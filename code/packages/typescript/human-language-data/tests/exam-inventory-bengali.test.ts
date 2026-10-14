@@ -24,6 +24,10 @@ import {
   trackIntroducedAtoms,
 } from "../src/exam-inventory.js";
 
+// These cases read one immutable corpus snapshot; synthetic inputs and
+// freshly derived counterfactual reports remain independent.
+const REAL_LESSONS = loadEverything().lessons;
+
 describe("the committed Bengali A1 inventory", () => {
   const inventory = loadExamInventory("bengali", "A1");
   const spanish = loadExamInventory("spanish", "A1");
@@ -36,7 +40,7 @@ describe("the committed Bengali A1 inventory", () => {
   });
 
   it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const taught = trackIntroducedAtoms(lessons, "bengali");
     const unknown: string[] = [];
     for (const point of inventory.points) {
@@ -131,7 +135,7 @@ describe("the committed Bengali A1 inventory", () => {
   });
 
   it("reports THREE full columns, a closed deixis grid, and a script two glyphs shorter", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(244);
     // 104 -> 121: the negation-and-joining tranche (chapters 27-30). Fifteen
@@ -242,7 +246,7 @@ describe("the committed Bengali A1 inventory", () => {
   // falsified before this was kept: a fabricated id fails the "probes only atoms
   // that EXIST" test above, and nulling the probe fails the coverage total.
   it("closes BN-A1-Q-04 on nine atoms, five borrowed words and a letter", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const taught = trackIntroducedAtoms(lessons, "bengali");
     const ordinals = inventory.points.find((point) => point.id === "BN-A1-Q-04");
     expect(ordinals?.probe).toEqual([
@@ -275,7 +279,7 @@ describe("the committed Bengali A1 inventory", () => {
   // that EXIST" test above AND the per-atom loop below, and nulling either probe
   // fails the coverage total, the Lipi column and this file's own `toEqual`.
   it("closes BN-A1-Q-03 and BN-A1-LIP-11 on one set of eleven atoms", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const taught = trackIntroducedAtoms(lessons, "bengali");
     const digits = inventory.points.find((point) => point.id === "BN-A1-Q-03");
     const script = inventory.points.find((point) => point.id === "BN-A1-LIP-11");

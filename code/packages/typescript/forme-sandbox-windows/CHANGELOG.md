@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exercise Node byte round-trips and overlapping ACL grants on an owned copy of the trusted runtime executable. System-wide Node installs may deny DACL writes. Use the production five-second startup budget and the Python overlap fixture's five-second child lifetime, retaining the 15-second case deadline and both exit assertions.
+
 ## 1.0.0 — 2026-10-05
 
 - Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.

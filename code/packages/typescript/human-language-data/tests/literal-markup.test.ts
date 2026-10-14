@@ -4,6 +4,10 @@ import { parseLesson } from "../src/parse.js";
 import { loadEverything } from "../src/loader.js";
 import { generatedBookOutputs } from "../src/book-cli.js";
 
+// These cases read one immutable corpus snapshot; synthetic inputs and
+// freshly derived counterfactual reports remain independent.
+const REAL_LESSONS = loadEverything().lessons;
+
 const lesson = (body: string) =>
   parseLesson(
     [
@@ -157,7 +161,7 @@ describe("literal markup", () => {
   });
 
   it("THE GATE: the committed corpus carries no literal markup at either layer", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     // The generator's own output, not the committed files: this asks whether the
     // books a reader would get TODAY are clean, which is one step ahead of
     // whatever happens to be checked in.
@@ -181,7 +185,7 @@ describe("literal markup", () => {
   it("proves the corpus gate is not vacuous", () => {
     // The check above passes on an empty input too. This pins that the same
     // measurement, over the same corpus plus one planted line, actually fires.
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const planted = [...lessons, lesson("planted &nbsp; control")];
     expect(measureLiteralMarkup(planted).summary.sourceFindings).toBe(1);
   }, 60_000);

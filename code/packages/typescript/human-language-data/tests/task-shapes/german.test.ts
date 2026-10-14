@@ -2,6 +2,10 @@ import { describe, expect, it } from "vitest";
 import { listTaskShapeInventories, loadLessons, loadTaskShapeInventory } from "../../src/loader.js";
 import { measureReadingReach } from "../../src/reading-reach.js";
 
+// These cases read one immutable corpus snapshot; synthetic inputs and
+// freshly derived counterfactual reports remain independent.
+const REAL_LESSONS = loadLessons();
+
 describe("German task-shape inventories", () => {
   it("loads the official German A1 performance target", () => {
     const inventory = loadTaskShapeInventory("german", "A1");
@@ -75,7 +79,7 @@ describe("German task-shape inventories", () => {
   it("declares a published stimulus length, so reading reach can measure the rung", () => {
     const inventories = listTaskShapeInventories().map(({ language, level }) =>
       loadTaskShapeInventory(language, level));
-    const report = measureReadingReach(loadLessons(), inventories);
+    const report = measureReadingReach(REAL_LESSONS, inventories);
     const row = report.rows.find((r) => r.language === "german" && r.level === "pre-A1");
     expect(row?.status).toBe("measurable");
     expect(row?.partsWithinReach).toBe(2);

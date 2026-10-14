@@ -2,7 +2,6 @@ import { expect, it } from "vitest";
 import { measureContinuity } from "../../../src/continuity.js";
 import {
   defaultCurriculumRoot,
-  loadEverything,
   loadExamInventory,
   loadTrackLessons,
 } from "../../../src/loader.js";
@@ -17,6 +16,8 @@ import {
   languageWritingStages,
 } from "../assert-language-corpus.js";
 
+import { REAL_EVERYTHING } from "../real-corpus.js";
+
 // ---------------------------------------------------------------------------
 // THE TELUGU A1 INVENTORY HAD NO ASSERTION AT ALL, and that is the failure mode
 // HL-C350's repairs were told to avoid: landing atoms and wiring probes, while
@@ -26,7 +27,7 @@ import {
 // TE-A1-NUM-04's probe fails the second.
 // ---------------------------------------------------------------------------
 it("probes only Telugu atoms that EXIST, so a guessed id cannot under-report", () => {
-  const { lessons } = loadEverything();
+  const { lessons } = REAL_EVERYTHING;
   const taught = trackIntroducedAtoms(lessons, "telugu");
   const unknown: string[] = [];
   for (const point of loadExamInventory("telugu", "A1").points) {

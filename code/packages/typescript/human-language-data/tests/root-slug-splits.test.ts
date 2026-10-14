@@ -300,9 +300,13 @@ describe("the write side", () => {
   });
 });
 
+// Preserve the live CLI check and measure the immutable corpus once per file.
+const LIVE_ROOT_SLUG_CHECK = runRootSlugSplitsCli(["--check"]);
+const LIVE_ROOT_SLUG_SPLITS = findRootSlugSplits();
+
 describe("the live corpus", () => {
   it("matches its committed baseline", () => {
-    expect(runRootSlugSplitsCli(["--check"])).toBe(0);
+    expect(LIVE_ROOT_SLUG_CHECK).toBe(0);
   });
 
   it("pins the CURRENT DEBT, which may only fall", () => {
@@ -349,7 +353,7 @@ describe("the live corpus", () => {
     // THIS NUMBER MAY ONLY FALL.
     const baselineFile = loadRootSlugBaseline(defaultCurriculumRoot());
     expect(baselineFile.splits).toHaveLength(77);
-    expect(findRootSlugSplits()).toHaveLength(77);
-    expect(findRootSlugSplits().every((split) => split.kind === "bare-vs-tagged")).toBe(true);
+    expect(LIVE_ROOT_SLUG_SPLITS).toHaveLength(77);
+    expect(LIVE_ROOT_SLUG_SPLITS.every((split) => split.kind === "bare-vs-tagged")).toBe(true);
   });
 });

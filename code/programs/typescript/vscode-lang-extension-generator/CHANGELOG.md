@@ -3,6 +3,12 @@
 All notable changes to `vscode-lang-extension-generator` are documented
 in this file.
 
+## Unreleased
+
+- `BUILD_windows` is written for `cmd /C`, which is how the build tool runs
+  every Windows BUILD line. It was PowerShell (`$ErrorActionPreference`,
+  `Push-Location`) and failed on its first line.
+
 ## 0.2.0 - Spec-driven flow
 
 - Added `--language-spec <path>` flag that consumes the JSON document

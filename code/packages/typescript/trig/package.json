@@ -5,15 +5,10 @@
   "main": "src/trig.ts",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "vitest run"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
-    "jest": "^29.0.0",
-    "ts-jest": "^29.0.0",
-    "@types/jest": "^29.0.0"
-  },
-  "overrides": {
-    "js-yaml": "^3.15.1"
+    "vitest": "^4.1.11"
   }
 }

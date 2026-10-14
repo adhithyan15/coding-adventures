@@ -287,6 +287,18 @@ describe("the pattern gates", () => {
 });
 
 describe("corpus snapshot", () => {
+  // These cases inspect the same immutable snapshot. Parse it and measure the
+  // gates once during registration, instead of charging each assertion for
+  // another full corpus scan. Synthetic gate fixtures above remain independent.
+  const { books: corpus, lessons } = loadEverything();
+  const trackChapters = loadTrackChapters();
+  const report = runChapterGates({
+    books: corpus,
+    lessons,
+    trackChapters,
+    policy: loadChapterPolicy(),
+  });
+
   // The first published measurement (HL-C03). These are DEBT counts, not a pass mark:
   // the gates are report-only precisely because this debt predates them. Ratchet them
   // DOWN as tracks are authored; never up.
@@ -298,13 +310,6 @@ describe("corpus snapshot", () => {
   // every lesson, emptying the "taught so far" set. A gate that reports total failure is
   // reporting on itself.
   it("pins the first published chapter-gate snapshot", () => {
-    const { books: corpus, lessons } = loadEverything();
-    const report = runChapterGates({
-      books: corpus,
-      lessons,
-      trackChapters: loadTrackChapters(),
-      policy: loadChapterPolicy(),
-    });
     // HL-C63 authored the 98 capabilities that had lagged behind already published,
     // handwritten chapters. The book total therefore stays at 513 while the declared
     // capability total catches up from 415 to 513 and the missing-capability debt falls
@@ -348,13 +353,6 @@ describe("corpus snapshot", () => {
   });
 
   it("names the tracks whose chapter debt is already zero", () => {
-    const { books: corpus, lessons } = loadEverything();
-    const report = runChapterGates({
-      books: corpus,
-      lessons,
-      trackChapters: loadTrackChapters(),
-      policy: loadChapterPolicy(),
-    });
     // HL-C156: kannada, telugu left this list — each carried one-character
     // script segments whose typed-atom payoff debt was not yet paid.
     // Capability closure makes nine more tracks clean. Tracks omitted from this list
@@ -452,7 +450,7 @@ describe("corpus snapshot", () => {
   it("leaves no payoff as an empty schema-v1 placeholder", () => {
     const empty: string[] = [];
     const awaitingMigration: string[] = [];
-    for (const track of loadTrackChapters()) {
+    for (const track of trackChapters) {
       for (const chapter of track.chapters) {
         const where = `${track.language}:${chapter.chapter}`;
         if ((chapter.payoff?.assesses ?? []).length === 0) empty.push(where);
@@ -469,13 +467,6 @@ describe("corpus snapshot", () => {
   });
 
   it("validates the first canonical pattern lesson", () => {
-    const { books: corpus, lessons } = loadEverything();
-    const report = runChapterGates({
-      books: corpus,
-      lessons,
-      trackChapters: loadTrackChapters(),
-      policy: loadChapterPolicy(),
-    });
     const patternLessons = lessons.filter((lesson) => lesson.realization.type === "pattern");
     // Still one. The friends arc (HL-C88) teaches productive ENDING rules, and
     // they are deliberately `grammar` rather than `pattern`: this corpus
@@ -508,7 +499,6 @@ describe("corpus snapshot", () => {
   // Spanish-only: the defect is a property of how chapters are inserted, not of
   // one track.
   it("keeps chapter numbers non-decreasing when lessons are sorted by sequence", () => {
-    const { lessons } = loadEverything();
     const byTrack = new Map<string, { sequence: number; chapter: number; id: string }[]>();
     for (const lesson of lessons) {
       const sequence = Number(lesson.frontmatter.sequence);

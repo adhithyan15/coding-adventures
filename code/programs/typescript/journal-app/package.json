@@ -37,7 +37,7 @@
     "@testing-library/react": "^16.0.0",
     "@testing-library/jest-dom": "^6.0.0",
     "jsdom": "^25.0.0",
-    "electron": "^43.5.0",
+    "electron": "^43.7.9",
     "electron-builder": "^26.8.1",
     "cross-env": "^7.0.0",
     "@types/node": "^22.20.1"
@@ -48,5 +48,8 @@
     "directory": "code/programs/typescript/journal-app"
   },
   "author": "Adhithya Rajasekaran",
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "global-agent": "4.1.3"
+  }
 }

@@ -133,6 +133,8 @@ fn web_lock_matches_the_emitted_react_project() {
 fn electron_lock_matches_the_emitted_project_plus_packaging_tools() {
     let emitted = emitted_package_json(Backend::Electron, "electron");
     let root = lock_root("electron");
+    assert_eq!(emitted["overrides"]["global-agent"], "4.1.3");
+    assert_eq!(emitted["overrides"]["shell-quote"], "1.11.0");
 
     let injected = electron_script_dev_dependencies();
     // The packaging tools: electron-builder makes the installer and
@@ -160,7 +162,15 @@ fn electron_lock_matches_the_emitted_project_plus_packaging_tools() {
 /// `npm ci --ignore-scripts`, so none of these run; the list exists so that a
 /// regenerated lock which brings in a NEW install-script package is reviewed
 /// rather than slipping in -- the shape most npm supply-chain attacks take.
-const INSTALL_SCRIPT_PACKAGES: &[&str] = &["@swc/core", "esbuild", "fsevents"];
+///
+/// `electron-winstaller` arrived with electron-builder 26 as a peer of
+/// `electron-builder-squirrel-windows`. Reviewed at 5.4.0: its `install`
+/// script is `node ./script/select-7z-arch.js`, which copies the package's own
+/// bundled `vendor/7z-<arch>.exe` and `.dll` to `vendor/7z.exe` and `.dll`. It
+/// makes no network calls and spawns nothing. Engram's Windows target is
+/// `portable`, not Squirrel, so the build never calls it either way.
+const INSTALL_SCRIPT_PACKAGES: &[&str] =
+    &["@swc/core", "electron-winstaller", "esbuild", "fsevents"];
 
 fn lock_packages(lock: &str) -> serde_json::Map<String, Value> {
     let path = package_root()
@@ -181,6 +191,18 @@ fn package_name<'a>(key: &'a str, entry: &'a Value) -> &'a str {
             .map(|(_, name)| name)
             .unwrap_or(key)
     })
+}
+
+#[test]
+fn generated_locks_do_not_reintroduce_sprintf_js() {
+    // sprintf-js has no patched release. Removing its old proxy/argument-parser
+    // ancestors must remove the package itself, including optional entries that
+    // npm ci can still install. A direct-version bump alone cannot prove that.
+    for lock in ["web", "electron"] {
+        for (key, entry) in lock_packages(lock) {
+            assert_ne!(package_name(&key, &entry), "sprintf-js", "npm/{lock}: {key}");
+        }
+    }
 }
 
 /// The directory whose `node_modules/` an entry was installed into:

@@ -416,8 +416,17 @@ function isZstdCliAvailable(): boolean {
   }
 }
 
+// Each case here starts the external `zstd` binary once or twice. The codec
+// work is tiny (~1 KB to 9 KB), but process start-up is not: on a Windows CI
+// runner under a full-repository rebuild, the first `execFileSync("zstd")`
+// in a case took 7.1s, over vitest's 5s default, while its sibling took
+// 126ms. The budget covers waiting for the OS to launch a child process, not
+// slow codec work. The in-process tests above keep the default.
+const CLI_INTEROP_TIMEOUT_MS = 30_000;
+
 describe.skipIf(!isZstdCliAvailable())(
   "TC-9: cross-language / interoperability (real zstd CLI)",
+  { timeout: CLI_INTEROP_TIMEOUT_MS },
   () => {
     it("round-trips both directions on the spec's TC-9 text", () => {
       // Same text as TC-5 / the spec's own TC-9 example: enough repetition

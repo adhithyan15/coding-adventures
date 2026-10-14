@@ -7,7 +7,6 @@
 // ZH-R17-writing-five. See "A lesson with no Writing or Script block" in
 // src/figure-targets.ts and the matching HL06 section.
 import { describe, expect, it } from "vitest";
-import { resolvedFigureTargets } from "../../src/figure-cli.js";
 import {
   MODELLED_WRITING_STAGES,
   filmstripCandidates,
@@ -17,9 +16,9 @@ import {
   withFilmstripImages,
   writingLetterOf,
 } from "../../src/figure-targets.js";
-import { defaultCurriculumRoot, loadLessons } from "../../src/loader.js";
 import type { ParsedLesson } from "../../src/parse.js";
 import { lesson } from "./fixture.js";
+import { realFigureById as byId, realFigureDrawn as drawn } from "./real-corpus.js";
 
 /** A Warm-up / Guided Practice / Wrap-up lesson whose practice block has `stage`. */
 function practice(id: string, stage: string | undefined, headword = "汉"): ParsedLesson {
@@ -99,14 +98,6 @@ describe("a strip in modelled practice", () => {
 });
 
 describe("modelled-practice strips in the real corpus", () => {
-  const root = defaultCurriculumRoot();
-  const lessons = loadLessons(root);
-  const byId = new Map(lessons.map((entry) => [entry.realization.lessonId, entry]));
-  const drawn = new Set(
-    resolvedFigureTargets(root, lessons)
-      .filter((target) => target.kind === "script-filmstrip")
-      .map((target) => target.lessonId),
-  );
 
   it("draws exactly the copy lessons whose headword is cited", () => {
     // Measured when the fallback landed: 64 writing lessons on switched-on

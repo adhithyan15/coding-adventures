@@ -2,7 +2,6 @@ import { expect, it } from "vitest";
 import { measureContinuity } from "../../../src/continuity.js";
 import {
   defaultCurriculumRoot,
-  loadEverything,
   loadExamInventory,
   loadTrackLessons,
 } from "../../../src/loader.js";
@@ -17,6 +16,8 @@ import {
   languageWritingStages,
 } from "../assert-language-corpus.js";
 
+import { REAL_EVERYTHING } from "../real-corpus.js";
+
 // ---------------------------------------------------------------------------
 // THE KANNADA A1 INVENTORY HAD NO ASSERTION AT ALL -- the same hole HL-C354
 // found in Telugu and Hindi, and the one it told the next reader to go looking
@@ -27,7 +28,7 @@ import {
 // the second.
 // ---------------------------------------------------------------------------
 it("probes only Kannada atoms that EXIST, so a guessed id cannot under-report", () => {
-  const { lessons } = loadEverything();
+  const { lessons } = REAL_EVERYTHING;
   const taught = trackIntroducedAtoms(lessons, "kannada");
   const unknown: string[] = [];
   for (const point of loadExamInventory("kannada", "A1").points) {

@@ -29,6 +29,10 @@ import {
   trackIntroducedAtoms,
 } from "../src/exam-inventory.js";
 
+// These cases read one immutable corpus snapshot; synthetic inputs and
+// freshly derived counterfactual reports remain independent.
+const REAL_LESSONS = loadEverything().lessons;
+
 describe("the committed Marwadi A1 inventory", () => {
   const inventory = loadExamInventory("marwadi", "A1");
   const spanish = loadExamInventory("spanish", "A1");
@@ -48,7 +52,7 @@ describe("the committed Marwadi A1 inventory", () => {
   });
 
   it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const taught = trackIntroducedAtoms(lessons, "marwadi");
     const unknown: string[] = [];
     for (const point of inventory.points) {
@@ -138,7 +142,7 @@ describe("the committed Marwadi A1 inventory", () => {
   });
 
   it("reports an EMPTY joining column, an adverb column of one, and a closed transaction column", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(197);
     expect(coverage.covered).toBe(79);
@@ -167,7 +171,7 @@ describe("the committed Marwadi A1 inventory", () => {
   }, 60_000);
 
   it("keeps the findings a percentage would bury: the numerals that closed, and no word for no", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const taught = trackIntroducedAtoms(lessons, "marwadi");
     // (1) THE MARKET COURSE THAT HAD NO NUMBERS. Chapters 26–31 teach "how much
     //     is this?", "how much altogether?", "this is very expensive", "make it

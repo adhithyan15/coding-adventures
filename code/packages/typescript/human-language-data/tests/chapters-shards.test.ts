@@ -44,7 +44,8 @@ describe("the chapters.d migration covers what it claims to", () => {
     expect(CHAPTER_PLANS.map((plan) => plan.path).sort()).toEqual(expected);
   });
 
-  it("passes --check for every sharded ledger", () => {
+  // This live all-ledger check measured 31.9-32.7s in the full coverage run.
+  it("passes --check for every sharded ledger", { timeout: 60_000 }, () => {
     expect(runShardCli(["--check"])).toBe(0);
   });
 

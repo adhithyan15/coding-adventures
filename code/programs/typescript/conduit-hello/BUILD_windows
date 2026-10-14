@@ -1,0 +1,4 @@
+# Windows: the tests start a real server through typescript/conduit's native
+# N-API addon, which is not built on Windows (see that package's
+# BUILD_windows). Covered by the Linux and macOS runners.
+echo Skipping typescript/programs/conduit-hello on Windows — depends on the conduit native addon

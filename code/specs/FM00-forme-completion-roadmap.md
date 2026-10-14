@@ -249,6 +249,24 @@ the bounded union of sample diagnostics. The summary records the three bounded
 performance samples alongside that conservative aggregate; no raw trace is
 retained.
 
+Before the first recorded sample, the gate runs one unrecorded warm-up audit
+against the first route, the landing page, with the same bounded, sandboxed,
+fresh-process browser phase. The first Chrome launch on a fresh hosted runner
+pays one-time OS costs (binary scanning, font and disk caches), and
+because the landing page is always audited first those costs used to land only
+in its samples. The warm-up's result is dropped and its failure is not a gate
+failure; the three recorded samples per route, the `0.95` median budget, and
+the retained summary are unchanged.
+
+Preflight every target's size-bounded, regular single-link HTML and static
+fallback before launching the warm-up or any recorded browser. Reuse those
+fallback reports in the retained target loop. A failed filesystem preflight
+must prevent browser startup. Classify all browser retirement failures with a
+dedicated internally created error, including native kill and temporary-directory
+cleanup failures. Warm-up and recorded-sample handlers must propagate that
+classification before bounding diagnostic text; a truncated startup message
+must never conceal an appended retirement failure or permit another browser.
+
 Browser scores do not replace the static contract. Before Chrome starts, the
 gate parses each size-bounded emitted HTML document with script, stylesheet,
 frame, image, and navigation loading disabled, and proves that it still
@@ -467,6 +485,7 @@ work.
 | 2026-10-05 | Follow-up security review found that starting the link walk at an already redirected output root missed a linked ancestor, while portable Node lacks descriptor-relative `openat` writes that could close every same-identity rename race. | Anchor the walk at the canonical working directory and enforce an explicit portable single-writer contract: require a fresh private output root, hold an exclusive lock for the complete write, refuse unowned or multiply-linked files, and fail closed on observable authority, directory, lock, path, or handle identity changes. Document that concurrent mutation by another process running as the same OS identity is outside this contract, and cover linked-ancestor, injected child-link, injected hard-link, and pre-existing-root regressions. |
 | 2026-10-05 | PR #16729 passed the unchanged FM-B072 contract on Linux, macOS, and Windows at one exact head: all three host attestations and the aggregate verdict passed, the exact-head mandatory security review approved, and authoritative CI, duplicate push CI, and CodeQL all passed before squash merge. The release evidence included the 1,000-page benchmark, three-sample Lighthouse medians with fail-closed accessibility/resource aggregation, API-v2 compatibility, and every supported product build. | Close FM-B072 and its FM-B018 completion milestone. Authoring v1 is complete. Activate FM-B029 as the highest-priority remaining operational gap so duplicate workflow cancellation and merge-state reporting become unambiguous without weakening the completed release contract. |
 | 2026-10-05 | The final FM-B029 audit confirmed that `ci.yml` still started a Linux push suite and a full pull-request suite for the same feature-branch commit. Superseding a run could then let the `always()` final gate reinterpret cancelled dependencies as a new failure, while the repository babysitter read every attached check without binding its conclusion to the PR's current head or protected contexts. | Restrict feature-branch CI to the authoritative pull-request event while retaining post-merge `main` validation; make the final gate compare the event head with a fresh authenticated PR read so only truly superseded cancellation closes cleanly; and make the babysitter pin `headRefOid`, query `gh pr checks --required`, ignore superseded/duplicate evidence, and verify the expected head merged. Close FM-B029. A fresh audit finds all 72 roadmap items done and no actionable Forme completion backlog. |
+| 2026-10-12 | On PR #17185, whose only landing-page change was a dev-only `source-map-js` lockfile bump, Windows failed the gate with a landing median of `0.94` while both blog routes passed, Linux and macOS passed the same bytes, and the same page passed on Windows at the previous head. Locally the landing page scores `1.00`, and `0.99` even with an 8x CPU slowdown. Every recorded landing-only dip (`0.85` Windows and `0.92` macOS on 2026-10-05, now `0.94`) hit the first route the gate audits. | Run one unrecorded warm-up audit before the first recorded sample so first-launch runner costs stay out of the evidence. Keep the `0.95` budget, three fresh-process samples per route, fail-closed aggregation, and summary schema unchanged. |
 
 ## Loop protocol
 

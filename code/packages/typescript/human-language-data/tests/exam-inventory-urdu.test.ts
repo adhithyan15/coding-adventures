@@ -24,6 +24,10 @@ import {
   trackIntroducedAtoms,
 } from "../src/exam-inventory.js";
 
+// These cases read one immutable corpus snapshot; synthetic inputs and
+// freshly derived counterfactual reports remain independent.
+const REAL_LESSONS = loadEverything().lessons;
+
 describe("the committed Urdu A1 inventory", () => {
   const inventory = loadExamInventory("urdu", "A1");
   const spanish = loadExamInventory("spanish", "A1");
@@ -36,7 +40,7 @@ describe("the committed Urdu A1 inventory", () => {
   });
 
   it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const taught = trackIntroducedAtoms(lessons, "urdu");
     const unknown: string[] = [];
     for (const point of inventory.points) {
@@ -137,7 +141,7 @@ describe("the committed Urdu A1 inventory", () => {
   });
 
   it("reports FOUR full columns, a numeral column now CLOSED, and a flattering script closure that is not one", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(234);
     // 101 -> 116: the negation-and-joining tranche (chapters 19-22). Fifteen

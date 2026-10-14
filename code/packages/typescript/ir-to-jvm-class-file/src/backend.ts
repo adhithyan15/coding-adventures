@@ -1022,25 +1022,55 @@ function asLabel(operand: IrOperand): IrLabel {
   return operand;
 }
 
+// Returns a "/"-joined path whatever the host OS. `classFilename` is a
+// separate field from `className`, so it gets its own checks. A backslash or a
+// colon in a component is rejected outright: on Windows either one would turn a
+// single "/"-delimited component into a traversal (`..\..\x.class`) or a
+// drive-absolute path (`C:\x.class`) once the writer joins it to the root.
 function validatedOutputRelativePath(classFilename: string): string {
   const parts = classFilename.split("/").filter(Boolean);
-  if (parts.length === 0 || parts.some((component) => component === "." || component === "..")) {
+  if (
+    parts.length === 0 ||
+    parts.some(
+      (component) =>
+        component === "." || component === ".." || component.includes("\\") || component.includes(":"),
+    )
+  ) {
     throw new JvmBackendError("Resolved class-file path escapes the requested classpath root");
   }
-  return join(...parts);
+  return parts.join("/");
 }
 
 const SECURE_CLASS_WRITER = `
 import base64
 import os
 import pathlib
+import stat
 import sys
+import tempfile
 
 root = pathlib.Path(sys.argv[1])
 if not root.is_absolute():
     root = pathlib.Path.cwd() / root
 relative_path = pathlib.PurePosixPath(sys.argv[2])
 payload = base64.b64decode(sys.argv[3])
+# Defence in depth behind the TypeScript validator: a component holding a
+# backslash or a drive colon is a traversal on Windows.
+if not relative_path.parts or any(
+    part in (".", "..") or "\\\\" in part or ":" in part for part in relative_path.parts
+):
+    raise RuntimeError("Resolved class-file path escapes the requested classpath root")
+
+def is_link_like(path):
+    # lstat exposes junctions on Python before os.path.isjunction (3.12).
+    try:
+        metadata = os.lstat(path)
+    except FileNotFoundError:
+        return False
+    return stat.S_ISLNK(metadata.st_mode) or bool(
+        getattr(metadata, "st_file_attributes", 0)
+        & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0)
+    )
 
 open_directory_flags = os.O_RDONLY
 if hasattr(os, "O_DIRECTORY"):
@@ -1059,7 +1089,10 @@ try:
     while True:
         try:
             metadata = os.lstat(current_root)
-            if not os.path.isdir(current_root) or os.path.islink(current_root):
+            if not stat.S_ISDIR(metadata.st_mode) or is_link_like(current_root):
+                raise RuntimeError("Refusing to write through symlinked or invalid directory")
+            # Windows realpath would otherwise erase an ancestor junction.
+            if os.name == "nt" and any(is_link_like(parent) for parent in current_root.parents):
                 raise RuntimeError("Refusing to write through symlinked or invalid directory")
             canonical_root = pathlib.Path(os.path.realpath(current_root))
             break
@@ -1069,6 +1102,43 @@ try:
                 raise
             missing_parts.insert(0, current_root.name)
             current_root = parent
+
+    if not (os.open in os.supports_dir_fd and os.mkdir in os.supports_dir_fd):
+        # Windows has no dir_fd support, and os.open() cannot open a bare
+        # directory there, so the descriptor walk below is impossible. Same
+        # fallback as the Python port: reject a symlink at every component
+        # (the existing-ancestor check above already ran), then write a
+        # sibling temp file and os.replace() it into place. Replacing the
+        # directory entry never follows a symlink swapped in after the check.
+        # It is not fully TOCTOU-proof the way the dir_fd walk is; it is what
+        # the platform's filesystem API allows.
+        current = canonical_root
+        for component in [*missing_parts, *relative_path.parts[:-1]]:
+            current = current / component
+            if is_link_like(current):
+                raise RuntimeError("Refusing to write through symlinked or invalid directory")
+            current.mkdir(exist_ok=True)
+            if not current.is_dir() or is_link_like(current):
+                raise RuntimeError("Refusing to write through symlinked or invalid directory")
+        target = current / relative_path.name
+        if is_link_like(target):
+            raise RuntimeError("Refusing to write through symlinked or invalid output file")
+        # The resolved parent must still be inside the canonical root.
+        resolved_parent = pathlib.Path(os.path.realpath(current))
+        if resolved_parent != canonical_root and canonical_root not in resolved_parent.parents:
+            raise RuntimeError("Resolved class-file path escapes the requested classpath root")
+        tmp_fd, tmp_name = tempfile.mkstemp(dir=current)
+        try:
+            with os.fdopen(tmp_fd, "wb") as handle:
+                handle.write(payload)
+            os.replace(tmp_name, target)
+        except BaseException:
+            try:
+                os.remove(tmp_name)
+            except FileNotFoundError:
+                pass
+            raise
+        sys.exit(0)
 
     current_fd = os.open(canonical_root, open_directory_flags)
     directory_fds.append(current_fd)

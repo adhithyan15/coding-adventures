@@ -58,5 +58,5 @@ Each term is derived from the previous one iteratively (no factorial or power ov
 
 ```bash
 npm install
-npx jest --verbose
+npm test
 ```

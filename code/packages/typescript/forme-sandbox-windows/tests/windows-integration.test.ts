@@ -30,6 +30,28 @@ afterAll(async () => Promise.all(suiteRoots.splice(0).map(root => rm(root, {
 }))));
 
 let trustedPythonPromise: Promise<{ readonly executable: string; readonly root: string }> | undefined;
+let trustedNodePromise: Promise<{ readonly executable: string; readonly root: string }> | undefined;
+
+async function trustedNodeExecutable(): Promise<{ readonly executable: string; readonly root: string }> {
+  trustedNodePromise ??= (async () => {
+    // Grant/revoke tests need DACL write authority over the executable; an
+    // administrator-owned system install does not grant that to ordinary users.
+    const root = await mkdtemp(join(homedir(), "forme-windows-node-runtime-"));
+    suiteRoots.push(root);
+    const executable = join(root, "node.exe");
+    await copyFile(process.execPath, executable);
+    return { executable, root };
+  })();
+  return trustedNodePromise;
+}
+
+async function trustedNodeFactory() {
+  const runtime = await trustedNodeExecutable();
+  return createWindowsSandboxFactory({
+    launcherPath,
+    runtimeExecutables: { node: runtime.executable }, runtimeRoots: { node: runtime.root },
+  });
+}
 
 function escapedDiagnosticPath(path: string): string {
   return path.split("\\").join("\\\\");
@@ -119,7 +141,7 @@ async function nodeRequest(source = String.raw`let input = "";
 process.stdin.setEncoding("utf8");
 process.stdin.on("data", chunk => { input += chunk; });
 process.stdin.on("end", () => process.stdout.write(input, () => process.exit(0)));
-`): Promise<SandboxLaunchRequest> {
+`, maxWallClockMs = 2_000): Promise<SandboxLaunchRequest> {
   const workingDirectory = await mkdtemp(join(tmpdir(), "forme-windows-node-"));
   roots.push(workingDirectory);
   const entryBytes = new TextEncoder().encode(source);
@@ -129,7 +151,7 @@ process.stdin.on("end", () => process.stdout.write(input, () => process.exit(0))
     runtime: { kind: "node", entry: "entry.mjs" },
     capabilities: { required: [], optional: [] },
     contributes: { stages: [{ id: "main", consumes: "ContentSource", produces: "ContentNode" }], kinds: [] },
-    resources: { maxMemoryMb: 64, maxWallClockMs: 2_000, maxFileDescriptors: 256 },
+    resources: { maxMemoryMb: 64, maxWallClockMs, maxFileDescriptors: 256 },
   };
   return {
     plugin: { manifest, manifestHash: computeManifestHash(manifest, entryBytes), entryBytes },
@@ -232,7 +254,7 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
   });
 
   it("round-trips protocol bytes through the trusted Node runtime", async () => {
-    const child = await createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 })
+    const child = await (await trustedNodeFactory())
       .launch(await nodeRequest());
     const stdout: Buffer[] = [];
     child.stdout.on("data", chunk => stdout.push(Buffer.from(chunk)));
@@ -353,9 +375,14 @@ try {
   }, 30_000);
 
   it("serializes overlapping trusted-runtime ACL grants and revocations", async () => {
+    const factory = await trustedNodeFactory();
     const [first, second] = await Promise.all([
-      createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 }).launch(await nodeRequest()),
-      createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 }).launch(await nodeRequest()),
+      // Both launches modify the same owned executable ACL. System installs
+      // can deny DACL writes to a non-administrator, before attestation.
+      // Both children wait for the other launch to attest before stdin closes.
+      // Match the Python overlap fixture's five-second lifetime under CI load.
+      factory.launch(await nodeRequest(undefined, 5_000)),
+      factory.launch(await nodeRequest(undefined, 5_000)),
     ]);
     first.stdin.end();
     second.stdin.end();

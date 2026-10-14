@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { loadEverything, loadExamInventory } from "../../../src/loader.js";
+import { loadExamInventory } from "../../../src/loader.js";
 import { formatExamCoverage, measureExamCoverage } from "../../../src/exam-inventory.js";
 import {
   expectLanguageContinuity,
@@ -7,6 +7,8 @@ import {
   expectLanguageModality,
   languageWritingStages,
 } from "../assert-language-corpus.js";
+
+import { REAL_EVERYTHING } from "../real-corpus.js";
 
 // ---------------------------------------------------------------------------
 // SANSKRIT A1 COVERAGE WAS MEASURABLE AND MEASURED BY NOBODY.
@@ -25,7 +27,7 @@ import {
 // point's probe fails the count below.
 // ---------------------------------------------------------------------------
 it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
-  const { lessons } = loadEverything();
+  const { lessons } = REAL_EVERYTHING;
   const coverage = measureExamCoverage(loadExamInventory("sanskrit", "A1"), lessons);
   expect(coverage.enumerated).toBe(164);
   // 141 -> 142: the ordinal tranche closes SA-A1-Q-02, and with it the Sankhya

@@ -1,3 +1,5 @@
+import { spawn } from "node:child_process";
+import { once } from "node:events";
 import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
@@ -5,14 +7,123 @@ import { Launcher } from "chrome-launcher";
 import { describe, expect, it } from "vitest";
 import {
   boundedError,
+  ChromeRetirementError,
   chromeFlagsFor,
   createBoundedChromeLauncher,
+  discardWarmupAudit,
+  preflightQualityTargets,
+  retireChrome,
   reportedChromeVersionForPlatform,
   readChromeStartupDiagnostic,
   readBoundedUtf8,
 } from "./release-web-quality.js";
+import { MAX_FALLBACK_HTML_BYTES, type QualityTarget } from "./web-quality.js";
 
 describe("Forme release web-quality effects", () => {
+  it("runs the warm-up audit exactly once and drops its result", async () => {
+    let calls = 0;
+    await expect(discardWarmupAudit(async () => {
+      calls += 1;
+      return { categories: { performance: { score: 0.1 } } };
+    })).resolves.toBeUndefined();
+    expect(calls).toBe(1);
+  });
+
+  it("does not turn a failed warm-up audit into a gate failure", async () => {
+    let calls = 0;
+    const lines: string[] = [];
+    await expect(discardWarmupAudit(async () => {
+      calls += 1;
+      throw new Error("Chrome exited before exposing a reachable debugging port");
+    }, line => lines.push(line))).resolves.toBeUndefined();
+    expect(calls).toBe(1);
+    expect(lines).toEqual([
+      "warm-up audit dropped: Chrome exited before exposing a reachable debugging port\n",
+    ]);
+  });
+
+  it("still fails when the warm-up browser could not be retired", async () => {
+    const lines: string[] = [];
+    await expect(discardWarmupAudit(async () => {
+      throw new ChromeRetirementError(new Error("Chrome retirement timed out"));
+    }, line => lines.push(line))).rejects.toThrow("Chrome retirement timed out");
+    expect(lines).toEqual([]);
+  });
+
+  it("does not lose fatal retirement identity when startup diagnostics are truncated", async () => {
+    const fatal = new ChromeRetirementError(new Error("cleanup denied"),
+      `Chrome startup failed: ${"x".repeat(1_024)}; retirement failed: cleanup denied`);
+    expect(boundedError(fatal)).not.toContain("retirement");
+    const lines: string[] = [];
+    await expect(discardWarmupAudit(async () => { throw fatal; }, line => lines.push(line)))
+      .rejects.toBe(fatal);
+    expect(lines).toEqual([]);
+  });
+
+  it("classifies a trapping thrown proxy without invoking its traps", async () => {
+    let trapped = false;
+    const hostile = new Proxy({}, {
+      get() { trapped = true; throw new Error("trap ran"); },
+      getPrototypeOf() { trapped = true; throw new Error("trap ran"); },
+    });
+    const lines: string[] = [];
+    await expect(discardWarmupAudit(async () => { throw hostile; }, line => lines.push(line)))
+      .resolves.toBeUndefined();
+    expect(lines).toEqual(["warm-up audit dropped: uninspectable thrown value\n"]);
+    expect(trapped).toBe(false);
+  });
+
+  it("propagates native temporary cleanup failures from a warm-up", async () => {
+    const cause = new Error("EPERM: access denied");
+    const lines: string[] = [];
+    await expect(discardWarmupAudit(() => retireChrome({
+      chromeProcess: undefined,
+      kill() {},
+      destroyTmp() { throw cause; },
+    }), line => lines.push(line))).rejects.toMatchObject({
+      name: "ChromeRetirementError", cause,
+    });
+    expect(lines).toEqual([]);
+  });
+
+  it("classifies native kill failures independently of their message", async () => {
+    const child = spawn(process.execPath, ["-e", ""], { stdio: "ignore" });
+    await once(child, "exit");
+    const cause = new Error("operation denied");
+    await expect(retireChrome({
+      chromeProcess: child,
+      kill() { throw cause; },
+      destroyTmp() {},
+    })).rejects.toMatchObject({ name: "ChromeRetirementError", cause });
+  });
+
+  it("preflights all bounded HTML before returning reusable fallback reports", async () => {
+    const root = await mkdtemp(resolve(tmpdir(), "forme-quality-preflight-"));
+    const target: QualityTarget = {
+      id: "test", route: "/test", document: "index.html",
+      performanceMinimum: 0.95, accessibilityMinimum: 1, resources: { total: 1_024 },
+      fallback: { requiredSelectors: ["main"], minimumTextCharacters: 1,
+        minimumLinks: 0, minimumListItems: 0, maximumScripts: 0 },
+    };
+    try {
+      const document = resolve(root, "index.html");
+      await writeFile(document, "<main>usable static content</main>");
+      const reports = await preflightQualityTargets([{ target, document, root }]);
+      expect(reports).toHaveLength(1);
+      expect(reports[0]?.fallback.diagnostics).toEqual([]);
+      const oversized = resolve(root, "oversized.html");
+      await writeFile(oversized, "x".repeat(MAX_FALLBACK_HTML_BYTES + 1));
+      await expect(preflightQualityTargets([
+        { target, document, root },
+        { target: { ...target, id: "oversized" }, document: oversized, root },
+      ])).rejects.toThrow(/no larger than/);
+      // The retained report came from the bounded preflight, not a later reread.
+      expect(reports[0]?.fallback.diagnostics).toEqual([]);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
   it("uses the pinned setup action's file-metadata version on Windows", () => {
     expect(reportedChromeVersionForPlatform("win32", "154.0.8037.92")).toBe("154.0.8037.92");
     expect(() => reportedChromeVersionForPlatform("win32", undefined)).toThrow(/reported/);

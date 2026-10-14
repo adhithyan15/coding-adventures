@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { loadAssessmentPolicy, loadChapterPolicy, loadEverything, loadTrackLessons } from "../../src/loader.js";
+import { loadAssessmentPolicy, loadChapterPolicy, loadTrackLessons } from "../../src/loader.js";
 import { buildRootLedger } from "../../src/root-ledger.js";
 import { measureWritingStages } from "../../src/writing-stages.js";
 import {
@@ -7,6 +7,8 @@ import {
   expectLanguageLessonBudgets,
   expectLanguageModality,
 } from "./assert-language-corpus.js";
+
+import { REAL_EVERYTHING } from "./real-corpus.js";
 
 it("pins Persian continuity", () => expectLanguageContinuity("persian"));
 it("pins Persian modality", () => expectLanguageModality("persian"));
@@ -54,7 +56,7 @@ it("pins Persian lesson-content budgets", () =>
   }));
 
 it("pins Persian's lesson-one writing ladder, now complete through dictation", () => {
-  const { lessons, curricula, spine } = loadEverything();
+  const { lessons, curricula, spine } = REAL_EVERYTHING;
   const report = measureWritingStages(
     loadAssessmentPolicy(),
     ["persian"],

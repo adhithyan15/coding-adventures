@@ -24,6 +24,10 @@ import {
   trackIntroducedAtoms,
 } from "../src/exam-inventory.js";
 
+// These cases read one immutable corpus snapshot; synthetic inputs and
+// freshly derived counterfactual reports remain independent.
+const REAL_LESSONS = loadEverything().lessons;
+
 describe("the committed Latin A1 inventory", () => {
   const inventory = loadExamInventory("latin", "A1");
   const spanish = loadExamInventory("spanish", "A1");
@@ -43,7 +47,7 @@ describe("the committed Latin A1 inventory", () => {
   });
 
   it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const taught = trackIntroducedAtoms(lessons, "latin");
     const unknown: string[] = [];
     for (const point of inventory.points) {
@@ -162,7 +166,7 @@ describe("the committed Latin A1 inventory", () => {
   });
 
   it("reports the joining column REBUILT, and the ordinal column CLOSED", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(270);
     expect(coverage.covered).toBe(135);
@@ -243,7 +247,7 @@ describe("the committed Latin A1 inventory", () => {
   it("closes every point it closes with an atom the tranche actually introduces", () => {
     // The tranche was chosen AGAINST this file, so the check that matters is
     // that the probes now point at real new atoms rather than at hopeful ids.
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const taught = trackIntroducedAtoms(lessons, "latin");
     const tranche = [...taught].filter((atom) => /^LA-(LEX|GRAMMAR)-C(4[89]|5[0-4])-/.test(atom));
     expect(tranche).toHaveLength(36);

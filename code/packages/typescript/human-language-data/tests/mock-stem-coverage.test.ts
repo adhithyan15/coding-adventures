@@ -241,6 +241,10 @@ describe("the committed vocabulary", () => {
 });
 
 describe("the level is a closed set, not a path fragment", () => {
+  it("rejects an invalid level before reading an absent corpus", () => {
+    expect(() => reportSpanishMockStemCoverage(join(tmpdir(), "hl-absent-corpus-for-invalid-level"), "../../etc" as never)).toThrow(/unknown mock level/);
+  });
+
   it("refuses a level that would escape the curriculum root", () => {
     // `reportSpanishMockStemCoverage` is exported from `index.ts`, and a
     // TypeScript union does not survive the package boundary. A first draft
@@ -268,6 +272,10 @@ describe("the level is a closed set, not a path fragment", () => {
   );
 });
 
+// The real CLI walks the immutable corpus once; timed cases inspect its result.
+const REAL_MOCK_CLI_LINES: string[] = [];
+const REAL_MOCK_CLI_CODE = runMockStemCoverageCli([], defaultCurriculumRoot(), (line) => REAL_MOCK_CLI_LINES.push(line));
+
 describe("runMockStemCoverageCli", () => {
   it("refuses an unknown --level rather than building a path from it", () => {
     // The CLI's own three-way string comparison is the last place a level is
@@ -284,9 +292,8 @@ describe("runMockStemCoverageCli", () => {
   });
 
   it("reports both mocks on a valid level", () => {
-    const lines: string[] = [];
-    expect(runMockStemCoverageCli([], defaultCurriculumRoot(), (t) => lines.push(t))).toBe(0);
-    const text = lines.join("");
+    expect(REAL_MOCK_CLI_CODE).toBe(0);
+    const text = REAL_MOCK_CLI_LINES.join("");
     expect(text).toContain("A2 mock 1");
     expect(text).toContain("A2 mock 2");
     expect(text).toContain("unaccounted");

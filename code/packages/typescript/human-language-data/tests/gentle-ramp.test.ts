@@ -11,6 +11,10 @@ import {
 } from "../src/loader.js";
 import type { BookCorpus, ChapterPolicy, LanguageRegistry } from "../src/types.js";
 
+// These cases read one immutable corpus snapshot; synthetic inputs and
+// freshly derived counterfactual reports remain independent.
+const REAL_EVERYTHING = loadEverything();
+
 const registry: LanguageRegistry = {
   version: 1,
   languages: [
@@ -96,7 +100,7 @@ describe("the corpus-wide super-gentle ramp", () => {
   });
 
   it("derives the real corpus as debt rather than mistaking unmeasured tracks for gentle ones", () => {
-    const { registry, lessons, books, curricula, spine } = loadEverything();
+    const { registry, lessons, books, curricula, spine } = REAL_EVERYTHING;
     const report = buildCurriculumGapReport({
       registry,
       lessons,

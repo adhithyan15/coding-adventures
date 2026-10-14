@@ -2,7 +2,6 @@ import { expect, it } from "vitest";
 import { measureContinuity } from "../../../src/continuity.js";
 import {
   defaultCurriculumRoot,
-  loadEverything,
   loadExamInventory,
   loadTrackLessons,
 } from "../../../src/loader.js";
@@ -17,8 +16,10 @@ import {
   languageWritingStages,
 } from "../assert-language-corpus.js";
 
+import { REAL_EVERYTHING } from "../real-corpus.js";
+
 it("pins Telugu A1 coverage, and the numeral column the ordinal tranche closed", () => {
-  const { lessons } = loadEverything();
+  const { lessons } = REAL_EVERYTHING;
   const coverage = measureExamCoverage(loadExamInventory("telugu", "A1"), lessons);
   expect(coverage.enumerated).toBe(326);
   // 214 -> 216: TE-A1-L-04 (the vowel signs) and TE-A1-L-12 (the retroflex row).

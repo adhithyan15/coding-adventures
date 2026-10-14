@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- The "walks deeply nested HTML iteratively" test states its own 30s
+  budget. Its 10,000-level depth is what proves the walk can't overflow the
+  stack. The cost is parse5's quadratic handling of nesting depth: about 0.7s
+  idle, 5.8s on a CI runner under a full-repository rebuild, over vitest's 5s
+  default.
+
 ## 1.0.0 — 2026-10-05
 
 - Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.

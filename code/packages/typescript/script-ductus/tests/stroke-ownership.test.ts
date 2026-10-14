@@ -358,7 +358,9 @@ describe("stroke ownership migration baseline", () => {
         ["an empty block shape", variant(REGISTRY_PIN_FILE, JSON.stringify({ scriptRuns: [], sharedIdentityGroups: 0, sharedIdentityHash: "0".repeat(64) })), /_registry\.json: expected/],
       ];
       for (const [label, files, error] of cases) {
-        expect(() => loadStrokeOwnershipPins(write(files)), label).toThrow(error);
+        const directory = write(files);
+        expect(readdirSync(directory).sort(), `${label}: fixture filenames`).toEqual([...files.keys()].sort());
+        expect(() => loadStrokeOwnershipPins(directory), label).toThrow(error);
       }
 
       const linked = write(variant("kannada.json", undefined));

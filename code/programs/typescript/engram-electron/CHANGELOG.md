@@ -21,3 +21,8 @@ Initial release of the standalone Electron wrapper.
 The Electron configuration and `electron/` directory previously lived in
 `engram-app`. Splitting them out lets `engram-app` be deployed as a plain web
 app (GitHub Pages) while this package handles native desktop distribution.
+
+## Security - 2026-10-11
+
+- Override global-agent with 4.1.3 to remove roarr and sprintf-js.
+- Require Electron 43.7.9 or later in the 43.x line, matching the patched lockfile while reconciling concurrent dependency updates.

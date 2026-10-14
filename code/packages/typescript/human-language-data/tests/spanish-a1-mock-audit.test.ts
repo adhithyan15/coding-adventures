@@ -37,9 +37,9 @@ describe("Spanish A1 book-bounded mock audit", () => {
 
   // `--check` runs the CLI end to end, so it rebuilds this level's audit from the
   // corpus rather than reading the shared one above; that rebuild is the path
-  // under test. The three --check cases keep an explicit budget: under full-suite
-  // parallel load on CI one measured 25s against the 30s default.
-  it("keeps the committed report canonical and current", { timeout: 60_000 }, () => {
+  // under test. The full two-worker coverage run measured 60.5-72.3 seconds.
+  // Keep these live rebuilds inside a 120s integration case; ordinary limits stay 30s.
+  it("keeps the committed report canonical and current", { timeout: 120_000 }, () => {
     expect(runSpanishA1MockAudit(["--check"], defaultCurriculumRoot())).toBe(0);
   });
 });
@@ -89,7 +89,7 @@ describe("Spanish pre-A1 book-bounded mock audit", () => {
     expect(preA1.taughtForms).toBeLessThan(a1.taughtForms);
   });
 
-  it("keeps the committed report canonical and current", { timeout: 60_000 }, () => {
+  it("keeps the committed report canonical and current", { timeout: 120_000 }, () => {
     expect(runSpanishA1MockAudit(["--check", "--level", "pre-A1"], defaultCurriculumRoot())).toBe(0);
   });
 });
@@ -500,7 +500,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     expect(a2.taughtForms).toBeGreaterThan(a1.taughtForms);
   });
 
-  it("keeps the committed report canonical and current", { timeout: 60_000 }, () => {
+  it("keeps the committed report canonical and current", { timeout: 120_000 }, () => {
     expect(runSpanishA1MockAudit(["--check", "--level", "A2"], defaultCurriculumRoot())).toBe(0);
   });
 });

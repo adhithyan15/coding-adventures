@@ -72,7 +72,7 @@ setMatrixBackend(customBackend);  // host-installed backend for CAS/image caller
 ## Running Tests
 
 ```bash
-npx jest --verbose
+npm test
 ```
 
 ## Package Structure

@@ -66,6 +66,10 @@ describe("coverage", () => {
 });
 
 describe("corpus snapshot", () => {
+  // Both snapshot assertions read the same coverage report. Parse the real
+  // corpus and measure it once; the synthetic coverage cases keep their fixtures.
+  const { lessons, taxonomy } = loadEverything();
+  const report = verbCoverage(lessons, taxonomy);
   // The honest starting line. Every number here should go UP; none may go down.
   //
   // The baseline this shipped at was 0 of 40 in all 22 tracks: not because the tracks
@@ -90,8 +94,6 @@ describe("corpus snapshot", () => {
   // were right in isolation and wrong together; the numbers here are re-measured against
   // the merged corpus.
   it("pins the core verb baseline: eighteen tracks, and Spanish has joined", () => {
-    const { lessons, taxonomy } = loadEverything();
-    const report = verbCoverage(lessons, taxonomy);
 
     expect(report.summary.coreVerbCount).toBe(40);
 
@@ -333,8 +335,6 @@ describe("corpus snapshot", () => {
   });
 
   it("gives every track an explicit authoring list", () => {
-    const { lessons, taxonomy } = loadEverything();
-    const report = verbCoverage(lessons, taxonomy);
     for (const track of report.tracks) {
       expect(track.covered.length + track.missing.length).toBe(40);
     }

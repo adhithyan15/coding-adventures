@@ -27,7 +27,8 @@ describe("the real core/spine.d shard set", () => {
     expect(() => JSON.parse(unshardContents(root, SPINE))).not.toThrow();
   });
 
-  it("passes its own --check", () => {
+  // This live all-ledger check measured 31.9-32.7s in the full coverage run.
+  it("passes its own --check", { timeout: 60_000 }, () => {
     expect(runShardCli(["--check"])).toBe(0);
   });
 

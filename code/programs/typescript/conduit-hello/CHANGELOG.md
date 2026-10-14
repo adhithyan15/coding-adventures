@@ -1,5 +1,12 @@
 # Changelog — conduit-hello (TypeScript)
 
+## Unreleased
+
+### Fixed
+
+- Add a Windows skip stub. The tests start a real server through
+  `typescript/conduit`'s native addon, which is not built on Windows.
+
 ## [0.1.0] — 2026-04-25
 
 ### Added

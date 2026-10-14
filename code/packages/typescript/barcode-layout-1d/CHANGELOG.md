@@ -4,6 +4,8 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Update source-map-js to 1.2.2 for GHSA-68fv-2mgg-jv7q; revalidate all 76 tests and refresh the exact conformance evidence tree.
+
 - Added strict portable-v1 expansion, layout, and rectangle-scene entry points
   with dynamic coverage of all 56 language-neutral fixture cases.
 - Added stable error IDs, bounded Unicode-scalar and metadata handling,

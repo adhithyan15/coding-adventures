@@ -90,7 +90,10 @@ describe("track progress", () => {
     expect(renderTrackProgressCard(tracks[1]!)).toContain("# Alpha progress");
   });
 
-  it("keeps every per-language card in memory and the tracked directory absent", () => {
+  // These two cases intentionally invoke the live CLI, including all corpus
+  // reads. The measured calls take 80.5s and 89.6s on Windows; keep them in the
+  // test bodies with a full-corpus budget instead of sharing their execution.
+  it("keeps every per-language card in memory and the tracked directory absent", { timeout: 120_000 }, () => {
     const root = defaultCurriculumRoot();
     const outputs = REAL_OUTPUTS;
     expect(outputs.size).toBe(23);
@@ -104,7 +107,7 @@ describe("track progress", () => {
     expect(runTrackProgress(["--check"], root)).toBe(0);
   });
 
-  it("prints the registry-ordered table on demand without writing a card", () => {
+  it("prints the registry-ordered table on demand without writing a card", { timeout: 120_000 }, () => {
     const root = defaultCurriculumRoot();
     const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     expect(runTrackProgress(["--report"], root)).toBe(0);
@@ -113,6 +116,7 @@ describe("track progress", () => {
       expect.stringContaining("| [Marwadi (Marwari)]"),
     );
     expect(() => lstatSync(join(root, TRACK_PROGRESS_DIR))).toThrow(/ENOENT/);
+    stdout.mockRestore();
   });
 
   it("rejects a resurrected progress path whether it is a file or directory", () => {

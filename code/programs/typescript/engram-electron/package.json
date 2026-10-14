@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "engram-app": "file:../engram-app",
-    "electron": "^43.5.0",
+    "electron": "^43.7.9",
     "electron-builder": "^26.8.1",
     "cross-env": "^7.0.0",
     "typescript": "~5.7.0"
@@ -26,5 +26,8 @@
     "directory": "code/programs/typescript/engram-electron"
   },
   "author": "Adhithya Rajasekaran",
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "global-agent": "4.1.3"
+  }
 }
