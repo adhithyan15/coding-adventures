@@ -54,5 +54,5 @@ on their own contributions; a partner's performance cannot compensate.
 These source papers, confidential masters, keys, and rubric are not qualified
 Sanskrit recordings, independent human review, standard setting, or book-only
 validation. They make no readiness or validated-pass claim. Those artifacts
-remain separate prerequisites, and `assessment.json` remains absent until they
-exist.
+remain separate prerequisites. `assessment.json` is active as a source-artifact
+contract; its presence does not satisfy them.
