@@ -10,7 +10,8 @@ gloss: "to ride; to set up"
 concept_tag: ES-VERB-MONTAR
 prerequisites: [ES-C498-deportista, ES-C498-competir]
 sounds: []
-roots: []
+roots: [mons-latin]
+etymology_hook: "montar — probably French monter 'to climb', from spoken Latin *montare, built on mons 'mountain'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C498-competir]
 > *I ride my bike on Sundays.*
 
 *Montar a caballo* — to ride a horse. In much of Latin America people say *andar en bici*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**montar** is probably from French *monter*, "to climb", from spoken Latin *\*montare*, built on *mons*, *montis*, "a mountain" (EtymDB 2.1 has the spoken Latin verb).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

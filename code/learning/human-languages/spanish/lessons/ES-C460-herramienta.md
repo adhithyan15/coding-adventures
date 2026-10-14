@@ -11,6 +11,7 @@ concept_tag: ES-ASK-HERRAMIENTA
 prerequisites: [ES-C459-sintesis-stock, ES-C449-taladro, ES-C449-arreglar]
 sounds: [silent-h, diphthong-ie, stress-penultimate]
 roots: [ferrum-latin]
+etymology_hook: "herramienta ← Latin ferramenta 'iron things', from ferrum: f- became h-"
 duration:
   max_seconds: 275
 requires:

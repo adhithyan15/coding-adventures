@@ -10,7 +10,8 @@ gloss: "to go down, to come down; to lower"
 concept_tag: ES-VERB-BAJAR
 prerequisites: [ES-C494-despertarse, ES-C494-arreglarse]
 sounds: []
-roots: []
+roots: [bassus-latin]
+etymology_hook: "bajar — built on bajo 'low', Late Latin bassus: the -ss- became j — English base, bass"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C494-arreglarse]
 > *I go down to buy the bread.*
 
 The opposite of *subir*. *Bajar el volumen* — to turn the volume down.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bajar** is built on *bajo*, "low", from Late Latin *bassus*, "low" (EtymDB 2.1) — inherited: the *-ss-* became *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

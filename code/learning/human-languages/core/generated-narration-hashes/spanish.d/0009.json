@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 9,
-  "sourceHash": "fnv1a64:856c1a8a06676b98",
+  "sourceHash": "fnv1a64:7b830dfee8554a5b",
   "lessonIds": [
     "ES-C04-como-estas-register",
     "ES-C04-regular",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "spanish/narration/ch09.txt",
   "json": "spanish/narration/ch09.json",
-  "textHash": "fnv1a64:52ef19798d1e9e75",
-  "jsonHash": "fnv1a64:06c5f4960d3d030f",
+  "textHash": "fnv1a64:4e1c42ada66981de",
+  "jsonHash": "fnv1a64:8cf1a47d39dae29e",
   "findings": []
 }

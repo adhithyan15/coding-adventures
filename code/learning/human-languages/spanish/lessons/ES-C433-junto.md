@@ -10,7 +10,8 @@ gloss: together, next to — one short word doing two jobs, and the preposition 
 concept_tag: ES-REF-JUNTO
 prerequisites: [ES-C433-norma, ES-C302-calle]
 sounds: []
-roots: []
+roots: [iungere-latin]
+etymology_hook: "junto ← Latin iunctus 'joined', from iungere 'to join' — English junction"
 duration:
   max_seconds: 245
 requires:
@@ -41,6 +42,11 @@ people did something **together** and see whether you have the word.
 **juntos** — together. **junto a** — next to, beside.
 
 Same word, two jobs, and the little **a** is what separates them.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**junto** ← Latin *iunctus*, "joined", the participle of *iungere*, "to join" — inherited: the *-nct-* became *-nt-*.
 
 ## Grammar Lens: the a decides
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C433-EDIF-05, ES-LEX-C302-AWAY-01] -->

@@ -11,7 +11,8 @@ romanization: ""
 concept_tag: ES-TAG-QUESTION
 prerequisites: [ES-C267-pregunta-si-no]
 sounds: []
-roots: []
+roots: [veritas-latin]
+etymology_hook: "¿verdad? ← Latin veritatem 'truth', worn down to verdad — English verity"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +53,11 @@ more casual. Neither one changes for the verb, the person, or the tense.
 
 One tidy convention: after a negative sentence people prefer **¿verdad?**, since
 *¿no?* after *no* sounds like a stutter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verdad** ← Latin *veritas*, *veritatem*, "truth" — inherited: the middle vowel dropped out and *-tatem* wore down to *-dad*. Tagged onto a sentence, it asks whether the sentence is the truth.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-C267-VERDADNO-01] -->

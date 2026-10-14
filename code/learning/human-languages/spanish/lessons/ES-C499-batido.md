@@ -10,7 +10,8 @@ gloss: "the milkshake, the smoothie"
 concept_tag: ES-REF-BATIDO
 prerequisites: [ES-C498-dibujar, ES-C499-bocadillo]
 sounds: []
-roots: []
+roots: [battuere-latin]
+etymology_hook: "batido — participle of batir 'to beat', Latin battuere: a drink that has been whisked"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C499-bocadillo]
 > *I would like a strawberry milkshake.*
 
 In parts of Latin America it is *el licuado*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**batido** is the participle of *batir*, "to beat, to whisk", from Latin *battuere*, "to beat" (Lewis & Short): a drink that has been beaten.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

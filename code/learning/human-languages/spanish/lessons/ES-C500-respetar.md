@@ -10,7 +10,8 @@ gloss: "to respect"
 concept_tag: ES-VERB-RESPETAR
 prerequisites: [ES-C499-apetecer, ES-C499-compartir]
 sounds: []
-roots: []
+roots: [respicere-latin]
+etymology_hook: "respetar — from respeto, Latin respectus 'a looking back, regard' — English respect"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C499-compartir]
 > *Respect the quiet hours.*
 
 The verb behind *el respeto*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**respetar** is built on *respeto*, "respect", from Latin *respectus*, "a looking back, regard", from *respicere*, "to look back" — semi-learned: its *-ct-* was simplified to *-t-*, not turned into the *-ch-* of words worn down in speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: GREETING-AFTERNOON
 prerequisites: [ES-C01-bien, ES-C02-tarde]
 sounds: [diphthong-ue, stress-default-vowel-ns]
 roots: [bonus, tardus]
+etymology_hook: "buenas tardes — buena 'good' + tardes 'afternoons': literally 'good afternoons'"
 duration:
   max_seconds: 180
 requires:
@@ -48,6 +49,8 @@ and that difference teaches you the other half of the agreement rule.
 
 **buenas tardes** = **buena** ("good") + **tardes** ("afternoons") =
 literally "good afternoons."
+
+*Tarde* is Latin *tarde*, "late", from *tardus*, "slow".
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENAS-TARDES] -->

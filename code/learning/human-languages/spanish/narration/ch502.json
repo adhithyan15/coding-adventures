@@ -4,7 +4,7 @@
   "chapter": 502,
   "title": "Hablar con otros",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:32bec1e00e61b311",
+  "sourceHash": "fnv1a64:0d0732c7eb2ff566",
   "lessons": [
     {
       "id": "ES-C502-presentar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d5e961fba003e0c",
+      "sourceHash": "fnv1a64:1ec187ee1949ba17",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "presentar from Latin praesentare, \"to place before, to show\" (EtymDB 2.1), from praesens, \"present, at hand\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51e2cfa9ba12aba1",
+      "sourceHash": "fnv1a64:8768bca369a9a4da",
       "notice": null,
       "blocks": [
         {
@@ -187,6 +198,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mencionar is built on mención, \"a mention\", from Latin mentio, mentionem, \"a calling to mind\" (Lewis & Short), from the root of mens, \"mind\". Mención is learned: its -ti- became -ci-, not the z of speech."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -197,7 +219,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -246,7 +268,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -277,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4493983a7f45299",
+      "sourceHash": "fnv1a64:488c15ceddb714e4",
       "notice": null,
       "blocks": [
         {
@@ -318,6 +340,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "charlar from Italian ciarlare, \"to chatter\" (EtymDB 2.1), a word that probably imitates the sound of chatter."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -328,7 +361,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -377,7 +410,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -408,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aaa9f2d8b76efbef",
+      "sourceHash": "fnv1a64:c1dbf676de0bf68f",
       "notice": null,
       "blocks": [
         {
@@ -449,6 +482,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chiste comes from chistar, \"to make the slightest sound\" (EtymDB 2.1), a verb built on the whispered noise chist."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -459,7 +503,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -508,7 +552,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -539,7 +583,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97bc9b2afe2a5a6b",
+      "sourceHash": "fnv1a64:72ba13c39eba76bc",
       "notice": null,
       "blocks": [
         {
@@ -580,6 +624,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "traducir from Latin traducere, \"to lead across\" (EtymDB 2.1): trans, \"across\", and ducere, \"to lead\". A translation carries words across into another language."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -590,7 +645,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -639,7 +694,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

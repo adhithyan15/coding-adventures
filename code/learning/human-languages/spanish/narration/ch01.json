@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Hola and Buenos Días",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:46d636693b35520c",
+  "sourceHash": "fnv1a64:c4109b25da2bfe86",
   "lessons": [
     {
       "id": "ES-C01-hola",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:a935d4f58f0a4d38",
+      "sourceHash": "fnv1a64:ae2a3643a9b7a64f",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -623,7 +623,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c959c6ba3261a30f",
+      "sourceHash": "fnv1a64:8ccb65d0b721dc99",
       "notice": null,
       "blocks": [
         {
@@ -790,7 +790,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59f7bf775dcbb156",
+      "sourceHash": "fnv1a64:1c5f2b2581476757",
       "notice": null,
       "blocks": [
         {
@@ -1078,7 +1078,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d06f61a8fc5db24",
+      "sourceHash": "fnv1a64:bf320f775f25208f",
       "notice": null,
       "blocks": [
         {
@@ -1249,7 +1249,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d4f1be4805ef6f4",
+      "sourceHash": "fnv1a64:7d756d407d950a30",
       "notice": null,
       "blocks": [
         {
@@ -1311,6 +1311,10 @@
             {
               "kind": "speech",
               "text": "The shape of it — why buenos and not bueno — is a real rule, and a useful one. It is also not the rule you need in order to say hello before lunch. It comes later, once you have enough words for it to be worth explaining."
+            },
+            {
+              "kind": "speech",
+              "text": "Buenos is Latin bonus, \"good\", its stressed o opened into ue; días is the dies of the last lesson."
             }
           ]
         },

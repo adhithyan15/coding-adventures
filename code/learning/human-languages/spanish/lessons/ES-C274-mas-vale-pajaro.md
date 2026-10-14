@@ -11,6 +11,7 @@ concept_tag: PROVERB
 prerequisites: [ES-C273-lo-cual]
 sounds: [vowel-a, vowel-e]
 roots: [valere]
+etymology_hook: "vale ← Latin valere 'to be worth' — English value, valid; mano is Latin manus"
 duration:
   max_seconds: 240
 requires:

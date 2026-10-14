@@ -4,7 +4,7 @@
   "chapter": 495,
   "title": "Las noticias",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d0a4c8960716ab71",
+  "sourceHash": "fnv1a64:6cadd043954543c4",
   "lessons": [
     {
       "id": "ES-C495-noticia",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e483284573b1a53",
+      "sourceHash": "fnv1a64:3a772c3925d0d63f",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "noticia from Latin notitia, \"a being known, knowledge\" (EtymDB 2.1), from notus, \"known\" — a learned word: the -ti- became -ci-."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20c67fb47e48cbc9",
+      "sourceHash": "fnv1a64:32c97a5295c64deb",
       "notice": null,
       "blocks": [
         {
@@ -191,6 +202,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ocurrir from Latin occurrere, \"to run to meet\" (EtymDB 2.1): ob-, \"towards\", and currere, \"to run\" — a learned word. What happens is what runs into you."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -201,7 +223,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -250,7 +272,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -281,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b54dbb144233eafa",
+      "sourceHash": "fnv1a64:5d33378160b8d687",
       "notice": null,
       "blocks": [
         {
@@ -322,6 +344,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "suceder from Latin succedere, \"to come after, to follow\" (Lewis & Short): sub- and cedere, \"to go\". What follows on is what happens."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -332,7 +365,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -381,7 +414,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -412,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69c7bb8c97a1755c",
+      "sourceHash": "fnv1a64:f8ecba806ec9278d",
       "notice": null,
       "blocks": [
         {
@@ -453,6 +486,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "desaparecer is des-, which undoes, and aparecer, \"to appear\", built on Latin apparere, \"to come into view\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -463,7 +507,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -512,7 +556,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -543,7 +587,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df30f2894edb6b54",
+      "sourceHash": "fnv1a64:efda08b6a03308dd",
       "notice": null,
       "blocks": [
         {
@@ -584,6 +628,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ladrón from Latin latro, latronem, \"a hired soldier; a robber\" (EtymDB 2.1) — inherited: the -t- became -d-."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -594,7 +649,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -643,7 +698,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

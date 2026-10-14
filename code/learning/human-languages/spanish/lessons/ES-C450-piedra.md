@@ -11,6 +11,7 @@ concept_tag: ES-GROUND-PIEDRA
 prerequisites: [ES-C450-hierba, ES-C444-madera, ES-C448-duro]
 sounds: [diphthong-ie, d-soft, stress-penultimate]
 roots: [petra-latin]
+etymology_hook: "piedra ← Latin petra, from Greek petra 'rock' — kin to Pedro; English petrol"
 duration:
   max_seconds: 275
 requires:

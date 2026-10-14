@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Me and Te --- The Two People Talking",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:1a76f6ea87ef27d5",
+  "sourceHash": "fnv1a64:245bd86b5ff96c39",
   "lessons": [
     {
       "id": "ES-C42-me-objeto",
@@ -214,7 +214,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6b1307bbcf4d3af",
+      "sourceHash": "fnv1a64:d324acc6992c4384",
       "notice": null,
       "blocks": [
         {
@@ -271,6 +271,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "te is Latin te, \"you\", the form for the one an action lands on, unchanged; the next lesson follows it further. Quiero is querer, Latin quaerere, \"to seek\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -365,7 +376,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

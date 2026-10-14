@@ -4,7 +4,7 @@
   "chapter": 490,
   "title": "Buscar trabajo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a08692fb313544dc",
+  "sourceHash": "fnv1a64:3ed974bca58592e4",
   "lessons": [
     {
       "id": "ES-C490-empleo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c42ffd83f902bec",
+      "sourceHash": "fnv1a64:75ad72321cac2a41",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "empleo is the noun of emplear, \"to use, to employ\", taken from French employer, which goes back to Latin implicare, \"to fold in, to involve\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d938e9884b8f5be3",
+      "sourceHash": "fnv1a64:e9f599c733210dc9",
       "notice": null,
       "blocks": [
         {
@@ -187,6 +198,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sueldo from Late Latin soldus (EtymDB 2.1), from solidus, \"solid\" — a solid gold coin — inherited: the o opened into ue. English soldier names one who served for that pay."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -197,7 +219,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -246,7 +268,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -277,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b67f5c250ca1153",
+      "sourceHash": "fnv1a64:f87e3cc7132ee424",
       "notice": null,
       "blocks": [
         {
@@ -318,6 +340,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "entrevista is built from entre, \"between\", and vista, \"a sight, a view\", like French entrevue: two people seeing each other."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -328,7 +361,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -377,7 +410,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -408,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cfe4ee68e97f2e8",
+      "sourceHash": "fnv1a64:6e24f944a3d53781",
       "notice": null,
       "blocks": [
         {
@@ -449,6 +482,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huelga is the noun of holgar, \"to rest, to be idle\" (EtymDB 2.1), from Late Latin follicare, \"to puff, to pant\", built on follis, \"bellows\" — inherited: f- became h- and the stressed o opened into ue. A strike is a stopping of work."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -459,7 +503,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -508,7 +552,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -539,7 +583,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b46b0bb7b59eb132",
+      "sourceHash": "fnv1a64:e5c314f79ca6d45c",
       "notice": null,
       "blocks": [
         {
@@ -580,6 +624,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "negocio from Latin negotium, \"business\" (EtymDB 2.1), from nec, \"not\", and otium, \"leisure\" — a learned word. Business was the absence of leisure; ocio, \"leisure\", is still Spanish."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -590,7 +645,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -639,7 +694,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-TORCERSE
 prerequisites: [ES-C438-natacion, ES-C314-pie, ES-C293-tobillo, ES-C36-dormir]
 sounds: [diphthong-ue, soft-c]
 roots: [torquere-latin]
+etymology_hook: "torcer ← Latin torquere 'to twist' — English torque, torture"
 duration:
   max_seconds: 270
 requires:

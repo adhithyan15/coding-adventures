@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ARREGLAR
 prerequisites: [ES-C448-sintesis-mudanza, ES-C396-reparar, ES-C04-regular]
 sounds: [rolled-rr, stress-final]
 roots: [regula-latin]
+etymology_hook: "arreglar — a- + regla 'rule', Latin regula 'a straight edge' — English regulate"
 duration:
   max_seconds: 275
 requires:

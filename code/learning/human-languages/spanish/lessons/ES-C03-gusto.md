@@ -11,6 +11,7 @@ concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [ES-C03-mucho, ES-C03-como-se-llama]
 sounds: [vowel-o, stress-default-vowel-ns]
 roots: [gustus, multus]
+etymology_hook: "gusto ← Latin gustus 'a taste' — English gusto, disgust; mucho gusto is 'much pleasure'"
 duration:
   max_seconds: 180
 requires:
@@ -45,7 +46,7 @@ reviews_of: [ES-C03-como-se-llama, ES-C03-mucho]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **el gusto** (masculine) — "taste; pleasure, liking." Root: Latin **gustus**
-("a tasting, a taste"). The English cousins:
+("a tasting, a taste"). The English relatives:
 
 - **gust**atory — to do with the sense of taste.
 - dis**gust** — *dis-* ("not, opposite") + *gust*: literally "**dis**taste."
@@ -77,5 +78,5 @@ The phrase works by itself, so this first exchange needs no extra reply formula.
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-MUCHO, ES-LEX-GUSTO, ES-LEX-MUCHO-GUSTO, ES-LEX-COMO-SE-LLAMA] -->
 
 [PAUSE 3s] What does *mucho gusto* literally mean? ("Much pleasure.") Is *el
-gusto* masculine or feminine? (Masculine.) And the English cousin of *gusto*
+gusto* masculine or feminine? (Masculine.) And the English relative of *gusto*
 built from *dis-*? (*Disgust* — "distaste.")

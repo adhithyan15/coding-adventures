@@ -10,7 +10,8 @@ gloss: "to inherit"
 concept_tag: ES-VERB-HEREDAR
 prerequisites: [ES-C497-nacer, ES-C497-fallecer]
 sounds: []
-roots: []
+roots: [heres-latin]
+etymology_hook: "heredar ← Late Latin hereditare 'to inherit', from heres 'an heir' — English heredity"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C497-fallecer]
 > Heredó la casa de su tía.
 >
 > *She inherited the house from her aunt.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**heredar** ← Late Latin *hereditare*, "to inherit" (EtymDB 2.1), from *heres*, *heredis*, "an heir" — inherited, and shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

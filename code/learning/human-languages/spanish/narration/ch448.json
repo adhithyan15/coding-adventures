@@ -4,7 +4,7 @@
   "chapter": 448,
   "title": "La mudanza",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:4567ddc048c80983",
+  "sourceHash": "fnv1a64:4627ef893c6362a8",
   "lessons": [
     {
       "id": "ES-C448-mudarse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6d7b6f8dfa4be7e",
+      "sourceHash": "fnv1a64:10baeca3baf52981",
       "notice": null,
       "blocks": [
         {
@@ -97,7 +97,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin mutare, to change. It is a wide family and you can hear it in English: a mutation is a change, to mute a sound is to alter it, and a bird in moult is changing its feathers — the same picture as the snake."
+              "text": "Latin mutare, to change. It is a wide family and you can hear it in English: a mutation is a change, and a bird in moult is changing its feathers — the same picture as the snake."
             },
             {
               "kind": "speech",
@@ -177,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:369f5c94596093b1",
+      "sourceHash": "fnv1a64:ada7b6a0999233bb",
       "notice": null,
       "blocks": [
         {
@@ -337,7 +337,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fea78c5365a77d07",
+      "sourceHash": "fnv1a64:1fa011b6a5f11918",
       "notice": null,
       "blocks": [
         {
@@ -499,7 +499,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29513979780be2fc",
+      "sourceHash": "fnv1a64:b701ab956a4ff130",
       "notice": null,
       "blocks": [
         {
@@ -673,7 +673,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:666002500302b35f",
+      "sourceHash": "fnv1a64:e4b467fd7fcce1f1",
       "notice": null,
       "blocks": [
         {

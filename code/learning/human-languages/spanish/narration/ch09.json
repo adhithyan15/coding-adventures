@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Answering, and Handing It Back",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:856c1a8a06676b98",
+  "sourceHash": "fnv1a64:7b830dfee8554a5b",
   "lessons": [
     {
       "id": "ES-C04-como-estas-register",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8508297735e4090",
+      "sourceHash": "fnv1a64:f390aa612ddb0121",
       "notice": null,
       "blocks": [
         {
@@ -65,6 +65,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cómo estás is two words you have taken apart: cómo is Latin quo modo, \"in what manner\", and estás is Latin stas, \"you stand\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -113,7 +124,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

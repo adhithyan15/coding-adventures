@@ -11,6 +11,7 @@ concept_tag: ES-VERB-PRACTICAR
 prerequisites: [ES-C475-jardinero, ES-C476-alumno]
 sounds: []
 roots: []
+etymology_hook: "practicar — from práctica, Late Latin practicus, Greek praktikos 'fit for doing' — English practise"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C476-alumno]
 > *I practise Spanish every day.*
 
 *Practicar un deporte* — to play a sport regularly.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**practicar** is built from *práctica*, "practice", from Late Latin *practicus*, "active", taken from Greek *praktikos*, "fit for doing", built on *prassein*, "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

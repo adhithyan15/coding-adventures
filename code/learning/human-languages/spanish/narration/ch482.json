@@ -4,7 +4,7 @@
   "chapter": 482,
   "title": "Cómo son las cosas",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:be3264999c39d706",
+  "sourceHash": "fnv1a64:6ac965cbe9175612",
   "lessons": [
     {
       "id": "ES-C482-concreto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35cd164d4e4763a0",
+      "sourceHash": "fnv1a64:1497ba00e9befca7",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "concreto from Latin concretus, \"grown together, hardened\" (EtymDB 2.1), the participle of concrescere: con- and crescere, \"to grow\" — a learned word. Something concrete has set solid."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93f0f057f3c0cd1d",
+      "sourceHash": "fnv1a64:c35a8afa5d41ed6c",
       "notice": null,
       "blocks": [
         {
@@ -191,6 +202,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "parecido is the participle of parecer, \"to seem, to look like\", from spoken Latin parescere, built on parere, \"to appear\" (Lewis & Short). Things that are parecidos look like each other."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -201,7 +223,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -250,7 +272,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -281,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a69d9cd7ec66fd1",
+      "sourceHash": "fnv1a64:c13e8c016432a492",
       "notice": null,
       "blocks": [
         {
@@ -322,6 +344,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "justo from Latin iustus, \"upright, righteous\" (Lewis & Short), from ius, \"right, law\". \"Exactly\" and \"tight\" grew out of \"fitting, right\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -332,7 +365,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -381,7 +414,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -412,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1d396ccf6f90542",
+      "sourceHash": "fnv1a64:02f50b69803828d5",
       "notice": null,
       "blocks": [
         {
@@ -453,6 +486,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rápido from Latin rapidus, \"snatching, swift\" (EtymDB 2.1), from rapere, \"to snatch\" — a learned borrowing: the stress stays on the first syllable and the -p- is kept."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -463,7 +507,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -512,7 +556,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -543,7 +587,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb37b603825690dc",
+      "sourceHash": "fnv1a64:2cad27c668ad92b6",
       "notice": null,
       "blocks": [
         {
@@ -580,6 +624,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "variedad from Latin varietas, \"difference, variety\" (EtymDB 2.1), from varius, \"different\"; its ending is the -dad of ciudad, \"city\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -590,7 +645,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -639,7 +694,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

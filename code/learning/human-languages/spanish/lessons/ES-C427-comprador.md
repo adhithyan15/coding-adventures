@@ -11,6 +11,7 @@ concept_tag: ES-THING-COMPRADOR
 prerequisites: [ES-C427-vendedor, ES-C40-comprar]
 sounds: [pr-cluster, r-tap, stress-final]
 roots: []
+etymology_hook: "comprador — comprar 'to buy' + -dor: the buyer, built like vendedor"
 duration:
   max_seconds: 240
 requires:
@@ -47,6 +48,9 @@ teaching the pair together: one ending buys both halves of a transaction.
 |---|---|---|
 | sells | vender | el vendedor |
 | buys | comprar | el comprador |
+
+*Comprar* is Latin *comparare*, "to procure", worn down in speech; *vender* is
+Latin *vendere*, "to sell".
 
 ## Grammar Lens: the pair that names an economy
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C427-AGENT-02, ES-LEX-C427-AGENT-01] -->

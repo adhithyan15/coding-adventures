@@ -11,6 +11,7 @@ concept_tag: IMPLICATURE
 prerequisites: [ES-C271-supongo-que]
 sounds: [vowel-e, vowel-o]
 roots: [esse]
+etymology_hook: "es que — es is Latin est 'is'; que goes back to Latin quid 'what'"
 duration:
   max_seconds: 240
 requires:
@@ -57,6 +58,8 @@ mañana trabajo.* Nothing in that sentence is a refusal. Every listener hears on
 The words supply a reason; the **refusal is left for you to work out**. That gap
 between what is said and what is meant has a name in linguistics — an
 **implicature** — and Spanish leans on it harder than English does.
+
+*Es* is Latin *est*, "is"; *que* goes back to Latin *quid*, "what".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[ES-SEMANTIC-IMPLICATURE]; assesses=[] -->

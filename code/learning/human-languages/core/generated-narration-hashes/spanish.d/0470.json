@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 470,
-  "sourceHash": "fnv1a64:b07c843f813a4924",
+  "sourceHash": "fnv1a64:3dda4b90445c3592",
   "lessonIds": [
     "ES-C470-paraguas",
     "ES-C470-mango",
@@ -15,6 +15,6 @@
   "text": "spanish/narration/ch470.txt",
   "json": "spanish/narration/ch470.json",
   "textHash": "fnv1a64:ded50318e30040bd",
-  "jsonHash": "fnv1a64:35d3f3c98f2fc4fa",
+  "jsonHash": "fnv1a64:ba412e2b81d17097",
   "findings": []
 }

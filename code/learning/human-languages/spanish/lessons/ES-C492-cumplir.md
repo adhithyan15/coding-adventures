@@ -10,7 +10,8 @@ gloss: "to keep (a promise); to turn (an age)"
 concept_tag: ES-VERB-CUMPLIR
 prerequisites: [ES-C492-evitar, ES-C492-elegir]
 sounds: []
-roots: []
+roots: [complere-latin]
+etymology_hook: "cumplir ← Latin complere 'to fill up, to complete' — English complete, comply"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C492-elegir]
 > *She always keeps her promises.*
 
 *Cumplir años* — to have a birthday.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cumplir** ← Latin *complere*, "to fill up, to complete" (EtymDB 2.1) — inherited: the *o* became *u*. To keep a promise is to fill it; to turn an age is to complete it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

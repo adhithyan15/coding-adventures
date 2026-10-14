@@ -4,7 +4,7 @@
   "chapter": 486,
   "title": "En la consulta",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b0f29d5cf0daaae1",
+  "sourceHash": "fnv1a64:8e4b4c4256cc8c38",
   "lessons": [
     {
       "id": "ES-C486-afeitarse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8360b0bb5f0ddfe0",
+      "sourceHash": "fnv1a64:d9a34a452500904c",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "afeitar from Latin affectare, \"to strive after\" (Lewis & Short). In Spanish it first meant \"to adorn, to make up\", and only later \"to shave\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a7715705774700b",
+      "sourceHash": "fnv1a64:62190775d6b8ab82",
       "notice": null,
       "blocks": [
         {
@@ -191,6 +202,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "toser from Latin tussire, \"to cough\" (EtymDB 2.1) — inherited: the u became o. La tos, \"the cough\", is Latin tussis."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -201,7 +223,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -250,7 +272,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -281,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ada6cea30023a49",
+      "sourceHash": "fnv1a64:1d7b914efb1bc78f",
       "notice": null,
       "blocks": [
         {
@@ -318,6 +340,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "respirar from Latin respirare, \"to breathe out, to breathe again\" (EtymDB 2.1): re- and spirare, \"to breathe\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -328,7 +361,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -377,7 +410,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -408,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:047e792c00b80754",
+      "sourceHash": "fnv1a64:65796e18a5ba1ecf",
       "notice": null,
       "blocks": [
         {
@@ -445,6 +478,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aspirina from German Aspirin, a brand name coined by the Bayer company in 1899: a- for acetyl, -spir- for Spiraea, the meadowsweet plant, and the chemists' ending -in."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -455,7 +499,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -504,7 +548,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -535,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6aa4c281da0ef140",
+      "sourceHash": "fnv1a64:f45c056681a5de32",
       "notice": null,
       "blocks": [
         {
@@ -576,6 +620,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vacuna is built on vacuno, \"of cattle\" (EtymDB 2.1), from Latin vacca, \"cow\": the first vaccine, in 1796, was made from cowpox."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -586,7 +641,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -635,7 +690,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

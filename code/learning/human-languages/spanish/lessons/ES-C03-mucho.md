@@ -11,6 +11,7 @@ concept_tag: ES-WORD-MUCHO
 prerequisites: [ES-C02-noche]
 sounds: [soft-c, vowel-o]
 roots: [multus]
+etymology_hook: "mucho ← Latin multum 'much': -lt- became -ch- — English multiple, multitude"
 duration:
   max_seconds: 180
 requires:
@@ -45,7 +46,7 @@ lot" — and it hides the same Latin-to-Spanish sound trick you spotted in
 <!-- hl-knowledge: introduces=[ES-LEX-MUCHO]; assesses=[] -->
 
 **mucho** — "much, a lot." Root: Latin **multus** ("much, many"). The English
-cousins keep the original *-lt-*:
+borrowings keep the original *-lt-*:
 
 - **mult**iple, **mult**itude, **mult**iply, **mult**i-purpose, **mult**imedia.
 
@@ -53,7 +54,7 @@ cousins keep the original *-lt-*:
 **-lt-** softened into Spanish **-ch-** — the very same move as *noctem →
 noche* (*-ct- → -ch-*, as in the *noche* lesson). Spanish has a habit of melting these
 consonant clusters into *ch*. So a Spanish *-ch-* word very often points back
-to a Latin *-ct-* or *-lt-* root — and the English cousin usually preserves
+to a Latin *-ct-* or *-lt-* root — and the English borrowing usually preserves
 it (*noct*urnal, *mult*iple).
 
 ## Guided Practice

@@ -4,7 +4,7 @@
   "chapter": 437,
   "title": "Decidir, Coincidir, Equivocarse",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:d3f73ec5deeaea73",
+  "sourceHash": "fnv1a64:474c1c861f0d61fa",
   "lessons": [
     {
       "id": "ES-C437-decidir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da35e4a5e3f4e625",
+      "sourceHash": "fnv1a64:4dda8a98fe01ff29",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b88211d99e37bec5",
+      "sourceHash": "fnv1a64:065aa60d91987d65",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "co- together, plus the same -incidir family as decidir — things falling together."
+              "text": "co- together, plus incidir, \"to fall upon\", from Latin cadere, \"to fall\" — things falling together. It only looks like decidir, whose root is caedere, \"to cut\"."
             },
             {
               "kind": "speech",
@@ -299,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a91dff1319d94e8",
+      "sourceHash": "fnv1a64:85fa7e66bfc3c995",
       "notice": null,
       "blocks": [
         {
@@ -447,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87aa2d09e7bccf41",
+      "sourceHash": "fnv1a64:2039d0826a8bd62c",
       "notice": null,
       "blocks": [
         {
@@ -484,6 +484,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tardar from Latin tardare, \"to slow down, to delay\" (Lewis & Short), from tardus, \"slow\" — the tardus behind la tarde. El retraso is another family, built on tras, \"behind\", Latin trans."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the delay and the duration",
           "segments": [
@@ -507,15 +518,11 @@
             {
               "kind": "speech",
               "text": "A journey that tarda two hours is not late — two hours is what the journey costs. A train with retraso has broken a promise. English blurs both into late and takes, and a reader who maps one to one will misread a station announcement."
-            },
-            {
-              "kind": "speech",
-              "text": "Both come from tardus, slow, so the shared root is real and the split is recent."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -555,7 +562,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -586,7 +593,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6062c840ba8c3f0",
+      "sourceHash": "fnv1a64:f90f5eec1ad044d4",
       "notice": null,
       "blocks": [
         {
@@ -651,6 +658,10 @@
             {
               "kind": "speech",
               "text": "So the three verbs are a set, and comer belongs to it as well as to the general sense."
+            },
+            {
+              "kind": "speech",
+              "text": "Cenar is Latin cenare, from cena, the main meal of the Roman day (Lewis & Short)."
             }
           ]
         },

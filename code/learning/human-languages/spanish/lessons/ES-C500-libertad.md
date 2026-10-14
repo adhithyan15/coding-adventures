@@ -10,7 +10,8 @@ gloss: "freedom, liberty"
 concept_tag: ES-REF-LIBERTAD
 prerequisites: [ES-C500-prohibir, ES-C500-ley]
 sounds: []
-roots: []
+roots: [liber-free-latin]
+etymology_hook: "libertad ← Latin libertas 'freedom', from liber 'free' — not liber 'book' — English liberty"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C500-ley]
 > Los niños necesitan libertad para jugar.
 >
 > *Children need freedom to play.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**libertad** ← Latin *libertas*, *libertatem*, "freedom" (Lewis & Short), from *liber*, "free" — not the *liber*, "book", behind *libro*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

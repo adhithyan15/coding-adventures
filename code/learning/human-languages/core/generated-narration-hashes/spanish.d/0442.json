@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 442,
-  "sourceHash": "fnv1a64:30ba771dc8b69229",
+  "sourceHash": "fnv1a64:951ca07d4ee4f88a",
   "lessonIds": [
     "ES-C442-administracion",
     "ES-C442-envio",
@@ -16,6 +16,6 @@
   "text": "spanish/narration/ch442.txt",
   "json": "spanish/narration/ch442.json",
   "textHash": "fnv1a64:8c98863c0aff7973",
-  "jsonHash": "fnv1a64:ebe2a59097888a84",
+  "jsonHash": "fnv1a64:9e863a583b190418",
   "findings": []
 }

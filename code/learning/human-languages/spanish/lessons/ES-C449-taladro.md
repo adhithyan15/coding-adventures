@@ -11,6 +11,7 @@ concept_tag: ES-FIX-TALADRO
 prerequisites: [ES-C449-rueda, ES-C24-mano, ES-C444-madera]
 sounds: [l-clear, d-soft, stress-penultimate]
 roots: [taratrum-latin]
+etymology_hook: "taladro ← Latin taratrum 'a borer', from Gaulish: one r became l"
 duration:
   max_seconds: 270
 requires:

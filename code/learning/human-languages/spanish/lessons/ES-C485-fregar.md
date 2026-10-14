@@ -10,7 +10,8 @@ gloss: "to wash up; to mop"
 concept_tag: ES-VERB-FREGAR
 prerequisites: [ES-C484-ahorrar, ES-C485-barrer]
 sounds: []
-roots: []
+roots: [fricare-latin]
+etymology_hook: "fregar ← Latin fricare 'to rub': -c- became -g- — English friction"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C485-barrer]
 > *I wash the dishes and you dry them.*
 
 The e breaks into ie under stress: *friego*, *friegas*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fregar** ← Latin *fricare*, "to rub" (EtymDB 2.1) — inherited: the *-c-* between vowels became *-g-* and the *i* became *e*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

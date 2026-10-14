@@ -10,7 +10,8 @@ gloss: "the offer, the special offer"
 concept_tag: ES-REF-OFERTA
 prerequisites: [ES-C490-negocio, ES-C491-recibo]
 sounds: []
-roots: []
+roots: [offerre-latin]
+etymology_hook: "oferta — from Latin offerre 'to bring before': ob- + ferre 'to carry' — kin to ofrecer"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C491-recibo]
 > *The oranges are on special offer.*
 
 *De oferta* — on offer.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oferta** goes back to Latin *offerre*, "to bring before, to offer" (Lewis & Short): *ob-*, "towards", and *ferre*, "to carry" — the verb behind *ofrecer*, "to offer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

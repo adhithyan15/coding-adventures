@@ -10,7 +10,8 @@ gloss: "to choose"
 concept_tag: ES-VERB-ELEGIR
 prerequisites: [ES-C492-lograr, ES-C492-evitar]
 sounds: []
-roots: []
+roots: [legere-latin]
+etymology_hook: "elegir ← Latin eligere 'to pick out': e- + legere 'to gather' — English elect, elegant"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C492-evitar]
 > *You can choose between two menus.*
 
 The e breaks into i and the g becomes j: *elijo*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**elegir** ← Latin *eligere*, "to pick out" (EtymDB 2.1): *e-*, "out", and *legere*, "to gather, to choose" — the *legere* inside *inteligente*, "intelligent". A learned word: speech lost the *-g-*, as *legere* became *leer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

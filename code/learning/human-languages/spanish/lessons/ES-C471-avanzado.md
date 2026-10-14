@@ -11,6 +11,7 @@ concept_tag: ES-ASK-AVANZADO
 prerequisites: [ES-C471-nivel, ES-C417-curso, ES-C323-antes]
 sounds: [v-b, nasal-n, stress-penultimate]
 roots: [ante-latin]
+etymology_hook: "avanzado — avanzar ← Latin ab ante 'from in front' — kin to antes; English advance"
 duration:
   max_seconds: 275
 requires:
@@ -69,7 +70,7 @@ distinction is the whole reason the woman in the recording changed groups.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C471-CURSO-03, ES-LEX-C323-WHEN-18] -->
 
-**Avanzar** is Latin **ab ante** — *from in front* — which became *abantiare*
+**Avanzar** is Latin **ab ante** — *from in front* — which became spoken Latin *\*abantiare*
 and then the Spanish verb. The *ante* in it is the same *ante* you already
 hold in **antes**.
 

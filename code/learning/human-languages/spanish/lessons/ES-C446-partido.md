@@ -11,6 +11,7 @@ concept_tag: ES-THING-PARTIDO
 prerequisites: [ES-C446-directo, ES-C345-parte, ES-C39-jugar, ES-C412-deporte]
 sounds: [d-soft, stress-penultimate]
 roots: [partem-latin]
+etymology_hook: "partido — participle of partir 'to divide', from parte: a side split off"
 duration:
   max_seconds: 280
 requires:

@@ -10,7 +10,8 @@ gloss: "to try"
 concept_tag: ES-VERB-INTENTAR
 prerequisites: [ES-C491-cartera, ES-C491-propina]
 sounds: []
-roots: []
+roots: [tendere-latin]
+etymology_hook: "intentar ← Latin intentare 'to stretch towards', built on tendere 'to stretch' — English intent"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C491-propina]
 > *I try to arrive on time.*
 
 Followed by an infinitive, with no preposition.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**intentar** ← Latin *intentare*, "to stretch out towards" (EtymDB 2.1), built on *tendere*, "to stretch" — a learned word. To try is to reach for something.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

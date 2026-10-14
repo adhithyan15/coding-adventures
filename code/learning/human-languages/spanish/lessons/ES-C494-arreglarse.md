@@ -10,7 +10,8 @@ gloss: "to get ready, to get dressed up"
 concept_tag: ES-VERB-ARREGLARSE
 prerequisites: [ES-C493-duda, ES-C494-despertarse]
 sounds: []
-roots: []
+roots: [regula-latin]
+etymology_hook: "arreglarse — arreglar, built on regla 'rule', Latin regula 'a straight edge': to set yourself right"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C494-despertarse]
 > *She gets ready to go to the wedding.*
 
 Without *se*, *arreglar* is to fix.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arreglarse** is *arreglar*, "to fix", turned on yourself: *a-*, *regla*, "a rule, a ruler", and *-ar*, to set a thing by the rule. *Regla* is Latin *regula*, "a straight edge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

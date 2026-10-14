@@ -11,6 +11,7 @@ concept_tag: ES-VERB-PRESTAR
 prerequisites: [ES-C436-ofrecer, ES-C431-devolver]
 sounds: []
 roots: [praestare-latin]
+etymology_hook: "prestar ← Latin praestare 'to stand in front; to supply': prae- + stare 'to stand'"
 duration:
   max_seconds: 250
 requires:
@@ -42,6 +43,11 @@ charger back. Say how it reached you in the first place.
 
 *Te presto el cargador* — I lend you the charger. And then, later, *te lo
 devuelvo*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prestar** ← Latin *praestare*, "to stand in front; to supply" (Lewis & Short): *prae-*, "in front", and *stare*, "to stand". To lend is to put a thing forward for someone.
 
 ## Grammar Lens: which way is it moving
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C436-GENTE-04, ES-LEX-C431-PEDIDO-02] -->

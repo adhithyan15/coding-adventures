@@ -10,7 +10,8 @@ gloss: "friendship"
 concept_tag: ES-REF-AMISTAD
 prerequisites: [ES-C497-heredar, ES-C497-cuidar]
 sounds: []
-roots: []
+roots: [amicus-latin]
+etymology_hook: "amistad ← spoken Latin *amicitatem, built on amicus 'friend' — English amity, amicable"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C497-cuidar]
 > Nuestra amistad empezó en el colegio.
 >
 > *Our friendship began at school.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amistad** ← Old Spanish *amiztad* (EtymDB 2.1), from spoken Latin *\*amicitatem*, built on *amicus*, "friend" — inherited: the ending became *-dad*, as in *ciudad*, "city".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

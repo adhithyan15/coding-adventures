@@ -11,6 +11,7 @@ concept_tag: TIME-DAY
 prerequisites: [ES-C01-genero-gramatical]
 sounds: [accent-i, vowel-a, d-soft]
 roots: [dies]
+etymology_hook: "día ← Latin dies 'day' — English diary, diurnal, and via French journal, journey"
 duration:
   max_seconds: 240
 requires:

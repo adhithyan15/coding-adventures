@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 484,
-  "sourceHash": "fnv1a64:3d63bf7eea37d692",
+  "sourceHash": "fnv1a64:0d7584b47f3b1945",
   "lessonIds": [
     "ES-C484-utilizar",
     "ES-C484-aprovechar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "spanish/narration/ch484.txt",
   "json": "spanish/narration/ch484.json",
-  "textHash": "fnv1a64:46673d23f394d2a4",
-  "jsonHash": "fnv1a64:e7783ce5ced76f4f",
+  "textHash": "fnv1a64:25dbf5a5f2b0fe44",
+  "jsonHash": "fnv1a64:da7a0601ffd23969",
   "findings": []
 }

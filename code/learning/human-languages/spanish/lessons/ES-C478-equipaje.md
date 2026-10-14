@@ -11,6 +11,7 @@ concept_tag: ES-REF-EQUIPAJE
 prerequisites: [ES-C477-ganar, ES-C477-trescientos]
 sounds: []
 roots: []
+etymology_hook: "equipaje ← French équipage 'a ship's crew and gear', from équiper 'to fit out a ship' — English equip"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C477-trescientos]
 > *Hand luggage cannot weigh more than ten kilos.*
 
 It is singular, like English luggage: *mi equipaje*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**equipaje** ← French *équipage*, "a ship's crew and gear" (EtymDB 2.1), from *équiper*, "to fit out a ship", a word of Germanic origin related to English *ship*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

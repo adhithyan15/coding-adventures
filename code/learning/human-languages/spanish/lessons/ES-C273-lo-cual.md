@@ -11,6 +11,7 @@ concept_tag: REFERENCE-ANAPHORA
 prerequisites: [ES-C273-por-lo-tanto]
 sounds: [vowel-a, vowel-o]
 roots: [qualis]
+etymology_hook: "cual ← Latin qualis 'of what kind' — English quality"
 duration:
   max_seconds: 240
 requires:
@@ -50,8 +51,7 @@ reviews_of: [ES-C273-por-lo-tanto]
 
 **lo cual** — "which", where the *which* points at an entire preceding clause.
 
-*Cual* is Latin **qualis**, "of what kind" — English **quality** and the *-al* of
-**equal**. The neuter *lo* in front is what widens its target: not a noun, but
+*Cual* is Latin **qualis**, "of what kind" — English **quality**. The neuter *lo* in front is what widens its target: not a noun, but
 everything just said.
 
 *Llegó tarde, lo cual me sorprendió.* — "He arrived late, **which** surprised

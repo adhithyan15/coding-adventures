@@ -10,7 +10,8 @@ gloss: "hope"
 concept_tag: ES-REF-ESPERANZA
 prerequisites: [ES-C509-desear, ES-C509-meta]
 sounds: []
-roots: []
+roots: [sperare-latin]
+etymology_hook: "esperanza — esperar 'to hope' + -anza; esperar is Latin sperare 'to hope' — English despair"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C509-meta]
 > Todavía hay esperanza.
 >
 > *There is still hope.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**esperanza** is *esperar*, "to hope, to wait", with *-anza*. *Esperar* is Latin *sperare*, "to hope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

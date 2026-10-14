@@ -9,8 +9,8 @@ headword: hasta aquí / hasta la noche
 gloss: hasta points to an endpoint in space or time
 prerequisites: [ES-C05-hasta]
 sounds: [silent-h, vowel-a]
-roots: [hatta-arabic]
-etymology_hook: "hasta marks a spatial or temporal limit; the endpoint may be a place such as aquí or a known time word such as la noche"
+roots: [hatta-arabic, hic-latin]
+etymology_hook: "aquí ← Latin eccum hic 'see, here'; hasta came from Arabic ḥattā 'until'"
 duration:
   max_seconds: 240
 requires:
@@ -48,6 +48,11 @@ For a time endpoint, reuse **la noche**, “the night,” which you already have
 
 The same preposition points to a place or the end of a stretch of time.
 The next lessons will place new time words after it one at a time.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aquí** goes back to Latin *eccum hic*, "see — here": a pointing word glued to *hic*, "here". *Hasta* came from Arabic *ḥattā*, "until".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-AQUI, ES-LEX-NOCHE, ES-GRAMMAR-HASTA-ENDPOINT] -->

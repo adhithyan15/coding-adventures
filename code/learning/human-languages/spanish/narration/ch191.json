@@ -4,7 +4,7 @@
   "chapter": 191,
   "title": "Hay --- There Is, There Are, Same Word",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6cb9534c05e94023",
+  "sourceHash": "fnv1a64:ebd44fc96e270567",
   "lessons": [
     {
       "id": "ES-C54-hay",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c053399fbd30987b",
+      "sourceHash": "fnv1a64:8c6ab56da30f4509",
       "notice": null,
       "blocks": [
         {
@@ -79,6 +79,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hay is two words fused: ha, from haber, Latin habere, \"to have\", and an old y, \"there\", from Latin ibi, \"there\". French il y a is built the same way."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -161,7 +172,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

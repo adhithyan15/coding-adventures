@@ -10,7 +10,8 @@ gloss: "the effort"
 concept_tag: ES-REF-ESFUERZO
 prerequisites: [ES-C503-adelgazar, ES-C503-aguantar]
 sounds: []
-roots: []
+roots: [fortis-latin]
+etymology_hook: "esfuerzo — from esforzarse 'to strive', built on fuerza 'strength', Latin fortis 'strong'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C503-aguantar]
 > *With effort, everything is possible.*
 
 *Hacer un esfuerzo* — to make an effort.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**esfuerzo** is the noun of *esforzarse*, "to strive", built on *fuerza*, "strength", from Late Latin *fortia*, from *fortis*, "strong".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

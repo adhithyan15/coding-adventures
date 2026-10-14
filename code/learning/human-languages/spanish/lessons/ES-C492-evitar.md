@@ -10,7 +10,8 @@ gloss: "to avoid"
 concept_tag: ES-VERB-EVITAR
 prerequisites: [ES-C492-intentar, ES-C492-lograr]
 sounds: []
-roots: []
+roots: [vitare-latin]
+etymology_hook: "evitar ← Latin evitare 'to shun': e- 'out' + vitare 'to avoid' — English inevitable"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C492-lograr]
 > Evita la carretera por la mañana.
 >
 > *Avoid the road in the morning.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**evitar** ← Latin *evitare*, "to shun" (EtymDB 2.1): *e-*, "out", and *vitare*, "to avoid" — a learned word: the *-t-* between vowels stayed *t*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

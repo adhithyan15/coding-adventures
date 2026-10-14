@@ -10,7 +10,8 @@ gloss: "three hundred"
 concept_tag: ES-REF-TRESCIENTOS
 prerequisites: [ES-C477-multa, ES-C477-ganar]
 sounds: []
-roots: []
+roots: [centum-latin]
+etymology_hook: "trescientos ← Old Spanish trezientos, from Latin trecenti 'three hundred', reshaped to match tres"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C477-ganar]
 > *The ticket costs three hundred euros.*
 
 It agrees with the noun: *trescientas personas*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trescientos** ← Old Spanish *trezientos* (EtymDB 2.1), from Latin *trecenti*, "three hundred" — inherited: the stressed *e* opened into *ie*. The modern spelling remade the front to match *tres*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

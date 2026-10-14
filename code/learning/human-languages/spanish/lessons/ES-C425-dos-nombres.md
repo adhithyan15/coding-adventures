@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-DOS-NOMBRES
 prerequisites: [ES-C425-abecedario]
 sounds: [v-b]
 roots: []
+etymology_hook: "be larga, ve corta — 'long b, short v'; y is i griega, 'Greek i', from Greek upsilon"
 duration:
   max_seconds: 240
 requires:

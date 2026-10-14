@@ -11,6 +11,7 @@ concept_tag: ES-ASK-DEMASIADO
 prerequisites: [ES-C470-sintesis-paraguas, ES-C60-bastante, ES-C317-poco]
 sounds: [d-soft, s-clear, stress-penultimate, diphthong-ia]
 roots: [magis]
+etymology_hook: "demasiado — de más 'of more': in excess; más is Latin magis"
 duration:
   max_seconds: 275
 requires:

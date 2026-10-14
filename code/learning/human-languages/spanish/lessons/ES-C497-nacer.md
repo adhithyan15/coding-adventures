@@ -10,7 +10,8 @@ gloss: "to be born"
 concept_tag: ES-VERB-NACER
 prerequisites: [ES-C496-quitar, ES-C496-llenar]
 sounds: []
-roots: []
+roots: [nasci-latin]
+etymology_hook: "nacer ← Latin nasci 'to be born' — English nation, native"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C496-llenar]
 > *I was born in Seville.*
 
 It takes a *z* in the first person present: *nazco*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nacer** ← Latin *nasci*, "to be born" (Lewis & Short) — inherited, and remade as an ordinary *-er* verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

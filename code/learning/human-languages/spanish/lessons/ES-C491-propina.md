@@ -11,6 +11,7 @@ concept_tag: ES-REF-PROPINA
 prerequisites: [ES-C491-cajero, ES-C491-cartera]
 sounds: []
 roots: []
+etymology_hook: "propina ← Medieval Latin propina, from propinare 'to drink to someone's health': money for a drink"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C491-cartera]
 > *We left the waiter a tip.*
 
 In much of Latin America a waiter is *el mesero*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**propina** ← Medieval Latin *propina*, from Latin *propinare*, "to drink to someone's health" (Lewis & Short), itself from Greek: a tip was money for a drink.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

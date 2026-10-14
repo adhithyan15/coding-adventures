@@ -10,7 +10,8 @@ gloss: "education; manners"
 concept_tag: ES-REF-EDUCACION
 prerequisites: [ES-C504-fabrica, ES-C504-danar]
 sounds: []
-roots: []
+roots: [educare-latin]
+etymology_hook: "educación ← Latin educatio 'a bringing up', from educare 'to rear' — English education"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C504-danar]
 > *Education is free.*
 
 *Tener buena educación* — to have good manners.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**educación** ← Latin *educatio*, "a bringing up" (EtymDB 2.1), from *educare*, "to rear" — a learned word. Manners are part of a good upbringing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

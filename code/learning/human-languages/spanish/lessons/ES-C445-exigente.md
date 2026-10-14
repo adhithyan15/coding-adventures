@@ -11,6 +11,7 @@ concept_tag: ES-QUAL-EXIGENTE
 prerequisites: [ES-C445-responsabilidad, ES-C398-dificil, ES-C398-facil]
 sounds: [j-jota, stress-penultimate]
 roots: [agere-latin]
+etymology_hook: "exigente ← Latin exigere 'to drive out': ex- + agere 'to drive' — kin to agenda, actor"
 duration:
   max_seconds: 275
 requires:

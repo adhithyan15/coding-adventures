@@ -10,7 +10,8 @@ gloss: "to treat; to be about"
 concept_tag: ES-VERB-TRATAR
 prerequisites: [ES-C511-parecer, ES-C511-mantener]
 sounds: []
-roots: []
+roots: [trahere-latin]
+etymology_hook: "tratar ← Latin tractare 'to handle', from trahere 'to drag' — English treat, tract"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C511-mantener]
 > *The film is about a family.*
 
 *Tratar de* + infinitive — to try to.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tratar** ← Latin *tractare*, "to drag about, to handle" (Lewis & Short), built on *trahere*, "to draw, to drag" — semi-learned: its *-ct-* became plain *t*, not the *ch* of words worn down in speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

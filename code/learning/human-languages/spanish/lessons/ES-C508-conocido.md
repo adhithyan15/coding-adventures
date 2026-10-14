@@ -10,7 +10,8 @@ gloss: "well known; an acquaintance"
 concept_tag: ES-REF-CONOCIDO
 prerequisites: [ES-C508-increible, ES-C508-independiente]
 sounds: []
-roots: []
+roots: [cognoscere-latin]
+etymology_hook: "conocido — participle of conocer 'to know', Latin cognoscere — English cognition"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C508-independiente]
 > *He is a very well-known singer.*
 
 As a noun, *un conocido* is someone you know, not quite a friend.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**conocido** is the participle of *conocer*, "to know", from Latin *cognoscere*, "to get to know" — inherited: the *g* before *n* fell away.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

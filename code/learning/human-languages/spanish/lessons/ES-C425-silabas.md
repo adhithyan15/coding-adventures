@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-SILABA
 prerequisites: [ES-C425-digrafos]
 sounds: []
 roots: []
+etymology_hook: "sílaba ← Greek syllabē 'a taking together': letters taken into one beat"
 duration:
   max_seconds: 240
 requires:

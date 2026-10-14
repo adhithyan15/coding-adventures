@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 477,
-  "sourceHash": "fnv1a64:4b556621a08886c3",
+  "sourceHash": "fnv1a64:4469f4ff58cdc6f2",
   "lessonIds": [
     "ES-C477-ahorro",
     "ES-C477-alquiler",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch477.txt",
   "json": "spanish/narration/ch477.json",
-  "textHash": "fnv1a64:9cda4f59f065a9a0",
-  "jsonHash": "fnv1a64:1ab04154c192a1e4",
+  "textHash": "fnv1a64:1686a92bac52e051",
+  "jsonHash": "fnv1a64:6e6b7a1124b970d3",
   "findings": []
 }

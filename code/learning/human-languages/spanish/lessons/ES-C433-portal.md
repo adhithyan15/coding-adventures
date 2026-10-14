@@ -11,6 +11,7 @@ concept_tag: ES-REF-PORTAL
 prerequisites: [ES-C432-sofa, ES-C279-puerta, ES-C378-edificio]
 sounds: []
 roots: []
+etymology_hook: "portal — puerta 'door' + -al: the door made big"
 duration:
   max_seconds: 240
 requires:
@@ -52,13 +53,15 @@ the noun it lands on.
 | the thing | the larger thing |
 |---|---|
 | la puerta | el portal |
-| el árbol | la arboleda |
 | la rama | el ramal |
 
 English has no single word here, which is why translations reach for *doorway*,
 *entrance*, *lobby* or *hallway* and none quite fits. When a Spanish word has no
 clean English partner, learning the **situation** beats learning a gloss: the
 portal is where you buzz, where the post boxes are, and where you wait.
+
+*Puerta* is Latin *porta*, "a gate". In *portal* the stress falls elsewhere, so
+the *o* never opened into *ue*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C433-EDIF-01, ES-LEX-PUERTA, ES-LEX-C378-WHERE-60] -->

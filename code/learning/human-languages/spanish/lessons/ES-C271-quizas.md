@@ -11,6 +11,7 @@ concept_tag: HEDGE-PROBABLY
 prerequisites: [ES-C270-aunque, ES-C267-no-verbo, ES-C267-no-nada, ES-C267-negar-preguntar]
 sounds: [vowel-a, vowel-o]
 roots: [qui sapit]
+etymology_hook: "quizás ← Latin qui sapit 'who knows?': a question worn down into 'perhaps'"
 duration:
   max_seconds: 240
 requires:

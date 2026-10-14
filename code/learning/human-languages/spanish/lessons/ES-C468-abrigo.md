@@ -11,6 +11,7 @@ concept_tag: ES-ASK-ABRIGO
 prerequisites: [ES-C468-grado, ES-C334-frio, ES-C468-chaqueta]
 sounds: [stress-penultimate, r-tap]
 roots: [apricari-latin]
+etymology_hook: "abrigo — from abrigar, Latin apricari 'to bask in the sun': a shelter"
 duration:
   max_seconds: 275
 requires:

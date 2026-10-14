@@ -4,7 +4,7 @@
   "chapter": 419,
   "title": "Dancing, and the Article You Drop",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1fb8bc26c2d36b7d",
+  "sourceHash": "fnv1a64:aa152b6778f5cfad",
   "lessons": [
     {
       "id": "ES-C419-bailar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:906697fdd171dae9",
+      "sourceHash": "fnv1a64:798f38415e0f6fb7",
       "notice": null,
       "blocks": [
         {
@@ -80,7 +80,7 @@
             },
             {
               "kind": "speech",
-              "text": "Root: Late Latin ballare, \"to dance,\" from Greek ballízein. This root travelled further into English than almost any other on this page:"
+              "text": "Root: Late Latin ballare, \"to dance,\" probably from Greek ballízein; Spanish took it through Occitan balar. This root travelled further into English than almost any other on this page:"
             },
             {
               "kind": "speech",
@@ -100,7 +100,7 @@
             },
             {
               "kind": "speech",
-              "text": "A ball you throw is not related. That one is Germanic, a cousin of balloon and bowl. English has two unrelated words spelled ball, and only the one you dance at comes from ballare."
+              "text": "A ball you throw is not related. That one is Germanic. English has two unrelated words spelled ball, and only the one you dance at comes from ballare."
             }
           ]
         },

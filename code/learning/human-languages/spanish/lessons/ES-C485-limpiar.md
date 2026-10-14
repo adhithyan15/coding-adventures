@@ -10,7 +10,8 @@ gloss: "to clean"
 concept_tag: ES-VERB-LIMPIAR
 prerequisites: [ES-C485-barrer, ES-C485-fregar]
 sounds: []
-roots: []
+roots: [limpidus-latin]
+etymology_hook: "limpiar — built on limpio 'clean', from Latin limpidus 'clear' — English limpid"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C485-fregar]
 > *We clean the house on Saturdays.*
 
 The verb behind *limpio*, clean.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**limpiar** is built on *limpio*, "clean", from Latin *limpidus*, "clear" (EtymDB 2.1) — a clear stream is a clean one. *Limpio* is inherited: the *-d-* of *limpidus* wore away.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,7 +10,8 @@ gloss: "independent"
 concept_tag: ES-REF-INDEPENDIENTE
 prerequisites: [ES-C507-debate, ES-C508-increible]
 sounds: []
-roots: []
+roots: [pendere-latin]
+etymology_hook: "independiente — in- + dependiente, from depender: Latin pendere 'to hang' — not hanging on"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C508-increible]
 > Mi hija es muy independiente.
 >
 > *My daughter is very independent.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**independiente** is *in-*, "not", and *dependiente*, "depending", from *depender*, the verb of *depende*, built on Latin *pendere*, "to hang".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

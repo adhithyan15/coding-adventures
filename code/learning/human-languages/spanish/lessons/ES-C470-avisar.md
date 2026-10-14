@@ -11,6 +11,7 @@ concept_tag: ES-VERB-AVISAR
 prerequisites: [ES-C470-encontrar, ES-C332-aviso, ES-C383-dejar]
 sounds: [v-b, s-clear, stress-final]
 roots: [videre-latin]
+etymology_hook: "avisar — from aviso, Latin ad visum 'toward what is seen' — English advise"
 duration:
   max_seconds: 270
 requires:

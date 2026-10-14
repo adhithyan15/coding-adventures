@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 10,
-  "sourceHash": "fnv1a64:06130b946ce85324",
+  "sourceHash": "fnv1a64:f4cdf88aceaebffa",
   "lessonIds": [
     "ES-W01-acento",
     "ES-W01-tilde-diacritica",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "spanish/narration/ch10.txt",
   "json": "spanish/narration/ch10.json",
-  "textHash": "fnv1a64:4279e98a046125fe",
-  "jsonHash": "fnv1a64:89ced92551dbfe10",
+  "textHash": "fnv1a64:bdd52c8a7cd048c9",
+  "jsonHash": "fnv1a64:81050fb2dea023f5",
   "findings": []
 }

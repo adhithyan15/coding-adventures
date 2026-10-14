@@ -11,6 +11,7 @@ concept_tag: ES-THING-ACTOR
 prerequisites: [ES-C420-teatro, ES-C404-pelicula]
 sounds: [vowel-a, r-tap, stress-final]
 roots: [agere-latin]
+etymology_hook: "actor ← Latin actor 'one who does', from agere 'to do' — English agent, action"
 duration:
   max_seconds: 240
 requires:

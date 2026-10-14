@@ -11,6 +11,7 @@ concept_tag: ES-VERB-IMPRIMIR
 prerequisites: [ES-C468-sintesis-abrigo, ES-C406-impreso, ES-C333-prisa]
 sounds: [stress-final, r-tap]
 roots: [impressus-latin]
+etymology_hook: "imprimir ← Latin imprimere: in- + premere 'to press' — English imprint, print"
 duration:
   max_seconds: 270
 requires:

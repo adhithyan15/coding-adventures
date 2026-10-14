@@ -12,7 +12,7 @@ prerequisites: [ES-C09-profesor, ES-C57-es-inicial]
 sounds: []
 roots: [studere-latin]
 teaches_cells: []
-etymology_hook: "estudiar plus -ante gives estudiante, the one who is studying — the same -ant that makes an English participant, an assistant and an inhabitant"
+etymology_hook: "estudiante — estudiar + -ante, the Latin participle ending -antem: 'one studying'"
 duration:
   max_seconds: 270
 requires:
@@ -73,6 +73,11 @@ all:
 
 The article moves instead — *el estudiante*, *la estudiante* — but the word
 itself stays put. Words ending in *-ante* almost never shift.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estudiante** is built from *estudiar*, "to study", with *-ante*, the Latin participle ending *-antem*: "one studying". *Estudiar* comes from Latin *studium*, "zeal, eagerness" (Lewis & Short).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESTUDIANTE, ES-FRIEND-ANTE-ANT, ES-GRAMMAR-SER-PRESENT-1PL] -->

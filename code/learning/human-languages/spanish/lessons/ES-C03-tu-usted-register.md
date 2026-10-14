@@ -10,9 +10,10 @@ gloss: the choice English lost — and the surprise that usted takes he/she verb
 concept_tag: ES-REGISTER-TU-USTED
 prerequisites: [ES-C03-tu-usted]
 sounds: [d-soft]
-roots: [tu-latin]
+roots: [tu-latin, aut-latin]
+etymology_hook: "tú o usted — o is Latin aut 'or'; tú is Latin tu, cousin of thou; usted's story comes two lessons on"
 duration:
-  max_seconds: 240
+  max_seconds: 263
 requires:
   knowledge: [ES-LEX-TU, ES-LEX-USTED]
 introduces:
@@ -62,6 +63,11 @@ friend as cold.
 
 The safe default when you cannot tell: **usted**. Over-formal is
 recoverable; over-familiar is awkward.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tú o usted** is two pronouns and the small word between them. *O*, "or", is Latin *aut*, "or", worn down to its vowel; *tú* is Latin *tu*, the cousin of *thou*. Where *usted* came from has a lesson of its own, two lessons on.
 
 ## Grammar Lens: usted takes he/she forms
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-USTED-THIRD-PERSON]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 466,
-  "sourceHash": "fnv1a64:bfff1e16bcad6de7",
+  "sourceHash": "fnv1a64:8dba0c576ae42ddc",
   "lessonIds": [
     "ES-C466-director",
     "ES-C466-visible",
@@ -15,6 +15,6 @@
   "text": "spanish/narration/ch466.txt",
   "json": "spanish/narration/ch466.json",
   "textHash": "fnv1a64:08458519726f84c0",
-  "jsonHash": "fnv1a64:029e6b522e2d4969",
+  "jsonHash": "fnv1a64:6ccc94b1c6bd7f0c",
   "findings": []
 }

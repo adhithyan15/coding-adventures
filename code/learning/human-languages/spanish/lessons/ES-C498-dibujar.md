@@ -11,6 +11,7 @@ concept_tag: ES-VERB-DIBUJAR
 prerequisites: [ES-C498-competir, ES-C498-montar]
 sounds: []
 roots: []
+etymology_hook: "dibujar — usually traced to Old French deboissier 'to carve in wood', built on bois 'wood'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C498-montar]
 > *My daughter draws very well.*
 
 *El dibujo* is the drawing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dibujar** is usually traced to Old French *deboissier*, "to carve in wood" (EtymDB 2.1), built on *bois*, "wood".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

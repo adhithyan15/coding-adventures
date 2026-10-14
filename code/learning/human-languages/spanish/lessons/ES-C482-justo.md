@@ -10,7 +10,8 @@ gloss: "fair; exactly; tight"
 concept_tag: ES-REF-JUSTO
 prerequisites: [ES-C482-concreto, ES-C482-parecido]
 sounds: []
-roots: []
+roots: [iustus-latin]
+etymology_hook: "justo ← Latin iustus 'upright', from ius 'right, law' — English justice"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C482-parecido]
 > *It is not fair.*
 
 *Justo a tiempo* — right on time; *me queda justo* — it is a tight fit.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**justo** ← Latin *iustus*, "upright, righteous" (Lewis & Short), from *ius*, "right, law". "Exactly" and "tight" grew out of "fitting, right".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

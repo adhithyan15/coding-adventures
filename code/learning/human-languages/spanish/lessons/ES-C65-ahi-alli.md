@@ -10,9 +10,9 @@ gloss: there, over there — the two places aquí has been missing, and they lin
 concept_tag: ES-PLACE-DEICTIC
 prerequisites: [ES-C64-repaso-tonicos]
 sounds: [accent-mark]
-roots: []
+roots: [illic-latin, ibi-latin]
 teaches_cells: []
-etymology_hook: "three words for here-and-there, matching the three pointing words one for one, because both sets answer the same question -- whose side is it on"
+etymology_hook: "allí ← Latin illic 'in that place'; ahí is a- + old hi 'there', from Latin ibi"
 duration:
   max_seconds: 270
 requires:
@@ -56,6 +56,11 @@ from us both.
 [PAUSE 2s] So this is not a new system to learn. It is the **same** system,
 answering the same question — whose side is it on — with a word for the place
 instead of a word for the thing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**allí** is Latin *illic*, "in that place" (Lewis & Short), with *a-* on the front. **ahí** is usually explained as *a-* and the old Spanish *hi*, "there", from Latin *ibi* — the same old word for "there" that sits in *hay*.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-AHI, ES-LEX-ALLI] -->

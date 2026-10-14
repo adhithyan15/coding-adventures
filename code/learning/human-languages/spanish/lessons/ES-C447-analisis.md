@@ -11,6 +11,7 @@ concept_tag: ES-MED-ANALISIS
 prerequisites: [ES-C446-sintesis-mover, ES-C300-sangre, ES-C394-medico, ES-C410-examen]
 sounds: [written-accent, stress-antepenultimate]
 roots: [analysis-greek]
+etymology_hook: "análisis ← Greek analysis: ana- 'up, through' + lyein 'to loosen' — English paralysis"
 duration:
   max_seconds: 280
 requires:

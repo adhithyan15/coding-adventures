@@ -10,7 +10,8 @@ gloss: "to carry out, to do"
 concept_tag: ES-VERB-REALIZAR
 prerequisites: [ES-C511-mantener, ES-C511-tratar]
 sounds: []
-roots: []
+roots: [res-latin]
+etymology_hook: "realizar — real 'real' + -izar, like French réaliser; real from Latin res 'thing', not 'royal'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C511-tratar]
 > *We are carrying out works on the street.*
 
 A false friend: to realise is *darse cuenta*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**realizar** is *real*, "real", with *-izar*, like French *réaliser*. This *real* is Late Latin *realis*, from *res*, "a thing" — not the *real*, "royal", that comes from *regalis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

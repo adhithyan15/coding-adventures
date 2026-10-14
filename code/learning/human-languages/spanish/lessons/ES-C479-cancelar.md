@@ -10,7 +10,8 @@ gloss: "to cancel"
 concept_tag: ES-VERB-CANCELAR
 prerequisites: [ES-C478-disponible, ES-C479-inscribirse]
 sounds: []
-roots: []
+roots: [cancellus-latin]
+etymology_hook: "cancelar ← Latin cancellare 'to make like a lattice', from cancelli 'railings' — English cancel"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C479-inscribirse]
 > *We are cancelling the booking.*
 
 *Cancelado* on a board means cancelled.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cancelar** ← Latin *cancellare*, "to make like a lattice" (Lewis & Short), from *cancelli*, "a lattice, railings" — a learned word: a cancelled document was struck through with crossed lines.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

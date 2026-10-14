@@ -11,6 +11,7 @@ concept_tag: ES-VERB-LLAMAR
 prerequisites: [ES-C03-me]
 sounds: [ll-y, vowel-o]
 roots: [clamare]
+etymology_hook: "llamar ← Latin clamare 'to cry out': cl- became ll- — English claim, exclaim, clamour"
 duration:
   max_seconds: 240
 requires:
@@ -62,9 +63,9 @@ shouts all through English:
 
 **A sound-pattern to bank:** Latin *cl-* became Spanish *ll-*. *clamare* →
 *llamar*. It happened repeatedly: *clavem* → *llave* ("key"), *flamma* →
-*llama* ("flame"), *plovere* → *llover* ("to rain"). A Spanish word starting
+*llama* ("flame"), *\*plovere* → *llover* ("to rain"). A Spanish word starting
 *ll-* is very often a Latin *cl-*/*fl-*/*pl-* word in disguise — and its
-English cousin usually kept the original cluster (*clamor*, *flame*, *pluvial*).
+English borrowing usually kept the original cluster (*clamor*, *flame*, *pluvial*).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ME, ES-LEX-LLAMO, ES-GRAMMAR-FIRST-PERSON-VERB] -->
