@@ -5509,6 +5509,33 @@ mod tests {
         assert_eq!(&code.code[cursor..], &[RETURN]);
     }
 
+    #[test]
+    fn captured_array_direct_call_rejects_reference_and_result_mismatches() {
+        for (argument, parameter) in [("array<i64>", "array<f64>"), ("str", "array<i64>"), ("ref<any>", "str")] {
+            let mut module = direct_call_slot_module(&[argument], false);
+            module.functions[1].params[0].1 = parameter.into();
+            let err = lower_iir_to_jvm(&module, &make_cfg()).unwrap_err();
+            assert!(format!("{err:?}").contains("reference descriptor"), "{err:?}");
+        }
+        let mut module = direct_call_slot_module(&["str"], false);
+        module.functions[1].params[0].1 = "ref<any>".into();
+        lower_iir_to_jvm(&module, &make_cfg()).expect("String safely widens to Object");
+        for hint in ["i32", "f64", "str"] {
+            let mut module = direct_call_slot_module(&["i64"], true);
+            module.functions[0].instructions[0].dest = Some("result".into());
+            module.functions[0].instructions[0].type_hint = hint.into();
+            let err = lower_iir_to_jvm(&module, &make_cfg()).unwrap_err();
+            assert!(format!("{err:?}").contains("return destination"), "{err:?}");
+        }
+        let mut module = direct_call_slot_module(&["array<i64>"], false);
+        module.functions[1].return_type = "array<i64>".into();
+        module.functions[1].instructions = vec![IIRInstr::new("ret", None, vec![Operand::Var("p0".into())], "array<i64>")];
+        module.functions[0].instructions[0].dest = Some("result".into());
+        module.functions[0].instructions[0].type_hint = "array<f64>".into();
+        let err = lower_iir_to_jvm(&module, &make_cfg()).unwrap_err();
+        assert!(format!("{err:?}").contains("return destination reference descriptor"), "{err:?}");
+    }
+
     fn make_cfg() -> IIRJvmConfig {
         IIRJvmConfig::new("TestClass")
     }
