@@ -1226,6 +1226,7 @@ fn layout_siblings(
 mod tests {
     use super::*;
     use diagram_ir::TreemapNode;
+    mod subgraph_margin;
 
     fn gap_work_diagram(direction: DiagramDirection, node_count: usize, lengths: &[usize]) -> SwimlaneDiagram {
         use diagram_ir::{EdgeMarker, SwimlaneEdge, SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode};
