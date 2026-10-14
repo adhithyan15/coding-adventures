@@ -12,12 +12,16 @@
 import { describe, expect, it } from "vitest";
 import {
   LEXICAL_ATOM,
+  TAKEN_APART_ORIGIN_SIGNALS,
+  blockStatesOrigin,
+  hasEmptyEtymologyBlock,
   hasEtymologyHook,
   hasVisibleEtymology,
   introducesNewWord,
   measureEtymologyCoverage,
   renderEtymologyCoverage,
   statesOrigin,
+  takenApartOriginSignals,
 } from "../src/etymology-coverage.js";
 import { parseLesson } from "../src/parse.js";
 
@@ -240,6 +244,265 @@ describe("statesOrigin", () => {
   });
 });
 
+// ---- The empty "taken apart" block (HL24 section 9.4) -------------------------
+//
+// Every loose signal gets the sentences it was kept for AND the near-miss it
+// must not fire on. The table is checked against TAKEN_APART_ORIGIN_SIGNALS
+// itself, so a signal cannot be added to the module without its fixtures.
+
+/** [text, track] -- the track only matters to `donor-word`. */
+type SignalCase = string | [string, string];
+
+const SIGNAL_FIXTURES: Record<string, { fires: SignalCase[]; rejects: SignalCase[] }> = {
+  inherited: {
+    fires: ["*Ōdu* is inherited, not borrowed.", "French, Spanish and Italian all inherited the same word."],
+    rejects: ["She was disinherited."],
+  },
+  borrowed: {
+    fires: ["Spanish borrowed the English word entire, island and all."],
+    rejects: ["The borrower pays it back."],
+  },
+  "a-loan": {
+    fires: ["**ಮಿಕ್ಸಿ** is a loan from Indian English *mixie*.", "**banana** — a loanword."],
+    // A gloss, quoted or emphasised, is the meaning of *préstamo*, not its history.
+    rejects: ['**el préstamo** — "a loan".', "**el préstamo** is *a loan*."],
+  },
+  "taken-over": {
+    fires: ["two Sanskrit words taken over whole, tatsamas"],
+    rejects: ["They had taken overnight trains."],
+  },
+  tatsama: {
+    fires: ["a genuine **Sanskrit tatsama**", "one of the tatsamas"],
+    rejects: ["tatsamatā, the quality of sameness"],
+  },
+  tadbhava: {
+    fires: ["**लड़ना** is a tadbhava, a word inherited and reshaped"],
+    rejects: ["tadbhavatā"],
+  },
+  "learned-word": {
+    fires: ["*fábrica* is a learned word, taken straight from the page.", "the learned borrowings"],
+    rejects: ["You have learned words like *casa* already."],
+  },
+  "semi-learned": {
+    fires: ["*siglo* is semi-learned: it half wore down."],
+    rejects: ["semi learned by heart"],
+  },
+  "built-on": {
+    fires: ["**casar** is built from *casa*, \"house\".", "built on the question base *e-*"],
+    rejects: ["The church was built in 1590.", "a building on the corner"],
+  },
+  "comes-from": {
+    fires: ["It comes from *vil*, \"to sell\".", "Both come from a Germanic root."],
+    rejects: ["The coming from abroad was late."],
+  },
+  "goes-back-to": {
+    fires: ["It goes back to a bare Slavic particle."],
+    // LA-C56-octavus: a return, not a descent.
+    rejects: ["the ninth breaks it differently, and the tenth goes back to behaving."],
+  },
+  "traced-to": {
+    fires: ["**चाबी** is usually traced to Portuguese *chave*."],
+    rejects: ["She traced the outline with a finger."],
+  },
+  "descends-from": {
+    fires: ["It descends from **vetulus**, the diminutive.", "*Konnte* and *could* descend from one verb."],
+    rejects: ["The road descends steeply to the sea."],
+  },
+  "derived-from": {
+    fires: [
+      "**dessin** — formed from *dessiner*, \"to draw\".",
+      "*porte*, from *porter*, \"to carry\"",
+      "\"favour, grace, gratitude,\" from *grātus*",
+      "*Nada* came from **res nata**, \"a thing born.\"",
+      "*Avē* is the more formal greeting — \"hail\" — from *avēre*",
+    ],
+    // ES-C436-recoger: a spelling comparison. And a date range is no form.
+    rejects: ["because *ge* would be said differently from *go*", "open, from Monday to Friday"],
+  },
+  "cousin-of": {
+    fires: ["*свинья* is a cousin of English *swine*.", "Its relative in Greek is *spondḗ*."],
+    rejects: ["**la prima** — the cousin.", "your cousin in Madrid"],
+  },
+  "is-english": {
+    fires: ["**drei** is English **three**.", "**sehr** is English **sore**."],
+    // The sound note rule 3 already refuses: italic letters, not bold words.
+    rejects: ["German *w* is English *v*."],
+  },
+  "donor-word": {
+    fires: [["Latin said **hodie**, *this day*.", "spanish"], ["**pero** was **two** Latin words.", "spanish"]],
+    rejects: [
+      // The track's own language: a fact about the word being taught.
+      ["Latin had two words here and they are not interchangeable.", "latin"],
+      // The bare name, measured and rejected.
+      ["named once, in Latin letters, never in Gurmukhi", "punjabi"],
+    ],
+  },
+  "native-family": {
+    fires: ["**கரடி** is native Dravidian.", "a native Indo-Aryan adverb"],
+    rejects: ["a native speaker would say", "native Japanese speakers"],
+  },
+  "source-tag": {
+    fires: ["(DEDR 3301)", "(Lewis & Short)", "(Lane, s.v.)", "(EtymDB 2.1)"],
+    // Case-sensitive, and the name must end there: a lowercase lane or a
+    // longer word after the parenthesis is not Lane's Lexicon.
+    rejects: ["Keep to the slow lane.", "(lane closed)", "(Laneway entrance)"],
+  },
+  "source-named": {
+    fires: ["DEDR 3376 lists Malayalam *tūṅṅuka*.", "Vasmer derives it from *руб*.", "its origin is not recorded in EtymDB 2.1."],
+    // A bare acronym is how a block says the dictionary is silent.
+    rejects: ["DEDR has no entry for it."],
+  },
+  uncertain: {
+    fires: ["The origin of **ಹುಬ್ಬು** is uncertain."],
+    rejects: ["the uncertainty of the weather"],
+  },
+  "not-settled": {
+    fires: ["its deeper origin is not settled (Vasmer)."],
+    // ES-C439-tirar's "unsettled" -- a documented miss, pinned.
+    rejects: ["its history is unsettled."],
+  },
+  "unknown-origin": {
+    fires: ["a word of unknown origin", "Its origin is unknown."],
+    rejects: ["an unknown word"],
+  },
+  "no-sure-origin": {
+    fires: ["**titulus** has no sure origin."],
+    rejects: ["There is no sure way to tell."],
+  },
+  disputed: {
+    fires: ["the details are disputed"],
+    rejects: ["an undisputed fact"],
+  },
+  starred: {
+    fires: ["It comes from *\\*ātmanaka*, \"own\".", "the stem **\\*yā-**"],
+    rejects: ["5 \\* 3 is fifteen."],
+  },
+};
+
+function signalsIn(testCase: SignalCase): string[] {
+  const [text, language] = typeof testCase === "string" ? [testCase, "spanish"] : testCase;
+  return takenApartOriginSignals(text, language);
+}
+
+describe("takenApartOriginSignals", () => {
+  it("has fixtures for every signal, and for no signal that is gone", () => {
+    expect(Object.keys(SIGNAL_FIXTURES).sort()).toEqual(TAKEN_APART_ORIGIN_SIGNALS.map((signal) => signal.name).sort());
+  });
+
+  for (const [name, fixture] of Object.entries(SIGNAL_FIXTURES)) {
+    it(`${name}: fires on the sentences it was kept for`, () => {
+      for (const testCase of fixture.fires) expect(signalsIn(testCase), String(testCase)).toContain(name);
+    });
+
+    it(`${name}: control -- rejects its near miss`, () => {
+      for (const testCase of fixture.rejects) expect(signalsIn(testCase), String(testCase)).not.toContain(name);
+    });
+  }
+
+  it("ignores HTML comments, which the reader is never shown", () => {
+    expect(takenApartOriginSignals("<!-- inherited, borrowed -->\nIt opens an excuse.")).toEqual([]);
+  });
+
+  it("stays linear on hostile input", () => {
+    // Long runs of every shape a signal begins with and never finishes.
+    const started = performance.now();
+    const hostile = [
+      `**${"x".repeat(50_000)}`,
+      `${"** ".repeat(50_000)}is English`,
+      `${", from ".repeat(50_000)}`,
+      `goes back to ${"a".repeat(50_000)}`,
+      `${"Latin ".repeat(50_000)}`,
+      `cousin of ${"Old ".repeat(50_000)}`,
+    ];
+    for (const text of hostile) takenApartOriginSignals(text, "spanish");
+    expect(performance.now() - started).toBeLessThan(2_000);
+  });
+});
+
+describe("blockStatesOrigin", () => {
+  it("passes any block whose prose passes rule 3", () => {
+    expect(blockStatesOrigin({ type: "input", markdown: "**día** — from Latin *dies*." }, "spanish")).toBe(true);
+  });
+
+  it("reads the loose signals inside a 'taken apart' block", () => {
+    expect(blockStatesOrigin({ type: "etymology", markdown: "**casar** is built from *casa*." }, "portuguese")).toBe(true);
+  });
+
+  it("control: the same sentence in any other block is not an origin statement", () => {
+    // Corpus-wide, "built from" and "inherited" are as often about a house or
+    // a sentence as a word; see the module comment.
+    expect(blockStatesOrigin({ type: "input", markdown: "**casar** is built from *casa*." }, "portuguese")).toBe(false);
+    expect(blockStatesOrigin({ type: "culture-pragmatics", markdown: "She inherited the house." }, "spanish")).toBe(false);
+  });
+
+  it("control: a 'taken apart' block that takes apart a sentence states nothing", () => {
+    expect(
+      blockStatesOrigin(
+        { type: "etymology", markdown: "A postposition trails its noun: *ghar par*, 'on the house'." },
+        "hindi",
+      ),
+    ).toBe(false);
+  });
+});
+
+describe("hasEmptyEtymologyBlock", () => {
+  const empty = (body: string, opts: { language?: string; title?: string } = {}) =>
+    hasEmptyEtymologyBlock(lesson({ id: "ES-C01-e", language: opts.language, headword: opts.title, body }));
+
+  it("is true for a 'taken apart' block that takes apart syntax and never says where the word came from", () => {
+    // HI-C87-par's shape: why the postposition trails, not where पर came from.
+    expect(
+      empty(
+        "## The word, taken apart\n\n**पर** comes after its noun, never before: *ghar par*, \"on the house\".",
+        { language: "hindi" },
+      ),
+    ).toBe(true);
+  });
+
+  it("is true for a block that only lists parts", () => {
+    // ES-C432-lavadora's shape: the parts, and no word about where they came from.
+    expect(empty("## The word, taken apart\n\n**lavar** plus **-dora**: the machine that washes.")).toBe(true);
+  });
+
+  it("is false for a 'built on X' block", () => {
+    expect(empty("## The word, taken apart\n\n**casar** is built from *casa*, \"house\".", { language: "portuguese" })).toBe(false);
+  });
+
+  it("is false when another block or the preamble says it instead", () => {
+    const syntax = "## The word, taken apart\n\nIt opens an excuse, not an answer.";
+    expect(empty(`${syntax}\n\n## You'll want to know\n\n**x** — from Latin *x*.`)).toBe(false);
+    expect(empty(syntax, { title: "día ← dies" })).toBe(false);
+  });
+
+  it("counts an origin HEADING over nothing, and reads no loose signal under it", () => {
+    // The loose reading belongs to the "taken apart" block only. Under
+    // "Where it comes from", "inherited" gets no more trust than anywhere else.
+    expect(empty("## Where it comes from\n\nA long story.")).toBe(true);
+    expect(empty("## Where it comes from\n\nIt is inherited.")).toBe(true);
+    expect(empty("## Where it comes from\n\nIt comes from Latin *x*.")).toBe(false);
+  });
+
+  it("is false for a lesson with no etymology structure at all, which the visible count already holds", () => {
+    const bare = lesson({ id: "ES-C01-b" });
+    expect(hasVisibleEtymology(bare)).toBe(false);
+    expect(hasEmptyEtymologyBlock(bare)).toBe(false);
+  });
+
+  // The documented misses, pinned so a change to the signals has to say what
+  // it did to them. See the module comment.
+  it("documented false negative: an origin told without a signal word is counted empty", () => {
+    // ES-C301-papel: "Behind it is papyrus" names no language and uses no signal.
+    expect(empty("## The word, taken apart\n\nBehind it is **papyrus**, the Egyptian reed.")).toBe(true);
+  });
+
+  it("documented false positive: a signal about a different word rescues the block", () => {
+    // ES-C431-retraso: the parts are re- and tras; the Latin word is tardar's.
+    expect(
+      empty("## The word, taken apart\n\n**re-** plus **tras**. Spanish also has **tardar**, from a different Latin word for *slow*."),
+    ).toBe(false);
+  });
+});
+
 describe("measureEtymologyCoverage", () => {
   const corpus = [
     // spanish: three word lessons and a review that introduces nothing.
@@ -248,6 +511,13 @@ describe("measureEtymologyCoverage", () => {
     lesson({ id: "ES-C01-c", sequence: 30, body: "## You'll want to know\n\n**c** — from Latin *c*." }),
     lesson({ id: "ES-C01-d", sequence: 40, hook: "  " }),
     lesson({ id: "ES-R01", sequence: 50, type: "review", introduces: [] }),
+    // Visible on structure alone: the block takes a sentence apart.
+    lesson({
+      id: "ES-C01-e",
+      sequence: 60,
+      hook: "e ← E",
+      body: "## The word, taken apart\n\n*Es que* opens an excuse, not an answer.",
+    }),
     // alphabetically first, listed second: tracks must come out sorted.
     lesson({ id: "AR-C01-x", language: "arabic", sequence: 10 }),
   ];
@@ -261,25 +531,28 @@ describe("measureEtymologyCoverage", () => {
         wordLessonsWithoutEtymologyHook: 1,
         wordLessonsWithoutVisibleEtymology: 1,
         wordLessonsWithoutAnyEtymology: 1,
+        wordLessonsWithEmptyEtymologyBlock: 0,
       },
       {
         language: "spanish",
-        wordLessons: 4,
+        wordLessons: 5,
         wordLessonsWithoutEtymologyHook: 2,
         wordLessonsWithoutVisibleEtymology: 2,
         wordLessonsWithoutAnyEtymology: 1,
+        wordLessonsWithEmptyEtymologyBlock: 1,
       },
     ]);
   });
 
   it("sums the tracks and rounds the covered share DOWN", () => {
     expect(report.summary).toEqual({
-      wordLessons: 5,
+      wordLessons: 6,
       wordLessonsWithoutEtymologyHook: 3,
       wordLessonsWithoutVisibleEtymology: 3,
       wordLessonsWithoutAnyEtymology: 2,
-      hookPercent: 40,
-      visiblePercent: 40,
+      wordLessonsWithEmptyEtymologyBlock: 1,
+      hookPercent: 50,
+      visiblePercent: 50,
     });
     // 2 of 3 is 66.7%; floor keeps a nearly-done track from printing as done.
     const twoOfThree = measureEtymologyCoverage([
@@ -292,10 +565,12 @@ describe("measureEtymologyCoverage", () => {
 
   it("lists every gap in reading order, saying which kind is missing", () => {
     expect(report.gaps).toEqual([
-      { lessonId: "AR-C01-x", language: "arabic", position: 0, missingHook: true, missingVisible: true },
-      { lessonId: "ES-C01-b", language: "spanish", position: 1, missingHook: false, missingVisible: true },
-      { lessonId: "ES-C01-c", language: "spanish", position: 2, missingHook: true, missingVisible: false },
-      { lessonId: "ES-C01-d", language: "spanish", position: 3, missingHook: true, missingVisible: true },
+      { lessonId: "AR-C01-x", language: "arabic", position: 0, missingHook: true, missingVisible: true, emptyEtymologyBlock: false },
+      { lessonId: "ES-C01-b", language: "spanish", position: 1, missingHook: false, missingVisible: true, emptyEtymologyBlock: false },
+      { lessonId: "ES-C01-c", language: "spanish", position: 2, missingHook: true, missingVisible: false, emptyEtymologyBlock: false },
+      { lessonId: "ES-C01-d", language: "spanish", position: 3, missingHook: true, missingVisible: true, emptyEtymologyBlock: false },
+      // Hook and visible both present, and still listed: the block is empty.
+      { lessonId: "ES-C01-e", language: "spanish", position: 5, missingHook: false, missingVisible: false, emptyEtymologyBlock: true },
     ]);
   });
 
@@ -313,7 +588,17 @@ describe("renderEtymologyCoverage", () => {
     ).join("\n");
     expect(text).toContain("Etymology coverage (HL24 §9)");
     expect(text).toContain("2 word-introducing lessons; 1 carry no etymology_hook (50% covered)");
-    expect(text).toContain("spanish: 2 word lessons; 1 no hook, 2 no visible etymology, 1 neither");
+    expect(text).toContain("spanish: 2 word lessons; 1 no hook, 2 no visible etymology, 1 neither, 0 empty etymology block");
+  });
+
+  it("prints the empty-block count in the totals and per track", () => {
+    const text = renderEtymologyCoverage(
+      measureEtymologyCoverage([
+        lesson({ id: "ES-C01-a", hook: "a", body: "## The word, taken apart\n\nIt opens an excuse." }),
+      ]),
+    ).join("\n");
+    expect(text).toContain('1 more count as visible only because a "taken apart" block or origin heading is there');
+    expect(text).toContain("spanish: 1 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 1 empty etymology block");
   });
 
   it("strips control characters from a track name before printing it", () => {
@@ -325,6 +610,7 @@ describe("renderEtymologyCoverage", () => {
           wordLessonsWithoutEtymologyHook: 0,
           wordLessonsWithoutVisibleEtymology: 0,
           wordLessonsWithoutAnyEtymology: 0,
+          wordLessonsWithEmptyEtymologyBlock: 0,
         },
       ],
       summary: {
@@ -332,6 +618,7 @@ describe("renderEtymologyCoverage", () => {
         wordLessonsWithoutEtymologyHook: 0,
         wordLessonsWithoutVisibleEtymology: 0,
         wordLessonsWithoutAnyEtymology: 0,
+        wordLessonsWithEmptyEtymologyBlock: 0,
         hookPercent: 100,
         visiblePercent: 100,
       },
