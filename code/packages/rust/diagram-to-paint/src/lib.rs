@@ -10565,6 +10565,93 @@ emphasized --> direct
         }
     }
 
+    fn varied_support_empty_hop_evidence() -> Vec<(usize, bool, usize, usize)> {
+        // Direct caller-layout inputs: the parser supplies the ordinary edge
+        // style/marker template, while these exact endpoints are test-authored.
+        let mut evidence = Vec::new();
+        for count in [32usize, 64] {
+            for nonparallel in [false, true] {
+                for mode in [SwimlaneLineHops::Arc, SwimlaneLineHops::Gap] {
+                    for exchange_axes in [false, true] {
+                        for reverse in [false, true] {
+                            let parsed = mermaid_parser::parse_swimlane("swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na --> b").unwrap();
+                            let mut layout = diagram_layout_hierarchy::layout_swimlane(&parsed);
+                            let template = layout.edges[0].clone();
+                            let span = (4 * count) as f64;
+                            let mut route_width = span + count as f64 + 2.0;
+                            let mut route_height = span + (3 * count) as f64 + 2.0;
+                            if exchange_axes { std::mem::swap(&mut route_width, &mut route_height); }
+                            layout.width = layout.width.max(route_width);
+                            layout.height = layout.height.max(route_height);
+                            let mut expected_bits = Vec::new();
+                            layout.edges = (0..count).map(|index| {
+                                let mut edge = template.clone();
+                                edge.id = Some(format!("varied-support-{index}"));
+                                edge.curve = Some(SwimlaneEdgeCurve::Linear);
+                                let mut from = Point { x: 0.0, y: index as f64 };
+                                let mut to = Point { x: span + index as f64, y: span + ((if nonparallel { 3 } else { 2 }) * index) as f64 };
+                                if exchange_axes { std::mem::swap(&mut from.x, &mut from.y); std::mem::swap(&mut to.x, &mut to.y); }
+                                if reverse { std::mem::swap(&mut from, &mut to); }
+                                expected_bits.push([from.x.to_bits(), from.y.to_bits(), to.x.to_bits(), to.y.to_bits()]);
+                                edge.from = from;
+                                edge.to = to;
+                                edge
+                            }).collect();
+                            assert_eq!(layout.edges.len(), count);
+                            assert_eq!(expected_bits.iter().copied().collect::<std::collections::BTreeSet<_>>().len(), count);
+                            let mut index = SwimlaneHopCrossings::default();
+                            for (ordinal, edge) in layout.edges.iter().enumerate() {
+                                assert_eq!(edge.id.as_deref(), Some(format!("varied-support-{ordinal}").as_str()));
+                                assert_eq!([edge.from.x.to_bits(),edge.from.y.to_bits(),edge.to.x.to_bits(),edge.to.y.to_bits()], expected_bits[ordinal]);
+                                assert_eq!(edge.curve, Some(SwimlaneEdgeCurve::Linear));
+                                assert!([edge.from.x,edge.to.x].iter().all(|&x| x >= 0.0 && x <= layout.width));
+                                assert!([edge.from.y,edge.to.y].iter().all(|&y| y >= 0.0 && y <= layout.height));
+                                for earlier in &layout.edges[..ordinal] {
+                                    assert!(swimlane_line_crossing(&edge.from,&edge.to,&earlier.from,&earlier.to).is_none(), "pin the unchanged rounded predicate, not only analytic geometry");
+                                }
+                                index.insert_geometry(ordinal, 0, &edge.from, &edge.to);
+                            }
+                            assert!(index.integer_x_cohort.is_none() && index.integer_y_cohort.is_none(), "different endpoint spans invalidate both old support cohorts");
+                            drop(index);
+                            layout.line_hops = Some(mode);
+                            let frozen = layout.clone();
+                            SWIMLANE_LINE_CROSSING_VISITS.with(|value| value.set(0));
+                            SWIMLANE_HOP_INDEX_WORK.with(|value| value.set(0));
+                            let mut enabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                            let predicates = SWIMLANE_LINE_CROSSING_VISITS.with(std::cell::Cell::get);
+                            let work = SWIMLANE_HOP_INDEX_WORK.with(std::cell::Cell::get);
+                            assert_eq!(layout, frozen, "rendering preserves every occurrence and endpoint bit");
+                            assert_eq!(enabled.metadata.as_mut().unwrap().remove("swimlane.lineHops").as_deref(), Some(match mode { SwimlaneLineHops::Arc => "arc", SwimlaneLineHops::Gap => "gap" }));
+                            layout.line_hops = None;
+                            let disabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                            assert_eq!(enabled, disabled, "complete scene: count={count}, nonparallel={nonparallel}, mode={mode:?}, axes={exchange_axes}, reverse={reverse}");
+                            assert!(work > 0, "existing eligibility/insertion/drop counter remains active");
+                            eprintln!("varied-support empty: count={count} nonparallel={nonparallel} mode={mode:?} axes={exchange_axes} reverse={reverse} predicates={predicates} existing_index_work={work}");
+                            evidence.push((count,nonparallel,predicates,work));
+                        }
+                    }
+                }
+            }
+        }
+        assert_eq!(evidence.len(), 32);
+        evidence
+    }
+
+    #[test]
+    fn line_hop_varied_support_empty_complete_scene_equivalence() {
+        let _ = varied_support_empty_hop_evidence();
+    }
+
+    #[test]
+    fn line_hop_varied_support_empty_discovery_work_bound() {
+        let evidence = varied_support_empty_hop_evidence();
+        let failures = evidence.iter().filter(|&&(count,_,predicates,work)| {
+            let levels = (usize::BITS - count.leading_zeros()) as usize + 1;
+            predicates > 2 * count * levels || work > 64 * count * levels
+        }).collect::<Vec<_>>();
+        assert!(failures.is_empty(), "varied-support empty discovery exceeds the committed predicate/index bounds in {}/32 cases: {failures:?}", failures.len());
+    }
+
     #[test]
     fn line_hop_integer_two_support_empty_work_preserves_complete_scene() {
         for count in [32usize, 64, 256, 512, 4096, 8192] {
