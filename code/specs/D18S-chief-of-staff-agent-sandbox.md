@@ -481,7 +481,7 @@ supervisor:**
 | Linux | Landlock restricts ptracing outside the domain (ABI v1), and seccomp denies the syscalls outright. **Each agent must call `landlock_restrict_self()` in its own process after fork** — a domain shared across agents does not separate them. At negotiated **ABI 0 the seccomp filter is the sole mechanism, and distinct UIDs become required rather than recommended.** | none |
 | OpenBSD | `pledge` lacking `ptrace`, `proc`, and `ps`; procfs has not existed since 5.7 | none |
 | FreeBSD | capability mode returns `ECAPMODE` for every global-namespace call; the only process handles are `procdesc` descriptors, and the agent holds none | none |
-| Windows | each agent gets its own AppContainer SID, which needs no administrator. **The SID is derived from a name that is the digest of the attested `agent_id`** (`DeriveAppContainerSidFromAppContainerName`; no profile is registered, step 8), so two agents never silently share one principal. Agents run as LPAC, or `ALL APPLICATION PACKAGES` (S-1-15-2-1) is explicitly denied on supervisor-owned objects, since every AppContainer token carries it. | none |
+| Windows | each agent gets its own AppContainer SID, which needs no administrator. **The SID is derived from a name that is the digest of the attested `agent_id`** (`DeriveAppContainerSidFromAppContainerName`; its profile exists only around each process creation, step 8), so two agents never silently share one principal. Agents run as LPAC, or `ALL APPLICATION PACKAGES` (S-1-15-2-1) is explicitly denied on supervisor-owned objects, since every AppContainer token carries it. | none |
 | macOS | Seatbelt `(deny mach-priv-task-port)`, `(deny mach-lookup)`, `(deny process-info*)`. `process-info*` alone gates enumeration, **not Mach task-port acquisition, which is the actual memory-read vector.** The broker and supervisor are built with the Hardened Runtime and without `com.apple.security.get-task-allow`; absent that, a same-UID caller can take their task ports regardless of the agent's own profile. | none |
 
 Distinct UIDs on Unix remain **recommended** as defence in depth against a gap
@@ -2375,11 +2375,22 @@ through S-I3 before two weeks are spent on Windows.
    from the name `chief-of-staff.<32 hex digits>`: the first 16 bytes of
    SHA-256 over the attested `agent_id`. The derivation is deterministic,
    so an agent has the same principal on every launch, and two agents
-   share one only through a SHA-256 collision. No profile is registered:
-   `CreateAppContainerProfile` would give the agent a storage folder under
+   share one only through a SHA-256 collision. A profile
+   (`CreateAppContainerProfile`) gives the agent a storage folder under
    `%LOCALAPPDATA%\Packages` and a registry key, both writable by its SID
    and kept across runs, which is persistent state S-I1 does not allow.
-   The kernel needs only the SID.
+   But `CreateProcessW` needs one: it looks the SID up among the
+   registered profiles and fails with `ERROR_FILE_NOT_FOUND` otherwise
+   (seen on windows-2025; an earlier draft of this step said the kernel
+   needed only the SID). So the profile exists only around the creation:
+   registered just before `CreateProcessW`, removed (folder and key with
+   it) while the agent is still suspended, before any check and before its
+   first instruction. The process keeps its container through its token.
+   A removal that fails ends the agent unrun. The register-create-remove
+   span is serialized within the supervisor, so one creation never loses
+   its profile to another's removal. A profile found already registered
+   was left by a crash inside that span; no agent can have run beside it,
+   since every agent dies with its supervisor's job handle.
 
    **Exec by path, pinned to a held handle (S-K1).** `CreateProcessW` takes
    a path, never a handle. So:

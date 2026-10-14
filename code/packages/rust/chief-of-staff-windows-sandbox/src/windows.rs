@@ -25,7 +25,9 @@ use windows_sys::Win32::Security::Authorization::{
     GetSecurityInfo, SetEntriesInAclW, SetSecurityInfo, EXPLICIT_ACCESS_W, GRANT_ACCESS,
     NO_MULTIPLE_TRUSTEE, SE_FILE_OBJECT, TRUSTEE_IS_SID, TRUSTEE_IS_UNKNOWN, TRUSTEE_W,
 };
-use windows_sys::Win32::Security::Isolation::DeriveAppContainerSidFromAppContainerName;
+use windows_sys::Win32::Security::Isolation::{
+    CreateAppContainerProfile, DeleteAppContainerProfile, DeriveAppContainerSidFromAppContainerName,
+};
 use windows_sys::Win32::Security::{
     EqualSid, FreeSid, GetSidSubAuthority, GetSidSubAuthorityCount, GetTokenInformation,
     TokenAppContainerSid, TokenCapabilities, TokenIntegrityLevel, TokenIsAppContainer,
@@ -95,6 +97,8 @@ pub struct WindowsConfinement {
     held: File,
     /// The image's path, exactly its final path.
     image: String,
+    /// The AppContainer's name, for the profile registered per creation.
+    name: String,
     sid: OwnedSid,
     system_directory: Vec<u16>,
     system_root: String,
@@ -128,11 +132,13 @@ impl WindowsConfinement {
                 "{given}: not canonical (its final path is {image})"
             )));
         }
-        let sid = container_sid(&container_name(agent_id))?;
+        let name = container_name(agent_id);
+        let sid = container_sid(&name)?;
         grant_image_access(&held, &sid)?;
         Ok(Self {
             held,
             image,
+            name,
             sid,
             system_directory: system_path(GetSystemDirectoryW)?,
             system_root: String::from_utf16_lossy(&strip_nul(system_path(
@@ -227,6 +233,9 @@ impl WindowsConfinement {
         startup.StartupInfo.hStdOutput = raw(&child_stdout);
         startup.StartupInfo.hStdError = raw(&stderr);
         startup.lpAttributeList = attributes.as_ptr();
+        // Registered from here until just after the creation; see
+        // `RegisteredProfile`.
+        let profile = RegisteredProfile::register(&self.name)?;
         // Only now, immediately before the creation, are the listed handles
         // made inheritable, so the window in which a std spawn on another
         // thread (which inherits every inheritable handle) could take one
@@ -277,6 +286,9 @@ impl WindowsConfinement {
         // caller's handles are gone too, so a retry needs new ones.
         drop(attributes);
         drop((child_stdin, child_stdout, stderr, request.inherited));
+        // The profile goes before the agent's first instruction, whatever
+        // happened: it was needed only for the creation.
+        let removed = profile.remove();
         if let Some(error) = failure {
             return Err(error);
         }
@@ -285,6 +297,14 @@ impl WindowsConfinement {
         let process = unsafe { OwnedHandle::from_raw_handle(information.hProcess as RawHandle) };
         // SAFETY: as above.
         let thread = unsafe { OwnedHandle::from_raw_handle(information.hThread as RawHandle) };
+        if let Err(error) = removed {
+            // A profile left in place would be storage the agent keeps
+            // across runs (S-I1), so an agent that would run beside one
+            // does not run at all.
+            // SAFETY: the job handle is open; the process is suspended in it.
+            unsafe { TerminateJobObject(raw(&job), 1) };
+            return Err(error);
+        }
 
         // S-P4: the process is suspended; nothing of it has run. Any
         // failure below ends it through the job before returning.
@@ -497,13 +517,9 @@ impl Drop for OwnedSid {
     }
 }
 
-/// The AppContainer SID for `name`, derived, with no profile registered.
-///
-/// A registered profile would give the agent a storage folder under
-/// `%LOCALAPPDATA%\Packages` and a registry key, both writable by its SID
-/// and both kept across runs: persistent state S-I1 does not allow. The
-/// kernel needs only the SID, and the SID is a function of the name alone,
-/// so the agent's principal is the same on every launch without one.
+/// The AppContainer SID for `name`, derived. The SID is a function of the
+/// name alone, so the agent's principal is the same on every launch, with
+/// or without a profile registered at the moment.
 fn container_sid(name: &str) -> Result<OwnedSid, ConfinementError> {
     let name = wide(name);
     let mut sid: PSID = std::ptr::null_mut();
@@ -516,6 +532,105 @@ fn container_sid(name: &str) -> Result<OwnedSid, ConfinementError> {
         )));
     }
     Ok(OwnedSid(sid))
+}
+
+/// The AppContainer profile for one agent's name, registered for one
+/// process creation only.
+///
+/// Deriving the SID is not enough to start a process in the container:
+/// `CreateProcessW` looks the SID up among the user's registered profiles
+/// and fails with `ERROR_FILE_NOT_FOUND` when it is not one. A registered
+/// profile comes with a storage folder under `%LOCALAPPDATA%\Packages` and
+/// a registry key, both writable by the agent's SID and kept across runs:
+/// persistent state S-I1 does not allow. So the profile lives only around
+/// the creation:
+///
+/// ```text
+///   register  ->  CreateProcessW (suspended)  ->  remove  ->  checks  ->  resume
+///   \______ the profile exists ______/
+///                  no instruction of the agent runs in this span
+/// ```
+///
+/// The process keeps its token, and with it its container, after the
+/// profile is gone. A removal that fails ends the new agent unrun.
+///
+/// The span is serialized across this process, so one spawn never removes
+/// a profile another is about to create a process with. A profile found
+/// already registered is one a crash left between the two steps; it is
+/// used and removed like a fresh one. No agent can have written to it
+/// since: agents run only while their supervisor holds their job, and its
+/// last handle closing (in a crash too) kills them.
+struct RegisteredProfile {
+    name: Vec<u16>,
+    removed: bool,
+    _serialized: std::sync::MutexGuard<'static, ()>,
+}
+
+/// `HRESULT_FROM_WIN32(ERROR_ALREADY_EXISTS)`.
+const PROFILE_EXISTS: i32 = 0x8007_00B7_u32 as i32;
+
+impl RegisteredProfile {
+    fn register(name: &str) -> Result<Self, ConfinementError> {
+        static PROFILES: std::sync::Mutex<()> = std::sync::Mutex::new(());
+        let serialized = PROFILES
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
+        let name = wide(name);
+        let mut sid: PSID = std::ptr::null_mut();
+        // SAFETY: NUL-terminated strings (the name doubles as display name
+        // and description), no capabilities, and a SID out that is freed
+        // below if one is returned.
+        let created = unsafe {
+            CreateAppContainerProfile(
+                name.as_ptr(),
+                name.as_ptr(),
+                name.as_ptr(),
+                std::ptr::null(),
+                0,
+                &mut sid,
+            )
+        };
+        if !sid.is_null() {
+            // SAFETY: allocated by CreateAppContainerProfile, whose
+            // documented release is FreeSid; freed once. The derived SID
+            // held by the confinement is the same value.
+            unsafe { FreeSid(sid) };
+        }
+        if created < 0 && created != PROFILE_EXISTS {
+            return Err(ConfinementError::Container(format!(
+                "CreateAppContainerProfile: {created:#x}"
+            )));
+        }
+        Ok(Self {
+            name,
+            removed: false,
+            _serialized: serialized,
+        })
+    }
+
+    /// Remove the profile, its folder and its registry key.
+    fn remove(mut self) -> Result<(), ConfinementError> {
+        self.removed = true;
+        // SAFETY: a NUL-terminated name.
+        let deleted = unsafe { DeleteAppContainerProfile(self.name.as_ptr()) };
+        if deleted < 0 {
+            return Err(ConfinementError::Container(format!(
+                "DeleteAppContainerProfile: {deleted:#x}"
+            )));
+        }
+        Ok(())
+    }
+}
+
+impl Drop for RegisteredProfile {
+    /// On an early return before the creation: best effort, as no process
+    /// exists to refuse. Runs before the guard (a later field) is released.
+    fn drop(&mut self) {
+        if !self.removed {
+            // SAFETY: a NUL-terminated name.
+            unsafe { DeleteAppContainerProfile(self.name.as_ptr()) };
+        }
+    }
 }
 
 /// One ACE on the image itself, through a handle reopened from the held

@@ -22,9 +22,10 @@ so this crate creates the process itself and returns a `ConfinedChild`.
 ## What the agent gets
 
 - **A principal of its own.** An AppContainer SID derived from the name
-  `chief-of-staff.<32 hex>`, the SHA-256 of its attested `agent_id`. No
-  profile is registered, so it has no storage folder or registry key to
-  keep state in.
+  `chief-of-staff.<32 hex>`, the SHA-256 of its attested `agent_id`. Its
+  profile, which `CreateProcessW` requires, is registered just before the
+  creation and removed while the agent is still suspended, so it has no
+  storage folder or registry key to keep state in.
   It has no capabilities: no network, no libraries, no devices. It is LPAC,
   so `ALL APPLICATION PACKAGES` grants it nothing.
 - **Its own image, readable.** One ACE lets its SID read and execute the

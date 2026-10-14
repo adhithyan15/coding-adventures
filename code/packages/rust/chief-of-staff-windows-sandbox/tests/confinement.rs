@@ -135,8 +135,8 @@ fn the_probe_runs_in_its_own_less_privileged_appcontainer() {
         "appcontainer=1 lpac=1 integrity=0x1000"
     );
     assert!(control(&["token"]).starts_with("appcontainer=0"));
-    // No profile is registered, so the agent has no storage of its own to
-    // keep state in across runs.
+    // The profile the creation needed was removed before the agent ran,
+    // so it has no storage of its own to keep state in across runs.
     let local = std::env::var("LOCALAPPDATA").unwrap();
     let storage = PathBuf::from(local)
         .join("Packages")

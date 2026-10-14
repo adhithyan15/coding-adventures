@@ -24,12 +24,14 @@
 //!   WindowsConfinement::prepare_verified(plan, agent, agent_id)
 //!     re-verifies the agent through its held handle
 //!     the path is exactly that handle's final path
-//!     the agent's own AppContainer SID (no profile)
+//!     the agent's own AppContainer SID (profile only during creation)
 //!     one ACE on the image: that SID may read and run it
 //!   spawn(arguments, environment)
 //!     a job: kill on close, one process, no UI
 //!     pipes for stdin and stdout; NUL for stderr
+//!     register the AppContainer's profile
 //!     CreateProcessW(SUSPENDED, the attributes below)
+//!     remove the profile, its folder and its key
 //!     launch checks (S-P4), from outside the process:
 //!       token: AppContainer, LPAC, this SID,
 //!              no capabilities, Low integrity
@@ -103,9 +105,11 @@
 //! `chief-of-staff.` and 32 hex digits, the first 16 bytes of SHA-256 over
 //! the attested `agent_id`. The derivation is deterministic, so the agent
 //! has the same principal on every launch, and two agents share one only
-//! through a SHA-256 collision. No profile is registered: a profile would
-//! give the agent a storage folder and a registry key of its own, kept
-//! across runs, which is state S-I1 does not allow.
+//! through a SHA-256 collision. A profile would give the agent a storage
+//! folder and a registry key of its own, kept across runs, which is state
+//! S-I1 does not allow; but `CreateProcessW` refuses a container without
+//! one. So the profile exists only around the creation, and is removed
+//! while the agent is still suspended.
 //!
 //! An LPAC token reads nothing ALL APPLICATION PACKAGES may, its own image
 //! included. So `WindowsConfinement::prepare_verified` adds one ACE to the
