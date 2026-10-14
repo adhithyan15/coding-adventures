@@ -14,7 +14,8 @@ romanization: "kholṇo"
 concept_tag: MW-VERB-KHOLNO
 prerequisites: [MW-C53-leno, MW-C53-rakhno]
 sounds: []
-roots: []
+roots: [indo-aryan-kholl]
+etymology_hook: "kholṇo ← *kholl 'to open', reconstructed (CDIAL 3945, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C53-rakhno]
 <!-- hl-knowledge: introduces=[MW-LEX-C54-VERBS54-01]; assesses=[] -->
 
 **खोलणो** — *kholṇo* — "to open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खोलणो** (*kholṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kholl*, "to open", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari *kholṇo* under it (CDIAL 3945).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

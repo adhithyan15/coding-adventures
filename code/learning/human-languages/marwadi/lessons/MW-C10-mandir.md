@@ -11,8 +11,8 @@ gloss: temple, written entirely with known signs
 concept_tag: MW-PLACE-TEMPLE-WRITTEN
 prerequisites: [MW-C10-hear-mandir]
 sounds: [nasal-consonant, dental-d, short-i]
-roots: []
-etymology_hook: Familiar म, ं, द, ि, and र carry a new place meaning without a script cliff.
+roots: [sanskrit-mandira]
+etymology_hook: "mandir ← Sanskrit mandira 'dwelling, camp, town, temple', a tatsama (CDIAL 9852)"
 duration:
   max_seconds: 165
 requires:
@@ -43,6 +43,11 @@ reviews_of: [MW-C10-hear-mandir, MW-C10-ghar, MW-W03-anusvara, MW-W08-da]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MANDIR-01, MW-SCRIPT-MANDIR-01] -->
 
 > **मं** + **दि** + **र** → **मंदिर** — *mandir* — temple
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मंदिर** (*mandir*) is Sanskrit *mandira*, "dwelling, camp, town, temple", taken over whole as a learned loan, a tatsama (CDIAL 9852).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MANDIR-01] -->

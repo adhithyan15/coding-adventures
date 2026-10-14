@@ -14,7 +14,8 @@ romanization: "chhuṭṭī"
 concept_tag: MW-WORLD88-CHHUTTI
 prerequisites: [MW-C88-git, MW-C88-jatra]
 sounds: []
-roots: []
+roots: [indo-aryan-kshutyate]
+etymology_hook: "chhuṭṭī ← *kṣuṭyate 'is released'; CDIAL marks chuṭṭī 'leave' as from Punjabi (CDIAL 3707)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C88-jatra]
 <!-- hl-knowledge: introduces=[MW-LEX-C88-WORLD88-04]; assesses=[] -->
 
 **छुट्टी** — *chhuṭṭī* — "a holiday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छुट्टी** (*chhuṭṭī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kṣuṭyate*, "is released", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari *chuṭṇo* under it (CDIAL 3707). The Marwari row is the verb "to get loose"; CDIAL marks Hindi and Gujarati *chuṭṭī*, "leave", as taken from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

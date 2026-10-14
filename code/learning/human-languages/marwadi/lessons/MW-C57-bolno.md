@@ -14,7 +14,8 @@ romanization: "bolṇo"
 concept_tag: MW-VERB-BOLNO
 prerequisites: [MW-C57-pairno, MW-C57-chhorno]
 sounds: []
-roots: []
+roots: [indo-aryan-boll]
+etymology_hook: "bolṇo ← *boll 'speak', reconstructed (CDIAL 9321, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C57-chhorno]
 <!-- hl-knowledge: introduces=[MW-LEX-C57-VERBS57-03]; assesses=[] -->
 
 **बोलणो** — *bolṇo* — "to speak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बोलणो** (*bolṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*boll*, "speak", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *bolaï* under it (CDIAL 9321).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

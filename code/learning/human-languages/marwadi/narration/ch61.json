@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "Grapes, Lemon, Flour, Onion, Sweets",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9f1be74f693f41e3",
+  "sourceHash": "fnv1a64:799d920a4092b825",
   "lessons": [
     {
       "id": "MW-C61-angur",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:922e28875de3fbf6",
+      "sourceHash": "fnv1a64:66f03df7e34ef1ad",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंगूर (aṅgūr) is a loan, usually traced to Persian angūr, \"grape\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df02f088beeb64fc",
+      "sourceHash": "fnv1a64:3752ed5e0ee966a4",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नींबू (nīmbū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nimbū, \"the lime\". CDIAL gives no Marwari form in this entry (CDIAL 7247); the match is through Hindi nimbū. CDIAL takes the Sanskrit word itself from an Austroasiatic language."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8047324b4f2fc0c6",
+      "sourceHash": "fnv1a64:18bf830d69c9d6a5",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आटो (āṭo) is a tadbhava, a word inherited and reshaped by sound change. It comes from ārta, \"flour\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 1338); the match is through Hindi āṭā and Gujarati āṭo. CDIAL compares Persian ārd, \"flour\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:856c68b96b22bb10",
+      "sourceHash": "fnv1a64:84199d1086f88710",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कांदो (kā̃do) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kanda, \"bulbous root\". CDIAL gives no Marwari form in this entry (CDIAL 2723); the match is through Hindi kā̃dā and Gujarati kā̃do. CDIAL thinks the Sanskrit word itself probably came from Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73cdf663c792609a",
+      "sourceHash": "fnv1a64:aaaf3edbfdf13e5c",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिठाई (miṭhāī) is a noun built with -āī on the word for \"sweet\". CDIAL lists that word, Hindi miṭh and Gujarati mīṭhũ, \"sweet\", under Sanskrit miṣṭa, \"dainty, sweet\" (CDIAL 10299), where Old Marwari has sumīṭha, \"very sweet\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

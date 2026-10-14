@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for dirty, then the Marwadi for fat.
 You'll want to know: पतळो.
 पतळो — patḷo — "thin".
 
+The word, taken apart.
+पतळो (patḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pattrala, "leafy; leaf-like, thin". CDIAL gives no Marwari form in this entry (CDIAL 7736); the match is through Hindi patlā and Gujarati pātḷũ.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for fat, then the Marwadi for thin.
 
 You'll want to know: भारी.
 भारी — bhārī — "heavy".
+
+The word, taken apart.
+भारी (bhārī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhārika, "forming a load, heavy". CDIAL gives no Marwari form in this entry (CDIAL 9465); the match is through Hindi bhārī and Gujarati bhārī. It is built on bhāra, "burden, weight".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for thin, then the Marwadi for heavy.
 You'll want to know: साचो.
 साचो — sācho — "true".
 
+The word, taken apart.
+साचो (sācho) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from satya, "true". CDIAL lists Marwari sāco under it (CDIAL 13112).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for heavy, then the Marwadi for true.
 You'll want to know: हरो.
 हरो — haro — "green".
 
+The word, taken apart.
+हरो (haro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from harita, "yellow; green". CDIAL lists Old Marwari harīyaü under it (CDIAL 13985).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for true, then the Marwadi for green.
 
 You'll want to know: पीळो.
 पीळो — pīḷo — "yellow".
+
+The word, taken apart.
+पीळो (pīḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pītala, "yellow". CDIAL lists Old Marwari pīla under it (CDIAL 8233). It is built on pīta, "yellow". Marwadi, like Gujarati, says the l curled back.
 
 What you've built.
 One more word for this chapter.

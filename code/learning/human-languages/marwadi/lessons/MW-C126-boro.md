@@ -14,7 +14,8 @@ romanization: "boro"
 concept_tag: MW-THINGS126-BORO
 prerequisites: [MW-C126-koylo, MW-C126-chhano]
 sounds: []
-roots: []
+roots: [indo-aryan-bora]
+etymology_hook: "boro ← *bōra 'sacking, sack', reconstructed (CDIAL 9320, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C126-chhano]
 <!-- hl-knowledge: introduces=[MW-LEX-C126-THINGS126-03]; assesses=[] -->
 
 **बोरो** — *boro* — "a sack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बोरो** (*boro*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bora*, "sacking, sack", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 9320); the match is through Hindi *borā*. CDIAL thinks it first meant cloth of goat's hair, and asks whether it goes back to Sanskrit *bakura*, a goatskin bag.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

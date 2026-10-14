@@ -14,7 +14,8 @@ romanization: "nāchṇo"
 concept_tag: MW-VERB-NACHNO
 prerequisites: [MW-C54-rovno, MW-C54-gavno]
 sounds: []
-roots: []
+roots: [sanskrit-nrtyati]
+etymology_hook: "nāchṇo ← Sanskrit nṛtyati 'dances', a tadbhava (CDIAL 7583, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C54-gavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C54-VERBS54-05]; assesses=[] -->
 
 **नाचणो** — *nāchṇo* — "to dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाचणो** (*nāchṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nṛtyati*, "dances". CDIAL gives no Marwari form in this entry (CDIAL 7583); the match is through Hindi *nācnā* and Gujarati *nācvũ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

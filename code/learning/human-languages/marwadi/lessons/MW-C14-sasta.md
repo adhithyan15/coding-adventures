@@ -12,7 +12,7 @@ concept_tag: MW-SHOPPING-CHEAP-WRITTEN
 prerequisites: [MW-C14-hear-sasta]
 sounds: [voiceless-s, dental-t, long-aa]
 roots: []
-etymology_hook: Familiar स, the vowel-off mark, त, and ा carry the whole word.
+etymology_hook: "sastā 'cheap': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 165
 requires:
@@ -46,6 +46,11 @@ Say sister, then recall **्** and **त**.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01] -->
 
 > **सस्** + **ता** → **सस्ता** — *sastā* — cheap
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **सस्ता** (*sastā*) is not settled. CDIAL, searched by form and by meaning, has no entry for it; its words for "cheap", such as Sanskrit *samargha* (CDIAL 13187), do not match.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SASTA-01] -->

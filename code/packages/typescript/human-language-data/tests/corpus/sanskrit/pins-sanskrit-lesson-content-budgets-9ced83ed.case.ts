@@ -127,7 +127,10 @@ it("pins Sanskrit lesson-content budgets", () =>
     // 1394 -> 1397: chapter 259 teaches asmākam, then yuṣmākam, then the
     // productive one-versus-several possessor contrast. It introduces no
     // idiom, sense, or culture claim.
-    lessons: 1397,
+    // 1397 -> 1407: chapters 260-262 add six independent first-/second-person
+    // accusatives, two number-local contrasts, one cumulative choice lesson,
+    // and a terminal retrieval. They add no idiom, sense, or culture claim.
+    lessons: 1407,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

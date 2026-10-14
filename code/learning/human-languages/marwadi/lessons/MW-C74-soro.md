@@ -14,7 +14,8 @@ romanization: "soro"
 concept_tag: MW-ADJ74-SORO
 prerequisites: [MW-C74-thando, MW-C74-tej]
 sounds: []
-roots: []
+roots: [sukha-sanskrit]
+etymology_hook: "soro 'easy': not settled; a lead is sukha 'easy', whose Hindi descendant suhelā means 'easy' (CDIAL 13451)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C74-tej]
 <!-- hl-knowledge: introduces=[MW-LEX-C74-ADJ74-04]; assesses=[] -->
 
 **सोरो** — *soro* — "easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **सोरो** (*soro*) is not settled; CDIAL has no entry for it. A likely relative is Hindi *suhelā* and Gujarati *sahelũ*, "easy", which CDIAL lists under Sanskrit *sukha*, "easy, pleasant" (CDIAL 13451), but that entry does not explain the *r* of **सोरो** (*soro*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

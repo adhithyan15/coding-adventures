@@ -11,7 +11,8 @@ gloss: nineteen, on the page — twenty visible inside it
 concept_tag: MW-NUMBER-NINETEEN-WRITTEN
 prerequisites: [MW-C38-hear-ughanis]
 sounds: []
-roots: []
+roots: [sanskrit-unavimshati]
+etymology_hook: "ughaṇīs ~ Hindi unīs ← Sanskrit ūnaviṃśati 'twenty less one' (CDIAL 2411); its gh is unexplained"
 duration:
   max_seconds: 190
 requires:
@@ -52,6 +53,11 @@ the retroflex **ण** from chapter 4, and **स** from the first page of the boo
 Write **बीस** under it. The **ीस** at the end of nineteen is the **ीस** of
 twenty, with a retroflex **ण** in front of it instead of **ब**. What the ear was
 told, the page shows.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Hindi *unīs*, "nineteen", under Sanskrit *ūnaviṃśati*, "nineteen", literally "twenty less one" (CDIAL 2411). It gives no Marwari form there, and the *gh* of **उघणीस** (*ughaṇīs*) is not explained by that entry, so that part of its history is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-UGHANIS-01, MW-SCRIPT-BEES-01, MW-SCRIPT-ATHARA-01] -->

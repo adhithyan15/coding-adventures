@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-THIRTEEN
 prerequisites: [MW-C37-baara]
 sounds: [dental-t, long-aa]
 roots: [sanskrit-trayodasha]
-etymology_hook: Sanskrit trayodasha; the t of three survives, the rest becomes the shared teens ending.
+etymology_hook: "terā ← *trayēdaśa, CDIAL's variant of Sanskrit trayodaśa 'thirteen'; a tadbhava (CDIAL 6001)"
 duration:
   max_seconds: 180
 requires:
@@ -54,6 +54,11 @@ Three is *tīn*. Thirteen is *terā*: the **t** stays, the long **ī** flattens 
 You have now heard the pattern three times, and it is the pattern rather than the
 words that is worth holding: **a consonant off the small number, then -ārā or
 -erā**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*terā* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to Sanskrit *trayodaśa*, "thirteen": CDIAL lists Marwari *terā* under a variant it reconstructs, *\*trayēdaśa* (CDIAL 6001). It is "three" and *daśa*, "ten".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-TERA-01, MW-LEX-BAARA-01] -->

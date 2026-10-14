@@ -14,7 +14,8 @@ romanization: "des"
 concept_tag: MW-WORLD89-DES
 prerequisites: [MW-C89-sangit, MW-C89-khabar]
 sounds: []
-roots: []
+roots: [sanskrit-desha]
+etymology_hook: "des ← Sanskrit deśa 'region, country', a tadbhava (CDIAL 6547, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C89-khabar]
 <!-- hl-knowledge: introduces=[MW-LEX-C89-WORLD89-03]; assesses=[] -->
 
 **देस** — *des* — "a country".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**देस** (*des*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *deśa*, "region, country". CDIAL lists Marwari *desṛo* under it (CDIAL 6547). The Marwari row is a diminutive, "a small country"; Hindi and Gujarati have *des*, as Marwadi does.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "migsar"
 concept_tag: MW-TIME93-MIGSAR
 prerequisites: [MW-C93-asoj, MW-C93-kati]
 sounds: []
-roots: []
+roots: [sanskrit-margashiras]
+etymology_hook: "migsar ← Sanskrit mārgaśiras 'the month November-December', a tadbhava (CDIAL 10076, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C93-kati]
 <!-- hl-knowledge: introduces=[MW-LEX-C93-TIME93-05]; assesses=[] -->
 
 **मिगसर** — *migsar* — "Migsar (November-December)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मिगसर** (*migsar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mārgaśiras*, "the month November-December". CDIAL gives no Marwari form in this entry (CDIAL 10076); the match is through Hindi *mãgsir* and Gujarati *māgsar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rābṛī"
 concept_tag: MW-THINGS130-RABRI
 prerequisites: [MW-C130-payal, MW-C130-bajro]
 sounds: []
-roots: []
+roots: [indo-aryan-rabba]
+etymology_hook: "rābṛī ← *rabbā 'gruel, thickened juice', reconstructed (CDIAL 10623, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C130-bajro]
 <!-- hl-knowledge: introduces=[MW-LEX-C130-THINGS130-05]; assesses=[] -->
 
 **राबड़ी** — *rābṛī* — "a millet porridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**राबड़ी** (*rābṛī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*rabbā*, "gruel, thickened juice", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 10623); the match is through Hindi *rābṛī* and Gujarati *rābṛī*. The *ṛ* is an added suffix.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

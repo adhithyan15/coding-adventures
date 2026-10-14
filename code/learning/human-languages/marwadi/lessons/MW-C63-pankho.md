@@ -14,7 +14,8 @@ romanization: "paṅkho"
 concept_tag: MW-HOME63-PANKHO
 prerequisites: [MW-C63-almari, MW-C63-diyo]
 sounds: []
-roots: []
+roots: [sanskrit-paksha]
+etymology_hook: "paṅkho ← Sanskrit pakṣa 'wing'; pakṣaka 'fan'; CDIAL queries its nasal (CDIAL 7627)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C63-diyo]
 <!-- hl-knowledge: introduces=[MW-LEX-C63-HOME63-04]; assesses=[] -->
 
 **पंखो** — *paṅkho* — "a fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पंखो** (*paṅkho*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pakṣa*, "wing, feather; side". CDIAL lists Old Marwari *pāṃkha* under it (CDIAL 7627). Sanskrit *pakṣaka* already meant "fan"; CDIAL asks whether the nasal comes from a blend with *puṅkha*, "feathered end of an arrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

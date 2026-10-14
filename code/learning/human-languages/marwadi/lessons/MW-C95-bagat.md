@@ -14,7 +14,8 @@ romanization: "bagat"
 concept_tag: MW-TIME95-BAGAT
 prerequisites: [MW-C95-basant, MW-C95-tarkai]
 sounds: []
-roots: []
+roots: [arabic-waqt]
+etymology_hook: "bagat ← Arabic waqt 'time', through Persian (Lane, root w-q-t)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C95-tarkai]
 <!-- hl-knowledge: introduces=[MW-LEX-C95-TIME95-03]; assesses=[] -->
 
 **बगत** — *bagat* — "time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बगत** (*bagat*) is a loan from Arabic *waqt*, "time", which reached Marwadi through Persian. Its Arabic root is *w-q-t* (Lane). Marwadi says the *w* as *b* and the *q* as *g*, and splits the final consonants with a vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hā̃ḍī"
 concept_tag: MW-THINGS118-HADI
 prerequisites: [MW-C118-tavo, MW-C118-karahi]
 sounds: []
-roots: []
+roots: [indo-aryan-handa]
+etymology_hook: "hā̃ḍī ← *hāṇḍa 'pot', reconstructed; a link with bhāṇḍa is unclear (CDIAL 14050)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C118-karahi]
 <!-- hl-knowledge: introduces=[MW-LEX-C118-THINGS118-04]; assesses=[] -->
 
 **हांडी** — *hā̃ḍī* — "a cooking pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हांडी** (*hā̃ḍī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*hāṇḍa*, "pot", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 14050); the match is through Hindi *hā̃ḍī* and Gujarati *hā̃ḍī*. CDIAL says any link with Sanskrit *bhāṇḍa*, "pot", is not clear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

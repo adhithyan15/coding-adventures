@@ -15,6 +15,7 @@ concept_tag: MW-VERB-BATANO
 prerequisites: [MW-C56-katno, MW-C56-rokno]
 sounds: []
 roots: []
+etymology_hook: "batāṇo 'to tell': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C56-rokno]
 <!-- hl-knowledge: introduces=[MW-LEX-C56-VERBS56-05]; assesses=[] -->
 
 **बताणो** — *batāṇo* — "to tell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **बताणो** (*batāṇo*) is not settled. CDIAL, searched by form and by meaning, has no entry for it or for Hindi *batānā*, "to tell".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

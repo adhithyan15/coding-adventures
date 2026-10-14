@@ -11,8 +11,8 @@ gloss: cloud or clouds, written with familiar signs
 concept_tag: MW-WEATHER-CLOUD-WRITTEN
 prerequisites: [MW-C11-hear-baadal]
 sounds: [voiced-b, long-aa, voiced-d]
-roots: []
-etymology_hook: The cloud word reuses ब, ा, द, and ल already secured elsewhere.
+roots: [sanskrit-vardala]
+etymology_hook: "bādal ← Sanskrit vārdala 'rainy day, bad weather', a tadbhava (CDIAL 11567, Hindi row)"
 duration:
   max_seconds: 160
 requires:
@@ -46,6 +46,11 @@ Then recall **ब**, **ा**, **द**, and **ल**.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAADAL-01, MW-SCRIPT-BAADAL-01] -->
 
 > **बा** + **दल** → **बादल** — *bādal* — cloud
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बादल** (*bādal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vārdala*, "rainy day, bad weather". CDIAL gives no Marwari form in this entry (CDIAL 11567); the match is through Hindi *bādal*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BAADAL-01] -->

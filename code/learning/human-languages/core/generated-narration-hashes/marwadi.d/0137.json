@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 137,
-  "sourceHash": "fnv1a64:057d145018bf714d",
+  "sourceHash": "fnv1a64:d0f753158ba34b8a",
   "lessonIds": [
     "MW-C137-masalo",
     "MW-C137-papito",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch137.txt",
   "json": "marwadi/narration/ch137.json",
-  "textHash": "fnv1a64:0f8d9911d91a29af",
-  "jsonHash": "fnv1a64:ef9fe1d4dd898ed1",
+  "textHash": "fnv1a64:21c820347fe0a286",
+  "jsonHash": "fnv1a64:9a3737a9e1e84ab1",
   "findings": []
 }

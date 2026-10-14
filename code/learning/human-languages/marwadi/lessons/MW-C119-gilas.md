@@ -14,7 +14,8 @@ romanization: "gilās"
 concept_tag: MW-THINGS119-GILAS
 prerequisites: [MW-C119-matko, MW-C119-loto]
 sounds: []
-roots: []
+roots: [english-glass]
+etymology_hook: "gilās ← English glass"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C119-loto]
 <!-- hl-knowledge: introduces=[MW-LEX-C119-THINGS119-03]; assesses=[] -->
 
 **गिलास** — *gilās* — "a glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गिलास** (*gilās*) is a loan from English *glass*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

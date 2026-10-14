@@ -14,7 +14,8 @@ romanization: "chauṛo"
 concept_tag: MW-QUAL141-CHAURO
 prerequisites: [MW-C141-kharab, MW-C141-sakro]
 sounds: []
-roots: []
+roots: [indo-aryan-cauda]
+etymology_hook: "chauṛo ← *ca-uḍa 'wide, open', perhaps on catur 'four' (CDIAL 4534, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C141-sakro]
 <!-- hl-knowledge: introduces=[MW-LEX-C141-QUAL141-04]; assesses=[] -->
 
 **चौड़ो** — *chauṛo* — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चौड़ो** (*chauṛo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ca-uḍa*, "wide, open", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *cauḍaï* under it (CDIAL 4534). The Old Marwari row means "in the open"; CDIAL thinks the word may be built on *caü-*, "four", from compounds of *catur*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

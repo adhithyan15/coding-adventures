@@ -11,8 +11,8 @@ gloss: paternal grandmother
 concept_tag: MW-FAMILY-PATERNAL-GRANDMOTHER
 prerequisites: [MW-C08-dada]
 sounds: [dental-d, long-aa, long-ii]
-roots: []
-etymology_hook: One final vowel changes the heard grandfather word into grandmother.
+roots: [indo-aryan-dadda]
+etymology_hook: "dādī: feminine of dādā ← *dādda 'elderly relative', reconstructed (CDIAL 6261)"
 duration:
   max_seconds: 150
 requires:
@@ -48,6 +48,11 @@ Then give the known see-you-later line and its two meaning parts.
 
 The first beat matches *dādā*. The last vowel changes: *dā-dī*. Hear the pair
 *dādā — dādī*, then say only *dādī*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dādī* is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dādda*, "father or other elderly relative", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 6261); the match is through Hindi *dādī* and Gujarati *dādī*. It is the feminine of *dādā*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DADI-01, MW-LEX-DADA-01] -->

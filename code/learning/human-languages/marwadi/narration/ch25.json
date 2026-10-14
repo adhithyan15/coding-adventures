@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "The Sweet and the Tea: One New Consonant",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:f1c53f9c0cf95ae1",
+  "sourceHash": "fnv1a64:54323b1a1056fbff",
   "lessons": [
     {
       "id": "MW-C20-hear-churma",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e48550e98dcdc97",
+      "sourceHash": "fnv1a64:26f27f7d53765252",
       "notice": null,
       "blocks": [
         {
@@ -65,6 +65,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chūrmā is built on chūr, \"crumbled\". CDIAL lists Hindi cūr, \"powder\", under cūra, a form drawn from Sanskrit cūrṇa, \"powdered\" (CDIAL 4888). It has no entry for chūrmā itself or for its ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -109,7 +120,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23afe13568d54db2",
+      "sourceHash": "fnv1a64:0dadfa56cf12b545",
       "notice": null,
       "blocks": [
         {
@@ -146,6 +157,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चूरमा (chūrmā) is built on chūr, \"crumbled\". CDIAL lists Hindi cūr, \"powder\", under cūra, a form drawn from Sanskrit cūrṇa, \"powdered\" (CDIAL 4888). It has no entry for चूरमा (chūrmā) itself or for its ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -170,7 +192,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -215,7 +237,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3dd8de78a847dd41",
+      "sourceHash": "fnv1a64:9371ab1e500144be",
       "notice": null,
       "blocks": [
         {
@@ -261,6 +283,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chāy is a loan, usually traced to Persian chāy, \"tea\". Persian took it overland from Chinese chá."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -411,7 +444,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c46ab0f873349e2",
+      "sourceHash": "fnv1a64:5e44151b3e8929c2",
       "notice": null,
       "blocks": [
         {
@@ -457,6 +490,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चाय (chāy) is a loan, usually traced to Persian chāy, \"tea\". Persian took it overland from Chinese chá."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -481,7 +525,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

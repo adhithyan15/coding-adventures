@@ -14,7 +14,8 @@ romanization: "harek"
 concept_tag: MW-DEF102-HAREK
 prerequisites: [MW-C102-apno, MW-C102-koi]
 sounds: []
-roots: []
+roots: [persian-har, sanskrit-eka]
+etymology_hook: "harek: har 'every', usually traced to Persian, + ek 'one' ← Sanskrit eka (CDIAL 2462)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C102-koi]
 <!-- hl-knowledge: introduces=[MW-LEX-C102-DEF102-05]; assesses=[] -->
 
 **हरेक** — *harek* — "each, every".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हरेक** (*harek*) joins *har*, "every", usually traced to Persian *har*, with *ek*, "one", from Sanskrit *eka* (CDIAL 2462).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

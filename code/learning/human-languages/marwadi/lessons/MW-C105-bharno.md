@@ -14,7 +14,8 @@ romanization: "bharṇo"
 concept_tag: MW-VERB-BHARNO
 prerequisites: [MW-C105-bachno, MW-C105-janno]
 sounds: []
-roots: []
+roots: [sanskrit-bharati]
+etymology_hook: "bharṇo ← Sanskrit bharati 'bears; fills', a tadbhava (CDIAL 9397, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C105-janno]
 <!-- hl-knowledge: introduces=[MW-LEX-C105-ACT105-04]; assesses=[] -->
 
 **भरणो** — *bharṇo* — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भरणो** (*bharṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bharati*, "bears; fills". CDIAL lists Old Marwari *bharaï* under it (CDIAL 9397).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

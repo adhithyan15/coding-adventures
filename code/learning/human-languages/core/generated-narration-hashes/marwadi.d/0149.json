@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 149,
-  "sourceHash": "fnv1a64:7ba426de5be69bf5",
+  "sourceHash": "fnv1a64:23e00f0188efb24b",
   "lessonIds": [
     "MW-C149-puro",
     "MW-C149-khus",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marwadi/narration/ch149.txt",
   "json": "marwadi/narration/ch149.json",
-  "textHash": "fnv1a64:8a48886c947b96de",
-  "jsonHash": "fnv1a64:13e0faf438de4aab",
+  "textHash": "fnv1a64:3bc805d68c510217",
+  "jsonHash": "fnv1a64:c909bea1884a9cfe",
   "findings": []
 }

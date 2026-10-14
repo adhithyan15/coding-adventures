@@ -4,7 +4,7 @@
   "chapter": 146,
   "title": "Shiny, Calm, Clever, Silly, Lazy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:527abb1c25848a9a",
+  "sourceHash": "fnv1a64:467a4fad2ccb9685",
   "lessons": [
     {
       "id": "MW-C146-chamkilo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50eb5c87a5a27978",
+      "sourceHash": "fnv1a64:5c73f02208e95ddb",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चमकीलो (chamkīlo) is built with -īlo on chamak, \"shine\". CDIAL lists Hindi camaknā, \"to glitter\", under camakka, \"sudden movement\" (CDIAL 4676)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b82535cda1ff6c1",
+      "sourceHash": "fnv1a64:02e161fa7e82c525",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांत (sānt) is a semi-tatsama: Sanskrit śānta, \"abated, calm\", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 12390). Marwadi says the ś as s."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab8590fd69695c19",
+      "sourceHash": "fnv1a64:9cd84b22f6d0d111",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हुसियार (husiyār) is a loan, usually traced to Persian hušyār, \"alert, wise\". It is built on Persian huš, \"the senses\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ddf3bcac508df05",
+      "sourceHash": "fnv1a64:05cf63ce25743000",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बावळो (bāvaḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vātula, \"affected by wind-disease, crazy\". CDIAL gives no Marwari form in this entry (CDIAL 11504); the match is through Hindi bāulā and Gujarati vāulũ. CDIAL thinks the sense \"mad\" may come from Middle Indo-Aryan vāula, \"perplexed\", from Sanskrit vyākula."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d79a1a796a2cc8b8",
+      "sourceHash": "fnv1a64:51adf1b9a685239a",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आळसी (āḷsī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ālasya, \"sloth\". CDIAL gives no Marwari form in this entry (CDIAL 1371); the match is through Hindi ālsī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

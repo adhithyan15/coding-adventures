@@ -14,7 +14,8 @@ romanization: "tāto"
 concept_tag: MW-QUAL143-TATO
 prerequisites: [MW-C142-gilo, MW-C142-suko]
 sounds: []
-roots: []
+roots: [sanskrit-tapta]
+etymology_hook: "tāto ← Sanskrit tapta 'heated, hot', a tadbhava (CDIAL 5679, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C142-suko]
 <!-- hl-knowledge: introduces=[MW-LEX-C143-QUAL143-01]; assesses=[] -->
 
 **तातो** — *tāto* — "hot (to the touch)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तातो** (*tāto*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tapta*, "heated, hot". CDIAL lists Marwari *tāto* under it (CDIAL 5679).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

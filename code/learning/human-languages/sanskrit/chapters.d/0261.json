@@ -1,0 +1,19 @@
+{
+  "chapter": 261,
+  "title": "Us two and you two as objects",
+  "label": "ch:sa-us-two-you-two-objects",
+  "canDo": "I can distinguish us two from you two when the pair is the object.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C261-dual-object-practice",
+    "kind": "production",
+    "summary": "Complete chapter 261 by deciding whether an object pair includes the speaker and producing the matching dual form.",
+    "assesses": [
+      "SA-PRON-C261-AVAM-01",
+      "SA-PRON-C261-YUVAM-02",
+      "SA-GRAMMAR-C261-DUAL-OBJECTS-03"
+    ]
+  }
+}

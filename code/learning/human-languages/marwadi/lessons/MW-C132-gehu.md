@@ -14,7 +14,8 @@ romanization: "gehū̃"
 concept_tag: MW-THINGS132-GEHU
 prerequisites: [MW-C132-ghevar, MW-C132-makki]
 sounds: []
-roots: []
+roots: [sanskrit-godhuma]
+etymology_hook: "gehū̃ ← Sanskrit godhūma 'wheat', a tadbhava (CDIAL 4287, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C132-makki]
 <!-- hl-knowledge: introduces=[MW-LEX-C132-THINGS132-05]; assesses=[] -->
 
 **गेहूं** — *gehū̃* — "wheat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गेहूं** (*gehū̃*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *godhūma*, "wheat". CDIAL gives no Marwari form in this entry (CDIAL 4287); the match is through Hindi *gehū̃*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

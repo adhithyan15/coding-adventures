@@ -14,7 +14,8 @@ romanization: "loṭo"
 concept_tag: MW-THINGS119-LOTO
 prerequisites: [MW-C118-gharo, MW-C119-matko]
 sounds: []
-roots: []
+roots: [indo-aryan-lotta]
+etymology_hook: "loṭo ← *loṭṭa 'waterpot', reconstructed (CDIAL 11133, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C119-matko]
 <!-- hl-knowledge: introduces=[MW-LEX-C119-THINGS119-02]; assesses=[] -->
 
 **लोटो** — *loṭo* — "a small water vessel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लोटो** (*loṭo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*loṭṭa*, "waterpot", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 11133); the match is through Hindi *loṭā* and Gujarati *loṭo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

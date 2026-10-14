@@ -14,7 +14,8 @@ romanization: "pasand"
 concept_tag: MW-LIKE113-PASAND
 prerequisites: [MW-C112-marji, MW-C113-lagno]
 sounds: []
-roots: []
+roots: [persian-pasand]
+etymology_hook: "pasand: usually traced to Persian pasand 'pleasing, approved'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C113-lagno]
 <!-- hl-knowledge: introduces=[MW-LEX-C113-LIKE113-02]; assesses=[] -->
 
 **पसंद** — *pasand* — "a liking, a choice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पसंद** (*pasand*) is a loan, usually traced to Persian *pasand*, "pleasing, approved".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

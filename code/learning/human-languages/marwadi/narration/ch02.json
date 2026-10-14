@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Aabhaar: Formal Thanks, Two New Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:585ba3ca4fb18c50",
+  "sourceHash": "fnv1a64:c424fa8738154455",
   "lessons": [
     {
       "id": "MW-W02-aa-independent",
@@ -276,7 +276,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:28ddd7bfa8bb6b3a",
+      "sourceHash": "fnv1a64:3c9a380a55411537",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -329,6 +329,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आभार (ābhār) is Sanskrit ābhāra, \"a load, a burden\", taken over whole, a tatsama; the sense of thanks came later. CDIAL has no entry for ābhāra itself, but lists the inherited family of its root under bhāra, \"burden, weight\", among them Old Marwari bhāra, \"load\" (CDIAL 9459)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "writing",
           "title": "Writing — from guided to delayed copy",
           "segments": [
@@ -359,7 +370,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up recall",
           "segments": [

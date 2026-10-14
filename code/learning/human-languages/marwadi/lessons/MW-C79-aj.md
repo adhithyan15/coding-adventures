@@ -14,7 +14,8 @@ romanization: "āj"
 concept_tag: MW-TIME79-AJ
 prerequisites: [MW-C79-ghanto, MW-C79-minat]
 sounds: []
-roots: []
+roots: [sanskrit-adya]
+etymology_hook: "āj ← Sanskrit adya 'today', a tadbhava (CDIAL 242, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C79-minat]
 <!-- hl-knowledge: introduces=[MW-LEX-C79-TIME79-03]; assesses=[] -->
 
 **आज** — *āj* — "today".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आज** (*āj*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *adya*, "today". CDIAL lists Old Marwari *āji* under it (CDIAL 242).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

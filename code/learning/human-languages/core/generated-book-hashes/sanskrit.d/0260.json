@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:41903a3e65d47a56",
+  "lessonIds": [
+    "SA-C260-mam",
+    "SA-C260-tvam",
+    "SA-C260-singular-object-practice"
+  ],
+  "tex": "sanskrit/book/chapters/ch260-me-and-you-as-objects.tex"
+}

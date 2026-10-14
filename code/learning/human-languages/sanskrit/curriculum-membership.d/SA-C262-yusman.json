@@ -1,0 +1,11 @@
+{
+  "id": "SA-C262-yusman",
+  "pathSegment": "SA-PATH-262-OBJ262",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-262-OBJ262",
+      "order": 1
+    }
+  ]
+}

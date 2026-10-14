@@ -14,7 +14,8 @@ romanization: "gairo"
 concept_tag: MW-QUAL141-GAIRO
 prerequisites: [MW-C141-sakro, MW-C141-chauro]
 sounds: []
-roots: []
+roots: [sanskrit-gabhira]
+etymology_hook: "gairo ← Sanskrit gabhīra 'deep', a tadbhava (CDIAL 4024, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C141-chauro]
 <!-- hl-knowledge: introduces=[MW-LEX-C141-QUAL141-05]; assesses=[] -->
 
 **गैरो** — *gairo* — "deep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गैरो** (*gairo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gabhīra*, "deep". CDIAL lists Old Marwari *gaharau* under it (CDIAL 4024). Marwadi has lost the *h* that the Old Marwari form kept.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

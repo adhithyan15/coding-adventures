@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a turn, then the Marwadi for a path.
 You'll want to know: रस्तो.
 रस्तो — rasto — "a route".
 
+The word, taken apart.
+रस्तो (rasto) is a loan, usually traced to Persian rāsta, "straight; a road".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a path, then the Marwadi for a route.
 
 You'll want to know: आंगणो.
 आंगणो — ā̃gaṇo — "a courtyard".
+
+The word, taken apart.
+आंगणो (ā̃gaṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṅgaṇa, "courtyard". CDIAL gives no Marwari form in this entry (CDIAL 118); the match is through Hindi ã̄gan and Gujarati ã̄gaṇ.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a route, then the Marwadi for a courtyar
 You'll want to know: बाड़ो.
 बाड़ो — bāṛo — "an enclosure, a yard".
 
+The word, taken apart.
+बाड़ो (bāṛo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāṭa, "enclosure, fence". CDIAL lists Marwari bāṛī under it (CDIAL 11480). The Marwari row bāṛī means "garden"; Hindi has bāṛā, "enclosure".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a courtyard, then the Marwadi for an enc
 You'll want to know: बावड़ी.
 बावड़ी — bāvṛī — "a stepwell".
 
+The word, taken apart.
+बावड़ी (bāvṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāpī, "pond, tank". CDIAL gives no Marwari form in this entry (CDIAL 11529); the match is through Hindi bāuṛī. CDIAL explains the ṛ as an added suffix.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for an enclosure, then the Marwadi for a ste
 
 You'll want to know: तळाव.
 तळाव — taḷāv — "a pond, a lake".
+
+The word, taken apart.
+तळाव (taḷāv) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from taḍāga, "pool". CDIAL lists Old Marwari talāvo under it (CDIAL 5635).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "mū̃ḍo"
 concept_tag: MW-BODY45-MUDO
 prerequisites: [MW-C45-angli, MW-C45-hoth]
 sounds: []
-roots: []
+roots: [sanskrit-murdhan]
+etymology_hook: "mū̃ḍo 'face': close to Old Marwari mūḍho 'face', under Sanskrit mūrdhan 'head' (CDIAL 10247)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C45-hoth]
 <!-- hl-knowledge: introduces=[MW-LEX-C45-BODY45-04]; assesses=[] -->
 
 **मूंडो** — *mū̃ḍo* — "the face, the mouth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Old Marwari *mūḍho*, "face", under Sanskrit *mūrdhan*, "head, top" (CDIAL 10247). **मूंडो** (*mū̃ḍo*) is a close form of the same word, with a nasal vowel and no breath after the *ḍ*; CDIAL does not list that exact shape.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

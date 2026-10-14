@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for Kati, then the Marwadi for Migsar.
 You'll want to know: पोस.
 पोस — pos — "Pos (December-January)".
 
+The word, taken apart.
+पोस (pos) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pauṣa, "the month December-January". CDIAL gives no Marwari form in this entry (CDIAL 8424); the match is through Gujarati pos.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for Migsar, then the Marwadi for Pos.
 
 You'll want to know: माघ.
 माघ — māgh — "Magh (January-February)".
+
+The word, taken apart.
+माघ (māgh) is Sanskrit māgha, "the month January-February", kept in its Sanskrit shape, the mark of a learned word, a tatsama. The inherited forms CDIAL lists under it, such as Gujarati and Punjabi māh, lost the g (CDIAL 9993).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for Pos, then the Marwadi for Magh.
 You'll want to know: उनाळो.
 उनाळो — unāḷo — "the hot season, summer".
 
+The word, taken apart.
+उनाळो (unāḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uṣṇakāla, "hot season". CDIAL lists Marwari unhāḷo under it (CDIAL 2391). It is built on uṣṇa, "hot", and kāla, "time".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for Magh, then the Marwadi for the hot seaso
 You'll want to know: सियाळो.
 सियाळो — siyāḷo — "the cold season, winter".
 
+The word, taken apart.
+सियाळो (siyāḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śītakāla, "cold season". CDIAL gives no Marwari form in this entry (CDIAL 12486); the match is through Hindi siyālā and Gujarati śiyāḷo. It is built on śīta, "cold", and kāla, "time".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for the hot season, then the Marwadi for the
 
 You'll want to know: चौमासो.
 चौमासो — chaumāso — "the rainy season".
+
+The word, taken apart.
+चौमासो (chaumāso) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caturmāsa, "period of four months". CDIAL gives no Marwari form in this entry (CDIAL 4616); the match is through Hindi caumāsā. It is built on catur, "four", and māsa, "month": the four months of rain.
 
 What you've built.
 One more word for this chapter.

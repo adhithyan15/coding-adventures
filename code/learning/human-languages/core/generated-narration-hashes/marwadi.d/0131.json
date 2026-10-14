@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 131,
-  "sourceHash": "fnv1a64:5a0d6474e926a56e",
+  "sourceHash": "fnv1a64:c65a6f342bbd48c5",
   "lessonIds": [
     "MW-C131-khichro",
     "MW-C131-ker",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch131.txt",
   "json": "marwadi/narration/ch131.json",
-  "textHash": "fnv1a64:99842728c93af03e",
-  "jsonHash": "fnv1a64:93107d93855ace8d",
+  "textHash": "fnv1a64:03d52eca2d6c00a6",
+  "jsonHash": "fnv1a64:fa48824c48614cfd",
   "findings": []
 }

@@ -11,8 +11,8 @@ gloss: seven, on the page — three signs from the book's first four chapters
 concept_tag: MW-NUMBER-SEVEN-WRITTEN
 prerequisites: [MW-C33-hear-saat]
 sounds: [voiceless-s, long-aa, dental-t]
-roots: []
-etymology_hook: सा was built in chapter 1; seven adds one dental त to it and stops.
+roots: [sanskrit-sapta]
+etymology_hook: "sāt ← Sanskrit sapta 'seven', a tadbhava (CDIAL 13139, Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -45,6 +45,11 @@ reviews_of: [MW-C33-hear-saat, MW-W01-saa, MW-W09-ta, MW-C20-chaay, MW-C33-chha]
 
 **सा** was the second word-piece this book asked the hand to build, in chapter
 1. Seven is that piece with a dental **त** after it, and nothing else.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सात** (*sāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sapta*, "seven". CDIAL lists Marwari *sāt* under it (CDIAL 13139). English *seven* is the same ancient word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SAAT-01, MW-SCRIPT-TEEN-01] -->

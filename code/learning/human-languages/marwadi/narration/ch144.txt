@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for bitter, then the Marwadi for spicy.
 You'll want to know: सुंदर.
 सुंदर — sundar — "beautiful".
 
+The word, taken apart.
+सुंदर (sundar) is Sanskrit sundara, "beautiful", taken over whole as a learned loan, a tatsama (CDIAL 13474). CDIAL asks whether the Sanskrit word is itself a Middle Indo-Aryan form of sūnara, "excellent".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for spicy, then the Marwadi for beautiful.
 
 You'll want to know: रूपाळो.
 रूपाळो — rūpāḷo — "good-looking".
+
+The word, taken apart.
+रूपाळो (rūpāḷo) is built with the suffix -āḷo on rūp, "beauty", from Sanskrit rūpa, "form, beauty". CDIAL lists Hindi rūṛā, "beautiful", under it (CDIAL 10803) but not रूपाळो (rūpāḷo) itself.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for beautiful, then the Marwadi for good-loo
 You'll want to know: जवान.
 जवान — javān — "young".
 
+The word, taken apart.
+जवान (javān) is a loan, usually traced to Persian javān, "young".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for good-looking, then the Marwadi for young
 You'll want to know: दुबळो.
 दुबळो — dubaḷo — "thin, weak".
 
+The word, taken apart.
+दुबळो (dubaḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from durbala, "weak". CDIAL lists Old Marwari dūbalaü under it (CDIAL 6438). It is built on dus-, "ill", and bala, "strength".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for young, then the Marwadi for thin.
 
 You'll want to know: ठिगणो.
 ठिगणो — ṭhigṇo — "short (of a person)".
+
+The word, taken apart.
+ठिगणो (ṭhigṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭhiṅga, "defective", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5501); the match is through Hindi ṭhĩgnā and Gujarati ṭhĩgṇũ. CDIAL sets it in a large group of "defective" words; Hindi and Gujarati forms mean "dwarfish".
 
 What you've built.
 One more word for this chapter.

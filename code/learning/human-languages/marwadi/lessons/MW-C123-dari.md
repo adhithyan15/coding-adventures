@@ -14,7 +14,8 @@ romanization: "darī"
 concept_tag: MW-THINGS123-DARI
 prerequisites: [MW-C123-takiyo, MW-C123-chadar]
 sounds: []
-roots: []
+roots: [indo-aryan-darika]
+etymology_hook: "darī ← *darikā 'split cane, mat', reconstructed (CDIAL 6194, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C123-chadar]
 <!-- hl-knowledge: introduces=[MW-LEX-C123-THINGS123-03]; assesses=[] -->
 
 **दरी** — *darī* — "a cotton rug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दरी** (*darī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*darikā*, "split cane, mat", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 6194); the match is through Hindi *darī*. It is built on the root *dṛ*, "to split".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

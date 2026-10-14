@@ -14,7 +14,8 @@ romanization: "sādo"
 concept_tag: MW-QUAL148-SADO
 prerequisites: [MW-C148-jaruri, MW-C148-khas]
 sounds: []
-roots: []
+roots: [persian-sada]
+etymology_hook: "sādo: usually traced to Persian sāda 'plain, simple'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C148-khas]
 <!-- hl-knowledge: introduces=[MW-LEX-C148-QUAL148-04]; assesses=[] -->
 
 **सादो** — *sādo* — "plain, simple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सादो** (*sādo*) is a loan, usually traced to Persian *sāda*, "plain, simple".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

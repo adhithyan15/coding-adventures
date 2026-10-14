@@ -14,7 +14,8 @@ romanization: "jeṭh"
 concept_tag: MW-TIME92-JETH
 prerequisites: [MW-C92-chait, MW-C92-baisakh]
 sounds: []
-roots: []
+roots: [sanskrit-jyaishtha]
+etymology_hook: "jeṭh ← Sanskrit jyaiṣṭha 'the month May-June', a tadbhava (CDIAL 5293, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C92-baisakh]
 <!-- hl-knowledge: introduces=[MW-LEX-C92-TIME92-05]; assesses=[] -->
 
 **जेठ** — *jeṭh* — "Jeth (May-June)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जेठ** (*jeṭh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jyaiṣṭha*, "the month May-June". CDIAL lists Marwari *jeṭh* under it (CDIAL 5293). The month is named for the star Jyeṣṭhā, "eldest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

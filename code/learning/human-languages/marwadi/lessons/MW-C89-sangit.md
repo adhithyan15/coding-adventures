@@ -14,7 +14,8 @@ romanization: "saṅgīt"
 concept_tag: MW-WORLD89-SANGIT
 prerequisites: [MW-C88-chhutti, MW-C88-prem]
 sounds: []
-roots: []
+roots: [sanskrit-sangita]
+etymology_hook: "saṅgīt ← Sanskrit saṃgīta 'chorus, concert', a tatsama (CDIAL 12849)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C88-prem]
 <!-- hl-knowledge: introduces=[MW-LEX-C89-WORLD89-01]; assesses=[] -->
 
 **संगीत** — *saṅgīt* — "music".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संगीत** (*saṅgīt*) is Sanskrit *saṃgīta*, "chorus, concert", taken over whole as a learned loan, a tatsama (CDIAL 12849).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

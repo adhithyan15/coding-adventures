@@ -14,7 +14,8 @@ romanization: "kyū̃kai"
 concept_tag: MW-WHY117-KYUKAI
 prerequisites: [MW-C117-vastai, MW-C117-khatar]
 sounds: []
-roots: []
+roots: [sanskrit-kim]
+etymology_hook: "kyū̃kai 'because': kyū̃ 'why' (CDIAL 3164) + kai 'that'; the second part is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C117-khatar]
 <!-- hl-knowledge: introduces=[MW-LEX-C117-WHY117-05]; assesses=[] -->
 
 **क्यूंकै** — *kyū̃kai* — "because".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**क्यूंकै** (*kyū̃kai*) joins *kyū̃*, "why", which CDIAL lists as Old Marwari *kyu* under Sanskrit *kim*, "what" (CDIAL 3164), with *kai*, "that". CDIAL takes the similar Hindi *ki*, "that", from Persian (CDIAL 3164), but gives no Marwari form of it, so that part is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

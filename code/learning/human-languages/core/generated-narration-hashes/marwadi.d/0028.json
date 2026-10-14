@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 28,
-  "sourceHash": "fnv1a64:bdaba9467f46b4e3",
+  "sourceHash": "fnv1a64:3726fb13002d74d3",
   "lessonIds": [
     "MW-C23-hear-ghano",
     "MW-C23-ghano",
@@ -22,7 +22,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch28.txt",
   "json": "marwadi/narration/ch28.json",
-  "textHash": "fnv1a64:a53828433be18551",
-  "jsonHash": "fnv1a64:7e858a5e7500a0a7",
+  "textHash": "fnv1a64:d267d29f630fa1f7",
+  "jsonHash": "fnv1a64:2c0b73fdb5b58116",
   "findings": []
 }

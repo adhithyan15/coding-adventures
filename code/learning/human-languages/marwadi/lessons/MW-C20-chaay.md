@@ -11,8 +11,8 @@ gloss: tea, written after the ya consonant is isolated
 concept_tag: MW-FOOD-TEA-WRITTEN
 prerequisites: [MW-W20-ya]
 sounds: [unaspirated-ch, long-aa, semivowel-y]
-roots: []
-etymology_hook: Three units, and the one that was new arrived on its own a lesson earlier.
+roots: [persian-chay]
+etymology_hook: "chāy: usually traced to Persian chāy 'tea'"
 duration:
   max_seconds: 160
 requires:
@@ -45,6 +45,11 @@ reviews_of: [MW-W20-ya, MW-C11-barsaat]
 > **चा** + **य** → **चाय** — *chāy* — tea
 
 The **य** carries no vowel mark of its own here and closes the word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चाय** (*chāy*) is a loan, usually traced to Persian *chāy*, "tea". Persian took it overland from Chinese *chá*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHAAY-01] -->

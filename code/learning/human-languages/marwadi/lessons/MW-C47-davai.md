@@ -14,7 +14,8 @@ romanization: "davāī"
 concept_tag: MW-HEALTH47-DAVAI
 prerequisites: [MW-C47-bimar, MW-C47-darad]
 sounds: []
-roots: []
+roots: [arabic-dawa]
+etymology_hook: "davāī ← Arabic dawāʾ 'medicine, remedy', through Persian (Lane, root d-w-y)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C47-darad]
 <!-- hl-knowledge: introduces=[MW-LEX-C47-HEALTH47-04]; assesses=[] -->
 
 **दवाई** — *davāī* — "medicine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दवाई** (*davāī*) is a loan from Arabic *dawāʾ*, "medicine, remedy", which reached Marwadi through Persian. Its Arabic root is *d-w-y* (Lane). Persian *davā* took the ending *-ī* in Marwadi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

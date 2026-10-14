@@ -12,8 +12,9 @@ concept_tag: QUESTION-WHAT
 prerequisites: [MW-C05-tharo]
 sounds: [unaspirated-k, long-aa, nasal-vowel, long-ii]
 roots: [SANSKRIT-KIM-WHAT, PIE-KWO-INTERROGATIVE]
+etymology_hook: "kāĩ 'what': not in CDIAL, so not settled; its k- is the question stem of Sanskrit kim (CDIAL 3164)"
 duration:
-  max_seconds: 150
+  max_seconds: 174
 requires:
   knowledge: [MW-LEX-THARO-01, MW-SCRIPT-THARO-01, MW-LEX-NAAM-01]
 introduces:
@@ -54,6 +55,11 @@ Then hear *thāro nām*, and give its meaning: **your name**.
 Listen for one long, lightly nasal middle and a final long *ī*. Say the whole
 word once rather than exaggerating the nasal sound. Its old interrogative root
 belongs to the same deep family as Sanskrit *kim* and English *what*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kāĩ* is not in CDIAL, so its history is not settled. Its *k-* is the question stem of Sanskrit *kim*, "what", where CDIAL lists Old Marwari *kyaü* (CDIAL 3164).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KAIN-01, MW-LEX-THARO-01, MW-LEX-NAAM-01] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for behind, then the Marwadi for on top of.
 You'll want to know: हेठै.
 हेठै — heṭhai — "underneath".
 
+The word, taken apart.
+हेठै (heṭhai) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to adhastāt, "underneath", through a variant CDIAL reconstructs, adhiṣṭāt, whose ṣṭ gave the ṭh. CDIAL gives no Marwari form in this entry (CDIAL 248); the match is through Hindi heṭh and Gujarati heṭhe, which it lists under adhiṣṭāt.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for on top of, then the Marwadi for undernea
 
 You'll want to know: बिचै.
 बिचै — bichai — "in the middle".
+
+The word, taken apart.
+बिचै (bichai) is a tadbhava, a word inherited and reshaped by sound change. It comes from vīcya, "middle", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari bīca under it (CDIAL 12042).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for underneath, then the Marwadi for in the 
 You'll want to know: कनै.
 कनै — kanai — "near, beside".
 
+The word, taken apart.
+कनै (kanai) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karṇa, "ear". CDIAL lists Old Marwari kanai under it (CDIAL 2830). CDIAL explains it as the word for "ear" used as an adverb, "at the side, near".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for in the middle, then the Marwadi for near
 You'll want to know: सामी.
 सामी — sāmī — "opposite, facing".
 
+The word, taken apart.
+सामी (sāmī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṃmukha, "facing". CDIAL lists Old Marwari sāmo under it (CDIAL 12982). It is built on sam, "with", and mukha, "face".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for near, then the Marwadi for opposite.
 
 You'll want to know: डावो.
 डावो — ḍāvo — "left".
+
+The word, taken apart.
+डावो (ḍāvo) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍāva, "lefthand", one of a group of forms CDIAL reconstructs from their descendants and heads ḍavva, "lefthand, crosswise". CDIAL gives no Marwari form in this entry (CDIAL 5539); the match is through Hindi ḍāwā, which it lists under ḍāva. CDIAL calls the word non-Aryan, and cites a view that it is Dravidian.
 
 What you've built.
 One more word for this chapter.

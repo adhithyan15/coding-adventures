@@ -14,7 +14,8 @@ romanization: "jaldī"
 concept_tag: MW-TIME80-JALDI
 prerequisites: [MW-C80-hamesa, MW-C80-kadi]
 sounds: []
-roots: []
+roots: [persian-jald]
+etymology_hook: "jaldī: usually traced to Persian jald 'quick', of Arabic origin, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C80-kadi]
 <!-- hl-knowledge: introduces=[MW-LEX-C80-TIME80-03]; assesses=[] -->
 
 **जल्दी** — *jaldī* — "quickly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जल्दी** (*jaldī*) is a loan, usually traced to Persian *jald*, "quick". Persian *jald* is itself of Arabic origin; Marwadi added the ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

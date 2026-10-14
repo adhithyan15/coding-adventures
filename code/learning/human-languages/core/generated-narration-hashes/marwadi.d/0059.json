@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 59,
-  "sourceHash": "fnv1a64:49b7f72b98e169d2",
+  "sourceHash": "fnv1a64:7a57ed91e5606b2d",
   "lessonIds": [
     "MW-C59-seb",
     "MW-C59-kelo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch59.txt",
   "json": "marwadi/narration/ch59.json",
-  "textHash": "fnv1a64:fcc7e0c3a48e660b",
-  "jsonHash": "fnv1a64:c9673f946b868049",
+  "textHash": "fnv1a64:67b8b4925543e3da",
+  "jsonHash": "fnv1a64:96b68e76894ea2dc",
   "findings": []
 }

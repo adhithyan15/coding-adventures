@@ -14,7 +14,8 @@ romanization: "assī"
 concept_tag: MW-NUMBERS87-ASSI
 prerequisites: [MW-C86-sath, MW-C86-sittar]
 sounds: []
-roots: []
+roots: [sanskrit-ashiti]
+etymology_hook: "assī ← Sanskrit aśīti 'eighty', a tadbhava (CDIAL 911, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C86-sittar]
 <!-- hl-knowledge: introduces=[MW-LEX-C87-NUMBERS87-01]; assesses=[] -->
 
 **अस्सी** — *assī* — "eighty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अस्सी** (*assī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aśīti*, "eighty". CDIAL gives no Marwari form in this entry (CDIAL 911); the match is through Hindi *assī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

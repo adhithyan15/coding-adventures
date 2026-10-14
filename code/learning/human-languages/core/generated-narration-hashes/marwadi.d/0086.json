@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 86,
-  "sourceHash": "fnv1a64:8b71c6d8a16c93b1",
+  "sourceHash": "fnv1a64:535ff4172d12f604",
   "lessonIds": [
     "MW-C86-tis",
     "MW-C86-chalis",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch86.txt",
   "json": "marwadi/narration/ch86.json",
-  "textHash": "fnv1a64:8764cbbd4a62d660",
-  "jsonHash": "fnv1a64:e038cad46d83e1bc",
+  "textHash": "fnv1a64:f11fd32401fa6dc5",
+  "jsonHash": "fnv1a64:1fe702b153ed6348",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "paṛṇo"
 concept_tag: MW-VERB-PARNO
 prerequisites: [MW-C108-tairno, MW-C108-kudno]
 sounds: []
-roots: []
+roots: [sanskrit-patati]
+etymology_hook: "paṛṇo ← Sanskrit patati 'flies; falls', a tadbhava (CDIAL 7722, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C108-kudno]
 <!-- hl-knowledge: introduces=[MW-LEX-C109-ACT109-01]; assesses=[] -->
 
 **पड़णो** — *paṛṇo* — "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पड़णो** (*paṛṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *patati*, "flies; falls". CDIAL lists Old Marwari *paḍaï* under it (CDIAL 7722).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 141,
-  "sourceHash": "fnv1a64:4cc23fb0890ef863",
+  "sourceHash": "fnv1a64:921f02d43dd3ead0",
   "lessonIds": [
     "MW-C141-chokho",
     "MW-C141-kharab",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch141.txt",
   "json": "marwadi/narration/ch141.json",
-  "textHash": "fnv1a64:74168497fbff3dc3",
-  "jsonHash": "fnv1a64:baca001877eb9af6",
+  "textHash": "fnv1a64:42230d52e48a4d8d",
+  "jsonHash": "fnv1a64:5af959fd757f6b0c",
   "findings": []
 }

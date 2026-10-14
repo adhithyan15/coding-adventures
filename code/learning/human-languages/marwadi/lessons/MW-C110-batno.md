@@ -14,7 +14,8 @@ romanization: "bā̃ṭṇo"
 concept_tag: MW-VERB-BATNO
 prerequisites: [MW-C109-harno, MW-C109-marno]
 sounds: []
-roots: []
+roots: [sanskrit-vantati]
+etymology_hook: "bā̃ṭṇo ← Sanskrit vaṇṭati 'shares', a tadbhava (CDIAL 11238, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C109-marno]
 <!-- hl-knowledge: introduces=[MW-LEX-C110-ACT110-01]; assesses=[] -->
 
 **बांटणो** — *bā̃ṭṇo* — "to share out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बांटणो** (*bā̃ṭṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vaṇṭati*, "shares". CDIAL lists Old Marwari *bāṃṭaï* under it (CDIAL 11238).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

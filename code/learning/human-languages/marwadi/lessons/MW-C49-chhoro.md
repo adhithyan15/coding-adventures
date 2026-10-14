@@ -14,7 +14,8 @@ romanization: "chhoro"
 concept_tag: MW-FAMILY49-CHHORO
 prerequisites: [MW-C49-kako, MW-C49-mamo]
 sounds: []
-roots: []
+roots: [indo-aryan-chokara]
+etymology_hook: "chhoro ← *chōkara 'boy', reconstructed (CDIAL 5070, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C49-mamo]
 <!-- hl-knowledge: introduces=[MW-LEX-C49-FAMILY49-03]; assesses=[] -->
 
 **छोरो** — *chhoro* — "a boy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छोरो** (*chhoro*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*chokara*, "boy", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5070); the match is through Hindi *chorā* and Gujarati *choro*. CDIAL compares *\*chōka*, "boy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

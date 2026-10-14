@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 139,
-  "sourceHash": "fnv1a64:517c65b9eaec573e",
+  "sourceHash": "fnv1a64:e11e2b8565258649",
   "lessonIds": [
     "MW-C139-kaglo",
     "MW-C139-kabutar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marwadi/narration/ch139.txt",
   "json": "marwadi/narration/ch139.json",
-  "textHash": "fnv1a64:ef491b129172cb1d",
-  "jsonHash": "fnv1a64:689f8c2a3824fe3e",
+  "textHash": "fnv1a64:ec58e4aa5816811c",
+  "jsonHash": "fnv1a64:ae3704dc6e9b9dd1",
   "findings": []
 }

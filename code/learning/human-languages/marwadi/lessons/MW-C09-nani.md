@@ -11,8 +11,8 @@ gloss: maternal grandmother, written with known signs
 concept_tag: MW-FAMILY-MATERNAL-GRANDMOTHER-WRITTEN
 prerequisites: [MW-C09-hear-nani]
 sounds: [dental-n, long-aa, long-ii]
-roots: []
-etymology_hook: The last familiar vowel mark distinguishes नानी from नाना.
+roots: [indo-aryan-nanna]
+etymology_hook: "nānī: feminine of nānā ← *nānna 'respected older relative', reconstructed (CDIAL 7059)"
 duration:
   max_seconds: 150
 requires:
@@ -45,6 +45,11 @@ Then recall the seven-label four-skill payoff.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANI-01, MW-SCRIPT-NANI-01] -->
 
 > **ना** + **नी** → **नानी** — *nānī* — maternal grandmother
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नानी** (*nānī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*nānna*, "term of respect for an older relative", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 7059); the match is through Hindi *nānī*. It is the feminine of *nānā*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-NANI-01, MW-SCRIPT-NANA-01, MW-LEX-NANA-01] -->

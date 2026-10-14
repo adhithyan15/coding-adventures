@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "Pos, Magh, Hot season, Cold season, Rainy season",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:46ce03ac4bf01974",
+  "sourceHash": "fnv1a64:1ef6759684f04389",
   "lessons": [
     {
       "id": "MW-C94-pos",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cc792c0ddc7b04e",
+      "sourceHash": "fnv1a64:d510264650a9628f",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पोस (pos) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pauṣa, \"the month December-January\". CDIAL gives no Marwari form in this entry (CDIAL 8424); the match is through Gujarati pos."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44ee3bec9aa90d00",
+      "sourceHash": "fnv1a64:a99709793e5bcdd9",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माघ (māgh) is Sanskrit māgha, \"the month January-February\", kept in its Sanskrit shape, the mark of a learned word, a tatsama. The inherited forms CDIAL lists under it, such as Gujarati and Punjabi māh, lost the g (CDIAL 9993)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f3f8a8608c362f6",
+      "sourceHash": "fnv1a64:0012967415401ef7",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उनाळो (unāḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uṣṇakāla, \"hot season\". CDIAL lists Marwari unhāḷo under it (CDIAL 2391). It is built on uṣṇa, \"hot\", and kāla, \"time\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7185fa1331712798",
+      "sourceHash": "fnv1a64:fa794772b2c4d3a8",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सियाळो (siyāḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śītakāla, \"cold season\". CDIAL gives no Marwari form in this entry (CDIAL 12486); the match is through Hindi siyālā and Gujarati śiyāḷo. It is built on śīta, \"cold\", and kāla, \"time\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea333aaa5284fc35",
+      "sourceHash": "fnv1a64:e50ca37ff7b92d1f",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चौमासो (chaumāso) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caturmāsa, \"period of four months\". CDIAL gives no Marwari form in this entry (CDIAL 4616); the match is through Hindi caumāsā. It is built on catur, \"four\", and māsa, \"month\": the four months of rain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

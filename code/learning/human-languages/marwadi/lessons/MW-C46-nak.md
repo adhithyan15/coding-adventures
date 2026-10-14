@@ -14,7 +14,8 @@ romanization: "nāk"
 concept_tag: MW-BODY46-NAK
 prerequisites: [MW-C46-jibh, MW-C46-akh]
 sounds: []
-roots: []
+roots: [indo-aryan-nakka]
+etymology_hook: "nāk ← *nakka 'nose', possibly on the old nas- 'nose' (CDIAL 6909, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C46-akh]
 <!-- hl-knowledge: introduces=[MW-LEX-C46-BODY46-04]; assesses=[] -->
 
 **नाक** — *nāk* — "the nose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाक** (*nāk*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*nakka*, "nose", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 6909); the match is through Hindi *nāk* and Gujarati *nāk*. CDIAL thinks it possibly goes back to the old word *nas-*, "nose", the same ancient word as English *nose*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Twenty, A Hundred, And A Price With A Figure In It",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:87d7c5bdbbba31ad",
+  "sourceHash": "fnv1a64:34fec4d54bc3fa54",
   "lessons": [
     {
       "id": "MW-C34-hear-bees",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51f484d2b93cdf73",
+      "sourceHash": "fnv1a64:17c4d8b1a120c37b",
       "notice": null,
       "blocks": [
         {
@@ -82,6 +82,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bīs is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from viṃśati, \"twenty\". CDIAL lists Old Marwari bīsa under it (CDIAL 11616)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -129,7 +140,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:7405c90cd9fd29ea",
+      "sourceHash": "fnv1a64:8cea5fcd9f595295",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -183,6 +194,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बीस (bīs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from viṃśati, \"twenty\". CDIAL lists Old Marwari bīsa under it (CDIAL 11616)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -193,7 +215,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -238,7 +260,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d8b27d51cacf1b3",
+      "sourceHash": "fnv1a64:fcbaebdce55da549",
       "notice": null,
       "blocks": [
         {
@@ -288,6 +310,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "so is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śata, \"hundred\". CDIAL lists Old Marwari sau under it (CDIAL 12278). English hundred holds a cousin of the same ancient word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -334,7 +367,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:a2b7c629e111691d",
+      "sourceHash": "fnv1a64:50af9f7245ee40a8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -388,6 +421,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सो (so) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śata, \"hundred\". CDIAL lists Old Marwari sau under it (CDIAL 12278). English hundred holds a cousin of the same ancient word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -398,7 +442,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -443,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:048fc9841aa5cb37",
+      "sourceHash": "fnv1a64:695092890c29bf4e",
       "notice": null,
       "blocks": [
         {
@@ -506,6 +550,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In the question and its answer, the new piece is bīs, \"twenty\", which CDIAL lists as Old Marwari bīsa under Sanskrit viṃśati, \"twenty\" (CDIAL 11616). The question words have their own lessons: kitṇe from kiyatta, \"how great\" (CDIAL 3167), and hai, \"is\" (CDIAL 1031)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -550,7 +605,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4288eaf059c2a6d8",
+      "sourceHash": "fnv1a64:94ec0b9825f26a90",
       "notice": null,
       "blocks": [
         {
@@ -600,6 +655,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In the question and its answer, the new piece is बीस (bīs), \"twenty\", which CDIAL lists as Old Marwari bīsa under Sanskrit viṃśati, \"twenty\" (CDIAL 11616). The question words have their own lessons: kitṇe from kiyatta, \"how great\" (CDIAL 3167), and hai, \"is\" (CDIAL 1031)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -615,7 +681,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -660,7 +726,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22d41a10397ec448",
+      "sourceHash": "fnv1a64:40f4b6b87260b93f",
       "notice": null,
       "blocks": [
         {
@@ -723,6 +789,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das karo joins two inherited words with their own lessons: das, \"ten\", which CDIAL lists as Marwari das under Sanskrit daśa (CDIAL 6227), and karo, \"make\", from Sanskrit karoti, \"does\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -768,7 +845,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:caa78fe205cb682a",
+      "sourceHash": "fnv1a64:c440de1faeb1314c",
       "notice": null,
       "blocks": [
         {
@@ -814,6 +891,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दस करो (das karo) joins two inherited words with their own lessons: das, \"ten\", which CDIAL lists as Marwari das under Sanskrit daśa (CDIAL 6227), and karo, \"make\", from Sanskrit karoti, \"does\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -829,7 +917,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

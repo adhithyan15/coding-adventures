@@ -11,8 +11,8 @@ gloss: nine, on the page — the same two-sign shape as two, with a different co
 concept_tag: MW-NUMBER-NINE-WRITTEN
 prerequisites: [MW-C33-hear-no-nine]
 sounds: [dental-n, long-o]
-roots: []
-etymology_hook: Swap the consonant under the o mark and two becomes nine.
+roots: [sanskrit-nava-nine]
+etymology_hook: "no ← Sanskrit nava 'nine', a tadbhava (CDIAL 6984, Old Marwari row)"
 duration:
   max_seconds: 160
 requires:
@@ -45,6 +45,11 @@ reviews_of: [MW-C33-hear-no-nine, MW-W05-na, MW-W05-o-matra, MW-C21-ye, MW-C33-a
 
 Write **दो** and **नो** one under the other. The mark on the right is the same
 in both. Only the letter carrying it changes, and with it the number.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नो** (*no*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nava*, "nine". CDIAL lists Old Marwari *nova* under it (CDIAL 6984). English *nine* is the same ancient word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-NO-NINE-01, MW-SCRIPT-DO-TWO-01] -->

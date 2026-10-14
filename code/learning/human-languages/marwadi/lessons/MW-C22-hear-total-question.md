@@ -11,8 +11,8 @@ gloss: how much is that altogether? — the second price question, asked at the 
 concept_tag: MW-SHOPPING-TOTAL-QUESTION
 prerequisites: [MW-R22-price-two]
 sounds: [semivowel-y, retroflex-n, short-u, long-aa]
-roots: []
-etymology_hook: One question opens the exchange and this one closes it; the asking word keeps its own ending here.
+roots: [sanskrit-bhuta]
+etymology_hook: "ye kitṇo huā: huā 'became' ← Sanskrit bhūta 'become', Old Marwari hūvo (CDIAL 9552)"
 duration:
   max_seconds: 175
 requires:
@@ -52,6 +52,11 @@ The two questions do different jobs. *ye kitṇe kū hai?* asks the price of one
 thing while you are still deciding. *ye kitṇo huā?* asks for the total once you
 have stopped choosing. Hear both, one after the other, and say which one comes
 last.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+In *ye kitṇo huā*, the new word is *huā*, "became, came to". CDIAL lists it as Hindi *huā* and Old Marwari *hūvo*, "became", under Sanskrit *bhūta*, "become, been" (CDIAL 9552). *ye* and *kitṇo* have their own lessons (CDIAL 2530, 3167).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-TOTAL-QUESTION-01] -->

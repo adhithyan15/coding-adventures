@@ -14,7 +14,8 @@ romanization: "gīlo"
 concept_tag: MW-QUAL142-GILO
 prerequisites: [MW-C142-karak, MW-C142-naram]
 sounds: []
-roots: []
+roots: [indo-aryan-grilla]
+etymology_hook: "gīlo ← *grilla 'wet', reconstructed; its further source is very doubtful (CDIAL 4386)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C142-naram]
 <!-- hl-knowledge: introduces=[MW-LEX-C142-QUAL142-04]; assesses=[] -->
 
 **गीलो** — *gīlo* — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गीलो** (*gīlo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*grilla*, "wet, damp", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *gīlau* under it (CDIAL 4386). CDIAL calls any further source very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chhorī"
 concept_tag: MW-FAMILY49-CHHORI
 prerequisites: [MW-C49-mamo, MW-C49-chhoro]
 sounds: []
-roots: []
+roots: [indo-aryan-chokara]
+etymology_hook: "chhorī: feminine of chhoro ← *chōkara 'boy', reconstructed (CDIAL 5070)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C49-chhoro]
 <!-- hl-knowledge: introduces=[MW-LEX-C49-FAMILY49-04]; assesses=[] -->
 
 **छोरी** — *chhorī* — "a girl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छोरी** (*chhorī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*chokara*, "boy", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5070); the match is through Hindi *chorī* and Gujarati *chorī*. It is the feminine of *chhoro*, "boy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

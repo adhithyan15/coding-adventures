@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Underneath, In the middle, Near, Opposite, Left",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b1e7776954d57221",
+  "sourceHash": "fnv1a64:36f435bcb1e83dfb",
   "lessons": [
     {
       "id": "MW-C97-hethai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8af97f0de535981",
+      "sourceHash": "fnv1a64:b42885ed3f8b7781",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हेठै (heṭhai) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to adhastāt, \"underneath\", through a variant CDIAL reconstructs, adhiṣṭāt, whose ṣṭ gave the ṭh. CDIAL gives no Marwari form in this entry (CDIAL 248); the match is through Hindi heṭh and Gujarati heṭhe, which it lists under adhiṣṭāt."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd162177553bb0d0",
+      "sourceHash": "fnv1a64:be06336684d751bc",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिचै (bichai) is a tadbhava, a word inherited and reshaped by sound change. It comes from vīcya, \"middle\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari bīca under it (CDIAL 12042)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71c9c064ccda1ca0",
+      "sourceHash": "fnv1a64:9c0f20d303e39945",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कनै (kanai) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karṇa, \"ear\". CDIAL lists Old Marwari kanai under it (CDIAL 2830). CDIAL explains it as the word for \"ear\" used as an adverb, \"at the side, near\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73a2287b1ac380da",
+      "sourceHash": "fnv1a64:49f75e6aef4833a1",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सामी (sāmī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṃmukha, \"facing\". CDIAL lists Old Marwari sāmo under it (CDIAL 12982). It is built on sam, \"with\", and mukha, \"face\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc7495cdf482a41c",
+      "sourceHash": "fnv1a64:169850f22f552786",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डावो (ḍāvo) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍāva, \"lefthand\", one of a group of forms CDIAL reconstructs from their descendants and heads ḍavva, \"lefthand, crosswise\". CDIAL gives no Marwari form in this entry (CDIAL 5539); the match is through Hindi ḍāwā, which it lists under ḍāva. CDIAL calls the word non-Aryan, and cites a view that it is Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

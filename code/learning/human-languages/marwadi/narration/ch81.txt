@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a delay; late, then the Marwadi for befo
 You'll want to know: दूर.
 दूर — dūr — "far".
 
+The word, taken apart.
+दूर (dūr) is Sanskrit dūra, "distant", with only its final vowel lost (CDIAL 6495). CDIAL lists Hindi and Gujarati dūr under it and gives no Marwari form.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for before, then the Marwadi for far.
 
 You'll want to know: नजीक.
 नजीक — najīk — "near".
+
+The word, taken apart.
+नजीक (najīk) is a loan, usually traced to Persian nazdīk, "near". Marwadi says the z as j and drops the d.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for far, then the Marwadi for near.
 You'll want to know: मांय.
 मांय — mā̃y — "inside".
 
+The word, taken apart.
+मांय (mā̃y) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from madhya, "middle". CDIAL lists Old Marwari māhī under it (CDIAL 9804). The Old Marwari row is the postposition "in, into"; मांय (mā̃y) matches it closely, with a y where Old Marwari has h.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for near, then the Marwadi for inside.
 You'll want to know: बारै.
 बारै — bārai — "outside".
 
+The word, taken apart.
+बारै (bārai) is a tadbhava, a word inherited and reshaped by sound change. It comes from bāhira, "external", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari bāhari under it (CDIAL 9226). It is built on Sanskrit bahis, "outside".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for inside, then the Marwadi for outside.
 
 You'll want to know: नीचे.
 नीचे — nīche — "below, down".
+
+The word, taken apart.
+नीचे (nīche) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nīca, "low". CDIAL lists Old Marwari nīcaï under it (CDIAL 7540). नीचे (nīche) is the adverb of nīcho, "low"; the Old Marwari row means "below".
 
 What you've built.
 One more word for this chapter.

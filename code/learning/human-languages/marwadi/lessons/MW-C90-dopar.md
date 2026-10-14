@@ -14,7 +14,8 @@ romanization: "dopār"
 concept_tag: MW-TIME90-DOPAR
 prerequisites: [MW-C89-bat, MW-C89-bhasa, MW-C40-pehlo-path]
 sounds: []
-roots: []
+roots: [persian-pahra]
+etymology_hook: "dopār: do 'two' + pahar 'a watch'; CDIAL asks if prahara 'a watch' is Persian pahra (CDIAL 8900)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [MW-C89-bhasa]
 <!-- hl-knowledge: introduces=[MW-LEX-C90-TIME90-01]; assesses=[] -->
 
 **दोपार** — *dopār* — "midday, the afternoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दोपार** (*dopār*) is usually explained as *do*, "two", and *pahar*, "a watch of about three hours", which CDIAL lists as Old Marwari *pahara* under Sanskrit *prahara*, "a watch" (CDIAL 8900). CDIAL asks whether the Sanskrit word is itself a reshaping of Persian *pahra*, "watch". It has no entry for **दोपार** (*dopār*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mūḷo"
 concept_tag: MW-THINGS136-MULO
 prerequisites: [MW-C135-baingan, MW-C135-palak]
 sounds: []
-roots: []
+roots: [sanskrit-mula]
+etymology_hook: "mūḷo ← Sanskrit mūla 'root; radish', likely non-Aryan (CDIAL 10250, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C135-palak]
 <!-- hl-knowledge: introduces=[MW-LEX-C136-THINGS136-01]; assesses=[] -->
 
 **मूळो** — *mūḷo* — "a radish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मूळो** (*mūḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mūla*, "root; radish". CDIAL lists Old Marwari *mūlī* under it (CDIAL 10250). CDIAL notes a likely non-Aryan origin for the word; Gujarati has *mūḷo*, "radish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

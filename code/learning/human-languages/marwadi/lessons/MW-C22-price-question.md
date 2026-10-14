@@ -11,8 +11,8 @@ gloss: how much is this? — written with no sign the hand has not already made
 concept_tag: MW-SHOPPING-PRICE-QUESTION-WRITTEN
 prerequisites: [MW-C22-hear-price-question]
 sounds: [semivowel-y, retroflex-n, long-uu, open-ai]
-roots: []
-etymology_hook: The long uu mark taught for the farewell comes back as a whole word of its own.
+roots: [indo-aryan-kiyatta]
+etymology_hook: "ye kitṇe kū hai: ye (CDIAL 2530) + kitṇe ← *kiyatta (CDIAL 3167) + kū + hai (CDIAL 1031)"
 duration:
   max_seconds: 200
 requires:
@@ -48,6 +48,11 @@ reviews_of: [MW-C22-hear-price-question, MW-C22-kitno, MW-W06-uu-matra, MW-W07-e
 Four written words. **ये** and **है** you have written before; **कितणे** is last
 lesson's **कितणो** with **े** where **ो** stood; **कू** is **क** carrying the
 long **ू** you first drew for **मिलसू**.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ये कितणे कू है** (*ye kitṇe kū hai*) is built from words with their own lessons: *ye*, "this" (CDIAL 2530); *kitṇe*, a form of *kitṇo*, "how much", from *\*kiyatta*, "how great" (CDIAL 3167); and *hai*, "is" (CDIAL 1031). The small word *kū* is the new piece; CDIAL gives no Marwari row for it, so its history is not settled. It does the work of Hindi *ko*, which CDIAL lists under *kakṣa*, "armpit" (CDIAL 14342).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PRICE-QUESTION-01] -->

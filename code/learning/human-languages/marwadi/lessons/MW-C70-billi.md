@@ -14,7 +14,8 @@ romanization: "billī"
 concept_tag: MW-NATURE70-BILLI
 prerequisites: [MW-C70-abho, MW-C70-kutto]
 sounds: []
-roots: []
+roots: [sanskrit-bidala]
+etymology_hook: "billī ← Sanskrit biḍāla 'cat', a tadbhava (CDIAL 9237, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C70-kutto]
 <!-- hl-knowledge: introduces=[MW-LEX-C70-NATURE70-03]; assesses=[] -->
 
 **बिल्ली** — *billī* — "a cat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बिल्ली** (*billī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *biḍāla*, "cat". CDIAL gives no Marwari form in this entry (CDIAL 9237); the match is through Hindi *billī*. CDIAL lists Hindi *billī* under a variant it reconstructs, *\*billa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "makkī"
 concept_tag: MW-THINGS132-MAKKI
 prerequisites: [MW-C132-lapsi, MW-C132-ghevar]
 sounds: []
-roots: []
+roots: [sanskrit-markaka]
+etymology_hook: "makkī: CDIAL lists Hindi makkā 'maize' under Sanskrit markaka, a bird-name, without explaining the link (CDIAL 9879)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C132-ghevar]
 <!-- hl-knowledge: introduces=[MW-LEX-C132-THINGS132-04]; assesses=[] -->
 
 **मक्की** — *makkī* — "maize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Hindi *makkā* and *makāī*, "maize", under Sanskrit *markaka*, the name of a heron-like bird (CDIAL 9879), without explaining the link. Maize reached India from the Americas, so how its name arose is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

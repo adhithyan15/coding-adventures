@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for an expectation, then the Marwadi for one
 You'll want to know: लागणो.
 लागणो — lāgṇo — "to seem, to feel (to someone)".
 
+The word, taken apart.
+लागणो (lāgṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lagyati, "adheres to". CDIAL lists Old Marwari lāgaï under it (CDIAL 10895). The sense moved from "stick to" to "seem, feel".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for one's will, then the Marwadi for to seem
 
 You'll want to know: पसंद.
 पसंद — pasand — "a liking, a choice".
+
+The word, taken apart.
+पसंद (pasand) is a loan, usually traced to Persian pasand, "pleasing, approved".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to seem, then the Marwadi for a liking.
 You'll want to know: सौक.
 सौक — sauk — "a hobby, a fondness".
 
+The word, taken apart.
+सौक (sauk) is a loan from Arabic šawq, "longing, desire", which reached Marwadi through Persian. Its Arabic root is š-w-q (Lane). Marwadi says the š as s.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a liking, then the Marwadi for a hobby.
 You'll want to know: हेत.
 हेत — het — "affection".
 
+The word, taken apart.
+The origin of हेत (het) is not settled. It is often linked with Sanskrit hita, "beneficial, kindly", but CDIAL lists hita only in the sense "placed" (CDIAL 14091) and gives no Marwari or Hindi form like हेत (het).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a hobby, then the Marwadi for affection.
 
 You'll want to know: मोह.
 मोह — moh — "attachment".
+
+The word, taken apart.
+मोह (moh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from moha, "bewilderment". CDIAL gives no Marwari form in this entry (CDIAL 10360); the match is through Hindi moh. The sense moved from "bewilderment" to "infatuation, attachment".
 
 What you've built.
 One more word for this chapter.

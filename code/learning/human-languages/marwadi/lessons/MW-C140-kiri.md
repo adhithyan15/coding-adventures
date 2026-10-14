@@ -14,7 +14,8 @@ romanization: "kīṛī"
 concept_tag: MW-THINGS140-KIRI
 prerequisites: [MW-C140-makhi, MW-C140-machchhar]
 sounds: []
-roots: []
+roots: [sanskrit-kita]
+etymology_hook: "kīṛī ← Sanskrit kīṭa 'insect, worm', a tadbhava (CDIAL 3193, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C140-machchhar]
 <!-- hl-knowledge: introduces=[MW-LEX-C140-THINGS140-04]; assesses=[] -->
 
 **कीड़ी** — *kīṛī* — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कीड़ी** (*kīṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kīṭa*, "insect, worm". CDIAL gives no Marwari form in this entry (CDIAL 3193); the match is through Hindi *kīṛī* and Gujarati *kīṛī*. Hindi and Gujarati *kīṛī* also mean "ant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

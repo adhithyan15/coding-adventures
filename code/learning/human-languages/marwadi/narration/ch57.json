@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "To wear, To leave, To speak, To write, To think",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e044e5958379f3a8",
+  "sourceHash": "fnv1a64:ddf351272045d211",
   "lessons": [
     {
       "id": "MW-C57-pairno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fa3b253f7f8b020",
+      "sourceHash": "fnv1a64:a3faeb592c01dbf3",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पैरणो (pairṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from paridadhāti, \"sets round; puts on clothes\". CDIAL lists Old Marwari paharaï under it (CDIAL 7835). Hindi has pahirnā; Marwadi has dropped the h."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23c782405d0af897",
+      "sourceHash": "fnv1a64:3fa3abc34c9f6591",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छोड़णो (chhoṛṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣoṭayati, \"throws\". CDIAL lists Marwari choṛṇo under it (CDIAL 3747)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56debdb52d81a95e",
+      "sourceHash": "fnv1a64:811ec5351f5f70f6",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बोलणो (bolṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from boll, \"speak\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari bolaï under it (CDIAL 9321)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a72dbba85d8a49f0",
+      "sourceHash": "fnv1a64:604d62ef0aec9cd7",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लिखणो (likhṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from likhati, \"scratches, writes\". CDIAL gives no Marwari form in this entry (CDIAL 11048); the match is through Hindi likhnā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba2c6d05c1851187",
+      "sourceHash": "fnv1a64:f6a111f80c430826",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सोचणो (sochṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śocyate, \"is made to feel pain\". CDIAL lists Old Marwari soca under it (CDIAL 12621). The Old Marwari row is the noun \"thought\"; Hindi socnā means \"to ponder\". The sense moved from \"grieve\" to \"think\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

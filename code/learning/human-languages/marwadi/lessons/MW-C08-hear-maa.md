@@ -11,8 +11,8 @@ gloss: mother
 concept_tag: MW-FAMILY-MOTHER
 prerequisites: [MW-C07-practice]
 sounds: [long-aa, nasal-vowel]
-roots: []
-etymology_hook: Secure one close-family meaning by ear before familiar signs appear.
+roots: [sanskrit-matr]
+etymology_hook: "mā̃ ← Sanskrit mātṛ 'mother', a tadbhava (CDIAL 10016, Old Marwari row)"
 duration:
   max_seconds: 150
 requires:
@@ -48,6 +48,11 @@ parts. [YOU WRITE: **े** and the known word **थारो**, once]
 Listen twice. The vowel is long and the ending is nasal. Say the whole word
 once; do not spell it yet. Families and the names people use for relatives vary,
 so this lesson teaches one source-attested everyday label, not one family model.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mā̃* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mātṛ*, "mother". CDIAL lists Old Marwari *mā* under it (CDIAL 10016).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAA-01] -->

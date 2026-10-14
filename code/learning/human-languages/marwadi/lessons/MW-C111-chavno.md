@@ -14,7 +14,8 @@ romanization: "chāvṇo"
 concept_tag: MW-VERB-CHAVNO
 prerequisites: [MW-C110-urno, MW-C110-tolno]
 sounds: []
-roots: []
+roots: [indo-aryan-cah]
+etymology_hook: "chāvṇo ← *cāh 'see, desire', reconstructed, of uncertain source (CDIAL 4775, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C110-tolno]
 <!-- hl-knowledge: introduces=[MW-LEX-C111-WANT111-01]; assesses=[] -->
 
 **चावणो** — *chāvṇo* — "to want".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चावणो** (*chāvṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cāh*, "see, look for, desire", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *cāhaï* under it (CDIAL 4775). CDIAL calls the further source of this reconstructed verb uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

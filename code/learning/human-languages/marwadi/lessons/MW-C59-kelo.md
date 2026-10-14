@@ -14,7 +14,8 @@ romanization: "keḷo"
 concept_tag: MW-VERBS59-KELO
 prerequisites: [MW-C58-chaval, MW-C59-seb]
 sounds: []
-roots: []
+roots: [sanskrit-kadala]
+etymology_hook: "keḷo ← Sanskrit kadala 'banana plant', itself from Austroasiatic (CDIAL 2712)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C59-seb]
 <!-- hl-knowledge: introduces=[MW-LEX-C59-VERBS59-02]; assesses=[] -->
 
 **केळो** — *keḷo* — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**केळो** (*keḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kadala*, "the banana plant". CDIAL gives no Marwari form in this entry (CDIAL 2712); the match is through Hindi *kelā* and Gujarati *keḷũ*. CDIAL takes the Sanskrit word itself from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

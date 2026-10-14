@@ -14,7 +14,8 @@ romanization: "sabad"
 concept_tag: MW-SCHOOL66-SABAD
 prerequisites: [MW-C66-saval, MW-C66-javab]
 sounds: []
-roots: []
+roots: [sanskrit-shabda]
+etymology_hook: "sabad ← Sanskrit śabda 'sound, word'; reshaped, a semi-tatsama; CDIAL lists Hindi sād (CDIAL 12298)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C66-javab]
 <!-- hl-knowledge: introduces=[MW-LEX-C66-SCHOOL66-05]; assesses=[] -->
 
 **सबद** — *sabad* — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सबद** (*sabad*) is Sanskrit *śabda*, "sound, word", borrowed and lightly reshaped, a semi-tatsama: the *ś* became *s* and a vowel split the *bd*. The fully inherited descendant is Hindi and Gujarati *sād*, "call, voice", which CDIAL lists under the same word (CDIAL 12298).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

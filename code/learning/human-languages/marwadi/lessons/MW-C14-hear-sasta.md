@@ -12,7 +12,7 @@ concept_tag: MW-SHOPPING-CHEAP
 prerequisites: [MW-R13-shopping-close]
 sounds: [voiceless-s, dental-t, long-aa]
 roots: []
-etymology_hook: A price description arrives by ear after the price noun.
+etymology_hook: "sastā 'cheap': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 145
 requires:
@@ -49,6 +49,11 @@ Then say heat.
 
 Say the two beats once from a low-price cue. This is the source's dictionary
 form; full bargaining phrases remain later work.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of *sastā* is not settled. CDIAL, searched by form and by meaning, has no entry for it; its words for "cheap", such as Sanskrit *samargha* (CDIAL 13187), do not match.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SASTA-01] -->

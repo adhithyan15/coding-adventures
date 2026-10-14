@@ -14,7 +14,8 @@ romanization: "pachās"
 concept_tag: MW-NUMBERS86-PACHAS
 prerequisites: [MW-C86-tis, MW-C86-chalis]
 sounds: []
-roots: []
+roots: [sanskrit-pancashat]
+etymology_hook: "pachās ← Sanskrit pañcāśat 'fifty', a tadbhava (CDIAL 7682, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C86-chalis]
 <!-- hl-knowledge: introduces=[MW-LEX-C86-NUMBERS86-03]; assesses=[] -->
 
 **पचास** — *pachās* — "fifty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पचास** (*pachās*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pañcāśat*, "fifty". CDIAL gives no Marwari form in this entry (CDIAL 7682); the match is through Hindi *pacās* and Gujarati *pacās*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

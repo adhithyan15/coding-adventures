@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Haan Sa: A Respectful Yes, Sign by Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e39b585d4b88d192",
+  "sourceHash": "fnv1a64:74cfff1b78133531",
   "lessons": [
     {
       "id": "MW-W03-ha",
@@ -263,7 +263,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:de6ce767a9a93d97",
+      "sourceHash": "fnv1a64:7fa347eb28f17297",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -310,6 +310,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हां सा (hā(n) sā) puts the respectful sā after hā̃, \"yes\". CDIAL lists Hindi and Gujarati hā̃, \"yes\", under Sanskrit ām, \"yes\", with an h- it calls emphatic or taken from the verb \"to be\" (CDIAL 1235); it gives no Marwari form there. The origin of sā is not settled (see CDIAL 13930 for a possible Gujarati relative)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "writing",
           "title": "Writing — guided, then delayed",
           "segments": [
@@ -336,7 +347,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up recall",
           "segments": [

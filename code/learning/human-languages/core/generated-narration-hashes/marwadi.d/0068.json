@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 68,
-  "sourceHash": "fnv1a64:806fb879217a39bf",
+  "sourceHash": "fnv1a64:f7ce894e2a7ed987",
   "lessonIds": [
     "MW-C68-jangal",
     "MW-C68-nadi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch68.txt",
   "json": "marwadi/narration/ch68.json",
-  "textHash": "fnv1a64:32facb3af5a3cd59",
-  "jsonHash": "fnv1a64:64e503850d64a720",
+  "textHash": "fnv1a64:3844f1d1c77dc936",
+  "jsonHash": "fnv1a64:08cce2407e7a7543",
   "findings": []
 }

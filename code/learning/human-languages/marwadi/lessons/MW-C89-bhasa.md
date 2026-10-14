@@ -14,7 +14,8 @@ romanization: "bhāsā"
 concept_tag: MW-WORLD89-BHASA
 prerequisites: [MW-C89-des, MW-C89-bat]
 sounds: []
-roots: []
+roots: [sanskrit-bhasha]
+etymology_hook: "bhāsā ← Sanskrit bhāṣā 'speech', a semi-tatsama (CDIAL 9479)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C89-bat]
 <!-- hl-knowledge: introduces=[MW-LEX-C89-WORLD89-05]; assesses=[] -->
 
 **भासा** — *bhāsā* — "a language".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भासा** (*bhāsā*) is a semi-tatsama: Sanskrit *bhāṣā*, "speech", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9479). Marwadi says the *ṣ* as *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 66,
-  "sourceHash": "fnv1a64:0a4f974241cfddc9",
+  "sourceHash": "fnv1a64:7ad9c4cc58a50150",
   "lessonIds": [
     "MW-C66-akhbar",
     "MW-C66-skul",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marwadi/narration/ch66.txt",
   "json": "marwadi/narration/ch66.json",
-  "textHash": "fnv1a64:087dcec7b5507829",
-  "jsonHash": "fnv1a64:150393f5315f1a63",
+  "textHash": "fnv1a64:a81af295d4694086",
+  "jsonHash": "fnv1a64:a63164bba6c32bd8",
   "findings": []
 }

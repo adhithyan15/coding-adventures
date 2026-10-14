@@ -14,7 +14,8 @@ romanization: "garīb"
 concept_tag: MW-ADJ75-GARIB
 prerequisites: [MW-C75-nicho, MW-C75-khali]
 sounds: []
-roots: []
+roots: [arabic-gharib]
+etymology_hook: "garīb ← Arabic ġarīb 'a stranger', through Persian (Lane, root ġ-r-b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C75-khali]
 <!-- hl-knowledge: introduces=[MW-LEX-C75-ADJ75-03]; assesses=[] -->
 
 **गरीब** — *garīb* — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गरीब** (*garīb*) is a loan from Arabic *ġarīb*, "a stranger", which reached Marwadi through Persian. Its Arabic root is *ġ-r-b* (Lane). The sense moved from "stranger, far from home" to "poor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

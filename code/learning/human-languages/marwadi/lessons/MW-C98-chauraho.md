@@ -14,7 +14,8 @@ romanization: "chaurāho"
 concept_tag: MW-LOC98-CHAURAHO
 prerequisites: [MW-C98-jimano, MW-C98-chauk]
 sounds: []
-roots: []
+roots: [persian-rah]
+etymology_hook: "chaurāho: chau- 'four' (as in chauk, CDIAL 4629) + rāh 'road', usually traced to Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C98-chauk]
 <!-- hl-knowledge: introduces=[MW-LEX-C98-LOC98-03]; assesses=[] -->
 
 **चौराहो** — *chaurāho* — "a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चौराहो** (*chaurāho*) is a meeting of four roads: *chau-*, "four", as in *chauk* (CDIAL 4629), with *rāh*, "road", usually traced to Persian *rāh*, "road, way". CDIAL has no entry for the compound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

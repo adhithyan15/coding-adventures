@@ -14,7 +14,8 @@ romanization: "chābī"
 concept_tag: MW-HOME63-CHABI
 prerequisites: [MW-C63-diyo, MW-C63-pankho]
 sounds: []
-roots: []
+roots: [portuguese-chave]
+etymology_hook: "chābī ← Portuguese chave 'key'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C63-pankho]
 <!-- hl-knowledge: introduces=[MW-LEX-C63-HOME63-05]; assesses=[] -->
 
 **चाबी** — *chābī* — "a key".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चाबी** (*chābī*) is a loan from Portuguese *chave*, "key".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

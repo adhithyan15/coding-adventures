@@ -14,7 +14,8 @@ romanization: "kitāb"
 concept_tag: MW-HOME65-KITAB
 prerequisites: [MW-C65-rasoi, MW-C65-kamro]
 sounds: []
-roots: []
+roots: [arabic-kitab]
+etymology_hook: "kitāb ← Arabic kitāb 'book', through Persian (Lane, root k-t-b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C65-kamro]
 <!-- hl-knowledge: introduces=[MW-LEX-C65-HOME65-04]; assesses=[] -->
 
 **किताब** — *kitāb* — "a book".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**किताब** (*kitāb*) is a loan from Arabic *kitāb*, "book", which reached Marwadi through Persian. Its Arabic root is *k-t-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: flatbread
 concept_tag: MW-FOOD-FLATBREAD
 prerequisites: [MW-R18-food-close]
 sounds: [tapped-r, long-o, long-ii]
-roots: []
-etymology_hook: The everyday bread arrives by ear one lesson before the only new consonant it needs.
+roots: [indo-aryan-rotta]
+etymology_hook: "roṭī ← *roṭṭa 'bread', reconstructed (CDIAL 10837, Marwari row)"
 duration:
   max_seconds: 145
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-R18-food-close, MW-C10-hear-haath, MW-C18-hear-daal]
 The middle consonant is made with the tongue tip curled back, further back
 than the *d* of *dāl*. Hear it twice and say it once. The spelling waits for
 the next lesson, because one sign in it has not been taught yet.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*roṭī* is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*roṭṭa*, "bread", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari *roṭī* under it (CDIAL 10837).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-ROTI-01] -->

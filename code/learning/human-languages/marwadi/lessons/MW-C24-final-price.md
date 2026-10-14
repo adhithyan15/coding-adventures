@@ -11,8 +11,8 @@ gloss: what final price will you give? — written from four words already writt
 concept_tag: MW-SHOPPING-FINAL-PRICE-QUESTION-WRITTEN
 prerequisites: [MW-C24-hear-final-price]
 sounds: [retroflex-n, aspirated-kh, aspirated-bh, voiced-d, long-e]
-roots: []
-etymology_hook: The last word is the give of two lessons ago with one familiar mark and one familiar letter added.
+roots: [sanskrit-dadati, arabic-akhir]
+etymology_hook: "kitṇo ākhrī bhāv doge: ākhrī ← Arabic ākhir 'last'; doge 'will give' ← dadāti (CDIAL 6141)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C24-hear-final-price, MW-C22-kitno, MW-C24-aakhri, MW-C13-bhaav,
 Four written words. Three you have written alone; the fourth, **दोगे**, is the
 **दो** of two lessons ago with **गे** added.
 [YOU WRITE: **दो** and **दोगे** one above the other, so the added part is the only difference on the page]
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कितणो आखरी भाव दोगे** (*kitṇo ākhrī bhāv doge*) joins words with their own lessons: *kitṇo*, "how much" (CDIAL 3167); *ākhrī*, "final", from Arabic *ākhir*, "last", through Persian; *bhāv*, "price" (CDIAL 9475); and *doge*, "will you give", a future of the verb CDIAL lists as Marwari *deṇo* under Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-FINAL-PRICE-01] -->

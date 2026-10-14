@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a rope, then the Marwadi for a peg.
 You'll want to know: खीलो.
 खीलो — khīlo — "a nail".
 
+The word, taken apart.
+खीलो (khīlo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kīla, "stake, peg". CDIAL gives no Marwari form in this entry (CDIAL 3202); the match is through Gujarati khīlo. CDIAL notes that the k/kh variation points to a non-Aryan source.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a peg, then the Marwadi for a nail.
 
 You'll want to know: हथोड़ो.
 हथोड़ो — hathoṛo — "a hammer".
+
+The word, taken apart.
+हथोड़ो (hathoṛo) is a tadbhava, a word inherited and reshaped by sound change. It comes from hastakūṭa, "hand hammer", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 14028); the match is through Hindi hathauṛā and Gujarati hathoṛo. It is built on hasta, "hand", and kūṭa, "hammer".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a nail, then the Marwadi for a hammer.
 You'll want to know: कुल्हाड़ी.
 कुल्हाड़ी — kulhāṛī — "an axe".
 
+The word, taken apart.
+कुल्हाड़ी (kulhāṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kuṭhāra, "axe". CDIAL gives no Marwari form in this entry (CDIAL 3244); the match is through Hindi kulhāṛī. CDIAL thinks the Sanskrit word itself probably came from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a hammer, then the Marwadi for an axe.
 You'll want to know: हळ.
 हळ — haḷ — "a plough".
 
+The word, taken apart.
+हळ (haḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hala, "plough". CDIAL gives no Marwari form in this entry (CDIAL 14000); the match is through Hindi hal and Gujarati haḷ. Marwadi, like Gujarati, says the l curled back.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for an axe, then the Marwadi for a plough.
 
 You'll want to know: बैलगाड़ी.
 बैलगाड़ी — bailgāṛī — "a bullock cart".
+
+The word, taken apart.
+बैलगाड़ी (bailgāṛī) is an ox cart: bail, "ox", which CDIAL lists as Hindi bail under balilla, "ox" (CDIAL 9175), and gāṛī, "cart", from gāḍḍa (CDIAL 4116).
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 89,
-  "sourceHash": "fnv1a64:ca2b21f8ae8036d3",
+  "sourceHash": "fnv1a64:c7c2e27f5d1d4d9f",
   "lessonIds": [
     "MW-C89-sangit",
     "MW-C89-khabar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marwadi/narration/ch89.txt",
   "json": "marwadi/narration/ch89.json",
-  "textHash": "fnv1a64:9d6e0da7d1cd7636",
-  "jsonHash": "fnv1a64:075a0efb78092ad3",
+  "textHash": "fnv1a64:d76d9608cd4a31c6",
+  "jsonHash": "fnv1a64:a8d23fe3a066990f",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "rasto"
 concept_tag: MW-LOC99-RASTO
 prerequisites: [MW-C98-mor, MW-C98-gelo]
 sounds: []
-roots: []
+roots: [persian-rasta]
+etymology_hook: "rasto: usually traced to Persian rāsta 'straight; a road'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C98-gelo]
 <!-- hl-knowledge: introduces=[MW-LEX-C99-LOC99-01]; assesses=[] -->
 
 **रस्तो** — *rasto* — "a route".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रस्तो** (*rasto*) is a loan, usually traced to Persian *rāsta*, "straight; a road".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

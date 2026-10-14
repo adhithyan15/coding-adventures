@@ -14,7 +14,8 @@ romanization: "mūsaḷ"
 concept_tag: MW-THINGS120-MUSAL
 prerequisites: [MW-C120-chalni, MW-C120-chakki]
 sounds: []
-roots: []
+roots: [sanskrit-musala]
+etymology_hook: "mūsaḷ ← Sanskrit musala 'pestle', perhaps non-Aryan (CDIAL 10223, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C120-chakki]
 <!-- hl-knowledge: introduces=[MW-LEX-C120-THINGS120-04]; assesses=[] -->
 
 **मूसळ** — *mūsaḷ* — "a pestle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मूसळ** (*mūsaḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *musala*, "pestle". CDIAL gives no Marwari form in this entry (CDIAL 10223); the match is through Hindi *mūsal*. CDIAL notes that the *s* points to a non-Aryan origin, perhaps Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

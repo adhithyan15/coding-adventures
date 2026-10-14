@@ -14,7 +14,8 @@ romanization: "bāvaḷo"
 concept_tag: MW-QUAL146-BAVALO
 prerequisites: [MW-C146-sant, MW-C146-husiyar]
 sounds: []
-roots: []
+roots: [sanskrit-vatula]
+etymology_hook: "bāvaḷo ← Sanskrit vātula 'affected by wind-disease, crazy', a tadbhava (CDIAL 11504, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C146-husiyar]
 <!-- hl-knowledge: introduces=[MW-LEX-C146-QUAL146-04]; assesses=[] -->
 
 **बावळो** — *bāvaḷo* — "silly, foolish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बावळो** (*bāvaḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vātula*, "affected by wind-disease, crazy". CDIAL gives no Marwari form in this entry (CDIAL 11504); the match is through Hindi *bāulā* and Gujarati *vāulũ*. CDIAL thinks the sense "mad" may come from Middle Indo-Aryan *vāula*, "perplexed", from Sanskrit *vyākula*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

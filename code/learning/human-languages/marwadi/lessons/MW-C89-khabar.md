@@ -14,7 +14,8 @@ romanization: "khabar"
 concept_tag: MW-WORLD89-KHABAR
 prerequisites: [MW-C88-prem, MW-C89-sangit]
 sounds: []
-roots: []
+roots: [arabic-khabar]
+etymology_hook: "khabar ← Arabic ḫabar 'news, report', through Persian (Lane, root ḫ-b-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C89-sangit]
 <!-- hl-knowledge: introduces=[MW-LEX-C89-WORLD89-02]; assesses=[] -->
 
 **खबर** — *khabar* — "news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खबर** (*khabar*) is a loan from Arabic *ḫabar*, "news, report", which reached Marwadi through Persian. Its Arabic root is *ḫ-b-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

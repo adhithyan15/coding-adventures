@@ -53,6 +53,7 @@
     "theme-typography-variables",
     "theme-edge-label-variables",
     "theme-cluster-variables",
+    "theme-node-edge-variables",
     "inline-node-styles",
     "node-typography-styles",
     "node-corner-radius-styles",
@@ -97,6 +98,7 @@
     "legacy-internal-shape-aliases",
     "flowchart-curve-config",
     "flowchart-spacing-config",
+    "flowchart-wrapping-width",
     "cross-lane-rank-constraints",
     "rank-crossing-optimization"
   ]

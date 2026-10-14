@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "To sit, To sleep, To get up, To walk, To run",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:99c43c18f485c9ad",
+  "sourceHash": "fnv1a64:bfce0fbec1ac4cbf",
   "lessons": [
     {
       "id": "MW-C52-baithno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65d0d03573fe8363",
+      "sourceHash": "fnv1a64:955256830213f6ce",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बैठणो (baiṭhṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from upaviśati, \"sits down\". CDIAL lists Old Marwari baiṭhaï under it (CDIAL 2245). The ṭh comes from its past participle, upaviṣṭa, \"seated\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1d8d9b747acbb42",
+      "sourceHash": "fnv1a64:d2a245093c4a4fd8",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सोवणो (sovṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from svapati, \"sleeps\". CDIAL lists Old Marwari soaï under it (CDIAL 13902)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d957fb56bc8e90e",
+      "sourceHash": "fnv1a64:dee8159240e206a6",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उठणो (uṭhṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from ut-sthāti, \"stands up\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari ūṭhaï under it (CDIAL 1900). It is built on ud, \"up\", and sthā, \"stand\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de7180f7bfca24e6",
+      "sourceHash": "fnv1a64:08dc6f2aa2d29b4b",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चालणो (chālṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from calyati, \"goes\", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari cālṇo under it (CDIAL 4721)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ba76e42fc802b55",
+      "sourceHash": "fnv1a64:30b55b18ba089722",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दौड़णो (dauṛṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dravati, \"runs\". CDIAL lists Marwari doṛṇo under it (CDIAL 6624). CDIAL explains the ṛ as an added suffix."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

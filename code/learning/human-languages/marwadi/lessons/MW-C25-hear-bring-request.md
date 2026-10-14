@@ -11,8 +11,8 @@ gloss: bring tea — the request a food counter actually hears
 concept_tag: MW-FOOD-BRING-REQUEST
 prerequisites: [MW-C25-lavo]
 sounds: [unaspirated-ch, long-aa, semivowel-y, dental-l]
-roots: []
-etymology_hook: Seven food words have been sitting on the page for five chapters with no way to order one.
+roots: [persian-chay, sanskrit-labhate]
+etymology_hook: "chāy lāvo: chāy, usually traced to Persian chāy 'tea'; lāvo 'bring', through Hindi lānā (CDIAL 10948)"
 duration:
   max_seconds: 175
 requires:
@@ -51,6 +51,11 @@ are not choosing between cups in front of you.
 
 Any of the seven food words fits the first slot. Say the line three times, with
 *chāy*, then *roṭī*, then *dāl*, and notice that nothing else in it moves.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chāy lāvo* joins two words with their own lessons: *chāy*, "tea", usually traced to Persian *chāy*, from Chinese *chá*; and *lāvo*, "bring", which CDIAL matches only through Hindi *lānā*, "to bring", under Sanskrit *labhate*, "takes" (CDIAL 10948).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BRING-REQUEST-01] -->

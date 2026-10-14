@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 65,
-  "sourceHash": "fnv1a64:8ba48244caad60c9",
+  "sourceHash": "fnv1a64:624da939540b05e1",
   "lessonIds": [
     "MW-C65-kivar",
     "MW-C65-rasoi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch65.txt",
   "json": "marwadi/narration/ch65.json",
-  "textHash": "fnv1a64:a147362affd6642e",
-  "jsonHash": "fnv1a64:a81c8567d888706a",
+  "textHash": "fnv1a64:9af6d21ba2c9ba22",
+  "jsonHash": "fnv1a64:75dfae0cb00c5e27",
   "findings": []
 }

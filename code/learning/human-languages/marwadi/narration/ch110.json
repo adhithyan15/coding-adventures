@@ -4,7 +4,7 @@
   "chapter": 110,
   "title": "To share out, To mislay, To reach, To fly, To weigh",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a6e124136f0ad9ef",
+  "sourceHash": "fnv1a64:c0a89c59d25d0775",
   "lessons": [
     {
       "id": "MW-C110-batno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fea17e0bc461054",
+      "sourceHash": "fnv1a64:89cd241a0d706ad1",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बांटणो (bā̃ṭṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vaṇṭati, \"shares\". CDIAL lists Old Marwari bāṃṭaï under it (CDIAL 11238)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5fbcb3ffaf018966",
+      "sourceHash": "fnv1a64:8727f80ee6ac88f0",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गमावणो (gamāvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gamayati, \"causes to go\". CDIAL lists Old Marwari gavī under it (CDIAL 4028). The Old Marwari row means \"lost\"; the sense moved from \"send away\" to \"lose\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c74c5aa927cee2f",
+      "sourceHash": "fnv1a64:8fd2f08ecde03ac0",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पूगणो (pūgṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pūryate, \"is filled\". CDIAL gives no Marwari form in this entry (CDIAL 8342); the match is through Gujarati pugvũ. The Gujarati row means \"to reach\", as पूगणो (pūgṇo) does; Old Gujarati pūjaï means \"reaches\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a100c9be3a63470",
+      "sourceHash": "fnv1a64:b7e0a706a2056554",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उडणो (uṛṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uḍḍīyate, \"flies up\". CDIAL lists Old Marwari ūḍaï under it (CDIAL 1697)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:316bcc8a4e6fcb45",
+      "sourceHash": "fnv1a64:6f027e55137fc865",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तोलणो (tolṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tolayati, \"lifts, weighs\". CDIAL gives no Marwari form in this entry (CDIAL 5979); the match is through Hindi tolnā and Gujarati toḷvũ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

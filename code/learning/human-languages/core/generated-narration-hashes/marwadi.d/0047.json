@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 47,
-  "sourceHash": "fnv1a64:1e75754a11928a85",
+  "sourceHash": "fnv1a64:d18bc6d67f3b9ae9",
   "lessonIds": [
     "MW-C47-tav",
     "MW-C47-bimar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch47.txt",
   "json": "marwadi/narration/ch47.json",
-  "textHash": "fnv1a64:daaf579042606eac",
-  "jsonHash": "fnv1a64:683dfb6b4d0ae58b",
+  "textHash": "fnv1a64:9e9b4b4750a9c87f",
+  "jsonHash": "fnv1a64:4f20bb0537576fdf",
   "findings": []
 }

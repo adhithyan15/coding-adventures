@@ -14,7 +14,8 @@ romanization: "kāl"
 concept_tag: MW-TIME79-KAL
 prerequisites: [MW-C79-minat, MW-C79-aj]
 sounds: []
-roots: []
+roots: [sanskrit-kalya]
+etymology_hook: "kāl ← Sanskrit kālya 'timely; at dawn', a tadbhava (CDIAL 3104, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C79-aj]
 <!-- hl-knowledge: introduces=[MW-LEX-C79-TIME79-04]; assesses=[] -->
 
 **काल** — *kāl* — "yesterday; tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काल** (*kāl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kālya*, "timely; at dawn". CDIAL lists Old Marwari *kālī* under it (CDIAL 3104). Sanskrit *kalya* already meant "at dawn, tomorrow"; the Old Marwari row means "tomorrow". It is built on *kāla*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

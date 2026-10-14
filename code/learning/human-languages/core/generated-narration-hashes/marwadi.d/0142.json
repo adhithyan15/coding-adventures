@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 142,
-  "sourceHash": "fnv1a64:9e534d3c28a36eeb",
+  "sourceHash": "fnv1a64:2fd95ff58cc53306",
   "lessonIds": [
     "MW-C142-halko",
     "MW-C142-karak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch142.txt",
   "json": "marwadi/narration/ch142.json",
-  "textHash": "fnv1a64:90176b538567e20d",
-  "jsonHash": "fnv1a64:c032f87b77f56060",
+  "textHash": "fnv1a64:201b62edf9e53a16",
+  "jsonHash": "fnv1a64:ecad6571be3a0a8f",
   "findings": []
 }

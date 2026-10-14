@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 99,
-  "sourceHash": "fnv1a64:8a6590e1e9a6b9c1",
+  "sourceHash": "fnv1a64:8b03c4b8357307d0",
   "lessonIds": [
     "MW-C99-rasto",
     "MW-C99-agano",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marwadi/narration/ch99.txt",
   "json": "marwadi/narration/ch99.json",
-  "textHash": "fnv1a64:7cac2fddced91a08",
-  "jsonHash": "fnv1a64:c7fd70abaa13bba9",
+  "textHash": "fnv1a64:97dc1b0dd458eec1",
+  "jsonHash": "fnv1a64:c5cc812ad13fb760",
   "findings": []
 }

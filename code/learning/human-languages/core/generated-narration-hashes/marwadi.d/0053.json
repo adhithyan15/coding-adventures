@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 53,
-  "sourceHash": "fnv1a64:3149364776bc5c80",
+  "sourceHash": "fnv1a64:111df90fcc0604b3",
   "lessonIds": [
     "MW-C53-khelno",
     "MW-C53-bechno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch53.txt",
   "json": "marwadi/narration/ch53.json",
-  "textHash": "fnv1a64:c5d9b2edc6178aa3",
-  "jsonHash": "fnv1a64:d4d5e649d2e1ab66",
+  "textHash": "fnv1a64:3a00eef567a0927c",
+  "jsonHash": "fnv1a64:30bc5afc2a7c9117",
   "findings": []
 }

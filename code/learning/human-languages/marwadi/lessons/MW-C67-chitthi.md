@@ -14,7 +14,8 @@ romanization: "chiṭṭhī"
 concept_tag: MW-SCHOOL67-CHITTHI
 prerequisites: [MW-C66-sabad, MW-C67-khel]
 sounds: []
-roots: []
+roots: [indo-aryan-cishta]
+etymology_hook: "chiṭṭhī ← *ciṣṭa 'message', reconstructed (CDIAL 4832, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C67-khel]
 <!-- hl-knowledge: introduces=[MW-LEX-C67-SCHOOL67-02]; assesses=[] -->
 
 **चिट्ठी** — *chiṭṭhī* — "a letter (post)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चिट्ठी** (*chiṭṭhī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ciṣṭa*, "message", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4832); the match is through Hindi *ciṭṭhī* and Gujarati *ciṭṭhī*. CDIAL compares Avestan *činasti*, "teaches, makes known".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

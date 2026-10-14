@@ -16,6 +16,9 @@ ye — this.
 One beat. It points at the single thing in front of you and at nothing else. The source prints it in front of an ordinary noun, exactly the way the next chapters will use it: ye vastu, this item.
 Every word this book has taught so far names a thing. ye does not name anything. It is the first Marwadi word here whose whole job is to pick one out.
 
+The word, taken apart.
+CDIAL lists Hindi yah, "this", under Sanskrit eṣa, "this" (CDIAL 2530). It gives no Marwari form, so the exact path to ye is not settled.
+
 Wrap-up Recall.
 Source: Marwari Pathshala, Lesson 9.
 [question — say your answer, then pause 10 seconds]
@@ -35,6 +38,9 @@ Say this, then write tea.
 You'll want to know.
 य + े becomes ये — ye — this.
 In चाय the glide य closed a word and carried no vowel mark. Here the same sign opens a word and carries े above the headstroke. One sign, two jobs, and nothing new to learn.
+
+The word, taken apart.
+CDIAL lists Hindi yah, "this", under Sanskrit eṣa, "this" (CDIAL 2530). It gives no Marwari form, so the exact path to ये (ye) is not settled.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -59,6 +65,9 @@ You'll want to know.
 dikhāvo — show it.
 Three beats: di-khā-vo, the middle one long. The middle beat carries a breath after the k that the k of kapṛā does not have. Hear both, then say both: ka — khā.
 The source prints this form twice, once for a menu and once for another colour. It is the asking form used to one person across a counter, not a command shouted at anyone, and this lesson teaches the printed form rather than the whole system of asking forms behind it.
+
+The word, taken apart.
+dikhāvo, "show", is the causing form of the verb "to see". CDIAL lists Marwari dekhṇo, "to see", and Old Marwari dikhāṛaï under dṛkṣati, "sees", and its variant dekṣati, present stems it reconstructs from Sanskrit (CDIAL 6507).
 
 Wrap-up Recall.
 Sources: Marwari Pathshala, Lesson 9; Marwari Pathshala, Lesson 6.
@@ -104,6 +113,9 @@ You'll want to know.
 दि + खा + वो becomes दिखावो — dikhāvo — show it.
 Three groups, one for each beat you already hear. ि is written before द and read after it, the order you first met in मंदिर. वो is the व of हवा with the ो of घोड़ो.
 
+The word, taken apart.
+दिखावो (dikhāvo), "show", is the causing form of the verb "to see". CDIAL lists Marwari dekhṇo, "to see", and Old Marwari dikhāṛaï under dṛkṣati, "sees", and its variant dekṣati, present stems it reconstructs from Sanskrit (CDIAL 6507).
+
 Guided Practice.
 [once you have stopped driving — read: the three groups once]
 [once you have stopped driving — cover: the word, then wait five seconds]
@@ -146,6 +158,9 @@ Three words, and you already own all three. The pointing word first, the thing s
 Hear the line twice. Say it once as if the cloth were on the counter in front of you.
 The source prints dikhāvo with its own objects. Here it takes a noun this book has already taught, so nothing in the line is unfamiliar except the joining.
 
+The phrase, taken apart.
+ye kapṛā dikhāvo joins three words with their own lessons: ye, "this", which CDIAL sets beside Hindi yah under Sanskrit eṣa (CDIAL 2530); kapṛā, "cloth", from Sanskrit karpaṭa, "rag", which CDIAL takes from Austroasiatic (CDIAL 2871); and dikhāvo, "show", the causing form of the verb CDIAL lists under dṛkṣati, "sees" (CDIAL 6507).
+
 Wrap-up Recall.
 Source: Marwari Pathshala, Lesson 9.
 [question — say your answer, then pause 12 seconds]
@@ -163,6 +178,9 @@ Say show me this cloth.
 You'll want to know.
 ये (ye) | कपड़ा | दिखावो (dikhāvo)।.
 Three written words, each one already written on its own in an earlier lesson. The full stop is the । you first met in पाछे मिलसू. Nothing here is new but the joining, which is the point of the chapter.
+
+The phrase, taken apart.
+ये कपड़ा दिखावो (ye kapṛā dikhāvo) joins three words with their own lessons: ye, "this", which CDIAL sets beside Hindi yah under Sanskrit eṣa (CDIAL 2530); kapṛā, "cloth", from Sanskrit karpaṭa, "rag", which CDIAL takes from Austroasiatic (CDIAL 2871); and dikhāvo, "show", the causing form of the verb CDIAL lists under dṛkṣati, "sees" (CDIAL 6507).
 
 Guided Practice.
 [once you have stopped driving — read: the line once, then cover it for ten seconds]

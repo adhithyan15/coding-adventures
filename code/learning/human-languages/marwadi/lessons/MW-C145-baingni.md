@@ -14,7 +14,8 @@ romanization: "baiṅgṇī"
 concept_tag: MW-QUAL145-BAINGNI
 prerequisites: [MW-C145-kesariyo, MW-C145-asmani]
 sounds: []
-roots: []
+roots: [sanskrit-vatingana]
+etymology_hook: "baiṅgṇī: the colour of baiṅgaṇ 'aubergine' ← vātiṅgaṇa (CDIAL 11503) + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C145-asmani]
 <!-- hl-knowledge: introduces=[MW-LEX-C145-QUAL145-04]; assesses=[] -->
 
 **बैंगणी** — *baiṅgṇī* — "purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बैंगणी** (*baiṅgṇī*) is built with *-ī* on *baiṅgaṇ*, "aubergine", from Sanskrit *vātiṅgaṇa*, which CDIAL thinks may come from Dravidian (CDIAL 11503). CDIAL lists Hindi *baĩjnī*, "purple", under the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

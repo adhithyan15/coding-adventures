@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Wife and Child: One New Sign",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:64159c1884230088",
+  "sourceHash": "fnv1a64:c5aa4c04c2e4e8de",
   "lessons": [
     {
       "id": "MW-C09-hear-patni",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e63f52fe21658b62",
+      "sourceHash": "fnv1a64:7d2bb67e3c4803ac",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "patnī is Sanskrit patnī, \"mistress, wife\", taken over whole as a learned loan, a tatsama (CDIAL 7742)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -113,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e49258bfbd6f785",
+      "sourceHash": "fnv1a64:da6b1dcde8ecf94f",
       "notice": null,
       "blocks": [
         {
@@ -159,6 +170,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पत्नी (patnī) is Sanskrit patnī, \"mistress, wife\", taken over whole as a learned loan, a tatsama (CDIAL 7742)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -174,7 +196,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -219,7 +241,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e4ec2cb5e467219",
+      "sourceHash": "fnv1a64:8bde343caea6f3d4",
       "notice": null,
       "blocks": [
         {
@@ -265,6 +287,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bachchā is a loan, usually traced to Persian bačča, \"child\". CDIAL lists a native cousin under Sanskrit vatsa, \"calf, child\": Hindi bāchā, \"calf\" (CDIAL 11239)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -411,7 +444,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0bbafa152141094e",
+      "sourceHash": "fnv1a64:77748f39c9398533",
       "notice": null,
       "blocks": [
         {
@@ -453,6 +486,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बच्चा (bachchā) is a loan, usually traced to Persian bačča, \"child\". CDIAL lists a native cousin under Sanskrit vatsa, \"calf, child\": Hindi bāchā, \"calf\" (CDIAL 11239)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -468,7 +512,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

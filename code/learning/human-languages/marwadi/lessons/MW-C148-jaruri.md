@@ -14,7 +14,8 @@ romanization: "jarūrī"
 concept_tag: MW-QUAL148-JARURI
 prerequisites: [MW-C147-bhalo, MW-C148-buro]
 sounds: []
-roots: []
+roots: [arabic-daruri]
+etymology_hook: "jarūrī ← Arabic ḍarūrī 'necessary', through Persian (Lane, root ḍ-r-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C148-buro]
 <!-- hl-knowledge: introduces=[MW-LEX-C148-QUAL148-02]; assesses=[] -->
 
 **जरूरी** — *jarūrī* — "necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जरूरी** (*jarūrī*) is a loan from Arabic *ḍarūrī*, "necessary", which reached Marwadi through Persian. Its Arabic root is *ḍ-r-r* (Lane). Persian says it *zarūrī*; Marwadi says the *z* as *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

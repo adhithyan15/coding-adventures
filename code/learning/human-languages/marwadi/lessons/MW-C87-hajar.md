@@ -14,7 +14,8 @@ romanization: "hajār"
 concept_tag: MW-NUMBERS87-HAJAR
 prerequisites: [MW-C87-assi, MW-C87-nabbai]
 sounds: []
-roots: []
+roots: [persian-hazar]
+etymology_hook: "hajār: usually traced to Persian hazār 'thousand'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C87-nabbai]
 <!-- hl-knowledge: introduces=[MW-LEX-C87-NUMBERS87-03]; assesses=[] -->
 
 **हजार** — *hajār* — "a thousand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हजार** (*hajār*) is a loan, usually traced to Persian *hazār*, "thousand". Marwadi says the *z* as *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

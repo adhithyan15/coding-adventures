@@ -2063,6 +2063,17 @@ fn swimlane_cluster_theme_reaches_semantic_ir() {
 }
 
 #[test]
+fn swimlane_node_and_edge_theme_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"nodeTextColor\": \"#14532d\", \"arrowheadColor\": \"#dc2626\", \"strokeWidth\": \"4px\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  request[Request]\n  done[Done]\nend\nrequest --> done",
+    ).expect("Swimlane node and edge theme should parse");
+
+    assert_eq!(diagram.theme.node_text_color.as_deref(), Some("#14532d"));
+    assert_eq!(diagram.theme.arrowhead_color.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.theme.stroke_width, Some(4.0));
+}
+
+#[test]
 fn swimlane_inline_node_styles_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nrequest --> done",
@@ -2616,6 +2627,23 @@ fn swimlane_flowchart_spacing_config_lowers_to_semantic_ir() {
     assert!(parse_swimlane(&format!(
         "---\nconfig:\n  flowchart:\n    rankSpacing: -1\n---\n{source}"
     )).is_err(), "negative Flowchart spacing must be rejected");
+}
+
+#[test]
+fn swimlane_flowchart_wrapping_width_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  first[Review a substantially longer customer request label]\nend";
+    let front_matter = parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    wrappingWidth: 180\n---\n{source}"
+    )).expect("Flowchart wrapping width front matter should parse for Swimlane");
+    let directive = parse_swimlane(&format!(
+        "%%{{init: {{\"flowchart\": {{\"wrappingWidth\": 220}}}}}}%%\n{source}"
+    )).expect("Flowchart wrapping width init directive should parse for Swimlane");
+
+    assert_eq!(front_matter.flowchart_config.wrapping_width, Some(180.0));
+    assert_eq!(directive.flowchart_config.wrapping_width, Some(220.0));
+    assert!(parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    wrappingWidth: -1\n---\n{source}"
+    )).is_err(), "negative Flowchart wrapping width must be rejected");
 }
 
 #[test]

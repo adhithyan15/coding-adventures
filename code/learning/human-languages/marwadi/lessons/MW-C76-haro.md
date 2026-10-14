@@ -14,7 +14,8 @@ romanization: "haro"
 concept_tag: MW-ADJ76-HARO
 prerequisites: [MW-C76-bhari, MW-C76-sacho]
 sounds: []
-roots: []
+roots: [sanskrit-harita]
+etymology_hook: "haro ← Sanskrit harita 'yellow; green', a tadbhava (CDIAL 13985, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C76-sacho]
 <!-- hl-knowledge: introduces=[MW-LEX-C76-ADJ76-04]; assesses=[] -->
 
 **हरो** — *haro* — "green".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हरो** (*haro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *harita*, "yellow; green". CDIAL lists Old Marwari *harīyaü* under it (CDIAL 13985).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: how much is that altogether? — written with no new sign
 concept_tag: MW-SHOPPING-TOTAL-QUESTION-WRITTEN
 prerequisites: [MW-C22-hear-total-question]
 sounds: [semivowel-y, retroflex-n, short-u, long-aa]
-roots: []
-etymology_hook: The independent आ of आभार and the short u of दुकान meet inside one three-letter word.
+roots: [sanskrit-bhuta]
+etymology_hook: "ye kitṇo huā: huā 'became' ← Sanskrit bhūta 'become', Old Marwari hūvo (CDIAL 9552)"
 duration:
   max_seconds: 195
 requires:
@@ -48,6 +48,11 @@ Three written words, all made of old parts. **हुआ** is **ह** carrying th
 **ु** of **दुकान**, followed by the standing **आ** you wrote for **आभार**. This
 is the first word in the track where a full independent vowel stands inside a
 word rather than starting one.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+In **ये कितणो हुआ** (*ye kitṇo huā*), the new word is *huā*, "became, came to". CDIAL lists it as Hindi *huā* and Old Marwari *hūvo*, "became", under Sanskrit *bhūta*, "become, been" (CDIAL 9552). *ye* and *kitṇo* have their own lessons (CDIAL 2530, 3167).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-TOTAL-QUESTION-01] -->

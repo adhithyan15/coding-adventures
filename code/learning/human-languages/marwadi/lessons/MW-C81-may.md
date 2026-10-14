@@ -14,7 +14,8 @@ romanization: "mā̃y"
 concept_tag: MW-PLACE81-MAY
 prerequisites: [MW-C81-dur, MW-C81-najik]
 sounds: []
-roots: []
+roots: [sanskrit-madhya]
+etymology_hook: "mā̃y 'inside': matches Old Marwari māhī 'in', listed under Sanskrit madhya 'middle' (CDIAL 9804)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C81-najik]
 <!-- hl-knowledge: introduces=[MW-LEX-C81-PLACE81-03]; assesses=[] -->
 
 **मांय** — *mā̃y* — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मांय** (*mā̃y*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *madhya*, "middle". CDIAL lists Old Marwari *māhī* under it (CDIAL 9804). The Old Marwari row is the postposition "in, into"; **मांय** (*mā̃y*) matches it closely, with a *y* where Old Marwari has *h*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

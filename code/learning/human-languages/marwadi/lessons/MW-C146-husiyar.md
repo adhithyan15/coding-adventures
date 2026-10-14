@@ -14,7 +14,8 @@ romanization: "husiyār"
 concept_tag: MW-QUAL146-HUSIYAR
 prerequisites: [MW-C146-chamkilo, MW-C146-sant]
 sounds: []
-roots: []
+roots: [persian-hushyar]
+etymology_hook: "husiyār: usually traced to Persian hušyār 'alert, wise'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C146-sant]
 <!-- hl-knowledge: introduces=[MW-LEX-C146-QUAL146-03]; assesses=[] -->
 
 **हुसियार** — *husiyār* — "clever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हुसियार** (*husiyār*) is a loan, usually traced to Persian *hušyār*, "alert, wise". It is built on Persian *huš*, "the senses".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

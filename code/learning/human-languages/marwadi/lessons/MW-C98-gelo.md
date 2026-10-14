@@ -14,7 +14,8 @@ romanization: "gelo"
 concept_tag: MW-LOC98-GELO
 prerequisites: [MW-C98-chauraho, MW-C98-mor]
 sounds: []
-roots: []
+roots: [sanskrit-gati]
+etymology_hook: "gelo ← Sanskrit gati 'going, gait', a tadbhava (CDIAL 4009, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C98-mor]
 <!-- hl-knowledge: introduces=[MW-LEX-C98-LOC98-05]; assesses=[] -->
 
 **गेलो** — *gelo* — "a path, the way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गेलो** (*gelo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gati*, "going, gait". CDIAL lists Old Marwari *gailo* under it (CDIAL 4009). The Old Marwari row means "road"; Hindi has *gail*, "path".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

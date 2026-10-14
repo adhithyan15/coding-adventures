@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "Route, Courtyard, Enclosure, Stepwell, Pond",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:8a6590e1e9a6b9c1",
+  "sourceHash": "fnv1a64:8b03c4b8357307d0",
   "lessons": [
     {
       "id": "MW-C99-rasto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54777c8518355920",
+      "sourceHash": "fnv1a64:3e2c91f9f4d65689",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रस्तो (rasto) is a loan, usually traced to Persian rāsta, \"straight; a road\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64ff9a6a35b3dbef",
+      "sourceHash": "fnv1a64:043ea4d123f02b5a",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आंगणो (ā̃gaṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṅgaṇa, \"courtyard\". CDIAL gives no Marwari form in this entry (CDIAL 118); the match is through Hindi ã̄gan and Gujarati ã̄gaṇ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:974dd640d9269f2d",
+      "sourceHash": "fnv1a64:3254749d358a7ab2",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाड़ो (bāṛo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāṭa, \"enclosure, fence\". CDIAL lists Marwari bāṛī under it (CDIAL 11480). The Marwari row bāṛī means \"garden\"; Hindi has bāṛā, \"enclosure\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed6769ffa5972be6",
+      "sourceHash": "fnv1a64:602c2a921b607021",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बावड़ी (bāvṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāpī, \"pond, tank\". CDIAL gives no Marwari form in this entry (CDIAL 11529); the match is through Hindi bāuṛī. CDIAL explains the ṛ as an added suffix."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c14a1f2523dc06d6",
+      "sourceHash": "fnv1a64:49a8dcdb424d031e",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तळाव (taḷāv) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from taḍāga, \"pool\". CDIAL lists Old Marwari talāvo under it (CDIAL 5635)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

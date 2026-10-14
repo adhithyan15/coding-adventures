@@ -14,7 +14,8 @@ romanization: "jagāvṇo"
 concept_tag: MW-VERB-JAGAVNO
 prerequisites: [MW-C107-hatavno, MW-C107-bichhavno]
 sounds: []
-roots: []
+roots: [sanskrit-jagrati]
+etymology_hook: "jagāvṇo ← Sanskrit jāgrati 'are awake', a tadbhava (CDIAL 5175, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C107-bichhavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C108-ACT108-01]; assesses=[] -->
 
 **जगावणो** — *jagāvṇo* — "to wake someone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जगावणो** (*jagāvṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jāgrati*, "are awake". CDIAL lists Marwari *jāgṇo* under it (CDIAL 5175). It is the causing form, "make awake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

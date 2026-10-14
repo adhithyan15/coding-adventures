@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 75,
-  "sourceHash": "fnv1a64:7bd4328d2c2105ec",
+  "sourceHash": "fnv1a64:41c01419f3ea583f",
   "lessonIds": [
     "MW-C75-nicho",
     "MW-C75-khali",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch75.txt",
   "json": "marwadi/narration/ch75.json",
-  "textHash": "fnv1a64:ef123d19755c6830",
-  "jsonHash": "fnv1a64:f53f2aef03fcd860",
+  "textHash": "fnv1a64:4b12231cd15aef48",
+  "jsonHash": "fnv1a64:2ef255dae5969949",
   "findings": []
 }

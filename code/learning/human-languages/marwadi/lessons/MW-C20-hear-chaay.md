@@ -11,8 +11,8 @@ gloss: tea
 concept_tag: MW-FOOD-TEA
 prerequisites: [MW-C20-churma]
 sounds: [unaspirated-ch, long-aa]
-roots: []
-etymology_hook: The most offered drink in the set arrives by ear one lesson before its last consonant is taught.
+roots: [persian-chay]
+etymology_hook: "chāy: usually traced to Persian chāy 'tea'"
 duration:
   max_seconds: 145
 requires:
@@ -48,6 +48,11 @@ reviews_of: [MW-C20-churma, MW-C11-baadal, MW-C18-hear-daal]
 One long beat closing on a glide. It opens with the same consonant as *chūrmā*.
 Hear it twice and say it once. The spelling waits one lesson, because its final
 consonant has not been taught yet.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chāy* is a loan, usually traced to Persian *chāy*, "tea". Persian took it overland from Chinese *chá*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-CHAAY-01] -->

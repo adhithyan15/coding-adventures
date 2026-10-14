@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for courage, then the Marwadi for an owner.
 You'll want to know: जमीन.
 जमीन — jamīn — "land".
 
+The word, taken apart.
+जमीन (jamīn) is a loan, usually traced to Persian zamīn, "earth, ground". Marwadi says the z as j.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for an owner, then the Marwadi for land.
 
 You'll want to know: जायदाद.
 जायदाद — jāydād — "property".
+
+The word, taken apart.
+जायदाद (jāydād) is a loan, usually traced to Persian jāydād, "property, estate".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for land, then the Marwadi for property.
 You'll want to know: पूंजी.
 पूंजी — pū̃jī — "capital, savings".
 
+The word, taken apart.
+पूंजी (pū̃jī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from puñja, "heap, quantity". CDIAL gives no Marwari form in this entry (CDIAL 8251); the match is through Hindi pū̃jī. The sense moved from "heap" to "store of money". CDIAL thinks the further history of the Sanskrit word doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for property, then the Marwadi for capital.
 You'll want to know: कमाई.
 कमाई — kamāī — "earnings".
 
+The word, taken apart.
+कमाई (kamāī) is a tadbhava, a word inherited and reshaped by sound change. It comes from karmāpayati, "works, earns", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 2897); the match is through Hindi kamānā and Gujarati kamāvũ. कमाई (kamāī) is the noun of the verb "to earn"; CDIAL builds that verb on Sanskrit karman, "work".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for capital, then the Marwadi for earnings.
 
 You'll want to know: नौकरी.
 नौकरी — naukrī — "a job".
+
+The word, taken apart.
+नौकरी (naukrī) is a loan, usually traced to Persian naukar, "servant". Persian took naukar from Mongolic nökör, "companion"; Marwadi added the ending -ī, so "the work of a servant".
 
 What you've built.
 One more word for this chapter.

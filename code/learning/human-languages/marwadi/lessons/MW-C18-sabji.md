@@ -11,8 +11,8 @@ gloss: vegetables, written entirely with familiar signs
 concept_tag: MW-FOOD-VEGETABLES-WRITTEN
 prerequisites: [MW-C18-hear-sabji]
 sounds: [voiceless-s, voiced-b, voiced-j, long-ii]
-roots: []
-etymology_hook: Four familiar units spell the word, and the cited source writes it without a vowel-killer.
+roots: [persian-sabzi]
+etymology_hook: "sabjī: usually traced to Persian sabzī 'greenness, greens'"
 duration:
   max_seconds: 170
 requires:
@@ -48,6 +48,11 @@ Four units, every one of them already in the hand. The source spells it with a
 full **ब** between **स** and **जी**; other Rajasthani writing prints a clustered
 spelling for the same word, so treat this form as the one attested here rather
 than as the only one anybody uses.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सबजी** (*sabjī*) is a loan, usually traced to Persian *sabzī*, "greenness, greens". Marwadi says the *z* as *j*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SABJI-01] -->

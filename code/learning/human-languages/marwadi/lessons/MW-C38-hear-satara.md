@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-SEVENTEEN
 prerequisites: [MW-W38-a]
 sounds: [voiceless-s, long-aa]
 roots: [sanskrit-saptadasha]
-etymology_hook: Sanskrit saptadasha; seven survives here more visibly than any other small number does in its teen.
+etymology_hook: "satarā ← Sanskrit saptadaśa 'seventeen', a tadbhava (CDIAL 13146, Hindi and Gujarati rows)"
 duration:
   max_seconds: 175
 requires:
@@ -52,6 +52,11 @@ before the **-arā** ending arrives.
 
 If you have been listening for the shape rather than learning the words, this is
 the one that proves the shape works.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*satarā* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *saptadaśa*, "seventeen". CDIAL gives no Marwari form in this entry (CDIAL 13146); the match is through Hindi *sattrah* and Gujarati *sattar*. It is *sapta*, "seven", and *daśa*, "ten".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SATARA-01, MW-LEX-SOLA-01] -->

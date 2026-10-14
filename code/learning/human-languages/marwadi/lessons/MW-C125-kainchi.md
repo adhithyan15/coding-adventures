@@ -14,7 +14,8 @@ romanization: "kaiñchī"
 concept_tag: MW-THINGS125-KAINCHI
 prerequisites: [MW-C124-sui, MW-C124-doro]
 sounds: []
-roots: []
+roots: [persian-qaichi]
+etymology_hook: "kaiñchī: usually traced to Persian qaičī 'scissors'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C124-doro]
 <!-- hl-knowledge: introduces=[MW-LEX-C125-THINGS125-01]; assesses=[] -->
 
 **कैंची** — *kaiñchī* — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कैंची** (*kaiñchī*) is a loan, usually traced to Persian *qaičī*, "scissors". Persian took the word from Turkish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

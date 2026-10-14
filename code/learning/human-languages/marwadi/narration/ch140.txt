@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a koel, then the Marwadi for a kite (the
 You'll want to know: उंदरो.
 उंदरो — undro — "a mouse".
 
+The word, taken apart.
+उंदरो (undro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from undura, "rat, mouse". CDIAL gives no Marwari form in this entry (CDIAL 2095); the match is through Gujarati ũdar and Hindi ũdur. CDIAL takes the Sanskrit word itself from an Austroasiatic language.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a kite (the bird), then the Marwadi for 
 
 You'll want to know: माखी.
 माखी — mākhī — "a fly".
+
+The word, taken apart.
+माखी (mākhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from makṣikā, "fly, bee". CDIAL gives no Marwari form in this entry (CDIAL 9696); the match is through Hindi mākhī and Gujarati mākhī.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a mouse, then the Marwadi for a fly.
 You'll want to know: मच्छर.
 मच्छर — machchhar — "a mosquito".
 
+The word, taken apart.
+मच्छर (machchhar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from matsara, "mosquito, fly". CDIAL gives no Marwari form in this entry (CDIAL 9757); the match is through Hindi macchar. CDIAL notes the possibility that the Sanskrit word was made back from Prakrit macchara, but finds no support for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a fly, then the Marwadi for a mosquito.
 You'll want to know: कीड़ी.
 कीड़ी — kīṛī — "an ant".
 
+The word, taken apart.
+कीड़ी (kīṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kīṭa, "insect, worm". CDIAL gives no Marwari form in this entry (CDIAL 3193); the match is through Hindi kīṛī and Gujarati kīṛī. Hindi and Gujarati kīṛī also mean "ant".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a mosquito, then the Marwadi for an ant.
 
 You'll want to know: बीछू.
 बीछू — bīchhū — "a scorpion".
+
+The word, taken apart.
+बीछू (bīchhū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vṛścika, "scorpion". CDIAL gives no Marwari form in this entry (CDIAL 12081); the match is through Hindi bīchū and Gujarati vīchu. CDIAL suggests that the many forms of the word come from a taboo on naming the scorpion.
 
 What you've built.
 One more word for this chapter.

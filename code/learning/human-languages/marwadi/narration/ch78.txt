@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for brown, then the Marwadi for sweet.
 You'll want to know: दिन.
 दिन — din — "a day".
 
+The word, taken apart.
+दिन (din) is Sanskrit dina, "day". CDIAL lists Hindi and Gujarati din under it and thinks the Gujarati and Marathi forms were taken back from Sanskrit (CDIAL 6328); it gives no Marwari form.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for sweet, then the Marwadi for a day.
 
 You'll want to know: रात.
 रात — rāt — "night".
+
+The word, taken apart.
+रात (rāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rātrī, "night". CDIAL lists Old Marwari rāti under it (CDIAL 10702).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a day, then the Marwadi for night.
 You'll want to know: सवेरो.
 सवेरो — savero — "morning".
 
+The word, taken apart.
+सवेरो (savero) is a tadbhava, a word inherited and reshaped by sound change. It comes from savela, "in time, early", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 13291); the match is through Hindi sawerā and Gujarati saverā. It is built on sa-, "with", and velā, "time".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for night, then the Marwadi for morning.
 You'll want to know: महीनो.
 महीनो — mahīno — "a month".
 
+The word, taken apart.
+महीनो (mahīno) is a loan, usually traced to Persian māhīna, "monthly". It is built on Persian māh, "moon, month".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for morning, then the Marwadi for a month.
 
 You'll want to know: बरस.
 बरस — baras — "a year".
+
+The word, taken apart.
+बरस (baras) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from varṣa, "rain; year". CDIAL lists Old Marwari barasa under it (CDIAL 11392). The sense moved from "rain, the rainy season" to "year".
 
 What you've built.
 One more word for this chapter.

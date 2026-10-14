@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 113,
-  "sourceHash": "fnv1a64:7cf2286639d6de00",
+  "sourceHash": "fnv1a64:b8911acdae7eb811",
   "lessonIds": [
     "MW-C113-lagno",
     "MW-C113-pasand",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch113.txt",
   "json": "marwadi/narration/ch113.json",
-  "textHash": "fnv1a64:29a1e3999233c6cf",
-  "jsonHash": "fnv1a64:7fcaef045553cac5",
+  "textHash": "fnv1a64:9b5f84f6225d54dd",
+  "jsonHash": "fnv1a64:e9448424cc3ceae7",
   "findings": []
 }

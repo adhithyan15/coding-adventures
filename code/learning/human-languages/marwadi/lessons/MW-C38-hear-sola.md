@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-SIXTEEN
 prerequisites: [MW-W38-lla]
 sounds: [retroflex-l, long-aa]
 roots: [sanskrit-shodasha]
-etymology_hook: Sanskrit shodasha; Marwari's retroflex l is what became of its d.
+etymology_hook: "soḷā ← Sanskrit ṣoḍaśa 'sixteen', a tadbhava (CDIAL 12812, Gujarati row)"
 duration:
   max_seconds: 170
 requires:
@@ -53,6 +53,11 @@ set.
 
 What they do share is the retroflex **ḷ** you have just written. Curl the tongue
 back for it: *so-ḷā*, not *so-lā*. This is where the new letter earns its lesson.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*soḷā* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ṣoḍaśa*, "sixteen". CDIAL gives no Marwari form in this entry (CDIAL 12812); the match is through Gujarati *soḷ*. Gujarati, like Marwadi, says the *l* curled back.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SOLA-01] -->

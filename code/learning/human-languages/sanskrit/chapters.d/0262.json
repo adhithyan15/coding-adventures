@@ -1,0 +1,25 @@
+{
+  "chapter": 262,
+  "title": "Us and you all as objects",
+  "label": "ch:sa-us-and-you-all-objects",
+  "canDo": "I can choose first or second person and one, two, or several people for a known object frame.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C262-object-pronoun-retrieval",
+    "kind": "production",
+    "summary": "Complete chapter 262 by retrieving all six independent first- and second-person objects from person-and-number cues.",
+    "assesses": [
+      "SA-PRON-C260-MAM-01",
+      "SA-PRON-C260-TVAM-02",
+      "SA-GRAMMAR-C260-SINGULAR-OBJECTS-03",
+      "SA-PRON-C261-AVAM-01",
+      "SA-PRON-C261-YUVAM-02",
+      "SA-GRAMMAR-C261-DUAL-OBJECTS-03",
+      "SA-PRON-C262-ASMAN-01",
+      "SA-PRON-C262-YUSMAN-02",
+      "SA-GRAMMAR-C262-OBJECT-PERSON-NUMBER-03"
+    ]
+  }
+}

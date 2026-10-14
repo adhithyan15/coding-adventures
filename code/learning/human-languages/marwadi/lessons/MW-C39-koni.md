@@ -12,6 +12,7 @@ concept_tag: MW-RESPONSE-NO-WRITTEN
 prerequisites: [MW-C39-hear-koni]
 sounds: []
 roots: []
+etymology_hook: "konī 'no': origin not settled; CDIAL has no entry for it (Marwari na 'not' is CDIAL 6906)"
 duration:
   max_seconds: 175
 requires:
@@ -51,6 +52,11 @@ written since chapter 5; **न** since chapter 5; **ी** since chapter 4.
 
 That is worth saying plainly, because it means this word cost the hand nothing
 and was missing anyway. The gap was never a writing problem.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **कोनी** (*konī*) is not settled. CDIAL, searched by form and by meaning, has no entry for it. It lists Marwari *na*, "not", under Sanskrit *na* (CDIAL 6906), but nothing that explains the *ko-* of **कोनी** (*konī*).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KONI-01, MW-SCRIPT-HAAN-01] -->

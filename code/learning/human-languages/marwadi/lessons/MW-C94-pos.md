@@ -14,7 +14,8 @@ romanization: "pos"
 concept_tag: MW-TIME94-POS
 prerequisites: [MW-C93-kati, MW-C93-migsar]
 sounds: []
-roots: []
+roots: [sanskrit-pausha]
+etymology_hook: "pos ← Sanskrit pauṣa 'the month December-January', a tadbhava (CDIAL 8424, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C93-migsar]
 <!-- hl-knowledge: introduces=[MW-LEX-C94-TIME94-01]; assesses=[] -->
 
 **पोस** — *pos* — "Pos (December-January)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पोस** (*pos*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pauṣa*, "the month December-January". CDIAL gives no Marwari form in this entry (CDIAL 8424); the match is through Gujarati *pos*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

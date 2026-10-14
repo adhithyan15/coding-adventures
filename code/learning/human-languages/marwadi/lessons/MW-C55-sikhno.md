@@ -14,7 +14,8 @@ romanization: "sīkhṇo"
 concept_tag: MW-VERB-SIKHNO
 prerequisites: [MW-C54-nachno, MW-C55-milno]
 sounds: []
-roots: []
+roots: [sanskrit-shikshate]
+etymology_hook: "sīkhṇo ← Sanskrit śikṣate 'learns', a tadbhava (CDIAL 12430, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C55-milno]
 <!-- hl-knowledge: introduces=[MW-LEX-C55-VERBS55-02]; assesses=[] -->
 
 **सीखणो** — *sīkhṇo* — "to learn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सीखणो** (*sīkhṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śikṣate*, "learns". CDIAL gives no Marwari form in this entry (CDIAL 12430); the match is through Hindi *sīkhnā* and Gujarati *sikhvũ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

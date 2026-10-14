@@ -11,8 +11,8 @@ gloss: cold or cold weather, written after dda is isolated
 concept_tag: MW-WEATHER-COLD-WRITTEN
 prerequisites: [MW-W12-dda]
 sounds: [retroflex-aspirated-tth, retroflex-dd, long-ii]
-roots: []
-etymology_hook: New ड joins familiar ठ, anusvara, and long ii.
+roots: [indo-aryan-thandha]
+etymology_hook: "ṭhaṇḍī: on *ṭhaṇḍha 'cold', listed by CDIAL under Sanskrit stabdha 'stiff' (CDIAL 13676)"
 duration:
   max_seconds: 170
 requires:
@@ -45,6 +45,11 @@ cold, heat, and weather.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THANDI-01, MW-SCRIPT-THANDI-01] -->
 
 > **ठं** + **डी** → **ठंडी** — *ṭhaṇḍī* — cold
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ठंडी** (*ṭhaṇḍī*) is built on *ṭhaṇḍ*, "cold". CDIAL lists Hindi *ṭhaṇḍā* and *ṭhaṇḍh*, "cold", under a reconstructed *\*ṭhaṇḍha*, which it sets under Sanskrit *stabdha*, "stiff, solidified", tracing the sense from "firm" through "sluggish" to "cold" (CDIAL 13676); it gives no Marwari form. DEDR compares Dravidian words for "cool", such as Tamil *taṇ* (DEDR 3045).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-THANDI-01] -->

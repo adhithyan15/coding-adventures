@@ -14,7 +14,8 @@ romanization: "kuṇ"
 concept_tag: MW-DEF101-KUN
 prerequisites: [MW-C101-uso, MW-C101-kiso]
 sounds: []
-roots: []
+roots: [sanskrit-kah-punar]
+etymology_hook: "kuṇ ← Sanskrit kaḥ punar 'who', a tadbhava (CDIAL 2575, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C101-kiso]
 <!-- hl-knowledge: introduces=[MW-LEX-C101-DEF101-05]; assesses=[] -->
 
 **कुण** — *kuṇ* — "who".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुण** (*kuṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaḥ punar*, "who". CDIAL lists Old Marwari *kuṇa* under it (CDIAL 2575). It is built on *kaḥ*, "who", and *punar*, "again".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

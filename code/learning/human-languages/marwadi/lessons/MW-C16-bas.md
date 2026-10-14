@@ -11,8 +11,8 @@ gloss: bus, written with familiar signs
 concept_tag: MW-TRANSPORT-BUS-WRITTEN
 prerequisites: [MW-C16-hear-bas]
 sounds: [voiced-b, voiceless-s]
-roots: []
-etymology_hook: Two familiar consonants write the whole transport word.
+roots: [english-bus]
+etymology_hook: "bas ← English bus"
 duration:
   max_seconds: 150
 requires:
@@ -44,6 +44,11 @@ reviews_of: [MW-C16-hear-bas]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAS-01, MW-SCRIPT-BAS-01] -->
 
 > **ब** + **स** → **बस** — *bas* — bus
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बस** (*bas*) is a loan from English *bus*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BAS-01] -->

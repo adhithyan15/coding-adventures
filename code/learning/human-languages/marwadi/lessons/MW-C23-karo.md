@@ -11,8 +11,8 @@ gloss: make it, written from three of the first signs this track ever taught
 concept_tag: MW-VERB-DO-WRITTEN
 prerequisites: [MW-C23-hear-karo]
 sounds: [unaspirated-k, tapped-r, long-o]
-roots: []
-etymology_hook: The r of Raam, taught in lesson one, finally does work in the middle of a word that asks for something.
+roots: [sanskrit-karoti]
+etymology_hook: "karo ← Sanskrit karoti 'does', a tadbhava (CDIAL 2814, Old Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -48,6 +48,11 @@ and *very*.
 Three signs, and the middle one is **र**, the very first sign this book taught.
 Set **करो** beside **ख** and say both: **क** and **ख** differ only by breath,
 and only one of them belongs in this word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**करो** (*karo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karoti*, "does". CDIAL lists Old Marwari *karaï* under it (CDIAL 2814). *karo* is the asking form of this verb.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KARO-01, MW-SCRIPT-KA-01] -->

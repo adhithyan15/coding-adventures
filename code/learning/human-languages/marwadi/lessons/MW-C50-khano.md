@@ -14,7 +14,8 @@ romanization: "khāṇo"
 concept_tag: MW-VERB-KHANO
 prerequisites: [MW-C50-pavno, MW-C50-mastar]
 sounds: []
-roots: []
+roots: [sanskrit-khadati]
+etymology_hook: "khāṇo ← Sanskrit khādati 'chews, bites; eats', a tadbhava (CDIAL 3865, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C50-mastar]
 <!-- hl-knowledge: introduces=[MW-LEX-C50-FAMILY50-05]; assesses=[] -->
 
 **खाणो** — *khāṇo* — "to eat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खाणो** (*khāṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khādati*, "chews, bites; eats". CDIAL lists Marwari *khābo* under it (CDIAL 3865). *khābo* is the same verb with another infinitive ending, *-bo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

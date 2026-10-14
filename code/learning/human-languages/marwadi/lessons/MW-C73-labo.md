@@ -14,7 +14,8 @@ romanization: "lā̃bo"
 concept_tag: MW-ADJ73-LABO
 prerequisites: [MW-C73-achho, MW-C73-maro]
 sounds: []
-roots: []
+roots: [sanskrit-lamba]
+etymology_hook: "lā̃bo ← Sanskrit lamba 'pendent; long', a tadbhava (CDIAL 10951, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C73-maro]
 <!-- hl-knowledge: introduces=[MW-LEX-C73-ADJ73-05]; assesses=[] -->
 
 **लांबो** — *lā̃bo* — "long, tall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लांबो** (*lā̃bo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lamba*, "pendent; long". CDIAL lists Old Marwari *lāṃbaü* under it (CDIAL 10951).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

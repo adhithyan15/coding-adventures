@@ -14,7 +14,8 @@ romanization: "khajūr"
 concept_tag: MW-THINGS137-KHAJUR
 prerequisites: [MW-C137-papito, MW-C137-anar]
 sounds: []
-roots: []
+roots: [sanskrit-kharjura]
+etymology_hook: "khajūr ← Sanskrit kharjūra 'the date-palm', a tadbhava (CDIAL 3828, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C137-anar]
 <!-- hl-knowledge: introduces=[MW-LEX-C137-THINGS137-04]; assesses=[] -->
 
 **खजूर** — *khajūr* — "dates".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खजूर** (*khajūr*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kharjūra*, "the date-palm". CDIAL gives no Marwari form in this entry (CDIAL 3828); the match is through Hindi *khajūr* and Gujarati *khajur*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

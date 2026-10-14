@@ -14,7 +14,8 @@ romanization: "chauk"
 concept_tag: MW-LOC98-CHAUK
 prerequisites: [MW-C97-davo, MW-C98-jimano]
 sounds: []
-roots: []
+roots: [sanskrit-catushka]
+etymology_hook: "chauk ← Sanskrit catuṣka 'set of four; square courtyard', a tadbhava (CDIAL 4629, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C98-jimano]
 <!-- hl-knowledge: introduces=[MW-LEX-C98-LOC98-02]; assesses=[] -->
 
 **चौक** — *chauk* — "a town square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चौक** (*chauk*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *catuṣka*, "set of four; square courtyard". CDIAL gives no Marwari form in this entry (CDIAL 4629); the match is through Hindi *cauk*. It is built on *catur*, "four".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

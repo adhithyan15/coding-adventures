@@ -14,7 +14,8 @@ romanization: "aṅgarkhī"
 concept_tag: MW-THINGS128-ANGARKHI
 prerequisites: [MW-C128-lugro, MW-C128-kachali]
 sounds: []
-roots: []
+roots: [indo-aryan-angaraksha]
+etymology_hook: "aṅgarkhī ← *aṅgarakṣa 'garment', reconstructed (CDIAL 120, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C128-kachali]
 <!-- hl-knowledge: introduces=[MW-LEX-C128-THINGS128-05]; assesses=[] -->
 
 **अंगरखी** — *aṅgarkhī* — "a long coat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अंगरखी** (*aṅgarkhī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*aṅgarakṣa*, "garment", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 120); the match is through Hindi *ãgarkhī* and Gujarati *ãgarkhī*. It is built on *aṅga*, "body", and *rakṣa*, "guard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

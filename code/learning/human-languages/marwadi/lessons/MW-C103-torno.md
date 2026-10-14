@@ -14,7 +14,8 @@ romanization: "toṛṇo"
 concept_tag: MW-VERB-TORNO
 prerequisites: [MW-C103-pakavno, MW-C103-banavno]
 sounds: []
-roots: []
+roots: [sanskrit-trotayati]
+etymology_hook: "toṛṇo ← Sanskrit troṭayati 'breaks, tears', a tadbhava (CDIAL 6079, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C103-banavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C103-ACT103-04]; assesses=[] -->
 
 **तोड़णो** — *toṛṇo* — "to break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तोड़णो** (*toṛṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *troṭayati*, "breaks, tears". CDIAL lists Marwari *toṛṇo* under it (CDIAL 6079).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

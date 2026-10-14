@@ -14,7 +14,8 @@ romanization: "uṛṇo"
 concept_tag: MW-VERB-URNO
 prerequisites: [MW-C110-gamavno, MW-C110-pugno]
 sounds: []
-roots: []
+roots: [sanskrit-uddiyate]
+etymology_hook: "uṛṇo ← Sanskrit uḍḍīyate 'flies up', a tadbhava (CDIAL 1697, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C110-pugno]
 <!-- hl-knowledge: introduces=[MW-LEX-C110-ACT110-04]; assesses=[] -->
 
 **उडणो** — *uṛṇo* — "to fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उडणो** (*uṛṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *uḍḍīyate*, "flies up". CDIAL lists Old Marwari *ūḍaï* under it (CDIAL 1697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

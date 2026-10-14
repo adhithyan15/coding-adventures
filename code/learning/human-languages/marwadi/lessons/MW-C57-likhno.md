@@ -14,7 +14,8 @@ romanization: "likhṇo"
 concept_tag: MW-VERB-LIKHNO
 prerequisites: [MW-C57-chhorno, MW-C57-bolno]
 sounds: []
-roots: []
+roots: [sanskrit-likhati]
+etymology_hook: "likhṇo ← Sanskrit likhati 'scratches, writes', a tadbhava (CDIAL 11048, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C57-bolno]
 <!-- hl-knowledge: introduces=[MW-LEX-C57-VERBS57-04]; assesses=[] -->
 
 **लिखणो** — *likhṇo* — "to write".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लिखणो** (*likhṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *likhati*, "scratches, writes". CDIAL gives no Marwari form in this entry (CDIAL 11048); the match is through Hindi *likhnā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

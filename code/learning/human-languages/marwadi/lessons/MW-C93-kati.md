@@ -14,7 +14,8 @@ romanization: "kātī"
 concept_tag: MW-TIME93-KATI
 prerequisites: [MW-C93-bhadvo, MW-C93-asoj]
 sounds: []
-roots: []
+roots: [sanskrit-karttika]
+etymology_hook: "kātī ← Sanskrit kārttika 'the month October-November', a tadbhava (CDIAL 3070, Sindhi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C93-asoj]
 <!-- hl-knowledge: introduces=[MW-LEX-C93-TIME93-04]; assesses=[] -->
 
 **काती** — *kātī* — "Kati (October-November)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काती** (*kātī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kārttika*, "the month October-November". CDIAL gives no Marwari form in this entry (CDIAL 3070); the match is through Sindhi *katī*. The month is named for the Kṛttikā stars, the Pleiades.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

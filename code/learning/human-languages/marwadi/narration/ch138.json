@@ -4,7 +4,7 @@
   "chapter": 138,
   "title": "Ox, Calf, Deer, Fox, Jackal",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:42235c1414f5a16e",
+  "sourceHash": "fnv1a64:5d6974f0396ce7b4",
   "lessons": [
     {
       "id": "MW-C138-balad",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cee81eca23ab71d",
+      "sourceHash": "fnv1a64:be9c4c04bdce6bbe",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बळद (baḷad) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from balivarda, \"ox, bull\". CDIAL gives no Marwari form in this entry (CDIAL 9176); the match is through Gujarati baḷad and Hindi balad. CDIAL records a view that the Sanskrit word joins balin, \"strong\", with a non-Aryan word for \"ox\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f197ffc4d315503",
+      "sourceHash": "fnv1a64:bce8b5ca558e2498",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाछड़ो (bāchhṛo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vatsa, \"calf, child\". CDIAL gives no Marwari form in this entry (CDIAL 11239); the match is through Hindi bāchā. The ṛ is an added suffix. The Sanskrit word first meant \"yearling\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:812f359eb04ee267",
+      "sourceHash": "fnv1a64:6e7bf6c6cc11fc5e",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिरण (hiraṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hariṇa, \"deer\". CDIAL gives no Marwari form in this entry (CDIAL 13982); the match is through Hindi hiran and Gujarati haraṇ. The Sanskrit word first meant \"yellow\". CDIAL rejects a proposed Austroasiatic source."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7872c6da5ac12d4",
+      "sourceHash": "fnv1a64:cbddbd02ea26b649",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of लूंकड़ी (lū̃kṛī) is not settled. CDIAL lists Hindi lomṛī, \"fox\", under Sanskrit lomaṭaka, \"fox\" (CDIAL 11153), but no form with the lū̃k- of लूंकड़ी (lū̃kṛī)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:480a51049e040e66",
+      "sourceHash": "fnv1a64:159105d13556aa7d",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सियाळ (siyāḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śṛgāla, \"jackal\". CDIAL gives no Marwari form in this entry (CDIAL 12578); the match is through Hindi siyāl and Gujarati siyāḷ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

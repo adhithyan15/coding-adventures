@@ -11,8 +11,8 @@ gloss: show me this cloth, written entirely from signs already taught
 concept_tag: MW-SHOPPING-SHOW-REQUEST-WRITTEN
 prerequisites: [MW-C21-hear-show-request]
 sounds: [semivowel-y, unaspirated-k, retroflex-flap, aspirated-kh]
-roots: []
-etymology_hook: The first Marwadi sentence this track writes, and it adds no sign at all.
+roots: [sanskrit-karpata, indo-aryan-drkshati]
+etymology_hook: "ye kapṛā dikhāvo: ye 'this' (CDIAL 2530); kapṛā ← karpaṭa (CDIAL 2871); dikhāvo ← *dṛkṣati (CDIAL 6507)"
 duration:
   max_seconds: 195
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C21-hear-show-request, MW-C21-ye, MW-C15-kapda, MW-C21-dikhavo, 
 Three written words, each one already written on its own in an earlier lesson.
 The full stop is the **।** you first met in **पाछे मिलसू**. Nothing here is new
 but the joining, which is the point of the chapter.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ये कपड़ा दिखावो** (*ye kapṛā dikhāvo*) joins three words with their own lessons: *ye*, "this", which CDIAL sets beside Hindi *yah* under Sanskrit *eṣa* (CDIAL 2530); *kapṛā*, "cloth", from Sanskrit *karpaṭa*, "rag", which CDIAL takes from Austroasiatic (CDIAL 2871); and *dikhāvo*, "show", the causing form of the verb CDIAL lists under *\*dṛkṣati*, "sees" (CDIAL 6507).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SHOW-REQUEST-01] -->

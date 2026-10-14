@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for medicine, then the Marwadi for hunger.
 You'll want to know: राजी.
 राजी — rājī — "happy, content".
 
+The word, taken apart.
+राजी (rājī) is a loan from Arabic rāḍī, "content, pleased", which reached Marwadi through Persian. Its Arabic root is r-ḍ-w (Lane). Persian says it rāzī; Marwadi says the z as j.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for hunger, then the Marwadi for happy.
 
 You'll want to know: उदास.
 उदास — udās — "sad".
+
+The word, taken apart.
+उदास (udās) is usually traced to Sanskrit udāsa, "indifference", with the sense moving from "indifferent" to "sad". CDIAL, searched by form and by meaning, does not list it, so the account is not confirmed there.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for happy, then the Marwadi for sad.
 You'll want to know: डाक्टर.
 डाक्टर — ḍākṭar — "a doctor".
 
+The word, taken apart.
+डाक्टर (ḍākṭar) is a loan from English doctor.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for sad, then the Marwadi for a doctor.
 You'll want to know: बेटो.
 बेटो — beṭo — "a son".
 
+The word, taken apart.
+CDIAL lists Marwari बेटो (beṭo) under bēṭṭa, one of a large group of reconstructed forms it heads biḍḍa, "defective", beside Prakrit biṭṭa, "boy" (CDIAL 9238). How the sense "boy" connects with the rest of the group is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a doctor, then the Marwadi for a son.
 
 You'll want to know: बेटी.
 बेटी — beṭī — "a daughter".
+
+The word, taken apart.
+CDIAL lists Marwari बेटी (beṭī) under bēṭṭa, one of a large group of reconstructed forms it heads biḍḍa, "defective", beside Prakrit biṭṭī, "girl" (CDIAL 9238). How the sense "girl" connects with the rest of the group is not settled.
 
 What you've built.
 One more word for this chapter.

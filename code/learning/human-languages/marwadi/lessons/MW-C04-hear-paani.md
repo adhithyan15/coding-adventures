@@ -11,9 +11,10 @@ gloss: water, heard before it is written
 concept_tag: NOUN-WATER
 prerequisites: [MW-C03-practice]
 sounds: [long-aa, retroflex-n, long-ii]
-roots: []
+roots: [sanskrit-paniya]
+etymology_hook: "pāṇī ← Sanskrit pānīya 'water', a tadbhava (CDIAL 8082, Marwari row)"
 duration:
-  max_seconds: 150
+  max_seconds: 172
 requires:
   knowledge: [MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01]
 introduces:
@@ -52,6 +53,11 @@ with the ear and voice.
 Listen for two long vowels: *pā-ṇī*. The middle sound is made with the tongue
 curled back a little. Hear the whole word twice, then say it once. Do not try to
 spell it yet; the next three tiny lessons will give the hand one piece at a time.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pāṇī* is inherited from Sanskrit *pānīya*, "water", a tadbhava; CDIAL lists Marwari *pāṇī* under it (CDIAL 8082).
 
 ## Guided Practice — meaning without letters
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PAANI-01] -->

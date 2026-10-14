@@ -11,8 +11,8 @@ gloss: brother, written with familiar units
 concept_tag: MW-FAMILY-BROTHER
 prerequisites: [MW-C08-hear-bhai]
 sounds: [aspirated-bh, long-aa, long-ii]
-roots: []
-etymology_hook: Familiar भ, ा, and ई now form a useful relation word without a new sign.
+roots: [sanskrit-bhratr]
+etymology_hook: "bhāī ← Sanskrit bhrātṛ 'brother', a tadbhava (CDIAL 9661, Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -46,6 +46,11 @@ known polite wellbeing question with *āp* and *kaiso*.
 > **भ** + **ा** + **ई** → **भाई** — *bhāī* — brother
 
 The written pieces are old; only their family meaning is new.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भाई** (*bhāī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhrātṛ*, "brother". CDIAL lists Marwari *bhāī* under it (CDIAL 9661). English *brother* is the same ancient word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BHAI-01, MW-SCRIPT-BHAI-01] -->

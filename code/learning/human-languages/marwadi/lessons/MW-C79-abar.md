@@ -15,6 +15,7 @@ concept_tag: MW-TIME79-ABAR
 prerequisites: [MW-C79-aj, MW-C79-kal]
 sounds: []
 roots: []
+etymology_hook: "abār 'now': not in CDIAL, so not settled; Hindi ab 'now' is listed under evam eva (CDIAL 2528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C79-kal]
 <!-- hl-knowledge: introduces=[MW-LEX-C79-TIME79-05]; assesses=[] -->
 
 **अबार** — *abār* — "now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL has no entry for **अबार** (*abār*), so its history is not settled. Its first part looks like Hindi *ab*, "now", which CDIAL lists under Sanskrit *evam eva*, "exactly so", crossed with the pronoun stem *a-* (CDIAL 2528), where Old Marwari has *hiva*, "now". The rest of **अबार** (*abār*) is not explained there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
