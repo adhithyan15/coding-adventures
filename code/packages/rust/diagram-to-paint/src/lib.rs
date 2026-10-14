@@ -1018,13 +1018,26 @@ where
             edge.end_marker, &end_previous, &edge.to, stroke, stroke_width,
         ));
         if let Some(label) = &edge.label {
+            let mut label_font = options.label_font.clone();
+            if let Some(size) = edge.style.font_size {
+                label_font.size = size;
+            }
+            if let Some(weight) = edge.style.font_weight {
+                label_font.weight = weight;
+            }
+            if let Some(italic) = edge.style.font_italic {
+                label_font.italic = italic;
+            }
+            if let Some(family) = &edge.style.font_family {
+                label_font.family.clone_from(family);
+            }
             text_children.push(text_node(
                 label,
                 (edge.from.x + edge.to.x) / 2.0 - 52.0,
                 (edge.from.y + edge.to.y) / 2.0 - 25.0,
                 104.0,
                 22.0,
-                options.label_font.clone(),
+                label_font,
                 edge.style.text_color.as_deref().map(css_to_color).unwrap_or(Color {
                     r: 55, g: 71, b: 79, a: 255,
                 }),
