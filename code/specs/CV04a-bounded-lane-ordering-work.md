@@ -72,3 +72,16 @@ Full final-source Miri **DEFERRED/PENDING**, never passed. The original frozen
 run/497inputs/checkout/receipts/target remain untouched and unpolled. Implementation
 delivery precedes genuine final-source Miri acceptance. Full Closure parity,
 output source joins and all transformation lineage remain OPEN; heartbeat ACTIVE.
+
+## Initial receipts
+
+Original current LANG validator54386 has now returned actual EXIT0 at a20:
+all eleven unchanged production BUILD commands and48 exact native controls,
+322 tests/docs across108 targets, zero failures/one existing archive ignore.
+This is the exact roster, not full unfiltered LANG or full453-cone acceptance.
+
+Ordering candidate b5e0d090 returned actual validator81534 EXIT1/Cargo101 with
+E0382 in its test fixture, before any tests. That compile receipt is preserved
+and is not the counted red. Clone the non-Copy direction and retry the same bound.
+The fresh ignored lock is archived; the original tested checkout's exact lock
+is copied into the new checkout without changing the original inputs.

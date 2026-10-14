@@ -1183,7 +1183,7 @@ mod tests {
             for hops in [false, true] {
                 for pairs in [vec![], vec![(0, 3, 2), (3, 0, 1), (1, 2, 3), (2, 2, 2)], vec![(0, 1, 1), (1, 2, 1), (2, 3, 1)]] {
                     let mut diagram = ordering_diagram(4, &pairs);
-                    diagram.direction = direction;
+                    diagram.direction = direction.clone();
                     diagram.line_hops = hops.then_some(SwimlaneLineHops::Arc);
                     if let Some(edge) = diagram.edges.first().cloned() {
                         let mut invisible = edge; invisible.kind = SwimlaneEdgeKind::Invisible;
