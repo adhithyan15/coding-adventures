@@ -343,6 +343,10 @@
       "source": "swimlane-beta LR\nsubgraph Review[Review lane]\n  subgraph Approval[Approval phase]\n    request[Request]\n    approve[Approve]\n  end\nend\nclassDef phase fill:#fef3c7,stroke:#b45309,stroke-width:3px,stroke-dasharray:5 3,color:#7c2d12,font-size:17px,font-weight:bold,rx:12px,ry:12px\nclass Approval phase\nstyle Review fill:#ecfdf5,stroke:#047857,stroke-width:2px,color:#064e3b,font-size:20px,rx:14px,ry:14px\nrequest --> approve"
     },
     {
+      "name": "subgraph-class-decorators",
+      "source": "swimlane-beta LR\nsubgraph Review[Review lane]:::laneStyle\n  subgraph Approval[Approval phase]:::phaseStyle\n    request[Request]\n    approve[Approve]\n  end\nend\nclassDef laneStyle fill:#eff6ff,stroke:#1d4ed8,stroke-width:2px,color:#172554,rx:14px,ry:14px\nclassDef phaseStyle fill:#fef3c7,stroke:#b45309,stroke-width:3px,stroke-dasharray:5 3,color:#7c2d12,font-size:17px,font-weight:bold,rx:12px,ry:12px\nrequest --> approve"
+    },
+    {
       "name": "state-choice-note-shapes",
       "source": "swimlane-beta LR\nsubgraph Workflow\n  pending@{ shape: state, label: \"Pending\" }\n  branch@{ shape: choice, label: \"Choose\" }\nend\nsubgraph Records\n  memo@{ shape: note, label: \"Decision note\" }\nend\npending --> branch --> memo"
     },
