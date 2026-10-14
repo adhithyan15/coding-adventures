@@ -959,6 +959,9 @@ mod tests {
             lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(), node_ids: ids }],
             nodes, edges, links: Vec::new(), callbacks: Vec::new(), line_hops: None,
             automatic_lane_ordering: false,
+            groups: Vec::new(),
+            ignore_cross_lane_edges: true,
+            optimize_ranks_by_crossings: false,
         }
     }
 
