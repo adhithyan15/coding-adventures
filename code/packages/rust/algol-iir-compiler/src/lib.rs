@@ -2256,6 +2256,13 @@ impl Compiler {
     /// slot that holds the result.  Used from `emit_expr`.
     fn emit_proc_call(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         self.set_loc(node);
+        // A validated sole-read body adds no effects beyond the actual. Match
+        // it before ordinary calls clear local facts; nested calls in the
+        // actual still take their own normal effect/invalidation paths.
+        if let Some(actual) = self.read_once_conditional_identity_actual(node) {
+            let value = self.emit_expr(actual)?;
+            return self.coerce_value(value, ScalarType::Real, "read-once name result");
+        }
         let source_name = direct_tokens(node)
             .into_iter()
             .find(|token| token.effective_type_name() == "NAME")
@@ -5629,10 +5636,37 @@ impl Compiler {
         if left.rule_name != "left_part" || rhs.rule_name != "expression" { return false; }
         let [ASTNodeOrToken::Node(variable), ASTNodeOrToken::Token(assignment)] = left.children.as_slice() else { return false; };
         let [ASTNodeOrToken::Token(target)] = variable.children.as_slice() else { return false; };
+        let mut formal = rhs;
+        // These exact wrappers are the generalized expression grammar's bare
+        // variable path. An arbitrary token-free proc_call/unknown rule is not
+        // transparent: ordinary expression lowering would reject it.
+        for rule in ["expression", "expr_eqv", "expr_impl", "expr_or", "expr_and",
+            "expr_not", "expr_cmp", "expr_add", "expr_mul", "expr_pow", "expr_atom"] {
+            if formal.rule_name != rule { return false; }
+            let [ASTNodeOrToken::Node(child)] = formal.children.as_slice() else { return false; };
+            formal = child;
+        }
+        let [ASTNodeOrToken::Token(formal_name)] = formal.children.as_slice() else { return false; };
         variable.rule_name == "variable"
             && assignment.effective_type_name() == "ASSIGN"
             && target.effective_type_name() == "NAME" && target.value == result_name
-            && exact_bare_variable_expression_name(rhs).as_deref() == Some(param.name.as_str())
+            && formal.rule_name == "variable" && formal_name.effective_type_name() == "NAME"
+            && formal_name.value == param.name
+    }
+
+    /// Resolve and validate the whole narrow call before changing caller state.
+    /// Nonmatching arity, signatures, formal-procedure bindings and active
+    /// recursive contexts all fall back to the existing call validator.
+    fn read_once_conditional_identity_actual<'n>(&self, node: &'n GrammarASTNode) -> Option<&'n GrammarASTNode> {
+        let name = direct_tokens(node).into_iter().find(|t| t.effective_type_name() == "NAME")?;
+        if self.procedure_bindings.contains_key(&name.value) { return None; }
+        let target = self.resolve_procedure_identity(&name.value);
+        if self.compiling_by_name_procedures.contains_key(&target) { return None; }
+        let sig = self.proc_sigs.get(&target)?;
+        if !self.is_read_once_real_name_identity(&target, sig) { return None; }
+        let actuals = self.standard_fn_actuals(node);
+        let [actual] = actuals.as_slice() else { return None; };
+        self.is_conditional_unit_identity_actual(actual).then_some(*actual)
     }
 
     /// Keep the read-once optimization within one builtin-entier conditional
@@ -5714,21 +5748,6 @@ impl Compiler {
                 sig.params.len(),
                 actuals.len()
             )));
-        }
-
-        // A name actual is normally captured into a sibling frame. A sole
-        // `relay := x` body reads it exactly once with no intervening effects;
-        // evaluating that read here preserves semantics and local proof
-        // invalidation. Limit this specialization to the conditional-entier
-        // boundary. Formal procedures and recursive/forwarded contexts keep
-        // the ordinary lowering path, and no cached proof becomes a fresh bit.
-        if !self.procedure_bindings.contains_key(&name)
-            && !self.compiling_by_name_procedures.contains_key(&target_source_name)
-            && self.is_read_once_real_name_identity(&target_source_name, &sig)
-            && self.is_conditional_unit_identity_actual(actuals[0])
-        {
-            let value = self.emit_expr(actuals[0])?;
-            return self.coerce_value(value, ScalarType::Real, "read-once name result").map(Some);
         }
 
         let target_name = if sig.params.iter().any(|param| {
