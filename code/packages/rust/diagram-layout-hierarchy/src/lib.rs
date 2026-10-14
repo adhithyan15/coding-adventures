@@ -572,14 +572,80 @@ fn optimize_swimlane_lane_order(diagram: &SwimlaneDiagram) -> Vec<&diagram_ir::S
 fn swimlane_arrangement_cost(order: &[String], weights: &[WeightedSwimlaneEdge]) -> usize {
     let positions = order.iter().enumerate().map(|(index, lane)| (lane.as_str(), index))
         .collect::<HashMap<_, _>>();
-    weights.iter().map(|edge| {
+    weights.iter().fold(0_usize, |cost, edge| {
         #[cfg(test)]
         SWIMLANE_ORDER_WEIGHT_VISITS.with(|count| count.set(count.get() + 1));
-        edge.weight * positions[edge.a.as_str()].abs_diff(positions[edge.b.as_str()])
-    }).sum()
+        let term = edge.weight.checked_mul(positions[edge.a.as_str()].abs_diff(positions[edge.b.as_str()]))
+            .expect("lane arrangement term overflow");
+        cost.checked_add(term).expect("lane arrangement cost overflow")
+    })
 }
 
 fn greedy_swimlane_order(
+    mut order: Vec<String>, weights: &[WeightedSwimlaneEdge], source: &HashMap<&str, usize>,
+) -> (Vec<String>, usize, usize) {
+    let positions = order.iter().enumerate().map(|(index, lane)| (lane.as_str(), index))
+        .collect::<HashMap<_, _>>();
+    // Authored subgraphs have unique IDs. Keep the old last-occurrence semantics
+    // for malformed direct IR instead of applying a permutation identity to it.
+    if positions.len() != order.len() {
+        return greedy_swimlane_order_full_cost(order, weights, source);
+    }
+    let mut cost = swimlane_arrangement_cost(&order, weights);
+    let mut balances = source.keys().map(|lane| (*lane, 0_i128)).collect::<HashMap<_, _>>();
+    for edge in weights {
+        #[cfg(test)]
+        SWIMLANE_ORDER_WEIGHT_VISITS.with(|count| count.set(count.get() + 1));
+        let weight = i128::try_from(edge.weight).expect("lane weight must fit signed arithmetic");
+        let (left, right) = if positions[edge.a.as_str()] < positions[edge.b.as_str()] {
+            (edge.a.as_str(), edge.b.as_str())
+        } else { (edge.b.as_str(), edge.a.as_str()) };
+        let balance = balances.get_mut(left).expect("weighted lane is in the source order");
+        *balance = balance.checked_sub(weight).expect("lane balance overflow");
+        let balance = balances.get_mut(right).expect("weighted lane is in the source order");
+        *balance = balance.checked_add(weight).expect("lane balance overflow");
+    }
+    let mut pair_weights = BTreeMap::<(&str, &str), i128>::new();
+    for edge in weights {
+        #[cfg(test)]
+        SWIMLANE_ORDER_WEIGHT_VISITS.with(|count| count.set(count.get() + 1));
+        let pair = if edge.a <= edge.b { (edge.a.as_str(), edge.b.as_str()) }
+            else { (edge.b.as_str(), edge.a.as_str()) };
+        let weight = pair_weights.entry(pair).or_default();
+        *weight = weight.checked_add(i128::try_from(edge.weight).expect("lane weight must fit signed arithmetic"))
+            .expect("lane pair weight overflow");
+    }
+    for _ in 0..order.len().max(1) {
+        let mut changed = false;
+        for index in 0..order.len().saturating_sub(1) {
+            let (left, right) = (order[index].as_str(), order[index + 1].as_str());
+            let pair = if left <= right { (left, right) } else { (right, left) };
+            let twice = pair_weights.get(&pair).copied().unwrap_or(0).checked_mul(2)
+                .expect("lane pair weight overflow");
+            // Moving left rightwards crosses only right; every other lane keeps
+            // its side. The pair contributes zero net cost and needs +2*w to
+            // cancel the -w contributions already present in the balances.
+            let delta = balances[left].checked_sub(balances[right])
+                .and_then(|value| value.checked_add(twice)).expect("lane swap delta overflow");
+            let next_cost = i128::try_from(cost).ok().and_then(|value| value.checked_add(delta))
+                .and_then(|value| usize::try_from(value).ok()).expect("lane arrangement cost overflow");
+            if next_cost < cost {
+                cost = next_cost;
+                let balance = balances.get_mut(left).expect("left lane balance");
+                *balance = balance.checked_add(twice).expect("lane balance overflow");
+                let balance = balances.get_mut(right).expect("right lane balance");
+                *balance = balance.checked_sub(twice).expect("lane balance overflow");
+                order.swap(index, index + 1);
+                changed = true;
+            }
+        }
+        if !changed { break; }
+    }
+    let distance = order.iter().enumerate().map(|(index, lane)| index.abs_diff(source[lane.as_str()])).sum();
+    (order, cost, distance)
+}
+
+fn greedy_swimlane_order_full_cost(
     mut order: Vec<String>, weights: &[WeightedSwimlaneEdge], source: &HashMap<&str, usize>,
 ) -> (Vec<String>, usize, usize) {
     let mut cost = swimlane_arrangement_cost(&order, weights);
@@ -1174,6 +1240,25 @@ mod tests {
                     "graph={graph}, initial={order:?}");
             }
         }
+    }
+
+    #[test]
+    fn swimlane_ordering_non_bijective_direct_orders_keep_full_cost_semantics() {
+        let order = ["a", "a", "b", "c"].map(str::to_owned).to_vec();
+        let source = order.iter().enumerate().map(|(i, id)| (id.as_str(), i)).collect::<HashMap<_, _>>();
+        let weights = vec![WeightedSwimlaneEdge { a: "a".into(), b: "c".into(), weight: 3 }];
+        let reference = vec![ReferenceWeightedSwimlaneEdge { a: "a".into(), b: "c".into(), weight: 3 }];
+        assert_eq!(greedy_swimlane_order(order.clone(), &weights, &source),
+            reference_greedy_swimlane_order(order.clone(), &reference, &source));
+    }
+
+    #[test]
+    fn swimlane_ordering_cost_overflow_is_refused_before_score_comparison() {
+        let order = ["a", "b", "c"].map(str::to_owned).to_vec();
+        let weights = vec![WeightedSwimlaneEdge { a: "a".into(), b: "c".into(), weight: usize::MAX }];
+        let source = order.iter().enumerate().map(|(i, id)| (id.as_str(), i)).collect::<HashMap<_, _>>();
+        let error = std::panic::catch_unwind(|| greedy_swimlane_order(order.clone(), &weights, &source));
+        assert!(error.is_err(), "an overflowing distance term must never become a lower score");
     }
 
     #[test]
