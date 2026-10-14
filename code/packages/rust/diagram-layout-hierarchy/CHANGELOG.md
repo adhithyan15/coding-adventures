@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Evaluate adjacent automatic lane swaps from checked lane balances and a
+  borrowed pair-weight index, preserving nine starts, seeded shuffles, strict
+  improvement and source-distance ties. Canonical unique-lane graphs visit each
+  weighted pair at most27 times across all nine initializations.
+- Retain the original full-cost oracle for729 four-lane graphs/all17496 initial
+  permutations, public layout/metadata and complete authored paint comparisons.
+  Malformed non-bijective direct orders retain the full-cost fallback; checked
+  score arithmetic refuses overflow before comparison.
+
 - Reuse the existing minimum-link index in cross-lane rank construction after
   upstream integration; verify exact enabled-rank spacing and 512 visits/14
   queries in all four directions without relaxing the legacy gap controls.

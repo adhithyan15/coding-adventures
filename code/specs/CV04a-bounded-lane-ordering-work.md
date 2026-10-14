@@ -94,3 +94,13 @@ only already-proven NaNs normalized in test-owned copies. Unexpected NaNs and
 all other fields remain checked. This preserves source behavior and does not
 claim finite self-loop geometry acceptance; that pre-existing route issue is
 outside this ordering resource repair. Retain the original failed receipt.
+
+Candidate9a668a14 supplies the clean behavioral red: validator42897's successor
+returns actual wrapperEXIT0 for expected Cargo101, exactly2PASS/1FAIL, and
+17280 weighted visits against3240. It is expected-red evidence, not native PASS.
+Delta candidatee363 passes all five focused controls; final authored scene and
+global729 graph comparisons are added at32abf007 and still need full validation.
+The test-source whitespace helper's truncation was confined to this new checkout;
+original bytes and failure receipt are archived, committed e363 paint bytes were
+restored exactly and only the owned reference/test was reapplied. Native a20
+checkout remained unchanged. No security/current-main/hosted acceptance inferred.

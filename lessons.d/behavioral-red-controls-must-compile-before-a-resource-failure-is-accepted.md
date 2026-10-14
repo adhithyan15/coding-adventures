@@ -29,3 +29,12 @@ NaN is unequal to itself. Prove each corresponding endpoint's exact floating
 bits first. Replace only already-proven NaNs in test-owned copies for the full
 struct comparison; unexpected NaNs, changed payloads and other fields still fail.
 Preserve the original one-pass/two-fail receipt rather than relabeling it.
+
+While removing indentation on blank reference lines, an inline shell/Python
+command passed literal backslash-n as `newline`. Opening in write mode truncated
+the new checkout's agent-owned paint file before TextIOWrapper rejected the
+argument. Its empty bytes and the committed original were archived. Restore
+the exact committed source, reapply only the new test, and verify the source
+inventory; the original validated checkout remained untouched. Use saved scripts
+with actual newline literals or apply_patch for source changes. Validate content
+and arguments before opening a destination for writing.
