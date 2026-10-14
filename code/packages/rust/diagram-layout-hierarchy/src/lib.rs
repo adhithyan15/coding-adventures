@@ -1324,6 +1324,53 @@ mod tests {
     }
 
     #[test]
+    fn imported_padding_complete_golden_layouts_enclose_nodes() {
+        let mut failures = Vec::new();
+        for direction in [DiagramDirection::Lr, DiagramDirection::Rl, DiagramDirection::Tb, DiagramDirection::Bt] {
+            let mut baseline = ordering_diagram(2, &[]);
+            baseline.direction = direction.clone();
+            baseline.automatic_lane_ordering = false;
+            let baseline_layout = layout_swimlane(&baseline);
+            for padding in [None, Some(0.0), Some(14.0), Some(100.0), Some(65_536.0)] {
+                let mut diagram = baseline.clone();
+                diagram.flowchart_config.padding = padding;
+                let before = diagram.clone();
+                let actual = try_layout_swimlane(&diagram).unwrap();
+                // Independent fixed two-lane arithmetic. Inherit only untouched
+                // identity/style/metadata fields from the default golden scene.
+                let node_width = padding.map_or(132.0, |p| 104.0 + 2.0*p);
+                let node_height = padding.map_or(54.0, |p| (26.0 + 2.0*p).max(54.0));
+                let horizontal = matches!(direction, DiagramDirection::Lr | DiagramDirection::Rl);
+                let cross = if horizontal { (node_height+18.0).max(150.0) }
+                    else { (node_width.max(132.0)+18.0).max(150.0) };
+                let mut expected = baseline_layout.clone();
+                expected.flowchart_config.padding = padding;
+                expected.width = if horizontal { (38.0+node_width+48.0).max(420.0) } else { 2.0*(cross+12.0)+12.0 };
+                expected.height = if horizontal { 16.0+2.0*(cross+12.0)+12.0 } else { 16.0+(node_height+108.0).max(420.0) };
+                for (i,lane) in expected.lanes.iter_mut().enumerate() {
+                    lane.x = if horizontal { 12.0 } else { 12.0+i as f64*(cross+12.0) };
+                    lane.y = if horizontal { 16.0+i as f64*(cross+12.0) } else { 16.0 };
+                    lane.width = if horizontal { expected.width-24.0 } else { cross };
+                    lane.height = if horizontal { cross } else { expected.height-28.0 };
+                    let node = &mut expected.nodes[i];
+                    node.x = lane.x + if horizontal { 58.0 } else { (cross-node_width)/2.0 };
+                    node.y = lane.y + if horizontal { (cross-node_height)/2.0 } else { 58.0 };
+                    node.width = node_width; node.height = node_height;
+                }
+                let enclosure = actual.nodes.iter().all(|node| {
+                    let lane = actual.lanes.iter().find(|lane| Some(&lane.id)==node.lane_id.as_ref()).unwrap();
+                    node.x>=lane.x && node.y>=lane.y && node.x+node.width<=lane.x+lane.width
+                        && node.y+node.height<=lane.y+lane.height && node.x>=0.0 && node.y>=0.0
+                        && node.x+node.width<=actual.width && node.y+node.height<=actual.height
+                });
+                if actual != expected || !enclosure { failures.push((direction.clone(),padding,enclosure)); }
+                assert_eq!(diagram,before);
+            }
+        }
+        assert!(failures.is_empty(), "padding golden/enclosure failures {}/20: {failures:?}",failures.len());
+    }
+
+    #[test]
     fn swimlane_ordering_dense_public_layout_bounds_weight_visits() {
         let pairs = (0..16).flat_map(|a| ((a + 1)..16).map(move |b| (a, b, 1))).collect::<Vec<_>>();
         assert_eq!(pairs.len(), 120);
