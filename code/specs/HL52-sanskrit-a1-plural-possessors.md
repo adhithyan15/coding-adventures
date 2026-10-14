@@ -25,8 +25,12 @@ Add one Sanskrit-owned chapter after chapter 258 with three short lessons:
    introducing another lexical or grammatical concept.
 
 The chapter must stay on the genitive relationship Sanskrit actually uses. It
-must not describe these forms as agreeing possessive adjectives, and it must
-not require the untaught nominative plural pronouns as a hidden prerequisite.
+must not teach these fixed forms as possessive adjectives that the learner
+inflects to agree with the possessed noun, and it must not require the untaught
+nominative plural pronouns as a hidden prerequisite. The historical note must
+still preserve Whitney's §493 analysis: the forms originated as stereotyped
+case-forms of adjective stems even though they function as the genitive plural
+forms in the paradigm taught here.
 
 The lessons introduce exactly these atoms:
 

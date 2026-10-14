@@ -1,0 +1,19 @@
+{
+  "chapter": 259,
+  "title": "Our and your-plural",
+  "label": "ch:sa-our-and-your-plural",
+  "canDo": "I can distinguish one possessor from several and say our and your-plural in Sanskrit.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C259-plural-possessors-practice",
+    "kind": "production",
+    "summary": "Complete chapter 259 by choosing and retrieving the singular and plural possessor forms in known noun frames.",
+    "assesses": [
+      "SA-LEX-C259-ASMAKAM-01",
+      "SA-LEX-C259-YUSMAKAM-02",
+      "SA-GRAMMAR-C259-PLURAL-POSSESSORS-03"
+    ]
+  }
+}

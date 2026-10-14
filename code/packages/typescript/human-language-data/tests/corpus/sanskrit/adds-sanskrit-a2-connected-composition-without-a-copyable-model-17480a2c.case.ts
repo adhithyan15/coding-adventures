@@ -48,7 +48,7 @@ it("adds Sanskrit A2 connected composition with no copyable model", () => {
   expect(completeLesson).not.toContain("<!-- hl-activity:");
 
   const ledger = loadTrackChapters().find((track) => track.language === "sanskrit");
-  expect(ledger?.chapters.at(-1)).toMatchObject({
+  expect(ledger?.chapters.find((chapter) => chapter.chapter === 258)).toMatchObject({
     chapter: 258,
     title: "A connected A2 message",
     payoff: {

@@ -97,8 +97,8 @@ it("adds Sanskrit A1 plural possessors on a gentle contrastive ramp", () => {
     partial: 0,
   });
   expect(coverage.byCategory["Ṣaṣṭhī — possession"]).toEqual({
-    enumerated: 2,
-    covered: 2,
+    enumerated: 3,
+    covered: 3,
   });
   expect(coverage.points.find((point) => point.id === "SA-A1-POS-02")).toMatchObject({
     covered: true,
