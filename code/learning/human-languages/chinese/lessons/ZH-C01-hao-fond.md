@@ -12,7 +12,7 @@ concept_tag: ZH-WORD-HAO-FOND
 prerequisites: [ZH-C01-tone-sandhi]
 sounds: [tone-4, tone-3, tone-lexical]
 roots: [middle-chinese-xawx, middle-chinese-xawh]
-etymology_hook: "hào 'to be fond of': Middle Chinese xawH, a falling-tone derivative of xawX 'good'; the pair is old"
+etymology_hook: "hào 'to be fond of': Middle Chinese xawH, a departing-tone derivative of xawX 'good'; the pair is old"
 duration:
   max_seconds: 190
 requires:
@@ -63,8 +63,8 @@ this is a different word.
 
 Both readings are inherited from Middle Chinese: the Guangyun lists *xawX*,
 "good", and *xawH*, "to be fond of" (in Baxter's transcription). Making a
-related word by moving it into the falling tone is a well-known pattern of
-Middle Chinese.
+related word by moving it into the departing tone, the *H* of these spellings,
+is a well-known pattern of Middle Chinese.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HAO-FOND, ZH-LEX-HAO, ZH-TONE-LEXICAL, ZH-METHOD-COMPONENT-HOOK] -->

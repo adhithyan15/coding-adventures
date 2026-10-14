@@ -11,7 +11,7 @@ gloss: university; college
 concept_tag: ZH-SCHOOL-UNIVERSITY
 prerequisites: [ZH-C13-xuesheng]
 sounds: [tone-4, tone-2]
-roots: [middle-chinese-dajh, middle-chinese-haewk]
+roots: [middle-chinese-dah, middle-chinese-haewk]
 etymology_hook: "dàxué: built from Middle Chinese daH 'big' and haewk 'learning'"
 duration:
   max_seconds: 125

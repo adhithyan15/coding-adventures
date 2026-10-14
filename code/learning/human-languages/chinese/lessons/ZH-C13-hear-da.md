@@ -11,7 +11,7 @@ gloss: big; large
 concept_tag: ZH-SCHOOL-BIG
 prerequisites: [ZH-C12-practice]
 sounds: [tone-4]
-roots: [middle-chinese-dajh]
+roots: [middle-chinese-dah]
 etymology_hook: "dà 'big': inherited, from Middle Chinese daH; the Guangyun also lists a second reading, dajH"
 duration:
   max_seconds: 120

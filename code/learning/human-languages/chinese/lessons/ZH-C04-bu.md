@@ -11,8 +11,8 @@ gloss: not — the character that turns a word around
 concept_tag: RESPONSE-NO
 prerequisites: [ZH-W04-bu]
 sounds: [tone-4, tone-lexical]
-roots: [middle-chinese-pjuw]
-etymology_hook: "bù 'not': inherited, from Middle Chinese pjuw, a negator already in the oldest Chinese writing"
+roots: [middle-chinese-pjut]
+etymology_hook: "bù 'not': inherited, from Middle Chinese pjut, a negator already in the oldest Chinese writing"
 duration:
   max_seconds: 250
 requires:
@@ -75,8 +75,9 @@ book up to now takes 不.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**不** *bù* is inherited from Middle Chinese *pjuw*, "not" (Guangyun, in Baxter's
-transcription), and it is already a negator in the oldest Chinese writing.
+**不** *bù* is inherited from Middle Chinese, and it is already a negator in the
+oldest Chinese writing. The Guangyun lists it as *pjuw* and as *pjut*, both
+"not" (in Baxter's transcription); Mandarin *bù* continues *pjut*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-BU, ZH-GRAMMAR-NEGATE] -->

@@ -11,7 +11,7 @@ concept_tag: ZH-SCHOOL-EVERYONE
 gloss: everyone, built from known characters
 prerequisites: [ZH-C13-hear-dajia]
 sounds: [tone-4, tone-1]
-roots: [middle-chinese-dajh, middle-chinese-kae]
+roots: [middle-chinese-dah, middle-chinese-kae]
 etymology_hook: "dàjiā: from Middle Chinese daH 'big' + kae 'household'; once a great household, now everyone"
 duration:
   max_seconds: 150

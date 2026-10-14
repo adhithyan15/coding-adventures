@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Have, and Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6801b87ba03d5dcb",
+  "sourceHash": "fnv1a64:3c31100f5fd2dff9",
   "lessons": [
     {
       "id": "ZH-W24-you",
@@ -608,7 +608,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c957064aeb2f134",
+      "sourceHash": "fnv1a64:9e4835c4d63d5a2f",
       "notice": null,
       "blocks": [
         {
@@ -735,7 +735,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "个 (gè) is inherited from Middle Chinese kaH, which the Guangyun glosses \"a counted piece\"."
+              "text": "个 (gè) is inherited from Middle Chinese kaH, \"a single piece\"."
             }
           ]
         },

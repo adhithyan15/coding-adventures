@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "From study to university student",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e8c533bfff4eb833",
+  "sourceHash": "fnv1a64:283fc33bfa4133c2",
   "lessons": [
     {
       "id": "ZH-C13-hear-da",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c4cdce5541f9b78",
+      "sourceHash": "fnv1a64:50af939e5a6f25a8",
       "notice": null,
       "blocks": [
         {
@@ -211,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c7df2b827dfbf12",
+      "sourceHash": "fnv1a64:7854b14e9a5504c4",
       "notice": null,
       "blocks": [
         {
@@ -329,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:843bce3f06cc670c",
+      "sourceHash": "fnv1a64:5820fb68a23700a4",
       "notice": null,
       "blocks": [
         {
@@ -414,7 +414,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:848cca76dd361c01",
+      "sourceHash": "fnv1a64:1a3678ce107ec22f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1017,7 +1017,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47445a7e5a491183",
+      "sourceHash": "fnv1a64:e555a4dd015aee5b",
       "notice": null,
       "blocks": [
         {
@@ -1070,7 +1070,7 @@
             },
             {
               "kind": "speech",
-              "text": "Both are inherited from Middle Chinese: haewk, \"to learn\", and srjaeng, \"life, birth\", long used for a young scholar (Guangyun, in Baxter's transcription). The pair is an old Chinese compound."
+              "text": "Both are inherited from Middle Chinese: haewk, \"to learn\", and srjaeng, \"life, birth\" (Guangyun, in Baxter's transcription). The pair is an old Chinese compound."
             }
           ]
         },
@@ -1135,7 +1135,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8473f8a6d9dc776b",
+      "sourceHash": "fnv1a64:af2f6473a038fe9b",
       "notice": null,
       "blocks": [
         {
@@ -1221,7 +1221,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:89c40f20308e2bd3",
+      "sourceHash": "fnv1a64:ae855c65a861b5a3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1328,7 +1328,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:feb7e3e2735e718c",
+      "sourceHash": "fnv1a64:b97ec8b50a9a44e6",
       "notice": null,
       "blocks": [
         {
@@ -1415,7 +1415,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:2107b6d5a118b0e6",
+      "sourceHash": "fnv1a64:cb1a8bc3e0cd9fd8",
       "notice": {
         "modality": "sight",
         "needs": [

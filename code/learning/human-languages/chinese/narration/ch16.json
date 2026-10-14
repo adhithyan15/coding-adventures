@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Character or language?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ea9e1396d5bd11d0",
+  "sourceHash": "fnv1a64:36a36b1aa63aa51a",
   "lessons": [
     {
       "id": "ZH-C16-hear-zi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c0d7b469cb440cb",
+      "sourceHash": "fnv1a64:b5e845965a3769b5",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Zì is inherited from Middle Chinese dziH; an older sense of the word was \"to nurse, to rear\"."
+              "text": "Zì is inherited from Middle Chinese dziH; an older sense of the word was \"to bear and nurse children\"."
             }
           ]
         },
@@ -106,7 +106,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:71f052a8a1960d1a",
+      "sourceHash": "fnv1a64:536053b0363dea2c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -153,7 +153,7 @@
             },
             {
               "kind": "speech",
-              "text": "字 (zì) is inherited from Middle Chinese dziH (Guangyun, in Baxter's transcription). The Guangyun quotes the Shuowen dictionary for an older sense, \"to nurse, to rear\"; \"written character\" came later."
+              "text": "字 (zì) is inherited from Middle Chinese dziH (Guangyun, in Baxter's transcription). The Guangyun quotes the Shuowen dictionary for an older sense, \"to bear and nurse children\"; \"written character\" came later."
             }
           ]
         },

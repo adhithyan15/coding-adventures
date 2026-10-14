@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Nǐ Hǎo — Hello, Character by Character",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:6601d53b53d98705",
+  "sourceHash": "fnv1a64:046f1168d06e0971",
   "lessons": [
     {
       "id": "ZH-C01-tones",
@@ -525,7 +525,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:839983fbc9f88084",
+      "sourceHash": "fnv1a64:43ab5a9c265173d4",
       "notice": null,
       "blocks": [
         {
@@ -613,7 +613,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "你好 (nǐ hǎo) is a compound Chinese made from two inherited words: hǎo, \"good\", from Middle Chinese xawX, and nǐ, \"you\", usually traced to the older second-person word nyeX (Guangyun, in Baxter's transcription)."
+              "text": "你好 (nǐ hǎo) is a Chinese compound of two inherited words: hǎo, \"good\", from Middle Chinese xawX, and nǐ, \"you\", usually traced to the older second-person word nyeX (Guangyun, in Baxter's transcription)."
             }
           ]
         },
@@ -840,7 +840,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4395e3a9c1b94ca",
+      "sourceHash": "fnv1a64:b43971ce77740eeb",
       "notice": null,
       "blocks": [
         {
@@ -895,7 +895,7 @@
             },
             {
               "kind": "speech",
-              "text": "Both readings are inherited from Middle Chinese: the Guangyun lists xawX, \"good\", and xawH, \"to be fond of\" (in Baxter's transcription). Making a related word by moving it into the falling tone is a well-known pattern of Middle Chinese."
+              "text": "Both readings are inherited from Middle Chinese: the Guangyun lists xawX, \"good\", and xawH, \"to be fond of\" (in Baxter's transcription). Making a related word by moving it into the departing tone, the H of these spellings, is a well-known pattern of Middle Chinese."
             }
           ]
         },

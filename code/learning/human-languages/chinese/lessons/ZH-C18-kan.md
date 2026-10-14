@@ -11,8 +11,8 @@ romanization: kàn
 gloss: to look at or watch, recovered without pinyin
 prerequisites: [ZH-W18-kan-delayed]
 sounds: [tone-4]
-roots: [middle-chinese-khan]
-etymology_hook: "kàn 'to look': inherited, from Middle Chinese khan or khanH; the hand over the eye is the character"
+roots: [middle-chinese-khanh]
+etymology_hook: "kàn 'to look': inherited, from Middle Chinese khanH; the hand over the eye is the character's history"
 duration:
   max_seconds: 145
 requires:

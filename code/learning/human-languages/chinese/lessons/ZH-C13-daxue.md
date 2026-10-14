@@ -11,7 +11,7 @@ concept_tag: ZH-SCHOOL-UNIVERSITY
 gloss: university; college, built from known characters
 prerequisites: [ZH-C13-hear-daxue]
 sounds: [tone-4, tone-2]
-roots: [middle-chinese-dajh, middle-chinese-haewk]
+roots: [middle-chinese-dah, middle-chinese-haewk]
 etymology_hook: "dàxué: 'big' + 'learning', from Middle Chinese daH and haewk; a classic's title, now university"
 duration:
   max_seconds: 150

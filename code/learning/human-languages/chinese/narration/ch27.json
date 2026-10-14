@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Age, and And",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cd39e6b5dca164d2",
+  "sourceHash": "fnv1a64:1466edefcd7bb5e1",
   "lessons": [
     {
       "id": "ZH-W27-sui",
@@ -230,7 +230,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eedcad175c3d0662",
+      "sourceHash": "fnv1a64:89ceb60f5fcd5181",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "岁 (suì) is inherited from Middle Chinese sjwejH, \"year\" (Guangyun); counting years of age is the modern use."
+              "text": "岁 (suì) is inherited from Middle Chinese sjwejH, \"year\" (Guangyun); Unihan also gives \"age\"."
             }
           ]
         },

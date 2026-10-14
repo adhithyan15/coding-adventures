@@ -87,7 +87,7 @@ That is what the reader is learning each time one arrives.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **呢** borrowed its character for the sound; where the particle itself comes from
-is not settled (Unihan).
+is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NE-01, ZH-GRAMMAR-NE-FOLLOWUP-01] -->

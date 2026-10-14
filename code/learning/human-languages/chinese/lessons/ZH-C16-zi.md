@@ -12,7 +12,7 @@ concept_tag: ZH-LANGUAGE-IDENTITY-CHARACTER
 prerequisites: [ZH-C16-hear-zi]
 sounds: [tone-4]
 roots: [middle-chinese-dzih]
-etymology_hook: "zì 'character': inherited, from Middle Chinese dziH; the Shuowen gives an older sense, 'to nurse'"
+etymology_hook: "zì 'character': inherited, from Middle Chinese dziH; the Shuowen gives an older sense, 'to bear, nurse'"
 duration:
   max_seconds: 145
 requires:
@@ -46,7 +46,7 @@ falling tone. You are attaching a standalone word to writing you already know.
 
 **字** is inherited from Middle Chinese *dziH* (Guangyun, in Baxter's
 transcription). The Guangyun quotes the Shuowen dictionary for an older sense,
-"to nurse, to rear"; "written character" came later.
+"to bear and nurse children"; "written character" came later.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-ZI-CHAR] -->

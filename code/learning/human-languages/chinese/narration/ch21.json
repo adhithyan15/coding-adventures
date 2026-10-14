@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Ten Words, Ninety-Nine Numbers",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7eaddd0ba44c3e4f",
+  "sourceHash": "fnv1a64:59e7932602bae9c0",
   "lessons": [
     {
       "id": "ZH-C21-shiyi",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:842fc4d6f3e57cb6",
+      "sourceHash": "fnv1a64:a0c13ebc02a7ba46",
       "notice": null,
       "blocks": [
         {
@@ -213,7 +213,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "九十九, ninety-nine, is the drill this book has been waiting for. jiǔ is third tone and so is the jiǔ at the end, and the rule you met in chapter 1 applies: a third tone before another third tone lifts and becomes a rise."
+              "text": "九十九, ninety-nine, is the drill this book has been waiting for. jiǔ is third tone and so is the jiǔ at the end, and the rule you met with nǐ hǎo applies: a third tone before another third tone lifts and becomes a rise."
             },
             {
               "kind": "speech",

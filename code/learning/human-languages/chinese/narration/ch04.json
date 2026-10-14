@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "One Box, Two Characters, and the First Thing You Can Refuse",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d2c5eddfc70ac64e",
+  "sourceHash": "fnv1a64:fabfa4fb4e7a998f",
   "lessons": [
     {
       "id": "ZH-W04-kou",
@@ -482,7 +482,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22fc8ace13f1f04a",
+      "sourceHash": "fnv1a64:02d6130ef29e4fd6",
       "notice": null,
       "blocks": [
         {
@@ -561,7 +561,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "日 rì is inherited from Middle Chinese nyit, \"sun, day\" (Guangyun, in Baxter's transcription). It is usually compared with Tibetan nyi, \"sun\", a likely Sino-Tibetan cognate."
+              "text": "日 rì is inherited from Middle Chinese nyit, \"sun, day\" (Guangyun, in Baxter's transcription). It is usually compared with Tibetan nyi ma, \"sun\", a likely Sino-Tibetan cognate."
             }
           ]
         },
@@ -791,7 +791,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d908cc0d4b897ee8",
+      "sourceHash": "fnv1a64:5c8ebdc002ea0a24",
       "notice": null,
       "blocks": [
         {
@@ -882,7 +882,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "不 bù is inherited from Middle Chinese pjuw, \"not\" (Guangyun, in Baxter's transcription), and it is already a negator in the oldest Chinese writing."
+              "text": "不 bù is inherited from Middle Chinese, and it is already a negator in the oldest Chinese writing. The Guangyun lists it as pjuw and as pjut, both \"not\" (in Baxter's transcription); Mandarin bù continues pjut."
             }
           ]
         },

@@ -10,8 +10,8 @@ romanization: hǎo bu hǎo
 gloss: is it good, heard as the second way Mandarin asks a yes-or-no question
 prerequisites: [ZH-C19-shima]
 sounds: [tone-3, tone-neutral]
-roots: [middle-chinese-xawx, middle-chinese-pjuw]
-etymology_hook: "hǎo bu hǎo: a Chinese pattern on two inherited words, Middle Chinese xawX 'good' and pjuw 'not'"
+roots: [middle-chinese-xawx, middle-chinese-pjut]
+etymology_hook: "hǎo bu hǎo: a Chinese pattern on two inherited words, Middle Chinese xawX 'good' and pjut 'not'"
 duration:
   max_seconds: 125
 requires:
@@ -56,7 +56,7 @@ little harder for a decision, which is why it is the one you hear at the end of
 a suggestion.
 
 *Hǎo bu hǎo* is built from two words inherited from Middle Chinese: *xawX*,
-"good", and *pjuw*, "not".
+"good", and *pjut*, "not".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HAOBUHAO-01, ZH-LEX-BU] -->

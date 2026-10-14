@@ -11,7 +11,7 @@ romanization: hǎokàn
 gloss: good-looking or nice to look at
 prerequisites: [ZH-C18-hear-haokan]
 sounds: [tone-3, tone-4]
-roots: [middle-chinese-xawx, middle-chinese-khan]
+roots: [middle-chinese-xawx, middle-chinese-khanh]
 etymology_hook: "hǎokàn: 'good' + 'look', from Middle Chinese xawX and khanH"
 duration:
   max_seconds: 145

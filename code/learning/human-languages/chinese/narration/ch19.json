@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e82992418c6fe5ea",
+  "sourceHash": "fnv1a64:78a129c4c931c74a",
   "lessons": [
     {
       "id": "ZH-C19-hear-ma",
@@ -1128,7 +1128,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61df13791d7ae206",
+      "sourceHash": "fnv1a64:f384753cbda3857e",
       "notice": null,
       "blocks": [
         {
@@ -1175,7 +1175,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hǎo bu hǎo is built from two words inherited from Middle Chinese: xawX, \"good\", and pjuw, \"not\"."
+              "text": "Hǎo bu hǎo is built from two words inherited from Middle Chinese: xawX, \"good\", and pjut, \"not\"."
             }
           ]
         },
@@ -1226,7 +1226,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73e8b1c3f1cc4550",
+      "sourceHash": "fnv1a64:001d8f81f26b5fda",
       "notice": null,
       "blocks": [
         {
@@ -1313,7 +1313,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "好不好 (hǎo bu hǎo) is a Chinese pattern, not a borrowing: both words are inherited from Middle Chinese, xawX, \"good\", and pjuw, \"not\" (Guangyun, in Baxter's transcription)."
+              "text": "好不好 (hǎo bu hǎo) is a Chinese pattern, not a borrowing: both words are inherited from Middle Chinese, xawX, \"good\", and pjut, \"not\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },

@@ -11,7 +11,7 @@ gloss: university student
 concept_tag: ZH-SCHOOL-UNIVERSITY-STUDENT
 prerequisites: [ZH-C13-daxue]
 sounds: [tone-4, tone-2, tone-neutral]
-roots: [middle-chinese-dajh, middle-chinese-haewk, middle-chinese-srjaeng]
+roots: [middle-chinese-dah, middle-chinese-haewk, middle-chinese-srjaeng]
 etymology_hook: "dàxuésheng: built from Middle Chinese daH, haewk and srjaeng, 'big', 'learning', 'life'"
 duration:
   max_seconds: 135

@@ -48,8 +48,8 @@ Say **study**, then **student**.
 Keep the second syllable light.
 
 Both are inherited from Middle Chinese: *haewk*, "to learn", and *srjaeng*,
-"life, birth", long used for a young scholar (Guangyun, in Baxter's
-transcription). The pair is an old Chinese compound.
+"life, birth" (Guangyun, in Baxter's transcription). The pair is an old
+Chinese compound.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUESHENG-01] -->

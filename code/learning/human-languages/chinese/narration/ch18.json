@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Looking and reading",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:192edac42411b09b",
+  "sourceHash": "fnv1a64:52b0ba5ee0fe14e1",
   "lessons": [
     {
       "id": "ZH-C18-hear-kan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cd41feb557ac9de",
+      "sourceHash": "fnv1a64:9daa9e4b15c3317e",
       "notice": null,
       "blocks": [
         {
@@ -436,7 +436,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:3a4955f44041e18c",
+      "sourceHash": "fnv1a64:53cec10633f183e1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -546,7 +546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2475cdf7a383846",
+      "sourceHash": "fnv1a64:04aebe02fcd7a2be",
       "notice": null,
       "blocks": [
         {
@@ -632,7 +632,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd49f4d3f9356ab9",
+      "sourceHash": "fnv1a64:04c124c8e385448f",
       "notice": null,
       "blocks": [
         {
@@ -760,7 +760,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:27a5f19d3c7512e0",
+      "sourceHash": "fnv1a64:ce435ad19c4c5640",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -855,7 +855,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:ae11398565746f66",
+      "sourceHash": "fnv1a64:77994abedd38e442",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1582,7 +1582,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8855c0ea2061fc47",
+      "sourceHash": "fnv1a64:60891a3450636225",
       "notice": null,
       "blocks": [
         {
@@ -1670,7 +1670,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:5f317676b3c9814b",
+      "sourceHash": "fnv1a64:8958d395fef684a9",
       "notice": {
         "modality": "sight",
         "needs": [

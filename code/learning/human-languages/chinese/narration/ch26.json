@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Ne and Dui",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d0544fdcfbf80591",
+  "sourceHash": "fnv1a64:7bcd62aba4e33754",
   "lessons": [
     {
       "id": "ZH-W26-ne",
@@ -225,7 +225,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:5769e2b89906d6da",
+      "sourceHash": "fnv1a64:7e268425b53bb3d2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -373,7 +373,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "呢 (ne) borrowed its character for the sound; where the particle itself comes from is not settled (Unihan)."
+              "text": "呢 (ne) borrowed its character for the sound; where the particle itself comes from is not settled."
             }
           ]
         },

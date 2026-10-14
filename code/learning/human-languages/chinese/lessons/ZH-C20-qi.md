@@ -12,7 +12,7 @@ concept_tag: ZH-NUMBER-SEVEN
 prerequisites: [ZH-W20-qi]
 sounds: [tone-1, tone-lexical]
 roots: [middle-chinese-tshit]
-etymology_hook: "qī 'seven': inherited, from Middle Chinese tshit; Mandarin turned ts into q and dropped the t"
+etymology_hook: "qī 'seven': inherited, from Middle Chinese tshit; Mandarin turned tsh into q and dropped the t"
 duration:
   max_seconds: 255
 requires:
@@ -57,7 +57,7 @@ tongue of one and the release of the other.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **七** *qī* is inherited from Middle Chinese *tshit*, "seven" (Guangyun, in
-Baxter's transcription). Mandarin turned its *ts* into the *q* you are
+Baxter's transcription). Mandarin turned its *tsh* into the *q* you are
 practising and dropped the final *t*.
 
 ## Guided Practice

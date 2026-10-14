@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Six to Ten, and the Character That Was Already Here",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7a2875441a7884c1",
+  "sourceHash": "fnv1a64:4a44789816b62551",
   "lessons": [
     {
       "id": "ZH-W20-liu",
@@ -448,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61dffaaaf14ed139",
+      "sourceHash": "fnv1a64:d4fd0035a754631d",
       "notice": null,
       "blocks": [
         {
@@ -503,7 +503,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "七 qī is inherited from Middle Chinese tshit, \"seven\" (Guangyun, in Baxter's transcription). Mandarin turned its ts into the q you are practising and dropped the final t."
+              "text": "七 qī is inherited from Middle Chinese tshit, \"seven\" (Guangyun, in Baxter's transcription). Mandarin turned its tsh into the q you are practising and dropped the final t."
             }
           ]
         },

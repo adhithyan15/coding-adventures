@@ -87,7 +87,7 @@ They cannot be swapped. 你吗 is not a question and 你是学生呢 is not the 
 呢 (ne) is the second of Mandarin's particles this book has taught, and the third toneless word after 吗 and 的. A Mandarin sentence's grammar lives in words like these — small, unstressed, unchanging, and placed rather than inflected. That is what the reader is learning each time one arrives.
 
 The word, taken apart.
-呢 (ne) borrowed its character for the sound; where the particle itself comes from is not settled (Unihan).
+呢 (ne) borrowed its character for the sound; where the particle itself comes from is not settled.
 
 Guided Practice.
 [your turn — say: 我是学生你呢]

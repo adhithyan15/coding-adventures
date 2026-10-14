@@ -12,7 +12,7 @@ concept_tag: ZH-WORD-RI
 prerequisites: [ZH-W04-ri]
 sounds: [tone-4, tone-lexical]
 roots: [middle-chinese-nyit]
-etymology_hook: "rì 'sun, day': inherited, from Middle Chinese nyit; usually compared with Tibetan nyi 'sun'"
+etymology_hook: "rì 'sun, day': inherited, from Middle Chinese nyit; usually compared with Tibetan nyi ma 'sun'"
 duration:
   max_seconds: 210
 requires:
@@ -71,7 +71,7 @@ almost always about the sun, light, or time.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **日** *rì* is inherited from Middle Chinese *nyit*, "sun, day" (Guangyun, in
-Baxter's transcription). It is usually compared with Tibetan *nyi*, "sun", a
+Baxter's transcription). It is usually compared with Tibetan *nyi ma*, "sun", a
 likely Sino-Tibetan cognate.
 
 ## Guided Practice

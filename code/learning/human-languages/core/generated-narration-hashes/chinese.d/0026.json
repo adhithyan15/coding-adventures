@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 26,
-  "sourceHash": "fnv1a64:d0544fdcfbf80591",
+  "sourceHash": "fnv1a64:7bcd62aba4e33754",
   "lessonIds": [
     "ZH-W26-ne",
     "ZH-C26-ne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch26.txt",
   "json": "chinese/narration/ch26.json",
-  "textHash": "fnv1a64:5ff4fdb99d841004",
-  "jsonHash": "fnv1a64:5f32ad53e81061cc",
+  "textHash": "fnv1a64:95b73702e68e7ab8",
+  "jsonHash": "fnv1a64:1399829e4c02f4f1",
   "findings": []
 }

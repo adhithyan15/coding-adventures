@@ -87,7 +87,7 @@ Name, nationality, age — the three pieces of personal information any beginner
 One habit worth knowing. Mandarin asks a small child's age with one question and an adult's with another, and both need words this book has not taught yet. What this lesson gives you is the answer, which is the half you are asked for.
 
 The word, taken apart.
-岁 (suì) is inherited from Middle Chinese sjwejH, "year" (Guangyun); counting years of age is the modern use.
+岁 (suì) is inherited from Middle Chinese sjwejH, "year" (Guangyun); Unihan also gives "age".
 
 Guided Practice.
 [your turn — say: shíbā suì — 十八岁]

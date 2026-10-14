@@ -11,7 +11,7 @@ concept_tag: ZH-SCHOOL-BIG
 gloss: big; large, now read and written
 prerequisites: [ZH-W13-da]
 sounds: [tone-4]
-roots: [middle-chinese-dajh]
+roots: [middle-chinese-dah]
 etymology_hook: "dà 'big': inherited, from Middle Chinese daH, beside a second reading dajH"
 duration:
   max_seconds: 145

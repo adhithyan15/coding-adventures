@@ -12,7 +12,7 @@ concept_tag: ZH-LANGUAGE-IDENTITY-CHARACTER
 prerequisites: [ZH-C15-practice]
 sounds: [tone-4]
 roots: [middle-chinese-dzih]
-etymology_hook: "zì 'character': inherited, from Middle Chinese dziH; 'to nurse, rear' is an older sense"
+etymology_hook: "zì 'character': inherited, from Middle Chinese dziH; 'to bear, nurse' is an older sense"
 duration:
   max_seconds: 115
 requires:
@@ -45,7 +45,7 @@ You heard a light *zi* at the end of *míngzi*. Standing alone, this word has a
 sharp falling tone: *zì*. Stay with sound and meaning for this tiny step.
 
 *Zì* is inherited from Middle Chinese *dziH*; an older sense of the word was "to
-nurse, to rear".
+bear and nurse children".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZI-02] -->

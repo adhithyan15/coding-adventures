@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 10,
-  "sourceHash": "fnv1a64:81d6563ef6681737",
+  "sourceHash": "fnv1a64:ab2dfd94355c51ea",
   "lessonIds": [
     "ZH-W10-yan",
     "ZH-W10-xie",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch10.txt",
   "json": "chinese/narration/ch10.json",
-  "textHash": "fnv1a64:13b6625ae2789556",
-  "jsonHash": "fnv1a64:f99bfc0385eef4ef",
+  "textHash": "fnv1a64:038a79f790bfedff",
+  "jsonHash": "fnv1a64:58bcb4e1ac520e71",
   "findings": []
 }

@@ -12,3 +12,4 @@
 - **Origin kinds.** 41 single inherited words, 58 compounds or patterns of inherited words, 5 origins stated as not settled, 1 the Hindu-Arabic digits; 4 hedged Tibetan comparisons.
 - **More detail.** The Chinese track changelog covers the roots added and the readings chosen; no `max_seconds` value was raised.
 - **No code changed.** Only the pins and the owner's rationale moved.
+- **Review.** An independent review fixed 32 of the 105 lessons (30%; 17 in prose or hook, 15 in the slug alone): 不 cites *pjut*, the reading Mandarin *bù* continues; 大 and 看 lessons use new slugs `middle-chinese-dah` and `middle-chinese-khanh` to match the *daH* and *khanH* they cite (the Japanese track keeps `-dajh` and `-khan`); two wrong source glosses (个, 岁) and two unsupported Unihan citations (什么, 呢) were corrected. `check:root-slug-splits` still reports 77 known entries, none new; no pin moved.

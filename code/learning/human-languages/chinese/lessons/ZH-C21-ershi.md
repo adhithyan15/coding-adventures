@@ -58,7 +58,7 @@ shapes again. Mandarin needs none of them.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-TONE-SANDHI-THIRD, ZH-LEX-NUM-JIU] -->
 
 **九十九**, ninety-nine, is the drill this book has been waiting for. *jiǔ* is
-third tone and so is the *jiǔ* at the end, and the rule you met in chapter 1
+third tone and so is the *jiǔ* at the end, and the rule you met with *nǐ hǎo*
 applies: a third tone before another third tone lifts and becomes a rise.
 
 Say it: **jiú-shí-jiǔ**. The first nine rises, the last one dips.

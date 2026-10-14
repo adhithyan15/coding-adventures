@@ -84,7 +84,7 @@ speaker is more likely to open with a small situational remark than with
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**你好** is a compound Chinese made from two inherited words: *hǎo*, "good", from
+**你好** is a Chinese compound of two inherited words: *hǎo*, "good", from
 Middle Chinese *xawX*, and *nǐ*, "you", usually traced to the older
 second-person word *nyeX* (Guangyun, in Baxter's transcription).
 

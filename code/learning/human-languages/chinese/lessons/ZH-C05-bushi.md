@@ -11,8 +11,8 @@ gloss: is not — and a pitch that moves to get out of the way
 concept_tag: ZH-WORD-BUSHI
 prerequisites: [ZH-C05-shi]
 sounds: [tone-4, tone-2, tone-sandhi-bu, tone-lexical]
-roots: [middle-chinese-pjuw, middle-chinese-dzyex]
-etymology_hook: "bú shì: 'not' + 'to be', two words inherited from Middle Chinese pjuw and dzyeX"
+roots: [middle-chinese-pjut, middle-chinese-dzyex]
+etymology_hook: "bú shì: 'not' + 'to be', two words inherited from Middle Chinese pjut and dzyeX"
 duration:
   max_seconds: 260
 requires:
@@ -48,7 +48,7 @@ But say the two words you just warmed up with, one after the other, and
 something is wrong. **bù** falls. **shì** falls. Two sharp drops in a row, back to
 back, and your mouth does not want to make them.
 
-Both words are inherited from Middle Chinese: *pjuw*, "not", and *dzyeX*, "this,
+Both words are inherited from Middle Chinese: *pjut*, "not", and *dzyeX*, "this,
 to be" (Guangyun, in Baxter's transcription).
 
 ## Why it's said this way — 不 gets out of the way

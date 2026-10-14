@@ -11,7 +11,7 @@ concept_tag: ZH-SCHOOL-UNIVERSITY-STUDENT
 gloss: university student, built from known characters
 prerequisites: [ZH-C13-hear-daxuesheng]
 sounds: [tone-4, tone-2, tone-neutral]
-roots: [middle-chinese-dajh, middle-chinese-haewk, middle-chinese-srjaeng]
+roots: [middle-chinese-dah, middle-chinese-haewk, middle-chinese-srjaeng]
 etymology_hook: "dàxuésheng: dàxué + sheng, all three pieces inherited from Middle Chinese daH, haewk, srjaeng"
 duration:
   max_seconds: 165

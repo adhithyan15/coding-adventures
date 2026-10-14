@@ -11,8 +11,8 @@ romanization: hǎo bu hǎo
 gloss: is it good, written from three characters already yours and no new shape at all
 prerequisites: [ZH-C19-hear-haobuhao]
 sounds: [tone-3, tone-neutral]
-roots: [middle-chinese-xawx, middle-chinese-pjuw]
-etymology_hook: "hǎo bu hǎo: a Chinese pattern on two inherited words, Middle Chinese xawX 'good' and pjuw 'not'"
+roots: [middle-chinese-xawx, middle-chinese-pjut]
+etymology_hook: "hǎo bu hǎo: a Chinese pattern on two inherited words, Middle Chinese xawX 'good' and pjut 'not'"
 duration:
   max_seconds: 160
 requires:
@@ -68,7 +68,7 @@ mark is not taught yet, so it is left off here.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **好不好** is a Chinese pattern, not a borrowing: both words are inherited from
-Middle Chinese, *xawX*, "good", and *pjuw*, "not" (Guangyun, in Baxter's
+Middle Chinese, *xawX*, "good", and *pjut*, "not" (Guangyun, in Baxter's
 transcription).
 
 ## Guided Practice

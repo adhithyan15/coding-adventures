@@ -12,7 +12,7 @@ concept_tag: ZH-MEASURE-GE
 prerequisites: [ZH-W24-ge, ZH-C23-huati, ZH-W20-ba, ZH-C20-ba, ZH-W17-guo-observe, ZH-C13-hear-daxuesheng]
 sounds: [tone-4]
 roots: [middle-chinese-kah]
-etymology_hook: "gè: inherited, from Middle Chinese kaH, glossed 'a counted piece' in the Guangyun"
+etymology_hook: "gè: inherited, from Middle Chinese kaH, a word for a single piece"
 duration:
   max_seconds: 230
 requires:
@@ -84,8 +84,7 @@ and you will be understood every time.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**个** is inherited from Middle Chinese *kaH*, which the Guangyun glosses "a
-counted piece".
+**个** is inherited from Middle Chinese *kaH*, "a single piece".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-GE-01, ZH-GRAMMAR-MEASURE-WORD-01] -->

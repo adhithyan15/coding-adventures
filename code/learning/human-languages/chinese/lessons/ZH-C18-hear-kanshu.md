@@ -10,7 +10,7 @@ romanization: kànshū
 gloss: to read a book or read books
 prerequisites: [ZH-C18-shu]
 sounds: [tone-1, tone-4]
-roots: [middle-chinese-khan, middle-chinese-syo]
+roots: [middle-chinese-khanh, middle-chinese-syo]
 etymology_hook: "kànshū: built from Middle Chinese khanH 'to look' and syo 'writing'"
 duration:
   max_seconds: 120

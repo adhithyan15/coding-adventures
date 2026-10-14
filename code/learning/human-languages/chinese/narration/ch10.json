@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "One Character, Two Courtesies",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:81d6563ef6681737",
+  "sourceHash": "fnv1a64:ab2dfd94355c51ea",
   "lessons": [
     {
       "id": "ZH-W10-yan",
@@ -520,7 +520,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b1fac99a2ea32b0",
+      "sourceHash": "fnv1a64:2cfdfa15e57ebe16",
       "notice": null,
       "blocks": [
         {
@@ -563,7 +563,7 @@
             },
             {
               "kind": "speech",
-              "text": "Both are inherited from Middle Chinese: pjuw, \"not\", and zjaeH, \"to decline, to thank\" (Guangyun, in Baxter's transcription)."
+              "text": "Both are inherited from Middle Chinese: pjut, \"not\", and zjaeH, \"to decline, to thank\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },

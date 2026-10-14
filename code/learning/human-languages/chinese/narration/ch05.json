@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Yes, No, and a Tone That Moves",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5dc03f55d16e2abd",
+  "sourceHash": "fnv1a64:bc4a5cd23bf6f623",
   "lessons": [
     {
       "id": "ZH-W05-shi",
@@ -354,7 +354,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e8c20eb4c530849",
+      "sourceHash": "fnv1a64:a8f424a9981f8973",
       "notice": null,
       "blocks": [
         {
@@ -393,7 +393,7 @@
             },
             {
               "kind": "speech",
-              "text": "Both words are inherited from Middle Chinese: pjuw, \"not\", and dzyeX, \"this, to be\" (Guangyun, in Baxter's transcription)."
+              "text": "Both words are inherited from Middle Chinese: pjut, \"not\", and dzyeX, \"this, to be\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },

@@ -10,7 +10,7 @@ romanization: kàn
 gloss: to look at or watch
 prerequisites: [ZH-C17-practice]
 sounds: [tone-4]
-roots: [middle-chinese-khan]
+roots: [middle-chinese-khanh]
 etymology_hook: "kàn 'to look': inherited, from Middle Chinese khanH, also read khan"
 duration:
   max_seconds: 120

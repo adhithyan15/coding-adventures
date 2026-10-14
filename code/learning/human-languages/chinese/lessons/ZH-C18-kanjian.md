@@ -11,7 +11,7 @@ romanization: kànjiàn
 gloss: to see or catch sight of
 prerequisites: [ZH-C18-hear-kanjian]
 sounds: [tone-4]
-roots: [middle-chinese-khan, middle-chinese-kenh]
+roots: [middle-chinese-khanh, middle-chinese-kenh]
 etymology_hook: "kànjiàn: 'look' + 'see', from Middle Chinese khanH and kenH"
 duration:
   max_seconds: 145
