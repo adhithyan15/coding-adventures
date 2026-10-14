@@ -76,3 +76,9 @@ groups clamp their right boundary six units inside the lane, while the old48
 tail leaves only four beyond the last node once the canvas floor is exceeded.
 For nonzero margins, include this six-unit group inset in the ranked tails and
 the horizontal unranked tail when groups exist. Keep the exact zero path.
+
+Expand the same336 title-band cells across diagramPadding None/0/12/65536
+(1344 cells). This directly exercises both ends of the independently admitted
+outer-padding domain in every ranked/unranked/direction/depth/empty case.
+Preserve full zero/default equivalence even when old zero-path geometry has
+different historical extents. Only the positive-margin branch is repaired.
