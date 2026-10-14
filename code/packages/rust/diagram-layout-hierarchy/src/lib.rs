@@ -91,17 +91,19 @@ fn optimize_swimlane_ranks_by_crossings(
     diagram: &SwimlaneDiagram,
     constraints: &[(String, String, usize)],
     ranks: &mut HashMap<String, usize>,
-) {
+) -> Result<(), SwimlaneLayoutError> {
     let mut best = swimlane_rank_crossing_count(diagram, ranks);
     for _ in 0..4 {
         let mut changed = false;
         for node in &diagram.nodes {
             let mut candidate = ranks.clone();
-            *candidate.entry(node.id.clone()).or_default() += 1;
+            let rank = candidate.entry(node.id.clone()).or_default();
+            *rank = rank.checked_add(1).ok_or(SwimlaneLayoutError::RankArithmeticOverflow)?;
             for _ in 0..diagram.nodes.len() {
                 let mut propagated = false;
                 for (from, to, distance) in constraints {
-                    let next = candidate.get(from).copied().unwrap_or(0) + distance;
+                    let next = candidate.get(from).copied().unwrap_or(0).checked_add(*distance)
+                        .ok_or(SwimlaneLayoutError::RankArithmeticOverflow)?;
                     if candidate.get(to).copied().unwrap_or(0) < next {
                         candidate.insert(to.clone(), next);
                         propagated = true;
@@ -122,11 +124,12 @@ fn optimize_swimlane_ranks_by_crossings(
             break;
         }
     }
+    Ok(())
 }
 
-fn swimlane_cross_lane_ranks(diagram: &SwimlaneDiagram, link_gaps: &SwimlaneLinkGaps<'_>) -> Option<HashMap<String, usize>> {
+fn swimlane_cross_lane_ranks(diagram: &SwimlaneDiagram, link_gaps: &SwimlaneLinkGaps<'_>) -> Result<Option<HashMap<String, usize>>, SwimlaneLayoutError> {
     if diagram.ignore_cross_lane_edges {
-        return None;
+        return Ok(None);
     }
     let mut constraints = Vec::<(String, String, usize)>::new();
     for lane in &diagram.lanes {
@@ -150,7 +153,8 @@ fn swimlane_cross_lane_ranks(diagram: &SwimlaneDiagram, link_gaps: &SwimlaneLink
     for _ in 0..diagram.nodes.len() {
         let mut changed = false;
         for (from, to, distance) in &constraints {
-            let next = ranks.get(from).copied().unwrap_or(0) + distance;
+            let next = ranks.get(from).copied().unwrap_or(0).checked_add(*distance)
+                .ok_or(SwimlaneLayoutError::RankArithmeticOverflow)?;
             if ranks.get(to).copied().unwrap_or(0) < next {
                 ranks.insert(to.clone(), next);
                 changed = true;
@@ -161,9 +165,9 @@ fn swimlane_cross_lane_ranks(diagram: &SwimlaneDiagram, link_gaps: &SwimlaneLink
         }
     }
     if diagram.optimize_ranks_by_crossings {
-        optimize_swimlane_ranks_by_crossings(diagram, &constraints, &mut ranks);
+        optimize_swimlane_ranks_by_crossings(diagram, &constraints, &mut ranks)?;
     }
-    Some(ranks)
+    Ok(Some(ranks))
 }
 
 /// Lay out explicit Railroad constructors into rule rows and branch paths.
@@ -268,12 +272,14 @@ fn measure_railroad_expression(expr: &RailroadExpression) -> (f64, f64) {
 pub enum SwimlaneLayoutError {
     UnsupportedSpacing { field: &'static str },
     InvalidDerivedGeometry,
+    RankArithmeticOverflow,
 }
 
 impl std::fmt::Display for SwimlaneLayoutError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::UnsupportedSpacing { field } => write!(f, "Swimlane flowchart {field} must be finite and in 0..=65536"),
+            Self::RankArithmeticOverflow => f.write_str("Swimlane rank arithmetic overflow"),
             Self::InvalidDerivedGeometry => f.write_str("Swimlane layout requires finite coordinates and nonnegative dimensions"),
         }
     }
@@ -293,7 +299,7 @@ pub fn try_layout_swimlane(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimlane
             return Err(SwimlaneLayoutError::UnsupportedSpacing { field });
         }
     }
-    let layout = layout_swimlane_supported(diagram);
+    let layout = layout_swimlane_supported(diagram)?;
     let rectangle = |x: f64, y: f64, width: f64, height: f64| {
         [x,y,width,height].iter().all(|v| v.is_finite()) && width >= 0.0 && height >= 0.0
     };
@@ -314,7 +320,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     try_layout_swimlane(diagram).expect("supported Swimlane layout input")
 }
 
-fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
+fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimlaneDiagram, SwimlaneLayoutError> {
     // Parallel edges remain separate drawing instructions, but spacing needs
     // only their maximum constraint. Index once before either layout phase;
     // otherwise a small flat document can force two full scans per node gap.
@@ -330,8 +336,9 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagr
     let node_width = 132.0;
     let node_height = 54.0;
     let node_gap = diagram.flowchart_config.rank_spacing.unwrap_or(42.0);
-    let cross_lane_ranks = swimlane_cross_lane_ranks(diagram, &link_gaps);
+    let cross_lane_ranks = swimlane_cross_lane_ranks(diagram, &link_gaps)?;
     let max_rank = cross_lane_ranks.as_ref().and_then(|ranks| ranks.values().max().copied()).unwrap_or(0);
+    let rank_count = max_rank.checked_add(1).ok_or(SwimlaneLayoutError::RankArithmeticOverflow)?;
     let rank_slot_width = diagram.nodes.iter().map(|node|
         swimlane_node_width(&node.shape, &node.label, &node.style, diagram.theme.font_size.unwrap_or(13.0))
     ).fold(node_width, f64::max);
@@ -347,9 +354,9 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagr
     }).max().unwrap_or(0);
     let lane_cross = 150.0 + 60.0 * max_group_depth as f64;
     let lane_along = if cross_lane_ranks.is_some() && horizontal_flow {
-        lane_header + (max_rank + 1) as f64 * rank_slot_width + max_rank as f64 * node_gap + 40.0
+        lane_header + rank_count as f64 * rank_slot_width + max_rank as f64 * node_gap + 40.0
     } else if cross_lane_ranks.is_some() {
-        lane_header + (max_rank + 1) as f64 * node_height + max_rank as f64 * node_gap + 28.0
+        lane_header + rank_count as f64 * node_height + max_rank as f64 * node_gap + 28.0
     } else if horizontal_flow {
         diagram.lanes.iter().map(|lane| {
             let widths = lane.node_ids.iter().filter_map(|node_id| {
@@ -544,7 +551,7 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagr
             })
         })
         .collect();
-    LayoutedSwimlaneDiagram {
+    Ok(LayoutedSwimlaneDiagram {
         width,
         height,
         direction: diagram.direction.clone(),
@@ -563,7 +570,7 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagr
         optimize_ranks_by_crossings: diagram.optimize_ranks_by_crossings,
         flowchart_config: diagram.flowchart_config.clone(),
         theme: diagram.theme.clone(),
-    }
+    })
 }
 
 #[cfg(test)]
@@ -1427,13 +1434,31 @@ mod tests {
                     diagram.optimize_ranks_by_crossings = optimize;
                     diagram.edges[0].min_length = usize::MAX;
                     let result = std::panic::catch_unwind(|| try_layout_swimlane(&diagram));
-                    let refused = matches!(&result, Ok(Err(_)));
+                    let refused = matches!(&result, Ok(Err(SwimlaneLayoutError::RankArithmeticOverflow)));
                     eprintln!("rank-overflow direction={direction:?} optimize={optimize} case={name} checked_refusal={refused} panicked={}",result.is_err());
                     if !refused { failures.push(format!("{direction:?}/{optimize}/{name}")); }
                 }
             }
         }
         assert!(failures.is_empty(), "rank overflow must be an explicit checked refusal, failures={failures:?}");
+    }
+
+    #[test]
+    fn crossing_rank_optimizer_refuses_candidate_and_constraint_overflow_exactly() {
+        let diagram = ordering_diagram(1, &[]);
+        let mut ranks = HashMap::from([("node0".to_owned(), usize::MAX)]);
+        assert_eq!(optimize_swimlane_ranks_by_crossings(&diagram, &[], &mut ranks),
+            Err(SwimlaneLayoutError::RankArithmeticOverflow));
+        assert_eq!(ranks["node0"], usize::MAX);
+        let mut ranks = HashMap::from([("node0".to_owned(), 0)]);
+        let constraints = vec![("node0".to_owned(), "external".to_owned(), usize::MAX)];
+        assert_eq!(optimize_swimlane_ranks_by_crossings(&diagram, &constraints, &mut ranks),
+            Err(SwimlaneLayoutError::RankArithmeticOverflow));
+        assert_eq!(ranks["node0"], 0);
+        let mut ranks = HashMap::from([("node0".to_owned(), usize::MAX-1)]);
+        assert_eq!(optimize_swimlane_ranks_by_crossings(&diagram, &[], &mut ranks), Ok(()));
+        assert_eq!(ranks["node0"], usize::MAX-1, "valid nonimproving candidate must not alter accepted ranks");
+        assert_eq!(SwimlaneLayoutError::RankArithmeticOverflow.to_string(), "Swimlane rank arithmetic overflow");
     }
 
     fn layout_gap(layout: &LayoutedSwimlaneDiagram, first: &str, second: &str) -> f64 {

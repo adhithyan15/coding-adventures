@@ -9704,7 +9704,7 @@ mod tests {
         let bare=mermaid_parser::parse_swimlane(&body).unwrap();
         let source=format!("---\nconfig:\n  flowchart:\n    nodeSpacing: 96\n    rankSpacing: 28\n    diagramPadding: 32\n---\n%%{{init: {{\"flowchart\": {{\"nodeSpacing\": 72, \"rankSpacing\": 24, \"diagramPadding\": 18}}}}}}%%\n{body}");
         let mut parsed=mermaid_parser::parse_swimlane(&source).unwrap();
-        assert_eq!(parsed.flowchart_config,diagram_ir::SwimlaneFlowchartConfig{node_spacing:Some(72.0),rank_spacing:Some(24.0),diagram_padding:Some(18.0)});
+        assert_eq!(parsed.flowchart_config,diagram_ir::SwimlaneFlowchartConfig{node_spacing:Some(72.0),rank_spacing:Some(24.0),diagram_padding:Some(18.0),curve:None});
         parsed.flowchart_config=Default::default();assert_eq!(parsed,bare);
         for field in ["nodeSpacing","rankSpacing","diagramPadding"] {
             for value in ["-1","not-a-number","NaN","inf","-inf"] {
@@ -9713,6 +9713,57 @@ mod tests {
                 assert_eq!(error.message,format!("Swimlane flowchart {field} must be a non-negative number"));
                 assert_eq!((error.line,error.col),(1,1));
             }
+        }
+    }
+
+    #[test]
+    fn authored_global_curve_preserves_complete_ir_layout_and_scene_with_edge_override() {
+        use diagram_ir::SwimlaneEdgeCurve::*;
+        let cases = [
+            ("linear",Linear,"linear"), ("basis",Basis,"basis"), ("BASIS",Basis,"basis"),
+            ("bumpX",BumpX,"bumpX"), ("bump-x",BumpX,"bumpX"),
+            ("bumpY",BumpY,"bumpY"), ("bump-y",BumpY,"bumpY"),
+            ("cardinal",Cardinal,"cardinal"), ("catmullRom",CatmullRom,"catmullRom"), ("catmull-rom",CatmullRom,"catmullRom"),
+            ("monotoneX",MonotoneX,"monotoneX"), ("monotone-x",MonotoneX,"monotoneX"),
+            ("monotoneY",MonotoneY,"monotoneY"), ("monotone-y",MonotoneY,"monotoneY"),
+            ("natural",Natural,"natural"), ("rounded",Rounded,"rounded"), ("step",Step,"step"),
+            ("stepBefore",StepBefore,"stepBefore"), ("step-before",StepBefore,"stepBefore"),
+            ("stepAfter",StepAfter,"stepAfter"), ("step-after",StepAfter,"stepAfter"),
+        ];
+        for direction in ["LR","RL","TB","BT"] {
+            let body=format!("swimlane-beta {direction}\nsubgraph A\nfirst[First]\nsecond[Second]\nthird[Third]\nend\nfirst --> second\nsecond override@--> third\noverride@{{ curve: linear }}");
+            let bare=mermaid_parser::parse_swimlane(&body).unwrap();
+            assert_eq!(bare.flowchart_config.curve,None);
+            assert_eq!(bare.edges[0].curve,None); assert_eq!(bare.edges[1].curve,Some(Linear));
+            let compare = |parsed: diagram_ir::SwimlaneDiagram, curve, canonical: &str| {
+                assert_eq!(parsed.flowchart_config.curve,Some(curve));
+                assert_eq!(parsed.edges[0].curve,None); assert_eq!(parsed.edges[1].curve,Some(Linear));
+                let mut normalized=parsed.clone(); normalized.flowchart_config.curve=None;
+                assert_eq!(normalized,bare,"global parser config alone differs; all source fields retain identity");
+                let mut explicit=bare.clone(); explicit.edges[0].curve=Some(curve);
+                let expected=diagram_layout_hierarchy::try_layout_swimlane(&explicit).unwrap();
+                let actual=diagram_layout_hierarchy::try_layout_swimlane(&parsed).unwrap();
+                assert_eq!(actual.edges[0].curve,Some(curve)); assert_eq!(actual.edges[1].curve,Some(Linear));
+                let mut normalized=actual.clone(); normalized.flowchart_config.curve=None;
+                assert_eq!(normalized,expected,"complete geometry/fields equal explicit edge reference");
+                let mut scene=diagram_to_paint_swimlane(&actual,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                assert_eq!(scene.metadata.as_mut().unwrap().remove("swimlane.flowchart.curve").as_deref(),Some(canonical));
+                let expected_scene=diagram_to_paint_swimlane(&expected,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                assert_eq!(scene,expected_scene,"only proven global config entry differs; retain every route/marker/glyph/metadata field");
+                if curve==Linear {
+                    assert_eq!(scene.metadata.as_mut().unwrap().remove("swimlane.edge.0.curve").as_deref(),Some("linear"));
+                    assert_eq!(scene,diagram_to_paint_swimlane(&diagram_layout_hierarchy::layout_swimlane(&bare),&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver)),"explicit linear default preserves entire old scene");
+                }
+            };
+            for (value,curve,canonical) in cases {
+                let source=format!("---\nconfig:\n  flowchart:\n    curve: {value}\n---\n{body}");
+                compare(mermaid_parser::parse_swimlane(&source).unwrap(),curve,canonical);
+            }
+            let source=format!("---\nconfig:\n  flowchart:\n    curve: stepAfter\n---\n%%{{init: {{\"flowchart\": {{\"curve\": \"basis\"}}}}}}%%\n{body}");
+            compare(mermaid_parser::parse_swimlane(&source).unwrap(),Basis,"basis");
+            let source=format!("---\nconfig:\n  flowchart:\n    curve: unsupported\n---\n{body}");
+            let error=mermaid_parser::parse_swimlane(&source).unwrap_err();
+            assert_eq!(error.message,"unsupported Swimlane edge curve"); assert_eq!((error.line,error.col),(1,1));
         }
     }
 
