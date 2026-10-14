@@ -1084,11 +1084,16 @@ impl Drop for AttributeList {
 /// access checks do not count ALL APPLICATION PACKAGES.
 ///
 /// The information class `TokenIsLessPrivilegedAppContainer` answers this
-/// where Windows lets it be queried. windows-2025 refuses it
-/// (`ERROR_INVALID_PARAMETER`, the error for an information class that
-/// cannot be read). What makes a token LPAC is its `WIN://NOALLAPPPKG`
-/// security attribute, which access checks consult, so that attribute is
-/// the answer then. Any other failure is an error, never a guess.
+/// where Windows lets it be queried. On windows-2025 it is, by inference,
+/// refused (`ERROR_INVALID_PARAMETER`, the error for an information class
+/// that cannot be read; the failing run's error was not yet labelled).
+/// What makes a token LPAC is its `WIN://NOALLAPPPKG` security attribute,
+/// which access checks consult, so that attribute is the answer then. Any
+/// other failure is an error, never a guess. Only the attribute's name is
+/// matched: only the kernel (TCB) sets `WIN://` attributes.
+///
+/// It does not check that the token is an AppContainer's at all; callers
+/// check `TokenIsAppContainer` first, as the launch check does.
 pub fn is_less_privileged_app_container(token: BorrowedHandle<'_>) -> io::Result<bool> {
     match token_u32(&token, TokenIsLessPrivilegedAppContainer) {
         Ok(value) => Ok(value != 0),

@@ -252,13 +252,14 @@ mod windows {
         };
         let container = query_u32(TokenIsAppContainer);
         // Through the attribute when the information class cannot be read;
-        // an error prints as 0, which the test refuses.
+        // an error prints in place of the value, which the test refuses.
         // SAFETY: the pseudo-handle is valid for this process's lifetime.
-        let lpac = chief_of_staff_windows_sandbox::is_less_privileged_app_container(unsafe {
+        let lpac = match chief_of_staff_windows_sandbox::is_less_privileged_app_container(unsafe {
             std::os::windows::io::BorrowedHandle::borrow_raw(token as RawHandle)
-        })
-        .map(u32::from)
-        .unwrap_or(0);
+        }) {
+            Ok(lpac) => u32::from(lpac).to_string(),
+            Err(error) => format!("error:{error}"),
+        };
         let mut buffer = vec![0u64; 16];
         let mut written = 0u32;
         // SAFETY: a 128-byte buffer, ample for a TOKEN_MANDATORY_LABEL and

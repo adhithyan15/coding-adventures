@@ -58,7 +58,7 @@ from outside that:
 
 - the token is an AppContainer's, LPAC, with this SID, no capabilities and
   Low integrity. LPAC is read from `TokenIsLessPrivilegedAppContainer`,
-  or, where Windows refuses that query (windows-2025 does), from the
+  or, where Windows refuses that query (windows-2025 seems to), from the
   token's `WIN://NOALLAPPPKG` security attribute
   (`is_less_privileged_app_container`);
 - the process is in its job;

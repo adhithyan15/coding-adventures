@@ -2433,8 +2433,9 @@ through S-I3 before two weeks are spent on Windows.
    APPLICATION PACKAGES (S-1-15-2-2) may read.
 
    **LPAC, as the launch check reads it.** `TokenIsLessPrivilegedAppContainer`
-   cannot be queried on windows-2025 (`ERROR_INVALID_PARAMETER`, seen
-   there). What makes a token LPAC is its `WIN://NOALLAPPPKG` security
+   cannot, by inference, be queried on windows-2025 (an unlabelled
+   `ERROR_INVALID_PARAMETER` from the launch check, which every token query
+   now labels). What makes a token LPAC is its `WIN://NOALLAPPPKG` security
    attribute, which access checks consult to leave out ALL APPLICATION
    PACKAGES, so the check reads `TokenSecurityAttributes` for it when the
    information class is refused. Any other failure refuses the launch.
