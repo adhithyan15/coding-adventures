@@ -129,3 +129,15 @@ acceptance or source-position/provenance validation; cloned position metadata
 is not evidence of a new source map. Cover true/false and direct/assigned.
 No production parser cap, classifier budget, policy or older assertion changes.
 Full final-source Miri DEFERRED/PENDING and whole delivery acceptance PENDING.
+
+
+Actual ee50 focus EXIT1/Cargo101 reports1PASS/1FAIL. The public AST pair passes
+all four cells. The source assertion incorrectly assumed both consumers hit
+parser135: direct output adds expression nesting and hits135, while assignment
+parses the sixth layer and produces Type(cannot print a real value). Preserve
+that original failed receipt. Final source controls must require exactly these
+distinct boundaries for both true/false cells: direct Parse/limit135 versus
+assigned Type/specific formatter refusal. Five-layer source accepts all four.
+This supplies real six-layer source semantic evidence for assignment only;
+the separately constructed AST supplies the compiler evidence for both consumers.
+No production limits or policy changed. Full acceptance and Miri remain pending.
