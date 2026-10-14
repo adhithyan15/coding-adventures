@@ -2,6 +2,38 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04a current-main reconciliation -->
+October14 candidate `bd3610d48aa0b8834602c50604d6354f0cf93ba5` integrates main
+`5526f94f956ac390fc667af525dabef602ec7fce`. Actual native session27645 EXIT0
+passes **658 tests/docs across14 targets**, zero failures/ignores, for hierarchy,
+parser, paint and Chief daemon; strict all-target session6489 returns EXIT0.
+The immutable receipts retain every earlier compile/red failure. Cross-lane ranks
+reuse one gap index (512 visits/14 queries in all four directions). Paint adds
+72 exact whole-scene orthogonal-hop controls while retaining duplicate/same-axis
+work bounds. Parser endpoint metadata and the unchanged eight-opener source-anchor
+security assertion pass; canonical LF repairs the conflict writer's CRLF bytes.
+
+Read-only planner54525 returns actual EXIT0: current Cargo metadata identifies
+38 changed Rust seeds and453 affected packages including dev dependencies. This
+is a plan, **not complete-cone acceptance**. Powered-selector controls, ordering
+and arbitrary-oblique work assessment, changed compiler/native/downstream suites,
+exact-final independent security review and genuine repaired hosted Linux remain
+pending. Earlier3347/211 native acceptance stays attributed to source282/main160.
+
+Fresh complete PR/backlog/epic audit session30949 sees main
+`fd6df512b7c750733095c8d87f3c6c10db17ec83`; its extra commit changes human-language
+source/tests/specs only and is not yet imported or runtime-accepted here. Sole
+Closure/shared PR17288 remains published at822, DIRTY, terminal Linux/CI-gate
+failures, auto-mergeOFF. Original build-plan artifact is now unavailable; preserved
+archive/plan hashes remain verified historical evidence, never fresh acceptance.
+No publication, merge, cleanup or CV04b selection occurred.
+
+Full final-source Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/
+checkout/receipts/target remain untouched and unpolled. Base ESTree, own types and
+no new crates.io dependencies remain binding. Full parity, source/output joins,
+all transformation lineage and the full objective remain OPEN; heartbeat ACTIVE.
+<!-- /CV04a current-main reconciliation -->
+
 <!-- CV04a BEAM heap native continuation -->
 CV04a source `282193e9b1911fb3846b4a107d5d11fb8bec02f0`, integrated main
 `160b1b4e0e8c52bf7dc8b02119e666611fd6001f`: native continuation session97289

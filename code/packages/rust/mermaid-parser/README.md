@@ -328,3 +328,9 @@ Line-hop/Qt integration controls assert exact public-layout sorted arc/gap route
 and marker triangles, mode aliases/exclusions, and Qt native output equivalence
 with exact inset/unsupported shadow debt. Existing resource and geometry controls
 remain required. No general renderer/device acceptance is inferred.
+
+The maximal-run label scanner retains the imported point/circle/cross endpoint
+operator families and positional link styles. Dispatch handles positional styles,
+then complete edge chains, then standalone edge configurations; endpoint node
+shape metadata therefore remains in its original context. Exact endpoint metadata
+and counted label/edge-target controls remain enabled after integration.

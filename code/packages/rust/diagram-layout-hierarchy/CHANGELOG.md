@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Reuse the existing minimum-link index in cross-lane rank construction after
+  upstream integration; verify exact enabled-rank spacing and 512 visits/14
+  queries in all four directions without relaxing the legacy gap controls.
+
 - Preserve alternating Linear/Basis curves in the duplicate-gap resource fixture
   and assert their exact layout propagation when integrating edge curve IR.
 

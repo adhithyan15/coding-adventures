@@ -12,6 +12,16 @@ Authored parser/layout/paint geometry tests run on every platform, checking
 exact triangle vertices, area and curve commands. Entirely coincident routes
 keep their existing directionless marker behavior.
 
+Swimlane line hops query every eligible orthogonal route segment before inserting
+any segment from the current edge, preserving the exclusion of self-crossings.
+The geometry index retains prior edge/segment identities and duplicate drawing
+multiplicity; same-axis cohorts are excluded before candidate traversal. Exact
+whole-scene controls cover all 36 prior/current combinations of None, Linear,
+Rounded, Step, StepBefore and StepAfter in both arc and gap modes (72 scenes),
+including intermediate segment boundaries, endpoint markers, styles and metadata.
+The existing duplicate and same-axis work bounds remain required. Arbitrary
+distinct oblique routes have separate, still unaccepted candidate-work costs.
+
 ## Usage
 
 ```rust
