@@ -68,11 +68,91 @@ fn run() -> Result<(), u8> {
     })
 }
 
-#[cfg(not(unix))]
+/// On Windows (D18S P2.8b-1) the keys arrive as handles on the applier's
+/// handle list, named in [`KEY_HANDLES_VARIABLE`]: exactly one per slot, in
+/// slot order. A count that differs from the bootstrap's is refused (66)
+/// before any key is read, as a stray descriptor is on Unix. Each handle is
+/// then read through `read_owner_only_secret_from`, which checks the
+/// owner-only policy on it again.
+///
+/// [`KEY_HANDLES_VARIABLE`]: crate::protocol::KEY_HANDLES_VARIABLE
+#[cfg(windows)]
 fn run() -> Result<(), u8> {
-    // Inheriting key descriptors is Unix-only so far (D18S step 8 is
-    // Windows); refuse to run rather than run without keys.
+    use crate::protocol::KEY_HANDLES_VARIABLE;
+
+    crate::serve_process(std::io::stdin().lock(), std::io::stdout().lock(), |count| {
+        let named = key_handles(std::env::var_os(KEY_HANDLES_VARIABLE).as_deref(), count)?;
+        named.into_iter().map(adopt_handle).collect()
+    })
+}
+
+#[cfg(not(any(unix, windows)))]
+fn run() -> Result<(), u8> {
+    // No way to inherit keys is defined here; refuse to run rather than
+    // run without them.
     Err(69)
+}
+
+/// The key handle values named in `value`: exactly `count` of them, each
+/// a non-zero decimal number, none repeated, in slot order. No variable
+/// at all is the same as an empty one, and right only for no slots.
+///
+/// ```text
+///   count  value          result
+///   2      "312,316"      [312, 316]
+///   0      (absent) / ""  []
+///   2      "312"          refused: one short
+///   2      "312,312"      refused: repeated
+///   1      "+312" / "0"   refused: not a plain non-zero number
+/// ```
+#[cfg(any(windows, test))]
+fn key_handles(value: Option<&std::ffi::OsStr>, count: usize) -> Result<Vec<usize>, u8> {
+    let text = match value {
+        None => "",
+        Some(value) => value.to_str().ok_or(66u8)?,
+    };
+    let values = if text.is_empty() {
+        Vec::new()
+    } else {
+        text.split(',')
+            .map(|value| {
+                if value.is_empty() || !value.bytes().all(|byte| byte.is_ascii_digit()) {
+                    return Err(66u8);
+                }
+                match value.parse::<usize>() {
+                    Ok(0) | Err(_) => Err(66u8),
+                    Ok(handle) => Ok(handle),
+                }
+            })
+            .collect::<Result<Vec<_>, _>>()?
+    };
+    let mut sorted = values.clone();
+    sorted.sort_unstable();
+    sorted.dedup();
+    if values.len() != count || sorted.len() != values.len() {
+        return Err(66);
+    }
+    Ok(values)
+}
+
+/// Take ownership of an inherited key handle. A value that names no handle
+/// in this process is refused (66); under the applier's strict handle
+/// checks it would instead end the process, which refuses it as well.
+#[cfg(windows)]
+fn adopt_handle(value: usize) -> Result<std::fs::File, u8> {
+    use std::os::windows::io::{FromRawHandle, RawHandle};
+    use windows_sys::Win32::Foundation::GetHandleInformation;
+    let mut flags = 0u32;
+    // SAFETY: GetHandleInformation only reads the handle table entry; on a
+    // value that names no handle it fails and touches nothing.
+    if unsafe { GetHandleInformation(value as _, &mut flags) } == 0 {
+        return Err(66);
+    }
+    // SAFETY: the applier passed this handle on its list and named it
+    // here; nothing in this process opened or claimed it, and only this
+    // function, once per slot (the values are distinct), takes it. So this
+    // is its single owner, and dropping the File closes it exactly once.
+    Ok(unsafe { std::fs::File::from_raw_handle(value as RawHandle) })
 }
 
 /// Whether `fd` is an open descriptor in this process.
@@ -106,4 +186,47 @@ fn adopt(fd: i32) -> std::fs::File {
     // this function, called once per slot, takes it. So this is its single
     // owner, and dropping the File closes it exactly once.
     unsafe { std::fs::File::from_raw_fd(fd) }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::key_handles;
+    use std::ffi::OsStr;
+
+    #[test]
+    fn exactly_the_named_handles_are_taken_in_order() {
+        assert_eq!(
+            key_handles(Some(OsStr::new("312,316")), 2),
+            Ok(vec![312, 316])
+        );
+        assert_eq!(
+            key_handles(Some(OsStr::new("316,312")), 2),
+            Ok(vec![316, 312])
+        );
+        assert_eq!(key_handles(None, 0), Ok(vec![]));
+        assert_eq!(key_handles(Some(OsStr::new("")), 0), Ok(vec![]));
+    }
+
+    #[test]
+    fn a_count_or_a_value_that_is_not_exact_is_refused() {
+        for (value, count) in [
+            (Some("312"), 2),
+            (Some("312,316"), 1),
+            (None, 1),
+            (Some("312,312"), 2),
+            (Some("312,,316"), 3),
+            (Some("312,"), 1),
+            (Some("+312"), 1),
+            (Some("0"), 1),
+            (Some(" 312"), 1),
+            (Some("0x138"), 1),
+            (Some("99999999999999999999999"), 1),
+        ] {
+            assert_eq!(
+                key_handles(value.map(OsStr::new), count),
+                Err(66),
+                "{value:?} {count}"
+            );
+        }
+    }
 }

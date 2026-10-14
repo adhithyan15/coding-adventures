@@ -8,7 +8,7 @@
 use capability_os_sandbox::{plan_from_json, OsFamily, SandboxPlan};
 use chief_of_staff_spawn_isolation::VerifiedExecutable;
 use chief_of_staff_windows_sandbox::{
-    container_name, ConfinementError, SpawnRequest, WindowsConfinement,
+    broker_container_name, container_name, ConfinementError, SpawnRequest, WindowsConfinement,
 };
 use std::fs;
 use std::io::Read;
@@ -97,10 +97,16 @@ impl Agent {
 
 /// The probe unconfined: the control.
 fn control(arguments: &[&str]) -> String {
-    let output = std::process::Command::new(PROBE)
-        .args(arguments)
-        .output()
-        .unwrap();
+    // Through the spawn lock, as the supervisor's std spawns are, so a
+    // control never inherits another test's agent handles mid-creation.
+    let child = chief_of_staff_spawn_isolation::spawn(
+        std::process::Command::new(PROBE)
+            .args(arguments)
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::null()),
+    )
+    .unwrap();
+    let output = child.wait_with_output().unwrap();
     String::from_utf8_lossy(&output.stdout).trim().to_string()
 }
 
@@ -426,4 +432,50 @@ fn a_path_that_is_not_canonical_is_refused() {
         WindowsConfinement::prepare_verified(&plan(), &probe, "dotted"),
         Err(ConfinementError::Executable(_))
     ));
+}
+
+#[test]
+fn a_broker_and_its_agent_are_different_principals() {
+    let agent = Agent::new();
+    let path = probe_path();
+    let digest = coding_adventures_sha256::sha256(&fs::read(&path).unwrap());
+    let probe = VerifiedExecutable::open(&path, digest).unwrap();
+    // The agent runs ...
+    let mut sleeping = agent
+        .confinement()
+        .spawn(SpawnRequest {
+            arguments: vec!["sleep".to_string()],
+            ..SpawnRequest::default()
+        })
+        .unwrap();
+    assert_eq!(sleeping.try_wait().unwrap(), None, "the agent is running");
+    // ... and its broker starts beside it: another container, so the
+    // one-instance rule does not see the agent, and so another SID.
+    let broker = WindowsConfinement::prepare_verified_broker(&plan(), &probe, agent.0.as_bytes())
+        .unwrap_or_else(|error| panic!("prepare the broker: {error}"));
+    let mut child = broker
+        .spawn(SpawnRequest {
+            arguments: vec!["env".to_string()],
+            ..SpawnRequest::default()
+        })
+        .unwrap_or_else(|error| panic!("spawn the broker: {error}"));
+    let mut output = String::new();
+    child
+        .stdout
+        .take()
+        .unwrap()
+        .read_to_string(&mut output)
+        .unwrap();
+    child.wait().unwrap();
+    let local = output
+        .lines()
+        .find_map(|line| line.strip_prefix("LOCALAPPDATA="))
+        .unwrap_or_else(|| panic!("no LOCALAPPDATA: {output}"))
+        .to_ascii_lowercase();
+    assert!(local.contains(&broker_container_name(&agent.0)), "{local}");
+    assert!(
+        !local.contains(&format!("\\{}\\", container_name(&agent.0))),
+        "{local}"
+    );
+    sleeping.kill().unwrap();
 }

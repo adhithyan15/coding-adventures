@@ -13,6 +13,13 @@ group or world access. Windows holds every ancestor without delete sharing, reje
 reparse points, and requires a protected DACL containing exactly one allow ACE for
 the current token user.
 
+For a broker's keys (D18S P2.6d, P2.8b-1), `open_owner_only_secret` opens a key
+under the same policy without reading it, so the handle can be inherited, and
+`read_owner_only_secret_from` checks the policy again on that handle before
+reading exactly the key. `check_owner_only_directory` checks a directory that
+holds secrets: on Unix the user's alone, on Windows owned by and open only to the
+user, SYSTEM and Administrators. All three work on Unix and Windows.
+
 The package only reads existing operator-owned files. It never creates, repairs,
 rewrites, logs, or exposes secret content through its errors.
 

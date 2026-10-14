@@ -368,6 +368,11 @@ The first holds the D18S Windows AppContainer applier, whose
 Without the gate, a change to either compiles and lints on `windows-2025` but
 never runs those tests: the job is green and proves nothing about them.
 
+It MUST also include `rust/chief-of-staff-daemon-secret-file` and
+`rust/chief-of-staff-agent-broker` (D18S P2.8b-1). The first holds the Windows
+owner-only key-file policy a broker's keys pass through; the second holds the
+broker's Windows key adoption. Both have tests that run only on Windows.
+
 ### Closure compiler native Windows acceptance
 
 The Windows general package-test step is conditional on

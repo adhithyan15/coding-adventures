@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- The host is spawned through `chief_of_staff_spawn_isolation::spawn`,
+  under the process-wide spawn lock (D18S P2.8b-1), so on Windows it is
+  never created inside the applier's inheritable span.
 - `a_host_that_never_becomes_ready_is_ended` expects the exit code a kill
   leaves on each platform: none on Unix (a signal), 1 on Windows
   (`Child::kill` is `TerminateProcess(handle, 1)`). It failed the first

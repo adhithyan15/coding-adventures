@@ -4,6 +4,15 @@
 
 ### Added
 
+- **P2.8b-1.** `WindowsConfinement::prepare_verified_broker(plan, broker,
+  agent_id)` and `broker_container_name`: a broker runs in a
+  `chief-of-staff-broker.<32 hex>` container, a namespace no agent's
+  container can reach, so a broker and its agent are always different
+  principals with independent one-instance rules. `container_name` now
+  takes any bytes. `spawn` holds `chief_of_staff_spawn_isolation::spawn_lock`
+  from marking the listed handles inheritable until its copies are closed
+  (on every path). The test control spawns go through the same lock. New
+  native test: an agent and its broker run side by side.
 - The D18S Windows applier (build step 8, P2.8a).
   - `WindowsConfinement::prepare_verified(plan, &agent, agent_id)` checks
     the plan (for Windows, launchable, no `Direct` grant yet) and

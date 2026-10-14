@@ -153,6 +153,48 @@ pub fn has_exited(child: &std::process::Child) -> std::io::Result<bool> {
     }
 }
 
+/// The one lock every process creation in the supervisor holds (D18S
+/// P2.8b-1).
+///
+/// On Windows a child inherits every handle that is inheritable when it
+/// is created: std's `Command` creates with `bInheritHandles=TRUE` and no
+/// list. The Windows applier makes the handles on its list inheritable
+/// for the span of one `CreateProcessW`, a broker's key handles among
+/// them. A std child created by another thread in that span would get
+/// them too. So the applier holds this lock across that span, and every
+/// std spawn takes it through [`spawn`]:
+///
+/// ```text
+///   thread A (applier)                  thread B (std spawn)
+///   spawn_lock() -------------------+
+///   mark listed handles inheritable |   spawn(cmd): spawn_lock() waits
+///   CreateProcessW (list only)      |
+///   close its copies of them        |
+///   drop the guard -----------------+   CreateProcess: nothing listed
+///                                         is inheritable any more
+/// ```
+///
+/// On Unix nothing is inherited without the applier's explicit placement,
+/// so the lock costs one uncontended mutex and changes nothing.
+///
+/// It is process-wide and not reentrant: never call [`spawn`] while
+/// holding it. A panic while it is held does not poison it for good; the
+/// next caller takes it.
+pub fn spawn_lock() -> std::sync::MutexGuard<'static, ()> {
+    static SPAWN: std::sync::Mutex<()> = std::sync::Mutex::new(());
+    SPAWN
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner())
+}
+
+/// Spawn `command` holding [`spawn_lock`]. Every std spawn the supervisor
+/// makes goes through here, so it never overlaps the Windows applier's
+/// inheritable span.
+pub fn spawn(command: &mut Command) -> std::io::Result<std::process::Child> {
+    let _held = spawn_lock();
+    command.spawn()
+}
+
 #[cfg(unix)]
 mod unix {
     use std::io;

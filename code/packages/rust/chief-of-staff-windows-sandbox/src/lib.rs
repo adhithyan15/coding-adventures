@@ -225,9 +225,28 @@ pub fn check_plan(plan: &SandboxPlan) -> Result<(), ConfinementError> {
 /// ```text
 ///   agent_id "weather-reporter"  →  chief-of-staff.<32 hex digits>
 /// ```
-pub fn container_name(agent_id: &str) -> String {
-    let digest = coding_adventures_sha256::sha256(agent_id.as_bytes());
-    let mut name = String::from("chief-of-staff.");
+pub fn container_name(agent_id: impl AsRef<[u8]>) -> String {
+    named("chief-of-staff.", agent_id.as_ref())
+}
+
+/// The AppContainer name for the broker that serves `agent_id` (D18S
+/// P2.8b-1): `chief-of-staff-broker.` and the same 32 hex digits. 54
+/// characters. No agent's name has this prefix, so a broker and any agent,
+/// its own included, are always different principals: processes of one
+/// AppContainer can open each other, and a broker holds keys its agent
+/// must not reach.
+///
+/// ```text
+///   agent   chief-of-staff.<32 hex>
+///   broker  chief-of-staff-broker.<32 hex>     (same digest, other prefix)
+/// ```
+pub fn broker_container_name(agent_id: impl AsRef<[u8]>) -> String {
+    named("chief-of-staff-broker.", agent_id.as_ref())
+}
+
+fn named(prefix: &str, agent_id: &[u8]) -> String {
+    let digest = coding_adventures_sha256::sha256(agent_id);
+    let mut name = String::from(prefix);
     for byte in &digest[..16] {
         name.push_str(&format!("{byte:02x}"));
     }
@@ -462,6 +481,25 @@ mod tests {
         assert_ne!(name, container_name("weather-reporter2"));
         // Nothing in the id reaches the name but its digest.
         assert!(!container_name("..\\x").contains('\\'));
+    }
+
+    #[test]
+    fn a_broker_s_container_is_never_an_agent_s() {
+        let broker = broker_container_name("weather-reporter");
+        assert!(broker.starts_with("chief-of-staff-broker."));
+        assert_eq!(broker.len(), 54);
+        assert!(broker.len() <= 64);
+        // The same digest, under a prefix no agent name has.
+        assert_eq!(broker[22..], container_name("weather-reporter")[15..]);
+        for id in ["weather-reporter", "", "chief-of-staff-broker."] {
+            assert!(!container_name(id).starts_with("chief-of-staff-broker."));
+            assert_ne!(container_name(id), broker_container_name(id));
+        }
+        // An id that is not UTF-8 is a valid id.
+        assert_eq!(
+            broker_container_name([0xff, 0xfe]),
+            broker_container_name(vec![0xff, 0xfe])
+        );
     }
 
     #[test]

@@ -6,8 +6,8 @@
 //! it) on every error.
 
 use crate::{
-    check_environment, check_plan, command_line, container_name, environment_block,
-    strip_verbatim_prefix, ConfinementError, HANDLES_VARIABLE, MITIGATIONS,
+    broker_container_name, check_environment, check_plan, command_line, container_name,
+    environment_block, strip_verbatim_prefix, ConfinementError, HANDLES_VARIABLE, MITIGATIONS,
 };
 use capability_os_sandbox::SandboxPlan;
 use chief_of_staff_spawn_isolation::VerifiedExecutable;
@@ -119,6 +119,26 @@ impl WindowsConfinement {
         agent: &VerifiedExecutable,
         agent_id: &str,
     ) -> Result<Self, ConfinementError> {
+        Self::prepare(plan, agent, container_name(agent_id))
+    }
+
+    /// The same, for the broker that serves `agent_id` (D18S P2.8b-1): its
+    /// container is [`crate::broker_container_name`], never the agent's,
+    /// so the two are different principals, each with its own one-instance
+    /// rule. `agent_id` is the agent's id as the broker protocol carries it.
+    pub fn prepare_verified_broker(
+        plan: &SandboxPlan,
+        broker: &VerifiedExecutable,
+        agent_id: &[u8],
+    ) -> Result<Self, ConfinementError> {
+        Self::prepare(plan, broker, broker_container_name(agent_id))
+    }
+
+    fn prepare(
+        plan: &SandboxPlan,
+        agent: &VerifiedExecutable,
+        name: String,
+    ) -> Result<Self, ConfinementError> {
         check_plan(plan)?;
         agent
             .verify()
@@ -139,7 +159,6 @@ impl WindowsConfinement {
                 "{given}: not canonical (its final path is {image})"
             )));
         }
-        let name = container_name(agent_id);
         let sid = container_sid(&name)?;
         grant_image_access(&held, &sid)?;
         Ok(Self {
@@ -254,16 +273,22 @@ impl WindowsConfinement {
         startup.StartupInfo.hStdError = raw(&stderr);
         startup.lpAttributeList = attributes.as_ptr();
         // Only now, immediately before the creation, are the listed handles
-        // made inheritable, so the window in which a std spawn on another
-        // thread (which inherits every inheritable handle) could take one
-        // is as short as it can be (D18S step 8, residuals).
+        // made inheritable, and the spawn lock is held from here until this
+        // process has closed its copies of them: a std spawn on another
+        // thread, which inherits every inheritable handle, waits for it
+        // (D18S P2.8b-1). The lock is released only after the handles are
+        // closed, on every path.
+        let spawning = chief_of_staff_spawn_isolation::spawn_lock();
         for &handle in &listed {
             // SAFETY: each is a handle this process owns, open until it is
             // dropped right after the creation below.
             if unsafe { SetHandleInformation(handle, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT) }
                 == 0
             {
-                return Err(create_error("SetHandleInformation"));
+                let error = create_error("SetHandleInformation");
+                drop((child_stdin, child_stdout, stderr, request.inherited));
+                drop(spawning);
+                return Err(error);
             }
         }
         // SAFETY: plain data, filled by CreateProcessW.
@@ -303,6 +328,7 @@ impl WindowsConfinement {
         // caller's handles are gone too, so a retry needs new ones.
         drop(attributes);
         drop((child_stdin, child_stdout, stderr, request.inherited));
+        drop(spawning);
         // The profile goes before the agent's first instruction, whatever
         // happened: it was needed only for the creation.
         let removed = profile.remove();

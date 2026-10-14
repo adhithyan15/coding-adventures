@@ -14,9 +14,10 @@ use windows_sys::Win32::Foundation::{BOOL, HANDLE, INVALID_HANDLE_VALUE, PSID};
 use windows_sys::Win32::Security::{
     AclSizeInformation, EqualSid, GetAce, GetAclInformation, GetKernelObjectSecurity, GetLengthSid,
     GetSecurityDescriptorControl, GetSecurityDescriptorDacl, GetSecurityDescriptorOwner,
-    GetTokenInformation, TokenUser, ACCESS_ALLOWED_ACE, ACL, ACL_SIZE_INFORMATION,
-    DACL_SECURITY_INFORMATION, OWNER_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, SE_DACL_PROTECTED,
-    TOKEN_QUERY, TOKEN_USER,
+    GetTokenInformation, IsWellKnownSid, TokenUser, WinBuiltinAdministratorsSid,
+    WinCreatorOwnerSid, WinLocalSystemSid, ACCESS_ALLOWED_ACE, ACL, ACL_SIZE_INFORMATION,
+    DACL_SECURITY_INFORMATION, INHERIT_ONLY_ACE, OWNER_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR,
+    SE_DACL_PROTECTED, TOKEN_USER,
 };
 #[cfg(any(test, feature = "test-support"))]
 use windows_sys::Win32::Security::{
@@ -30,12 +31,11 @@ use windows_sys::Win32::Storage::FileSystem::{
     CreateFileW, FileAttributeTagInfo, GetFileInformationByHandleEx, FILE_ATTRIBUTE_DIRECTORY,
     FILE_ATTRIBUTE_REPARSE_POINT, FILE_ATTRIBUTE_TAG_INFO, FILE_FLAG_BACKUP_SEMANTICS,
     FILE_FLAG_OPEN_REPARSE_POINT, FILE_GENERIC_READ, FILE_READ_ATTRIBUTES, FILE_SHARE_READ,
-    FILE_SHARE_WRITE, OPEN_EXISTING,
+    FILE_SHARE_WRITE, OPEN_EXISTING, READ_CONTROL,
 };
-use windows_sys::Win32::System::SystemServices::ACCESS_ALLOWED_ACE_TYPE;
 #[cfg(any(test, feature = "test-support"))]
 use windows_sys::Win32::System::SystemServices::SECURITY_DESCRIPTOR_REVISION;
-use windows_sys::Win32::System::Threading::{GetCurrentProcess, OpenProcessToken};
+use windows_sys::Win32::System::SystemServices::{ACCESS_ALLOWED_ACE_TYPE, ACCESS_DENIED_ACE_TYPE};
 
 #[cfg(any(test, feature = "test-support"))]
 const OWNER_ACCESS: u32 = FILE_GENERIC_READ | FILE_GENERIC_WRITE;
@@ -70,6 +70,177 @@ pub(super) fn read(
         return Err(SecretFileError::InvalidLength);
     }
     Ok(bytes)
+}
+
+/// Open one secret file for a broker to inherit (D18S P2.8b-1): the same
+/// held-ancestor walk and policy as [`read`], but sharing read so the
+/// handle can be passed on, and returning the handle unread.
+pub(super) fn open(path: &Path) -> Result<File, SecretFileError> {
+    validate_path(path)?;
+    let _parent_locks = lock_parents(path)?;
+    let wide = wide_path(path)?;
+    let raw = unsafe {
+        CreateFileW(
+            wide.as_ptr(),
+            FILE_GENERIC_READ,
+            FILE_SHARE_READ,
+            null(),
+            OPEN_EXISTING,
+            FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT,
+            0,
+        )
+    };
+    let file = File::from(owned_handle(raw).map_err(|_| SecretFileError::AccessFailed)?);
+    verify_file(&file)?;
+    Ok(file)
+}
+
+/// Read exactly `expected_length` bytes from offset 0 of an inherited
+/// secret handle, after checking the policy again on the handle itself.
+///
+/// Windows has no positional read that leaves the handle's position
+/// alone (`seek_read` moves it), unlike Unix `pread`. That is harmless
+/// here: the supervisor closed its copy of the handle when the broker was
+/// created, so nothing else shares the position.
+pub(super) fn read_from(
+    file: &File,
+    expected_length: usize,
+) -> Result<Zeroizing<Vec<u8>>, SecretFileError> {
+    use std::os::windows::fs::FileExt;
+    verify_file(file)?;
+    let mut bytes = Zeroizing::new(vec![0u8; expected_length + 1]);
+    let mut filled = 0;
+    while filled < bytes.len() {
+        match file.seek_read(&mut bytes[filled..], filled as u64) {
+            Ok(0) => break,
+            Ok(count) => filled += count,
+            Err(error) if error.kind() == std::io::ErrorKind::Interrupted => {}
+            Err(_) => return Err(SecretFileError::AccessFailed),
+        }
+    }
+    if filled != expected_length {
+        return Err(SecretFileError::InvalidLength);
+    }
+    bytes.truncate(expected_length);
+    Ok(bytes)
+}
+
+/// Check that `path` is a directory no one but the user, SYSTEM and
+/// Administrators can use (D18S P2.8b-1), reached without a reparse point.
+///
+/// ```text
+///   owner         the user, SYSTEM or Administrators
+///   every allow   the user, SYSTEM or Administrators
+///                 (CREATOR OWNER too, inherit-only: it becomes the
+///                 creator of a child, and only the user creates here)
+///   deny ACEs     any (they only take away)
+///   other types   refused (callback and object ACEs are not expected)
+/// ```
+///
+/// A user profile's own directories pass as created. Unlike a key file's
+/// policy, inherited ACEs are allowed: the question is who else may list
+/// or change the directory, and the answer must be no one.
+pub(super) fn check_directory(path: &Path) -> Result<(), SecretFileError> {
+    if !path.is_absolute()
+        || path
+            .components()
+            .any(|component| matches!(component, Component::CurDir | Component::ParentDir))
+    {
+        return Err(SecretFileError::InvalidPath);
+    }
+    let _parent_locks = lock_parents(path)?;
+    let wide = wide_path(path)?;
+    let raw = unsafe {
+        CreateFileW(
+            wide.as_ptr(),
+            FILE_READ_ATTRIBUTES | READ_CONTROL,
+            FILE_SHARE_READ | FILE_SHARE_WRITE,
+            null(),
+            OPEN_EXISTING,
+            FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT,
+            0,
+        )
+    };
+    let directory = owned_handle(raw).map_err(|_| SecretFileError::AccessFailed)?;
+    let raw = directory.as_raw_handle() as HANDLE;
+    let attributes = file_attributes(raw)?;
+    if attributes.FileAttributes & FILE_ATTRIBUTE_DIRECTORY == 0
+        || attributes.FileAttributes & FILE_ATTRIBUTE_REPARSE_POINT != 0
+    {
+        return Err(SecretFileError::UnsafeFileType);
+    }
+    verify_directory_acl(raw)
+}
+
+fn verify_directory_acl(raw: HANDLE) -> Result<(), SecretFileError> {
+    let current = CurrentUserSid::query()?;
+    let trusted = |sid: PSID| unsafe {
+        EqualSid(sid, current.sid) != 0
+            || IsWellKnownSid(sid, WinLocalSystemSid) != 0
+            || IsWellKnownSid(sid, WinBuiltinAdministratorsSid) != 0
+    };
+    let mut storage = security_descriptor(raw)?;
+    let descriptor: PSECURITY_DESCRIPTOR = storage.as_mut_ptr().cast();
+    let mut owner = null_mut();
+    let mut owner_defaulted: BOOL = 0;
+    if unsafe { GetSecurityDescriptorOwner(descriptor, &mut owner, &mut owner_defaulted) } == 0 {
+        return Err(SecretFileError::AccessFailed);
+    }
+    if owner.is_null() || !trusted(owner) {
+        return Err(SecretFileError::InsecureOwner);
+    }
+    let mut present: BOOL = 0;
+    let mut dacl: *mut ACL = null_mut();
+    let mut defaulted: BOOL = 0;
+    if unsafe { GetSecurityDescriptorDacl(descriptor, &mut present, &mut dacl, &mut defaulted) }
+        == 0
+        || present == 0
+        || dacl.is_null()
+    {
+        // No DACL, or a null one, grants everyone everything.
+        return Err(SecretFileError::InsecurePermissions);
+    }
+    let mut acl_information = MaybeUninit::<ACL_SIZE_INFORMATION>::zeroed();
+    if unsafe {
+        GetAclInformation(
+            dacl,
+            acl_information.as_mut_ptr().cast(),
+            size_of::<ACL_SIZE_INFORMATION>() as u32,
+            AclSizeInformation,
+        )
+    } == 0
+    {
+        return Err(SecretFileError::AccessFailed);
+    }
+    let count = unsafe { acl_information.assume_init() }.AceCount;
+    let sid_offset = size_of::<ACCESS_ALLOWED_ACE>() - size_of::<u32>();
+    for index in 0..count {
+        let mut ace_pointer: *mut c_void = null_mut();
+        if unsafe { GetAce(dacl, index, &mut ace_pointer) } == 0 || ace_pointer.is_null() {
+            return Err(SecretFileError::AccessFailed);
+        }
+        let ace = unsafe { &*ace_pointer.cast::<ACCESS_ALLOWED_ACE>() };
+        match u32::from(ace.Header.AceType) {
+            ACCESS_DENIED_ACE_TYPE => continue,
+            ACCESS_ALLOWED_ACE_TYPE => {}
+            _ => return Err(SecretFileError::InsecurePermissions),
+        }
+        if usize::from(ace.Header.AceSize) < sid_offset + MINIMUM_SID_BYTES {
+            return Err(SecretFileError::InsecurePermissions);
+        }
+        let sid: PSID = addr_of!(ace.SidStart).cast_mut().cast();
+        let sid_bytes = unsafe { GetLengthSid(sid) } as usize;
+        if sid_bytes < MINIMUM_SID_BYTES || usize::from(ace.Header.AceSize) < sid_offset + sid_bytes
+        {
+            return Err(SecretFileError::InsecurePermissions);
+        }
+        let creator = u32::from(ace.Header.AceFlags) & INHERIT_ONLY_ACE != 0
+            && unsafe { IsWellKnownSid(sid, WinCreatorOwnerSid) } != 0;
+        if !trusted(sid) && !creator {
+            return Err(SecretFileError::InsecurePermissions);
+        }
+    }
+    Ok(())
 }
 
 fn validate_path(path: &Path) -> Result<(), SecretFileError> {
@@ -173,11 +344,11 @@ struct CurrentUserSid {
 
 impl CurrentUserSid {
     fn query() -> Result<Self, SecretFileError> {
-        let mut raw_token = 0;
-        if unsafe { OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &mut raw_token) } == 0 {
-            return Err(SecretFileError::AccessFailed);
-        }
-        let _token = owned_handle(raw_token).map_err(|_| SecretFileError::AccessFailed)?;
+        // GetCurrentProcessToken(): the token pseudo-handle, which needs no
+        // access check and is never closed. Opening the process's token
+        // by handle is an access check, which a broker confined to a less
+        // privileged AppContainer may fail (D18S P2.8b-1).
+        let raw_token: HANDLE = -4;
         let mut needed = 0;
         unsafe {
             GetTokenInformation(raw_token, TokenUser, null_mut(), 0, &mut needed);
@@ -210,8 +381,9 @@ impl CurrentUserSid {
     }
 }
 
-fn verify_owner_acl(raw: HANDLE) -> Result<(), SecretFileError> {
-    let current = CurrentUserSid::query()?;
+/// The owner and DACL of the object behind `raw`, in a word-aligned buffer
+/// that the returned descriptor points into.
+fn security_descriptor(raw: HANDLE) -> Result<Vec<usize>, SecretFileError> {
     let information = OWNER_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION;
     let mut needed = 0;
     unsafe {
@@ -225,6 +397,13 @@ fn verify_owner_acl(raw: HANDLE) -> Result<(), SecretFileError> {
     if unsafe { GetKernelObjectSecurity(raw, information, descriptor, needed, &mut needed) } == 0 {
         return Err(SecretFileError::AccessFailed);
     }
+    Ok(storage)
+}
+
+fn verify_owner_acl(raw: HANDLE) -> Result<(), SecretFileError> {
+    let current = CurrentUserSid::query()?;
+    let mut storage = security_descriptor(raw)?;
+    let descriptor: PSECURITY_DESCRIPTOR = storage.as_mut_ptr().cast();
     let mut owner = null_mut();
     let mut owner_defaulted: BOOL = 0;
     if unsafe { GetSecurityDescriptorOwner(descriptor, &mut owner, &mut owner_defaulted) } == 0 {

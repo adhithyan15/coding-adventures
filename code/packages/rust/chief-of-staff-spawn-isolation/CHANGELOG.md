@@ -4,6 +4,12 @@
 
 ### Added
 
+- `spawn_lock()` and `spawn(&mut Command)` (D18S P2.8b-1): one
+  process-wide spawn lock. The Windows applier holds it across its
+  inheritable span; every std spawn the supervisor makes goes through
+  `spawn`, so on Windows no std child (which inherits every inheritable
+  handle) can be created while a broker's key handles are inheritable.
+  On Unix it changes nothing. Tested: a spawn waits while the lock is held.
 - `VerifiedExecutable` on Windows (D18S step 8, P2.8a). The file is opened
   sharing read only, so while it is held no one can write, rename or
   delete it. A reparse point at the last component is opened as itself
