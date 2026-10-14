@@ -4,7 +4,7 @@
   "chapter": 265,
   "title": "A gentle order at a meal",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:13ea52db744c569d",
+  "sourceHash": "fnv1a64:1843e06811b27f15",
   "lessons": [
     {
       "id": "SA-C265-meal-and-restaurant-recall",
@@ -576,7 +576,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c83df5edf4dc291",
+      "sourceHash": "fnv1a64:b4029a2649a31e41",
       "notice": null,
       "blocks": [
         {
@@ -634,7 +634,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Your request should contain कृपया, मह्यम्, the chosen item, and ददातु (dadātu). For example, after answering: कृपया मह्यं जलं ददातु (dadātu) is the mock-paper water request. भोजनम्; अन्नं खादति completes the last prompt."
+              "text": "Your request should contain कृपया, मह्यम्, the chosen item, and ददातु (dadātu). For example, after answering: कृपया मह्यं पानीयं ददातु (dadātu) is the track's water request. It preserves the chapter-24 distinction between जलम्, water as a substance, and पानीयम्, a drink offered to someone. भोजनम्; अन्नं खादति completes the last prompt."
             }
           ]
         },

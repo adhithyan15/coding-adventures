@@ -60,8 +60,10 @@ Finally, name the meal and say that someone eats food.
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-01, SA-PRON-DATIVE-ME-01, SA-LEX-ANNAM-FOOD, SA-LEX-PANIYAM-WATER, SA-LEX-KSHIRAM-MILK, SA-GRAMMAR-C265-DADATU-01, SA-PATTERN-C265-POLITE-ORDER-02] -->
 
 Your request should contain **कृपया**, **मह्यम्**, the chosen item, and
-**ददातु**. For example, after answering: **कृपया मह्यं जलं ददातु** is the
-mock-paper water request. **भोजनम्; अन्नं खादति** completes the last prompt.
+**ददातु**. For example, after answering: **कृपया मह्यं पानीयं ददातु** is the
+track's water request. It preserves the chapter-24 distinction between
+**जलम्**, water as a substance, and **पानीयम्**, a drink offered to someone.
+**भोजनम्; अन्नं खादति** completes the last prompt.
 
 ## Grammar Lens: the boundary
 

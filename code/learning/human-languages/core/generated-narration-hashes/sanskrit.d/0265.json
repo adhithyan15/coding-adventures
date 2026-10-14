@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 265,
-  "sourceHash": "fnv1a64:13ea52db744c569d",
+  "sourceHash": "fnv1a64:1843e06811b27f15",
   "lessonIds": [
     "SA-C265-meal-and-restaurant-recall",
     "SA-C265-dadatu",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "sanskrit/narration/ch265.txt",
   "json": "sanskrit/narration/ch265.json",
-  "textHash": "fnv1a64:85a672853edd4e22",
-  "jsonHash": "fnv1a64:582a37e1b10b29f4",
+  "textHash": "fnv1a64:d7efc0acdfd208d5",
+  "jsonHash": "fnv1a64:3c1a9db94e36cf4e",
   "findings": []
 }

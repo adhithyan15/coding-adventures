@@ -147,7 +147,7 @@ Now choose a second item and make a different request.
 Finally, name the meal and say that someone eats food.
 
 What you've built.
-Your request should contain कृपया, मह्यम्, the chosen item, and ददातु (dadātu). For example, after answering: कृपया मह्यं जलं ददातु (dadātu) is the mock-paper water request. भोजनम्; अन्नं खादति completes the last prompt.
+Your request should contain कृपया, मह्यम्, the chosen item, and ददातु (dadātu). For example, after answering: कृपया मह्यं पानीयं ददातु (dadātu) is the track's water request. It preserves the chapter-24 distinction between जलम्, water as a substance, and पानीयम्, a drink offered to someone. भोजनम्; अन्नं खादति completes the last prompt.
 
 Grammar Lens: the boundary.
 This chapter gives you one useful request with familiar items. It is not a complete imperative paradigm, a complete restaurant vocabulary, or evidence that every possible meal exchange is covered.

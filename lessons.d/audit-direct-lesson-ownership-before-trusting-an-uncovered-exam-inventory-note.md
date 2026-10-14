@@ -16,5 +16,3 @@ owners and mock sources for every claimed missing exponent. Separate atoms
 that already exist from the functional composition that is genuinely absent,
 then write the issue around that exact gap. This prevents redundant vocabulary
 and makes a gentle bridge reuse the learner's real prerequisites.
-
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
