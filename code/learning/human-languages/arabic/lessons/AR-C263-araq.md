@@ -14,7 +14,8 @@ romanization: "ʿaraq"
 concept_tag: AR-SIHHA263-ARAQ
 prerequisites: [AR-C262-tawattur, AR-C263-laqah]
 sounds: []
-roots: []
+roots: [ʿ-r-q]
+etymology_hook: "ʿaraq: built on the root ʿ-r-q, 'to sweat' (Lane); ʿaraq is sweat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C263-laqah]
 <!-- hl-knowledge: introduces=[AR-LEX-C263-SIHHA263-02]; assesses=[] -->
 
 **عرق** — *ʿaraq* — "sweat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عرق** (*ʿaraq*) is built on the native Arabic root *ʿ-r-q*, "to sweat" (Lane). *ʿAraq* is sweat; the spirit called arrack takes the same name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

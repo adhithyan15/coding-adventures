@@ -14,7 +14,8 @@ romanization: "rasaba"
 concept_tag: AR-VERB-RASABA
 prerequisites: [AR-C255-tahassana, AR-C255-fahasa]
 sounds: []
-roots: []
+roots: [r-s-b]
+etymology_hook: "rasaba: built on the root r-s-b, 'to sink' (Lane); rasaba is 'to sink to the bottom', hence 'to fail'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C255-fahasa]
 <!-- hl-knowledge: introduces=[AR-LEX-C256-ACT256-01]; assesses=[] -->
 
 **رسب** — *rasaba* — "to fail (an exam)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رسب** (*rasaba*) is built on the native Arabic root *r-s-b*, "to sink" (Lane). *Rasaba* is "to sink to the bottom", hence "to fail".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

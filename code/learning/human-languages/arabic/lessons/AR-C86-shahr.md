@@ -14,7 +14,8 @@ romanization: "shahr"
 concept_tag: AR-ADJ86-SHAHR
 prerequisites: [AR-C86-bunni, AR-C86-usbu]
 sounds: []
-roots: []
+roots: [sh-h-r]
+etymology_hook: "shahr: built on the root sh-h-r, 'to make known' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C86-usbu]
 <!-- hl-knowledge: introduces=[AR-LEX-C86-ADJ86-04]; assesses=[] -->
 
 **شهر** — *shahr* — "a month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شهر** (*shahr*) is built on the native Arabic root *sh-h-r*, "to make known; the new moon" (Lane). Lane gives *shahr* first as the new moon, named for being conspicuous, then the month; the same root gives *mashhūr*, "famous".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mustaʿmal"
 concept_tag: AR-SIFA243-MUSTAMAL
 prerequisites: [AR-C243-muzij, AR-C243-mukhif]
 sounds: []
-roots: []
+roots: [ʿ-m-l]
+etymology_hook: "mustaʿmal: built on the root ʿ-m-l, 'to work, to do' (Lane); mustaʿmal is the Form X passive participle, 'used'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C243-mukhif]
 <!-- hl-knowledge: introduces=[AR-LEX-C243-SIFA243-04]; assesses=[] -->
 
 **مستعمل** — *mustaʿmal* — "second-hand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مستعمل** (*mustaʿmal*) is built on the native Arabic root *ʿ-m-l*, "to work, to do" (Lane). *Mustaʿmal* is the Form X passive participle, "used".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

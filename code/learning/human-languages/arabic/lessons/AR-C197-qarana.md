@@ -14,7 +14,8 @@ romanization: "qārana"
 concept_tag: AR-VERB-QARANA
 prerequisites: [AR-C196-wathiqa2, AR-C197-naqasha]
 sounds: []
-roots: []
+roots: [q-r-n]
+etymology_hook: "qārana: built on the root q-r-n, 'to join, to couple' (Lane); qārana is Form III, 'to set side by side'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C197-naqasha]
 <!-- hl-knowledge: introduces=[AR-LEX-C197-ACT197-02]; assesses=[] -->
 
 **قارن** — *qārana* — "to compare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قارن** (*qārana*) is built on the native Arabic root *q-r-n*, "to join, to couple" (Lane). *Qārana* is Form III, "to set side by side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

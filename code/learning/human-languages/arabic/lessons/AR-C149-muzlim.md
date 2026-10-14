@@ -14,7 +14,8 @@ romanization: "muẓlim"
 concept_tag: AR-QUAL149-MUZLIM
 prerequisites: [AR-C148-mustadir, AR-C148-hadd]
 sounds: []
-roots: []
+roots: [ẓ-l-m]
+etymology_hook: "muẓlim: built on the root ẓ-l-m, 'darkness' (Lane); muẓlim is the Form IV participle, 'growing dark'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C148-hadd]
 <!-- hl-knowledge: introduces=[AR-LEX-C149-QUAL149-01]; assesses=[] -->
 
 **مظلم** — *muẓlim* — "dark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مظلم** (*muẓlim*) is built on the native Arabic root *ẓ-l-m*, "darkness; to do wrong" (Lane). *Muẓlim* is the Form IV participle, "growing dark".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

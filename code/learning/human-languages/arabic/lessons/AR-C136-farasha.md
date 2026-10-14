@@ -14,7 +14,8 @@ romanization: "farāsha"
 concept_tag: AR-THINGS136-FARASHA
 prerequisites: [AR-C136-dhubaba, AR-C136-nahla]
 sounds: []
-roots: []
+roots: [f-r-sh]
+etymology_hook: "farāsha: Lane's farāsh are moths that fly into a lamp, under f-r-sh 'to spread out'; butterflies are later"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C136-nahla]
 <!-- hl-knowledge: introduces=[AR-LEX-C136-THINGS136-05]; assesses=[] -->
 
 **فراشة** — *farāsha* — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فراشة** (*farāsha*) is built on the native Arabic root *f-r-sh*, "to spread out" (Lane). Lane's *farāsh* are moths that fly into a lamp, and he adds that modern usage applies it to butterflies.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

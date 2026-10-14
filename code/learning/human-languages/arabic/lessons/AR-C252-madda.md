@@ -14,7 +14,8 @@ romanization: "mādda"
 concept_tag: AR-AMAL252-MADDA
 prerequisites: [AR-C252-alama, AR-C252-muhadara]
 sounds: []
-roots: []
+roots: [m-d-d]
+etymology_hook: "mādda: built on the root m-d-d, 'to stretch' (Lane); mādda is matter, the stuff a thing is drawn from"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C252-muhadara]
 <!-- hl-knowledge: introduces=[AR-LEX-C252-AMAL252-03]; assesses=[] -->
 
 **مادة** — *mādda* — "a school subject".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مادة** (*mādda*) is built on the native Arabic root *m-d-d*, "to stretch" (Lane). *Mādda* is matter, the stuff a thing is drawn from; the school subject is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

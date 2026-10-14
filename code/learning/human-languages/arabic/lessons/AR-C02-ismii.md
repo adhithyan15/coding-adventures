@@ -11,7 +11,8 @@ gloss: my name is… (with no "is")
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [AR-C02-ism, AR-C02-ii-my]
 sounds: []
-roots: []
+roots: [s-m-w]
+etymology_hook: "ismī: built from ism 'name' (root s-m-w, Lane) + the ending -ī 'my'"
 duration:
   max_seconds: 180
 requires:
@@ -54,6 +55,11 @@ Recall from *as-salāmu ʿalaykum* (Ch. 1) that Arabic sets two words side by si
 and lets "is" be understood. So *ismī Arun* is literally "my-name Arun." Arabic
 shares this **zero copula** with the Dravidian languages (Tamil *eṉ peyar
 Arun*) — two unrelated families meeting on the same habit.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اسمي** (*ismī*) is built from *ism*, "name", on the root *s-m-w* (Lane), and the ending *-ī*, "my": "my name".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-ISMII-01, AR-CONCEPT-C02-ISMII-02] -->

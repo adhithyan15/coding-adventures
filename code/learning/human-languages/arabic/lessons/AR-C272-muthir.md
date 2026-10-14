@@ -14,7 +14,8 @@ romanization: "muthīr"
 concept_tag: AR-SIFA272-MUTHIR
 prerequisites: [AR-C272-mudhish, AR-C272-mutaakkid]
 sounds: []
-roots: []
+roots: [th-w-r]
+etymology_hook: "muthīr: built on the root th-w-r, 'to rise up' (Lane); muthīr is the Form IV participle, 'stirring up'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C272-mutaakkid]
 <!-- hl-knowledge: introduces=[AR-LEX-C272-SIFA272-03]; assesses=[] -->
 
 **مثير** — *muthīr* — "exciting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مثير** (*muthīr*) is built on the native Arabic root *th-w-r*, "to rise up; a bull" (Lane). *Muthīr* is the Form IV participle, "stirring up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

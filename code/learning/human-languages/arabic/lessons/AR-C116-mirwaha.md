@@ -14,7 +14,8 @@ romanization: "mirwaḥa"
 concept_tag: AR-THINGS116-MIRWAHA
 prerequisites: [AR-C116-miqlah, AR-C116-furn]
 sounds: []
-roots: []
+roots: [r-w-ḥ]
+etymology_hook: "mirwaḥa: built on the root r-w-ḥ, 'wind' (Lane); mirwaḥa is an instrument noun, 'a thing for making wind': a fan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C116-furn]
 <!-- hl-knowledge: introduces=[AR-LEX-C116-THINGS116-04]; assesses=[] -->
 
 **مروحة** — *mirwaḥa* — "a fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مروحة** (*mirwaḥa*) is built on the native Arabic root *r-w-ḥ*, "wind; breath" (Lane). *Mirwaḥa* is an instrument noun, "a thing for making wind": a fan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

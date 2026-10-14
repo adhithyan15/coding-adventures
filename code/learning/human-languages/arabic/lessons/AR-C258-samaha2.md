@@ -14,7 +14,8 @@ romanization: "sāmaḥa"
 concept_tag: AR-VERB-SAMAHA2
 prerequisites: [AR-C257-ibtasama, AR-C258-ihtarama]
 sounds: []
-roots: []
+roots: [s-m-ḥ]
+etymology_hook: "sāmaḥa: built on the root s-m-ḥ, 'to be generous, to grant' (Lane); sāmaḥa is Form III, 'to be generous to', to forgive"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C258-ihtarama]
 <!-- hl-knowledge: introduces=[AR-LEX-C258-ACT258-02]; assesses=[] -->
 
 **سامح** — *sāmaḥa* — "to forgive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سامح** (*sāmaḥa*) is built on the native Arabic root *s-m-ḥ*, "to be generous, to grant" (Lane). *Sāmaḥa* is Form III, "to be generous to", to forgive.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

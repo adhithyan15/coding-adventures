@@ -12,7 +12,7 @@ concept_tag: AR-FAMILY-PARENTS
 prerequisites: [AR-C09-ahmar-azraq]
 sounds: [hamza-variants, arabic-rtl]
 roots: [semitic-ab, semitic-umm]
-etymology_hook: "أب ab 'father' and أم umm 'mother' are ancient Semitic roots, cousins of Hebrew av and em — the same roots behind Aramaic abba ('Abba, Father') and the honorific naming pattern Umm [child]"
+etymology_hook: "ab, umm: old Semitic nouns, cousins of Hebrew av and em; Aramaic abba 'father' is the same word"
 duration:
   max_seconds: 240
 requires:

@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:74ed524e3a7fc87a",
+  "sourceHash": "fnv1a64:5cf0010c9129e7aa",
   "lessons": [
     {
       "id": "AR-C17-kam-umruka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:babffdb91e035a2e",
+      "sourceHash": "fnv1a64:5eac4ee76d6ff8d9",
       "notice": null,
       "blocks": [
         {
@@ -71,6 +71,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kam, \"how much\", is an inherited question word; ʿumr, \"life\", is built on the native root ʿ-m-r, \"to live long\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -110,7 +121,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

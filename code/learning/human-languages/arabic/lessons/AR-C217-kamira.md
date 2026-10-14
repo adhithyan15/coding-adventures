@@ -14,7 +14,8 @@ romanization: "kāmīrā"
 concept_tag: AR-SHAY217-KAMIRA
 prerequisites: [AR-C217-dhayl, AR-C217-janah]
 sounds: []
-roots: []
+roots: [english-camera]
+etymology_hook: "kāmīrā: a modern loan from English camera (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C217-janah]
 <!-- hl-knowledge: introduces=[AR-LEX-C217-SHAY217-03]; assesses=[] -->
 
 **كاميرا** — *kāmīrā* — "a camera".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كاميرا** (*kāmīrā*) is a modern loan from English *camera* (EtymDB); it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

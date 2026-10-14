@@ -14,7 +14,8 @@ romanization: "taqrīr"
 concept_tag: AR-AMAL221-TAQRIR
 prerequisites: [AR-C220-hisab, AR-C220-jazzar]
 sounds: []
-roots: []
+roots: [q-r-r]
+etymology_hook: "taqrīr: built on the root q-r-r, 'to settle, to be still' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C220-jazzar]
 <!-- hl-knowledge: introduces=[AR-LEX-C221-AMAL221-01]; assesses=[] -->
 
 **تقرير** — *taqrīr* — "a report".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تقرير** (*taqrīr*) is built on the native Arabic root *q-r-r*, "to settle, to be still" (Lane). *Taqrīr* is the verbal noun of Form II, "establishing", hence "a report".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

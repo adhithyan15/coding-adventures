@@ -14,7 +14,8 @@ romanization: "manaʿa"
 concept_tag: AR-VERB-MANAA
 prerequisites: [AR-C197-itabara, AR-C198-samaha]
 sounds: []
-roots: []
+roots: [m-n-ʿ]
+etymology_hook: "manaʿa: built on the root m-n-ʿ, 'to prevent' (Lane); manaʿa is the plain verb, 'he prevented'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C198-samaha]
 <!-- hl-knowledge: introduces=[AR-LEX-C198-ACT198-02]; assesses=[] -->
 
 **منع** — *manaʿa* — "to prevent, to forbid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**منع** (*manaʿa*) is built on the native Arabic root *m-n-ʿ*, "to prevent" (Lane). *Manaʿa* is the plain verb, "he prevented".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

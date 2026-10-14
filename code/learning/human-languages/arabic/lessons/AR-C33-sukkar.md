@@ -12,7 +12,7 @@ romanization: sukkar
 prerequisites: [AR-C33-halib, AR-W08-kaf-and-ra]
 sounds: [shadda, rtl-known-letters]
 roots: [borrowed-sanskrit-sarkara]
-etymology_hook: "سُكَّر (sukkar, 'sugar') is borrowed, from Persian shakar, from Sanskrit śarkarā, 'grit, gravel' — sugar named for the coarse grains it comes in; Arabic passed it to medieval Latin as succarum and from there to Italian zucchero, French sucre and English sugar, while Spanish azúcar keeps Arabic's own article al- welded onto the front, the same fusion visible in algebra and alcohol; its shadda doubles a letter the word itself owns, the أحبّ reason rather than the فكّر reason"
+etymology_hook: "sukkar: from Persian shakar, from Sanskrit śarkarā 'grit'; English sugar comes from the Arabic"
 duration:
   max_seconds: 240
 requires:

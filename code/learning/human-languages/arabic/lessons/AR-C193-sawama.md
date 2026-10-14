@@ -14,7 +14,8 @@ romanization: "sāwama"
 concept_tag: AR-VERB-SAWAMA
 prerequisites: [AR-C193-jarraba, AR-C193-qasa]
 sounds: []
-roots: []
+roots: [s-w-m]
+etymology_hook: "sāwama: built on the root s-w-m, 'to set a price' (Lane); sāwama is Form III, 'to haggle over a price'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C193-qasa]
 <!-- hl-knowledge: introduces=[AR-LEX-C193-ACT193-04]; assesses=[] -->
 
 **ساوم** — *sāwama* — "to bargain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ساوم** (*sāwama*) is built on the native Arabic root *s-w-m*, "to set a price" (Lane). *Sāwama* is Form III, "to haggle over a price".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "muḍḥik"
 concept_tag: AR-SIFA241-MUDHIK
 prerequisites: [AR-C241-sabur, AR-C241-mutawadi]
 sounds: []
-roots: []
+roots: [ḍ-ḥ-k]
+etymology_hook: "muḍḥik: built on the root ḍ-ḥ-k, 'to laugh' (Lane); muḍḥik is the Form IV participle, 'making laugh'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C241-mutawadi]
 <!-- hl-knowledge: introduces=[AR-LEX-C241-SIFA241-04]; assesses=[] -->
 
 **مضحك** — *muḍḥik* — "funny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مضحك** (*muḍḥik*) is built on the native Arabic root *ḍ-ḥ-k*, "to laugh" (Lane). *Muḍḥik* is the Form IV participle, "making laugh".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

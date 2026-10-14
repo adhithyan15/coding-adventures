@@ -14,7 +14,8 @@ romanization: "dahana"
 concept_tag: AR-VERB-DAHANA
 prerequisites: [AR-C166-bana, AR-C166-hadama]
 sounds: []
-roots: []
+roots: [d-h-n]
+etymology_hook: "dahana: built on the root d-h-n, 'oil, grease' (Lane); dahana is 'to smear with oil', hence to paint"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C166-hadama]
 <!-- hl-knowledge: introduces=[AR-LEX-C166-ACT166-04]; assesses=[] -->
 
 **دهن** — *dahana* — "to paint (a wall), to coat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دهن** (*dahana*) is built on the native Arabic root *d-h-n*, "oil, grease; to anoint" (Lane). *Dahana* is "to smear with oil", hence to paint.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

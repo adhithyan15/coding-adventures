@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 110,
-  "sourceHash": "fnv1a64:223b101914122172",
+  "sourceHash": "fnv1a64:1cd7b9c5c678b9bb",
   "lessonIds": [
     "AR-C110-adat",
     "AR-C110-malaka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch110.txt",
   "json": "arabic/narration/ch110.json",
-  "textHash": "fnv1a64:098bb51df1d30c5c",
-  "jsonHash": "fnv1a64:533d8dbb8c214e3b",
+  "textHash": "fnv1a64:45a8b242e13d1292",
+  "jsonHash": "fnv1a64:339309f2131b7c8e",
   "findings": []
 }

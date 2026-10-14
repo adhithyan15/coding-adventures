@@ -14,7 +14,8 @@ romanization: "ḍayf"
 concept_tag: AR-FAMILY56-DAYF
 prerequisites: [AR-C56-rajul, AR-C56-imraa]
 sounds: []
-roots: []
+roots: [ḍ-y-f]
+etymology_hook: "ḍayf: built on the root ḍ-y-f, 'to turn aside to, to lodge with as a guest' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C56-imraa]
 <!-- hl-knowledge: introduces=[AR-LEX-C56-FAMILY56-05]; assesses=[] -->
 
 **ضيف** — *ḍayf* — "a guest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضيف** (*ḍayf*) is built on the native Arabic root *ḍ-y-f*, "to turn aside to, to lodge with as a guest" (Lane). The word *ḍayf* is the one who turns in to stay, "a guest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ gloss: "a pilgrim"
 concept_tag: AR-ANCHOR-HAAJJ
 prerequisites: [AR-W06-hamza]
 sounds: []
-roots: []
+roots: [ḥ-j-j]
+etymology_hook: "ḥājj: built on the root ḥ-j-j, 'to repair to, to make the pilgrimage' (Lane)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: modern-standard-arabic
 
 Say it: *ḥājj*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, *ḥāʾ, khāʾ, jīm*, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حاج** (*ḥājj*) is built on the native Arabic root *ḥ-j-j*, "to repair to, to make the pilgrimage" (Lane). Lane's *ḥājj* is one who repairs to Mecca for the pilgrimage.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-HAAJJ] -->

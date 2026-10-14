@@ -14,7 +14,8 @@ romanization: "fashal"
 concept_tag: AR-SABAB269-FASHAL
 prerequisites: [AR-C268-mathalan, AR-C268-awwalan]
 sounds: []
-roots: []
+roots: [f-sh-l]
+etymology_hook: "fashal: built on the root f-sh-l, 'to be weak, to lose heart' (Lane); fashal is losing heart, failure"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C268-awwalan]
 <!-- hl-knowledge: introduces=[AR-LEX-C269-SABAB269-01]; assesses=[] -->
 
 **فشل** — *fashal* — "failure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فشل** (*fashal*) is built on the native Arabic root *f-sh-l*, "to be weak, to lose heart" (Lane). *Fashal* is losing heart, failure.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

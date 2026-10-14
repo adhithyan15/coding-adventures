@@ -14,7 +14,8 @@ romanization: "sabaḥa"
 concept_tag: AR-VERB-SABAHA
 prerequisites: [AR-C63-rama, AR-C63-tara]
 sounds: []
-roots: []
+roots: [s-b-ḥ]
+etymology_hook: "sabaḥa: built on the root s-b-ḥ, 'to swim' (Lane); Lane gives swimming and, in Form II, praising God under one root"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C63-tara]
 <!-- hl-knowledge: introduces=[AR-LEX-C63-VERBS63-03]; assesses=[] -->
 
 **سبح** — *sabaḥa* — "to swim (he swam)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سبح** (*sabaḥa*) is built on the native Arabic root *s-b-ḥ*, "to swim; to glorify God" (Lane). Lane gives swimming and, in Form II, praising God under one root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

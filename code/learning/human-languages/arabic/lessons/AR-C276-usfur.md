@@ -14,7 +14,8 @@ romanization: "ʿuṣfūr"
 concept_tag: AR-SHAY276-USFUR
 prerequisites: [AR-C276-hayawan, AR-C276-tayr]
 sounds: []
-roots: []
+roots: [ʿ-ṣ-f-r]
+etymology_hook: "ʿuṣfūr: built on the root ʿ-ṣ-f-r, 'a sparrow' (Lane); ʿuṣfūr is a sparrow"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C276-tayr]
 <!-- hl-knowledge: introduces=[AR-LEX-C276-SHAY276-03]; assesses=[] -->
 
 **عصفور** — *ʿuṣfūr* — "a sparrow, a small bird".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عصفور** (*ʿuṣfūr*) is built on the native Arabic root *ʿ-ṣ-f-r*, "a sparrow" (Lane). *ʿUṣfūr* is a sparrow.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "qifl"
 concept_tag: AR-THINGS127-QIFL
 prerequisites: [AR-C126-thallaja, AR-C127-sitara, AR-C29-qala]
 sounds: []
-roots: []
+roots: [q-f-l]
+etymology_hook: "qifl: built on the root q-f-l, 'to return' (Lane); Lane lists qufl, 'a lock', under q-f-l"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ Which letter is the deep *q*? (**ق**, *qāf*, two dots above.)
 <!-- hl-knowledge: introduces=[AR-LEX-C127-THINGS127-02]; assesses=[] -->
 
 **قفل** — *qifl* — "a lock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قفل** (*qifl*) is built on the native Arabic root *q-f-l*, "to return; to lock" (Lane). Lane lists *qufl*, "a lock", under *q-f-l*; the same root gives *qāfila*, "a caravan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

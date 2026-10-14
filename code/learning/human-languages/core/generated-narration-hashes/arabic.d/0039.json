@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 39,
-  "sourceHash": "fnv1a64:b02f845b03b8ca33",
+  "sourceHash": "fnv1a64:0110199eb2e2db5e",
   "lessonIds": [
     "AR-C39-laysa",
     "AR-C39-ma",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "arabic/narration/ch39.txt",
   "json": "arabic/narration/ch39.json",
-  "textHash": "fnv1a64:bf1e7f95d8f7d0af",
-  "jsonHash": "fnv1a64:3eb45cdc1c5abd67",
+  "textHash": "fnv1a64:9a012ceaedeb6364",
+  "jsonHash": "fnv1a64:d863ec6efab1d7a1",
   "findings": []
 }

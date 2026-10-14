@@ -11,7 +11,8 @@ gloss: what
 concept_tag: QUESTION-WHAT
 prerequisites: [AR-C02-anta-anti]
 sounds: [known-letters]
-roots: []
+roots: [semitic-ma-what]
+etymology_hook: "mā: an inherited Semitic question word with no three-letter root; Hebrew mā 'what' is its cousin"
 duration:
   max_seconds: 120
 requires:
@@ -51,6 +52,8 @@ reviews_of: [AR-C02-anta-anti, AR-C02-ismii]
 **ما** (*mā*, "what") is the everyday question-word for things. (Arabic has a
 second, *māḏā*, for "what" before verbs; *mā* is the one you want before a noun,
 as in "what [is] your name?")
+
+*Mā* is inherited from the Semitic parent language, not built on a three-letter root; Hebrew *mā*, "what", is its cousin.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-MAA-01, AR-CONCEPT-C02-MAA-02] -->

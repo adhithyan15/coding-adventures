@@ -12,7 +12,7 @@ concept_tag: AR-COURTESY-YOUREWELCOME
 prerequisites: [AR-C01-shukran]
 sounds: [ayn, tanwin-fath]
 roots: [ayn-f-w]
-etymology_hook: "عفوا (ʿafwan), root ʿ-f-w, 'to erase, obliterate' → 'to pardon, forgive' (forgiving as metaphorically erasing an offense) — the same root behind العفو (al-ʿAfuww, 'The Supreme Pardoner,' one of the 99 names of Allah); grammatically, ʿafwan carries the exact same indefinite-accusative ending (tanwīn fatḥ, the '-an' sound) as شكرا (shukran) itself — both are fixed, idiomatic accusative forms, not full sentences"
+etymology_hook: "ʿafwan: accusative of ʿafw 'pardon', root ʿ-f-w 'to be effaced' (Lane): an offence wiped out"
 duration:
   max_seconds: 240
 requires:
@@ -49,6 +49,8 @@ starting with a root that literally means "to erase."
 directly out of that, since forgiving something is, metaphorically,
 **erasing** it. The same root gives **العفو** (*al-ʿAfuww*, "**the Supreme
 Pardoner**"), one of the **99 names of Allah** in Islamic tradition.
+
+*ʿAfwan* is the accusative of *ʿafw*, "pardon", built on the native root *ʿ-f-w* (Lane).
 
 ## You'll want to know — Be honest: ʿafwan does more than one job
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C23-AFWAN-02]; assesses=[] -->

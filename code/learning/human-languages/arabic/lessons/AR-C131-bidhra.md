@@ -14,7 +14,8 @@ romanization: "bidhra"
 concept_tag: AR-THINGS131-BIDHRA
 prerequisites: [AR-C130-kaka, AR-C131-ushb]
 sounds: []
-roots: []
+roots: [b-dh-r]
+etymology_hook: "bidhra: built on the root b-dh-r, 'to sow seed' (Lane); bidhra is one seed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C131-ushb]
 <!-- hl-knowledge: introduces=[AR-LEX-C131-THINGS131-02]; assesses=[] -->
 
 **بذرة** — *bidhra* — "a seed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بذرة** (*bidhra*) is built on the native Arabic root *b-dh-r*, "to sow seed" (Lane). *Bidhra* is one seed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

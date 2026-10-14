@@ -14,7 +14,8 @@ romanization: "ihtimām"
 concept_tag: AR-WANT113-IHTIMAM
 prerequisites: [AR-C112-mashru, AR-C112-iqtirah]
 sounds: []
-roots: []
+roots: [h-m-m]
+etymology_hook: "ihtimām: built on the root h-m-m, 'to concern, to make anxious' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C112-iqtirah]
 <!-- hl-knowledge: introduces=[AR-LEX-C113-WANT113-01]; assesses=[] -->
 
 **اهتمام** — *ihtimām* — "interest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اهتمام** (*ihtimām*) is built on the native Arabic root *h-m-m*, "to concern, to make anxious" (Lane). *Ihtimām* is the verbal noun of Form VIII, "concern, interest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

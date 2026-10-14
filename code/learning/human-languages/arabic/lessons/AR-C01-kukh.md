@@ -14,7 +14,8 @@ gloss: "a hut"
 concept_tag: AR-ANCHOR-KUKH
 prerequisites: [AR-W00-ayn-ya]
 sounds: []
-roots: []
+roots: [kukh-hut]
+etymology_hook: "kūkh: a reed hut; Lane calls it a Persian word, EtymDB links it with Syriac kūkhītā; origin not settled"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: modern-standard-arabic
 
 Say it: *kūkh*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ك و — السلام عليكم**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كوخ** (*kūkh*) is a hut of reeds with a rounded roof. Lane's sources call it a Persian word, while EtymDB links it with Syriac *kūkhītā*; which way it travelled is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-KUKH] -->

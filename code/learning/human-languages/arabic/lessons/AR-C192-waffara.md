@@ -14,7 +14,8 @@ romanization: "waffara"
 concept_tag: AR-VERB-WAFFARA
 prerequisites: [AR-C192-rakiba, AR-C192-dafaa]
 sounds: []
-roots: []
+roots: [w-f-r]
+etymology_hook: "waffara: built on the root w-f-r, 'to be abundant' (Lane); waffara is Form II, 'to make abundant', to save"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C192-dafaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C192-ACT192-03]; assesses=[] -->
 
 **وفر** — *waffara* — "to save (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وفر** (*waffara*) is built on the native Arabic root *w-f-r*, "to be abundant" (Lane). *Waffara* is Form II, "to make abundant", to save.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

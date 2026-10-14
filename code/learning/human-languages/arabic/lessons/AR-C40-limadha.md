@@ -11,8 +11,8 @@ gloss: why — the question this book has never been able to ask, built out of t
 concept_tag: AR-QUESTION-WHY
 prerequisites: [AR-R39-denying-and-asking, AR-C02-maa-ismuka, AR-C39-hal, AR-C17-kam-umruka]
 sounds: [dhal]
-roots: []
-etymology_hook: "لماذا is لـ ('for') plus ماذا ('what'), which is itself ما plus ذا ('this') — so Arabic's 'why' is transparently 'for what this', and the ما inside it is the very particle the last chapter taught as the past-tense negator"
+roots: [li-madha]
+etymology_hook: "limādhā: built from li- 'for' + mādhā 'what' (mā + dhā): 'for what'"
 duration:
   max_seconds: 240
 requires:
@@ -65,6 +65,8 @@ the next lesson supplies the word that clause begins with.
 The letter **ذال** in the middle of this word has no lesson in this track's
 script ladder yet, so the word is printed whole here, in the lesson that owns it,
 and named in romanization wherever else it appears.
+
+*Limādhā* is built from *li-*, "for", and *mādhā*, "what": native particles with no borrowed part.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C40-LIMADHA-01, AR-CONCEPT-C03-KAYFA-01, AR-GRAMMAR-C39-HAL-01] -->

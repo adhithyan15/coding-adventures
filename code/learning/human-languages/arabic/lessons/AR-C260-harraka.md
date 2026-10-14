@@ -14,7 +14,8 @@ romanization: "ḥarraka"
 concept_tag: AR-VERB-HARRAKA
 prerequisites: [AR-C260-taraqa, AR-C260-alsaqa]
 sounds: []
-roots: []
+roots: [ḥ-r-k]
+etymology_hook: "ḥarraka: built on the root ḥ-r-k, 'to move' (Lane); ḥarraka is Form II, 'to set moving'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C260-alsaqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C260-ACT260-04]; assesses=[] -->
 
 **حرك** — *ḥarraka* — "to stir, to move (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حرك** (*ḥarraka*) is built on the native Arabic root *ḥ-r-k*, "to move" (Lane). *Ḥarraka* is Form II, "to set moving".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

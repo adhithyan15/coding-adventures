@@ -14,7 +14,8 @@ romanization: "hannaʾa"
 concept_tag: AR-VERB-HANNAA
 prerequisites: [AR-C196-qatafa, AR-C196-amtara]
 sounds: []
-roots: []
+roots: [h-n-ʾ]
+etymology_hook: "hannaʾa: built on the root h-n-ʾ, 'to be wholesome, to be pleasant' (Lane); hannaʾa is Form II, 'to wish one joy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C196-amtara]
 <!-- hl-knowledge: introduces=[AR-LEX-C196-ACT196-04]; assesses=[] -->
 
 **هنأ** — *hannaʾa* — "to congratulate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**هنأ** (*hannaʾa*) is built on the native Arabic root *h-n-ʾ*, "to be wholesome, to be pleasant" (Lane). *Hannaʾa* is Form II, "to wish one joy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

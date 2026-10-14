@@ -14,7 +14,8 @@ romanization: "hazza"
 concept_tag: AR-VERB-HAZZA
 prerequisites: [AR-C198-saqata, AR-C198-hafara]
 sounds: []
-roots: []
+roots: [h-z-z]
+etymology_hook: "hazza: built on the root h-z-z, 'to shake' (Lane); hazza is the plain verb, 'he shook'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C198-hafara]
 <!-- hl-knowledge: introduces=[AR-LEX-C199-ACT199-01]; assesses=[] -->
 
 **هز** — *hazza* — "to shake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**هز** (*hazza*) is built on the native Arabic root *h-z-z*, "to shake" (Lane). *Hazza* is the plain verb, "he shook".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

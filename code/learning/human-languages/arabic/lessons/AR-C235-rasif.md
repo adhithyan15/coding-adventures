@@ -14,7 +14,8 @@ romanization: "raṣīf"
 concept_tag: AR-MAKAN235-RASIF
 prerequisites: [AR-C235-mathaf, AR-C235-malab]
 sounds: []
-roots: []
+roots: [r-ṣ-f]
+etymology_hook: "raṣīf: built on the root r-ṣ-f, 'to set stones close' (Lane); Lane's raṣīf is stones set close together"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C235-malab]
 <!-- hl-knowledge: introduces=[AR-LEX-C235-MAKAN235-03]; assesses=[] -->
 
 **رصيف** — *raṣīf* — "a pavement; a platform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رصيف** (*raṣīf*) is built on the native Arabic root *r-ṣ-f*, "to set stones close" (Lane). Lane's *raṣīf* is stones set close together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

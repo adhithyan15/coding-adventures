@@ -14,7 +14,8 @@ romanization: "ṭumūḥ"
 concept_tag: AR-WANT112-TUMUH
 prerequisites: [AR-C111-tafdil, AR-C112-shawq]
 sounds: []
-roots: []
+roots: [ṭ-m-ḥ]
+etymology_hook: "ṭumūḥ: built on the root ṭ-m-ḥ, 'to raise the eyes, to aspire' (Lane); ṭumūḥ is the verbal noun, 'aspiring'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C112-shawq]
 <!-- hl-knowledge: introduces=[AR-LEX-C112-WANT112-02]; assesses=[] -->
 
 **طموح** — *ṭumūḥ* — "ambition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طموح** (*ṭumūḥ*) is built on the native Arabic root *ṭ-m-ḥ*, "to raise the eyes, to aspire" (Lane). *Ṭumūḥ* is the verbal noun, "aspiring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

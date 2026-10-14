@@ -14,7 +14,8 @@ romanization: "karīm"
 concept_tag: AR-SIFA210-KARIM
 prerequisites: [AR-C209-maksur, AR-C210-mubashir]
 sounds: []
-roots: []
+roots: [k-r-m]
+etymology_hook: "karīm: built on the root k-r-m, 'to be noble, to be generous' (Lane); karīm is the faʿīl adjective, 'generous'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C210-mubashir]
 <!-- hl-knowledge: introduces=[AR-LEX-C210-SIFA210-02]; assesses=[] -->
 
 **كريم** — *karīm* — "generous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كريم** (*karīm*) is built on the native Arabic root *k-r-m*, "to be noble, to be generous" (Lane). *Karīm* is the *faʿīl* adjective, "generous".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

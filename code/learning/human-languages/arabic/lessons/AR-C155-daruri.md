@@ -14,7 +14,8 @@ romanization: "ḍarūrī"
 concept_tag: AR-QUAL155-DARURI
 prerequisites: [AR-C154-qawi, AR-C154-daif]
 sounds: []
-roots: []
+roots: [ḍ-r-r]
+etymology_hook: "ḍarūrī: built on the root ḍ-r-r, 'to harm' (Lane); the word ḍarūrī is the adjective of ḍarūra, 'necessity'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C154-daif]
 <!-- hl-knowledge: introduces=[AR-LEX-C155-QUAL155-01]; assesses=[] -->
 
 **ضروري** — *ḍarūrī* — "necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضروري** (*ḍarūrī*) is built on the native Arabic root *ḍ-r-r*, "to harm; necessity" (Lane). The word *ḍarūrī* is the adjective of *ḍarūra*, "necessity".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

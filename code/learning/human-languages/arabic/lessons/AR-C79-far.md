@@ -14,7 +14,8 @@ romanization: "faʾr"
 concept_tag: AR-ANIMALS79-FAR
 prerequisites: [AR-C79-maiz, AR-C79-kharuf]
 sounds: []
-roots: []
+roots: [f-ʾ-r]
+etymology_hook: "faʾr: built on the root f-ʾ-r, 'rats, mice' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C79-kharuf]
 <!-- hl-knowledge: introduces=[AR-LEX-C79-ANIMALS79-04]; assesses=[] -->
 
 **فأر** — *faʾr* — "a mouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فأر** (*faʾr*) is built on the native Arabic root *f-ʾ-r*, "rats, mice" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

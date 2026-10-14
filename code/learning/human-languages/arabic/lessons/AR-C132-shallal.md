@@ -14,7 +14,8 @@ romanization: "shallāl"
 concept_tag: AR-THINGS132-SHALLAL
 prerequisites: [AR-C131-jazira, AR-C132-sahil, AR-C32-akhadha]
 sounds: []
-roots: []
+roots: [sh-l-l]
+etymology_hook: "shallāl: built on the root sh-l-l, 'to drive away' (Lane); shallāl is a later word on this root, 'a cascade'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C132-sahil]
 <!-- hl-knowledge: introduces=[AR-LEX-C132-THINGS132-02]; assesses=[] -->
 
 **شلال** — *shallāl* — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شلال** (*shallāl*) is built on the native Arabic root *sh-l-l*, "to drive away" (Lane). *Shallāl* is a later word on this root, "a cascade".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

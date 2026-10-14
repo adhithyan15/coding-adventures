@@ -14,7 +14,8 @@ romanization: "mīza"
 concept_tag: AR-SABAB269-MIZA
 prerequisites: [AR-C269-darar, AR-C269-ayb]
 sounds: []
-roots: []
+roots: [m-y-z]
+etymology_hook: "mīza: built on the root m-y-z, 'to distinguish' (Lane); mīza is a distinguishing mark"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C269-ayb]
 <!-- hl-knowledge: introduces=[AR-LEX-C269-SABAB269-05]; assesses=[] -->
 
 **ميزة** — *mīza* — "an advantage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ميزة** (*mīza*) is built on the native Arabic root *m-y-z*, "to distinguish" (Lane). *Mīza* is a distinguishing mark.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

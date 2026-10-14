@@ -61,6 +61,9 @@ Grammar Lens: the same operation on every verb you own.
 Nothing moves and nothing is added at the end. This is the operation a beginner uses more than any other, and this book could not perform it on any verb until this chapter.
 One note on the page rather than the language: فاء, the letter in the middle of أفهم, has no lesson in this track's script ladder yet, so the sentence is printed whole here, in the lesson that owns it, and named in romanization wherever else it appears.
 
+The word, taken apart.
+لا أفهم (lā afham) is built from lā, "not", an inherited negative, and afham, "I understand", the present tense of fahima on the native root f-h-m (Lane).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: lā afham]

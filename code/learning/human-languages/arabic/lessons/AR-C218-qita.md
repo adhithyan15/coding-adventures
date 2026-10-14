@@ -14,7 +14,8 @@ romanization: "qiṭʿa"
 concept_tag: AR-SHAY218-QITA
 prerequisites: [AR-C218-mawdu, AR-C218-mizan]
 sounds: []
-roots: []
+roots: [q-ṭ-ʿ]
+etymology_hook: "qiṭʿa: built on the root q-ṭ-ʿ, 'to cut, to sever' (Lane); qiṭʿa is a cut piece"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C218-mizan]
 <!-- hl-knowledge: introduces=[AR-LEX-C218-SHAY218-04]; assesses=[] -->
 
 **قطعة** — *qiṭʿa* — "a piece".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قطعة** (*qiṭʿa*) is built on the native Arabic root *q-ṭ-ʿ*, "to cut, to sever" (Lane). *Qiṭʿa* is a cut piece.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

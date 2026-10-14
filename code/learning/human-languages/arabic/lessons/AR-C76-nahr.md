@@ -14,7 +14,8 @@ romanization: "nahr"
 concept_tag: AR-NATURE76-NAHR
 prerequisites: [AR-C75-jabal, AR-C76-ghaba]
 sounds: []
-roots: []
+roots: [n-h-r]
+etymology_hook: "nahr: built on the root n-h-r, 'a river' (Lane); Hebrew nahar, 'river', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C76-ghaba]
 <!-- hl-knowledge: introduces=[AR-LEX-C76-NATURE76-02]; assesses=[] -->
 
 **نهر** — *nahr* — "a river".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نهر** (*nahr*) is built on the native Arabic root *n-h-r*, "a river" (Lane). Hebrew *nahar*, "river", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

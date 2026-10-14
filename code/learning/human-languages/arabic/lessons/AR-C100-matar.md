@@ -14,7 +14,8 @@ romanization: "maṭār"
 concept_tag: AR-LOC100-MATAR
 prerequisites: [AR-C100-mamarr, AR-C100-maydan]
 sounds: []
-roots: []
+roots: [ṭ-y-r]
+etymology_hook: "maṭār: built on the root ṭ-y-r, 'to fly' (Lane); maṭār is the ma- place noun, 'a place of flying'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C100-maydan]
 <!-- hl-knowledge: introduces=[AR-LEX-C100-LOC100-04]; assesses=[] -->
 
 **مطار** — *maṭār* — "an airport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مطار** (*maṭār*) is built on the native Arabic root *ṭ-y-r*, "to fly" (Lane). *Maṭār* is the *ma-* place noun, "a place of flying"; the airport is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

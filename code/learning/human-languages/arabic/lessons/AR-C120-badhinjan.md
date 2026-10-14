@@ -14,7 +14,8 @@ romanization: "bādhinjān"
 concept_tag: AR-THINGS120-BADHINJAN
 prerequisites: [AR-C120-farawila, AR-C120-khass]
 sounds: []
-roots: []
+roots: [persian-badinkan]
+etymology_hook: "bādhinjān: from Persian bādinkān (Lane); English aubergine comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C120-khass]
 <!-- hl-knowledge: introduces=[AR-LEX-C120-THINGS120-05]; assesses=[] -->
 
 **باذنجان** — *bādhinjān* — "an aubergine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**باذنجان** (*bādhinjān*) is a loan: Lane derives it from Persian *bādinkān*. English *aubergine* comes from the Arabic word through Catalan and French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

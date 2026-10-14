@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Understanding, Reading, Writing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d7197b70ba12bc31",
+  "sourceHash": "fnv1a64:70d21b787296c6d9",
   "lessons": [
     {
       "id": "AR-C31-fahima",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cc7975860dc48fa6",
+      "sourceHash": "fnv1a64:d61760163cbd0107",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -189,7 +189,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9a3caed755e81029",
+      "sourceHash": "fnv1a64:76a8c52351968764",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -370,7 +370,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:305140a2eb6b2feb",
+      "sourceHash": "fnv1a64:de39f672b1a6275b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -551,7 +551,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eac25f40d45d48a6",
+      "sourceHash": "fnv1a64:9c50b0a8ec0670f3",
       "notice": {
         "modality": "sight",
         "needs": [

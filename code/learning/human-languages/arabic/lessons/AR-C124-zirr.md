@@ -14,7 +14,8 @@ romanization: "zirr"
 concept_tag: AR-THINGS124-ZIRR
 prerequisites: [AR-C124-ibra, AR-C124-khayt]
 sounds: []
-roots: []
+roots: [z-r-r]
+etymology_hook: "zirr: built on the root z-r-r, 'a button' (Lane); zirr is a button"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C124-khayt]
 <!-- hl-knowledge: introduces=[AR-LEX-C124-THINGS124-04]; assesses=[] -->
 
 **زر** — *zirr* — "a button".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زر** (*zirr*) is built on the native Arabic root *z-r-r*, "a button" (Lane). *Zirr* is a button.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

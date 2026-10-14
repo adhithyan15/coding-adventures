@@ -14,7 +14,8 @@ romanization: "mustaṭīl"
 concept_tag: AR-SHAY279-MUSTATIL
 prerequisites: [AR-C278-mighrafa, AR-C278-barmil]
 sounds: []
-roots: []
+roots: [ṭ-w-l]
+etymology_hook: "mustaṭīl: built on the root ṭ-w-l, 'to be long' (Lane); mustaṭīl is the Form X participle, 'lengthened'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C278-barmil]
 <!-- hl-knowledge: introduces=[AR-LEX-C279-SHAY279-01]; assesses=[] -->
 
 **مستطيل** — *mustaṭīl* — "a rectangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مستطيل** (*mustaṭīl*) is built on the native Arabic root *ṭ-w-l*, "to be long" (Lane). *Mustaṭīl* is the Form X participle, "lengthened".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

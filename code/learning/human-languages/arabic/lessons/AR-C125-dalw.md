@@ -14,7 +14,8 @@ romanization: "dalw"
 concept_tag: AR-THINGS125-DALW
 prerequisites: [AR-C124-zirr, AR-C124-mismar]
 sounds: []
-roots: []
+roots: [d-l-w]
+etymology_hook: "dalw: built on the root d-l-w, 'to let down a bucket' (Lane); dalw is a bucket for drawing water"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C124-mismar]
 <!-- hl-knowledge: introduces=[AR-LEX-C125-THINGS125-01]; assesses=[] -->
 
 **دلو** — *dalw* — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دلو** (*dalw*) is built on the native Arabic root *d-l-w*, "to let down a bucket" (Lane). *Dalw* is a bucket for drawing water.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

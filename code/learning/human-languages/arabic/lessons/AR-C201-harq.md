@@ -14,7 +14,8 @@ romanization: "ḥarq"
 concept_tag: AR-SIHHA201-HARQ
 prerequisites: [AR-C201-amaliyya, AR-C201-kadma]
 sounds: []
-roots: []
+roots: [ḥ-r-q]
+etymology_hook: "ḥarq: built on the root ḥ-r-q, 'to burn' (Lane); ḥarq is the verbal noun, 'burning', hence 'a burn'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C201-kadma]
 <!-- hl-knowledge: introduces=[AR-LEX-C201-SIHHA201-04]; assesses=[] -->
 
 **حرق** — *ḥarq* — "a burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حرق** (*ḥarq*) is built on the native Arabic root *ḥ-r-q*, "to burn" (Lane). *Ḥarq* is the verbal noun, "burning", hence "a burn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

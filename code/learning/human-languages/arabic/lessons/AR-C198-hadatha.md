@@ -14,7 +14,8 @@ romanization: "ḥadatha"
 concept_tag: AR-VERB-HADATHA
 prerequisites: [AR-C198-samaha, AR-C198-manaa]
 sounds: []
-roots: []
+roots: [ḥ-d-th]
+etymology_hook: "ḥadatha: built on the root ḥ-d-th, 'to be new' (Lane); ḥadatha is the plain verb, 'it happened'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C198-manaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C198-ACT198-03]; assesses=[] -->
 
 **حدث** — *ḥadatha* — "to happen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حدث** (*ḥadatha*) is built on the native Arabic root *ḥ-d-th*, "to be new; to happen" (Lane). *Ḥadatha* is the plain verb, "it happened".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

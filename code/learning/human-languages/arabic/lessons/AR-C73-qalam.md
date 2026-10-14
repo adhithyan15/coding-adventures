@@ -14,7 +14,8 @@ romanization: "qalam"
 concept_tag: AR-SCHOOL73-QALAM
 prerequisites: [AR-C73-kitab, AR-C73-daftar]
 sounds: []
-roots: []
+roots: [greek-kalamos]
+etymology_hook: "qalam: usually traced to Greek kalamos 'reed pen' (EtymDB); Lane lists it under q-l-m"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C73-daftar]
 <!-- hl-knowledge: introduces=[AR-LEX-C73-SCHOOL73-03]; assesses=[] -->
 
 **قلم** — *qalam* — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قلم** (*qalam*) is listed by Lane under *q-l-m* as a reed prepared for writing. It is usually traced to Greek *kalamos*, "reed, reed pen" (EtymDB), perhaps through Aramaic, though Lane gives no foreign source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

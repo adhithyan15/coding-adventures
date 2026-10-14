@@ -14,7 +14,8 @@ romanization: "ṣandal"
 concept_tag: AR-SHAY214-SANDAL
 prerequisites: [AR-C213-ghasil, AR-C214-badla]
 sounds: []
-roots: []
+roots: [persian-sandal]
+etymology_hook: "ṣandal: Lane's sources call it a Persian word for a thing like a boot; EtymDB: Middle Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C214-badla]
 <!-- hl-knowledge: introduces=[AR-LEX-C214-SHAY214-02]; assesses=[] -->
 
 **صندل** — *ṣandal* — "sandals".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صندل** (*ṣandal*) is listed by Lane as sandalwood, and his sources also call it a Persian word, arabicized, for a thing like a boot; EtymDB traces the sandalwood word to Middle Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

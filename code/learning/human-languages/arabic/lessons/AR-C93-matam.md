@@ -14,7 +14,8 @@ romanization: "maṭʿam"
 concept_tag: AR-TOWN93-MATAM
 prerequisites: [AR-C93-qarya, AR-C93-madina]
 sounds: []
-roots: []
+roots: [t-a-m]
+etymology_hook: "maṭʿam: built on the root ṭ-ʿ-m, 'to eat, to taste' (Lane); maṭʿam is the ma- place noun, 'a place of eating'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C93-madina]
 <!-- hl-knowledge: introduces=[AR-LEX-C93-TOWN93-05]; assesses=[] -->
 
 **مطعم** — *maṭʿam* — "a restaurant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مطعم** (*maṭʿam*) is built on the native Arabic root *ṭ-ʿ-m*, "to eat, to taste" (Lane). *Maṭʿam* is the *ma-* place noun, "a place of eating".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

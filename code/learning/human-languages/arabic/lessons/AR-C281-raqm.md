@@ -14,7 +14,8 @@ romanization: "raqm"
 concept_tag: AR-AMAL281-RAQM
 prerequisites: [AR-C280-tayyar, AR-C280-saydali]
 sounds: []
-roots: []
+roots: [r-q-m]
+etymology_hook: "raqm: built on the root r-q-m, 'to write, to mark' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C280-saydali]
 <!-- hl-knowledge: introduces=[AR-LEX-C281-AMAL281-01]; assesses=[] -->
 
 **رقم** — *raqm* — "a number".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رقم** (*raqm*) is built on the native Arabic root *r-q-m*, "to write, to mark" (Lane). Lane's *raqm* is a mark of writing, and he notes the "Indian" numerals the Arabs adopted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

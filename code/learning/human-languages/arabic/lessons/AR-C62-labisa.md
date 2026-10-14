@@ -14,7 +14,8 @@ romanization: "labisa"
 concept_tag: AR-VERB-LABISA
 prerequisites: [AR-C62-bahatha, AR-C62-wajada]
 sounds: []
-roots: []
+roots: [l-b-s]
+etymology_hook: "labisa: built on the root l-b-s, 'to put on, to wear' (Lane); the same root gives malābis, 'clothes'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C62-wajada]
 <!-- hl-knowledge: introduces=[AR-LEX-C62-VERBS62-04]; assesses=[] -->
 
 **لبس** — *labisa* — "to wear (he wore)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لبس** (*labisa*) is built on the native Arabic root *l-b-s*, "to put on, to wear" (Lane). The same root gives *malābis*, "clothes".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

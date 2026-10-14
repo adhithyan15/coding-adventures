@@ -14,7 +14,8 @@ romanization: "mudhīʿ"
 concept_tag: AR-AMAL281-MUDHI
 prerequisites: [AR-C281-mukalama, AR-C281-malumat]
 sounds: []
-roots: []
+roots: [dh-y-ʿ]
+etymology_hook: "mudhīʿ: built on the root dh-y-ʿ, 'to spread abroad (news)' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C281-malumat]
 <!-- hl-knowledge: introduces=[AR-LEX-C281-AMAL281-04]; assesses=[] -->
 
 **مذيع** — *mudhīʿ* — "a presenter, a broadcaster".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مذيع** (*mudhīʿ*) is built on the native Arabic root *dh-y-ʿ*, "to spread abroad (news)" (Lane). *Mudhīʿ* is the Form IV participle, "one who spreads (news) abroad"; broadcasting is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mashhūr"
 concept_tag: AR-QUAL145-MASHHUR
 prerequisites: [AR-C145-basit, AR-C145-murih]
 sounds: []
-roots: []
+roots: [sh-h-r]
+etymology_hook: "mashhūr: built on the root sh-h-r, 'to make known' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C145-murih]
 <!-- hl-knowledge: introduces=[AR-LEX-C145-QUAL145-05]; assesses=[] -->
 
 **مشهور** — *mashhūr* — "famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مشهور** (*mashhūr*) is built on the native Arabic root *sh-h-r*, "to make known" (Lane). *Mashhūr* is the passive participle, "made known", hence "famous".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "asad"
 concept_tag: AR-ANIMALS79-ASAD
 prerequisites: [AR-C79-kharuf, AR-C79-far]
 sounds: []
-roots: []
+roots: [ʾ-s-d]
+etymology_hook: "asad: built on the root ʾ-s-d, 'a lion' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C79-far]
 <!-- hl-knowledge: introduces=[AR-LEX-C79-ANIMALS79-05]; assesses=[] -->
 
 **أسد** — *asad* — "a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أسد** (*asad*) is built on the native Arabic root *ʾ-s-d*, "a lion" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

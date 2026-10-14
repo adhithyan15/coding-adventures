@@ -14,7 +14,8 @@ romanization: "khalaʿa"
 concept_tag: AR-VERB-KHALAA
 prerequisites: [AR-C192-istalama, AR-C192-kallafa]
 sounds: []
-roots: []
+roots: [kh-l-ʿ]
+etymology_hook: "khalaʿa: built on the root kh-l-ʿ, 'to pull off' (Lane); khalaʿa is the plain verb, 'he took off'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C192-kallafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C193-ACT193-01]; assesses=[] -->
 
 **خلع** — *khalaʿa* — "to take off (clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خلع** (*khalaʿa*) is built on the native Arabic root *kh-l-ʿ*, "to pull off" (Lane). *Khalaʿa* is the plain verb, "he took off".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

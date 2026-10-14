@@ -14,7 +14,8 @@ romanization: "ḥafiẓa"
 concept_tag: AR-VERB-HAFIZA
 prerequisites: [AR-C110-malaka, AR-C110-khasira]
 sounds: []
-roots: []
+roots: [ḥ-f-ẓ]
+etymology_hook: "ḥafiẓa: built on the root ḥ-f-ẓ, 'to guard, to keep' (Lane); ḥafiẓa is the plain verb, 'to keep, to learn by heart'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C110-khasira]
 <!-- hl-knowledge: introduces=[AR-LEX-C110-CAN110-04]; assesses=[] -->
 
 **حفظ** — *ḥafiẓa* — "to keep, to memorize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حفظ** (*ḥafiẓa*) is built on the native Arabic root *ḥ-f-ẓ*, "to guard, to keep" (Lane). *Ḥafiẓa* is the plain verb, "to keep, to learn by heart".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kitāb"
 concept_tag: AR-SCHOOL73-KITAB
 prerequisites: [AR-C72-matbakh, AR-C72-hadiqa]
 sounds: []
-roots: []
+roots: [k-t-b]
+etymology_hook: "kitāb: built on the root k-t-b, 'to write' (Lane); kitāb is 'a writing', hence 'a book'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C72-hadiqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C73-SCHOOL73-01]; assesses=[] -->
 
 **كتاب** — *kitāb* — "a book".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كتاب** (*kitāb*) is built on the native Arabic root *k-t-b*, "to write" (Lane). *Kitāb* is "a writing", hence "a book".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

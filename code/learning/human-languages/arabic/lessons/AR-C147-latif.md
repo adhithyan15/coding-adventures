@@ -14,7 +14,8 @@ romanization: "laṭīf"
 concept_tag: AR-QUAL147-LATIF
 prerequisites: [AR-C147-mutab, AR-C147-nashit]
 sounds: []
-roots: []
+roots: [l-ṭ-f]
+etymology_hook: "laṭīf: built on the root l-ṭ-f, 'to be gentle, to be fine' (Lane); laṭīf is 'gentle, fine', hence 'kind, pleasant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C147-nashit]
 <!-- hl-knowledge: introduces=[AR-LEX-C147-QUAL147-04]; assesses=[] -->
 
 **لطيف** — *laṭīf* — "kind, pleasant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لطيف** (*laṭīf*) is built on the native Arabic root *l-ṭ-f*, "to be gentle, to be fine" (Lane). *Laṭīf* is "gentle, fine", hence "kind, pleasant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

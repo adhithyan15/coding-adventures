@@ -12,7 +12,7 @@ concept_tag: COURTESY-SORRY
 prerequisites: [AR-C06-min-fadlik]
 sounds: [alef-madda, gendered-ending, arabic-rtl]
 roots: [asifa-arabic]
-etymology_hook: "آسف āsif/āsifa 'sorry' is a GENDERED adjective — unlike English sorry, the speaker's own gender changes the word"
+etymology_hook: "āsif: the active participle of the root ʾ-s-f 'to grieve, to regret' (Lane): 'grieving'"
 duration:
   max_seconds: 240
 requires:

@@ -14,7 +14,8 @@ romanization: "māliḥ"
 concept_tag: AR-QUAL145-MALIH
 prerequisites: [AR-C144-muzari, AR-C144-jamia]
 sounds: []
-roots: []
+roots: [m-l-h]
+etymology_hook: "māliḥ: built on the root m-l-ḥ, 'salt' (Lane); māliḥ is 'salty'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C144-jamia]
 <!-- hl-knowledge: introduces=[AR-LEX-C145-QUAL145-01]; assesses=[] -->
 
 **مالح** — *māliḥ* — "salty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مالح** (*māliḥ*) is built on the native Arabic root *m-l-ḥ*, "salt" (Lane). *Māliḥ* is "salty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

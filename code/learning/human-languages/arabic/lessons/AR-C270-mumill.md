@@ -14,7 +14,8 @@ romanization: "mumill"
 concept_tag: AR-SIFA270-MUMILL
 prerequisites: [AR-C269-ayb, AR-C269-miza]
 sounds: []
-roots: []
+roots: [m-l-l]
+etymology_hook: "mumill: built on the root m-l-l, 'to be weary of' (Lane); mumill is the Form IV participle, 'wearying'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C269-miza]
 <!-- hl-knowledge: introduces=[AR-LEX-C270-SIFA270-01]; assesses=[] -->
 
 **ممل** — *mumill* — "boring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ممل** (*mumill*) is built on the native Arabic root *m-l-l*, "to be weary of" (Lane). *Mumill* is the Form IV participle, "wearying".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "baṭāṭis"
 concept_tag: AR-FOOD66-BATATIS
 prerequisites: [AR-C66-tuffaha, AR-C66-mawz]
 sounds: []
-roots: []
+roots: [spanish-patata]
+etymology_hook: "baṭāṭis: modern loan, usually traced to Spanish patata, from Taíno batata 'sweet potato'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C66-mawz]
 <!-- hl-knowledge: introduces=[AR-LEX-C66-FOOD66-05]; assesses=[] -->
 
 **بطاطس** — *baṭāṭis* — "potatoes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بطاطس** (*baṭāṭis*) is a modern loan from a European name of the potato, usually traced to Spanish *patata*, which goes back to Taíno *batata*, "sweet potato". It has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

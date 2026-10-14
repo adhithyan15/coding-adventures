@@ -12,7 +12,7 @@ romanization: shāy
 prerequisites: [AR-C32-ahabba]
 sounds: [shin, long-alif, rtl-known-letters]
 roots: [borrowed-no-arabic-root]
-etymology_hook: "شاي (shāy, 'tea') is a borrowed word with no Arabic root and therefore no pattern family — unlike كتب, which fills كِتاب, كاتِب and مَكْتَبة from one root; Arabic took it through Persian چای (chāy) from the northern Chinese chá, while English took the same Chinese word through the coastal Hokkien form tê carried by Dutch traders, so shāy and tea are the two ends of one word"
+etymology_hook: "shāy: from Persian chāy, from northern Chinese chá; English tea came from Hokkien tê instead"
 duration:
   max_seconds: 240
 requires:

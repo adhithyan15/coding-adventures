@@ -14,7 +14,8 @@ romanization: "khātam"
 concept_tag: AR-CLOTHES95-KHATAM
 prerequisites: [AR-C94-jawrab, AR-C95-jayb]
 sounds: []
-roots: []
+roots: [kh-t-m]
+etymology_hook: "khātam: built on the root kh-t-m, 'to seal' (Lane); khātam is a seal, a signet ring"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C95-jayb]
 <!-- hl-knowledge: introduces=[AR-LEX-C95-CLOTHES95-02]; assesses=[] -->
 
 **خاتم** — *khātam* — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خاتم** (*khātam*) is built on the native Arabic root *kh-t-m*, "to seal" (Lane). *Khātam* is a seal, a signet ring.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

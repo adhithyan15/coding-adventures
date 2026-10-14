@@ -14,7 +14,8 @@ romanization: "lāḥiqan"
 concept_tag: AR-WAQT202-LAHIQAN
 prerequisites: [AR-C202-ghaliban, AR-C202-fawran]
 sounds: []
-roots: []
+roots: [l-ḥ-q]
+etymology_hook: "lāḥiqan: built on the root l-ḥ-q, 'to overtake, to follow' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C202-fawran]
 <!-- hl-knowledge: introduces=[AR-LEX-C202-WAQT202-03]; assesses=[] -->
 
 **لاحقا** — *lāḥiqan* — "later".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لاحقا** (*lāḥiqan*) is built on the native Arabic root *l-ḥ-q*, "to overtake, to follow" (Lane). *Lāḥiqan* is the active participle, "following", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

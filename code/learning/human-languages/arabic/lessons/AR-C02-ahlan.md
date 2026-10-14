@@ -14,7 +14,8 @@ gloss: "welcome"
 concept_tag: AR-ANCHOR-AHLAN
 prerequisites: [AR-W06-harakat-and-hamza]
 sounds: []
-roots: []
+roots: [ʾ-h-l]
+etymology_hook: "ahlan: accusative of ahl 'people of a house, family' (root ʾ-h-l, Lane): '(you have come to) family'"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: modern-standard-arabic
 **أَهْلًا** — *ahlan* — "welcome".
 
 Say it: *ahlan*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, the no-vowel mark **ـْ** and the ending **ـً**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أَهْلًا** (*ahlan*) is the accusative of *ahl*, "the people of a house, family", built on the native root *ʾ-h-l* (Lane): "(you have come to) family".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-AHLAN] -->

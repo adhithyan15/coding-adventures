@@ -14,7 +14,8 @@ romanization: "istalama"
 concept_tag: AR-VERB-ISTALAMA
 prerequisites: [AR-C192-dafaa, AR-C192-waffara]
 sounds: []
-roots: []
+roots: [s-l-m]
+etymology_hook: "istalama: built on the root s-l-m, 'to be safe' (Lane); istalama is Form VIII, 'to take what is handed over', to receive"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C192-waffara]
 <!-- hl-knowledge: introduces=[AR-LEX-C192-ACT192-04]; assesses=[] -->
 
 **استلم** — *istalama* — "to receive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**استلم** (*istalama*) is built on the native Arabic root *s-l-m*, "to be safe" (Lane). *Istalama* is Form VIII, "to take what is handed over", to receive.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

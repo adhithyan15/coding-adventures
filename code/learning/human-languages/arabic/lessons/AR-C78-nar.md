@@ -14,7 +14,8 @@ romanization: "nār"
 concept_tag: AR-NATURE78-NAR
 prerequisites: [AR-C77-qamar, AR-C77-bahr]
 sounds: []
-roots: []
+roots: [n-w-r]
+etymology_hook: "nār: built on the root n-w-r, 'light' (Lane); the same root gives nūr, 'light'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C77-bahr]
 <!-- hl-knowledge: introduces=[AR-LEX-C78-NATURE78-01]; assesses=[] -->
 
 **نار** — *nār* — "fire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نار** (*nār*) is built on the native Arabic root *n-w-r*, "light; fire" (Lane). The same root gives *nūr*, "light".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

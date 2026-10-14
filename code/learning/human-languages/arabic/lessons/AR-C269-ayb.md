@@ -14,7 +14,8 @@ romanization: "ʿayb"
 concept_tag: AR-SABAB269-AYB
 prerequisites: [AR-C269-khutwa, AR-C269-darar]
 sounds: []
-roots: []
+roots: [ʿ-y-b]
+etymology_hook: "ʿayb: built on the root ʿ-y-b, 'a fault, a defect' (Lane); ʿayb is a fault"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C269-darar]
 <!-- hl-knowledge: introduces=[AR-LEX-C269-SABAB269-04]; assesses=[] -->
 
 **عيب** — *ʿayb* — "a fault, a defect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عيب** (*ʿayb*) is built on the native Arabic root *ʿ-y-b*, "a fault, a defect" (Lane). *ʿAyb* is a fault.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

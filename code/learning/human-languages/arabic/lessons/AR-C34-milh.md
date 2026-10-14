@@ -12,7 +12,7 @@ romanization: milḥ
 prerequisites: [AR-C33-qahwa, AR-W07-hook-family-ha-kha]
 sounds: [haa-pharyngeal-final, rtl-known-letters]
 roots: [m-l-h]
-etymology_hook: "مِلْح (milḥ, 'salt') sits on the root م-ل-ح, which also yields مَلّاح (mallāḥ, 'a sailor' — the man of the salt water) and مَليح (malīḥ, 'handsome, pleasant'), so the root runs from a mineral to the sea to a compliment; Hebrew מֶלַח (melaḥ, 'salt') is the same word, and English took none of it — the English salt line comes from Latin sāl, an entirely separate family"
+etymology_hook: "milḥ 'salt': root m-l-ḥ (Lane), which gives mallāḥ 'sailor'; Hebrew melaḥ 'salt' is its cousin"
 duration:
   max_seconds: 240
 requires:

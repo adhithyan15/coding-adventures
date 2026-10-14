@@ -14,7 +14,8 @@ romanization: "jāmiʿa"
 concept_tag: AR-THINGS144-JAMIA
 prerequisites: [AR-C144-khabbaz, AR-C144-muzari, AR-C14-ashhur, AR-C14-ashhur]
 sounds: []
-roots: []
+roots: [jamaa-gather]
+etymology_hook: "jāmiʿa: built on the root j-m-ʿ, 'to gather' (Lane); jāmiʿa is the feminine active participle, 'one that gathers'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C144-muzari]
 <!-- hl-knowledge: introduces=[AR-LEX-C144-THINGS144-05]; assesses=[] -->
 
 **جامعة** — *jāmiʿa* — "a university".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جامعة** (*jāmiʿa*) is built on the native Arabic root *j-m-ʿ*, "to gather" (Lane). *Jāmiʿa* is the feminine active participle, "one that gathers"; the university is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

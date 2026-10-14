@@ -14,7 +14,8 @@ romanization: "lazij"
 concept_tag: AR-SIFA212-LAZIJ
 prerequisites: [AR-C211-adi, AR-C212-khashin]
 sounds: []
-roots: []
+roots: [l-z-j]
+etymology_hook: "lazij: built on the root l-z-j, 'to stick' (Lane); lazij is the adjective, 'sticky'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C212-khashin]
 <!-- hl-knowledge: introduces=[AR-LEX-C212-SIFA212-02]; assesses=[] -->
 
 **لزج** — *lazij* — "sticky".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لزج** (*lazij*) is built on the native Arabic root *l-z-j*, "to stick" (Lane). *Lazij* is the adjective, "sticky".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

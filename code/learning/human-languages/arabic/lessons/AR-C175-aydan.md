@@ -14,7 +14,8 @@ romanization: "ayḍan"
 concept_tag: AR-SABAB175-AYDAN
 prerequisites: [AR-C175-diyafa, AR-C175-raghma]
 sounds: []
-roots: []
+roots: [ʾ-y-ḍ]
+etymology_hook: "ayḍan: built on the root ʾ-y-ḍ, 'to return' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C175-raghma]
 <!-- hl-knowledge: introduces=[AR-LEX-C175-SABAB175-05]; assesses=[] -->
 
 **أيضا** — *ayḍan* — "also, too".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أيضا** (*ayḍan*) is built on the native Arabic root *ʾ-y-ḍ*, "to return" (Lane). *Ayḍan* is *ayḍ*, "returning", with the adverb ending *-an*: "once more", hence "also".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

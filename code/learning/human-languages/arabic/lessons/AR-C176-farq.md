@@ -14,7 +14,8 @@ romanization: "farq"
 concept_tag: AR-SABAB176-FARQ
 prerequisites: [AR-C176-akthar, AR-C176-aqall]
 sounds: []
-roots: []
+roots: [f-r-q]
+etymology_hook: "farq: built on the root f-r-q, 'to separate, to divide' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C176-aqall]
 <!-- hl-knowledge: introduces=[AR-LEX-C176-SABAB176-05]; assesses=[] -->
 
 **فرق** — *farq* — "a difference".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فرق** (*farq*) is built on the native Arabic root *f-r-q*, "to separate, to divide" (Lane). *Farq* is the verbal noun, "a separating", hence "a difference".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

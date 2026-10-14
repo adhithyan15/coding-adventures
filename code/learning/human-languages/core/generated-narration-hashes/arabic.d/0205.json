@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 205,
-  "sourceHash": "fnv1a64:347f0f5b73ce2bde",
+  "sourceHash": "fnv1a64:97a4c12ddac8c156",
   "lessonIds": [
     "AR-C205-tabia",
     "AR-C205-turab",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch205.txt",
   "json": "arabic/narration/ch205.json",
-  "textHash": "fnv1a64:b036d3d71ef03a9c",
-  "jsonHash": "fnv1a64:4f241327f3590ffe",
+  "textHash": "fnv1a64:200adb44c2522346",
+  "jsonHash": "fnv1a64:587dc7f3d52be3f3",
   "findings": []
 }

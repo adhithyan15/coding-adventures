@@ -14,7 +14,8 @@ romanization: "ḥafla"
 concept_tag: AR-SHAY275-HAFLA
 prerequisites: [AR-C275-shakhs, AR-C275-nas]
 sounds: []
-roots: []
+roots: [ḥ-f-l]
+etymology_hook: "ḥafla: built on the root ḥ-f-l, 'to gather, to fill' (Lane); ḥafla is a gathering"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C275-nas]
 <!-- hl-knowledge: introduces=[AR-LEX-C275-SHAY275-04]; assesses=[] -->
 
 **حفلة** — *ḥafla* — "a party".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حفلة** (*ḥafla*) is built on the native Arabic root *ḥ-f-l*, "to gather, to fill" (Lane). *Ḥafla* is a gathering.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shaḥana"
 concept_tag: AR-VERB-SHAHANA
 prerequisites: [AR-C225-ahdara, AR-C226-intalaqa]
 sounds: []
-roots: []
+roots: [sh-ḥ-n]
+etymology_hook: "shaḥana: built on the root sh-ḥ-n, 'to load, to fill' (Lane); to load a ship; charging is a modern sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C226-intalaqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C226-ACT226-02]; assesses=[] -->
 
 **شحن** — *shaḥana* — "to charge (a phone); to ship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شحن** (*shaḥana*) is built on the native Arabic root *sh-ḥ-n*, "to load, to fill" (Lane). *Shaḥana* is to load a ship; charging a battery is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

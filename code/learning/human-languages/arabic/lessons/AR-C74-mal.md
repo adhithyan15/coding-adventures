@@ -14,7 +14,8 @@ romanization: "māl"
 concept_tag: AR-SCHOOL74-MAL
 prerequisites: [AR-C73-madrasa, AR-C74-haqiba]
 sounds: []
-roots: []
+roots: [m-w-l]
+etymology_hook: "māl: built on the root m-w-l, 'property, wealth' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C74-haqiba]
 <!-- hl-knowledge: introduces=[AR-LEX-C74-SCHOOL74-02]; assesses=[] -->
 
 **مال** — *māl* — "money".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مال** (*māl*) is built on the native Arabic root *m-w-l*, "property, wealth" (Lane). Lane's *māl* is property of any kind, mostly camels for the Arabs of the desert.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

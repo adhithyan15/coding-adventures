@@ -14,7 +14,8 @@ romanization: "khayyāṭ"
 concept_tag: AR-THINGS144-KHAYYAT
 prerequisites: [AR-C143-wazifa, AR-C143-ratib]
 sounds: []
-roots: []
+roots: [kh-y-ṭ]
+etymology_hook: "khayyāṭ: built on the root kh-y-ṭ, 'to sew' (Lane); khayyāṭ is the faʿʿāl trade noun, 'tailor'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C143-ratib]
 <!-- hl-knowledge: introduces=[AR-LEX-C144-THINGS144-01]; assesses=[] -->
 
 **خياط** — *khayyāṭ* — "a tailor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خياط** (*khayyāṭ*) is built on the native Arabic root *kh-y-ṭ*, "to sew" (Lane). *Khayyāṭ* is the *faʿʿāl* trade noun, "tailor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

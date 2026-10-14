@@ -14,7 +14,8 @@ romanization: "kawā"
 concept_tag: AR-VERB-KAWA
 prerequisites: [AR-C223-rattaba, AR-C223-kanasa]
 sounds: []
-roots: []
+roots: [k-w-y]
+etymology_hook: "kawā: built on the root k-w-y, 'to brand, to cauterize' (Lane); kawā is to burn with a hot iron, hence to iron"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C223-kanasa]
 <!-- hl-knowledge: introduces=[AR-LEX-C223-ACT223-03]; assesses=[] -->
 
 **كوى** — *kawā* — "to iron".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كوى** (*kawā*) is built on the native Arabic root *k-w-y*, "to brand, to cauterize" (Lane). *Kawā* is to burn with a hot iron, hence to iron.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

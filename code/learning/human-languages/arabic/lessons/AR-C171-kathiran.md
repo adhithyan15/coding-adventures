@@ -14,7 +14,8 @@ romanization: "kathīran"
 concept_tag: AR-WAQT171-KATHIRAN
 prerequisites: [AR-C171-bidaya, AR-C171-nadiran]
 sounds: []
-roots: []
+roots: [k-th-r]
+etymology_hook: "kathīran: built on the root k-th-r, 'to be many' (Lane); kathīran is kathīr, 'much', with the adverb ending -an"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C171-nadiran]
 <!-- hl-knowledge: introduces=[AR-LEX-C171-WAQT171-05]; assesses=[] -->
 
 **كثيرا** — *kathīran* — "often, a lot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كثيرا** (*kathīran*) is built on the native Arabic root *k-th-r*, "to be many" (Lane). *Kathīran* is *kathīr*, "much", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

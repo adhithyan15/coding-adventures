@@ -14,7 +14,8 @@ romanization: "funduq"
 concept_tag: AR-TOWN92-FUNDUQ
 prerequisites: [AR-C92-jisr, AR-C92-masjid]
 sounds: []
-roots: []
+roots: [greek-pandokheion]
+etymology_hook: "funduq: Lane: said to be Persian, apparently from Greek pandokheion 'inn'; EtymDB agrees"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C92-masjid]
 <!-- hl-knowledge: introduces=[AR-LEX-C92-TOWN92-04]; assesses=[] -->
 
 **فندق** — *funduq* — "a hotel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فندق** (*funduq*) is a loan. Lane reports it as said to be Persian and adds that it seems to come from Greek *pandokheion*, "inn", a word in the Gospel of Luke; EtymDB gives the same Greek source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

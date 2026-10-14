@@ -14,7 +14,8 @@ romanization: "ayna"
 concept_tag: AR-MAKAN204-AYNA
 prerequisites: [AR-C204-markaz, AR-C204-asima]
 sounds: []
-roots: []
+roots: [ayna-where]
+etymology_hook: "ayna: listed by Lane under ʾ-y-n as a question-word of place; Hebrew ʾayyē is usually compared"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C204-asima]
 <!-- hl-knowledge: introduces=[AR-LEX-C204-MAKAN204-05]; assesses=[] -->
 
 **أين** — *ayna* — "where".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أين** (*ayna*) is listed by Lane under *ʾ-y-n* as an adverbial noun that asks about place. It is not built on a verbal root; Hebrew *ʾayyē*, "where", is usually compared.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

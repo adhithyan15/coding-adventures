@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 122,
-  "sourceHash": "fnv1a64:aaf47644b9df1a15",
+  "sourceHash": "fnv1a64:490303a33ca124eb",
   "lessonIds": [
     "AR-C122-khizana",
     "AR-C122-musht",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch122.txt",
   "json": "arabic/narration/ch122.json",
-  "textHash": "fnv1a64:833a75cbc5884134",
-  "jsonHash": "fnv1a64:16c91e81066557dd",
+  "textHash": "fnv1a64:9c276e518236c7ef",
+  "jsonHash": "fnv1a64:26f9e80e773f082b",
   "findings": []
 }

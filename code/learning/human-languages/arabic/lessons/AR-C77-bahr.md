@@ -14,7 +14,8 @@ romanization: "baḥr"
 concept_tag: AR-NATURE77-BAHR
 prerequisites: [AR-C77-shams, AR-C77-qamar]
 sounds: []
-roots: []
+roots: [b-ḥ-r]
+etymology_hook: "baḥr: built on the root b-ḥ-r, 'the sea' (Lane); Lane also gives a verb baḥara, 'to slit, to cleave'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C77-qamar]
 <!-- hl-knowledge: introduces=[AR-LEX-C77-NATURE77-05]; assesses=[] -->
 
 **بحر** — *baḥr* — "the sea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بحر** (*baḥr*) is built on the native Arabic root *b-ḥ-r*, "the sea; to slit" (Lane). Lane also gives a verb *baḥara*, "to slit, to cleave".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

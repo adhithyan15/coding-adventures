@@ -14,7 +14,8 @@ romanization: "ḥamāma"
 concept_tag: AR-THINGS135-HAMAMA
 prerequisites: [AR-C135-ghazal, AR-C135-thalab]
 sounds: []
-roots: []
+roots: [ḥ-m-m]
+etymology_hook: "ḥamāma: one bird of ḥamām 'pigeons, doves', a native noun that Lane lists under ḥ-m-m"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C135-thalab]
 <!-- hl-knowledge: introduces=[AR-LEX-C135-THINGS135-03]; assesses=[] -->
 
 **حمامة** — *ḥamāma* — "a pigeon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حمامة** (*ḥamāma*) is one bird of *ḥamām*, "pigeons, doves", a native noun, filed under the root *ḥ-m-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

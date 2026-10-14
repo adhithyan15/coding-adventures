@@ -12,7 +12,7 @@ romanization: ʾakhadha
 prerequisites: [AR-C31-kataba]
 sounds: [alif-hamza, khaa, dhal, rtl-known-letters]
 roots: [a-kh-dh]
-etymology_hook: "أخذ (ʾakhadha, 'he took') is the bare فَعَلَ shape on root أ-خ-ذ, giving أَخْذ (akhdh, 'taking'), آخِذ (ākhidh, 'one taking', where the root's alif and the pattern's alif fuse into long آ exactly as in آكِل) and مَأْخوذ (maʾkhūdh, 'taken', the done-to shape of maktūb); its Hebrew twin is אָחַז (ʾaḥaz, 'he seized'), reached by two regular swaps — Arabic خ answers Hebrew ח, Arabic ذ answers Hebrew ז — and nothing came into English from either side"
+etymology_hook: "akhadha: root ʾ-kh-dh 'to take' (Lane); Hebrew ʾāḥaz 'he seized' is its cousin by regular sound change"
 duration:
   max_seconds: 240
 requires:

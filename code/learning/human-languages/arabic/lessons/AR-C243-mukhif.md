@@ -14,7 +14,8 @@ romanization: "mukhīf"
 concept_tag: AR-SIFA243-MUKHIF
 prerequisites: [AR-C243-fatir, AR-C243-muzij]
 sounds: []
-roots: []
+roots: [kh-w-f]
+etymology_hook: "mukhīf: built on the root kh-w-f, 'to fear' (Lane); mukhīf is the Form IV participle, 'frightening'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C243-muzij]
 <!-- hl-knowledge: introduces=[AR-LEX-C243-SIFA243-03]; assesses=[] -->
 
 **مخيف** — *mukhīf* — "frightening, scary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مخيف** (*mukhīf*) is built on the native Arabic root *kh-w-f*, "to fear" (Lane). *Mukhīf* is the Form IV participle, "frightening".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

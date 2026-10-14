@@ -15,8 +15,9 @@ You'll want to know: و.
 One letter, and it is written joined to the word that follows it, never with a space after it. That is why it looks like part of the next word and why it has been on the page in front of you since chapter one without ever being a word you owned.
 
 The word, taken apart.
-و (wa-) is the same conjunction Hebrew and Aramaic write with a single letter, in the same job, and it has held that job for three thousand years. It is by a wide margin the commonest word in written Arabic: Arabic prose strings clauses with و (wa-) where English would use a full stop, so a page of Arabic has far more ands in it than a page of English ever does.
+و (wa-) is the same conjunction Hebrew and Aramaic write with a single letter, in the same job, as far back as those languages are written. It is by a wide margin the commonest word in written Arabic: Arabic prose strings clauses with و (wa-) where English would use a full stop, so a page of Arabic has far more ands in it than a page of English ever does.
 Note that و (wa-) is also the letter wāw, the long ū inside كوب and يوم. One shape, two jobs, told apart by whether it stands alone at the head of a word.
+Wa is inherited from the Semitic parent language, a cousin of Hebrew wə-, "and".
 
 Guided Practice.
 [pause 1 second]
@@ -53,6 +54,7 @@ Look at the shape: أ — the hamza-carrying alif you know from أكل — follo
 
 The word, taken apart.
 أو (aw) is Semitic ʾaw, the same word Hebrew keeps. It is the whole apparatus a host needs: two nouns, أو (aw) between them, and the question particle a later lesson in this book will add. Until this lesson the corpus could name coffee, tea, milk and sugar and could not offer any one of them against another.
+It is inherited from the Semitic parent language, a cousin of Hebrew ʾō, "or", and not built on a three-letter root.
 
 Guided Practice.
 [pause 1 second]
@@ -92,6 +94,7 @@ The word, taken apart.
 Look at the first two letters: لا, the negator this book taught in chapter five, with an old particle behind it. Arabic's but has a not inside it.
 English did the same thing by a different road. But is Old English be-ūtan, "be out, except" — and out is still visible in it if you look. Two unrelated languages built their adversative out of a word for leaving something aside.
 In writing you will also meet لكنّ with a shadda, which takes a following noun in the accusative. The plain لكن (lākin) in this lesson joins clauses and asks nothing of what follows.
+Lākin is a native particle (Lane, under l-k-n); the grammarians differ over which old particle stands behind lā.
 
 Guided Practice.
 [pause 1 second]
@@ -130,6 +133,9 @@ said: نعم. does: answers a question.
 said: حسنًا (ḥasanan). does: accepts what was said.
 said: حسنًا (ḥasanan)، لكن (lākin) … does: accepts, and then turns.
 The third row is the shape almost every real disagreement takes. A learner who can only say نعم or لا has to accept or refuse whole; this is the first thing in the book that lets them do neither.
+
+The word, taken apart.
+حسنًا (ḥasanan) is ḥasan, "good", on the native root ḥ-s-n, "to be good, beautiful" (Lane), with the adverb ending -an: "well".
 
 Guided Practice.
 [pause 1 second]

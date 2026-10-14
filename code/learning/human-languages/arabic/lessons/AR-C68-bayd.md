@@ -14,7 +14,8 @@ romanization: "bayḍ"
 concept_tag: AR-FOOD68-BAYD
 prerequisites: [AR-C68-burtuqal, AR-C68-laymun]
 sounds: []
-roots: []
+roots: [bayad-white]
+etymology_hook: "bayḍ: built on the root b-y-ḍ, 'to be white, to whiten' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C68-laymun]
 <!-- hl-knowledge: introduces=[AR-LEX-C68-FOOD68-03]; assesses=[] -->
 
 **بيض** — *bayḍ* — "eggs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بيض** (*bayḍ*) is built on the native Arabic root *b-y-ḍ*, "to be white, to whiten" (Lane). *Bayḍ*, "eggs", is named on the root of whiteness, which also gives *abyaḍ*, "white".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

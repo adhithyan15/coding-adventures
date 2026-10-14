@@ -14,7 +14,8 @@ romanization: "khass"
 concept_tag: AR-THINGS120-KHASS
 prerequisites: [AR-C120-rumman, AR-C120-farawila]
 sounds: []
-roots: []
+roots: [aramaic-hassa]
+etymology_hook: "khass: Lane lists it under kh-s-s; usually taken from Aramaic ḥassā 'lettuce' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C120-farawila]
 <!-- hl-knowledge: introduces=[AR-LEX-C120-THINGS120-04]; assesses=[] -->
 
 **خس** — *khass* — "lettuce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خس** (*khass*) is listed by Lane under *kh-s-s*. Aramaic *ḥassā*, "lettuce", is the same word (EtymDB), and the Arabic is usually taken as borrowed from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

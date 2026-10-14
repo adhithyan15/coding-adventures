@@ -14,7 +14,8 @@ romanization: "ʿukkāz"
 concept_tag: AR-SIHHA232-UKKAZ
 prerequisites: [AR-C232-marham, AR-C232-jarrah]
 sounds: []
-roots: []
+roots: [ʿ-k-z]
+etymology_hook: "ʿukkāz: built on the root ʿ-k-z, 'a staff with a spike' (Lane); Lane's ʿukkāza is a staff with an iron spike"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C232-jarrah]
 <!-- hl-knowledge: introduces=[AR-LEX-C232-SIHHA232-04]; assesses=[] -->
 
 **عكاز** — *ʿukkāz* — "a crutch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عكاز** (*ʿukkāz*) is built on the native Arabic root *ʿ-k-z*, "a staff with a spike" (Lane). Lane's *ʿukkāza* is a staff with an iron spike.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

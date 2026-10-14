@@ -14,7 +14,8 @@ romanization: "ḥaẓẓ"
 concept_tag: AR-SABAB239-HAZZ
 prerequisites: [AR-C238-taqriban, AR-C238-khususan]
 sounds: []
-roots: []
+roots: [ḥ-ẓ-ẓ]
+etymology_hook: "ḥaẓẓ: built on the root ḥ-ẓ-ẓ, 'a portion, luck' (Lane); ḥaẓẓ is one's portion, one's luck"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C238-khususan]
 <!-- hl-knowledge: introduces=[AR-LEX-C239-SABAB239-01]; assesses=[] -->
 
 **حظ** — *ḥaẓẓ* — "luck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حظ** (*ḥaẓẓ*) is built on the native Arabic root *ḥ-ẓ-ẓ*, "a portion, luck" (Lane). *Ḥaẓẓ* is one's portion, one's luck.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

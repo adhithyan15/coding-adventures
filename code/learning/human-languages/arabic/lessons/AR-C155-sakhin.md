@@ -14,7 +14,8 @@ romanization: "sākhin"
 concept_tag: AR-QUAL155-SAKHIN
 prerequisites: [AR-C155-qabih, AR-C155-thamin]
 sounds: []
-roots: []
+roots: [s-kh-n]
+etymology_hook: "sākhin: built on the root s-kh-n, 'to be hot' (Lane); sākhin is the active participle, 'hot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C155-thamin]
 <!-- hl-knowledge: introduces=[AR-LEX-C155-QUAL155-04]; assesses=[] -->
 
 **ساخن** — *sākhin* — "hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ساخن** (*sākhin*) is built on the native Arabic root *s-kh-n*, "to be hot" (Lane). *Sākhin* is the active participle, "hot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ḥashara"
 concept_tag: AR-SHAY185-HASHARA
 prerequisites: [AR-C185-namla, AR-C185-thawr]
 sounds: []
-roots: []
+roots: [ḥ-sh-r]
+etymology_hook: "ḥashara: built on the root ḥ-sh-r, 'to gather, to assemble' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C185-thawr]
 <!-- hl-knowledge: introduces=[AR-LEX-C185-SHAY185-05]; assesses=[] -->
 
 **حشرة** — *ḥashara* — "an insect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حشرة** (*ḥashara*) is built on the native Arabic root *ḥ-sh-r*, "to gather, to assemble" (Lane). *Ḥashara* is one of the *ḥasharāt*, the small creeping things.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

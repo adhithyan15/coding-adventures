@@ -14,7 +14,8 @@ romanization: "ghāḍib"
 concept_tag: AR-QUAL147-GHADIB
 prerequisites: [AR-C147-nashit, AR-C147-latif]
 sounds: []
-roots: []
+roots: [gh-ḍ-b]
+etymology_hook: "ghāḍib: built on the root gh-ḍ-b, 'to be angry' (Lane); ghāḍib is the active participle, 'angry'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C147-latif]
 <!-- hl-knowledge: introduces=[AR-LEX-C147-QUAL147-05]; assesses=[] -->
 
 **غاضب** — *ghāḍib* — "angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غاضب** (*ghāḍib*) is built on the native Arabic root *gh-ḍ-b*, "to be angry" (Lane). *Ghāḍib* is the active participle, "angry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

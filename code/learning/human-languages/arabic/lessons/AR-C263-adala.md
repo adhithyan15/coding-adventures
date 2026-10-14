@@ -14,7 +14,8 @@ romanization: "ʿaḍala"
 concept_tag: AR-SIHHA263-ADALA
 prerequisites: [AR-C263-misam, AR-C263-ibham]
 sounds: []
-roots: []
+roots: [ʿ-ḍ-l]
+etymology_hook: "ʿaḍala: an old noun for a muscle, listed by Lane under ʿ-ḍ-l, beside ʿaḍala 'to hinder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C263-ibham]
 <!-- hl-knowledge: introduces=[AR-LEX-C263-SIHHA263-05]; assesses=[] -->
 
 **عضلة** — *ʿaḍala* — "a muscle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عضلة** (*ʿaḍala*), "a muscle", is an old native noun, filed under the root *ʿ-ḍ-l* (Lane), beside the verb *ʿaḍala*, "to hinder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ibtasama"
 concept_tag: AR-VERB-IBTASAMA
 prerequisites: [AR-C257-fariha, AR-C257-khafa]
 sounds: []
-roots: []
+roots: [b-s-m]
+etymology_hook: "ibtasama: built on the root b-s-m, 'to smile' (Lane); ibtasama is Form VIII, 'to smile'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C257-khafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C257-ACT257-05]; assesses=[] -->
 
 **ابتسم** — *ibtasama* — "to smile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ابتسم** (*ibtasama*) is built on the native Arabic root *b-s-m*, "to smile" (Lane). *Ibtasama* is Form VIII, "to smile".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

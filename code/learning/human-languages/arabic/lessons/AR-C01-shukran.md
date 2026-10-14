@@ -12,6 +12,7 @@ concept_tag: COURTESY-THANKS
 prerequisites: [AR-C01-as-salamu-alaykum]
 sounds: [shin, kaf]
 roots: [sh-k-r]
+etymology_hook: "shukran: the accusative of shukr 'thanks', root sh-k-r 'to thank' (Lane); Urdu shukriyā comes from it via Persian"
 reviews_of: [AR-C01-as-salamu-alaykum, AR-C01-marhaba]
 duration:
   max_seconds: 246

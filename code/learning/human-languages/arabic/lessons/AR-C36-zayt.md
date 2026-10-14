@@ -12,7 +12,7 @@ romanization: zayt
 prerequisites: [AR-C35-sadiq, AR-W08-kaf-and-ra]
 sounds: [zay, rtl-known-letters]
 roots: [z-y-t]
-etymology_hook: "زَيْت (zayt, 'oil') and زَيْتون (zaytūn, 'olives') sit on the root ز-ي-ت, and Spanish borrowed both of them with the article still attached: الزَّيت (az-zayt) became aceite, 'oil', and الزَّيتونة (az-zaytūna) became aceituna, 'an olive' — the same welding already seen in azúcar; the letter ز (zāy) is simply ر (rā) with one dot above it, and like rā it refuses to join what follows"
+etymology_hook: "zayt: an old Semitic word (Lane: z-y-t), cousin of Hebrew zayit 'olive'; Spanish aceite comes from az-zayt"
 duration:
   max_seconds: 240
 requires:
@@ -75,6 +75,8 @@ front. The same thing happened here, twice over:
 **ز** is a **sun letter**, which is why *al-* is said *az-* — the assimilation
 that makes *al-* + *sukkar* into *as-sukkar*. Spanish took the sound it heard,
 article and all. Portuguese did the same with **azeite**.
+
+*Zayt* is an old Semitic word, listed under *z-y-t* (Lane), and a cousin of Hebrew *zayit*, "olive".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C36-ZAYT-01, AR-CONCEPT-C36-ZAYT-02, AR-CONCEPT-C35-SADIQ-01, AR-CONCEPT-C35-SADIQ-02, AR-CONCEPT-C35-IBN-BINT-02, AR-CONCEPT-C33-SUKKAR-02, AR-CONCEPT-W08-KAF-AND-RA-02, AR-CONCEPT-C35-IBN-BINT-01] -->

@@ -14,7 +14,8 @@ romanization: "qiṭār"
 concept_tag: AR-TOWN92-QITAR
 prerequisites: [AR-C91-sayyara, AR-C91-hafila]
 sounds: []
-roots: []
+roots: [q-ṭ-r]
+etymology_hook: "qiṭār: listed by Lane under q-ṭ-r, 'to drip'; Lane's qiṭār is a string of camels, now a train"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C91-hafila]
 <!-- hl-knowledge: introduces=[AR-LEX-C92-TOWN92-01]; assesses=[] -->
 
 **قطار** — *qiṭār* — "a train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قطار** (*qiṭār*) is filed under the native Arabic root *q-ṭ-r*, "to drip, to fall in drops" (Lane). Lane's *qiṭār* is a string of camels led one behind another; the train is the modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

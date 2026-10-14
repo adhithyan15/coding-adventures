@@ -14,7 +14,8 @@ romanization: "adāra"
 concept_tag: AR-VERB-ADARA
 prerequisites: [AR-C194-amsaka, AR-C195-istaqala]
 sounds: []
-roots: []
+roots: [d-w-r]
+etymology_hook: "adāra: built on the root d-w-r, 'to turn round' (Lane); adāra is Form IV, 'to make turn', to run a thing"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C195-istaqala]
 <!-- hl-knowledge: introduces=[AR-LEX-C195-ACT195-02]; assesses=[] -->
 
 **أدار** — *adāra* — "to manage, to run".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أدار** (*adāra*) is built on the native Arabic root *d-w-r*, "to turn round" (Lane). *Adāra* is Form IV, "to make turn", to run a thing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

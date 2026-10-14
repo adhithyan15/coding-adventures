@@ -14,7 +14,8 @@ romanization: "mishjab"
 concept_tag: AR-SHAY279-MISHJAB
 prerequisites: [AR-C278-barmil, AR-C279-mustatil]
 sounds: []
-roots: []
+roots: [sh-j-b]
+etymology_hook: "mishjab: an old noun listed by Lane under sh-j-b: pieces of wood bound together to put clothes on"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C279-mustatil]
 <!-- hl-knowledge: introduces=[AR-LEX-C279-SHAY279-02]; assesses=[] -->
 
 **مشجب** — *mishjab* — "a coat hanger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مشجب** (*mishjab*) is an old native noun, filed under the root *sh-j-b* (Lane): pieces of wood bound together on which clothes are put. *Mishjab* is a thing to hang clothes on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

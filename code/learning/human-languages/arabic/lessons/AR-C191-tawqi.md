@@ -14,7 +14,8 @@ romanization: "tawqīʿ"
 concept_tag: AR-AMAL191-TAWQI
 prerequisites: [AR-C191-sayyad, AR-C191-warsha]
 sounds: []
-roots: []
+roots: [w-q-ʿ]
+etymology_hook: "tawqīʿ: built on the root w-q-ʿ, 'to fall' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C191-warsha]
 <!-- hl-knowledge: introduces=[AR-LEX-C191-AMAL191-05]; assesses=[] -->
 
 **توقيع** — *tawqīʿ* — "a signature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**توقيع** (*tawqīʿ*) is built on the native Arabic root *w-q-ʿ*, "to fall" (Lane). *Tawqīʿ* is the verbal noun of Form II, "setting one's mark on a document".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

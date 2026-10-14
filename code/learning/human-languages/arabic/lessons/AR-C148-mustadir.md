@@ -14,7 +14,8 @@ romanization: "mustadīr"
 concept_tag: AR-QUAL148-MUSTADIR
 prerequisites: [AR-C148-wasi, AR-C148-amiq]
 sounds: []
-roots: []
+roots: [d-w-r]
+etymology_hook: "mustadīr: built on the root d-w-r, 'to turn round' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C148-amiq]
 <!-- hl-knowledge: introduces=[AR-LEX-C148-QUAL148-04]; assesses=[] -->
 
 **مستدير** — *mustadīr* — "round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مستدير** (*mustadīr*) is built on the native Arabic root *d-w-r*, "to turn round" (Lane). *Mustadīr* is the Form X participle, "turning round", hence "round".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

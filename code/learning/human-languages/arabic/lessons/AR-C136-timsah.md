@@ -14,7 +14,8 @@ romanization: "timsāḥ"
 concept_tag: AR-THINGS136-TIMSAH
 prerequisites: [AR-C135-batta, AR-C135-sulahfah, AR-C42-words]
 sounds: []
-roots: []
+roots: [coptic-msah]
+etymology_hook: "timsāḥ: usually traced to Coptic msah 'crocodile' (EtymDB); Lane lists it under m-s-ḥ"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [AR-C135-sulahfah]
 <!-- hl-knowledge: introduces=[AR-LEX-C136-THINGS136-01]; assesses=[] -->
 
 **تمساح** — *timsāḥ* — "a crocodile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تمساح** (*timsāḥ*) is listed by Lane under *m-s-ḥ* as the crocodile. It is usually traced to Coptic *msah*, the Egyptian word for the crocodile (EtymDB), with an added *t-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

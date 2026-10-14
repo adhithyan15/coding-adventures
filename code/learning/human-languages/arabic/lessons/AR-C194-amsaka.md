@@ -14,7 +14,8 @@ romanization: "amsaka"
 concept_tag: AR-VERB-AMSAKA
 prerequisites: [AR-C194-lamasa, AR-C194-shamma]
 sounds: []
-roots: []
+roots: [m-s-k]
+etymology_hook: "amsaka: built on the root m-s-k, 'to hold, to grasp' (Lane); amsaka is Form IV, 'to take hold'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C194-shamma]
 <!-- hl-knowledge: introduces=[AR-LEX-C194-ACT194-05]; assesses=[] -->
 
 **أمسك** — *amsaka* — "to hold, to grab".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أمسك** (*amsaka*) is built on the native Arabic root *m-s-k*, "to hold, to grasp" (Lane). *Amsaka* is Form IV, "to take hold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

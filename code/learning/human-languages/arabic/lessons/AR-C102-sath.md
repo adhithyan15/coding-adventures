@@ -14,7 +14,8 @@ romanization: "saṭḥ"
 concept_tag: AR-LOC102-SATH
 prerequisites: [AR-C101-hammam, AR-C101-shurfa]
 sounds: []
-roots: []
+roots: [s-ṭ-ḥ]
+etymology_hook: "saṭḥ: built on the root s-ṭ-ḥ, 'to spread out flat' (Lane); saṭḥ is a flat roof, the flat top of a house"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C101-shurfa]
 <!-- hl-knowledge: introduces=[AR-LEX-C102-LOC102-01]; assesses=[] -->
 
 **سطح** — *saṭḥ* — "a roof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سطح** (*saṭḥ*) is built on the native Arabic root *s-ṭ-ḥ*, "to spread out flat" (Lane). *Saṭḥ* is a flat roof, the flat top of a house.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

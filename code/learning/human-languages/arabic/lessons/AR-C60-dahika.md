@@ -14,7 +14,8 @@ romanization: "ḍaḥika"
 concept_tag: AR-VERB-DAHIKA
 prerequisites: [AR-C60-tabakha, AR-C60-ghasala]
 sounds: []
-roots: []
+roots: [ḍ-ḥ-k]
+etymology_hook: "ḍaḥika: built on the root ḍ-ḥ-k, 'to laugh' (Lane); the word ḍaḥika is the plain verb, 'he laughed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C60-ghasala]
 <!-- hl-knowledge: introduces=[AR-LEX-C60-VERBS60-03]; assesses=[] -->
 
 **ضحك** — *ḍaḥika* — "to laugh (he laughed)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضحك** (*ḍaḥika*) is built on the native Arabic root *ḍ-ḥ-k*, "to laugh" (Lane). The word *ḍaḥika* is the plain verb, "he laughed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

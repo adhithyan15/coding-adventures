@@ -14,7 +14,8 @@ romanization: "taraka"
 concept_tag: AR-VERB-TARAKA
 prerequisites: [AR-C62-wajada, AR-C62-labisa]
 sounds: []
-roots: []
+roots: [t-r-k]
+etymology_hook: "taraka: built on the root t-r-k, 'to leave, to forsake' (Lane); taraka is the plain verb, 'he left'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C62-labisa]
 <!-- hl-knowledge: introduces=[AR-LEX-C62-VERBS62-05]; assesses=[] -->
 
 **ترك** — *taraka* — "to leave (he left)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ترك** (*taraka*) is built on the native Arabic root *t-r-k*, "to leave, to forsake" (Lane). *Taraka* is the plain verb, "he left".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

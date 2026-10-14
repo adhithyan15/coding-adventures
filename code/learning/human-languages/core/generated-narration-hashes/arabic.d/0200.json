@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 200,
-  "sourceHash": "fnv1a64:c0f21e32e850e340",
+  "sourceHash": "fnv1a64:9366f58f150929bc",
   "lessonIds": [
     "AR-C200-zukam",
     "AR-C200-sual",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch200.txt",
   "json": "arabic/narration/ch200.json",
-  "textHash": "fnv1a64:cdefd89e5e1ce584",
-  "jsonHash": "fnv1a64:0aea8beb99761d47",
+  "textHash": "fnv1a64:3b0ff3d62c95b1f8",
+  "jsonHash": "fnv1a64:42913d80fe9b15fe",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "qubbaʿa"
 concept_tag: AR-CLOTHES95-QUBBAA
 prerequisites: [AR-C95-jayb, AR-C95-khatam]
 sounds: []
-roots: []
+roots: [syriac-qubbaa]
+etymology_hook: "qubbaʿa: usually traced to Syriac qubbaʿā 'hood' (EtymDB); not in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C95-khatam]
 <!-- hl-knowledge: introduces=[AR-LEX-C95-CLOTHES95-03]; assesses=[] -->
 
 **قبعة** — *qubbaʿa* — "a hat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قبعة** (*qubbaʿa*) is usually traced to Syriac *qubbaʿā*, "hood" (EtymDB); Lane has no entry for it, though a root *q-b-ʿ* exists in his lexicon.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

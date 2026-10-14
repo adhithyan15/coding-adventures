@@ -14,7 +14,8 @@ romanization: "shuʿūr"
 concept_tag: AR-SABAB237-SHUUR
 prerequisites: [AR-C237-sabr, AR-C237-karam]
 sounds: []
-roots: []
+roots: [sh-ʿ-r]
+etymology_hook: "shuʿūr: built on the root sh-ʿ-r, 'to perceive' (Lane); shuʿūr is the verbal noun, 'perceiving, feeling'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C237-karam]
 <!-- hl-knowledge: introduces=[AR-LEX-C237-SABAB237-03]; assesses=[] -->
 
 **شعور** — *shuʿūr* — "a feeling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شعور** (*shuʿūr*) is built on the native Arabic root *sh-ʿ-r*, "to perceive" (Lane). *Shuʿūr* is the verbal noun, "perceiving, feeling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṣalṣa"
 concept_tag: AR-SHAY182-SALSA
 prerequisites: [AR-C181-maghsala, AR-C181-raff]
 sounds: []
-roots: []
+roots: [italian-salsa]
+etymology_hook: "ṣalṣa: usually traced to Italian salsa 'sauce' (EtymDB), from Latin salsus 'salted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C181-raff]
 <!-- hl-knowledge: introduces=[AR-LEX-C182-SHAY182-01]; assesses=[] -->
 
 **صلصة** — *ṣalṣa* — "a sauce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صلصة** (*ṣalṣa*) is usually traced to Italian *salsa*, "sauce" (EtymDB), from Latin *salsus*, "salted"; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hadama"
 concept_tag: AR-VERB-HADAMA
 prerequisites: [AR-C166-sada, AR-C166-bana]
 sounds: []
-roots: []
+roots: [h-d-m]
+etymology_hook: "hadama: built on the root h-d-m, 'to pull down' (Lane); hadama is the plain verb, 'he pulled down'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C166-bana]
 <!-- hl-knowledge: introduces=[AR-LEX-C166-ACT166-03]; assesses=[] -->
 
 **هدم** — *hadama* — "to knock down, to demolish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**هدم** (*hadama*) is built on the native Arabic root *h-d-m*, "to pull down" (Lane). *Hadama* is the plain verb, "he pulled down".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

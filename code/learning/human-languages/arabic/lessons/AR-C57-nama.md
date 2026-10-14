@@ -14,7 +14,8 @@ romanization: "nāma"
 concept_tag: AR-VERB-NAMA
 prerequisites: [AR-C57-samia, AR-C57-jalasa]
 sounds: []
-roots: []
+roots: [n-w-m]
+etymology_hook: "nāma: built on the root n-w-m, 'to sleep'; nāma is the plain verb, 'he slept'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C57-jalasa]
 <!-- hl-knowledge: introduces=[AR-LEX-C57-FAMILY57-05]; assesses=[] -->
 
 **نام** — *nāma* — "to sleep (he slept)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نام** (*nāma*) is built on the native Arabic root *n-w-m*, "to sleep". Lane's lexicon has no article on this root. *Nāma* is the plain verb, "he slept".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

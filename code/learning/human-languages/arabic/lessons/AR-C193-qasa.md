@@ -14,7 +14,8 @@ romanization: "qāsa"
 concept_tag: AR-VERB-QASA
 prerequisites: [AR-C193-khalaa, AR-C193-jarraba]
 sounds: []
-roots: []
+roots: [q-y-s]
+etymology_hook: "qāsa: built on the root q-y-s, 'to measure' (Lane); qāsa is the plain verb, 'he measured'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C193-jarraba]
 <!-- hl-knowledge: introduces=[AR-LEX-C193-ACT193-03]; assesses=[] -->
 
 **قاس** — *qāsa* — "to measure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قاس** (*qāsa*) is built on the native Arabic root *q-y-s*, "to measure" (Lane). *Qāsa* is the plain verb, "he measured".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

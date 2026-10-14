@@ -14,7 +14,8 @@ romanization: "tadhkira"
 concept_tag: AR-THINGS118-TADHKIRA
 prerequisites: [AR-C117-zarf, AR-C118-hadiyya]
 sounds: []
-roots: []
+roots: [dh-k-r]
+etymology_hook: "tadhkira: built on the root dh-k-r, 'to remember' (Lane); Lane's tadhkira is a reminder, a memorandum"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C118-hadiyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C118-THINGS118-02]; assesses=[] -->
 
 **تذكرة** — *tadhkira* — "a ticket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تذكرة** (*tadhkira*) is built on the native Arabic root *dh-k-r*, "to remember" (Lane). Lane's *tadhkira* is a reminder, a memorandum; the ticket is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

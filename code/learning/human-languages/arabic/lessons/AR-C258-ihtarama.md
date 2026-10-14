@@ -14,7 +14,8 @@ romanization: "iḥtarama"
 concept_tag: AR-VERB-IHTARAMA
 prerequisites: [AR-C257-khafa, AR-C257-ibtasama]
 sounds: []
-roots: []
+roots: [ḥ-r-m]
+etymology_hook: "iḥtarama: built on the root ḥ-r-m, 'to be forbidden, to be sacred' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C257-ibtasama]
 <!-- hl-knowledge: introduces=[AR-LEX-C258-ACT258-01]; assesses=[] -->
 
 **احترم** — *iḥtarama* — "to respect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**احترم** (*iḥtarama*) is built on the native Arabic root *ḥ-r-m*, "to be forbidden, to be sacred" (Lane). *Iḥtarama* is Form VIII, "to hold sacred", to respect.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

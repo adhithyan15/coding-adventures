@@ -14,7 +14,8 @@ romanization: "mashghūl"
 concept_tag: AR-QUAL147-MASHGHUL
 prerequisites: [AR-C146-maftuh, AR-C146-mughlaq]
 sounds: []
-roots: []
+roots: [sh-gh-l]
+etymology_hook: "mashghūl: built on the root sh-gh-l, 'to occupy' (Lane); mashghūl is the passive participle, 'occupied'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C146-mughlaq]
 <!-- hl-knowledge: introduces=[AR-LEX-C147-QUAL147-01]; assesses=[] -->
 
 **مشغول** — *mashghūl* — "busy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مشغول** (*mashghūl*) is built on the native Arabic root *sh-gh-l*, "to occupy" (Lane). *Mashghūl* is the passive participle, "occupied".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

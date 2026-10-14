@@ -14,7 +14,8 @@ romanization: "aʿāda"
 concept_tag: AR-VERB-AADA
 prerequisites: [AR-C256-sharaha, AR-C256-tarjama]
 sounds: []
-roots: []
+roots: [ʿ-w-d]
+etymology_hook: "aʿāda: built on the root ʿ-w-d, 'to return' (Lane); aʿāda is Form IV, 'to make return'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C256-tarjama]
 <!-- hl-knowledge: introduces=[AR-LEX-C256-ACT256-05]; assesses=[] -->
 
 **أعاد** — *aʿāda* — "to give back, to return (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أعاد** (*aʿāda*) is built on the native Arabic root *ʿ-w-d*, "to return" (Lane). *Aʿāda* is Form IV, "to make return".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

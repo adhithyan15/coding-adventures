@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 179,
-  "sourceHash": "fnv1a64:c6eca04e7e5b2c50",
+  "sourceHash": "fnv1a64:7aa2ea3f95ba71f7",
   "lessonIds": [
     "AR-C179-ramadi",
     "AR-C179-dhahabi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch179.txt",
   "json": "arabic/narration/ch179.json",
-  "textHash": "fnv1a64:055b1a1fca61223d",
-  "jsonHash": "fnv1a64:77fc517b3f0c40f1",
+  "textHash": "fnv1a64:01916b1a87c51945",
+  "jsonHash": "fnv1a64:039022863420207d",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "risāla"
 concept_tag: AR-THINGS117-RISALA
 prerequisites: [AR-C117-jarida, AR-C117-majalla]
 sounds: []
-roots: []
+roots: [r-s-l]
+etymology_hook: "risāla: built on the root r-s-l, 'to send' (Lane); risāla is a thing sent: a message, a letter"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C117-majalla]
 <!-- hl-knowledge: introduces=[AR-LEX-C117-THINGS117-04]; assesses=[] -->
 
 **رسالة** — *risāla* — "a letter, a message".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رسالة** (*risāla*) is built on the native Arabic root *r-s-l*, "to send" (Lane). *Risāla* is a thing sent: a message, a letter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

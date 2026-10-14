@@ -14,7 +14,8 @@ romanization: "ṭalaba"
 concept_tag: AR-VERB-TALABA
 prerequisites: [AR-C115-ikhtara, AR-C115-faddala]
 sounds: []
-roots: []
+roots: [ṭ-l-b]
+etymology_hook: "ṭalaba: built on the root ṭ-l-b, 'to seek, to ask for' (Lane); ṭalaba is the plain verb, 'he sought'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C115-faddala]
 <!-- hl-knowledge: introduces=[AR-LEX-C115-WANT115-04]; assesses=[] -->
 
 **طلب** — *ṭalaba* — "to ask for, to request".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طلب** (*ṭalaba*) is built on the native Arabic root *ṭ-l-b*, "to seek, to ask for" (Lane). *Ṭalaba* is the plain verb, "he sought".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

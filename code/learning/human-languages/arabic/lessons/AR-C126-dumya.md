@@ -14,7 +14,8 @@ romanization: "dumya"
 concept_tag: AR-THINGS126-DUMYA
 prerequisites: [AR-C126-shama, AR-C126-sajjada]
 sounds: []
-roots: []
+roots: [d-m-y]
+etymology_hook: "dumya: an old native noun Lane files under d-m-y; Lane's dumya is an image, a statue"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C126-sajjada]
 <!-- hl-knowledge: introduces=[AR-LEX-C126-THINGS126-03]; assesses=[] -->
 
 **دمية** — *dumya* — "a doll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دمية** (*dumya*), "an image, a statue", is an old native noun, filed under the root *d-m-y* (Lane). Lane's *dumya* is an image, a statue.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

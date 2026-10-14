@@ -14,7 +14,8 @@ romanization: "khāṣṣ"
 concept_tag: AR-SIFA178-KHASS
 prerequisites: [AR-C177-maqli, AR-C178-rasmi]
 sounds: []
-roots: []
+roots: [kh-ṣ-ṣ]
+etymology_hook: "khāṣṣ: built on the root kh-ṣ-ṣ, 'to single out, to distinguish' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C178-rasmi]
 <!-- hl-knowledge: introduces=[AR-LEX-C178-SIFA178-02]; assesses=[] -->
 
 **خاص** — *khāṣṣ* — "private, special".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خاص** (*khāṣṣ*) is built on the native Arabic root *kh-ṣ-ṣ*, "to single out, to distinguish" (Lane). *Khāṣṣ* is the active participle, "singling out", hence "special, private".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

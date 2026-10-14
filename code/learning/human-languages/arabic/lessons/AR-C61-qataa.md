@@ -14,7 +14,8 @@ romanization: "qaṭaʿa"
 concept_tag: AR-VERB-QATAA
 prerequisites: [AR-C61-arada, AR-C61-arsala]
 sounds: []
-roots: []
+roots: [q-ṭ-ʿ]
+etymology_hook: "qaṭaʿa: built on the root q-ṭ-ʿ, 'to cut, to sever' (Lane); qaṭaʿa is the plain verb, 'he cut'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C61-arsala]
 <!-- hl-knowledge: introduces=[AR-LEX-C61-VERBS61-05]; assesses=[] -->
 
 **قطع** — *qaṭaʿa* — "to cut (he cut)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قطع** (*qaṭaʿa*) is built on the native Arabic root *q-ṭ-ʿ*, "to cut, to sever" (Lane). *Qaṭaʿa* is the plain verb, "he cut".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

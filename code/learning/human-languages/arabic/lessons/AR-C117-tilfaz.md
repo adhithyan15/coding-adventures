@@ -14,7 +14,8 @@ romanization: "tilfāz"
 concept_tag: AR-THINGS117-TILFAZ
 prerequisites: [AR-C116-mirwaha, AR-C116-hasub]
 sounds: []
-roots: []
+roots: [european-television]
+etymology_hook: "tilfāz: a modern word shaped from European television to fit an Arabic pattern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C116-hasub]
 <!-- hl-knowledge: introduces=[AR-LEX-C117-THINGS117-01]; assesses=[] -->
 
 **تلفاز** — *tilfāz* — "a television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تلفاز** (*tilfāz*) is a modern word borrowed from European *television* and fitted to an Arabic pattern; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

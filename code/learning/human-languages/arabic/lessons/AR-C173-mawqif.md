@@ -14,7 +14,8 @@ romanization: "mawqif"
 concept_tag: AR-MAKAN173-MAWQIF
 prerequisites: [AR-C173-bustan, AR-C173-khayma]
 sounds: []
-roots: []
+roots: [w-q-f]
+etymology_hook: "mawqif: built on the root w-q-f, 'to stand still, to stop' (Lane); mawqif is the ma- place noun, 'a place of stopping'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C173-khayma]
 <!-- hl-knowledge: introduces=[AR-LEX-C173-MAKAN173-03]; assesses=[] -->
 
 **موقف** — *mawqif* — "a car park; a stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موقف** (*mawqif*) is built on the native Arabic root *w-q-f*, "to stand still, to stop" (Lane). *Mawqif* is the *ma-* place noun, "a place of stopping".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

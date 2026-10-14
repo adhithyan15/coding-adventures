@@ -14,7 +14,8 @@ romanization: "khallāṭ"
 concept_tag: AR-SHAY187-KHALLAT
 prerequisites: [AR-C186-lawha, AR-C186-ala]
 sounds: []
-roots: []
+roots: [kh-l-ṭ]
+etymology_hook: "khallāṭ: built on the root kh-l-ṭ, 'to mix' (Lane); khallāṭ is a modern faʿʿāl word, 'the mixer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C186-ala]
 <!-- hl-knowledge: introduces=[AR-LEX-C187-SHAY187-01]; assesses=[] -->
 
 **خلاط** — *khallāṭ* — "a blender".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خلاط** (*khallāṭ*) is built on the native Arabic root *kh-l-ṭ*, "to mix" (Lane). *Khallāṭ* is a modern *faʿʿāl* word, "the mixer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

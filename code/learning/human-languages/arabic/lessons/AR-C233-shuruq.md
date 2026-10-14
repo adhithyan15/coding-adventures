@@ -14,7 +14,8 @@ romanization: "shurūq"
 concept_tag: AR-WAQT233-SHURUQ
 prerequisites: [AR-C233-mundhu, AR-C233-fajr]
 sounds: []
-roots: []
+roots: [sh-r-q]
+etymology_hook: "shurūq: built on the root sh-r-q, 'to rise (of the sun)' (Lane); shurūq is the verbal noun, 'rising'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C233-fajr]
 <!-- hl-knowledge: introduces=[AR-LEX-C233-WAQT233-03]; assesses=[] -->
 
 **شروق** — *shurūq* — "sunrise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شروق** (*shurūq*) is built on the native Arabic root *sh-r-q*, "to rise (of the sun)" (Lane). *Shurūq* is the verbal noun, "rising".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "daraj"
 concept_tag: AR-LOC102-DARAJ
 prerequisites: [AR-C101-shurfa, AR-C102-sath]
 sounds: []
-roots: []
+roots: [d-r-j]
+etymology_hook: "daraj: built on the root d-r-j, 'to go step by step' (Lane); daraj is a flight of steps"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C102-sath]
 <!-- hl-knowledge: introduces=[AR-LEX-C102-LOC102-02]; assesses=[] -->
 
 **درج** — *daraj* — "stairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**درج** (*daraj*) is built on the native Arabic root *d-r-j*, "to go step by step" (Lane). *Daraj* is a flight of steps.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

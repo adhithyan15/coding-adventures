@@ -14,7 +14,8 @@ romanization: "fakka"
 concept_tag: AR-VERB-FAKKA
 prerequisites: [AR-C228-sawwara, AR-C229-rabata]
 sounds: []
-roots: []
+roots: [f-k-k]
+etymology_hook: "fakka: built on the root f-k-k, 'to loose, to separate' (Lane); fakka is the plain verb, 'he undid'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C229-rabata]
 <!-- hl-knowledge: introduces=[AR-LEX-C229-ACT229-02]; assesses=[] -->
 
 **فك** — *fakka* — "to untie, to undo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فك** (*fakka*) is built on the native Arabic root *f-k-k*, "to loose, to separate" (Lane). *Fakka* is the plain verb, "he undid".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

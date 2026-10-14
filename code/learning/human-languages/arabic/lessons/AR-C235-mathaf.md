@@ -14,7 +14,8 @@ romanization: "matḥaf"
 concept_tag: AR-MAKAN235-MATHAF
 prerequisites: [AR-C234-munabbih, AR-C234-taqwim]
 sounds: []
-roots: []
+roots: [t-ḥ-f]
+etymology_hook: "matḥaf: built on the root t-ḥ-f, 'a rare gift' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C234-taqwim]
 <!-- hl-knowledge: introduces=[AR-LEX-C235-MAKAN235-01]; assesses=[] -->
 
 **متحف** — *matḥaf* — "a museum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**متحف** (*matḥaf*) is built on the native Arabic root *t-ḥ-f*, "a rare gift" (Lane). *Matḥaf* is a modern place noun built on *tuḥfa*, "a rarity": "a place of rarities".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

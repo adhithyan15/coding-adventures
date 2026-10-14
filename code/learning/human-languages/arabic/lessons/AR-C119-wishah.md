@@ -14,7 +14,8 @@ romanization: "wishāḥ"
 concept_tag: AR-THINGS119-WISHAH
 prerequisites: [AR-C118-mizalla, AR-C119-quffaz]
 sounds: []
-roots: []
+roots: [w-sh-ḥ]
+etymology_hook: "wishāḥ: built on the root w-sh-ḥ, 'a sash' (Lane); Lane's wishāḥ is a woman's ornamented sash"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C119-quffaz]
 <!-- hl-knowledge: introduces=[AR-LEX-C119-THINGS119-02]; assesses=[] -->
 
 **وشاح** — *wishāḥ* — "a scarf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وشاح** (*wishāḥ*) is built on the native Arabic root *w-sh-ḥ*, "a sash" (Lane). Lane's *wishāḥ* is a woman's ornamented sash.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

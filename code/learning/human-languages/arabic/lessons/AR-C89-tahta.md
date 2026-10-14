@@ -14,7 +14,8 @@ romanization: "taḥta"
 concept_tag: AR-PLACE89-TAHTA
 prerequisites: [AR-C89-kharij, AR-C89-fawqa]
 sounds: []
-roots: []
+roots: [t-ḥ-t]
+etymology_hook: "taḥta: built on the root t-ḥ-t, 'below, beneath' (Lane); Hebrew taḥat, 'under', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C89-fawqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C89-PLACE89-03]; assesses=[] -->
 
 **تحت** — *taḥta* — "below".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تحت** (*taḥta*) is built on the native Arabic root *t-ḥ-t*, "below, beneath" (Lane). Hebrew *taḥat*, "under", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

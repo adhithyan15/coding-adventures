@@ -11,8 +11,8 @@ gloss: or — two letters, and the word an offer cannot be made without
 concept_tag: AR-JOIN-AW
 prerequisites: [AR-C38-wa, AR-C33-qahwa, AR-C33-shay]
 sounds: [alif-hamza, arabic-waw]
-roots: []
-etymology_hook: "أو is Semitic ʾaw, cousin to Hebrew או — and its shape is the hamza-carrying alif of أكل followed by the very letter و that means 'and', which is why the two coordinators look so nearly alike and mean opposite things"
+roots: [semitic-aw-or]
+etymology_hook: "aw: an inherited Semitic conjunction with no three-letter root; Hebrew ʾō 'or' is its cousin"
 duration:
   max_seconds: 235
 requires:
@@ -61,6 +61,8 @@ coordinators are one letter apart and mean opposite things.
 host needs: two nouns, **أو** between them, and the question particle a later
 lesson in this book will add. Until this lesson the corpus could name coffee,
 tea, milk and sugar and could not offer any one of them against another.
+
+It is inherited from the Semitic parent language, a cousin of Hebrew *ʾō*, "or", and not built on a three-letter root.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C38-AW-01, AR-LEX-C38-WA-01, AR-CONCEPT-C33-SHAY-01, AR-CONCEPT-C33-QAHWA-01, AR-CONCEPT-C33-SUKKAR-01] -->

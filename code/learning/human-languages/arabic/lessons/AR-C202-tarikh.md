@@ -14,7 +14,8 @@ romanization: "tārīkh"
 concept_tag: AR-WAQT202-TARIKH
 prerequisites: [AR-C202-fawran, AR-C202-lahiqan]
 sounds: []
-roots: []
+roots: [ʾ-r-kh]
+etymology_hook: "tārīkh: Lane's sources dispute it: borrowed (cf. Hebrew yeraḥ 'month') or native ʾ-r-kh; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C202-lahiqan]
 <!-- hl-knowledge: introduces=[AR-LEX-C202-WAQT202-04]; assesses=[] -->
 
 **تاريخ** — *tārīkh* — "a date; history".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تاريخ** (*tārīkh*) is disputed in Lane's sources: some call it arabicized, borrowed from the people of the Bible, and Lane compares Hebrew *yeraḥ*, "month"; others give it a native root *ʾ-r-kh*, "to date". The origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "qabw"
 concept_tag: AR-MAKAN266-QABW
 prerequisites: [AR-C265-mazraa, AR-C265-rif]
 sounds: []
-roots: []
+roots: [qabw-cellar]
+etymology_hook: "qabw: a vaulted cellar; not in Lane; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C265-rif]
 <!-- hl-knowledge: introduces=[AR-LEX-C266-MAKAN266-01]; assesses=[] -->
 
 **قبو** — *qabw* — "a basement, a cellar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قبو** (*qabw*) is a vaulted cellar. Lane has no entry for *qabw*, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

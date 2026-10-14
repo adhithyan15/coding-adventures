@@ -14,7 +14,8 @@ romanization: "ḍalla"
 concept_tag: AR-VERB-DALLA
 prerequisites: [AR-C195-adara, AR-C195-qabala]
 sounds: []
-roots: []
+roots: [ḍ-l-l]
+etymology_hook: "ḍalla: built on the root ḍ-l-l, 'to go astray' (Lane); the word ḍalla is the plain verb, 'he lost his way'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C195-qabala]
 <!-- hl-knowledge: introduces=[AR-LEX-C195-ACT195-04]; assesses=[] -->
 
 **ضل** — *ḍalla* — "to get lost".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضل** (*ḍalla*) is built on the native Arabic root *ḍ-l-l*, "to go astray" (Lane). The word *ḍalla* is the plain verb, "he lost his way".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

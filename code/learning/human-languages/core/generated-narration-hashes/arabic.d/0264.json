@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 264,
-  "sourceHash": "fnv1a64:8ece9c97354896ee",
+  "sourceHash": "fnv1a64:5a45cae32af0d711",
   "lessonIds": [
     "AR-C264-fasl",
     "AR-C264-tufula",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch264.txt",
   "json": "arabic/narration/ch264.json",
-  "textHash": "fnv1a64:37e07c892890ab6e",
-  "jsonHash": "fnv1a64:b8aa92ccb5a2cf2b",
+  "textHash": "fnv1a64:930ec030fb589598",
+  "jsonHash": "fnv1a64:7b83777f3d2ac544",
   "findings": []
 }

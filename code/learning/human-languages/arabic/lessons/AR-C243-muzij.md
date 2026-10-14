@@ -14,7 +14,8 @@ romanization: "muzʿij"
 concept_tag: AR-SIFA243-MUZIJ
 prerequisites: [AR-C242-samm, AR-C243-fatir]
 sounds: []
-roots: []
+roots: [z-ʿ-j]
+etymology_hook: "muzʿij: built on the root z-ʿ-j, 'to disquiet' (Lane); muzʿij is the Form IV participle, 'disquieting'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C243-fatir]
 <!-- hl-knowledge: introduces=[AR-LEX-C243-SIFA243-02]; assesses=[] -->
 
 **مزعج** — *muzʿij* — "annoying".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مزعج** (*muzʿij*) is built on the native Arabic root *z-ʿ-j*, "to disquiet" (Lane). *Muzʿij* is the Form IV participle, "disquieting".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

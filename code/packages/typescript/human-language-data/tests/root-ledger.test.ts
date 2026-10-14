@@ -242,7 +242,7 @@ const etymologyGapPinOwnerDirectory = resolve(
  * its 88, so the pins start at 435.
  */
 const EMPTY_ETYMOLOGY_BLOCK_PINS: Readonly<Record<string, number>> = {
-  arabic: 19,
+  arabic: 0,
   bengali: 0,
   chinese: 43,
   french: 66,

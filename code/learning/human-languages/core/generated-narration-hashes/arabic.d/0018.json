@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 18,
-  "sourceHash": "fnv1a64:2b09263efcf5e205",
+  "sourceHash": "fnv1a64:f20813c6643797c8",
   "lessonIds": [
     "AR-C18-al-taqs"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "arabic/narration/ch18.txt",
   "json": "arabic/narration/ch18.json",
-  "textHash": "fnv1a64:bf88ed2a475f5790",
-  "jsonHash": "fnv1a64:9666cdb4043f2653",
+  "textHash": "fnv1a64:9215558ee77f64d6",
+  "jsonHash": "fnv1a64:cd525fb8f82a84c1",
   "findings": []
 }

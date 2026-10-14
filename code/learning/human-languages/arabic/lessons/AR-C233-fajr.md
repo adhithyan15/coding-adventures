@@ -14,7 +14,8 @@ romanization: "fajr"
 concept_tag: AR-WAQT233-FAJR
 prerequisites: [AR-C232-nazif, AR-C233-mundhu]
 sounds: []
-roots: []
+roots: [f-j-r]
+etymology_hook: "fajr: built on the root f-j-r, 'to cleave, to break open' (Lane); fajr is the dawn that breaks the night"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C233-mundhu]
 <!-- hl-knowledge: introduces=[AR-LEX-C233-WAQT233-02]; assesses=[] -->
 
 **فجر** — *fajr* — "dawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فجر** (*fajr*) is built on the native Arabic root *f-j-r*, "to cleave, to break open" (Lane). *Fajr* is the dawn that breaks the night.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

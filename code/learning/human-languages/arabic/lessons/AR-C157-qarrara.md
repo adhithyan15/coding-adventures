@@ -14,7 +14,8 @@ romanization: "qarrara"
 concept_tag: AR-VERB-QARRARA
 prerequisites: [AR-C157-min-al-an-fasaidan, AR-C157-barnamaj]
 sounds: []
-roots: []
+roots: [q-r-r]
+etymology_hook: "qarrara: built on the root q-r-r, 'to settle, to be still' (Lane); qarrara is Form II, 'to make settled', to decide"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C157-barnamaj]
 <!-- hl-knowledge: introduces=[AR-LEX-C157-MUSTAQBAL157-04]; assesses=[] -->
 
 **قرر** — *qarrara* — "to decide". **قررت أن أمشي كل يوم** — *qarrartu an amshiya kulla yawm* — "I decided to walk every day."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قرر** (*qarrara*) is built on the native Arabic root *q-r-r*, "to settle, to be still" (Lane). *Qarrara* is Form II, "to make settled", to decide.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

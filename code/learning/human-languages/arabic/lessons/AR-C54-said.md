@@ -14,7 +14,8 @@ romanization: "saʿīd"
 concept_tag: AR-HEALTH54-SAID
 prerequisites: [AR-C53-dawa, AR-C54-ju]
 sounds: []
-roots: []
+roots: [s-a-d]
+etymology_hook: "saʿīd: built on the root s-ʿ-d, 'to be fortunate, to be happy' (Lane); saʿīd is the faʿīl adjective, 'fortunate, happy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C54-ju]
 <!-- hl-knowledge: introduces=[AR-LEX-C54-HEALTH54-02]; assesses=[] -->
 
 **سعيد** — *saʿīd* — "happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سعيد** (*saʿīd*) is built on the native Arabic root *s-ʿ-d*, "to be fortunate, to be happy" (Lane). *Saʿīd* is the *faʿīl* adjective, "fortunate, happy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

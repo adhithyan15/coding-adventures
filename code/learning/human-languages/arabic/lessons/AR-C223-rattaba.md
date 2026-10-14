@@ -14,7 +14,8 @@ romanization: "rattaba"
 concept_tag: AR-VERB-RATTABA
 prerequisites: [AR-C222-adab, AR-C222-tajir]
 sounds: []
-roots: []
+roots: [r-t-b]
+etymology_hook: "rattaba: built on the root r-t-b, 'to be fixed, to be firm' (Lane); rattaba is Form II, 'to set in order'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C222-tajir]
 <!-- hl-knowledge: introduces=[AR-LEX-C223-ACT223-01]; assesses=[] -->
 
 **رتب** — *rattaba* — "to tidy, to arrange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رتب** (*rattaba*) is built on the native Arabic root *r-t-b*, "to be fixed, to be firm" (Lane). *Rattaba* is Form II, "to set in order".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

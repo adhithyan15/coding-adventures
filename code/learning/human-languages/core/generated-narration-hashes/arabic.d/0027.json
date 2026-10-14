@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 27,
-  "sourceHash": "fnv1a64:1c873f2be952dad1",
+  "sourceHash": "fnv1a64:57914f907e58a890",
   "lessonIds": [
     "AR-C27-tusbih-ala-khayr"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "arabic/narration/ch27.txt",
   "json": "arabic/narration/ch27.json",
-  "textHash": "fnv1a64:a3be68ac4f23496d",
-  "jsonHash": "fnv1a64:3be63d412a3d8940",
+  "textHash": "fnv1a64:826a6ce0167bd4f4",
+  "jsonHash": "fnv1a64:eed57f6b9f620de4",
   "findings": []
 }

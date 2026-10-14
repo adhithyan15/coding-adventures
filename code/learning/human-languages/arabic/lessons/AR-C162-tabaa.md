@@ -14,7 +14,8 @@ romanization: "ṭabaʿa"
 concept_tag: AR-VERB-TABAA
 prerequisites: [AR-C161-istaraha, AR-C161-ahassa]
 sounds: []
-roots: []
+roots: [ṭ-b-ʿ]
+etymology_hook: "ṭabaʿa: built on the root ṭ-b-ʿ, 'to seal, to stamp' (Lane); ṭabaʿa is to stamp, hence to print"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C161-ahassa]
 <!-- hl-knowledge: introduces=[AR-LEX-C162-ACT162-01]; assesses=[] -->
 
 **طبع** — *ṭabaʿa* — "to print".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طبع** (*ṭabaʿa*) is built on the native Arabic root *ṭ-b-ʿ*, "to seal, to stamp" (Lane). *Ṭabaʿa* is to stamp, hence to print.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

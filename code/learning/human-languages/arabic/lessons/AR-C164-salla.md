@@ -14,7 +14,8 @@ romanization: "ṣallā"
 concept_tag: AR-VERB-SALLA
 prerequisites: [AR-C163-anaqa, AR-C164-sarakha]
 sounds: []
-roots: []
+roots: [ṣ-l-w]
+etymology_hook: "ṣallā: Lane lists it under ṣ-l-w; usually traced to Aramaic ṣlōthā 'prayer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C164-sarakha]
 <!-- hl-knowledge: introduces=[AR-LEX-C164-ACT164-02]; assesses=[] -->
 
 **صلى** — *ṣallā* — "to pray".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صلى** (*ṣallā*) is listed by Lane under *ṣ-l-w*. Many trace the Arabic words for prayer to Aramaic *ṣlōthā*, "prayer", and *ṣallā* is usually taken as built from that borrowed noun.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

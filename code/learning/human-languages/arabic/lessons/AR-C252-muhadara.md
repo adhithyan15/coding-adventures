@@ -14,7 +14,8 @@ romanization: "muḥāḍara"
 concept_tag: AR-AMAL252-MUHADARA
 prerequisites: [AR-C251-sharika, AR-C252-alama]
 sounds: []
-roots: []
+roots: [ḥ-ḍ-r]
+etymology_hook: "muḥāḍara: built on the root ḥ-ḍ-r, 'to be present' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C252-alama]
 <!-- hl-knowledge: introduces=[AR-LEX-C252-AMAL252-02]; assesses=[] -->
 
 **محاضرة** — *muḥāḍara* — "a lecture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**محاضرة** (*muḥāḍara*) is built on the native Arabic root *ḥ-ḍ-r*, "to be present" (Lane). *Muḥāḍara* is the verbal noun of Form III, "a talk given in person".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

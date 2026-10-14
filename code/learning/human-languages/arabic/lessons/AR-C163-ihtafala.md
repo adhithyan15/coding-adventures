@@ -14,7 +14,8 @@ romanization: "iḥtafala"
 concept_tag: AR-VERB-IHTAFALA
 prerequisites: [AR-C162-sajjala, AR-C162-wazzafa]
 sounds: []
-roots: []
+roots: [ḥ-f-l]
+etymology_hook: "iḥtafala: built on the root ḥ-f-l, 'to gather, to fill' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C162-wazzafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C163-ACT163-01]; assesses=[] -->
 
 **احتفل** — *iḥtafala* — "to celebrate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**احتفل** (*iḥtafala*) is built on the native Arabic root *ḥ-f-l*, "to gather, to fill" (Lane). *Iḥtafala* is Form VIII, "to gather for an occasion", to celebrate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

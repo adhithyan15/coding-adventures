@@ -12,7 +12,7 @@ concept_tag: AR-COLOUR-GREEN-YELLOW
 prerequisites: [AR-C21-kalb-qitt]
 sounds: [arabic-dad, arabic-sad]
 roots: [semitic-khadara-green, semitic-safara-empty]
-etymology_hook: "أخضر (akhḍar, 'green') is from root خ-ض-ر (kh-ḍ-r, 'to be green') — the same root behind خضار (khuḍār, 'vegetables'), echoing English's own 'greens' for vegetables, and the name of the Quranic figure al-Khiḍr, 'the Green One'; أصفر (aṣfar, 'yellow') shares its root, ص-ف-ر (ṣ-f-r), with صفر (ṣifr, 'zero, empty') — the very word behind English 'zero' and 'cipher'"
+etymology_hook: "akhḍar on kh-ḍ-r 'green'; aṣfar on ṣ-f-r, the letters of ṣifr 'empty, zero', source of English cipher"
 duration:
   max_seconds: 240
 requires:

@@ -14,7 +14,8 @@ romanization: "mulawwan"
 concept_tag: AR-QUAL149-MULAWWAN
 prerequisites: [AR-C148-hadd, AR-C149-muzlim]
 sounds: []
-roots: []
+roots: [l-w-n]
+etymology_hook: "mulawwan: built on the root l-w-n, 'colour' (Lane); mulawwan is the Form II passive participle, 'coloured'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C149-muzlim]
 <!-- hl-knowledge: introduces=[AR-LEX-C149-QUAL149-02]; assesses=[] -->
 
 **ملون** — *mulawwan* — "colourful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ملون** (*mulawwan*) is built on the native Arabic root *l-w-n*, "colour" (Lane). *Mulawwan* is the Form II passive participle, "coloured".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

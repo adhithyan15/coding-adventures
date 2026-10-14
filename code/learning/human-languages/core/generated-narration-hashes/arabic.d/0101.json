@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 101,
-  "sourceHash": "fnv1a64:16a9564b3324b42e",
+  "sourceHash": "fnv1a64:ea07bb37a30c17ef",
   "lessonIds": [
     "AR-C101-hayy",
     "AR-C101-zuqaq",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch101.txt",
   "json": "arabic/narration/ch101.json",
-  "textHash": "fnv1a64:53eb79827a22ccab",
-  "jsonHash": "fnv1a64:04099d2d962f7f09",
+  "textHash": "fnv1a64:070869a5ca0cb81c",
+  "jsonHash": "fnv1a64:414980eefb45a3bc",
   "findings": []
 }

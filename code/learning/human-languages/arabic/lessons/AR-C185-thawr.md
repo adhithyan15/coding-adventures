@@ -14,7 +14,8 @@ romanization: "thawr"
 concept_tag: AR-SHAY185-THAWR
 prerequisites: [AR-C185-babbagha, AR-C185-namla]
 sounds: []
-roots: []
+roots: [th-w-r]
+etymology_hook: "thawr: built on the root th-w-r, 'a bull' (Lane); Hebrew shor, 'ox', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C185-namla]
 <!-- hl-knowledge: introduces=[AR-LEX-C185-SHAY185-04]; assesses=[] -->
 
 **ثور** — *thawr* — "a bull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ثور** (*thawr*) is built on the native Arabic root *th-w-r*, "a bull; to rise up" (Lane). Hebrew *shor*, "ox", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

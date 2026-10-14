@@ -14,7 +14,8 @@ romanization: "furshā"
 concept_tag: AR-SHAY213-FURSHA
 prerequisites: [AR-C212-lami, AR-C213-arika]
 sounds: []
-roots: []
+roots: [f-r-sh]
+etymology_hook: "furshā: built on the root f-r-sh, 'to spread out' (Lane); furshāh is a modern word, 'a thing for spreading': a brush"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C213-arika]
 <!-- hl-knowledge: introduces=[AR-LEX-C213-SHAY213-02]; assesses=[] -->
 
 **فرشاة** — *furshā* — "a brush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فرشاة** (*furshā*) is built on the native Arabic root *f-r-sh*, "to spread out" (Lane). *Furshāh* is a modern word, "a thing for spreading": a brush.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

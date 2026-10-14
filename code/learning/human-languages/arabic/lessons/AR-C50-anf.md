@@ -14,7 +14,8 @@ romanization: "anf"
 concept_tag: AR-BODY50-ANF
 prerequisites: [AR-C50-ayn, AR-C50-udhun]
 sounds: []
-roots: []
+roots: [ʾ-n-f]
+etymology_hook: "anf: built on the root ʾ-n-f, 'the nose' (Lane); an old Semitic noun: Hebrew ʾaf, 'nose', is usually counted its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C50-udhun]
 <!-- hl-knowledge: introduces=[AR-LEX-C50-BODY50-03]; assesses=[] -->
 
 **أنف** — *anf* — "a nose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أنف** (*anf*) is built on the native Arabic root *ʾ-n-f*, "the nose" (Lane). An old Semitic noun: Hebrew *ʾaf*, "nose", is usually counted its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

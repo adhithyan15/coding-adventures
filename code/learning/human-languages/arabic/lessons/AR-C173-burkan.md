@@ -14,7 +14,8 @@ romanization: "burkān"
 concept_tag: AR-MAKAN173-BURKAN
 prerequisites: [AR-C173-mawqif, AR-C173-qarra]
 sounds: []
-roots: []
+roots: [italian-vulcano]
+etymology_hook: "burkān: usually traced to Sicilian vurcanu, Italian vulcano (EtymDB), from Latin Vulcanus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C173-qarra]
 <!-- hl-knowledge: introduces=[AR-LEX-C173-MAKAN173-05]; assesses=[] -->
 
 **بركان** — *burkān* — "a volcano".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بركان** (*burkān*) is usually traced to Italian *vulcano*, in its Sicilian form *vurcanu* (EtymDB), named after Vulcan, the Roman god of fire.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

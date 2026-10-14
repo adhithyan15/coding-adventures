@@ -14,7 +14,8 @@ romanization: "ḥummā"
 concept_tag: AR-HEALTH53-HUMMA
 prerequisites: [AR-C52-zahr, AR-C52-qalb]
 sounds: []
-roots: []
+roots: [ḥ-m-m]
+etymology_hook: "ḥummā: built on the root ḥ-m-m, 'to be hot, to heat' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C52-qalb]
 <!-- hl-knowledge: introduces=[AR-LEX-C53-HEALTH53-01]; assesses=[] -->
 
 **حمى** — *ḥummā* — "a fever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حمى** (*ḥummā*) is built on the native Arabic root *ḥ-m-m*, "to be hot, to heat" (Lane). Fever is named on the root of heat, like *ḥammām*, "a hot bath".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

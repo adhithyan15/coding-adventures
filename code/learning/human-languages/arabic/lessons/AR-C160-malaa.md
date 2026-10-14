@@ -14,7 +14,8 @@ romanization: "malaʾa"
 concept_tag: AR-VERB-MALAA
 prerequisites: [AR-C160-sabba, AR-C160-atfaa]
 sounds: []
-roots: []
+roots: [m-l-ʾ]
+etymology_hook: "malaʾa: built on the root m-l-ʾ, 'to fill' (Lane); malaʾa is the plain verb, 'he filled'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C160-atfaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C160-ACT160-04]; assesses=[] -->
 
 **ملأ** — *malaʾa* — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ملأ** (*malaʾa*) is built on the native Arabic root *m-l-ʾ*, "to fill" (Lane). *Malaʾa* is the plain verb, "he filled".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

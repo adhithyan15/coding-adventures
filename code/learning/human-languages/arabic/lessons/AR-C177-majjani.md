@@ -14,7 +14,8 @@ romanization: "majjānī"
 concept_tag: AR-SIFA177-MAJJANI
 prerequisites: [AR-C176-farq, AR-C177-mukallif]
 sounds: []
-roots: []
+roots: [m-j-n]
+etymology_hook: "majjānī: on m-j-n, 'to care nothing for what one does' (Lane); Lane's majjān is the gift of a thing without price"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C177-mukallif]
 <!-- hl-knowledge: introduces=[AR-LEX-C177-SIFA177-02]; assesses=[] -->
 
 **مجاني** — *majjānī* — "free (of charge)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مجاني** (*majjānī*) is built on the native Arabic root *m-j-n*, "to care nothing for what one does or hears" (Lane). Lane's *majjān* is the gift of a thing without price; *majjānī* adds the adjective ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

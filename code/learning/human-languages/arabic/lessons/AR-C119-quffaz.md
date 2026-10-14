@@ -14,7 +14,8 @@ romanization: "quffāz"
 concept_tag: AR-THINGS119-QUFFAZ
 prerequisites: [AR-C118-mihfaza, AR-C118-mizalla]
 sounds: []
-roots: []
+roots: [q-f-z]
+etymology_hook: "quffāz: built on the root q-f-z, 'to leap' (Lane); Lane's quffāz is a thing worn on the hand, stuffed with cotton"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C118-mizalla]
 <!-- hl-knowledge: introduces=[AR-LEX-C119-THINGS119-01]; assesses=[] -->
 
 **قفاز** — *quffāz* — "a glove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قفاز** (*quffāz*) is built on the native Arabic root *q-f-z*, "to leap" (Lane). Lane's *quffāz* is a thing worn on the hand, stuffed with cotton.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

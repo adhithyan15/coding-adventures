@@ -14,7 +14,8 @@ romanization: "ghannā"
 concept_tag: AR-VERB-GHANNA
 prerequisites: [AR-C228-istamaa, AR-C228-rasama]
 sounds: []
-roots: []
+roots: [gh-n-y]
+etymology_hook: "ghannā: built on the root gh-n-y, 'to be free from want; to sing' (Lane); ghannā is Form II, 'to sing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C228-rasama]
 <!-- hl-knowledge: introduces=[AR-LEX-C228-ACT228-04]; assesses=[] -->
 
 **غنى** — *ghannā* — "to sing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غنى** (*ghannā*) is built on the native Arabic root *gh-n-y*, "to be free from want; to sing" (Lane). *Ghannā* is Form II, "to sing"; the same root gives *ghinā*, "wealth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 7,
-  "sourceHash": "fnv1a64:7b50736cc491b932",
+  "sourceHash": "fnv1a64:8a388358a0846c84",
   "lessonIds": [
     "AR-C07-asif"
   ],
@@ -10,6 +10,6 @@
   "text": "arabic/narration/ch07.txt",
   "json": "arabic/narration/ch07.json",
   "textHash": "fnv1a64:e0d7332d47c483cb",
-  "jsonHash": "fnv1a64:09804e5e93bedf36",
+  "jsonHash": "fnv1a64:537a873d01dbd1f6",
   "findings": []
 }

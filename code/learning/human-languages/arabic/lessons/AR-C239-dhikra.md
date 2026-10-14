@@ -14,7 +14,8 @@ romanization: "dhikrā"
 concept_tag: AR-SABAB239-DHIKRA
 prerequisites: [AR-C239-ittifaq, AR-C239-niqash]
 sounds: []
-roots: []
+roots: [dh-k-r]
+etymology_hook: "dhikrā: built on the root dh-k-r, 'to remember' (Lane); dhikrā is a remembrance"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C239-niqash]
 <!-- hl-knowledge: introduces=[AR-LEX-C239-SABAB239-04]; assesses=[] -->
 
 **ذكرى** — *dhikrā* — "a memory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ذكرى** (*dhikrā*) is built on the native Arabic root *dh-k-r*, "to remember" (Lane). *Dhikrā* is a remembrance.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

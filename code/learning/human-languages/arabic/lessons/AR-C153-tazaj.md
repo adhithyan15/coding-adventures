@@ -14,7 +14,8 @@ romanization: "ṭāzaj"
 concept_tag: AR-QUAL153-TAZAJ
 prerequisites: [AR-C153-shuja, AR-C153-atshan]
 sounds: []
-roots: []
+roots: [persian-taza]
+etymology_hook: "ṭāzaj: usually traced to Persian tāza 'fresh'; not in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C153-atshan]
 <!-- hl-knowledge: introduces=[AR-LEX-C153-QUAL153-04]; assesses=[] -->
 
 **طازج** — *ṭāzaj* — "fresh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طازج** (*ṭāzaj*) is usually traced to Persian *tāza*, "fresh"; it has no entry in Lane and no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

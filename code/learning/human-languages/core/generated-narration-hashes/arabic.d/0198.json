@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 198,
-  "sourceHash": "fnv1a64:9ed16ee8d0122702",
+  "sourceHash": "fnv1a64:995ce6d44edf06f4",
   "lessonIds": [
     "AR-C198-samaha",
     "AR-C198-manaa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch198.txt",
   "json": "arabic/narration/ch198.json",
-  "textHash": "fnv1a64:87e25385e2f53112",
-  "jsonHash": "fnv1a64:2183bfa8089d6d2d",
+  "textHash": "fnv1a64:f6325d024a946e2d",
+  "jsonHash": "fnv1a64:b131ee4979c7d4a2",
   "findings": []
 }
