@@ -3209,9 +3209,9 @@ pub struct DroppedStyleProperty {
 /// of supported names, which would go stale silently the moment a property
 /// stopped being lowered.
 ///
-/// State-layer props are not walked separately: a state block can only set a
-/// property the base lowering also understands, so a drop there is the same
-/// drop, reported once against the part.
+/// Most state-layer properties retain the historical base-only report.
+/// Transform values need their own state audit: a supported base rotation
+/// does not imply a state rotation has a supported unit or function.
 ///
 /// `layout` is needed because not every property is lowered by a modifier.
 /// `gap` is lowered at view-CONSTRUCTION time — `HStack(spacing:)` — which the
@@ -3270,6 +3270,20 @@ pub fn dropped_style_properties(
                 name: drop.name,
                 value: drop.value,
             });
+        }
+        // State names cannot prove value support. Reuse the exact rotation
+        // parser rather than exempting a state because its base lowered.
+        for state in &part.states {
+            for prop in &state.props {
+                if prop.name == "transform" && swiftui_rotation_degrees(&prop.value).is_none() {
+                    out.push(DroppedStyleProperty {
+                        part: part.name.clone(),
+                        name: prop.name.clone(),
+                        value: prop.value.clone(),
+                        reason: format!("state {}: {}", state.state, swiftui_drop_reason(&prop.name)),
+                    });
+                }
+            }
         }
     }
     out
@@ -14095,6 +14109,22 @@ mod tests {
             assert!(chain.is_empty(), "{value}: {chain}");
             assert_eq!(drops, props, "{value}");
         }
+    }
+
+    #[test]
+    fn unsupported_state_rotation_is_visible_in_the_public_report() {
+        let mut style = style_with_part("F", "c", vec![sp("transform", "rotate(45deg)")]);
+        style.parts[0].states.push(StateStyle {
+            slot: None, slot_is_bool: false, state: "hover".into(),
+            props: vec![sp("transform", "scale(2)")], transitions: vec![],
+        });
+        let layout = gap_layout(None, "Box", "c");
+        let drops = dropped_style_properties(&style, &layout);
+        assert_eq!(drops.len(), 1);
+        assert_eq!(drops[0].name, "transform");
+        assert_eq!(drops[0].value, "scale(2)");
+        style.parts[0].states[0].props = vec![sp("transform", "rotate(-22.5deg)")];
+        assert!(dropped_style_properties(&style, &layout).is_empty());
     }
 
     // ---------------------------------------------------------------------
