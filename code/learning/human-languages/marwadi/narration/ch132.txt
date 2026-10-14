@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for gram-flour dumplings, then the Marwadi f
 You'll want to know: अचार.
 अचार — achār — "pickle".
 
+The word, taken apart.
+अचार (achār) is a loan, usually traced to Persian āčār, "pickle".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a papad, then the Marwadi for pickle.
 
 You'll want to know: लापसी.
 लापसी — lāpsī — "a sweet wheat dish".
+
+The word, taken apart.
+लापसी (lāpsī) is a tadbhava, a word inherited and reshaped by sound change. It comes from lappasikā, "a sweetmeat or dish", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 10941); the match is through Hindi lāpsī and Gujarati lāpśī. CDIAL calls Sanskrit lapsikā a Sanskritized form of the Middle Indo-Aryan word.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for pickle, then the Marwadi for a sweet whe
 You'll want to know: घेवर.
 घेवर — ghevar — "a honeycomb sweet".
 
+The word, taken apart.
+घेवर (ghevar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghṛtapūra, "sweetmeat of flour, milk, coconut and ghee". CDIAL gives no Marwari form in this entry (CDIAL 4502); the match is through Gujarati ghebar. It is built on ghṛta, "ghee", and pūra, "cake".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a sweet wheat dish, then the Marwadi for
 You'll want to know: मक्की.
 मक्की — makkī — "maize".
 
+The word, taken apart.
+CDIAL lists Hindi makkā and makāī, "maize", under Sanskrit markaka, the name of a heron-like bird (CDIAL 9879), without explaining the link. Maize reached India from the Americas, so how its name arose is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a honeycomb sweet, then the Marwadi for 
 
 You'll want to know: गेहूं.
 गेहूं — gehū̃ — "wheat".
+
+The word, taken apart.
+गेहूं (gehū̃) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from godhūma, "wheat". CDIAL gives no Marwari form in this entry (CDIAL 4287); the match is through Hindi gehū̃.
 
 What you've built.
 One more word for this chapter.

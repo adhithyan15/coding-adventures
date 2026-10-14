@@ -50,6 +50,9 @@ soḷā — sixteen.
 Six is chha. Sixteen is soḷā, and the two share nothing you can hear — the teens have worn their small numbers down further here than anywhere else in the set.
 What they do share is the retroflex ḷ you have just written. Curl the tongue back for it: so-ḷā, not so-lā. This is where the new letter earns its lesson.
 
+The word, taken apart.
+soḷā is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ṣoḍaśa, "sixteen". CDIAL gives no Marwari form in this entry (CDIAL 12812); the match is through Gujarati soḷ. Gujarati, like Marwadi, says the l curled back.
+
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages.
 [question — say your answer, then pause 12 seconds]
@@ -78,6 +81,9 @@ You'll want to know.
 सो + ळा becomes सोळा — soḷā — sixteen.
 सो is already a word in this book: a hundred. Sixteen is that syllable with ळा after it — which is why the retroflex letter had to come first.
 Write सो and सोळा (soḷā) one above the other. Two signs apart, a hundred and sixteen.
+
+The word, taken apart.
+सोळा (soḷā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ṣoḍaśa, "sixteen". CDIAL gives no Marwari form in this entry (CDIAL 12812); the match is through Gujarati soḷ. Gujarati, like Marwadi, says the l curled back.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -138,6 +144,9 @@ satarā — seventeen.
 Seven is sāt. Seventeen is satarā, and this is the clearest one in the whole set: सात is still visible inside it, with only its long vowel shortened before the -arā ending arrives.
 If you have been listening for the shape rather than learning the words, this is the one that proves the shape works.
 
+The word, taken apart.
+satarā is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saptadaśa, "seventeen". CDIAL gives no Marwari form in this entry (CDIAL 13146); the match is through Hindi sattrah and Gujarati sattar. It is sapta, "seven", and daśa, "ten".
+
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages.
 [question — say your answer, then pause 12 seconds]
@@ -165,6 +174,9 @@ You'll want to know.
 Write सात and then सतरा (satarā) underneath it. The difference is one mark: the ा of seven is gone, and रा is added.
 That is the whole spelling, and it is the tidiest evidence in the set that the teens are built rather than learned.
 
+The word, taken apart.
+सतरा (satarā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saptadaśa, "seventeen". CDIAL gives no Marwari form in this entry (CDIAL 13146); the match is through Hindi sattrah and Gujarati sattar. It is sapta, "seven", and daśa, "ten".
+
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 Write सात, then cover it and write सतरा (satarā) from memory. Compare them letter by letter and name the single mark that differs. Then write सोळा (soḷā) above both and read the three down the page.
@@ -190,6 +202,9 @@ You'll want to know.
 aṭhārā — eighteen.
 Eight is āṭh. Eighteen is aṭhārā: the same two sounds, with the length moved from the front of the word to the middle of it.
 Say them back to back — āṭh, aṭhārā — and hear the long vowel change places. Eighteen is the second of the two teens that begin on a vowel, which is why the letter came before it.
+
+The word, taken apart.
+aṭhārā is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṣṭādaśa, "eighteen". CDIAL gives no Marwari form in this entry (CDIAL 946); the match is through Hindi aṭhārah. It is aṣṭā, "eight", and daśa, "ten".
 
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages.
@@ -219,6 +234,9 @@ Here is the standing अ (a) doing the one thing it exists for. Write आठ and
 आठ opens on the long आ;
 अठारा (aṭhārā) opens on the short अ (a), and moves the length onto ठा.
 Two letters that differ by one stroke, at the front of two numbers ten apart. This is the pair most worth writing twice.
+
+The word, taken apart.
+अठारा (aṭhārā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṣṭādaśa, "eighteen". CDIAL gives no Marwari form in this entry (CDIAL 946); the match is through Hindi aṭhārah. It is aṣṭā, "eight", and daśa, "ten".
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -282,6 +300,9 @@ Nine is no, and there is no no in ughaṇīs. What is in it is -ṇīs, which is
 That is why twenty was taught before the teens rather than after them. A course that counted straight up would have printed bīs inside nineteen before it had taught bīs. The language counts down here, so the book did too.
 Turner records the same habit further up: ekuṇcālīs, one short of forty, for thirty-nine.
 
+The word, taken apart.
+CDIAL lists Hindi unīs, "nineteen", under Sanskrit ūnaviṃśati, "nineteen", literally "twenty less one" (CDIAL 2411). It gives no Marwari form there, and the gh of ughaṇīs is not explained by that entry, so that part of its history is not settled.
+
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages.
 [question — say your answer, then pause 16 seconds]
@@ -310,6 +331,9 @@ You'll want to know.
 उ (u) + घ + णी + स becomes उघणीस — ughaṇīs — nineteen.
 Four pieces and no new sign: उ (u) from the last lesson, घ from chapter 10, the retroflex ण from chapter 4, and स from the first page of the book.
 Write बीस under it. The ीस at the end of nineteen is the ीस of twenty, with a retroflex ण in front of it instead of ब. What the ear was told, the page shows.
+
+The word, taken apart.
+CDIAL lists Hindi unīs, "nineteen", under Sanskrit ūnaviṃśati, "nineteen", literally "twenty less one" (CDIAL 2411). It gives no Marwari form there, and the gh of उघणीस (ughaṇīs) is not explained by that entry, so that part of its history is not settled.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.

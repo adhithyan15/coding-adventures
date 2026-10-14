@@ -14,7 +14,8 @@ romanization: "mahīno"
 concept_tag: MW-TIME78-MAHINO
 prerequisites: [MW-C78-rat, MW-C78-savero]
 sounds: []
-roots: []
+roots: [persian-mahina]
+etymology_hook: "mahīno: usually traced to Persian māhīna 'monthly'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C78-savero]
 <!-- hl-knowledge: introduces=[MW-LEX-C78-TIME78-04]; assesses=[] -->
 
 **महीनो** — *mahīno* — "a month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**महीनो** (*mahīno*) is a loan, usually traced to Persian *māhīna*, "monthly". It is built on Persian *māh*, "moon, month".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

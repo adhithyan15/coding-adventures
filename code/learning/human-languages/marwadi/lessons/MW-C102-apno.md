@@ -14,7 +14,8 @@ romanization: "āpṇo"
 concept_tag: MW-DEF102-APNO
 prerequisites: [MW-C102-sagla, MW-C102-dujo]
 sounds: []
-roots: []
+roots: [sanskrit-atman]
+etymology_hook: "āpṇo ← *ātmanaka 'own', on Sanskrit ātman 'self' (CDIAL 1135, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C102-dujo]
 <!-- hl-knowledge: introduces=[MW-LEX-C102-DEF102-03]; assesses=[] -->
 
 **आपणो** — *āpṇo* — "our own, one's own".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आपणो** (*āpṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ātmanaka*, "own", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *āpaṇau* under it (CDIAL 1135). CDIAL reconstructs *\*ātmanaka* from Sanskrit *ātman*, "self".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

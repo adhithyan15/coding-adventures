@@ -14,7 +14,8 @@ romanization: "kāko"
 concept_tag: MW-FAMILY49-KAKO
 prerequisites: [MW-C48-beto, MW-C48-beti]
 sounds: []
-roots: []
+roots: [indo-aryan-kakka]
+etymology_hook: "kāko ← *kākka 'senior male relative', which CDIAL takes from Dravidian (CDIAL 2998)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C48-beti]
 <!-- hl-knowledge: introduces=[MW-LEX-C49-FAMILY49-01]; assesses=[] -->
 
 **काको** — *kāko* — "an uncle (father's brother)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काको** (*kāko*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kākka*, "senior male relative", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 2998); the match is through Hindi *kākā* and Gujarati *kāko*. CDIAL takes the word from Dravidian: Kannada *kakka*, "uncle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

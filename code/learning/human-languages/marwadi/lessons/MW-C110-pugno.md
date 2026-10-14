@@ -14,7 +14,8 @@ romanization: "pūgṇo"
 concept_tag: MW-VERB-PUGNO
 prerequisites: [MW-C110-batno, MW-C110-gamavno]
 sounds: []
-roots: []
+roots: [sanskrit-puryate]
+etymology_hook: "pūgṇo ← Sanskrit pūryate 'is filled', a tadbhava (CDIAL 8342, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C110-gamavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C110-ACT110-03]; assesses=[] -->
 
 **पूगणो** — *pūgṇo* — "to reach, to arrive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पूगणो** (*pūgṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pūryate*, "is filled". CDIAL gives no Marwari form in this entry (CDIAL 8342); the match is through Gujarati *pugvũ*. The Gujarati row means "to reach", as **पूगणो** (*pūgṇo*) does; Old Gujarati *pūjaï* means "reaches".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

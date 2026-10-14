@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for green, then the Marwadi for yellow.
 You'll want to know: लाल.
 लाल — lāl — "red".
 
+The word, taken apart.
+लाल (lāl) is a loan, usually traced to Persian lāl, "red; ruby".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for yellow, then the Marwadi for red.
 
 You'll want to know: नीलो.
 नीलो — nīlo — "blue".
+
+The word, taken apart.
+नीलो (nīlo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nīla, "dark blue, dark green, black". CDIAL gives no Marwari form in this entry (CDIAL 7563); the match is through Hindi nīlā and Gujarati nīlũ.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for red, then the Marwadi for blue.
 You'll want to know: काळो.
 काळो — kāḷo — "black".
 
+The word, taken apart.
+काळो (kāḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kāla, "black, dark-blue". CDIAL lists Marwari kāḷo under it (CDIAL 3083). CDIAL reports a view that the Sanskrit word came from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for blue, then the Marwadi for black.
 You'll want to know: भूरो.
 भूरो — bhūro — "brown".
 
+The word, taken apart.
+भूरो (bhūro) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhrūra, "brown", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 9690); the match is through Hindi bhūrā and Gujarati bhūrũ. CDIAL sets it beside Indo-European bhrūno-, behind English brown.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for black, then the Marwadi for brown.
 
 You'll want to know: मीठो.
 मीठो — mīṭho — "sweet".
+
+The word, taken apart.
+मीठो (mīṭho) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from miṣṭa, "dainty, sweet". CDIAL lists Old Marwari sumīṭha under it (CDIAL 10299). The Old Marwari row means "very sweet"; Hindi has mīṭhā.
 
 What you've built.
 One more word for this chapter.

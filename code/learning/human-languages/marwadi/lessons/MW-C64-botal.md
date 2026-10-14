@@ -14,7 +14,8 @@ romanization: "botal"
 concept_tag: MW-HOME64-BOTAL
 prerequisites: [MW-C64-chamcho, MW-C64-chhuri]
 sounds: []
-roots: []
+roots: [english-bottle]
+etymology_hook: "botal: usually traced to English bottle, or to Portuguese botelha; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C64-chhuri]
 <!-- hl-knowledge: introduces=[MW-LEX-C64-HOME64-05]; assesses=[] -->
 
 **बोतल** — *botal* — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बोतल** (*botal*) is usually traced to English *bottle*, or to Portuguese *botelha*; CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

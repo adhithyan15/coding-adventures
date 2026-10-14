@@ -14,7 +14,8 @@ romanization: "khāṭ"
 concept_tag: MW-HOME63-KHAT
 prerequisites: [MW-C62-bhit, MW-C62-chhat]
 sounds: []
-roots: []
+roots: [sanskrit-khatva]
+etymology_hook: "khāṭ ← Sanskrit khaṭvā 'bedstead', a tadbhava (CDIAL 3781, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C62-chhat]
 <!-- hl-knowledge: introduces=[MW-LEX-C63-HOME63-01]; assesses=[] -->
 
 **खाट** — *khāṭ* — "a string bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खाट** (*khāṭ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khaṭvā*, "bedstead". CDIAL gives no Marwari form in this entry (CDIAL 3781); the match is through Hindi *khāṭ* and Gujarati *khāṭ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

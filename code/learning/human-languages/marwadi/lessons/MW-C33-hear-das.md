@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-TEN
 prerequisites: [MW-C33-no-nine]
 sounds: [dental-d, short-a, voiceless-s]
 roots: [sanskrit-dasha]
-etymology_hook: The comparative dictionary records this exact form for Marwari under Sanskrit dasha, ten.
+etymology_hook: "das ← Sanskrit daśa 'ten', a tadbhava (CDIAL 6227, Marwari row)"
 duration:
   max_seconds: 170
 requires:
@@ -54,6 +54,11 @@ not understand the answer.
 
 The comparative dictionary of the Indo-Aryan languages lists this form for
 Marwari by name, under the Sanskrit word for ten.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*das* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *daśa*, "ten". CDIAL lists Marwari *das* under it (CDIAL 6227). English *ten* is the same ancient word.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DAS-01] -->

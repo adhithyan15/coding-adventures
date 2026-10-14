@@ -12,6 +12,7 @@ concept_tag: PRONOUN-MY
 prerequisites: [MW-C04-practice]
 sounds: [aspirated-mh, long-aa, tapped-r, long-o]
 roots: []
+etymology_hook: "mhāro 'my': CDIAL has no Marwari entry; its nearest row is Old Gujarati māharaü 'my' (CDIAL 9691)"
 duration:
   max_seconds: 150
 requires:
@@ -49,6 +50,11 @@ Set writing aside. The next chapter begins with the ear.
 Listen twice: *mhā-ro*. Say it once. The breath after *m* belongs to the
 word; do not insert a full vowel between *m* and *h*. You do not need to spell
 it today.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mhāro* is the Marwari "my". CDIAL lists no Marwari *mhāro*; its nearest row is Old Gujarati *māharaü*, "my", under the first-person stem *ma-* (CDIAL 9691), beside Old Marwari *meraü*. How the word took its *mh-* is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MHARO-01] -->

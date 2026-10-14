@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for dates, then the Marwadi for a coconut.
 You'll want to know: बळद.
 बळद — baḷad — "an ox".
 
+The word, taken apart.
+बळद (baḷad) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from balivarda, "ox, bull". CDIAL gives no Marwari form in this entry (CDIAL 9176); the match is through Gujarati baḷad and Hindi balad. CDIAL records a view that the Sanskrit word joins balin, "strong", with a non-Aryan word for "ox".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a coconut, then the Marwadi for an ox.
 
 You'll want to know: बाछड़ो.
 बाछड़ो — bāchhṛo — "a calf".
+
+The word, taken apart.
+बाछड़ो (bāchhṛo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vatsa, "calf, child". CDIAL gives no Marwari form in this entry (CDIAL 11239); the match is through Hindi bāchā. The ṛ is an added suffix. The Sanskrit word first meant "yearling".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for an ox, then the Marwadi for a calf.
 You'll want to know: हिरण.
 हिरण — hiraṇ — "a deer".
 
+The word, taken apart.
+हिरण (hiraṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hariṇa, "deer". CDIAL gives no Marwari form in this entry (CDIAL 13982); the match is through Hindi hiran and Gujarati haraṇ. The Sanskrit word first meant "yellow". CDIAL rejects a proposed Austroasiatic source.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a calf, then the Marwadi for a deer.
 You'll want to know: लूंकड़ी.
 लूंकड़ी — lū̃kṛī — "a fox".
 
+The word, taken apart.
+The origin of लूंकड़ी (lū̃kṛī) is not settled. CDIAL lists Hindi lomṛī, "fox", under Sanskrit lomaṭaka, "fox" (CDIAL 11153), but no form with the lū̃k- of लूंकड़ी (lū̃kṛī).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a deer, then the Marwadi for a fox.
 
 You'll want to know: सियाळ.
 सियाळ — siyāḷ — "a jackal".
+
+The word, taken apart.
+सियाळ (siyāḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śṛgāla, "jackal". CDIAL gives no Marwari form in this entry (CDIAL 12578); the match is through Hindi siyāl and Gujarati siyāḷ.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "ret"
 concept_tag: MW-NATURE68-RET
 prerequisites: [MW-C68-nadi, MW-C68-bhato]
 sounds: []
-roots: []
+roots: [sanskrit-retra]
+etymology_hook: "ret ← Sanskrit retra 'perfumed powder' (CDIAL 10816, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C68-bhato]
 <!-- hl-knowledge: introduces=[MW-LEX-C68-NATURE68-04]; assesses=[] -->
 
 **रेत** — *ret* — "sand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रेत** (*ret*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *retra*, "perfumed powder". CDIAL lists Old Marwari *reta* under it (CDIAL 10816). CDIAL thinks a Munda source for the Sanskrit word scarcely likely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

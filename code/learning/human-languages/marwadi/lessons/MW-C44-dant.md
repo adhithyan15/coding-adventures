@@ -14,7 +14,8 @@ romanization: "dānt"
 concept_tag: MW-BODY44-DANT
 prerequisites: [MW-C44-matho, MW-C44-bal]
 sounds: []
-roots: []
+roots: [danta-sanskrit]
+etymology_hook: "dānt ← Sanskrit danta 'tooth', a tadbhava (CDIAL 6152, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C44-bal]
 <!-- hl-knowledge: introduces=[MW-LEX-C44-BODY44-04]; assesses=[] -->
 
 **दांत** — *dānt* — "a tooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दांत** (*dānt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *danta*, "tooth". CDIAL lists Marwari *dā̃t* under it (CDIAL 6152). English *tooth* and Latin *dens* are the same ancient word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

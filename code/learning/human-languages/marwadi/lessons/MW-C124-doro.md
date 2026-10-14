@@ -14,7 +14,8 @@ romanization: "ḍoro"
 concept_tag: MW-THINGS124-DORO
 prerequisites: [MW-C124-tauliyo, MW-C124-sui]
 sounds: []
-roots: []
+roots: [sanskrit-davara]
+etymology_hook: "ḍoro ← Sanskrit davara 'string', a tadbhava (CDIAL 6225, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C124-sui]
 <!-- hl-knowledge: introduces=[MW-LEX-C124-THINGS124-05]; assesses=[] -->
 
 **डोरो** — *ḍoro* — "thread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डोरो** (*ḍoro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *davara*, "string". CDIAL gives no Marwari form in this entry (CDIAL 6225); the match is through Hindi *ḍorā* and Gujarati *doro*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

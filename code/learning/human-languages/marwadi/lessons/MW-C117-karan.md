@@ -14,7 +14,8 @@ romanization: "kāraṇ"
 concept_tag: MW-WHY117-KARAN
 prerequisites: [MW-C116-mauko, MW-C117-kyu]
 sounds: []
-roots: []
+roots: [sanskrit-karana]
+etymology_hook: "kāraṇ ← Sanskrit kāraṇa 'cause', a tatsama (CDIAL 3057)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C117-kyu]
 <!-- hl-knowledge: introduces=[MW-LEX-C117-WHY117-02]; assesses=[] -->
 
 **कारण** — *kāraṇ* — "a reason".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कारण** (*kāraṇ*) is Sanskrit *kāraṇa*, "cause", taken over whole as a learned loan, a tatsama (CDIAL 3057). CDIAL also lists Gujarati *kāraṇ* and Hindi *kāran*, "reason", under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ghaṛo"
 concept_tag: MW-THINGS118-GHARO
 prerequisites: [MW-C118-karahi, MW-C118-hadi]
 sounds: []
-roots: []
+roots: [sanskrit-ghata-pot]
+etymology_hook: "ghaṛo ← Sanskrit ghaṭa 'pot', a tadbhava (CDIAL 4406, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C118-hadi]
 <!-- hl-knowledge: introduces=[MW-LEX-C118-THINGS118-05]; assesses=[] -->
 
 **घड़ो** — *ghaṛo* — "a water pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घड़ो** (*ghaṛo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghaṭa*, "pot". CDIAL lists Marwari *ghaṛī* under it (CDIAL 4406). The Marwari row is *ghaṛī*, "water-clock"; Hindi *ghaṛā* and Gujarati *ghaṛo* mean "water pot", as **घड़ो** (*ghaṛo*) does.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

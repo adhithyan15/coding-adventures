@@ -14,7 +14,8 @@ romanization: "bhūlṇo"
 concept_tag: MW-VERB-BHULNO
 prerequisites: [MW-C55-milno, MW-C55-sikhno]
 sounds: []
-roots: []
+roots: [indo-aryan-bhull]
+etymology_hook: "bhūlṇo ← *bhull 'err, forget', reconstructed (CDIAL 9538, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C55-sikhno]
 <!-- hl-knowledge: introduces=[MW-LEX-C55-VERBS55-03]; assesses=[] -->
 
 **भूलणो** — *bhūlṇo* — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भूलणो** (*bhūlṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhull*, "err, forget", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *bhūlaï* under it (CDIAL 9538).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

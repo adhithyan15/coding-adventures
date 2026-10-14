@@ -14,7 +14,8 @@ romanization: "chaklo"
 concept_tag: MW-THINGS121-CHAKLO
 prerequisites: [MW-C120-musal, MW-C120-belan]
 sounds: []
-roots: []
+roots: [indo-aryan-cakrala]
+etymology_hook: "chaklo ← *cakrala 'circular', reconstructed (CDIAL 4548, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C120-belan]
 <!-- hl-knowledge: introduces=[MW-LEX-C121-THINGS121-01]; assesses=[] -->
 
 **चकलो** — *chaklo* — "a rolling board".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चकलो** (*chaklo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cakrala*, "circular", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4548); the match is through Hindi *caklā*. It is built on *cakra*, "wheel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

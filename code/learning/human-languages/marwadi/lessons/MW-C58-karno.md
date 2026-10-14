@@ -14,7 +14,8 @@ romanization: "karṇo"
 concept_tag: MW-VERB-KARNO
 prerequisites: [MW-C57-sochno, MW-C58-puchhno]
 sounds: []
-roots: []
+roots: [sanskrit-karoti]
+etymology_hook: "karṇo ← Sanskrit karoti 'does', a tadbhava (CDIAL 2814, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C58-puchhno]
 <!-- hl-knowledge: introduces=[MW-LEX-C58-VERBS58-02]; assesses=[] -->
 
 **करणो** — *karṇo* — "to do".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**करणो** (*karṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karoti*, "does". CDIAL lists Old Marwari *karaï* under it (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

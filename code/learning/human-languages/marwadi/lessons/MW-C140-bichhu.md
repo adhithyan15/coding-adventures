@@ -14,7 +14,8 @@ romanization: "bīchhū"
 concept_tag: MW-THINGS140-BICHHU
 prerequisites: [MW-C140-machchhar, MW-C140-kiri]
 sounds: []
-roots: []
+roots: [sanskrit-vrshcika]
+etymology_hook: "bīchhū ← Sanskrit vṛścika 'scorpion', a tadbhava (CDIAL 12081, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C140-kiri]
 <!-- hl-knowledge: introduces=[MW-LEX-C140-THINGS140-05]; assesses=[] -->
 
 **बीछू** — *bīchhū* — "a scorpion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बीछू** (*bīchhū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vṛścika*, "scorpion". CDIAL gives no Marwari form in this entry (CDIAL 12081); the match is through Hindi *bīchū* and Gujarati *vīchu*. CDIAL suggests that the many forms of the word come from a taboo on naming the scorpion.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

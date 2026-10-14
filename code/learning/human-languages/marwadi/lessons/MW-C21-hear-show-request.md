@@ -11,8 +11,8 @@ gloss: show me this cloth — the first complete thing this track can ask for
 concept_tag: MW-SHOPPING-SHOW-REQUEST
 prerequisites: [MW-R21-show-two]
 sounds: [semivowel-y, unaspirated-k, retroflex-flap, aspirated-kh]
-roots: []
-etymology_hook: Nineteen nouns and no transaction; this is the line that turns one of them into an exchange.
+roots: [sanskrit-karpata, indo-aryan-drkshati]
+etymology_hook: "ye kapṛā dikhāvo: ye 'this' (CDIAL 2530); kapṛā ← karpaṭa (CDIAL 2871); dikhāvo ← *dṛkṣati (CDIAL 6507)"
 duration:
   max_seconds: 175
 requires:
@@ -53,6 +53,11 @@ the counter in front of you.
 The source prints *dikhāvo* with its own objects. Here it takes a noun this
 book has already taught, so nothing in the line is unfamiliar except the
 joining.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ye kapṛā dikhāvo* joins three words with their own lessons: *ye*, "this", which CDIAL sets beside Hindi *yah* under Sanskrit *eṣa* (CDIAL 2530); *kapṛā*, "cloth", from Sanskrit *karpaṭa*, "rag", which CDIAL takes from Austroasiatic (CDIAL 2871); and *dikhāvo*, "show", the causing form of the verb CDIAL lists under *\*dṛkṣati*, "sees" (CDIAL 6507).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SHOW-REQUEST-01] -->

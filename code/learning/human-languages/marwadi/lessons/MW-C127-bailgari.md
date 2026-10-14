@@ -14,7 +14,8 @@ romanization: "bailgāṛī"
 concept_tag: MW-THINGS127-BAILGARI
 prerequisites: [MW-C127-kulhari, MW-C127-hal]
 sounds: []
-roots: []
+roots: [indo-aryan-balilla, indo-aryan-gadda]
+etymology_hook: "bailgāṛī: bail 'ox' ← *balilla (CDIAL 9175) + gāṛī 'cart' ← *gāḍḍa (CDIAL 4116)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C127-hal]
 <!-- hl-knowledge: introduces=[MW-LEX-C127-THINGS127-05]; assesses=[] -->
 
 **बैलगाड़ी** — *bailgāṛī* — "a bullock cart".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बैलगाड़ी** (*bailgāṛī*) is an ox cart: *bail*, "ox", which CDIAL lists as Hindi *bail* under *\*balilla*, "ox" (CDIAL 9175), and *gāṛī*, "cart", from *\*gāḍḍa* (CDIAL 4116).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

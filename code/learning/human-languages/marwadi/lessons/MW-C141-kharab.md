@@ -14,7 +14,8 @@ romanization: "kharāb"
 concept_tag: MW-QUAL141-KHARAB
 prerequisites: [MW-C140-bichhu, MW-C141-chokho]
 sounds: []
-roots: []
+roots: [arabic-kharab]
+etymology_hook: "kharāb ← Arabic ḫarāb 'ruin, desolation', through Persian (Lane, root ḫ-r-b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C141-chokho]
 <!-- hl-knowledge: introduces=[MW-LEX-C141-QUAL141-02]; assesses=[] -->
 
 **खराब** — *kharāb* — "bad, spoiled".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खराब** (*kharāb*) is a loan from Arabic *ḫarāb*, "ruin, desolation", which reached Marwadi through Persian. Its Arabic root is *ḫ-r-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

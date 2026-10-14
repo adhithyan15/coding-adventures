@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 37,
-  "sourceHash": "fnv1a64:8b6736d440e77def",
+  "sourceHash": "fnv1a64:2c579b1443a071a5",
   "lessonIds": [
     "MW-W37-i",
     "MW-C37-hear-igyaara",
@@ -20,7 +20,7 @@
   "drivablePrefix": 0,
   "text": "marwadi/narration/ch37.txt",
   "json": "marwadi/narration/ch37.json",
-  "textHash": "fnv1a64:ea06f25dac442178",
-  "jsonHash": "fnv1a64:16c8c4e85e05491e",
+  "textHash": "fnv1a64:a6dbb39931023c81",
+  "jsonHash": "fnv1a64:b72c9ca996495a23",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to burn, then the Marwadi for to sew.
 You'll want to know: बुणणो.
 बुणणो — buṇṇo — "to weave".
 
+The word, taken apart.
+बुणणो (buṇṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from vināti, "weaves", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari bināi under it (CDIAL 11773). Hindi bunnā comes from the variant vunāti, as बुणणो (buṇṇo) does.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to sew, then the Marwadi for to weave.
 
 You'll want to know: रंगणो.
 रंगणो — raṅgṇo — "to dye".
+
+The word, taken apart.
+रंगणो (raṅgṇo), "to dye", is the verb made from raṅg, "colour". That word may come from Sanskrit raṅga, "dye, colour", under which CDIAL lists Hindi rā̃g, "dye" (CDIAL 10560), or from Persian rang, "colour"; the two may have merged.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to weave, then the Marwadi for to dye.
 You'll want to know: लगावणो.
 लगावणो — lagāvṇo — "to apply, to fix on".
 
+The word, taken apart.
+लगावणो (lagāvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lagyati, "adheres to". CDIAL lists Old Marwari lāgaï under it (CDIAL 10895). It is the causing form of lāgṇo, "to stick, to seem": "make stick", so "apply".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to dye, then the Marwadi for to apply.
 You'll want to know: हटावणो.
 हटावणो — haṭāvṇo — "to remove".
 
+The word, taken apart.
+हटावणो (haṭāvṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from haṭṭ, "move", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 13943); the match is through Hindi haṭnā. It is the causing form, "make move aside".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to apply, then the Marwadi for to remove
 
 You'll want to know: बिछावणो.
 बिछावणो — bichhāvṇo — "to spread out".
+
+The word, taken apart.
+बिछावणो (bichhāvṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from vicchādayati, "spread out", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari bichāṇo under it (CDIAL 11692). It is built on the root chad, "to cover".
 
 What you've built.
 One more word for this chapter.

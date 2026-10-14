@@ -14,7 +14,8 @@ romanization: "ker"
 concept_tag: MW-THINGS131-KER
 prerequisites: [MW-C130-rabri, MW-C131-khichro]
 sounds: []
-roots: []
+roots: [sanskrit-karira]
+etymology_hook: "ker ← Sanskrit karīra 'the caper bush Capparis aphylla', a tadbhava (CDIAL 2805, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C131-khichro]
 <!-- hl-knowledge: introduces=[MW-LEX-C131-THINGS131-02]; assesses=[] -->
 
 **केर** — *ker* — "a desert berry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**केर** (*ker*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karīra*, "the caper bush Capparis aphylla". CDIAL gives no Marwari form in this entry (CDIAL 2805); the match is through Hindi *karīr*. CDIAL lists Gujarati *kerṛo*, "its fruit", under the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

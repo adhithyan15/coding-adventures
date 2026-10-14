@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for Thursday, then the Marwadi for Friday.
 You'll want to know: सनिवार.
 सनिवार — sanivār — "Saturday".
 
+The word, taken apart.
+सनिवार (sanivār) is a Sanskrit compound: śani, "the planet Saturn", and vāra, "day of the week" (CDIAL 11547). Marwadi says the ś as s; CDIAL has no entry for śani.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for Friday, then the Marwadi for Saturday.
 
 You'll want to know: रविवार.
 रविवार — ravivār — "Sunday".
+
+The word, taken apart.
+रविवार (ravivār) is a Sanskrit compound, a tatsama: ravi, "the sun" (CDIAL 10646), and vāra, "day of the week" (CDIAL 11547).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for Saturday, then the Marwadi for Sunday.
 You'll want to know: चैत.
 चैत — chait — "Chait (the first month, March-April)".
 
+The word, taken apart.
+चैत (chait) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caitra, "the month of the Citrā full moon". CDIAL gives no Marwari form in this entry (CDIAL 4915); the match is through Punjabi cetar. The month is named for the star Citrā.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for Sunday, then the Marwadi for Chait.
 You'll want to know: बैसाख.
 बैसाख — baisākh — "Baisakh (April-May)".
 
+The word, taken apart.
+बैसाख (baisākh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vaiśākha, "the month April-May". CDIAL gives no Marwari form in this entry (CDIAL 12149); the match is through Prakrit vēsāha. The month is named for the star pair Viśākhā.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for Chait, then the Marwadi for Baisakh.
 
 You'll want to know: जेठ.
 जेठ — jeṭh — "Jeth (May-June)".
+
+The word, taken apart.
+जेठ (jeṭh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jyaiṣṭha, "the month May-June". CDIAL lists Marwari jeṭh under it (CDIAL 5293). The month is named for the star Jyeṣṭhā, "eldest".
 
 What you've built.
 One more word for this chapter.

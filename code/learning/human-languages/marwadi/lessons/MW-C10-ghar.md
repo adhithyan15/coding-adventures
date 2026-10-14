@@ -11,8 +11,8 @@ gloss: home; house, written after gha is isolated
 concept_tag: MW-PLACE-HOME-WRITTEN
 prerequisites: [MW-W10-gha]
 sounds: [aspirated-gh, short-a, rolled-r]
-roots: []
-etymology_hook: New घ joins familiar र without another script burden.
+roots: [sanskrit-ghara]
+etymology_hook: "ghar: usually taken as a popular form of Sanskrit gṛha 'house', a link CDIAL calls phonetically difficult (CDIAL 4428)"
 duration:
   max_seconds: 150
 requires:
@@ -44,6 +44,11 @@ reviews_of: [MW-C10-hear-ghar, MW-W10-gha, MW-C10-bajar]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GHAR-01, MW-SCRIPT-GHAR-01] -->
 
 > **घ** + **र** → **घर** — *ghar* — home; house
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Marwari **घर** (*ghar*) under *ghara-*, "house", a word already in early Middle Indo-Aryan (CDIAL 4428). It is usually taken as a popular form of Sanskrit *gṛha*, "house", but CDIAL calls that link phonetically difficult, so the origin is not fully settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GHAR-01] -->

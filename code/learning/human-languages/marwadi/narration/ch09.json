@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Pachhe Milsu: See You Later",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:232346f84978adcd",
+  "sourceHash": "fnv1a64:690b34f515490614",
   "lessons": [
     {
       "id": "MW-C07-hear-later",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c7a71eaf9a06ca4",
+      "sourceHash": "fnv1a64:bc78dac9e7b45fb9",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pāchhe milsū is two inherited words. pāchhe, \"later, behind\", matches Old Marwari pāchaï, \"behind\", which CDIAL lists under paśca, \"hinder part\", drawn from Sanskrit paścāt (CDIAL 7990). milsū, \"we will meet\", is the future of a verb CDIAL lists as Old Marwari milaï, \"meets\", under Sanskrit milati (CDIAL 10133)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -79,7 +90,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -11,8 +11,8 @@ gloss: horse
 concept_tag: MW-TRANSPORT-HORSE
 prerequisites: [MW-C17-riksha]
 sounds: [aspirated-gh, long-o, retroflex-flap]
-roots: []
-etymology_hook: The last transport noun reuses the dotted sound and every written sign.
+roots: [sanskrit-ghotaka]
+etymology_hook: "ghoṛo ← Sanskrit ghoṭa 'horse', non-Aryan, prob. Dravidian (CDIAL 4516, Marwari row)"
 duration:
   max_seconds: 145
 requires:
@@ -46,6 +46,11 @@ reviews_of: [MW-C17-riksha, MW-C16-hear-gaadi, MW-W15-nukta]
 
 Hear the breathy first sound and curled middle sound. Picture a horse and
 say the word once.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ghoṛo* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghoṭa*, "horse". CDIAL lists Marwari *ghoṛo* under it (CDIAL 4516). CDIAL calls the Sanskrit word non-Aryan, probably Dravidian.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GHODO-01] -->

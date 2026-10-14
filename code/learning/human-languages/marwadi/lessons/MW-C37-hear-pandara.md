@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-FIFTEEN
 prerequisites: [MW-C37-chauda]
 sounds: [vowel-nasalization, long-aa]
 roots: [sanskrit-panchadasha]
-etymology_hook: Sanskrit panchadasha; five keeps its p and its nasal all the way into the teens.
+etymology_hook: "pandarā ← Sanskrit pañcadaśa 'fifteen', a tadbhava (CDIAL 7662, Hindi row)"
 duration:
   max_seconds: 170
 requires:
@@ -52,6 +52,11 @@ back after fourteen broke it.
 
 Three beats: *pan-da-rā*. The nasal in the middle is the same one already in
 *pāṅch* — the sound the anusvara writes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pandarā* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pañcadaśa*, "fifteen". CDIAL gives no Marwari form in this entry (CDIAL 7662); the match is through Hindi *pandrā*. It is *pañca*, "five", and *daśa*, "ten".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PANDARA-01, MW-LEX-CHAUDA-01] -->

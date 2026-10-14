@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-HUNDRED
 prerequisites: [MW-C34-bees]
 sounds: [voiceless-s, long-o]
 roots: [sanskrit-shata]
-etymology_hook: Two, nine and a hundred are the three shortest number words in Marwari, and all three rhyme.
+etymology_hook: "so ← Sanskrit śata 'hundred', a tadbhava (CDIAL 12278, Old Marwari row)"
 duration:
   max_seconds: 170
 requires:
@@ -52,6 +52,11 @@ Say *do*, *no*, *so*. Two, nine, a hundred: all three are one consonant plus
 the same long *o*, and nothing but that consonant tells them apart. At a noisy
 counter this is where a price gets misheard, so it is worth drilling the three
 together rather than in the order they were taught.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*so* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śata*, "hundred". CDIAL lists Old Marwari *sau* under it (CDIAL 12278). English *hundred* holds a cousin of the same ancient word.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SO-01, MW-LEX-NO-NINE-01, MW-LEX-DO-TWO-01] -->

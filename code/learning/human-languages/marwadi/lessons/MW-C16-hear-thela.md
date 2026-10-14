@@ -11,8 +11,8 @@ gloss: cart or handcart
 concept_tag: MW-TRANSPORT-CART
 prerequisites: [MW-C16-gaadi]
 sounds: [retroflex-tth, long-e, long-aa]
-roots: []
-etymology_hook: A cart word arrives by ear and needs no new written sign.
+roots: [indo-aryan-thedd]
+etymology_hook: "ṭhelā 'handcart' ← *ṭhēll- 'push', reconstructed (CDIAL 5512, Old Marwari row)"
 duration:
   max_seconds: 145
 requires:
@@ -46,6 +46,11 @@ reviews_of: [MW-C16-gaadi, MW-W06-ttha]
 > *ṭhelā* — **cart; handcart**
 
 Hear the strong first sound, picture a handcart, and say the word once.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ṭhelā* is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭhell*, "push", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *ṭhelijaï* under it (CDIAL 5512). Hindi has *ṭhelā* in the same sense, the cart you push.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THELA-01] -->

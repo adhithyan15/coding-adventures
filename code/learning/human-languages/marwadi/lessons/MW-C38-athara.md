@@ -11,7 +11,8 @@ gloss: eighteen, on the page — the standing a doing its only job
 concept_tag: MW-NUMBER-EIGHTEEN-WRITTEN
 prerequisites: [MW-C38-hear-athara]
 sounds: [retroflex-tth]
-roots: []
+roots: [sanskrit-ashtadasha]
+etymology_hook: "aṭhārā ← Sanskrit aṣṭādaśa 'eighteen', a tadbhava (CDIAL 946, Hindi row)"
 duration:
   max_seconds: 180
 requires:
@@ -53,6 +54,11 @@ Here is the standing **अ** doing the one thing it exists for. Write **आठ**
 
 Two letters that differ by one stroke, at the front of two numbers ten apart.
 This is the pair most worth writing twice.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अठारा** (*aṭhārā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṣṭādaśa*, "eighteen". CDIAL gives no Marwari form in this entry (CDIAL 946); the match is through Hindi *aṭhārah*. It is *aṣṭā*, "eight", and *daśa*, "ten".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-ATHARA-01, MW-SCRIPT-AATH-01, MW-SCRIPT-A-INDEPENDENT-01, MW-SCRIPT-AA-INDEPENDENT-01] -->

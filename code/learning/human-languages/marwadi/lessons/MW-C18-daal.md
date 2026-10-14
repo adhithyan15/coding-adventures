@@ -11,8 +11,8 @@ gloss: lentils, written entirely with familiar signs
 concept_tag: MW-FOOD-LENTILS-WRITTEN
 prerequisites: [MW-C18-hear-daal]
 sounds: [dental-d, long-aa, dental-l]
-roots: []
-etymology_hook: Familiar द, ा, and ल write the whole word with no new sign to learn.
+roots: [sanskrit-dala]
+etymology_hook: "dāl ← Sanskrit dāla 'split peas' (CDIAL 6309, Hindi row)"
 duration:
   max_seconds: 165
 requires:
@@ -45,6 +45,11 @@ reviews_of: [MW-C18-hear-daal, MW-C17-ghodo, MW-W10-ja]
 > **दा** + **ल** → **दाल** — *dāl* — lentils
 
 Three units, all of them met before: **द**, the long **ा**, and **ल**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दाल** (*dāl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dāla*, "kind of grain, split peas". CDIAL gives no Marwari form in this entry (CDIAL 6309); the match is through Hindi *dāl*. CDIAL asks whether it is the same word as *dāla*, "splitting".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DAAL-01] -->

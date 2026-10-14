@@ -4,7 +4,7 @@
   "chapter": 129,
   "title": "Shirt, Sandals, Embroidered shoes, Thick bangle, Bangle",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:15e1c3719f9f7c86",
+  "sourceHash": "fnv1a64:55f3e3795cba72e5",
   "lessons": [
     {
       "id": "MW-C129-kamij",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:809bc29b870defec",
+      "sourceHash": "fnv1a64:36c857a7356fdd76",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कमीज (kamīj) is a loan from Arabic qamīṣ, \"shirt\", which reached Marwadi through Persian. Its Arabic root is q-m-ṣ (Lane). Persian says it qamīz; Marwadi says the last sound as j."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c749b36823d87115",
+      "sourceHash": "fnv1a64:ba9bf495c5f19ac2",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of चप्पल (chappal) is not settled. CDIAL has no entry for it; DEDR compares Hindi cappal, with a \"Cf.\", to Dravidian words for \"sandal\" such as Telugu ceppu (DEDR 1963)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b7c4c8c7412f8ee",
+      "sourceHash": "fnv1a64:b958d96f1fd67437",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोचड़ी (mochṛī) matches Sindhi mocaṛu, \"shoe\", which CDIAL lists under mōca, \"shoe\", a word it takes from Iranian (Pahlavi mōč, \"shoe\"); Hindi mocī, \"cobbler\", is in the same entry (CDIAL 10349). CDIAL gives no Marwari form, so the match is through Sindhi, and the ṛ is an added suffix."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7ef81e4a747aba6",
+      "sourceHash": "fnv1a64:cc70ed5f92b73476",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कड़ो (kaṛo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaṭaka, \"twist of straw; bracelet\". CDIAL lists Marwari kaṛo under it (CDIAL 2629). Sanskrit kaṭaka already meant \"bracelet\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32cbbf43bf64759b",
+      "sourceHash": "fnv1a64:75cc404e491a3b4e",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चूड़ी (chūṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cūḍa, \"bracelet\". CDIAL gives no Marwari form in this entry (CDIAL 4884); the match is through Hindi cūṛī and Gujarati cūṛī. CDIAL asks whether it is the same word as cūḍa, \"topknot\", which it takes from Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

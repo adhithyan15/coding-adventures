@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for thin, then the Marwadi for short.
 You'll want to know: गुलाबी.
 गुलाबी — gulābī — "pink".
 
+The word, taken apart.
+गुलाबी (gulābī) is a loan, usually traced to Persian gulābī, "rose-coloured". It is built on Persian gulāb, "rose-water".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for short, then the Marwadi for pink.
 
 You'll want to know: केसरियो.
 केसरियो — kesariyo — "saffron-coloured".
+
+The word, taken apart.
+केसरियो (kesariyo) is built with the suffix -iyo on kesar, "saffron", which CDIAL lists as Gujarati and Hindi kesar under Sanskrit kesara, "hair, filament" (CDIAL 3474): saffron is the flower's filament.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for pink, then the Marwadi for saffron-colou
 You'll want to know: आसमानी.
 आसमानी — āsmānī — "sky-blue".
 
+The word, taken apart.
+आसमानी (āsmānī) is a loan, usually traced to Persian āsmānī, "sky-coloured". It is built on Persian āsmān, "sky".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for saffron-coloured, then the Marwadi for s
 You'll want to know: बैंगणी.
 बैंगणी — baiṅgṇī — "purple".
 
+The word, taken apart.
+बैंगणी (baiṅgṇī) is built with -ī on baiṅgaṇ, "aubergine", from Sanskrit vātiṅgaṇa, which CDIAL thinks may come from Dravidian (CDIAL 11503). CDIAL lists Hindi baĩjnī, "purple", under the same word.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for sky-blue, then the Marwadi for purple.
 
 You'll want to know: नारंगी.
 नारंगी — nāraṅgī — "orange".
+
+The word, taken apart.
+नारंगी (nāraṅgī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nāraṅga, "orange tree". CDIAL gives no Marwari form in this entry (CDIAL 7073); the match is through Hindi nāraṅgī and Gujarati nārãgī. The colour is named for the fruit.
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 61,
-  "sourceHash": "fnv1a64:9f1be74f693f41e3",
+  "sourceHash": "fnv1a64:799d920a4092b825",
   "lessonIds": [
     "MW-C61-angur",
     "MW-C61-nimbu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch61.txt",
   "json": "marwadi/narration/ch61.json",
-  "textHash": "fnv1a64:70c5e9241effc8de",
-  "jsonHash": "fnv1a64:a2433feb8c325c30",
+  "textHash": "fnv1a64:1b6afe73083bca12",
+  "jsonHash": "fnv1a64:4418ed0195d2a737",
   "findings": []
 }

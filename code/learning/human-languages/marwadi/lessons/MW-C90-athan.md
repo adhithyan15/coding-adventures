@@ -14,7 +14,8 @@ romanization: "āthaṇ"
 concept_tag: MW-TIME90-ATHAN
 prerequisites: [MW-C89-bhasa, MW-C90-dopar]
 sounds: []
-roots: []
+roots: [sanskrit-astamayana]
+etymology_hook: "āthaṇ ← Sanskrit astamayana 'setting of the sun', a tadbhava (CDIAL 975, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C90-dopar]
 <!-- hl-knowledge: introduces=[MW-LEX-C90-TIME90-02]; assesses=[] -->
 
 **आथण** — *āthaṇ* — "the evening".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आथण** (*āthaṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *astamayana*, "setting of the sun". CDIAL lists Old Marwari *āthaṇa* under it (CDIAL 975). It is built on *astam eti*, "goes home", said of the sun.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

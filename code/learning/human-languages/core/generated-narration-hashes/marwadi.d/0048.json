@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 48,
-  "sourceHash": "fnv1a64:a1c8e9e07677bc9f",
+  "sourceHash": "fnv1a64:894a283fa640309d",
   "lessonIds": [
     "MW-C48-raji",
     "MW-C48-udas",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch48.txt",
   "json": "marwadi/narration/ch48.json",
-  "textHash": "fnv1a64:24fa230a733fa5a1",
-  "jsonHash": "fnv1a64:3c7570ff449de1f8",
+  "textHash": "fnv1a64:0d0ee1e1c20481d7",
+  "jsonHash": "fnv1a64:c17f4e90f19c8ad6",
   "findings": []
 }

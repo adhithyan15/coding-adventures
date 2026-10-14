@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "Chickpeas, Mung beans, Moth beans, Sesame, Jaggery",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7ed1d0434df87106",
+  "sourceHash": "fnv1a64:c636465d64aeac17",
   "lessons": [
     {
       "id": "MW-C133-chana",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d44ad721e81cbd12",
+      "sourceHash": "fnv1a64:131f459d65a1ef8d",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चणा (chaṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caṇa, \"the chickpea\". CDIAL gives no Marwari form in this entry (CDIAL 4579); the match is through Gujarati caṇā. Marwadi, like Gujarati, keeps the ṇ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:273116c2baaa974e",
+      "sourceHash": "fnv1a64:44027cf9f55a1e64",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मूंग (mū̃g) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mudga, \"the bean Phaseolus mungo\". CDIAL gives no Marwari form in this entry (CDIAL 10198); the match is through Hindi mū̃g."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6d17afceea247e1",
+      "sourceHash": "fnv1a64:a7e0397202437610",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोठ (moṭh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mukuṣṭha, \"a kind of bean\". CDIAL gives no Marwari form in this entry (CDIAL 10148); the match is through Hindi moṭh. The Sanskrit word has many variant spellings in the old word-lists."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c47c3f03227dc1b4",
+      "sourceHash": "fnv1a64:da2dcbed13e326be",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तिल (til) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tila, \"sesame\". CDIAL lists Old Marwari tila under it (CDIAL 5827). The Old Marwari row means \"small particle\", a sense the Sanskrit word also had. CDIAL thinks the Sanskrit word itself probably came from Munda."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b90319935bde5766",
+      "sourceHash": "fnv1a64:9683b1f8c336b344",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गुड़ (guṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from guḍa, \"boiled sugarcane juice, molasses\". CDIAL gives no Marwari form in this entry (CDIAL 4182); the match is through Hindi guṛ. CDIAL asks whether it is the same word as guḍa, \"ball\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

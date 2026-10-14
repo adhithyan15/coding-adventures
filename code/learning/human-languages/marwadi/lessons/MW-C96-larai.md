@@ -14,7 +14,8 @@ romanization: "lārai"
 concept_tag: MW-LOC96-LARAI
 prerequisites: [MW-C96-uthai, MW-C96-agai]
 sounds: []
-roots: []
+roots: [indo-aryan-lara]
+etymology_hook: "lārai: Old Marwari lāra 'behind', under *lārā 'string, line', reconstructed (CDIAL 11024)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C96-agai]
 <!-- hl-knowledge: introduces=[MW-LEX-C96-LOC96-04]; assesses=[] -->
 
 **लारै** — *lārai* — "behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लारै** (*lārai*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*lārā*, "string, line", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *lāra* under it (CDIAL 11024). The Old Marwari row means "at the back, behind"; Gujarati has *lāre*, "behind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

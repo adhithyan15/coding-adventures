@@ -14,7 +14,8 @@ romanization: "jeb"
 concept_tag: MW-CLOTHES85-JEB
 prerequisites: [MW-C84-juti, MW-C85-mojo]
 sounds: []
-roots: []
+roots: [persian-jeb]
+etymology_hook: "jeb: usually traced to Persian jēb 'pocket', itself Arabic jayb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C85-mojo]
 <!-- hl-knowledge: introduces=[MW-LEX-C85-CLOTHES85-02]; assesses=[] -->
 
 **जेब** — *jeb* — "a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जेब** (*jeb*) is a loan, usually traced to Persian *jēb*, "pocket". Persian took it from Arabic *jayb*, "opening of a garment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

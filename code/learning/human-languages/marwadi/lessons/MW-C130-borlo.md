@@ -15,6 +15,7 @@ concept_tag: MW-THINGS130-BORLO
 prerequisites: [MW-C129-karo, MW-C129-churi]
 sounds: []
 roots: []
+etymology_hook: "borlo 'forehead ornament': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C129-churi]
 <!-- hl-knowledge: introduces=[MW-LEX-C130-THINGS130-01]; assesses=[] -->
 
 **बोरलो** — *borlo* — "a forehead ornament".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **बोरलो** (*borlo*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

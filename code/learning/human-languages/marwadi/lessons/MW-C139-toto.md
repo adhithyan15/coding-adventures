@@ -14,7 +14,8 @@ romanization: "toto"
 concept_tag: MW-THINGS139-TOTO
 prerequisites: [MW-C139-kaglo, MW-C139-kabutar]
 sounds: []
-roots: []
+roots: [persian-tuti]
+etymology_hook: "toto: usually traced to Persian ṭūṭī 'parrot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C139-kabutar]
 <!-- hl-knowledge: introduces=[MW-LEX-C139-THINGS139-03]; assesses=[] -->
 
 **तोतो** — *toto* — "a parrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तोतो** (*toto*) is a loan, usually traced to Persian *ṭūṭī*, "parrot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pāṛosī"
 concept_tag: MW-FAMILY50-PAROSI
 prerequisites: [MW-C49-admi, MW-C50-lugai]
 sounds: []
-roots: []
+roots: [sanskrit-prativeshya]
+etymology_hook: "pāṛosī ← Sanskrit prātiveśya 'neighbour', a tadbhava (CDIAL 8936, Gujarati and Sindhi rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C50-lugai]
 <!-- hl-knowledge: introduces=[MW-LEX-C50-FAMILY50-02]; assesses=[] -->
 
 **पाड़ोसी** — *pāṛosī* — "a neighbour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पाड़ोसी** (*pāṛosī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *prātiveśya*, "neighbouring; neighbour". CDIAL gives no Marwari form in this entry (CDIAL 8936); the match is through Gujarati *pāṛośī* and Sindhi *pāṛosī*. It is built on *prati*, "near", and *veśa*, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

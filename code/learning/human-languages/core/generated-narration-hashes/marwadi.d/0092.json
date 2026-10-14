@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 92,
-  "sourceHash": "fnv1a64:3611cde21d9224f1",
+  "sourceHash": "fnv1a64:ac44b9b79c23ef5e",
   "lessonIds": [
     "MW-C92-sanivar",
     "MW-C92-ravivar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch92.txt",
   "json": "marwadi/narration/ch92.json",
-  "textHash": "fnv1a64:a444c76718294b03",
-  "jsonHash": "fnv1a64:4523e197c1352b0c",
+  "textHash": "fnv1a64:65a5b31c7eda46e2",
+  "jsonHash": "fnv1a64:8d9d2352b6039a0b",
   "findings": []
 }

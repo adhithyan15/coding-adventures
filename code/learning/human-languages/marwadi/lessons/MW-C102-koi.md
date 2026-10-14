@@ -14,7 +14,8 @@ romanization: "koī"
 concept_tag: MW-DEF102-KOI
 prerequisites: [MW-C102-dujo, MW-C102-apno]
 sounds: []
-roots: []
+roots: [sanskrit-kashcid]
+etymology_hook: "koī ← Sanskrit kaścid 'some one, anyone', a tadbhava (CDIAL 2967, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C102-apno]
 <!-- hl-knowledge: introduces=[MW-LEX-C102-DEF102-04]; assesses=[] -->
 
 **कोई** — *koī* — "someone, any".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोई** (*koī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaścid*, "some one, anyone". CDIAL lists Old Marwari *koi* under it (CDIAL 2967). CDIAL notes that it partly ran together with *ko'pi*, "whoever".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: how are you? (polite/formal)
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [MW-C06-hear-question]
 sounds: [long-aa, open-ai, long-o]
-roots: []
-etymology_hook: The ear already owns the line; writing simply reuses known signs in three groups.
+roots: [sanskrit-atman, sanskrit-kidrsha, sanskrit-bhavati]
+etymology_hook: "āp ← ātman 'self' (CDIAL 1135); kaiso ← kīdṛśa 'of what kind' (CDIAL 3197); ho ← bhavati (CDIAL 9416)"
 duration:
   max_seconds: 180
 requires:
@@ -39,6 +39,11 @@ reviews_of: [MW-C06-hear-question, MW-C05-tharo, MW-C05-kain]
 
 [PAUSE 12s] Write **पाणी** from memory, then write **क**. Hear *āp kaiso ho?*,
 give its meaning, and say the three groups back.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आप कैसो हो** (*āp kaiso ho*) is three inherited words: *āp*, "you", from Sanskrit *ātman*, "self" (CDIAL 1135); *kaiso*, "how", from *kīdṛśa*, "of what kind" (CDIAL 3197); and *ho*, "are", from *bhavati*, "is" (CDIAL 9416).
 
 ## Script — three known groups
 <!-- hl-knowledge: introduces=[MW-SCRIPT-WELLBEING-QUESTION-01]; assesses=[MW-SCRIPT-THARO-01, MW-SCRIPT-KAIN-01] -->

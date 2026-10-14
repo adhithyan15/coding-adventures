@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 119,
-  "sourceHash": "fnv1a64:d6c59ce28578ce41",
+  "sourceHash": "fnv1a64:f5d877d84a23fc39",
   "lessonIds": [
     "MW-C119-matko",
     "MW-C119-loto",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marwadi/narration/ch119.txt",
   "json": "marwadi/narration/ch119.json",
-  "textHash": "fnv1a64:1f76e74b23352d71",
-  "jsonHash": "fnv1a64:0921a419e5166001",
+  "textHash": "fnv1a64:3cd3df1be6c4c251",
+  "jsonHash": "fnv1a64:92a894cfec660cc4",
   "findings": []
 }

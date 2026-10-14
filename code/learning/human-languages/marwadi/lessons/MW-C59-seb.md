@@ -14,7 +14,8 @@ romanization: "seb"
 concept_tag: MW-VERBS59-SEB
 prerequisites: [MW-C58-machhli, MW-C58-chaval]
 sounds: []
-roots: []
+roots: [persian-seb]
+etymology_hook: "seb: usually traced to Persian sēb 'apple'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C58-chaval]
 <!-- hl-knowledge: introduces=[MW-LEX-C59-VERBS59-01]; assesses=[] -->
 
 **सेब** — *seb* — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सेब** (*seb*) is a loan, usually traced to Persian *sēb*, "apple".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

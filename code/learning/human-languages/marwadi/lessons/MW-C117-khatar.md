@@ -14,7 +14,8 @@ romanization: "khātar"
 concept_tag: MW-WHY117-KHATAR
 prerequisites: [MW-C117-karan, MW-C117-vastai]
 sounds: []
-roots: []
+roots: [arabic-khatir]
+etymology_hook: "khātar ← Arabic ḫāṭir 'mind; sake', through Persian (Lane, root ḫ-ṭ-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C117-vastai]
 <!-- hl-knowledge: introduces=[MW-LEX-C117-WHY117-04]; assesses=[] -->
 
 **खातर** — *khātar* — "because of, for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खातर** (*khātar*) is a loan from Arabic *ḫāṭir*, "mind; sake", which reached Marwadi through Persian. Its Arabic root is *ḫ-ṭ-r* (Lane). Persian uses it in *ba xāṭir*, "for the sake of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "beṭī"
 concept_tag: MW-HEALTH48-BETI
 prerequisites: [MW-C48-daktar, MW-C48-beto]
 sounds: []
-roots: []
+roots: [indo-aryan-betta]
+etymology_hook: "beṭī 'daughter': CDIAL lists it under *bēṭṭa, beside Prakrit biṭṭī 'girl', in a group headed *biḍḍa (CDIAL 9238)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C48-beto]
 <!-- hl-knowledge: introduces=[MW-LEX-C48-HEALTH48-05]; assesses=[] -->
 
 **बेटी** — *beṭī* — "a daughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Marwari **बेटी** (*beṭī*) under *\*bēṭṭa*, one of a large group of reconstructed forms it heads *\*biḍḍa*, "defective", beside Prakrit *biṭṭī*, "girl" (CDIAL 9238). How the sense "girl" connects with the rest of the group is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

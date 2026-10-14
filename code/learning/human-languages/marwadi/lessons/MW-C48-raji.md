@@ -14,7 +14,8 @@ romanization: "rājī"
 concept_tag: MW-HEALTH48-RAJI
 prerequisites: [MW-C47-davai, MW-C47-bhukh]
 sounds: []
-roots: []
+roots: [arabic-radi]
+etymology_hook: "rājī ← Arabic rāḍī 'content, pleased', through Persian (Lane, root r-ḍ-w)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C47-bhukh]
 <!-- hl-knowledge: introduces=[MW-LEX-C48-HEALTH48-01]; assesses=[] -->
 
 **राजी** — *rājī* — "happy, content".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**राजी** (*rājī*) is a loan from Arabic *rāḍī*, "content, pleased", which reached Marwadi through Persian. Its Arabic root is *r-ḍ-w* (Lane). Persian says it *rāzī*; Marwadi says the *z* as *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rū̃kh"
 concept_tag: MW-SCHOOL67-RUKH
 prerequisites: [MW-C67-khel, MW-C67-chitthi]
 sounds: []
-roots: []
+roots: [indo-aryan-ruksha]
+etymology_hook: "rū̃kh ← *rukṣa 'tree', reconstructed (CDIAL 10757, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C67-chitthi]
 <!-- hl-knowledge: introduces=[MW-LEX-C67-SCHOOL67-03]; assesses=[] -->
 
 **रूंख** — *rū̃kh* — "a tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रूंख** (*rū̃kh*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*rukṣa*, "tree", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 10757); the match is through Hindi *rūkh* and Gujarati *rūkh*. CDIAL sets it beside Sanskrit *vṛkṣa*, "tree".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

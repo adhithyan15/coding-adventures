@@ -14,7 +14,8 @@ romanization: "tauliyo"
 concept_tag: MW-THINGS124-TAULIYO
 prerequisites: [MW-C124-kagsi, MW-C124-saban]
 sounds: []
-roots: []
+roots: [portuguese-toalha]
+etymology_hook: "tauliyo ← Portuguese toalha 'towel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C124-saban]
 <!-- hl-knowledge: introduces=[MW-LEX-C124-THINGS124-03]; assesses=[] -->
 
 **तौलियो** — *tauliyo* — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तौलियो** (*tauliyo*) is a loan from Portuguese *toalha*, "towel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

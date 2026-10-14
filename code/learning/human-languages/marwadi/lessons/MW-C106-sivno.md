@@ -14,7 +14,8 @@ romanization: "sīvṇo"
 concept_tag: MW-VERB-SIVNO
 prerequisites: [MW-C106-gerno, MW-C106-balno]
 sounds: []
-roots: []
+roots: [sanskrit-sivyati]
+etymology_hook: "sīvṇo ← Sanskrit sīvyati 'sews', a tadbhava (CDIAL 13444, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C106-balno]
 <!-- hl-knowledge: introduces=[MW-LEX-C106-ACT106-05]; assesses=[] -->
 
 **सीवणो** — *sīvṇo* — "to sew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सीवणो** (*sīvṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sīvyati*, "sews". CDIAL gives no Marwari form in this entry (CDIAL 13444); the match is through Hindi *sīnā* and Gujarati *sivvũ*. English *sew* is the same ancient word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

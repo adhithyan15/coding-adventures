@@ -11,8 +11,8 @@ gloss: clarified butter, written with two familiar units
 concept_tag: MW-FOOD-GHEE-WRITTEN
 prerequisites: [MW-C18-hear-ghee]
 sounds: [aspirated-gh, long-ii]
-roots: []
-etymology_hook: The shortest written food word so far reuses घ from home and horse.
+roots: [sanskrit-ghrta]
+etymology_hook: "ghī ← Sanskrit ghṛta 'fluid grease, clarified butter or ghee', a tadbhava (CDIAL 4501, Hindi and Gujarati rows)"
 duration:
   max_seconds: 155
 requires:
@@ -47,6 +47,11 @@ say bus.
 
 The same **घ** that opens **घर** and **घोड़ो**, carrying the long **ी** met in
 **पाणी**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घी** (*ghī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghṛta*, "fluid grease, clarified butter or ghee". CDIAL gives no Marwari form in this entry (CDIAL 4501); the match is through Hindi *ghī* and Gujarati *ghī*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GHEE-01] -->

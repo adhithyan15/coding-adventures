@@ -11,8 +11,8 @@ gloss: make it ten — the bargaining turn that had no number to put in it
 concept_tag: MW-FUNCTION-COUNTER-OFFER
 prerequisites: [MW-C34-price-number]
 sounds: [mixed]
-roots: []
-etymology_hook: Chapter 28 could ask for a bit cheaper; a figure in the same slot turns a wish into an offer.
+roots: [sanskrit-dasha, sanskrit-karoti]
+etymology_hook: "das karo: das ← Sanskrit daśa 'ten' (CDIAL 6227); karo ← karoti 'does' (CDIAL 2814)"
 duration:
   max_seconds: 185
 requires:
@@ -55,6 +55,11 @@ buyer names the price now.
 
 Hear the pair run end to end: the seller says *bīs*, the buyer says *das karo*.
 This is the first exchange in the book where both sides have said an amount.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*das karo* joins two inherited words with their own lessons: *das*, "ten", which CDIAL lists as Marwari *das* under Sanskrit *daśa* (CDIAL 6227), and *karo*, "make", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-COUNTER-OFFER-01, MW-LEX-PRICE-NUMBER-01] -->

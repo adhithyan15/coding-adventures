@@ -15,6 +15,7 @@ concept_tag: MW-THINGS138-LUKRI
 prerequisites: [MW-C138-bachhro, MW-C138-hiran]
 sounds: []
 roots: []
+etymology_hook: "lū̃kṛī 'fox': origin not settled; CDIAL lists Hindi lomṛī 'fox' under lomaṭaka (CDIAL 11153) but nothing in this shape"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C138-hiran]
 <!-- hl-knowledge: introduces=[MW-LEX-C138-THINGS138-04]; assesses=[] -->
 
 **लूंकड़ी** — *lū̃kṛī* — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **लूंकड़ी** (*lū̃kṛī*) is not settled. CDIAL lists Hindi *lomṛī*, "fox", under Sanskrit *lomaṭaka*, "fox" (CDIAL 11153), but no form with the *lū̃k-* of **लूंकड़ी** (*lū̃kṛī*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

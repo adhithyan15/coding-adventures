@@ -14,7 +14,8 @@ romanization: "din"
 concept_tag: MW-TIME78-DIN
 prerequisites: [MW-C77-bhuro, MW-C77-mitho]
 sounds: []
-roots: []
+roots: [sanskrit-dina]
+etymology_hook: "din ← Sanskrit dina 'day'; CDIAL thinks Gujarati and Marathi din were taken from Sanskrit (CDIAL 6328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C77-mitho]
 <!-- hl-knowledge: introduces=[MW-LEX-C78-TIME78-01]; assesses=[] -->
 
 **दिन** — *din* — "a day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दिन** (*din*) is Sanskrit *dina*, "day". CDIAL lists Hindi and Gujarati *din* under it and thinks the Gujarati and Marathi forms were taken back from Sanskrit (CDIAL 6328); it gives no Marwari form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

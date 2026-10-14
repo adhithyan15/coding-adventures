@@ -14,7 +14,8 @@ romanization: "utarṇo"
 concept_tag: MW-VERB-UTARNO
 prerequisites: [MW-C108-jagavno, MW-C108-bachavno]
 sounds: []
-roots: []
+roots: [sanskrit-uttarati]
+etymology_hook: "utarṇo ← Sanskrit uttarati 'passes over; descends', a tadbhava (CDIAL 1770, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C108-bachavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C108-ACT108-03]; assesses=[] -->
 
 **उतरणो** — *utarṇo* — "to get down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उतरणो** (*utarṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *uttarati*, "passes over; descends". CDIAL lists Old Marwari *utaraï* under it (CDIAL 1770). It is built on *ud*, "up, out", and *tar*, "to cross".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

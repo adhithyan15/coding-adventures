@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-THREE
 prerequisites: [MW-C32-do-two]
 sounds: [dental-t, long-ii, dental-n]
 roots: [sanskrit-tri]
-etymology_hook: Its long ii is the vowel of paani, held the same length in a word half as long.
+etymology_hook: "tīn ← Sanskrit trīṇi 'three', a tadbhava (CDIAL 5994, Marwari row)"
 duration:
   max_seconds: 160
 requires:
@@ -49,6 +49,11 @@ chapter 4. Hold it. A short one turns the number into something else.
 
 Count aloud: *ek, do, tīn*. Three words in, and two of them arrived with no new
 sign for the hand at all.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tīn* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *trīṇi*, "three". CDIAL lists Marwari *tīn* under it (CDIAL 5994). English *three* is the same ancient word.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-TEEN-01] -->

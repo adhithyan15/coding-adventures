@@ -14,7 +14,8 @@ romanization: "kaṛvo"
 concept_tag: MW-QUAL143-KARVO
 prerequisites: [MW-C143-kharo, MW-C143-khato]
 sounds: []
-roots: []
+roots: [sanskrit-katu]
+etymology_hook: "kaṛvo ← Sanskrit kaṭu 'pungent, bitter', a tadbhava (CDIAL 2641, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C143-khato]
 <!-- hl-knowledge: introduces=[MW-LEX-C143-QUAL143-04]; assesses=[] -->
 
 **कड़वो** — *kaṛvo* — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कड़वो** (*kaṛvo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṭu*, "pungent, bitter". CDIAL lists Old Marwari *kaṛuvaü* under it (CDIAL 2641).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

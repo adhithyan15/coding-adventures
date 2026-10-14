@@ -14,7 +14,8 @@ romanization: "pū̃jī"
 concept_tag: MW-CAN115-PUJI
 prerequisites: [MW-C115-jamin, MW-C115-jaydad]
 sounds: []
-roots: []
+roots: [sanskrit-punja]
+etymology_hook: "pū̃jī ← Sanskrit puñja 'heap, quantity', a tadbhava (CDIAL 8251, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C115-jaydad]
 <!-- hl-knowledge: introduces=[MW-LEX-C115-CAN115-03]; assesses=[] -->
 
 **पूंजी** — *pū̃jī* — "capital, savings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पूंजी** (*pū̃jī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *puñja*, "heap, quantity". CDIAL gives no Marwari form in this entry (CDIAL 8251); the match is through Hindi *pū̃jī*. The sense moved from "heap" to "store of money". CDIAL thinks the further history of the Sanskrit word doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

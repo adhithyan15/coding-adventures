@@ -14,7 +14,8 @@ romanization: "pūro"
 concept_tag: MW-QUAL149-PURO
 prerequisites: [MW-C148-sado, MW-C148-anokho]
 sounds: []
-roots: []
+roots: [sanskrit-pura-filling]
+etymology_hook: "pūro ← Sanskrit pūra 'filling', a tadbhava (CDIAL 8330, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C148-anokho]
 <!-- hl-knowledge: introduces=[MW-LEX-C149-QUAL149-01]; assesses=[] -->
 
 **पूरो** — *pūro* — "complete, whole".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पूरो** (*pūro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pūra*, "filling". CDIAL lists Old Marwari *puraü* under it (CDIAL 8330).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

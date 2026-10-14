@@ -11,7 +11,8 @@ gloss: your, agreeing with a masculine noun
 concept_tag: MW-GRAMMAR-THARO-POSSESSIVE
 prerequisites: [MW-C05-answer]
 sounds: [aspirated-th, long-aa, tapped-r, long-o]
-roots: []
+roots: [sanskrit-yushmad]
+etymology_hook: "thāro 'your': listed by CDIAL among the possessives under Sanskrit yuṣmad- 'you (plural)' (CDIAL 10511)"
 duration:
   max_seconds: 150
 requires:
@@ -48,6 +49,11 @@ Say *my* on *mhāro*.
 
 Listen twice: *thā-ro*. Let a small breath follow *t*. Say *your*
 when you hear it. Spelling waits for the next lesson.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Marwari *thāro*, "your", among the possessive forms built on Sanskrit *yuṣmad-*, the plural "you" (CDIAL 10511). It is an inherited word, a tadbhava, whose plural "your" now serves for one person too.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THARO-01, MW-LEX-MHARO-01] -->

@@ -4,7 +4,7 @@
   "chapter": 131,
   "title": "Millet-and-lentil dish, Desert berry, Desert beans, Gram-flour dumplings, Papad",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5a0d6474e926a56e",
+  "sourceHash": "fnv1a64:c65a6f342bbd48c5",
   "lessons": [
     {
       "id": "MW-C131-khichro",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b36c3fba2741ff8",
+      "sourceHash": "fnv1a64:49ceefb358829906",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खीचड़ो (khīchṛo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khiccā, \"dish of rice and peas\". CDIAL gives no Marwari form in this entry (CDIAL 3880); the match is through Hindi khicṛī and Gujarati khicṛo. The ṛ is an added suffix."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf1483156cbd39ec",
+      "sourceHash": "fnv1a64:63c448286791c548",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "केर (ker) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karīra, \"the caper bush Capparis aphylla\". CDIAL gives no Marwari form in this entry (CDIAL 2805); the match is through Hindi karīr. CDIAL lists Gujarati kerṛo, \"its fruit\", under the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1eb3f845ca776ca",
+      "sourceHash": "fnv1a64:5843a6525638d640",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांगरी (sā̃grī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṅgara, \"fruit of Prosopis spicigera\". CDIAL gives no Marwari form in this entry (CDIAL 13083); the match is through Gujarati sā̃grī and Hindi sā̃gar."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44eabefb638e8739",
+      "sourceHash": "fnv1a64:4dad929848c430af",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of गट्टा (gaṭṭā) is not settled. CDIAL lists Hindi gaṭṭā, \"stopper\", under gaṭṭa, \"piece\" (CDIAL 3965); a link with the dumpling is possible but not shown there."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1ed3f541d89cf4e",
+      "sourceHash": "fnv1a64:9ec86ce5e9cb479f",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पापड़ (pāpaṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from parpaṭa, \"thin cake of rice or pease-meal\". CDIAL gives no Marwari form in this entry (CDIAL 7934); the match is through Hindi pāpaṛ and Gujarati pāpaṛ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

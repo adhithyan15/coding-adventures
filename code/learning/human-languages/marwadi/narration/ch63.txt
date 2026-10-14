@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a wall, then the Marwadi for a roof.
 You'll want to know: खाट.
 खाट — khāṭ — "a string bed".
 
+The word, taken apart.
+खाट (khāṭ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khaṭvā, "bedstead". CDIAL gives no Marwari form in this entry (CDIAL 3781); the match is through Hindi khāṭ and Gujarati khāṭ.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a roof, then the Marwadi for a string be
 
 You'll want to know: अलमारी.
 अलमारी — almārī — "a cupboard".
+
+The word, taken apart.
+अलमारी (almārī) is a loan from Portuguese armário, "cupboard".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a string bed, then the Marwadi for a cup
 You'll want to know: दीयो.
 दीयो — dīyo — "a lamp".
 
+The word, taken apart.
+दीयो (dīyo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dīpa, "lamp". CDIAL lists Old Marwari diva under it (CDIAL 6348).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a cupboard, then the Marwadi for a lamp.
 You'll want to know: पंखो.
 पंखो — paṅkho — "a fan".
 
+The word, taken apart.
+पंखो (paṅkho) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pakṣa, "wing, feather; side". CDIAL lists Old Marwari pāṃkha under it (CDIAL 7627). Sanskrit pakṣaka already meant "fan"; CDIAL asks whether the nasal comes from a blend with puṅkha, "feathered end of an arrow".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a lamp, then the Marwadi for a fan.
 
 You'll want to know: चाबी.
 चाबी — chābī — "a key".
+
+The word, taken apart.
+चाबी (chābī) is a loan from Portuguese chave, "key".
 
 What you've built.
 One more word for this chapter.

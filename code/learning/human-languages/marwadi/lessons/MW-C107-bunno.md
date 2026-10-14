@@ -14,7 +14,8 @@ romanization: "buṇṇo"
 concept_tag: MW-VERB-BUNNO
 prerequisites: [MW-C106-balno, MW-C106-sivno]
 sounds: []
-roots: []
+roots: [indo-aryan-vinati]
+etymology_hook: "buṇṇo ← *vināti 'weaves', reconstructed (CDIAL 11773, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C106-sivno]
 <!-- hl-knowledge: introduces=[MW-LEX-C107-ACT107-01]; assesses=[] -->
 
 **बुणणो** — *buṇṇo* — "to weave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बुणणो** (*buṇṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vināti*, "weaves", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *bināi* under it (CDIAL 11773). Hindi *bunnā* comes from the variant *\*vunāti*, as **बुणणो** (*buṇṇo*) does.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

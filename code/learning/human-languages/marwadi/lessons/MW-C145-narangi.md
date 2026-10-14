@@ -14,7 +14,8 @@ romanization: "nāraṅgī"
 concept_tag: MW-QUAL145-NARANGI
 prerequisites: [MW-C145-asmani, MW-C145-baingni]
 sounds: []
-roots: []
+roots: [sanskrit-naranga]
+etymology_hook: "nāraṅgī ← Sanskrit nāraṅga 'orange tree', a tadbhava (CDIAL 7073, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C145-baingni]
 <!-- hl-knowledge: introduces=[MW-LEX-C145-QUAL145-05]; assesses=[] -->
 
 **नारंगी** — *nāraṅgī* — "orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नारंगी** (*nāraṅgī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nāraṅga*, "orange tree". CDIAL gives no Marwari form in this entry (CDIAL 7073); the match is through Hindi *nāraṅgī* and Gujarati *nārãgī*. The colour is named for the fruit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

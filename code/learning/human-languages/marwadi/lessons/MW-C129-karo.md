@@ -14,7 +14,8 @@ romanization: "kaṛo"
 concept_tag: MW-THINGS129-KARO
 prerequisites: [MW-C129-chappal, MW-C129-mochri]
 sounds: []
-roots: []
+roots: [sanskrit-kataka]
+etymology_hook: "kaṛo ← Sanskrit kaṭaka 'twist of straw; bracelet', a tadbhava (CDIAL 2629, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C129-mochri]
 <!-- hl-knowledge: introduces=[MW-LEX-C129-THINGS129-04]; assesses=[] -->
 
 **कड़ो** — *kaṛo* — "a thick bangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कड़ो** (*kaṛo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṭaka*, "twist of straw; bracelet". CDIAL lists Marwari *kaṛo* under it (CDIAL 2629). Sanskrit *kaṭaka* already meant "bracelet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

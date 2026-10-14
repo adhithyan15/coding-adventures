@@ -14,7 +14,8 @@ romanization: "chhāt"
 concept_tag: MW-HOME62-CHHAT
 prerequisites: [MW-C62-mej, MW-C62-bhit]
 sounds: []
-roots: []
+roots: [indo-aryan-chatti]
+etymology_hook: "chhāt ← *chatti 'covering', reconstructed (CDIAL 4971, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C62-bhit]
 <!-- hl-knowledge: introduces=[MW-LEX-C62-HOME62-05]; assesses=[] -->
 
 **छात** — *chhāt* — "a roof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छात** (*chhāt*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*chatti*, "covering", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4971); the match is through Hindi *chāt*. It is built on the root *chad*, "to cover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

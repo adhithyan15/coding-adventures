@@ -11,7 +11,8 @@ gloss: fifteen, on the page — the anusvara doing the work it was taught for
 concept_tag: MW-NUMBER-FIFTEEN-WRITTEN
 prerequisites: [MW-C37-hear-pandara]
 sounds: [vowel-nasalization]
-roots: []
+roots: [sanskrit-panchadasha]
+etymology_hook: "pandarā ← Sanskrit pañcadaśa 'fifteen', a tadbhava (CDIAL 7662, Hindi row)"
 duration:
   max_seconds: 175
 requires:
@@ -49,6 +50,11 @@ reviews_of: [MW-C37-hear-pandara, MW-C37-chauda, MW-W04-pa, MW-W03-anusvara, MW-
 The dot over **प** is the anusvara from chapter 3, the one **हां** needed. There
 it nasalised a vowel; here it stands for a full **n** before **द**. Same mark,
 and the letter after it decides what it sounds like.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पंदरा** (*pandarā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pañcadaśa*, "fifteen". CDIAL gives no Marwari form in this entry (CDIAL 7662); the match is through Hindi *pandrā*. It is *pañca*, "five", and *daśa*, "ten".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PANDARA-01, MW-SCRIPT-ANUSVARA-01] -->

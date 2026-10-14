@@ -11,8 +11,8 @@ gloss: rain or rainfall, written with familiar signs
 concept_tag: MW-WEATHER-RAIN-WRITTEN
 prerequisites: [MW-C11-hear-barsaat]
 sounds: [voiced-b, trilled-r, long-aa]
-roots: []
-etymology_hook: Every sign in rain has appeared before, so memory grows without script load.
+roots: [sanskrit-varsharatri]
+etymology_hook: "barsāt ← Sanskrit varṣārātri 'the rainy season', a tadbhava (CDIAL 11398, Hindi row)"
 duration:
   max_seconds: 165
 requires:
@@ -44,6 +44,11 @@ reviews_of: [MW-C11-hear-barsaat, MW-C11-hawa, MW-C10-travel-five, MW-W05-tha]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BARSAAT-01, MW-SCRIPT-BARSAAT-01] -->
 
 > **बर** + **सात** → **बरसात** — *barsāt* — rain
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बरसात** (*barsāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *varṣārātri*, "the rainy season". CDIAL gives no Marwari form in this entry (CDIAL 11398); the match is through Hindi *barsāt*. CDIAL also allows a blend with *varṣartu*, "rainy season". It is built on *varṣā*, "rain", and *rātri*, "night".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BARSAAT-01] -->

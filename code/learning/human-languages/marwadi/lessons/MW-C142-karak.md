@@ -14,7 +14,8 @@ romanization: "kaṛak"
 concept_tag: MW-QUAL142-KARAK
 prerequisites: [MW-C141-gairo, MW-C142-halko]
 sounds: []
-roots: []
+roots: [sanskrit-katakata]
+etymology_hook: "kaṛak ← Sanskrit kaṭakaṭā 'sound of rubbing', a tadbhava (CDIAL 2632, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C142-halko]
 <!-- hl-knowledge: introduces=[MW-LEX-C142-QUAL142-02]; assesses=[] -->
 
 **कड़क** — *kaṛak* — "hard, stiff".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कड़क** (*kaṛak*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṭakaṭā*, "sound of rubbing". CDIAL lists Old Marwari *kaṛāko* under it (CDIAL 2632). CDIAL calls the word imitative. The Old Marwari row means "fasting", from a rumbling stomach; Gujarati *kaṛak* means "dry, crisp", as **कड़क** (*kaṛak*) does.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

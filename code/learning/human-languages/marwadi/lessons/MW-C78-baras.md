@@ -14,7 +14,8 @@ romanization: "baras"
 concept_tag: MW-TIME78-BARAS
 prerequisites: [MW-C78-savero, MW-C78-mahino]
 sounds: []
-roots: []
+roots: [sanskrit-varsha]
+etymology_hook: "baras ← Sanskrit varṣa 'rain; year', a tadbhava (CDIAL 11392, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C78-mahino]
 <!-- hl-knowledge: introduces=[MW-LEX-C78-TIME78-05]; assesses=[] -->
 
 **बरस** — *baras* — "a year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बरस** (*baras*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *varṣa*, "rain; year". CDIAL lists Old Marwari *barasa* under it (CDIAL 11392). The sense moved from "rain, the rainy season" to "year".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

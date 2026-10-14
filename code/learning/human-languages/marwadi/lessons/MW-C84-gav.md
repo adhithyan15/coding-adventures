@@ -14,7 +14,8 @@ romanization: "gā̃v"
 concept_tag: MW-TOWN84-GAV
 prerequisites: [MW-C83-nav, MW-C83-saikal]
 sounds: []
-roots: []
+roots: [sanskrit-grama]
+etymology_hook: "gā̃v ← Sanskrit grāma 'troop, village', a tadbhava (CDIAL 4368, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C83-saikal]
 <!-- hl-knowledge: introduces=[MW-LEX-C84-TOWN84-01]; assesses=[] -->
 
 **गांव** — *gā̃v* — "a village".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गांव** (*gā̃v*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *grāma*, "troop, village". CDIAL lists Marwari *gā̃v* under it (CDIAL 4368).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

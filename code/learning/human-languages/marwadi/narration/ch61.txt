@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for yoghurt, then the Marwadi for oil.
 You'll want to know: अंगूर.
 अंगूर — aṅgūr — "grapes".
 
+The word, taken apart.
+अंगूर (aṅgūr) is a loan, usually traced to Persian angūr, "grape".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for oil, then the Marwadi for grapes.
 
 You'll want to know: नींबू.
 नींबू — nīmbū — "a lemon".
+
+The word, taken apart.
+नींबू (nīmbū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nimbū, "the lime". CDIAL gives no Marwari form in this entry (CDIAL 7247); the match is through Hindi nimbū. CDIAL takes the Sanskrit word itself from an Austroasiatic language.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for grapes, then the Marwadi for a lemon.
 You'll want to know: आटो.
 आटो — āṭo — "flour".
 
+The word, taken apart.
+आटो (āṭo) is a tadbhava, a word inherited and reshaped by sound change. It comes from ārta, "flour", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 1338); the match is through Hindi āṭā and Gujarati āṭo. CDIAL compares Persian ārd, "flour".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a lemon, then the Marwadi for flour.
 You'll want to know: कांदो.
 कांदो — kā̃do — "an onion".
 
+The word, taken apart.
+कांदो (kā̃do) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kanda, "bulbous root". CDIAL gives no Marwari form in this entry (CDIAL 2723); the match is through Hindi kā̃dā and Gujarati kā̃do. CDIAL thinks the Sanskrit word itself probably came from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for flour, then the Marwadi for an onion.
 
 You'll want to know: मिठाई.
 मिठाई — miṭhāī — "sweets".
+
+The word, taken apart.
+मिठाई (miṭhāī) is a noun built with -āī on the word for "sweet". CDIAL lists that word, Hindi miṭh and Gujarati mīṭhũ, "sweet", under Sanskrit miṣṭa, "dainty, sweet" (CDIAL 10299), where Old Marwari has sumīṭha, "very sweet".
 
 What you've built.
 One more word for this chapter.

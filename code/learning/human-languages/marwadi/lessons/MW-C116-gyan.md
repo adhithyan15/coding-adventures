@@ -14,7 +14,8 @@ romanization: "gyān"
 concept_tag: MW-CAN116-GYAN
 prerequisites: [MW-C116-gun, MW-C116-akal]
 sounds: []
-roots: []
+roots: [sanskrit-jnana]
+etymology_hook: "gyān ← Sanskrit jñāna 'knowledge', a semi-tatsama (CDIAL 5281)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C116-akal]
 <!-- hl-knowledge: introduces=[MW-LEX-C116-CAN116-03]; assesses=[] -->
 
 **ग्यान** — *gyān* — "knowledge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ग्यान** (*gyān*) is a semi-tatsama: Sanskrit *jñāna*, "knowledge", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 5281). Marwadi says the *jñ* as *gy*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

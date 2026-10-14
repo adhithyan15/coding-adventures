@@ -14,7 +14,8 @@ romanization: "iso"
 concept_tag: MW-DEF101-ISO
 prerequisites: [MW-C100-hat, MW-C101-yo]
 sounds: []
-roots: []
+roots: [sanskrit-idrsha]
+etymology_hook: "iso ← Sanskrit īdṛśa 'such, like this', a tadbhava (CDIAL 1611, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C101-yo]
 <!-- hl-knowledge: introduces=[MW-LEX-C101-DEF101-02]; assesses=[] -->
 
 **इसो** — *iso* — "like this, such".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इसो** (*iso*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *īdṛśa*, "such, like this". CDIAL lists Old Marwari *iso* under it (CDIAL 1611).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

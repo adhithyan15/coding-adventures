@@ -14,7 +14,8 @@ romanization: "ḍākṭar"
 concept_tag: MW-HEALTH48-DAKTAR
 prerequisites: [MW-C48-raji, MW-C48-udas]
 sounds: []
-roots: []
+roots: [english-doctor]
+etymology_hook: "ḍākṭar ← English doctor"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C48-udas]
 <!-- hl-knowledge: introduces=[MW-LEX-C48-HEALTH48-03]; assesses=[] -->
 
 **डाक्टर** — *ḍākṭar* — "a doctor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डाक्टर** (*ḍākṭar*) is a loan from English *doctor*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

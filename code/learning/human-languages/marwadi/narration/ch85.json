@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Sock, Pocket, Ring, Watch, Cap",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1f8dc870d8865cd6",
+  "sourceHash": "fnv1a64:9526861de94db18b",
   "lessons": [
     {
       "id": "MW-C85-mojo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aedeab318cacc048",
+      "sourceHash": "fnv1a64:024ecf170fa86cea",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोजो (mojo) is a loan, usually traced to Persian mūza, \"boot, stocking\". Marwadi says the z as j."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1bd57538cc4aa4f",
+      "sourceHash": "fnv1a64:44e4d616495c130d",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जेब (jeb) is a loan, usually traced to Persian jēb, \"pocket\". Persian took it from Arabic jayb, \"opening of a garment\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f119a8ef19002b70",
+      "sourceHash": "fnv1a64:8eb030874fadf3f8",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंगूठी (aṅgūṭhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṅguṣṭhya, \"pertaining to the thumb\". CDIAL gives no Marwari form in this entry (CDIAL 138); the match is through Hindi ãgūṭhī. It is built on Sanskrit aṅguṣṭha, \"thumb\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72df17f1711ecca3",
+      "sourceHash": "fnv1a64:a04363af4ad91773",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घड़ी (ghaṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghaṭī, \"pot, water-clock\". CDIAL lists Marwari ghaṛī under it (CDIAL 4406). The water-clock was a pot that sank in a set time, about twenty-four minutes."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90cc74930a36bcc6",
+      "sourceHash": "fnv1a64:e804b730bf4837fb",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टोपी (ṭopī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭoppa, \"hat, covering\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5481); the match is through Hindi ṭopī and Gujarati ṭopī. CDIAL calls a link with Sanskrit āṭopa, which one proposal takes from Munda, very doubtful."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

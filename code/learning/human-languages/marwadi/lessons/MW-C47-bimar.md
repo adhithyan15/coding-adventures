@@ -14,7 +14,8 @@ romanization: "bīmār"
 concept_tag: MW-HEALTH47-BIMAR
 prerequisites: [MW-C46-dil, MW-C47-tav]
 sounds: []
-roots: []
+roots: [persian-bimar]
+etymology_hook: "bīmār: usually traced to Persian bīmār 'ill, sick'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C47-tav]
 <!-- hl-knowledge: introduces=[MW-LEX-C47-HEALTH47-02]; assesses=[] -->
 
 **बीमार** — *bīmār* — "ill, sick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बीमार** (*bīmār*) is a loan, usually traced to Persian *bīmār*, "ill, sick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ā̃gaṇo"
 concept_tag: MW-LOC99-AGANO
 prerequisites: [MW-C98-gelo, MW-C99-rasto]
 sounds: []
-roots: []
+roots: [sanskrit-angana]
+etymology_hook: "ā̃gaṇo ← Sanskrit aṅgaṇa 'courtyard', a tadbhava (CDIAL 118, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C99-rasto]
 <!-- hl-knowledge: introduces=[MW-LEX-C99-LOC99-02]; assesses=[] -->
 
 **आंगणो** — *ā̃gaṇo* — "a courtyard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आंगणो** (*ā̃gaṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṅgaṇa*, "courtyard". CDIAL gives no Marwari form in this entry (CDIAL 118); the match is through Hindi *ã̄gan* and Gujarati *ã̄gaṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

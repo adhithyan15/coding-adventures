@@ -14,7 +14,8 @@ romanization: "mauko"
 concept_tag: MW-CAN116-MAUKO
 prerequisites: [MW-C116-gyan, MW-C116-hak]
 sounds: []
-roots: []
+roots: [arabic-mawqi]
+etymology_hook: "mauko ← Arabic mawqiʿ 'place, occasion', through Persian (Lane, root w-q-ʿ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C116-hak]
 <!-- hl-knowledge: introduces=[MW-LEX-C116-CAN116-05]; assesses=[] -->
 
 **मौको** — *mauko* — "a chance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मौको** (*mauko*) is a loan from Arabic *mawqiʿ*, "place, occasion", which reached Marwadi through Persian. Its Arabic root is *w-q-ʿ* (Lane). Persian says it *mauqa*, "occasion"; the sense moved to "chance".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

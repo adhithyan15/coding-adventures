@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 102,
-  "sourceHash": "fnv1a64:176a444df94cca77",
+  "sourceHash": "fnv1a64:e529e9c4b1c893c3",
   "lessonIds": [
     "MW-C102-sagla",
     "MW-C102-dujo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch102.txt",
   "json": "marwadi/narration/ch102.json",
-  "textHash": "fnv1a64:98adaf979fc32a8f",
-  "jsonHash": "fnv1a64:6c648a4b1f908453",
+  "textHash": "fnv1a64:44916b865d1c71dc",
+  "jsonHash": "fnv1a64:fd06132bb14c157a",
   "findings": []
 }

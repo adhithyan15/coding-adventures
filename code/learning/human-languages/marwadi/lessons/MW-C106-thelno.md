@@ -14,7 +14,8 @@ romanization: "ṭhelṇo"
 concept_tag: MW-VERB-THELNO
 prerequisites: [MW-C105-bharno, MW-C105-khichno]
 sounds: []
-roots: []
+roots: [indo-aryan-thedd]
+etymology_hook: "ṭhelṇo ← *ṭhell 'push', reconstructed (CDIAL 5512, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C105-khichno]
 <!-- hl-knowledge: introduces=[MW-LEX-C106-ACT106-01]; assesses=[] -->
 
 **ठेलणो** — *ṭhelṇo* — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ठेलणो** (*ṭhelṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭhell*, "push", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *ṭhelijaï* under it (CDIAL 5512).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

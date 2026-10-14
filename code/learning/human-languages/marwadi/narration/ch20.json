@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Clothes and Expensive: One Dot Below",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5038c69c3b56a4d3",
+  "sourceHash": "fnv1a64:5c5dc9f8ec9f04ef",
   "lessons": [
     {
       "id": "MW-C15-hear-kapda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:832f840d61cda883",
+      "sourceHash": "fnv1a64:b5edd107fff9874d",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kapṛā is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karpaṭa, \"patched garment, rag\". CDIAL lists Marwari kapṛo under it (CDIAL 2871). CDIAL takes the Sanskrit word itself from an Austroasiatic language."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -208,7 +219,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a032ca0cafd1f28f",
+      "sourceHash": "fnv1a64:1068b98dbfa56b72",
       "notice": null,
       "blocks": [
         {
@@ -250,6 +261,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कपड़ा (kapṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karpaṭa, \"patched garment, rag\". CDIAL lists Marwari kapṛo under it (CDIAL 2871). CDIAL takes the Sanskrit word itself from an Austroasiatic language."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -274,7 +296,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -320,7 +342,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11b1ce3d5b21d81a",
+      "sourceHash": "fnv1a64:7fb04aa93f39005f",
       "notice": null,
       "blocks": [
         {
@@ -366,6 +388,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mahaṅgo is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mahārgha, \"high-priced\". CDIAL gives no Marwari form in this entry (CDIAL 9954); the match is through Hindi mahãgā. It is built from mahā, \"great\", and argha, \"price\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -411,7 +444,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e36f945f7afb64e",
+      "sourceHash": "fnv1a64:0538aa05a8fc3f98",
       "notice": null,
       "blocks": [
         {
@@ -453,6 +486,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "महंगो (mahaṅgo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mahārgha, \"high-priced\". CDIAL gives no Marwari form in this entry (CDIAL 9954); the match is through Hindi mahãgā. It is built from mahā, \"great\", and argha, \"price\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -477,7 +521,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

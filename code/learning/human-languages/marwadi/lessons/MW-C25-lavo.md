@@ -11,8 +11,8 @@ gloss: bring it, written from three signs and the ending every asking word share
 concept_tag: MW-VERB-BRING-WRITTEN
 prerequisites: [MW-C25-hear-lavo]
 sounds: [dental-l, long-aa, voiced-v, long-o]
-roots: []
-etymology_hook: Take it and bring it differ by one mark and one letter, and the difference is worth a whole page.
+roots: [sanskrit-labhate]
+etymology_hook: "lāvo 'bring': CDIAL lists Hindi lānā 'to bring' under labhate 'takes', crossed with dadāti (CDIAL 10948)"
 duration:
   max_seconds: 175
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C25-hear-lavo, MW-W07-la, MW-W01-aa-matra, MW-W08-va, MW-C24-lo,
 Three signs, none new. Its ending **वो** is the same one that closes
 **दिखावो**. Write **लो** and **लावो** one under the other: same first letter,
 and everything after it is what separates taking from bringing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL gives no Marwari row for **लावो** (*lāvo*), "bring". It lists Hindi *lānā*, "to bring", under Sanskrit *labhate*, "takes", in forms it explains as crossed with *dadāti*, "gives" (CDIAL 10948). The match is through Hindi.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-LAVO-01, MW-SCRIPT-LO-01] -->

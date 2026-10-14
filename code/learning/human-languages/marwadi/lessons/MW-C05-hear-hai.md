@@ -11,7 +11,8 @@ gloss: is, the small copula closing the name statement
 concept_tag: WORD-IS
 prerequisites: [MW-C05-naam]
 sounds: [open-ai]
-roots: []
+roots: [sanskrit-akshati]
+etymology_hook: "hai 'is': CDIAL lists Old Hindi āhaï and Old Marwari chai under ākṣēti (CDIAL 1031); often traced to asti"
 duration:
   max_seconds: 150
 requires:
@@ -49,6 +50,11 @@ Hear *mhāro* and *nām* in either order, then give each meaning.
 
 Listen twice, then say it once. This tiny copula closes the name statement.
 Do not spell it yet; one vowel sign is still missing from your hand.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hai*, "is", has no Marwari row in CDIAL. Under Sanskrit *ākṣēti*, "abides", it lists Old Hindi *āhaï*, "is", and Old Marwari *chai*, "exists" (CDIAL 1031). Many accounts trace *hai* instead to Sanskrit *asti*, "is"; the route is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAI-01, MW-LEX-MHARO-01, MW-LEX-NAAM-01] -->

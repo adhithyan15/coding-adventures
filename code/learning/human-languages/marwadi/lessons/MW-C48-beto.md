@@ -14,7 +14,8 @@ romanization: "beṭo"
 concept_tag: MW-HEALTH48-BETO
 prerequisites: [MW-C48-udas, MW-C48-daktar]
 sounds: []
-roots: []
+roots: [indo-aryan-betta]
+etymology_hook: "beṭo 'son': CDIAL lists it under *bēṭṭa, beside Prakrit biṭṭa 'boy', in a group headed *biḍḍa (CDIAL 9238)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C48-daktar]
 <!-- hl-knowledge: introduces=[MW-LEX-C48-HEALTH48-04]; assesses=[] -->
 
 **बेटो** — *beṭo* — "a son".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Marwari **बेटो** (*beṭo*) under *\*bēṭṭa*, one of a large group of reconstructed forms it heads *\*biḍḍa*, "defective", beside Prakrit *biṭṭa*, "boy" (CDIAL 9238). How the sense "boy" connects with the rest of the group is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

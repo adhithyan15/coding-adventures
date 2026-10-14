@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Bus, Vehicle, and Cart: No New Signs",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:a9d7078ac1313f0c",
+  "sourceHash": "fnv1a64:1a7957ef4250ec5d",
   "lessons": [
     {
       "id": "MW-C16-hear-bas",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ade9adbd95118a5f",
+      "sourceHash": "fnv1a64:f3aedf2e2806706b",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bas is a loan from English bus."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -99,7 +110,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50164b8892119456",
+      "sourceHash": "fnv1a64:58f4c96000619c71",
       "notice": null,
       "blocks": [
         {
@@ -141,6 +152,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बस (bas) is a loan from English bus."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -165,7 +187,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -210,7 +232,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af10f43630579ccc",
+      "sourceHash": "fnv1a64:198e0ca7edabd66f",
       "notice": null,
       "blocks": [
         {
@@ -256,6 +278,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gāṛī is a tadbhava, a word inherited and reshaped by sound change. It comes from gāḍḍa, \"cart\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4116); the match is through Hindi gāṛī. CDIAL thinks it may be the same word as one for a seat."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -301,7 +334,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:820dddf386456d6f",
+      "sourceHash": "fnv1a64:83fe76d4cc99b8e0",
       "notice": null,
       "blocks": [
         {
@@ -347,6 +380,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गाड़ी (gāṛī) is a tadbhava, a word inherited and reshaped by sound change. It comes from gāḍḍa, \"cart\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4116); the match is through Hindi gāṛī. CDIAL thinks it may be the same word as one for a seat."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -371,7 +415,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -417,7 +461,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a52a1e07f98cad62",
+      "sourceHash": "fnv1a64:9bd45a2703ebb65f",
       "notice": null,
       "blocks": [
         {
@@ -463,6 +507,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ṭhelā is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭhell, \"push\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari ṭhelijaï under it (CDIAL 5512). Hindi has ṭhelā in the same sense, the cart you push."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -508,7 +563,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63fc66518af0e00a",
+      "sourceHash": "fnv1a64:c4994ff7b359b7c5",
       "notice": null,
       "blocks": [
         {
@@ -550,6 +605,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठेला (ṭhelā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭhell, \"push\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari ṭhelijaï under it (CDIAL 5512). Hindi has ṭhelā in the same sense, the cart you push."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -574,7 +640,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

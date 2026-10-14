@@ -14,7 +14,8 @@ romanization: "lagāvṇo"
 concept_tag: MW-VERB-LAGAVNO
 prerequisites: [MW-C107-bunno, MW-C107-rangno]
 sounds: []
-roots: []
+roots: [sanskrit-lagyati]
+etymology_hook: "lagāvṇo ← Sanskrit lagyati 'adheres to', a tadbhava (CDIAL 10895, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C107-rangno]
 <!-- hl-knowledge: introduces=[MW-LEX-C107-ACT107-03]; assesses=[] -->
 
 **लगावणो** — *lagāvṇo* — "to apply, to fix on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लगावणो** (*lagāvṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lagyati*, "adheres to". CDIAL lists Old Marwari *lāgaï* under it (CDIAL 10895). It is the causing form of *lāgṇo*, "to stick, to seem": "make stick", so "apply".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

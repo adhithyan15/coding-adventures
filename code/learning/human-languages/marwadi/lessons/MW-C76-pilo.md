@@ -14,7 +14,8 @@ romanization: "pīḷo"
 concept_tag: MW-ADJ76-PILO
 prerequisites: [MW-C76-sacho, MW-C76-haro]
 sounds: []
-roots: []
+roots: [sanskrit-pitala]
+etymology_hook: "pīḷo ← Sanskrit pītala 'yellow', a tadbhava (CDIAL 8233, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C76-haro]
 <!-- hl-knowledge: introduces=[MW-LEX-C76-ADJ76-05]; assesses=[] -->
 
 **पीळो** — *pīḷo* — "yellow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पीळो** (*pīḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pītala*, "yellow". CDIAL lists Old Marwari *pīla* under it (CDIAL 8233). It is built on *pīta*, "yellow". Marwadi, like Gujarati, says the *l* curled back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

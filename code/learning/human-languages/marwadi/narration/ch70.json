@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Sky, Dog, Cat, Cow, Buffalo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8c2c155ec123e13a",
+  "sourceHash": "fnv1a64:b61651f828597c32",
   "lessons": [
     {
       "id": "MW-C70-abho",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29baa33470998686",
+      "sourceHash": "fnv1a64:b976988dde46b8c1",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आभो (ābho) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from abhra, \"cloud, rainy weather\". CDIAL lists Old Marwari ābhai under it (CDIAL 549). The Old Marwari row means \"in the sky\"; Gujarati ābh means \"sky, clouds\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e702a623bae1efe8",
+      "sourceHash": "fnv1a64:8d84a091339bb63a",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुत्तो (kutto) is a tadbhava, a word inherited and reshaped by sound change. It comes from kutta, \"dog\", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari kuto under it (CDIAL 3275). CDIAL thinks the word imitates a call to a dog."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c2306790dcb493d",
+      "sourceHash": "fnv1a64:b615eca6ee0569ef",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिल्ली (billī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from biḍāla, \"cat\". CDIAL gives no Marwari form in this entry (CDIAL 9237); the match is through Hindi billī. CDIAL lists Hindi billī under a variant it reconstructs, billa."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:133af10fad4d0c3d",
+      "sourceHash": "fnv1a64:1211d6c98fbe2718",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गाय (gāy) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gāvī, \"cow\". CDIAL lists Old Marwari gāi under it (CDIAL 4147). It is a form of Sanskrit go, \"cow\", the same ancient word as English cow."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa235a90a02f0921",
+      "sourceHash": "fnv1a64:81a408c2510e2e31",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भैंस (bhaĩs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mahiṣī, \"buffalo cow\". CDIAL lists Old Marwari bhaïṃsa under it (CDIAL 9964). The Sanskrit word first meant \"great, powerful\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

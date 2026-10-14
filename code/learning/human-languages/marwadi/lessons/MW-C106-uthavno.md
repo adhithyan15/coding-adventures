@@ -14,7 +14,8 @@ romanization: "uṭhāvṇo"
 concept_tag: MW-VERB-UTHAVNO
 prerequisites: [MW-C105-khichno, MW-C106-thelno]
 sounds: []
-roots: []
+roots: [indo-aryan-utthapayati]
+etymology_hook: "uṭhāvṇo ← *ut-sthāpayati 'raises', reconstructed (CDIAL 1903, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C106-thelno]
 <!-- hl-knowledge: introduces=[MW-LEX-C106-ACT106-02]; assesses=[] -->
 
 **उठावणो** — *uṭhāvṇo* — "to lift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उठावणो** (*uṭhāvṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ut-sthāpayati*, "raises", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *uṭhāi* under it (CDIAL 1903). It is the causing form of *uṭhṇo*, "to get up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

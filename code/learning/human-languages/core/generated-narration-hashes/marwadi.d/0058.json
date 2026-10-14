@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 58,
-  "sourceHash": "fnv1a64:a132bbd648ccbf24",
+  "sourceHash": "fnv1a64:8455cfd9833b752a",
   "lessonIds": [
     "MW-C58-puchhno",
     "MW-C58-karno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch58.txt",
   "json": "marwadi/narration/ch58.json",
-  "textHash": "fnv1a64:0aed4d5eab0d4718",
-  "jsonHash": "fnv1a64:0da7ecbba905bae7",
+  "textHash": "fnv1a64:8f59bc45792a2cb3",
+  "jsonHash": "fnv1a64:b610e383a835d907",
   "findings": []
 }

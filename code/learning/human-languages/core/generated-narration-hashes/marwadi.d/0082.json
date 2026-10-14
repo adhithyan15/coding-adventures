@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 82,
-  "sourceHash": "fnv1a64:4d3853d21438bdcf",
+  "sourceHash": "fnv1a64:5fea5b5e3f97021b",
   "lessonIds": [
     "MW-C82-athai",
     "MW-C82-bathai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch82.txt",
   "json": "marwadi/narration/ch82.json",
-  "textHash": "fnv1a64:38d7675c185a1906",
-  "jsonHash": "fnv1a64:7a552e42704bcac8",
+  "textHash": "fnv1a64:27373be6ff34318e",
+  "jsonHash": "fnv1a64:cc792a24e8abba23",
   "findings": []
 }

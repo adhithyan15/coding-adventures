@@ -14,7 +14,8 @@ romanization: "unāḷo"
 concept_tag: MW-TIME94-UNALO
 prerequisites: [MW-C94-pos, MW-C94-magh]
 sounds: []
-roots: []
+roots: [sanskrit-ushnakala]
+etymology_hook: "unāḷo ← Sanskrit uṣṇakāla 'hot season', a tadbhava (CDIAL 2391, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C94-magh]
 <!-- hl-knowledge: introduces=[MW-LEX-C94-TIME94-03]; assesses=[] -->
 
 **उनाळो** — *unāḷo* — "the hot season, summer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उनाळो** (*unāḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *uṣṇakāla*, "hot season". CDIAL lists Marwari *unhāḷo* under it (CDIAL 2391). It is built on *uṣṇa*, "hot", and *kāla*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

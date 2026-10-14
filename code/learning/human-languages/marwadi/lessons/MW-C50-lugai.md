@@ -15,6 +15,7 @@ concept_tag: MW-FAMILY50-LUGAI
 prerequisites: [MW-C49-chhori, MW-C49-admi]
 sounds: []
 roots: []
+etymology_hook: "lugāī 'woman, wife': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C49-admi]
 <!-- hl-knowledge: introduces=[MW-LEX-C50-FAMILY50-01]; assesses=[] -->
 
 **लुगाई** — *lugāī* — "a woman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **लुगाई** (*lugāī*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

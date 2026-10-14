@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "To ask, To do, Meat, Fish, Rice",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a132bbd648ccbf24",
+  "sourceHash": "fnv1a64:8455cfd9833b752a",
   "lessons": [
     {
       "id": "MW-C58-puchhno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b44bdc1aae71ff89",
+      "sourceHash": "fnv1a64:d092974647090720",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पूछणो (pūchhṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pṛcchati, \"asks\". CDIAL lists Old Marwari pūchaï under it (CDIAL 8352)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7fc8e0ac75db6bf",
+      "sourceHash": "fnv1a64:0cf6743436817374",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "करणो (karṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karoti, \"does\". CDIAL lists Old Marwari karaï under it (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:445541701805683d",
+      "sourceHash": "fnv1a64:ee52cca0937aeaad",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मांस (mā̃s) goes back to Sanskrit māṃsa, \"flesh\", and keeps its shape almost whole. CDIAL lists Hindi and Gujarati mā̃s under it (CDIAL 9982); it gives no Marwari form there."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e67d457b188e1766",
+      "sourceHash": "fnv1a64:112e076900a1a580",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माछली (māchhlī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from matsya, \"fish\". CDIAL lists Old Marwari māchalī under it (CDIAL 9758). CDIAL explains the -l- as an added suffix."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0eb72856c90f03e4",
+      "sourceHash": "fnv1a64:8372f74ed9b48a5c",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चावळ (chāvaḷ) is a tadbhava, a word inherited and reshaped by sound change. It comes from cāvala, \"husked rice\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari cāvala under it (CDIAL 4749). CDIAL thinks it may come from the same non-Aryan source as Sanskrit taṇḍula, \"rice\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

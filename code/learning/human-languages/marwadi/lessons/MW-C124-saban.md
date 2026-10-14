@@ -14,7 +14,8 @@ romanization: "sābaṇ"
 concept_tag: MW-THINGS124-SABAN
 prerequisites: [MW-C123-arsi, MW-C124-kagsi]
 sounds: []
-roots: []
+roots: [arabic-sabun]
+etymology_hook: "sābaṇ: a loan, usually traced to Arabic ṣābūn 'soap' through Persian (Lane, root ṣ-b-n), or to Portuguese sabão"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C124-kagsi]
 <!-- hl-knowledge: introduces=[MW-LEX-C124-THINGS124-02]; assesses=[] -->
 
 **साबण** — *sābaṇ* — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साबण** (*sābaṇ*) is a loan, usually traced to Arabic *ṣābūn*, "soap", which reached Marwadi through Persian; its Arabic root is *ṣ-b-n* (Lane). Portuguese *sabão* is another proposed source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

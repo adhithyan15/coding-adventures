@@ -14,7 +14,8 @@ romanization: "himmat"
 concept_tag: MW-CAN114-HIMMAT
 prerequisites: [MW-C114-hunar, MW-C114-takat]
 sounds: []
-roots: []
+roots: [arabic-himma]
+etymology_hook: "himmat ← Arabic himma 'resolve, aspiration', through Persian (Lane, root h-m-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C114-takat]
 <!-- hl-knowledge: introduces=[MW-LEX-C114-CAN114-04]; assesses=[] -->
 
 **हिम्मत** — *himmat* — "courage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हिम्मत** (*himmat*) is a loan from Arabic *himma*, "resolve, aspiration", which reached Marwadi through Persian. Its Arabic root is *h-m-m* (Lane). Its final *-t* is the Arabic feminine ending, which Persian sounds in full.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
