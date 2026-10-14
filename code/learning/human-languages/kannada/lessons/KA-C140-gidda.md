@@ -14,7 +14,8 @@ romanization: "giḍḍa"
 concept_tag: KA-THINGS140-GIDDA
 prerequisites: [KA-C140-pada, KA-C140-udda]
 sounds: []
-roots: []
+roots: [dravidian-giddu-short]
+etymology_hook: "giḍḍa: native Dravidian, one word with Telugu giḍḍa (DEDR 1670)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C140-udda]
 <!-- hl-knowledge: introduces=[KA-LEX-C140-THINGS140-04]; assesses=[] -->
 
 **ಗಿಡ್ಡ** — *giḍḍa* — "short".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಿಡ್ಡ** (*giḍḍa*) is native Dravidian, one word with Telugu *giḍḍa* (DEDR 1670). DEDR lists *giḍḍa*, "dwarf", with *giḍḍu*, "shortness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

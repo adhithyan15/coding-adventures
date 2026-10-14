@@ -14,7 +14,8 @@ romanization: "vidēśaṁ"
 concept_tag: ML-STHALAM315-VIDESAM
 prerequisites: [ML-C314-pularcce, ML-C315-samsthanam]
 sounds: []
-roots: []
+roots: [sanskrit-videsha]
+etymology_hook: "vidēśaṁ ← Sanskrit vidēśa 'another country', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C315-samsthanam]
 <!-- hl-knowledge: introduces=[ML-LEX-C315-STHALAM315-02]; assesses=[] -->
 
 **വിദേശം** — *vidēśaṁ* — "abroad, a foreign country".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിദേശം** (*vidēśaṁ*) ← Sanskrit *vidēśa*, "another country", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*. Its parts are *vi-*, "apart", and *dēśa*, "country".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

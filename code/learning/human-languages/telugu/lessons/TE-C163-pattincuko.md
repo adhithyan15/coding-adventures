@@ -14,7 +14,8 @@ romanization: "paṭṭiñcukō"
 concept_tag: TE-VERB-PATTINCUKO
 prerequisites: [TE-C163-anumanincu, TE-C163-grahincu]
 sounds: []
-roots: []
+roots: [dravidian-pattu-hold]
+etymology_hook: "paṭṭiñcukō: native paṭṭu 'to hold' (DEDR 4034) + reflexive kō (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C163-grahincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C163-KRIYA163-03]; assesses=[] -->
 
 **పట్టించుకో** — *paṭṭiñcukō* — "to pay attention to, to care about".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పట్టించుకో** (*paṭṭiñcukō*) is native Dravidian, built on *paṭṭu*, "to hold, catch", one word with Kannada *paṭṭu*, "to seize" (DEDR 4034), which also lists *paṭṭimpu*, "attention, not overlooking". The ending *-kō* means "for oneself" (DEDR 2151).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

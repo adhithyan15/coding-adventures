@@ -14,7 +14,8 @@ romanization: "sīmesuṇṇa"
 concept_tag: KA-KELASA307-SIMESUNNA
 prerequisites: [KA-C307-phalaka, KA-C307-sayi]
 sounds: []
-roots: []
+roots: [sanskrit-sima, sanskrit-curna]
+etymology_hook: "sīmesuṇṇa: sīme 'foreign land', from Sanskrit sīmā (CDIAL 13435), + suṇṇa 'lime' from cūrṇa (CDIAL 4889)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C307-sayi]
 <!-- hl-knowledge: introduces=[KA-LEX-C307-KELASA307-04]; assesses=[] -->
 
 **ಸೀಮೆಸುಣ್ಣ** — *sīmesuṇṇa* — "chalk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೀಮೆಸುಣ್ಣ** (*sīmesuṇṇa*) is *sīme*, "a land, a foreign country", from Sanskrit *sīmā*, "boundary" (CDIAL 13435), and *suṇṇa*, "lime", a tadbhava of Sanskrit *cūrṇa*, "powder, lime" (CDIAL 4889): "foreign lime".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

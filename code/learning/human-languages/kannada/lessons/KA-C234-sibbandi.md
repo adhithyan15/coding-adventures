@@ -14,7 +14,8 @@ romanization: "sibbandi"
 concept_tag: KA-KELASA234-SIBBANDI
 prerequisites: [KA-C233-vijnana, KA-C233-itihasa]
 sounds: []
-roots: []
+roots: [persian-sibandi]
+etymology_hook: "sibbandi ← Persian sibandī 'a body of paid men', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C233-itihasa]
 <!-- hl-knowledge: introduces=[KA-LEX-C234-KELASA234-01]; assesses=[] -->
 
 **ಸಿಬ್ಬಂದಿ** — *sibbandi* — "staff, personnel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಿಬ್ಬಂದಿ** (*sibbandi*) is a loan from Persian *sibandī*, "a body of paid men", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

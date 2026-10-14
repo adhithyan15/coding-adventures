@@ -14,7 +14,8 @@ romanization: "eppuḍū"
 concept_tag: TE-NISHEDHAM153-EPPUDU
 prerequisites: [TE-C152-jhari, TE-C153-evaru]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "eppuḍū: native eppuḍu 'when' (DEDR 5151, 4559) + -ū 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C153-evaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C153-NISHEDHAM153-02]; assesses=[] -->
 
 **ఎప్పుడూ** — *eppuḍū* — "never (with a negative verb); always". **నేను ఎప్పుడూ మాంసం తినను** — *nēnu eppuḍū māṁsaṁ tinanu* — "I never eat meat."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎప్పుడూ** (*eppuḍū*) is native Dravidian: *eppuḍu*, "when" (DEDR 5151, 4559), with *-ū*, "even, any".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

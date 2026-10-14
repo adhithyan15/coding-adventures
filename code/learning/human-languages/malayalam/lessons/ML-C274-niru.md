@@ -14,7 +14,8 @@ romanization: "nīrŭ"
 concept_tag: ML-AROGYAM274-NIRU
 prerequisites: [ML-C273-karannuka, ML-C273-nulluka]
 sounds: []
-roots: []
+roots: [niiru-water-dravidian]
+etymology_hook: "nīrŭ 'swelling': native Dravidian, the same word as nīr 'water, juice, moisture' (DEDR 3690)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C273-nulluka]
 <!-- hl-knowledge: introduces=[ML-LEX-C274-AROGYAM274-01]; assesses=[] -->
 
 **നീര്** — *nīrŭ* — "a swelling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നീര്** (*nīrŭ*) is native Dravidian: DEDR 3690 lists Malayalam *nīr*, "water, juice, moisture", with Tamil *nīr*. Malayalam also uses the word for a swelling, fluid gathered under the skin; DEDR 3690 gives only the water senses. DEDR 3690 compares Sanskrit *nīra*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

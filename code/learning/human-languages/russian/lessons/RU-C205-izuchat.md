@@ -14,7 +14,8 @@ romanization: "izuchát"
 concept_tag: RU-VERB-IZUCHAT
 prerequisites: [RU-C205-zabyvat, RU-C205-uchitsya]
 sounds: []
-roots: []
+roots: [slavic-uchiti]
+etymology_hook: "изучать is из- 'out, thoroughly' + учать, from учить 'to teach': to learn thoroughly"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C205-uchitsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C205-ACT205-03]; assesses=[] -->
 
 **изучать** (*izuchát*) — "to study (a subject)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**изучать** is *из-*, "out, thoroughly", with *-учать*, from *учить*, "to teach, to learn": to study a subject through.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

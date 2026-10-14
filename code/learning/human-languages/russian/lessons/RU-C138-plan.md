@@ -14,7 +14,8 @@ romanization: "plan"
 concept_tag: RU-FUT138-PLAN
 prerequisites: [RU-C138-budushchiy, RU-C138-cherez]
 sounds: []
-roots: []
+roots: [french-plan]
+etymology_hook: "план perhaps came through Polish or German from French plan, which Vasmer traces to Latin planta"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C138-cherez]
 <!-- hl-knowledge: introduces=[RU-LEX-C138-FUT138-03]; assesses=[] -->
 
 **план** (*plan*) — "a plan". **Какой план?** — *kakóy plan* — "What's the plan?" English *plan* is the same word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**план** — recorded from 1704; it perhaps came through Polish *plan* or German *Plan* from French *plan*, which Vasmer traces to Latin *planta*, "the sole of the foot, an outline".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

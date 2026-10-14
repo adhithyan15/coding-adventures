@@ -13,7 +13,8 @@ gloss: "a tooth"
 concept_tag: LA-CORPUS1-DENS
 prerequisites: [LA-C63-bracchium, LA-C63-digitus]
 sounds: []
-roots: []
+roots: [dens-latin]
+etymology_hook: "dēns 'tooth' — inherited, usually traced to PIE *h3dent-; English tooth is a distant cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C63-digitus]
 <!-- hl-knowledge: introduces=[LA-LEX-C63-CORPUS1-03]; assesses=[] -->
 
 **dēns, dentis** — "a tooth". A *dentist* looks after them.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēns** is inherited, usually traced to Proto-Indo-European *\*h3dent-*, "tooth" (EtymDB 2.1). English *tooth* is a distant cousin (Lewis & Short), and English *dental* comes from *dēns* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

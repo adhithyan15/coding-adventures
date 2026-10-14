@@ -14,7 +14,8 @@ romanization: "reshát"
 concept_tag: RU-VERB-RESHAT
 prerequisites: [RU-C232-otpravlyat, RU-C232-poluchat]
 sounds: []
-roots: []
+roots: [slavic-reshiti]
+etymology_hook: "решать is from решить, first 'to untie'; Lithuanian rišti 'to tie' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C232-poluchat]
 <!-- hl-knowledge: introduces=[RU-LEX-C233-ACT233-01]; assesses=[] -->
 
 **решать** (*reshát*) — "to decide; to solve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**решать** is the ongoing partner of *решить*, "to decide", first "to untie, to loosen". Vasmer relates it to Lithuanian *rìšti*, "to tie", and *raišýti*, "to tie, untie": deciding unties a knot.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

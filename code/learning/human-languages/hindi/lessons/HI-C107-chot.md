@@ -14,7 +14,8 @@ romanization: "coṭ"
 concept_tag: HI-DOCTOR-INJURY
 prerequisites: [HI-C107-doctor, HI-C107-aspatal]
 sounds: []
-roots: []
+roots: [sanskrit-cutati]
+etymology_hook: "coṭ ← Sanskrit cuṭati 'cuts off', a group CDIAL calls non-Aryan; a tadbhava (CDIAL 4857)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C107-aspatal]
 **चोट** (*coṭ*) — "an injury, a hurt". It is feminine.
 
 **मुझे चोट लगी है** — "I have been hurt", literally "a hurt has struck me".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चोट** (*coṭ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cuṭati*, "cuts off" (CDIAL 4857). CDIAL reconstructs a further sense, "strikes", and a variant *\*coṭṭ-*, and takes the group to be of non-Aryan origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "daśaka"
 concept_tag: KA-KALA248-DASAKA
 prerequisites: [KA-C247-ganesa-caturthi, KA-C247-rajyotsava]
 sounds: []
-roots: []
+roots: [sanskrit-dashaka]
+etymology_hook: "daśaka ← Sanskrit daśaka 'consisting of ten; decad', a tatsama (CDIAL 6228)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C247-rajyotsava]
 <!-- hl-knowledge: introduces=[KA-LEX-C248-KALA248-01]; assesses=[] -->
 
 **ದಶಕ** — *daśaka* — "a decade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದಶಕ** (*daśaka*) is Sanskrit *daśaka*, "consisting of ten; decad", taken over whole as a learned loan, a tatsama (CDIAL 6228).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

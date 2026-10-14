@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 96,
-  "sourceHash": "fnv1a64:9f9523a50cea50d9",
+  "sourceHash": "fnv1a64:3e093b0e65cebdbd",
   "lessonIds": [
     "TA-C96-notatall",
     "TA-C96-isthatso",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch96.txt",
   "json": "tamil/narration/ch96.json",
-  "textHash": "fnv1a64:9ed36cec5438bf2e",
-  "jsonHash": "fnv1a64:a2e0a5753d888133",
+  "textHash": "fnv1a64:fd020baee1491693",
+  "jsonHash": "fnv1a64:80506387389e7ea5",
   "findings": []
 }

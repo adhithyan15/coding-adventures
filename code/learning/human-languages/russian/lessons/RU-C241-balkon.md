@@ -14,7 +14,8 @@ romanization: "balkón"
 concept_tag: RU-MESTO241-BALKON
 prerequisites: [RU-C240-obychno, RU-C241-podval]
 sounds: []
-roots: []
+roots: [germanic-balko]
+etymology_hook: "балкон came from German Balkon or French balcon, from Italian balcone, from Lombard balko 'a beam'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C241-podval]
 <!-- hl-knowledge: introduces=[RU-LEX-C241-MESTO241-02]; assesses=[] -->
 
 **балкон** (*balkón*) — "a balcony".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**балкон** — known from 1725; it came from German *Balkon* or French *balcon*, from Italian *balcone*, which goes back to Lombardic and Old High German *balko*, "a beam" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

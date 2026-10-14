@@ -14,7 +14,8 @@ romanization: "seychás"
 concept_tag: RU-WHEN-NOW
 prerequisites: [RU-C74-sometimes, RU-C74-never]
 sounds: []
-roots: []
+roots: [slavic-chasu]
+etymology_hook: "сейчас is сей 'this' + час 'hour': 'this very hour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C74-never]
 <!-- hl-knowledge: introduces=[RU-LEX-C74-WHEN-04]; assesses=[] -->
 
 **сейчас** (*seychás*) — "now, right now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сейчас** is *сей*, an old word for "this", with *час*, "hour": "this hour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

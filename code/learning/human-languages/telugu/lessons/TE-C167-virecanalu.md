@@ -14,7 +14,8 @@ romanization: "virēcanālu"
 concept_tag: TE-AROGYAM167-VIRECANALU
 prerequisites: [TE-C166-vidipovu, TE-C167-talanoppi]
 sounds: []
-roots: []
+roots: [sanskrit-virecana]
+etymology_hook: "virēcanālu: Sanskrit virecana 'purging' + plural -lu; CDIAL 11874 lists virēcayati 'empties'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C167-talanoppi]
 <!-- hl-knowledge: introduces=[TE-LEX-C167-AROGYAM167-02]; assesses=[] -->
 
 **విరేచనాలు** — *virēcanālu* — "diarrhoea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విరేచనాలు** (*virēcanālu*) is Sanskrit *virecana*, "purging", with the Telugu plural ending *-lu*. CDIAL 11874 lists the verb behind it, *virēcayati*, "empties, drains".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

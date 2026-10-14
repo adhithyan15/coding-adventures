@@ -14,7 +14,8 @@ romanization: "gāju"
 concept_tag: KA-VASTU301-GAJU
 prerequisites: [KA-C300-dharavahi, KA-C300-kadambari]
 sounds: []
-roots: []
+roots: [sanskrit-kaca-glass]
+etymology_hook: "gāju: probably a tadbhava of Sanskrit kāca 'glass' (CDIAL 3007)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C300-kadambari]
 <!-- hl-knowledge: introduces=[KA-LEX-C301-VASTU301-01]; assesses=[] -->
 
 **ಗಾಜು** — *gāju* — "glass (the material)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಾಜು** (*gāju*) is probably a tadbhava of Sanskrit *kāca*, "glass" (CDIAL 3007): *k* became *g* and *c* became *j*. CDIAL does not list the Kannada word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

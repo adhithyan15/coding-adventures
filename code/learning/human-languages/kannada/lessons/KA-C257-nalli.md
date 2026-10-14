@@ -14,7 +14,8 @@ romanization: "nalli"
 concept_tag: KA-VASTU257-NALLI
 prerequisites: [KA-C256-masuku, KA-C256-kikkirida]
 sounds: []
-roots: []
+roots: [sanskrit-nala]
+etymology_hook: "nalli: usually traced to Sanskrit naḍa, nala 'reed', the hollow stem (CDIAL 6936)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C256-kikkirida]
 <!-- hl-knowledge: introduces=[KA-LEX-C257-VASTU257-01]; assesses=[] -->
 
 **ನಲ್ಲಿ** — *nalli* — "a tap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಲ್ಲಿ** (*nalli*) is usually traced to Sanskrit *nala*, "a reed" (CDIAL 6936): a tap is a little pipe, like a hollow reed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

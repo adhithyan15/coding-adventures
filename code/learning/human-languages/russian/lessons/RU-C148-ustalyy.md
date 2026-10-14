@@ -14,7 +14,8 @@ romanization: "ustályy"
 concept_tag: RU-ZDOROV148-USTALYY
 prerequisites: [RU-C148-silnyy, RU-C148-blednyy]
 sounds: []
-roots: []
+roots: [pie-steh2]
+etymology_hook: "усталый is from устать 'to get tired', у- + стать 'to stand': come to a stop"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C148-blednyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C148-ZDOROV148-05]; assesses=[] -->
 
 **усталый** (*ustályy*) — "tired".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**усталый** is built on *устать*, "to get tired", *у-* with *стать*, "to stand" (Vasmer): the tired person has come to a stop.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

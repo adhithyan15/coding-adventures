@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 229,
-  "sourceHash": "fnv1a64:5940712c0225ccc6",
+  "sourceHash": "fnv1a64:703023f365f12caf",
   "lessonIds": [
     "LA-C229-decerno",
     "LA-C229-tempto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch229.txt",
   "json": "latin/narration/ch229.json",
-  "textHash": "fnv1a64:361e2954c0b07ccf",
-  "jsonHash": "fnv1a64:2ae3cbe3b9729e6c",
+  "textHash": "fnv1a64:22104c38d39e3b7e",
+  "jsonHash": "fnv1a64:3e3ea6adca6d16e0",
   "findings": []
 }

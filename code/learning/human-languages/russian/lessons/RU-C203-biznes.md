@@ -14,7 +14,8 @@ romanization: "bíznes"
 concept_tag: RU-RABOTA203-BIZNES
 prerequisites: [RU-C203-podpis, RU-C203-pechat]
 sounds: []
-roots: []
+roots: [english-business]
+etymology_hook: "бизнес ← English business, from busy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C203-pechat]
 <!-- hl-knowledge: introduces=[RU-LEX-C203-RABOTA203-03]; assesses=[] -->
 
 **бизнес** (*bíznes*) — "business".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бизнес** comes from English *business*, from *busy*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dhārāvāhi"
 concept_tag: KA-VASTU300-DHARAVAHI
 prerequisites: [KA-C300-kyamara, KA-C300-karyakrama]
 sounds: []
-roots: []
+roots: [sanskrit-dhara-stream]
+etymology_hook: "dhārāvāhi ← Sanskrit dhārā 'stream' (CDIAL 6788) + vāhin 'carrying'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C300-karyakrama]
 <!-- hl-knowledge: introduces=[KA-LEX-C300-VASTU300-04]; assesses=[] -->
 
 **ಧಾರಾವಾಹಿ** — *dhārāvāhi* — "a TV serial".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಧಾರಾವಾಹಿ** (*dhārāvāhi*) is Sanskrit *dhārā*, "stream, flow" (CDIAL 6788), and *vāhin*, "carrying": "carried on in a stream", episode after episode.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

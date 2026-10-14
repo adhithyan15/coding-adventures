@@ -14,7 +14,8 @@ romanization: "amrūd"
 concept_tag: HI-THG217-AMRUD
 prerequisites: [HI-C216-papita, HI-C217-anar]
 sounds: []
-roots: []
+roots: [persian-amrud]
+etymology_hook: "amrūd: usually traced to Persian amrūd 'pear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C217-anar]
 <!-- hl-knowledge: introduces=[HI-LEX-C217-THG217-02]; assesses=[] -->
 
 **अमरूद** — *amrūd* — "a guava".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अमरूद** (*amrūd*) is a loan, usually traced to Persian *amrūd*, "pear". In Hindi it names the guava.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

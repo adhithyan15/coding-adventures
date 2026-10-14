@@ -4,7 +4,7 @@
   "chapter": 217,
   "title": "Bride, Bridegroom, Engagement, Feast, Festival",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c126d65c9aa0639e",
+  "sourceHash": "fnv1a64:f2720e21c729b0e6",
   "lessons": [
     {
       "id": "TA-C217-manamakal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:afecb571f0b971e3",
+      "sourceHash": "fnv1a64:b71cfc974f20e3d3",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "மணமகள் (maṇamakaḷ) is native: maṇam, \"marriage\" (DEDR 4667), and makaḷ, \"daughter, woman\" (DEDR 4616)."
+              "text": "மணமகள் (maṇamakaḷ) is native: maṇam, \"marriage\" (DEDR 4667), and makaḷ, \"daughter, woman\" (DEDR 4616, which compares Sanskrit mālikā, \"daughter\")."
             }
           ]
         },

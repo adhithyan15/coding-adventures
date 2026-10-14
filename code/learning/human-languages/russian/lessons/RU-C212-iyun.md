@@ -14,7 +14,8 @@ romanization: "iyún"
 concept_tag: RU-VREMYA212-IYUN
 prerequisites: [RU-C211-davleniye, RU-C211-sila]
 sounds: []
-roots: []
+roots: [latin-iunius]
+etymology_hook: "июнь came through Byzantine Greek iounios from Latin iunius"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C211-sila]
 <!-- hl-knowledge: introduces=[RU-LEX-C212-VREMYA212-01]; assesses=[] -->
 
 **июнь** (*iyún*) — "June".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**июнь** — Old Russian *июнь*; it came through Byzantine Greek *ioúnios* from Latin *iūnius*, "June" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

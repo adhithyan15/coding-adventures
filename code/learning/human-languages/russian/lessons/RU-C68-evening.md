@@ -14,7 +14,8 @@ romanization: "vécher"
 concept_tag: RU-TIME1-EVENING
 prerequisites: [RU-C68-month, RU-C68-year]
 sounds: []
-roots: []
+roots: [slavic-vecheru]
+etymology_hook: "вечер ← Proto-Slavic *večerŭ; Lithuanian vãkaras 'evening' is a cousin, and probably Latin vesper"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C68-year]
 <!-- hl-knowledge: introduces=[RU-LEX-C68-TIME1-05]; assesses=[] -->
 
 **вечер** (*vécher*) — "the evening".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вечер** ← Proto-Slavic *\*večerŭ* — inherited, a cousin of Lithuanian *vãkaras*, "evening" (Vasmer). Vasmer thinks Greek *hespéra* and Latin *vespera*, "evening", probably belong here too, with a changed first sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

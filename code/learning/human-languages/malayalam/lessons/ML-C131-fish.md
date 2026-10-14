@@ -11,7 +11,8 @@ romanization: "mīn"
 concept_tag: ML-KITCHEN-FISH
 prerequisites: [ML-C130-feast, ML-C130-payasam]
 sounds: []
-roots: []
+roots: [dravidian-min-fish]
+etymology_hook: "mīn: native Dravidian, one word with Tamil mīṉ and Kannada mīn (DEDR 4885)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C130-payasam]
 <!-- hl-knowledge: introduces=[ML-LEX-C131-KITCHEN-01]; assesses=[] -->
 
 **മീൻ** (*mīn*) — "fish", straight from the boats every morning.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മീൻ** (*mīn*) is native Dravidian, one word with Tamil *mīṉ* and Kannada *mīn* (DEDR 4885). Sanskrit *mīna*, "fish", is thought to come from this Dravidian word (CDIAL 10140a). DEDR 4885 compares Sanskrit *mīna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

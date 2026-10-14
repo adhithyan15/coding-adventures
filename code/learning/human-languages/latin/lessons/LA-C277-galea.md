@@ -13,7 +13,8 @@ gloss: "a helmet"
 concept_tag: LA-RES277-GALEA
 prerequisites: [LA-C276-vermis, LA-C276-testudo]
 sounds: []
-roots: []
+roots: [galea-latin]
+etymology_hook: "galea 'helmet' — probably from Greek galeē 'weasel': a cap of animal skin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C276-testudo]
 <!-- hl-knowledge: introduces=[LA-LEX-C277-RES277-01]; assesses=[] -->
 
 **galea, galeae** — "a helmet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**galea** is probably a loan from Greek *galeē*, "a weasel, a marten", for a cap of animal skin; Lewis & Short's comparison with Sanskrit is doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kapṛā"
 concept_tag: HI-NOUN-CLOTH
 prerequisites: [HI-C45-fruit, HI-C43-listen, HI-C44-son]
 sounds: []
-roots: []
+roots: [sanskrit-karpata]
+etymology_hook: "kapṛā ← Sanskrit karpaṭa 'patched garment, rag', which CDIAL takes from Austroasiatic (CDIAL 2871)"
 duration:
   max_seconds: 210
 requires:

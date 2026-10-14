@@ -14,7 +14,8 @@ romanization: "ṟippōrṭṭŭ"
 concept_tag: ML-JOLI261-RIPPORTTU
 prerequisites: [ML-C261-olivu, ML-C261-parisilanam]
 sounds: []
-roots: []
+roots: [english-report]
+etymology_hook: "ṟippōrṭṭŭ ← English report"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C261-parisilanam]
 <!-- hl-knowledge: introduces=[ML-LEX-C261-JOLI261-05]; assesses=[] -->
 
 **റിപ്പോർട്ട്** — *ṟippōrṭṭŭ* — "a report".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**റിപ്പോർട്ട്** (*ṟippōrṭṭŭ*) ← English *report*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

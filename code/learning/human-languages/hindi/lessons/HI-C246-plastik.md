@@ -14,7 +14,8 @@ romanization: "plāsṭik"
 concept_tag: HI-THG246-PLASTIK
 prerequisites: [HI-C246-cadi, HI-C246-kagaz]
 sounds: []
-roots: []
+roots: [english-plastic]
+etymology_hook: "plāsṭik ← English plastic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C246-kagaz]
 <!-- hl-knowledge: introduces=[HI-LEX-C246-THG246-04]; assesses=[] -->
 
 **प्लास्टिक** — *plāsṭik* — "plastic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्लास्टिक** (*plāsṭik*) is a loan from English *plastic*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

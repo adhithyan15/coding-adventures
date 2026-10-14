@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 134,
-  "sourceHash": "fnv1a64:ec65b95cdc816658",
+  "sourceHash": "fnv1a64:90efb2ee371b6a49",
   "lessonIds": [
     "HI-C134-botal",
     "HI-C134-pensil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch134.txt",
   "json": "hindi/narration/ch134.json",
-  "textHash": "fnv1a64:339ee9b599ce9c54",
-  "jsonHash": "fnv1a64:b8a1c5da3c85c29d",
+  "textHash": "fnv1a64:8e04be47841b6432",
+  "jsonHash": "fnv1a64:a276e95cab4c865b",
   "findings": []
 }

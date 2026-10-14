@@ -14,7 +14,8 @@ romanization: "vāsane"
 concept_tag: KA-VASTU303-VASANE
 prerequisites: [KA-C303-cilaka, KA-C303-hidike]
 sounds: []
-roots: []
+roots: [sanskrit-vasa-perfume]
+etymology_hook: "vāsane ← Sanskrit vāsanā, built on vāsa 'perfume' (CDIAL 11592)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C303-hidike]
 <!-- hl-knowledge: introduces=[KA-LEX-C303-VASTU303-05]; assesses=[] -->
 
 **ವಾಸನೆ** — *vāsane* — "a smell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಾಸನೆ** (*vāsane*) is Sanskrit *vāsanā*, built on *vāsa*, "perfume" (CDIAL 11592), with the Kannada *-e* for final *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

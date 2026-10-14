@@ -14,7 +14,8 @@ romanization: "tairnā"
 concept_tag: HI-VERB-TAIRNA
 prerequisites: [HI-C161-girna, HI-C161-urna]
 sounds: []
-roots: []
+roots: [sanskrit-tirate]
+etymology_hook: "tairnā ← Sanskrit tirate 'crosses over', a tadbhava (CDIAL 5821)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C161-urna]
 <!-- hl-knowledge: introduces=[HI-LEX-C162-ACT162-01]; assesses=[] -->
 
 **तैरना** — *tairnā* — "to swim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तैरना** (*tairnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tirate*, "crosses over" (CDIAL 5821). CDIAL rejects a Dravidian source proposed by Bloch, and explains the *ai* as a blend with another verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

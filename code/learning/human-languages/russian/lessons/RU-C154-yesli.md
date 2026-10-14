@@ -14,7 +14,8 @@ romanization: "yésli"
 concept_tag: RU-PRICH154-YESLI
 prerequisites: [RU-C154-poetomu, RU-C154-tak-kak]
 sounds: []
-roots: []
+roots: [pie-h1es]
+etymology_hook: "если is old есть ли, 'is it so', есть 'is' + the asking particle ли"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C154-tak-kak]
 <!-- hl-knowledge: introduces=[RU-LEX-C154-PRICH154-03]; assesses=[] -->
 
 **если** (*yésli*) — "if".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**если** is old *естьли*, still in Karamzin: *есть*, "is", with *ли*, the asking word (Vasmer). It spread in the 1500s and 1600s, perhaps under Polish *jeśli*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Sixth to Tenth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7a9687dc111330c2",
+  "sourceHash": "fnv1a64:f79afb60df920b2f",
   "lessons": [
     {
       "id": "HI-C76-sixth",
@@ -203,7 +203,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a23a679c5a37bc1",
+      "sourceHash": "fnv1a64:4a5f42d43897e820",
       "notice": null,
       "blocks": [
         {
@@ -302,6 +302,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सातवाँ (sātvāṁ) comes from Sanskrit saptama, \"seventh\" (CDIAL 13151), the ordinal built on sapta, \"seven\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -341,7 +352,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -372,7 +383,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fee3b53d9039227",
+      "sourceHash": "fnv1a64:8779cb328b6d360a",
       "notice": null,
       "blocks": [
         {
@@ -471,6 +482,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आठवाँ (āṭhvāṁ) comes from Sanskrit aṣṭama, \"eighth\" (CDIAL 937), the ordinal built on aṣṭā, \"eight\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -519,7 +541,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -550,7 +572,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f1122ededde7af3",
+      "sourceHash": "fnv1a64:6e59b9839237dedc",
       "notice": null,
       "blocks": [
         {
@@ -649,6 +671,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नौवाँ (nauvāṁ) comes from Sanskrit navama, \"ninth\" (CDIAL 7006), the ordinal built on nava, \"nine\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -697,7 +730,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -728,7 +761,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7361ed8d5a0be42",
+      "sourceHash": "fnv1a64:dd82fbeeee50aefa",
       "notice": null,
       "blocks": [
         {
@@ -827,6 +860,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दसवाँ (dasvāṁ) comes from Sanskrit daśama, \"tenth\" (CDIAL 6233), the ordinal built on daśa, \"ten\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -875,7 +919,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

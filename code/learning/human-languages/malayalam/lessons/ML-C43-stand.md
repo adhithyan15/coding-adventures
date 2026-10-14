@@ -11,7 +11,8 @@ romanization: "nilkkū"
 concept_tag: ML-VERB-STAND
 prerequisites: [ML-C43-sleep, ML-C41-where]
 sounds: []
-roots: []
+roots: [dravidian-nil-stand]
+etymology_hook: "nilkkū: native Dravidian, one word with Tamil nil and Kannada nil (DEDR 3675)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [ML-C43-sleep]
 **നിൽക്കൂ** (*nilkkū*) — "stand".
 
 Its pair, with the same courteous ending.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിൽക്കൂ** (*nilkkū*) is native Dravidian, one word with Tamil *nil*, Kannada *nil* and Telugu *nilucu* (DEDR 3675).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "svobódnyy"
 concept_tag: RU-QUAL125-FREE
 prerequisites: [RU-C124-orange, RU-C124-busy]
 sounds: []
-roots: []
+roots: [pie-swe]
+etymology_hook: "свободный is from свобода, the standing of one of 'one's own' kin, from свой 'one's own'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C124-busy]
 <!-- hl-knowledge: introduces=[RU-LEX-C125-QUAL125-01]; assesses=[] -->
 
 **свободный** (*svobódnyy*) — "free".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**свободный** is built on *свобода*, "freedom", Proto-Slavic *\*svoboda*. Vasmer explains it from *свой*, "one's own": the standing of a free member of one's own kin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

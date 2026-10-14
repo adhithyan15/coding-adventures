@@ -14,7 +14,8 @@ romanization: "krīḍāṅgaṇa"
 concept_tag: KA-STHALA213-KRIDANGANA
 prerequisites: [KA-C213-kalyana-mantapa, KA-C213-jim]
 sounds: []
-roots: []
+roots: [sanskrit-krida]
+etymology_hook: "krīḍāṅgaṇa ← Sanskrit krīḍā 'play' + aṅgaṇa 'courtyard'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C213-jim]
 <!-- hl-knowledge: introduces=[KA-LEX-C213-STHALA213-04]; assesses=[] -->
 
 **ಕ್ರೀಡಾಂಗಣ** — *krīḍāṅgaṇa* — "a stadium".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕ್ರೀಡಾಂಗಣ** (*krīḍāṅgaṇa*) is Sanskrit *krīḍā*, "play, sport", and *aṅgaṇa*, "courtyard": "a yard for sport".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

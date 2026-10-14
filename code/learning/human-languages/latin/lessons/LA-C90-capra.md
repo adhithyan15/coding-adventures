@@ -13,7 +13,8 @@ gloss: "a goat"
 concept_tag: LA-ANIMALIA1-CAPRA
 prerequisites: [LA-C90-bos, LA-C90-ovis]
 sounds: []
-roots: []
+roots: [capra-latin, caper-latin]
+etymology_hook: "capra 'goat' — the feminine of caper 'he-goat', from PIE *kapros 'buck'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C90-ovis]
 <!-- hl-knowledge: introduces=[LA-LEX-C90-ANIMALIA1-04]; assesses=[] -->
 
 **capra, caprae** — "a goat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**capra** is the feminine of *caper*, "a he-goat" (Lewis & Short), which is usually traced to Proto-Indo-European *\*kapros*, "buck, he-goat" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

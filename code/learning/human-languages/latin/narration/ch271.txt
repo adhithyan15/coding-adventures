@@ -12,6 +12,9 @@ Before the new one: say the Latin for an anchor, then the Latin for an oar.
 You'll want to know: populus, populī.
 populus, populī — "a people, a nation".
 
+The word, taken apart.
+populus has no sure origin; EtymDB 2.1 gives Proto-Italic poplos, "army", for its oldest sense, a body of armed men. It may be a loan, perhaps from Etruscan. English people comes from it through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for an oar, then the Latin for a people.
 
 You'll want to know: cīvitās, cīvitātis.
 cīvitās, cīvitātis — "a state; citizenship".
+
+The word, taken apart.
+cīvitās is built on cīvis, "a citizen" (Lewis & Short), with -tās, an ending for a quality: the body of citizens. English city comes from it through French.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a people, then the Latin for a state; citi
 You'll want to know: patria, patriae.
 patria, patriae — "a homeland".
 
+The word, taken apart.
+patria is the feminine of patrius, "of a father" (Lewis & Short), with terra, "land", understood: the land of one's fathers.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a state; citizenship, then the Latin for a
 You'll want to know: hostis, hostis.
 hostis, hostis — "an enemy (of the state)".
 
+The word, taken apart.
+hostis is inherited, usually traced to Proto-Indo-European ghostis, "a stranger, a guest" (EtymDB 2.1): the stranger became the enemy in Latin, the guest in Germanic. English guest is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a homeland, then the Latin for an enemy.
 
 You'll want to know: bellum, bellī.
 bellum, bellī — "war".
+
+The word, taken apart.
+bellum comes from older duellum (Lewis & Short); Latin turned an initial dw into b, as in bis, "two times", from older duis. The deeper origin of duellum is uncertain.
 
 What you've built.
 One more word for this chapter.

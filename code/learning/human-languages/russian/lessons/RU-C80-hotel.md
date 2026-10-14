@@ -14,7 +14,8 @@ romanization: "gostínitsa"
 concept_tag: RU-PLACES-HOTEL
 prerequisites: [RU-C79-car, RU-C79-bridge]
 sounds: []
-roots: []
+roots: [pie-ghostis]
+etymology_hook: "гостиница is built on гость 'guest': a house for guests, once also for travelling merchants"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C79-bridge]
 <!-- hl-knowledge: introduces=[RU-LEX-C80-PLACES-01]; assesses=[] -->
 
 **гостиница** (*gostínitsa*) — "a hotel". Built on **гость**, guest.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**гостиница** is built on *гость*, "a guest", with *-ница*, a place: a house for guests. Old Russian *гость* also meant "a travelling merchant" (Vasmer), as in *Гостиный двор*, "the merchants' arcade".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

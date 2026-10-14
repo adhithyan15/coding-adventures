@@ -14,7 +14,8 @@ romanization: "śālu"
 concept_tag: KA-VASTU259-SALU2
 prerequisites: [KA-C259-gundi, KA-C259-svetar]
 sounds: []
-roots: []
+roots: [persian-shal]
+etymology_hook: "śālu: Persian shāl 'shawl', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C259-svetar]
 <!-- hl-knowledge: introduces=[KA-LEX-C259-VASTU259-03]; assesses=[] -->
 
 **ಶಾಲು** — *śālu* — "a shawl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಶಾಲು** (*śālu*) is Persian *shāl*, "shawl", which came into Kannada through Hindustani, with a final *-u* added.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

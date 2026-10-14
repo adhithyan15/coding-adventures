@@ -14,7 +14,8 @@ romanization: "tumán"
 concept_tag: RU-THINGS114-FOG
 prerequisites: [RU-C114-concert, RU-C114-holiday]
 sounds: []
-roots: []
+roots: [turkic-tuman]
+etymology_hook: "туман ← Turkic tuman 'fog, darkness', probably from an Iranian word for 'mist'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C114-holiday]
 <!-- hl-knowledge: introduces=[RU-LEX-C114-THINGS114-05]; assesses=[] -->
 
 **туман** (*tumán*) — "fog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**туман** comes from Turkic *tuman*, "fog, gloom", as in Kazakh and Kirghiz, Turkish *duman*; Vasmer thinks the Turkic words probably go back to Avestan *dunman-*, "mist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

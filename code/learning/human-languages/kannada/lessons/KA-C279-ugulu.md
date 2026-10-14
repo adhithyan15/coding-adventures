@@ -14,7 +14,8 @@ romanization: "uguḷu"
 concept_tag: KA-VERB-UGULU
 prerequisites: [KA-C278-tayarisu, KA-C279-cuccu]
 sounds: []
-roots: []
+roots: [dravidian-umil-spit]
+etymology_hook: "uguḷu: native Dravidian, one word with Tamil umi (DEDR 636)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C279-cuccu]
 <!-- hl-knowledge: introduces=[KA-LEX-C279-KRIYE279-02]; assesses=[] -->
 
 **ಉಗುಳು** — *uguḷu* — "to spit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಗುಳು** (*uguḷu*) is native Dravidian, one word with Tamil *umi* (DEDR 636). DEDR lists older *uguḻ*, "to spit out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

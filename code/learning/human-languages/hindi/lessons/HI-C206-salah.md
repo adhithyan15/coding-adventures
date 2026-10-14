@@ -14,7 +14,8 @@ romanization: "salāh"
 concept_tag: HI-THG206-SALAH
 prerequisites: [HI-C205-sandesa, HI-C205-batcit]
 sounds: []
-roots: []
+roots: [arabic-salah]
+etymology_hook: "salāh ← Arabic ṣalāḥ 'soundness, what is right', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C205-batcit]
 <!-- hl-knowledge: introduces=[HI-LEX-C206-THG206-01]; assesses=[] -->
 
 **सलाह** — *salāh* — "advice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सलाह** (*salāh*) is a loan from Arabic *ṣalāḥ*, "soundness, what is right", which reached Hindi through Persian. Its Arabic root is *ṣ-l-ḥ* (Lane). Hindi uses it for advice.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

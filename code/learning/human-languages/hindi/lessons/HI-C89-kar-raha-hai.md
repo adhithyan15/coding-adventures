@@ -14,7 +14,8 @@ romanization: "kar rahā hai"
 concept_tag: HI-CONTINUOUS-THIRD
 prerequisites: [HI-C89-kar-rahi-hun, HI-C02-hai, HI-C40-that]
 sounds: []
-roots: []
+roots: [rah-remain, kr-do]
+etymology_hook: "rahā: from rahnā ← *rahati 'remains', a form CDIAL reconstructs (CDIAL 10666)"
 duration:
   max_seconds: 240
 requires:
@@ -58,6 +59,8 @@ Only the **last** word moved when the subject changed from *I* to *he*:
 Two independent dials. The middle word answers *what is the subject like* and
 the last word answers *which person is it*. Turning one does nothing to the
 other, which is why you can build any combination without a table to memorise.
+
+**रहा** is a form of **रहना**, from a reconstructed *\*rahati*, "remains" (CDIAL 10666).
 
 ## Grammar Lens: it works on things as well as people
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C89-CONT-03, HI-LEX-C40-DEIXIS-02] -->

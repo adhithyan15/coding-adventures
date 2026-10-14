@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to withdraw, then the Kannada for to sig
 You'll want to know: ಚಾರ್ಜ್ ಮಾಡು.
 ಚಾರ್ಜ್ ಮಾಡು — cārj māḍu — "to charge (a phone)".
 
+The word, taken apart.
+ಚಾರ್ಜ್ ಮಾಡು (cārj māḍu) is English charge with native māḍu, "to do" (DEDR 4797).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to sign, then the Kannada for to charge.
 
 You'll want to know: ಪರಿಶೀಲಿಸು.
 ಪರಿಶೀಲಿಸು — pariśīlisu — "to check, to verify".
+
+The word, taken apart.
+ಪರಿಶೀಲಿಸು (pariśīlisu) is Sanskrit pariśīlana, "close study, examination", made into a Kannada verb with -isu.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to charge, then the Kannada for to check
 You'll want to know: ಅನುವಾದಿಸು.
 ಅನುವಾದಿಸು — anuvādisu — "to translate".
 
+The word, taken apart.
+ಅನುವಾದಿಸು (anuvādisu) is Sanskrit anuvāda, "saying after, saying again", built on vāda, "speech" (CDIAL 11507), made into a Kannada verb with -isu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to check, then the Kannada for to transl
 You'll want to know: ಅರ್ಜಿ ಹಾಕು.
 ಅರ್ಜಿ ಹಾಕು — arji hāku — "to apply (for a job, a loan)".
 
+The word, taken apart.
+ಅರ್ಜಿ ಹಾಕು (arji hāku) is Hindustani arzī, "a petition", from Arabic ʿarḍ, "presenting", through Persian, with hāku, "to put", whose history neither DEDR nor CDIAL gives.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to translate, then the Kannada for to ap
 
 You'll want to know: ಹೋಲಿಸು.
 ಹೋಲಿಸು — hōlisu — "to compare".
+
+The word, taken apart.
+ಹೋಲಿಸು (hōlisu) is native Dravidian, from hōl, "to resemble", and DEDR 4597 lists pōlisu, "to cause to resemble, compare", with the older p-; the entry also has Tamil pōl, Telugu pōlu and Malayalam pōluka.
 
 What you've built.
 One more word for this chapter.

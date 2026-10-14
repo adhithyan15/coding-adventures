@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to here, then the Malayalam for a side
 You'll want to know: സംബന്ധിച്ച്.
 സംബന്ധിച്ച് — sambandhiccŭ — "regarding, about".
 
+The word, taken apart.
+സംബന്ധിച്ച് (sambandhiccŭ) is a Malayalam verb form, "having connected", built on Sanskrit sambandha, "connection", from the root bandh, "to bind".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a side, then the Malayalam for regardi
 
 You'll want to know: എങ്കിലും.
 എങ്കിലും — eṅkiluṁ — "although, even so".
+
+The word, taken apart.
+എങ്കിലും (eṅkiluṁ) is native Dravidian: a conditional form of the verb "to say" (DEDR 868, with Tamil eṉ), with -uṁ, "even": "even if one says so".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for regarding, then the Malayalam for alth
 You'll want to know: എന്നിട്ടും.
 എന്നിട്ടും — enniṭṭuṁ — "and yet, still".
 
+The word, taken apart.
+എന്നിട്ടും (enniṭṭuṁ) is native Dravidian: a past form of the verb "to say" (DEDR 868, with Tamil eṉ), with -uṁ, "even": "even having said so".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for although, then the Malayalam for and y
 You'll want to know: എന്നിരുന്നാലും.
 എന്നിരുന്നാലും — ennirunnāluṁ — "however, nevertheless".
 
+The word, taken apart.
+എന്നിരുന്നാലും (ennirunnāluṁ) is native Dravidian, "even if it were so": the verb "to say" (DEDR 868), the verb "to be" (DEDR 480, with Tamil iru), the conditional -āl, and -uṁ, "even".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for and yet, then the Malayalam for howeve
 
 You'll want to know: എങ്കിൽ.
 എങ്കിൽ — eṅkil — "if so, in that case".
+
+The word, taken apart.
+എങ്കിൽ (eṅkil) is native Dravidian, a conditional form of the verb "to say, to sound" (DEDR 868, with Tamil eṉ): "if (that is) said".
 
 What you've built.
 One more word for this chapter.

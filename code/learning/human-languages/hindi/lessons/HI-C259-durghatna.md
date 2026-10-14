@@ -14,7 +14,8 @@ romanization: "durghaṭnā"
 concept_tag: HI-THG259-DURGHATNA
 prerequisites: [HI-C259-bhir, HI-C259-ghatna]
 sounds: []
-roots: []
+roots: [sanskrit-durghatana]
+etymology_hook: "durghaṭnā ← Sanskrit durghaṭanā 'a bad occurrence', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C259-ghatna]
 <!-- hl-knowledge: introduces=[HI-LEX-C259-THG259-04]; assesses=[] -->
 
 **दुर्घटना** — *durghaṭnā* — "an accident".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुर्घटना** (*durghaṭnā*) is Sanskrit *durghaṭanā*, "a bad occurrence", taken over whole as a learned loan, a tatsama. It is *ghaṭanā*, "event", with *dur-*, "bad".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

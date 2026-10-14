@@ -11,6 +11,7 @@ concept_tag: ES-TRADE-ALMACEN
 prerequisites: [ES-C451-sintesis-turno, ES-C311-tienda, ES-C366-caja]
 sounds: [accent-acute, stress-final, nasal-n]
 roots: [makhzan-arabic]
+etymology_hook: "almacén ← Arabic al-makhzan 'the storehouse' — English magazine"
 duration:
   max_seconds: 270
 requires:

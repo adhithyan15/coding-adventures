@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a plate, then the Kannada for the price.
 You'll want to know: ಸಾಧ್ಯವಿಲ್ಲ.
 ಸಾಧ್ಯವಿಲ್ಲ (sādhyavilla) — "it's not possible", from ಸಾಧ್ಯ (sādhya), "possible", with ‑ಇಲ್ಲ, "not".
 
+The word, taken apart.
+ಸಾಧ್ಯವಿಲ್ಲ (sādhyavilla) is sādhya, "possible", from Sanskrit sādhya, "to be accomplished", with native illa, "is not" (DEDR 2559).
+
 What you've built.
 Possible, and the no that closes it.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for the price, then the Kannada for not poss
 
 You'll want to know: ಹಾಗಲ್ಲ.
 ಹಾಗಲ್ಲ (hāgalla) — "it's not like that", "no, that's not it". It is ಹಾಗೆ (hāge), "like that", with ಅಲ್ಲ (alla), "is not".
+
+The word, taken apart.
+ಹಾಗಲ್ಲ (hāgalla) is native Dravidian: hāge, "in that way" (DEDR 1), and alla, "is not" (DEDR 234).
 
 What you've built.
 Two known pieces, one correction.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for not possible, then the Kannada for not l
 You'll want to know: ಓಹೋ.
 ಓಹೋ (ōhō) — "oh, I see!", the sound of understanding arriving.
 
+The word, taken apart.
+ಓಹೋ (ōhō) is an exclamation: the sound of surprise made into a word, as in many languages. It has no etymology beyond the sound.
+
 What you've built.
 The happy opposite of ayyō.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for not like that, then the Kannada for oh, 
 You'll want to know: ಇರಬಹುದು.
 ಇರಬಹುದು (irabahudu) — "maybe, it could be", from ಇರು (iru), "to be", with ‑ಬಹುದು, "may".
 
+The word, taken apart.
+ಇರಬಹುದು (irabahudu) is native Dravidian: ira, from iru, "to be" (DEDR 480), and bahudu, "it may", usually explained as an old future form of baru, "to come" (DEDR 5270): "it may come to be".
+
 What you've built.
 A known verb, softened into a guess.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for oh, I see, then the Kannada for maybe.
 
 You'll want to know: ಖಚಿತವಾಗಿ.
 ಖಚಿತವಾಗಿ (khacitavāgi) — "certainly, for sure", with the ‑ಆಗಿ ending of ನಿಧಾನವಾಗಿ. ಖಂಡಿತ (khaṇḍita) says the same with more force.
+
+The word, taken apart.
+ಖಚಿತವಾಗಿ (khacitavāgi) is khacita, "certain, fixed", from Sanskrit khacita, "inlaid, set", with the adverb ending -āgi, "in a … way". What is set in place is certain.
 
 What you've built.
 The sure answer after maybe.

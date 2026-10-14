@@ -13,7 +13,8 @@ gloss: "tired"
 concept_tag: LA-AEGER-FESSUS
 prerequisites: [LA-C67-morbus, LA-C68-aeger]
 sounds: []
-roots: []
+roots: [fessus-latin, fatigare-latin]
+etymology_hook: "fessus 'tired' — the old participle of fatīscor 'to grow weary'; kin to fatīgō, whence English fatigue"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C68-aeger]
 <!-- hl-knowledge: introduces=[LA-LEX-C68-AEGER-02]; assesses=[] -->
 
 **fessus, fessa, fessum** — "tired".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fessus** is the old participle of *fatīscor*, "to grow weary, to gape open". It belongs with *fatīgō*, "to tire out" (Lewis & Short). English *fatigue* comes from that verb through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

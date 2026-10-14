@@ -11,7 +11,8 @@ romanization: "ciri"
 concept_tag: ML-FEEL-LAUGH
 prerequisites: [ML-C116-fear, ML-C116-anger]
 sounds: []
-roots: []
+roots: [dravidian-ciri-laugh]
+etymology_hook: "ciri: native Dravidian, one word with Tamil ciri and Kannada kiri (DEDR 1562)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C116-anger]
 <!-- hl-knowledge: introduces=[ML-LEX-C116-FEELINGS-04]; assesses=[] -->
 
 **ചിരി** (*ciri*) — "laughter, a smile". **ചിരിക്കൂ** (*cirikkū*) — "smile!".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചിരി** (*ciri*) is native Dravidian, one word with Tamil *ciri* and Kannada *kiri* (DEDR 1562).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

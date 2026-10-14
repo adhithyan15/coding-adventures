@@ -46,7 +46,7 @@ It is built on the same **மாமா** root as the uncle.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**மாமியார்** (*māmiyār*) is native Dravidian (DEDR 4813). The entry lists *māmi*, "mother-in-law", beside *māmā*, "uncle"; *-yār* is the respectful ending.
+**மாமியார்** (*māmiyār*) is native Dravidian (DEDR 4813). The entry lists *māmi*, "mother-in-law", beside *māmā*, "uncle", which it compares with Sanskrit *māma*; *-yār* is the respectful ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

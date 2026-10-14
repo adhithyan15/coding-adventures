@@ -14,7 +14,8 @@ romanization: "týsyacha"
 concept_tag: RU-NUM2-THOUSAND
 prerequisites: [RU-C76-fifty, RU-C76-ninety]
 sounds: []
-roots: []
+roots: [slavic-tysenti]
+etymology_hook: "тысяча ← Proto-Slavic *tysęti; Lithuanian tūkstantis and Gothic þūsundi, 'thousand', are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C76-ninety]
 <!-- hl-knowledge: introduces=[RU-LEX-C76-NUM2-04]; assesses=[] -->
 
 **тысяча** (*týsyacha*) — "a thousand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тысяча** ← Proto-Slavic *\*tysęti* — inherited, a cousin of Lithuanian *tūkstantis* and Gothic *þūsundi*, "thousand" (Vasmer): English *thousand* is a cousin. One proposal Vasmer reports reads it as "a swollen hundred".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

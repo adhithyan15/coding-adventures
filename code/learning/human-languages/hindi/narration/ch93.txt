@@ -15,6 +15,9 @@ Take the verb, drop the -ना, add -o:
 bolnā becomes bol becomes bolo.
 The same operation on any verb: karnā becomes karo, sunnā becomes suno, calnā becomes calo.
 
+The word, taken apart.
+बोलो (bolo) is the verb बोलना, "to speak", with the command ending -o. CDIAL traces the verb to a reconstructed boll-, "speak" (CDIAL 9321).
+
 Grammar Lens: the command carries the level, and nothing else has to.
 This is the part that makes the imperative economical. In English a command is one word for everybody — speak — and politeness has to be added around it: speak, please speak, would you mind speaking.
 In Hindi the verb ending itself carries the level:
@@ -53,6 +56,9 @@ The ending is -iye, on the same stem as before:
 bolnā becomes bol becomes boliye.
 And now the lump comes apart. कीजिए is karnā, "to do," with this same ending: kar + -iye. Māf kījiye is literally "please do forgiveness." You have been giving a respectful command since the ninth chapter without knowing it was one.
 
+The word, taken apart.
+बोलिए (boliye) is the verb बोलना, "to speak", with the respectful ending -iye. CDIAL traces the verb to a reconstructed boll-, "speak" (CDIAL 9321).
+
 Grammar Lens: politeness is built in, not added on.
 [a table of 3 rows, read aloud]
 English. command: speak. how politeness is carried: by adding please.
@@ -87,6 +93,9 @@ Say tumhārā. You can name the tum level and command at it. Say "you are" at th
 You'll want to know: तुम हो.
 तुम हो (tum ho) — "you are," at the tum level.
 हो is the copula that goes with तुम, and nothing else takes it.
+
+The word, taken apart.
+तुम हो (tum ho) is two inherited words. tum comes from yuṣmad-, the Sanskrit plural "you", with its t- from the singular tuvam (CDIAL 10511). ho is a form of honā, "to be", from Sanskrit bhavati, "becomes, is" (CDIAL 9416).
 
 Grammar Lens: the copula, completed.
 You have had the others for a long time. Here they are together, which is the first time the set has been complete:
@@ -132,6 +141,9 @@ You'll want to know: मत.
 मत (mat) — "don't," and it goes in front of the verb:
 मत बोलिए — mat boliye — please don't speak. मत बोलो — mat bolo — don't speak.
 Hindi has a negative for statements, which you already have, and a separate one reserved for commands. Using the statement negative to tell somebody not to do something is the mistake an English speaker makes, because English uses not for both.
+
+The word, taken apart.
+मत (mat) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mā, "don't (forbidding)" (CDIAL 9981). CDIAL notes that mā went with commands and wishes, which is the job mat still does.
 
 Grammar Lens: the sign you will actually meet it on.
 A negative command is what a public notice is. This is the shape:

@@ -4,7 +4,7 @@
   "chapter": 474,
   "title": "El curso que paga la empresa",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:718d8670045a6d88",
+  "sourceHash": "fnv1a64:4867326869fe1c1f",
   "lessons": [
     {
       "id": "ES-C474-invitar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:348876476b0c7719",
+      "sourceHash": "fnv1a64:4423de6aaa137d18",
       "notice": null,
       "blocks": [
         {
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bfb5cc7e583e89d",
+      "sourceHash": "fnv1a64:02eaa6a465462ff0",
       "notice": null,
       "blocks": [
         {
@@ -268,7 +268,7 @@
             },
             {
               "kind": "speech",
-              "text": "el deporte — dis- plus portare, carrying yourself away from work;"
+              "text": "el deporte — de- plus portare, carrying yourself away from work;"
             },
             {
               "kind": "speech",
@@ -281,6 +281,10 @@
             {
               "kind": "speech",
               "text": "And importante is literally carrying-in-ish: something that brings weight with it."
+            },
+            {
+              "kind": "speech",
+              "text": "El importe is the noun of importar in its third sense, \"to amount to\": the sum a bill comes to."
             }
           ]
         },
@@ -356,7 +360,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a43489621064f16",
+      "sourceHash": "fnv1a64:59196983920f3ac9",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +527,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a453912cb105f161",
+      "sourceHash": "fnv1a64:041aeb2fbb80886c",
       "notice": null,
       "blocks": [
         {

@@ -13,7 +13,8 @@ gloss: "breath, soul"
 concept_tag: LA-VALE206-ANIMA
 prerequisites: [LA-C205-medicamentum, LA-C205-unguentum]
 sounds: []
-roots: []
+roots: [anima-latin, animus-latin]
+etymology_hook: "anima 'breath, soul' — partner of animus, from PIE *h2enh1- 'to breathe'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C205-unguentum]
 <!-- hl-knowledge: introduces=[LA-LEX-C206-VALE206-01]; assesses=[] -->
 
 **anima, animae** — "breath, soul".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anima** is the partner of *animus*, "mind, spirit" (EtymDB 2.1), and both are usually traced to Proto-Indo-European *\*h2enh1-*, "to breathe" (EtymDB 2.1): the soul as breath.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

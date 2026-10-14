@@ -11,6 +11,7 @@ concept_tag: ES-REF-EXPERIENCIA
 prerequisites: [ES-C435-documentacion, ES-C427-empresa]
 sounds: []
 roots: []
+etymology_hook: "experiencia ← Latin experientia 'a trial', from experiri 'to try' — English experience"
 duration:
   max_seconds: 235
 requires:
@@ -55,7 +56,7 @@ rather than passing over.
 | la diferencia | difference |
 | la paciencia | patience |
 
-**-encia** and English **-ence** are the same ending, inherited by both from
+**-encia** and English **-ence** are the same ending, taken by both from
 Latin. Hundreds of words pair this way, and the pairing almost never misleads.
 
 So the real content of this lesson is a **licence**: when a long Spanish noun
@@ -66,6 +67,9 @@ is a moment.
 That is not true of short words, where the false friends live — *embarazada*
 does not mean embarrassed, and *éxito* is not exit. The long formal endings are
 the safe ones.
+
+*Experiencia* is Latin *experientia*, "a trial, a proof" (Lewis & Short), from
+*experiri*, "to try".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C435-PAPEL-03, ES-LEX-C427-AGENT-06] -->

@@ -14,7 +14,8 @@ romanization: "oṭivŭ"
 concept_tag: ML-AROGYAM274-OTIVU
 prerequisites: [ML-C274-niru, ML-C274-ulukku]
 sounds: []
-roots: []
+roots: [dravidian-odi-break]
+etymology_hook: "oṭivŭ: native Dravidian, the noun of the verb 'to break'; Tamil oṭi (DEDR 946)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C274-ulukku]
 <!-- hl-knowledge: introduces=[ML-LEX-C274-AROGYAM274-03]; assesses=[] -->
 
 **ഒടിവ്** — *oṭivŭ* — "a fracture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒടിവ്** (*oṭivŭ*) is native Dravidian, the noun of the verb "to break"; DEDR 946 lists the root with Tamil *oṭi* and Kannada *oḍi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

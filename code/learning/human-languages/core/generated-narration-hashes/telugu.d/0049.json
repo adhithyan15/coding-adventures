@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 49,
-  "sourceHash": "fnv1a64:a1e01f204e225303",
+  "sourceHash": "fnv1a64:55d8da262855abf8",
   "lessonIds": [
     "TE-C49-true",
     "TE-C49-enough",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "telugu/narration/ch49.txt",
   "json": "telugu/narration/ch49.json",
-  "textHash": "fnv1a64:74a810b865693fd1",
-  "jsonHash": "fnv1a64:8359262ed5de0fe1",
+  "textHash": "fnv1a64:24ed19e3645d2817",
+  "jsonHash": "fnv1a64:2121fb719d719d0d",
   "findings": []
 }

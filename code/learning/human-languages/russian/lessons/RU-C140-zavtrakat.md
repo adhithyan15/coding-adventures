@@ -14,7 +14,8 @@ romanization: "závtrakat"
 concept_tag: RU-VERB-ZAVTRAKAT
 prerequisites: [RU-C139-chek, RU-C140-obedat]
 sounds: []
-roots: []
+roots: [slavic-utro]
+etymology_hook: "завтракать is завтрак 'breakfast' made into a verb with -ать"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C140-obedat]
 <!-- hl-knowledge: introduces=[RU-LEX-C140-ACT140-02]; assesses=[] -->
 
 **завтракать** (*závtrakat*) — "to have breakfast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**завтракать** is *завтрак*, "breakfast", made into a verb; Old Russian already had *завтрокать* (Vasmer). *завтрак* is built on *завтра*, from *за утро*, "after the morning".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

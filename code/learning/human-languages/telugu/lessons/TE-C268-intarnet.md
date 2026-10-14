@@ -14,7 +14,8 @@ romanization: "iṇṭarneṭ"
 concept_tag: TE-VASTUVU268-INTARNET
 prerequisites: [TE-C268-rediyo, TE-C268-karyakramam]
 sounds: []
-roots: []
+roots: [english-internet]
+etymology_hook: "iṇṭarneṭ ← English internet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C268-karyakramam]
 <!-- hl-knowledge: introduces=[TE-LEX-C268-VASTUVU268-04]; assesses=[] -->
 
 **ఇంటర్నెట్** — *iṇṭarneṭ* — "the internet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇంటర్నెట్** (*iṇṭarneṭ*) is a loan from English *internet*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

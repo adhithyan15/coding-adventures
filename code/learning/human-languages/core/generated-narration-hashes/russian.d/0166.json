@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 166,
-  "sourceHash": "fnv1a64:82bab033c3acde7f",
+  "sourceHash": "fnv1a64:ed3891fb14ee7eae",
   "lessonIds": [
     "RU-C166-lyzhi",
     "RU-C166-konki",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch166.txt",
   "json": "russian/narration/ch166.json",
-  "textHash": "fnv1a64:312b8c45a2360405",
-  "jsonHash": "fnv1a64:d804e96223f8c742",
+  "textHash": "fnv1a64:210fbbea2dc3d04c",
+  "jsonHash": "fnv1a64:c70c9bf8bef72d89",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "ḍālī"
 concept_tag: HI-THG252-DALI
 prerequisites: [HI-C251-mitar, HI-C252-bori]
 sounds: []
-roots: []
+roots: [sanskrit-dala-branch]
+etymology_hook: "ḍālī ← Sanskrit ḍāla 'branch', perhaps of Munda source; a tadbhava (CDIAL 5546)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C252-bori]
 <!-- hl-knowledge: introduces=[HI-LEX-C252-THG252-02]; assesses=[] -->
 
 **डाली** — *ḍālī* — "a branch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डाली** (*ḍālī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ḍāla*, "branch" (CDIAL 5546). CDIAL notes that the variety of forms points to a Munda source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

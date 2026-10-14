@@ -14,7 +14,8 @@ romanization: "shéya"
 concept_tag: RU-BODY2-NECK
 prerequisites: [RU-C30-hair, RU-C30-finger]
 sounds: []
-roots: []
+roots: [slavic-shija]
+etymology_hook: "шея ← Proto-Slavic *šija, probably first 'collar', from the root of шить 'to sew' (Vasmer)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C30-finger]
 <!-- hl-knowledge: introduces=[RU-LEX-C30-BODY2-03]; assesses=[] -->
 
 **шея** (*shéya*) — "the neck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шея** ← Proto-Slavic *\*šija* — inherited. Vasmer thinks it probably first meant "collar", from the root of *шить*, "to sew"; the links proposed with Latin and Albanian words he calls unreliable.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

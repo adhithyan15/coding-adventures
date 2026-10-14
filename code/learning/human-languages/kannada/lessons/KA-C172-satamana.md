@@ -14,7 +14,8 @@ romanization: "śatamāna"
 concept_tag: KA-KALA172-SATAMANA
 prerequisites: [KA-C172-pratidina, KA-C172-arambha]
 sounds: []
-roots: []
+roots: [sanskrit-shata, sanskrit-mana]
+etymology_hook: "śatamāna: Sanskrit śata 'hundred' (CDIAL 12278) + māna 'measure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C172-arambha]
 <!-- hl-knowledge: introduces=[KA-LEX-C172-KALA172-04]; assesses=[] -->
 
 **ಶತಮಾನ** — *śatamāna* — "a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಶತಮಾನ** (*śatamāna*) is Sanskrit *śata*, "hundred" (CDIAL 12278), and *māna*, "measure": "a measure of a hundred" years.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

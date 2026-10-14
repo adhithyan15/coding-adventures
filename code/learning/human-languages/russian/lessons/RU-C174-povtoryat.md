@@ -14,7 +14,8 @@ romanization: "povtoryát"
 concept_tag: RU-VERB-POVTORYAT
 prerequisites: [RU-C174-sovetovat, RU-C174-opisyvat]
 sounds: []
-roots: []
+roots: [slavic-vutoru]
+etymology_hook: "повторять is по- + второй 'second': to do a second time"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C174-opisyvat]
 <!-- hl-knowledge: introduces=[RU-LEX-C174-ACT174-03]; assesses=[] -->
 
 **повторять** (*povtoryát*) — "to repeat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**повторять** is *по-* with *-вторять*, from *второй*, "second": to repeat is to do a thing a second time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

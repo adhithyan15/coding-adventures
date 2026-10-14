@@ -13,7 +13,8 @@ gloss: "an inn"
 concept_tag: LA-LOC117-CAUPONA
 prerequisites: [LA-C117-macellum, LA-C117-popina]
 sounds: []
-roots: []
+roots: [caupona-latin, caupo-latin]
+etymology_hook: "caupōna 'inn' — built on caupō 'innkeeper': first the landlady, then the inn"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C117-popina]
 <!-- hl-knowledge: introduces=[LA-LEX-C117-LOC117-05]; assesses=[] -->
 
 **caupōna, caupōnae** — "an inn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caupōna** is built on *caupō*, "an innkeeper, a shopkeeper" (Lewis & Short): first the woman who kept the shop, then the inn itself. Where *caupō* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

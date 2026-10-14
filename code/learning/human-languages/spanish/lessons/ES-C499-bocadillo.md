@@ -10,7 +10,8 @@ gloss: "the sandwich (in a bread roll)"
 concept_tag: ES-REF-BOCADILLO
 prerequisites: [ES-C498-montar, ES-C498-dibujar]
 sounds: []
-roots: []
+roots: [bucca-latin]
+etymology_hook: "bocadillo — bocado 'a mouthful' + -illo: a little mouthful; boca 'mouth' is Latin bucca"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C498-dibujar]
 > *A cheese sandwich, please.*
 
 The word used in Spain; in much of Latin America a sandwich is *un sándwich*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bocadillo** is *bocado*, "a mouthful", with the small-ending *-illo*: a little mouthful. *Bocado* is built on *boca*, "mouth", Latin *bucca*, "a cheek" — inherited: the short *u* became *o*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

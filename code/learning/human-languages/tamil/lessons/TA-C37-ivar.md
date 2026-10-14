@@ -57,8 +57,8 @@ One caution about speech: **இவர்** is heard mostly of men, and **இவ�
 **ி** sign that hangs on a consonant. **வ** is the *va* opening **வணக்கம்** and
 **வீடு**. **ர்** is the soft r with a puḷḷi.
 
-A word this short is almost all arc, which is the moment to recall the usual
-explanation for that roundness: Tamil was scratched into palm leaf, and a
+A word this short is almost all arc. Recall the usual explanation for that
+roundness: Tamil was scratched into palm leaf, and a
 straight stroke along the grain can split the leaf. Hold it as the writing
 lesson asked — **the standard account, not a settled fact**, since the earliest
 Tamil writing was cut into stone and is angular. What survives is the useful
@@ -67,8 +67,8 @@ part: **the tool leaves fingerprints on the letters**.
 ## Grammar Lens: near, far, and which
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-IVAR-02]; assesses=[] -->
 
-**இவர்** is one cell of a system, and the system is a single letter at the
-front:
+**இவர்** is one cell of a system inherited from Dravidian (DEDR 410), and the
+system is a single letter at the front:
 
 | the front letter | what it does |
 |---|---|

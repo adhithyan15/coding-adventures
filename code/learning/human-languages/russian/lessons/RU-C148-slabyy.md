@@ -14,7 +14,8 @@ romanization: "slábyy"
 concept_tag: RU-ZDOROV148-SLABYY
 prerequisites: [RU-C147-tabletka, RU-C148-zdorovyy]
 sounds: []
-roots: []
+roots: [slavic-slabu]
+etymology_hook: "слабый ← Proto-Slavic *slabŭ; Lithuanian slõbti 'to grow weak' and German schlaff 'slack' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C148-zdorovyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C148-ZDOROV148-02]; assesses=[] -->
 
 **слабый** (*slábyy*) — "weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**слабый** ← Proto-Slavic *\*slabŭ* — inherited. Vasmer relates it to Lithuanian *slõbti*, "to weaken", Old High German *slaf*, "slack", and Gothic *slēpan*, "to sleep": English *sleep* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "muduki"
 concept_tag: KA-VASTU299-MUDUKI
 prerequisites: [KA-C298-spardhe, KA-C298-bahumana]
 sounds: []
-roots: []
+roots: [dravidian-mutu-old]
+etymology_hook: "muduki: native Dravidian, one word with Tamil mutu and Telugu mudara (DEDR 4954)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C298-bahumana]
 <!-- hl-knowledge: introduces=[KA-LEX-C299-VASTU299-01]; assesses=[] -->
 
 **ಮುದುಕಿ** — *muduki* — "an old woman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುದುಕಿ** (*muduki*) is native Dravidian, one word with Tamil *mutu*, Telugu *mudara* and Malayalam *mutu* (DEDR 4954). DEDR lists *mudaki*, *muduki*, "old woman".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

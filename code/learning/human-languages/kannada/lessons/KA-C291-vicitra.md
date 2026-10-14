@@ -14,7 +14,8 @@ romanization: "vicitra"
 concept_tag: KA-GUNA291-VICITRA
 prerequisites: [KA-C291-tannage, KA-C291-beccage]
 sounds: []
-roots: []
+roots: [sanskrit-citra]
+etymology_hook: "vicitra ← Sanskrit vicitra 'many-coloured, strange', from citra 'bright' (CDIAL 4803)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C291-beccage]
 <!-- hl-knowledge: introduces=[KA-LEX-C291-GUNA291-03]; assesses=[] -->
 
 **ವಿಚಿತ್ರ** — *vicitra* — "strange, odd".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿಚಿತ್ರ** (*vicitra*) is Sanskrit *vicitra*, "many-coloured, strange", built on *citra*, "bright, variegated" (CDIAL 4803).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "apakaṭakaramāya"
 concept_tag: ML-GUNAM284-APAKATAKARAMAYA
 prerequisites: [ML-C284-rasakaramaya, ML-C284-virasamaya]
 sounds: []
-roots: []
+roots: [sanskrit-apakata, aaka-dravidian]
+etymology_hook: "apakaṭakaramāya: apakaṭam 'accident' + Sanskrit -kara 'making' + native āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C284-virasamaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C284-GUNAM284-05]; assesses=[] -->
 
 **അപകടകരമായ** — *apakaṭakaramāya* — "dangerous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അപകടകരമായ** (*apakaṭakaramāya*) is *apakaṭam*, "accident", with Sanskrit *-kara*, "making" (CDIAL 2779), and native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

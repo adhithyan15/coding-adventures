@@ -15,9 +15,9 @@ concept_tag: HI-SEASONS
 prerequisites: [HI-C13-haath, HI-C14-ghee]
 sounds: [devanagari-conjunct-shma, anusvara]
 roots: [ritu-sanskrit-six-season-system]
-etymology_hook: "Hindi's traditional calendar recognizes SIX ऋतु (ṛtu) 'seasons', not four — vasant, grishma, varsha (monsoon), sharad, hemant, shishir — a genuinely different structure, not just extra vocabulary"
+etymology_hook: "ṛtu ← Sanskrit ṛtu 'season', a tatsama, as are the six season names"
 duration:
-  max_seconds: 280
+  max_seconds: 282
 requires:
   knowledge: [HI-LEX-ANCHOR-GHEE]
 introduces:
@@ -62,6 +62,8 @@ important season there — not a subdivision of "summer" or "autumn," but its
 own season with no clean Western counterpart. And the cold season splits
 into **two** stages, *hemant* (the onset) and *śiśir* (deep winter), rather
 than being lumped into one "winter."
+
+**ऋतु** is Sanskrit *ṛtu*, "season", taken over whole, and so are the six season names.
 
 ## You'll want to know — Be honest: don't force the four-season frame onto this
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C14-RITU-02]; assesses=[] -->

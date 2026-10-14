@@ -14,7 +14,8 @@ romanization: "caturasraṁ"
 concept_tag: TE-VASTUVU193-CATURASRAM
 prerequisites: [TE-C193-gita, TE-C193-vrttam]
 sounds: []
-roots: []
+roots: [sanskrit-caturasra]
+etymology_hook: "caturasraṁ ← Sanskrit caturasra 'four-cornered', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C193-vrttam]
 <!-- hl-knowledge: introduces=[TE-LEX-C193-VASTUVU193-03]; assesses=[] -->
 
 **చతురస్రం** — *caturasraṁ* — "a square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చతురస్రం** (*caturasraṁ*) is Sanskrit *caturasra*, "four-cornered", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

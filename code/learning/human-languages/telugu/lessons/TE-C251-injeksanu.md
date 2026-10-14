@@ -14,7 +14,8 @@ romanization: "iñjekṣanu"
 concept_tag: TE-AROGYAM251-INJEKSANU
 prerequisites: [TE-C251-ayasam, TE-C251-kandaram]
 sounds: []
-roots: []
+roots: [english-injection]
+etymology_hook: "iñjekṣanu ← English injection"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C251-kandaram]
 <!-- hl-knowledge: introduces=[TE-LEX-C251-AROGYAM251-04]; assesses=[] -->
 
 **ఇంజెక్షను** — *iñjekṣanu* — "an injection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇంజెక్షను** (*iñjekṣanu*) is a loan from English *injection*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

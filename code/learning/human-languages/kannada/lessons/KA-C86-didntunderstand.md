@@ -11,7 +11,8 @@ romanization: "arthavāgalilla"
 concept_tag: KA-REP-DIDNT-UNDERSTAND
 prerequisites: [KA-C86-show, KA-C86-didnthear]
 sounds: []
-roots: []
+roots: [sanskrit-artha-meaning, tamil-aaku-become, il]
+etymology_hook: "arthavāgalilla: Sanskrit artha 'meaning' (CDIAL 638) + native āgu 'become' (DEDR 333) + illa 'not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C86-didnthear]
 
 **ಅರ್ಥವಾಗಲಿಲ್ಲ** (*arthavāgalilla*) — "I didn't understand", literally "the
 meaning did not happen". It starts with **ಅರ್ಥ**, "meaning", from the last chapter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅರ್ಥವಾಗಲಿಲ್ಲ** (*arthavāgalilla*) is *artha*, "meaning", from Sanskrit *artha* (CDIAL 638), with native *āgu*, "to become" (DEDR 333), and *illa*, "not" (DEDR 2559): "it did not become meaning". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

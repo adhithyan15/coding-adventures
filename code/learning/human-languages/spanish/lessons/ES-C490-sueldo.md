@@ -10,7 +10,8 @@ gloss: "the salary, the pay"
 concept_tag: ES-REF-SUELDO
 prerequisites: [ES-C489-buzon, ES-C490-empleo]
 sounds: []
-roots: []
+roots: [solidus-latin]
+etymology_hook: "sueldo ← Late Latin soldus, from solidus 'solid', a gold coin — English soldier, paid in it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C490-empleo]
 > El sueldo es de mil quinientos euros.
 >
 > *The salary is one thousand five hundred euros.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sueldo** ← Late Latin *soldus* (EtymDB 2.1), from *solidus*, "solid" — a solid gold coin — inherited: the *o* opened into *ue*. English *soldier* names one who served for that pay.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tīrika"
 concept_tag: TE-SAMAYAM212-TIRIKA
 prerequisites: [TE-C211-vadadebba, TE-C211-aviri]
 sounds: []
-roots: []
+roots: [dravidian-tir-finish]
+etymology_hook: "tīrika: looks built on tīru 'to be finished' (DEDR 3278), which DEDR lists"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C211-aviri]
 <!-- hl-knowledge: introduces=[TE-LEX-C212-SAMAYAM212-01]; assesses=[] -->
 
 **తీరిక** — *tīrika* — "free time, leisure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తీరిక** (*tīrika*) looks built on native *tīru*, "to be finished, completed", one word with Tamil *tīr* (DEDR 3278); DEDR does not list *tīrika* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

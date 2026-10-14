@@ -14,7 +14,8 @@ romanization: "ū̃cā"
 concept_tag: HI-QUAL158-UCA
 prerequisites: [HI-C158-caura, HI-C158-gahra]
 sounds: []
-roots: []
+roots: [sanskrit-ucca]
+etymology_hook: "ūṁcā ← Sanskrit ucca 'tall, lofty', a tadbhava (CDIAL 1634)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C158-gahra]
 <!-- hl-knowledge: introduces=[HI-LEX-C158-QUAL158-03]; assesses=[] -->
 
 **ऊँचा** — *ū̃cā* — "high, tall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ऊँचा** (*ūṁcā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ucca*, "tall, lofty" (CDIAL 1634). CDIAL calls the influence of *udañc*, "turned upwards", on the nasal very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

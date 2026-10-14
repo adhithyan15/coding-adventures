@@ -10,7 +10,8 @@ gloss: "to rehearse, to practise"
 concept_tag: ES-VERB-ENSAYAR
 prerequisites: [ES-C505-asistir, ES-C505-explicacion]
 sounds: []
-roots: []
+roots: [exagium-latin]
+etymology_hook: "ensayar — from ensayo 'a trial', Late Latin exagium 'a weighing' — English essay, assay"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C505-explicacion]
 > *The band rehearses on Fridays.*
 
 *El ensayo* is the rehearsal, or an essay.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ensayar** is built on *ensayo*, "a trial, a rehearsal", from Late Latin *exagium*, "a weighing" (EtymDB 2.1) — inherited: the *-gi-* became *y*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

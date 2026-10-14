@@ -11,7 +11,8 @@ romanization: "mēka"
 concept_tag: TE-NOUN-GOAT
 prerequisites: [TE-C60-buffalo]
 sounds: []
-roots: []
+roots: [dravidian-meeke-goat]
+etymology_hook: "mēka: native Dravidian, one word with Kannada mēke (DEDR 5087), which compares Sanskrit meka"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C60-buffalo]
 The word is inherited and it is old. Its shape sits close to the Tamil and Kannada words for the same animal, which is what happens to the names of animals people have kept for a very long time.
 
 A మేక will strip a bush bare and move on, which is why a గ్రామం keeps them at its edge rather than in its lanes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మేక** (*mēka*) is native Dravidian, one word with Kannada *mēke*, "she-goat" (DEDR 5087). DEDR compares Sanskrit *meka*, "goat", a word known only from lexicons.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

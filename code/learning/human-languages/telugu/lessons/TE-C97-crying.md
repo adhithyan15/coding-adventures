@@ -11,7 +11,8 @@ romanization: "ēḍupu"
 concept_tag: TE-MOOD-CRYING
 prerequisites: [TE-C96-signature, TE-C97-laugh]
 sounds: []
-roots: []
+roots: [dravidian-azhu-weep]
+etymology_hook: "ēḍupu: DEDR 282 lists it, with a query on the Telugu verb ēḍucu, beside Tamil aḻu 'to weep'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C97-laugh]
 
 **నాకు ఏడుపు వచ్చింది** — "I felt like crying", literally "crying came to me", on the pattern of
 **కోపం వచ్చింది**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 282 lists **ఏడుపు** (*ēḍupu*), "weeping, crying", with the verb *ēḍucu*, "to cry", beside Tamil *aḻu* and Kannada *aḻu*, "to weep", but puts a query against the Telugu forms.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

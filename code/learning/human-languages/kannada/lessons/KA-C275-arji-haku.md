@@ -14,7 +14,8 @@ romanization: "arji hāku"
 concept_tag: KA-VERB-ARJI-HAKU
 prerequisites: [KA-C275-parisilisu, KA-C275-anuvadisu]
 sounds: []
-roots: []
+roots: [arabic-arz, kannada-haku-put]
+etymology_hook: "arji hāku: Hindustani arzī 'petition', from Arabic ʿarḍ, + hāku 'to put'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C275-anuvadisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C275-KRIYE275-04]; assesses=[] -->
 
 **ಅರ್ಜಿ ಹಾಕು** — *arji hāku* — "to apply (for a job, a loan)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅರ್ಜಿ ಹಾಕು** (*arji hāku*) is Hindustani *arzī*, "a petition", from Arabic *ʿarḍ*, "presenting", through Persian, with *hāku*, "to put", whose history neither DEDR nor CDIAL gives.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

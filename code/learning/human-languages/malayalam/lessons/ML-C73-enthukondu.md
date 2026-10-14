@@ -11,9 +11,10 @@ romanization: entukoṇṭŭ
 concept_tag: ML-WHY
 prerequisites: [ML-C02-entu]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, dravidian-kolu-take]
+etymology_hook: "entukoṇṭŭ: native Dravidian, 'taking what': entŭ (DEDR 5151) + koṇṭŭ, from the verb 'to take' (DEDR 2151)"
 duration:
-  max_seconds: 240
+  max_seconds: 278
 requires:
   knowledge: [ML-LEX-ENTU-01]
 introduces:
@@ -74,6 +75,8 @@ that had it already.
 
 **ആര്** is the odd one out and starts on ആ. Question words are a family, not a
 rule — most of them carry the asking letter, and *who* does not.
+
+**Where the word comes from.** Both halves are native Dravidian: *entŭ* (DEDR 5151), and *koṇṭŭ*, the past form of the verb "to take, to hold", with Tamil *koḷ* (DEDR 2151). "Why" is "taking what".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C73-WHY-01, ML-LEX-ENTU-01] -->

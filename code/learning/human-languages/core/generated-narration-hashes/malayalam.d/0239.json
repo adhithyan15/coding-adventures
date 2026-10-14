@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 239,
-  "sourceHash": "fnv1a64:0fd5436efbb14d7a",
+  "sourceHash": "fnv1a64:a12d0c28739b3bbd",
   "lessonIds": [
     "ML-C239-mula2",
     "ML-C239-kunnu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch239.txt",
   "json": "malayalam/narration/ch239.json",
-  "textHash": "fnv1a64:7d386ddf4f68577c",
-  "jsonHash": "fnv1a64:f8c9958c923c14cf",
+  "textHash": "fnv1a64:f3c4660c6e9ba08f",
+  "jsonHash": "fnv1a64:69a00e3f87eb51d1",
   "findings": []
 }

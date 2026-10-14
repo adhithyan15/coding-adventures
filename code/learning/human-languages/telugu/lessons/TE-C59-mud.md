@@ -11,7 +11,8 @@ romanization: "burada"
 concept_tag: TE-NOUN-MUD
 prerequisites: [TE-C59-sand]
 sounds: []
-roots: []
+roots: [dravidian-burude-mud]
+etymology_hook: "burada: native Dravidian, one word with Kannada burude (DEDR 4291)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C59-sand]
 It does the same second job that mud does in English. బురద చల్లు, to throw mud, is to slander somebody, and the picture is exact enough that you can guess the phrase before you are told it.
 
 బురద is also the honest reason a visit ends early in the wet months. The బాట between the గ్రామం and the నది turns to it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బురద** (*burada*) is native Dravidian, one word with Kannada *burude* (DEDR 4291). DEDR lists Telugu *burada*, "mud".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "Weather and Ground",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c8bd30eb43792ed8",
+  "sourceHash": "fnv1a64:4bfe37a06554bfc8",
   "lessons": [
     {
       "id": "KA-C59-wind",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af5c246afcd3c3df",
+      "sourceHash": "fnv1a64:22e3bfc1e3216949",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಾಳಿ (gāḷi) is native Dravidian, one word with Telugu gāli (DEDR 1499)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -123,7 +134,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -154,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2cde7a9f889550d",
+      "sourceHash": "fnv1a64:42b456fb459adbf6",
       "notice": null,
       "blocks": [
         {
@@ -199,6 +210,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಂಜು (mañju) is native Dravidian, one word with Tamil mañcu and Telugu mancu (DEDR 4641)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -209,7 +231,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -258,7 +280,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -289,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa8b7c61018dbb30",
+      "sourceHash": "fnv1a64:35531b38557a1e53",
       "notice": null,
       "blocks": [
         {
@@ -334,6 +356,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮರಳು (maraḷu) is native Dravidian, close kin of maṇṇu, \"earth\": DEDR 4666 lists the sand words maḷal and maral beside it; the entry also has Tamil maṇal."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -344,7 +377,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -393,7 +426,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -424,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e6622754faba612",
+      "sourceHash": "fnv1a64:2780dad46f94f936",
       "notice": null,
       "blocks": [
         {
@@ -469,6 +502,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೆಸರು (kesaru) is native Dravidian, one word with Tamil cēṟu (DEDR 2020). DEDR gives Kannada kesaṟ, \"wet soil, mud\". DEDR 2020 compares Sanskrit kedāra."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -479,7 +523,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -528,7 +572,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -559,7 +603,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f774669eefb17854",
+      "sourceHash": "fnv1a64:4d9b92957eabbb0d",
       "notice": null,
       "blocks": [
         {
@@ -604,6 +648,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೆಂಕಿ (beṅki) is native Dravidian, of the root bē, \"to burn\", and DEDR 5517 lists beṅki, \"heat, fire\", itself; the entry also has Tamil vē."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -614,7 +669,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -663,7 +718,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

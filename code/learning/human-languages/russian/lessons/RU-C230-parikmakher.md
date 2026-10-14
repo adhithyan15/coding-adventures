@@ -14,7 +14,8 @@ romanization: "parikmákher"
 concept_tag: RU-RABOTA230-PARIKMAKHER
 prerequisites: [RU-C230-sadovnik, RU-C230-kassir]
 sounds: []
-roots: []
+roots: [german-perueckenmacher]
+etymology_hook: "парикмахер ← German Perückenmacher 'wig-maker', reshaped after парик 'a wig'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C230-kassir]
 <!-- hl-knowledge: introduces=[RU-LEX-C230-RABOTA230-03]; assesses=[] -->
 
 **парикмахер** (*parikmákher*) — "a hairdresser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**парикмахер** comes from German *Perückenmacher*, "wig-maker", reshaped after *парик*, "a wig"; older *парукмакар* came from Dutch *paruikmaker* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

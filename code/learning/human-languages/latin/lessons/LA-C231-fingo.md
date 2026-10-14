@@ -13,7 +13,8 @@ gloss: "to shape, to imagine"
 concept_tag: LA-VERB-FINGO
 prerequisites: [LA-C231-verto, LA-C231-fruor]
 sounds: []
-roots: []
+roots: [fingere-latin]
+etymology_hook: "fingō 'to shape' — inherited, usually traced to PIE *dheygh- 'to mould'; English dough is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C231-fruor]
 <!-- hl-knowledge: introduces=[LA-LEX-C231-ACT231-03]; assesses=[] -->
 
 **fingō, fingere** — "to shape, to imagine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fingō** is inherited, usually traced to Proto-Indo-European *\*dheygh-*, "to mould, to shape" (EtymDB 2.1). English *dough* is a cousin, and English *fiction* and *figure* come from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

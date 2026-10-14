@@ -14,7 +14,8 @@ romanization: "paścim"
 concept_tag: HI-LOC233-PASCIM
 prerequisites: [HI-C233-daksin, HI-C233-purv]
 sounds: []
-roots: []
+roots: [sanskrit-pashcima]
+etymology_hook: "paścim ← Sanskrit paścima 'hinder; western', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C233-purv]
 <!-- hl-knowledge: introduces=[HI-LEX-C233-LOC233-04]; assesses=[] -->
 
 **पश्चिम** — *paścim* — "west".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पश्चिम** (*paścim*) is Sanskrit *paścima*, "hinder; western", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

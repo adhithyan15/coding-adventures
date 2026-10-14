@@ -14,7 +14,8 @@ romanization: "telefón"
 concept_tag: RU-THINGS-PHONE
 prerequisites: [RU-C52-pencil, RU-C53-bag]
 sounds: []
-roots: []
+roots: [tele-greek, phone-greek]
+etymology_hook: "телефон is an international word from Greek tēle 'far' + phōnē 'voice, sound'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C53-bag]
 <!-- hl-knowledge: introduces=[RU-LEX-C53-THINGS-02]; assesses=[] -->
 
 **телефон** (*telefón*) — "a phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**телефон** is an international coinage from Greek *tēle*, "far off", and *phōnē*, "voice, sound": a far voice.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

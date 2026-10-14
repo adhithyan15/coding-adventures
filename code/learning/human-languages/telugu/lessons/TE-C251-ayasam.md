@@ -14,7 +14,8 @@ romanization: "āyāsaṁ"
 concept_tag: TE-AROGYAM251-AYASAM
 prerequisites: [TE-C250-nadumu, TE-C251-manasu]
 sounds: []
-roots: []
+roots: [sanskrit-ayasa]
+etymology_hook: "āyāsaṁ ← Sanskrit āyāsa 'exertion, fatigue', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C251-manasu]
 <!-- hl-knowledge: introduces=[TE-LEX-C251-AROGYAM251-02]; assesses=[] -->
 
 **ఆయాసం** — *āyāsaṁ* — "breathlessness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆయాసం** (*āyāsaṁ*) is Sanskrit *āyāsa*, "exertion, fatigue", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

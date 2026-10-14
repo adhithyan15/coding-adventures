@@ -14,7 +14,8 @@ romanization: "samparkisu"
 concept_tag: KA-VERB-SAMPARKISU
 prerequisites: [KA-C202-nondayisu, KA-C202-munduvarisu]
 sounds: []
-roots: []
+roots: [sanskrit-samparka]
+etymology_hook: "samparkisu: Sanskrit samparka 'contact' (CDIAL 12936) + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C202-munduvarisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C202-KRIYE202-04]; assesses=[] -->
 
 **ಸಂಪರ್ಕಿಸು** — *samparkisu* — "to contact".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಂಪರ್ಕಿಸು** (*samparkisu*) is Sanskrit *samparka*, "mixing together, contact" (CDIAL 12936), made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

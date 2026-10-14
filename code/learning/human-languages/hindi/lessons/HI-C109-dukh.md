@@ -14,7 +14,8 @@ romanization: "dukh"
 concept_tag: HI-MOOD-SORROW
 prerequisites: [HI-C109-hansi, HI-C109-ansu]
 sounds: []
-roots: []
+roots: [sanskrit-duhkha]
+etymology_hook: "dukh ← Sanskrit duḥkha 'difficulty, pain', a tadbhava (CDIAL 6375)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C109-ansu]
 
 **मुझे दुख है** — "I am sorry", said in sympathy, when someone tells you bad news.
 It is not the **माफ़ कीजिए** of an apology.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुख** (*dukh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *duḥkha*, "difficulty, pain" (CDIAL 6375). CDIAL notes that *duḥkha* was formed after *sukha*, "ease".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

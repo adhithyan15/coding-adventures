@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 93,
-  "sourceHash": "fnv1a64:b78eb84b8f928a56",
+  "sourceHash": "fnv1a64:8d31a39352558331",
   "lessonIds": [
     "HI-C85-bolo",
     "HI-C85-boliye",
@@ -14,7 +14,7 @@
   "drivablePrefix": 4,
   "text": "hindi/narration/ch93.txt",
   "json": "hindi/narration/ch93.json",
-  "textHash": "fnv1a64:1a4f102e26f4286d",
-  "jsonHash": "fnv1a64:a82605a710eee5cd",
+  "textHash": "fnv1a64:cc7bfc4d51a6aed9",
+  "jsonHash": "fnv1a64:dd9bb45259910346",
   "findings": []
 }

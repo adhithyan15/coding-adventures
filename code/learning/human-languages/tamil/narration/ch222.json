@@ -4,7 +4,7 @@
   "chapter": 222,
   "title": "Discount, Rupee, Coin, Expense, Salary",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8f63749e9bfdf8f2",
+  "sourceHash": "fnv1a64:14d941a044babda6",
   "lessons": [
     {
       "id": "TA-C222-tallupati",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33b7ae4213d64d91",
+      "sourceHash": "fnv1a64:bb3bc01122962c94",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "தள்ளுபடி (taḷḷupaṭi) is native: taḷḷu, \"to push away, to reject\" (DEDR 3135), and paṭi, \"measure\" (DEDR 3849): \"a measure pushed off\"."
+              "text": "தள்ளுபடி (taḷḷupaṭi) is native: taḷḷu, \"to push away, to reject\" (DEDR 3135), and paṭi, probably \"measure\" (DEDR 3849): \"a measure pushed off\"."
             }
           ]
         },

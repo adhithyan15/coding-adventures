@@ -11,7 +11,8 @@ romanization: "kṣētraṁ"
 concept_tag: ML-TOWN-TEMPLE
 prerequisites: [ML-C134-plate, ML-C135-market]
 sounds: []
-roots: []
+roots: [sanskrit-kshetra]
+etymology_hook: "kṣētraṁ ← Sanskrit kṣētra 'land, field; a sacred place', a tatsama (CDIAL 3735)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C135-market]
 <!-- hl-knowledge: introduces=[ML-LEX-C135-TOWN-02]; assesses=[] -->
 
 **ക്ഷേത്രം** (*kṣētraṁ*) — "a temple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ക്ഷേത്രം** (*kṣētraṁ*) ← Sanskrit *kṣētra*, "land, field; a sacred place", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 3735). Its first sense is "land, a field"; the holy ground became the temple.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

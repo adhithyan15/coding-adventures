@@ -14,7 +14,8 @@ romanization: "aptéka"
 concept_tag: RU-PLACES-PHARMACY
 prerequisites: [RU-C79-bridge, RU-C80-hotel]
 sounds: []
-roots: []
+roots: [greek-apotheke]
+etymology_hook: "аптека came from German Apotheke, from Latin apotheca, Greek apothēkē 'storehouse'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C80-hotel]
 <!-- hl-knowledge: introduces=[RU-LEX-C80-PLACES-02]; assesses=[] -->
 
 **аптека** (*aptéka*) — "a pharmacy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**аптека** — from Peter the Great's time, also *оптека* in the 1600s; it came from German *Apotheke* or Baltic German *aptheke*, from Latin *apothēca*, Greek *apothḗkē*, "a storehouse" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to press out, to express"
 concept_tag: LA-VERB-EXPRIMO
 prerequisites: [LA-C259-desisto, LA-C259-permuto]
 sounds: []
-roots: []
+roots: [exprimere-latin, premere-latin]
+etymology_hook: "exprimō 'to press out' — ex + premō 'to press'; English express"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C259-permuto]
 <!-- hl-knowledge: introduces=[LA-LEX-C260-ACT260-01]; assesses=[] -->
 
 **exprimō, exprimere** — "to press out, to express".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**exprimō** is *ex*, "out", with *premō*, "to press" (Lewis & Short), its e weakened to i: to press out. English *express* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

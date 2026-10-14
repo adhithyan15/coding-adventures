@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 117,
-  "sourceHash": "fnv1a64:a66b0b9d1c91f3ec",
+  "sourceHash": "fnv1a64:064c2257081b6e45",
   "lessonIds": [
     "KA-C117-suttige",
     "KA-C117-kattari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch117.txt",
   "json": "kannada/narration/ch117.json",
-  "textHash": "fnv1a64:6af81a86da50eee5",
-  "jsonHash": "fnv1a64:afaa2aa0c70ccdde",
+  "textHash": "fnv1a64:ba4110feddfeac37",
+  "jsonHash": "fnv1a64:d310f6a7d9d645bd",
   "findings": []
 }

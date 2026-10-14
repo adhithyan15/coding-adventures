@@ -11,7 +11,8 @@ romanization: "maraṁ"
 concept_tag: ML-NOUN-TREE
 prerequisites: [ML-C53-sunshine, ML-C52-door]
 sounds: []
-roots: []
+roots: [dravidian-maram-tree]
+etymology_hook: "maraṁ: native Dravidian, one word with Tamil maram and Kannada mara (DEDR 4711)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited Dravidian, matching Tamil *maram*, Kannada *mara* and Telugu *mrānu*.
 It carries the standing tree and the cut timber on one shape. A carpenter's മരം and a forest's മരം are the same word, and Malayalam leaves it to the situation to say which is meant. English needs *tree* and *wood* to do that work.
 
 Kerala's own tree, the coconut, gets a compound built on this one, and the ordinary word for a tree-climber is built on it too.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മരം** (*maraṁ*) is native Dravidian, one word with Tamil *maram*, Kannada *mara* and Telugu *m(r)ānu* (DEDR 4711).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

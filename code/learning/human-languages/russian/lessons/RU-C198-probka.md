@@ -14,7 +14,8 @@ romanization: "próbka"
 concept_tag: RU-VESHCH198-PROBKA
 prerequisites: [RU-C198-vagon, RU-C198-peresadka]
 sounds: []
-roots: []
+roots: [german-propke]
+etymology_hook: "пробка apparently came through Low German propke 'a stopper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C198-peresadka]
 <!-- hl-knowledge: introduces=[RU-LEX-C198-VESHCH198-04]; assesses=[] -->
 
 **пробка** (*próbka*) — "a traffic jam; a cork".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пробка** apparently came through Low German *propke*, *prop*, "a stopper", since Russia long imported corks from Bremen (Vasmer). A traffic jam corks the road.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

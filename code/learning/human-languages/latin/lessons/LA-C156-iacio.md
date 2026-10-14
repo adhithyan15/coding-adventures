@@ -13,7 +13,8 @@ gloss: "to throw"
 concept_tag: LA-VERB-IACIO
 prerequisites: [LA-C155-purgo, LA-C156-frango]
 sounds: []
-roots: []
+roots: [iacere-latin]
+etymology_hook: "iaciō 'to throw' — inherited, usually traced to PIE *(H)yeh1- 'to throw'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C156-frango]
 <!-- hl-knowledge: introduces=[LA-LEX-C156-ACT156-02]; assesses=[] -->
 
 **iaciō, iacere** — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**iaciō** is inherited, usually traced to Proto-Indo-European *\*(H)yeh1-*, "to throw, to let go" (EtymDB 2.1), with a k added to the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

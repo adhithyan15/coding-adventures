@@ -14,7 +14,8 @@ romanization: "granthālaya"
 concept_tag: KA-LOC109-GRANTHALAYA
 prerequisites: [KA-C109-udyana, KA-C109-devasthana]
 sounds: []
-roots: []
+roots: [sanskrit-grantha, sanskrit-alaya]
+etymology_hook: "granthālaya ← Sanskrit grantha 'book' (CDIAL 4350) + ālaya 'house' (CDIAL 1366)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C109-devasthana]
 <!-- hl-knowledge: introduces=[KA-LEX-C109-LOC109-04]; assesses=[] -->
 
 **ಗ್ರಂಥಾಲಯ** — *granthālaya* — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗ್ರಂಥಾಲಯ** (*granthālaya*) is Sanskrit *grantha*, "knot; book" (CDIAL 4350), and *ālaya*, "house, receptacle" (CDIAL 1366): "a house of books".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

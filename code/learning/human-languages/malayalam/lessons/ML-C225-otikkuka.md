@@ -14,7 +14,8 @@ romanization: "ōṭikkuka"
 concept_tag: ML-VERB-OTIKKUKA
 prerequisites: [ML-C224-niraykkuka, ML-C224-mutuka]
 sounds: []
-roots: []
+roots: [dravidian-otu-run]
+etymology_hook: "ōṭikkuka: native Dravidian, 'make run', the causative of ōṭuka; Tamil ōṭu (DEDR 1041)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C224-mutuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C225-KRIYA225-01]; assesses=[] -->
 
 **ഓടിക്കുക** — *ōṭikkuka* — "to drive (a vehicle)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓടിക്കുക** (*ōṭikkuka*) is native Dravidian, the causative of the verb "to run": "make run"; DEDR 1041 lists the root with Tamil *ōṭu*, Kannada *ōḍu* and Telugu *ōḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

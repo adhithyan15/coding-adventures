@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Through the Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:45b8eddc16b8c68b",
+  "sourceHash": "fnv1a64:1c39ee15ac38c316",
   "lessons": [
     {
       "id": "TA-C71-rise",
@@ -807,7 +807,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eba2b654ffe15765",
+      "sourceHash": "fnv1a64:930232371d7a33af",
       "notice": null,
       "blocks": [
         {
@@ -857,7 +857,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "விளையாடு (viḷaiyāḍu) is native Dravidian. DEDR 5438 lists Malayalam viḷay-āṭuka. The second half is āṭu, \"to move, to dance\"."
+              "text": "விளையாடு (viḷaiyāḍu) is native Dravidian. DEDR 5438 lists Malayalam viḷay-āṭuka. The second half is āṭu, \"to move, to dance\". DEDR compares, with a query, Sanskrit vilāsa, \"play\"."
             }
           ]
         },

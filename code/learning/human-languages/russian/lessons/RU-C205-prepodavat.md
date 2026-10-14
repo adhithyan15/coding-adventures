@@ -14,7 +14,8 @@ romanization: "prepodavát"
 concept_tag: RU-VERB-PREPODAVAT
 prerequisites: [RU-C205-uchitsya, RU-C205-izuchat]
 sounds: []
-roots: []
+roots: [pie-deh3-give]
+etymology_hook: "преподавать is пре- + по- + давать 'to give': to hand on knowledge"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C205-izuchat]
 <!-- hl-knowledge: introduces=[RU-LEX-C205-ACT205-04]; assesses=[] -->
 
 **преподавать** (*prepodavát*) — "to teach (a subject)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**преподавать** is *пре-* and *по-* with *давать*, "to give": to teach is to hand knowledge on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

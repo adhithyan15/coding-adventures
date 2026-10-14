@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 292,
-  "sourceHash": "fnv1a64:0b41507a88b055ba",
+  "sourceHash": "fnv1a64:5fefaa2e2dfe84f7",
   "lessonIds": [
     "KA-C292-nirjana",
     "KA-C292-garigari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch292.txt",
   "json": "kannada/narration/ch292.json",
-  "textHash": "fnv1a64:b76b36cb73a030db",
-  "jsonHash": "fnv1a64:fc3515e171189253",
+  "textHash": "fnv1a64:7f79bef8af6fc08c",
+  "jsonHash": "fnv1a64:b846a16679570fae",
   "findings": []
 }

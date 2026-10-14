@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a handle, then the Kannada for a smell.
 You'll want to know: ಪಾಠ.
 ಪಾಠ — pāṭha — "a lesson".
 
+The word, taken apart.
+ಪಾಠ (pāṭha) is Sanskrit pāṭha, "text of a book; study", taken over whole as a learned loan, a tatsama (CDIAL 8035).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a smell, then the Kannada for a lesson.
 
 You'll want to know: ಪರೀಕ್ಷೆ.
 ಪರೀಕ್ಷೆ — parīkṣe — "an exam, a test".
+
+The word, taken apart.
+ಪರೀಕ್ಷೆ (parīkṣe) is Sanskrit parīkṣā, "inspection, test" (CDIAL 7904), with the Kannada -e for final -ā.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a lesson, then the Kannada for an exam.
 You'll want to know: ತರಬೇತಿ.
 ತರಬೇತಿ — tarabēti — "training".
 
+The word, taken apart.
+ತರಬೇತಿ (tarabēti) is Hindustani tarbiyat, "training, upbringing", from Arabic tarbiya, through Persian.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for an exam, then the Kannada for training.
 You'll want to know: ವಿಷಯ.
 ವಿಷಯ — viṣaya — "a subject, a topic".
 
+The word, taken apart.
+ವಿಷಯ (viṣaya) is Sanskrit viṣaya, "scope, sphere", taken over whole as a learned loan, a tatsama (CDIAL 11973).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for training, then the Kannada for a subject
 
 You'll want to know: ಗಣಿತ.
 ಗಣಿತ — gaṇita — "mathematics".
+
+The word, taken apart.
+ಗಣಿತ (gaṇita) is Sanskrit gaṇita, "counted", taken over whole as a learned loan, a tatsama (CDIAL 3996).
 
 What you've built.
 One more word for this chapter.

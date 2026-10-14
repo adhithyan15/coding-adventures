@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7841c36c452d6a9d",
+  "sourceHash": "fnv1a64:8d885386ee3be8e1",
   "lessons": [
     {
       "id": "KA-C57-neck",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a28b1a5ffd148167",
+      "sourceHash": "fnv1a64:d955d8d89c32a57f",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕುತ್ತಿಗೆ (kuttige) is native Dravidian, one word with Telugu kutika (DEDR 1718)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -123,7 +134,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -154,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c5e8b71dd5606f1",
+      "sourceHash": "fnv1a64:ae7adff44dbe6c29",
       "notice": null,
       "blocks": [
         {
@@ -199,6 +210,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೆನ್ನು (bennu) is native Dravidian, one word with Tamil veṉ and Telugu vennu (DEDR 5488). DEDR gives Kannada ben, bennu: the old v- has become b-."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -209,7 +231,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -258,7 +280,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -289,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1939eff63ddb399",
+      "sourceHash": "fnv1a64:d999ee1c26b774ee",
       "notice": null,
       "blocks": [
         {
@@ -334,6 +356,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತುಟಿ (tuṭi) is native Dravidian, one word with Tamil tuṭi (DEDR 3296). DEDR points to related Indo-Aryan words in CDIAL 5853."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -344,7 +377,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -393,7 +426,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -424,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e011081c87a80cef",
+      "sourceHash": "fnv1a64:c18c57c3641952ca",
       "notice": null,
       "blocks": [
         {
@@ -464,6 +497,10 @@
             {
               "kind": "speech",
               "text": "That opening ಭ is a letter Kannada mostly uses in borrowed words. Meeting one is a fair hint that the word came from Sanskrit before you know anything else about it."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 9525 lists Sanskrit bhuja, \"arm\"."
             }
           ]
         },
@@ -559,7 +596,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd2ef414ac710a67",
+      "sourceHash": "fnv1a64:fa8ee5391a1b35e0",
       "notice": null,
       "blocks": [
         {
@@ -604,6 +641,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೂಳೆ (mūḷe) is native Dravidian (DEDR 5050). DEDR lists Kannada mūḷe with Kodagu mu, ḷe and Tulu mūḷe, \"bone\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -614,7 +662,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -663,7 +711,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

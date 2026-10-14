@@ -13,7 +13,8 @@ gloss: "a library"
 concept_tag: LA-LOC117-BIBLIOTHECA
 prerequisites: [LA-C116-vicus, LA-C117-gradus]
 sounds: []
-roots: []
+roots: [bibliotheca-latin]
+etymology_hook: "bibliothēca 'library' — from Greek bibliothēkē: biblion 'book' + thēkē 'storeplace'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C117-gradus]
 <!-- hl-knowledge: introduces=[LA-LEX-C117-LOC117-02]; assesses=[] -->
 
 **bibliothēca, bibliothēcae** — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bibliothēca** was borrowed from Greek *bibliothēkē*, "a book-room, a library" (Lewis & Short), from *biblion*, "book", and *thēkē*, "a box, a storeplace" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dikku"
 concept_tag: TE-STHALAM254-DIKKU
 prerequisites: [TE-C254-rastram, TE-C254-prantam]
 sounds: []
-roots: []
+roots: [sanskrit-dish]
+etymology_hook: "dikku ← Sanskrit diś 'direction' (CDIAL 6339)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C254-prantam]
 <!-- hl-knowledge: introduces=[TE-LEX-C254-STHALAM254-03]; assesses=[] -->
 
 **దిక్కు** — *dikku* — "a direction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దిక్కు** (*dikku*) comes from Sanskrit *diś*, "direction, region" (CDIAL 6339), in its joining form *dik*, with the Telugu ending *-ku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

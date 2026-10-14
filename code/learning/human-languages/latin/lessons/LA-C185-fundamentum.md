@@ -13,7 +13,8 @@ gloss: "a foundation"
 concept_tag: LA-RES185-FUNDAMENTUM
 prerequisites: [LA-C185-peristylium, LA-C185-impluvium]
 sounds: []
-roots: []
+roots: [fundamentum-latin, fundus-latin]
+etymology_hook: "fundāmentum 'foundation' — built on fundō 'to found', from fundus 'bottom'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C185-impluvium]
 <!-- hl-knowledge: introduces=[LA-LEX-C185-RES185-05]; assesses=[] -->
 
 **fundāmentum, fundāmentī** — "a foundation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fundāmentum** is built on *fundō*, "to lay the bottom, to found", from *fundus*, "bottom" (EtymDB 2.1), with *-mentum*, an ending for a thing. *fundus* is usually traced to Proto-Indo-European *\*bhudhmen*, "bottom" (EtymDB 2.1); English *bottom* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

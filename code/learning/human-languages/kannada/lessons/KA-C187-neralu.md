@@ -14,7 +14,8 @@ romanization: "neraḷu"
 concept_tag: KA-VASTU187-NERALU
 prerequisites: [KA-C187-kamanabillu, KA-C187-hima]
 sounds: []
-roots: []
+roots: [dravidian-nizhal-shade]
+etymology_hook: "neraḷu: native Dravidian, one word with Tamil niḻal and Telugu nīḍa (DEDR 3679)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C187-hima]
 <!-- hl-knowledge: introduces=[KA-LEX-C187-VASTU187-04]; assesses=[] -->
 
 **ನೆರಳು** — *neraḷu* — "shade, a shadow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೆರಳು** (*neraḷu*) is native Dravidian, one word with Tamil *niḻal*, Telugu *nīḍa* and Malayalam *niḻal* (DEDR 3679). DEDR lists Kannada *neraḷ*, "shade, shadow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

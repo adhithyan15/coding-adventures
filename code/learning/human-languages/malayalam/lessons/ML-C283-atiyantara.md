@@ -14,7 +14,8 @@ romanization: "aṭiyantara"
 concept_tag: ML-GUNAM283-ATIYANTARA
 prerequisites: [ML-C282-sramam, ML-C282-vijayam]
 sounds: []
-roots: []
+roots: [malayalam-adiyantaram]
+etymology_hook: "aṭiyantara 'urgent': of uncertain origin; neither DEDR nor CDIAL lists it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C282-vijayam]
 <!-- hl-knowledge: introduces=[ML-LEX-C283-GUNAM283-01]; assesses=[] -->
 
 **അടിയന്തര** — *aṭiyantara* — "urgent, emergency".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അടിയന്തര** (*aṭiyantara*) is of uncertain origin; neither DEDR nor CDIAL lists it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

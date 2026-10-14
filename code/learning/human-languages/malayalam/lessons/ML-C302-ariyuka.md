@@ -14,7 +14,8 @@ romanization: "ariyuka"
 concept_tag: ML-VERB-ARIYUKA
 prerequisites: [ML-C302-istiriyituka, ML-C302-murikkuka]
 sounds: []
-roots: []
+roots: [dravidian-ari-cut]
+etymology_hook: "ariyuka: native Dravidian, one word with Tamil ari and Kannada ari (DEDR 212)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C302-murikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C302-KRIYA302-04]; assesses=[] -->
 
 **അരിയുക** — *ariyuka* — "to chop (vegetables)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അരിയുക** (*ariyuka*) is native Dravidian, one word with Tamil *ari* and Kannada *ari* (DEDR 212).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

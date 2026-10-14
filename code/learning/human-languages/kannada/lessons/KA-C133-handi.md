@@ -14,7 +14,8 @@ romanization: "handi"
 concept_tag: KA-THINGS133-HANDI
 prerequisites: [KA-C133-kappe, KA-C133-batukoli]
 sounds: []
-roots: []
+roots: [dravidian-panri-pig]
+etymology_hook: "handi: native Dravidian, one word with Tamil paṉṟi and Telugu pandi (DEDR 4039)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C133-batukoli]
 <!-- hl-knowledge: introduces=[KA-LEX-C133-THINGS133-03]; assesses=[] -->
 
 **ಹಂದಿ** — *handi* — "a pig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಂದಿ** (*handi*) is native Dravidian, one word with Tamil *paṉṟi* and Telugu *pandi* (DEDR 4039). DEDR gives the older Kannada *pandi*: the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

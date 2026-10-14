@@ -14,7 +14,8 @@ romanization: "desért"
 concept_tag: RU-THINGS106-DESSERT
 prerequisites: [RU-C105-sandwich, RU-C105-sauce]
 sounds: []
-roots: []
+roots: [servire-latin]
+etymology_hook: "десерт ← French dessert, 'the clearing of the table', directly or through German"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C105-sauce]
 <!-- hl-knowledge: introduces=[RU-LEX-C106-THINGS106-01]; assesses=[] -->
 
 **десерт** (*desért*) — "a dessert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**десерт** came through German *Dessert* or straight from French *dessert* (Vasmer), from *desservir*, "to clear the table".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

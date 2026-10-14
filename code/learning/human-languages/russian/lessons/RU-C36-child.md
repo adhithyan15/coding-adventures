@@ -14,7 +14,8 @@ romanization: "rebyónok"
 concept_tag: RU-FAMILY2-CHILD
 prerequisites: [RU-C35-wife, RU-C36-children]
 sounds: []
-roots: []
+roots: [slavic-orbu]
+etymology_hook: "ребёнок ← Old Russian робя, Proto-Slavic *orbę; раб 'slave', Latin orbus and Greek orphanos are kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C36-children]
 <!-- hl-knowledge: introduces=[RU-LEX-C36-FAMILY2-02]; assesses=[] -->
 
 **ребёнок** (*rebyónok*) — "a child". One child; **дети** is the plural.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ребёнок** grew from Old Russian *робя*, "child", Proto-Slavic *\*orbę*, with a diminutive ending; *роб-* became *реб-* by an old vowel assimilation (Vasmer). The same root gave *раб*, "slave", and Vasmer lists Latin *orbus*, "bereaved", and Greek *orphanós*, "orphan", as cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "cukka"
 concept_tag: TE-NOUN-STAR
 prerequisites: [TE-C53-moon]
 sounds: []
-roots: []
+roots: [dravidian-cukka-dot]
+etymology_hook: "cukka: native Dravidian, one word with Kannada cukke 'dot' (DEDR 2646); Tamil borrowed it as cukkai"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C53-moon]
 That is why it matters for the ముగ్గు. The design at the doorstep is laid out first as a grid of చుక్కలు, dots of rice flour set at even spacing, and the lines are then drawn around and between them. A woman who says she is putting down చుక్కలు in the morning is not talking about the sky.
 
 The borrowed word for a star is నక్షత్రం, and it is what an astrologer uses. చుక్క is what a child points at.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చుక్క** (*cukka*) is native Dravidian, one word with Kannada *cukke*, "small mark, dot" (DEDR 2646). DEDR notes that Tamil *cukkai*, "star", is a loan from Telugu.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

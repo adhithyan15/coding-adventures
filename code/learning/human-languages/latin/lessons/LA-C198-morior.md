@@ -13,7 +13,8 @@ gloss: "to die"
 concept_tag: LA-VERB-MORIOR
 prerequisites: [LA-C198-veto, LA-C198-defendo]
 sounds: []
-roots: []
+roots: [mori-latin]
+etymology_hook: "morior 'to die' — inherited, usually traced to PIE *mer- 'to die'; English murder is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C198-defendo]
 <!-- hl-knowledge: introduces=[LA-LEX-C198-ACT198-03]; assesses=[] -->
 
 **morior, morī** — "to die".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**morior** is inherited, usually traced to Proto-Indo-European *\*mer-*, "to die" (EtymDB 2.1). English *murder* is a distant cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

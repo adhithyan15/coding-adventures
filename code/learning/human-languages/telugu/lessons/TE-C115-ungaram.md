@@ -14,7 +14,8 @@ romanization: "uṅgaraṁ"
 concept_tag: TE-THINGS115-UNGARAM
 prerequisites: [TE-C114-ceppulu, TE-C115-topi]
 sounds: []
-roots: []
+roots: [dravidian-ungura-ring]
+etymology_hook: "uṅgaraṁ: native Dravidian, one word with Kannada uṅgara (DEDR 572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C115-topi]
 <!-- hl-knowledge: introduces=[TE-LEX-C115-THINGS115-02]; assesses=[] -->
 
 **ఉంగరం** — *uṅgaraṁ* — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉంగరం** (*uṅgaraṁ*) is native Dravidian, one word with Kannada *uṅgara* (DEDR 572). DEDR lists Telugu *uṅgaramu*, "ring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

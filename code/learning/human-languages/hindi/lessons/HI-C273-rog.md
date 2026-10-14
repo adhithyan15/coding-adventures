@@ -14,7 +14,8 @@ romanization: "rog"
 concept_tag: HI-THG273-ROG
 prerequisites: [HI-C273-davakhana, HI-C273-rogi]
 sounds: []
-roots: []
+roots: [sanskrit-roga]
+etymology_hook: "rog ← Sanskrit roga 'disease', a tatsama (CDIAL 10829)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C273-rogi]
 <!-- hl-knowledge: introduces=[HI-LEX-C273-THG273-04]; assesses=[] -->
 
 **रोग** — *rog* — "a disease".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रोग** (*rog*) is Sanskrit *roga*, "disease", taken over whole as a learned loan, a tatsama (CDIAL 10829).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

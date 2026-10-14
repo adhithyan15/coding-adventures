@@ -47,7 +47,7 @@ reviews_of: [TA-C241-camamana]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**கரடுமுரடான** (*karaṭumuraṭāṉa*) is native Dravidian. DEDR 1265 lists Kannada *karaḍu*, "rough, uneven". *Karaṭu*, "roughness", is doubled with a rhyming partner, *muraṭu*.
+**கரடுமுரடான** (*karaṭumuraṭāṉa*) is native Dravidian. DEDR 1265 lists Kannada *karaḍu*, "rough, uneven". *Karaṭu*, "roughness", is doubled with a rhyming partner, *muraṭu*. The entry compares Sanskrit *karkaśa*, "rough, harsh".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

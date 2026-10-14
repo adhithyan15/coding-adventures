@@ -14,7 +14,8 @@ romanization: "hindirugu"
 concept_tag: KA-VERB-HINDIRUGU
 prerequisites: [KA-C234-mungada, KA-C235-bilu]
 sounds: []
-roots: []
+roots: [tamil-pin-after, dravidian-tiri-turn]
+etymology_hook: "hindirugu: native, usually hindu 'back' (DEDR 4205) + tirugu 'to turn' (DEDR 3246)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C235-bilu]
 <!-- hl-knowledge: introduces=[KA-LEX-C235-KRIYE235-02]; assesses=[] -->
 
 **ಹಿಂದಿರುಗು** — *hindirugu* — "to return, to come back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿಂದಿರುಗು** (*hindirugu*) is native Dravidian, usually explained as *hindu*, "back, behind" (DEDR 4205, older *pindu*), and *tirugu*, "to turn" (DEDR 3246): "to turn back".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

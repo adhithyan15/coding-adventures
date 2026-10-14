@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 237,
-  "sourceHash": "fnv1a64:3c289540c67034ed",
+  "sourceHash": "fnv1a64:29033977f404a079",
   "lessonIds": [
     "RU-C237-umirat",
     "RU-C237-stuchat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch237.txt",
   "json": "russian/narration/ch237.json",
-  "textHash": "fnv1a64:a1642fea045d9771",
-  "jsonHash": "fnv1a64:b09476ad3fafb168",
+  "textHash": "fnv1a64:120954f49f318419",
+  "jsonHash": "fnv1a64:a54547eaad30221a",
   "findings": []
 }

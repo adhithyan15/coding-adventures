@@ -14,7 +14,8 @@ romanization: "sad"
 concept_tag: RU-HOME3-GARDEN
 prerequisites: [RU-C50-wall, RU-C50-roof]
 sounds: []
-roots: []
+roots: [pie-sed]
+etymology_hook: "сад ← Proto-Slavic *sadŭ 'a planting', from садить 'to plant', the causative of сидеть 'to sit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C50-roof]
 <!-- hl-knowledge: introduces=[RU-LEX-C50-HOME3-03]; assesses=[] -->
 
 **сад** (*sad*) — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сад** ← Proto-Slavic *\*sadŭ*, "a planting" — inherited, from *садить*, "to plant", literally "to make sit", the partner of *сидеть*, "to sit" (Vasmer). Old Russian *sadŭ* also meant "a tree, a grove".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

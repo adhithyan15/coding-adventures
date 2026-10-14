@@ -14,7 +14,8 @@ romanization: "vánnaya"
 concept_tag: RU-HOME3-BATHROOM
 prerequisites: [RU-C50-roof, RU-C50-garden]
 sounds: []
-roots: []
+roots: [german-wanne]
+etymology_hook: "ванная is short for ванная комната, 'the bath room', from ванна 'bathtub', from German Wanne or French vanne"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C50-garden]
 <!-- hl-knowledge: introduces=[RU-LEX-C50-HOME3-04]; assesses=[] -->
 
 **ванная** (*vánnaya*) — "the bathroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ванная** is short for *ванная комната*, "the bath room": an adjective from *ванна*, "a bathtub", standing alone. *ванна* came from German *Wanne* or French *vanne* (Vasmer); Trubachev adds that it is recorded by 1697.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

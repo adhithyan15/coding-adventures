@@ -14,7 +14,8 @@ romanization: "erraṭi"
 concept_tag: TE-QUAL143-ERRATI
 prerequisites: [TE-C142-nallani, TE-C142-tellani]
 sounds: []
-roots: []
+roots: [dravidian-erra-red]
+etymology_hook: "erraṭi: native Dravidian; DEDR 865 lists eṟṟa, eṟṟani 'red'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C142-tellani]
 <!-- hl-knowledge: introduces=[TE-LEX-C143-QUAL143-01]; assesses=[] -->
 
 **ఎర్రటి** — *erraṭi* — "red, reddish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎర్రటి** (*erraṭi*) is native Dravidian. DEDR 865 lists *eṟṟa* and *eṟṟani*, "redness, red", with Tamil *eṟuḻ*, a hill tree with red flowers.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

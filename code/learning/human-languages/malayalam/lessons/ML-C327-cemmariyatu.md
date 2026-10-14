@@ -14,7 +14,8 @@ romanization: "cemmariyāṭŭ"
 concept_tag: ML-VASTU327-CEMMARIYATU
 prerequisites: [ML-C326-paramparyam, ML-C326-samskaram]
 sounds: []
-roots: []
+roots: [dravidian-cem-red, dravidian-adu-goat]
+etymology_hook: "cemmariyāṭŭ: native Dravidian, cem 'red' (DEDR 1931) + a middle part + āṭŭ 'goat, sheep' (DEDR 5152)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C326-samskaram]
 <!-- hl-knowledge: introduces=[ML-LEX-C327-VASTU327-01]; assesses=[] -->
 
 **ചെമ്മരിയാട്** — *cemmariyāṭŭ* — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചെമ്മരിയാട്** (*cemmariyāṭŭ*) is native Dravidian: *cem-*, "red" (DEDR 1931), and *āṭŭ*, "goat, sheep" (DEDR 5152, with Tamil *āṭu*), with a middle part of uncertain origin. DEDR 5152 compares Sanskrit *eḍa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

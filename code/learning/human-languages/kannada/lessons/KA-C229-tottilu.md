@@ -14,7 +14,8 @@ romanization: "toṭṭilu"
 concept_tag: KA-VASTU229-TOTTILU
 prerequisites: [KA-C229-hande, KA-C229-totti]
 sounds: []
-roots: []
+roots: [dravidian-tottil-cradle]
+etymology_hook: "toṭṭilu: native Dravidian, one word with Tamil toṭṭil (DEDR 3486)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C229-totti]
 <!-- hl-knowledge: introduces=[KA-LEX-C229-VASTU229-03]; assesses=[] -->
 
 **ತೊಟ್ಟಿಲು** — *toṭṭilu* — "a cradle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೊಟ್ಟಿಲು** (*toṭṭilu*) is native Dravidian, one word with Tamil *toṭṭil* (DEDR 3486). DEDR lists Kannada *toṭṭil*, "cradle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pechátat"
 concept_tag: RU-VERB-PECHATAT
 prerequisites: [RU-C144-rugat, RU-C145-podpisyvat]
 sounds: []
-roots: []
+roots: [slavic-peci]
+etymology_hook: "печатать is from печать 'a seal', probably from печь 'to bake, to burn': a branding tool"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C145-podpisyvat]
 <!-- hl-knowledge: introduces=[RU-LEX-C145-ACT145-02]; assesses=[] -->
 
 **печатать** (*pechátat*) — "to print, to type".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**печатать** comes from *печать*, "a seal, a stamp", which Vasmer thinks probably comes from *печь*, "to burn": a tool for burning a mark.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

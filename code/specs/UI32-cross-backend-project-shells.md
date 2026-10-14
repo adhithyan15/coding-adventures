@@ -92,12 +92,24 @@ run dev` and see Hello on `http://localhost:5173`.
 | **Flutter** | `pubspec.yaml`, `lib/main.dart` (MaterialApp shell mounting the component), `README.md` | `flutter pub get && flutter run` |
 | **Qt** | `CMakeLists.txt`, `main.cpp` (loads the `.qml` as the root QML), `qmldir`, `README.md` | `cmake -B build && cmake --build build && ./build/<Component>` |
 | **SwiftUI** | `Package.swift`, `Sources/App/App.swift` (App + WindowGroup shell), `README.md` | `swift run` |
+| **Compose** | `settings.gradle.kts`, `build.gradle.kts`, `src/main/kotlin/Main.kt` + `MosaicAppShell.kt` (Compose Desktop window mounting the component), `src/main/kotlin/<Component>.kt` (a copy of the emitted component, so Gradle compiles it), the platform library (`MosaicPlatform.kt`, `MosaicRuntimeHost.kt`, `MosaicFileEffects.kt`, `MosaicPlatformEffects.kt`), `README.md` | `gradle run` |
 | **XAML** | (already shipped) `{Component}.csproj`, `App.xaml`, `App.xaml.cs`, `MainWindow.xaml`, `MainWindow.xaml.cs`, `app.manifest`, `build.ps1`, `README.md` | `pwsh build.ps1` |
 
 Notes:
 - **HTML** is partially done by UI31-M (PR [#4219](https://github.com/adhithyan15/coding-adventures/pull/4219)) which writes `html/index-shell.html` from `mosaic-package-artifact-builder`. UI32 lifts that to `mosaic-compile --emit-project --backend html` and renames it to `index.html` (the bare manifest stays as `index-shell.html`'s sibling for backward compat).
 - **WebComponent** doesn't need a build step in v1 — the emitted `.js` is a self-registering Custom Element; the `index.html` shell just `<script type="module" src="./Component.js"></script>` and `<mosaic-component></mosaic-component>`.
 - **Qt** uses `qrc:` resource embedding so the QML lives inside the binary; the `qmldir` makes the component importable.
+- **Compose** (EM-6, #14704) reuses the permissive desktop shell that
+  `mosaic-compile pkg --backend compose --emit-project` already writes, with
+  the component as the root and no layout variants. One generator serves both
+  modes, so the two shells cannot drift. With `--fixtures`, each story value
+  replaces that slot's sample fallback in `MosaicAppShell.kt`, exactly as Flutter's
+  `lib/main.dart` does (#14459): a number becomes a `Double` literal, a bool a
+  `Boolean`, a list of text `listOf(...)`, a list of rows
+  `listOf(listOf(...))`, and anything else an escaped string. A number or bool
+  fixture that does not parse keeps the sample value, so the project still
+  compiles. A runtime that sends props still wins over the fixture, as it wins
+  over the sample.
 - **SwiftUI** uses Swift Package Manager (not Xcode .xcodeproj) for parity with the per-platform CLI workflow. iOS-specific scaffolds are out of scope.
 
 ### 2.3 Artifact-builder integration

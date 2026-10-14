@@ -14,7 +14,8 @@ romanization: "saṁstha"
 concept_tag: TE-PANI239-SAMSTHA
 prerequisites: [TE-C238-bhautikasastram, TE-C239-nivedika]
 sounds: []
-roots: []
+roots: [sanskrit-samstha]
+etymology_hook: "saṁstha ← Sanskrit saṁsthā 'completion; established order', a tatsama (CDIAL 13049)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C239-nivedika]
 <!-- hl-knowledge: introduces=[TE-LEX-C239-PANI239-02]; assesses=[] -->
 
 **సంస్థ** — *saṁstha* — "an organization".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సంస్థ** (*saṁstha*) is Sanskrit *saṁsthā*, "completion; established order", taken over whole as a learned loan, a tatsama, with the final *-ā* shortened (CDIAL 13049).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

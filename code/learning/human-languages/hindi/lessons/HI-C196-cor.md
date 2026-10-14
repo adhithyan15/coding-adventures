@@ -14,7 +14,8 @@ romanization: "cor"
 concept_tag: HI-THG196-COR
 prerequisites: [HI-C196-rani, HI-C196-naukar]
 sounds: []
-roots: []
+roots: [sanskrit-cora]
+etymology_hook: "cor ← Sanskrit cora 'thief', inherited (CDIAL 4931)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C196-naukar]
 <!-- hl-knowledge: introduces=[HI-LEX-C196-THG196-05]; assesses=[] -->
 
 **चोर** — *cor* — "a thief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चोर** (*cor*) is inherited from Sanskrit *cora*, "thief", and has come down with almost no change (CDIAL 4931).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 105,
   "title": "Wishes and Warmth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:006e19152a869257",
+  "sourceHash": "fnv1a64:5b362485c2602c74",
   "lessons": [
     {
       "id": "KA-C105-wishes",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd0e582d4f35bdea",
+      "sourceHash": "fnv1a64:66c5c9995e09dac2",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶುಭಾಶಯಗಳು (śubhāśayagaḷu) is Sanskrit śubha, \"auspicious, good\" (CDIAL 12532), and āśaya, \"intention, wish\", with Kannada's plural -gaḷu: good wishes."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23ace50c3d786137",
+      "sourceHash": "fnv1a64:3eec56d4fce73d54",
       "notice": null,
       "blocks": [
         {
@@ -179,6 +190,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಬ್ಬ (habba) is usually traced to Sanskrit parvan, \"knot, joint\" (CDIAL 7947), through Prakrit pavva. In Sanskrit the word also named the joints of the lunar month and the feasts held on them. It is a tadbhava: the p- became h- and rv became bb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -189,7 +211,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -238,7 +260,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -269,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:532dd1a6743ecc9f",
+      "sourceHash": "fnv1a64:4ceac50879726692",
       "notice": null,
       "blocks": [
         {
@@ -306,6 +328,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆತಿಥ್ಯ (ātithya) is Sanskrit ātithya, \"hospitality\", the noun of atithi, \"guest\", taken over whole: a tatsama."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -316,7 +349,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -365,7 +398,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -396,7 +429,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7db6328f8c9478b9",
+      "sourceHash": "fnv1a64:b541cea26f68dea1",
       "notice": null,
       "blocks": [
         {
@@ -429,6 +462,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರೀತಿ (prīti) is Sanskrit prīti, \"pleasure; love\", taken over whole as a learned loan, a tatsama (CDIAL 8982)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -439,7 +483,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -519,7 +563,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c6af17e764c3f8f",
+      "sourceHash": "fnv1a64:69408f4692aa56d2",
       "notice": null,
       "blocks": [
         {
@@ -552,6 +596,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೆಚ್ಚುಗೆ (meccuge) is native Dravidian, from meccu, \"to approve, like\", which DEDR 4722 lists itself; the entry also has Tamil maruvu and Telugu maragu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -562,7 +617,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -611,7 +666,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

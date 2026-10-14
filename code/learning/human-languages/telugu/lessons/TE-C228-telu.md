@@ -14,7 +14,8 @@ romanization: "tēlu"
 concept_tag: TE-VASTUVU228-TELU
 prerequisites: [TE-C227-pellikoduku, TE-C228-pita]
 sounds: []
-roots: []
+roots: [dravidian-teel-scorpion]
+etymology_hook: "tēlu: native Dravidian, one word with Tamil tēḷ and Malayalam tēḷ (DEDR 3470)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C228-pita]
 <!-- hl-knowledge: introduces=[TE-LEX-C228-VASTUVU228-02]; assesses=[] -->
 
 **తేలు** — *tēlu* — "a scorpion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తేలు** (*tēlu*) is native Dravidian, one word with Tamil *tēḷ* and Malayalam *tēḷ* (DEDR 3470). DEDR lists Telugu *tēlu*, "scorpion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

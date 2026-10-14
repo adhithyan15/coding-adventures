@@ -14,7 +14,8 @@ romanization: "prichína"
 concept_tag: RU-PRICH185-PRICHINA
 prerequisites: [RU-C184-syuda, RU-C184-ottuda]
 sounds: []
-roots: []
+roots: [slavic-chinu]
+etymology_hook: "причина is при- + чин 'order': what brings a thing about"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C184-ottuda]
 <!-- hl-knowledge: introduces=[RU-LEX-C185-PRICH185-01]; assesses=[] -->
 
 **причина** (*prichína*) — "a reason".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**причина** is *при-* with *чин*, "order", the root of *чинить*, "to set in order" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

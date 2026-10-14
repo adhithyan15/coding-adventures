@@ -12,6 +12,9 @@ Before the new one: say the Kannada for anyone, then the Kannada for anything.
 You'll want to know: ಇತ್ತೀಚೆಗೆ.
 ಇತ್ತೀಚೆಗೆ — ittīcege — "recently". Kannada's past for "I" ends in -ಎ (-e) after the past stem: ನಾನು ಇತ್ತೀಚೆಗೆ ಒಂದು ಪುಸ್ತಕ ಓದಿದೆ — nānu ittīcege ondu pustaka ōdide — "I recently read a book."
 
+The word, taken apart.
+ಇತ್ತೀಚೆಗೆ (ittīcege) is native Dravidian, built on the near-pointing base i-, "this". DEDR 410 lists īce, "this side", and itta, "on this side": recently is "on this side" of now.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for anything, then the Kannada for recently.
 
 You'll want to know: ಈಗಾಗಲೇ.
 ಈಗಾಗಲೇ — īgāgalē — "already". ನಾನು ಈಗಾಗಲೇ ಊಟ ಮಾಡಿದೆ — nānu īgāgalē ūṭa māḍide — "I have already eaten."
+
+The word, taken apart.
+ಈಗಾಗಲೇ (īgāgalē) is native Dravidian: īga, "now" (DEDR 410), and āgalē, "has already become", from āgu, "to become" (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for recently, then the Kannada for already.
 You'll want to know: ಕಳೆದ.
 ಕಳೆದ — kaḷeda — "last, previous". ಕಳೆದ ವರ್ಷ ನಾನು ಮೈಸೂರಿಗೆ ಹೋದೆ — kaḷeda varṣa nānu maisūrige hōde — "Last year I went to Mysuru."
 
+The word, taken apart.
+ಕಳೆದ (kaḷeda) is native Dravidian: the "which has been" form of kaḷe, "to send forth, spend (time)", which DEDR 1356 lists. Last week is the week that has been spent.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for already, then the Kannada for last.
 You'll want to know: ಒಮ್ಮೆ.
 ಒಮ್ಮೆ — omme — "once, one time". ನಾನು ಒಮ್ಮೆ ದೆಹಲಿಗೆ ಹೋಗಿದ್ದೆ — nānu omme dehalige hōgidde — "I went to Delhi once."
 
+The word, taken apart.
+ಒಮ್ಮೆ (omme) is native Dravidian, one word with Tamil oru (DEDR 990). DEDR lists omme, "one time, once", on the root for "one".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for last, then the Kannada for once.
 
 You'll want to know: ಕಳೆ.
 ಕಳೆ — kaḷe — "to spend (time)". Said of time: ನಾನು ರಜೆಯನ್ನು ಹಳ್ಳಿಯಲ್ಲಿ ಕಳೆದೆ — nānu rajeyannu haḷḷiyalli kaḷede — "I spent the holiday in the village."
+
+The word, taken apart.
+ಕಳೆ (kaḷe) is native Dravidian, one word with Tamil kaḻi (DEDR 1356). DEDR lists kaḷe, kaḷi, "to send forth, spend (as time and money)".
 
 What you've built.
 One more word for this chapter.

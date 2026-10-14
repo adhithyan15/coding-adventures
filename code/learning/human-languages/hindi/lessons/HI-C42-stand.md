@@ -14,7 +14,8 @@ romanization: "khaṛā honā"
 concept_tag: HI-VERB-STAND
 prerequisites: [HI-C42-sit]
 sounds: []
-roots: []
+roots: [indo-aryan-khadati, sanskrit-bhavati]
+etymology_hook: "khaṛā ← *khaḍati 'stands' (CDIAL 3784); honā ← Sanskrit bhavati 'becomes, is' (CDIAL 9416)"
 duration:
   max_seconds: 210
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C42-sit]
 **खड़ा होना** (*khaṛā honā*) — "to stand".
 
 Two words: an adjective *khaṛā*, 'upright', plus *honā*, 'to be'. Hindi builds many verbs this way, from a word plus a light verb.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खड़ा होना** (*khaṛā honā*) is two inherited words. **खड़ा** (*khaṛā*), "standing", is listed by CDIAL under *\*khaḍati*, "stands", a form it reconstructs beside Sanskrit *khaḍaka*, "post" (CDIAL 3784). **होना** (*honā*), "to be, to become", comes from Sanskrit *bhavati*, "becomes, is" (CDIAL 9416).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

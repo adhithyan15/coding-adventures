@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 198,
-  "sourceHash": "fnv1a64:d242b086a853245b",
+  "sourceHash": "fnv1a64:1e8e2f8943acb647",
   "lessonIds": [
     "ML-C198-tekku",
     "ML-C198-kilakku",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch198.txt",
   "json": "malayalam/narration/ch198.json",
-  "textHash": "fnv1a64:e484396b78efe74c",
-  "jsonHash": "fnv1a64:61c6f9e654b68f9d",
+  "textHash": "fnv1a64:0a7768cc80ea2c26",
+  "jsonHash": "fnv1a64:33cb9c0158bd1fb0",
   "findings": []
 }

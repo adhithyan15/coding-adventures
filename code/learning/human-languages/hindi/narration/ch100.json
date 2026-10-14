@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "How Much, How Well, How Big",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:b4f9672be47504c2",
+  "sourceHash": "fnv1a64:79069444049d3975",
   "lessons": [
     {
       "id": "HI-C92-thoda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad2d9ecd73d7b99e",
+      "sourceHash": "fnv1a64:993804f460d476a2",
       "notice": null,
       "blocks": [
         {
@@ -83,6 +83,10 @@
             {
               "kind": "speech",
               "text": "This catches English speakers out, because a little in English is a fixed lump that never changes. Here it is an adjective, and adjectives agree."
+            },
+            {
+              "kind": "speech",
+              "text": "थोड़ा (thoṛā) comes from Sanskrit stoka, \"a drop; a little\" (CDIAL 13720)."
             }
           ]
         },
@@ -195,7 +199,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:575363bea01ab861",
+      "sourceHash": "fnv1a64:84cc098cdbebd5fa",
       "notice": null,
       "blocks": [
         {
@@ -268,6 +272,10 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU FIND: **छ** in **अच्छा**]"
+            },
+            {
+              "kind": "speech",
+              "text": "बुरा comes from a reconstructed bura, \"defective\" (CDIAL 9289)."
             }
           ]
         },
@@ -380,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa9a1c3b1c144fc0",
+      "sourceHash": "fnv1a64:60f90e15b2ddd1ab",
       "notice": null,
       "blocks": [
         {
@@ -444,6 +452,10 @@
             {
               "kind": "speech",
               "text": "So there is no comparative form to learn in this language. There is one more use of a word you already have."
+            },
+            {
+              "kind": "speech",
+              "text": "से comes from Sanskrit sahita, \"together with\" (CDIAL 13310), or perhaps sama (CDIAL 13173)."
             }
           ]
         },
@@ -557,7 +569,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf17946e25193f30",
+      "sourceHash": "fnv1a64:509a87f3496c99af",
       "notice": null,
       "blocks": [
         {
@@ -621,6 +633,10 @@
             {
               "kind": "speech",
               "text": "Hindi does not split how much from how many. English needs two phrases because it sorts nouns into countable and uncountable; Hindi asks one question and lets the noun answer."
+            },
+            {
+              "kind": "speech",
+              "text": "कितना (kitnā) comes from a reconstructed kiyatta, \"how great\" (CDIAL 3167)."
             }
           ]
         },
@@ -729,7 +745,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81867bb6e0fce1f9",
+      "sourceHash": "fnv1a64:ac3b443edefa6d34",
       "notice": null,
       "blocks": [
         {
@@ -789,6 +805,10 @@
             {
               "kind": "speech",
               "text": "The difference is the verb and the voice. Drop है, let the pitch fall at the end, and a question becomes an exclamation. English does the identical thing — how good is it? against how good! — so there is nothing new to translate, only a habit to notice."
+            },
+            {
+              "kind": "speech",
+              "text": "कितना (kitnā) comes from a reconstructed kiyatta, \"how great\" (CDIAL 3167)."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 212,
-  "sourceHash": "fnv1a64:94bdee82528977e8",
+  "sourceHash": "fnv1a64:aaccaf3d7efbc13e",
   "lessonIds": [
     "HI-C212-bhadda",
     "HI-C212-mazbut",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch212.txt",
   "json": "hindi/narration/ch212.json",
-  "textHash": "fnv1a64:145911582ac8677c",
-  "jsonHash": "fnv1a64:46fc68b122b59048",
+  "textHash": "fnv1a64:4ffbc891cebe2be1",
+  "jsonHash": "fnv1a64:500e81e2718e823c",
   "findings": []
 }

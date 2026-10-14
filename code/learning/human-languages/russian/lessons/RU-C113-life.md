@@ -14,7 +14,8 @@ romanization: "zhizn"
 concept_tag: RU-THINGS113-LIFE
 prerequisites: [RU-C113-song, RU-C113-drawing]
 sounds: []
-roots: []
+roots: [pie-gweih]
+etymology_hook: "жизнь is from жить 'to live' with the old noun suffix -знь"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C113-drawing]
 <!-- hl-knowledge: introduces=[RU-LEX-C113-THINGS113-05]; assesses=[] -->
 
 **жизнь** (*zhizn*) — "life".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**жизнь** comes from *жить*, "to live" (Vasmer), with the old noun suffix *-знь*, as in *болезнь*, "illness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

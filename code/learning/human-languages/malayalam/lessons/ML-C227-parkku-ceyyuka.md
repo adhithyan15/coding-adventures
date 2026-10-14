@@ -14,7 +14,8 @@ romanization: "pārkkŭ ceyyuka"
 concept_tag: ML-VERB-PARKKU-CEYYUKA
 prerequisites: [ML-C227-panketukkuka, ML-C227-valiterruka]
 sounds: []
-roots: []
+roots: [english-park, cey-do-dravidian]
+etymology_hook: "pārkkŭ ceyyuka: English park + native ceyyuka 'do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C227-valiterruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C227-KRIYA227-05]; assesses=[] -->
 
 **പാർക്ക് ചെയ്യുക** — *pārkkŭ ceyyuka* — "to park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാർക്ക് ചെയ്യുക** (*pārkkŭ ceyyuka*) joins English *park* to native *ceyyuka*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -3,7 +3,7 @@
 //! with its descriptors at 3..3+n, is `chief-of-staff-linux-sandbox`'s
 //! (P2.6d-3), and is tested there.
 
-#![cfg(target_os = "linux")]
+#![cfg(any(target_os = "linux", target_os = "macos"))]
 
 use chief_of_staff_spawn_isolation::{VerifiedExecutable, VerifyError};
 use std::fs;

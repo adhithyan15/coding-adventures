@@ -14,7 +14,8 @@ romanization: "toḻuttŭ"
 concept_tag: ML-VASTU296-TOLUTTU
 prerequisites: [ML-C295-ulakka, ML-C296-kattila]
 sounds: []
-roots: []
+roots: [dravidian-tozhu-stable]
+etymology_hook: "toḻuttŭ: native Dravidian, one word with Tamil toḻu (DEDR 3526)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C296-kattila]
 <!-- hl-knowledge: introduces=[ML-LEX-C296-VASTU296-02]; assesses=[] -->
 
 **തൊഴുത്ത്** — *toḻuttŭ* — "a cowshed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തൊഴുത്ത്** (*toḻuttŭ*) is native Dravidian, one word with Tamil *toḻu* (DEDR 3526). DEDR 3526 lists Malayalam *toḻuttu*, "stable, pen", itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

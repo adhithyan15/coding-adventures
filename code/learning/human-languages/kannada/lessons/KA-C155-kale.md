@@ -14,7 +14,8 @@ romanization: "kaḷe"
 concept_tag: KA-VERB-KALE
 prerequisites: [KA-C155-kaleda, KA-C155-omme]
 sounds: []
-roots: []
+roots: [dravidian-kazhi-pass]
+etymology_hook: "kaḷe: native Dravidian, one word with Tamil kaḻi (DEDR 1356)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C155-omme]
 <!-- hl-knowledge: introduces=[KA-LEX-C155-HINDE155-05]; assesses=[] -->
 
 **ಕಳೆ** — *kaḷe* — "to spend (time)". Said of time: **ನಾನು ರಜೆಯನ್ನು ಹಳ್ಳಿಯಲ್ಲಿ ಕಳೆದೆ** — *nānu rajeyannu haḷḷiyalli kaḷede* — "I spent the holiday in the village."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಳೆ** (*kaḷe*) is native Dravidian, one word with Tamil *kaḻi* (DEDR 1356). DEDR lists *kaḷe*, *kaḷi*, "to send forth, spend (as time and money)".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "darzī"
 concept_tag: HI-THG193-DARZI
 prerequisites: [HI-C193-vakil, HI-C193-sipahi]
 sounds: []
-roots: []
+roots: [persian-darzi]
+etymology_hook: "darzī: usually traced to Persian darzī 'tailor'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C193-sipahi]
 <!-- hl-knowledge: introduces=[HI-LEX-C193-THG193-04]; assesses=[] -->
 
 **दर्ज़ी** — *darzī* — "a tailor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दर्ज़ी** (*darzī*) is a loan, usually traced to Persian *darzī*, "tailor". It is built on *darz*, "seam".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

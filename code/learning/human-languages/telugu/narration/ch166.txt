@@ -12,6 +12,9 @@ Before the new one: say the Telugu for to prick, then the Telugu for to knit.
 You'll want to know: కొనసాగు.
 కొనసాగు — konasāgu — "to continue".
 
+The word, taken apart.
+కొనసాగు (konasāgu) is native Dravidian. Its second part is sāgu, "to go on, continue", one word with Kannada sāgu (DEDR 2430); its first part matches kona, "end, tip" (DEDR 2174), though DEDR does not list the compound.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for to knit, then the Telugu for to continue.
 
 You'll want to know: పాటించు.
 పాటించు — pāṭiñcu — "to observe, to follow (rules)".
+
+The word, taken apart.
+The origin of పాటించు (pāṭiñcu) is uncertain. DEDR and CDIAL list no word of this shape meaning "to observe, follow".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for to continue, then the Telugu for to obser
 You'll want to know: దిద్దు.
 దిద్దు — diddu — "to correct (written work)".
 
+The word, taken apart.
+దిద్దు (diddu) is native Dravidian, one word with Tamil tiruttu and Kannada tiddu (DEDR 3251). DEDR lists Telugu diddu, "to correct, set right".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for to observe, then the Telugu for to correc
 You'll want to know: గొణుగు.
 గొణుగు — goṇugu — "to mutter, to grumble".
 
+The word, taken apart.
+గొణుగు (goṇugu) is Dravidian. DEDR 1685 lists nasalised forms of goṇugu, "to murmur, mutter, grumble", with Tamil kuṇukuṇu, "to murmur", and points to related sound-words across the region, such as Hindi gungun, "murmur" (CDIAL 4013).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for to correct, then the Telugu for to mutter
 
 You'll want to know: విడిపోవు.
 విడిపోవు — viḍipōvu — "to separate, to part".
+
+The word, taken apart.
+విడిపోవు (viḍipōvu) is native Dravidian: viḍu, "to be loosened, separate", one word with Tamil viṭu, "to leave" (DEDR 5393), and pōvu, "to go" (DEDR 4572).
 
 What you've built.
 One more word for this chapter.

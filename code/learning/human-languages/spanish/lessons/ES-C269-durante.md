@@ -11,6 +11,7 @@ concept_tag: TIME-DURATION
 prerequisites: [ES-C269-mas-que]
 sounds: [vowel-a, vowel-e]
 roots: [durare]
+etymology_hook: "durante — the old participle of durar 'to last', Latin durare, from durus 'hard'"
 duration:
   max_seconds: 240
 requires:

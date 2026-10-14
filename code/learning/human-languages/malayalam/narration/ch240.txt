@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a stream, then the Malayalam for a cav
 You'll want to know: അറ്റം.
 അറ്റം — aṟṟaṁ — "the end, the tip".
 
+The word, taken apart.
+അറ്റം (aṟṟaṁ) is native Dravidian, a noun from the verb "to be severed, cut off": the end is where a thing is cut; DEDR 315 lists the root with Tamil aṟu, Kannada aṟu and Telugu aṟu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a cave, then the Malayalam for the end
 
 You'll want to know: കുറുകെ.
 കുറുകെ — kuṟuke — "across".
+
+The word, taken apart.
+കുറുകെ (kuṟuke) is native Dravidian, built on kuṟu, "short" (DEDR 1851, with Tamil kuṟu): across is the short way over.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for the end, then the Malayalam for across
 You'll want to know: അങ്ങോട്ട്.
 അങ്ങോട്ട് — aṅṅōṭṭŭ — "to there, that way".
 
+The word, taken apart.
+അങ്ങോട്ട് (aṅṅōṭṭŭ) is native Dravidian: the far-pointing base (DEDR 1) with -ōṭṭŭ, "towards".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for across, then the Malayalam for to ther
 You'll want to know: ഇങ്ങോട്ട്.
 ഇങ്ങോട്ട് — iṅṅōṭṭŭ — "to here, this way".
 
+The word, taken apart.
+ഇങ്ങോട്ട് (iṅṅōṭṭŭ) is native Dravidian: DEDR 410 lists it, "hither, this way", among the near-pointing words.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for to there, then the Malayalam for to he
 
 You'll want to know: വശം.
 വശം — vaśaṁ — "a side".
+
+The word, taken apart.
+വശം (vaśaṁ) has the shape of a Sanskrit word, but which one is uncertain; it is not the Sanskrit vaśa, "power" (CDIAL 11430), in meaning.
 
 What you've built.
 One more word for this chapter.

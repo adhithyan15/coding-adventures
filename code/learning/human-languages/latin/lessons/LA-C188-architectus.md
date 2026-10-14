@@ -13,7 +13,8 @@ gloss: "an architect"
 concept_tag: LA-RES188-ARCHITECTUS
 prerequisites: [LA-C187-libertas, LA-C187-gloria]
 sounds: []
-roots: []
+roots: [architectus-latin]
+etymology_hook: "architectus 'architect' — from Greek arkhitektōn: arkhi- 'chief' + tektōn 'builder'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C187-gloria]
 <!-- hl-knowledge: introduces=[LA-LEX-C188-RES188-01]; assesses=[] -->
 
 **architectus, architectī** — "an architect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**architectus** was borrowed from Greek *arkhitektōn*, "a master builder" (Lewis & Short), from *arkhi-*, "chief", and *tektōn*, "builder" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

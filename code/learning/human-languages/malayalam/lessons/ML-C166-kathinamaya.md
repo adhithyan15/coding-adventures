@@ -14,7 +14,8 @@ romanization: "kaṭhinamāya"
 concept_tag: ML-QUAL166-KATHINAMAYA
 prerequisites: [ML-C166-kattiyulla, ML-C166-mrduvaya, ML-C73-enthukondennaal]
 sounds: []
-roots: []
+roots: [sanskrit-kathina, aaka-dravidian]
+etymology_hook: "kaṭhinamāya: Sanskrit kaṭhina 'hard' (CDIAL 2650) + native āya 'having become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C166-mrduvaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C166-QUAL166-05]; assesses=[] -->
 
 **കഠിനമായ** — *kaṭhinamāya* — "hard, difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കഠിനമായ** (*kaṭhinamāya*) joins Sanskrit *kaṭhina*, "hard, stiff" (CDIAL 2650), to native *āya*, "having become" (DEDR 333). CDIAL notes that the Sanskrit word itself may come from Dravidian. DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

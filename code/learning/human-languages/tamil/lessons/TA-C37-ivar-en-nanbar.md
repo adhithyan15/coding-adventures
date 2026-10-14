@@ -43,7 +43,7 @@ order.
 
 > **இவர் என் நண்பர்.** — *ivar eṉ naṇbar* — **This is my friend.**
 
-Three words, and **not one of them is a verb**. Tamil links two nouns by setting
+Three words, all inherited from Dravidian, and **not one of them is a verb**. Tamil links two nouns by setting
 them beside each other, as in **என் பெயர் …** and **என் தவறு**.
 
 The pieces in order: **இவர்**, the person here; **என்**, my; **நண்பர்**,
@@ -54,8 +54,6 @@ The whole meeting:
 > — **வணக்கம். இவர் என் நண்பர்.**
 >
 > — **வணக்கம். உங்கள் ஊர் என்ன.**
-
-Every word in it is yours.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-VOWEL-SIGNS-NANDRI-01, TA-SCRIPT-MA-RETROFLEX-NA-02] -->

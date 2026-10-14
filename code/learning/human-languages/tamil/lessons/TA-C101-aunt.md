@@ -46,7 +46,7 @@ reviews_of: [TA-C101-uncle]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**அத்தை** (*attai*) is native Dravidian. DEDR 142 lists Malayalam *atta*, "mother", Kannada *atte*, "mother-in-law" and Telugu *atta*, "mother-in-law, father's sister". The entry compares Prakrit *attā*, "mother".
+**அத்தை** (*attai*) is native Dravidian. DEDR 142 lists Malayalam *atta*, "mother", Kannada *atte*, "mother-in-law" and Telugu *atta*, "mother-in-law, father's sister". The entry compares Sanskrit (lexicons) and Prakrit *attā*, "mother".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

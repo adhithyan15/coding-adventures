@@ -14,7 +14,8 @@ romanization: "peḷḷikūturu"
 concept_tag: TE-VASTUVU265-PELLIKUTURU
 prerequisites: [TE-C264-vartapatrika, TE-C264-nambaru]
 sounds: []
-roots: []
+roots: [dravidian-pen-female, dravidian-kuusu-child]
+etymology_hook: "peḷḷikūturu: native peḷḷi 'marriage' (DEDR 4395) + kūturu 'daughter' (DEDR 1873)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C264-nambaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C265-VASTUVU265-01]; assesses=[] -->
 
 **పెళ్ళికూతురు** — *peḷḷikūturu* — "a bride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పెళ్ళికూతురు** (*peḷḷikūturu*) is native Dravidian: *peḷḷi*, "marriage" (DEDR 4395), and a nasalised *kūturu*, "daughter", which DEDR 1873 lists with Kannada *kūsu*, "infant; maiden": "the wedding daughter". DEDR compares Sanskrit *kūkuda*, "one who gives a girl in marriage", a lexicon word, with the second.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

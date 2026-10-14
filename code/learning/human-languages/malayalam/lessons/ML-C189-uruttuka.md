@@ -14,7 +14,8 @@ romanization: "uruṭṭuka"
 concept_tag: ML-VERB-URUTTUKA
 prerequisites: [ML-C189-piliyuka, ML-C189-kulukkuka]
 sounds: []
-roots: []
+roots: [dravidian-urul-round]
+etymology_hook: "uruṭṭuka: native Dravidian, 'make roll', from the verb to roll; Tamil uruḷ (DEDR 664)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C189-kulukkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C189-KRIYA189-04]; assesses=[] -->
 
 **ഉരുട്ടുക** — *uruṭṭuka* — "to roll (something along)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉരുട്ടുക** (*uruṭṭuka*) is native Dravidian, the causative of the verb "to roll"; DEDR 664 lists the root with Tamil *uruḷ* and Kannada *uruḷ*. DEDR 664 compares Sanskrit *uṇḍeraka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

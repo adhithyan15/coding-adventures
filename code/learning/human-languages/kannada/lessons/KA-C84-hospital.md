@@ -11,7 +11,8 @@ romanization: "āspatre"
 concept_tag: KA-BODY-HOSPITAL
 prerequisites: [KA-C84-weariness, KA-C84-sweat]
 sounds: []
-roots: []
+roots: [english-hospital]
+etymology_hook: "āspatre ← English hospital"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C84-sweat]
 
 **ಆಸ್ಪತ್ರೆ ಎಲ್ಲಿ?** (*āspatre elli?*) — "where is the hospital?", with **ಎಲ್ಲಿ**,
 "where", which you already know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಸ್ಪತ್ರೆ** (*āspatre*) is a loan from English *hospital*. Kannada reshaped the English word to its own sounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

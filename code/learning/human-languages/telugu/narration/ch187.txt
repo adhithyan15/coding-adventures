@@ -12,6 +12,9 @@ Before the new one: say the Telugu for twins, then the Telugu for a baby.
 You'll want to know: తేనెటీగ.
 తేనెటీగ — tēneṭīga — "a bee".
 
+The word, taken apart.
+తేనెటీగ (tēneṭīga) is native Dravidian: tēne, "honey", one word with Tamil tēṉ (DEDR 3268), and īga, "fly", one word with Tamil ī, "fly, bee" (DEDR 533). For the first, DEDR compares, with a query, Prakrit tiṇisa, "honeycomb".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a baby, then the Telugu for a bee.
 
 You'll want to know: బల్లి.
 బల్లి — balli — "a lizard, a gecko".
+
+The word, taken apart.
+బల్లి (balli) is native Dravidian. DEDR 3994 lists palli and balli, "lizard", with Tamil palli and Kannada palli. DEDR compares Sanskrit pallī, "small house lizard" (CDIAL 7973), a lexicon word.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a bee, then the Telugu for a lizard.
 You'll want to know: పురుగు.
 పురుగు — purugu — "an insect, a worm".
 
+The word, taken apart.
+పురుగు (purugu) is native Dravidian. DEDR 4312 lists purugu, "worm, any insect", with Tamil puḻu, "worm", and Kannada puḻu, "worm, insect". DEDR compares several Sanskrit words for "worm", among them pīlu, "worm" (CDIAL 8240), which CDIAL takes from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a lizard, then the Telugu for an insect.
 You'll want to know: పిచ్చుక.
 పిచ్చుక — piccuka — "a sparrow".
 
+The word, taken apart.
+పిచ్చుక (piccuka) is native Dravidian. DEDR 4190 lists piccuka, "sparrow", with Gadba piske, "sparrow", and Kuwi piṛska, "sparrow".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for an insect, then the Telugu for a sparrow.
 
 You'll want to know: కోకిల.
 కోకిల — kōkila — "a koel, the Indian cuckoo".
+
+The word, taken apart.
+కోకిల (kōkila) is Sanskrit kōkila, "the Indian cuckoo", taken over whole as a learned loan, a tatsama (CDIAL 3483).
 
 What you've built.
 One more word for this chapter.

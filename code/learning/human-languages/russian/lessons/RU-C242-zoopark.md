@@ -14,7 +14,8 @@ romanization: "zoopárk"
 concept_tag: RU-MESTO242-ZOOPARK
 prerequisites: [RU-C242-universitet, RU-C242-kafe]
 sounds: []
-roots: []
+roots: [parricus-latin]
+etymology_hook: "зоопарк is зоо-, Greek zōion 'an animal', + парк 'a park'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C242-kafe]
 <!-- hl-knowledge: introduces=[RU-LEX-C242-MESTO242-04]; assesses=[] -->
 
 **зоопарк** (*zoopárk*) — "a zoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**зоопарк** is *зоо-*, from Greek *zôion*, "an animal", with *парк*, "a park", from French *parc*, "an enclosure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

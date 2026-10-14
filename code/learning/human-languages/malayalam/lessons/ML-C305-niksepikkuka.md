@@ -14,7 +14,8 @@ romanization: "nikṣēpikkuka"
 concept_tag: ML-VERB-NIKSEPIKKUKA
 prerequisites: [ML-C304-virkkuka, ML-C304-coriyuka]
 sounds: []
-roots: []
+roots: [sanskrit-nikshepa]
+etymology_hook: "nikṣēpikkuka ← Sanskrit nikṣēpa 'deposit, a thing laid down' + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C304-coriyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C305-KRIYA305-01]; assesses=[] -->
 
 **നിക്ഷേപിക്കുക** — *nikṣēpikkuka* — "to deposit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിക്ഷേപിക്കുക** (*nikṣēpikkuka*) is built on Sanskrit *nikṣēpa*, "a deposit, a thing laid down", with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 204,
-  "sourceHash": "fnv1a64:3dfbce107adf481c",
+  "sourceHash": "fnv1a64:61df06f72c24afab",
   "lessonIds": [
     "HI-C204-trak",
     "HI-C204-riksa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch204.txt",
   "json": "hindi/narration/ch204.json",
-  "textHash": "fnv1a64:fbc5f0964cafb2f0",
-  "jsonHash": "fnv1a64:7b1d3294bab0efb4",
+  "textHash": "fnv1a64:6b886a0ab506d6bb",
+  "jsonHash": "fnv1a64:022b7e9a1fbabca8",
   "findings": []
 }

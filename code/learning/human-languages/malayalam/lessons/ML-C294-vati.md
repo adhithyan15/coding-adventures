@@ -14,7 +14,8 @@ romanization: "vaṭi"
 concept_tag: ML-VASTU294-VATI
 prerequisites: [ML-C294-talu, ML-C294-cannala]
 sounds: []
-roots: []
+roots: [dravidian-vadi-stick]
+etymology_hook: "vaṭi: native Dravidian, one word with Tamil vaṭi and Kannada baḍi (DEDR 5224)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C294-cannala]
 <!-- hl-knowledge: introduces=[ML-LEX-C294-VASTU294-05]; assesses=[] -->
 
 **വടി** — *vaṭi* — "a stick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വടി** (*vaṭi*) is native Dravidian, one word with Tamil *vaṭi*, Kannada *baḍi* and Telugu *baḍita* (DEDR 5224).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

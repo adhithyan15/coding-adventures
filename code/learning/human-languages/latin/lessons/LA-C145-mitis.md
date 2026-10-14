@@ -13,7 +13,8 @@ gloss: "gentle, mild"
 concept_tag: LA-QUAL145-MITIS
 prerequisites: [LA-C145-acerbus, LA-C145-vivus]
 sounds: []
-roots: []
+roots: [mitis-latin]
+etymology_hook: "mītis 'gentle' — probably from PIE *meh1y- 'mild'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C145-vivus]
 <!-- hl-knowledge: introduces=[LA-LEX-C145-QUAL145-03]; assesses=[] -->
 
 **mītis, mīte** — "gentle, mild".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mītis** is probably inherited, from a Proto-Indo-European *\*meh1y-*, "mild, soft" (EtymDB 2.1); Lewis & Short call it doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

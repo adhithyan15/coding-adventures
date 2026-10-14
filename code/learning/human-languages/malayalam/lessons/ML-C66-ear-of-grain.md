@@ -11,7 +11,8 @@ romanization: "katirŭ"
 concept_tag: ML-NOUN-EAR-OF-GRAIN
 prerequisites: [ML-C66-grass, ML-C64-sometimes]
 sounds: []
-roots: []
+roots: [dravidian-katir-ear]
+etymology_hook: "katirŭ: native Dravidian, one word with Tamil katir and Kannada kadir (DEDR 1194)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, matching Tamil *katir*, and the same word names a ray of light
 *Veyil*, the sunshine-word, is the other half of that picture, and a Malayalam poet can put the two side by side and let the reader do the joining.
 
 A field of കതിര് is a field ready. Everything in this chapter after this point is what happens next.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കതിര്** (*katirŭ*) is native Dravidian, one word with Tamil *katir* and Kannada *kadir* (DEDR 1194). DEDR 1193 lists the same shape meaning "ray of light", with Tamil *katir*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

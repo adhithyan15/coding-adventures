@@ -12,6 +12,9 @@ Before the new one: say the Kannada for an elbow, then the Kannada for a wrist.
 You'll want to know: ಹೆಬ್ಬೆರಳು.
 ಹೆಬ್ಬೆರಳು — hebberaḷu — "a thumb".
 
+The word, taken apart.
+ಹೆಬ್ಬೆರಳು (hebberaḷu) is native Dravidian, usually explained as "the big finger": heb-, a form of the root for "great", which DEDR 4411 lists as Kannada per, pēr; then beraḷu, "finger" (DEDR 5409).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a wrist, then the Kannada for a thumb.
 
 You'll want to know: ಉಗುರು.
 ಉಗುರು — uguru — "a fingernail".
+
+The word, taken apart.
+ಉಗುರು (uguru) is native Dravidian, one word with Tamil ukir (DEDR 561). DEDR gives Kannada ugur, "nail, claw".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a thumb, then the Kannada for a fingerna
 You'll want to know: ಎದೆ.
 ಎದೆ — ede — "the chest".
 
+The word, taken apart.
+ಎದೆ (ede) is native Dravidian, one word with Telugu eda (DEDR 827). DEDR lists ede itself, "chest, breast, courage".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a fingernail, then the Kannada for the c
 You'll want to know: ಸೊಂಟ.
 ಸೊಂಟ — soṇṭa — "the waist".
 
+The word, taken apart.
+ಸೊಂಟ (soṇṭa) is native Dravidian, one word with Telugu toṇṭi (DEDR 2840). DEDR lists soṇṭa itself, "hip, loins, waist".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for the chest, then the Kannada for the wais
 
 You'll want to know: ಹುಬ್ಬು.
 ಹುಬ್ಬು — hubbu — "an eyebrow".
+
+The word, taken apart.
+The origin of ಹುಬ್ಬು (hubbu) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 What you've built.
 One more word for this chapter.

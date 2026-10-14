@@ -14,7 +14,8 @@ romanization: "uppūṟṟi"
 concept_tag: ML-AROGYAM235-UPPURRI
 prerequisites: [ML-C234-asvasam, ML-C235-kanankai]
 sounds: []
-roots: []
+roots: [malayalam-uppurri]
+etymology_hook: "uppūṟṟi 'heel': of uncertain origin; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C235-kanankai]
 <!-- hl-knowledge: introduces=[ML-LEX-C235-AROGYAM235-02]; assesses=[] -->
 
 **ഉപ്പൂറ്റി** — *uppūṟṟi* — "a heel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉപ്പൂറ്റി** (*uppūṟṟi*) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

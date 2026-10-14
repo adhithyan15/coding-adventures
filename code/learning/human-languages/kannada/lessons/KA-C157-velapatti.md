@@ -14,7 +14,8 @@ romanization: "vēḷāpaṭṭi"
 concept_tag: KA-ODU157-VELAPATTI
 prerequisites: [KA-C156-nirdharisu, KA-C156-nirikshisu]
 sounds: []
-roots: []
+roots: [sanskrit-vela, sanskrit-pattika]
+etymology_hook: "vēḷāpaṭṭi: Sanskrit velā 'time' (CDIAL 12115) + paṭṭi 'list', from paṭṭikā 'tablet' (CDIAL 7699)"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [KA-C156-nirikshisu]
 
 The board says **ಬಸ್: ಬೆಳಿಗ್ಗೆ ೮** — *bas: beḷigge eṇṭu* — "Bus: 8 a.m." The bus
 leaves at eight, so be there before eight.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವೇಳಾಪಟ್ಟಿ** (*vēḷāpaṭṭi*) is *vēḷā*, "time", from Sanskrit *velā*, "limit, time" (CDIAL 12115), and *paṭṭi*, "list", from Sanskrit *paṭṭikā*, "slab, tablet" (CDIAL 7699): a table of times. CDIAL thinks *velā* probably came into Sanskrit from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

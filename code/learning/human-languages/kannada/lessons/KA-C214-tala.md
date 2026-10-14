@@ -14,7 +14,8 @@ romanization: "taḷa"
 concept_tag: KA-STHALA214-TALA
 prerequisites: [KA-C214-ancu, KA-C214-tudi]
 sounds: []
-roots: []
+roots: [sanskrit-tala]
+etymology_hook: "taḷa: usually traced to Sanskrit tala 'surface, bottom'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C214-tudi]
 <!-- hl-knowledge: introduces=[KA-LEX-C214-STHALA214-03]; assesses=[] -->
 
 **ತಳ** — *taḷa* — "the bottom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಳ** (*taḷa*) is usually traced to Sanskrit *tala*, "base, bottom, surface" (CDIAL 5731), with Kannada's *ḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

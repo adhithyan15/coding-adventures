@@ -14,7 +14,8 @@ romanization: "kavi"
 concept_tag: ML-JOLI300-KAVI
 prerequisites: [ML-C299-sarvakalasala, ML-C300-natan]
 sounds: []
-roots: []
+roots: [sanskrit-kavi]
+etymology_hook: "kavi ← Sanskrit kavi 'wise man, poet', a tatsama (CDIAL 2964)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C300-natan]
 <!-- hl-knowledge: introduces=[ML-LEX-C300-JOLI300-02]; assesses=[] -->
 
 **കവി** — *kavi* — "a poet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കവി** (*kavi*) ← Sanskrit *kavi*, "wise man, poet", taken over whole as a tatsama (CDIAL 2964).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

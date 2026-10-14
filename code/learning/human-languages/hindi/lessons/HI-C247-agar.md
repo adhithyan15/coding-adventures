@@ -14,7 +14,8 @@ romanization: "agar"
 concept_tag: HI-THG247-AGAR
 prerequisites: [HI-C247-camra, HI-C247-isliye]
 sounds: []
-roots: []
+roots: [persian-agar]
+etymology_hook: "agar: usually traced to Persian agar 'if'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C247-isliye]
 <!-- hl-knowledge: introduces=[HI-LEX-C247-THG247-04]; assesses=[] -->
 
 **अगर** — *agar* — "if".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अगर** (*agar*) is a loan, usually traced to Persian *agar*, "if".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

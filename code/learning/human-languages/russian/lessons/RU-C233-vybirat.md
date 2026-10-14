@@ -14,7 +14,8 @@ romanization: "vybirát"
 concept_tag: RU-VERB-VYBIRAT
 prerequisites: [RU-C232-poluchat, RU-C233-reshat]
 sounds: []
-roots: []
+roots: [pie-bher]
+etymology_hook: "выбирать is вы- 'out' + бирать, from брать 'to take': to take out, to choose"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C233-reshat]
 <!-- hl-knowledge: introduces=[RU-LEX-C233-ACT233-02]; assesses=[] -->
 
 **выбирать** (*vybirát*) — "to choose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**выбирать** is *вы-*, "out", with *-бирать*, from *брать*, "to take": to choose is to take one out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

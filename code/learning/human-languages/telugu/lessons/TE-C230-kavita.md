@@ -14,7 +14,8 @@ romanization: "kavita"
 concept_tag: TE-VASTUVU230-KAVITA
 prerequisites: [TE-C229-cinuku, TE-C229-pogamancu]
 sounds: []
-roots: []
+roots: [sanskrit-kavi]
+etymology_hook: "kavita ← Sanskrit kavitā 'poetry', from kavi 'poet' (CDIAL 2964)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C229-pogamancu]
 <!-- hl-knowledge: introduces=[TE-LEX-C230-VASTUVU230-01]; assesses=[] -->
 
 **కవిత** — *kavita* — "a poem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కవిత** (*kavita*) is Sanskrit *kavitā*, "poetry", from *kavi*, "wise man, poet" (CDIAL 2964), with the final *-ā* shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

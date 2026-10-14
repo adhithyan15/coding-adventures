@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-VILLAGE
 prerequisites: [KA-C55-hill, KA-C53-star]
 sounds: []
 roots: []
+etymology_hook: "haḷḷi: native Dravidian, older Kannada paḷḷi (DEDR 4018); Tamil paḷḷi, Telugu palli"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ The *h* tells you what happened: an older *paḷḷi* stands behind it, worn dow
 What makes this one worth stopping for is that the older shape did not disappear — it is written on road signs across the state. Hundreds of Karnataka place names end in *-halli*, and hundreds more across the border end in *-palli* and *-pally*. Same word, one of them having passed through the Kannada law and the other not. A learner who can hear that ending can read a map as a record of a sound change.
 
 Tamil kept *paḷḷi* too and steered it a different way, toward a place of rest and then toward a school.
+
+DEDR 4018 lists Kannada *paḷḷi*, *haḷḷi* with Tamil *paḷḷi* and Telugu *palli*. DEDR 4018 compares Sanskrit *pallī*, "small village".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

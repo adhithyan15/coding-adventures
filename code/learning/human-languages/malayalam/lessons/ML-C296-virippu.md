@@ -14,7 +14,8 @@ romanization: "virippŭ"
 concept_tag: ML-VASTU296-VIRIPPU
 prerequisites: [ML-C296-balbu, ML-C296-paravatani]
 sounds: []
-roots: []
+roots: [dravidian-viri-open]
+etymology_hook: "virippŭ: native Dravidian, 'what is spread', from the verb to spread; Tamil viri (DEDR 5411)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C296-paravatani]
 <!-- hl-knowledge: introduces=[ML-LEX-C296-VASTU296-05]; assesses=[] -->
 
 **വിരിപ്പ്** — *virippŭ* — "a bedsheet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിരിപ്പ്** (*virippŭ*) is native Dravidian, a noun from the verb "to spread, open out"; DEDR 5411 lists the root with Tamil *viri*, Kannada *biri* and Telugu *viriyu*. DEDR 5411 compares Sanskrit *ara-vinda*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

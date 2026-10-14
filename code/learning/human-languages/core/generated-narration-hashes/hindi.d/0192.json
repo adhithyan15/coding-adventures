@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 192,
-  "sourceHash": "fnv1a64:8361486a4677b602",
+  "sourceHash": "fnv1a64:fbce1461ceeb0072",
   "lessonIds": [
     "HI-C192-roz",
     "HI-C192-kabhi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch192.txt",
   "json": "hindi/narration/ch192.json",
-  "textHash": "fnv1a64:89766363b6ee6c98",
-  "jsonHash": "fnv1a64:b117e2b9dea3374a",
+  "textHash": "fnv1a64:acf95657b13ace9a",
+  "jsonHash": "fnv1a64:d57978f7819bec8e",
   "findings": []
 }

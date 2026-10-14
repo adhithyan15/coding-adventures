@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 204,
-  "sourceHash": "fnv1a64:07d751fec6b4fa7b",
+  "sourceHash": "fnv1a64:6591ab6edea050b4",
   "lessonIds": [
     "KA-C204-prakatisu",
     "KA-C204-jodisu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch204.txt",
   "json": "kannada/narration/ch204.json",
-  "textHash": "fnv1a64:31556c5e3edcd827",
-  "jsonHash": "fnv1a64:4c3cba72fcf085f9",
+  "textHash": "fnv1a64:2071e3468dffae6c",
+  "jsonHash": "fnv1a64:7a422d3eb9c97f34",
   "findings": []
 }

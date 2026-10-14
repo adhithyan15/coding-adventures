@@ -14,7 +14,8 @@ romanization: "déngi"
 concept_tag: RU-THINGS-MONEY
 prerequisites: [RU-C53-phone, RU-C53-umbrella]
 sounds: []
-roots: []
+roots: [turkic-tenge]
+etymology_hook: "деньги ← Turkic täŋkä 'a silver coin', as in Kazakh teŋge; the Persian link is disputed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C53-umbrella]
 <!-- hl-knowledge: introduces=[RU-LEX-C53-THINGS-04]; assesses=[] -->
 
 **деньги** (*déngi*) — "money". Always plural.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**деньги** is the plural of *деньга*, a coin, recorded from 1361; Vasmer takes it from Turkic: Tatar and Chagatai *täŋkä*, "money, a silver coin", Kazakh *teŋgä*. A Persian origin for the Turkic word has been proposed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

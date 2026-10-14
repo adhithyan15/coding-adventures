@@ -11,7 +11,8 @@ romanization: "kānī"
 concept_tag: TE-CONJ-BUT
 prerequisites: [TE-C74-and, TE-C09-kshaminchandi]
 sounds: []
-roots: []
+roots: [tamil-aaku-become]
+etymology_hook: "kānī: native Dravidian, built on kā-, a stem of agu 'to be' (DEDR 333)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C74-and]
 కానీ turns a sentence around. Where మరియు adds, కానీ takes back: it warns the listener that what comes next does not match what came before.
 
 **నాకు టీ ఇష్టం, కానీ పాలు వద్దు** — "I like tea, but no milk." This one word is what lets you disagree politely instead of only saying లేదు.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కానీ** (*kānī*) is native Dravidian, built on *kā-*, the stem of *agu*, "to be", that also gives *kādu*, "it is not" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "verblyúd"
 concept_tag: RU-VESHCH225-VERBLYUD
 prerequisites: [RU-C225-zhiraf, RU-C225-zebra]
 sounds: []
-roots: []
+roots: [gothic-ulbandus]
+etymology_hook: "верблюд is an old loan from Gothic ulbandus, which goes back to Greek elephas 'elephant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C225-zebra]
 <!-- hl-knowledge: introduces=[RU-LEX-C225-VESHCH225-04]; assesses=[] -->
 
 **верблюд** (*verblyúd*) — "a camel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**верблюд** — Old Russian *velĭbludŭ*; an old loan from Gothic *ulbandus*, reshaped after *велий*, "great" (Vasmer). The Gothic word goes back to Greek *eléphas*, "elephant": the name passed from one large beast to another.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

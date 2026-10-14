@@ -14,7 +14,8 @@ romanization: "skeyil"
 concept_tag: ML-JOLI301-SKEYIL
 prerequisites: [ML-C301-pila, ML-C301-srraplar]
 sounds: []
-roots: []
+roots: [english-scale]
+etymology_hook: "skeyil ← English scale"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C301-srraplar]
 <!-- hl-knowledge: introduces=[ML-LEX-C301-JOLI301-05]; assesses=[] -->
 
 **സ്കെയിൽ** — *skeyil* — "a ruler (for lines)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്കെയിൽ** (*skeyil*) ← English *scale*, the ruler with its measured marks.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

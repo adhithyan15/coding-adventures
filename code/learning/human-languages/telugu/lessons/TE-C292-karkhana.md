@@ -14,7 +14,8 @@ romanization: "kārkhānā"
 concept_tag: TE-STHALAM292-KARKHANA
 prerequisites: [TE-C292-bhavanam, TE-C292-kota]
 sounds: []
-roots: []
+roots: [persian-karkhana]
+etymology_hook: "kārkhānā ← Persian kārkhāna 'workshop', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C292-kota]
 <!-- hl-knowledge: introduces=[TE-LEX-C292-STHALAM292-05]; assesses=[] -->
 
 **కార్ఖానా** — *kārkhānā* — "a factory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కార్ఖానా** (*kārkhānā*) is a loan from Persian *kārkhāna*, "workshop, factory", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

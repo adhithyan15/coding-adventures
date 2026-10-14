@@ -14,7 +14,8 @@ romanization: "ovtsá"
 concept_tag: RU-VESHCH224-OVTSA
 prerequisites: [RU-C224-sosna, RU-C224-kust]
 sounds: []
-roots: []
+roots: [pie-h2owis]
+etymology_hook: "овца ← Proto-Slavic *ovĭca; Latin ovis and English ewe are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C224-kust]
 <!-- hl-knowledge: introduces=[RU-LEX-C224-VESHCH224-05]; assesses=[] -->
 
 **овца** (*ovtsá*) — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**овца** ← Proto-Slavic *\*ovĭca*, a diminutive of the old word for "sheep" — inherited. Vasmer lists Sanskrit *ávi-*, Lithuanian *avìs*, Greek *óis* and Latin *ovis*: English *ewe* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

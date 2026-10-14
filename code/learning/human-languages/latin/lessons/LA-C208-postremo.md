@@ -13,7 +13,8 @@ gloss: "lastly"
 concept_tag: LA-TEMP208-POSTREMO
 prerequisites: [LA-C207-diluculum, LA-C208-denique]
 sounds: []
-roots: []
+roots: [postremo-latin, posterus-latin, post-latin]
+etymology_hook: "postrēmō 'lastly' — from postrēmus 'last', the superlative of posterus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C208-denique]
 <!-- hl-knowledge: introduces=[LA-LEX-C208-TEMP208-02]; assesses=[] -->
 
 **postrēmō** — "lastly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**postrēmō** is the adverb of *postrēmus*, "last", the superlative of *posterus*, "coming after" (Lewis & Short), from *post*, "after".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

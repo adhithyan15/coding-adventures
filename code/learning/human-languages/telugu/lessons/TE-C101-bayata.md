@@ -14,7 +14,8 @@ romanization: "bayaṭa"
 concept_tag: TE-LOC101-BAYATA
 prerequisites: [TE-C101-kinda, TE-C101-lopala]
 sounds: []
-roots: []
+roots: [dravidian-bayalu-open]
+etymology_hook: "bayaṭa: native, built on bayalu 'outside' (DEDR 3940)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C101-lopala]
 <!-- hl-knowledge: introduces=[TE-LEX-C101-LOC101-04]; assesses=[] -->
 
 **బయట** — *bayaṭa* — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బయట** (*bayaṭa*) is native Dravidian, built on *bayalu*, which DEDR 3940 lists as "outside, exterior"; DEDR does not list *bayaṭa* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to burst, to break apart"
 concept_tag: LA-VERB-RUMPO
 prerequisites: [LA-C254-vexillum, LA-C255-teneo]
 sounds: []
-roots: []
+roots: [rumpere-latin]
+etymology_hook: "rumpō 'to burst' — inherited, usually traced to PIE *Hrunepti 'breaks'; English rupture"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C255-teneo]
 <!-- hl-knowledge: introduces=[LA-LEX-C255-ACT255-02]; assesses=[] -->
 
 **rumpō, rumpere** — "to burst, to break apart".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rumpō** is inherited, usually traced to a Proto-Indo-European present *\*Hrunepti*, "breaks" (EtymDB 2.1), with an n inside the root. English *rupture* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

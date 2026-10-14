@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 56,
-  "sourceHash": "fnv1a64:b59440f37db849bc",
+  "sourceHash": "fnv1a64:7428c02ac1b127e1",
   "lessonIds": [
     "KA-C56-mat",
     "KA-C56-basket",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch56.txt",
   "json": "kannada/narration/ch56.json",
-  "textHash": "fnv1a64:0358b4e65cd54643",
-  "jsonHash": "fnv1a64:41ee9dc26480c8fa",
+  "textHash": "fnv1a64:2b9c759c51e6967a",
+  "jsonHash": "fnv1a64:6a8880d1bcb772f1",
   "findings": []
 }

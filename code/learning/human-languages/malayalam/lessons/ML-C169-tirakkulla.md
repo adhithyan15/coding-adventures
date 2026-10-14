@@ -14,7 +14,8 @@ romanization: "tirakkuḷḷa"
 concept_tag: ML-QUAL169-TIRAKKULLA
 prerequisites: [ML-C169-matiyulla, ML-C169-santamaya]
 sounds: []
-roots: []
+roots: [dravidian-tirakku-throng, dravidian-ul-be]
+etymology_hook: "tirakkuḷḷa: native Dravidian, 'having a throng': tirakku (DEDR 3243) + uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C169-santamaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C169-QUAL169-04]; assesses=[] -->
 
 **തിരക്കുള്ള** — *tirakkuḷḷa* — "busy, crowded".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തിരക്കുള്ള** (*tirakkuḷḷa*) is native Dravidian, "having a throng": *tirakku*, "thronging, pressing" (DEDR 3243), with *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

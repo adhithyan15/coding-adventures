@@ -4751,6 +4751,96 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("3.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 -- pure standard functions preserve an unaliased local
+    // runtime-real root across an ordinary procedure-call selector.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 12.25; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then abs(left) else sqrt(right); output(result) end",
+        expect: Expect::Stdout("3.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - a procedure-call selector may choose exact entier(sign(...))
+    // transforms rooted in unaliased local runtime-real snapshots.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then entier(sign(left)) else entier(sign(right)); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - a procedure-call selector may carry exact local-rooted
+    // runtime-real transforms through a specialised real name formal.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - exact local-rooted name actuals retain their proof through
+    // unary signs.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(-entier(sign(left))) else relay(+entier(sign(right))); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - signed exact local-rooted name actuals retain their proof
+    // through additive composition with finite static terms.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - additive exact local-rooted name actuals retain their proof
+    // through multiplication or division by finite static terms.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay((-entier(sign(left)) + 2.0) * 3.0) else relay((+entier(sign(right)) - 0.0) / 1.0); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - multiplicative exact local-rooted name actuals retain their
+    // proof as the sole dynamic base of a finite static power chain.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(((-entier(sign(left)) + 2.0) * 3.0) ^ 2) else relay(((+entier(sign(right)) - 0.0) / 1.0) ^ 1); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - a supported built-in real transform preserves the exact
+    // powered local-rooted name-actual proof.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)) else relay(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - exactly two supported built-in real transforms preserve the
+    // powered local-rooted name-actual proof.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))) else relay(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - exactly three supported built-in real transforms preserve the
+    // powered local-rooted name-actual proof.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)))) else relay(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)))); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -21033,6 +21123,266 @@ fn algol_call_selected_powered_local_runtime_real_output_runs_on_every_available
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the call-selected powered local runtime real did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_standard_function_local_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := if choose() then abs(left) else sqrt(right); output(result)",
+                )
+        })
+        .expect("the ALGOL call-selected standard-function local runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the call-selected standard-function local runtime real did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_entier_sign_local_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := if choose() then entier(sign(left)) else entier(sign(right)); output(result)",
+                )
+        })
+        .expect("the ALGOL call-selected entier-sign local runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the call-selected entier-sign local runtime real did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then relay(entier(sign(left))) else relay(entier(sign(right))); output(result)",
+                )
+        })
+        .expect("the ALGOL call-selected local name-actual runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the call-selected local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_signed_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then relay(-entier(sign(left))) else relay(+entier(sign(right)))",
+                )
+        })
+        .expect("the signed ALGOL local name-actual runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the signed local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_additive_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0)",
+                )
+        })
+        .expect("the additive ALGOL local name-actual runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the additive local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_multiplicative_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then relay((-entier(sign(left)) + 2.0) * 3.0) else relay((+entier(sign(right)) - 0.0) / 1.0)",
+                )
+        })
+        .expect("the multiplicative ALGOL local name-actual runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the multiplicative local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_powered_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then relay(((-entier(sign(left)) + 2.0) * 3.0) ^ 2) else relay(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)",
+                )
+        })
+        .expect("the powered ALGOL local name-actual runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the powered local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_standard_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then relay(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)) else relay(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))",
+                )
+        })
+        .expect("the standard-function ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the standard-function local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_nested_standard_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then relay(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))) else relay(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)))",
+                )
+        })
+        .expect("the nested standard-function ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the nested standard-function local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_triple_nested_standard_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then relay(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)))) else relay(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))))",
+                )
+        })
+        .expect("the triple-nested standard-function ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the triple-nested standard-function local name actual did not run"
             );
             continue;
         };

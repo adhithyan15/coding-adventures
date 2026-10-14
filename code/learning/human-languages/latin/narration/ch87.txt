@@ -12,6 +12,9 @@ Before the new one: say the Latin for a forest, then the Latin for a mountain.
 You'll want to know: flūmen, flūminis.
 flūmen, flūminis — "a river".
 
+The word, taken apart.
+flūmen is built on fluō, "to flow" (EtymDB 2.1), with -men, an ending for a thing or a result: the flowing. fluō is usually traced to Proto-Indo-European bhlew-, "to swell, to flow" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a mountain, then the Latin for a river.
 
 You'll want to know: lacus, lacūs.
 lacus, lacūs — "a lake". English lake.
+
+The word, taken apart.
+lacus is inherited, usually traced to Proto-Indo-European lokus, "pond, pool" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a river, then the Latin for a lake.
 You'll want to know: rīvus, rīvī.
 rīvus, rīvī — "a stream". English rival: people who share a stream.
 
+The word, taken apart.
+rīvus is inherited, usually traced to Proto-Indo-European h3rih2wos, "brook, small stream" (EtymDB 2.1), from a root for flowing.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a lake, then the Latin for a stream.
 You'll want to know: fōns, fontis.
 fōns, fontis — "a spring, a fountain". English fountain.
 
+The word, taken apart.
+fōns has no sure origin; Lewis & Short tie it to fundō, "to pour", but that link is doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a stream, then the Latin for a spring.
 
 You'll want to know: ōra, ōrae.
 ōra, ōrae — "a coast, an edge".
+
+The word, taken apart.
+ōra has no certain origin; it is often linked with ōs, ōris, "mouth, opening": an edge as a rim.
 
 What you've built.
 One more word for this chapter.

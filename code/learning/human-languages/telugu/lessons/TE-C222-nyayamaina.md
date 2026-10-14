@@ -14,7 +14,8 @@ romanization: "nyāyamaina"
 concept_tag: TE-GUNAM222-NYAYAMAINA
 prerequisites: [TE-C222-spastamaina, TE-C222-bhinnamaina]
 sounds: []
-roots: []
+roots: [sanskrit-nyaya, tamil-aaku-become]
+etymology_hook: "nyāyamaina: Sanskrit nyāya 'rule, method' (CDIAL 7614) + native aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C222-bhinnamaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C222-GUNAM222-05]; assesses=[] -->
 
 **న్యాయమైన** — *nyāyamaina* — "fair, righteous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**న్యాయమైన** (*nyāyamaina*) is Sanskrit *nyāya*, "rule, method" (CDIAL 7614), which Telugu uses for "justice", with native *aina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

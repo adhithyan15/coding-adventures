@@ -14,7 +14,8 @@ romanization: "eccaragoḷḷu"
 concept_tag: KA-VERB-ECCARAGOLLU
 prerequisites: [KA-C236-biccu, KA-C236-ebbisu]
 sounds: []
-roots: []
+roots: [dravidian-ezhu-rise, dravidian-kol-take]
+etymology_hook: "eccaragoḷḷu: native eccara 'wakefulness' (DEDR 851) + koḷḷu 'take' (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C236-ebbisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C236-KRIYE236-03]; assesses=[] -->
 
 **ಎಚ್ಚರಗೊಳ್ಳು** — *eccaragoḷḷu* — "to wake up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಚ್ಚರಗೊಳ್ಳು** (*eccaragoḷḷu*) is native Dravidian: *eccara*, "wakefulness", which DEDR 851 lists, and *koḷḷu*, "to take" (DEDR 2151): "to take wakefulness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

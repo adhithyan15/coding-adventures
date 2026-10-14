@@ -11,6 +11,7 @@ concept_tag: ES-DOC-CONTRATO
 prerequisites: [ES-C440-sintesis-fiesta, ES-C394-trabajo, ES-C406-documento]
 sounds: [pr-cluster, stress-penultimate]
 roots: [trahere-latin]
+etymology_hook: "contrato — con- 'together' + trahere 'to draw': a drawing-together — English contract"
 duration:
   max_seconds: 265
 requires:

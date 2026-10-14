@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 230,
-  "sourceHash": "fnv1a64:96a4e24c134d9ad2",
+  "sourceHash": "fnv1a64:95a12f8336c8f59f",
   "lessonIds": [
     "ML-C230-nirddesikkuka",
     "ML-C230-vimarsikkuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch230.txt",
   "json": "malayalam/narration/ch230.json",
-  "textHash": "fnv1a64:af16000e6447294c",
-  "jsonHash": "fnv1a64:a9ee03eaa6783369",
+  "textHash": "fnv1a64:22aac235c89db974",
+  "jsonHash": "fnv1a64:886529384d23f496",
   "findings": []
 }

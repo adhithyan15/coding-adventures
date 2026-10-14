@@ -11,7 +11,8 @@ romanization: "mēlu"
 concept_tag: TE-NOUN-FAVOUR
 prerequisites: [TE-C51-gratitude]
 sounds: []
-roots: []
+roots: [dravidian-mel-above]
+etymology_hook: "mēlu: native Dravidian, one word with Tamil mē and Kannada mē (DEDR 5086)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C51-gratitude]
 Inherited, and short. మేల్ meant "above"; the good is what is above. From it Telugu draws మేలు, a benefit or a good turn done to someone, and also the plain comparative sense of "better".
 
 So *idi mēlu* says "this one is higher" and lets the height do the judging --- which is what English does too, in *superior*, without anyone noticing any more.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మేలు** (*mēlu*) is native Dravidian, one word with Tamil *mē* and Kannada *mē* (DEDR 5086). DEDR lists Telugu *mēlu*, "good, advantage, better".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

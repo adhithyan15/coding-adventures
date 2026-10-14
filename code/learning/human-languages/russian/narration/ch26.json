@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Which One: the Ordinals, Said and Written",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1b0aec3001c6784a",
+  "sourceHash": "fnv1a64:fa46410fbb1115d6",
   "lessons": [
     {
       "id": "RU-C26-pervyy",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cda5eefed9c5f3c",
+      "sourceHash": "fnv1a64:9d5483582ac5334a",
       "notice": null,
       "blocks": [
         {
@@ -195,6 +195,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "третий from Proto-Slavic tretĭjĭ — inherited, a cousin of Lithuanian trẽčias, Latin tertius and English third (Vasmer). второй is perhaps from vĭtorŭ, related to Sanskrit vítaras, \"further\"; others reconstruct vŭtorŭ and link it with Lithuanian añtras, \"second, other\" (Vasmer)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -228,7 +239,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

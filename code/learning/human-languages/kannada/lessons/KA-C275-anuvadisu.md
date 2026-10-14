@@ -14,7 +14,8 @@ romanization: "anuvādisu"
 concept_tag: KA-VERB-ANUVADISU
 prerequisites: [KA-C275-carj-madu, KA-C275-parisilisu]
 sounds: []
-roots: []
+roots: [sanskrit-anuvada]
+etymology_hook: "anuvādisu: Sanskrit anuvāda 'saying again', built on vāda 'speech' (CDIAL 11507), + -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C275-parisilisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C275-KRIYE275-03]; assesses=[] -->
 
 **ಅನುವಾದಿಸು** — *anuvādisu* — "to translate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅನುವಾದಿಸು** (*anuvādisu*) is Sanskrit *anuvāda*, "saying after, saying again", built on *vāda*, "speech" (CDIAL 11507), made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

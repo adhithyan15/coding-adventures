@@ -14,7 +14,8 @@ romanization: "vorobéy"
 concept_tag: RU-VESHCH251-VOROBEY
 prerequisites: [RU-C251-gus, RU-C251-golub]
 sounds: []
-roots: []
+roots: [slavic-vorbij]
+etymology_hook: "воробей ← Proto-Slavic *vorbĭjĭ; Lithuanian žvirblis 'sparrow' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C251-golub]
 <!-- hl-knowledge: introduces=[RU-LEX-C251-VESHCH251-05]; assesses=[] -->
 
 **воробей** (*vorobéy*) — "a sparrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**воробей** ← Proto-Slavic *\*vorbĭjĭ* — inherited. Vasmer relates it to Lithuanian *žvìrblis*, "sparrow", and Greek *rhóbillos*, a small bird.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nalivát"
 concept_tag: RU-VERB-NALIVAT
 prerequisites: [RU-C173-varit, RU-C173-zharit]
 sounds: []
-roots: []
+roots: [slavic-liti]
+etymology_hook: "наливать is на- 'onto, into' + ливать, from лить 'to pour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C173-zharit]
 <!-- hl-knowledge: introduces=[RU-LEX-C173-ACT173-05]; assesses=[] -->
 
 **наливать** (*nalivát*) — "to pour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**наливать** is *на-*, "into", with *-ливать*, from *лить*, "to pour", which Vasmer relates to Lithuanian *líeti*, "to pour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

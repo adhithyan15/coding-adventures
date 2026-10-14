@@ -14,7 +14,8 @@ romanization: "rodnóy"
 concept_tag: RU-KACH189-RODNOY
 prerequisites: [RU-C188-slozhnyy, RU-C189-chuzhoy]
 sounds: []
-roots: []
+roots: [slavic-rodu]
+etymology_hook: "родной is from род 'kin, family': one's own by birth"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C189-chuzhoy]
 <!-- hl-knowledge: introduces=[RU-LEX-C189-KACH189-02]; assesses=[] -->
 
 **родной** (*rodnóy*) — "native; dear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**родной** is built on *род*, "kin, family", with *-ной*: "of one's own kin". Vasmer relates *род* to Latvian *rads*, "a relative".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

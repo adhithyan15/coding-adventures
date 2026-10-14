@@ -11,7 +11,8 @@ romanization: "bēru"
 concept_tag: KA-NOUN-ROOT
 prerequisites: [KA-C54-leaf, KA-C52-flower]
 sounds: []
-roots: []
+roots: [dravidian-veer-root]
+etymology_hook: "bēru: native Dravidian, one word with Tamil vēr and Telugu vēru (DEDR 5535)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Tamil says *vēr*, Malayalam says *vēr*, Telugu says *vēru* — and Kannada sa
 Two sound laws now separate Kannada from its sisters, and both of them are visible in a single chapter: the *p* that became *h* in ಹಣ್ಣು and ಹೂವು, and the *v* that became *b* in this word.
 
 ಬೇರು also does the figurative work English gives *roots*: where a family comes from, what a word descends from. Both languages dug the same hole.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೇರು** (*bēru*) is native Dravidian, one word with Tamil *vēr* and Telugu *vēru* (DEDR 5535). DEDR gives Kannada *bēr(u)*: the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

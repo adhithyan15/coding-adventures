@@ -19,6 +19,7 @@ That is enough for a first lesson. The rest of the word — a long-ā sign and t
 
 The word, taken apart.
 Namaskāra came from Sanskrit namas (“a bow”) + kāra (“a making,” from kṛ, “to do”): literally “the making of a bow.” Kannada borrowed the whole word. Tamil instead kept its native greeting, vaṇakkam.
+Sanskrit namaskāra is listed in CDIAL 6960, and namas, "a bow, adoration", in CDIAL 6958.
 
 Across the family — the same idea, five ways.
 [a table of 6 rows, read aloud]
@@ -72,6 +73,7 @@ The middle of the word stacks n onto ya and stretches va to vā. Those pieces, a
 
 The word, taken apart.
 Dhanyavāda is Sanskrit: dhanya ("worthy, blessed," from dhana, "wealth") + vāda ("a saying, an utterance," from the root vad, "to speak"). Literally "an utterance of '[you are] worthy'" — a formal, dignified thanks. It is the same word as Hindi dhanyavād and Telugu dhanyavādamulu.
+Sanskrit dhanya is in CDIAL 6727a, glossed "rich; fortunate, happy", and vāda, "speech", in CDIAL 11507.
 
 Across the family — the same idea, five ways.
 [a table of 5 rows, read aloud]
@@ -118,6 +120,7 @@ Left to right: ಹೌ, ದು = hau-du, which gives:
 
 The word, taken apart.
 ಹೌದು (haudu) is the everyday "yes / that's so," a genuinely native Kannada word (not a Sanskrit loan). Its polite-agreement cousins — audu, houdu in speech — all circle the same "it is so."
+It is usually explained as ahudu, "it becomes, it is so", a form of the native verb āgu, "to become" (DEDR 333). Telugu avunu, "yes", comes from the same verb in that entry. DEDR 333 compares Sanskrit ām.
 
 Grammar Lens: Dravidian often answers by echoing the verb.
 Like its sister Tamil, Kannada frequently answers "yes" by repeating the verb rather than using a stand-alone word: asked "bandiddīyā?" ("have you come?"), a natural yes is "bandiddēne" ("I have come"). Keep haudu as the simple all-purpose "yes," but expect a "yes" to come back as a whole verb — a habit shared right across the Dravidian family.
@@ -157,6 +160,7 @@ Left to right: ಇ, ಲ್ಲ = i-lla, which gives:
 
 The word, taken apart.
 ಇಲ್ಲ (illa) is built on the old Dravidian root il, "not-being, absence" — so, like Tamil illai, it is really the statement "[it] is not, [there] is not," doing duty as the everyday "no." Its positive twin is ide, "there is."
+DEDR 2559 lists Kannada illa with Tamil illai, Malayalam illa and Telugu lē-, lēdu.
 
 Grammar Lens: Dravidian negates by being, not with a "not"-word.
 English inserts not / no to make a sentence negative. Kannada — exactly like Tamil — instead swaps in the negative verb of existence:
@@ -169,9 +173,9 @@ Across the family — the same idea, five ways.
 Language: Kannada. "No / isn't": illa (ಇಲ್ಲ). Note: native Dravidian (root il).
 Language: Tamil. "No / isn't": illai (இல்லை). Note: the same root.
 Language: Malayalam. "No / isn't": illa (ഇല്ല). Note: the same root.
-Language: Telugu. "No / isn't": lēdu (లేదు). Note: native Dravidian, a different root.
+Language: Telugu. "No / isn't": lēdu (లేదు). Note: native Dravidian, the same entry (DEDR 2559).
 Language: Hindi. "No / isn't": nahīṁ (नहीं). Note: Indo-European.
-Three of the four Dravidian languages share il-; only Telugu picked a different native root. Hindi, from the other family entirely, is unrelated.
+Telugu's lē- has lost the i-, but DEDR 2559 files it with il- all the same. Hindi, from the other family entirely, is unrelated.
 
 Guided Practice.
 [pause 1 second]
@@ -208,7 +212,8 @@ Left to right: ಸ, ರಿ = sa-ri, which gives:
 Two clean syllables — no conjunct, no stacking — a good moment to feel how smoothly Kannada's round letters read.
 
 The word, taken apart.
-ಸರಿ (sari) is native Dravidian for "correct, even, right," and by an easy step, "okay, agreed." It is the verbal nod of Kannada, just as it is of Tamil (சரி, sari) — the same word across the family. Doubled, sari sari, it means "yes, yes, alright."
+ಸರಿ (sari) means "correct, even, right," and by an easy step, "okay, agreed." It is the verbal nod of Kannada, just as it is of Tamil (சரி, sari) — the same word across the family. Doubled, sari sari, it means "yes, yes, alright."
+Its origin is uncertain. DEDR has no entry for sari in this sense, and the usual account traces it to Sanskrit sadṛśa, "like, equal", through a Prakrit form sarisa (CDIAL 13120).
 
 Grammar Lens: one shared Dravidian word, two scripts.
 sari is a small proof of how close these languages are: identical word, identical meaning, written in two different scripts — Kannada ಸರಿ, Tamil சரி. As you learn to read each script, watching a shared word change its clothes but not its sound is the fastest way to feel the family resemblance. (This "same word, different script" pattern-matching is exactly what carries you across Kannada, Telugu, and Malayalam.)

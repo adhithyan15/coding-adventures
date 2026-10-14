@@ -15,7 +15,7 @@ concept_tag: TA-PORUL250-KUTARAM
 prerequisites: [TA-C249-catarankam, TA-C249-potti]
 sounds: []
 roots: [dravidian-kutaram-tent]
-etymology_hook: "கூடாரம் — DEDR 1881 lists Malayalam kūṭāram; compared with Prakrit guḍḍara, so its source is uncertain"
+etymology_hook: "கூடாரம் — DEDR 1881 lists Malayalam kūṭāram; compared with Sanskrit kuṭaru and Prakrit guḍḍara; its source is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TA-C249-potti]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**கூடாரம்** (*kūṭāram*) is a South Indian word: DEDR 1881 lists Malayalam kūṭāram, Kannada guḍāra and Telugu guḍāramu. DEDR also compares Prakrit *guḍḍara*, "tent", so which way the word travelled is uncertain.
+**கூடாரம்** (*kūṭāram*) is a South Indian word: DEDR 1881 lists Malayalam kūṭāram, Kannada guḍāra and Telugu guḍāramu. DEDR also compares Sanskrit (lexicons) *kuṭaru* and Prakrit *guḍḍara*, "tent", so which way the word travelled is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

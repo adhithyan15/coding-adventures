@@ -15,6 +15,7 @@ concept_tag: VERB-LIVE
 prerequisites: [HI-C05-bolna]
 sounds: [matra-a]
 roots: [rah-remain]
+etymology_hook: "rahnā ← *rahati 'remains', a form CDIAL reconstructs (CDIAL 10666)"
 duration:
   max_seconds: 240
 requires:

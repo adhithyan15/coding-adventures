@@ -13,7 +13,8 @@ gloss: "to clean"
 concept_tag: LA-VERB-PURGO
 prerequisites: [LA-C155-induo, LA-C155-exuo]
 sounds: []
-roots: []
+roots: [purgare-latin, purus-latin, agere-latin]
+etymology_hook: "pūrgō 'to clean' — contracted from pūrigō: pūrus 'clean' + agō 'to make'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C155-exuo]
 <!-- hl-knowledge: introduces=[LA-LEX-C155-ACT155-05]; assesses=[] -->
 
 **pūrgō, pūrgāre** — "to clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pūrgō** is contracted from *pūrigō*, "to make clean", from *pūrum*, "clean", and *agō*, "to make" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

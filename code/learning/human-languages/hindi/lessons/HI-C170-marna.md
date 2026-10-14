@@ -14,7 +14,8 @@ romanization: "marnā"
 concept_tag: HI-VERB-MARNA
 prerequisites: [HI-C169-bacana, HI-C169-bacna]
 sounds: []
-roots: []
+roots: [sanskrit-marate]
+etymology_hook: "marnā ← Sanskrit marate 'will die', a tadbhava (CDIAL 9871)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C169-bacna]
 <!-- hl-knowledge: introduces=[HI-LEX-C170-ACT170-01]; assesses=[] -->
 
 **मरना** — *marnā* — "to die".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मरना** (*marnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *marate*, "will die" (CDIAL 9871). CDIAL calls direct descent from this old form possible, even probable.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

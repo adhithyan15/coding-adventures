@@ -13,7 +13,8 @@ gloss: "shame, modesty"
 concept_tag: LA-VALE262-PUDOR
 prerequisites: [LA-C262-fides, LA-C262-virtus]
 sounds: []
-roots: []
+roots: [pudor-latin, pudere-latin]
+etymology_hook: "pudor 'shame' — built on pudeō 'to be ashamed'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C262-virtus]
 <!-- hl-knowledge: introduces=[LA-LEX-C262-VALE262-03]; assesses=[] -->
 
 **pudor, pudōris** — "shame, modesty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pudor** is built on *pudeō*, "to be ashamed" (Lewis & Short), with *-or*, "a state". Where *pudeō* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

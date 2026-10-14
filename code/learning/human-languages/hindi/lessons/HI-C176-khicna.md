@@ -14,7 +14,8 @@ romanization: "khī̃cnā"
 concept_tag: HI-VERB-KHICNA
 prerequisites: [HI-C175-bujhana, HI-C176-hilana]
 sounds: []
-roots: []
+roots: [indo-aryan-khinc]
+etymology_hook: "khīṁcnā ← *khiñc 'drag, pull', a reconstructed form; a tadbhava (CDIAL 3881)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C176-hilana]
 <!-- hl-knowledge: introduces=[HI-LEX-C176-ACT176-02]; assesses=[] -->
 
 **खींचना** — *khī̃cnā* — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खींचना** (*khīṁcnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khiñc*, "drag, pull", a form CDIAL reconstructs from its descendants (CDIAL 3881).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

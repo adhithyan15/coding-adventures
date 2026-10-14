@@ -10,7 +10,7 @@ gloss: formal and informal how-are-you questions differ in the verb ending and p
 prerequisites: [ES-C04-como-esta]
 sounds: [vowel-o, r-tap]
 roots: [quomodo-latin, stare-latin]
-etymology_hook: "the formal/informal split reuses the usted/tú register choice and estar endings already learned: está usted versus estás"
+etymology_hook: "¿cómo estás? — cómo is Latin quo modo 'in what manner'; estás is Latin stas 'you stand'"
 duration:
   max_seconds: 240
 requires:
@@ -47,6 +47,11 @@ The formal version uses the third-person ending **está** plus **usted**.
 The informal version uses second-person **estás** and normally omits **tú**.
 This is the same relationship contrast you drilled with **se llama / te
 llamas**.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cómo estás** is two words you have taken apart: *cómo* is Latin *quo modo*, "in what manner", and *estás* is Latin *stas*, "you stand".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST, ES-GRAMMAR-ESTAR-ESTA-ESTAS] -->

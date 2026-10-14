@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f37120148f25b1aa",
+  "sourceHash": "fnv1a64:0939c96119ac27b3",
   "lessons": [
     {
       "id": "ML-C44-look",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31ae7418210508d4",
+      "sourceHash": "fnv1a64:eda42a83e431d019",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നോക്കൂ (nōkkū) is native Dravidian, one word with Tamil nōkku and Kannada nōḍu (DEDR 3794)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -106,7 +117,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -137,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3eb9ecd05bceb5ad",
+      "sourceHash": "fnv1a64:ecbd5fd0f2cb8176",
       "notice": null,
       "blocks": [
         {
@@ -174,6 +185,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കേൾക്കൂ (kēḷkkū) is native Dravidian, one word with Tamil kēḷ and Kannada kēḷ (DEDR 2017). The same verb also means \"to ask\": hearing and asking are one root in this family."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -184,7 +206,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -233,7 +255,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -264,7 +286,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0da784ee8210f941",
+      "sourceHash": "fnv1a64:e289162d9773d6f5",
       "notice": null,
       "blocks": [
         {
@@ -301,6 +323,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംസാരിക്കൂ (saṁsārikkū) is built on Sanskrit saṁsāra, \"the world, secular life\" (CDIAL 13036), with the ending that turns a borrowed noun into a Malayalam verb, here in its request form."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -311,7 +344,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -360,7 +393,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -391,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61c850b24ec0f47a",
+      "sourceHash": "fnv1a64:54ca252b6d69115f",
       "notice": null,
       "blocks": [
         {
@@ -428,6 +461,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എഴുതൂ (eḻutū) is native Dravidian, one word with Tamil eḻutu (DEDR 853). Its older senses are \"to paint\" and \"to draw\": writing began as drawing lines."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -438,7 +482,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -487,7 +531,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

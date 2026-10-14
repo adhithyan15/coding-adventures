@@ -14,7 +14,8 @@ romanization: "ārī"
 concept_tag: HI-THG266-ARI
 prerequisites: [HI-C265-qalin, HI-C266-citkani]
 sounds: []
-roots: []
+roots: [sanskrit-ara]
+etymology_hook: "ārī: CDIAL lists ārī 'awl' under Sanskrit ārā 'shoemaker's awl' (CDIAL 1313)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C266-citkani]
 <!-- hl-knowledge: introduces=[HI-LEX-C266-THG266-02]; assesses=[] -->
 
 **आरी** — *ārī* — "a saw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आरी** (*ārī*) is listed by CDIAL in the sense "awl", under Sanskrit *ārā*, "shoemaker's awl" (CDIAL 1313). The sense "saw" is not recorded there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

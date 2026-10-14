@@ -14,7 +14,8 @@ romanization: "vokrúg"
 concept_tag: RU-MESTO152-VOKRUG
 prerequisites: [RU-C151-prospekt, RU-C152-okolo]
 sounds: []
-roots: []
+roots: [slavic-krogu]
+etymology_hook: "вокруг is в 'in' + круг 'a circle': in a circle round"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C152-okolo]
 <!-- hl-knowledge: introduces=[RU-LEX-C152-MESTO152-02]; assesses=[] -->
 
 **вокруг** (*vokrúg*) — "around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вокруг** is *в*, "in", with *круг*, "a circle": "in a ring around".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

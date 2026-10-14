@@ -14,6 +14,9 @@ You'll want to know: తలుపు.
 తలుపు (talupu) is the leaf: the panel that swings and shuts. The opening it fills is a different word — వాకిలి in everyday speech, ద్వారం in the formal Sanskrit register. Telugu keeps the hole and the thing that fills it apart, which English manages only when it is being careful.
 తలుపు (talupu) is inherited. That ద్వారం sits beside it doing no daily work is the usual arrangement here: the old word carries the load, the borrowed one keeps the ceremony.
 
+The word, taken apart.
+తలుపు (talupu) is native Dravidian. DEDR 3123 lists talupu, "door", in an entry with Tamil taḷ, "to hinder, obstruct", and Kannada taḷ, "impediment".
+
 What you've built.
 The first of five things standing between the street and a guest.
 
@@ -79,6 +82,9 @@ You'll want to know: ముగ్గు.
 ముగ్గు (muggu) is the design put on the ground outside the door, in rice flour, before the sun is up. It is walked over all day and drawn again the next morning.
 The flour is the point. It is laid where ants and birds will find it, so the welcome begins by feeding something smaller than a guest. Tamil calls the same act கோலம், Kannada ರಂಗೋಲಿ. The word is local; the practice is not.
 
+The word, taken apart.
+The origin of ముగ్గు (muggu) is uncertain. DEDR lists no word of this shape in this sense, and CDIAL has nothing for it.
+
 What you've built.
 Three: the door, the chair, and the mark on the ground in front of both.
 
@@ -111,6 +117,7 @@ You'll want to know: పువ్వు.
 Proto-Dravidian pū, and the family kept it: Tamil பூ, Malayalam പൂ, Kannada ಹೂವು.
 There is that p- to h- once more on the Kannada side — the third time in this book, after పాలు beside ಹಾಲು and పండు beside ಹಣ್ಣು. A sound law you have watched work three times has stopped being a claim; it is a pattern you can predict with, and predicting is the only test a sound law ever gets.
 The plural stem is పూల-, which is about to matter.
+DEDR 4345 lists Telugu pū, pūvu and puvvu, "flower", with Tamil pū and Kannada pūvu. DEDR compares, with a query, Sanskrit puṣpa, "flower" (CDIAL 8303).
 
 What you've built.
 Four.
@@ -141,8 +148,8 @@ Before the new one: what did puvvu mean?
 
 You'll want to know: పూలదండ.
 పూలదండ (pūladaṇḍa) — "a flower garland".
-పూల, flowers, and దండ — the same దండ that gave you దండం, the salutation, one chapter back. Sanskrit daṇḍa is a staff, and by extension a row. A పూలదండ (pūladaṇḍa) is a row of flowers, strung.
-So the greeting and the garland are one word used twice. You say దండం with your hands; you put పూలదండ (pūladaṇḍa) round a neck. Both of them come from a straight line.
+పూల, flowers, and దండ, a garland. It looks like the దండ of దండం, the salutation, one chapter back, but this one is Dravidian: DEDR 3060 lists it with Kannada daṇḍe, "garland, wreath". A పూలదండ (pūladaṇḍa) is a garland of flowers, strung.
+So the greeting and the garland only sound alike. You say దండం with your hands; you put పూలదండ (pūladaṇḍa) round a neck.
 And that closes the welcome: the ముగ్గు (muggu) on the ground, the తలుపు (talupu) opened, the కుర్చీ (kurcī) offered, and a పూలదండ (pūladaṇḍa) of పువ్వులు for the అతిథి who sent no word ahead.
 
 What you've built.

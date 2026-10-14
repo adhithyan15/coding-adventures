@@ -14,7 +14,8 @@ romanization: "lījie"
 concept_tag: HI-COMEIN-TAKE
 prerequisites: [HI-C115-aie, HI-C115-padharie]
 sounds: []
-roots: []
+roots: [sanskrit-labhate]
+etymology_hook: "lījie: the respectful command of lenā 'to take', from Sanskrit labhate 'catches, takes' (CDIAL 10948)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C115-padharie]
 **लीजिए** (*lījie*) — "please take", "here you are", as you hand something over.
 
 It is **लेना**, "to take", with the respectful ending of **बोलिए**. **चाय लीजिए** — "have some tea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लीजिए** (*lījie*) is the respectful command of *lenā*, "to take". CDIAL lists *lenā* under Sanskrit *labhate*, "catches, takes" (CDIAL 10948).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for strange, then the Malayalam for modern
 You'll want to know: കുസൃതിയുള്ള.
 കുസൃതിയുള്ള — kusṛtiyuḷḷa — "naughty, mischievous".
 
+The word, taken apart.
+കുസൃതിയുള്ള (kusṛtiyuḷḷa) joins Sanskrit kusṛti, "trickery, a crooked way", to native -uḷḷa, "that has" (DEDR 697).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for modern, then the Malayalam for naughty
 
 You'll want to know: അനുസരണയുള്ള.
 അനുസരണയുള്ള — anusaraṇayuḷḷa — "obedient".
+
+The word, taken apart.
+അനുസരണയുള്ള (anusaraṇayuḷḷa) joins Sanskrit anusaraṇa, "following", to native -uḷḷa, "that has" (DEDR 697): "having following" is obedience.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for naughty, then the Malayalam for obedie
 You'll want to know: സ്വാർത്ഥമായ.
 സ്വാർത്ഥമായ — svārtthamāya — "selfish".
 
+The word, taken apart.
+സ്വാർത്ഥമായ (svārtthamāya) is Sanskrit svārtha, "one's own aim": sva, "own", and artha, "aim" (CDIAL 638), with native āya, "having become" (DEDR 333). DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for obedient, then the Malayalam for selfi
 You'll want to know: സ്ഥിരമായ.
 സ്ഥിരമായ — sthiramāya — "permanent, regular".
 
+The word, taken apart.
+സ്ഥിരമായ (sthiramāya) joins Sanskrit sthira, "firm, durable" (CDIAL 13771), to native āya, "having become" (DEDR 333). DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for selfish, then the Malayalam for perman
 
 You'll want to know: ഒറ്റ.
 ഒറ്റ — oṟṟa — "single, lone".
+
+The word, taken apart.
+ഒറ്റ (oṟṟa) is native Dravidian: DEDR 990 lists it, "one, single, odd", under the word for "one", with Tamil oṟṟai.
 
 What you've built.
 One more word for this chapter.

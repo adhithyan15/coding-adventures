@@ -14,7 +14,8 @@ romanization: "sāru"
 concept_tag: KA-THINGS121-SARU
 prerequisites: [KA-C121-ungura, KA-C121-bale]
 sounds: []
-roots: []
+roots: [dravidian-caaru-juice]
+etymology_hook: "sāru: native Dravidian, one word with Tamil cāṟu (DEDR 2484)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C121-bale]
 <!-- hl-knowledge: introduces=[KA-LEX-C121-THINGS121-04]; assesses=[] -->
 
 **ಸಾರು** — *sāru* — "rasam, a thin curry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾರು** (*sāru*) is native Dravidian, one word with Tamil *cāṟu* (DEDR 2484). DEDR lists Kannada *sāṟu*, "juice, broth, pepper water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

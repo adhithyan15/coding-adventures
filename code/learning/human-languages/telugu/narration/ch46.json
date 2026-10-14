@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Things You Ask For",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ae963402190d48a0",
+  "sourceHash": "fnv1a64:43b71e1b92faa1b7",
   "lessons": [
     {
       "id": "TE-C46-fruit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c36a216075d6ba3",
+      "sourceHash": "fnv1a64:6a95782cd5ffc734",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పండు (paṇḍu) is native Dravidian, one word with Tamil paḻu, \"to ripen\", and Kannada paṇṇu, \"ripe fruit\" (DEDR 4004). DEDR lists the Telugu as both \"to ripen\" and \"fruit\". DEDR compares Sanskrit phala, \"fruit\" (CDIAL 9051)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -110,7 +121,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -141,7 +152,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dafba1db2e63f145",
+      "sourceHash": "fnv1a64:e49ece9ee53478bc",
       "notice": null,
       "blocks": [
         {
@@ -176,12 +187,23 @@
             },
             {
               "kind": "speech",
-              "text": "Sanskrit has paṭṭa, \"a strip of cloth, a bandage\", and here the borrowing most likely ran the unusual way — out of Dravidian and into Sanskrit, rather than the other direction this book has shown so often. The same strip reached English by a different road: Hindi paṭṭī, a wrapping, is the soldier's puttee."
+              "text": "Sanskrit has paṭṭa, \"a strip of cloth, a bandage\", and here the borrowing may have run the unusual way — into Sanskrit from a non-Aryan source, rather than the other direction this book has shown so often. The same strip reached English by a different road: Hindi paṭṭī, a wrapping, is the soldier's puttee."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of బట్ట (baṭṭa) is uncertain, and DEDR does not list it. It is often set beside Sanskrit paṭṭa, \"cloth, woven silk\", which CDIAL 7700 itself thinks probably came from a non-Aryan source, without naming which."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -192,7 +214,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -232,7 +254,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -263,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1351df6162bb0779",
+      "sourceHash": "fnv1a64:a3d3deeca556f4c9",
       "notice": null,
       "blocks": [
         {
@@ -299,6 +321,10 @@
             {
               "kind": "speech",
               "text": "Put దీప together with a word meaning \"a row\" and you get dīpāvaḷi, \"a row of lamps\" — the festival English spells Diwali. The ending is the tatsama neuter -ం, the same shape already carried by హృదయం and భోజనం."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 6348 lists Sanskrit dīpa, \"lamp\"."
             }
           ]
         },
@@ -385,7 +411,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1664d89ed3064c5e",
+      "sourceHash": "fnv1a64:01911d64715027f5",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +447,10 @@
             {
               "kind": "speech",
               "text": "Notice the doubled ప్ప in the middle. Telugu likes a consonant twice inside a short word — కుక్క, పిల్లి, కన్ను all do it — and the doubling is not decoration: it is the difference between one word and another."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 2674 lists Telugu uppu, \"salt\", with Tamil uppu, Kannada uppu and Malayalam uppu."
             }
           ]
         },
@@ -507,7 +537,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfd48773aa663b0a",
+      "sourceHash": "fnv1a64:923f549de2b4e2ae",
       "notice": null,
       "blocks": [
         {
@@ -543,6 +573,10 @@
             {
               "kind": "speech",
               "text": "So the Telugu word for a book carries an animal skin folded up inside it, and it arrived by the same north-western road as రోజు, which turned out to be Persian too. Two of these five walked in from outside; three were always here."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 8413 takes Sanskrit pustaka from Iranian, comparing Sogdian pwstk, \"book\", and Persian pōst, \"skin\"."
             }
           ]
         },

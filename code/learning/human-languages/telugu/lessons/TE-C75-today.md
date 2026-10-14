@@ -11,7 +11,8 @@ romanization: "ivāḷa"
 concept_tag: TE-TIME-TODAY
 prerequisites: [TE-C74-because, TE-C40-bhojanam]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "ivāḷa: begins with the near-pointing i- 'this' (DEDR 410); DEDR does not list the word itself"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C74-because]
 The farewells gave you రేపు, "tomorrow", inside రేపు కలుద్దాం. The day you are actually standing in had no name until now.
 
 It begins with the same **ఇ-** as ఇక్కడ and ఇది: the near one, the one right here. ఇవాళ is the near day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇవాళ** (*ivāḷa*) begins with the near-pointing *i-*, "this", of DEDR 410. DEDR does not list the word itself, and where its second part comes from is not recorded.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

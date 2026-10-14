@@ -20,6 +20,7 @@ piece: रहा. what it carries: that it is in progress.
 piece: हूँ. what it carries: who, and that it is now.
 रहा is the past participle of रहना, "to stay, to remain." So the sentence says, almost literally, doing — having stayed — I am. The action is pictured as one you are still inside.
 English does the same thing from a different angle: I am doing uses a participle too, and I remain at work is the same metaphor spelled out.
+रहना comes from a reconstructed rahati, "remains" (CDIAL 10666).
 
 Grammar Lens: the stem is bare, and that is the point.
 Look at what happens to the verb in each tense:
@@ -62,6 +63,7 @@ speaker: a man. the three words: कर रहा हूँ (kar rahā hū̃).
 speaker: a woman. the three words: कर रही हूँ (kar rahī hū̃).
 The stem stays bare either way. The copula हूँ is about who is speaking rather than about gender, so it does not move. Only रहा bends, and it bends the way every -आ word you have met bends.
 That is the tidiest arrangement you have seen yet: one word per job, and only the one that describes the action listens to gender.
+रही is a form of रहना, from a reconstructed rahati, "remains" (CDIAL 10666).
 
 Grammar Lens: the same ending, a fourth time.
 [a table of 4 rows, read aloud]
@@ -103,6 +105,7 @@ Only the last word moved when the subject changed from I to he:
 subject: मैं. middle: रहा / रही. last: हूँ.
 subject: वह. middle: रहा / रही. last: है.
 Two independent dials. The middle word answers what is the subject like and the last word answers which person is it. Turning one does nothing to the other, which is why you can build any combination without a table to memorise.
+रहा is a form of रहना, from a reconstructed rahati, "remains" (CDIAL 10666).
 
 Grammar Lens: it works on things as well as people.
 [a table of 2 rows, read aloud]
@@ -144,6 +147,7 @@ subject: वह. middle: रहा. last: है.
 subject: हम, वे, आप. middle: रहे. last: हैं.
 रहे is the plural of the same -आ / -ई / -ए set. हैं is the plural copula. Nothing here is new — it is the two dials you already have, both turned one notch.
 At the तुम level the last word is हो: तुम क्या कर रहे हो?
+रहे is a form of रहना, from a reconstructed rahati, "remains" (CDIAL 10666).
 
 Grammar Lens: the question a listening paper asks.
 [a table of 2 rows, read aloud]
@@ -184,6 +188,7 @@ The word, taken apart.
 This distinction is worth pausing on, because English speakers have it and most European learners of Hindi do not. French, German and Spanish all translate both of those lines with a single present tense; Hindi and English each keep two.
 So the good news is that your instinct is already right. Where English says I am doing, Hindi says कर रहा हूँ (kar rahā hū̃). Where English says I do, Hindi says करता हूँ. Translate the shape, not the words.
 One caution. Hindi leans on the habit form in a place English does not: for something happening in the near future that is already arranged, Hindi is happy with the habitual, where English reaches for I am.
+वर्तमान is Sanskrit vartamāna, "existing, present", a tatsama.
 
 Grammar Lens: which word in the sentence tells you.
 [a table of 2 rows, read aloud]

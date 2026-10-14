@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:1f08801f2295c632",
+  "sourceHash": "fnv1a64:cf3c1bfd4e77ad16",
   "lessons": [
     {
       "id": "ML-C32-undu",
@@ -951,7 +951,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ebd613051edd57d",
+      "sourceHash": "fnv1a64:16713c2c6a0f2c3b",
       "notice": null,
       "blocks": [
         {
@@ -986,7 +986,7 @@
             },
             {
               "kind": "speech",
-              "text": "Native Dravidian, and the sisters kept the root — Tamil அறி (aṟi), Kannada ಅರಿ (ari) — though for everyday knowing each reached elsewhere: Tamil தெரியும் (teriyum), Telugu తెలుసు (telusu). Malayalam stayed with aṟi-."
+              "text": "Native Dravidian (DEDR 314), cognate with Tamil and Kannada; the sisters kept the root — Tamil அறி (aṟi), Kannada ಅರಿ (ari) — though for everyday knowing each reached elsewhere: Tamil தெரியும் (teriyum), Telugu తెలుసు (telusu). Malayalam stayed with aṟi-."
             }
           ]
         },

@@ -14,7 +14,8 @@ romanization: "klass"
 concept_tag: RU-THINGS110-CLASS
 prerequisites: [RU-C110-boss, RU-C110-profession]
 sounds: []
-roots: []
+roots: [classis-latin]
+etymology_hook: "класс came under Peter the Great from French classe, Latin classis 'a rank, a division'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C110-profession]
 <!-- hl-knowledge: introduces=[RU-LEX-C110-THINGS110-05]; assesses=[] -->
 
 **класс** (*klass*) — "a class".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**класс** — from Peter the Great's time; it comes from French *classe*, from Latin *classis*, "a rank, a division" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

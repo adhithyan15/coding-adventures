@@ -14,7 +14,8 @@ romanization: "soséd"
 concept_tag: RU-PEOPLE-NEIGHBOUR
 prerequisites: [RU-C36-grandson, RU-C36-granddaughter]
 sounds: []
-roots: []
+roots: [pie-sed]
+etymology_hook: "сосед ← Proto-Slavic *sǫsědŭ, 'one who sits together', from со- 'with' and the root of сидеть 'to sit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C36-granddaughter]
 <!-- hl-knowledge: introduces=[RU-LEX-C37-PEOPLE-01]; assesses=[] -->
 
 **сосед** (*soséd*) — "a neighbour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сосед** ← Proto-Slavic *\*sǫsědŭ* — inherited: *\*sǫ-*, "together", with the root of *сидеть*, "to sit", so a neighbour is "one who sits beside you". Vasmer compares Sanskrit *saṃsád*, "assembly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

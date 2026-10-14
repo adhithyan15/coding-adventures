@@ -14,7 +14,8 @@ romanization: "mīnu"
 concept_tag: KA-THINGS122-MINU
 prerequisites: [KA-C122-uppinakayi, KA-C122-motte]
 sounds: []
-roots: []
+roots: [dravidian-miin-fish]
+etymology_hook: "mīnu: native Dravidian, one word with Tamil mīṉ and Telugu mīnu (DEDR 4885)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C122-motte]
 <!-- hl-knowledge: introduces=[KA-LEX-C122-THINGS122-04]; assesses=[] -->
 
 **ಮೀನು** — *mīnu* — "a fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೀನು** (*mīnu*) is native Dravidian, one word with Tamil *mīṉ* and Telugu *mīnu* (DEDR 4885). DEDR gives Kannada *mīn*. DEDR 4885 compares Sanskrit *mīna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

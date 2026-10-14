@@ -11,7 +11,8 @@ romanization: "khacitavāgi"
 concept_tag: KA-RESP-CERTAINLY
 prerequisites: [KA-C95-oh, KA-C95-maybe]
 sounds: []
-roots: []
+roots: [sanskrit-khacita]
+etymology_hook: "khacitavāgi: Sanskrit khacita 'set, fixed' + the adverb ending -āgi"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C95-maybe]
 
 **ಖಚಿತವಾಗಿ** (*khacitavāgi*) — "certainly, for sure", with the **‑ಆಗಿ** ending of
 **ನಿಧಾನವಾಗಿ**. **ಖಂಡಿತ** (*khaṇḍita*) says the same with more force.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಖಚಿತವಾಗಿ** (*khacitavāgi*) is *khacita*, "certain, fixed", from Sanskrit *khacita*, "inlaid, set", with the adverb ending *-āgi*, "in a … way". What is set in place is certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

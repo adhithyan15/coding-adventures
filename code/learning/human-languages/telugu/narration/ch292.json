@@ -4,7 +4,7 @@
   "chapter": 292,
   "title": "Hut, Canal, Building, Fort, Factory",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:37af6d140abea9d0",
+  "sourceHash": "fnv1a64:4eabc6fd5180ae2a",
   "lessons": [
     {
       "id": "TE-C292-gudise",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d7590584d533cd7",
+      "sourceHash": "fnv1a64:b75bcd20fe0cb44c",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గుడిసె (guḍise) is native Dravidian. DEDR 1655 lists guḍise, \"hut, cottage\", with Kannada guḍisalu, \"hut\", and Tamil kuṭical, \"hut\". DEDR compares Sanskrit kuṭī, \"hut\" (CDIAL 3232), which CDIAL partly takes from Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4bb21678f4563459",
+      "sourceHash": "fnv1a64:52eabf6d7397979f",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాలువ (kāluva) is native Dravidian. DEDR 1480 lists kāluva, \"canal, channel\", with Kannada kāluve, \"water-course\", and Tamil kāl, \"irrigation channel\". DEDR compares Sanskrit khalla, \"trench, canal\" (CDIAL 3849)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ffdb0f9d0e88240",
+      "sourceHash": "fnv1a64:985476c690b53c27",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "భవనం (bhavanaṁ) is Sanskrit bhavana, \"place of abode\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 9417)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31423aa2c2dbda5a",
+      "sourceHash": "fnv1a64:0445a71ba1de956f",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కోట (kōṭa) is native Dravidian. DEDR 2207 lists kōṭa, \"fort\", with Tamil kōṭṭai and Kannada kōṭe, \"fort\". DEDR compares Sanskrit kōṭṭa, \"fort\" (CDIAL 3500)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25a8272a1b288aaf",
+      "sourceHash": "fnv1a64:aee72379a634ee76",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కార్ఖానా (kārkhānā) is a loan from Persian kārkhāna, \"workshop, factory\", which came through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

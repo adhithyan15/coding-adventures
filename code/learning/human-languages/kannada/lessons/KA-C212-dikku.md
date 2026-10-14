@@ -14,7 +14,8 @@ romanization: "dikku"
 concept_tag: KA-STHALA212-DIKKU
 prerequisites: [KA-C212-citramandira, KA-C212-maidana]
 sounds: []
-roots: []
+roots: [sanskrit-dish]
+etymology_hook: "dikku ← Sanskrit diś 'direction, region', reshaped as a tadbhava (CDIAL 6339)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C212-maidana]
 <!-- hl-knowledge: introduces=[KA-LEX-C212-STHALA212-05]; assesses=[] -->
 
 **ದಿಕ್ಕು** — *dikku* — "a direction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದಿಕ್ಕು** (*dikku*) comes from Sanskrit *diś*, "direction, region", reshaped to Kannada sounds: a tadbhava (CDIAL 6339). Kannada doubled the final sound and added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

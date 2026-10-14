@@ -11,6 +11,7 @@ concept_tag: ES-ASK-SUFICIENTE
 prerequisites: [ES-C467-producir, ES-C60-bastante, ES-C352-escaso]
 sounds: [stress-penultimate, diphthong-ie]
 roots: [sufficere-latin]
+etymology_hook: "suficiente ← Latin sufficientem, from sufficere: sub- + facere — English sufficient"
 duration:
   max_seconds: 275
 requires:

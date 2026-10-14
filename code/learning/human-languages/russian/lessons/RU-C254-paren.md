@@ -14,7 +14,8 @@ romanization: "páren"
 concept_tag: RU-VESHCH254-PAREN
 prerequisites: [RU-C253-trolleybus, RU-C254-devochka]
 sounds: []
-roots: []
+roots: [slavic-parobuku]
+etymology_hook: "парень is probably from *parę, a diminutive of паробок 'a young man, a farmhand'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C254-devochka]
 <!-- hl-knowledge: introduces=[RU-LEX-C254-VESHCH254-02]; assesses=[] -->
 
 **парень** (*páren*) — "a lad, a boyfriend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**парень** — Vasmer thinks it probably comes from *\*parę*, a diminutive of *паробок*, "a young man, a farmhand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

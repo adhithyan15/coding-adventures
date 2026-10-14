@@ -14,7 +14,8 @@ romanization: "endigū"
 concept_tag: KA-ILLA154-ENDIGU
 prerequisites: [KA-C153-alu, KA-C154-yaru]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "endigū: native endu 'when' (DEDR 5151) + -igū 'even at'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C154-yaru]
 <!-- hl-knowledge: introduces=[KA-LEX-C154-ILLA154-02]; assesses=[] -->
 
 **ಎಂದಿಗೂ** — *endigū* — "never (with a negative verb)". **ನಾನು ಎಂದಿಗೂ ಮಾಂಸ ತಿನ್ನುವುದಿಲ್ಲ** — *nānu endigū māṃsa tinnuvudilla* — "I never eat meat."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಂದಿಗೂ** (*endigū*) is native Dravidian: *endu*, "when", which DEDR 5151 lists on the question base *e-*, with *-igū*, "even at": with a "not" verb, "not even at any time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

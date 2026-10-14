@@ -14,7 +14,8 @@ romanization: "rabótat"
 concept_tag: RU-VERB-RABOTAT
 prerequisites: [RU-C37-pupil, RU-C37-work]
 sounds: []
-roots: []
+roots: [slavic-orbu]
+etymology_hook: "работать is работа 'work' made into a verb with -ать"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C37-work]
 <!-- hl-knowledge: introduces=[RU-LEX-C38-VERB1-01]; assesses=[] -->
 
 **работать** (*rabótat*) — "to work". The verb of **работа**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**работать** is *работа*, "work", made into a verb with *-ать*. *работа* goes back to a Proto-Slavic word for "toil, slavery", built on the root of *раб*, "slave" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

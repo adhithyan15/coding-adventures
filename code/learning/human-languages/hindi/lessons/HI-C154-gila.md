@@ -14,7 +14,8 @@ romanization: "gīlā"
 concept_tag: HI-QUAL154-GILA
 prerequisites: [HI-C153-baink, HI-C154-garam]
 sounds: []
-roots: []
+roots: [indo-aryan-grilla]
+etymology_hook: "gīlā ← *grilla 'wet, damp', a reconstructed form; a tadbhava (CDIAL 4386)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C154-garam]
 <!-- hl-knowledge: introduces=[HI-LEX-C154-QUAL154-02]; assesses=[] -->
 
 **गीला** — *gīlā* — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गीला** (*gīlā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*grilla*, "wet, damp", a form CDIAL reconstructs from its descendants (CDIAL 4386). CDIAL calls a further link with *\*gṛdla* very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

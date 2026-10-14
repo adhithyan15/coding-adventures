@@ -14,7 +14,8 @@ romanization: "māṁsa"
 concept_tag: KA-THINGS122-MAMSA
 prerequisites: [KA-C122-motte, KA-C122-minu]
 sounds: []
-roots: []
+roots: [sanskrit-mamsa]
+etymology_hook: "māṁsa ← Sanskrit māṃsa 'flesh', a tatsama (CDIAL 9982)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C122-minu]
 <!-- hl-knowledge: introduces=[KA-LEX-C122-THINGS122-05]; assesses=[] -->
 
 **ಮಾಂಸ** — *māṁsa* — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಾಂಸ** (*māṁsa*) is Sanskrit *māṃsa*, "flesh", taken over whole as a learned loan, a tatsama (CDIAL 9982).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kāgaz"
 concept_tag: HI-THG246-KAGAZ
 prerequisites: [HI-C246-loha, HI-C246-cadi]
 sounds: []
-roots: []
+roots: [persian-kaghaz]
+etymology_hook: "kāgaz: usually traced to Persian kāghaz 'paper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C246-cadi]
 <!-- hl-knowledge: introduces=[HI-LEX-C246-THG246-03]; assesses=[] -->
 
 **काग़ज़** — *kāgaz* — "paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काग़ज़** (*kāgaz*) is a loan, usually traced to Persian *kāghaz*, "paper".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

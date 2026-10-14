@@ -15,6 +15,9 @@ The pointing pattern again, and this time on time rather than manner. i- is the 
 Tamil says இப்போது (ippōtu) — the same two pieces, put together the same way.
 The word ends on ൾ, the chillu already met at the end of നിങ്ങൾ. Kannada's word for now, ಈಗ (īga), is built from its own near-pointer and shares nothing else with this one.
 
+The word, taken apart.
+ഇപ്പോൾ (ippōḷ) is native Dravidian, "this time": the near-pointing base of itŭ (DEDR 410) joined to a word for "time" (DEDR 4559, with Tamil poḻutu, pōtu and Kannada pottu).
+
 What you've built.
 The first of five words for going away.
 
@@ -46,6 +49,9 @@ You'll want to know: മറ്റന്നാൾ.
 Three pieces, and the last of them this book has already taught: നാൾ, the native day-word. Before it sits മറ്റ് (maṟṟŭ), 'other', and a middle piece pointing at a particular day. Put together: the other day along.
 Malayalam does not stop there. There is a word for the day after that one as well, and speakers use it without ceremony, where an English speaker would give up and name a date.
 Kannada builds its own with the same idea and different parts, ನಾಡಿದ್ದು (nāḍiddu), and its day-word is the cousin of ours.
+
+The word, taken apart.
+മറ്റന്നാൾ (maṟṟannāḷ) is native Dravidian, built from a word for "other" (DEDR 4766, with Tamil maṟṟu), a short pointing piece, and nāḷ, "day" (DEDR 3656, with Tamil nāḷ).
 
 What you've built.
 Two: now, and the day after tomorrow.
@@ -85,6 +91,7 @@ The word, taken apart.
 പറ (paṟa) is the stem, and the റ in it is the hard ṟ — made further back in the mouth than the ordinary r, and one of the letters this script keeps apart where English has a single shape.
 Where the other three verbs in this strand came from Sanskrit nouns — cintikkuka from ചിന്ത, cōdikkuka from a Sanskrit word for pushing — this one did not. പറ is a native Dravidian stem, and it is the one this language reaches for when somebody speaks, with no other job attached.
 -ഉക (-uka) is the dictionary ending you have seen on every verb in this book: aṟiyuka, cintikkuka, cōdikkuka, cērkkuka.
+DEDR 4031 lists paṟayuka with Tamil paṟai and Kannada paṟe.
 
 Guided Practice.
 [pause 1 second]
@@ -114,6 +121,9 @@ You'll want to know: യാത്ര.
 Sanskrit yātrā, off a root meaning simply 'to go'. A journey is a going, with a noun ending on it.
 Malayalam then does something with the word that Sanskrit did not: യാത്ര (yātra) പറയുക (paṟayuka), literally 'to say journey', is how a speaker takes leave of a household. The noun for travelling became the verb phrase for saying goodbye, because what you announce at the door is that you are going.
 Kannada's ಪ್ರಯಾಣ (prayāṇa) is the same root with a prefix in front of it — a going-forth. The sisters borrowed from the same shelf and reached for neighbouring jars.
+
+The word, taken apart.
+യാത്ര (yātra) from Sanskrit yātrā, "journey", taken over whole as a tatsama (CDIAL 10456). It is built on the Sanskrit root yā, "to go".
 
 What you've built.
 Three. Now, the day after tomorrow, a journey.
@@ -147,6 +157,9 @@ A compound with its seam showing. പുറം (puṟaṁ) is 'the outside, the 
 Malayalam builds a great many verbs this way, a noun and a light verb sitting next to each other, and this book has already shown one: the work-verb made of 'work' plus 'do'.
 Kannada says ಹೊರಡು (horaḍu), built on its own outside-word, and that word begins with the h where ours begins with a p. The shift turns up again.
 
+The word, taken apart.
+പുറപ്പെടുക (puṟappeṭuka) is native Dravidian, "to come to be outside": a word for "the outside" (DEDR 4333, with Tamil puṟam) joined to the verb "to happen, fall into" (DEDR 3853, with Tamil paṭu and Kannada paḍu).
+
 What you've built.
 Four. Now, the day after tomorrow, a journey, setting out.
 
@@ -177,6 +190,9 @@ You'll want to know: വിട.
 A short word off a plain verb: വിടുക (viṭuka) is 'to let go, to release'. വിട (viṭa) is the letting-go itself.
 And it is used exactly as the journey-word was: വിട (viṭa) പറയുക (paṟayuka), 'to say farewell'. Malayalam has two ways to announce a departure, one naming the going and one naming the release, and both are built by hanging the speaking-verb off a noun.
 Kannada's word here, ಬೀಳ್ಕೊಡುಗೆ (bīḷkoḍuge), is longer and made of its own native parts — a giving of leave. Three languages could hardly agree less on how to say goodbye, and each of them is transparent once opened.
+
+The word, taken apart.
+വിട (viṭa) is native Dravidian, the noun of the verb "to let go, to release"; DEDR 5393 lists the root with Tamil viṭu, Kannada biḍu and Telugu viḍu. DEDR 5393 notes Sanskrit avamocana, "inn", as a translation of Tamil viṭuti.
 
 What you've built.
 Five, and the run is closed: now, the day after tomorrow, a journey, setting out, a farewell.

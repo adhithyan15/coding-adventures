@@ -14,7 +14,8 @@ romanization: "pūṭa"
 concept_tag: TE-SAMAYAM290-PUTA
 prerequisites: [TE-C289-suryodayam, TE-C290-pagalu]
 sounds: []
-roots: []
+roots: [telugu-puta-mealtime]
+etymology_hook: "pūṭa: origin uncertain; DEDR and CDIAL list no word of this shape in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C290-pagalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C290-SAMAYAM290-02]; assesses=[] -->
 
 **పూట** — *pūṭa* — "a half of the day (a mealtime)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **పూట** (*pūṭa*) is uncertain. DEDR and CDIAL list no word of this shape meaning "half a day, a mealtime".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

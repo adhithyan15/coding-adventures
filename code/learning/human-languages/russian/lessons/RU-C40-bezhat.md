@@ -14,7 +14,8 @@ romanization: "bezhát"
 concept_tag: RU-VERB-BEZHAT
 prerequisites: [RU-C40-sidet, RU-C40-stoyat]
 sounds: []
-roots: []
+roots: [pie-bhegw]
+etymology_hook: "бежать ← Proto-Slavic *běžati; Lithuanian bėgti 'to run' and Greek phobos 'flight, fear' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C40-stoyat]
 <!-- hl-knowledge: introduces=[RU-LEX-C40-VERB3-04]; assesses=[] -->
 
 **бежать** (*bezhát*) — "to run".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бежать** ← Proto-Slavic *\*běžati* — inherited, a cousin of Lithuanian *bėgti*, "to run", and of Greek *phébomai*, "I flee", and *phóbos*, "flight, fear" (Vasmer), the source of English *phobia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

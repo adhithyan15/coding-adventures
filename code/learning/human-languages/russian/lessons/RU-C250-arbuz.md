@@ -14,7 +14,8 @@ romanization: "arbúz"
 concept_tag: RU-VESHCH250-ARBUZ
 prerequisites: [RU-C249-baranina, RU-C249-vetchina]
 sounds: []
-roots: []
+roots: [persian-kharbuza]
+etymology_hook: "арбуз came through Kipchak harbuz and Turkish karpuz from Persian xarbuza 'a melon'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C249-vetchina]
 <!-- hl-knowledge: introduces=[RU-LEX-C250-VESHCH250-01]; assesses=[] -->
 
 **арбуз** (*arbúz*) — "a watermelon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**арбуз** — recorded in the Domostroy; it came through Kipchak *xarbuz* and Turkish *karpuz* from Persian *xarbuza*, "a melon", literally "donkey melon" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mókryy"
 concept_tag: RU-QUAL128-WET
 prerequisites: [RU-C128-ready, RU-C128-dangerous]
 sounds: []
-roots: []
+roots: [slavic-mokru]
+etymology_hook: "мокрый ← Proto-Slavic *mokrŭ; Lithuanian makonė 'puddle' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C128-dangerous]
 <!-- hl-knowledge: introduces=[RU-LEX-C128-QUAL128-04]; assesses=[] -->
 
 **мокрый** (*mókryy*) — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мокрый** ← Proto-Slavic *\*mokrŭ* — inherited. Vasmer relates it to Lithuanian *makonė*, "a puddle", and Irish *móin*, "a bog".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nānī"
 concept_tag: HI-GRAND-NANI
 prerequisites: [HI-C116-dadi, HI-C116-nana]
 sounds: []
-roots: []
+roots: [indo-aryan-nanna]
+etymology_hook: "nānī ← *nānna 'a term of respect for an older relative', a reconstructed form; a tadbhava (CDIAL 7059)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C116-nana]
 
 **नानी का घर** — "grandmother's house", the mother's family home, where many summer holidays
 are spent.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नानी** (*nānī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*nānna*, "a term of respect for an older relative", a form CDIAL reconstructs from its descendants (CDIAL 7059). *nānī* is its feminine. CDIAL compares Sanskrit *nanā*, "mother".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ghṛṇā"
 concept_tag: HI-THG257-GHRNA
 prerequisites: [HI-C257-nabz, HI-C257-irsya]
 sounds: []
-roots: []
+roots: [sanskrit-ghrna]
+etymology_hook: "ghṛṇā ← Sanskrit ghṛṇā 'disgust, contempt', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C257-irsya]
 <!-- hl-knowledge: introduces=[HI-LEX-C257-THG257-03]; assesses=[] -->
 
 **घृणा** — *ghṛṇā* — "hatred".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घृणा** (*ghṛṇā*) is Sanskrit *ghṛṇā*, "disgust, contempt", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

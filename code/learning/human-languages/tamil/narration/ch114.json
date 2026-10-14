@@ -4,7 +4,7 @@
   "chapter": 114,
   "title": "In the middle, Street, Bridge, Park, Temple",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:efc96fe84d7c64c3",
+  "sourceHash": "fnv1a64:7d31251345381e5e",
   "lessons": [
     {
       "id": "TA-C114-natuvil",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15cd01cfa3ca5c5d",
+      "sourceHash": "fnv1a64:3c2fae7d5355f7f5",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "பூங்கா (pūṅkā) is native: pū, \"flower\" (DEDR 4345), and kā, \"grove, garden\" (DEDR 1418): \"flower-garden\"."
+              "text": "பூங்கா (pūṅkā) is native: pū, \"flower\" (DEDR 4345), and kā, \"grove, garden\" (DEDR 1418): \"flower-garden\". DEDR compares Sanskrit kānana, \"forest\", and, with a query, puṣpa, \"flower\"."
             }
           ]
         },

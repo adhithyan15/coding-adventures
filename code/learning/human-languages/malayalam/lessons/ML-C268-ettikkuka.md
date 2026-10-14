@@ -14,7 +14,8 @@ romanization: "ettikkuka"
 concept_tag: ML-VERB-ETTIKKUKA
 prerequisites: [ML-C268-putukkuka, ML-C268-rajisrrar-ceyyuka]
 sounds: []
-roots: []
+roots: [dravidian-ettu-reach]
+etymology_hook: "ettikkuka: native Dravidian, 'make arrive'; Tamil eytu (DEDR 809)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C268-rajisrrar-ceyyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C268-KRIYA268-05]; assesses=[] -->
 
 **എത്തിക്കുക** — *ettikkuka* — "to deliver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എത്തിക്കുക** (*ettikkuka*) is native Dravidian, the causative of the verb "to reach, arrive"; DEDR 809 lists the root with Tamil *eytu* and Kannada *aydu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

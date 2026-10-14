@@ -14,7 +14,8 @@ romanization: "rāgi"
 concept_tag: KA-THINGS125-RAGI
 prerequisites: [KA-C125-vade, KA-C125-uppittu]
 sounds: []
-roots: []
+roots: [dravidian-raagi-millet]
+etymology_hook: "rāgi: native Dravidian, one word with Tamil irāki and Telugu rāgi (DEDR 812)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C125-uppittu]
 <!-- hl-knowledge: introduces=[KA-LEX-C125-THINGS125-05]; assesses=[] -->
 
 **ರಾಗಿ** — *rāgi* — "finger millet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರಾಗಿ** (*rāgi*) is native Dravidian, one word with Tamil *irāki* and Telugu *rāgi* (DEDR 812). DEDR 812 compares Sanskrit *rāgā*, a lexicon word for the same grain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

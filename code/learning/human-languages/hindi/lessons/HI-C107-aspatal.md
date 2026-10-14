@@ -14,7 +14,8 @@ romanization: "aspatāl"
 concept_tag: HI-DOCTOR-HOSPITAL
 prerequisites: [HI-C106-tabiyat, HI-C107-doctor]
 sounds: []
-roots: []
+roots: [english-hospital]
+etymology_hook: "aspatāl ← English hospital"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C107-doctor]
 
 It is English *hospital*, reshaped to fit Hindi sounds. **अस्पताल कहाँ है?** — "where is the
 hospital?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अस्पताल** (*aspatāl*) is a loan from English *hospital*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 86,
   "title": "The One It Is Done To",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e824ce3991a574df",
+  "sourceHash": "fnv1a64:c389457ef2c3f55d",
   "lessons": [
     {
       "id": "TA-C86-ai",
@@ -367,7 +367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c54a64cdc6ce53b",
+      "sourceHash": "fnv1a64:f01d099c850b42ab",
       "notice": null,
       "blocks": [
         {
@@ -437,7 +437,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "தேநீர் / தேநீரை (tēnīr / tēnīrai) is tēnīr, \"tea\", met earlier, with the accusative -ai. Tēnīr is tē, the travelling word for tea, welded onto native nīr, \"water\" (DEDR 3690)."
+              "text": "தேநீர் / தேநீரை (tēnīr / tēnīrai) is tēnīr, \"tea\", with the accusative -ai. Tēnīr is the travelling word tē, \"tea\", and native nīr, \"water\" (DEDR 3690; it compares Sanskrit nīra)."
             }
           ]
         },

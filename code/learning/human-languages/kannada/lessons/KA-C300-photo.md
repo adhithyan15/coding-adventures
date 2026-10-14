@@ -14,7 +14,8 @@ romanization: "phōṭō"
 concept_tag: KA-VASTU300-PHOTO
 prerequisites: [KA-C299-aparicita, KA-C299-hiriyaru]
 sounds: []
-roots: []
+roots: [english-photo]
+etymology_hook: "phōṭō ← English photo"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C299-hiriyaru]
 <!-- hl-knowledge: introduces=[KA-LEX-C300-VASTU300-01]; assesses=[] -->
 
 **ಫೋಟೋ** — *phōṭō* — "a photo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಫೋಟೋ** (*phōṭō*) is a loan from English *photo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

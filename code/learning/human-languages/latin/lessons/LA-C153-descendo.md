@@ -13,7 +13,8 @@ gloss: "to go down"
 concept_tag: LA-VERB-DESCENDO
 prerequisites: [LA-C153-aedifico, LA-C153-ascendo]
 sounds: []
-roots: []
+roots: [descendere-latin, scandere-latin]
+etymology_hook: "dēscendō 'to go down' — dē 'down from' + scandō 'to climb'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C153-ascendo]
 <!-- hl-knowledge: introduces=[LA-LEX-C153-QUAL153-05]; assesses=[] -->
 
 **dēscendō, dēscendere** — "to go down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēscendō** is *dē*, "down from", with *scandō*, "to climb" (EtymDB 2.1): to climb down.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

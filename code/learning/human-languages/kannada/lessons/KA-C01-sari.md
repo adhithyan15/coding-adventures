@@ -12,6 +12,7 @@ concept_tag: RESPONSE-OKAY
 prerequisites: [KA-C01-haudu]
 sounds: [sa, ri-vowel-sign]
 roots: [sari]
+etymology_hook: "sari: origin uncertain; usually traced to Sanskrit sadṛśa 'like' through Prakrit sarisa (CDIAL 13120)"
 duration:
   max_seconds: 240
 requires:
@@ -55,10 +56,12 @@ smoothly Kannada's round letters read.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[KA-LEX-C01-SARI-01]; assesses=[] -->
 
-**ಸರಿ** (*sari*) is native Dravidian for **"correct, even, right,"** and by an
+**ಸರಿ** (*sari*) means **"correct, even, right,"** and by an
 easy step, **"okay, agreed."** It is the verbal nod of Kannada, just as it is
 of Tamil (**சரி**, *sari*) — the **same word** across the family. Doubled,
 *sari sari*, it means "yes, yes, alright."
+
+Its origin is uncertain. DEDR has no entry for *sari* in this sense, and the usual account traces it to Sanskrit *sadṛśa*, "like, equal", through a Prakrit form *sarisa* (CDIAL 13120).
 
 ## Grammar Lens: one shared Dravidian word, two scripts
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C01-SARI-02]; assesses=[] -->

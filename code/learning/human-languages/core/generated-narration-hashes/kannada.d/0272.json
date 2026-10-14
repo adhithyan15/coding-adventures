@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 272,
-  "sourceHash": "fnv1a64:a77b8971cbec7559",
+  "sourceHash": "fnv1a64:f327623092e9e443",
   "lessonIds": [
     "KA-C272-cellu",
     "KA-C272-suri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch272.txt",
   "json": "kannada/narration/ch272.json",
-  "textHash": "fnv1a64:bad6985d4145b17b",
-  "jsonHash": "fnv1a64:2d650ce566963ca7",
+  "textHash": "fnv1a64:d05585e7ae1ebc4b",
+  "jsonHash": "fnv1a64:f839cb1d9aeb972d",
   "findings": []
 }

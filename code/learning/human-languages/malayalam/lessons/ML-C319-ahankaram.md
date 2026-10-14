@@ -14,7 +14,8 @@ romanization: "ahaṅkāraṁ"
 concept_tag: ML-GUNAM319-AHANKARAM
 prerequisites: [ML-C319-vinayam, ML-C319-svabhavam]
 sounds: []
-roots: []
+roots: [sanskrit-ahamkara]
+etymology_hook: "ahaṅkāraṁ ← Sanskrit ahaṁkāra 'self-consciousness, pride', a tatsama (CDIAL 991)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C319-svabhavam]
 <!-- hl-knowledge: introduces=[ML-LEX-C319-GUNAM319-04]; assesses=[] -->
 
 **അഹങ്കാരം** — *ahaṅkāraṁ* — "arrogance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അഹങ്കാരം** (*ahaṅkāraṁ*) ← Sanskrit *ahaṁkāra*, "self-consciousness, pride", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 991). Its parts are *aham*, "I", and *kāra*, "making": the making of an "I".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

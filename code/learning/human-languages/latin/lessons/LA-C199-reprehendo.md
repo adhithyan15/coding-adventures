@@ -13,7 +13,8 @@ gloss: "to blame, to criticise"
 concept_tag: LA-VERB-REPREHENDO
 prerequisites: [LA-C199-comparo, LA-C199-persuadeo]
 sounds: []
-roots: []
+roots: [reprehendere-latin, prehendere-latin]
+etymology_hook: "reprehendō 'to blame' — re- 'back' + prehendō 'to seize'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C199-persuadeo]
 <!-- hl-knowledge: introduces=[LA-LEX-C199-ACT199-03]; assesses=[] -->
 
 **reprehendō, reprehendere** — "to blame, to criticise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reprehendō** is *re-*, "back", with *prehendō*, "to seize" (EtymDB 2.1): to pull back, to hold someone back with blame.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "kappŭ"
 concept_tag: ML-TABLE-CUP
 prerequisites: [ML-C134-glass, ML-C134-bottle]
 sounds: []
-roots: []
+roots: [english-cup]
+etymology_hook: "kappŭ ← English cup"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C134-bottle]
 <!-- hl-knowledge: introduces=[ML-LEX-C134-TABLE-03]; assesses=[] -->
 
 **കപ്പ്** (*kappŭ*) — "a cup", from English. **ഒരു കപ്പ് ചായ** — "a cup of tea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കപ്പ്** (*kappŭ*) ← English *cup*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a helmet, then the Kannada for a diction
 You'll want to know: ಜೇನುನೊಣ.
 ಜೇನುನೊಣ — jēnunoṇa — "a bee".
 
+The word, taken apart.
+ಜೇನುನೊಣ (jēnunoṇa) is native Dravidian: jēnu, "honey", one word with Tamil tēṉ (DEDR 3268), and noṇa, "a fly" (DEDR 3715): "the honey fly". DEDR 3268 compares, with a query, Prakrit tiṇisa, "honeycomb".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a dictionary, then the Kannada for a bee
 
 You'll want to know: ಗುಬ್ಬಚ್ಚಿ.
 ಗುಬ್ಬಚ್ಚಿ — gubbacci — "a sparrow".
+
+The word, taken apart.
+ಗುಬ್ಬಚ್ಚಿ (gubbacci) is native Dravidian, one word with Tamil kuruvi and Malayalam kuruvi (DEDR 1793). DEDR lists gubbacci, "a small bird, a sparrow".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a bee, then the Kannada for a sparrow.
 You'll want to know: ಮೊಸಳೆ.
 ಮೊಸಳೆ — mosaḷe — "a crocodile".
 
+The word, taken apart.
+ಮೊಸಳೆ (mosaḷe) is native Dravidian, one word with Tamil mutalai, Telugu mosali and Malayalam mutala (DEDR 4952). DEDR lists mosaḷe, masaḷe, "crocodile". DEDR 4952 compares Sanskrit mācala.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a sparrow, then the Kannada for a crocod
 You'll want to know: ಚಿರತೆ.
 ಚಿರತೆ — cirate — "a leopard".
 
+The word, taken apart.
+ಚಿರತೆ (cirate) is native Dravidian, one word with Tamil ciṟuttai (DEDR 2590). DEDR lists ciṟate, "the hunting leopard".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a crocodile, then the Kannada for a leop
 
 You'll want to know: ಬಾಲ.
 ಬಾಲ — bāla — "a tail".
+
+The word, taken apart.
+ಬಾಲ (bāla) is one of the words DEDR lists among Indo-Aryan loans (DEDR App. 57), beside Tamil vāl, "tail": it goes back to Sanskrit vāla, "tail, hair" (CDIAL 11572).
 
 What you've built.
 One more word for this chapter.

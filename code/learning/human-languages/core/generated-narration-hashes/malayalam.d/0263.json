@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 263,
-  "sourceHash": "fnv1a64:3d1eeeec50b1c9ee",
+  "sourceHash": "fnv1a64:bcef8a7449e32597",
   "lessonIds": [
     "ML-C263-asari",
     "ML-C263-mestiri",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch263.txt",
   "json": "malayalam/narration/ch263.json",
-  "textHash": "fnv1a64:7e7a431280ff2b5b",
-  "jsonHash": "fnv1a64:c6c15ff512be3160",
+  "textHash": "fnv1a64:b6842b0627cde47c",
+  "jsonHash": "fnv1a64:46adffe6ede7c7ea",
   "findings": []
 }

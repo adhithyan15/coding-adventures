@@ -47,7 +47,7 @@ reviews_of: [TA-C126-eri]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**குளம்** (*kuḷam*) is native Dravidian. DEDR 1828 lists Malayalam *kuḷam*, Kannada *koḷa* and Telugu *kolanu*.
+**குளம்** (*kuḷam*) is native Dravidian. DEDR 1828 lists Malayalam *kuḷam*, Kannada *koḷa* and Telugu *kolanu*. The entry compares Sanskrit *kūla*, "pond".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a column"
 concept_tag: LA-RES280-COLUMNA
 prerequisites: [LA-C279-puls, LA-C280-turris]
 sounds: []
-roots: []
+roots: [columna-latin, columen-latin]
+etymology_hook: "columna 'column' — a form beside columen 'top, pillar'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C280-turris]
 <!-- hl-knowledge: introduces=[LA-LEX-C280-RES280-02]; assesses=[] -->
 
 **columna, columnae** — "a column".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**columna** is a form beside *columen*, "a top, a pillar" (Lewis & Short), usually traced to Proto-Indo-European *\*kelH-*, "to rise" (EtymDB 2.1), the root of *collis*, "a hill".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

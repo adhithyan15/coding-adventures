@@ -14,7 +14,8 @@ romanization: "sāṅkētikavidya"
 concept_tag: ML-VASTU293-SANKETIKAVIDYA
 prerequisites: [ML-C292-sopha, ML-C293-tivi]
 sounds: []
-roots: []
+roots: [sanskrit-vidya]
+etymology_hook: "sāṅkētikavidya: Sanskrit sāṅkētika 'conventional, technical' + vidyā 'knowledge' (CDIAL 11741)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C293-tivi]
 <!-- hl-knowledge: introduces=[ML-LEX-C293-VASTU293-02]; assesses=[] -->
 
 **സാങ്കേതികവിദ്യ** — *sāṅkētikavidya* — "technology".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സാങ്കേതികവിദ്യ** (*sāṅkētikavidya*) is a modern compound of Sanskrit *sāṅkētika*, "conventional, technical", from *saṅkēta*, "agreement, sign", and *vidyā*, "knowledge" (CDIAL 11741).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

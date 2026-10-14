@@ -14,7 +14,8 @@ romanization: "bōlu"
 concept_tag: TE-GUNAM298-BOLU
 prerequisites: [TE-C298-vankara, TE-C298-cadunaina]
 sounds: []
-roots: []
+roots: [dravidian-poorai-hollow]
+etymology_hook: "bōlu: native Dravidian; DEDR 4604 lists bōlu 'hollow' with Tamil pōr 'hollow of a tree'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C298-cadunaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C298-GUNAM298-04]; assesses=[] -->
 
 **బోలు** — *bōlu* — "hollow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బోలు** (*bōlu*) is native Dravidian. DEDR 4604 lists *bōlu*, "hollow", with Tamil *pōr*, "hollow of a tree", and Kannada *pōr*, "hole".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kōṭe"
 concept_tag: KA-STHALA213-KOTE
 prerequisites: [KA-C212-maidana, KA-C212-dikku]
 sounds: []
-roots: []
+roots: [dravidian-kottai-fort]
+etymology_hook: "kōṭe: native Dravidian, one word with Tamil kōṭṭai (DEDR 2207)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C212-dikku]
 <!-- hl-knowledge: introduces=[KA-LEX-C213-STHALA213-01]; assesses=[] -->
 
 **ಕೋಟೆ** — *kōṭe* — "a fort".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೋಟೆ** (*kōṭe*) is native Dravidian, one word with Tamil *kōṭṭai* (DEDR 2207). DEDR lists *kōṭe* itself, "fort, rampart". DEDR 2207 compares Sanskrit *koṭṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

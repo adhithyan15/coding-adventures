@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to finish, then the Malayalam for to c
 You'll want to know: കുറിച്ചെടുക്കുക.
 കുറിച്ചെടുക്കുക — kuṟicceṭukkuka — "to note down".
 
+The word, taken apart.
+കുറിച്ചെടുക്കുക (kuṟicceṭukkuka) is native Dravidian, "take up having noted": the verb "to mark, note, write" (DEDR 1847, with Tamil kuṟi) and the verb "to take up" (DEDR 851).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to check, then the Malayalam for to no
 
 You'll want to know: ഹാജരാകുക.
 ഹാജരാകുക — hājarākuka — "to be present, to attend".
+
+The word, taken apart.
+ഹാജരാകുക (hājarākuka) joins hājar, "present, in attendance", from Arabic ḥāḍir by way of Hindustani, to native ākuka, "to become" (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for to note down, then the Malayalam for t
 You'll want to know: പങ്കെടുക്കുക.
 പങ്കെടുക്കുക — paṅkeṭukkuka — "to take part".
 
+The word, taken apart.
+പങ്കെടുക്കുക (paṅkeṭukkuka) is native Dravidian, "take a share": paṅku, "part, share" (DEDR 3808), and the verb "to take up" (DEDR 851).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for to be present, then the Malayalam for 
 You'll want to know: വഴിതെറ്റുക.
 വഴിതെറ്റുക — vaḻiteṟṟuka — "to lose one's way".
 
+The word, taken apart.
+വഴിതെറ്റുക (vaḻiteṟṟuka) is native Dravidian, "slip from the path": vaḻi, "way" (DEDR 5297), and the verb "to slip, err" (DEDR 3445, with Tamil teṟṟu).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for to take part, then the Malayalam for t
 
 You'll want to know: പാർക്ക് ചെയ്യുക.
 പാർക്ക് ചെയ്യുക — pārkkŭ ceyyuka — "to park".
+
+The word, taken apart.
+പാർക്ക് ചെയ്യുക (pārkkŭ ceyyuka) joins English park to native ceyyuka, "to do" (DEDR 1957).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "skáchivat"
 concept_tag: RU-VERB-SKACHIVAT
 prerequisites: [RU-C145-pechatat, RU-C145-sokhranyat]
 sounds: []
-roots: []
+roots: [slavic-katiti]
+etymology_hook: "скачивать is с- 'off' + качать 'to pump, to swing': to pump data down"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C145-sokhranyat]
 <!-- hl-knowledge: introduces=[RU-LEX-C145-ACT145-04]; assesses=[] -->
 
 **скачивать** (*skáchivat*) — "to download".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**скачивать** is *с-*, "off, down", with *-качивать*, from *качать*, "to swing, to pump", which Vasmer derives from *катать*, "to roll". Downloading is pumping data off.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āturapaḍu"
 concept_tag: KA-VERB-ATURAPADU
 prerequisites: [KA-C206-himbalisu, KA-C206-tappisikollu]
 sounds: []
-roots: []
+roots: [sanskrit-atura, dravidian-padu-suffer]
+etymology_hook: "āturapaḍu: Sanskrit ātura 'eager, hasty' + native paḍu 'to undergo' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C206-tappisikollu]
 <!-- hl-knowledge: introduces=[KA-LEX-C206-KRIYE206-05]; assesses=[] -->
 
 **ಆತುರಪಡು** — *āturapaḍu* — "to hurry, to be in a rush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆತುರಪಡು** (*āturapaḍu*) is *ātura*, "haste", from Sanskrit *ātura*, "eager, suffering", with native *paḍu*, "to undergo, feel" (DEDR 3853): "to feel haste".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -214,8 +214,19 @@ real-valued standard functions preserve it, while a finite static real actual
 is safe directly. Variable-free exact `sign` and exact-range `entier` results
 may also widen through a real name formal. Selector calls may also choose
 unaliased local runtime-real snapshots through unary signs, additive or
-multiplicative composition, and powers with finite static operands;
-standard-function transforms, globals, captured locals, and other real-name branches remain conservative.
+multiplicative composition, powers with finite static operands, and pure
+supported standard-function transforms. Globals, captured locals, and other
+real-name branches remain conservative. The exact bounded
+`entier(sign(local-runtime-real))` transform is also safe across such a
+selector, including when a specialised real name formal carries the exact
+local-rooted transform. Unary signs may wrap that exact name actual without
+losing the proof, and additive composition may include finite static terms.
+That additive form may in turn be multiplied or divided by finite static
+terms, and the resulting exact local-rooted form may be the sole dynamic base
+of a power chain whose exponents are finite and static. Unrestricted runtime
+`entier` remains conservative. Up to three supported built-in real standard functions
+may wrap that powered exact name actual. A user-declared procedure receives no
+built-in privilege and must qualify through the ordinary procedure proof.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real
 operand because its result is always `-1`, `0`, or `1`.
 The same bounded result preserves runtime-real formatter provenance when it is

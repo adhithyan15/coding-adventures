@@ -14,7 +14,8 @@ romanization: "talēnnŭ"
 concept_tag: ML-SAMAYAM237-TALENNU
 prerequisites: [ML-C237-pakal, ML-C237-ennenkilum]
 sounds: []
-roots: []
+roots: [dravidian-tala-kai]
+etymology_hook: "talēnnŭ: native Dravidian, built on tala 'head, front end' (DEDR 3103) with a word for 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C237-ennenkilum]
 <!-- hl-knowledge: introduces=[ML-LEX-C237-SAMAYAM237-03]; assesses=[] -->
 
 **തലേന്ന്** — *talēnnŭ* — "the day before (an event)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തലേന്ന്** (*talēnnŭ*) is native Dravidian, built on *tala*, "head, the front end" (DEDR 3103), with a word for "day": the day at the head of an event.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

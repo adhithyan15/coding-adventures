@@ -15,7 +15,7 @@ concept_tag: TA-VELAI222-TALLUPATI
 prerequisites: [TA-C221-alippan, TA-C221-cirutai]
 sounds: []
 roots: [dravidian-tallu-push]
-etymology_hook: "தள்ளுபடி — native: taḷḷu 'to push away' (DEDR 3135) + paṭi 'measure' (DEDR 3849)"
+etymology_hook: "தள்ளுபடி — native: taḷḷu 'to push away' (DEDR 3135) + paṭi, probably 'measure' (DEDR 3849)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TA-C221-cirutai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**தள்ளுபடி** (*taḷḷupaṭi*) is native: *taḷḷu*, "to push away, to reject" (DEDR 3135), and *paṭi*, "measure" (DEDR 3849): "a measure pushed off".
+**தள்ளுபடி** (*taḷḷupaṭi*) is native: *taḷḷu*, "to push away, to reject" (DEDR 3135), and *paṭi*, probably "measure" (DEDR 3849): "a measure pushed off".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

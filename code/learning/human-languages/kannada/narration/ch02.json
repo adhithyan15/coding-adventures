@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:3b3eb11c3a463efa",
+  "sourceHash": "fnv1a64:3c0835775c0a157d",
   "lessons": [
     {
       "id": "KA-C02-hesaru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cd5fb97481b4df75",
+      "sourceHash": "fnv1a64:01ee4a0c97195ac0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -71,6 +71,10 @@
             {
               "kind": "speech",
               "text": "Across the family: Kannada hesaru, Tamil peyar, Telugu pēru, Malayalam pēr — one Dravidian word; only Hindi nām / English name are Indo-European."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 4410 gives the older Kannada spelling pesar(u), with the p- still in place."
             }
           ]
         },
@@ -175,7 +179,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e779c39769e4027e",
+      "sourceHash": "fnv1a64:dbe1c52c0f3549f1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -223,6 +227,10 @@
             {
               "kind": "speech",
               "text": "ನನ್ನ (nanna) means \"my.\" It belongs to Kannada's native Dravidian first-person family, not to the Indo-European family behind English I/my. The stem underneath is Dravidian nān — the same one behind Tamil nāṉ / eṉ. You will meet the related word for \"I\" in its own lesson; today you only need nanna."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 5160 lists Kannada nān, \"I\", with the stem nan- that nanna is built on, beside Tamil nāṉ and Telugu nēnu."
             }
           ]
         },
@@ -289,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16d12441945326ef",
+      "sourceHash": "fnv1a64:4f1a526c3870ea69",
       "notice": null,
       "blocks": [
         {
@@ -330,6 +338,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಹೆಸರು … (nanna hesaru …) is two native Dravidian words: nanna, \"my\" (DEDR 5160), and hesaru, \"name\" (DEDR 4410). Tamil eṉ peyar is built the same way, from the same two roots, also with no word for \"is\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the zero copula",
           "segments": [
@@ -340,7 +359,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -371,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -402,7 +421,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d49b8b4e1f202128",
+      "sourceHash": "fnv1a64:2011329b77870cf0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -450,6 +469,10 @@
             {
               "kind": "speech",
               "text": "ನೀನು (nīnu, familiar \"you\") from Proto-Dravidian nīn — the same native root as Tamil nī. ನೀವು (nīvu) is the respectful/plural \"you.\""
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 3684 lists Kannada nīn(u) with Tamil nī; DEDR 3688 lists the plural nīvu with Tamil nīm and Telugu mīru."
             }
           ]
         },
@@ -527,7 +550,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:47bdec7a4d02c7bf",
+      "sourceHash": "fnv1a64:cf1b498c3e7175b2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -576,6 +599,10 @@
             {
               "kind": "speech",
               "text": "ಏನು (ēnu, \"what\") is native Dravidian, on the interrogative stem yā- / e- — the same Dravidian question-root as Tamil eṉṉa, heading Kannada's question family: ēnu (what), yāru (who), elli (where), yāke (why)."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 5151 lists Kannada ēn, \"what\", with Tamil ētu and Telugu ēdi."
             }
           ]
         },
@@ -660,7 +687,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3872c42c1c4afab",
+      "sourceHash": "fnv1a64:ab639c29a3242c26",
       "notice": null,
       "blocks": [
         {
@@ -701,6 +728,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿಮ್ಮ ಹೆಸರು ಏನು? (nimma hesaru ēnu?) is three native Dravidian words: nimma, \"your\" (DEDR 3688), hesaru, \"name\" (DEDR 4410), and ēnu, \"what\" (DEDR 5151)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: answer, and the familiar version",
           "segments": [
@@ -711,7 +749,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -742,7 +780,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -924,7 +962,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b2da4eab96ea2a4",
+      "sourceHash": "fnv1a64:3b0c8958fdaca1d8",
       "notice": null,
       "blocks": [
         {
@@ -967,6 +1005,10 @@
             {
               "kind": "speech",
               "text": "Santōṣa (\"joy, contentment\") is Sanskrit — sam- (\"fully\") + toṣa (\"satisfaction\") — not native. Where Tamil reaches for its home-grown magiḻcci, Kannada uses a Sanskrit word even for \"pleased.\" The same split you saw over \"hello\" (namaskāra) and \"thanks\" (dhanyavāda) runs right through the introductions: Kannada borrows, Tamil keeps its own."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 12895 lists Sanskrit santoṣa, \"satisfaction\"."
             }
           ]
         },

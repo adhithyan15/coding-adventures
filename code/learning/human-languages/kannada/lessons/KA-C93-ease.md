@@ -11,7 +11,8 @@ romanization: "ārāma"
 concept_tag: KA-WX-EASE
 prerequisites: [KA-C93-dizzy, KA-C93-sultry]
 sounds: []
-roots: []
+roots: [sanskrit-arama]
+etymology_hook: "ārāma ← Sanskrit ārāma 'delight; garden', a tatsama (CDIAL 1317)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C93-sultry]
 
 **ಆರಾಮಾಗಿದ್ದೀರಾ?** (*ārāmāgiddīrā?*) — "are you well, are you at ease?", a warm
 way to ask how someone is.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆರಾಮ** (*ārāma*) is Sanskrit *ārāma*, "delight; garden", taken over whole as a learned loan, a tatsama (CDIAL 1317). In Kannada the delight became ease and comfort.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

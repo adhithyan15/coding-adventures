@@ -14,7 +14,8 @@ romanization: "gorókh"
 concept_tag: RU-VESHCH194-GOROKH
 prerequisites: [RU-C194-kapusta, RU-C194-svyokla]
 sounds: []
-roots: []
+roots: [slavic-gorxu]
+etymology_hook: "горох ← Proto-Slavic *gorxŭ; Vasmer thinks it probably related to Sanskrit gharṣati 'rubs'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C194-svyokla]
 <!-- hl-knowledge: introduces=[RU-LEX-C194-VESHCH194-05]; assesses=[] -->
 
 **горох** (*gorókh*) — "peas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**горох** ← Proto-Slavic *\*gorxŭ* — inherited. Vasmer thinks it probably related to Lithuanian *garšvà*, a weed, and Sanskrit *gharṣati*, "rubs". Bulgarian has *грах*, "peas", with *-ра-* for Russian *-оро-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

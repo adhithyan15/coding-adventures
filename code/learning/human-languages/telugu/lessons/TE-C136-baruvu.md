@@ -14,7 +14,8 @@ romanization: "baruvu"
 concept_tag: TE-THINGS136-BARUVU
 prerequisites: [TE-C136-podavu, TE-C136-potti]
 sounds: []
-roots: []
+roots: [telugu-baruvu-heavy]
+etymology_hook: "baruvu: origin uncertain; DEDR does not list it; often linked to Sanskrit bhāra 'burden' (CDIAL 9459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C136-potti]
 <!-- hl-knowledge: introduces=[TE-LEX-C136-THINGS136-05]; assesses=[] -->
 
 **బరువు** — *baruvu* — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **బరువు** (*baruvu*) is uncertain. DEDR does not list it. It is often linked to Sanskrit *bhāra*, "burden, weight" (CDIAL 9459), but the link is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

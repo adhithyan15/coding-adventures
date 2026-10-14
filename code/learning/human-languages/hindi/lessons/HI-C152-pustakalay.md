@@ -14,7 +14,8 @@ romanization: "pustakālay"
 concept_tag: HI-THINGS152-PUSTAKALAY
 prerequisites: [HI-C152-khun, HI-C152-dakghar, HI-C34-likhna, HI-C34-likhna, HI-C34-padhna, HI-C34-padhna, HI-C34-samajhna, HI-C34-sochna]
 sounds: []
-roots: []
+roots: [sanskrit-pustaka, sanskrit-alaya]
+etymology_hook: "pustakālay: Sanskrit pustaka 'book' + ālaya 'abode', a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C152-dakghar]
 <!-- hl-knowledge: introduces=[HI-LEX-C152-THINGS152-03]; assesses=[] -->
 
 **पुस्तकालय** — *pustakālay* — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पुस्तकालय** (*pustakālay*) is a tatsama compound, taken over whole from Sanskrit: *pustaka*, "book", and *ālaya*, "abode".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

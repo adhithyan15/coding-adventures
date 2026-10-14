@@ -14,7 +14,8 @@ romanization: "kīmat"
 concept_tag: HI-THG208-KIMAT
 prerequisites: [HI-C208-nuqsan, HI-C208-fayda]
 sounds: []
-roots: []
+roots: [arabic-qima]
+etymology_hook: "kīmat ← Arabic qīma 'value', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C208-fayda]
 <!-- hl-knowledge: introduces=[HI-LEX-C208-THG208-03]; assesses=[] -->
 
 **क़ीमत** — *kīmat* — "a price, value".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**क़ीमत** (*kīmat*) is a loan from Arabic *qīma*, "value", which reached Hindi through Persian. Its Arabic root is *q-w-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

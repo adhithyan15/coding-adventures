@@ -14,7 +14,8 @@ romanization: "kōti"
 concept_tag: TE-THINGS123-KOTI
 prerequisites: [TE-C123-simham, TE-C123-elugubanti]
 sounds: []
-roots: []
+roots: [dravidian-kurangu-monkey]
+etymology_hook: "kōti: native Dravidian, one word with Tamil kuraṅku and Kannada kōti (DEDR 1769)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C123-elugubanti]
 <!-- hl-knowledge: introduces=[TE-LEX-C123-THINGS123-04]; assesses=[] -->
 
 **కోతి** — *kōti* — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కోతి** (*kōti*) is native Dravidian, one word with Tamil *kuraṅku* and Kannada *kōti* (DEDR 1769).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "seb"
 concept_tag: HI-THINGS139-SEB
 prerequisites: [HI-C139-am, HI-C139-kela]
 sounds: []
-roots: []
+roots: [persian-seb]
+etymology_hook: "seb: usually traced to Persian sēb 'apple'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C139-kela]
 <!-- hl-knowledge: introduces=[HI-LEX-C139-THINGS139-05]; assesses=[] -->
 
 **सेब** — *seb* — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सेब** (*seb*) is a loan, usually traced to Persian *sēb*, "apple".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

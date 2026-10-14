@@ -13,7 +13,8 @@ gloss: "a name"
 concept_tag: LA-RES278-NOMEN
 prerequisites: [LA-C278-littera, LA-C278-verbum]
 sounds: []
-roots: []
+roots: [nomen-latin]
+etymology_hook: "nōmen 'name' — inherited, usually traced to PIE *h1nomn 'name'; English name is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C278-verbum]
 <!-- hl-knowledge: introduces=[LA-LEX-C278-RES278-05]; assesses=[] -->
 
 **nōmen, nōminis** — "a name".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nōmen** is inherited, usually traced to Proto-Indo-European *\*h1nomn*, "name" (EtymDB 2.1); English *name* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

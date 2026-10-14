@@ -14,7 +14,8 @@ romanization: "māthā"
 concept_tag: HI-NOUN-FOREHEAD
 prerequisites: [HI-C53-knee, HI-C51-courtyard, HI-C52-oil]
 sounds: []
-roots: []
+roots: [sanskrit-mastaka]
+etymology_hook: "māthā ← Sanskrit mastaka 'head, skull', a tadbhava (CDIAL 9926)"
 duration:
   max_seconds: 210
 requires:

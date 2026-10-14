@@ -11,7 +11,8 @@ romanization: "kemmu"
 concept_tag: KA-UNWELL-COUGH
 prerequisites: [KA-C82-tiredness, KA-C82-cold]
 sounds: []
-roots: []
+roots: [dravidian-kemmu-cough]
+etymology_hook: "kemmu: native Dravidian, one word with Tamil cerumu (DEDR 1964)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C82-cold]
 **ಕೆಮ್ಮು** (*kemmu*) — "a cough", and also the verb "to cough".
 
 **ಕೆಮ್ಮು ಇದೆ** (*kemmu ide*) — "there is a cough", the plain way to tell a doctor.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೆಮ್ಮು** (*kemmu*) is native Dravidian, one word with Tamil *cerumu* (DEDR 1964).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

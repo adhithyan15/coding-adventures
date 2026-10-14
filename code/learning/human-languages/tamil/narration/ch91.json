@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "Sun, Heat, and Sleep",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3a02152642588d65",
+  "sourceHash": "fnv1a64:c29f9224e0322aa1",
   "lessons": [
     {
       "id": "TA-C91-sunshine",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e9f658b008b26d5",
+      "sourceHash": "fnv1a64:2312ff35654a53e7",
       "notice": null,
       "blocks": [
         {
@@ -199,7 +199,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "சூடு (cūṭu) is native Dravidian. DEDR 2654 lists Malayalam cuṭuka, \"to be hot\" and Kannada suḍu, \"to burn\". The entry lists cūṭu, \"heat, burning\", under cuṭu, \"to be hot\"."
+              "text": "சூடு (cūṭu) is native Dravidian. DEDR 2654 lists Malayalam cuṭuka, \"to be hot\" and Kannada suḍu, \"to burn\". The entry lists cūṭu, \"heat, burning\", under cuṭu, \"to be hot\", and compares Sanskrit cūḍ-, \"to singe\"."
             }
           ]
         },

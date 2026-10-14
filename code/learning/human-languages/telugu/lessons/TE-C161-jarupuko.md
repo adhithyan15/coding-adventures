@@ -14,7 +14,8 @@ romanization: "jarupukō"
 concept_tag: TE-VERB-JARUPUKO
 prerequisites: [TE-C160-oppuko, TE-C161-natyam-ceyu]
 sounds: []
-roots: []
+roots: [dravidian-cari-slide]
+etymology_hook: "jarupukō: native jarapu 'to pass (time)' (DEDR 2360) + reflexive kō (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C161-natyam-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C161-KRIYA161-02]; assesses=[] -->
 
 **జరుపుకో** — *jarupukō* — "to celebrate (a festival or occasion)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జరుపుకో** (*jarupukō*) is native Dravidian. DEDR 2360 lists *jarapu*, "to spend or pass (time)", beside *jarugu*, "to happen, move on", with Kannada *sari*, "to move, go". The ending *-kō* means "for oneself" (DEDR 2151).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

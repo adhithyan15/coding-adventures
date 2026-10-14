@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "At the Table",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:948fa0dfc5441bbb",
+  "sourceHash": "fnv1a64:930afbfcd82b0ea2",
   "lessons": [
     {
       "id": "KA-C94-snack",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:feb4a57beb7fd238",
+      "sourceHash": "fnv1a64:6b3a8eae73fe1e77",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಿಂಡಿ (tiṇḍi) is native Dravidian, from tin, \"to eat\", and DEDR 3263 lists tiṇḍi, \"food\", itself; the entry also has Tamil tiṉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14ebd3f148e28194",
+      "sourceHash": "fnv1a64:a4fb817f85415538",
       "notice": null,
       "blocks": [
         {
@@ -183,6 +194,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚಮಚ (camaca) came through Hindustani camcā, \"spoon\", a Persian word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -193,7 +215,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -242,7 +264,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -273,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72ddd2662ef61745",
+      "sourceHash": "fnv1a64:3d0610bda3da7e7c",
       "notice": null,
       "blocks": [
         {
@@ -310,6 +332,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಲೋಟ (lōṭa) came from Hindustani lōṭā, \"a small round metal pot\". Its deeper origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -320,7 +353,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -369,7 +402,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -400,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4a04efbe2c65bbf",
+      "sourceHash": "fnv1a64:008690cb88465c51",
       "notice": null,
       "blocks": [
         {
@@ -433,6 +466,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಟ್ಟೆ (taṭṭe) is native Dravidian, one word with Tamil taṭṭu (DEDR 3035). DEDR lists taṭṭe itself, \"flatness; a flat basket\", and notes Marathi tāṭ, \"a dining plate\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -443,7 +487,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -492,7 +536,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -523,7 +567,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93b201d858c22cae",
+      "sourceHash": "fnv1a64:25e63c209a7beca7",
       "notice": null,
       "blocks": [
         {
@@ -560,6 +604,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೆಲೆ (bele) is native Dravidian, one word with Tamil vilai and Telugu vela (DEDR 5421). DEDR lists bele, \"price\", under bil, \"to sell\": the old v- has become b-."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -570,7 +625,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -619,7 +674,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

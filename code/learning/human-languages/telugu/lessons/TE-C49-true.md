@@ -11,7 +11,8 @@ romanization: "nijaṁ"
 concept_tag: TE-WORD-TRUE
 prerequisites: [TE-C48-guest]
 sounds: []
-roots: []
+roots: [sanskrit-nija]
+etymology_hook: "nijaṁ ← Sanskrit nija 'innate, one's own' (CDIAL 7181), with the Telugu ending -ṁ"
 duration:
   max_seconds: 210
 requires:
@@ -44,6 +45,7 @@ Sanskrit *nija* meant "one's own, innate" — what belongs to a thing by its nat
 
 Alone it answers a doubt: *nijaṁ*, "true". With a question on the end it becomes perhaps the commonest interjection in the language: *nijamā?*, "really?"
 
+CDIAL 7181 lists Sanskrit *nija*, "innate, one's own".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

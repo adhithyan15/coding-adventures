@@ -14,7 +14,8 @@ romanization: "kolucu"
 concept_tag: TE-VERB-KOLUCU
 prerequisites: [TE-C158-marcu, TE-C158-vippu]
 sounds: []
-roots: []
+roots: [dravidian-kola-measure]
+etymology_hook: "kolucu: DEDR 1827 lists it, 'to measure', but doubts its tie to Tamil kuḷakam 'a measure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C158-vippu]
 <!-- hl-knowledge: introduces=[TE-LEX-C158-KRIYA158-05]; assesses=[] -->
 
 **కొలుచు** — *kolucu* — "to measure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కొలుచు** (*kolucu*) is Dravidian. DEDR 1827 lists *kolucu*, "to measure", with *kola*, "measurement", but doubts whether this group belongs with Tamil *kuḷakam*, "a grain measure". DEDR compares the Tamil measure words with Sanskrit *kuḍava*, "a grain measure" (CDIAL 3246), which CDIAL takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

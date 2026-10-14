@@ -14,7 +14,8 @@ romanization: "fírma"
 concept_tag: RU-RABOTA257-FIRMA
 prerequisites: [RU-C256-aktyor, RU-C257-kompaniya]
 sounds: []
-roots: []
+roots: [latin-firmare]
+etymology_hook: "фирма came through German Firma or from Italian firma 'a signature'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C257-kompaniya]
 <!-- hl-knowledge: introduces=[RU-LEX-C257-RABOTA257-02]; assesses=[] -->
 
 **фирма** (*fírma*) — "a firm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**фирма** came through German *Firma* or straight from Italian *firma*, "a signature" (Vasmer), from *firmare*, "to confirm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "unlucky, unhappy"
 concept_tag: LA-QUAL243-INFELIX
 prerequisites: [LA-C243-fidus, LA-C243-fidelis]
 sounds: []
-roots: []
+roots: [infelix-latin, felix]
+etymology_hook: "īnfēlīx 'unlucky' — in- 'not' + fēlīx 'fruitful, lucky'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C243-fidelis]
 <!-- hl-knowledge: introduces=[LA-LEX-C243-QUAL243-04]; assesses=[] -->
 
 **īnfēlīx, īnfēlīcis** — "unlucky, unhappy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**īnfēlīx** is *in-*, "not", with *fēlīx*, "fruitful, lucky" (Lewis & Short): first an unfruitful tree, then an unlucky person.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

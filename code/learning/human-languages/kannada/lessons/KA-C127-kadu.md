@@ -14,7 +14,8 @@ romanization: "kāḍu"
 concept_tag: KA-THINGS127-KADU
 prerequisites: [KA-C126-jirige, KA-C127-samudra]
 sounds: []
-roots: []
+roots: [dravidian-kaadu-forest]
+etymology_hook: "kāḍu: native Dravidian, one word with Tamil kāṭu (DEDR 1438)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C127-samudra]
 <!-- hl-knowledge: introduces=[KA-LEX-C127-THINGS127-02]; assesses=[] -->
 
 **ಕಾಡು** — *kāḍu* — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾಡು** (*kāḍu*) is native Dravidian, one word with Tamil *kāṭu* (DEDR 1438). DEDR lists *kāḍu* itself, "forest, jungle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

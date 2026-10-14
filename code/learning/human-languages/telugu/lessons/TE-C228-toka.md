@@ -14,7 +14,8 @@ romanization: "tōka"
 concept_tag: TE-VASTUVU228-TOKA
 prerequisites: [TE-C228-gabbilam, TE-C228-gudu]
 sounds: []
-roots: []
+roots: [dravidian-tookai-tail]
+etymology_hook: "tōka: native Dravidian; DEDR 3538 lists tōka 'tail' with Tamil tōkai"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C228-gudu]
 <!-- hl-knowledge: introduces=[TE-LEX-C228-VASTUVU228-05]; assesses=[] -->
 
 **తోక** — *tōka* — "a tail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తోక** (*tōka*) is native Dravidian. DEDR 3538 lists a nasalised *tōka*, "tail", with Tamil *tōkai* and Kannada *tōke*, "tail".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

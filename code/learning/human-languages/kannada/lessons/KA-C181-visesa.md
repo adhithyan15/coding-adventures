@@ -14,7 +14,8 @@ romanization: "viśēṣa"
 concept_tag: KA-GUNA181-VISESA
 prerequisites: [KA-C180-kaddaya, KA-C181-upayukta]
 sounds: []
-roots: []
+roots: [sanskrit-vishesha]
+etymology_hook: "viśēṣa ← Sanskrit viśeṣa 'distinction, peculiarity', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C181-upayukta]
 <!-- hl-knowledge: introduces=[KA-LEX-C181-GUNA181-02]; assesses=[] -->
 
 **ವಿಶೇಷ** — *viśēṣa* — "special".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿಶೇಷ** (*viśēṣa*) is Sanskrit *viśeṣa*, "distinction, peculiarity", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

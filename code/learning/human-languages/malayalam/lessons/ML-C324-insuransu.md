@@ -14,7 +14,8 @@ romanization: "inṣuṟansŭ"
 concept_tag: ML-VASTU324-INSURANSU
 prerequisites: [ML-C324-pasporttu, ML-C324-visa]
 sounds: []
-roots: []
+roots: [english-insurance]
+etymology_hook: "inṣuṟansŭ ← English insurance"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C324-visa]
 <!-- hl-knowledge: introduces=[ML-LEX-C324-VASTU324-05]; assesses=[] -->
 
 **ഇൻഷുറൻസ്** — *inṣuṟansŭ* — "insurance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇൻഷുറൻസ്** (*inṣuṟansŭ*) ← English *insurance*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

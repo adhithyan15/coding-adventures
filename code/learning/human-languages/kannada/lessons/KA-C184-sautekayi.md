@@ -14,7 +14,8 @@ romanization: "sautekāyi"
 concept_tag: KA-VASTU184-SAUTEKAYI
 prerequisites: [KA-C183-sautu, KA-C183-baket]
 sounds: []
-roots: []
+roots: [dravidian-saute-cucumber, dravidian-kaay-unripe]
+etymology_hook: "sautekāyi: native saute 'cucumber' (DEDR 2399) + kāyi 'fruit' (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C183-baket]
 <!-- hl-knowledge: introduces=[KA-LEX-C184-VASTU184-01]; assesses=[] -->
 
 **ಸೌತೆಕಾಯಿ** — *sautekāyi* — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೌತೆಕಾಯಿ** (*sautekāyi*) is native Dravidian: *saute*, "cucumber", which DEDR 2399 lists, and *kāyi*, "unripe fruit" (DEDR 1459). DEDR 1459 compares a reconstructed Indo-Aryan *\*kacca*, "raw, unripe" (CDIAL 2613).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

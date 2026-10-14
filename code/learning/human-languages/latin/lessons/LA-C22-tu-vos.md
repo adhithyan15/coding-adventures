@@ -13,7 +13,7 @@ sounds: [long-vowel-u, macron-long-vowel]
 roots: [pie-tu, vos-pie]
 etymology_hook: "tū ('you,' singular) and vōs ('you,' plural) are a PURELY grammatical number distinction in Classical Latin — genuinely NO politeness dimension existed yet; the later habit of using plural vōs to address one person politely only developed in LATE Latin, after the classical period, and is the direct ancestor of French's polite vous — a genuinely separate solution from German's Sie, which independently repurposes an entirely different pronoun (3rd-person plural 'they'), not a descendant of vōs at all"
 duration:
-  max_seconds: 240
+  max_seconds: 279
 requires:
   knowledge: [LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02]
 introduces:
@@ -70,6 +70,11 @@ didn't have this option yet: one person was always *tū*, no matter how
 important they were — though Romans still had **other** ways to show
 deference, like respectful titles (*domine*, "sir/lord"), just not through
 the pronoun itself.
+
+## The words, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tū** is inherited, usually traced to Proto-Indo-European *\*tuh2*, "you" (EtymDB 2.1), a cousin of English thou. *vōs* "you all" is usually traced to Proto-Italic *\*wos*, "you all" (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02, LA-LEX-TU-VOS-01, LA-LEX-TU-VOS-02, LA-PRAGMATICS-TU-VOS-03] -->

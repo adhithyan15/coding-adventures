@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 107,
-  "sourceHash": "fnv1a64:898d05f78a57cd71",
+  "sourceHash": "fnv1a64:c2644b3e72411787",
   "lessonIds": [
     "HI-C107-doctor",
     "HI-C107-aspatal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch107.txt",
   "json": "hindi/narration/ch107.json",
-  "textHash": "fnv1a64:c0818a5a4fc7de32",
-  "jsonHash": "fnv1a64:4471b39c67d81b5e",
+  "textHash": "fnv1a64:6f6f3b7c5e00e313",
+  "jsonHash": "fnv1a64:4ed5033984ab87c7",
   "findings": []
 }

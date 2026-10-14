@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 280,
-  "sourceHash": "fnv1a64:538f8c42effa358f",
+  "sourceHash": "fnv1a64:8d1320c0e668be69",
   "lessonIds": [
     "ML-C280-pradesam",
     "ML-C280-parampu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch280.txt",
   "json": "malayalam/narration/ch280.json",
-  "textHash": "fnv1a64:3b3a07df2da16c9b",
-  "jsonHash": "fnv1a64:553269a1efdf308c",
+  "textHash": "fnv1a64:0e489f71716dff34",
+  "jsonHash": "fnv1a64:bdec52963300d383",
   "findings": []
 }

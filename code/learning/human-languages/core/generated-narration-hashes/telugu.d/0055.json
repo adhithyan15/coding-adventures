@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 55,
-  "sourceHash": "fnv1a64:c0199f81c4b8804f",
+  "sourceHash": "fnv1a64:677235fe22a1e1cb",
   "lessonIds": [
     "TE-C55-river",
     "TE-C55-tank",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch55.txt",
   "json": "telugu/narration/ch55.json",
-  "textHash": "fnv1a64:bdef0b2aec31cfba",
-  "jsonHash": "fnv1a64:178e323f831d77c7",
+  "textHash": "fnv1a64:f9ab257d0b9d31e7",
+  "jsonHash": "fnv1a64:eca9dc4c4026cff1",
   "findings": []
 }

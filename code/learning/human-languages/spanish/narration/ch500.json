@@ -4,7 +4,7 @@
   "chapter": 500,
   "title": "Vivir juntos",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:565303af6f4e8e2a",
+  "sourceHash": "fnv1a64:3a55408d00ad433a",
   "lessons": [
     {
       "id": "ES-C500-respetar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a13d3ebb5bd4e69",
+      "sourceHash": "fnv1a64:ea92c7b29392bfa2",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "respetar is built on respeto, \"respect\", from Latin respectus, \"a looking back, regard\", from respicere, \"to look back\" — semi-learned: its -ct- was simplified to -t-, not turned into the -ch- of words worn down in speech."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2134970a34cfdf0d",
+      "sourceHash": "fnv1a64:06fd04d18a45388a",
       "notice": null,
       "blocks": [
         {
@@ -191,6 +202,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "molestar from Latin molestare, \"to trouble, to annoy\" (Lewis & Short), from molestus, \"troublesome\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -201,7 +223,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -250,7 +272,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -281,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd500795ded468b2",
+      "sourceHash": "fnv1a64:e64eb0829613a77b",
       "notice": null,
       "blocks": [
         {
@@ -322,6 +344,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prohibir from Latin prohibere, \"to hold back\" (EtymDB 2.1): pro-, \"in front\", and habere, \"to hold\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -332,7 +365,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -381,7 +414,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -412,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d395062d2eafe20",
+      "sourceHash": "fnv1a64:3a48a020df397019",
       "notice": null,
       "blocks": [
         {
@@ -449,6 +482,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ley from Latin lex, legem, \"law\" (EtymDB 2.1) — inherited: the -g- between vowels fell away."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -459,7 +503,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -508,7 +552,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -539,7 +583,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4282bd8e85f4066e",
+      "sourceHash": "fnv1a64:fc09394c63994096",
       "notice": null,
       "blocks": [
         {
@@ -576,6 +620,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "libertad from Latin libertas, libertatem, \"freedom\" (Lewis & Short), from liber, \"free\" — not the liber, \"book\", behind libro."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -586,7 +641,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -635,7 +690,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -13,7 +13,8 @@ gloss: "different"
 concept_tag: LA-QUAL266-DIVERSUS
 prerequisites: [LA-C265-saltem, LA-C266-mirus]
 sounds: []
-roots: []
+roots: [diversus-latin, vertere-latin]
+etymology_hook: "dīversus 'different' — the participle of dīvertō 'to turn apart'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C266-mirus]
 <!-- hl-knowledge: introduces=[LA-LEX-C266-QUAL266-02]; assesses=[] -->
 
 **dīversus, dīversa, dīversum** — "different".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dīversus** is the past participle of *dīvertō*, "to turn in different directions" (Lewis & Short), from *dis-*, "apart", and *vertō*, "to turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

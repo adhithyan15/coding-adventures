@@ -14,7 +14,8 @@ romanization: "khóbbi"
 concept_tag: RU-VESHCH197-KHOBBI
 prerequisites: [RU-C196-mukha, RU-C196-zhuk]
 sounds: []
-roots: []
+roots: [english-hobby]
+etymology_hook: "хобби ← English hobby, short for hobby-horse"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C196-zhuk]
 <!-- hl-knowledge: introduces=[RU-LEX-C197-VESHCH197-01]; assesses=[] -->
 
 **хобби** (*khóbbi*) — "a hobby".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**хобби** comes from English *hobby*, cut short from *hobby-horse*, a toy horse ridden for fun.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

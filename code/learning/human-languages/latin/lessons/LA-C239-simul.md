@@ -13,7 +13,8 @@ gloss: "at the same time"
 concept_tag: LA-CAUSA239-SIMUL
 prerequisites: [LA-C238-coram, LA-C238-qua]
 sounds: []
-roots: []
+roots: [simul-latin]
+etymology_hook: "simul 'at the same time' — usually traced to PIE *sem- 'one'; English same is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C238-qua]
 <!-- hl-knowledge: introduces=[LA-LEX-C239-CAUSA239-01]; assesses=[] -->
 
 **simul** — "at the same time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**simul** is inherited, usually traced to the Proto-Indo-European root *\*sem-*, "one, together". Greek *hama*, "together", is a cousin (Lewis & Short), and so is English *same*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

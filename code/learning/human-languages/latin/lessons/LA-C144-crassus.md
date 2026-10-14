@@ -13,7 +13,8 @@ gloss: "thick, fat"
 concept_tag: LA-QUAL144-CRASSUS
 prerequisites: [LA-C143-angustus, LA-C144-humilis]
 sounds: []
-roots: []
+roots: [crassus-latin]
+etymology_hook: "crassus 'thick' — probably from PIE *krtsus, from *kert- 'to twist together'; English crass"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C144-humilis]
 <!-- hl-knowledge: introduces=[LA-LEX-C144-QUAL144-02]; assesses=[] -->
 
 **crassus, crassa, crassum** — "thick, fat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crassus** is probably inherited, from a Proto-Indo-European *\*krtsus*, "woven thick", from *\*kert-*, "to twist together" (EtymDB 2.1). English *crass* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a leg, a shin"
 concept_tag: LA-CORPUS4-CRUS
 prerequisites: [LA-C65-barba, LA-C66-pectus]
 sounds: []
-roots: []
+roots: [crus-latin]
+etymology_hook: "crūs 'leg, shin' — origin unknown; no proposal is generally accepted"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C66-pectus]
 <!-- hl-knowledge: introduces=[LA-LEX-C66-CORPUS4-02]; assesses=[] -->
 
 **crūs, crūris** — "a leg, a shin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crūs**, "leg, shin", has no sure origin; Lewis & Short call it doubtful, and no later proposal has won general agreement.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

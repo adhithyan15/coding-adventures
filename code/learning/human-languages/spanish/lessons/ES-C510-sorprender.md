@@ -10,7 +10,8 @@ gloss: "to surprise"
 concept_tag: ES-VERB-SORPRENDER
 prerequisites: [ES-C510-pelear, ES-C510-odiar]
 sounds: []
-roots: []
+roots: [prehendere-latin]
+etymology_hook: "sorprender ← French surprendre 'to take unawares': sur 'over' + prendre 'to take'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C510-odiar]
 > *Your question surprises me.*
 
 It works like *gustar*: *me sorprende*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sorprender** ← French *surprendre*, "to take unawares" (EtymDB 2.1): *sur*, "over", and *prendre*, "to take", from Latin *prehendere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

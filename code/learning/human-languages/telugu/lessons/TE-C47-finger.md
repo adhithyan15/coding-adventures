@@ -11,7 +11,8 @@ romanization: "vēlu"
 concept_tag: TE-NOUN-FINGER
 prerequisites: [TE-C47-hair]
 sounds: []
-roots: []
+roots: [dravidian-viral-finger]
+etymology_hook: "vēlu: native Dravidian, one word with Tamil viral and Kannada beraḷ (DEDR 5409)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [TE-C47-hair]
 Proto-Dravidian **\*viral**. Tamil kept விரல் entire; Kannada has ಬೆರಳು; Telugu dropped the *-r-* and came out with వేలు. On the page the three look barely related, and they are the same word.
 
 It is still working inside compounds: బొటనవేలు, the thumb, is the stubby one of the set.
+
+DEDR 5409 lists Telugu *vēlu* and *vrēlu*, "finger, toe", with Tamil *viral* and Kannada *beraḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

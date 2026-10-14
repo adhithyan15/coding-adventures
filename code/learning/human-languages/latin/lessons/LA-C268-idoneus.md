@@ -13,7 +13,8 @@ gloss: "suitable"
 concept_tag: LA-QUAL268-IDONEUS
 prerequisites: [LA-C267-proximus, LA-C268-alter]
 sounds: []
-roots: []
+roots: [idoneus-latin]
+etymology_hook: "idōneus 'suitable' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C268-alter]
 <!-- hl-knowledge: introduces=[LA-LEX-C268-QUAL268-02]; assesses=[] -->
 
 **idōneus, idōnea, idōneum** — "suitable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**idōneus** has no sure origin; no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

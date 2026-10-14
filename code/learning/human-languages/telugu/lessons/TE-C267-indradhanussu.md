@@ -14,7 +14,8 @@ romanization: "indradhanussu"
 concept_tag: TE-VASTUVU267-INDRADHANUSSU
 prerequisites: [TE-C266-tulasi, TE-C266-mogga]
 sounds: []
-roots: []
+roots: [sanskrit-indra, sanskrit-dhanus]
+etymology_hook: "indradhanussu: Sanskrit indra (CDIAL 1572) + dhanus 'bow' (CDIAL 6726)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C266-mogga]
 <!-- hl-knowledge: introduces=[TE-LEX-C267-VASTUVU267-01]; assesses=[] -->
 
 **ఇంద్రధనుస్సు** — *indradhanussu* — "a rainbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇంద్రధనుస్సు** (*indradhanussu*) is Sanskrit *indradhanus*, "Indra's bow": *indra*, "the god Indra" (CDIAL 1572), and *dhanus*, "bow" (CDIAL 6726), with the Telugu ending *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "próshlyy"
 concept_tag: RU-PAS137-PROSHLYY
 prerequisites: [RU-C137-davno, RU-C137-ranshe]
 sounds: []
-roots: []
+roots: [pie-hei]
+etymology_hook: "прошлый is from пройти 'to pass by': what has passed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C137-ranshe]
 <!-- hl-knowledge: introduces=[RU-LEX-C137-PAS137-04]; assesses=[] -->
 
 **прошлый** (*próshlyy*) — "last, past". It agrees with its noun: **на прошлой неделе** — *na próshloy nedéle* — "last week"; **в прошлом году** — "last year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**прошлый** is built on *прошёл*, "passed", from *пройти*, "to go past": *про-*, "past", with *идти*, "to go". What is past has gone by.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

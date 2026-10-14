@@ -11,7 +11,8 @@ romanization: "kaḷikkuka"
 concept_tag: ML-VERB-PLAY
 prerequisites: [ML-C98-kali, ML-C33-vaayikkuka]
 sounds: []
-roots: []
+roots: [dravidian-kali-play]
+etymology_hook: "kaḷikkuka: native Dravidian, the verb of kaḷi 'play' (DEDR 1374)"
 duration:
   max_seconds: 250
 requires:
@@ -59,6 +60,8 @@ verb:
 **Verb after verb in this book already ends in -ിക്കുക** — **സംസാരിക്കുക**,
 **വായിക്കുക**, **ചോദിക്കുക**, **കുടിക്കുക** — so this one arrives asking
 nothing new of you. The only new part is the two syllables at the front.
+
+**Where the word comes from.** It is native Dravidian, the verb belonging to *kaḷi* (DEDR 1374, with Tamil *kaḷi*, "to rejoice", and Kodagu *kaḷi*, "to play").
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-PLAY-01, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-LEX-NJAAN-01] -->

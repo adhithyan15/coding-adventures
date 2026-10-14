@@ -14,7 +14,8 @@ romanization: "chā̃d"
 concept_tag: HI-NOUN-MOON
 prerequisites: [HI-C55-sun, HI-C53-knee, HI-C54-horse]
 sounds: []
-roots: []
+roots: [sanskrit-candra]
+etymology_hook: "cāṁd ← Sanskrit candra 'shining; moon', a tadbhava (CDIAL 4661)"
 duration:
   max_seconds: 210
 requires:

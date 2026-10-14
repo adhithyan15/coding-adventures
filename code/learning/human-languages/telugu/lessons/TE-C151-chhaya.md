@@ -11,7 +11,7 @@ romanization: "chāya"
 concept_tag: TE-NOUN-SHADE
 prerequisites: [TE-S110-letter-ya, TE-S171-letter-nga]
 sounds: []
-roots: []
+roots: [sanskrit-chaya]
 etymology_hook: "A learned word shared with Sanskrit, used in Telugu for shade, shadow, reflection, and a tinge of colour"
 duration:
   max_seconds: 180
@@ -54,6 +54,11 @@ second is the familiar **య** sound. Say the word as **ఛా-య**.
 **ఛాయ** is a learned word with a wider range than one dark shape. In literary
 or careful language it can also name a reflected image or a tinge of colour.
 Keep the first meaning small today: shade or shadow.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Chāya* is Sanskrit *chāyā*, "shade, shadow, reflection" (CDIAL 5027), with the final *-ā* shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C151-SHADE-01] -->

@@ -14,7 +14,8 @@ romanization: "khelkūd"
 concept_tag: HI-THG223-KHELKUD
 prerequisites: [HI-C223-sauq, HI-C223-sapna]
 sounds: []
-roots: []
+roots: [indo-aryan-khel, sanskrit-kurdati]
+etymology_hook: "khelkūd: khel 'play' (CDIAL 3918) + kūd 'jump', from kūrdati 'leaps', probably Dravidian (CDIAL 3412)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C223-sapna]
 <!-- hl-knowledge: introduces=[HI-LEX-C223-THG223-04]; assesses=[] -->
 
 **खेलकूद** — *khelkūd* — "sport, games".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खेलकूद** (*khelkūd*) is "play-and-jump": *khel*, from a reconstructed *\*khel-*, "play" (CDIAL 3918), and *kūd*, from Sanskrit *kūrdati*, "leaps", which CDIAL takes, probably, from Dravidian (CDIAL 3412).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

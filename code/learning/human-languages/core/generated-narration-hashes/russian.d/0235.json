@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 235,
-  "sourceHash": "fnv1a64:44f940fb61038b50",
+  "sourceHash": "fnv1a64:855b206d5473311a",
   "lessonIds": [
     "RU-C235-krichat",
     "RU-C235-sheptat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch235.txt",
   "json": "russian/narration/ch235.json",
-  "textHash": "fnv1a64:a35d6c38401a842d",
-  "jsonHash": "fnv1a64:7ade3eb712551674",
+  "textHash": "fnv1a64:9fde9e658d57a24b",
+  "jsonHash": "fnv1a64:833ade61b9a61054",
   "findings": []
 }

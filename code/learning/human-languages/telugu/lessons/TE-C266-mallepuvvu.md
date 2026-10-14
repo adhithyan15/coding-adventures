@@ -14,7 +14,8 @@ romanization: "mallepuvvu"
 concept_tag: TE-VASTUVU266-MALLEPUVVU
 prerequisites: [TE-C265-donga, TE-C265-jantuvu]
 sounds: []
-roots: []
+roots: [sanskrit-mallika, dravidian-pu-flower]
+etymology_hook: "mallepuvvu: malle ← Sanskrit mallikā 'jasmine' (CDIAL 9913) + native puvvu 'flower' (DEDR 4345)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C265-jantuvu]
 <!-- hl-knowledge: introduces=[TE-LEX-C266-VASTUVU266-01]; assesses=[] -->
 
 **మల్లెపువ్వు** — *mallepuvvu* — "a jasmine flower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మల్లెపువ్వు** (*mallepuvvu*) is *malle*, "jasmine", which matches Sanskrit *mallikā*, "jasmine" (CDIAL 9913), and native *puvvu*, "flower" (DEDR 4345). CDIAL compares the Dravidian jasmine words with the Sanskrit one; DEDR compares, with a query, Sanskrit *puṣpa*, "flower", with *puvvu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

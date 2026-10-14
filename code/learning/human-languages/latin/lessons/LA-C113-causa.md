@@ -13,7 +13,8 @@ gloss: "a reason, a cause"
 concept_tag: LA-WHY113-CAUSA
 prerequisites: [LA-C113-ideo, LA-C113-itaque]
 sounds: []
-roots: []
+roots: [causa-latin]
+etymology_hook: "causa 'cause' — older caussa; origin unknown; English cause and because"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C113-itaque]
 <!-- hl-knowledge: introduces=[LA-LEX-C113-WHY113-05]; assesses=[] -->
 
 **causa, causae** — "a reason, a cause".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**causa** was spelled *caussa* in older Latin (EtymDB 2.1); where it comes from is unknown. English *cause* and *because* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

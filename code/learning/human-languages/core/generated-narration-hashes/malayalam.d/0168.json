@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 168,
-  "sourceHash": "fnv1a64:d085d3868d39e8a1",
+  "sourceHash": "fnv1a64:f2504b86a117de8a",
   "lessonIds": [
     "ML-C168-vitiyulla",
     "ML-C168-itunniya",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch168.txt",
   "json": "malayalam/narration/ch168.json",
-  "textHash": "fnv1a64:95fece8a31603006",
-  "jsonHash": "fnv1a64:d2eded90db35b389",
+  "textHash": "fnv1a64:2717fc44bbc54582",
+  "jsonHash": "fnv1a64:a952e6babc7134c1",
   "findings": []
 }

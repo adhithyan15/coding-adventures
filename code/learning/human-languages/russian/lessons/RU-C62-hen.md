@@ -14,7 +14,8 @@ romanization: "kúritsa"
 concept_tag: RU-ANIMALS3-HEN
 prerequisites: [RU-C62-hare, RU-C62-snake]
 sounds: []
-roots: []
+roots: [slavic-kuru]
+etymology_hook: "курица is built on кур 'cock', a name from a root for crying out"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C62-snake]
 <!-- hl-knowledge: introduces=[RU-LEX-C62-ANIMALS3-03]; assesses=[] -->
 
 **курица** (*kúritsa*) — "a hen". It lays the **яйцо**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**курица** is built on *кура*, "a hen", and the old *кур*, "a cock". Vasmer relates *кур* to Latvian *kaurêt*, "to roar", and Sanskrit *kāuti*, "cries out": the cock as the crier.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

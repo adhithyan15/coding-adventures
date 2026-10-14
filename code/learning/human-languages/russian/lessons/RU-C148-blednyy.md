@@ -14,7 +14,8 @@ romanization: "blédnyy"
 concept_tag: RU-ZDOROV148-BLEDNYY
 prerequisites: [RU-C148-slabyy, RU-C148-silnyy]
 sounds: []
-roots: []
+roots: [slavic-bledu]
+etymology_hook: "бледный ← Proto-Slavic *blědŭ; Old English blāt 'pale' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C148-silnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C148-ZDOROV148-04]; assesses=[] -->
 
 **бледный** (*blédnyy*) — "pale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бледный** is *бледый*, Proto-Slavic *\*blědŭ*, "pale", with *-ный* — inherited. Vasmer relates it to Old English *blāt*, "pale", and Old High German *bleiza*, "paleness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

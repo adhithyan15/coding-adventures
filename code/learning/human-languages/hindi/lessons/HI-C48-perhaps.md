@@ -14,7 +14,8 @@ romanization: "śāyad"
 concept_tag: HI-WORD-PERHAPS
 prerequisites: [HI-C48-certainly, HI-C46-nose, HI-C47-guest]
 sounds: []
-roots: []
+roots: [persian-shayad]
+etymology_hook: "śāyad: usually traced to Persian shāyad 'it may be'"
 duration:
   max_seconds: 210
 requires:

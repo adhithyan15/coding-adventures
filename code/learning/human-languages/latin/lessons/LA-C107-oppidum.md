@@ -13,7 +13,8 @@ gloss: "a town"
 concept_tag: LA-URBS-OPPIDUM
 prerequisites: [LA-C106-mille, LA-C107-urbs]
 sounds: []
-roots: []
+roots: [oppidum-latin]
+etymology_hook: "oppidum 'town' — usually explained as ob 'on' + a word for 'ground'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C107-urbs]
 <!-- hl-knowledge: introduces=[LA-LEX-C107-URBS-02]; assesses=[] -->
 
 **oppidum, oppidī** — "a town".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oppidum** is usually explained as *ob*, "on, over", and a word for "ground, place", the one in Greek *pedon*, "ground" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

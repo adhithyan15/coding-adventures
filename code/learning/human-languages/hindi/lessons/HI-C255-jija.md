@@ -14,7 +14,8 @@ romanization: "jījā"
 concept_tag: HI-THG255-JIJA
 prerequisites: [HI-C255-devar, HI-C255-nanad]
 sounds: []
-roots: []
+roots: [indo-aryan-jijja]
+etymology_hook: "jījā ← *jījja 'a nursery word for breast, mother, sister', a reconstructed form; a tadbhava (CDIAL 5232)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C255-nanad]
 <!-- hl-knowledge: introduces=[HI-LEX-C255-THG255-05]; assesses=[] -->
 
 **जीजा** — *jījā* — "a sister's husband".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जीजा** (*jījā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jījja*, "a nursery word for breast, mother, sister", a form CDIAL reconstructs from its descendants (CDIAL 5232). CDIAL glosses Hindi *jījā* "sister's husband".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

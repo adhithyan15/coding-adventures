@@ -14,7 +14,8 @@ romanization: "illadiddare"
 concept_tag: KA-KARANA176-ILLADIDDARE
 prerequisites: [KA-C175-ice, KA-C176-saluvagi]
 sounds: []
-roots: []
+roots: [il, dravidian-iru-be]
+etymology_hook: "illadiddare: native illade 'not being' (DEDR 2559) + iddare 'if it is', from iru (DEDR 480)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C176-saluvagi]
 <!-- hl-knowledge: introduces=[KA-LEX-C176-KARANA176-02]; assesses=[] -->
 
 **ಇಲ್ಲದಿದ್ದರೆ** — *illadiddare* — "otherwise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇಲ್ಲದಿದ್ದರೆ** (*illadiddare*) is native Dravidian: *illade*, "not being", which DEDR 2559 lists, and *iddare*, "if it is", from *iru*, "to be" (DEDR 480): "if it is not so".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

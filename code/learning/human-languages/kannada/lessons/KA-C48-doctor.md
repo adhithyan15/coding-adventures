@@ -11,7 +11,8 @@ romanization: "vaidya"
 concept_tag: KA-NOUN-DOCTOR
 prerequisites: [KA-C48-student, KA-C46-lamp]
 sounds: []
-roots: []
+roots: [sanskrit-vaidya]
+etymology_hook: "vaidya ← Sanskrit vaidya 'learned; physician', a tatsama (CDIAL 12140)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C48-student]
 Here is the seeker's root a second time. *vaidya* is built directly on *vidyā*: 'one versed in the knowledge'. Which knowledge is left unsaid, because for the people who coined the word there was only one worth naming that way — the knowledge of medicine.
 
 So the student and the doctor are the same word twice over, once for the one still looking and once for the one who has found. ವೈದ್ಯ carries the older physician of the herb-books with it; the doctor at the clinic is more often ಡಾಕ್ಟರ್.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವೈದ್ಯ** (*vaidya*) is Sanskrit *vaidya*, "learned; physician", taken over whole as a learned loan, a tatsama (CDIAL 12140).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

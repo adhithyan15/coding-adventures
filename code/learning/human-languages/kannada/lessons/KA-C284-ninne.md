@@ -14,7 +14,8 @@ romanization: "ninne"
 concept_tag: KA-KALA284-NINNE
 prerequisites: [KA-C284-hunnime, KA-C284-suryasta]
 sounds: []
-roots: []
+roots: [dravidian-nerunal-yesterday]
+etymology_hook: "ninne: native Dravidian, one word with Telugu ninna and Malayalam innalē (DEDR 3758)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C284-suryasta]
 <!-- hl-knowledge: introduces=[KA-LEX-C284-KALA284-03]; assesses=[] -->
 
 **ನಿನ್ನೆ** — *ninne* — "yesterday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿನ್ನೆ** (*ninne*) is native Dravidian, one word with Telugu *ninna* and Malayalam *innalē* (DEDR 3758). DEDR lists *ninne*, "yesterday".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

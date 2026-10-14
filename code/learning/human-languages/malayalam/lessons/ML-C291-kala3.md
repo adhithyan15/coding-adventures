@@ -14,7 +14,8 @@ romanization: "kāḷa"
 concept_tag: ML-VASTU291-KALA3
 prerequisites: [ML-C291-jantu, ML-C291-man]
 sounds: []
-roots: []
+roots: [dravidian-kalai-bull]
+etymology_hook: "kāḷa: native Dravidian, one word with Tamil kāḷai (DEDR 1502)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C291-man]
 <!-- hl-knowledge: introduces=[ML-LEX-C291-VASTU291-04]; assesses=[] -->
 
 **കാള** — *kāḷa* — "a bull, an ox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാള** (*kāḷa*) is native Dravidian, one word with Tamil *kāḷai* (DEDR 1502).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

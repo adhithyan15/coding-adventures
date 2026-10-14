@@ -14,7 +14,8 @@ romanization: "olén"
 concept_tag: RU-VESHCH225-OLEN
 prerequisites: [RU-C225-zebra, RU-C225-verblyud]
 sounds: []
-roots: []
+roots: [slavic-oleni]
+etymology_hook: "олень ← Proto-Slavic *olenĭ; Lithuanian elnis 'deer' and Greek elaphos are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C225-verblyud]
 <!-- hl-knowledge: introduces=[RU-LEX-C225-VESHCH225-05]; assesses=[] -->
 
 **олень** (*olén*) — "a deer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**олень** ← Proto-Slavic *\*olenĭ* — inherited. Vasmer lists Lithuanian *élnis*, "deer, elk", Greek *élaphos*, "deer", and Welsh *elain*, "hind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

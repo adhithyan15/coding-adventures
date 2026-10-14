@@ -14,7 +14,8 @@ romanization: "ṭhoṛī"
 concept_tag: HI-THINGS151-THORI
 prerequisites: [HI-C150-nakhun, HI-C150-gal]
 sounds: []
-roots: []
+roots: [sanskrit-tunda]
+etymology_hook: "ṭhoṛī ← Sanskrit tuṇḍa 'beak, snout', a non-Aryan word, probably Munda; a tadbhava (CDIAL 5853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C150-gal]
 <!-- hl-knowledge: introduces=[HI-LEX-C151-THINGS151-01]; assesses=[] -->
 
 **ठोड़ी** — *ṭhoṛī* — "the chin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ठोड़ी** (*ṭhoṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tuṇḍa*, "beak, snout" (CDIAL 5853). CDIAL calls the word certainly non-Aryan and probably Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

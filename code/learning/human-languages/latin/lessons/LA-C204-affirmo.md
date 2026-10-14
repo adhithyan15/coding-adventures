@@ -13,7 +13,8 @@ gloss: "to state firmly"
 concept_tag: LA-VERB-AFFIRMO
 prerequisites: [LA-C203-vexo, LA-C203-obliviscor]
 sounds: []
-roots: []
+roots: [affirmare-latin, firmus-latin]
+etymology_hook: "affirmō 'to state firmly' — ad + firmō 'to make firm', from firmus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C203-obliviscor]
 <!-- hl-knowledge: introduces=[LA-LEX-C204-ACT204-01]; assesses=[] -->
 
 **affirmō, affirmāre** — "to state firmly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**affirmō** is *ad*, "to", with *firmō*, "to make firm" (EtymDB 2.1), from *firmus*, "firm": to make a statement firm.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

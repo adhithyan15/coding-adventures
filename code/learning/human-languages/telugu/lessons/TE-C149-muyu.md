@@ -14,7 +14,8 @@ romanization: "mūyu"
 concept_tag: TE-VERB-MUYU
 prerequisites: [TE-C148-ammu, TE-C149-naducu]
 sounds: []
-roots: []
+roots: [dravidian-muccu-shut]
+etymology_hook: "mūyu: native Dravidian, one word with Tamil mūy and Kannada muccu (DEDR 4915)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C149-naducu]
 <!-- hl-knowledge: introduces=[TE-LEX-C149-ACT149-02]; assesses=[] -->
 
 **మూయు** — *mūyu* — "to close".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మూయు** (*mūyu*) is native Dravidian, one word with Tamil *mūy* and Kannada *muccu* (DEDR 4915). DEDR lists Telugu *mūyu*, "to cover, shut, close".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cherepákha"
 concept_tag: RU-THINGS117-TORTOISE
 prerequisites: [RU-C117-butterfly, RU-C117-frog]
 sounds: []
-roots: []
+roots: [slavic-cherepu]
+etymology_hook: "черепаха is from череп 'a shell, a skull'; it replaced an older word by taboo"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C117-frog]
 <!-- hl-knowledge: introduces=[RU-LEX-C117-THINGS117-05]; assesses=[] -->
 
 **черепаха** (*cherepákha*) — "a tortoise, a turtle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**черепаха** is built on *череп*, "a skull, a shell" (Vasmer), and replaced an older Slavic *\*žely*, "tortoise", for taboo reasons, after Zelenin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

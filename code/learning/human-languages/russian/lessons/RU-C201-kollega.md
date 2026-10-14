@@ -14,7 +14,8 @@ romanization: "kolléga"
 concept_tag: RU-RABOTA201-KOLLEGA
 prerequisites: [RU-C201-skidka, RU-C201-pokupka]
 sounds: []
-roots: []
+roots: [collega-latin]
+etymology_hook: "коллега came under Peter the Great through Polish kolega or from Latin collega 'a partner in office'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C201-pokupka]
 <!-- hl-knowledge: introduces=[RU-LEX-C201-RABOTA201-04]; assesses=[] -->
 
 **коллега** (*kolléga*) — "a colleague".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**коллега** — from Peter the Great's time; it came through Polish *kolega* or straight from Latin *collēga*, "a partner in office" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

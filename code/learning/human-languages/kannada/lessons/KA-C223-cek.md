@@ -14,7 +14,8 @@ romanization: "cek"
 concept_tag: KA-VASTU223-CEK
 prerequisites: [KA-C223-pasport, KA-C223-gurutina-citi]
 sounds: []
-roots: []
+roots: [english-cheque]
+etymology_hook: "cek ← English cheque"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C223-gurutina-citi]
 <!-- hl-knowledge: introduces=[KA-LEX-C223-VASTU223-05]; assesses=[] -->
 
 **ಚೆಕ್** — *cek* — "a cheque".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚೆಕ್** (*cek*) is a loan from English *cheque*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

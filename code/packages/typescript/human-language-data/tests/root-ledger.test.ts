@@ -224,7 +224,15 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // with no supporting row carry no source tag, and 12 genuinely uncertain origins say so.
   german: { withoutHook: 0, withoutVisible: 0 },
   gujarati: { withoutHook: 529, withoutVisible: 543 },
-  hindi: { withoutHook: 1126, withoutVisible: 967 },
+  // hindi: 1126 / 967 -> 0 / 0. Every Hindi word lesson now has an etymology_hook and says
+  // where its word comes from: 962 new "taken apart" blocks, plus one origin sentence in 43
+  // lessons whose block or section had none. Inherited words and Sanskrit loans cite Turner's
+  // CDIAL (read from the moli-mandala files), keeping its "prob.", "?", Dravidian, Munda and
+  // Austroasiatic notes; Arabic loans name their root in Lane's Lexicon; Persian, English and
+  // Portuguese loans name the donor, Persian ones as "usually traced to". About 48 say the
+  // origin is uncertain or only partly known. 15 older blocks that contradicted CDIAL were
+  // corrected. 41 max_seconds rose to the computed length, all still under 300 s.
+  hindi: { withoutHook: 0, withoutVisible: 0 },
   // italian: 1126 / 1135 -> 745 / 745 -> 0 / 0. The first 401 gap lessons in sequence
   // order (through IT-C110-pepe) gained a sourced origin -- EtymDB 2.1 (Fourrier & Sagot
   // 2020), CC BY-SA 4.0, with Lewis & Short for textbook Latin forms EtymDB lacks --
@@ -234,9 +242,29 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // tracing where EtymDB has no row; 14 say the origin is uncertain and why.
   italian: { withoutHook: 0, withoutVisible: 0 },
   japanese: { withoutHook: 601, withoutVisible: 688 },
-  kannada: { withoutHook: 1330, withoutVisible: 1281 },
-  latin: { withoutHook: 1095, withoutVisible: 1105 },
-  malayalam: { withoutHook: 1367, withoutVisible: 1275 },
+  // kannada: 1330 / 1281 -> 0 / 0. All 1,345 gap lessons (KA-C01 through KA-C307) now say
+  // where their word comes from in a taken-apart block or an origin sentence, with a matching
+  // hook. Native words cite DEDR (Burrow & Emeneau 1984), checked against the full article
+  // text with every "?", "Cf. Skt." and "< IA" kept; Sanskrit tatsamas and tadbhavas cite
+  // CDIAL (Turner); English and Perso-Arabic loans name the donor. About 63 say the origin is
+  // uncertain after a search of both sources by form and by gloss, giving the usual account
+  // as a hedge where there is one.
+  kannada: { withoutHook: 0, withoutVisible: 0 },
+  // latin: 1095 / 1105 -> 0 / 0. All 1,090 generated word lessons (LA-C63-bracchium through
+  // LA-C280-vallum) gained a taken-apart block and a matching hook; the five Chapter 1
+  // greetings gained the hook they lacked, and fifteen hand-written lessons a short taken-apart
+  // block. Sources: EtymDB 2.1 (Fourrier & Sagot 2020), CC BY-SA 4.0, checked row by row, and
+  // Lewis & Short, whose outdated comparisons are left out. PIE and Proto-Italic forms are
+  // starred and hedged; 183 say the origin is uncertain and give the usual account where
+  // one exists.
+  latin: { withoutHook: 0, withoutVisible: 0 },
+  // malayalam: 1367 / 1275 -> 0 / 0. Every Malayalam word lesson now carries an etymology_hook
+  // and says where its word comes from, almost always in a "taken apart" block. Native words
+  // cite the Dravidian Etymological Dictionary (DEDR, Burrow & Emeneau 1984), naming only
+  // cognates the full DEDR article lists and keeping its own "Cf. Skt." and "?" caveats;
+  // Sanskrit loans cite Turner's CDIAL where it has the form; English, Portuguese, Arabic and
+  // Persian loans name the donor. 47 say the origin is uncertain or only usually traced.
+  malayalam: { withoutHook: 0, withoutVisible: 0 },
   marathi: { withoutHook: 1163, withoutVisible: 1116 },
   marwadi: { withoutHook: 552, withoutVisible: 716 },
   persian: { withoutHook: 1300, withoutVisible: 1311 },
@@ -246,19 +274,95 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // origin is uncertain or disputed, each a genuinely open question, never a stand-in.
   portuguese: { withoutHook: 0, withoutVisible: 0 },
   punjabi: { withoutHook: 549, withoutVisible: 524 },
-  russian: { withoutHook: 1135, withoutVisible: 1148 },
+  // russian: 1135 / 1148 -> 0 / 0. All 1,135 generated word lessons gained a taken-apart
+  // block and a matching hook, and 13 earlier hand-written lessons the measure missed gained
+  // the half they lacked (six as a block, seven as one origin sentence in an existing section,
+  // paid for by trimming prose; only RU-C02-menya-zovut needed a raise, 240 -> 275 s). Source:
+  // Vasmer's Russisches etymologisches Woerterbuch (Russian edition, with Trubachev's notes),
+  // paraphrased and cited, never copied; Church Slavonic shapes are named by their sound
+  // change, and loans name the donor and the route. 86 say the origin is uncertain or disputed
+  // and give Vasmer's usual account with his hedges.
+  russian: { withoutHook: 0, withoutVisible: 0 },
   sanskrit: { withoutHook: 1200, withoutVisible: 1099 },
-  spanish: { withoutHook: 486, withoutVisible: 209 },
+  // spanish: 486 / 209 -> 0 / 0. 287 lessons with an origin in their body gained a hook that
+  // agrees with it, 199 gained a "taken apart" block and a hook (185 of them the generated
+  // wave ES-C475-profesional through ES-C511-soler), and the ten hook-only lessons gained a
+  // block or, for ES-C52-como-se-dice at 299 s, one origin sentence. Sources: EtymDB 2.1
+  // (Fourrier & Sagot 2020), CC BY-SA 4.0, checked row by row and relabelled by Spanish sound
+  // change, with Lewis & Short for Latin forms EtymDB lacks; Arabic loans name the Arabic word.
+  // 16 new ones say the origin is uncertain or only usually traced. 41 older passages that
+  // misreported an origin were corrected, and 22 blocks that never named one gained a sentence.
+  // A full review of all 497 then fixed loan routes (empresa, bailar, ruta), etyma (aceptar,
+  // opinión, portero, apoyar), hedges (andén, jubilar, copiar) and labels, and gave 26 more
+  // blocks that named only Spanish parts a sentence saying where the parts come from.
+  spanish: { withoutHook: 0, withoutVisible: 0 },
   // tamil: 1185 / 1144 -> 0 / 4. Every Tamil word lesson now has an etymology_hook, and all
   // but four have a "taken apart" block: native words cite the Dravidian Etymological
   // Dictionary (Burrow & Emeneau, DEDR) and Sanskrit loans cite Turner's CDIAL, both read
-  // from the moli-mandala/data (Jambu) files; no source text is copied. The four left
-  // without a block (TA-C06-dative-subject, TA-C37-ivar, TA-C37-ivar-en-nanbar,
-  // TA-C39-evvalavu) already estimate at 294-299 s, so any visible block would cross the
-  // 300-second limit; their hooks carry the etymology.
-  tamil: { withoutHook: 0, withoutVisible: 4 },
-  telugu: { withoutHook: 1376, withoutVisible: 1318 },
+  // from the moli-mandala/data (Jambu) files; no source text is copied. 0 / 4 -> 0 / 0:
+  // the four that estimated at 294-299 s (TA-C06-dative-subject, TA-C37-ivar,
+  // TA-C37-ivar-en-nanbar, TA-C39-evvalavu) each gained one origin sentence in an existing
+  // section, paid for by trimming redundant prose; only TA-C39-evvalavu needed a raise
+  // (294 -> 298 s, still under 300).
+  tamil: { withoutHook: 0, withoutVisible: 0 },
+  // telugu: 1376 / 1318 -> 0 / 0. Every Telugu word lesson now carries an etymology_hook and
+  // says where its word comes from, almost always in a "taken apart" block. Native words cite
+  // the Dravidian Etymological Dictionary (DEDR, Burrow & Emeneau 1984), naming only cognates
+  // the full article lists and keeping its "Cf. Skt.", "?" and Indo-Aryan-appendix notes;
+  // Sanskrit loans cite Turner's CDIAL where it has the form, with its "<- Drav." notes; both
+  // read from the moli-mandala/data files, no source text copied. English, Persian, Arabic and
+  // Portuguese loans name the donor. 79 say the origin is uncertain, after a search of both
+  // sources by form and by gloss.
+  telugu: { withoutHook: 0, withoutVisible: 0 },
   urdu: { withoutHook: 1123, withoutVisible: 1137 },
+};
+
+/**
+ * Empty etymology blocks per track (HL24 §9.4): AN EXACT PIN THAT MAY ONLY BE LOWERED.
+ *
+ * A word lesson counted visible above only because a "taken apart" block or
+ * an origin heading is there, while nothing in the lesson says where the word
+ * came from: the block takes apart a sentence, or lists the word's parts and
+ * stops. `hasEmptyEtymologyBlock` in src/etymology-coverage.ts; its loose
+ * origin signals, their measured rescues and their known misses are in the
+ * module comment.
+ *
+ * Disjoint from `withoutVisible` above: a lesson is in one count or the
+ * other, never both. Same ratchet, same two directions. A rise names the
+ * newest lessons; the fix is a sentence in the block saying where the word
+ * comes from (from a cited source, or "unknown"/"disputed" stated plainly),
+ * never a raised pin. A fall asks for the pin to be lowered with it.
+ *
+ * Measured when the pin was added: 475 of 25,682 word lessons, of 4,782
+ * whose visible etymology rested on structure alone with no rule-3 origin
+ * statement anywhere; the loose signals read 4,307 of those as origins.
+ * Spanish's etymology pass (#17455) landed before this pin and filled 40 of
+ * its 88, so the pins start at 435.
+ */
+const EMPTY_ETYMOLOGY_BLOCK_PINS: Readonly<Record<string, number>> = {
+  arabic: 19,
+  bengali: 3,
+  chinese: 43,
+  french: 66,
+  german: 43,
+  gujarati: 24,
+  hindi: 7,
+  italian: 7,
+  japanese: 2,
+  kannada: 8,
+  latin: 31,
+  malayalam: 6,
+  marathi: 5,
+  marwadi: 0,
+  persian: 2,
+  portuguese: 5,
+  punjabi: 31,
+  russian: 52,
+  sanskrit: 12,
+  spanish: 48,
+  tamil: 12,
+  telugu: 8,
+  urdu: 1,
 };
 
 /**
@@ -309,6 +413,38 @@ describe("the committed corpus", () => {
         expect(found.length, message).toBe(pinned);
       });
     }
+  }
+
+  it("pins empty etymology blocks for every track, and no track that is gone", () => {
+    expect(Object.keys(EMPTY_ETYMOLOGY_BLOCK_PINS).sort()).toEqual(
+      etymology.tracks.map((track) => track.language).sort(),
+    );
+  });
+
+  for (const [language, pinned] of Object.entries(EMPTY_ETYMOLOGY_BLOCK_PINS)) {
+    it(`holds ${language}'s word lessons with an empty etymology block at exactly ${pinned} (a pin that may only be lowered)`, () => {
+      const found = etymology.gaps.filter((gap) => gap.language === language && gap.emptyEtymologyBlock);
+      // The per-track count and the gap list are one measurement; if they
+      // ever disagree, the pin would be checking the wrong thing.
+      expect(found.length).toBe(
+        etymology.tracks.find((track) => track.language === language)?.wordLessonsWithEmptyEtymologyBlock,
+      );
+      const newest = [...found]
+        .sort((a, b) => b.position - a.position)
+        .slice(0, NEWEST_GAPS_SHOWN)
+        .map((gap) => gap.lessonId)
+        .join(", ");
+      const message =
+        found.length > pinned
+          ? `${language} has ${found.length} word lessons whose "taken apart" block or origin heading never ` +
+            `says where the word comes from, above its pin of ${pinned}. Say it in the block (HL24 §9.4) -- ` +
+            `from a cited source, or "unknown"/"disputed" stated plainly; never invented. Fix the lessons, ` +
+            `not the pin. Newest ${Math.min(found.length, NEWEST_GAPS_SHOWN)}, latest first: ${newest}`
+          : `${language} has ${found.length} word lessons with an empty etymology block, below its pin of ` +
+            `${pinned}. The pin may only fall: lower EMPTY_ETYMOLOGY_BLOCK_PINS.${language} to ` +
+            `${found.length} in this change.`;
+      expect(found.length, message).toBe(pinned);
+    });
   }
 
   it("uses the policy's configured minimum rather than a constant", () => {

@@ -13,7 +13,8 @@ gloss: "to tremble"
 concept_tag: LA-VERB-TREMO
 prerequisites: [LA-C201-persequor, LA-C202-suadeo]
 sounds: []
-roots: []
+roots: [tremere-latin]
+etymology_hook: "tremō 'to tremble' — inherited, usually traced to PIE *trem- 'to tremble'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C202-suadeo]
 <!-- hl-knowledge: introduces=[LA-LEX-C202-ACT202-02]; assesses=[] -->
 
 **tremō, tremere** — "to tremble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tremō** is inherited, usually traced to Proto-Indo-European *\*trem-*, "to tremble" (EtymDB 2.1); Greek *tremō*, "to tremble", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

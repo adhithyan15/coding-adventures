@@ -14,7 +14,8 @@ romanization: "sosná"
 concept_tag: RU-VESHCH224-SOSNA
 prerequisites: [RU-C224-beryoza, RU-C224-yel]
 sounds: []
-roots: []
+roots: [slavic-sosna]
+etymology_hook: "сосна: Vasmer derives it most likely from *kasnos 'grey'; Trubachev doubts this"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C224-yel]
 <!-- hl-knowledge: introduces=[RU-LEX-C224-VESHCH224-03]; assesses=[] -->
 
 **сосна** (*sosná*) — "a pine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сосна** ← Proto-Slavic *\*sosna*. Vasmer derives it most likely from a PIE *\*ḱasnos*, "grey", as in Latin *cānus*, "grey", and Old High German *haso*, "hare"; Trubachev, in a note, doubts this.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

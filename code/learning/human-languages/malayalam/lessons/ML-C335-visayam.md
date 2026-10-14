@@ -14,7 +14,8 @@ romanization: "viṣayaṁ"
 concept_tag: ML-JOLI335-VISAYAM
 prerequisites: [ML-C334-yogam, ML-C335-birudam]
 sounds: []
-roots: []
+roots: [sanskrit-vishaya]
+etymology_hook: "viṣayaṁ ← Sanskrit viṣaya 'scope, sphere', a tatsama (CDIAL 11973)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C335-birudam]
 <!-- hl-knowledge: introduces=[ML-LEX-C335-JOLI335-02]; assesses=[] -->
 
 **വിഷയം** — *viṣayaṁ* — "a subject, a topic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിഷയം** (*viṣayaṁ*) ← Sanskrit *viṣaya*, "scope, sphere", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 11973).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

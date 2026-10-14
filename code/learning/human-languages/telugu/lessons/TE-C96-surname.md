@@ -11,7 +11,8 @@ romanization: "iṇṭipēru"
 concept_tag: TE-NAMES-SURNAME
 prerequisites: [TE-C95-show, TE-C95-didnthear]
 sounds: []
-roots: []
+roots: [dravidian-il-house, peyar-dravidian]
+etymology_hook: "iṇṭipēru: native iṇṭi 'of the house' (DEDR 494) + pēru 'name' (DEDR 4410)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C95-didnthear]
 
 It is **ఇంటి**, "of the house", and **పేరు**, "name". In Telugu the house name comes FIRST, before
 the given name, so a form that asks for a first name is asking the wrong question.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇంటిపేరు** (*iṇṭipēru*) is native Dravidian: *iṇṭi*, "of the house" (DEDR 494), and *pēru*, "name" (DEDR 4410).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

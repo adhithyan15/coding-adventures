@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 85,
-  "sourceHash": "fnv1a64:8d645453bfd42af4",
+  "sourceHash": "fnv1a64:e99cace2964178ef",
   "lessonIds": [
     "ML-C85-kudikkuka",
     "ML-C85-gemination",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch85.txt",
   "json": "malayalam/narration/ch85.json",
-  "textHash": "fnv1a64:9597090269d03765",
-  "jsonHash": "fnv1a64:102bac7aa0128094",
+  "textHash": "fnv1a64:f42a0bda05e78f73",
+  "jsonHash": "fnv1a64:d00571207e9ed342",
   "findings": []
 }

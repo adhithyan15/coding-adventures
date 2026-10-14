@@ -14,7 +14,8 @@ romanization: "halkā"
 concept_tag: HI-QUAL154-HALKA
 prerequisites: [HI-C154-sukha, HI-C154-bhari]
 sounds: []
-roots: []
+roots: [sanskrit-laghu]
+etymology_hook: "halkā ← Sanskrit laghu 'light', a tadbhava (CDIAL 10896)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C154-bhari]
 <!-- hl-knowledge: introduces=[HI-LEX-C154-QUAL154-05]; assesses=[] -->
 
 **हल्का** — *halkā* — "light (in weight)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हल्का** (*halkā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *laghu*, "light" (CDIAL 10896). CDIAL notes that its *l* and *h* swapped places and that it took an added *-k-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

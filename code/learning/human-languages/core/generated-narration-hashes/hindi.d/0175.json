@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 175,
-  "sourceHash": "fnv1a64:eb500d11db18ffa4",
+  "sourceHash": "fnv1a64:23181ce5fc2c7e65",
   "lessonIds": [
     "HI-C175-napna",
     "HI-C175-girana",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch175.txt",
   "json": "hindi/narration/ch175.json",
-  "textHash": "fnv1a64:fe413107c7e02931",
-  "jsonHash": "fnv1a64:f5910ef0068f0c16",
+  "textHash": "fnv1a64:06e7441cd1482ff8",
+  "jsonHash": "fnv1a64:cf99e13d491da050",
   "findings": []
 }

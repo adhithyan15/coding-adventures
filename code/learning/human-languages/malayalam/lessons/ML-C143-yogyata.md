@@ -14,7 +14,8 @@ romanization: "yōgyata"
 concept_tag: ML-CAN143-YOGYATA
 prerequisites: [ML-C143-paricayam, ML-C143-silam]
 sounds: []
-roots: []
+roots: [sanskrit-yogya]
+etymology_hook: "yōgyata ← Sanskrit yōgyatā 'fitness, suitability', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C143-silam]
 <!-- hl-knowledge: introduces=[ML-LEX-C143-CAN143-05]; assesses=[] -->
 
 **യോഗ്യത** — *yōgyata* — "a qualification".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**യോഗ്യത** (*yōgyata*) ← Sanskrit *yōgyatā*, "fitness, suitability", taken over whole as a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

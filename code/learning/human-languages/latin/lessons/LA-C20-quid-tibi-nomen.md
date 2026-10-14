@@ -13,7 +13,7 @@ sounds: [macron-long-vowel, qu-kw-sound]
 roots: [nomen-latin, dative-possession]
 etymology_hook: "quid tibi nōmen est?, literally 'what is the name to you?', and mihi nōmen est [X], 'the name to me is [X]', use the classical dative of possession instead of a verb like English have"
 duration:
-  max_seconds: 240
+  max_seconds: 252
 requires:
   knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-LEX-VALEO-FAMILY-01]
 introduces:
@@ -56,6 +56,11 @@ The reply follows the identical pattern: **mihi nōmen est** [name] —
 possession"**: instead of a possessive verb, the possessor simply sits in
 the dative case, and the thing possessed — here, **nōmen**, "name" — stays
 in the nominative, as the sentence's real subject.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quid tibi nōmen est** rests on inherited words. *nōmen* "name" is usually traced to Proto-Indo-European *\*h1nomn*, "name" (EtymDB 2.1), a cousin of English name. *tibi* "to you" is an old dative, usually traced to *\*tebhye*, "to you" (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-LEX-VALEO-FAMILY-01, LA-LEX-QUID-TIBI-NOMEN-01, LA-LEX-QUID-TIBI-NOMEN-02] -->

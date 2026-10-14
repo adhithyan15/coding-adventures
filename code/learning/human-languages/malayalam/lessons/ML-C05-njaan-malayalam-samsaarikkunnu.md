@@ -12,6 +12,7 @@ concept_tag: ML-WORD-MALAYALAM
 prerequisites: [ML-C05-samsaarikkuka, ML-C03-njaan]
 sounds: [retroflex-l, long-aa]
 roots: [mala-mountain-dravidian, alam-place-dravidian]
+etymology_hook: "malayāḷaṁ: native Dravidian, mala 'mountain' + āḷaṁ; Tamil malai, Kannada male (DEDR 4742)"
 duration:
   max_seconds: 240
 requires:
@@ -51,6 +52,8 @@ the verb last. The name **മലയാളം** (*malayāḷaṁ*) is native Drav
 (*mala*, "mountain") + **ആളം** (*āḷaṁ*, "place, region") — "**the mountain
 land**," named for the Western Ghats along the coast where it is spoken. Its
 signature retroflex **ള** (*ḷ*) sits right in the middle of the word.
+
+DEDR 4742 lists *mala* with Tamil *malai*, Kannada *male* and Telugu *mala*. DEDR 4742 compares Sanskrit *malaya*.
 
 ## Grammar Lens: the pronoun stays
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01] -->

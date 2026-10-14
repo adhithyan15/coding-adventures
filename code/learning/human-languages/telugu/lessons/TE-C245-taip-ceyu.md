@@ -14,7 +14,8 @@ romanization: "ṭaip cēyu"
 concept_tag: TE-VERB-TAIP-CEYU
 prerequisites: [TE-C245-mudrincu, TE-C245-daunlod-ceyu]
 sounds: []
-roots: []
+roots: [english-type, sey-do-dravidian]
+etymology_hook: "ṭaip cēyu: English type + native cēyu (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C245-daunlod-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C245-KRIYA245-05]; assesses=[] -->
 
 **టైప్ చేయు** — *ṭaip cēyu* — "to type".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**టైప్ చేయు** (*ṭaip cēyu*) pairs *ṭaip*, a loan from English *type*, with native *cēyu*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ġarīb"
 concept_tag: HI-QUAL157-GARIB
 prerequisites: [HI-C157-taza, HI-C157-amir]
 sounds: []
-roots: []
+roots: [arabic-gharib]
+etymology_hook: "ġarīb ← Arabic gharīb 'a stranger', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C157-amir]
 <!-- hl-knowledge: introduces=[HI-LEX-C157-QUAL157-03]; assesses=[] -->
 
 **ग़रीब** — *ġarīb* — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ग़रीब** (*ġarīb*) is a loan from Arabic *gharīb*, "a stranger", which reached Hindi through Persian. Its Arabic root is *gh-r-b* (Lane). Hindi uses it for "poor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

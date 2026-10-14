@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 284,
-  "sourceHash": "fnv1a64:296d474dda41f0d0",
+  "sourceHash": "fnv1a64:a846dfe2e1c84268",
   "lessonIds": [
     "ML-C284-kurran",
     "ML-C284-valippam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch284.txt",
   "json": "malayalam/narration/ch284.json",
-  "textHash": "fnv1a64:9058cc844ba40d60",
-  "jsonHash": "fnv1a64:29c76c24858a6d95",
+  "textHash": "fnv1a64:bf4ae465496c0a93",
+  "jsonHash": "fnv1a64:4529c048e098eee6",
   "findings": []
 }

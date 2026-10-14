@@ -11,6 +11,7 @@ concept_tag: ES-REF-CONTADOR
 prerequisites: [ES-C432-lavadora, ES-C38-contar]
 sounds: []
 roots: []
+etymology_hook: "contador — contar 'to count' + -dor: the meter is the counter"
 duration:
   max_seconds: 235
 requires:
@@ -60,6 +61,8 @@ one you can extend.
 somebody coming to read it. Note the gender: this one is masculine where the
 washing machine was feminine, and nothing about the ending decides that — the
 machine takes whatever gender its own word already had.
+
+*Contar* is Latin *computare*, "to reckon".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C432-CASA-02, ES-LEX-AGUA-01, ES-LEX-CONTAR-08] -->

@@ -4,7 +4,7 @@
   "chapter": 163,
   "title": "Eyebrow, Palm, Rice gruel, Beans, Dal",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fbcd3ca3fe9b14f7",
+  "sourceHash": "fnv1a64:0302dda1027caafd",
   "lessons": [
     {
       "id": "ML-C163-purikam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98c89a32002aceaf",
+      "sourceHash": "fnv1a64:5182e492faddcc37",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുരികം (purikaṁ) may come from Sanskrit bhrū, \"eyebrow\" (CDIAL 9688), reshaped in the mouth, but the path is not certain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8797c72202648eb",
+      "sourceHash": "fnv1a64:9023cf032a8f8439",
       "notice": null,
       "blocks": [
         {
@@ -185,6 +196,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൈവെള്ള (kaiveḷḷa) is native Dravidian, \"the white of the hand\": kai, \"hand\" (DEDR 2023), and veḷḷa, \"white\" (DEDR 5496, with Tamil veḷ). The palm is the paler side of the hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -195,7 +217,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -244,7 +266,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -275,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e1ac0a235e99f9e",
+      "sourceHash": "fnv1a64:7bab6e05d80477a3",
       "notice": null,
       "blocks": [
         {
@@ -308,6 +330,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കഞ്ഞി (kañji) is native Dravidian, one word with Tamil kañci, Kannada gañji and Telugu ganji (DEDR 1107). English congee comes from this word. DEDR 1107 compares Sanskrit kāñjīka."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -318,7 +351,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -367,7 +400,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -398,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:189fa5a1d57d968b",
+      "sourceHash": "fnv1a64:d6f7f20eb4e74eb7",
       "notice": null,
       "blocks": [
         {
@@ -441,6 +474,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പയറ് (payaṟŭ) is native Dravidian, one word with Tamil payaṟu, Kannada pesaṟ and Telugu pesalu (DEDR 3941)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -451,7 +495,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -500,7 +544,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -531,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad7b8c145858aae6",
+      "sourceHash": "fnv1a64:c612eed56b705def",
       "notice": null,
       "blocks": [
         {
@@ -564,6 +608,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പരിപ്പ് (parippŭ) is native Dravidian, one word with Tamil paruppu, Kannada pappu and Telugu pappu (DEDR 3978)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -574,7 +629,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -623,7 +678,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

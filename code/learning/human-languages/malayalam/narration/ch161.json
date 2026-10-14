@@ -4,7 +4,7 @@
   "chapter": 161,
   "title": "Soil, Coconut palm, Banana plant, Jasmine, Lotus",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5130a804d3bbabf2",
+  "sourceHash": "fnv1a64:b94393175b9c643c",
   "lessons": [
     {
       "id": "ML-C161-mannu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:094287df18e787ac",
+      "sourceHash": "fnv1a64:4d8aa289b6e2c509",
       "notice": null,
       "blocks": [
         {
@@ -62,6 +62,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മണ്ണ് (maṇṇŭ) is native Dravidian, one word with Tamil maṇ and Kannada maṇ (DEDR 4666)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -72,7 +83,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -121,7 +132,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -152,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2cde514e5fcdb28",
+      "sourceHash": "fnv1a64:3bdc0794c3f34c61",
       "notice": null,
       "blocks": [
         {
@@ -185,6 +196,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തെങ്ങ് (teṅṅŭ) is native Dravidian, one word with Tamil teṅku and Kannada teṅgu (DEDR 3408)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -195,7 +217,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -244,7 +266,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -275,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fbf2804e65862106",
+      "sourceHash": "fnv1a64:d0753dd96a4df1e4",
       "notice": null,
       "blocks": [
         {
@@ -318,6 +340,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വാഴ (vāḻa) is native Dravidian, one word with Tamil vāḻai and Kannada bāḻe (DEDR 5373). DEDR 5373 compares Sanskrit vārabuṣā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -328,7 +361,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -377,7 +410,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -408,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab1db44d692cc674",
+      "sourceHash": "fnv1a64:58da0052250f7462",
       "notice": null,
       "blocks": [
         {
@@ -441,6 +474,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുല്ല (mulla) is native Dravidian, one word with Tamil mullai, Kannada molle and Telugu molla (DEDR 4987). DEDR 4987 compares Sanskrit mallikā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -451,7 +495,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -500,7 +544,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -531,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:826c8309b9f8f34d",
+      "sourceHash": "fnv1a64:e7070cd170bf5836",
       "notice": null,
       "blocks": [
         {
@@ -574,6 +618,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "താമര (tāmara) is native Dravidian, one word with Tamil tāmarai, Kannada tāmare and Telugu tāmara (DEDR 3163). DEDR 3163 compares Sanskrit tāmarasa."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -584,7 +639,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -633,7 +688,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

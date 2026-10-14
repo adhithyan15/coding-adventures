@@ -14,7 +14,8 @@ romanization: "golubóy"
 concept_tag: RU-KACH157-GOLUBOY
 prerequisites: [RU-C156-gryaznyy, RU-C156-pustoy]
 sounds: []
-roots: []
+roots: [slavic-golobi]
+etymology_hook: "голубой is from голубь 'a dove', after the blue sheen of its neck feathers"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C156-pustoy]
 <!-- hl-knowledge: introduces=[RU-LEX-C157-KACH157-01]; assesses=[] -->
 
 **голубой** (*golubóy*) — "light blue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**голубой** comes from *голубь*, "a dove", after the blue sheen of a dove's neck feathers (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

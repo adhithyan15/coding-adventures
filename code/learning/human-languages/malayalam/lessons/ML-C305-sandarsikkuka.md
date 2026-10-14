@@ -14,7 +14,8 @@ romanization: "sandarśikkuka"
 concept_tag: ML-VERB-SANDARSIKKUKA
 prerequisites: [ML-C305-ceruka, ML-C305-kantumuttuka]
 sounds: []
-roots: []
+roots: [sanskrit-sandarshana]
+etymology_hook: "sandarśikkuka ← Sanskrit sandarśana 'seeing, a visit' + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C305-kantumuttuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C305-KRIYA305-05]; assesses=[] -->
 
 **സന്ദർശിക്കുക** — *sandarśikkuka* — "to visit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സന്ദർശിക്കുക** (*sandarśikkuka*) is built on Sanskrit *sandarśana*, "seeing, beholding", with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

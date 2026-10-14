@@ -14,7 +14,8 @@ romanization: "heccariñcu"
 concept_tag: TE-VERB-HECCARINCU
 prerequisites: [TE-C284-pisuku, TE-C285-bedirincu]
 sounds: []
-roots: []
+roots: [dravidian-ezhu-rise]
+etymology_hook: "heccariñcu: native Dravidian; DEDR 851 lists heccarincu 'to caution' with Kannada eccaṟisu 'to warn'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C285-bedirincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C285-KRIYA285-02]; assesses=[] -->
 
 **హెచ్చరించు** — *heccariñcu* — "to warn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**హెచ్చరించు** (*heccariñcu*) is native Dravidian. DEDR 851 lists *heccariñcu*, "to caution", with Kannada *eccaṟisu*, "to awaken, warn", and Tamil *eccari*, "to warn", under the word for "to rise".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

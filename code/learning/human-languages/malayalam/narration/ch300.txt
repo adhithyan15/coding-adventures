@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a college, then the Malayalam for a un
 You'll want to know: നടൻ.
 നടൻ — naṭan — "an actor".
 
+The word, taken apart.
+നടൻ (naṭan) from Sanskrit naṭa, "dancer, actor", taken over whole as a tatsama, with the masculine ending -n (CDIAL 6933).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a university, then the Malayalam for a
 
 You'll want to know: കവി.
 കവി — kavi — "a poet".
+
+The word, taken apart.
+കവി (kavi) from Sanskrit kavi, "wise man, poet", taken over whole as a tatsama (CDIAL 2964).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for an actor, then the Malayalam for a poe
 You'll want to know: തൂക്കം.
 തൂക്കം — tūkkaṁ — "weight".
 
+The word, taken apart.
+തൂക്കം (tūkkaṁ) is native Dravidian, a noun from the verb "to hang, be weighed"; DEDR 3376 lists the root with Tamil tūṅku and Kannada tūgu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a poet, then the Malayalam for weight.
 You'll want to know: ലാഭം.
 ലാഭം — lābhaṁ — "profit".
 
+The word, taken apart.
+ലാഭം (lābhaṁ) from Sanskrit lābha, "finding, profit", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 11018).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for weight, then the Malayalam for profit.
 
 You'll want to know: നഷ്ടം.
 നഷ്ടം — naṣṭaṁ — "a loss".
+
+The word, taken apart.
+നഷ്ടം (naṣṭaṁ) from Sanskrit naṣṭa, "lost, destroyed", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 7027).
 
 What you've built.
 One more word for this chapter.

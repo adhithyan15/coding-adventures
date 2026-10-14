@@ -4,7 +4,7 @@
   "chapter": 118,
   "title": "Glasses, Clock, Bag, Pen, Paper",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c89e6932b35fde8e",
+  "sourceHash": "fnv1a64:e5c95b0fa7deb433",
   "lessons": [
     {
       "id": "KA-C118-kannadaka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4afd8768c9255a6d",
+      "sourceHash": "fnv1a64:26087f14663e831d",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕನ್ನಡಕ (kannaḍaka) is native Dravidian, one word with Tamil kaṇṇāṭi (DEDR 1182). DEDR lists kanaḍaka, \"pair of spectacles\", beside kannaḍi, \"mirror, lens\". The entry explains the Tamil word as kaṇ, \"eye\", with āṭi, \"mirror\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f8d51f218c4f2ba",
+      "sourceHash": "fnv1a64:1435b8b5f7f7ec98",
       "notice": null,
       "blocks": [
         {
@@ -190,6 +201,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಡಿಯಾರ (gaḍiyāra) came from Hindustani ghaṛiyāl, \"a gong, a clock\". That goes back to Sanskrit ghaṭikā (CDIAL 4406), the small pot that marked time as a water-clock."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -200,7 +222,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -249,7 +271,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -280,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbae9104def62158",
+      "sourceHash": "fnv1a64:5bb3da9cd2fbf431",
       "notice": null,
       "blocks": [
         {
@@ -313,6 +335,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚೀಲ (cīla) is native Dravidian (DEDR 2632). DEDR lists Kannada cīra, cīla, cīlu, \"bag, sack\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -323,7 +356,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -372,7 +405,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -403,7 +436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39882242c25ddccd",
+      "sourceHash": "fnv1a64:216b06fae5ba0b75",
       "notice": null,
       "blocks": [
         {
@@ -455,6 +488,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಲೇಖನಿ (lēkhani) is Sanskrit lekhanī, \"instrument for scraping\", taken over whole as a learned loan, a tatsama, with the final -ī shortened (CDIAL 11103). The tool that scratched letters became the pen."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -465,7 +509,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -514,7 +558,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -545,7 +589,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30ffc225456ab053",
+      "sourceHash": "fnv1a64:3ebef3e71f241767",
       "notice": null,
       "blocks": [
         {
@@ -593,6 +637,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾಗದ (kāgada) is a loan from Persian kāghaz, \"paper\", which came through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -652,7 +707,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

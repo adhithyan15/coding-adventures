@@ -13,7 +13,8 @@ gloss: "an aqueduct"
 concept_tag: LA-RES244-AQUAEDUCTUS
 prerequisites: [LA-C244-raeda, LA-C244-platea]
 sounds: []
-roots: []
+roots: [aquaeductus-latin, aqua-latin, ducere-latin]
+etymology_hook: "aquaeductus 'aqueduct' — aquae ductus 'a leading of water'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C244-platea]
 <!-- hl-knowledge: introduces=[LA-LEX-C244-RES244-03]; assesses=[] -->
 
 **aquaeductus, aquaeductūs** — "an aqueduct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aquaeductus** is *aquae ductus*, "a leading of water" (Lewis & Short): *aqua*, "water", and *ductus*, "a leading", from *dūcō*, "to lead".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

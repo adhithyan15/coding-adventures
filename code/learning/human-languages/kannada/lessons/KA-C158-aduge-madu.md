@@ -14,7 +14,8 @@ romanization: "aḍuge māḍu"
 concept_tag: KA-VERB-ADUGE-MADU
 prerequisites: [KA-C157-rasidi, KA-C158-beyisu]
 sounds: []
-roots: []
+roots: [dravidian-adu-cook, maadu-do-dravidian]
+etymology_hook: "aḍuge māḍu: native aḍuge 'cooking' (DEDR 76) + māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C158-beyisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C158-KRIYE158-02]; assesses=[] -->
 
 **ಅಡುಗೆ ಮಾಡು** — *aḍuge māḍu* — "to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಡುಗೆ ಮಾಡು** (*aḍuge māḍu*) is native Dravidian: *aḍuge*, "cooking", which DEDR 76 lists under *aḍu*, "to cook" (Tamil *aṭu*), and *māḍu*, "to do" (DEDR 4797). DEDR 76 compares Sanskrit *aṭṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sūcī"
 concept_tag: HI-THG260-SUCI
 prerequisites: [HI-C260-asuvidha, HI-C260-niyam]
 sounds: []
-roots: []
+roots: [sanskrit-suci]
+etymology_hook: "sūcī ← Sanskrit sūcī 'needle, pointer', a tatsama (CDIAL 13551)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C260-niyam]
 <!-- hl-knowledge: introduces=[HI-LEX-C260-THG260-04]; assesses=[] -->
 
 **सूची** — *sūcī* — "a list".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सूची** (*sūcī*) is Sanskrit *sūcī*, "needle, pointer", taken over whole as a learned loan, a tatsama (CDIAL 13551). Hindi uses it for a list. CDIAL lists the inherited form of the same word as *sūī*, "needle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for for now, then the Kannada for a period.
 You'll want to know: ಬಂದರು.
 ಬಂದರು — bandaru — "a port, a harbour".
 
+The word, taken apart.
+ಬಂದರು (bandaru) is a loan from Persian bandar, "port, harbour", which came through Hindustani. Kannada adds -u at the end.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a period, then the Kannada for a port.
 
 You'll want to know: ಕಾರ್ಖಾನೆ.
 ಕಾರ್ಖಾನೆ — kārkhāne — "a factory".
+
+The word, taken apart.
+ಕಾರ್ಖಾನೆ (kārkhāne) is a loan from Persian kārxāna, "workshop": kār, "work", and xāna, "house". It came through Hindustani.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a port, then the Kannada for a factory.
 You'll want to know: ಚಿತ್ರಮಂದಿರ.
 ಚಿತ್ರಮಂದಿರ — citramandira — "a cinema hall".
 
+The word, taken apart.
+ಚಿತ್ರಮಂದಿರ (citramandira) is Sanskrit citra, "bright; picture" (CDIAL 4803), and mandira, "dwelling, temple" (CDIAL 9852): "a house of pictures".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a factory, then the Kannada for a cinema
 You'll want to know: ಮೈದಾನ.
 ಮೈದಾನ — maidāna — "a ground, a playground".
 
+The word, taken apart.
+ಮೈದಾನ (maidāna) is a loan from Persian maydān, "an open field, a square", which came through Hindustani.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a cinema hall, then the Kannada for a gr
 
 You'll want to know: ದಿಕ್ಕು.
 ದಿಕ್ಕು — dikku — "a direction".
+
+The word, taken apart.
+ದಿಕ್ಕು (dikku) comes from Sanskrit diś, "direction, region", reshaped to Kannada sounds: a tadbhava (CDIAL 6339). Kannada doubled the final sound and added -u.
 
 What you've built.
 One more word for this chapter.

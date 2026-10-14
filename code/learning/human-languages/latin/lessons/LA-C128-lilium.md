@@ -13,7 +13,8 @@ gloss: "a lily"
 concept_tag: LA-THINGS128-LILIUM
 prerequisites: [LA-C128-sucus, LA-C128-rosa]
 sounds: []
-roots: []
+roots: [lilium-latin]
+etymology_hook: "līlium 'lily' — borrowed from Greek leirion 'lily'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C128-rosa]
 <!-- hl-knowledge: introduces=[LA-LEX-C128-THINGS128-05]; assesses=[] -->
 
 **līlium, līliī** — "a lily".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**līlium** was borrowed from Greek *leirion*, "lily" (Lewis & Short), probably through another language; the word may go back to Egyptian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

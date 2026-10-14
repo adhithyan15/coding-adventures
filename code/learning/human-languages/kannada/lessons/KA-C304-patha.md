@@ -14,7 +14,8 @@ romanization: "pāṭha"
 concept_tag: KA-KELASA304-PATHA
 prerequisites: [KA-C303-hidike, KA-C303-vasane]
 sounds: []
-roots: []
+roots: [sanskrit-patha-recitation]
+etymology_hook: "pāṭha ← Sanskrit pāṭha 'text of a book; study', a tatsama (CDIAL 8035)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C303-vasane]
 <!-- hl-knowledge: introduces=[KA-LEX-C304-KELASA304-01]; assesses=[] -->
 
 **ಪಾಠ** — *pāṭha* — "a lesson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಾಠ** (*pāṭha*) is Sanskrit *pāṭha*, "text of a book; study", taken over whole as a learned loan, a tatsama (CDIAL 8035).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

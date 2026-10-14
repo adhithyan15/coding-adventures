@@ -11,6 +11,7 @@ concept_tag: ES-ASK-DIRECTOR
 prerequisites: [ES-C465-sintesis-apunte, ES-C446-directo, ES-C421-actor]
 sounds: [stress-final, r-tap]
 roots: [dirigere-latin]
+etymology_hook: "director ← Latin director, from dirigere 'to set straight' + -tor"
 duration:
   max_seconds: 270
 requires:

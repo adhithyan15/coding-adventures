@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to part, then the Malayalam for to poi
 You'll want to know: മുഖം.
 മുഖം — mukhaṁ — "the face".
 
+The word, taken apart.
+മുഖം (mukhaṁ) from Sanskrit mukha, "mouth, face", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 10158).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to point, then the Malayalam for the f
 
 You'll want to know: ശരീരം.
 ശരീരം — śarīraṁ — "the body".
+
+The word, taken apart.
+ശരീരം (śarīraṁ) from Sanskrit śarīra, "body", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 12335).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for the face, then the Malayalam for the b
 You'll want to know: തൊണ്ട.
 തൊണ്ട — toṇṭa — "the throat".
 
+The word, taken apart.
+തൊണ്ട (toṇṭa) is native Dravidian, one word with Tamil toṇṭai (DEDR 3498).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for the body, then the Malayalam for the t
 You'll want to know: തുട.
 തുട — tuṭa — "the thigh".
 
+The word, taken apart.
+തുട (tuṭa) is native Dravidian, one word with Tamil tuṭai, Kannada toḍe and Telugu toḍa (DEDR 3302).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for the throat, then the Malayalam for the
 
 You'll want to know: അര.
 അര — ara — "the waist".
+
+The word, taken apart.
+അര (ara) is native Dravidian, one word with Tamil arai (DEDR 230).
 
 What you've built.
 One more word for this chapter.

@@ -10,7 +10,8 @@ gloss: that is to say — the same idea in your own words
 concept_tag: PARAPHRASE
 prerequisites: [ES-C277-segun]
 sounds: [vowel-e, vowel-o]
-roots: [dicere]
+roots: [dicere-latin]
+etymology_hook: "decir ← Latin dicere 'to say' — English diction, dictate, verdict"
 duration:
   max_seconds: 240
 requires:

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 138,
-  "sourceHash": "fnv1a64:9a57eaadca7130e0",
+  "sourceHash": "fnv1a64:ed945b7a89e1f80d",
   "lessonIds": [
     "TE-C138-vegam",
     "TE-C138-andamaina",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch138.txt",
   "json": "telugu/narration/ch138.json",
-  "textHash": "fnv1a64:3172ab115d0b4249",
-  "jsonHash": "fnv1a64:7bb44b865ae85907",
+  "textHash": "fnv1a64:24390a35d8ce4dc9",
+  "jsonHash": "fnv1a64:296110743ad9677e",
   "findings": []
 }

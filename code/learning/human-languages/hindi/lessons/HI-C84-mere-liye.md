@@ -14,7 +14,8 @@ romanization: "mere liye"
 concept_tag: HI-GRAMMAR-COMPOUND-POSTPOSITION
 prerequisites: [HI-C84-mere-paas]
 sounds: []
-roots: []
+roots: [sanskrit-labhate]
+etymology_hook: "liye: usually explained as a form of lenā 'to take', which CDIAL lists under Sanskrit labhate 'takes' (CDIAL 10948)"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,11 @@ follows:
 | mere pās | near me — *I have* |
 | mere liye | for me |
 | mere *sāth* | with me |
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मेरे लिए** (*mere liye*) is *mere*, "my", with *liye*, "for". *liye* is usually explained as a form of *lenā*, "to take", which CDIAL lists under Sanskrit *labhate*, "catches, takes" (CDIAL 10948).
 
 ## Grammar Lens: the pattern generalises to every person
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C84-POSS-06, HI-LEX-C84-POSS-05, HI-LEX-C84-POSS-02] -->

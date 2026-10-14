@@ -45,8 +45,16 @@ reached without links). Those are the key files' directories, and whatever
 
 ## Platforms
 
-Verified launch needs `execveat`, so it is Linux only. Elsewhere
-`VerifiedExecutable` is an empty type: no broker can be launched (S-P3).
+`launch` runs a `BrokerProgram`, which differs by platform:
+
+| Platform | `BrokerProgram` holds | How the broker is confined |
+|---|---|---|
+| Linux (P2.6d-3) | the verified broker | `chief-of-staff-linux-sandbox`, between fork and `execveat` of the hashed descriptor |
+| macOS (P2.7b) | the verified broker and the verified Seatbelt shim | `chief-of-staff-macos-sandbox`: the shim, a fresh image, installs the profile and then execs the broker |
+| elsewhere | nothing: no value can exist | no broker can be launched (S-P3) |
+
+On both supported platforms the plan is `broker_plan()`, with no
+capabilities. The launch takes the same steps in the same order.
 
 ## Tests
 

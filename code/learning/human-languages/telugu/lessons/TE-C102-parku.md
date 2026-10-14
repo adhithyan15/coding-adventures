@@ -14,7 +14,8 @@ romanization: "pārku"
 concept_tag: TE-LOC102-PARKU
 prerequisites: [TE-C102-roddu, TE-C102-vantena]
 sounds: []
-roots: []
+roots: [english-park]
+etymology_hook: "pārku ← English park, with Telugu's added -u"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C102-vantena]
 <!-- hl-knowledge: introduces=[TE-LEX-C102-LOC102-05]; assesses=[] -->
 
 **పార్కు** — *pārku* — "a park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పార్కు** (*pārku*) is a loan from English *park*, with Telugu's added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

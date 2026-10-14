@@ -11,7 +11,8 @@ romanization: "atanu"
 concept_tag: TE-PRONOUN-THIRD
 prerequisites: [TE-C79-our, TE-C33-caduvu]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "atanu, āme: native Dravidian, on the far-pointing base a- 'that' (DEDR 1), which lists āme 'that woman'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C79-our]
 Until now you could speak about yourself and to one other person. You could not speak *about* anybody, which is half of what an exam asks you to do.
 
 All three start on the **అ-** of అది and అక్కడ: the far one, the one not here. అతను is literally "that man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అతను** (*atanu*) is native Dravidian, built on the far-pointing base *a-*, "that": DEDR 1 lists the Telugu words for "that man", and *āme*, "that woman", among them.
 
 ## Grammar Lens: the third person is where Telugu marks gender
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C79-WHO-03]; assesses=[] -->

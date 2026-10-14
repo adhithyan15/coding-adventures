@@ -14,7 +14,8 @@ romanization: "vyākaraṇaṁ"
 concept_tag: ML-JOLI222-VYAKARANAM
 prerequisites: [ML-C222-bhumisastram, ML-C222-sahityam]
 sounds: []
-roots: []
+roots: [sanskrit-vyakarana]
+etymology_hook: "vyākaraṇaṁ ← Sanskrit vyākaraṇa 'separation, grammatical analysis', a tatsama (CDIAL 12182)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C222-sahityam]
 <!-- hl-knowledge: introduces=[ML-LEX-C222-JOLI222-03]; assesses=[] -->
 
 **വ്യാകരണം** — *vyākaraṇaṁ* — "grammar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വ്യാകരണം** (*vyākaraṇaṁ*) ← Sanskrit *vyākaraṇa*, "separation, grammatical analysis", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 12182). Grammar is the taking apart of speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

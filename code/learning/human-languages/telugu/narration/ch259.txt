@@ -12,6 +12,9 @@ Before the new one: say the Telugu for development, then the Telugu for a situat
 You'll want to know: రద్దీ.
 రద్దీ — raddī — "crowded; a crowd, rush".
 
+The word, taken apart.
+The origin of రద్దీ (raddī) is uncertain. DEDR and CDIAL list no word of this shape meaning "crowd, rush".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a situation, then the Telugu for crowded.
 
 You'll want to know: ముఖ్యమైన.
 ముఖ్యమైన — mukhyamaina — "important".
+
+The word, taken apart.
+ముఖ్యమైన (mukhyamaina) is Sanskrit mukhya, "pertaining to the face; chief" (CDIAL 10174), with native aina, "which is" (DEDR 333).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for crowded, then the Telugu for important.
 You'll want to know: సొంత.
 సొంత — sonta — "own".
 
+The word, taken apart.
+The origin of సొంత (sonta) is uncertain. DEDR and CDIAL list no word of this shape meaning "own".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for important, then the Telugu for own.
 You'll want to know: బిజీ.
 బిజీ — bijī — "busy".
 
+The word, taken apart.
+బిజీ (bijī) is a loan from English busy.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for own, then the Telugu for busy.
 
 You'll want to know: తప్పనిసరి.
 తప్పనిసరి — tappanisari — "compulsory".
+
+The word, taken apart.
+తప్పనిసరి (tappanisari) is native tappu, "to miss, fail" (DEDR 3071), with ani, "saying", and sari, "right", whose origin is uncertain: "right to say it cannot be missed".
 
 What you've built.
 One more word for this chapter.

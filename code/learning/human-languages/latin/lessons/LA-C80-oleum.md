@@ -13,7 +13,8 @@ gloss: "oil"
 concept_tag: LA-CIBUS2-OLEUM
 prerequisites: [LA-C79-caro, LA-C80-caseus]
 sounds: []
-roots: []
+roots: [oleum-latin]
+etymology_hook: "oleum 'oil' — borrowed from Greek elaion 'olive oil'; English oil"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C80-caseus]
 <!-- hl-knowledge: introduces=[LA-LEX-C80-CIBUS2-02]; assesses=[] -->
 
 **oleum, oleī** — "oil". Pressed from the olive.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oleum** was borrowed from Greek *elaion*, "olive oil" (Lewis & Short), probably from an older Greek *\*elaiwon* (EtymDB 2.1). English *oil* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

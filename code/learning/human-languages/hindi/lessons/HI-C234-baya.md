@@ -14,7 +14,8 @@ romanization: "bāyā̃"
 concept_tag: HI-LOC234-BAYA
 prerequisites: [HI-C233-pascim, HI-C233-daya]
 sounds: []
-roots: []
+roots: [sanskrit-vama]
+etymology_hook: "bāyāṁ ← Sanskrit vāma 'lefthand', a tadbhava (CDIAL 11533)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C233-daya]
 <!-- hl-knowledge: introduces=[HI-LEX-C234-LOC234-01]; assesses=[] -->
 
 **बायाँ** — *bāyā̃* — "left (side)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बायाँ** (*bāyāṁ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vāma*, "lefthand" (CDIAL 11533).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

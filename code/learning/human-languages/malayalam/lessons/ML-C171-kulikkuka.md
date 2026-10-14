@@ -14,7 +14,8 @@ romanization: "kuḷikkuka"
 concept_tag: ML-VERB-KULIKKUKA
 prerequisites: [ML-C171-urannuka, ML-C171-unaruka, ML-C71-njangal-naam]
 sounds: []
-roots: []
+roots: [dravidian-kuli-bathe]
+etymology_hook: "kuḷikkuka: native Dravidian, one word with Tamil kuḷi (DEDR 1832)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C171-unaruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C171-ACT171-04]; assesses=[] -->
 
 **കുളിക്കുക** — *kuḷikkuka* — "to bathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുളിക്കുക** (*kuḷikkuka*) is native Dravidian, one word with Tamil *kuḷi* (DEDR 1832).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

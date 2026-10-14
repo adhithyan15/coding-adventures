@@ -14,7 +14,8 @@ romanization: "otvét"
 concept_tag: RU-VERB5-ANSWER
 prerequisites: [RU-C42-pit, RU-C42-question]
 sounds: []
-roots: []
+roots: [vet]
+etymology_hook: "ответ is от- 'back' + Old Russian větŭ 'counsel, speech': a word given back"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C42-question]
 <!-- hl-knowledge: introduces=[RU-LEX-C42-VERB5-05]; assesses=[] -->
 
 **ответ** (*otvét*) — "an answer". The noun behind **отвечать**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ответ** is *от-*, "back", with *вет*, an old word: Old Russian *větŭ* meant "counsel, agreement" (Vasmer). An answer is a word given back. The same root is in *привет*, "hi", and *совет*, "advice". Vasmer compares Old Prussian *waitiāt*, "to speak".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

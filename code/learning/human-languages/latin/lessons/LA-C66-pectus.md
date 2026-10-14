@@ -13,7 +13,8 @@ gloss: "the chest, the breast"
 concept_tag: LA-CORPUS4-PECTUS
 prerequisites: [LA-C65-frons, LA-C65-barba]
 sounds: []
-roots: []
+roots: [pectus-latin]
+etymology_hook: "pectus 'chest' — probably inherited, through Proto-Italic *pektos; English pectoral comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C65-barba]
 <!-- hl-knowledge: introduces=[LA-LEX-C66-CORPUS4-01]; assesses=[] -->
 
 **pectus, pectoris** — "the chest, the breast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pectus** is probably inherited: EtymDB 2.1 traces it through Proto-Italic *\*pektos*, "chest", to a Proto-Indo-European *\*peg-*, "breast", a root with few other witnesses. English *pectoral* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

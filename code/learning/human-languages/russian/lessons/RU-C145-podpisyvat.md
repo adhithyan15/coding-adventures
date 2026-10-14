@@ -14,7 +14,8 @@ romanization: "podpísyvat"
 concept_tag: RU-VERB-PODPISYVAT
 prerequisites: [RU-C144-khvalit, RU-C144-rugat]
 sounds: []
-roots: []
+roots: [pie-peyk]
+etymology_hook: "подписывать is под- 'under' + писать 'to write': to write one's name under"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C144-rugat]
 <!-- hl-knowledge: introduces=[RU-LEX-C145-ACT145-01]; assesses=[] -->
 
 **подписывать** (*podpísyvat*) — "to sign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**подписывать** is *под-*, "under", with *-писывать*, from *писать*, "to write": you sign at the foot of a page.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

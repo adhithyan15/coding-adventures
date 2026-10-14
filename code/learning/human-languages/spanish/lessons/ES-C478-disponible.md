@@ -10,7 +10,8 @@ gloss: "available"
 concept_tag: ES-REF-DISPONIBLE
 prerequisites: [ES-C478-sitio, ES-C478-espacio]
 sounds: []
-roots: []
+roots: [ponere-latin]
+etymology_hook: "disponible — disponer 'to arrange' + -ible; Latin disponere, dis- + ponere 'to put'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C478-espacio]
 > *The room is available from Monday.*
 
 Used with *estar*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**disponible** is built from *disponer*, "to arrange, to have at hand", with *-ible*, "able to be". *Disponer* is Latin *disponere*, "to set in order": *dis-*, "apart", and *ponere*, "to put".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

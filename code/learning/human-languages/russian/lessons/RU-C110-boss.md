@@ -14,7 +14,8 @@ romanization: "nachálnik"
 concept_tag: RU-THINGS110-BOSS
 prerequisites: [RU-C110-customer, RU-C110-till]
 sounds: []
-roots: []
+roots: [slavic-chenti]
+etymology_hook: "начальник is начало 'beginning, head' + -ник: the one at the head"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C110-till]
 <!-- hl-knowledge: introduces=[RU-LEX-C110-THINGS110-03]; assesses=[] -->
 
 **начальник** (*nachálnik*) — "a boss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**начальник** is *начало*, "beginning; authority", with *-ник*, "a person": the one in charge. *начало* goes with *начать*, "to begin", and *конец*, "end", and Vasmer relates the root to Greek *kainós*, "new".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

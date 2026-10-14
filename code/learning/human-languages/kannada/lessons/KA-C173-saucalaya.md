@@ -14,7 +14,8 @@ romanization: "śaucālaya"
 concept_tag: KA-STHALA173-SAUCALAYA
 prerequisites: [KA-C173-adugemane, KA-C173-snanada-mane]
 sounds: []
-roots: []
+roots: [sanskrit-shauca, sanskrit-alaya]
+etymology_hook: "śaucālaya: Sanskrit śauca 'cleanness' (CDIAL 12649) + ālaya 'house' (CDIAL 1366)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C173-snanada-mane]
 <!-- hl-knowledge: introduces=[KA-LEX-C173-STHALA173-03]; assesses=[] -->
 
 **ಶೌಚಾಲಯ** — *śaucālaya* — "a toilet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಶೌಚಾಲಯ** (*śaucālaya*) is Sanskrit *śauca*, "cleanness" (CDIAL 12649), and *ālaya*, "house, receptacle" (CDIAL 1366): "the place for cleansing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

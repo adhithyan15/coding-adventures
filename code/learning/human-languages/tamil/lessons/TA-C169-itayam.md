@@ -47,7 +47,7 @@ reviews_of: [TA-C169-tontai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**இதயம்** (*itayam*) is a loan from Sanskrit *hṛdaya*, "heart" (CDIAL 14152). Tamil dropped the *h* and the *ṛ*.
+**இதயம்** (*itayam*) is a loan from Sanskrit *hṛdaya*, "heart" (CDIAL 14152). Tamil dropped the *h*, and *ṛ* became *i*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

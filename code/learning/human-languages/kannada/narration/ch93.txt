@@ -13,6 +13,9 @@ You'll want to know: ತಲೆಸುತ್ತು.
 ತಲೆಸುತ್ತು (talesuttu) — "dizziness", literally "head-spinning": ತಲೆ (tale), "head", with ಸುತ್ತು (suttu), "to go round".
 ನನಗೆ ತಲೆಸುತ್ತು (nanage talesuttu) — "I feel dizzy", built like ನನಗೆ ತಲೆನೋವು.
 
+The word, taken apart.
+ತಲೆಸುತ್ತು (talesuttu) is native Dravidian: tale, "head" (DEDR 3103), and suttu, "going round, winding" (DEDR 2715). Dizziness is the head going round.
+
 What you've built.
 Head, and a turn, make one more head word.
 
@@ -42,6 +45,9 @@ Before the new one: say the Kannada for English, then the Kannada for dizziness.
 You'll want to know: ಸೆಕೆ.
 ಸೆಕೆ (seke) — "sultry, sticky heat", the heat that makes you ಬೆವರು, "sweat".
 ತುಂಬಾ ಸೆಕೆ (tumbā seke) — "it's very hot and sticky".
+
+The word, taken apart.
+Where ಸೆಕೆ (seke) comes from is uncertain: DEDR does not record it. It looks like the northern verb for "to heat, foment", which CDIAL 13581 reconstructs as sēkk, "heat, foment", but no source records the Kannada word.
 
 What you've built.
 Heat you can feel on the skin.
@@ -73,6 +79,9 @@ You'll want to know: ಆರಾಮ.
 ಆರಾಮ (ārāma) — "ease, comfort, rest".
 ಆರಾಮಾಗಿದ್ದೀರಾ? (ārāmāgiddīrā?) — "are you well, are you at ease?", a warm way to ask how someone is.
 
+The word, taken apart.
+ಆರಾಮ (ārāma) is Sanskrit ārāma, "delight; garden", taken over whole as a learned loan, a tatsama (CDIAL 1317). In Kannada the delight became ease and comfort.
+
 What you've built.
 The feeling that comes after rest.
 
@@ -103,6 +112,9 @@ You'll want to know: ಗಾಯ.
 ಗಾಯ (gāya) — "a wound, an injury".
 ಗಾಯ ಆಗಿದೆ (gāya āgide) — "(I) got hurt".
 
+The word, taken apart.
+ಗಾಯ (gāya) comes from Sanskrit ghāta, "killing; blow, bruise", reshaped to Kannada sounds: a tadbhava (CDIAL 4460). Prakrit ghāya shows the middle step.
+
 What you've built.
 What the hospital treats.
 
@@ -132,6 +144,9 @@ Before the new one: say the Kannada for at ease, then the Kannada for a wound.
 You'll want to know: ವಾಂತಿ.
 ವಾಂತಿ (vānti) — "vomiting".
 ವಾಂತಿ ಆಗುತ್ತಿದೆ (vānti āguttide) — "(I) feel like vomiting". It is a word to say to a doctor.
+
+The word, taken apart.
+ವಾಂತಿ (vānti) is Sanskrit vānti, "vomiting", taken over whole as a learned loan, a tatsama (CDIAL 11518).
 
 What you've built.
 One more word for the doctor.

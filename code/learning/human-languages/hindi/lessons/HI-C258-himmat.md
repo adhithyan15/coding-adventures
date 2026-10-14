@@ -14,7 +14,8 @@ romanization: "himmat"
 concept_tag: HI-THG258-HIMMAT
 prerequisites: [HI-C258-ahankar, HI-C258-dhiraj]
 sounds: []
-roots: []
+roots: [arabic-himma]
+etymology_hook: "himmat ← Arabic himma 'resolve, aspiration', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C258-dhiraj]
 <!-- hl-knowledge: introduces=[HI-LEX-C258-THG258-03]; assesses=[] -->
 
 **हिम्मत** — *himmat* — "courage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हिम्मत** (*himmat*) is a loan from Arabic *himma*, "resolve, aspiration", which reached Hindi through Persian. Its Arabic root is *h-m-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

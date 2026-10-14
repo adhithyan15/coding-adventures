@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "Right, Wrong, Maybe",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0efdfdeb87170c5b",
+  "sourceHash": "fnv1a64:77ad2d92bd1ef6a1",
   "lessons": [
     {
       "id": "TE-C87-mistake",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:978402953e2832da",
+      "sourceHash": "fnv1a64:f36b019f8d42b9dc",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తప్పు (tappu) is native Dravidian, one word with Tamil tappu and Kannada tappu (DEDR 3071). DEDR lists Telugu tappu, \"error, mistake; to miss, fail\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6fc71224ed4040b4",
+      "sourceHash": "fnv1a64:91bf2ff6eb4da515",
       "notice": null,
       "blocks": [
         {
@@ -187,6 +198,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సరిగ్గా (sariggā) is sari, \"right, even\", with the adverb ending -gā. The origin of sari is uncertain: DEDR has no entry for it, and it is usually traced to Sanskrit sadṛśa, \"like, equal\" (CDIAL 13120)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -197,7 +219,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -246,7 +268,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -277,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:506a993a97d63719",
+      "sourceHash": "fnv1a64:09c40aae09a97887",
       "notice": null,
       "blocks": [
         {
@@ -314,6 +336,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బహుశా (bahuśā) is Sanskrit bahuśaḥ, \"many times, often\", from bahu, \"much, many\" (CDIAL 9187), taken over as a learned loan with its ending worn down."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -324,7 +357,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -373,7 +406,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -404,7 +437,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f23903fe30c4be8",
+      "sourceHash": "fnv1a64:97c44035970f331c",
       "notice": null,
       "blocks": [
         {
@@ -441,6 +474,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అలాగా (alāgā) is native Dravidian: alā, \"in that way\", built on the far-pointing base a- (DEDR 1), with -gā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -451,7 +495,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -500,7 +544,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -531,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78d3efd43b2ada71",
+      "sourceHash": "fnv1a64:e794f1055f62d9cb",
       "notice": null,
       "blocks": [
         {
@@ -568,6 +612,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిజంగా (nijaṁgā) is nijaṁ, \"truth\", from Sanskrit nija, \"one's own, innate\" (CDIAL 7181), with the Telugu adverb ending -gā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -578,7 +633,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -627,7 +682,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

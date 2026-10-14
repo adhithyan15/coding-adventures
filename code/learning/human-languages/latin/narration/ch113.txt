@@ -12,6 +12,9 @@ Before the new one: say the Latin for why?, then the Latin for why?.
 You'll want to know: nam.
 nam — "for (giving a reason)".
 
+The word, taken apart.
+nam is usually explained as an old case form of a pronoun stem na-, "that" (Lewis & Short): "for that".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for why?, then the Latin for for.
 
 You'll want to know: enim.
 enim — "for, you see".
+
+The word, taken apart.
+enim is often explained as a short pointing element followed by nam, "for" (Lewis & Short), but its make-up is uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for for, then the Latin for for.
 You'll want to know: ideō.
 ideō — "for that reason".
 
+The word, taken apart.
+ideō is built from id, "that", and eō, "for that" (Lewis & Short): for that reason.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for for, then the Latin for for that reason.
 You'll want to know: itaque.
 itaque — "and so, therefore".
 
+The word, taken apart.
+itaque is ita, "so, thus", with -que, "and" (EtymDB 2.1): and so.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for for that reason, then the Latin for and so
 
 You'll want to know: causa, causae.
 causa, causae — "a reason, a cause".
+
+The word, taken apart.
+causa was spelled caussa in older Latin (EtymDB 2.1); where it comes from is unknown. English cause and because come from it.
 
 What you've built.
 One more word for this chapter.

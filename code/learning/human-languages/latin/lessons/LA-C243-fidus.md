@@ -13,7 +13,8 @@ gloss: "faithful"
 concept_tag: LA-QUAL243-FIDUS
 prerequisites: [LA-C242-alius, LA-C243-dubius]
 sounds: []
-roots: []
+roots: [fidus-latin, fidere-latin]
+etymology_hook: "fīdus 'faithful' — kin to fīdō 'to trust', from PIE *bheydh-; Greek peithō is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C243-dubius]
 <!-- hl-knowledge: introduces=[LA-LEX-C243-QUAL243-02]; assesses=[] -->
 
 **fīdus, fīda, fīdum** — "faithful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fīdus** belongs with *fīdō*, "to trust" (Lewis & Short), usually traced to Proto-Indo-European *\*bheydh-*, "to trust, to persuade" (EtymDB 2.1); Greek *peithō*, "to persuade", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

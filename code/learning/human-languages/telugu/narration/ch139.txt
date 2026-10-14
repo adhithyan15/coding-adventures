@@ -12,6 +12,9 @@ Before the new one: say the Telugu for wide, then the Telugu for narrow.
 You'll want to know: తడి.
 తడి — taḍi — "wet".
 
+The word, taken apart.
+తడి (taḍi) is native Dravidian. DEDR 3045 lists taḍi, "moisture, wet, damp", in an entry with Tamil taṇ, "cool". DEDR compares Prakrit taṇṇāya, "damp", and the northern words in CDIAL 13676.
+
 What you've built.
 One more word for this chapter.
 
@@ -41,6 +44,9 @@ Before the new one: say the Telugu for narrow, then the Telugu for wet.
 You'll want to know: పొడి.
 పొడి — poḍi — "dry".
 
+The word, taken apart.
+పొడి (poḍi) is native Dravidian. DEDR 4481 lists poḍi, "powder, dust; powdery, loose", with Kannada puḍi, "powder"; the sense "dry" is not listed there.
+
 What you've built.
 One more word for this chapter.
 
@@ -69,6 +75,9 @@ Before the new one: say the Telugu for wet, then the Telugu for dry.
 
 You'll want to know: పేద.
 పేద — pēda — "poor".
+
+The word, taken apart.
+పేద (pēda) is native Dravidian. DEDR 4437 lists pēda, "poor, timid", with Tamil pētu, "bewilderment, sorrow".
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Say తాత and అమ్మమ్మ, grandfather and grandmother.
 You'll want to know: ముసలి.
 ముసలి — musali — "old (of people)".
 
+The word, taken apart.
+The origin of ముసలి (musali) is uncertain. Neither DEDR nor CDIAL records it.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Telugu for poor, then the Telugu for old.
 
 You'll want to know: ప్రసిద్ధ.
 ప్రసిద్ధ — prasiddha — "famous".
+
+The word, taken apart.
+ప్రసిద్ధ (prasiddha) is Sanskrit prasiddha, "celebrated", taken over whole as a learned loan, a tatsama (CDIAL 8842).
 
 What you've built.
 One more word for this chapter.

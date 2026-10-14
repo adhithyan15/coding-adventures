@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 184,
-  "sourceHash": "fnv1a64:16e70aa30e059787",
+  "sourceHash": "fnv1a64:49ff5c080cec252f",
   "lessonIds": [
     "KA-C184-sautekayi",
     "KA-C184-bendekayi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch184.txt",
   "json": "kannada/narration/ch184.json",
-  "textHash": "fnv1a64:c6364728b34e2081",
-  "jsonHash": "fnv1a64:ccf622a57c258740",
+  "textHash": "fnv1a64:7e962f380d4ef10a",
+  "jsonHash": "fnv1a64:ef8f90b3740caa98",
   "findings": []
 }

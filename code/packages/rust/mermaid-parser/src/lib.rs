@@ -17,7 +17,7 @@ use diagram_ir::{
     DiagramStyle, EdgeKind, GraphCallback, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
-    SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneLane, SwimlaneLineHops, SwimlaneNode,
+    SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneGroup, SwimlaneLane, SwimlaneLineHops, SwimlaneNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -6196,6 +6196,8 @@ fn is_treeview_metadata_line(line: &str) -> bool {
 pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     let line_hops = parse_swimlane_line_hops(source)?;
     let automatic_lane_ordering = parse_swimlane_automatic_lane_ordering(source)?;
+    let ignore_cross_lane_edges = parse_swimlane_ignore_cross_lane_edges(source)?;
+    let optimize_ranks_by_crossings = parse_swimlane_optimize_ranks_by_crossings(source)?;
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_swimlane(&prepared).map_err(|message| ParseError {
         message,
@@ -6219,18 +6221,23 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         accessibility_title: None,
         accessibility_description: None,
         lanes: Vec::new(),
+        groups: Vec::new(),
         nodes: Vec::new(),
         edges: Vec::new(),
         links: Vec::new(),
         callbacks: Vec::new(),
         line_hops,
         automatic_lane_ordering,
+        ignore_cross_lane_edges,
+        optimize_ranks_by_crossings,
     };
     let mut current_lane: Option<usize> = None;
+    let mut group_stack = Vec::<usize>::new();
     let mut last_edge_targets: Option<Vec<String>> = None;
     let mut class_styles = HashMap::new();
     let mut pending_classes = Vec::new();
     let mut pending_styles = Vec::new();
+    let mut pending_link_styles = Vec::new();
     let mut pending_edge_configs = Vec::new();
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
@@ -6259,28 +6266,33 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             continue;
         }
         if let Some(value) = line.strip_prefix("subgraph ") {
-            if current_lane.is_some() {
+            let (id, label) = parse_swimlane_lane(
+                value, diagram.lanes.len() + diagram.groups.len() + 1, line_number,
+            )?;
+            if diagram.lanes.iter().any(|lane| lane.id == id)
+                || diagram.groups.iter().any(|group| group.id == id)
+            {
                 return Err(swimlane_error(
                     line_number,
-                    "nested subgraphs are not supported by the native Swimlane slice",
+                    format!("duplicate Swimlane subgraph id {id:?}"),
                 ));
             }
-            let (id, label) = parse_swimlane_lane(value, diagram.lanes.len() + 1, line_number)?;
-            if diagram.lanes.iter().any(|lane| lane.id == id) {
-                return Err(swimlane_error(
-                    line_number,
-                    format!("duplicate Swimlane id {id:?}"),
-                ));
+            if let Some(lane) = current_lane {
+                let parent_id = group_stack.last().map(|group| diagram.groups[*group].id.clone());
+                diagram.groups.push(SwimlaneGroup {
+                    id, label, lane_id: diagram.lanes[lane].id.clone(), parent_id, node_ids: Vec::new(),
+                });
+                group_stack.push(diagram.groups.len() - 1);
+            } else {
+                diagram.lanes.push(SwimlaneLane { id, label, node_ids: Vec::new() });
+                current_lane = Some(diagram.lanes.len() - 1);
             }
-            diagram.lanes.push(SwimlaneLane {
-                id,
-                label,
-                node_ids: Vec::new(),
-            });
-            current_lane = Some(diagram.lanes.len() - 1);
             continue;
         }
         if line.eq_ignore_ascii_case("end") {
+            if group_stack.pop().is_some() {
+                continue;
+            }
             if current_lane.take().is_none() {
                 return Err(swimlane_error(
                     line_number,
@@ -6326,11 +6338,20 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             pending_styles.push(parse_swimlane_style(value, line_number)?);
             continue;
         }
+        if let Some(value) = line.strip_prefix("linkStyle ") {
+            pending_link_styles.push(parse_swimlane_link_style(value, line_number)?);
+            continue;
+        }
+        if let Some(config) = parse_swimlane_edge_config(line, line_number)? {
+            pending_edge_configs.push(config);
+            continue;
+        }
         if is_edge {
             last_edge_targets = Some(parse_swimlane_edge_chain(
                 line,
                 line_number,
                 current_lane,
+                group_stack.last().copied(),
                 last_edge_targets.as_deref(),
                 &mut diagram,
             )?);
@@ -6345,14 +6366,15 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             line_number,
             current_lane.map(|lane| diagram.lanes[lane].id.clone()),
         )?;
-        upsert_swimlane_node(&mut diagram, node, current_lane);
+        upsert_swimlane_node(&mut diagram, node, current_lane, group_stack.last().copied());
     }
-    if current_lane.is_some() {
+    if current_lane.is_some() || !group_stack.is_empty() {
         return Err(swimlane_error(
             prepared.lines().count(),
             "unterminated Swimlane subgraph",
         ));
     }
+    assign_swimlane_default_lane(&mut diagram);
     if diagram.lanes.is_empty() || diagram.nodes.is_empty() {
         return Err(swimlane_error(
             1,
@@ -6471,6 +6493,30 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             return Err(swimlane_error(line, format!("Swimlane style references unknown node or edge {target_id:?}")));
         }
     }
+    for (targets, style, curve, line) in pending_link_styles {
+        match targets {
+            SwimlaneLinkStyleTargets::Default => {
+                for edge in &mut diagram.edges {
+                    merge_state_style(&mut edge.style, &style);
+                    if let Some(curve) = curve {
+                        edge.curve = Some(curve);
+                    }
+                }
+            }
+            SwimlaneLinkStyleTargets::Indices(indices) => {
+                for index in indices {
+                    let edge = diagram.edges.get_mut(index).ok_or_else(|| swimlane_error(
+                        line,
+                        format!("Swimlane linkStyle references unknown edge index {index}"),
+                    ))?;
+                    merge_state_style(&mut edge.style, &style);
+                    if let Some(curve) = curve {
+                        edge.curve = Some(curve);
+                    }
+                }
+            }
+        }
+    }
     Ok(diagram)
 }
 
@@ -6508,6 +6554,42 @@ fn parse_swimlane_automatic_lane_ordering(source: &str) -> Result<bool, ParseErr
         "true" => Ok(true),
         "false" => Ok(false),
         _ => Err(swimlane_error(1, "Swimlane automaticLaneOrdering must be true or false")),
+    }
+}
+
+fn parse_swimlane_ignore_cross_lane_edges(source: &str) -> Result<bool, ParseError> {
+    let Some(section) = mermaid_front_matter_section(source, &["config", "swimlane"]) else {
+        return Ok(true);
+    };
+    let Some(value) = section.lines().find_map(|line| {
+        let (key, value) = line.split_once(':')?;
+        key.trim().eq_ignore_ascii_case("ignoreCrossLaneEdges").then(||
+            value.trim().trim_matches(['\'', '"']).to_ascii_lowercase())
+    }) else {
+        return Ok(true);
+    };
+    match value.as_str() {
+        "true" => Ok(true),
+        "false" => Ok(false),
+        _ => Err(swimlane_error(1, "Swimlane ignoreCrossLaneEdges must be true or false")),
+    }
+}
+
+fn parse_swimlane_optimize_ranks_by_crossings(source: &str) -> Result<bool, ParseError> {
+    let Some(section) = mermaid_front_matter_section(source, &["config", "swimlane"]) else {
+        return Ok(true);
+    };
+    let Some(value) = section.lines().find_map(|line| {
+        let (key, value) = line.split_once(':')?;
+        key.trim().eq_ignore_ascii_case("optimizeRanksByCrossings").then(||
+            value.trim().trim_matches(['\'', '"']).to_ascii_lowercase())
+    }) else {
+        return Ok(true);
+    };
+    match value.as_str() {
+        "true" => Ok(true),
+        "false" => Ok(false),
+        _ => Err(swimlane_error(1, "Swimlane optimizeRanksByCrossings must be true or false")),
     }
 }
 
@@ -6642,6 +6724,53 @@ fn parse_swimlane_style(value: &str, line: usize) -> Result<(String, DiagramStyl
     Ok((node_id.to_string(), parse_swimlane_style_declarations(declarations, line)?, line))
 }
 
+enum SwimlaneLinkStyleTargets {
+    Default,
+    Indices(Vec<usize>),
+}
+
+fn parse_swimlane_link_style(
+    value: &str,
+    line: usize,
+) -> Result<(SwimlaneLinkStyleTargets, DiagramStyle, Option<SwimlaneEdgeCurve>, usize), ParseError> {
+    let value = value.strip_suffix(';').unwrap_or(value).trim_end();
+    let value = value.trim();
+    let (selector, declarations) = if let Some(declarations) = value.strip_prefix("default") {
+        if !declarations.starts_with(char::is_whitespace) {
+            return Err(swimlane_error(line, "Swimlane linkStyle requires targets and declarations"));
+        }
+        ("default", declarations.trim_start())
+    } else {
+        let Some(declaration_start) = value.find(char::is_alphabetic) else {
+            return Err(swimlane_error(line, "Swimlane linkStyle requires targets and declarations"));
+        };
+        (value[..declaration_start].trim(), value[declaration_start..].trim())
+    };
+    let targets = if selector.eq_ignore_ascii_case("default") {
+        SwimlaneLinkStyleTargets::Default
+    } else {
+        let indices = selector.split(',').map(str::trim).map(|index| {
+            index.parse::<usize>().map_err(|_| swimlane_error(
+                line,
+                format!("invalid Swimlane linkStyle edge index {index:?}"),
+            ))
+        }).collect::<Result<Vec<_>, _>>()?;
+        if indices.is_empty() {
+            return Err(swimlane_error(line, "Swimlane linkStyle requires at least one edge index"));
+        }
+        SwimlaneLinkStyleTargets::Indices(indices)
+    };
+    let (style, curve) = if let Some(curve) = declarations.strip_prefix("interpolate") {
+        if !curve.starts_with(char::is_whitespace) {
+            return Err(swimlane_error(line, "Swimlane linkStyle interpolate requires a curve"));
+        }
+        (DiagramStyle::default(), Some(parse_swimlane_edge_curve(curve.trim(), line)?))
+    } else {
+        (parse_swimlane_style_declarations(declarations, line)?, None)
+    };
+    Ok((targets, style, curve, line))
+}
+
 fn parse_swimlane_edge_config(
     value: &str,
     line: usize,
@@ -6683,22 +6812,7 @@ fn parse_swimlane_edge_config(
                 "fast" => SwimlaneEdgeAnimation::Fast,
                 _ => return Err(swimlane_error(line, "Swimlane edge animation must be slow or fast")),
             }),
-            "curve" => curve = Some(match value.to_ascii_lowercase().as_str() {
-                "linear" => SwimlaneEdgeCurve::Linear,
-                "basis" => SwimlaneEdgeCurve::Basis,
-                "bumpx" | "bump-x" => SwimlaneEdgeCurve::BumpX,
-                "bumpy" | "bump-y" => SwimlaneEdgeCurve::BumpY,
-                "cardinal" => SwimlaneEdgeCurve::Cardinal,
-                "catmullrom" | "catmull-rom" => SwimlaneEdgeCurve::CatmullRom,
-                "monotonex" | "monotone-x" => SwimlaneEdgeCurve::MonotoneX,
-                "monotoney" | "monotone-y" => SwimlaneEdgeCurve::MonotoneY,
-                "natural" => SwimlaneEdgeCurve::Natural,
-                "rounded" => SwimlaneEdgeCurve::Rounded,
-                "step" => SwimlaneEdgeCurve::Step,
-                "stepbefore" | "step-before" => SwimlaneEdgeCurve::StepBefore,
-                "stepafter" | "step-after" => SwimlaneEdgeCurve::StepAfter,
-                _ => return Err(swimlane_error(line, "unsupported Swimlane edge curve")),
-            }),
+            "curve" => curve = Some(parse_swimlane_edge_curve(&value, line)?),
             other => return Err(swimlane_error(line, format!("unsupported Swimlane edge configuration {other:?}"))),
         }
     }
@@ -6709,6 +6823,25 @@ fn parse_swimlane_edge_config(
         curve,
         line,
     }))
+}
+
+fn parse_swimlane_edge_curve(value: &str, line: usize) -> Result<SwimlaneEdgeCurve, ParseError> {
+    match value.to_ascii_lowercase().as_str() {
+        "linear" => Ok(SwimlaneEdgeCurve::Linear),
+        "basis" => Ok(SwimlaneEdgeCurve::Basis),
+        "bumpx" | "bump-x" => Ok(SwimlaneEdgeCurve::BumpX),
+        "bumpy" | "bump-y" => Ok(SwimlaneEdgeCurve::BumpY),
+        "cardinal" => Ok(SwimlaneEdgeCurve::Cardinal),
+        "catmullrom" | "catmull-rom" => Ok(SwimlaneEdgeCurve::CatmullRom),
+        "monotonex" | "monotone-x" => Ok(SwimlaneEdgeCurve::MonotoneX),
+        "monotoney" | "monotone-y" => Ok(SwimlaneEdgeCurve::MonotoneY),
+        "natural" => Ok(SwimlaneEdgeCurve::Natural),
+        "rounded" => Ok(SwimlaneEdgeCurve::Rounded),
+        "step" => Ok(SwimlaneEdgeCurve::Step),
+        "stepbefore" | "step-before" => Ok(SwimlaneEdgeCurve::StepBefore),
+        "stepafter" | "step-after" => Ok(SwimlaneEdgeCurve::StepAfter),
+        _ => Err(swimlane_error(line, "unsupported Swimlane edge curve")),
+    }
 }
 
 fn parse_swimlane_style_declarations(value: &str, line: usize) -> Result<DiagramStyle, ParseError> {
@@ -6804,6 +6937,7 @@ fn parse_swimlane_edge_chain(
     line: &str,
     line_number: usize,
     lane: Option<usize>,
+    group: Option<usize>,
     continuation_from: Option<&[String]>,
     diagram: &mut SwimlaneDiagram,
 ) -> Result<Vec<String>, ParseError> {
@@ -6822,7 +6956,7 @@ fn parse_swimlane_edge_chain(
         )?;
         let previous = first.iter().map(|node| node.id.clone()).collect::<Vec<_>>();
         for node in first {
-            upsert_swimlane_node(diagram, node, lane);
+            upsert_swimlane_node(diagram, node, lane, group);
         }
         previous
     };
@@ -6883,7 +7017,7 @@ fn parse_swimlane_edge_chain(
         }
         previous = next_ids;
         for node in nodes {
-            upsert_swimlane_node(diagram, node, lane);
+            upsert_swimlane_node(diagram, node, lane, group);
         }
         let Some(next_operator) = next else {
             break;
@@ -7003,9 +7137,18 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
     }))
     .min_by_key(|operator| (operator.at, usize::MAX - operator.len));
     let labeled = [
-        labeled_swimlane_operator(value, "--", '-', 2, ">", SwimlaneEdgeKind::Directed),
-        labeled_swimlane_operator(value, "==", '=', 2, ">", SwimlaneEdgeKind::Thick),
-        labeled_swimlane_operator(value, "-.", '.', 1, "->", SwimlaneEdgeKind::Dotted),
+        labeled_swimlane_operator_family(
+            value, &["<--", "o--", "x--", "--"], '-', 2, &[">", "o", "x", ""],
+            SwimlaneEdgeKind::Directed,
+        ),
+        labeled_swimlane_operator_family(
+            value, &["<==", "o==", "x==", "=="], '=', 2, &[">", "o", "x", ""],
+            SwimlaneEdgeKind::Thick,
+        ),
+        labeled_swimlane_operator_family(
+            value, &["<-.", "o-.", "x-.", "-."], '.', 1, &["->", "-o", "-x", "-"],
+            SwimlaneEdgeKind::Dotted,
+        ),
     ].into_iter().flatten().min_by_key(|operator| operator.at);
     let operator = match (standard, labeled) {
         (Some(standard), Some(labeled)) if labeled.at < standard.at => Some(labeled),
@@ -7052,6 +7195,19 @@ fn swimlane_label_run_matches(candidate: char, repeated: char) -> bool {
     candidate == repeated
 }
 
+fn labeled_swimlane_operator_family(
+    value: &str,
+    starts: &[&str],
+    repeated: char,
+    minimum_run: usize,
+    suffixes: &[&str],
+    kind: SwimlaneEdgeKind,
+) -> Option<SwimlaneOperator> {
+    starts.iter().flat_map(|start| suffixes.iter().filter_map(|suffix|
+        labeled_swimlane_operator(value, start, repeated, minimum_run, suffix, kind)
+    )).min_by_key(|operator| (operator.at, usize::MAX - operator.len))
+}
+
 fn labeled_swimlane_operator(
     value: &str,
     start: &str,
@@ -7087,8 +7243,18 @@ fn labeled_swimlane_operator(
                         at,
                         len: run_end + suffix.len() - at,
                         kind,
-                        start_marker: EdgeMarker::None,
-                        end_marker: EdgeMarker::Point,
+                        start_marker: match start.chars().next() {
+                            Some('<') => EdgeMarker::Point,
+                            Some('o') => EdgeMarker::Circle,
+                            Some('x') => EdgeMarker::Cross,
+                            _ => EdgeMarker::None,
+                        },
+                        end_marker: match suffix.chars().last() {
+                            Some('o') => EdgeMarker::Circle,
+                            Some('x') => EdgeMarker::Cross,
+                            Some('>') => EdgeMarker::Point,
+                            _ => EdgeMarker::None,
+                        },
                         label: Some(label.to_string()),
                         min_length: run_end - label_end - minimum_run + 1,
                         id: None,
@@ -7248,20 +7414,21 @@ fn parse_swimlane_shape_attributes(
             "label" => label = Some(value),
             "shape" => {
                 shape = Some(match value.to_ascii_lowercase().as_str() {
-                    "rect" | "proc" | "process" | "rectangle" => DiagramShape::Rect,
-                    "rounded" | "event" => DiagramShape::RoundedRect,
-                    "circle" | "circ" => DiagramShape::Ellipse,
-                    "diam" | "decision" | "diamond" | "question" => DiagramShape::Diamond,
+                    "rect" | "proc" | "process" | "rectangle" | "squarerect" => DiagramShape::Rect,
+                    "rounded" | "event" | "state" | "roundedrect" | "kanbanitem"
+                    | "defaultmindmapnode" => DiagramShape::RoundedRect,
+                    "circle" | "circ" | "mindmapcircle" => DiagramShape::Ellipse,
+                    "choice" | "diam" | "decision" | "diamond" | "question" => DiagramShape::Diamond,
                     "hex" | "hexagon" | "prepare" => DiagramShape::Hexagon,
                     "hourglass" | "collate" => DiagramShape::Hourglass,
                     "tri" | "extract" | "triangle" => DiagramShape::Triangle,
                     "flip-tri" | "flipped-triangle" | "manual-file" => DiagramShape::InvertedTriangle,
                     "notch-rect" | "card" | "notched-rectangle" => DiagramShape::NotchedRect,
                     "lin-rect" | "lined-rectangle" | "lined-process" | "lin-proc" | "shaded-process" => DiagramShape::LinedRect,
-                    "text" => DiagramShape::TextBlock,
-                    "sm-circ" | "start" | "small-circle" => DiagramShape::SmallCircle,
-                    "fr-circ" | "stop" | "framed-circle" => DiagramShape::FramedCircle,
-                    "fork" | "join" => DiagramShape::ForkJoin,
+                    "text" | "labelrect" => DiagramShape::TextBlock,
+                    "sm-circ" | "start" | "small-circle" | "statestart" => DiagramShape::SmallCircle,
+                    "fr-circ" | "stop" | "framed-circle" | "stateend" => DiagramShape::FramedCircle,
+                    "fork" | "join" | "forkjoin" => DiagramShape::ForkJoin,
                     "bolt" | "com-link" | "lightning-bolt" => DiagramShape::LightningBolt,
                     "brace" | "comment" | "brace-l" => DiagramShape::CurlyBraceLeft,
                     "brace-r" => DiagramShape::CurlyBraceRight,
@@ -7272,8 +7439,10 @@ fn parse_swimlane_shape_attributes(
                     "lin-cyl" | "disk" | "lined-cylinder" => DiagramShape::LinedCylinder,
                     "curv-trap" | "curved-trapezoid" | "display" => DiagramShape::Display,
                     "div-rect" | "div-proc" | "divided-rectangle" | "divided-process" => DiagramShape::DividedRect,
+                    "rectwithtitle" | "classbox" | "erbox" | "requirementbox" => DiagramShape::TitledRect,
                     "win-pane" | "internal-storage" | "window-pane" => DiagramShape::WindowPane,
                     "f-circ" | "junction" | "filled-circle" => DiagramShape::FilledCircle,
+                    "anchor" => DiagramShape::Anchor,
                     "notch-pent" | "loop-limit" | "notched-pentagon" => DiagramShape::LoopLimit,
                     "sl-rect" | "manual-input" | "sloped-rectangle" => DiagramShape::ManualInput,
                     "docs" | "documents" | "st-doc" | "stacked-document" => DiagramShape::MultiDocument,
@@ -7291,11 +7460,12 @@ fn parse_swimlane_shape_attributes(
                     "lean-r" | "in-out" | "lean-right" => DiagramShape::ParallelogramRight,
                     "lean-l" | "lean-left" | "out-in" => DiagramShape::ParallelogramLeft,
                     "trap-b" | "priority" | "trapezoid" | "trapezoid-bottom" => DiagramShape::Trapezoid,
-                    "trap-t" | "inv-trapezoid" | "manual" | "trapezoid-top" => DiagramShape::InvertedTrapezoid,
+                    "trap-t" | "inv-trapezoid" | "inv_trapezoid" | "manual" | "trapezoid-top" => DiagramShape::InvertedTrapezoid,
                     "fr-rect" | "framed-rectangle" | "subproc" | "subprocess" | "subroutine" => DiagramShape::Subroutine,
                     "cyl" | "cylinder" | "database" | "db" => DiagramShape::Cylinder,
-                    "dbl-circ" | "double-circle" => DiagramShape::DoubleCircle,
-                    "odd" => DiagramShape::Asymmetric,
+                    "dbl-circ" | "double-circle" | "doublecircle" => DiagramShape::DoubleCircle,
+                    "odd" | "rect_left_inv_arrow" => DiagramShape::Asymmetric,
+                    "note" => DiagramShape::Note,
                     other => return Err(swimlane_error(line, format!("unsupported Swimlane attribute shape {other:?}"))),
                 });
             }
@@ -7334,7 +7504,9 @@ fn normalize_swimlane_label(value: &str) -> String {
     commonmark_parser::entities::decode_entities(&normalized)
 }
 
-fn upsert_swimlane_node(diagram: &mut SwimlaneDiagram, node: SwimlaneNode, lane: Option<usize>) {
+fn upsert_swimlane_node(
+    diagram: &mut SwimlaneDiagram, node: SwimlaneNode, lane: Option<usize>, group: Option<usize>,
+) {
     if let Some(existing) = diagram
         .nodes
         .iter_mut()
@@ -7357,7 +7529,41 @@ fn upsert_swimlane_node(diagram: &mut SwimlaneDiagram, node: SwimlaneNode, lane:
     }
     if let Some(lane) = lane {
         if !diagram.lanes[lane].node_ids.contains(&node.id) {
-            diagram.lanes[lane].node_ids.push(node.id);
+            diagram.lanes[lane].node_ids.push(node.id.clone());
+        }
+    }
+    if let Some(group) = group {
+        if !diagram.groups[group].node_ids.contains(&node.id) {
+            diagram.groups[group].node_ids.push(node.id);
+        }
+    }
+}
+
+fn assign_swimlane_default_lane(diagram: &mut SwimlaneDiagram) {
+    const DEFAULT_LANE_ID: &str = "__swimlane_default__";
+
+    let loose_node_ids = diagram.nodes.iter()
+        .filter(|node| node.lane_id.is_none())
+        .map(|node| node.id.clone())
+        .collect::<Vec<_>>();
+    if loose_node_ids.is_empty() {
+        return;
+    }
+    let lane_index = diagram.lanes.iter().position(|lane| lane.id == DEFAULT_LANE_ID)
+        .unwrap_or_else(|| {
+            diagram.lanes.push(SwimlaneLane {
+                id: DEFAULT_LANE_ID.into(),
+                label: String::new(),
+                node_ids: Vec::new(),
+            });
+            diagram.lanes.len() - 1
+        });
+    for node_id in loose_node_ids {
+        if !diagram.lanes[lane_index].node_ids.contains(&node_id) {
+            diagram.lanes[lane_index].node_ids.push(node_id.clone());
+        }
+        if let Some(node) = diagram.nodes.iter_mut().find(|node| node.id == node_id) {
+            node.lane_id = Some(DEFAULT_LANE_ID.into());
         }
     }
 }

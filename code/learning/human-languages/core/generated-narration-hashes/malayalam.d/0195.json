@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 195,
-  "sourceHash": "fnv1a64:94c24f03c7292bc1",
+  "sourceHash": "fnv1a64:1d6547b7ceeed19c",
   "lessonIds": [
     "ML-C195-ennum",
     "ML-C195-tiyati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch195.txt",
   "json": "malayalam/narration/ch195.json",
-  "textHash": "fnv1a64:57c7a65fcc1fa68c",
-  "jsonHash": "fnv1a64:24b0b3530cb02cf9",
+  "textHash": "fnv1a64:297648618a0979ea",
+  "jsonHash": "fnv1a64:abaf1fdc57f3d07e",
   "findings": []
 }

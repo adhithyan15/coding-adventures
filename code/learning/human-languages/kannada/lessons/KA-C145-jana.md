@@ -14,7 +14,8 @@ romanization: "jāṇa"
 concept_tag: KA-QUAL145-JANA
 prerequisites: [KA-C145-sihi, KA-C145-somari]
 sounds: []
-roots: []
+roots: [kannada-jana-clever]
+etymology_hook: "jāṇa: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C145-somari]
 <!-- hl-knowledge: introduces=[KA-LEX-C145-QUAL145-05]; assesses=[] -->
 
 **ಜಾಣ** — *jāṇa* — "clever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಜಾಣ** (*jāṇa*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "citrakār"
 concept_tag: HI-THG195-CITRAKAR
 prerequisites: [HI-C194-lekhak, HI-C195-kavi]
 sounds: []
-roots: []
+roots: [sanskrit-citra, kara]
+etymology_hook: "citrakār: Sanskrit citrakāra 'painter', a tatsama; CDIAL lists the inherited citerā (CDIAL 4805)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C195-kavi]
 <!-- hl-knowledge: introduces=[HI-LEX-C195-THG195-02]; assesses=[] -->
 
 **चित्रकार** — *citrakār* — "a painter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चित्रकार** (*citrakār*) is Sanskrit *citrakāra*, "painter", from *citra*, "bright, a picture", and *kāra*, "maker", taken over whole as a tatsama. CDIAL lists the inherited form of the word as Hindi *citerā*, "painter" (CDIAL 4805).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

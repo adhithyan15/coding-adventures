@@ -14,7 +14,8 @@ romanization: "znáchit"
 concept_tag: RU-PRICH185-ZNACHIT
 prerequisites: [RU-C185-tsel, RU-C185-rezultat]
 sounds: []
-roots: []
+roots: [pie-gneh]
+etymology_hook: "значит is 'it means', from значить, from знак 'a sign', on знать 'to know'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C185-rezultat]
 <!-- hl-knowledge: introduces=[RU-LEX-C185-PRICH185-04]; assesses=[] -->
 
 **значит** (*znáchit*) — "that means, so".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**значит** is "it means", a form of *значить*, from *знак*, "a sign", which Vasmer puts with *знать*, "to know".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

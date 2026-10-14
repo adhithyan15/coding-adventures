@@ -13,7 +13,8 @@ gloss: "a saw"
 concept_tag: LA-THINGS122-SERRA
 prerequisites: [LA-C122-clavus, LA-C122-malleus]
 sounds: []
-roots: []
+roots: [serra-latin]
+etymology_hook: "serra 'saw' — origin uncertain; English serrated comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C122-malleus]
 <!-- hl-knowledge: introduces=[LA-LEX-C122-THINGS122-03]; assesses=[] -->
 
 **serra, serrae** — "a saw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**serra** has no sure origin; Lewis & Short suggest a link with *secō*, "to cut", but it is uncertain. English *serrated*, "saw-toothed", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

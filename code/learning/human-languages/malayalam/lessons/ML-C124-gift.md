@@ -11,7 +11,8 @@ romanization: "sammānaṁ"
 concept_tag: ML-COUR-GIFT
 prerequisites: [ML-C124-congratulations, ML-C124-invitation]
 sounds: []
-roots: []
+roots: [sanskrit-sammana]
+etymology_hook: "sammānaṁ ← Sanskrit sammāna 'honour, respect', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C124-invitation]
 <!-- hl-knowledge: introduces=[ML-LEX-C124-WELCOME-03]; assesses=[] -->
 
 **സമ്മാനം** (*sammānaṁ*) — "a gift", and also "a prize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സമ്മാനം** (*sammānaṁ*) ← Sanskrit *sammāna*, "honour, respect", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*. A gift is an honour shown.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

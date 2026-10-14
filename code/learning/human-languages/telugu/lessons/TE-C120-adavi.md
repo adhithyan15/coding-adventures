@@ -14,7 +14,8 @@ romanization: "aḍavi"
 concept_tag: TE-THINGS120-ADAVI
 prerequisites: [TE-C120-samudram, TE-C120-sarassu]
 sounds: []
-roots: []
+roots: [sanskrit-atavi]
+etymology_hook: "aḍavi ← Sanskrit aṭavī 'forest', reshaped as a tadbhava (CDIAL 177)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C120-sarassu]
 <!-- hl-knowledge: introduces=[TE-LEX-C120-THINGS120-03]; assesses=[] -->
 
 **అడవి** — *aḍavi* — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అడవి** (*aḍavi*) comes from Sanskrit *aṭavī*, "forest", reshaped to Telugu sounds: a tadbhava (CDIAL 177).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

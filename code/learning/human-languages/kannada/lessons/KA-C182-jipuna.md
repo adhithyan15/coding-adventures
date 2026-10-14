@@ -14,7 +14,8 @@ romanization: "jipuṇa"
 concept_tag: KA-GUNA182-JIPUNA
 prerequisites: [KA-C181-adhunika, KA-C181-sampradayika]
 sounds: []
-roots: []
+roots: [kannada-jipuna]
+etymology_hook: "jipuṇa: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C181-sampradayika]
 <!-- hl-knowledge: introduces=[KA-LEX-C182-GUNA182-01]; assesses=[] -->
 
 **ಜಿಪುಣ** — *jipuṇa* — "stingy, miserly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಜಿಪುಣ** (*jipuṇa*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

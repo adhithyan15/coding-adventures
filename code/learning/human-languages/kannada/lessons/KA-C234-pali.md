@@ -14,7 +14,8 @@ romanization: "pāḷi"
 concept_tag: KA-KELASA234-PALI
 prerequisites: [KA-C234-naukara, KA-C234-hajari]
 sounds: []
-roots: []
+roots: [dravidian-paazhi-row]
+etymology_hook: "pāḷi: native Dravidian, one word with Telugu pāḍi (DEDR 4113)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C234-hajari]
 <!-- hl-knowledge: introduces=[KA-LEX-C234-KELASA234-04]; assesses=[] -->
 
 **ಪಾಳಿ** — *pāḷi* — "a work shift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಾಳಿ** (*pāḷi*) is native Dravidian, one word with Telugu *pāḍi* (DEDR 4113). DEDR gives the older Kannada *pāḻi*, "row, regular order, method": a shift is one's turn in the order. DEDR 4113 compares Sanskrit *pāli*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

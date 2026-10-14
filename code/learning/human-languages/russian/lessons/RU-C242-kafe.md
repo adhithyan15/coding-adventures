@@ -14,7 +14,8 @@ romanization: "kafé"
 concept_tag: RU-MESTO242-KAFE
 prerequisites: [RU-C242-biblioteka, RU-C242-universitet]
 sounds: []
-roots: []
+roots: [arabic-qahwa]
+etymology_hook: "кафе ← French café or German Kaffee 'coffee', ultimately Arabic qahwa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C242-universitet]
 <!-- hl-knowledge: introduces=[RU-LEX-C242-MESTO242-03]; assesses=[] -->
 
 **кафе** (*kafé*) — "a café".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кафе** comes from French *café* or German *Kaffee*, "coffee" (Vasmer), a word that goes back through Turkish *kahve* to Arabic *qahwa*. A café is a coffee house.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

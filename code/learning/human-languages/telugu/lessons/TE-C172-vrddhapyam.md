@@ -14,7 +14,8 @@ romanization: "vṛddhāpyaṁ"
 concept_tag: TE-SAMAYAM172-VRDDHAPYAM
 prerequisites: [TE-C171-nirantaram, TE-C172-yavvanam]
 sounds: []
-roots: []
+roots: [sanskrit-vrddha]
+etymology_hook: "vṛddhāpyaṁ: built on Sanskrit vṛddha 'grown, old' (CDIAL 12073)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C172-yavvanam]
 <!-- hl-knowledge: introduces=[TE-LEX-C172-SAMAYAM172-02]; assesses=[] -->
 
 **వృద్ధాప్యం** — *vṛddhāpyaṁ* — "old age".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వృద్ధాప్యం** (*vṛddhāpyaṁ*) is a learned word built on Sanskrit *vṛddha*, "grown up, old" (CDIAL 12073), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

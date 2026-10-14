@@ -14,7 +14,8 @@ romanization: "kōrṭu"
 concept_tag: TE-STHALAM256-KORTU
 prerequisites: [TE-C256-sivaru, TE-C256-godamu]
 sounds: []
-roots: []
+roots: [english-court]
+etymology_hook: "kōrṭu ← English court"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C256-godamu]
 <!-- hl-knowledge: introduces=[TE-LEX-C256-STHALAM256-05]; assesses=[] -->
 
 **కోర్టు** — *kōrṭu* — "a court (of law)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కోర్టు** (*kōrṭu*) is a loan from English *court*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

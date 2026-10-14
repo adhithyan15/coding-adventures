@@ -14,7 +14,8 @@ romanization: "emme"
 concept_tag: KA-THINGS134-EMME
 prerequisites: [KA-C133-onte, KA-C134-ili]
 sounds: []
-roots: []
+roots: [dravidian-erumai-buffalo]
+etymology_hook: "emme: native Dravidian, one word with Tamil erumai and Telugu enumu (DEDR 816)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C134-ili]
 <!-- hl-knowledge: introduces=[KA-LEX-C134-THINGS134-02]; assesses=[] -->
 
 **ಎಮ್ಮೆ** — *emme* — "a buffalo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಮ್ಮೆ** (*emme*) is native Dravidian, one word with Tamil *erumai* and Telugu *enumu* (DEDR 816). DEDR also gives an older Kannada *erme*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

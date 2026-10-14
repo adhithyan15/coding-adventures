@@ -14,7 +14,8 @@ romanization: "omme"
 concept_tag: KA-HINDE155-OMME
 prerequisites: [KA-C155-igagale, KA-C155-kaleda]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "omme: native Dravidian, one word with Tamil oru (DEDR 990)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C155-kaleda]
 <!-- hl-knowledge: introduces=[KA-LEX-C155-HINDE155-04]; assesses=[] -->
 
 **ಒಮ್ಮೆ** — *omme* — "once, one time". **ನಾನು ಒಮ್ಮೆ ದೆಹಲಿಗೆ ಹೋಗಿದ್ದೆ** — *nānu omme dehalige hōgidde* — "I went to Delhi once."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಮ್ಮೆ** (*omme*) is native Dravidian, one word with Tamil *oru* (DEDR 990). DEDR lists *omme*, "one time, once", on the root for "one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "madhumēha"
 concept_tag: KA-AROGYA246-MADHUMEHA
 prerequisites: [KA-C246-hunnu, KA-C246-byandej]
 sounds: []
-roots: []
+roots: [sanskrit-madhumeha]
+etymology_hook: "madhumēha ← Sanskrit madhumeha 'honey-urine', the old name for diabetes"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C246-byandej]
 <!-- hl-knowledge: introduces=[KA-LEX-C246-AROGYA246-05]; assesses=[] -->
 
 **ಮಧುಮೇಹ** — *madhumēha* — "diabetes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಧುಮೇಹ** (*madhumēha*) is Sanskrit *madhumeha*: *madhu*, "honey", and *meha*, "urine". The old physicians named the illness for the sweetness of the urine.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

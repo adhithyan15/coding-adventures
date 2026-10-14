@@ -13,7 +13,8 @@ gloss: "a garment"
 concept_tag: LA-RES225-VESTIMENTUM
 prerequisites: [LA-C224-vitulus, LA-C225-gemma]
 sounds: []
-roots: []
+roots: [vestimentum-latin, vestis-latin]
+etymology_hook: "vestīmentum 'garment' — built on vestiō 'to clothe', from vestis 'clothing'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C225-gemma]
 <!-- hl-knowledge: introduces=[LA-LEX-C225-RES225-02]; assesses=[] -->
 
 **vestīmentum, vestīmentī** — "a garment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vestīmentum** is built on *vestiō*, "to clothe", from *vestis*, "clothing" (EtymDB 2.1), with *-mentum*, an ending for a thing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [telugu-inherent-a, virama-conjunct, anusvara]
 roots: [namas, kṛ]
+etymology_hook: "namaskāram ← Sanskrit namaskāra 'adoration', from namas 'a bow' (CDIAL 6958, 6960)"
 duration:
   max_seconds: 250
 requires:
@@ -69,6 +70,8 @@ sound. Tamil instead kept its native greeting, *vaṇakkam*.
 
 Four of the six borrowed the Sanskrit bow. **Tamil alone kept its own word** —
 the first sign that "Dravidian family" does not mean "same vocabulary."
+
+CDIAL 6960 lists Sanskrit *namaskāra*, "adoration", and CDIAL 6958 *namas*, "a bow, adoration".
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[TE-PRAGMATICS-C01-NAMASKARAM-03]; assesses=[] -->

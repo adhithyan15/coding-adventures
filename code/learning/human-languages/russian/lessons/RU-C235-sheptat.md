@@ -14,7 +14,8 @@ romanization: "sheptát"
 concept_tag: RU-VERB-SHEPTAT
 prerequisites: [RU-C234-kormit, RU-C235-krichat]
 sounds: []
-roots: []
+roots: [slavic-shiputu]
+etymology_hook: "шептать is a sound-imitating word, like шепелявый 'lisping'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C235-krichat]
 <!-- hl-knowledge: introduces=[RU-LEX-C235-ACT235-02]; assesses=[] -->
 
 **шептать** (*sheptát*) — "to whisper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шептать** ← Proto-Slavic *\*šĭpŭtati* — a sound-imitating word, like *шепелявый*, "lisping" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

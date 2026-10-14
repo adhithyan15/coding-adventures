@@ -148,7 +148,7 @@ Returns all discovered components and their stories.
     {
       "id": "src/Button",
       "title": "Button",
-      "source_path": "src/Button.mosaic",
+      "source_path": "",
       "stories": [
         { "name": "Default", "fixtures": {} },
         { "name": "Primary", "fixtures": { "label": "Click me" } }
@@ -157,6 +157,9 @@ Returns all discovered components and their stories.
   ]
 }
 ```
+
+`source_path` is the legacy `.mosaic` file's path. It is empty for a
+three-file component, which has no single source file.
 
 ### `GET /api/backends`
 
@@ -237,8 +240,9 @@ the iframe remains a useful debugging surface.
 ### `GET /events`
 
 Server-Sent Events stream.  The browser shell subscribes to this endpoint for
-hot-reload notifications.  The server pushes a message whenever any `.mosaic`
-or `.stories.json` file changes:
+hot-reload notifications.  The server polls `--root` every second and pushes a
+message whenever a `.mil`, `.mll`, `.msl`, `.stories.json` or legacy `.mosaic`
+file changes:
 
 ```
 data: {"type":"reload","component_id":"all"}
@@ -246,7 +250,8 @@ data: {"type":"reload","component_id":"all"}
 
 ## Story format
 
-Place a `.stories.json` file alongside any `.mosaic` file to define named story
+Place a `Foo.stories.json` file beside a component's `Foo.mil`, `Foo.mll` and
+`Foo.light.msl` (or beside a legacy `Foo.mosaic`) to define named story
 variants:
 
 ```json
@@ -268,8 +273,9 @@ variants:
 }
 ```
 
-If no `.stories.json` exists, a single `"Default"` story with empty fixtures is
-auto-generated.
+If no `.stories.json` exists, the interactive server shows a single `"Default"`
+story with empty fixtures. `--check` fails such a component instead, so every
+component in CI has explicit stories.
 
 ## Architecture
 
@@ -305,12 +311,12 @@ is exercised using a deliberately nonexistent compiler path.
 ## How it fits in the stack
 
 ```
-.mosaic files         ← authored by the developer
+.mil/.mll/.msl       ← authored by the developer (+ .stories.json)
       │
       ▼
 mosaic-compile        ← Rust binary (code/packages/rust/mosaic-compile/)
       │
-      ▼ html / webcomponent / react output
+      ▼ html / webcomponent / react output, or a Paint PNG
       │
 mosaicbook-server     ← this binary
       │

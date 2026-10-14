@@ -39,7 +39,11 @@
 //! causes: a broken frame, or a reply to the wrong callback. The broker
 //! exits on one, and the supervisor ends its agent.
 
-#![forbid(unsafe_code)]
+// `deny`, not `forbid`: `process` is the one module allowed `unsafe`, to
+// adopt inherited descriptors. Everything else stays safe.
+#![deny(unsafe_code)]
+
+pub mod process;
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -861,8 +865,9 @@ impl<R: std::io::Read, W: std::io::Write> ChannelCallbacks for FramedCallbacks<R
 /// ```
 ///
 /// `adopt` is the one step that needs `unsafe`: taking ownership of
-/// inherited descriptors. It lives with the binary, so this library stays
-/// `forbid(unsafe_code)`. The exit codes are 65 (protocol), 66 (descriptors,
+/// inherited descriptors. [`process::run_inherited`] supplies it, and is
+/// what a broker binary runs; tests call this directly with their own. The
+/// exit codes are 65 (protocol), 66 (descriptors,
 /// from `adopt`), 67 (keys), 70 (hardening) and 74 (writing).
 pub fn serve_process(
     stdin: impl std::io::Read,
@@ -930,5 +935,94 @@ pub fn callbacks_for(request: &DataPlaneRequest) -> &'static [CallbackOp] {
             CallbackOp::AbandonAppend,
         ],
         _ => &[],
+    }
+}
+
+/// The library is `deny(unsafe_code)`, not `forbid`, so that `process` can
+/// allow it. That makes a lower lint level anywhere else compile silently;
+/// this keeps it to `process.rs`, and keeps the `deny` itself, without
+/// which `unsafe` is allowed by default and no attribute is needed at all.
+#[cfg(test)]
+mod unsafe_scope {
+    /// Whether `text` lowers the `unsafe_code` lint anywhere: `allow`,
+    /// `warn` or `expect`, alone or in a list, however it is spaced.
+    ///
+    /// With `L` standing for the lint (spelled out, this table would
+    /// match itself):
+    ///
+    /// ```text
+    ///   allow(L)                yes
+    ///   allow( dead_code , L)   yes   (whitespace is removed first)
+    ///   expect(L)               yes
+    ///   disallow(L)             no    (not the whole word)
+    ///   deny(L)                 no
+    /// ```
+    fn lowers_unsafe_code(text: &str) -> bool {
+        let compact: String = text.chars().filter(|c| !c.is_whitespace()).collect();
+        ["allow", "warn", "expect"].iter().any(|level| {
+            let opening = format!("{level}(");
+            compact.match_indices(&opening).any(|(at, _)| {
+                let whole_word = compact[..at]
+                    .chars()
+                    .next_back()
+                    .is_none_or(|before| !(before.is_alphanumeric() || before == '_'));
+                let list = &compact[at + opening.len()..];
+                let list = &list[..list.find(')').unwrap_or(list.len())];
+                whole_word && list.split(',').any(|lint| lint == "unsafe_code")
+            })
+        })
+    }
+
+    #[test]
+    fn the_lint_level_scan_sees_every_spelling() {
+        // Spelled in pieces, so this file does not match itself.
+        let lint = concat!("unsafe", "_code");
+        assert!(lowers_unsafe_code(&format!("#![allow({lint})]")));
+        assert!(lowers_unsafe_code(&format!("#[warn({lint})]")));
+        assert!(lowers_unsafe_code(&format!("#[expect({lint})]")));
+        assert!(lowers_unsafe_code(&format!(
+            "#[allow( dead_code , {lint} )]"
+        )));
+        assert!(lowers_unsafe_code(&format!("#[allow({lint}, dead_code)]")));
+        assert!(!lowers_unsafe_code(&format!("#![deny({lint})]")));
+        assert!(!lowers_unsafe_code(&format!("disallow({lint})")));
+        assert!(!lowers_unsafe_code(&format!("#[allow({lint}_extra)]")));
+    }
+
+    #[test]
+    fn the_library_denies_unsafe_code() {
+        let lib = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src/lib.rs");
+        let text = std::fs::read_to_string(lib).unwrap();
+        assert!(
+            text.lines()
+                .any(|line| line.trim() == concat!("#![deny(unsafe", "_code)]")),
+            "lib.rs must keep #![deny(unsafe_code)]"
+        );
+    }
+
+    #[test]
+    fn only_the_process_module_allows_unsafe_code() {
+        let source = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
+        let mut stack = vec![source.clone()];
+        while let Some(directory) = stack.pop() {
+            for entry in std::fs::read_dir(&directory).unwrap() {
+                let path = entry.unwrap().path();
+                if path.is_dir() {
+                    stack.push(path);
+                    continue;
+                }
+                if path.extension().is_none_or(|extension| extension != "rs") {
+                    continue;
+                }
+                let text = std::fs::read_to_string(&path).unwrap();
+                let allows = lowers_unsafe_code(&text);
+                let relative = path.strip_prefix(&source).unwrap();
+                if relative == std::path::Path::new("process.rs") {
+                    assert!(allows, "process.rs is the module that allows unsafe code");
+                } else {
+                    assert!(!allows, "{} allows unsafe code", relative.display());
+                }
+            }
+        }
     }
 }

@@ -14,7 +14,8 @@ romanization: "rekláma"
 concept_tag: RU-CHT139-REKLAMA
 prerequisites: [RU-C138-nadeyatsya, RU-C139-raspisaniye]
 sounds: []
-roots: []
+roots: [clamare-latin]
+etymology_hook: "реклама came through German Reklame from French réclame 'a call'"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [RU-C139-raspisaniye]
 
 The advert says **Новый магазин. Закрыт по воскресеньям.** A new shop, closed on
 Sundays, so go on another day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**реклама** came through German *Reklame* from French *réclame*, first "the call to a hunting falcon", from *réclamer*, "to call back", Latin *clāmāre*, "to shout" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

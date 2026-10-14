@@ -14,7 +14,8 @@ romanization: "vākya"
 concept_tag: HI-THG198-VAKYA
 prerequisites: [HI-C197-ank, HI-C198-sabd]
 sounds: []
-roots: []
+roots: [sanskrit-vakya]
+etymology_hook: "vākya ← Sanskrit vākya 'speech, sentence', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C198-sabd]
 <!-- hl-knowledge: introduces=[HI-LEX-C198-THG198-02]; assesses=[] -->
 
 **वाक्य** — *vākya* — "a sentence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वाक्य** (*vākya*) is Sanskrit *vākya*, "speech, sentence", taken over whole as a learned loan, a tatsama. It is built on *vac-*, "to speak".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

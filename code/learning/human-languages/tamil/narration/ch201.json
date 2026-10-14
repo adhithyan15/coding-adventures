@@ -4,7 +4,7 @@
   "chapter": 201,
   "title": "Forehead, Beard, Moustache, Palm of the hand, Stomach ache",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:80851836557ef529",
+  "sourceHash": "fnv1a64:192f5eb155a8c351",
   "lessons": [
     {
       "id": "TA-C201-nerri",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c675e2987b7c7fa",
+      "sourceHash": "fnv1a64:8fc29b8596cc281d",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of தாடி (tāṭi) is uncertain. DEDR has no entry for it."
+              "text": "தாடி (tāṭi) probably comes from Prakrit dāḍhiā, \"beard\" (CDIAL 6250; Pali dāṭhikā). DEDR has no entry for it."
             }
           ]
         },

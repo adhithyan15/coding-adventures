@@ -14,7 +14,8 @@ romanization: "komár"
 concept_tag: RU-VESHCH196-KOMAR
 prerequisites: [RU-C196-krysa, RU-C196-pauk]
 sounds: []
-roots: []
+roots: [slavic-komaru]
+etymology_hook: "комар ← Proto-Slavic *komarŭ; Lithuanian kamanė 'bumblebee' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C196-pauk]
 <!-- hl-knowledge: introduces=[RU-LEX-C196-VESHCH196-03]; assesses=[] -->
 
 **комар** (*komár*) — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**комар** ← Proto-Slavic *\*komarŭ* — inherited. Vasmer relates it to Lithuanian *kamãnė*, "a bumblebee", and Old Prussian *camus*, "bumblebee", and probably Middle High German *hummen*, "to hum".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

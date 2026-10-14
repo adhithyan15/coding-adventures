@@ -14,7 +14,8 @@ romanization: "sattar assī nabbe"
 concept_tag: HI-NUMBERS-SEVENTY-NINETY
 prerequisites: [HI-C96-pachaas-saath]
 sounds: []
-roots: []
+roots: [sanskrit-saptati, sanskrit-ashiti, sanskrit-navati]
+etymology_hook: "sattar ← saptati (CDIAL 13143); assī ← aśīti (CDIAL 911); nabbe ← navati (CDIAL 6995)"
 duration:
   max_seconds: 240
 requires:
@@ -47,6 +48,11 @@ dropped it.
 **अस्सी** (*assī*) — eighty.
 
 **नब्बे** (*nabbe*) — ninety.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सत्तर अस्सी नब्बे** (*sattar assī nabbe*) is three tadbhavas. *sattar* comes from Sanskrit *saptati*, "seventy" (CDIAL 13143), *assī* from *aśīti*, "eighty" (CDIAL 911), and *nabbe* from *navati*, "ninety" (CDIAL 6995).
 
 ## Grammar Lens: each one leans on a number you already count
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C96-TENS-05, HI-LEX-C96-TENS-06, HI-LEX-C96-TENS-07] -->

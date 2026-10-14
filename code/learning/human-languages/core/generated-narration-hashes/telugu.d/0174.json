@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 174,
-  "sourceHash": "fnv1a64:3e5fc3543f065795",
+  "sourceHash": "fnv1a64:da584957742b948b",
   "lessonIds": [
     "TE-C174-avatala",
     "TE-C174-atu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch174.txt",
   "json": "telugu/narration/ch174.json",
-  "textHash": "fnv1a64:3d66ffe17efb1e6c",
-  "jsonHash": "fnv1a64:f1254b6e0bda2cce",
+  "textHash": "fnv1a64:a72ccda03f1881c5",
+  "jsonHash": "fnv1a64:ff8186f9557bcdf4",
   "findings": []
 }

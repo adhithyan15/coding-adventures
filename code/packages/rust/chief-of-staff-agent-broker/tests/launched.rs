@@ -13,7 +13,7 @@ use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use chief_of_staff_broker_launcher::{
-    launch, start_relay, BrokerKeyFiles, HostGone, KeyFileDeclaration, LaunchError,
+    launch, start_relay, BrokerKeyFiles, BrokerProgram, HostGone, KeyFileDeclaration, LaunchError,
     PinnedBindingResolver, RelayConfig, ResponseSink, VerifiedExecutable,
 };
 use chief_of_staff_broker_protocol::KeyKind;
@@ -68,9 +68,9 @@ fn binding() -> HostPipelineBinding {
     )
 }
 
-fn broker() -> VerifiedExecutable {
+fn broker() -> BrokerProgram {
     let digest = coding_adventures_sha256::sha256(&fs::read(BROKER).unwrap());
-    VerifiedExecutable::open(Path::new(BROKER), digest).unwrap()
+    BrokerProgram::new(VerifiedExecutable::open(Path::new(BROKER), digest).unwrap())
 }
 
 struct Scratch(PathBuf);

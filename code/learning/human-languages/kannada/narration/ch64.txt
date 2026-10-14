@@ -14,6 +14,9 @@ You'll want to know: ಆಮೇಲೆ.
 ಆಮೇಲೆ (āmēle) opens with the same far-pointing ಆ that stands at the front of ಅದು and ಅಲ್ಲಿ. Not this one, not here — that one, over there, and here it is time rather than place: not now, later.
 Put it in front of a farewell you already own and you have a new one. ಆಮೇಲೆ (āmēle) ಸಿಗೋಣ sits beside ಮತ್ತೆ ಸಿಗೋಣ and ನಾಳೆ ಸಿಗೋಣ, three ways of promising the same thing with different amounts of commitment.
 
+The word, taken apart.
+ಆಮೇಲೆ (āmēle) is native Dravidian: ā, "that", the far-pointing base (DEDR 1), and mēle, "the top; above, after" (DEDR 5086, with Tamil mēl). It is "after that".
+
 What you've built.
 The first of five words that join one thing to the next.
 
@@ -46,6 +49,9 @@ You'll want to know: ಕೂಡ.
 The same shape carries the idea of coming together, which is where the adding sense comes from — two things joined, and the second one mentioned.
 Take care with the middle letter. ಕೂಡ (kūḍa) and ಕೂದಲು from the body chapter open alike and then part company, and in a rough spelling they can look closer than they are.
 
+The word, taken apart.
+ಕೂಡ (kūḍa) is native Dravidian, from kūḍu, "to join, come together", and DEDR 1882 lists kūḍa, "along with", itself; the entry also has Tamil kūṭu.
+
 What you've built.
 Two.
 
@@ -75,6 +81,9 @@ You'll want to know: ಇನ್ನೂ.
 ಇನ್ನೂ (innū) — "still, yet".
 ಇನ್ನೂ (innū) is the word for a thing that has not stopped or has not started. With ಇಲ್ಲ behind it you get not yet, which is the single most useful thing in this chapter.
 It stacks with the measuring words from the replies chapter. ಇನ್ನೂ (innū) ಸ್ವಲ್ಪ is a little more still; ಇನ್ನೂ (innū) ಹೆಚ್ಚು is more than that again. One word in front and your five replies have doubled.
+
+The word, taken apart.
+ಇನ್ನೂ (innū) is native Dravidian: innu, "still, yet, more", which DEDR 410 lists on the near-pointing base i-, with the ending -ū, "even".
 
 What you've built.
 Three.
@@ -107,6 +116,9 @@ You'll want to know: ಬೇಗ.
 ಬೇಗ (bēga) is inherited, and it holds hurry and nearness-in-time on one shape. ಬೇಗ (bēga) ಬಾ is come quickly and equally come soon, and which one is meant is settled by everything around it rather than by the word.
 Set it against īga, the now-word from the leave-taking chapter. Īga is this moment. ಬೇಗ (bēga) is a moment that has not arrived but will not keep you waiting. They rhyme and are unrelated, which by now should surprise you less than it did.
 
+The word, taken apart.
+ಬೇಗ (bēga) comes from Sanskrit vēga, "violent agitation; speed", reshaped to Kannada sounds: a tadbhava (CDIAL 12089). The Sanskrit v- became Kannada b-, and the noun "speed" became "quickly, soon".
+
 What you've built.
 Four.
 
@@ -136,6 +148,9 @@ You'll want to know: ಹಾಗಾದರೆ.
 ಹಾಗಾದರೆ (hāgādare) — "in that case, then".
 ಹಾಗಾದರೆ (hāgādare) is built out of ಹಾಗೆ, the that way word from the earlier replies chapter, with an if it becomes wrapped around it. If it is that way — in that case.
 It is the word that lets you answer a fact with a decision. Somebody says the shop is shut; you say ಹಾಗಾದರೆ (hāgādare) ಆಮೇಲೆ (āmēle), and with two of this chapter's five words you have made a plan without a single naming-word in it.
+
+The word, taken apart.
+ಹಾಗಾದರೆ (hāgādare) is native Dravidian: hāge, "in that way" (DEDR 1), and ādare, "if it becomes", from āgu, "to become" (DEDR 333). "If it is that way" means "in that case". DEDR 333 compares Sanskrit ām.
 
 What you've built.
 Five: ಆಮೇಲೆ (āmēle), ಕೂಡ (kūḍa), ಇನ್ನೂ (innū), ಬೇಗ (bēga), ಹಾಗಾದರೆ (hāgādare). Enough to keep a conversation moving without answering yes or no.

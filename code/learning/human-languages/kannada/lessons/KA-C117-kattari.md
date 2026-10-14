@@ -14,7 +14,8 @@ romanization: "kattari"
 concept_tag: KA-THINGS117-KATTARI
 prerequisites: [KA-C116-mole, KA-C117-suttige]
 sounds: []
-roots: []
+roots: [sanskrit-kartari]
+etymology_hook: "kattari ← Sanskrit kartarī 'scissors, knife', reshaped as a tadbhava (CDIAL 2858)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C117-suttige]
 <!-- hl-knowledge: introduces=[KA-LEX-C117-THINGS117-02]; assesses=[] -->
 
 **ಕತ್ತರಿ** — *kattari* — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕತ್ತರಿ** (*kattari*) comes from Sanskrit *kartarī*, "scissors, knife", reshaped to Kannada sounds: a tadbhava (CDIAL 2858). The *rt* became *tt*, as in Prakrit *kattarī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

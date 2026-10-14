@@ -13,7 +13,8 @@ gloss: "a hill"
 concept_tag: LA-TERRA-COLLIS
 prerequisites: [LA-C88-lapis, LA-C88-harena]
 sounds: []
-roots: []
+roots: [collis-latin]
+etymology_hook: "collis 'hill' — inherited, usually traced to PIE *klHnis 'hill'; English hill is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C88-harena]
 <!-- hl-knowledge: introduces=[LA-LEX-C88-TERRA-03]; assesses=[] -->
 
 **collis, collis** — "a hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**collis** is inherited, usually traced to Proto-Indo-European *\*klHnis*, "hill", from *\*kelH-*, "to rise" (EtymDB 2.1); *excellō*, "to rise above", comes from the same root (Lewis & Short). English *hill* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

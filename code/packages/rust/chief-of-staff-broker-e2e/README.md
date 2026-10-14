@@ -44,5 +44,6 @@ binaries. `broker-e2e-host` is a host scripted by markers in its package:
 cargo test -p chief-of-staff-broker-e2e
 ```
 
-The tests are Linux-only: the verified launch (`execveat` on the hashed
-descriptor) exists only there so far.
+The tests run on Linux and macOS, the two platforms with a verified,
+confined broker launch. On macOS they also pin `broker-e2e-seatbelt-shim`
+(D18S P2.7b), a shim fixture whose body is the production shim's.

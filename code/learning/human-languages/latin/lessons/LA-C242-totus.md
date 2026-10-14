@@ -13,7 +13,8 @@ gloss: "whole"
 concept_tag: LA-QUAL242-TOTUS
 prerequisites: [LA-C242-pauci, LA-C242-omnis]
 sounds: []
-roots: []
+roots: [totus-latin]
+etymology_hook: "tōtus 'whole' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C242-omnis]
 <!-- hl-knowledge: introduces=[LA-LEX-C242-QUAL242-03]; assesses=[] -->
 
 **tōtus, tōta, tōtum** — "whole".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tōtus** has no sure origin; Lewis & Short link it with *tot*, "so many", but that is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

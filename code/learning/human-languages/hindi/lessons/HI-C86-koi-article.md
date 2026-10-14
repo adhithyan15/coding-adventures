@@ -14,9 +14,10 @@ romanization: "binā ārṭikal"
 concept_tag: HI-DET-NO-ARTICLE
 prerequisites: [HI-C86-aapko-use, HI-C40-that]
 sounds: []
-roots: []
+roots: [sanskrit-vina, english-article]
+etymology_hook: "binā ← Sanskrit vinā 'without' (CDIAL 11772); ārṭikal ← English article"
 duration:
-  max_seconds: 240
+  max_seconds: 251
 requires:
   knowledge: [HI-LEX-C86-PRON-04, HI-LEX-C40-DEIXIS-02]
 introduces:
@@ -51,6 +52,11 @@ it is worth being told once rather than discovered slowly:
 
 The bare noun covers both. Nothing is missing from the sentence; the slot the
 English article fills does not exist.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*binā* comes from Sanskrit *vinā*, "without" (CDIAL 11772); *ārṭikal* is English *article*.
 
 ## Grammar Lens: what does the work instead
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C86-PRON-05, HI-LEX-C40-DEIXIS-02] -->

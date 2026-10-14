@@ -63,6 +63,11 @@ job in both: it turns a stem into a word that stands in front of a noun.
 Where **что** asks *what thing*, **какой** asks *which one of these* — and it is
 the natural partner of **или** when you are offering a choice out loud.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**какой** ← Proto-Slavic *\*kakŭjĭ*, built on *как*, "how", on the old question stem of *кто*, "who"; Vasmer compares Lithuanian *kõks*, "what kind of".
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-KAKOY-01, RU-LEX-CHTO-01, RU-LEX-CHAI, RU-LEX-KOFE] -->
 

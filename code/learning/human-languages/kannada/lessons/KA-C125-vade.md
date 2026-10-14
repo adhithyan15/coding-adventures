@@ -14,7 +14,8 @@ romanization: "vaḍe"
 concept_tag: KA-THINGS125-VADE
 prerequisites: [KA-C125-idli, KA-C125-dose]
 sounds: []
-roots: []
+roots: [sanskrit-vataka]
+etymology_hook: "vaḍe ← Sanskrit vaṭaka 'round cake of pulse fried in oil', reshaped as a tadbhava (CDIAL 11213)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C125-dose]
 <!-- hl-knowledge: introduces=[KA-LEX-C125-THINGS125-03]; assesses=[] -->
 
 **ವಡೆ** — *vaḍe* — "a vada".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಡೆ** (*vaḍe*) comes from Sanskrit *vaṭaka*, "round cake of pulse fried in oil", reshaped to Kannada sounds: a tadbhava (CDIAL 11213). Prakrit *vaḍaga* shows the softened middle.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

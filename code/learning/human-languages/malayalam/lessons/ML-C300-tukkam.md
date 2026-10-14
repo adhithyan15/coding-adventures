@@ -14,7 +14,8 @@ romanization: "tūkkaṁ"
 concept_tag: ML-JOLI300-TUKKAM
 prerequisites: [ML-C300-natan, ML-C300-kavi]
 sounds: []
-roots: []
+roots: [dravidian-tungu-hang]
+etymology_hook: "tūkkaṁ: native Dravidian, from the verb 'to hang, be weighed'; Tamil tūṅku (DEDR 3376)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C300-kavi]
 <!-- hl-knowledge: introduces=[ML-LEX-C300-JOLI300-03]; assesses=[] -->
 
 **തൂക്കം** — *tūkkaṁ* — "weight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തൂക്കം** (*tūkkaṁ*) is native Dravidian, a noun from the verb "to hang, be weighed"; DEDR 3376 lists the root with Tamil *tūṅku* and Kannada *tūgu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

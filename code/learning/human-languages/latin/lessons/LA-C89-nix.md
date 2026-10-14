@@ -13,7 +13,8 @@ gloss: "snow"
 concept_tag: LA-CAELUM-NIX
 prerequisites: [LA-C89-nubes, LA-C89-pluvia]
 sounds: []
-roots: []
+roots: [nix-latin]
+etymology_hook: "nix 'snow' — inherited, usually traced to PIE *snigwhs 'snow'; English snow is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C89-pluvia]
 <!-- hl-knowledge: introduces=[LA-LEX-C89-CAELUM-03]; assesses=[] -->
 
 **nix, nivis** — "snow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nix**, *nivis*, is inherited, usually traced to Proto-Indo-European *\*snigwhs*, "snow" (EtymDB 2.1); Latin lost the first *s*. English *snow* and Greek *nipha*, "snow" (Lewis & Short), are cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

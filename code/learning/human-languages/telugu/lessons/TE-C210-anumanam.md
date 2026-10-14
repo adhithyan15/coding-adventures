@@ -14,7 +14,8 @@ romanization: "anumānaṁ"
 concept_tag: TE-AROGYAM210-ANUMANAM
 prerequisites: [TE-C209-vaidyam, TE-C209-nuduru]
 sounds: []
-roots: []
+roots: [sanskrit-anumana]
+etymology_hook: "anumānaṁ ← Sanskrit anumāna 'inference, thought', a tatsama (CDIAL 328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C209-nuduru]
 <!-- hl-knowledge: introduces=[TE-LEX-C210-AROGYAM210-01]; assesses=[] -->
 
 **అనుమానం** — *anumānaṁ* — "doubt, suspicion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అనుమానం** (*anumānaṁ*) is Sanskrit *anumāna*, "inference, thought", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 328). The sense "doubt, suspicion" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

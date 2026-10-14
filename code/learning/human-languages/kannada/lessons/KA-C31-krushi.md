@@ -14,7 +14,8 @@ gloss: "farming"
 concept_tag: KA-ANCHOR-KRUSHI
 prerequisites: [KA-S125-letter-oo]
 sounds: []
-roots: []
+roots: [sanskrit-krsi]
+etymology_hook: "kṛṣi ← Sanskrit kṛṣi 'ploughing', a tatsama (CDIAL 3448)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *kṛṣi*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ೃ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೃಷಿ** (*kṛṣi*) is Sanskrit *kṛṣi*, "ploughing", taken over whole as a learned loan, a tatsama (CDIAL 3448).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-ANCHOR-KRUSHI] -->

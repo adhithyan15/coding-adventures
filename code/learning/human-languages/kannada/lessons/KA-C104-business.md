@@ -11,7 +11,8 @@ romanization: "vyāpāra"
 concept_tag: KA-JOBS-BUSINESS
 prerequisites: [KA-C103-country, KA-C103-state]
 sounds: []
-roots: []
+roots: [sanskrit-vyapara]
+etymology_hook: "vyāpāra ← Sanskrit vyāpāra 'occupation, business', a tatsama (CDIAL 12205)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C103-state]
 
 **ನನ್ನದು ವ್ಯಾಪಾರ** (*nannadu vyāpāra*) — "mine is business", an answer to
 **ನಿಮ್ಮ ಉದ್ಯೋಗ ಏನು?**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವ್ಯಾಪಾರ** (*vyāpāra*) is Sanskrit *vyāpāra*, "occupation, business", taken over whole as a learned loan, a tatsama (CDIAL 12205).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

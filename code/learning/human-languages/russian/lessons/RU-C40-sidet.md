@@ -14,7 +14,8 @@ romanization: "sidét"
 concept_tag: RU-VERB-SIDET
 prerequisites: [RU-C39-plavat, RU-C40-spat]
 sounds: []
-roots: []
+roots: [pie-sed]
+etymology_hook: "сидеть ← Proto-Slavic *sěděti; Latin sedere and English sit are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C40-spat]
 <!-- hl-knowledge: introduces=[RU-LEX-C40-VERB3-02]; assesses=[] -->
 
 **сидеть** (*sidét*) — "to sit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сидеть** ← Proto-Slavic *\*sěděti* — inherited from PIE *\*sed-*, "to sit". Vasmer lists Lithuanian *sėdėti*, Latin *sedeō* and Gothic *sitan*: English *sit* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

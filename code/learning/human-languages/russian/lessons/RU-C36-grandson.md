@@ -14,7 +14,8 @@ romanization: "vnuk"
 concept_tag: RU-FAMILY2-GRANDSON
 prerequisites: [RU-C36-child, RU-C36-aunt]
 sounds: []
-roots: []
+roots: [slavic-vunuku]
+etymology_hook: "внук ← Proto-Slavic *vŭnukŭ; Vasmer links it, as possible, with Latin anus 'old woman'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C36-aunt]
 <!-- hl-knowledge: introduces=[RU-LEX-C36-FAMILY2-04]; assesses=[] -->
 
 **внук** (*vnuk*) — "a grandson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**внук** ← Proto-Slavic *\*vŭnukŭ* — inherited. Vasmer thinks it may belong with an old nursery word for an elder, seen in Old High German *ano*, "ancestor", and Latin *anus*, "old woman"; he finds other proposals less likely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

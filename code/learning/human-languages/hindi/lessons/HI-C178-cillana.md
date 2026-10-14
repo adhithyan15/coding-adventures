@@ -15,6 +15,7 @@ concept_tag: HI-VERB-CILLANA
 prerequisites: [HI-C178-larna, HI-C178-darna]
 sounds: []
 roots: []
+etymology_hook: "cillānā: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C178-darna]
 <!-- hl-knowledge: introduces=[HI-LEX-C178-ACT178-05]; assesses=[] -->
 
 **चिल्लाना** — *cillānā* — "to shout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **चिल्लाना** (*cillānā*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

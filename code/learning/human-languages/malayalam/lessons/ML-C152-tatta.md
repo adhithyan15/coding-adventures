@@ -14,7 +14,8 @@ romanization: "tatta"
 concept_tag: ML-THINGS152-TATTA
 prerequisites: [ML-C152-ama, ML-C152-mayil]
 sounds: []
-roots: []
+roots: [dravidian-tattai-parrot]
+etymology_hook: "tatta: native Dravidian, one word with Tamil tattai (DEDR 3063)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C152-mayil]
 <!-- hl-knowledge: introduces=[ML-LEX-C152-THINGS152-05]; assesses=[] -->
 
 **തത്ത** — *tatta* — "a parrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തത്ത** (*tatta*) is native Dravidian, one word with Tamil *tattai* (DEDR 3063).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

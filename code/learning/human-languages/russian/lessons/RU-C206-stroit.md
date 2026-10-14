@@ -14,7 +14,8 @@ romanization: "stróit"
 concept_tag: RU-VERB-STROIT
 prerequisites: [RU-C205-sdavat, RU-C206-gasit]
 sounds: []
-roots: []
+roots: [slavic-stroji]
+etymology_hook: "строить is from строй 'order, structure'; Latin stria 'a furrow' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C206-gasit]
 <!-- hl-knowledge: introduces=[RU-LEX-C206-ACT206-02]; assesses=[] -->
 
 **строить** (*stróit*) — "to build".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**строить** comes from *строй*, "order, arrangement" (Vasmer), which Vasmer relates to Latvian *strāja*, "a straw-bedded stall", and Latin *stria*, "a furrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

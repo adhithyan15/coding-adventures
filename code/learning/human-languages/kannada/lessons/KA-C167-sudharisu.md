@@ -14,7 +14,8 @@ romanization: "sudhārisu"
 concept_tag: KA-VERB-SUDHARISU
 prerequisites: [KA-C166-telu, KA-C167-uduru]
 sounds: []
-roots: []
+roots: [hindustani-sudhar]
+etymology_hook: "sudhārisu: sudhāra 'improvement', usually traced to Sanskrit, + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C167-uduru]
 <!-- hl-knowledge: introduces=[KA-LEX-C167-KRIYE167-02]; assesses=[] -->
 
 **ಸುಧಾರಿಸು** — *sudhārisu* — "to improve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುಧಾರಿಸು** (*sudhārisu*) is *sudhāra*, "improvement", made into a verb with *-isu*. The noun is usually traced to Sanskrit, through Hindustani *sudhār*, but no source settles its history.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

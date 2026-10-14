@@ -14,7 +14,8 @@ romanization: "aṟiyikkuka"
 concept_tag: ML-VERB-ARIYIKKUKA
 prerequisites: [ML-C184-oppituka, ML-C185-rajivaykkuka]
 sounds: []
-roots: []
+roots: [dravidian-ari-know]
+etymology_hook: "aṟiyikkuka: native Dravidian, 'make know', the causative of aṟiyuka; Tamil aṟi (DEDR 314)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C185-rajivaykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C185-KRIYA185-02]; assesses=[] -->
 
 **അറിയിക്കുക** — *aṟiyikkuka* — "to inform, to let know".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അറിയിക്കുക** (*aṟiyikkuka*) is native Dravidian, the causative of the verb "to know": "make know"; DEDR 314 lists the root with Tamil *aṟi* and Kannada *aṟi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

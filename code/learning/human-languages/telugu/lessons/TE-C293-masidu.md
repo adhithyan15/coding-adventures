@@ -14,7 +14,8 @@ romanization: "masīdu"
 concept_tag: TE-STHALAM293-MASIDU
 prerequisites: [TE-C292-karkhana, TE-C293-jailu]
 sounds: []
-roots: []
+roots: [arabic-masjid]
+etymology_hook: "masīdu ← Arabic masjid 'mosque', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C293-jailu]
 <!-- hl-knowledge: introduces=[TE-LEX-C293-STHALAM293-02]; assesses=[] -->
 
 **మసీదు** — *masīdu* — "a mosque".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మసీదు** (*masīdu*) is a loan from Arabic *masjid*, "mosque", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,6 +13,9 @@ You'll want to know: ಶಾಲೆ.
 ಶಾಲೆ (śāle) — "school".
 A ಶಿಕ್ಷಕ (śikṣaka), "teacher", works in one.
 
+The word, taken apart.
+ಶಾಲೆ (śāle) is Sanskrit śālā, "shed, stable, house", taken over whole as a learned loan, a tatsama, with Kannada's -e for the Sanskrit -ā (CDIAL 12414). A house for learning became the school.
+
 What you've built.
 Where the teacher you know works.
 
@@ -72,6 +75,9 @@ You'll want to know: ಕಚೇರಿ.
 ಕಚೇರಿ (kacēri) — "office".
 ನಾನು ಕಚೇರಿಗೆ ಹೋಗುತ್ತೇನೆ (nānu kacērige hōguttēne) — "I go to the office".
 
+The word, taken apart.
+ಕಚೇರಿ (kacēri) came from Hindustani kacahrī, "an office, a court of law". The word's deeper origin is not settled.
+
 What you've built.
 Where the work happens.
 
@@ -102,6 +108,9 @@ You'll want to know: ಉದ್ಯೋಗ.
 ಉದ್ಯೋಗ (udyōga) — "job, occupation".
 ನಿಮ್ಮ ಉದ್ಯೋಗ ಏನು? (nimma udyōga ēnu?) — "what is your job?"
 
+The word, taken apart.
+ಉದ್ಯೋಗ (udyōga) is Sanskrit udyoga, "active preparation, exertion" (CDIAL 2055), taken over whole: a tatsama.
+
 What you've built.
 The name question again, asked about work.
 
@@ -131,6 +140,9 @@ Before the new one: say the Kannada for office, then the Kannada for a job.
 You'll want to know: ಇಂಗ್ಲಿಷ್.
 ಇಂಗ್ಲಿಷ್ (iṅgliṣ) — "English".
 ನನಗೆ ಇಂಗ್ಲಿಷ್ ಗೊತ್ತು (nanage iṅgliṣ gottu) — "I know English", built like ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು.
+
+The word, taken apart.
+ಇಂಗ್ಲಿಷ್ (iṅgliṣ) is a loan from English English. It names the language.
 
 What you've built.
 The language you already speak, in Kannada.

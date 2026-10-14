@@ -14,7 +14,8 @@ romanization: "helmeṟṟŭ"
 concept_tag: ML-VASTU333-HELMERRU
 prerequisites: [ML-C333-arival, ML-C333-pottu]
 sounds: []
-roots: []
+roots: [english-helmet]
+etymology_hook: "helmeṟṟŭ ← English helmet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C333-pottu]
 <!-- hl-knowledge: introduces=[ML-LEX-C333-VASTU333-05]; assesses=[] -->
 
 **ഹെൽമെറ്റ്** — *helmeṟṟŭ* — "a helmet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഹെൽമെറ്റ്** (*helmeṟṟŭ*) ← English *helmet*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

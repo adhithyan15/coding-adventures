@@ -37,22 +37,10 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // an empty entry as a 120px-wide box. The web, SwiftUI and XAML lower
     // both, and so does Compose: `min-height`, and since #15967 a text field's
     // `width: 100%` outside a Row (these fields sit in a Column). Qt and
-    // Flutter lower neither on a text field yet. Checked both ways below.
-    (Backend::Qt, "width"),
+    // Flutter now lower the width too (X-7), but not `min-height` on a text
+    // field yet. Checked both ways below.
     (Backend::Qt, "min-height"),
-    (Backend::Flutter, "width"),
     (Backend::Flutter, "min-height"),
-    // ---- Flutter (#12022) ----
-    // Measured on first build, in both themes; the same pre-existing Flutter
-    // gaps `mosaic-pkg-note-editor` pins. Each is checked below and must go
-    // when the emitter learns it.
-    //
-    // `border-radius` on the two text fields (the InputDecoration border is
-    // not derived from it), `color` on the two label `Text`s, and `font-size`
-    // on the three action buttons.
-    (Backend::Flutter, "border-radius"),
-    (Backend::Flutter, "color"),
-    (Backend::Flutter, "font-size"),
 ];
 
 fn package_root() -> PathBuf {

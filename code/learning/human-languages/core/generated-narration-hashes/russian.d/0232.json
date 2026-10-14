@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 232,
-  "sourceHash": "fnv1a64:24bef9d57a3adaf6",
+  "sourceHash": "fnv1a64:9968221eab203724",
   "lessonIds": [
     "RU-C232-kopit",
     "RU-C232-zanimat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch232.txt",
   "json": "russian/narration/ch232.json",
-  "textHash": "fnv1a64:bd67805da3450613",
-  "jsonHash": "fnv1a64:8e2022d647cb5867",
+  "textHash": "fnv1a64:28a41db3cede29da",
+  "jsonHash": "fnv1a64:a561d4249257144a",
   "findings": []
 }

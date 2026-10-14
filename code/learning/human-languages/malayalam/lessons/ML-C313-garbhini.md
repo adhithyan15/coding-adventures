@@ -14,7 +14,8 @@ romanization: "garbhiṇi"
 concept_tag: ML-AROGYAM313-GARBHINI
 prerequisites: [ML-C313-lepanam, ML-C313-kasayam]
 sounds: []
-roots: []
+roots: [sanskrit-garbha]
+etymology_hook: "garbhiṇi ← Sanskrit garbhiṇī 'pregnant', a tatsama (CDIAL 4062)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C313-kasayam]
 <!-- hl-knowledge: introduces=[ML-LEX-C313-AROGYAM313-05]; assesses=[] -->
 
 **ഗർഭിണി** — *garbhiṇi* — "a pregnant woman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഗർഭിണി** (*garbhiṇi*) ← Sanskrit *garbhiṇī*, "pregnant", taken over whole as a tatsama (CDIAL 4062). It is built on *garbha*, "womb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

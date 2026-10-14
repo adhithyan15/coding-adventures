@@ -14,7 +14,8 @@ romanization: "horage"
 concept_tag: KA-LOC108-HORAGE
 prerequisites: [KA-C107-mele, KA-C108-kelage]
 sounds: []
-roots: []
+roots: [dravidian-pura-outside]
+etymology_hook: "horage: native Dravidian, one word with Tamil puṟam (DEDR 4333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C108-kelage]
 <!-- hl-knowledge: introduces=[KA-LEX-C108-LOC108-02]; assesses=[] -->
 
 **ಹೊರಗೆ** — *horage* — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೊರಗೆ** (*horage*) is native Dravidian, one word with Tamil *puṟam* (DEDR 4333). DEDR lists *poṟage*, "the outside", the older form: the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sluchítsya"
 concept_tag: RU-VERB-SLUCHITSYA
 prerequisites: [RU-C137-ranshe, RU-C137-proshlyy]
 sounds: []
-roots: []
+roots: [slavic-luchiti]
+etymology_hook: "случиться goes with лучить 'to hit, to meet', Old Church Slavonic лучити ся"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C137-proshlyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C137-PAS137-05]; assesses=[] -->
 
 **случиться** (*sluchítsya*) — "to happen". **Что случилось?** — *shto sluchílos* — "What happened?" **случилось** is its past with "it".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**случиться** — Old Church Slavonic *лучити ся*, "to come about". Vasmer links it with *лучить*, "to hit upon", and keeps it apart from German *Glück*, "luck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

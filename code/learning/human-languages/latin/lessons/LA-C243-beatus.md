@@ -13,7 +13,8 @@ gloss: "blessed, fortunate"
 concept_tag: LA-QUAL243-BEATUS
 prerequisites: [LA-C243-fidelis, LA-C243-infelix]
 sounds: []
-roots: []
+roots: [beatus-latin, beare-latin]
+etymology_hook: "beātus 'blessed' — the participle of beō 'to make happy'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C243-infelix]
 <!-- hl-knowledge: introduces=[LA-LEX-C243-QUAL243-05]; assesses=[] -->
 
 **beātus, beāta, beātum** — "blessed, fortunate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**beātus** is the past participle of *beō*, "to make happy, to bless" (Lewis & Short): made happy. Where *beō* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

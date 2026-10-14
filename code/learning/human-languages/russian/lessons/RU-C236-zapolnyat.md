@@ -14,7 +14,8 @@ romanization: "zapolnyát"
 concept_tag: RU-VERB-ZAPOLNYAT
 prerequisites: [RU-C236-sravnivat, RU-C236-proveryat]
 sounds: []
-roots: []
+roots: [pie-pelh1]
+etymology_hook: "заполнять is за- + полнять, from полный 'full'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C236-proveryat]
 <!-- hl-knowledge: introduces=[RU-LEX-C236-ACT236-05]; assesses=[] -->
 
 **заполнять** (*zapolnyát*) — "to fill in".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**заполнять** is *за-* with *-полнять*, from *полный*, "full": to fill in.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaṭorī"
 concept_tag: HI-THINGS132-KATORI
 prerequisites: [HI-C131-mombatti, HI-C132-machis]
 sounds: []
-roots: []
+roots: [indo-aryan-kattora]
+etymology_hook: "kaṭorī ← *kaṭṭora 'cup', a reconstructed form; a tadbhava (CDIAL 2648)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C132-machis]
 <!-- hl-knowledge: introduces=[HI-LEX-C132-THINGS132-02]; assesses=[] -->
 
 **कटोरी** — *kaṭorī* — "a small bowl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कटोरी** (*kaṭorī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kaṭṭora*, "cup", a form CDIAL reconstructs from its descendants (CDIAL 2648).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

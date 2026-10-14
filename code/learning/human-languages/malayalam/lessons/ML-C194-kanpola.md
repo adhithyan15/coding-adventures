@@ -14,7 +14,8 @@ romanization: "kaṇpōḷa"
 concept_tag: ML-AROGYAM194-KANPOLA
 prerequisites: [ML-C194-kelvi, ML-C194-arogyam]
 sounds: []
-roots: []
+roots: [proto-dravidian-kan-eye]
+etymology_hook: "kaṇpōḷa: native Dravidian, kaṇ 'eye' (DEDR 1159) + pōḷa, perhaps the word DEDR 4455 lists as 'bubble'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C194-arogyam]
 <!-- hl-knowledge: introduces=[ML-LEX-C194-AROGYAM194-05]; assesses=[] -->
 
 **കൺപോള** — *kaṇpōḷa* — "an eyelid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൺപോള** (*kaṇpōḷa*) is native Dravidian: *kaṇ*, "eye" (DEDR 1159, with Tamil *kaṇ*), and *pōḷa*, which may be the word DEDR 4455 lists as "bubble, blister"; that second link is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

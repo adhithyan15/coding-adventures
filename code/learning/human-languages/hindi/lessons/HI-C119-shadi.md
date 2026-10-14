@@ -14,7 +14,8 @@ romanization: "śādī"
 concept_tag: HI-ABOUT-WEDDING
 prerequisites: [HI-C119-naukri, HI-C119-pesha]
 sounds: []
-roots: []
+roots: [persian-shadi]
+etymology_hook: "śādī: usually traced to Persian shādī 'joy, festivity'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C119-pesha]
 **शादी** (*śādī*) — "a wedding", and "marriage".
 
 **शादी कब है?** — "when is the wedding?", with the **कब** you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शादी** (*śādī*) is a loan, usually traced to Persian *shādī*, "joy, festivity". Hindi narrowed it to the happiest festivity: a wedding.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

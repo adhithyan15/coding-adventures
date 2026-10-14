@@ -47,7 +47,7 @@ reviews_of: [TA-C245-an]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**பெண்** (*peṇ*) is native Dravidian. DEDR 4395 lists Malayalam *peṇ*, "girl, woman" and Kannada *peṇ*.
+**பெண்** (*peṇ*) is native Dravidian. DEDR 4395 lists Malayalam *peṇ*, "girl, woman" and Kannada *peṇ*. The entry compares Sanskrit *pṛṇākā*, "young female (of deer)".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

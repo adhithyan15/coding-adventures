@@ -14,7 +14,8 @@ romanization: "nampar"
 concept_tag: ML-VASTU250-NAMPAR
 prerequisites: [ML-C249-jyus, ML-C249-karikku]
 sounds: []
-roots: []
+roots: [english-number]
+etymology_hook: "nampar ← English number"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C249-karikku]
 <!-- hl-knowledge: introduces=[ML-LEX-C250-VASTU250-01]; assesses=[] -->
 
 **നമ്പർ** — *nampar* — "a number (phone, house)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നമ്പർ** (*nampar*) ← English *number*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "roṭṭe"
 concept_tag: TE-VASTUVU262-ROTTE
 prerequisites: [TE-C261-jigata, TE-C261-garuku]
 sounds: []
-roots: []
+roots: [sanskrit-rotika]
+etymology_hook: "roṭṭe: like Hindi roṭī, from *rōṭṭa 'bread' (CDIAL 10837)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C261-garuku]
 <!-- hl-knowledge: introduces=[TE-LEX-C262-VASTUVU262-01]; assesses=[] -->
 
 **రొట్టె** — *roṭṭe* — "bread, flatbread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రొట్టె** (*roṭṭe*) matches the Indo-Aryan words for "bread", such as Hindi *roṭī*, which CDIAL 10837 traces to a reconstructed *rōṭṭa*, "bread".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

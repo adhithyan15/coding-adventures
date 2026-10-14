@@ -14,7 +14,8 @@ romanization: "dīyā"
 concept_tag: HI-NOUN-LAMP
 prerequisites: [HI-C45-cloth, HI-C43-speak, HI-C44-daughter]
 sounds: []
-roots: []
+roots: [sanskrit-dipa]
+etymology_hook: "dīyā ← Sanskrit dīpa 'lamp', a tadbhava (CDIAL 6348)"
 duration:
   max_seconds: 210
 requires:

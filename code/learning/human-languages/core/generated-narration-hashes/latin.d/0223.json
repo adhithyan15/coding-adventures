@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 223,
-  "sourceHash": "fnv1a64:95c0299d861c2e20",
+  "sourceHash": "fnv1a64:c710168a76c61aaa",
   "lessonIds": [
     "LA-C223-caligo",
     "LA-C223-aura",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch223.txt",
   "json": "latin/narration/ch223.json",
-  "textHash": "fnv1a64:8e55f9a8b9f085c2",
-  "jsonHash": "fnv1a64:b3f15b1c43690f91",
+  "textHash": "fnv1a64:77e78003975db7ba",
+  "jsonHash": "fnv1a64:b58d9b727a18c8f1",
   "findings": []
 }

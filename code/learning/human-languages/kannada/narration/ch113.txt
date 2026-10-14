@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a chance, then the Kannada for a tool.
 You'll want to know: ಆಸ್ತಿ.
 ಆಸ್ತಿ — āsti — "property".
 
+The word, taken apart.
+The origin of ಆಸ್ತಿ (āsti) is uncertain. It is often linked to Sanskrit asti, "it is" (CDIAL 977), so that property is "what one has", but no source settles it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a tool, then the Kannada for property.
 
 You'll want to know: ಯಜಮಾನ.
 ಯಜಮಾನ — yajamāna — "an owner, the master".
+
+The word, taken apart.
+ಯಜಮಾನ (yajamāna) is Sanskrit yajamāna, "the one who pays for a sacrifice", taken over whole. The patron who paid became the master of the house.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for property, then the Kannada for an owner.
 You'll want to know: ಶಕ್ತಿ.
 ಶಕ್ತಿ — śakti — "strength, power".
 
+The word, taken apart.
+ಶಕ್ತಿ (śakti) is Sanskrit śakti, "power", taken over whole as a learned loan, a tatsama (CDIAL 12250).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for an owner, then the Kannada for strength.
 You'll want to know: ಆಸೆ.
 ಆಸೆ — āse — "a wish, a desire".
 
+The word, taken apart.
+ಆಸೆ (āse) comes from Sanskrit āśā, "wish, expectation", reshaped to Kannada sounds: a tadbhava (CDIAL 1456). The ś became s, and the final -ā became Kannada -e.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for strength, then the Kannada for a wish.
 
 You'll want to know: ಕನಸು.
 ಕನಸು — kanasu — "a dream".
+
+The word, taken apart.
+ಕನಸು (kanasu) is native Dravidian, one word with Tamil kaṉavu and Telugu kala (DEDR 1407). DEDR lists kanasu itself, "dream".
 
 What you've built.
 One more word for this chapter.

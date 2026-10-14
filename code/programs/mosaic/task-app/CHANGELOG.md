@@ -7,6 +7,15 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.4` accumulate here until the next version is
 cut.
 
+### Fixed — XAML preserves the seven-column calendar grid (#17394)
+
+XAML now lowers complete direct-child percentage groups to proportional Grid
+stars and the Calendar package's wrapping repeated day cells to a seven-column
+`UniformGridLayout`. Fresh strict generation retires the seven weekday widths,
+the repeated cell width, and `flex-wrap`, reducing the measured XAML style
+inventory from 38 to 29. Partial, mixed, invalid, and unsupported wrapping
+shapes remain explicit debt.
+
 ### Fixed — Qt elevation shadows leave the degradation report (#17386)
 
 Qt now treats a non-inset `box-shadow` paired with a supported Mosaic

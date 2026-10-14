@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 459,
-  "sourceHash": "fnv1a64:dd08648d65010f91",
+  "sourceHash": "fnv1a64:10656c0dd95f1b2a",
   "lessonIds": [
     "ES-C459-seccion",
     "ES-C459-inventario",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch459.txt",
   "json": "spanish/narration/ch459.json",
   "textHash": "fnv1a64:ff694f50f346ce51",
-  "jsonHash": "fnv1a64:068f59169f7bf596",
+  "jsonHash": "fnv1a64:e04a7046275605fa",
   "findings": []
 }

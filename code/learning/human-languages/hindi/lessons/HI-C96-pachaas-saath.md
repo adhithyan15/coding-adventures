@@ -14,7 +14,8 @@ romanization: "pacās sāṭh"
 concept_tag: HI-NUMBERS-FIFTY-SIXTY
 prerequisites: [HI-C96-tees-chaalees]
 sounds: []
-roots: []
+roots: [sanskrit-pancashat, sanskrit-shashti]
+etymology_hook: "pacās ← Sanskrit pañcāśat '50' (CDIAL 7682); sāṭh ← ṣaṣṭi '60' (CDIAL 12804)"
 duration:
   max_seconds: 220
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C96-tees-chaalees]
 **पचास** (*pacās*) — fifty.
 
 **साठ** (*sāṭh*) — sixty.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पचास साठ** (*pacās sāṭh*) is two tadbhavas, words inherited and reshaped by sound change. *pacās* comes from Sanskrit *pañcāśat*, "fifty" (CDIAL 7682), and *sāṭh* from *ṣaṣṭi*, "sixty" (CDIAL 12804).
 
 ## Grammar Lens: one keeps the ending, one drops it
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C96-TENS-03, HI-LEX-C96-TENS-04] -->

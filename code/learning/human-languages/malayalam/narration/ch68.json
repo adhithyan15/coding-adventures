@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "All the Way Up, and First in Time",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ec182a5a04bc3edd",
+  "sourceHash": "fnv1a64:53a3aa5c9bcd25ce",
   "lessons": [
     {
       "id": "ML-C68-sixth",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abd2e74df2f47031",
+      "sourceHash": "fnv1a64:8b28a13d4974d466",
       "notice": null,
       "blocks": [
         {
@@ -96,6 +96,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആറാം (āṟāṁ) is native Dravidian: \"six\" (DEDR 2485, with Tamil āṟu and Kannada āṟu) with the ordinal ending -āṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -135,7 +146,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -166,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46a68a102e3b2c35",
+      "sourceHash": "fnv1a64:4217d7fa74db4663",
       "notice": null,
       "blocks": [
         {
@@ -256,6 +267,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഏഴാം (ēḻāṁ) is native Dravidian: \"seven\" (DEDR 910, with Tamil ēḻu and Kannada ēḻu) with the ordinal ending -āṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -295,7 +317,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -326,7 +348,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf682e4a2a2f082f",
+      "sourceHash": "fnv1a64:83f1a099205e8ce2",
       "notice": null,
       "blocks": [
         {
@@ -399,6 +421,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എട്ടാം (eṭṭāṁ) is native Dravidian: \"eight\" (DEDR 784, with Tamil eṭṭu) with the ordinal ending -āṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -438,7 +471,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -469,7 +502,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ccb2e182b2b51001",
+      "sourceHash": "fnv1a64:a3ffd58454c74be1",
       "notice": null,
       "blocks": [
         {
@@ -542,6 +575,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒമ്പതാം (ompathāṁ) is native Dravidian: \"nine\" (DEDR 1025, with Tamil oṉpatu, ompatu and Kannada ombattu) with the ordinal ending -āṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -581,7 +625,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -612,7 +656,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c26bed9a89c28b41",
+      "sourceHash": "fnv1a64:03fb649c8b7d6b4c",
       "notice": null,
       "blocks": [
         {
@@ -681,6 +725,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പത്താം (pathāṁ) is native Dravidian: \"ten\" (DEDR 3918, with Tamil pattu and Kannada pattu) with the ordinal ending -āṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -720,7 +775,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -751,7 +806,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96c06f186f97109b",
+      "sourceHash": "fnv1a64:9219401fca570e86",
       "notice": null,
       "blocks": [
         {
@@ -824,6 +879,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പതിനൊന്നാം (patinonnāṁ) is native Dravidian throughout: the joining shape of \"ten\" (DEDR 3918, with Tamil patiṉ-), \"one\" (DEDR 990), and the ordinal ending -āṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the ending is a fact about numbers, not about ten",
           "segments": [
@@ -838,7 +904,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -878,7 +944,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -909,7 +975,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59acc194d2c5509c",
+      "sourceHash": "fnv1a64:93063c499450e03f",
       "notice": null,
       "blocks": [
         {
@@ -982,6 +1048,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആദ്യം (ādyaṁ) from Sanskrit ādya, \"first, earliest\", built on ādi, \"beginning\" (CDIAL 1152), with Malayalam's noun ending -ṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way — the one word Malayalam borrowed here",
           "segments": [
@@ -996,7 +1073,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -1020,7 +1097,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1060,7 +1137,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

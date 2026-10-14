@@ -14,7 +14,8 @@ romanization: "kaṭṭu"
 concept_tag: KA-VERB-KATTU
 prerequisites: [KA-C150-oresu, KA-C150-gudisu]
 sounds: []
-roots: []
+roots: [dravidian-kattu-bind]
+etymology_hook: "kaṭṭu: native Dravidian, one word with Tamil kaṭṭu and Telugu kaṭṭu (DEDR 1147)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C150-gudisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C150-ACT150-04]; assesses=[] -->
 
 **ಕಟ್ಟು** — *kaṭṭu* — "to tie, to build".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಟ್ಟು** (*kaṭṭu*) is native Dravidian, one word with Tamil *kaṭṭu* and Telugu *kaṭṭu* (DEDR 1147). DEDR lists *kaṭṭu* itself, "to bind, tie, build". DEDR 1147 compares Sanskrit *ghaṭṭa*, "landing-place", only with the Kannada and Telugu *gaṭṭu*, "embankment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

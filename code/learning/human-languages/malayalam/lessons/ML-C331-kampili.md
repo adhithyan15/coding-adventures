@@ -14,7 +14,8 @@ romanization: "kampiḷi"
 concept_tag: ML-VASTU331-KAMPILI
 prerequisites: [ML-C331-kuja, ML-C331-kampi]
 sounds: []
-roots: []
+roots: [sanskrit-kambala]
+etymology_hook: "kampiḷi: from Sanskrit kambala 'woollen blanket' (CDIAL 2771), reshaped"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C331-kampi]
 <!-- hl-knowledge: introduces=[ML-LEX-C331-VASTU331-05]; assesses=[] -->
 
 **കമ്പിളി** — *kampiḷi* — "wool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കമ്പിളി** (*kampiḷi*) comes from Sanskrit *kambala*, "a woollen blanket" (CDIAL 2771), reshaped in the mouth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

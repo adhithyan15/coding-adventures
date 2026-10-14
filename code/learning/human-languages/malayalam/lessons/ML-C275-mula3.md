@@ -14,7 +14,8 @@ romanization: "muḻa"
 concept_tag: ML-AROGYAM275-MULA3
 prerequisites: [ML-C274-prameham, ML-C275-borati]
 sounds: []
-roots: []
+roots: [dravidian-muzha-lump]
+etymology_hook: "muḻa: native Dravidian; DEDR 4988 lists Malayalam muḻa 'protuberance, tumour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C275-borati]
 <!-- hl-knowledge: introduces=[ML-LEX-C275-AROGYAM275-02]; assesses=[] -->
 
 **മുഴ** — *muḻa* — "a lump, a swelling bump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുഴ** (*muḻa*) is native Dravidian: DEDR 4988 lists it, "protuberance, tumour, excrescence".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

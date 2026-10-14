@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Which Way",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1d2fe0ba4a363b3d",
+  "sourceHash": "fnv1a64:2dea4e80f0c7f13d",
   "lessons": [
     {
       "id": "TA-C66-up",
@@ -938,7 +938,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eca2ee4f349950f9",
+      "sourceHash": "fnv1a64:58816880bfef908d",
       "notice": null,
       "blocks": [
         {
@@ -980,7 +980,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "இடது (iḍadu) is native Dravidian. DEDR 449 lists Malayalam iṭam and Kannada eḍa. The entry gives iṭam, \"left side\"."
+              "text": "இடது (iḍadu) is native Dravidian. DEDR 449 lists Malayalam iṭam and Kannada eḍa. The entry gives iṭam, \"left side\", and compares Indo-Aryan ḍāva, \"left\" (CDIAL 5539), which CDIAL counts as non-Aryan."
             }
           ]
         },

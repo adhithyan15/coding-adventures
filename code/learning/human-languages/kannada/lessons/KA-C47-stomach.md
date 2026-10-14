@@ -11,7 +11,8 @@ romanization: "hoṭṭe"
 concept_tag: KA-NOUN-STOMACH
 prerequisites: [KA-C47-finger, KA-C45-wife]
 sounds: []
-roots: []
+roots: [dravidian-potta-belly]
+etymology_hook: "hoṭṭe: older Kannada poṭṭe 'belly' (DEDR 4494); Telugu poṭṭa; DEDR compares Prakrit poṭṭa"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C47-finger]
 Telugu has పొట్ట (*poṭṭa*) for the same thing, the *p* being the older shape and Kannada's *h* the newer one. Tamil went its own way here and reaches for வயிறு (*vayiṟu*), a word from another root entirely — a reminder that the sisters agree often, not invariably.
 
 Five body words, and three of them — ಹಲ್ಲು, ಹೊಟ್ಟೆ, and the fruit from the chapter before — carry the same *h* into the same first slot.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೊಟ್ಟೆ** (*hoṭṭe*) is the older Kannada *poṭṭe*, "belly", with the *p-* turned into *h-*. DEDR 4494 lists it with Telugu *poṭṭa*, and compares Prakrit *poṭṭa*, "belly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

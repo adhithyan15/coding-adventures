@@ -14,7 +14,8 @@ romanization: "tivācī"
 concept_tag: TE-VASTUVU190-TIVACI
 prerequisites: [TE-C190-sopha, TE-C190-uyyala]
 sounds: []
-roots: []
+roots: [telugu-tivaci-carpet]
+etymology_hook: "tivācī: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'carpet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C190-uyyala]
 <!-- hl-knowledge: introduces=[TE-LEX-C190-VASTUVU190-05]; assesses=[] -->
 
 **తివాచీ** — *tivācī* — "a carpet, a rug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **తివాచీ** (*tivācī*) is uncertain. DEDR and CDIAL list no word of this shape meaning "carpet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

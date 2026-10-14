@@ -11,8 +11,8 @@ concept_tag: RU-REQUEST-REPEAT
 romanization: paftarítye
 prerequisites: [RU-C21-prostite]
 sounds: []
-roots: []
-etymology_hook: "повторите is по- plus втор-, 'second' — the same втор- that names Tuesday, вторник, the second day — so to repeat is literally to do a thing a second time"
+roots: [slavic-vutoru]
+etymology_hook: "повторите is по- + втор-, 'second', as in вторник 'Tuesday': to repeat is to do a thing a second time"
 duration:
   max_seconds: 250
 requires:
@@ -52,31 +52,28 @@ reviews_of: [RU-C21-prostite, RU-C20-khochu-chitat, RU-C04-pisat]
 
 - **повторите** — *paftarítye* — **say it again, repeat it**
 
-Until now the book could report a failure and do nothing about it. *Я не
-понимаю* said something had gone wrong; it did not ask anybody to change
-anything. This word does.
+Until now the book could only report a failure. This word asks for a fix.
 
 - **извините, повторите, пожалуйста** — *izvinítye, paftarítye, pazhálusta* —
   sorry, please say that again.
 
-Three words you own, in the order a Russian says them: the opening, the request,
-the politeness. That is a complete repair turn.
+That is a complete repair turn.
 
 ## Grammar lens — the -ите ending is an order
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-IMPERATIVE-ITE-01]; assesses=[RU-LEX-POVTORITE-01, RU-LEX-IZVINITE-01, RU-LEX-PROSTITE-01, RU-GRAMMAR-TY-VY-REGISTER] -->
 
 Three words in two lessons now end in **-ите**: **извините**, **простите**,
-**повторите**. That is not a coincidence and it is worth naming.
+**повторите**. That is worth naming.
 
 **-ите** is Russian's polite **imperative** — the ending that turns a verb into an
 instruction addressed to **вы**. Drop the **-те** and you get the **ты** form:
 *извини*, *прости*, *повтори*.
 
-So the two apologies were never nouns. They were commands all along, and seeing
-the ending makes them a set instead of three things to memorise.
+So the two apologies were never nouns: they were commands all along.
 
 The word itself is **по-** plus **втор-**, *second* — the same **втор-** in
-**вторник**, Tuesday, the second day. To repeat is to do a thing a second time.
+**вторник**, Tuesday, the second day. To repeat is to do a thing a second time. **второй** goes back to Proto-Slavic
+*\*vŭtorŭ*, whose deeper origin Vasmer calls uncertain.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POVTORITE-01, RU-GRAMMAR-IMPERATIVE-ITE-01] -->

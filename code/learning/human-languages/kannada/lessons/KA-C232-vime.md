@@ -14,7 +14,8 @@ romanization: "vime"
 concept_tag: KA-KELASA232-VIME
 prerequisites: [KA-C231-adhikari, KA-C232-kharcu]
 sounds: []
-roots: []
+roots: [persian-bima]
+etymology_hook: "vime ← Hindustani bīmā 'insurance', from Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C232-kharcu]
 <!-- hl-knowledge: introduces=[KA-LEX-C232-KELASA232-02]; assesses=[] -->
 
 **ವಿಮೆ** — *vime* — "insurance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿಮೆ** (*vime*) came through Hindustani *bīmā*, "insurance", a Persian word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

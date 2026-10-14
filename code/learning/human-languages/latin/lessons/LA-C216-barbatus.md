@@ -13,7 +13,8 @@ gloss: "bearded"
 concept_tag: LA-QUAL216-BARBATUS
 prerequisites: [LA-C215-incertus, LA-C216-calvus]
 sounds: []
-roots: []
+roots: [barbatus-latin, barba-latin]
+etymology_hook: "barbātus 'bearded' — built on barba 'beard'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C216-calvus]
 <!-- hl-knowledge: introduces=[LA-LEX-C216-QUAL216-02]; assesses=[] -->
 
 **barbātus, barbāta, barbātum** — "bearded".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**barbātus** is built on *barba*, "beard" (Lewis & Short), with *-ātus*, "provided with": bearded.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

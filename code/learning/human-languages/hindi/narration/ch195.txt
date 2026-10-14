@@ -12,6 +12,9 @@ Before the new one: say the Hindi for an engineer, then the Hindi for a writer.
 You'll want to know: कवि.
 कवि — kavi — "a poet".
 
+The word, taken apart.
+कवि (kavi) is Sanskrit kavi, "wise; wise man, poet", taken over whole as a learned loan, a tatsama (CDIAL 2964).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a writer, then the Hindi for a poet.
 
 You'll want to know: चित्रकार.
 चित्रकार — citrakār — "a painter".
+
+The word, taken apart.
+चित्रकार (citrakār) is Sanskrit citrakāra, "painter", from citra, "bright, a picture", and kāra, "maker", taken over whole as a tatsama. CDIAL lists the inherited form of the word as Hindi citerā, "painter" (CDIAL 4805).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a poet, then the Hindi for a painter.
 You'll want to know: गायक.
 गायक — gāyak — "a singer".
 
+The word, taken apart.
+गायक (gāyak) is Sanskrit gāyaka, "singer", taken over whole as a learned loan, a tatsama. It is built on gai-, "to sing", the root of गाना.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a painter, then the Hindi for a singer.
 You'll want to know: खिलाड़ी.
 खिलाड़ी — khilāṛī — "a player".
 
+The word, taken apart.
+खिलाड़ी (khilāṛī) is built on khel-, "play", with the ending -āṛī, "one who does it". CDIAL lists the verb under a reconstructed khel-, "play" (CDIAL 3918).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a singer, then the Hindi for a player.
 
 You'll want to know: नेता.
 नेता — netā — "a leader, a politician".
+
+The word, taken apart.
+नेता (netā) is Sanskrit netṛ, "leader", taken over whole as a learned loan, a tatsama. Hindi took its nominative, netā, "the leader".
 
 What you've built.
 One more word for this chapter.

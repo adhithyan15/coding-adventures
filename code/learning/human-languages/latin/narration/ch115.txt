@@ -12,6 +12,9 @@ Before the new one: say the Latin for right, then the Latin for left.
 You'll want to know: hūc.
 hūc — "to here, hither".
 
+The word, taken apart.
+hūc is an old case form of hic, "this": "to this place". Early Latin wrote it hoc (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for left, then the Latin for to here.
 
 You'll want to know: illūc.
 illūc — "to there, thither".
+
+The word, taken apart.
+illūc goes with illic, "there" (Lewis & Short), and is built on ille, "that": to that place.
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the Latin for to here, then the Latin for to there.
 You'll want to know: theātrum, theātrī.
 theātrum, theātrī — "a theatre".
 
+The word, taken apart.
+theātrum was borrowed from Greek theatron, "a place for viewing" (Lewis & Short), from theaomai, "to watch" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Latin for to there, then the Latin for a theatre.
 You'll want to know: balneum, balneī.
 balneum, balneī — "a bath, a bathhouse".
 
+The word, taken apart.
+balneum is contracted from balineum, "a bath" (Lewis & Short), which was borrowed from Greek balaneion, "bath" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Latin for a theatre, then the Latin for a bath.
 
 You'll want to know: castra, castrōrum.
 castra, castrōrum — "a military camp".
+
+The word, taken apart.
+castra is the plural of castrum, "a fort" (Lewis & Short). Where castrum comes from is uncertain. English Chester and Lancaster take their names from it.
 
 What you've built.
 One more word for this chapter.

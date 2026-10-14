@@ -12,6 +12,9 @@ Before the new one: say the Latin for talent, then the Latin for a habit.
 You'll want to know: saeculum, saeculī.
 saeculum, saeculī — "a generation, a century".
 
+The word, taken apart.
+saeculum has no sure origin; Lewis & Short call it doubtful. Welsh hoedl, "lifetime", is sometimes compared. English secular comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a habit, then the Latin for a generation.
 
 You'll want to know: aetās, aetātis.
 aetās, aetātis — "age, a lifetime".
+
+The word, taken apart.
+aetās is contracted from older aevitās (Lewis & Short), built on aevum, "a lifetime, an age", which is usually traced to Proto-Indo-European h2eyu-, "life force".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a generation, then the Latin for age.
 You'll want to know: occāsus, occāsūs.
 occāsus, occāsūs — "sunset; a setting".
 
+The word, taken apart.
+occāsus is built on occidō, "to fall down, to set" (Lewis & Short), from ob, "towards", and cadō, "to fall": the sun's going down.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for age, then the Latin for sunset; a setting.
 You'll want to know: ortus, ortūs.
 ortus, ortūs — "sunrise; a rising".
 
+The word, taken apart.
+ortus is built on orior, "to rise" (Lewis & Short): the sun's rising. English orient, "the east", comes from the same verb.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for sunset; a setting, then the Latin for sunr
 
 You'll want to know: dīlūculum, dīlūculī.
 dīlūculum, dīlūculī — "first light, daybreak".
+
+The word, taken apart.
+dīlūculum is built on dīlūceō, "to grow light" (Lewis & Short), from lūx, "light", with -culum, a diminutive ending: the first glimmer.
 
 What you've built.
 One more word for this chapter.

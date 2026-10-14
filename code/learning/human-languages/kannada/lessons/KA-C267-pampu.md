@@ -14,7 +14,8 @@ romanization: "pampu"
 concept_tag: KA-VASTU267-PAMPU
 prerequisites: [KA-C267-kunda, KA-C267-paip]
 sounds: []
-roots: []
+roots: [english-pump]
+etymology_hook: "pampu ← English pump"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C267-paip]
 <!-- hl-knowledge: introduces=[KA-LEX-C267-VASTU267-04]; assesses=[] -->
 
 **ಪಂಪು** — *pampu* — "a pump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಂಪು** (*pampu*) is a loan from English *pump*. Kannada adds a final *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

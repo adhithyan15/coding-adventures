@@ -14,7 +14,8 @@ romanization: "krossóvki"
 concept_tag: RU-VESHCH162-KROSSOVKI
 prerequisites: [RU-C162-futbolka, RU-C162-kolgotki]
 sounds: []
-roots: []
+roots: [english-cross]
+etymology_hook: "кроссовки is from кросс 'a cross-country run', English cross: shoes for running"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C162-kolgotki]
 <!-- hl-knowledge: introduces=[RU-LEX-C162-VESHCH162-04]; assesses=[] -->
 
 **кроссовки** (*krossóvki*) — "trainers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кроссовки** is built on *кросс*, "a cross-country run", from English *cross(-country)*, with *-овки*: shoes for running.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

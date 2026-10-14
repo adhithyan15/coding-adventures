@@ -4,7 +4,7 @@
   "chapter": 123,
   "title": "Vegetables, Banana, Mango, Coconut, Onion",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ab95d0898ac8a537",
+  "sourceHash": "fnv1a64:0b7af6c55c0ed098",
   "lessons": [
     {
       "id": "TA-C123-kaykari",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09a56d5dc52d1d4f",
+      "sourceHash": "fnv1a64:3e8200dc9eadce99",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "காய்கறி (kāykaṟi) is native: kāy, \"unripe fruit\" (DEDR 1459), and kaṟi, \"vegetables, curry\" (DEDR 1391; Malayalam kaṟi)."
+              "text": "காய்கறி (kāykaṟi) is native: kāy, \"unripe fruit\" (DEDR 1459, which compares Indo-Aryan kacca, \"raw\"), and kaṟi, \"vegetables, curry\" (DEDR 1391; Malayalam kaṟi)."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54dbc0d246619d06",
+      "sourceHash": "fnv1a64:67ea2884aa9ae302",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "வாழைப்பழம் (vāḻaippaḻam) is native: vāḻai, \"plantain\" (DEDR 5373; Malayalam vāḻa, Kannada bāḻe), and paḻam, \"fruit\" (DEDR 4004)."
+              "text": "வாழைப்பழம் (vāḻaippaḻam) is native: vāḻai, \"plantain\" (DEDR 5373; Malayalam vāḻa, Kannada bāḻe), and paḻam, \"fruit\" (DEDR 4004). DEDR compares Sanskrit (lexicons) vārabuṣā, \"plantain\", and phala, \"fruit\"."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a90f71ae15c2c789",
+      "sourceHash": "fnv1a64:bb98e5b650ea2ebf",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "மாம்பழம் (māmpaḻam) is native: mā, \"mango\" (DEDR 4782; Malayalam mā), and paḻam, \"fruit\" (DEDR 4004). English mango came, through Portuguese, from the Malayalam form māṅṅa."
+              "text": "மாம்பழம் (māmpaḻam) is native: mā, \"mango\" (DEDR 4782; Malayalam mā), and paḻam, \"fruit\" (DEDR 4004). DEDR compares Sanskrit mākanda, \"mango tree\", and phala, \"fruit\". English mango came, through Portuguese, from the Malayalam form māṅṅa."
             }
           ]
         },

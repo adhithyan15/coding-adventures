@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 153,
-  "sourceHash": "fnv1a64:22e9a8f3f3c9c376",
+  "sourceHash": "fnv1a64:144e8a3a72270b48",
   "lessonIds": [
     "RU-C153-sportzal",
     "RU-C153-mechet",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch153.txt",
   "json": "russian/narration/ch153.json",
-  "textHash": "fnv1a64:e7e42a9535215fdd",
-  "jsonHash": "fnv1a64:167b13fa43e8c359",
+  "textHash": "fnv1a64:cc3bb6814ec1ec88",
+  "jsonHash": "fnv1a64:db85c5d382c53a62",
   "findings": []
 }

@@ -11,7 +11,8 @@ romanization: "nirttū"
 concept_tag: ML-REP-STOP
 prerequisites: [ML-C120-didntunderstand, ML-C120-help]
 sounds: []
-roots: []
+roots: [dravidian-nil-stand]
+etymology_hook: "nirttū: native Dravidian, 'make stand', the causative of nilkkuka; Tamil nil (DEDR 3675)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C120-help]
 
 **നിർത്തൂ** (*nirttū*) — "please stop (it)", said to a driver or about a noise.
 **ഇവിടെ നിർത്തൂ** — "please stop here", with **ഇവിടെ**, "here".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിർത്തൂ** (*nirttū*) is native Dravidian, the causative of the verb "to stand": "make stand"; DEDR 3675 lists the root with Tamil *nil* and Kannada *nil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

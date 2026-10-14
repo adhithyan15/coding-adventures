@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 299,
-  "sourceHash": "fnv1a64:c44b83e2d23396ef",
+  "sourceHash": "fnv1a64:914ec631897f9add",
   "lessonIds": [
     "TE-C299-sanagalu",
     "TE-C299-avalu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch299.txt",
   "json": "telugu/narration/ch299.json",
-  "textHash": "fnv1a64:491b93632dd633d3",
-  "jsonHash": "fnv1a64:84f2ae82454a221c",
+  "textHash": "fnv1a64:beeb4d5bc1c9d9b0",
+  "jsonHash": "fnv1a64:8af336f61caab263",
   "findings": []
 }

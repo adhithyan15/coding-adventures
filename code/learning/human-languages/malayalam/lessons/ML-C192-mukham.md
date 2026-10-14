@@ -14,7 +14,8 @@ romanization: "mukhaṁ"
 concept_tag: ML-AROGYAM192-MUKHAM
 prerequisites: [ML-C191-piriyuka, ML-C191-cuntuka]
 sounds: []
-roots: []
+roots: [sanskrit-mukha]
+etymology_hook: "mukhaṁ ← Sanskrit mukha 'mouth, face', a tatsama (CDIAL 10158)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C191-cuntuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C192-AROGYAM192-01]; assesses=[] -->
 
 **മുഖം** — *mukhaṁ* — "the face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുഖം** (*mukhaṁ*) ← Sanskrit *mukha*, "mouth, face", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 10158).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

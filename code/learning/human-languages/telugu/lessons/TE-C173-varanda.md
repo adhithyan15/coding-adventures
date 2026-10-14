@@ -14,7 +14,8 @@ romanization: "varaṇḍā"
 concept_tag: TE-STHALAM173-VARANDA
 prerequisites: [TE-C172-eta, TE-C172-eppatiki]
 sounds: []
-roots: []
+roots: [english-veranda]
+etymology_hook: "varaṇḍā ← English veranda"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C172-eppatiki]
 <!-- hl-knowledge: introduces=[TE-LEX-C173-STHALAM173-01]; assesses=[] -->
 
 **వరండా** — *varaṇḍā* — "a veranda".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వరండా** (*varaṇḍā*) is a loan from English *veranda*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

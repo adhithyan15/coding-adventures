@@ -14,7 +14,8 @@ romanization: "maṁca"
 concept_tag: KA-WHY115-MAMCA
 prerequisites: [KA-C115-adakke, KA-C115-yakendare]
 sounds: []
-roots: []
+roots: [sanskrit-manca]
+etymology_hook: "maṁca ← Sanskrit mañca 'stage, platform; bed', a tatsama (CDIAL 9715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C115-yakendare]
 <!-- hl-knowledge: introduces=[KA-LEX-C115-WHY115-05]; assesses=[] -->
 
 **ಮಂಚ** — *maṁca* — "a bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಂಚ** (*maṁca*) is Sanskrit *mañca*, "stage, platform; bed", taken over whole as a learned loan, a tatsama (CDIAL 9715).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

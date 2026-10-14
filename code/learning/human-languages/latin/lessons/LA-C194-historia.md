@@ -13,7 +13,8 @@ gloss: "history"
 concept_tag: LA-RES194-HISTORIA
 prerequisites: [LA-C194-oratio, LA-C194-rumor]
 sounds: []
-roots: []
+roots: [historia-latin]
+etymology_hook: "historia 'history' — borrowed from Greek historia 'inquiry', from histōr 'one who knows'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C194-rumor]
 <!-- hl-knowledge: introduces=[LA-LEX-C194-RES194-05]; assesses=[] -->
 
 **historia, historiae** — "history".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**historia** was borrowed from Greek *historia*, "inquiry, a narrative" (Lewis & Short), from *histōr*, "one who knows" (EtymDB 2.1), whose root is usually given as *\*weyd-*, "to see, to know", the root of *videō*, "to see".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "avar"
 concept_tag: ML-THIRD-PERSON-RESPECT
 prerequisites: [ML-C71-avan-aval, ML-C02-nii-ningal]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "avar: native Dravidian, 'those persons'; Tamil avar, Kannada avar (DEDR 1)"
 duration:
   max_seconds: 240
 requires:
@@ -65,6 +66,8 @@ polite passes without comment, and the other direction does not.
 
 Context decides between *they* and *respectful he or she*, and usually decides
 it without effort — a room with three people in it needs no help.
+
+**Where the word comes from.** It is native Dravidian, the far-pointing base with the plural of persons: DEDR 1 lists it with Tamil *avar* and Kannada *avar*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C71-AVAR-01, ML-LEX-C71-AVAN-AVAL-01] -->

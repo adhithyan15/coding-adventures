@@ -14,7 +14,8 @@ romanization: "appu tīsukō"
 concept_tag: TE-VERB-APPU-TISUKO
 prerequisites: [TE-C205-pancuko, TE-C205-kanukko]
 sounds: []
-roots: []
+roots: [dravidian-ari-tax, dravidian-tegu-pull]
+etymology_hook: "appu tīsukō: native appu 'loan' (DEDR 216) + tīyu 'to take' (DEDR 3407) + konu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C205-kanukko]
 <!-- hl-knowledge: introduces=[TE-LEX-C205-KRIYA205-05]; assesses=[] -->
 
 **అప్పు తీసుకో** — *appu tīsukō* — "to borrow (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అప్పు తీసుకో** (*appu tīsukō*) is native Dravidian: *appu*, "loan", which DEDR 216 lists, noting that Tamil *appu*, "loan, debt", was borrowed from Telugu; and *tīsukō*, "to take for oneself", from *tīyu*, "to take" (DEDR 3407).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

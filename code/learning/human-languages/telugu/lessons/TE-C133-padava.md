@@ -14,7 +14,8 @@ romanization: "paḍava"
 concept_tag: TE-THINGS133-PADAVA
 prerequisites: [TE-C133-misalu, TE-C133-kantiniru]
 sounds: []
-roots: []
+roots: [dravidian-padaku-boat]
+etymology_hook: "paḍava: native Dravidian, one word with Tamil paṭaku and Kannada paḍagu (DEDR 3838)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C133-kantiniru]
 <!-- hl-knowledge: introduces=[TE-LEX-C133-THINGS133-04]; assesses=[] -->
 
 **పడవ** — *paḍava* — "a boat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పడవ** (*paḍava*) is native Dravidian, one word with Tamil *paṭaku* and Kannada *paḍagu* (DEDR 3838). DEDR lists Telugu *paḍava*, "boat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

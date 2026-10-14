@@ -14,7 +14,8 @@ romanization: "muṅgaḍa"
 concept_tag: KA-KELASA234-MUNGADA
 prerequisites: [KA-C234-hajari, KA-C234-pali]
 sounds: []
-roots: []
+roots: [dravidian-mun-front, dravidian-katan-debt]
+etymology_hook: "muṅgaḍa: native mun- 'before' (DEDR 5020) + kaḍa 'debt, loan' (DEDR 1113)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C234-pali]
 <!-- hl-knowledge: introduces=[KA-LEX-C234-KELASA234-05]; assesses=[] -->
 
 **ಮುಂಗಡ** — *muṅgaḍa* — "an advance (payment)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಂಗಡ** (*muṅgaḍa*) is native Dravidian: *mun-*, "before, in front" (DEDR 5020), and *kaḍa*, "debt, loan" (DEDR 1113), with *k* softened to *g*: money paid before.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dharikkuka"
 concept_tag: ML-VERB-DHARIKKUKA
 prerequisites: [ML-C223-cumakkuka, ML-C223-vaykkuka]
 sounds: []
-roots: []
+roots: [sanskrit-dharayati]
+etymology_hook: "dharikkuka ← Sanskrit dhāryate / dhārayati 'holds, carries' (CDIAL 6791) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C223-vaykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C223-KRIYA223-03]; assesses=[] -->
 
 **ധരിക്കുക** — *dharikkuka* — "to wear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ധരിക്കുക** (*dharikkuka*) is built on the Sanskrit root *dhṛ*, "to hold, to bear", as in *dhārayati*, "holds, carries, wears" (CDIAL 6791), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

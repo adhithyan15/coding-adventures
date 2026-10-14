@@ -13,7 +13,8 @@ gloss: "a stylus, a writing stick"
 concept_tag: LA-RES1-STILUS
 prerequisites: [LA-C84-arca, LA-C84-charta]
 sounds: []
-roots: []
+roots: [stilus-latin]
+etymology_hook: "stilus 'stylus' — probably from PIE *steyg- 'to prick'; the spelling with y is a later mistake"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C84-charta]
 <!-- hl-knowledge: introduces=[LA-LEX-C84-RES1-03]; assesses=[] -->
 
 **stilus, stilī** — "a stylus, a writing stick". English *style*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stilus** is probably inherited, from a Proto-Indo-European root *\*steyg-*, "to prick, to pierce" (EtymDB 2.1); English *stick* is a cousin (Lewis & Short). The spelling with *y* came later, from a mistaken link with Greek *stylos*, "pillar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

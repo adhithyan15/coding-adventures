@@ -14,7 +14,8 @@ romanization: "kaḍugu"
 concept_tag: TE-VERB-KADUGU
 prerequisites: [TE-C146-pilucu, TE-C146-lekkapettu]
 sounds: []
-roots: []
+roots: [dravidian-kazhuvu-wash]
+etymology_hook: "kaḍugu: native Dravidian, one word with Tamil kaḻuvu (DEDR 1369)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C146-lekkapettu]
 <!-- hl-knowledge: introduces=[TE-LEX-C146-ACT146-05]; assesses=[] -->
 
 **కడుగు** — *kaḍugu* — "to wash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కడుగు** (*kaḍugu*) is native Dravidian, one word with Tamil *kaḻuvu* (DEDR 1369). DEDR lists Telugu *kaḍugu*, "to wash".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

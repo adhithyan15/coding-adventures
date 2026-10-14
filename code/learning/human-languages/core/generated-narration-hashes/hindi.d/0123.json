@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 123,
-  "sourceHash": "fnv1a64:2290c65f90667a55",
+  "sourceHash": "fnv1a64:6ce62ff4092136c9",
   "lessonIds": [
     "HI-C123-kyahaal",
     "HI-C123-sabthik",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch123.txt",
   "json": "hindi/narration/ch123.json",
-  "textHash": "fnv1a64:ea79d932c0899716",
-  "jsonHash": "fnv1a64:916053227060fa6d",
+  "textHash": "fnv1a64:8d68adafa9a44963",
+  "jsonHash": "fnv1a64:adc98553a493c5b6",
   "findings": []
 }

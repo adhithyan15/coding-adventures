@@ -11,6 +11,7 @@ concept_tag: ES-BILL-ENSALADA
 prerequisites: [ES-C455-sintesis-cuarto, ES-C361-sal, ES-C403-verdura]
 sounds: [l-clear, d-soft, stress-penultimate]
 roots: [sal-latin]
+etymology_hook: "ensalada — en- + sal 'salt': a salted thing — English salad"
 duration:
   max_seconds: 270
 requires:

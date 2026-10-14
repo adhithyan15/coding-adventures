@@ -14,7 +14,8 @@ romanization: "sētuve"
 concept_tag: KA-LOC109-SETUVE
 prerequisites: [KA-C108-naduve, KA-C108-raste]
 sounds: []
-roots: []
+roots: [sanskrit-setu]
+etymology_hook: "sētuve ← Sanskrit setu 'dam, bridge', reshaped as a tadbhava (CDIAL 13585)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C108-raste]
 <!-- hl-knowledge: introduces=[KA-LEX-C109-LOC109-01]; assesses=[] -->
 
 **ಸೇತುವೆ** — *sētuve* — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೇತುವೆ** (*sētuve*) comes from Sanskrit *setu*, "dam, bridge", reshaped to Kannada sounds: a tadbhava (CDIAL 13585). Kannada added *-ve* to the end.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

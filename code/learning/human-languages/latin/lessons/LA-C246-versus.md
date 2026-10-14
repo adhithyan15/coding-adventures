@@ -13,7 +13,8 @@ gloss: "a line of verse"
 concept_tag: LA-RES246-VERSUS
 prerequisites: [LA-C245-regnum, LA-C246-carmen]
 sounds: []
-roots: []
+roots: [versus-latin, vertere-latin]
+etymology_hook: "versus 'line of verse' — built on vertō 'to turn': the plough's turn; English verse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C246-carmen]
 <!-- hl-knowledge: introduces=[LA-LEX-C246-RES246-02]; assesses=[] -->
 
 **versus, versūs** — "a line of verse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**versus** is built on *vertō*, "to turn" (Lewis & Short): first the turn of the plough at the end of a furrow, then a line of writing. English *verse* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

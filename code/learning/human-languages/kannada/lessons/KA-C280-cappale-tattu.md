@@ -14,7 +14,8 @@ romanization: "cappāḷe taṭṭu"
 concept_tag: KA-VERB-CAPPALE-TATTU
 prerequisites: [KA-C279-age, KA-C280-pisuguttu]
 sounds: []
-roots: []
+roots: [dravidian-cappali-clap, dravidian-tattu-tap]
+etymology_hook: "cappāḷe taṭṭu: native cappaḷe 'clapping' (DEDR 2335) + taṭṭu 'to tap' (DEDR 3039)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C280-pisuguttu]
 <!-- hl-knowledge: introduces=[KA-LEX-C280-KRIYE280-02]; assesses=[] -->
 
 **ಚಪ್ಪಾಳೆ ತಟ್ಟು** — *cappāḷe taṭṭu* — "to clap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಪ್ಪಾಳೆ ತಟ್ಟು** (*cappāḷe taṭṭu*) is native Dravidian: *cappāḷe*, "clapping the hands", which DEDR 2335 lists as *cappaḷe*, and *taṭṭu*, "to tap, pat, clap" (DEDR 3039). DEDR 2335 compares Sanskrit *capeṭā*, "a slap", and DEDR 3039 a reconstructed Indo-Aryan *\*ṭhaṭṭh-*, "to strike" (CDIAL 5490).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

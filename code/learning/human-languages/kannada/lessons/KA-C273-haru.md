@@ -14,7 +14,8 @@ romanization: "hāru"
 concept_tag: KA-VERB-HARU
 prerequisites: [KA-C272-kalaku, KA-C272-huri]
 sounds: []
-roots: []
+roots: [dravidian-para-fly]
+etymology_hook: "hāru: native Dravidian, one word with Tamil paṟa (DEDR 4020)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C272-huri]
 <!-- hl-knowledge: introduces=[KA-LEX-C273-KRIYE273-01]; assesses=[] -->
 
 **ಹಾರು** — *hāru* — "to fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಾರು** (*hāru*) is native Dravidian, one word with Tamil *paṟa* (DEDR 4020). DEDR lists older *pāṟu*, "to leap up, fly": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

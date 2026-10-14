@@ -14,7 +14,8 @@ romanization: "soobshchéniye"
 concept_tag: RU-VESHCH255-SOOBSHCHENIYE
 prerequisites: [RU-C255-vozrast, RU-C255-nomer]
 sounds: []
-roots: []
+roots: [slavic-obti]
+etymology_hook: "сообщение is from сообщить 'to share, to report', from общий 'common'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C255-nomer]
 <!-- hl-knowledge: introduces=[RU-LEX-C255-VESHCH255-04]; assesses=[] -->
 
 **сообщение** (*soobshchéniye*) — "a message".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сообщение** comes from *сообщить*, "to share, to report", from *общий*, "common", Proto-Slavic *\*obĭtjĭ*, "what is around" (Vasmer): to make something common. *общий* itself is the Church Slavonic form, with *щ*; the native Old Russian form was *обчий* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

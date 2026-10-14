@@ -14,7 +14,8 @@ romanization: "yāp"
 concept_tag: TE-VASTUVU305-YAP
 prerequisites: [TE-C304-kriket, TE-C304-cadarangam]
 sounds: []
-roots: []
+roots: [english-app]
+etymology_hook: "yāp ← English app"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C304-cadarangam]
 <!-- hl-knowledge: introduces=[TE-LEX-C305-VASTUVU305-01]; assesses=[] -->
 
 **యాప్** — *yāp* — "an app".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**యాప్** (*yāp*) is a loan from English *app*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

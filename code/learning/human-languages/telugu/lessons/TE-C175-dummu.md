@@ -14,7 +14,8 @@ romanization: "dummu"
 concept_tag: TE-STHALAM175-DUMMU
 prerequisites: [TE-C175-prapancam, TE-C175-bhukampam]
 sounds: []
-roots: []
+roots: [dravidian-tumpu-dust]
+etymology_hook: "dummu: native Dravidian; DEDR 3332 lists dummu 'dust' with Tamil tumpu 'dust'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C175-bhukampam]
 <!-- hl-knowledge: introduces=[TE-LEX-C175-STHALAM175-04]; assesses=[] -->
 
 **దుమ్ము** — *dummu* — "dust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దుమ్ము** (*dummu*) is native Dravidian. DEDR 3332 lists *dummu*, "dust", with Tamil *tumpu*, "dust", and Kannada *dumbu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

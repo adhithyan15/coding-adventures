@@ -14,7 +14,8 @@ romanization: "ēmainā"
 concept_tag: TE-NISHEDHAM153-EMAINA
 prerequisites: [TE-C153-ekkada, TE-C153-evaraina, TE-S172-letter-chha, TE-S173-letter-jha]
 sounds: []
-roots: []
+roots: [yaa-dravidian, tamil-aaku-become]
+etymology_hook: "ēmainā: native ēmi 'what' (DEDR 5151) + ayinā 'even if it be' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C153-evaraina]
 **ఏమైనా** — *ēmainā* — "anything, something". **మీకు ఏమైనా కావాలా?** — *mīku
 ēmainā kāvālā?* — "Do you need anything?"
 [YOU READ: two words again — **ఛాయ** (*chāya*, shade) is written with ఛ, and **ఝరి** (*jhari*, a stream) with ఝ]
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఏమైనా** (*ēmainā*) is native Dravidian: *ēmi*, "what" (DEDR 5151), and *ayinā*, "even if it be" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

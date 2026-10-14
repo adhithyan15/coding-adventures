@@ -14,7 +14,8 @@ romanization: "pustýnya"
 concept_tag: RU-THINGS116-DESERT
 prerequisites: [RU-C115-rock, RU-C115-wave]
 sounds: []
-roots: []
+roots: [slavic-pustu]
+etymology_hook: "пустыня is from пустой 'empty': an empty place"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C115-wave]
 <!-- hl-knowledge: introduces=[RU-LEX-C116-THINGS116-01]; assesses=[] -->
 
 **пустыня** (*pustýnya*) — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пустыня** is built on *пустой*, "empty", Proto-Slavic *\*pustŭ* (Vasmer): a desert is the empty land.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a zoo, then the Kannada for a palace.
 You'll want to know: ಬೇಲಿ.
 ಬೇಲಿ — bēli — "a fence".
 
+The word, taken apart.
+ಬೇಲಿ (bēli) is native Dravidian, one word with Tamil vēli (DEDR 5538). DEDR lists bēli itself, "fence, hedge": the old v- has become b-.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a palace, then the Kannada for a fence.
 
 You'll want to know: ಕಂಬ.
 ಕಂಬ — kamba — "a pillar".
+
+The word, taken apart.
+ಕಂಬ (kamba) comes from Sanskrit skambha, "prop, pillar", reshaped to Kannada sounds: a tadbhava (CDIAL 13639). Prakrit khaṁbha shows the step between; Kannada softened the kh.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a fence, then the Kannada for a pillar.
 You'll want to know: ಪಕ್ಕ.
 ಪಕ್ಕ — pakka — "beside, next to; the side".
 
+The word, taken apart.
+ಪಕ್ಕ (pakka) is usually traced to Sanskrit pakṣa, "wing, side", through Prakrit pakkha (CDIAL 7627): a tadbhava, a loan reshaped by speech.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a pillar, then the Kannada for beside.
 You'll want to know: ಆಚೆ.
 ಆಚೆ — āce — "on the other side, over there".
 
+The word, taken apart.
+ಆಚೆ (āce) is native Dravidian, built on the far-pointing base a-, "that". DEDR 1 lists āce itself, "on that side, afterwards".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for beside, then the Kannada for on the othe
 
 You'll want to know: ಈಚೆ.
 ಈಚೆ — īce — "on this side".
+
+The word, taken apart.
+ಈಚೆ (īce) is native Dravidian, built on the near-pointing base i-, "this". DEDR 410 lists īce itself, "this side, on this side".
 
 What you've built.
 One more word for this chapter.

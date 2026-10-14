@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 204,
-  "sourceHash": "fnv1a64:2bc347e7671f004f",
+  "sourceHash": "fnv1a64:dc51474de83b044e",
   "lessonIds": [
     "LA-C204-affirmo",
     "LA-C204-doleo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch204.txt",
   "json": "latin/narration/ch204.json",
-  "textHash": "fnv1a64:1118c1bd189f7b47",
-  "jsonHash": "fnv1a64:6b02dd5bd1aa9266",
+  "textHash": "fnv1a64:b63df99602177505",
+  "jsonHash": "fnv1a64:7bd5a39351800832",
   "findings": []
 }

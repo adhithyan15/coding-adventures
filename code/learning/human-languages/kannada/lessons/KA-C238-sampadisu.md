@@ -14,7 +14,8 @@ romanization: "sampādisu"
 concept_tag: KA-VERB-SAMPADISU
 prerequisites: [KA-C238-oppu, KA-C238-nirakarisu]
 sounds: []
-roots: []
+roots: [sanskrit-sampadana]
+etymology_hook: "sampādisu: Sanskrit sampādayati 'brings about, provides' (CDIAL 12938), made a Kannada verb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C238-nirakarisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C238-KRIYE238-05]; assesses=[] -->
 
 **ಸಂಪಾದಿಸು** — *sampādisu* — "to earn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಂಪಾದಿಸು** (*sampādisu*) is the Sanskrit verb *sampād-*, "to bring about, provide" (CDIAL 12938), made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "rainy"
 concept_tag: LA-QUAL241-PLUVIUS
 prerequisites: [LA-C241-sollicitus, LA-C241-caelebs]
 sounds: []
-roots: []
+roots: [pluvius-latin, pluere-latin]
+etymology_hook: "pluvius 'rainy' — built on pluō 'to rain'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C241-caelebs]
 <!-- hl-knowledge: introduces=[LA-LEX-C241-QUAL241-05]; assesses=[] -->
 
 **pluvius, pluvia, pluvium** — "rainy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pluvius** is built on *pluō*, "to rain" (Lewis & Short), whose third person is *pluit*, "it rains".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

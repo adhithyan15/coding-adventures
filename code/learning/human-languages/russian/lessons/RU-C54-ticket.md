@@ -14,7 +14,8 @@ romanization: "bilét"
 concept_tag: RU-WORDS-TICKET
 prerequisites: [RU-C54-word, RU-C54-address]
 sounds: []
-roots: []
+roots: [french-billet]
+etymology_hook: "билет ← French billet 'a note, a ticket', through Polish bilet or German Billett"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C54-address]
 <!-- hl-knowledge: introduces=[RU-LEX-C54-WORDS-04]; assesses=[] -->
 
 **билет** (*bilét*) — "a ticket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**билет** — recorded from 1720; it came through Polish *bilet* or German *Billett* from French *billet*, "a note, a ticket" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

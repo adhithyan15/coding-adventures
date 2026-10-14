@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 45,
-  "sourceHash": "fnv1a64:3be6fbcfa349beb9",
+  "sourceHash": "fnv1a64:3e7226226ab0a5f6",
   "lessonIds": [
     "KA-C45-grandfather",
     "KA-C45-grandmother",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "kannada/narration/ch45.txt",
   "json": "kannada/narration/ch45.json",
-  "textHash": "fnv1a64:afaadf876cbac416",
-  "jsonHash": "fnv1a64:f50fae2fcff4a938",
+  "textHash": "fnv1a64:de2481e40b7ea7b7",
+  "jsonHash": "fnv1a64:286ef5aae6db9d88",
   "findings": []
 }

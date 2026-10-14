@@ -11,6 +11,7 @@ concept_tag: TIME-AFTERNOON
 prerequisites: [ES-C01-dia, ES-C01-buenos-dias]
 sounds: [vowel-a, stress-default-vowel-ns]
 roots: [tardus]
+etymology_hook: "tarde ← Latin tardus 'slow, late': the afternoon is the late part of the day — English tardy"
 duration:
   max_seconds: 180
 requires:

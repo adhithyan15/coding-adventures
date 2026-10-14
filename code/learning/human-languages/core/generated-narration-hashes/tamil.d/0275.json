@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 275,
-  "sourceHash": "fnv1a64:ae3d3d016bfca9f7",
+  "sourceHash": "fnv1a64:dc59a152371b2831",
   "lessonIds": [
     "TA-C275-iraku",
     "TA-C275-val",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch275.txt",
   "json": "tamil/narration/ch275.json",
-  "textHash": "fnv1a64:385ba3a89137b740",
-  "jsonHash": "fnv1a64:2b4aed4b0c0afc50",
+  "textHash": "fnv1a64:e8e03e5c8c9d1c28",
+  "jsonHash": "fnv1a64:64920615d42d2dca",
   "findings": []
 }

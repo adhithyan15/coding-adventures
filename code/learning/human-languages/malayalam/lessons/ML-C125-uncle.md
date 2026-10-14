@@ -11,7 +11,8 @@ romanization: "ammāvan"
 concept_tag: ML-KIN-UNCLE
 prerequisites: [ML-C125-relative, ML-C125-neighbours]
 sounds: []
-roots: []
+roots: [dravidian-appa-amma]
+etymology_hook: "ammāvan: native Dravidian; DEDR 183 lists Malayalam ammāvan 'maternal uncle' under amma 'mother'"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C125-neighbours]
 <!-- hl-knowledge: introduces=[ML-LEX-C125-KIN-04]; assesses=[] -->
 
 **അമ്മാവൻ** (*ammāvan*) — "uncle", the mother's brother. It begins with **അമ്മ**, "mother".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അമ്മാവൻ** (*ammāvan*) is native Dravidian: DEDR 183 lists it, "maternal uncle", under *amma*, "mother", with Tamil *ammā* and Kannada *amma*. DEDR 183 compares Sanskrit *ambā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

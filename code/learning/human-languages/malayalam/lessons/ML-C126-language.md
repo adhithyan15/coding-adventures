@@ -11,7 +11,8 @@ romanization: "bhāṣa"
 concept_tag: ML-YOU-LANGUAGE
 prerequisites: [ML-C126-address, ML-C126-wedding]
 sounds: []
-roots: []
+roots: [sanskrit-bhasha]
+etymology_hook: "bhāṣa ← Sanskrit bhāṣā 'speech', a tatsama (CDIAL 9479)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C126-wedding]
 <!-- hl-knowledge: introduces=[ML-LEX-C126-ABOUTYOU-03]; assesses=[] -->
 
 **ഭാഷ** (*bhāṣa*) — "language". **മലയാളം ഭാഷ** — "the Malayalam language".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഭാഷ** (*bhāṣa*) ← Sanskrit *bhāṣā*, "speech", taken over whole as a tatsama (CDIAL 9479).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

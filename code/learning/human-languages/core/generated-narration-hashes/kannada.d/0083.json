@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 83,
-  "sourceHash": "fnv1a64:ee9888370886a46a",
+  "sourceHash": "fnv1a64:61429cc1a9b48d5a",
   "lessonIds": [
     "KA-C83-sadness",
     "KA-C83-worry",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch83.txt",
   "json": "kannada/narration/ch83.json",
-  "textHash": "fnv1a64:de7d902c77f57ff8",
-  "jsonHash": "fnv1a64:2a2c2031fa80df29",
+  "textHash": "fnv1a64:629178545391da32",
+  "jsonHash": "fnv1a64:304ec11a1885ea38",
   "findings": []
 }

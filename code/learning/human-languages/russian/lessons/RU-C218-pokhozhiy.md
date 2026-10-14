@@ -14,7 +14,8 @@ romanization: "pokhózhiy"
 concept_tag: RU-KACH218-POKHOZHIY
 prerequisites: [RU-C218-raznyy, RU-C218-odinakovyy]
 sounds: []
-roots: []
+roots: [slavic-khoditi]
+etymology_hook: "похожий is from походить 'to resemble', по- + ходить 'to go': to go after someone"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C218-odinakovyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C218-KACH218-03]; assesses=[] -->
 
 **похожий** (*pokhózhiy*) — "similar, alike".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**похожий** comes from *походить (на)*, "to take after", *по-* with *ходить*, "to walk": to resemble is to go after someone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

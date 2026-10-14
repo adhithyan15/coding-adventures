@@ -14,7 +14,8 @@ romanization: "kanasu"
 concept_tag: KA-CAN113-KANASU
 prerequisites: [KA-C113-sakti, KA-C113-ase]
 sounds: []
-roots: []
+roots: [dravidian-kanavu-dream]
+etymology_hook: "kanasu: native Dravidian, one word with Tamil kaṉavu and Telugu kala (DEDR 1407)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C113-ase]
 <!-- hl-knowledge: introduces=[KA-LEX-C113-CAN113-05]; assesses=[] -->
 
 **ಕನಸು** — *kanasu* — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕನಸು** (*kanasu*) is native Dravidian, one word with Tamil *kaṉavu* and Telugu *kala* (DEDR 1407). DEDR lists *kanasu* itself, "dream".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

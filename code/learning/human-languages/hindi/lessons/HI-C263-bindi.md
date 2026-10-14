@@ -14,7 +14,8 @@ romanization: "bindī"
 concept_tag: HI-THG263-BINDI
 prerequisites: [HI-C262-kangan, HI-C263-jhumka]
 sounds: []
-roots: []
+roots: [sanskrit-bindu]
+etymology_hook: "bindī: built on Sanskrit bindu 'drop, spot' (CDIAL 9240), + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C263-jhumka]
 <!-- hl-knowledge: introduces=[HI-LEX-C263-THG263-02]; assesses=[] -->
 
 **बिंदी** — *bindī* — "a bindi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बिंदी** (*bindī*) is built on Sanskrit *bindu*, "drop, spot", with the ending *-ī* (CDIAL 9240). CDIAL lists the inherited form of the word as *būṁd*, "drop".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,7 +10,8 @@ gloss: "to protect"
 concept_tag: ES-VERB-PROTEGER
 prerequisites: [ES-C504-reciclar, ES-C504-contaminacion]
 sounds: []
-roots: []
+roots: [tegere-latin]
+etymology_hook: "proteger ← Latin protegere 'to cover in front': pro- + tegere — kin to techo 'roof'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C504-contaminacion]
 > *We must protect the forests.*
 
 The g becomes j before *o* and *a*: *protejo*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**proteger** ← Latin *protegere*, "to cover in front" (Lewis & Short): *pro-* and *tegere*, "to cover". A learned word: the *-t-* and *-g-* between vowels were kept. The participle of *tegere*, *tectum*, gave *techo*, "a roof".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "māykkuka"
 concept_tag: ML-VERB-MAYKKUKA
 prerequisites: [ML-C187-kuraykkuka, ML-C187-udikkuka]
 sounds: []
-roots: []
+roots: [dravidian-may-vanish]
+etymology_hook: "māykkuka: native Dravidian, one word with Tamil māy and Kannada māy (DEDR 4814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C187-udikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C188-KRIYA188-01]; assesses=[] -->
 
 **മായ്ക്കുക** — *māykkuka* — "to erase, to delete".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മായ്ക്കുക** (*māykkuka*) is native Dravidian, one word with Tamil *māy*, Kannada *māy* and Telugu *māyu* (DEDR 4814). It is the causative of the verb "to vanish": "make vanish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

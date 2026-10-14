@@ -11,6 +11,7 @@ concept_tag: IDIOM-COMMON
 prerequisites: [ES-C272-si-claro]
 sounds: [vowel-e, vowel-o]
 roots: [pilus]
+etymology_hook: "pelo ← Latin pilus 'a hair' — English pile, depilate; the idiom's origin is uncertain"
 duration:
   max_seconds: 240
 requires:

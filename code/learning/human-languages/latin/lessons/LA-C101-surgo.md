@@ -13,7 +13,8 @@ gloss: "to rise, to get up"
 concept_tag: LA-VERB-SURGO
 prerequisites: [LA-C100-tango, LA-C100-traho]
 sounds: []
-roots: []
+roots: [surgere-latin, regere-latin]
+etymology_hook: "surgō 'to rise' — contracted from surrigō: sub 'up from under' + regō 'to direct'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C100-traho]
 <!-- hl-knowledge: introduces=[LA-LEX-C101-VERBA7-01]; assesses=[] -->
 
 **surgō, surgere** — "to rise, to get up". English *surge*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**surgō** is contracted from *surrigō*, "to raise up", built from *sub*, "up from under", and *regō*, "to direct, to keep straight" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

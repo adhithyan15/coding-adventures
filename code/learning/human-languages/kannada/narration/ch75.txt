@@ -22,6 +22,9 @@ You'll want to know: ಆರನೆಯ.
 ಆರನೆಯ ದಿನ (āraneya dina), the sixth day.
 That "nothing else to notice" is the point of the whole chapter. Six to ten were a separate lesson from one to five when you learned to count; for ordering they are not a separate anything.
 
+The word, taken apart.
+ಆರನೆಯ (āraneya) is built from āru, "six", native Dravidian (DEDR 2485, with Tamil āṟu), and the ordinal ending -aneya.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: āru, then āraneya]
@@ -55,6 +58,9 @@ You'll want to know: ಏಳನೆಯ.
 ಏಳು has the retroflex ಳ, the letter Kannada shares with Tamil, Telugu and Malayalam and which northern languages lost. Adding the ending does not soften it: ಏಳನೆಯ (ēḷaneya), with the tongue still curled back for the ḷ.
 ಏಳನೆಯ ದಿನ (ēḷaneya dina), the seventh day.
 
+The word, taken apart.
+ಏಳನೆಯ (ēḷaneya) is built from ēḷu, "seven", native Dravidian (DEDR 910, with Tamil ēḻu), and the ordinal ending -aneya.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: ēḷu, then ēḷaneya — keep the ḷ retroflex both times]
@@ -87,6 +93,9 @@ You'll want to know: ಎಂಟನೆಯ.
 ಎಂಟು carries the ಂ anusvara, the dot that takes its sound from whatever follows it — here a retroflex ṇ, because ಟ is retroflex. The ending is added at the far end of the word, so the dot keeps the same neighbour and the same sound.
 ಎಂಟನೆಯ ದಿನ (eṇṭaneya dina), the eighth day.
 
+The word, taken apart.
+ಎಂಟನೆಯ (eṇṭaneya) is built from eṇṭu, "eight", native Dravidian (DEDR 784, with Tamil eṭṭu), and the ordinal ending -aneya.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: eṇṭu, then eṇṭaneya]
@@ -117,6 +126,9 @@ You'll want to know: ಒಂಬತ್ತನೆಯ.
 ಒಂಬತ್ತನೆಯ (ombattaneya) — "ninth".
 ಒಂಬತ್ತು is the longest cardinal in the set: an anusvara, a doubled ತ್ತ, and four syllables. None of that matters to the ending, which does what it did to the two-syllable ಆರು — takes the final -ು off and goes on after everything else.
 ಒಂಬತ್ತನೆಯ ದಿನ (ombattaneya dina), the ninth day.
+
+The word, taken apart.
+ಒಂಬತ್ತನೆಯ (ombattaneya) is built from ombattu, "nine", native Dravidian (DEDR 1025, with Tamil oṉpatu), and the ordinal ending -aneya.
 
 Guided Practice.
 [pause 1 second]
@@ -150,6 +162,9 @@ You'll want to know: ಹತ್ತನೆಯ.
 ಹತ್ತು is the word that showed you the p becomes h law: Tamil kept pattu, Kannada softened the p to h. The ordinal keeps whatever the cardinal became — the ending has no opinion about the history of the word it lands on.
 ಹತ್ತನೆಯ ದಿನ (hattaneya dina), the tenth day.
 
+The word, taken apart.
+ಹತ್ತನೆಯ (hattaneya) is built from hattu, "ten", native Dravidian (DEDR 3918, with Tamil pattu), and the ordinal ending -aneya.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: hattu, then hattaneya]
@@ -182,6 +197,9 @@ You'll want to know: ಹನ್ನೊಂದನೆಯ.
 ಹನ್ನೊಂದನೆಯ (hannondaneya) — "eleventh".
 ಹನ್ನೊಂದು was itself a built word: the ten-echo hann- with ondu welded on. Now the ordinal ending goes on top of that, and the result is a word made of three parts, none of which had to be learned as a whole.
 ಹನ್ನೊಂದನೆಯ ದಿನ (hannondaneya dina), the eleventh day.
+
+The word, taken apart.
+ಹನ್ನೊಂದನೆಯ (hannondaneya) is built from hannondu, "eleven", and the ordinal ending -aneya. Hannondu is native: DEDR 3918 lists pann-, "ten", as the form used in eleven and twelve, and ondu, "one", is in DEDR 990.
 
 Grammar Lens: the ending is a fact about numbers, not about ten.
 Most books stop an ordinal chapter at tenth, and a learner reasonably concludes that the ten words were the set. In Kannada there is no set. -ಅನೆಯ attaches to a number, and every number you learn from here on arrives with its ordinal already made: ಇಪ್ಪತ್ತು gives ಇಪ್ಪತ್ತನೆಯ (ippattaneya), twentieth, without a lesson.
@@ -223,6 +241,9 @@ careful: ಮೊದಲನೆಯ modalaneya. everyday: ಮೊದಲನೇ modalan�
 careful: ಎರಡನೆಯ eraḍaneya. everyday: ಎರಡನೇ eraḍanē.
 careful: ಮೂರನೆಯ mūraneya. everyday: ಮೂರನೇ mūranē.
 Both are worth having, and for different reasons: you need to recognise the long one on a printed page, and you need to produce the short one at a door.
+
+The word, taken apart.
+ಮೊದಲನೇ (modalanē) is built from modalu, "beginning, the first thing", native Dravidian (DEDR 4950), with -anē, the everyday short form of the ordinal ending -aneya.
 
 Guided Practice.
 [pause 1 second]

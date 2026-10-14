@@ -14,7 +14,8 @@ romanization: "haḍḍī"
 concept_tag: HI-THG199-HADDI
 prerequisites: [HI-C199-kauva, HI-C199-dil]
 sounds: []
-roots: []
+roots: [sanskrit-hadda]
+etymology_hook: "haḍḍī ← Sanskrit haḍḍa 'bone', a tadbhava (CDIAL 13952)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C199-dil]
 <!-- hl-knowledge: introduces=[HI-LEX-C199-THG199-05]; assesses=[] -->
 
 **हड्डी** — *haḍḍī* — "a bone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हड्डी** (*haḍḍī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *haḍḍa*, "bone" (CDIAL 13952). The Sanskrit word is known only from the old word-lists; CDIAL calls a link with *asthi*, "bone", very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

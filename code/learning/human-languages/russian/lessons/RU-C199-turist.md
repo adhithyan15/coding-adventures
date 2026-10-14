@@ -14,7 +14,8 @@ romanization: "turíst"
 concept_tag: RU-VESHCH199-TURIST
 prerequisites: [RU-C199-grazhdanin, RU-C199-inostranets]
 sounds: []
-roots: []
+roots: [tornare-latin]
+etymology_hook: "турист ← French touriste, from tour 'a turn, a tour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C199-inostranets]
 <!-- hl-knowledge: introduces=[RU-LEX-C199-VESHCH199-04]; assesses=[] -->
 
 **турист** (*turíst*) — "a tourist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**турист** comes from French *touriste* or English *tourist*, from *tour*, "a turn, a round trip", Latin *tornāre*, "to turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

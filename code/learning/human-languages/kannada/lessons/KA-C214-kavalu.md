@@ -14,7 +14,8 @@ romanization: "kavalu"
 concept_tag: KA-STHALA214-KAVALU
 prerequisites: [KA-C214-tala, KA-C214-addaraste]
 sounds: []
-roots: []
+roots: [dravidian-kaval-fork]
+etymology_hook: "kavalu: native Dravidian, one word with Tamil kavar and Telugu kava (DEDR 1325)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C214-addaraste]
 <!-- hl-knowledge: introduces=[KA-LEX-C214-STHALA214-05]; assesses=[] -->
 
 **ಕವಲು** — *kavalu* — "a fork (in a road)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕವಲು** (*kavalu*) is native Dravidian, one word with Tamil *kavar*, Telugu *kava* and Malayalam *kava* (DEDR 1325). DEDR lists *kaval*, "bifurcation, fork".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

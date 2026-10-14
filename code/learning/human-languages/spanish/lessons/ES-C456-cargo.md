@@ -11,6 +11,7 @@ concept_tag: ES-BILL-CARGO
 prerequisites: [ES-C456-ensalada, ES-C444-carrito, ES-C311-cuenta]
 sounds: [g-hard, r-tap, stress-penultimate]
 roots: [carrus-latin]
+etymology_hook: "cargo — from cargar, Latin carricare 'to load a cart', from carrus — English charge, cargo"
 duration:
   max_seconds: 275
 requires:

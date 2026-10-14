@@ -14,7 +14,8 @@ romanization: "salát"
 concept_tag: RU-VESHCH194-SALAT
 prerequisites: [RU-C193-sergi, RU-C194-pelmeni]
 sounds: []
-roots: []
+roots: [salsus-latin]
+etymology_hook: "салат came through French salade from Italian salata 'salted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C194-pelmeni]
 <!-- hl-knowledge: introduces=[RU-LEX-C194-VESHCH194-02]; assesses=[] -->
 
 **салат** (*salát*) — "a salad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**салат** came through French *salade* from Italian *salata*, "something salted" (Vasmer), from Latin *sāl*, "salt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

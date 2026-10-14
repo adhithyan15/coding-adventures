@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 178,
-  "sourceHash": "fnv1a64:386f8842a2839b45",
+  "sourceHash": "fnv1a64:f1243e0de6c969bf",
   "lessonIds": [
     "LA-C178-igitur",
     "LA-C178-tamen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch178.txt",
   "json": "latin/narration/ch178.json",
-  "textHash": "fnv1a64:4b536d7da0129f81",
-  "jsonHash": "fnv1a64:c3eccb3f71d36129",
+  "textHash": "fnv1a64:d1a5d91f4c9d0db2",
+  "jsonHash": "fnv1a64:13d5dbd9f26481c1",
   "findings": []
 }

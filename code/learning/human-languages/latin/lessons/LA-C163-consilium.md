@@ -13,7 +13,8 @@ gloss: "a plan; advice"
 concept_tag: LA-FUT163-CONSILIUM
 prerequisites: [LA-C163-perendie, LA-C163-postea]
 sounds: []
-roots: []
+roots: [consilium-latin, consulere-latin]
+etymology_hook: "cōnsilium 'plan, advice' — kin to cōnsulō 'to deliberate' and cōnsul"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C163-postea]
 <!-- hl-knowledge: introduces=[LA-LEX-C163-FUT163-03]; assesses=[] -->
 
 **cōnsilium, cōnsiliī** — "a plan; advice". **Quod cōnsilium habēs?** — "What plan have you got?" English *counsel* comes from it, by way of French.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cōnsilium** belongs with *cōnsul*, "a consul" (Lewis & Short), and with *cōnsulō*, "to consult, to deliberate"; where their root comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

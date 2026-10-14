@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 140,
-  "sourceHash": "fnv1a64:e5f807d3e6b8af79",
+  "sourceHash": "fnv1a64:a6862313dfc07095",
   "lessonIds": [
     "RU-C140-obedat",
     "RU-C140-zavtrakat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch140.txt",
   "json": "russian/narration/ch140.json",
-  "textHash": "fnv1a64:5bb4ed85e2d965e5",
-  "jsonHash": "fnv1a64:55b9939fd4350193",
+  "textHash": "fnv1a64:780b409a6e194b00",
+  "jsonHash": "fnv1a64:f0b687370d5eda0d",
   "findings": []
 }

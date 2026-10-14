@@ -14,7 +14,8 @@ romanization: "pañce"
 concept_tag: TE-THINGS114-PANCE
 prerequisites: [TE-C114-cokka, TE-C114-cira]
 sounds: []
-roots: []
+roots: [telugu-pance-dhoti]
+etymology_hook: "pañce: origin uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C114-cira]
 <!-- hl-knowledge: introduces=[TE-LEX-C114-THINGS114-04]; assesses=[] -->
 
 **పంచె** — *pañce* — "a dhoti".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **పంచె** (*pañce*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

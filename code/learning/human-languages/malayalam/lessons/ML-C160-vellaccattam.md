@@ -14,7 +14,8 @@ romanization: "veḷḷaccāṭṭaṁ"
 concept_tag: ML-THINGS160-VELLACCATTAM
 prerequisites: [ML-C160-varanta, ML-C160-malavillu, ML-C16-kollavarsham-maasangal]
 sounds: []
-roots: []
+roots: [vellam-flood-white, dravidian-cattam-leap]
+etymology_hook: "veḷḷaccāṭṭaṁ: native Dravidian, 'water's leap': veḷḷam (DEDR 5503) + cāṭṭam 'a leap' (DEDR 2440)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C160-malavillu]
 <!-- hl-knowledge: introduces=[ML-LEX-C160-THINGS160-04]; assesses=[] -->
 
 **വെള്ളച്ചാട്ടം** — *veḷḷaccāṭṭaṁ* — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വെള്ളച്ചാട്ടം** (*veḷḷaccāṭṭaṁ*) is native Dravidian, "the water's leap": *veḷḷam*, "water" (DEDR 5503), and *cāṭṭam*, "a leap" (DEDR 2440, with Tamil *cāṭṭam*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

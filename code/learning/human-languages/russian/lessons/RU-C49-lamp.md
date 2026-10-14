@@ -14,7 +14,8 @@ romanization: "lámpa"
 concept_tag: RU-HOME2-LAMP
 prerequisites: [RU-C49-chair, RU-C49-bed]
 sounds: []
-roots: []
+roots: [lampas-latin]
+etymology_hook: "лампа ← German Lampe or French lampe, from Latin lampada and Greek lampas 'torch'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C49-bed]
 <!-- hl-knowledge: introduces=[RU-LEX-C49-HOME2-04]; assesses=[] -->
 
 **лампа** (*lámpa*) — "a lamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лампа** came from German *Lampe* or French *lampe*, from Latin *lampada* and Greek *lampás*, "a torch"; the old form *лямпа* came through Polish (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "egiru"
 concept_tag: TE-VERB-EGIRU
 prerequisites: [TE-C142-tellani, TE-C143-errati]
 sounds: []
-roots: []
+roots: [dravidian-niva-rise]
+etymology_hook: "egiru: native Dravidian; DEDR 3730 lists eguru 'to fly' with Tamil niva 'to rise'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C143-errati]
 <!-- hl-knowledge: introduces=[TE-LEX-C143-QUAL143-02]; assesses=[] -->
 
 **ఎగురు** — *egiru* — "to fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎగురు** (*egiru*) is native Dravidian. DEDR 3730 lists *negayu*, *egayu* and *eguru*, "to fly, rise", with Tamil *niva*, "to rise", and Kannada *nege*, "to rise, jump".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

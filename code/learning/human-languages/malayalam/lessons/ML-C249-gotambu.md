@@ -14,7 +14,8 @@ romanization: "gōtambŭ"
 concept_tag: ML-VASTU249-GOTAMBU
 prerequisites: [ML-C248-jins, ML-C249-mavu]
 sounds: []
-roots: []
+roots: [sanskrit-godhuma]
+etymology_hook: "gōtambŭ: a tadbhava of Sanskrit gōdhūma 'wheat' (CDIAL 4287)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C249-mavu]
 <!-- hl-knowledge: introduces=[ML-LEX-C249-VASTU249-02]; assesses=[] -->
 
 **ഗോതമ്പ്** — *gōtambŭ* — "wheat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഗോതമ്പ്** (*gōtambŭ*) is a tadbhava of Sanskrit *gōdhūma*, "wheat" (CDIAL 4287), worn down through Prakrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

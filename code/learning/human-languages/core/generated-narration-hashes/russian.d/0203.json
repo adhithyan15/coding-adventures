@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 203,
-  "sourceHash": "fnv1a64:6847777643899466",
+  "sourceHash": "fnv1a64:f595942e3bf06eef",
   "lessonIds": [
     "RU-C203-podpis",
     "RU-C203-pechat",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch203.txt",
   "json": "russian/narration/ch203.json",
-  "textHash": "fnv1a64:78722a19105ca264",
-  "jsonHash": "fnv1a64:120c76b7a9a1df34",
+  "textHash": "fnv1a64:3a5f89ca9fa9ec72",
+  "jsonHash": "fnv1a64:3e6c11ae2e507ce7",
   "findings": []
 }

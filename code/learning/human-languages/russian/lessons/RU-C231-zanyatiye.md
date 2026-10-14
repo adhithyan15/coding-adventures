@@ -14,7 +14,8 @@ romanization: "zanyátiye"
 concept_tag: RU-RABOTA231-ZANYATIYE
 prerequisites: [RU-C231-rubl, RU-C231-lektsiya]
 sounds: []
-roots: []
+roots: [pie-hem]
+etymology_hook: "занятие is from занять 'to take up', за- + an old verb 'to take'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C231-lektsiya]
 <!-- hl-knowledge: introduces=[RU-LEX-C231-RABOTA231-04]; assesses=[] -->
 
 **занятие** (*zanyátiye*) — "a class, a lesson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**занятие** comes from *занять*, "to occupy, to take up", *за-* with the old verb *\*jęti*, "to take": an occupation, a class.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

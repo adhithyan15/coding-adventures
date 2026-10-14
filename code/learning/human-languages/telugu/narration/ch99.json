@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "Welcomes, Gifts, Invitations",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:755d8235ea411a39",
+  "sourceHash": "fnv1a64:ec02d262c0cdd717",
   "lessons": [
     {
       "id": "TE-C99-namaste",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:defec2964bb089b0",
+      "sourceHash": "fnv1a64:612a6df9a5a79844",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నమస్తే (namastē) is Sanskrit namas te, \"a bow to you\": namas, \"bow, adoration\" (CDIAL 6958), and te, \"to you\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c30f35bf98a18f7d",
+      "sourceHash": "fnv1a64:b6a42ac0f497477e",
       "notice": null,
       "blocks": [
         {
@@ -183,6 +194,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆనందం (ānandaṁ) is Sanskrit ānanda, \"happiness\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 1172)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -193,7 +215,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -242,7 +264,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -273,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c10832477e67c34f",
+      "sourceHash": "fnv1a64:0a3e6cc73c294287",
       "notice": null,
       "blocks": [
         {
@@ -310,6 +332,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అభినందనలు (abhinandanalu) is Sanskrit abhinandana, \"rejoicing, praise\", with the Telugu plural ending -lu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -320,7 +353,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -369,7 +402,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -400,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:690eaad5512229b2",
+      "sourceHash": "fnv1a64:27f543e02688aa46",
       "notice": null,
       "blocks": [
         {
@@ -437,6 +470,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బహుమతి (bahumati) is Sanskrit bahumati, \"high regard\", from bahu, \"much\" (CDIAL 9187), and mati, \"mind\": a gift as a mark of regard."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -447,7 +491,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -496,7 +540,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -527,7 +571,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03530b2c3ab9aa22",
+      "sourceHash": "fnv1a64:4c65bba7d0672f48",
       "notice": null,
       "blocks": [
         {
@@ -564,6 +608,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆహ్వానం (āhvānaṁ) is Sanskrit āhvāna, \"calling, invitation\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -574,7 +629,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -623,7 +678,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

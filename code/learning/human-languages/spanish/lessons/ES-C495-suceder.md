@@ -10,7 +10,8 @@ gloss: "to happen, to take place"
 concept_tag: ES-VERB-SUCEDER
 prerequisites: [ES-C495-noticia, ES-C495-ocurrir]
 sounds: []
-roots: []
+roots: [cedere-latin]
+etymology_hook: "suceder ← Latin succedere 'to come after': sub- + cedere 'to go' — English succeed"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C495-ocurrir]
 > *The accident happened on the motorway.*
 
 News reports use it alongside *ocurrir*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**suceder** ← Latin *succedere*, "to come after, to follow" (Lewis & Short): *sub-* and *cedere*, "to go". What follows on is what happens.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

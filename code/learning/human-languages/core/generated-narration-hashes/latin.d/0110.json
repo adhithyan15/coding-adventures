@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 110,
-  "sourceHash": "fnv1a64:a4e5ccf3fc589803",
+  "sourceHash": "fnv1a64:4b8c443aeb9f7431",
   "lessonIds": [
     "LA-C110-facultas",
     "LA-C110-ars",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch110.txt",
   "json": "latin/narration/ch110.json",
-  "textHash": "fnv1a64:4ccf05382a515d5a",
-  "jsonHash": "fnv1a64:92420554e41a0a7a",
+  "textHash": "fnv1a64:7c70ec25d728ef90",
+  "jsonHash": "fnv1a64:8940d77e28181131",
   "findings": []
 }

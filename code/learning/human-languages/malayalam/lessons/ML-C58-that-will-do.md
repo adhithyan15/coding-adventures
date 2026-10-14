@@ -11,7 +11,8 @@ romanization: "pōruṁ"
 concept_tag: ML-WORD-THAT-WILL-DO
 prerequisites: [ML-C58-no-need, ML-C56-box]
 sounds: []
-roots: []
+roots: [dravidian-poru-suffice]
+etymology_hook: "pōruṁ: native Dravidian, from the verb 'to suit, suffice' (DEDR 4594)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ From പോരുക (*pōruka*), "to suffice", and it means that what is there 
 Set it against *mati*, which you already have. The two overlap, and either will stop a server; പോരും leans a little more towards "that reaches far enough" and *mati* towards "stop". Kerala uses both, often in the same breath.
 
 The ം at the end is the anusvara, the humming close you have met on the sky-word and the star-word and the vessel-word. It closes a great many Malayalam words, and by now it should be arriving without thought.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പോരും** (*pōruṁ*) is native Dravidian, from the verb "to suit, to suffice"; DEDR 4594 lists the root with Tamil *pōru* and Kodagu *po·r-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

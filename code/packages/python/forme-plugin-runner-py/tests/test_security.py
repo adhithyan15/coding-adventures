@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import io
 import os
+import select
 import subprocess
 import sys
 import time
@@ -302,19 +303,21 @@ def test_runner_exits_after_termination_signal(active: bool) -> None:
         stderr=subprocess.PIPE,
     )
     try:
-        if active:
-            messages = [
-                {
-                    "jsonrpc": "2.0",
-                    "id": 1,
-                    "method": "handshake",
-                    "params": {
-                        "pluginName": "@forme/conformance",
-                        "pluginVersion": "1.0.0",
-                        "apiVersion": 2,
-                        "protocolVersion": 1,
-                    },
+        messages: list[dict[str, Any]] = [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "handshake",
+                "params": {
+                    "pluginName": "@forme/conformance",
+                    "pluginVersion": "1.0.0",
+                    "apiVersion": 2,
+                    "protocolVersion": 1,
                 },
+            },
+        ]
+        if active:
+            messages += [
                 {"jsonrpc": "2.0", "id": 2, "method": "announce", "params": {}},
                 {
                     "jsonrpc": "2.0",
@@ -333,9 +336,19 @@ def test_runner_exits_after_termination_signal(active: bool) -> None:
                     },
                 },
             ]
-            assert process.stdin is not None
-            process.stdin.write(b"".join(encode_frame(message, 4096) for message in messages))
-            process.stdin.flush()
+        assert process.stdin is not None
+        process.stdin.write(b"".join(encode_frame(message, 4096) for message in messages))
+        process.stdin.flush()
+        if os.name != "nt":
+            # Wait for the handshake reply rather than a fixed delay. The
+            # runner installs its SIGTERM handler before it reads a request,
+            # so a reply proves the handler is in place. A 0.1 s sleep raced
+            # the interpreter's own start-up (about 0.1 s) on a loaded CI
+            # runner, and SIGTERM then killed the process with -15 (X-7).
+            assert process.stdout is not None
+            ready, _, _ = select.select([process.stdout], [], [], 10)
+            assert ready, "the runner never answered the handshake"
+            assert process.stdout.readline().startswith(b"Content-Length:")
         time.sleep(0.1)
         process.terminate()
         process.wait(timeout=2)

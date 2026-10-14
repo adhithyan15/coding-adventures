@@ -14,7 +14,8 @@ romanization: "dvārā"
 concept_tag: TE-KARANAM176-DVARA
 prerequisites: [TE-C176-lekapote, TE-C176-ayina]
 sounds: []
-roots: []
+roots: [sanskrit-dvara]
+etymology_hook: "dvārā ← Sanskrit dvārā 'by way of', instrumental of dvāra 'door' (CDIAL 6663)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C176-ayina]
 <!-- hl-knowledge: introduces=[TE-LEX-C176-KARANAM176-03]; assesses=[] -->
 
 **ద్వారా** — *dvārā* — "through, by means of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ద్వారా** (*dvārā*) is Sanskrit *dvārā*, "by way of", the instrumental of *dvāra*, "door" (CDIAL 6663).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

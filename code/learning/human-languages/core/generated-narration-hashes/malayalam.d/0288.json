@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 288,
-  "sourceHash": "fnv1a64:49a0acfaa35f8bbc",
+  "sourceHash": "fnv1a64:b2e09f395cfd6044",
   "lessonIds": [
     "ML-C288-palsal",
     "ML-C288-cekku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch288.txt",
   "json": "malayalam/narration/ch288.json",
-  "textHash": "fnv1a64:06e3836dbf4f33f8",
-  "jsonHash": "fnv1a64:45aedccda9ed7e35",
+  "textHash": "fnv1a64:0efd728087eaba06",
+  "jsonHash": "fnv1a64:c4f4f7eea7625ad9",
   "findings": []
 }

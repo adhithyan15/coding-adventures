@@ -14,7 +14,8 @@ romanization: "sonta"
 concept_tag: TE-GUNAM259-SONTA
 prerequisites: [TE-C259-raddi, TE-C259-mukhyamaina]
 sounds: []
-roots: []
+roots: [telugu-sonta-own]
+etymology_hook: "sonta: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'own'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C259-mukhyamaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C259-GUNAM259-03]; assesses=[] -->
 
 **సొంత** — *sonta* — "own".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **సొంత** (*sonta*) is uncertain. DEDR and CDIAL list no word of this shape meaning "own".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

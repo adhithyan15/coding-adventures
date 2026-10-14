@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 226,
-  "sourceHash": "fnv1a64:9290046449817e90",
+  "sourceHash": "fnv1a64:2d44221fb7c89a9c",
   "lessonIds": [
     "LA-C226-grammatica",
     "LA-C226-philosophia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch226.txt",
   "json": "latin/narration/ch226.json",
-  "textHash": "fnv1a64:85d571c8d304e969",
-  "jsonHash": "fnv1a64:d05f86fe681a0a25",
+  "textHash": "fnv1a64:7ffa092f776cddea",
+  "jsonHash": "fnv1a64:b16960c616467061",
   "findings": []
 }

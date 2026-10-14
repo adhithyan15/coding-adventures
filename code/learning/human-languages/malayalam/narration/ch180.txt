@@ -14,6 +14,9 @@ You'll want to know: സമയപ്പട്ടിക.
 [once you have stopped driving — read: the board]
 The board says ബസ്: രാവിലെ എട്ട് മണി — basŭ: rāvile eṭṭŭ maṇi — "Bus: 8 a.m." The bus leaves at eight, so be there before eight.
 
+The word, taken apart.
+സമയപ്പട്ടിക (samayappaṭṭika) is built from Sanskrit parts: samaya, "time" (CDIAL 13185), and paṭṭikā, "a tablet, a slab" (CDIAL 7699), which became a written list.
+
 What you've built.
 One more word for this chapter.
 
@@ -45,6 +48,9 @@ You'll want to know: അറിയിപ്പ്.
 [once you have stopped driving — read: the notice]
 The notice says ഇന്ന് കട അടച്ചിരിക്കുന്നു — innŭ kaṭa aṭaccirikkunnu — "The shop is closed today." Come back on another day.
 
+The word, taken apart.
+അറിയിപ്പ് (aṟiyippŭ) is native Dravidian, a noun from the causative of the verb "to know": "a making known"; DEDR 314 lists the root with Tamil aṟi and Kannada aṟi.
+
 What you've built.
 One more word for this chapter.
 
@@ -73,6 +79,9 @@ Before the new one: say the Malayalam for a timetable, then the Malayalam for a 
 
 You'll want to know: വാടക.
 വാടക — vāṭaka — "rent, hire charge". The money you pay to live in a house: വീട്ടുവാടക — vīṭṭuvāṭaka — "the rent for the house".
+
+The word, taken apart.
+വാടക (vāṭaka) is usually traced to Sanskrit bhāṭaka, "hire, rent", with the bh softened to v.
 
 What you've built.
 One more word for this chapter.
@@ -105,6 +114,9 @@ You'll want to know: പരസ്യം.
 [once you have stopped driving — read: the advert]
 The advert says വീട് വാടകയ്ക്ക് — vīṭŭ vāṭakaykkŭ — "House for rent."
 
+The word, taken apart.
+പരസ്യം (parasyaṁ) is of uncertain origin; neither DEDR nor CDIAL lists it.
+
 What you've built.
 One more word for this chapter.
 
@@ -133,6 +145,9 @@ Before the new one: say the Malayalam for rent, then the Malayalam for an advert
 
 You'll want to know: രസീത്.
 രസീത് — rasītŭ — "a receipt". Ask for it when you pay: രസീത് തരുമോ? — rasītŭ tarumō? — "Could you give me the receipt?"
+
+The word, taken apart.
+രസീത് (rasītŭ) from Persian rasīd, "arrived; an acknowledgement of receipt", which came in through Hindustani with Mughal and British administration.
 
 What you've built.
 One more word for this chapter.

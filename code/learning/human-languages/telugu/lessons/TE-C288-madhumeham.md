@@ -14,7 +14,8 @@ romanization: "madhumēhaṁ"
 concept_tag: TE-AROGYAM288-MADHUMEHAM
 prerequisites: [TE-C288-ajirnam, TE-C288-malabaddhakam]
 sounds: []
-roots: []
+roots: [sanskrit-madhu, sanskrit-meha]
+etymology_hook: "madhumēhaṁ: Sanskrit madhu 'honey' (CDIAL 9784) + mēha 'urine' (CDIAL 10337)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C288-malabaddhakam]
 <!-- hl-knowledge: introduces=[TE-LEX-C288-AROGYAM288-04]; assesses=[] -->
 
 **మధుమేహం** — *madhumēhaṁ* — "diabetes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మధుమేహం** (*madhumēhaṁ*) is Sanskrit *madhumēha*: *madhu*, "honey" (CDIAL 9784), and *mēha*, "urine" (CDIAL 10337), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

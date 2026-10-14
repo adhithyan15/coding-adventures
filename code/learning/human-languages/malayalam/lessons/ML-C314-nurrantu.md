@@ -14,7 +14,8 @@ romanization: "nūṟṟāṇṭŭ"
 concept_tag: ML-SAMAYAM314-NURRANTU
 prerequisites: [ML-C313-kasayam, ML-C313-garbhini]
 sounds: []
-roots: []
+roots: [dravidian-nuru-hundred, dravidian-andu-year]
+etymology_hook: "nūṟṟāṇṭŭ: native Dravidian, 'a hundred years'; DEDR 3729 lists Malayalam nūṟṟ-āṇṭu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C313-garbhini]
 <!-- hl-knowledge: introduces=[ML-LEX-C314-SAMAYAM314-01]; assesses=[] -->
 
 **നൂറ്റാണ്ട്** — *nūṟṟāṇṭŭ* — "a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നൂറ്റാണ്ട്** (*nūṟṟāṇṭŭ*) is native Dravidian, "a hundred years": DEDR 3729 lists it, *nūṟṟ-āṇṭu*, from *nūṟu*, "hundred", and *āṇṭu*, "year" (DEDR 5153, with Tamil *yāṇṭu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

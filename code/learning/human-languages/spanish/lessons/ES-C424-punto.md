@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-PUNTO
 prerequisites: [ES-C423-sintesis-persona]
 sounds: []
 roots: []
+etymology_hook: "punto ← Latin punctum 'a prick', from pungere 'to pierce': a dot is a prick of the pen"
 duration:
   max_seconds: 240
 requires:
@@ -53,6 +54,9 @@ those names appear in exam instructions, so they are worth having:
 The mark on the page is identical in all three. What changes is the size of the
 thing being finished — a sentence, a block, or a text. *Seguido* means
 "continued," *aparte* means "separate," and *final* means what it looks like.
+
+*Punto* is Latin *punctum*, "a prick", from *pungere*, "to pierce": a dot is a
+prick of the pen.
 
 ## Grammar Lens: spacing, and the one place the mark is left off
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C424-01] -->

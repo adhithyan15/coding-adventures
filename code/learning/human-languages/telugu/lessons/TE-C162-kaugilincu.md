@@ -14,7 +14,8 @@ romanization: "kaugiliñcu"
 concept_tag: TE-VERB-KAUGILINCU
 prerequisites: [TE-C161-ascaryapovu, TE-C162-muddupettu]
 sounds: []
-roots: []
+roots: [telugu-kaugilincu-embrace]
+etymology_hook: "kaugiliñcu: origin uncertain; DEDR 1802 cites it only in a phrase"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C162-muddupettu]
 <!-- hl-knowledge: introduces=[TE-LEX-C162-KRIYA162-02]; assesses=[] -->
 
 **కౌగిలించు** — *kaugiliñcu* — "to hug, to embrace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **కౌగిలించు** (*kaugiliñcu*) is uncertain. DEDR 1802 cites it only in the phrase *grucci kaugiliñcu*, "to embrace tightly", filed under *grucci*, and gives it no entry of its own.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

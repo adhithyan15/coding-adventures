@@ -14,7 +14,8 @@ romanization: "posýlka"
 concept_tag: RU-VESHCH161-POSYLKA
 prerequisites: [RU-C161-marka, RU-C161-otkrytka]
 sounds: []
-roots: []
+roots: [slavic-sylati]
+etymology_hook: "посылка is from посылать 'to send', по- + сылать"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C161-otkrytka]
 <!-- hl-knowledge: introduces=[RU-LEX-C161-VESHCH161-05]; assesses=[] -->
 
 **посылка** (*posýlka*) — "a parcel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**посылка** comes from *посылать*, "to send", with the noun ending *-ка*: something sent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -56,28 +56,10 @@ const NATIVE_BACKENDS: &[Backend] = &[
 /// Style properties this package is currently known to lose, by backend.
 /// Every entry is measured and the inverse-ratchet test rejects stale pins.
 const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
-    // ---- Qt (#15245) ----
-    //
-    // These became visible the moment Qt started reporting its drops in
-    // #15245. They are PRE-EXISTING gaps, not regressions: this package has
-    // been rendering without them on Qt since the parts were authored, and
-    // nothing could see them because the backend reported no drops at all.
-    //
-    // Pinned so the gate stays honest, NOT to bless them -- see this list's
-    // doc comment on how a stale pin turns into a standing licence.
-    //
-    // #15247 -- `qml_padding` reads ONE value and fans it to all four
-    // edges, so any longhand beyond the one it picks is lost.
-    (Backend::Qt, "padding-bottom"),
-    (Backend::Qt, "padding-top"),
     // ---- Flutter (#12022) ----
     // These pre-existing losses became measurable when Flutter gained drop
     // reporting. Each pin is checked below and must disappear with its gap.
-    (Backend::Flutter, "border-radius"),
-    (Backend::Flutter, "color"),
     (Backend::Flutter, "font-weight"),
-    (Backend::Flutter, "padding-bottom"),
-    (Backend::Flutter, "padding-top"),
 ];
 
 fn package_root() -> PathBuf {

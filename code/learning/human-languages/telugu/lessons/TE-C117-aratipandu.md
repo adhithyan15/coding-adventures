@@ -14,7 +14,8 @@ romanization: "araṭipaṇḍu"
 concept_tag: TE-THINGS117-ARATIPANDU
 prerequisites: [TE-C116-mamsam, TE-C117-kuragayalu]
 sounds: []
-roots: []
+roots: [dravidian-aratti-banana, dravidian-pazhu-ripen]
+etymology_hook: "araṭipaṇḍu: native araṭi 'banana tree' (DEDR 205) + paṇḍu 'fruit' (DEDR 4004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C117-kuragayalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C117-THINGS117-02]; assesses=[] -->
 
 **అరటిపండు** — *araṭipaṇḍu* — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అరటిపండు** (*araṭipaṇḍu*) is native Dravidian: *araṭi*, "banana tree" (DEDR 205), and *paṇḍu*, "fruit" (DEDR 4004). DEDR compares Sanskrit *phala*, "fruit", with *paṇḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

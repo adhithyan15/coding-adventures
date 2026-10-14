@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 228,
-  "sourceHash": "fnv1a64:5768a5370c6195fd",
+  "sourceHash": "fnv1a64:0f1e53cc67d6ac60",
   "lessonIds": [
     "ML-C228-paratippetuka",
     "ML-C228-nuna-parayuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch228.txt",
   "json": "malayalam/narration/ch228.json",
-  "textHash": "fnv1a64:567052e82c71fa4b",
-  "jsonHash": "fnv1a64:38ddada002bdcf3f",
+  "textHash": "fnv1a64:a2830398a8f4f60f",
+  "jsonHash": "fnv1a64:1bc7f3fcfbfcd032",
   "findings": []
 }

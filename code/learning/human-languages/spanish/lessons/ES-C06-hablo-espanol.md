@@ -10,9 +10,10 @@ gloss: your first sentence built from parts — and the rule that languages take
 concept_tag: ES-SENTENCE-HABLO-ESPANOL
 prerequisites: [ES-C06-espanol, ES-C06-ar-presente, ES-W03-question-span, ES-C19-no]
 sounds: [enye-ny, silent-h]
-roots: [hispania-latin]
+roots: [hispania-latin, fabulari-latin]
+etymology_hook: "hablo español — hablar ← Latin fabulari 'to chat', f- turned h-; español built on Latin Hispania"
 duration:
-  max_seconds: 230
+  max_seconds: 280
 requires:
   knowledge: [ES-LEX-ESPANOL, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-ORTHOGRAPHY-PUNCTUATION-SPAN, ES-ORTHOGRAPHY-OPENING-PUNCTUATION, ES-FORM-ESPANOL, ES-LEX-NO-01]
 introduces:
@@ -55,6 +56,11 @@ Now swap the pieces and watch it generate:
 - **Trabajo.** — "I work."
 - **¿Hablas español?** — "Do you speak Spanish?" (the **¿ ?** pair opening
   and closing the question, as in the writing lesson).
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hablo español** is two words you have taken apart: *hablo* is *hablar*, Latin *fabulari*, "to chat", its *f-* turned to *h-*; *español* was built on *Hispania*, the Roman name for the peninsula.
 
 ## Grammar Lens: languages go bare
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-BARE-LANGUAGE]; assesses=[] -->

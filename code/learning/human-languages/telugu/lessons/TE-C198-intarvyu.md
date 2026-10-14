@@ -14,7 +14,8 @@ romanization: "iṇṭarvyū"
 concept_tag: TE-PANI198-INTARVYU
 prerequisites: [TE-C197-abhiprayam, TE-C198-tyusanu]
 sounds: []
-roots: []
+roots: [english-interview]
+etymology_hook: "iṇṭarvyū ← English interview"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C198-tyusanu]
 <!-- hl-knowledge: introduces=[TE-LEX-C198-PANI198-02]; assesses=[] -->
 
 **ఇంటర్వ్యూ** — *iṇṭarvyū* — "an interview".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇంటర్వ్యూ** (*iṇṭarvyū*) is a loan from English *interview*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

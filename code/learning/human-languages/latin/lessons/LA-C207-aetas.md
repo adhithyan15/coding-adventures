@@ -13,7 +13,8 @@ gloss: "age, a lifetime"
 concept_tag: LA-TEMP207-AETAS
 prerequisites: [LA-C206-consuetudo, LA-C207-saeculum]
 sounds: []
-roots: []
+roots: [aetas-latin, aevum-latin]
+etymology_hook: "aetās 'age' — contracted from aevitās, built on aevum 'lifetime'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C207-saeculum]
 <!-- hl-knowledge: introduces=[LA-LEX-C207-TEMP207-02]; assesses=[] -->
 
 **aetās, aetātis** — "age, a lifetime".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aetās** is contracted from older *aevitās* (Lewis & Short), built on *aevum*, "a lifetime, an age", which is usually traced to Proto-Indo-European *\*h2eyu-*, "life force".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 200,
-  "sourceHash": "fnv1a64:2f2f65682b2e9d54",
+  "sourceHash": "fnv1a64:45c3513675dd87bf",
   "lessonIds": [
     "KA-C200-gunavagu",
     "KA-C200-turisu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch200.txt",
   "json": "kannada/narration/ch200.json",
-  "textHash": "fnv1a64:43c33f4dd73a06ec",
-  "jsonHash": "fnv1a64:91320627586ede8a",
+  "textHash": "fnv1a64:88ed1b9a64efc74f",
+  "jsonHash": "fnv1a64:7ec613ca8811f770",
   "findings": []
 }

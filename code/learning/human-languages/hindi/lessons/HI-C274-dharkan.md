@@ -14,7 +14,8 @@ romanization: "dhaṛkan"
 concept_tag: HI-THG274-DHARKAN
 prerequisites: [HI-C273-rog, HI-C273-bimari]
 sounds: []
-roots: []
+roots: [indo-aryan-dhad]
+etymology_hook: "dhaṛkan ← *dhaḍ 'throb, beat', a reconstructed form; a tadbhava (CDIAL 6711)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C273-bimari]
 <!-- hl-knowledge: introduces=[HI-LEX-C274-THG274-01]; assesses=[] -->
 
 **धड़कन** — *dhaṛkan* — "a heartbeat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धड़कन** (*dhaṛkan*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhaḍ*, "throb, beat", a form CDIAL reconstructs from its descendants (CDIAL 6711). *dhaṛkan* is the noun of *dhaṛaknā*, "to throb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

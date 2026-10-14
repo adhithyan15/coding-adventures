@@ -14,7 +14,8 @@ romanization: "namak"
 concept_tag: HI-NOUN-SALT
 prerequisites: [HI-C45-lamp, HI-C43-write, HI-C44-family]
 sounds: []
-roots: []
+roots: [persian-namak]
+etymology_hook: "namak: usually traced to Persian namak 'salt'"
 duration:
   max_seconds: 210
 requires:

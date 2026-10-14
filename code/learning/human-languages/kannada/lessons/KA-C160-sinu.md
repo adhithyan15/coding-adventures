@@ -14,7 +14,8 @@ romanization: "sīnu"
 concept_tag: KA-VERB-SINU
 prerequisites: [KA-C160-horu, KA-C160-vyayama-madu]
 sounds: []
-roots: []
+roots: [dravidian-ciintu-sneeze]
+etymology_hook: "sīnu: native Dravidian, one word with Tamil cīntu (DEDR 2618)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C160-vyayama-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C160-KRIYE160-04]; assesses=[] -->
 
 **ಸೀನು** — *sīnu* — "to sneeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೀನು** (*sīnu*) is native Dravidian, one word with Tamil *cīntu* (DEDR 2618). DEDR lists *sīn*, *sīnu*, "to sneeze".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

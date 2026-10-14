@@ -11,7 +11,8 @@ romanization: "elli"
 concept_tag: KA-DEIXIS-WHERE
 prerequisites: [KA-C41-who, KA-C39-chaha]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "elli: native Dravidian, on the question base e- (DEDR 5151)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ Its partners are **ಇಲ್ಲಿ** *illi* and **ಅಲ್ಲಿ** *alli*, whic
 already met. The three differ by one sound at the front — **e-** for ask — and
 that is not a coincidence. It is the whole system, and the last lesson of this
 chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಲ್ಲಿ** (*elli*) is native Dravidian, built on the question base *e-* with an ending for place. DEDR 5151 lists *elli* itself, "what place, where".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-06, KA-LEX-C39-CHAHA-01, KA-ETYMON-C39-CHAHA-02] -->

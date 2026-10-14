@@ -14,7 +14,8 @@ romanization: "taṇṇimattan"
 concept_tag: ML-VASTU323-TANNIMATTAN
 prerequisites: [ML-C322-kappa, ML-C322-cammanti]
 sounds: []
-roots: []
+roots: [dravidian-tan-cool]
+etymology_hook: "taṇṇimattan: native taṇṇi 'water' (DEDR 3045) + mattan 'pumpkin', of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C322-cammanti]
 <!-- hl-knowledge: introduces=[ML-LEX-C323-VASTU323-01]; assesses=[] -->
 
 **തണ്ണിമത്തൻ** — *taṇṇimattan* — "a watermelon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തണ്ണിമത്തൻ** (*taṇṇimattan*) is "water pumpkin": native *taṇṇi*, "cold water" (DEDR 3045, with Tamil *taṇ*, "cool"), and *mattan*, the pumpkin word, of uncertain origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Estudiante --- a Word You Can Build",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5f5860dd0dd18685",
+  "sourceHash": "fnv1a64:77ddbfbaaf7168ba",
   "lessons": [
     {
       "id": "ES-C09-estudiante",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16ed1344d05102bc",
+      "sourceHash": "fnv1a64:b69e2446d2c8cbd6",
       "notice": null,
       "blocks": [
         {
@@ -121,6 +121,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "estudiante is built from estudiar, \"to study\", with -ante, the Latin participle ending -antem: \"one studying\". Estudiar comes from Latin studium, \"zeal, eagerness\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -214,7 +225,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

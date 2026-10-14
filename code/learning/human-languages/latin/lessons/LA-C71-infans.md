@@ -13,7 +13,8 @@ gloss: "a baby, an infant"
 concept_tag: LA-FAMILIA2-INFANS
 prerequisites: [LA-C71-uxor, LA-C71-liberi]
 sounds: []
-roots: []
+roots: [latin-infans, fari-latin]
+etymology_hook: "īnfāns 'baby' — in- 'not' + fāns 'speaking': one who cannot yet speak; English infant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C71-liberi]
 <!-- hl-knowledge: introduces=[LA-LEX-C71-FAMILIA2-04]; assesses=[] -->
 
 **īnfāns, īnfantis** — "a baby, an infant". Literally "not speaking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**īnfāns** is built from *in-*, "not", and *for*, "I speak" (Lewis & Short): a baby is one who cannot yet speak. Its second part is *fāns*, "speaking". English *infant* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

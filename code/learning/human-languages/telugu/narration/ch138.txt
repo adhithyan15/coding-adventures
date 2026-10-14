@@ -12,6 +12,9 @@ Before the new one: say the Telugu for clean, then the Telugu for dirty.
 You'll want to know: వేగం.
 వేగం — vēgaṁ — "fast; speed".
 
+The word, taken apart.
+వేగం (vēgaṁ) is Sanskrit vega, "violent agitation; speed", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 12089).
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ An adjective goes before the noun and does not change: పాత పుస్త
 You'll want to know: అందమైన.
 అందమైన — andamaina — "beautiful".
 
+The word, taken apart.
+అందమైన (andamaina) is native andamu, "beauty", one word with Tamil antam and Kannada anda (DEDR 2328), which queries whether it was influenced by Sanskrit chanda; and ayina, "which is", from agu, "to be" (DEDR 333).
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Telugu for fast; speed, then the Telugu for beautifu
 
 You'll want to know: లోతు.
 లోతు — lōtu — "deep".
+
+The word, taken apart.
+The origin of లోతు (lōtu) is uncertain. Neither DEDR nor CDIAL records it.
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Before the new one: say the Telugu for beautiful, then the Telugu for deep.
 You'll want to know: వెడల్పు.
 వెడల్పు — veḍalpu — "wide".
 
+The word, taken apart.
+The origin of వెడల్పు (veḍalpu) is uncertain. Neither DEDR nor CDIAL records it.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Telugu for deep, then the Telugu for wide.
 
 You'll want to know: ఇరుకు.
 ఇరుకు — iruku — "narrow".
+
+The word, taken apart.
+ఇరుకు (iruku) is native Dravidian, one word with Tamil iṟuku and Kannada iṟuku (DEDR 524). DEDR lists Telugu iṟuku, "to be squeezed; a narrow place".
 
 What you've built.
 One more word for this chapter.

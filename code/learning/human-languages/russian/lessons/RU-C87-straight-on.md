@@ -14,7 +14,8 @@ romanization: "prýamo"
 concept_tag: RU-LOC87-STRAIGHT-ON
 prerequisites: [RU-C86-to-the-right, RU-C86-to-the-left]
 sounds: []
-roots: []
+roots: [slavic-premu]
+etymology_hook: "прямо is the adverb of прямой 'straight'; Vasmer compares Greek promos 'foremost'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C86-to-the-left]
 <!-- hl-knowledge: introduces=[RU-LEX-C87-LOC87-01]; assesses=[] -->
 
 **прямо** (*prýamo*) — "straight on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**прямо** is *прямой*, "straight", made into an adverb. Vasmer calls the Proto-Slavic form disputed but thinks of a link with Greek *prómos*, "foremost", and Old Norse *framr*, "forward".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

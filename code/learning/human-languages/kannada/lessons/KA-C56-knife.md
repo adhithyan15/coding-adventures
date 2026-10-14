@@ -11,7 +11,8 @@ romanization: "cāku"
 concept_tag: KA-NOUN-KNIFE
 prerequisites: [KA-C56-basket, KA-C54-leaf]
 sounds: []
-roots: []
+roots: [persian-chaqu]
+etymology_hook: "cāku ← Persian chāqū 'small knife', through Hindustani"
 duration:
   max_seconds: 210
 requires:

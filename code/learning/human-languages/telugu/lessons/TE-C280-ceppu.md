@@ -14,7 +14,8 @@ romanization: "ceppu"
 concept_tag: TE-VERB-CEPPU
 prerequisites: [TE-C280-ruddu, TE-C280-anduko]
 sounds: []
-roots: []
+roots: [dravidian-ceppu-say]
+etymology_hook: "ceppu: native Dravidian, one word with Tamil ceppu and Malayalam ceppuka (DEDR 1955)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C280-anduko]
 <!-- hl-knowledge: introduces=[TE-LEX-C280-KRIYA280-03]; assesses=[] -->
 
 **చెప్పు** — *ceppu* — "to tell, to say".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చెప్పు** (*ceppu*) is native Dravidian, one word with Tamil *ceppu* and Malayalam *ceppuka* (DEDR 1955). DEDR lists Telugu *ceppu*, "to say, tell". DEDR 1963 *ceppu*, "sandal", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [ML-C02-enre-peru-aanu]
 sounds: [anusvara]
 roots: [santosha-sanskrit]
+etymology_hook: "santōṣaṁ ← Sanskrit saṁtōṣa 'satisfaction', a tatsama (CDIAL 12895)"
 duration:
   max_seconds: 180
 requires:
@@ -63,6 +64,8 @@ Telugu use. So even Malayalam, the great keeper of native words (recall *nandi*
 for "thanks" in Chapter 1), reaches for Sanskrit here. The loanwords spread
 **selectively**, word by word — which is exactly what these cognate notes
 trace: native for "name" and "thanks," Sanskrit for "pleased."
+
+Sanskrit *saṁtōṣa*, "satisfaction", is CDIAL 12895.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SANTOSHAM-01] -->

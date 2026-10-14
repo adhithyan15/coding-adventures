@@ -14,7 +14,8 @@ romanization: "ginnā"
 concept_tag: HI-VERB-GINNA
 prerequisites: [HI-C165-samjhana, HI-C165-bajana]
 sounds: []
-roots: []
+roots: [sanskrit-ganayati]
+etymology_hook: "ginnā ← Sanskrit gaṇayati 'counts', a tadbhava (CDIAL 3993)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C165-bajana]
 <!-- hl-knowledge: introduces=[HI-LEX-C165-ACT165-05]; assesses=[] -->
 
 **गिनना** — *ginnā* — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गिनना** (*ginnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gaṇayati*, "counts" (CDIAL 3993).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gurutisu"
 concept_tag: KA-VERB-GURUTISU
 prerequisites: [KA-C242-addu, KA-C242-hari]
 sounds: []
-roots: []
+roots: [dravidian-kuri-mark]
+etymology_hook: "gurutisu: native gurutu 'mark, sign' (DEDR 1847) + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C242-hari]
 <!-- hl-knowledge: introduces=[KA-LEX-C243-KRIYE243-01]; assesses=[] -->
 
 **ಗುರುತಿಸು** — *gurutisu* — "to recognise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗುರುತಿಸು** (*gurutisu*) is native Dravidian: *gurutu*, "a mark, a sign", which DEDR 1847 lists, made into a verb with *-isu*: "to know by its marks".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

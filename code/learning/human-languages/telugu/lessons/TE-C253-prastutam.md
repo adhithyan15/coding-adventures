@@ -14,7 +14,8 @@ romanization: "prastutaṁ"
 concept_tag: TE-SAMAYAM253-PRASTUTAM
 prerequisites: [TE-C253-civara, TE-C253-eppudaina]
 sounds: []
-roots: []
+roots: [sanskrit-prastuta]
+etymology_hook: "prastutaṁ ← Sanskrit prastuta 'begun, at hand', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C253-eppudaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C253-SAMAYAM253-03]; assesses=[] -->
 
 **ప్రస్తుతం** — *prastutaṁ* — "at present, currently".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రస్తుతం** (*prastutaṁ*) is Sanskrit *prastuta*, "begun, under discussion, at hand", taken over as a learned loan, a tatsama, with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

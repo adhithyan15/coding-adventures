@@ -14,7 +14,8 @@ romanization: "paddhati"
 concept_tag: ML-WANT145-PADDHATI
 prerequisites: [ML-C145-pratiksa, ML-C145-laksyam, ML-C26-raavile]
 sounds: []
-roots: []
+roots: [sanskrit-paddhati]
+etymology_hook: "paddhati ← Sanskrit paddhati 'a path, a way', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C145-laksyam]
 <!-- hl-knowledge: introduces=[ML-LEX-C145-WANT145-05]; assesses=[] -->
 
 **പദ്ധതി** — *paddhati* — "a plan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പദ്ധതി** (*paddhati*) ← Sanskrit *paddhati*, "a path, a way", taken over whole as a tatsama. A plan is a path laid out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

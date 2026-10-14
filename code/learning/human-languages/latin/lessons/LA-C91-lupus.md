@@ -13,7 +13,8 @@ gloss: "a wolf"
 concept_tag: LA-ANIMALIA2-LUPUS
 prerequisites: [LA-C90-porcus, LA-C91-avis]
 sounds: []
-roots: []
+roots: [lupus-latin]
+etymology_hook: "lupus 'wolf' — from PIE *wlkwos, probably through a neighbouring Italic tongue; English wolf is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C91-avis]
 <!-- hl-knowledge: introduces=[LA-LEX-C91-ANIMALIA2-02]; assesses=[] -->
 
 **lupus, lupī** — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lupus** is usually traced to Proto-Indo-European *\*wlkwos*, "wolf" (EtymDB 2.1), with Greek *lykos*, "wolf", and English *wolf* as cousins (Lewis & Short). Its p, where Latin would have qu, suggests it came in from a neighbouring Italic language such as Sabine.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

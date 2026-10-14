@@ -11,7 +11,8 @@ romanization: "alasaṭa"
 concept_tag: TE-WELLBEING-TIRED
 prerequisites: [TE-C84-fever, TE-C84-pain]
 sounds: []
-roots: []
+roots: [dravidian-ala-weary]
+etymology_hook: "alasaṭa: native Dravidian (DEDR 236), which takes Sanskrit alasa 'lazy, tired' from this root"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C84-pain]
 
 The ending **-గా** turns the noun into a manner, and **ఉంది** says "it is". This frame,
 *నాకు ... గా ఉంది*, is how Telugu says many of the things English says with *I am*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అలసట** (*alasaṭa*) is native Dravidian. DEDR 236 lists *alasaṭa*, "weariness", with *alayu*, "to be tired", beside Tamil *ala*, "to suffer, be in distress". DEDR suggests that Sanskrit *alasa*, "lazy, tired", came from this Dravidian root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

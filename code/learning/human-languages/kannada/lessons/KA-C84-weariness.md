@@ -11,7 +11,8 @@ romanization: "sustu"
 concept_tag: KA-BODY-WEARY
 prerequisites: [KA-C83-laughter, KA-C84-thirst]
 sounds: []
-roots: []
+roots: [persian-sust]
+etymology_hook: "sustu ← Persian sust 'weak, slack', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C84-thirst]
 
 **ಸುಸ್ತಾಗಿದೆ** (*sustāgide*) — "I'm worn out". **ಆಯಾಸ** is a little more formal;
 **ಸುಸ್ತು** is what you hear at home.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುಸ್ತು** (*sustu*) is a loan from Persian *sust*, "weak, slack", which came to Kannada through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

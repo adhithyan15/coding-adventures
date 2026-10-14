@@ -14,7 +14,8 @@ romanization: "kallaṅgaḍi"
 concept_tag: KA-VASTU221-KALLANGADI
 prerequisites: [KA-C221-kittale, KA-C221-pappayi]
 sounds: []
-roots: []
+roots: [sanskrit-kalinga-melon]
+etymology_hook: "kallaṅgaḍi: probably from Sanskrit kāliṅga 'watermelon' (CDIAL 3100), close to the Marathi word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C221-pappayi]
 <!-- hl-knowledge: introduces=[KA-LEX-C221-VASTU221-04]; assesses=[] -->
 
 **ಕಲ್ಲಂಗಡಿ** — *kallaṅgaḍi* — "a watermelon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಲ್ಲಂಗಡಿ** (*kallaṅgaḍi*) probably goes back to Sanskrit *kāliṅga*, "watermelon" (CDIAL 3100), whose Marathi form is very close to the Kannada one; CDIAL does not list the Kannada word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

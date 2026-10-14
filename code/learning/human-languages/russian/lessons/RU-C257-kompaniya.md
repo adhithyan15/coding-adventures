@@ -14,7 +14,8 @@ romanization: "kompániya"
 concept_tag: RU-RABOTA257-KOMPANIYA
 prerequisites: [RU-C256-muzykant, RU-C256-aktyor]
 sounds: []
-roots: []
+roots: [companio-latin]
+etymology_hook: "компания came through Polish kompania from Italian compagnia, 'those who share bread'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C256-aktyor]
 <!-- hl-knowledge: introduces=[RU-LEX-C257-RABOTA257-01]; assesses=[] -->
 
 **компания** (*kompániya*) — "a company".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**компания** — first, in 1634, "a trading company"; it came through Polish *kompania* (Vasmer), from Italian *compagnia*, from Latin *com-*, "with", and *pānis*, "bread": people who share bread.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

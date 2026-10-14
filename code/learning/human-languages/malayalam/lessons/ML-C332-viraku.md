@@ -14,7 +14,8 @@ romanization: "viṟakŭ"
 concept_tag: ML-VASTU332-VIRAKU
 prerequisites: [ML-C331-kampili, ML-C332-ciratta]
 sounds: []
-roots: []
+roots: [dravidian-viraku-firewood]
+etymology_hook: "viṟakŭ: native Dravidian, one word with Tamil viṟaku (DEDR 5440)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C332-ciratta]
 <!-- hl-knowledge: introduces=[ML-LEX-C332-VASTU332-02]; assesses=[] -->
 
 **വിറക്** — *viṟakŭ* — "firewood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിറക്** (*viṟakŭ*) is native Dravidian, one word with Tamil *viṟaku* (DEDR 5440).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

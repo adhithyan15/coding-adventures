@@ -14,7 +14,8 @@ romanization: "nirāśa"
 concept_tag: ML-AROGYAM234-NIRASA
 prerequisites: [ML-C233-alarji, ML-C234-utsaham]
 sounds: []
-roots: []
+roots: [sanskrit-nirasha]
+etymology_hook: "nirāśa ← Sanskrit nirāśa 'hopeless', a tatsama (CDIAL 7278)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C234-utsaham]
 <!-- hl-knowledge: introduces=[ML-LEX-C234-AROGYAM234-02]; assesses=[] -->
 
 **നിരാശ** — *nirāśa* — "disappointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിരാശ** (*nirāśa*) ← Sanskrit *nirāśa*, "hopeless", taken over whole as a tatsama (CDIAL 7278). Its parts are *nir*, "without", and *āśā*, "hope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

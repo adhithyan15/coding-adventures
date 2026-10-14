@@ -13,7 +13,8 @@ gloss: "much, a lot"
 concept_tag: LA-QUANTUM-MULTUM
 prerequisites: [LA-C105-iam, LA-C105-tum]
 sounds: []
-roots: []
+roots: [multum-latin, multus]
+etymology_hook: "multum 'much' — the neuter of multus 'much, many', used as an adverb"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C105-tum]
 <!-- hl-knowledge: introduces=[LA-LEX-C105-QUANTUM-04]; assesses=[] -->
 
 **multum** — "much, a lot". English *multitude*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**multum** is the neuter of *multus*, "much, many" (Lewis & Short), used as an adverb. Where *multus* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

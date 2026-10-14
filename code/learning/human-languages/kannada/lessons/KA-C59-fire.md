@@ -11,7 +11,8 @@ romanization: "beṅki"
 concept_tag: KA-NOUN-FIRE
 prerequisites: [KA-C59-mud, KA-C57-bone]
 sounds: []
-roots: []
+roots: [dravidian-vee-burn]
+etymology_hook: "beṅki: native Dravidian; DEDR 5517 lists beṅki 'heat, fire' under bē 'to burn'; Tamil vē"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Kannada's own, and once again it stands apart from its sisters: Tamil reaches fo
 The ದೀಪ from the asking-chapter needs this word before it is any use, and so does the ಬಿಸಿ under ಬಿಸಿಲು. Fire is the thing the ಗಾಳಿ feeds and the ಕೆಸರು puts out.
 
 And with ಬೆಂಕಿ the run closes the way it opened, on something you can point at. ಆಕಾಶ was overhead and out of reach; this one is on the floor of the kitchen, close enough to warm your hands at.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆಂಕಿ** (*beṅki*) is native Dravidian, of the root *bē*, "to burn", and DEDR 5517 lists *beṅki*, "heat, fire", itself; the entry also has Tamil *vē*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 276,
-  "sourceHash": "fnv1a64:fa7ceefb641e2e25",
+  "sourceHash": "fnv1a64:9a9755df8f85e956",
   "lessonIds": [
     "KA-C276-bai",
     "KA-C276-regisu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch276.txt",
   "json": "kannada/narration/ch276.json",
-  "textHash": "fnv1a64:84874d45caf3d4d1",
-  "jsonHash": "fnv1a64:8ebaede1ce0d3dd1",
+  "textHash": "fnv1a64:4e9bfe9667971b2d",
+  "jsonHash": "fnv1a64:62219dde17126a6c",
   "findings": []
 }

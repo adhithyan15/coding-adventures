@@ -14,7 +14,8 @@ romanization: "sapnā"
 concept_tag: HI-THG223-SAPNA
 prerequisites: [HI-C223-adat, HI-C223-sauq]
 sounds: []
-roots: []
+roots: [sanskrit-svapna]
+etymology_hook: "sapnā: from Sanskrit svapna 'sleep, dream' (CDIAL 13904); CDIAL does not list the Hindi form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C223-sauq]
 <!-- hl-knowledge: introduces=[HI-LEX-C223-THG223-03]; assesses=[] -->
 
 **सपना** — *sapnā* — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सपना** (*sapnā*) goes back to Sanskrit *svapna*, "sleep, dream" (CDIAL 13904), though CDIAL does not list the Hindi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

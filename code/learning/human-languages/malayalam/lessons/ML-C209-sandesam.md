@@ -14,7 +14,8 @@ romanization: "sandēśaṁ"
 concept_tag: ML-VASTU209-SANDESAM
 prerequisites: [ML-C209-masala, ML-C209-cemmin]
 sounds: []
-roots: []
+roots: [sanskrit-sandesha]
+etymology_hook: "sandēśaṁ ← Sanskrit saṁdēśa 'message, information', a tatsama (CDIAL 12904)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C209-cemmin]
 <!-- hl-knowledge: introduces=[ML-LEX-C209-VASTU209-05]; assesses=[] -->
 
 **സന്ദേശം** — *sandēśaṁ* — "a message".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സന്ദേശം** (*sandēśaṁ*) ← Sanskrit *saṁdēśa*, "message, information", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 12904).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

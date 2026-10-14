@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 211,
-  "sourceHash": "fnv1a64:23d9f8517b03a9c2",
+  "sourceHash": "fnv1a64:d0994251e4a1f887",
   "lessonIds": [
     "RU-C211-myshtsa",
     "RU-C211-kost",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch211.txt",
   "json": "russian/narration/ch211.json",
-  "textHash": "fnv1a64:cde08bb0d6ae4b15",
-  "jsonHash": "fnv1a64:f0d44ec16a4c8107",
+  "textHash": "fnv1a64:b7e44f555fc4ffcf",
+  "jsonHash": "fnv1a64:c18a5b36068dc7dc",
   "findings": []
 }

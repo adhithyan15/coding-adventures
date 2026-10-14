@@ -14,7 +14,8 @@ romanization: "pesók"
 concept_tag: RU-NATURE3-SAND
 prerequisites: [RU-C56-sea, RU-C57-stone]
 sounds: []
-roots: []
+roots: [slavic-pesuku]
+etymology_hook: "песок ← Proto-Slavic *pěsŭkŭ; Sanskrit pāṃsu 'dust, sand' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C57-stone]
 <!-- hl-knowledge: introduces=[RU-LEX-C57-NATURE3-02]; assesses=[] -->
 
 **песок** (*pesók*) — "sand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**песок** ← Proto-Slavic *\*pěsŭkŭ* — inherited, a cousin of Sanskrit *pāṃsú-*, "dust, sand", and Avestan *pąsnu-* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

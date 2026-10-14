@@ -14,7 +14,8 @@ romanization: "gaḍiyāraṁ"
 concept_tag: TE-THINGS111-GADIYARAM
 prerequisites: [TE-C111-tuvvalu, TE-C111-kallajodu, TE-C16-nelalu, TE-C10-vaaram]
 sounds: []
-roots: []
+roots: [hindustani-ghariyal]
+etymology_hook: "gaḍiyāraṁ ← Hindustani ghaṛiyāl 'gong, clock', from Sanskrit ghaṭikā 'water-clock'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C111-kallajodu]
 <!-- hl-knowledge: introduces=[TE-LEX-C111-THINGS111-05]; assesses=[] -->
 
 **గడియారం** — *gaḍiyāraṁ* — "a clock, a watch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గడియారం** (*gaḍiyāraṁ*) is a loan from Hindustani *ghaṛiyāl*, "gong, clock", from Sanskrit *ghaṭikā*, the little pot that measured time as a water-clock.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

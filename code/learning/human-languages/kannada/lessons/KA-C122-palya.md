@@ -14,7 +14,8 @@ romanization: "palya"
 concept_tag: KA-THINGS122-PALYA
 prerequisites: [KA-C121-saru, KA-C121-sambaru]
 sounds: []
-roots: []
+roots: [kannada-palya-dish]
+etymology_hook: "palya: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C121-sambaru]
 <!-- hl-knowledge: introduces=[KA-LEX-C122-THINGS122-01]; assesses=[] -->
 
 **ಪಲ್ಯ** — *palya* — "a dry vegetable dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಪಲ್ಯ** (*palya*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

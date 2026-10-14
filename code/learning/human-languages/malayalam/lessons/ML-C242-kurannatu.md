@@ -14,7 +14,8 @@ romanization: "kuṟaññatŭ"
 concept_tag: ML-KARANAM242-KURANNATU
 prerequisites: [ML-C241-ennirunnalum, ML-C241-enkil]
 sounds: []
-roots: []
+roots: [dravidian-kuru-short]
+etymology_hook: "kuṟaññatŭ: native Dravidian, 'what is least', from the verb 'to dwindle' (DEDR 1851)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C241-enkil]
 <!-- hl-knowledge: introduces=[ML-LEX-C242-KARANAM242-01]; assesses=[] -->
 
 **കുറഞ്ഞത്** — *kuṟaññatŭ* — "at least".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുറഞ്ഞത്** (*kuṟaññatŭ*) is native Dravidian, "the least amount", from the verb "to dwindle, be little" (DEDR 1851, with Tamil *kuṟu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

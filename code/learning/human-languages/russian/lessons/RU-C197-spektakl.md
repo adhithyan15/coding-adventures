@@ -14,7 +14,8 @@ romanization: "spektákl"
 concept_tag: RU-VESHCH197-SPEKTAKL
 prerequisites: [RU-C197-khobbi, RU-C197-vystavka]
 sounds: []
-roots: []
+roots: [spectaculum-latin]
+etymology_hook: "спектакль ← French spectacle, Latin spectaculum 'a show', perhaps through German"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C197-vystavka]
 <!-- hl-knowledge: introduces=[RU-LEX-C197-VESHCH197-03]; assesses=[] -->
 
 **спектакль** (*spektákl*) — "a play, a show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**спектакль** comes from French *spectacle*, from Latin *spectāculum*, "a show", perhaps through German *Spektakel* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

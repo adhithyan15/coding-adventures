@@ -11,6 +11,7 @@ concept_tag: ES-ASK-GRADO
 prerequisites: [ES-C468-chaqueta, ES-C465-temperatura, ES-C60-repaso-grado]
 sounds: [stress-penultimate, r-tap]
 roots: [gradus-latin]
+etymology_hook: "grado ← Latin gradus 'a step' — English grade, degree, gradual"
 duration:
   max_seconds: 275
 requires:

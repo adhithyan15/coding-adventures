@@ -14,7 +14,8 @@ gloss: "a flag"
 concept_tag: ML-ANCHOR-KODI
 prerequisites: [ML-S122-letter-ya]
 sounds: []
-roots: []
+roots: [dravidian-koti-top]
+etymology_hook: "koṭi: native Dravidian, one word with Tamil koṭi and Kannada kuḍi (DEDR 2049)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *koṭi*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ൊ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൊടി** (*koṭi*) is native Dravidian, one word with Tamil *koṭi*, Kannada *kuḍi* and Telugu *koḍi* (DEDR 2049). The same word means the top or tip of a thing, and a flag flies at the top.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-KODI] -->

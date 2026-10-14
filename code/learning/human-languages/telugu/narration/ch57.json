@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6c8ff514ed095e02",
+  "sourceHash": "fnv1a64:04b1721f1f90acc2",
   "lessons": [
     {
       "id": "TE-C57-neck",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea4210493a2724e2",
+      "sourceHash": "fnv1a64:12e90d924057c03c",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మెడ (meḍa) is native Dravidian, one word with Tamil miṭaṟu, \"neck, throat\", and Kannada meṭre, \"throat\" (DEDR 4847). DEDR compares Prakrit maḍa, \"neck\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:307080ad5ab452b7",
+      "sourceHash": "fnv1a64:0abbe6c922b03ce0",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వీపు (vīpu) is native Dravidian. DEDR 5455 lists the Telugu word for \"the back\" in an entry with Kota and Kolami words for the backbone."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +298,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5baf648abdf84d88",
+      "sourceHash": "fnv1a64:4f6595cdcab4e9ed",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +374,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పెదవి (pedavi) is native Dravidian, one word with Kolami pedave, \"lip\" (DEDR 4400). DEDR lists no Tamil or Kannada match."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +395,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2a41c0a62c154f7",
+      "sourceHash": "fnv1a64:e091c117a27eb476",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +529,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గోరు (gōru) is native Dravidian, one word with Tamil ukir and Kannada ugur, \"nail, claw\" (DEDR 561). The Telugu form has a g- in front, like its Gondi and Kui cousins."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +550,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +608,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff75c7abbe8c83a2",
+      "sourceHash": "fnv1a64:532da3932f019977",
       "notice": null,
       "blocks": [
         {
@@ -640,6 +684,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎముక (emuka) is native Dravidian, one word with Tamil elumpu and Kannada elubu, \"bone\" (DEDR 839). DEDR compares Sanskrit eḍūka, \"a monument holding bones\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +705,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +763,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

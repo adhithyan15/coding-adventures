@@ -14,7 +14,8 @@ romanization: "padunaina"
 concept_tag: TE-GUNAM221-PADUNAINA
 prerequisites: [TE-C221-leta, TE-C221-gundrani]
 sounds: []
-roots: []
+roots: [dravidian-patam-fitness, tamil-aaku-become]
+etymology_hook: "padunaina: native padunu 'sharpness' (DEDR 3907) + aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C221-gundrani]
 <!-- hl-knowledge: introduces=[TE-LEX-C221-GUNAM221-05]; assesses=[] -->
 
 **పదునైన** — *padunaina* — "sharp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పదునైన** (*padunaina*) is native Dravidian: *padunu*, "sharpness", one word with Kannada *pada*, "keenness of edge" (DEDR 3907), with *aina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

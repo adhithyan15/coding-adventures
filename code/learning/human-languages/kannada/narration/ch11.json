@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5a186fd3603a977c",
+  "sourceHash": "fnv1a64:52fe0fbd41f636a2",
   "lessons": [
     {
       "id": "KA-C11-bannagalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f426dede20e22e6",
+      "sourceHash": "fnv1a64:2402ee82e8aace9a",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಪ್ಪು (kappu) is native Dravidian (DEDR 1395, with Tamil kaṟuppu), ಬಿಳಿ (biḷi) is native too (DEDR 5496, with Tamil veḷ), and so is ಕೆಂಪು (kempu) (DEDR 1931, with Telugu kempu). ನೀಲಿ (nīli) comes from Sanskrit nīla, \"dark blue\" (CDIAL 7563). DEDR 1395 compares Sanskrit karparī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "You'll want to know: The familiar borrowed blue",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

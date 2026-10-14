@@ -14,7 +14,8 @@ romanization: "shossé"
 concept_tag: RU-MESTO183-SHOSSE
 prerequisites: [RU-C183-trotuar, RU-C183-doroga]
 sounds: []
-roots: []
+roots: [calx-latin]
+etymology_hook: "шоссе ← French chaussée, through German Chaussee, from Latin calciata (via) 'a road paved with lime'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C183-doroga]
 <!-- hl-knowledge: introduces=[RU-LEX-C183-MESTO183-04]; assesses=[] -->
 
 **шоссе** (*shossé*) — "a highway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шоссе** came through German *Chaussée* or straight from French *chaussée*, "a paved road", from Latin *calciāta (via)*, "a road laid with lime" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

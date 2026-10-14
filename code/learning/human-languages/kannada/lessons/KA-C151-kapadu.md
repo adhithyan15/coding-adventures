@@ -14,7 +14,8 @@ romanization: "kāpāḍu"
 concept_tag: KA-VERB-KAPADU
 prerequisites: [KA-C151-solu, KA-C151-baccidu]
 sounds: []
-roots: []
+roots: [dravidian-kaa-guard, dravidian-aadu-move]
+etymology_hook: "kāpāḍu: native kāpu 'guarding' (DEDR 1416) + āḍu 'to do, move' (DEDR 347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C151-baccidu]
 <!-- hl-knowledge: introduces=[KA-LEX-C151-ACT151-04]; assesses=[] -->
 
 **ಕಾಪಾಡು** — *kāpāḍu* — "to protect, to save".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾಪಾಡು** (*kāpāḍu*) is native Dravidian: *kāpu*, "guarding, protection", which DEDR 1416 lists under *kā*, "to guard" (Tamil *kā*), and *āḍu*, "to move, act" (DEDR 347).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

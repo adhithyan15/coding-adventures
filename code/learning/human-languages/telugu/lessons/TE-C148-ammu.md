@@ -14,7 +14,8 @@ romanization: "ammu"
 concept_tag: TE-VERB-AMMU
 prerequisites: [TE-C148-arpu, TE-C148-padu]
 sounds: []
-roots: []
+roots: [dravidian-ammu-sell]
+etymology_hook: "ammu: native Dravidian; DEDR 186 lists ammu 'to sell'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C148-padu]
 <!-- hl-knowledge: introduces=[TE-LEX-C148-ACT148-05]; assesses=[] -->
 
 **అమ్ము** — *ammu* — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అమ్ము** (*ammu*) is native Dravidian. DEDR 186 lists *ammu*, "to sell", and *ammakamu*, "sale".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

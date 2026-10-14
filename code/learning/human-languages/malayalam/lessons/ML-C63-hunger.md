@@ -11,7 +11,8 @@ romanization: "viśappŭ"
 concept_tag: ML-NOUN-HUNGER
 prerequisites: [ML-C62-winnowing-tray, ML-C61-coconut]
 sounds: []
-roots: []
+roots: [dravidian-vicarppu-hunger]
+etymology_hook: "viśappŭ: native Dravidian, a noun from the verb 'to be hungry'; Tamil vicarppu (DEDR 5384)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, built off *viśakkuka*, the word for going hungry — the stat
 Tamil reaches for a different root here, *paci*, so this is one of the places where the two closest sisters part company on an everyday word.
 
 You already have the part of the body it reports from: *vayaṟŭ*, the stomach. One is the place, this is the message.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിശപ്പ്** (*viśappŭ*) is native Dravidian, a noun from the verb "to be hungry"; DEDR 5384 lists the root with Tamil *vicarppu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

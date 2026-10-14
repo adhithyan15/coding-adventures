@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to remember, then the Kannada for to pri
 You'll want to know: ದೂರು ಕೊಡು.
 ದೂರು ಕೊಡು — dūru koḍu — "to complain, to lodge a complaint".
 
+The word, taken apart.
+ದೂರು ಕೊಡು (dūru koḍu) is native Dravidian: dūru, "blame, complaint", which DEDR 3397 lists as dūṟu, and koḍu, "to give" (DEDR 2053): "to give a complaint".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to print, then the Kannada for to compla
 
 You'll want to know: ನೋಂದಾಯಿಸು.
 ನೋಂದಾಯಿಸು — nōndāyisu — "to register".
+
+The word, taken apart.
+The origin of ನೋಂದಾಯಿಸು (nōndāyisu) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to complain, then the Kannada for to reg
 You'll want to know: ಮುಂದುವರಿಸು.
 ಮುಂದುವರಿಸು — munduvarisu — "to continue".
 
+The word, taken apart.
+ಮುಂದುವರಿಸು (munduvarisu) begins with native mundu, "ahead, onward" (DEDR 5020). DEDR does not explain the second part, -varisu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to register, then the Kannada for to con
 You'll want to know: ಸಂಪರ್ಕಿಸು.
 ಸಂಪರ್ಕಿಸು — samparkisu — "to contact".
 
+The word, taken apart.
+ಸಂಪರ್ಕಿಸು (samparkisu) is Sanskrit samparka, "mixing together, contact" (CDIAL 12936), made into a Kannada verb with -isu.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to continue, then the Kannada for to con
 
 You'll want to know: ಚರ್ಚಿಸು.
 ಚರ್ಚಿಸು — carcisu — "to discuss".
+
+The word, taken apart.
+ಚರ್ಚಿಸು (carcisu) is Sanskrit carcā, "repetition, discussion" (CDIAL 4695), made into a Kannada verb with -isu.
 
 What you've built.
 One more word for this chapter.

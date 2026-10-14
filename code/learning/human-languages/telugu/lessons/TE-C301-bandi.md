@@ -14,7 +14,8 @@ romanization: "baṇḍi"
 concept_tag: TE-VASTUVU301-BANDI
 prerequisites: [TE-C300-cetirumalu, TE-C301-nighantuvu]
 sounds: []
-roots: []
+roots: [dravidian-vandi-cart]
+etymology_hook: "baṇḍi: an Indo-Aryan loan (DEDR App. 50), with Tamil vaṇṭi 'cart'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C301-nighantuvu]
 <!-- hl-knowledge: introduces=[TE-LEX-C301-VASTUVU301-02]; assesses=[] -->
 
 **బండి** — *baṇḍi* — "a cart; a vehicle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బండి** (*baṇḍi*) is listed in DEDR's appendix of words taken from Indo-Aryan (DEDR App. 50), with Tamil *vaṇṭi* and Kannada *baṇḍi*, "cart".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

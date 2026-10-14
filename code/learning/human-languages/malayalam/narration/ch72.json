@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "The Thing Said",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:85c7afdacd174ab6",
+  "sourceHash": "fnv1a64:f4fb4cfb4f2665cc",
   "lessons": [
     {
       "id": "ML-C72-ennu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fbeeba451a632a36",
+      "sourceHash": "fnv1a64:c3e285e75aa420fa",
       "notice": null,
       "blocks": [
         {
@@ -74,6 +74,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എന്ന് (ennŭ) is native Dravidian, a form of the verb \"to say, to sound\"; DEDR 868 lists the root with Tamil eṉ and Kannada en."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: where it sits",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -151,7 +162,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -182,7 +193,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13bdde45bcdd5f8f",
+      "sourceHash": "fnv1a64:391bd5fee2b29e98",
       "notice": null,
       "blocks": [
         {
@@ -252,6 +263,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എന്ന് ചിന്തിക്കുന്നു (ennŭ cintikkunnu) joins native ennŭ, a form of the verb \"to say\" (DEDR 868, with Tamil eṉ), to a verb built on Sanskrit cintā, \"thought, care\" (CDIAL 4816)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -300,7 +322,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

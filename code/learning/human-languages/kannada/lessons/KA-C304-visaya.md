@@ -14,7 +14,8 @@ romanization: "viṣaya"
 concept_tag: KA-KELASA304-VISAYA
 prerequisites: [KA-C304-parikse, KA-C304-tarabeti]
 sounds: []
-roots: []
+roots: [sanskrit-vishaya]
+etymology_hook: "viṣaya ← Sanskrit viṣaya 'scope, sphere', a tatsama (CDIAL 11973)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C304-tarabeti]
 <!-- hl-knowledge: introduces=[KA-LEX-C304-KELASA304-04]; assesses=[] -->
 
 **ವಿಷಯ** — *viṣaya* — "a subject, a topic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿಷಯ** (*viṣaya*) is Sanskrit *viṣaya*, "scope, sphere", taken over whole as a learned loan, a tatsama (CDIAL 11973).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

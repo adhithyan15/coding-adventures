@@ -14,7 +14,8 @@ romanization: "ghumānā"
 concept_tag: HI-VERB-GHUMANA
 prerequisites: [HI-C228-pakrana, HI-C228-dabana]
 sounds: []
-roots: []
+roots: [indo-aryan-ghummati]
+etymology_hook: "ghumānā: the causing form of ghūmnā 'to wander', from *ghummati 'revolves' (CDIAL 4485)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C228-dabana]
 <!-- hl-knowledge: introduces=[HI-LEX-C228-ACT228-05]; assesses=[] -->
 
 **घुमाना** — *ghumānā* — "to turn, to show around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घुमाना** (*ghumānā*) is the causing form of *ghūmnā*, "to wander, revolve", which CDIAL lists under a reconstructed *\*ghummati*, "revolves" (CDIAL 4485).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

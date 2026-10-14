@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b79c287a941309dc",
+  "sourceHash": "fnv1a64:f9bcec5e2df7e067",
   "lessons": [
     {
       "id": "KA-C04-hoogu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6871b7870fd38a02",
+      "sourceHash": "fnv1a64:9d2e12f892bef6a3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -67,6 +67,10 @@
             {
               "kind": "speech",
               "text": "ಹೋಗು (hōgu, \"to go\") and bā (\"come\") are native Dravidian verbs. As commands they are whole words: hōgu! (\"go!\"), bā! (\"come!\"). You need both, because Kannada — like every Dravidian language — does not say a plain \"goodbye.\" It says \"I go, and I come back.\""
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 4572 lists Kannada pōgu, hōgu with Tamil pō; DEDR 5270 lists bar, bā with Tamil varu, vā."
             }
           ]
         },
@@ -311,7 +315,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7ce0e9ba24860ccf",
+      "sourceHash": "fnv1a64:10c6ce497fd3535b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -359,6 +363,10 @@
             {
               "kind": "speech",
               "text": "ಹೋಗಿ ಬರುತ್ತೇನೆ (hōgi baruttēne) = ಹೋಗಿ (hōgi, \"having gone\") + ಬರುತ್ತೇನೆ (baruttēne, \"I come\") — literally \"having gone, I come [back],\" i.e. \"I'll go and come back.\" A Kannada speaker never signs off with a bare \"I'm leaving\" — it sounds final. It is the same \"go-and-come-back\" farewell across the Dravidian south (Tamil pōy varugiṟēṉ, Telugu veḷḷi vastānu, Malayalam pōyi varāṁ). The warm reply is ಹೋಗಿ ಬನ್ನಿ (hōgi banni, \"go and come [back]\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Both verbs are native Dravidian: hōgu (DEDR 4572) and baru, \"come\" (DEDR 5270), the same pair as Tamil pō and varu."
             }
           ]
         },
@@ -472,7 +480,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aa36501ac2e5620e",
+      "sourceHash": "fnv1a64:f3da7ef1987dd7cf",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -520,6 +528,10 @@
             {
               "kind": "speech",
               "text": "ನಾಳೆ (nāḷe, \"tomorrow\") is native Dravidian, from ನಾಳ್ (nāḷ, \"day\") — the very same nāḷ behind Tamil's nāḷai. ಸಿಗೋಣ (sigōṇa, \"let's meet\") is from ಸಿಗು (sigu, \"to meet, to be found\") — so the phrase is \"tomorrow, let's meet.\" The -ōṇa ending is Kannada's warm \"let's ___\": hōgōṇa (\"let's go\"), tinnōṇa (\"let's eat\")."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 3656 lists nāḷe itself with Tamil nāḷai; DEDR 2498 lists sigu, \"to be caught, be got\", with Tamil cikku."
             }
           ]
         },
@@ -595,7 +607,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:64d89b1b32d09699",
+      "sourceHash": "fnv1a64:002c05b6395770ec",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -643,6 +655,10 @@
             {
               "kind": "speech",
               "text": "ಮತ್ತೆ ಸಿಗೋಣ (matte sigōṇa) = ಮತ್ತೆ (matte, \"again\") + ಸಿಗೋಣ (sigōṇa, \"let's meet\") — \"we'll meet again.\" Both words are native Dravidian: matte (\"again\") and sigu (\"to meet\"). Where Tamil's \"we'll meet again\" (mīṇḍum sandippōm) reaches for the Sanskrit loan sandi to say \"meet,\" Kannada keeps the native sigu — the same phrase, from home-grown stock."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 4766 lists matte with Tamil maṟṟu, \"other, again\"; DEDR 2498 lists sigu with Tamil cikku."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 271,
-  "sourceHash": "fnv1a64:c858746097e9e255",
+  "sourceHash": "fnv1a64:6eaab43599e10a3a",
   "lessonIds": [
     "TE-C271-sunnam",
     "TE-C271-penku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch271.txt",
   "json": "telugu/narration/ch271.json",
-  "textHash": "fnv1a64:b009e5911ba35d67",
-  "jsonHash": "fnv1a64:7abe8586f0788ec8",
+  "textHash": "fnv1a64:0165ca94e5722a39",
+  "jsonHash": "fnv1a64:849a624e18261b18",
   "findings": []
 }

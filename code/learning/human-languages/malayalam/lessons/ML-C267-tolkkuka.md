@@ -14,7 +14,8 @@ romanization: "tōlkkuka"
 concept_tag: ML-VERB-TOLKKUKA
 prerequisites: [ML-C267-parisilikkuka, ML-C267-jayikkuka]
 sounds: []
-roots: []
+roots: [dravidian-tol-defeat]
+etymology_hook: "tōlkkuka: native Dravidian, one word with Tamil tōl (DEDR 3558)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C267-jayikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C267-KRIYA267-03]; assesses=[] -->
 
 **തോൽക്കുക** — *tōlkkuka* — "to fail, to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തോൽക്കുക** (*tōlkkuka*) is native Dravidian, one word with Tamil *tōl* (DEDR 3558).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

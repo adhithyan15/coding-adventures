@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 511,
-  "sourceHash": "fnv1a64:6de17a759559cc6c",
+  "sourceHash": "fnv1a64:1371ea6568e0f65e",
   "lessonIds": [
     "ES-C511-parecer",
     "ES-C511-mantener",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "spanish/narration/ch511.txt",
   "json": "spanish/narration/ch511.json",
-  "textHash": "fnv1a64:0c4a64875794126f",
-  "jsonHash": "fnv1a64:af67f123261496f5",
+  "textHash": "fnv1a64:f3547dee40ec7727",
+  "jsonHash": "fnv1a64:593eb1480b69185f",
   "findings": []
 }

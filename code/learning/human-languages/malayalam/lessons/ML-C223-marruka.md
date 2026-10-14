@@ -14,7 +14,8 @@ romanization: "māṟṟuka"
 concept_tag: ML-VERB-MARRUKA
 prerequisites: [ML-C223-dharikkuka, ML-C223-uruka]
 sounds: []
-roots: []
+roots: [dravidian-maru-change]
+etymology_hook: "māṟṟuka: native Dravidian, 'make change', from the verb to be changed; Tamil māṟu (DEDR 4834)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C223-uruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C223-KRIYA223-05]; assesses=[] -->
 
 **മാറ്റുക** — *māṟṟuka* — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മാറ്റുക** (*māṟṟuka*) is native Dravidian, the causative of the verb "to be changed"; DEDR 4834 lists the root with Tamil *māṟu*, Kannada *māṟu* and Telugu *māṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

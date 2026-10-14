@@ -14,6 +14,9 @@ You'll want to know.
 ഇന്ന് ഞാൻ പോകുന്നു. — innŭ ñān pōkunnu — "Today I go."
 The word goes in front, before the person and the verb. That is where a time word sits in this language, and you have been putting things there since you learned to say now.
 
+The word, taken apart.
+ഇന്ന് (innŭ) is native Dravidian, built on the near-pointing base, "this (day)": DEDR 410 lists it with Tamil iṉṟu and Kannada indu.
+
 What you've built.
 This is smaller than it looks and it opens more than it looks.
 Every sentence you have made so far has floated free of any particular day. You could say that you go, that you went, that you will go — and nothing in the sentence said when. A listener had to guess from the room.
@@ -51,6 +54,7 @@ They begin the same way. Yesterday is today with something added on the end — 
 
 The word, taken apart.
 You do not have to take it apart to use it, and you should not force a story onto the tail. What is worth seeing is the shared front, because it is what will make the pair easy to keep apart from tomorrow, which begins somewhere else entirely.
+Where the word comes from. It is native Dravidian: DEDR 3758 lists Malayalam innalē, "yesterday", in the same entry as Tamil nerunal, "yesterday".
 
 Guided Practice.
 [pause 1 second]

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 195,
-  "sourceHash": "fnv1a64:058cc5ee661163e1",
+  "sourceHash": "fnv1a64:4e672bdf805c94c9",
   "lessonIds": [
     "KA-C195-sulka",
     "KA-C195-khate",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch195.txt",
   "json": "kannada/narration/ch195.json",
-  "textHash": "fnv1a64:1b46240f2618041f",
-  "jsonHash": "fnv1a64:7b6205a8f3aa6ebc",
+  "textHash": "fnv1a64:a111a6cc38837ddd",
+  "jsonHash": "fnv1a64:0e88634ae8e41101",
   "findings": []
 }

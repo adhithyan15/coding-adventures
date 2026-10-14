@@ -13,7 +13,8 @@ gloss: "a book-roll"
 concept_tag: LA-RES278-VOLUMEN
 prerequisites: [LA-C277-sagitta, LA-C277-tuba]
 sounds: []
-roots: []
+roots: [volumen-latin, volvere-latin]
+etymology_hook: "volūmen 'book-roll' — built on volvō 'to roll'; English volume"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C277-tuba]
 <!-- hl-knowledge: introduces=[LA-LEX-C278-RES278-01]; assesses=[] -->
 
 **volūmen, volūminis** — "a book-roll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**volūmen** is built on *volvō*, "to roll" (Lewis & Short), with *-men*, an ending for a result: something rolled up. *volvō* is usually traced to Proto-Indo-European *\*welw-*, "to roll" (EtymDB 2.1). English *volume* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pólka"
 concept_tag: RU-THINGS95-SHELF
 prerequisites: [RU-C94-shower, RU-C95-bathtub]
 sounds: []
-roots: []
+roots: [slavic-pol-floor]
+etymology_hook: "полка is short for полица, from пол 'floor, board'; Sanskrit phalaka 'board' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C95-bathtub]
 <!-- hl-knowledge: introduces=[RU-LEX-C95-THINGS95-02]; assesses=[] -->
 
 **полка** (*pólka*) — "a shelf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**полка** comes from *полица*, "a shelf", built on *пол*, "floor, board" (Vasmer), which Vasmer relates to Sanskrit *phálakam*, "a board, a plank".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

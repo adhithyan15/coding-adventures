@@ -14,7 +14,8 @@ romanization: "kiṭaki"
 concept_tag: KA-THINGS137-KITAKI
 prerequisites: [KA-C136-hubbu, KA-C137-meju, KA-C76-modala-oduvike]
 sounds: []
-roots: []
+roots: [hindustani-khirki]
+etymology_hook: "kiṭaki ← Hindustani khiṛkī 'window'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [KA-C137-meju]
 <!-- hl-knowledge: introduces=[KA-LEX-C137-THINGS137-02]; assesses=[] -->
 
 **ಕಿಟಕಿ** — *kiṭaki* — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಿಟಕಿ** (*kiṭaki*) came from Hindustani *khiṛkī*, "window". Its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

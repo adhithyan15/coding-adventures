@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 277,
-  "sourceHash": "fnv1a64:1df1df2e07d242ce",
+  "sourceHash": "fnv1a64:665c721d23831589",
   "lessonIds": [
     "KA-C277-uhisu",
     "KA-C277-anisu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch277.txt",
   "json": "kannada/narration/ch277.json",
-  "textHash": "fnv1a64:a1583d5031ede993",
-  "jsonHash": "fnv1a64:108cdd7f84689945",
+  "textHash": "fnv1a64:94d20caf398b6373",
+  "jsonHash": "fnv1a64:3458e88554b62b9e",
   "findings": []
 }

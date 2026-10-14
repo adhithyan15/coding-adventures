@@ -14,7 +14,8 @@ romanization: "endukō"
 concept_tag: TE-KARANAM295-ENDUKO
 prerequisites: [TE-C295-akaram, TE-C295-endukaina]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "endukō: native enduku 'why' (DEDR 5151) + -ō"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C295-endukaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C295-KARANAM295-04]; assesses=[] -->
 
 **ఎందుకో** — *endukō* — "for some reason".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎందుకో** (*endukō*) is native Dravidian: *enduku*, "for what, why", on the question base *e-* (DEDR 5151), with the doubting ending *-ō*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

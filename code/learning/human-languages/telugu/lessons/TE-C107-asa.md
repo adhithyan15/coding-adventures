@@ -14,7 +14,8 @@ romanization: "āśa"
 concept_tag: TE-WANT107-ASA
 prerequisites: [TE-C106-balam, TE-C107-korika]
 sounds: []
-roots: []
+roots: [sanskrit-asha]
+etymology_hook: "āśa ← Sanskrit āśā 'wish, expectation', a tatsama (CDIAL 1456)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C107-korika]
 <!-- hl-knowledge: introduces=[TE-LEX-C107-WANT107-02]; assesses=[] -->
 
 **ఆశ** — *āśa* — "hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆశ** (*āśa*) is Sanskrit *āśā*, "wish, expectation", taken over whole as a learned loan, a tatsama, with the final *-ā* shortened (CDIAL 1456).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

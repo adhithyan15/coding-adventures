@@ -13,7 +13,8 @@ gloss: "to shout"
 concept_tag: LA-VERB-CLAMO
 prerequisites: [LA-C165-salio, LA-C165-subrideo]
 sounds: []
-roots: []
+roots: [clamare-latin]
+etymology_hook: "clāmō 'to shout' — usually traced to PIE *kelh1- 'to call'; Greek kaleō 'to call' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C165-subrideo]
 <!-- hl-knowledge: introduces=[LA-LEX-C165-ACT165-05]; assesses=[] -->
 
 **clāmō, clāmāre** — "to shout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**clāmō** is inherited, usually traced to Proto-Indo-European *\*kelh1-*, "to call, to shout" (EtymDB 2.1); Greek *kaleō*, "to call", and *clārus*, "clear, loud", are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

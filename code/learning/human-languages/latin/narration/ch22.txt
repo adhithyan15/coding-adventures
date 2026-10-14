@@ -18,6 +18,9 @@ Vōs = "you," addressing more than one person — plain plural, nothing more.
 Why it's said this way: The honest historical twist: no politeness distinction yet.
 Here's the real teaching point: in Classical Latin, this is a purely grammatical number distinction. There is no formal/informal dimension at all — using vōs to politely address a single powerful person had not yet started. That habit — plural pronoun used respectfully for one person — only developed later, in Late Latin, well after the classical period. It's the direct ancestor of French's polite vous. Careful, though: it is not the ancestor of German's Sie from the last lesson — Sie solves the same politeness problem in a completely different way, by repurposing an unrelated pronoun (3rd-person plural "they"), not by descending from vōs at all. Classical Romans simply didn't have this option yet: one person was always tū, no matter how important they were — though Romans still had other ways to show deference, like respectful titles (domine, "sir/lord"), just not through the pronoun itself.
 
+The words, taken apart.
+tū is inherited, usually traced to Proto-Indo-European tuh2, "you" (EtymDB 2.1), a cousin of English thou. vōs "you all" is usually traced to Proto-Italic wos, "you all" (EtymDB 2.1).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "tū" — you, singular, one person]

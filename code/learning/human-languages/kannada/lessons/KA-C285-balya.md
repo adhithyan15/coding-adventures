@@ -14,7 +14,8 @@ romanization: "bālya"
 concept_tag: KA-KALA285-BALYA
 prerequisites: [KA-C285-mukkalu, KA-C285-marudina]
 sounds: []
-roots: []
+roots: [sanskrit-bala-child]
+etymology_hook: "bālya ← Sanskrit bālya 'childhood', from bāla 'young, a boy' (CDIAL 9216)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C285-marudina]
 <!-- hl-knowledge: introduces=[KA-LEX-C285-KALA285-03]; assesses=[] -->
 
 **ಬಾಲ್ಯ** — *bālya* — "childhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಾಲ್ಯ** (*bālya*) is Sanskrit *bālya*, "childhood", built on *bāla*, "young; a boy" (CDIAL 9216).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

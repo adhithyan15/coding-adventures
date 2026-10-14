@@ -4,7 +4,7 @@
   "chapter": 210,
   "title": "Synthesis --- Supposing Out Loud",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f2fce94458cbde86",
+  "sourceHash": "fnv1a64:682f490c68533ec8",
   "lessons": [
     {
       "id": "ES-C56-sintesis-condiciones",
@@ -232,7 +232,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fa276079b976646",
+      "sourceHash": "fnv1a64:aa1901164abfd85d",
       "notice": null,
       "blocks": [
         {

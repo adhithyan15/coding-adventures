@@ -14,7 +14,8 @@ romanization: "darjan"
 concept_tag: HI-THG245-DARJAN
 prerequisites: [HI-C245-sab, HI-C245-kuch]
 sounds: []
-roots: []
+roots: [english-dozen]
+etymology_hook: "darjan ← English dozen"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C245-kuch]
 <!-- hl-knowledge: introduces=[HI-LEX-C245-THG245-04]; assesses=[] -->
 
 **दर्जन** — *darjan* — "a dozen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दर्जन** (*darjan*) is a loan from English *dozen*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

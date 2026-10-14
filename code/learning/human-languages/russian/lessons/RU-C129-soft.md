@@ -14,7 +14,8 @@ romanization: "myákhkiy"
 concept_tag: RU-QUAL129-SOFT
 prerequisites: [RU-C128-wet, RU-C128-dry]
 sounds: []
-roots: []
+roots: [slavic-moka]
+etymology_hook: "мягкий ← Proto-Slavic *mękŭkŭ; Lithuanian minkštas 'soft' is a cousin, and мука 'flour' shares its root"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C128-dry]
 <!-- hl-knowledge: introduces=[RU-LEX-C129-QUAL129-01]; assesses=[] -->
 
 **мягкий** (*myákhkiy*) — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мягкий** ← Proto-Slavic *\*mękŭkŭ* — inherited. Vasmer relates it to Lithuanian *mìnkštas*, "soft", and *mìnkyti*, "to knead", and Greek *mássō*, "I knead"; *мука*, "flour", shares its root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

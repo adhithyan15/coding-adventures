@@ -14,7 +14,8 @@ romanization: "jiraḷe"
 concept_tag: KA-VASTU261-JIRALE
 prerequisites: [KA-C261-alilu, KA-C261-halli]
 sounds: []
-roots: []
+roots: [dravidian-jirale-cockroach]
+etymology_hook: "jiraḷe: native Dravidian, one word with Telugu jeṟi (DEDR 2797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C261-halli]
 <!-- hl-knowledge: introduces=[KA-LEX-C261-VASTU261-05]; assesses=[] -->
 
 **ಜಿರಳೆ** — *jiraḷe* — "a cockroach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜಿರಳೆ** (*jiraḷe*) is native Dravidian, one word with Telugu *jeṟi* (DEDR 2797). DEDR lists *jiṟale* and *jeraḷe*, "cockroach".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a cupboard"
 concept_tag: LA-THINGS138-ARMARIUM
 prerequisites: [LA-C138-domina, LA-C138-amica]
 sounds: []
-roots: []
+roots: [armarium-latin, arma-latin]
+etymology_hook: "armārium 'cupboard' — built on arma 'tools, gear': a place to keep them"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C138-amica]
 <!-- hl-knowledge: introduces=[LA-LEX-C138-THINGS138-05]; assesses=[] -->
 
 **armārium, armāriī** — "a cupboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**armārium** is built on *arma*, "tools, gear" (Lewis & Short), with *-ārium*, an ending for a place to keep things.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

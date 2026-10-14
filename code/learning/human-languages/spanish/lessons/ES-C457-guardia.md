@@ -11,6 +11,7 @@ concept_tag: ES-PHARM-GUARDIA
 prerequisites: [ES-C457-encargar, ES-C383-guardar, ES-C353-farmacia]
 sounds: [g-soft-gw, diphthong-ia, stress-penultimate]
 roots: [wardon-germanic]
+etymology_hook: "guardia ← Germanic *wardon 'to watch over' — English guard, ward"
 duration:
   max_seconds: 275
 requires:
@@ -68,7 +69,7 @@ puerta* is a man standing at it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C457-GUARDIA-03, ES-LEX-GUARDAR] -->
 
-Germanic **wardōn**, to watch over — the same root as **guardar**, which you
+Germanic **\*wardōn**, to watch over — the same root as **guardar**, which you
 already have for keeping and putting away.
 
 Spanish took a shelf of Germanic words from the Visigoths and from Frankish,
@@ -78,7 +79,7 @@ and they are recognisable by the **gu-** where English has plain **w-**:
 |---|---|
 | **gu**ardar | **w**ard |
 | **gu**erra | **w**ar |
-| **gu**ante | (glove, from the same Frankish *want*) |
+| **gu**ante | (glove, from Frankish *\*want*) |
 
 English got *guard* back from French, so **guard** and **ward** are the same
 Germanic word arriving twice — once directly, once round by way of Paris.
@@ -94,6 +95,6 @@ Germanic word arriving twice — once directly, once round by way of Paris.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C457-GUARDIA-03] -->
 
-[PAUSE 3s] The duty chemist? (**La farmacia de guardia**.) What does *wardōn*
+[PAUSE 3s] The duty chemist? (**La farmacia de guardia**.) What does *\*wardōn*
 mean? (**To watch over**.) What does Spanish **gu-** often answer to in
 English? (**W-** — *guerra* and *war*.)

@@ -14,7 +14,8 @@ romanization: "spardhisu"
 concept_tag: KA-VERB-SPARDHISU
 prerequisites: [KA-C204-ale, KA-C204-maja-madu]
 sounds: []
-roots: []
+roots: [sanskrit-spardha]
+etymology_hook: "spardhisu: Sanskrit spardhā 'rivalry' + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C204-maja-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C204-KRIYE204-05]; assesses=[] -->
 
 **ಸ್ಪರ್ಧಿಸು** — *spardhisu* — "to compete".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ಪರ್ಧಿಸು** (*spardhisu*) is Sanskrit *spardhā*, "rivalry, emulation", made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 163,
   "title": "To prepare, To serve, To share, To bargain, To check",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2b575776c60314f2",
+  "sourceHash": "fnv1a64:045e11b1f0826096",
   "lessons": [
     {
       "id": "TA-C163-tayar-cey",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da41e5f31c139b15",
+      "sourceHash": "fnv1a64:d5c807f666dd1c18",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "தயார் செய் (tayār cey) is tayār, \"ready\", a loan from Arabic tayyār through Persian and Hindustani, with native sey, \"to do\" (DEDR 1957): \"make ready\"."
+              "text": "தயார் செய் (tayār cey) is tayār, \"ready\", a loan from Arabic ṭayyār, \"flying, swift\", which took the sense \"ready\" in Persian and Hindustani, with native sey, \"to do\" (DEDR 1957): \"make ready\"."
             }
           ]
         },

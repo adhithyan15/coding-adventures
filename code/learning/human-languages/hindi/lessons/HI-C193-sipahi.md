@@ -14,7 +14,8 @@ romanization: "sipāhī"
 concept_tag: HI-THG193-SIPAHI
 prerequisites: [HI-C193-adhyapak, HI-C193-vakil]
 sounds: []
-roots: []
+roots: [persian-sipahi]
+etymology_hook: "sipāhī: usually traced to Persian sipāhī 'soldier'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C193-vakil]
 <!-- hl-knowledge: introduces=[HI-LEX-C193-THG193-03]; assesses=[] -->
 
 **सिपाही** — *sipāhī* — "a soldier, a constable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सिपाही** (*sipāhī*) is a loan, usually traced to Persian *sipāhī*, "soldier". It is built on *sipāh*, "army". English took the word as *sepoy*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

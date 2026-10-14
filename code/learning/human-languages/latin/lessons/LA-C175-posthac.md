@@ -13,7 +13,8 @@ gloss: "from now on"
 concept_tag: LA-TEMP175-POSTHAC
 prerequisites: [LA-C174-animus, LA-C175-tandem]
 sounds: []
-roots: []
+roots: [posthac-latin, post-latin]
+etymology_hook: "posthāc 'from now on' — post 'after' + hāc 'this'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C175-tandem]
 <!-- hl-knowledge: introduces=[LA-LEX-C175-TEMP175-02]; assesses=[] -->
 
 **posthāc** — "from now on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**posthāc** is *post*, "after", with *hāc*, "this" (Lewis & Short): after this time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

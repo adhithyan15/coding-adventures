@@ -13,7 +13,8 @@ gloss: "breakfast"
 concept_tag: LA-CIBUS1-IENTACULUM
 prerequisites: [LA-C79-cena, LA-C79-prandium]
 sounds: []
-roots: []
+roots: [ientaculum-latin, ientare-latin]
+etymology_hook: "ientāculum 'breakfast' — built on ientō 'to have breakfast', itself of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C79-prandium]
 <!-- hl-knowledge: introduces=[LA-LEX-C79-CIBUS1-04]; assesses=[] -->
 
 **ientāculum, ientāculī** — "breakfast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ientāculum** is built on *ientō*, "to have breakfast" (Lewis & Short), with *-culum*, an ending for a thing. Where *ientō* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

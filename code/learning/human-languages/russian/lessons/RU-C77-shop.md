@@ -14,7 +14,8 @@ romanization: "magazín"
 concept_tag: RU-TOWN1-SHOP
 prerequisites: [RU-C77-city, RU-C77-street]
 sounds: []
-roots: []
+roots: [makhzan-arabic]
+etymology_hook: "магазин came through German Magasin from French magasin, 'a store', a word of Arabic origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C77-street]
 <!-- hl-knowledge: introduces=[RU-LEX-C77-TOWN1-03]; assesses=[] -->
 
 **магазин** (*magazín*) — "a shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**магазин** — first in Peter the Great's time; it came through German *Magasin* from French *magasin*, "a storehouse" (Vasmer). The French word goes back, through Italian, to Arabic *makhāzin*, "storehouses".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

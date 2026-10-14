@@ -11,7 +11,8 @@ romanization: "eṇṇa"
 concept_tag: ML-NOUN-OIL
 prerequisites: [ML-C61-coconut, ML-C59-sand]
 sounds: []
-roots: []
+roots: [dravidian-el-sesame]
+etymology_hook: "eṇṇa: native Dravidian, first 'sesame oil'; Tamil eṇ ṇey (DEDR 854)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, matching Tamil *eṇṇey*, and the older shape of it comes ap
 The seed changed and the word stayed. What a Kerala kitchen presses now is the coconut you have just met, so for most cooks the word for oil in general and the oil actually on the shelf name one thing.
 
 The doubled ണ in the middle is a long consonant: hold it, the way *katti*, the knife-word, holds its *tt*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എണ്ണ** (*eṇṇa*) is native Dravidian, from "sesame oil": the word for sesame fused with the word for oil; DEDR 854 lists the root with Tamil *eṇ* and Kannada *eṇṇe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

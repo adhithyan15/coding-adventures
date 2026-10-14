@@ -14,7 +14,8 @@ romanization: "vétka"
 concept_tag: RU-VESHCH195-VETKA
 prerequisites: [RU-C194-gorokh, RU-C195-priroda]
 sounds: []
-roots: []
+roots: [slavic-vetvi]
+etymology_hook: "ветка is from ветвь 'a bough'; Latin vitis 'vine' is a cousin of ветвь"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C195-priroda]
 <!-- hl-knowledge: introduces=[RU-LEX-C195-VESHCH195-02]; assesses=[] -->
 
 **ветка** (*vétka*) — "a branch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ветка** comes from *ветвь*, "a bough", which Vasmer puts with *вить*, "to twist", and relates to Lithuanian *vytìs*, "a willow switch", and Latin *vītis*, "a vine".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

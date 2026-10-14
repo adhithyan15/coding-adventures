@@ -14,7 +14,8 @@ romanization: "plátye"
 concept_tag: RU-THINGS103-DRESS
 prerequisites: [RU-C103-shirt, RU-C103-trousers]
 sounds: []
-roots: []
+roots: [slavic-platu]
+etymology_hook: "платье ← Old Russian платие 'clothing', a collective from плат 'a cloth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C103-trousers]
 <!-- hl-knowledge: introduces=[RU-LEX-C103-THINGS103-05]; assesses=[] -->
 
 **платье** (*plátye*) — "a dress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**платье** ← Old Russian *платие*, "clothing", an old collective noun built on *плат*, "a piece of cloth" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

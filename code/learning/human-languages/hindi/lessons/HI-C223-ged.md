@@ -14,7 +14,8 @@ romanization: "gẽd"
 concept_tag: HI-THG223-GED
 prerequisites: [HI-C223-sapna, HI-C223-khelkud]
 sounds: []
-roots: []
+roots: [sanskrit-genduka]
+etymology_hook: "gẽd ← Sanskrit genduka 'ball for play', a tadbhava (CDIAL 4248)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C223-khelkud]
 <!-- hl-knowledge: introduces=[HI-LEX-C223-THG223-05]; assesses=[] -->
 
 **गेंद** — *gẽd* — "a ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गेंद** (*gẽd*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *genduka*, "ball for play" (CDIAL 4248). CDIAL notes that the related *kanduka* has been traced to Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

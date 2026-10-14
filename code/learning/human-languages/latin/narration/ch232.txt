@@ -12,6 +12,9 @@ Before the new one: say the Latin for to complain, then the Latin for to be miss
 You'll want to know: fūror, fūrārī.
 fūror, fūrārī — "to steal".
 
+The word, taken apart.
+fūror is built on fūr, "a thief" (Lewis & Short), usually traced to Proto-Indo-European bhōr, "thief" (EtymDB 2.1), from the root of ferō, "to carry": one who carries off. It is a different word from furor, "rage".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to be missing, then the Latin for to steal
 
 You'll want to know: dētegō, dētegere.
 dētegō, dētegere — "to uncover, to discover".
+
+The word, taken apart.
+dētegō is dē, "off", with tegō, "to cover" (EtymDB 2.1): to take the cover off. English detect comes from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to steal, then the Latin for to uncover.
 You'll want to know: videor, vidērī.
 videor, vidērī — "to seem".
 
+The word, taken apart.
+videor is the passive of videō, "to see": to be seen, so to seem.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to uncover, then the Latin for to seem.
 You'll want to know: serviō, servīre.
 serviō, servīre — "to serve, to be a slave".
 
+The word, taken apart.
+serviō is the verb made from servus, "a slave" (EtymDB 2.1): to be a slave, to serve. English serve comes from it through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to seem, then the Latin for to serve.
 
 You'll want to know: patior, patī.
 patior, patī — "to suffer, to allow".
+
+The word, taken apart.
+patior has no sure origin. Lewis & Short compare Greek penthos, "grief", and EtymDB 2.1 records a proposed root pe(i)-, "to hurt", but neither link is settled. English passion and patient come from it.
 
 What you've built.
 One more word for this chapter.

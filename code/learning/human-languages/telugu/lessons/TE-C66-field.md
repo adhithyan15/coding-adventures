@@ -11,7 +11,8 @@ romanization: "polaṁ"
 concept_tag: TE-NOUN-FIELD
 prerequisites: [TE-C65-trust]
 sounds: []
-roots: []
+roots: [dravidian-pulam-field]
+etymology_hook: "polaṁ: native Dravidian, one word with Tamil pulam and Kannada pola (DEDR 4303)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C65-trust]
 The word is inherited. A గ్రామం is measured by its పొలం far more than by its houses, and directions in the country are given by whose పొలం you pass rather than by any బాట.
 
 Going out to the పొలం before ఉదయం and coming back after సాయంత్రం is the shape of the day the rest of this chapter describes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పొలం** (*polaṁ*) is native Dravidian, one word with Tamil *pulam* and Kannada *pola* (DEDR 4303). DEDR lists Telugu *polamu*, "field, cultivated land".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

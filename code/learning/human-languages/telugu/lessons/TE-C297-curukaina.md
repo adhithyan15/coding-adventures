@@ -14,7 +14,8 @@ romanization: "curukaina"
 concept_tag: TE-GUNAM297-CURUKAINA
 prerequisites: [TE-C297-mondi, TE-C297-pisinari]
 sounds: []
-roots: []
+roots: [dravidian-curukku-quick, tamil-aaku-become]
+etymology_hook: "curukaina: native curuku 'briskness' (DEDR 2713) + aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C297-pisinari]
 <!-- hl-knowledge: introduces=[TE-LEX-C297-GUNAM297-03]; assesses=[] -->
 
 **చురుకైన** — *curukaina* — "active, alert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చురుకైన** (*curukaina*) is native Dravidian: *curuku*, "activity, briskness", one word with Tamil *cuṟukku*, "quickness" (DEDR 2713), with *aina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

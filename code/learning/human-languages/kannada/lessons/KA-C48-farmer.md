@@ -11,7 +11,8 @@ romanization: "raita"
 concept_tag: KA-NOUN-FARMER
 prerequisites: [KA-C48-doctor, KA-C46-salt]
 sounds: []
-roots: []
+roots: [arabic-raiyat]
+etymology_hook: "raita ← Arabic raʿīyat 'the governed people', through Persian and Hindustani"
 duration:
   max_seconds: 210
 requires:

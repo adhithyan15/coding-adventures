@@ -4,7 +4,7 @@
   "chapter": 233,
   "title": "Every year, Dawn, Day after tomorrow, Day before yesterday, Second",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e3c3d664d1d317bc",
+  "sourceHash": "fnv1a64:cb3aa3c57b712ae2",
   "lessons": [
     {
       "id": "TA-C233-antutorum",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42514e8f1b83c22c",
+      "sourceHash": "fnv1a64:143f745a4bf0e2f1",
       "notice": null,
       "blocks": [
         {

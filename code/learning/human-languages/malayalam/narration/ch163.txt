@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a duck, then the Malayalam for an owl.
 You'll want to know: പുരികം.
 പുരികം — purikaṁ — "an eyebrow".
 
+The word, taken apart.
+പുരികം (purikaṁ) may come from Sanskrit bhrū, "eyebrow" (CDIAL 9688), reshaped in the mouth, but the path is not certain.
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Rātri, "night": which Hindi word shares its Sanskrit source? (Rāt.)
 You'll want to know: കൈവെള്ള.
 കൈവെള്ള — kaiveḷḷa — "a palm (of the hand)".
 
+The word, taken apart.
+കൈവെള്ള (kaiveḷḷa) is native Dravidian, "the white of the hand": kai, "hand" (DEDR 2023), and veḷḷa, "white" (DEDR 5496, with Tamil veḷ). The palm is the paler side of the hand.
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Malayalam for an eyebrow, then the Malayalam for a p
 
 You'll want to know: കഞ്ഞി.
 കഞ്ഞി — kañji — "rice gruel".
+
+The word, taken apart.
+കഞ്ഞി (kañji) is native Dravidian, one word with Tamil kañci, Kannada gañji and Telugu ganji (DEDR 1107). English congee comes from this word. DEDR 1107 compares Sanskrit kāñjīka.
 
 What you've built.
 One more word for this chapter.
@@ -103,6 +112,9 @@ Greet the day in order. (Suprabhātaṁ, śubha madhyāhnaṁ, śubha sāyāhna�
 You'll want to know: പയറ്.
 പയറ് — payaṟŭ — "beans".
 
+The word, taken apart.
+പയറ് (payaṟŭ) is native Dravidian, one word with Tamil payaṟu, Kannada pesaṟ and Telugu pesalu (DEDR 3941).
+
 What you've built.
 One more word for this chapter.
 
@@ -131,6 +143,9 @@ Before the new one: say the Malayalam for rice gruel, then the Malayalam for bea
 
 You'll want to know: പരിപ്പ്.
 പരിപ്പ് — parippŭ — "dal, split lentils".
+
+The word, taken apart.
+പരിപ്പ് (parippŭ) is native Dravidian, one word with Tamil paruppu, Kannada pappu and Telugu pappu (DEDR 3978).
 
 What you've built.
 One more word for this chapter.

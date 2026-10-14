@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 253,
-  "sourceHash": "fnv1a64:fdb97202dfc341bc",
+  "sourceHash": "fnv1a64:4b7412687554640b",
   "lessonIds": [
     "LA-C253-feriae",
     "LA-C253-convivium",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch253.txt",
   "json": "latin/narration/ch253.json",
-  "textHash": "fnv1a64:0d47ec04ba9e394f",
-  "jsonHash": "fnv1a64:21023e37482073a2",
+  "textHash": "fnv1a64:057bd80e90ced7a7",
+  "jsonHash": "fnv1a64:98d924a2d8d8d86f",
   "findings": []
 }

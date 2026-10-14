@@ -14,7 +14,8 @@ romanization: "eṇḍa"
 concept_tag: TE-VASTUVU229-ENDA
 prerequisites: [TE-C229-tapakayalu, TE-C229-gangireddu]
 sounds: []
-roots: []
+roots: [dravidian-enru-sun]
+etymology_hook: "eṇḍa: native Dravidian; DEDR 869 lists eṇḍa 'sunshine' with Tamil eṉṟu 'sun'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C229-gangireddu]
 <!-- hl-knowledge: introduces=[TE-LEX-C229-VASTUVU229-03]; assesses=[] -->
 
 **ఎండ** — *eṇḍa* — "sunshine, the sun's heat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎండ** (*eṇḍa*) is native Dravidian. DEDR 869 lists *eṇḍa*, "sunshine, heat of the sun", with Tamil *eṉṟu*, "sun".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

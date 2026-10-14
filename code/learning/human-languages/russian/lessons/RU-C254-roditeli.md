@@ -14,7 +14,8 @@ romanization: "rodíteli"
 concept_tag: RU-VESHCH254-RODITELI
 prerequisites: [RU-C254-paren, RU-C254-devushka]
 sounds: []
-roots: []
+roots: [slavic-rodu]
+etymology_hook: "родители is the plural of родитель 'a parent', from родить 'to give birth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C254-devushka]
 <!-- hl-knowledge: introduces=[RU-LEX-C254-VESHCH254-04]; assesses=[] -->
 
 **родители** (*rodíteli*) — "parents".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**родители** is the plural of *родитель*, "a parent", from *родить*, "to give birth", with *-тель*, "one who" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:470f5b3d2edbd9e6",
+  "sourceHash": "fnv1a64:aa0e474bac39c81d",
   "lessons": [
     {
       "id": "KA-C18-gante",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23e8d962dd3b937b",
+      "sourceHash": "fnv1a64:1ae9c114ae425301",
       "notice": null,
       "blocks": [
         {
@@ -211,6 +211,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಊರುಗೋಲು (ūrugōlu) is native Dravidian. DEDR 763 lists it whole as Kannada ūṟu-gōlu, \"walking-stick\": ūṟu, \"to set firmly, lean on\", the same root as Tamil ūṉṟu; then kōlu, \"stick\" (DEDR 2237, with Tamil kōl)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -241,7 +252,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

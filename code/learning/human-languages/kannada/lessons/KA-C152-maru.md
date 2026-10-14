@@ -14,7 +14,8 @@ romanization: "māru"
 concept_tag: KA-VERB-MARU
 prerequisites: [KA-C152-adu, KA-C152-hadu]
 sounds: []
-roots: []
+roots: [dravidian-maaru-change]
+etymology_hook: "māru: native Dravidian, one word with Tamil māṟu and Telugu māṟu (DEDR 4834)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C152-hadu]
 <!-- hl-knowledge: introduces=[KA-LEX-C152-ACT152-04]; assesses=[] -->
 
 **ಮಾರು** — *māru* — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಾರು** (*māru*) is native Dravidian, one word with Tamil *māṟu* and Telugu *māṟu* (DEDR 4834). DEDR lists Kannada *māṟu*, "to barter, sell, change".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

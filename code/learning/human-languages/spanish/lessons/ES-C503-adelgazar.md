@@ -10,7 +10,8 @@ gloss: "to lose weight"
 concept_tag: ES-VERB-ADELGAZAR
 prerequisites: [ES-C502-chiste, ES-C502-traducir]
 sounds: []
-roots: []
+roots: [delicatus]
+etymology_hook: "adelgazar — a- + delgado 'thin' + -azar; delgado is Latin delicatus — English delicate"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C502-traducir]
 > *He wants to lose weight before the summer.*
 
 The opposite is *engordar*. It takes *c* before *e*: *adelgacé*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**adelgazar** is *a-*, *delgado*, "thin", and *-azar*: to make thin. *Delgado* is Latin *delicatus*, "delicate" — inherited, its *-c-* and *-t-* softened to *-g-* and *-d-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

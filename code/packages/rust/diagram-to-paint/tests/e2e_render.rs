@@ -3498,6 +3498,17 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 
+    fn any_paint_instruction(
+        instructions: &[PaintInstruction],
+        predicate: &impl Fn(&PaintInstruction) -> bool,
+    ) -> bool {
+        instructions.iter().any(|instruction| {
+            predicate(instruction)
+                || matches!(instruction, PaintInstruction::Group(group)
+                    if any_paint_instruction(&group.children, predicate))
+        })
+    }
+
     #[test]
     fn render_pinned_mermaid_swimlane_visual_corpus_to_png() {
         let syntax: Value = serde_json::from_str(SWIMLANE_CORPUS).expect("swimlane corpus JSON");
@@ -3526,6 +3537,16 @@ line "Target" [35, 50, 68, 82]"##,
                 resolver: &resolver,
             });
             assert!(!scene.instructions.is_empty(), "{fixture_name} must lower to paint");
+            if fixture_name == "default-lane-for-loose-nodes" {
+                assert_eq!(layout.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
+                    vec!["OwnedLane", "__swimlane_default__"]);
+                assert_eq!(layout.lanes[1].label, "");
+                assert!(layout.nodes.iter().any(|node| node.id == "loose"));
+                assert_eq!(layout.edges.len(), 1);
+                assert!(scene.instructions.iter().filter(|instruction|
+                    matches!(instruction, PaintInstruction::Rect(_))
+                ).count() >= 4, "the default lane and both nodes must lower to paint rectangles");
+            }
             if fixture_name == "cloud-and-bang-attribute-shapes" {
                 assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
                     PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. }))
@@ -3795,6 +3816,65 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[5.0, 5.0])
                 )), "labeled dotted links must lower to dashed paths");
             }
+            if fixture_name == "labeled-bidirectional-links" {
+                assert!(layout.edges.iter().all(|edge|
+                    edge.start_marker == diagram_ir::EdgeMarker::Point
+                        && edge.end_marker == diagram_ir::EdgeMarker::Point));
+                assert_eq!(layout.edges.iter().map(|edge| edge.label.as_deref()).collect::<Vec<_>>(),
+                    vec![Some("submit"), Some("approve"), Some("release")]);
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.fill.is_some() && path.commands.len() == 4
+                )).count() >= 6, "both endpoints of each labeled link must lower to arrowheads");
+            }
+            if fixture_name == "labeled-circle-cross-links" {
+                assert_eq!(layout.edges.iter().filter(|edge|
+                    edge.start_marker == diagram_ir::EdgeMarker::Circle
+                        && edge.end_marker == diagram_ir::EdgeMarker::Circle
+                ).count(), 3);
+                assert_eq!(layout.edges.iter().filter(|edge|
+                    edge.start_marker == diagram_ir::EdgeMarker::Cross
+                        && edge.end_marker == diagram_ir::EdgeMarker::Cross
+                ).count(), 3);
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )).count() >= 6, "both endpoints of circle links must lower to ellipses");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
+                )).count() >= 12, "both endpoints of cross links must lower to paired paths");
+            }
+            if fixture_name == "labeled-mixed-endpoint-markers" {
+                use diagram_ir::EdgeMarker::{Circle, Cross, None, Point};
+                assert_eq!(layout.edges.iter().map(|edge|
+                    (edge.start_marker, edge.end_marker)
+                ).collect::<Vec<_>>(), vec![
+                    (Circle, Cross), (Cross, Circle), (Point, Cross),
+                    (Circle, Point), (None, Circle), (Point, Cross),
+                ]);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )), "mixed marker links must lower circle endpoints");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
+                )), "mixed marker links must lower cross endpoints");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.fill.is_some() && path.commands.len() == 4
+                )), "mixed marker links must lower point endpoints");
+            }
+            if fixture_name == "labeled-open-links" {
+                assert!(layout.edges.iter().all(|edge|
+                    edge.end_marker == diagram_ir::EdgeMarker::None));
+                assert_eq!(layout.edges.iter().map(|edge| edge.start_marker).collect::<Vec<_>>(), vec![
+                    diagram_ir::EdgeMarker::None,
+                    diagram_ir::EdgeMarker::Circle,
+                    diagram_ir::EdgeMarker::Cross,
+                    diagram_ir::EdgeMarker::Point,
+                    diagram_ir::EdgeMarker::None,
+                    diagram_ir::EdgeMarker::Circle,
+                ]);
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )).count() >= 2, "open links must retain authored start circles");
+            }
             if fixture_name == "edge-identifiers" {
                 assert_eq!(layout.edges.iter().map(|edge| edge.id.as_deref()).collect::<Vec<_>>(),
                     vec![Some("submit"), Some("release")]);
@@ -3819,6 +3899,31 @@ line "Target" [35, 50, 68, 82]"##,
                 )), "direct edge styles must lower to backend-neutral path paint");
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.classes")),
                     Some(&"urgent".to_string()));
+            }
+            if fixture_name == "positional-link-styles" {
+                assert_eq!(layout.edges[0].style.stroke.as_deref(), Some("#dc2626"));
+                assert_eq!(layout.edges[1].style.stroke.as_deref(), Some("#64748b"));
+                assert_eq!(layout.edges[2].style.stroke.as_deref(), Some("#dc2626"));
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#dc2626")
+                        && path.stroke_width == Some(5.0)
+                        && path.stroke_dash.as_deref() == Some(&[7.0, 3.0])
+                )).count(), 2, "positional link styles must lower to backend-neutral path paint");
+            }
+            if fixture_name == "positional-link-curves" {
+                assert_eq!(layout.edges[0].curve, Some(diagram_ir::SwimlaneEdgeCurve::Basis));
+                assert_eq!(layout.edges[1].curve, Some(diagram_ir::SwimlaneEdgeCurve::StepBefore));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().any(|command|
+                        matches!(command, PathCommand::CubicTo { .. }))
+                )), "positional basis interpolation must lower to a backend-neutral cubic path");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 3
+                )), "positional step-before interpolation must lower to an orthogonal bend");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.curve")),
+                    Some(&"basis".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"stepBefore".to_string()));
             }
             if fixture_name == "edge-animation-config" {
                 assert!(layout.edges.iter().all(|edge| edge.animate));
@@ -3919,6 +4024,129 @@ line "Target" [35, 50, 68, 82]"##,
                     Some(&"true".to_string()));
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.laneOrder")),
                     Some(&"laneB,laneC,laneA,laneD".to_string()));
+            }
+            if fixture_name == "line-hops-step" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().any(|command|
+                        matches!(command, PathCommand::QuadTo { .. }))
+                )).count(), 1, "the later step edge must contain an arc hop");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"step".to_string()));
+            }
+            if fixture_name == "line-hops-rounded" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().filter(|command|
+                        matches!(command, PathCommand::MoveTo { .. })).count() == 2
+                )).count(), 1, "the later rounded edge must contain one visible gap");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"rounded".to_string()));
+            }
+            if fixture_name == "nested-subgraphs" {
+                assert_eq!(layout.groups.len(), 2);
+                let platform = layout.groups.iter().find(|group| group.id == "Platform").unwrap();
+                let runtime = layout.groups.iter().find(|group| group.id == "Runtime").unwrap();
+                assert!(runtime.x >= platform.x && runtime.y >= platform.y);
+                assert!(runtime.x + runtime.width <= platform.x + platform.width);
+                assert!(runtime.y + runtime.height <= platform.y + platform.height);
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.stroke_dash.as_deref() == Some(&[6.0, 4.0][..])
+                )).count(), 2);
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.group.1.parent")),
+                    Some(&"Platform".to_string()));
+            }
+            if fixture_name == "state-choice-note-shapes" {
+                assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+                    &diagram_ir::DiagramShape::RoundedRect,
+                    &diagram_ir::DiagramShape::Diamond,
+                    &diagram_ir::DiagramShape::Note,
+                ]);
+                assert!(any_paint_instruction(&scene.instructions, &|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.iter().filter(|child|
+                        matches!(child, PaintInstruction::Path(_))).count() == 2
+                )), "the note must lower to an outline and interior fold path");
+            }
+            if fixture_name == "label-rect-shape" {
+                assert_eq!(layout.nodes[1].shape, diagram_ir::DiagramShape::TextBlock);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.is_none() && rect.stroke.is_none()
+                )), "labelRect must lower without visible container geometry");
+            }
+            if fixture_name == "anchor-shape" {
+                let anchor = layout.nodes.iter().find(|node| node.id == "pin").unwrap();
+                assert_eq!((anchor.width, anchor.height), (2.0, 2.0));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(ellipse)
+                        if ellipse.rx == 1.0 && ellipse.ry == 1.0 && ellipse.stroke.is_none()
+                )), "anchor must lower to a filled two-pixel circle");
+            }
+            if fixture_name == "rect-with-title-shape" {
+                let item = layout.nodes.iter().find(|node| node.id == "item").unwrap();
+                assert_eq!(item.shape, diagram_ir::DiagramShape::TitledRect);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path)
+                        if path.commands.iter().filter(|command|
+                            matches!(command, PathCommand::QuadTo { .. })).count() == 4
+                            && path.commands.len() == 12
+                )), "rectWithTitle must lower to a rounded container and title divider");
+            }
+            if fixture_name == "internal-container-shapes" {
+                assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+                    &diagram_ir::DiagramShape::RoundedRect,
+                    &diagram_ir::DiagramShape::Ellipse,
+                    &diagram_ir::DiagramShape::RoundedRect,
+                ]);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )), "mindmapCircle must retain circular paint geometry");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.corner_radius.unwrap_or_default() > 2.0
+                )).count() >= 2, "internal card and branch nodes must retain rounded paint geometry");
+            }
+            if fixture_name == "internal-compartment-shapes" {
+                assert!(layout.nodes.iter().all(|node|
+                    node.shape == diagram_ir::DiagramShape::TitledRect));
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path)
+                        if path.commands.iter().filter(|command|
+                            matches!(command, PathCommand::QuadTo { .. })).count() == 4
+                            && path.commands.len() == 12
+                )).count(), 3, "internal compartment shapes must retain title-divider geometry");
+            }
+            if fixture_name == "legacy-internal-shape-aliases" {
+                assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+                    &diagram_ir::DiagramShape::Rect,
+                    &diagram_ir::DiagramShape::RoundedRect,
+                    &diagram_ir::DiagramShape::SmallCircle,
+                    &diagram_ir::DiagramShape::FramedCircle,
+                    &diagram_ir::DiagramShape::ForkJoin,
+                    &diagram_ir::DiagramShape::InvertedTrapezoid,
+                    &diagram_ir::DiagramShape::DoubleCircle,
+                    &diagram_ir::DiagramShape::Asymmetric,
+                ]);
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )).count() >= 4, "legacy control aliases must retain their circle geometry");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 5
+                )), "the legacy inverted-trapezoid alias must retain polygon geometry");
+            }
+            if fixture_name == "cross-lane-rank-constraints" {
+                let validate = layout.nodes.iter().find(|node| node.id == "validate").unwrap();
+                let build = layout.nodes.iter().find(|node| node.id == "build").unwrap();
+                assert!(build.x > validate.x + validate.width,
+                    "cross-lane rank constraints must place the destination after the source");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.ignoreCrossLaneEdges")), Some(&"false".to_string()));
+            }
+            if fixture_name == "rank-crossing-optimization" {
+                let a = layout.nodes.iter().find(|node| node.id == "a").unwrap();
+                let b = layout.nodes.iter().find(|node| node.id == "b").unwrap();
+                let c = layout.nodes.iter().find(|node| node.id == "c").unwrap();
+                let d = layout.nodes.iter().find(|node| node.id == "d").unwrap();
+                assert!(a.x > c.x && d.x > b.x,
+                    "crossing optimization must separate the independent edge rank intervals");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.optimizeRanksByCrossings")), Some(&"true".to_string()));
             }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");

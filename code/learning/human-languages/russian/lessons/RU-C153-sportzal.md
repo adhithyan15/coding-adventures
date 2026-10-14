@@ -14,7 +14,8 @@ romanization: "sportzál"
 concept_tag: RU-MESTO153-SPORTZAL
 prerequisites: [RU-C152-snaruzhi, RU-C152-szadi]
 sounds: []
-roots: []
+roots: [english-sport, salaz-germanic]
+etymology_hook: "спортзал is спорт 'sport' + зал 'a hall', from German Saal or French salle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C152-szadi]
 <!-- hl-knowledge: introduces=[RU-LEX-C153-MESTO153-01]; assesses=[] -->
 
 **спортзал** (*sportzál*) — "a gym".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**спортзал** is *спорт*, "sport", from English, with *зал*, "a hall", from German *Saal* and French *salle*, words of Germanic origin (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

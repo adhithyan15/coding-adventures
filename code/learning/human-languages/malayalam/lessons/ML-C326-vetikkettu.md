@@ -14,7 +14,8 @@ romanization: "veṭikkeṭṭŭ"
 concept_tag: ML-VASTU326-VETIKKETTU
 prerequisites: [ML-C325-purusan, ML-C325-ceruppakkaran]
 sounds: []
-roots: []
+roots: [dravidian-vedi-burst, dravidian-kattu-bind]
+etymology_hook: "veṭikkeṭṭŭ: native Dravidian, 'a bundle of explosions': veṭi (DEDR 5473) + keṭṭu 'bundle' (DEDR 1147)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C325-ceruppakkaran]
 <!-- hl-knowledge: introduces=[ML-LEX-C326-VASTU326-01]; assesses=[] -->
 
 **വെടിക്കെട്ട്** — *veṭikkeṭṭŭ* — "a fireworks display".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വെടിക്കെട്ട്** (*veṭikkeṭṭŭ*) is native Dravidian, "a tying-together of bangs": *veṭi*, "explosion, shot" (DEDR 5473, with Tamil *veṭi*), and *keṭṭu*, "tie, bundle" (DEDR 1147). DEDR 1147 compares Sanskrit *ghaṭṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

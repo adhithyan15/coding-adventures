@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-ARROBA
 prerequisites: [ES-C393-correo-electronico, ES-C424-guion]
 sounds: [rolled-rr, b-soft, stress-penultimate]
 roots: []
+etymology_hook: "arroba ← Arabic ar-rubʿ 'the quarter', a unit of weight before it was @"
 duration:
   max_seconds: 240
 requires:

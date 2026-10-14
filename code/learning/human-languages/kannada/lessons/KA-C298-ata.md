@@ -14,7 +14,8 @@ romanization: "āṭa"
 concept_tag: KA-VASTU298-ATA
 prerequisites: [KA-C297-cirate, KA-C297-bala]
 sounds: []
-roots: []
+roots: [dravidian-aadu-move]
+etymology_hook: "āṭa: native Dravidian, 'playing', from āḍu 'to play, move' (DEDR 347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C297-bala]
 <!-- hl-knowledge: introduces=[KA-LEX-C298-VASTU298-01]; assesses=[] -->
 
 **ಆಟ** — *āṭa* — "a game, a match".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಟ** (*āṭa*) is native Dravidian, from *āḍu*, "to play, move", and DEDR 347 lists *āṭu* beside it: a game is "playing"; the entry also has Tamil *āṭu*, Telugu *āḍu* and Malayalam *āṭuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

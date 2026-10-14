@@ -14,7 +14,8 @@ romanization: "mikacca"
 concept_tag: ML-GUNAM205-MIKACCA
 prerequisites: [ML-C205-lalitamaya, ML-C205-upayogapradamaya]
 sounds: []
-roots: []
+roots: [dravidian-miku-excess]
+etymology_hook: "mikacca: native Dravidian, from the verb 'to be foremost, abound'; Tamil miku (DEDR 4838)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C205-upayogapradamaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C205-GUNAM205-03]; assesses=[] -->
 
 **മികച്ച** — *mikacca* — "excellent, best".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മികച്ച** (*mikacca*) is native Dravidian, a past form of the verb "to increase, be foremost"; DEDR 4838 lists the root with Tamil *miku*, Kannada *mikku* and Telugu *migulu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

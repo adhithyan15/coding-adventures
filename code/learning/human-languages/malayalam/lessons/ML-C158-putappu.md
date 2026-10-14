@@ -14,7 +14,8 @@ romanization: "putappŭ"
 concept_tag: ML-THINGS158-PUTAPPU
 prerequisites: [ML-C158-treyin, ML-C158-talayana]
 sounds: []
-roots: []
+roots: [dravidian-putai-cover]
+etymology_hook: "putappŭ: native Dravidian, a noun from the verb 'to cover'; Tamil putai, Kannada pode (DEDR 4509)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C158-talayana]
 <!-- hl-knowledge: introduces=[ML-LEX-C158-THINGS158-04]; assesses=[] -->
 
 **പുതപ്പ്** — *putappŭ* — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുതപ്പ്** (*putappŭ*) is native Dravidian, a noun from the verb "to cover"; DEDR 4509 lists the root with Tamil *putai*, Kannada *pode* and Telugu *podugu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

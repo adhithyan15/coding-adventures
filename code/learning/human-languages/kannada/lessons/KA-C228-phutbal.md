@@ -14,7 +14,8 @@ romanization: "phuṭbāl"
 concept_tag: KA-VASTU228-PHUTBAL
 prerequisites: [KA-C227-tarc, KA-C227-yantra]
 sounds: []
-roots: []
+roots: [english-football]
+etymology_hook: "phuṭbāl ← English football"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C227-yantra]
 <!-- hl-knowledge: introduces=[KA-LEX-C228-VASTU228-01]; assesses=[] -->
 
 **ಫುಟ್ಬಾಲ್** — *phuṭbāl* — "football".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಫುಟ್ಬಾಲ್** (*phuṭbāl*) is a loan from English *football*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "karugu"
 concept_tag: TE-VERB-KARUGU
 prerequisites: [TE-C285-gamanincu, TE-C285-tarumu]
 sounds: []
-roots: []
+roots: [dravidian-karai-melt]
+etymology_hook: "karugu: native Dravidian; DEDR 1292 lists karugu 'to melt' with Tamil karai 'to dissolve'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C285-tarumu]
 <!-- hl-knowledge: introduces=[TE-LEX-C285-KRIYA285-05]; assesses=[] -->
 
 **కరుగు** — *karugu* — "to melt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కరుగు** (*karugu*) is native Dravidian. DEDR 1292 lists a nasalised *karagu*, "to melt, dissolve", with Tamil *karai*, "to dissolve, melt", and Kannada *karagu*, "to melt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

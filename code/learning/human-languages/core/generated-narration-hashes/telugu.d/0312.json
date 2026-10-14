@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 312,
-  "sourceHash": "fnv1a64:aec24a5418853c80",
+  "sourceHash": "fnv1a64:7a5eb931ac2be738",
   "lessonIds": [
     "TE-C312-katha",
     "TE-C312-ata",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch312.txt",
   "json": "telugu/narration/ch312.json",
-  "textHash": "fnv1a64:21303e7312bca1e9",
-  "jsonHash": "fnv1a64:f92ad604d1abbee2",
+  "textHash": "fnv1a64:154bb58a2a0aabdf",
+  "jsonHash": "fnv1a64:5654ca7d709ecf98",
   "findings": []
 }

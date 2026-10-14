@@ -14,7 +14,8 @@ romanization: "ṟabbar"
 concept_tag: ML-VASTU251-RABBAR
 prerequisites: [ML-C251-phayal, ML-C251-nottubukku]
 sounds: []
-roots: []
+roots: [english-rubber]
+etymology_hook: "ṟabbar ← English rubber"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C251-nottubukku]
 <!-- hl-knowledge: introduces=[ML-LEX-C251-VASTU251-04]; assesses=[] -->
 
 **റബ്ബർ** — *ṟabbar* — "an eraser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**റബ്ബർ** (*ṟabbar*) ← English *rubber*, the thing that rubs pencil out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

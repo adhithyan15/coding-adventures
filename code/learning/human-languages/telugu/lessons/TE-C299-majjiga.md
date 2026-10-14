@@ -14,7 +14,8 @@ romanization: "majjiga"
 concept_tag: TE-VASTUVU299-MAJJIGA
 prerequisites: [TE-C299-kottimira, TE-C299-karivepaku]
 sounds: []
-roots: []
+roots: [dravidian-majjige-buttermilk]
+etymology_hook: "majjiga: DEDR 4630 lists majjiga with Tamil maccikai, asking whether it came from Indo-Aryan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C299-karivepaku]
 <!-- hl-knowledge: introduces=[TE-LEX-C299-VASTUVU299-05]; assesses=[] -->
 
 **మజ్జిగ** — *majjiga* — "buttermilk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 4630 lists **మజ్జిగ** (*majjiga*), "buttermilk", with Tamil *maccikai* and Kannada *majjige*, and asks whether the word came from Indo-Aryan, comparing Prakrit *majjiā*, "a curd dish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "You, Singular and Plural",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1de98de483807e8d",
+  "sourceHash": "fnv1a64:7d10505706828e32",
   "lessons": [
     {
       "id": "LA-C22-tu-vos",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cabfa45cb33dd85e",
+      "sourceHash": "fnv1a64:303f4228c9c5086f",
       "notice": null,
       "blocks": [
         {
@@ -74,6 +74,17 @@
         },
         {
           "index": 4,
+          "type": "etymology",
+          "title": "The words, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tū is inherited, usually traced to Proto-Indo-European tuh2, \"you\" (EtymDB 2.1), a cousin of English thou. vōs \"you all\" is usually traced to Proto-Italic wos, \"you all\" (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -113,7 +124,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

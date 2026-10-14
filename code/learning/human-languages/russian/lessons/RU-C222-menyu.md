@@ -14,7 +14,8 @@ romanization: "menyú"
 concept_tag: RU-VESHCH222-MENYU
 prerequisites: [RU-C222-yeda, RU-C222-blyudo]
 sounds: []
-roots: []
+roots: [menu-french]
+etymology_hook: "меню ← French menu 'a detailed list', from Latin minutus 'small'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C222-blyudo]
 <!-- hl-knowledge: introduces=[RU-LEX-C222-VESHCH222-03]; assesses=[] -->
 
 **меню** (*menyú*) — "a menu".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**меню** comes from French *menu*, "a detailed list", from *menu*, "small, detailed", Latin *minūtus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

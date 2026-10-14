@@ -14,7 +14,8 @@ romanization: "mudriñcu"
 concept_tag: TE-VERB-MUDRINCU
 prerequisites: [TE-C245-sekarincu, TE-C245-prasaram-ceyu]
 sounds: []
-roots: []
+roots: [sanskrit-mudra]
+etymology_hook: "mudriñcu: Sanskrit mudrā 'seal' (CDIAL 10203) + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C245-prasaram-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C245-KRIYA245-03]; assesses=[] -->
 
 **ముద్రించు** — *mudriñcu* — "to print".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ముద్రించు** (*mudriñcu*) is Sanskrit *mudrā*, "seal, signet-ring" (CDIAL 10203), made into a verb with the Telugu ending *-iñcu*: "to stamp, print". CDIAL thinks *mudrā* probably came from Iranian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

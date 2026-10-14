@@ -10,7 +10,8 @@ gloss: "to worry"
 concept_tag: ES-VERB-PREOCUPARSE
 prerequisites: [ES-C487-alegrarse, ES-C487-enfadarse]
 sounds: []
-roots: []
+roots: [occupare]
+etymology_hook: "preocuparse ← Latin praeoccupare 'to seize beforehand': prae- + occupare — English preoccupy"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C487-enfadarse]
 > *Do not worry, everything is fine.*
 
 It goes with *por*: *preocuparse por alguien*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**preocupar** ← Latin *praeoccupare*, "to seize beforehand" (EtymDB 2.1): *prae-*, "before", and *occupare*, "to take hold of". A worry is a thought that has taken hold of you first. A learned word: the *-p-* between vowels was kept, where speech made *saber* from *sapere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

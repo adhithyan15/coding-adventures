@@ -14,7 +14,8 @@ romanization: "tere"
 concept_tag: KA-VERB-TERE
 prerequisites: [KA-C152-maru, KA-C152-nade]
 sounds: []
-roots: []
+roots: [dravidian-tira-open]
+etymology_hook: "tere: native Dravidian, one word with Tamil tiṟa and Telugu teṟa (DEDR 3259)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C152-nade]
 <!-- hl-knowledge: introduces=[KA-LEX-C153-ACT153-01]; assesses=[] -->
 
 **ತೆರೆ** — *tere* — "to open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೆರೆ** (*tere*) is native Dravidian, one word with Tamil *tiṟa* and Telugu *teṟa* (DEDR 3259). DEDR lists *teṟe*, "to open, uncover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 156,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9414ed4d3123b0f8",
+  "sourceHash": "fnv1a64:4f49680744a0aa22",
   "lessons": [
     {
       "id": "TE-C156-kalapattika",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31fec5c88332c880",
+      "sourceHash": "fnv1a64:ebdc8b734dd96df0",
       "notice": null,
       "blocks": [
         {
@@ -65,6 +65,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాలపట్టిక (kālapaṭṭika) is Sanskrit: kāla, \"time\" (CDIAL 3084), and paṭṭikā, \"a slab, tablet\" (CDIAL 7699), with the final -ā shortened."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -75,7 +86,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -124,7 +135,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -155,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5106296a60e2489f",
+      "sourceHash": "fnv1a64:4e4ccffed6478a18",
       "notice": null,
       "blocks": [
         {
@@ -201,6 +212,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సూచన (sūcana) is Sanskrit sūcanā, \"pointing out, indication\", taken over as a learned loan, a tatsama, with the final -ā shortened. CDIAL 13551a lists the related sūcyatē, \"is indicated\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -211,7 +233,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -260,7 +282,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -291,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6989caa0f37edd2",
+      "sourceHash": "fnv1a64:b13ffddbbf828591",
       "notice": null,
       "blocks": [
         {
@@ -324,6 +346,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of అద్దె (adde) is uncertain. DEDR and CDIAL list no word of this shape meaning \"rent\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -334,7 +367,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -383,7 +416,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -414,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7a32995caa569e7",
+      "sourceHash": "fnv1a64:72e4d938b3cab065",
       "notice": null,
       "blocks": [
         {
@@ -460,6 +493,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రకటన (prakaṭana) is Sanskrit prakaṭana, \"bringing to light\", taken over whole as a learned loan, a tatsama (CDIAL 8429). The sense \"announcement\" grows out of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -470,7 +514,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -519,7 +563,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -550,7 +594,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a1a68809c1c325f",
+      "sourceHash": "fnv1a64:9cec436ce0303146",
       "notice": null,
       "blocks": [
         {
@@ -592,6 +636,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రసీదు (rasīdu) comes from Persian rasīd, \"received; a receipt\", which reached Telugu through Hindustani and took the Telugu ending -u."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -602,7 +657,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -651,7 +706,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

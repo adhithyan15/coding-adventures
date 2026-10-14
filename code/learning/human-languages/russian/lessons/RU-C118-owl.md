@@ -14,7 +14,8 @@ romanization: "sová"
 concept_tag: RU-THINGS118-OWL
 prerequisites: [RU-C117-tortoise, RU-C118-squirrel]
 sounds: []
-roots: []
+roots: [slavic-sova]
+etymology_hook: "сова ← Proto-Slavic *sova; Welsh cuan 'owl' and Lithuanian šaukti 'to cry' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C118-squirrel]
 <!-- hl-knowledge: introduces=[RU-LEX-C118-THINGS118-02]; assesses=[] -->
 
 **сова** (*sová*) — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сова** ← Proto-Slavic *\*sova* — inherited. Vasmer relates it to Welsh *cuan*, "night owl", Old High German *hûwo*, "owl", and Lithuanian *šaũkti*, "to cry out": the owl as the hooter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

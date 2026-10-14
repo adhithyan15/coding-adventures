@@ -14,7 +14,8 @@ romanization: "pīche"
 concept_tag: HI-LOC235-PICHE
 prerequisites: [HI-C235-nice, HI-C235-age]
 sounds: []
-roots: []
+roots: [indo-aryan-pashca]
+etymology_hook: "pīche ← *paśca 'hinder part', a reconstructed form; a tadbhava (CDIAL 7990)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C235-age]
 <!-- hl-knowledge: introduces=[HI-LEX-C235-LOC235-04]; assesses=[] -->
 
 **पीछे** — *pīche* — "behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पीछे** (*pīche*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*paśca*, "hinder part", a form CDIAL reconstructs from its descendants (CDIAL 7990). *pīche* is an old case form that took the place of Sanskrit *paścāt*, "behind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

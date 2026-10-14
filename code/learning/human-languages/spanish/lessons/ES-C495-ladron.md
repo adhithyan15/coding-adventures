@@ -10,7 +10,8 @@ gloss: "the thief"
 concept_tag: ES-REF-LADRON
 prerequisites: [ES-C495-suceder, ES-C495-desaparecer]
 sounds: []
-roots: []
+roots: [latro-latin]
+etymology_hook: "ladrón ← Latin latro, latronem 'a mercenary; a robber': the -t- became -d- — English larceny"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C495-desaparecer]
 > *The police are looking for the thief.*
 
 A woman is *la ladrona*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ladrón** ← Latin *latro*, *latronem*, "a hired soldier; a robber" (EtymDB 2.1) — inherited: the *-t-* became *-d-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

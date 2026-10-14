@@ -14,7 +14,8 @@ romanization: "pakka"
 concept_tag: KA-STHALA175-PAKKA
 prerequisites: [KA-C175-beli, KA-C175-kamba]
 sounds: []
-roots: []
+roots: [sanskrit-paksha]
+etymology_hook: "pakka: usually traced to Sanskrit pakṣa 'wing, side' through Prakrit pakkha (CDIAL 7627)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C175-kamba]
 <!-- hl-knowledge: introduces=[KA-LEX-C175-STHALA175-03]; assesses=[] -->
 
 **ಪಕ್ಕ** — *pakka* — "beside, next to; the side".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಕ್ಕ** (*pakka*) is usually traced to Sanskrit *pakṣa*, "wing, side", through Prakrit *pakkha* (CDIAL 7627): a tadbhava, a loan reshaped by speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 177,
-  "sourceHash": "fnv1a64:4338f2648403a6c9",
+  "sourceHash": "fnv1a64:18d5b434033e5183",
   "lessonIds": [
     "ML-C177-arum",
     "ML-C177-orikkalum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch177.txt",
   "json": "malayalam/narration/ch177.json",
-  "textHash": "fnv1a64:815224036771e1eb",
-  "jsonHash": "fnv1a64:573ee59bd8b13f2e",
+  "textHash": "fnv1a64:7b78ff1666328e70",
+  "jsonHash": "fnv1a64:a28bf9a0725db55d",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "tápochki"
 concept_tag: RU-VESHCH162-TAPOCHKI
 prerequisites: [RU-C162-kolgotki, RU-C162-krossovki]
 sounds: []
-roots: []
+roots: [slavic-tapki]
+etymology_hook: "тапочки is a diminutive of тапки 'slippers'; the origin of тапки is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C162-krossovki]
 <!-- hl-knowledge: introduces=[RU-LEX-C162-VESHCH162-05]; assesses=[] -->
 
 **тапочки** (*tápochki*) — "slippers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тапочки** is a diminutive of *тапки*, "slippers". Vasmer has no entry for *тапки*, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

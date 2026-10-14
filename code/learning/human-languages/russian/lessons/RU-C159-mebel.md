@@ -14,7 +14,8 @@ romanization: "mébel"
 concept_tag: RU-VESHCH159-MEBEL
 prerequisites: [RU-C159-veshch, RU-C159-predmet]
 sounds: []
-roots: []
+roots: [mobilis-latin]
+etymology_hook: "мебель came through German Möbel or from French meuble, Latin mobile 'movable (property)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C159-predmet]
 <!-- hl-knowledge: introduces=[RU-LEX-C159-VESHCH159-03]; assesses=[] -->
 
 **мебель** (*mébel*) — "furniture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мебель** — from Peter the Great's time; it came through German *Möbel* or straight from French *meuble*, from Latin *mōbile*, "movable (property)" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

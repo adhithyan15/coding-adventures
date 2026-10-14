@@ -14,7 +14,8 @@ romanization: "tāku"
 concept_tag: TE-VERB-TAKU
 prerequisites: [TE-C279-ubbu, TE-C279-kallu-tirugu]
 sounds: []
-roots: []
+roots: [dravidian-taakku-touch]
+etymology_hook: "tāku: native Dravidian; DEDR 3150 lists tāku 'to touch, hit' with Kannada tāku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C279-kallu-tirugu]
 <!-- hl-knowledge: introduces=[TE-LEX-C279-KRIYA279-04]; assesses=[] -->
 
 **తాకు** — *tāku* — "to touch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తాకు** (*tāku*) is native Dravidian. DEDR 3150 lists a nasalised *tāku*, "to touch, hit", with Kannada *tāku*, "to touch", and Tamil *tākku*, "to strike against".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

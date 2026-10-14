@@ -13,7 +13,8 @@ gloss: "to decorate"
 concept_tag: LA-VERB-ORNO
 prerequisites: [LA-C204-affirmo, LA-C204-doleo]
 sounds: []
-roots: []
+roots: [ornare-latin]
+etymology_hook: "ōrnō 'to decorate' — perhaps from ōrdō 'order': to put in order; uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C204-doleo]
 <!-- hl-knowledge: introduces=[LA-LEX-C204-ACT204-03]; assesses=[] -->
 
 **ōrnō, ōrnāre** — "to decorate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ōrnō** is often explained as a shortened *\*ordināre*, "to put in order", from *ōrdō*, "a row, an order", but this is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "Offers, Apologies, Introductions",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:435c23698a380ee5",
+  "sourceHash": "fnv1a64:5fe136bc00f49c97",
   "lessons": [
     {
       "id": "TE-C94-pardon",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:208e90c6bcf7bf79",
+      "sourceHash": "fnv1a64:0e30f9f8eefb8110",
       "notice": null,
       "blocks": [
         {
@@ -50,12 +50,23 @@
             },
             {
               "kind": "speech",
-              "text": "It does the work of క్షమించండి, and is the gentler, native word beside it. Either answers a mistake; మన్నించండి (manniñcaṇḍi) is the one to use with an elder."
+              "text": "It does the work of క్షమించండి, and is the gentler word beside it. Either answers a mistake; మన్నించండి (manniñcaṇḍi) is the one to use with an elder."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of manniñcu, the verb in మన్నించండి (manniñcaṇḍi), is uncertain: neither DEDR nor CDIAL records it. It may come from Sanskrit manyatē, \"thinks, honours\" (CDIAL 9857), but no source says so. The polite ending -aṇḍi is the one in raṇḍi."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4759ea77ba8b3c14",
+      "sourceHash": "fnv1a64:d708e72e49b0a7e4",
       "notice": null,
       "blocks": [
         {
@@ -183,6 +194,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "క్షమాపణ (kṣamāpaṇa) is Sanskrit kṣamāpaṇa, \"asking pardon\", built on kṣamā, \"patience\" (CDIAL 3659), taken over as a learned loan."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -193,7 +215,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -242,7 +264,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -273,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e235848a7bc77d05",
+      "sourceHash": "fnv1a64:5c8f2a01e821df57",
       "notice": null,
       "blocks": [
         {
@@ -310,6 +332,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కావాలా? (kāvālā?) is native Dravidian: kāvāli, \"is wanted\", from kā-, \"to become\" (DEDR 333), and the question -ā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -320,7 +353,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -369,7 +402,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -400,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:188a3f6aa447093e",
+      "sourceHash": "fnv1a64:9ece987ab8e3ff52",
       "notice": null,
       "blocks": [
         {
@@ -437,6 +470,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అవసరం (avasaraṁ) is Sanskrit avasara, \"occasion, opportunity\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 858). The sense \"need\" is the one Telugu gives it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -447,7 +491,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -496,7 +540,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -527,7 +571,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e958660e91873721",
+      "sourceHash": "fnv1a64:ce5877b9ae5204b2",
       "notice": null,
       "blocks": [
         {
@@ -564,6 +608,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పరిచయం (paricayaṁ) is Sanskrit paricaya, \"acquaintance\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 7807)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -574,7 +629,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -623,7 +678,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "dhuā̃"
 concept_tag: HI-THG268-DHUA
 prerequisites: [HI-C268-kura, HI-C268-kuredan]
 sounds: []
-roots: []
+roots: [sanskrit-dhuma]
+etymology_hook: "dhuāṁ ← Sanskrit dhūma 'smoke, vapour', a tadbhava (CDIAL 6849)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C268-kuredan]
 <!-- hl-knowledge: introduces=[HI-LEX-C268-THG268-03]; assesses=[] -->
 
 **धुआँ** — *dhuā̃* — "smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धुआँ** (*dhuāṁ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dhūma*, "smoke, vapour" (CDIAL 6849).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "oraṭu"
 concept_tag: KA-GUNA219-ORATU
 prerequisites: [KA-C219-mondu, KA-C219-nunupu]
 sounds: []
-roots: []
+roots: [dravidian-urattu-coarse]
+etymology_hook: "oraṭu: native Dravidian, one word with Tamil ura (DEDR 649)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C219-nunupu]
 <!-- hl-knowledge: introduces=[KA-LEX-C219-GUNA219-04]; assesses=[] -->
 
 **ಒರಟು** — *oraṭu* — "rough, coarse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒರಟು** (*oraṭu*) is native Dravidian, one word with Tamil *ura* (DEDR 649). DEDR lists *oraṭu*, "coarseness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

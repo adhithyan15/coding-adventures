@@ -14,7 +14,8 @@ romanization: "akúla"
 concept_tag: RU-THINGS121-SHARK
 prerequisites: [RU-C120-bee, RU-C120-ant]
 sounds: []
-roots: []
+roots: [norse-hakall]
+etymology_hook: "акула ← Old Norse hákall 'shark', with -а added after рыба 'fish'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C120-ant]
 <!-- hl-knowledge: introduces=[RU-LEX-C121-THINGS121-01]; assesses=[] -->
 
 **акула** (*akúla*) — "a shark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**акула** comes from Old Norse *hákall*, "shark", with an *-а* added to match *рыба*, "fish" (Vasmer); Itkonen took it through Sami *akkli*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

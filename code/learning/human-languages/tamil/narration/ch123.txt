@@ -13,7 +13,7 @@ You'll want to know: காய்கறி.
 காய்கறி — kāykaṟi — "vegetables".
 
 The word, taken apart.
-காய்கறி (kāykaṟi) is native: kāy, "unripe fruit" (DEDR 1459), and kaṟi, "vegetables, curry" (DEDR 1391; Malayalam kaṟi).
+காய்கறி (kāykaṟi) is native: kāy, "unripe fruit" (DEDR 1459, which compares Indo-Aryan kacca, "raw"), and kaṟi, "vegetables, curry" (DEDR 1391; Malayalam kaṟi).
 
 What you've built.
 One more word for this chapter.
@@ -45,7 +45,7 @@ You'll want to know: வாழைப்பழம்.
 வாழைப்பழம் — vāḻaippaḻam — "a banana".
 
 The word, taken apart.
-வாழைப்பழம் (vāḻaippaḻam) is native: vāḻai, "plantain" (DEDR 5373; Malayalam vāḻa, Kannada bāḻe), and paḻam, "fruit" (DEDR 4004).
+வாழைப்பழம் (vāḻaippaḻam) is native: vāḻai, "plantain" (DEDR 5373; Malayalam vāḻa, Kannada bāḻe), and paḻam, "fruit" (DEDR 4004). DEDR compares Sanskrit (lexicons) vārabuṣā, "plantain", and phala, "fruit".
 
 What you've built.
 One more word for this chapter.
@@ -79,7 +79,7 @@ You'll want to know: மாம்பழம்.
 மாம்பழம் — māmpaḻam — "a mango".
 
 The word, taken apart.
-மாம்பழம் (māmpaḻam) is native: mā, "mango" (DEDR 4782; Malayalam mā), and paḻam, "fruit" (DEDR 4004). English mango came, through Portuguese, from the Malayalam form māṅṅa.
+மாம்பழம் (māmpaḻam) is native: mā, "mango" (DEDR 4782; Malayalam mā), and paḻam, "fruit" (DEDR 4004). DEDR compares Sanskrit mākanda, "mango tree", and phala, "fruit". English mango came, through Portuguese, from the Malayalam form māṅṅa.
 
 What you've built.
 One more word for this chapter.

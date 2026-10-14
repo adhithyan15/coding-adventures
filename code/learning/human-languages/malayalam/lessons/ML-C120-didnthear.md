@@ -11,7 +11,8 @@ romanization: "kēṭṭilla"
 concept_tag: ML-REP-DIDNT-HEAR
 prerequisites: [ML-C119-wait, ML-C120-show]
 sounds: []
-roots: []
+roots: [dravidian-kel-hear-ask, illa-not-dravidian]
+etymology_hook: "kēṭṭilla: native Dravidian, kēṭṭu 'heard' (DEDR 2017) + illa 'not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C120-show]
 
 **കേട്ടില്ല** (*kēṭṭilla*) — "(I) didn't hear", **കേട്ടു**, "heard", with **ഇല്ല**,
 "not". Follow it with **ഒന്നുകൂടി പറയൂ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കേട്ടില്ല** (*kēṭṭilla*) is native Dravidian: *kēṭṭu*, "heard", the past of the hearing verb (DEDR 2017, with Tamil *kēḷ*), with *illa*, "not" (DEDR 2559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

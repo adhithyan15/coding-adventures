@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b48c9ae40bd2ce7c",
+  "sourceHash": "fnv1a64:167ed5d21d0355e8",
   "lessons": [
     {
       "id": "TE-C02-peru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8ff41376dc3287c2",
+      "sourceHash": "fnv1a64:d6c476ee92947690",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -67,7 +67,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "పేరు (pēru, \"name\") is native Dravidian, from Proto-Dravidian pēr — the same word as Tamil peyar and Malayalam pēr, and a cousin of Kannada hesaru (which softened p becomes h). It is not Sanskrit nāma (Hindi nām, English name). Even Telugu — the most Sanskritised of the Dravidian tongues — kept its home-grown word for \"name.\""
+              "text": "పేరు (pēru, \"name\") is native Dravidian (DEDR 4410), from Proto-Dravidian pēr — the same word as Tamil peyar and Malayalam pēr, and a cousin of Kannada hesaru (which softened p becomes h). It is not Sanskrit nāma (Hindi nām, English name). Even Telugu — the most Sanskritised of the Dravidian tongues — kept its home-grown word for \"name.\""
             },
             {
               "kind": "speech",
@@ -345,7 +345,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:84a96954a98c8ccc",
+      "sourceHash": "fnv1a64:0afead9ede21ad50",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -393,6 +393,10 @@
             {
               "kind": "speech",
               "text": "నా (nā) means \"my.\" It belongs to Telugu's native Dravidian first-person family, not to the Indo-European family behind English I/my. You will meet the related word for \"I\" in its own lesson; today you only need nā."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 5160 lists Telugu nēnu, \"I\", with its oblique stems nan- and nā-, beside Tamil nāṉ."
             }
           ]
         },
@@ -639,7 +643,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c89a30766e4a1cc8",
+      "sourceHash": "fnv1a64:9849b69a54719508",
       "notice": null,
       "blocks": [
         {
@@ -675,6 +679,10 @@
             {
               "kind": "speech",
               "text": "Nā pēru Arun. becomes \"My name is Arun.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Both words are native Dravidian: nā (DEDR 5160) and pēru (DEDR 4410)."
             }
           ]
         },
@@ -905,7 +913,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ab6ae7db4c2de91c",
+      "sourceHash": "fnv1a64:540dddfd0c7aa917",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -956,7 +964,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "నువ్వు (nuvvu, familiar \"you\") traces to Proto-Dravidian nīn — the same native root as Tamil nī and Kannada nīnu. మీరు (mīru) is the respectful/plural \"you.\""
+              "text": "నువ్వు (nuvvu, familiar \"you\") traces to Proto-Dravidian nīn — the same native root as Tamil nī and Kannada nīnu (DEDR 3684, which spells the Telugu nīvu). మీరు (mīru) is the respectful/plural \"you\" (DEDR 3688)."
             }
           ]
         },
@@ -1201,7 +1209,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1d598359261ad30d",
+      "sourceHash": "fnv1a64:1fd831d5826f8517",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1249,6 +1257,10 @@
             {
               "kind": "speech",
               "text": "ఏమిటి (ēmiṭi, \"what\") is native Dravidian, on the interrogative stem yā-/e- — the same Dravidian question-root as Tamil eṉṉa and Kannada ēnu, heading Telugu's question family: ēmiṭi (what), evaru (who), ekkaḍa (where), enduku (why)."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 5151 lists Telugu ēmi, \"what\", beside Tamil eṉṉa and Kannada ēn."
             }
           ]
         },
@@ -1805,7 +1817,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e49ac35f9eccf7d8",
+      "sourceHash": "fnv1a64:0294ba39da385774",
       "notice": null,
       "blocks": [
         {
@@ -1840,7 +1852,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three words, no verb — the zero copula holds for questions too."
+              "text": "Three Dravidian words (DEDR 3688, 4410, 5151), no verb — the zero copula holds for questions too."
             }
           ]
         },
@@ -2079,7 +2091,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c893de1a7b5cb4c",
+      "sourceHash": "fnv1a64:e0c5b1cb94a5de95",
       "notice": null,
       "blocks": [
         {
@@ -2118,6 +2130,10 @@
             {
               "kind": "speech",
               "text": "సంతోషం (santōṣam, \"joy, gladness\") is Sanskrit — sam- (\"fully\") + toṣa (\"satisfaction\") — the same loan Kannada uses (santōṣa). Both reach for Sanskrit where Tamil keeps its native magiḻcci. Telugu — the most Sanskritised of the four Dravidian tongues — does so most readily of all."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 12895 lists Sanskrit santoṣa, \"satisfaction\"."
             }
           ]
         },

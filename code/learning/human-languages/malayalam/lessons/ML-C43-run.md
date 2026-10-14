@@ -11,7 +11,8 @@ romanization: "ōṭū"
 concept_tag: ML-VERB-RUN
 prerequisites: [ML-C41-there]
 sounds: []
-roots: []
+roots: [dravidian-otu-run]
+etymology_hook: "ōṭū: native Dravidian, one word with Tamil ōṭu and Kannada ōḍu (DEDR 1041)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: []
 **ഓടൂ** (*ōṭū*) — "run".
 
 The long final *ū* softens a command into an invitation — Malayalam marks courtesy in the verb ending itself.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓടൂ** (*ōṭū*) is native Dravidian, one word with Tamil *ōṭu*, Kannada *ōḍu* and Telugu *ōḍu* (DEDR 1041).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

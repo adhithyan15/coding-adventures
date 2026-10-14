@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed — 1 stale style-drop pin removed (X-7)
+
+The emitters now lower this, so the gate's inverse ratchet
+(`no_pinned_style_drop_has_silently_been_fixed`) failed on every main CI run.
+Removed from `ALLOWED_STYLE_DROPS`: `(Flutter, "font-size")`. Comments that only explained
+removed pins went with them.
+
 ### Changed — a check item is a real `HostCheckbox`
 
 - A check item is the platform's own checkbox, labelled with the item's name,

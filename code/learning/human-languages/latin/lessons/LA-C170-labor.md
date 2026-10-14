@@ -13,7 +13,8 @@ gloss: "to slip, to glide"
 concept_tag: LA-VERB-LABOR
 prerequisites: [LA-C169-recedo, LA-C169-appropinquo]
 sounds: []
-roots: []
+roots: [labi-latin]
+etymology_hook: "lābor 'to slip' — probably from PIE *(s)leh2b- 'to hang loosely'; English lapse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C169-appropinquo]
 <!-- hl-knowledge: introduces=[LA-LEX-C170-ACT170-01]; assesses=[] -->
 
 **lābor, lābī** — "to slip, to glide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lābor** is probably inherited, from a Proto-Indo-European root *\*(s)leh2b-*, "to hang loosely, to droop" (EtymDB 2.1). English *lapse* comes from its participle *lāpsus*, "slipped".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "asvastha"
 concept_tag: KA-GUNA254-ASVASTHA
 prerequisites: [KA-C253-niyama, KA-C254-telu2]
 sounds: []
-roots: []
+roots: [sanskrit-asvastha]
+etymology_hook: "asvastha ← Sanskrit asvastha 'not well', a- 'not' + svastha 'well'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C254-telu2]
 <!-- hl-knowledge: introduces=[KA-LEX-C254-GUNA254-02]; assesses=[] -->
 
 **ಅಸ್ವಸ್ಥ** — *asvastha* — "unwell, sick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಸ್ವಸ್ಥ** (*asvastha*) is Sanskrit *asvastha*, "unwell": *a-*, "not", and *svastha*, "well, at ease". A tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

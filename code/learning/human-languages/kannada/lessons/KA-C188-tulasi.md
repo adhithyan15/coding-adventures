@@ -14,7 +14,8 @@ romanization: "tuḷasi"
 concept_tag: KA-VASTU188-TULASI
 prerequisites: [KA-C188-moggu, KA-C188-mullu]
 sounds: []
-roots: []
+roots: [sanskrit-tulasi]
+etymology_hook: "tuḷasi ← Sanskrit tulasī 'the sacred basil plant', reshaped as a tadbhava (CDIAL 5885)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C188-mullu]
 <!-- hl-knowledge: introduces=[KA-LEX-C188-VASTU188-05]; assesses=[] -->
 
 **ತುಳಸಿ** — *tuḷasi* — "holy basil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತುಳಸಿ** (*tuḷasi*) comes from Sanskrit *tulasī*, "the sacred basil plant", reshaped to Kannada sounds: a tadbhava (CDIAL 5885).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

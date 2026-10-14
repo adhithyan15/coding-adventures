@@ -14,7 +14,8 @@ romanization: "pūjāri"
 concept_tag: ML-JOLI262-PUJARI
 prerequisites: [ML-C262-udaharanam, ML-C262-kalakaran]
 sounds: []
-roots: []
+roots: [sanskrit-puja]
+etymology_hook: "pūjāri: Sanskrit pūjā 'worship' (CDIAL 8317) + a Malayalam ending for a person"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C262-kalakaran]
 <!-- hl-knowledge: introduces=[ML-LEX-C262-JOLI262-04]; assesses=[] -->
 
 **പൂജാരി** — *pūjāri* — "a temple priest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൂജാരി** (*pūjāri*) is Sanskrit *pūjā*, "honour, worship" (CDIAL 8317), with an ending for a person: "one who does the worship".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

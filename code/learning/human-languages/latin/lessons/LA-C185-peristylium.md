@@ -13,7 +13,8 @@ gloss: "a colonnaded garden"
 concept_tag: LA-RES185-PERISTYLIUM
 prerequisites: [LA-C185-cella, LA-C185-tablinum]
 sounds: []
-roots: []
+roots: [peristylium-latin]
+etymology_hook: "peristylium 'colonnaded garden' — from Greek peristylion: peri 'around' + stylos 'column'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C185-tablinum]
 <!-- hl-knowledge: introduces=[LA-LEX-C185-RES185-03]; assesses=[] -->
 
 **peristylium, peristyliī** — "a colonnaded garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**peristylium** was borrowed from Greek *peristylion*, "a place ringed with columns" (Lewis & Short), from *peri*, "around", and *stylos*, "a column".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

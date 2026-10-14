@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 266,
-  "sourceHash": "fnv1a64:58c7002d0f5f4427",
+  "sourceHash": "fnv1a64:e0e7cb82a7c1d197",
   "lessonIds": [
     "KA-C266-balb",
     "KA-C266-rimot",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch266.txt",
   "json": "kannada/narration/ch266.json",
-  "textHash": "fnv1a64:e7cbc1c37346f9d0",
-  "jsonHash": "fnv1a64:8c2120fa1b6fd987",
+  "textHash": "fnv1a64:721e19391d3809d4",
+  "jsonHash": "fnv1a64:61772dd7f0987d1e",
   "findings": []
 }

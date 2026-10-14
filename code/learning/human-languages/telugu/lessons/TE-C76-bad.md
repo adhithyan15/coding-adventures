@@ -11,7 +11,8 @@ romanization: "ceḍḍa"
 concept_tag: TE-ADJ-BAD
 prerequisites: [TE-C76-very, TE-C29-subhodayam]
 sounds: []
-roots: []
+roots: [dravidian-cedu-rot]
+etymology_hook: "ceḍḍa: native Dravidian; DEDR 2760 lists ceḍḍa 'rotten' with Tamil ceṭi 'stench'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C76-very]
 మంచి, "good", has stood without an opposite ever since the adjectives chapter. చెడ్డ is the opposite.
 
 It sits in front of its noun and does not change, exactly as మంచి does. Do not reach for చేదు from the last chapter: that is *bitter*, a taste, and it does not judge anything.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చెడ్డ** (*ceḍḍa*) is native Dravidian. DEDR 2760 lists *ceḍu*, "to be rotten", and *ceḍḍa*, "rotten", with Tamil *ceṭi*, "bad odour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

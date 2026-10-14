@@ -14,7 +14,8 @@ romanization: "schyot"
 concept_tag: RU-RABOTA170-SCHYOT
 prerequisites: [RU-C170-zarplata, RU-C170-nalog]
 sounds: []
-roots: []
+roots: [slavic-chisti]
+etymology_hook: "счёт is с- + чёт, from считать 'to count', on the root of читать 'to read'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C170-nalog]
 <!-- hl-knowledge: introduces=[RU-LEX-C170-RABOTA170-04]; assesses=[] -->
 
 **счёт** (*schyot*) — "a bill; an account".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**счёт** is *с-* with *чёт*, "a count", from *считать*, "to count", on the root of *читать*, "to read", which once meant "to count".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 268,
-  "sourceHash": "fnv1a64:769bedbaacf0fe38",
+  "sourceHash": "fnv1a64:173475789d8a344f",
   "lessonIds": [
     "KA-C268-vakila",
     "KA-C268-enjiniyar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch268.txt",
   "json": "kannada/narration/ch268.json",
-  "textHash": "fnv1a64:8527057b02a71ef0",
-  "jsonHash": "fnv1a64:3c0affac61e334c1",
+  "textHash": "fnv1a64:e6167030b7437a1f",
+  "jsonHash": "fnv1a64:9964252511e6841d",
   "findings": []
 }

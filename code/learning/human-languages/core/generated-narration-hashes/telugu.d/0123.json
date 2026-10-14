@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 123,
-  "sourceHash": "fnv1a64:5b331754170e21a3",
+  "sourceHash": "fnv1a64:6b615b8f366656ea",
   "lessonIds": [
     "TE-C123-puli",
     "TE-C123-simham",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch123.txt",
   "json": "telugu/narration/ch123.json",
-  "textHash": "fnv1a64:f3a82d3a84c0c73b",
-  "jsonHash": "fnv1a64:53e8ac135687cc7c",
+  "textHash": "fnv1a64:8c02af5952962057",
+  "jsonHash": "fnv1a64:0c5fc638e55e4e64",
   "findings": []
 }

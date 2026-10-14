@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Why, and Because",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:786f737281dcd6a4",
+  "sourceHash": "fnv1a64:0dee711a4b02ba56",
   "lessons": [
     {
       "id": "HI-C71-kyon",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53ab38b359d87d29",
+      "sourceHash": "fnv1a64:048f42d1b55d3717",
       "notice": null,
       "blocks": [
         {
@@ -63,6 +63,10 @@
             {
               "kind": "speech",
               "text": "The deixis lesson generalised the य- / व- / क- system and listed the k- words. This is one of the ones it listed and did not teach. Its क- is the same ancient stem as क्या and kaun, and it is Latin's qu- in quis and English's wh- in who — one Indo-European kʷ-, three different spellings of the same sound."
+            },
+            {
+              "kind": "speech",
+              "text": "क्यों (kyoṁ) is built on Sanskrit ka-, the question stem behind क्या (CDIAL 3164)."
             }
           ]
         },

@@ -14,7 +14,8 @@ romanization: "maññappittaṁ"
 concept_tag: ML-AROGYAM275-MANNAPPITTAM
 prerequisites: [ML-C275-mula3, ML-C275-catavu]
 sounds: []
-roots: []
+roots: [dravidian-mancal-turmeric, sanskrit-pitta]
+etymology_hook: "maññappittaṁ: native mañña 'yellow' (DEDR 4635) + Sanskrit pitta 'bile' (CDIAL 8181)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C275-catavu]
 <!-- hl-knowledge: introduces=[ML-LEX-C275-AROGYAM275-04]; assesses=[] -->
 
 **മഞ്ഞപ്പിത്തം** — *maññappittaṁ* — "jaundice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മഞ്ഞപ്പിത്തം** (*maññappittaṁ*) joins native *mañña*, "yellow" (DEDR 4635, with Tamil *mañcaḷ*, "turmeric"), to Sanskrit *pitta*, "bile" (CDIAL 8181): "yellow bile".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

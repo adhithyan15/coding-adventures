@@ -14,7 +14,8 @@ romanization: "jīlakarra"
 concept_tag: TE-THINGS135-JILAKARRA
 prerequisites: [TE-C134-godhumalu, TE-C135-miriyalu]
 sounds: []
-roots: []
+roots: [sanskrit-jiraka]
+etymology_hook: "jīlakarra: usually traced to Sanskrit jīraka 'cumin seed' (CDIAL 5234)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C135-miriyalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C135-THINGS135-02]; assesses=[] -->
 
 **జీలకర్ర** — *jīlakarra* — "cumin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జీలకర్ర** (*jīlakarra*) is usually traced to Sanskrit *jīraka*, "cumin seed" (CDIAL 5234), reshaped to Telugu sounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

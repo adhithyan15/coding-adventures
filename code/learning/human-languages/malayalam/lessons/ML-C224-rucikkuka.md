@@ -14,7 +14,8 @@ romanization: "rucikkuka"
 concept_tag: ML-VERB-RUCIKKUKA
 prerequisites: [ML-C224-kalarttuka, ML-C224-vilambuka]
 sounds: []
-roots: []
+roots: [sanskrit-ruci]
+etymology_hook: "rucikkuka ← Sanskrit ruci 'light, relish' (CDIAL 10762) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C224-vilambuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C224-KRIYA224-03]; assesses=[] -->
 
 **രുചിക്കുക** — *rucikkuka* — "to taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**രുചിക്കുക** (*rucikkuka*) is built on Sanskrit *ruci*, "light, beauty", later "relish, taste" (CDIAL 10762), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 232,
-  "sourceHash": "fnv1a64:5a34140e159b748f",
+  "sourceHash": "fnv1a64:4de0bc09d15c7eae",
   "lessonIds": [
     "KA-C232-kharcu",
     "KA-C232-vime",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch232.txt",
   "json": "kannada/narration/ch232.json",
-  "textHash": "fnv1a64:520d1869c0cd1de3",
-  "jsonHash": "fnv1a64:1f5e26c48e32017d",
+  "textHash": "fnv1a64:a9ccbb8c08122d8b",
+  "jsonHash": "fnv1a64:8d1c41025b0f1484",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "jāru"
 concept_tag: TE-VERB-JARU
 prerequisites: [TE-C205-appu-tisuko, TE-C206-dorlu]
 sounds: []
-roots: []
+roots: [dravidian-caaru-slip]
+etymology_hook: "jāru: native Dravidian, one word with Tamil cāṟu and Kannada jāṟu (DEDR 2482)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C206-dorlu]
 <!-- hl-knowledge: introduces=[TE-LEX-C206-KRIYA206-02]; assesses=[] -->
 
 **జారు** — *jāru* — "to slip, to slide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జారు** (*jāru*) is native Dravidian, one word with Tamil *cāṟu* and Kannada *jāṟu* (DEDR 2482). DEDR lists Telugu *jāṟu*, "to slide, slip".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

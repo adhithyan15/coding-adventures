@@ -13,7 +13,8 @@ gloss: "to mourn"
 concept_tag: LA-VERB-LUGEO
 prerequisites: [LA-C261-iubeo, LA-C261-cogo]
 sounds: []
-roots: []
+roots: [lugere-latin]
+etymology_hook: "lūgeō 'to mourn' — probably from PIE *lewg-; Greek lygros 'mournful' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C261-cogo]
 <!-- hl-knowledge: introduces=[LA-LEX-C261-ACT261-04]; assesses=[] -->
 
 **lūgeō, lūgēre** — "to mourn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lūgeō** is probably inherited, from a Proto-Indo-European root *\*lewg-*, "to break" (EtymDB 2.1); Greek *lygros*, "mournful", is often compared (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

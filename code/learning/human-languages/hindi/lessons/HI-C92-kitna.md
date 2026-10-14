@@ -14,9 +14,10 @@ romanization: "kitnā"
 concept_tag: HI-QUESTION-HOW-MUCH
 prerequisites: [HI-C92-se-comparison, HI-C19-umr, HI-C91-kitaben]
 sounds: []
-roots: []
+roots: [indo-aryan-kiyatta]
+etymology_hook: "kitnā ← *kiyatta 'how great?', with an added -n- (CDIAL 3167)"
 duration:
-  max_seconds: 240
+  max_seconds: 279
 requires:
   knowledge: [HI-LEX-C92-DEG-03, HI-CONCEPT-C19-UMR-01, HI-LEX-C91-NOUN-02, HI-LEX-C92-DEG-01]
 introduces:
@@ -64,6 +65,8 @@ the past copula, the continuous and the hedge.
 **Hindi does not split *how much* from *how many*.** English needs two phrases
 because it sorts nouns into countable and uncountable; Hindi asks one question
 and lets the noun answer.
+
+**कितना** comes from a reconstructed *\*kiyatta*, "how great" (CDIAL 3167).
 
 ## Grammar Lens: the shape of a quantity question
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C92-DEG-04, HI-LEX-C92-DEG-01] -->

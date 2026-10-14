@@ -14,7 +14,8 @@ romanization: "eviṭeyuṁ"
 concept_tag: ML-NISHEDHAM177-EVITEYUM
 prerequisites: [ML-C177-arum, ML-C177-orikkalum]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian]
+etymology_hook: "eviṭeyuṁ: native Dravidian, eviṭe 'where' (DEDR 5151) + -uṁ 'even, any'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C177-orikkalum]
 <!-- hl-knowledge: introduces=[ML-LEX-C177-NISHEDHAM177-03]; assesses=[] -->
 
 **എവിടെയും** — *eviṭeyuṁ* — "nowhere, not anywhere (with a negative verb)". **അവൻ എവിടെയും പോയില്ല** — *avan eviṭeyuṁ pōyilla* — "He didn't go anywhere."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എവിടെയും** (*eviṭeyuṁ*) is native Dravidian: *eviṭe*, "where" (DEDR 5151), with *-uṁ*, "even, any": with a negative verb, "not anywhere".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gōriṇṭāku"
 concept_tag: TE-VASTUVU188-GORINTAKU
 prerequisites: [TE-C188-toranam, TE-C188-bottu]
 sounds: []
-roots: []
+roots: [telugu-gorinta-henna, dravidian-aaku-leaf]
+etymology_hook: "gōriṇṭāku: gōriṇṭa, of uncertain origin, + native āku 'leaf' (DEDR 335)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C188-bottu]
 <!-- hl-knowledge: introduces=[TE-LEX-C188-VASTUVU188-05]; assesses=[] -->
 
 **గోరింటాకు** — *gōriṇṭāku* — "henna".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గోరింటాకు** (*gōriṇṭāku*) is *gōriṇṭa*, "henna", whose origin is uncertain, and native *āku*, "leaf", one word with Kannada *āku* (DEDR 335).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

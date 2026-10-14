@@ -14,7 +14,8 @@ romanization: "paṭi"
 concept_tag: ML-THINGS148-PATI
 prerequisites: [ML-C147-bhitti, ML-C147-melkkura]
 sounds: []
-roots: []
+roots: [dravidian-padi-step]
+etymology_hook: "paṭi: native Dravidian, one word with Tamil paṭi and Kannada paḍi (DEDR 3850)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C147-melkkura]
 <!-- hl-knowledge: introduces=[ML-LEX-C148-THINGS148-01]; assesses=[] -->
 
 **പടി** — *paṭi* — "a step".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പടി** (*paṭi*) is native Dravidian, one word with Tamil *paṭi* and Kannada *paḍi* (DEDR 3850).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

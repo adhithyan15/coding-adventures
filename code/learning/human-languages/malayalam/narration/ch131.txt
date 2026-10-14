@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a feast, then the Malayalam for payasa
 You'll want to know: മീൻ.
 മീൻ (mīn) — "fish", straight from the boats every morning.
 
+The word, taken apart.
+മീൻ (mīn) is native Dravidian, one word with Tamil mīṉ and Kannada mīn (DEDR 4885). Sanskrit mīna, "fish", is thought to come from this Dravidian word (CDIAL 10140a). DEDR 4885 compares Sanskrit mīna.
+
 What you've built.
 The coast's favourite food.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for payasam, then the Malayalam for fish.
 
 You'll want to know: ഇറച്ചി.
 ഇറച്ചി (iṟacci) — "meat".
+
+The word, taken apart.
+ഇറച്ചി (iṟacci) is native Dravidian, one word with Tamil iṟacci and Telugu eṟaci (DEDR 529).
 
 What you've built.
 Another main dish.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for fish, then the Malayalam for meat.
 You'll want to know: മുട്ട.
 മുട്ട (muṭṭa) — "an egg", the thing a കോഴി gives you.
 
+The word, taken apart.
+മുട്ട (muṭṭa) is native Dravidian, one word with Tamil muṭṭai and Kannada moṭṭe (DEDR 4939).
+
 What you've built.
 A hen word.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for meat, then the Malayalam for an egg.
 You'll want to know: പച്ചക്കറി.
 പച്ചക്കറി (paccakkaṟi) — "vegetables". It begins with പച്ച, "green".
 
+The word, taken apart.
+പച്ചക്കറി (paccakkaṟi) is native Dravidian: pacca, "green, fresh" (DEDR 3821, with Tamil paca, "to be green"), with the word for "vegetables, curry" (DEDR 1391, with Tamil kaṟi).
+
 What you've built.
 The green part of the meal.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for an egg, then the Malayalam for vegetab
 
 You'll want to know: ഉള്ളി.
 ഉള്ളി (uḷḷi) — "an onion", in almost every Kerala dish.
+
+The word, taken apart.
+ഉള്ളി (uḷḷi) is native Dravidian, one word with Tamil uḷḷi, Kannada uḷḷi and Telugu ulli (DEDR 705). DEDR 705 compares Sanskrit ūlī.
 
 What you've built.
 The start of every curry.

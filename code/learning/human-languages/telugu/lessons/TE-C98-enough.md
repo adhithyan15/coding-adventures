@@ -11,7 +11,8 @@ romanization: "saripōtundi"
 concept_tag: TE-REPLY-ENOUGH
 prerequisites: [TE-C98-nothing, TE-C98-notyet]
 sounds: []
-roots: []
+roots: [sari, proto-dravidian-poo-go]
+etymology_hook: "saripōtundi: sari 'right', of uncertain origin, + pō 'to go' (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C98-notyet]
 **సరిపోతుంది** (*saripōtundi*) — "that will do", "it is enough", and of clothes, "it fits".
 
 It starts on **సరి**, "right, even", like **సరే** and **సరిగ్గా**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సరిపోతుంది** (*saripōtundi*) is *sari*, "right, even", and *pōtundi*, "it goes", from native *pō*, "to go" (DEDR 4572). The origin of *sari* is uncertain: DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

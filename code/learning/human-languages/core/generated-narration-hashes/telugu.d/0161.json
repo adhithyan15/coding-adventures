@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 161,
-  "sourceHash": "fnv1a64:b9f4932fbabcfba1",
+  "sourceHash": "fnv1a64:e86de6edf1aa2e69",
   "lessonIds": [
     "TE-C161-natyam-ceyu",
     "TE-C161-jarupuko",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch161.txt",
   "json": "telugu/narration/ch161.json",
-  "textHash": "fnv1a64:9d45213cdb6c152b",
-  "jsonHash": "fnv1a64:240fdd6d0fd97e33",
+  "textHash": "fnv1a64:db08bbfd5cb6315b",
+  "jsonHash": "fnv1a64:427d92259ae53873",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "viṟaykkuka"
 concept_tag: ML-VERB-VIRAYKKUKA
 prerequisites: [ML-C304-svasikkuka, ML-C304-tummuka]
 sounds: []
-roots: []
+roots: [dravidian-vira-tremble]
+etymology_hook: "viṟaykkuka: native Dravidian, one word with Tamil viṟai (DEDR 5439)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C304-tummuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C304-KRIYA304-03]; assesses=[] -->
 
 **വിറയ്ക്കുക** — *viṟaykkuka* — "to shiver, to tremble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിറയ്ക്കുക** (*viṟaykkuka*) is native Dravidian, one word with Tamil *viṟai* (DEDR 5439).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

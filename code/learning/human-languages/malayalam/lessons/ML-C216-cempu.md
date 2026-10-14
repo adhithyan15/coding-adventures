@@ -14,7 +14,8 @@ romanization: "cempŭ"
 concept_tag: ML-VASTU216-CEMPU
 prerequisites: [ML-C215-samanila, ML-C215-hobi]
 sounds: []
-roots: []
+roots: [dravidian-cembu-copper]
+etymology_hook: "cempŭ: native Dravidian, one word with Tamil cempu and Kannada cambu (DEDR 2775)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C215-hobi]
 <!-- hl-knowledge: introduces=[ML-LEX-C216-VASTU216-01]; assesses=[] -->
 
 **ചെമ്പ്** — *cempŭ* — "copper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചെമ്പ്** (*cempŭ*) is native Dravidian, one word with Tamil *cempu*, Kannada *cambu* and Telugu *cembu* (DEDR 2775). DEDR 2775 asks whether Sanskrit *tāmra*, "copper", has influenced these words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

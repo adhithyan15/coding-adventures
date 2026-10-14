@@ -14,7 +14,8 @@ romanization: "utsāhaṁ"
 concept_tag: TE-AROGYAM168-UTSAHAM
 prerequisites: [TE-C168-asuya, TE-C168-garvam]
 sounds: []
-roots: []
+roots: [sanskrit-utsaha]
+etymology_hook: "utsāhaṁ ← Sanskrit utsāha 'power, firmness; joy', a tatsama (CDIAL 1882)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C168-garvam]
 <!-- hl-knowledge: introduces=[TE-LEX-C168-AROGYAM168-03]; assesses=[] -->
 
 **ఉత్సాహం** — *utsāhaṁ* — "enthusiasm, excitement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉత్సాహం** (*utsāhaṁ*) is Sanskrit *utsāha*, "power, firmness; joy", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 1882). The sense "enthusiasm" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

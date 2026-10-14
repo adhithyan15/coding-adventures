@@ -14,7 +14,8 @@ romanization: "virasamāya"
 concept_tag: ML-GUNAM284-VIRASAMAYA
 prerequisites: [ML-C284-valippam, ML-C284-rasakaramaya]
 sounds: []
-roots: []
+roots: [sanskrit-rasa, aaka-dravidian]
+etymology_hook: "virasamāya: Sanskrit virasa 'tasteless' (CDIAL 11849) + native āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C284-rasakaramaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C284-GUNAM284-04]; assesses=[] -->
 
 **വിരസമായ** — *virasamāya* — "boring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിരസമായ** (*virasamāya*) joins Sanskrit *virasa*, "juiceless, tasteless" (CDIAL 11849), to native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 197,
-  "sourceHash": "fnv1a64:f67ec828de3fdb60",
+  "sourceHash": "fnv1a64:13a340ec1a424837",
   "lessonIds": [
     "ML-C197-marunnukata",
     "ML-C197-tunikkata",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch197.txt",
   "json": "malayalam/narration/ch197.json",
-  "textHash": "fnv1a64:8e4ad76673bc80c6",
-  "jsonHash": "fnv1a64:2c80ff0a0c85e3ec",
+  "textHash": "fnv1a64:c60d02686ab2010f",
+  "jsonHash": "fnv1a64:b88f8f18b6e41e22",
   "findings": []
 }

@@ -12,7 +12,7 @@
     {
       "category": "ffi",
       "action": "call",
-      "target": "libc fcntl(F_GETFD) on Unix",
+      "target": "libc fcntl(F_GETFD) and sysconf(_SC_OPEN_MAX) on Unix, in the process module",
       "justification": "Checks that exactly the key descriptors were inherited (the one after the last must be closed) before adopting them."
     }
   ],

@@ -14,7 +14,8 @@ romanization: "śubhkāmnāẽ"
 concept_tag: HI-SORRY-WISHES
 prerequisites: [HI-C114-koibaat, HI-C114-badhai]
 sounds: []
-roots: []
+roots: [sanskrit-shubha, sanskrit-kamana]
+etymology_hook: "śubhkāmnāẽ: Sanskrit śubha 'good' + kāmanā 'wish', both tatsamas"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C114-badhai]
 
 It opens on the **शुभ** of **शुभ रात्रि**, "auspicious". **आपको शुभकामनाएँ** — "good wishes to
 you".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शुभकामनाएँ** (*śubhkāmnāẽ*) is two Sanskrit words taken over whole, tatsamas: *śubha*, "auspicious, good", and *kāmanā*, "a wish", with the Hindi plural ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

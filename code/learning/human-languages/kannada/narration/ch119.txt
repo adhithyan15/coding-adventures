@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a pen, then the Kannada for paper; a let
 You'll want to know: ಒಲೆ.
 ಒಲೆ — ole — "a stove".
 
+The word, taken apart.
+ಒಲೆ (ole) is native Dravidian, one word with Tamil ulai (DEDR 2857). DEDR lists ole itself, "fireplace".
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Greet through the day: ಶುಭೋದಯ, ಶುಭ ಮಧ್ಯಾಹ್ನ, �
 You'll want to know: ಮೇಣಬತ್ತಿ.
 ಮೇಣಬತ್ತಿ — mēṇabatti — "a candle".
 
+The word, taken apart.
+ಮೇಣಬತ್ತಿ (mēṇabatti) is mēṇa, "wax", which DEDR lists among Indo-Aryan loans (DEDR App. 52), and batti, "wick", from Sanskrit varti, "wick, lamp" (CDIAL 11359). A candle is a wax wick.
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Kannada for a stove, then the Kannada for a candle.
 
 You'll want to know: ಬೆಂಕಿಪೆಟ್ಟಿಗೆ.
 ಬೆಂಕಿಪೆಟ್ಟಿಗೆ — beṅkipeṭṭige — "a matchbox".
+
+The word, taken apart.
+ಬೆಂಕಿಪೆಟ್ಟಿಗೆ (beṅkipeṭṭige) is native Dravidian: beṅki, "fire" (DEDR 5517), and peṭṭige, "box" (DEDR 4388). DEDR 4388 compares Sanskrit peṭaka.
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Before the new one: say the Kannada for a candle, then the Kannada for a matchbo
 You'll want to know: ಬೊಂಬೆ.
 ಬೊಂಬೆ — bombe — "a doll".
 
+The word, taken apart.
+ಬೊಂಬೆ (bombe) is native Dravidian, one word with Tamil pommai and Telugu bomma (DEDR 4530).
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Kannada for a matchbox, then the Kannada for a doll.
 
 You'll want to know: ಚೆಂಡು.
 ಚೆಂಡು — ceṇḍu — "a ball".
+
+The word, taken apart.
+ಚೆಂಡು (ceṇḍu) is native Dravidian, one word with Tamil ceṇṭu and Telugu ceṇḍu (DEDR 2766).
 
 What you've built.
 One more word for this chapter.

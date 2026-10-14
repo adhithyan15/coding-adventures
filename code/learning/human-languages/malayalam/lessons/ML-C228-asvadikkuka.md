@@ -14,7 +14,8 @@ romanization: "āsvadikkuka"
 concept_tag: ML-VERB-ASVADIKKUKA
 prerequisites: [ML-C228-nuna-parayuka, ML-C228-vagdanam-ceyyuka]
 sounds: []
-roots: []
+roots: [sanskrit-asvada]
+etymology_hook: "āsvadikkuka ← Sanskrit āsvāda 'tasting, relish' + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C228-vagdanam-ceyyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C228-KRIYA228-04]; assesses=[] -->
 
 **ആസ്വദിക്കുക** — *āsvadikkuka* — "to enjoy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആസ്വദിക്കുക** (*āsvadikkuka*) is built on Sanskrit *āsvāda*, "tasting, relish", with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

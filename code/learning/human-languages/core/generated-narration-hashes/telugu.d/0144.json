@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 144,
-  "sourceHash": "fnv1a64:565a2c3356ddecf0",
+  "sourceHash": "fnv1a64:825df3c9a545e1f9",
   "lessonIds": [
     "TE-C144-vandu",
     "TE-C144-koyu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch144.txt",
   "json": "telugu/narration/ch144.json",
-  "textHash": "fnv1a64:3feb21057659d4e4",
-  "jsonHash": "fnv1a64:cc6b5e19271e19d1",
+  "textHash": "fnv1a64:95da757341f0af8d",
+  "jsonHash": "fnv1a64:7199dfaecfcf9055",
   "findings": []
 }

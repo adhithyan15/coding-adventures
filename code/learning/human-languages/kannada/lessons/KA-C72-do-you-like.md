@@ -11,9 +11,10 @@ romanization: "nimage kāphi iṣṭavā"
 concept_tag: KA-PHRASE-DOYOULIKE
 prerequisites: [KA-C72-want, KA-S150-letter-ja, KA-C34-ishta, KA-C69-is-it, KA-C56-vessel, KA-C56-knife, KA-C13-dehada-bhagagalu, KA-C11-bannagalu]
 sounds: []
-roots: []
+roots: [sanskrit-ishta, english-coffee]
+etymology_hook: "nimage kāphi iṣṭavā: native nimage 'to you' (DEDR 3688), English coffee, Sanskrit iṣṭa 'desired' (CDIAL 1597)"
 duration:
-  max_seconds: 210
+  max_seconds: 258
 requires:
   knowledge: [KA-SCRIPT-RECOG-150, KA-LEX-C34-ISHTA-01, KA-GRAMMAR-C34-ISHTA-02, KA-GRAMMAR-C69-ASK-02, KA-LEX-C39-KAAPI-01]
 introduces:
@@ -50,6 +51,11 @@ with a ವ slipped in to keep the two vowels apart, gives ಇಷ್ಟವಾ.
 
 That little ವ is not a rule to learn. Kannada dislikes two vowels meeting and
 puts a ವ or a ಯ between them; you have heard it all along without noticing.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿಮಗೆ ಕಾಫಿ ಇಷ್ಟವಾ** (*nimage kāphi iṣṭavā*) is *nimage*, "to you" (DEDR 3688), *kāphi*, "coffee", a loan from English *coffee*, and *iṣṭa*, "liked", from Sanskrit *iṣṭa*, "sought, beloved" (CDIAL 1597), with the question ending *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

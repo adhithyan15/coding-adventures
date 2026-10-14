@@ -11,6 +11,7 @@ concept_tag: ES-HOME-CALEFACCION
 prerequisites: [ES-C443-sintesis-animo, ES-C334-calor, ES-C334-frio, ES-C441-factura]
 sounds: [written-accent, stress-final]
 roots: [calor-latin, facere-latin]
+etymology_hook: "calefacción — cale- (calor 'heat') + -facción (facere 'to make'): heat-making"
 duration:
   max_seconds: 265
 requires:

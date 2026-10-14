@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 211,
-  "sourceHash": "fnv1a64:bfacf34188228421",
+  "sourceHash": "fnv1a64:360635efc9ba3219",
   "lessonIds": [
     "LA-C211-omnino",
     "LA-C211-vix",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch211.txt",
   "json": "latin/narration/ch211.json",
-  "textHash": "fnv1a64:a8d2505dcb3a8b51",
-  "jsonHash": "fnv1a64:736db3a2eb080424",
+  "textHash": "fnv1a64:7b0eac5b25c4656d",
+  "jsonHash": "fnv1a64:ff1853f91c0422d2",
   "findings": []
 }

@@ -11,7 +11,8 @@ romanization: "kaburu"
 concept_tag: TE-NOUN-MESSAGE
 prerequisites: [TE-C68-shout]
 sounds: []
-roots: []
+roots: [arabic-khabar]
+etymology_hook: "kaburu ← Arabic khabar 'news', through Persian and Hindustani"
 duration:
   max_seconds: 210
 requires:

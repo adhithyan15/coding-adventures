@@ -11,6 +11,7 @@ concept_tag: VERB-PAST
 prerequisites: [ES-C10-ir-a-futuro]
 sounds: [vowel-a, vowel-e]
 roots: [ad heri]
+etymology_hook: "ayer ← Latin heri 'yesterday', probably with ad fused on; heri is a cousin of English yester-"
 duration:
   max_seconds: 240
 requires:
@@ -51,7 +52,7 @@ what the verbs in this chapter are about to do.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-LEX-AYER, ES-ETYMON-AD-HERI]; assesses=[] -->
 
-**ayer** — "yesterday." It is two Latin words that fused:
+**ayer** — "yesterday." It is most likely two Latin words that fused:
 
 ```
 ad    +   heri        →   ayer
@@ -59,8 +60,9 @@ ad    +   heri        →   ayer
 ```
 
 Latin *heri* is the same ancient word as English **yester**day and German
-*gestern*. The *h-* fell silent and then fell away, the *-ri* softened to a
-*-y-* sound, and *ad heri* — "to yesterday" — packed down into one short word.
+*gestern*. The *h-* fell silent and then fell away, the stressed *e* opened
+into *ie*, written *ye*, the final *-i* dropped, and *ad heri* packed down into
+one short word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[ES-SEMANTIC-PAST-TIME-FRAME]; assesses=[] -->

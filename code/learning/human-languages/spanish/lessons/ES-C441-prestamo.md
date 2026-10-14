@@ -11,6 +11,7 @@ concept_tag: ES-MONEY-PRESTAMO
 prerequisites: [ES-C441-factura, ES-C436-prestar, ES-C353-banco, ES-C280-dinero]
 sounds: [written-accent, stress-antepenultimate]
 roots: [praestare-latin]
+etymology_hook: "préstamo — from prestar, Latin praestare 'to stand in front, to supply'"
 duration:
   max_seconds: 280
 requires:

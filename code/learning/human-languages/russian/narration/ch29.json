@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Head, Hand, Leg, Belly, Tooth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ae996fb94c7a2ca9",
+  "sourceHash": "fnv1a64:2c01b401a8b3a862",
   "lessons": [
     {
       "id": "RU-C29-head",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3bb76ddcb0fb572",
+      "sourceHash": "fnv1a64:c14119dfd49d7933",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "голова (golová) from Proto-Slavic golva, \"head\" — inherited, and a cousin of Lithuanian galvà, \"head\" (Vasmer). East Slavic says -оло- where Church Slavonic says -ла-, so the same word came back from church books as глава, \"chapter; the head of something\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd21a3eb49952ce5",
+      "sourceHash": "fnv1a64:615ca429d3eaa831",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "рука (ruká) from Proto-Slavic rǫka, \"hand\" — inherited; the old nasal ǫ became Russian у. Vasmer pairs it with Lithuanian rankà, \"hand\", and links both with Lithuanian riñkti, \"to gather\": the hand as the gatherer."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f0aa63dbaa5597c",
+      "sourceHash": "fnv1a64:82f6deda5fa6d666",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "нога (nogá) from Proto-Slavic noga — inherited. Vasmer gives \"claw\" as the first sense and lists Lithuanian nagà, \"hoof\", Latin unguis, \"nail\", and Old High German nagal, \"nail\": English nail is a cousin, from PIE h₃nogʷʰ-, \"nail, claw\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:564328a2091ea28b",
+      "sourceHash": "fnv1a64:645504e95dcc95ac",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "живот (zhivót) from Proto-Slavic životŭ, \"life\" — inherited, from the root of жить, \"to live\". Old Russian životŭ meant \"life, property\"; \"belly\" came later (Vasmer). Lithuanian gyvatà, \"life\", and Latin vīta, \"life\", are cousins (Vasmer)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7aa224cbe36b9894",
+      "sourceHash": "fnv1a64:57e5fef5ed16291e",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "зуб (zub) from Proto-Slavic zǫbŭ, \"tooth\" — inherited. Vasmer sets it beside Sanskrit jámbha-, \"tooth\", Greek gómphos, \"peg\", and Old High German kamb, \"comb\", so English comb is a cousin, from PIE ǵómbʰos, \"tooth, peg\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

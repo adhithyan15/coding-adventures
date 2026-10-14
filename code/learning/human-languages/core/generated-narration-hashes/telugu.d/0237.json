@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 237,
-  "sourceHash": "fnv1a64:a9c85d7f7ce66d20",
+  "sourceHash": "fnv1a64:c8beaaa3caba3701",
   "lessonIds": [
     "TE-C237-polisu",
     "TE-C237-draivaru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch237.txt",
   "json": "telugu/narration/ch237.json",
-  "textHash": "fnv1a64:ea2b814b8cdb9a51",
-  "jsonHash": "fnv1a64:dadef96b380f34ad",
+  "textHash": "fnv1a64:14b2751b692e80e3",
+  "jsonHash": "fnv1a64:40d1bd01f718edc7",
   "findings": []
 }

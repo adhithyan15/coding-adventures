@@ -14,7 +14,8 @@ romanization: "dhairyaṁ"
 concept_tag: TE-QUAL141-DHAIRYAM
 prerequisites: [TE-C141-cedaina, TE-C141-karamaina]
 sounds: []
-roots: []
+roots: [sanskrit-dhairya]
+etymology_hook: "dhairyaṁ ← Sanskrit dhairya 'firmness, courage', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C141-karamaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C141-QUAL141-04]; assesses=[] -->
 
 **ధైర్యం** — *dhairyaṁ* — "courage; brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ధైర్యం** (*dhairyaṁ*) is Sanskrit *dhairya*, "firmness, courage", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

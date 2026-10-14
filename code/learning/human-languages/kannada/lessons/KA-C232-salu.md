@@ -14,7 +14,8 @@ romanization: "sālu"
 concept_tag: KA-KELASA232-SALU
 prerequisites: [KA-C232-kharcu, KA-C232-vime]
 sounds: []
-roots: []
+roots: [dravidian-caal-furrow]
+etymology_hook: "sālu: native Dravidian, one word with Tamil cāl and Telugu cālu (DEDR 2471)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C232-vime]
 <!-- hl-knowledge: introduces=[KA-LEX-C232-KELASA232-03]; assesses=[] -->
 
 **ಸಾಲು** — *sālu* — "a queue, a line".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಲು** (*sālu*) is native Dravidian, one word with Tamil *cāl* and Telugu *cālu* (DEDR 2471). DEDR lists Kannada *sāl*, "a continuous line, a furrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

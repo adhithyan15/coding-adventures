@@ -14,7 +14,8 @@ romanization: "dhaniyā"
 concept_tag: HI-THG211-DHANIYA
 prerequisites: [HI-C211-masala, HI-C211-haldi]
 sounds: []
-roots: []
+roots: [sanskrit-dhanaka]
+etymology_hook: "dhaniyā ← Sanskrit dhāneyaka 'coriander', a form beside dhānaka; a tadbhava (CDIAL 6776)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C211-haldi]
 <!-- hl-knowledge: introduces=[HI-LEX-C211-THG211-04]; assesses=[] -->
 
 **धनिया** — *dhaniyā* — "coriander".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धनिया** (*dhaniyā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dhāneyaka*, "coriander", which CDIAL lists beside *dhānaka* (CDIAL 6776).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

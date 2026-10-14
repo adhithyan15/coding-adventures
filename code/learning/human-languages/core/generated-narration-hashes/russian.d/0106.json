@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 106,
-  "sourceHash": "fnv1a64:1565a7680762d1cb",
+  "sourceHash": "fnv1a64:ac39f7cba7b62267",
   "lessonIds": [
     "RU-C106-dessert",
     "RU-C106-yoghurt",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch106.txt",
   "json": "russian/narration/ch106.json",
-  "textHash": "fnv1a64:dc03a3796a5a67bb",
-  "jsonHash": "fnv1a64:d321dc206e5a43e4",
+  "textHash": "fnv1a64:53fe4cb4e34701e3",
+  "jsonHash": "fnv1a64:7c1fd59a0adcb61c",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "sūpparmārkkaṟṟŭ"
 concept_tag: ML-JOLI263-SUPPARMARKKARRU
 prerequisites: [ML-C263-kavalkkaran, ML-C263-bekkari]
 sounds: []
-roots: []
+roots: [supermarket-english]
+etymology_hook: "sūpparmārkkaṟṟŭ ← English supermarket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C263-bekkari]
 <!-- hl-knowledge: introduces=[ML-LEX-C263-JOLI263-05]; assesses=[] -->
 
 **സൂപ്പർമാർക്കറ്റ്** — *sūpparmārkkaṟṟŭ* — "a supermarket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സൂപ്പർമാർക്കറ്റ്** (*sūpparmārkkaṟṟŭ*) ← English *supermarket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

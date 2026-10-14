@@ -14,7 +14,8 @@ romanization: "reśam"
 concept_tag: HI-THG247-RESAM
 prerequisites: [HI-C246-plastik, HI-C246-rui]
 sounds: []
-roots: []
+roots: [persian-abresham]
+etymology_hook: "reśam: usually traced to Persian abrēsham 'silk'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C246-rui]
 <!-- hl-knowledge: introduces=[HI-LEX-C247-THG247-01]; assesses=[] -->
 
 **रेशम** — *reśam* — "silk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रेशम** (*reśam*) is a loan, usually traced to Persian *abrēsham*, "silk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

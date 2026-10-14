@@ -11,6 +11,7 @@ concept_tag: ES-VERB-DESCANSAR
 prerequisites: [ES-C438-torcerse, ES-C09-cansado]
 sounds: [stress-final]
 roots: [campsare-latin]
+etymology_hook: "descansar — des- + cansar, from Latin campsare 'to round a headland'"
 duration:
   max_seconds: 265
 requires:

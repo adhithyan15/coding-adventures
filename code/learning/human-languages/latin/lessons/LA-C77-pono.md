@@ -13,7 +13,8 @@ gloss: "to put, to place"
 concept_tag: LA-VERB-PONO
 prerequisites: [LA-C77-maneo, LA-C77-cado]
 sounds: []
-roots: []
+roots: [ponere-latin, sinere-latin]
+etymology_hook: "pōnō 'to put' — contracted from older *posinō: po- 'off' + sinō 'to let'; English position"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C77-cado]
 <!-- hl-knowledge: introduces=[LA-LEX-C77-VERBA3-04]; assesses=[] -->
 
 **pōnō, pōnere** — "to put, to place". English *position*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pōnō** is contracted from an older *\*posinō* (Lewis & Short), made of a prefix *po-*, "off, away", and *sinō*, "to let, to leave": to let something down in its place.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

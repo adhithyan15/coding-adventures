@@ -14,7 +14,8 @@ romanization: "āśvasippikkuka"
 concept_tag: ML-VERB-ASVASIPPIKKUKA
 prerequisites: [ML-C268-rajisrrar-ceyyuka, ML-C268-ettikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-ashvasa]
+etymology_hook: "āśvasippikkuka ← Sanskrit āśvāsa 'breathing freely, relief' (CDIAL 1471), as a Malayalam causative"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C268-ettikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C269-KRIYA269-01]; assesses=[] -->
 
 **ആശ്വസിപ്പിക്കുക** — *āśvasippikkuka* — "to comfort, to console".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആശ്വസിപ്പിക്കുക** (*āśvasippikkuka*) is built on Sanskrit *āśvāsa*, "breathing freely, relief" (CDIAL 1471), made into a Malayalam causative: "make breathe freely".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

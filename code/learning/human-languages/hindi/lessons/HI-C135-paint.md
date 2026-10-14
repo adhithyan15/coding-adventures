@@ -14,7 +14,8 @@ romanization: "paiṇṭ"
 concept_tag: HI-THINGS135-PAINT
 prerequisites: [HI-C135-moza, HI-C135-kamiz]
 sounds: []
-roots: []
+roots: [english-pants]
+etymology_hook: "paiṇṭ ← English pants"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C135-kamiz]
 <!-- hl-knowledge: introduces=[HI-LEX-C135-THINGS135-05]; assesses=[] -->
 
 **पैंट** — *paiṇṭ* — "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पैंट** (*paiṇṭ*) is a loan from English *pants*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

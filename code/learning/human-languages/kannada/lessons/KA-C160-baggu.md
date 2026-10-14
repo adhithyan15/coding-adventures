@@ -14,7 +14,8 @@ romanization: "baggu"
 concept_tag: KA-VERB-BAGGU
 prerequisites: [KA-C159-ruci-nodu, KA-C159-agi]
 sounds: []
-roots: []
+roots: [dravidian-vaanku-bend]
+etymology_hook: "baggu: native Dravidian, one word with Telugu vaṅgu (DEDR 5335)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C159-agi]
 <!-- hl-knowledge: introduces=[KA-LEX-C160-KRIYE160-01]; assesses=[] -->
 
 **ಬಗ್ಗು** — *baggu* — "to bend down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಗ್ಗು** (*baggu*) is native Dravidian, one word with Telugu *vaṅgu* (DEDR 5335). DEDR lists *baggu*, "to bend", beside *bāgu*: the old *v-* has become *b-*. DEDR 5335 compares Sanskrit *vaṅka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

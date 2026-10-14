@@ -14,7 +14,8 @@ romanization: "thānā"
 concept_tag: HI-THG187-THANA
 prerequisites: [HI-C186-yad, HI-C187-girjaghar]
 sounds: []
-roots: []
+roots: [sanskrit-sthana]
+etymology_hook: "thānā ← Sanskrit sthāna 'firm stance; place of abode', a tadbhava (CDIAL 13753)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C187-girjaghar]
 <!-- hl-knowledge: introduces=[HI-LEX-C187-THG187-02]; assesses=[] -->
 
 **थाना** — *thānā* — "a police station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थाना** (*thānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sthāna*, "firm stance; place of abode" (CDIAL 13753). CDIAL glosses the Hindi word "police station".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

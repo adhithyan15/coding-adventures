@@ -14,7 +14,8 @@ romanization: "sajānā"
 concept_tag: HI-VERB-SAJANA
 prerequisites: [HI-C173-magna, HI-C174-lautana]
 sounds: []
-roots: []
+roots: [sanskrit-sajjayati]
+etymology_hook: "sajānā: CDIAL lists it under Sanskrit sajjayati 'equips, prepares' (CDIAL 13091)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C174-lautana]
 <!-- hl-knowledge: introduces=[HI-LEX-C174-ACT174-02]; assesses=[] -->
 
 **सजाना** — *sajānā* — "to decorate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सजाना** (*sajānā*) is a tadbhava, inherited and reshaped by sound change. CDIAL lists it, as the causing form of *sājnā*, "to prepare, decorate", under Sanskrit *sajjayati*, "equips, prepares" (CDIAL 13091).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

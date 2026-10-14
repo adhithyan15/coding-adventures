@@ -11,7 +11,8 @@ romanization: "kāraṁ"
 concept_tag: TE-NOUN-PUNGENT
 prerequisites: [TE-C73-bitter]
 sounds: []
-roots: []
+roots: [dravidian-kaar-pungent]
+etymology_hook: "kāraṁ: native Dravidian, one word with Tamil kār 'to be pungent' (DEDR 1466), probably influenced by Sanskrit kṣāra"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C73-bitter]
 Ask for something with తక్కువ కారం and you will be understood anywhere, though in one or two households you will be heard as having said something mildly insulting.
 
 It is inherited. Do not read it into the end of నమస్కారం, which is a different word altogether, Sanskrit, and means a making.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కారం** (*kāraṁ*) is native Dravidian, one word with Tamil *kār*, "to be pungent", and Kannada *kāra*, "pungency" (DEDR 1466). DEDR adds that the word was probably influenced by Sanskrit *kṣāra*, "caustic, alkali".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

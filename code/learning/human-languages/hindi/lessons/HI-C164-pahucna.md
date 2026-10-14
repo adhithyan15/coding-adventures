@@ -14,7 +14,8 @@ romanization: "pahũcnā"
 concept_tag: HI-VERB-PAHUCNA
 prerequisites: [HI-C164-sikhana, HI-C164-sikhna]
 sounds: []
-roots: []
+roots: [sanskrit-prabhuta]
+etymology_hook: "pahũcnā ← Sanskrit prabhūta 'much, great', a tadbhava (CDIAL 8716)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C164-sikhna]
 <!-- hl-knowledge: introduces=[HI-LEX-C164-ACT164-04]; assesses=[] -->
 
 **पहुँचना** — *pahũcnā* — "to arrive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पहुँचना** (*pahũcnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *prabhūta*, "much, great" (CDIAL 8716). Prakrit made a verb of it, "is strong, reaches", and Hindi kept "to reach".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

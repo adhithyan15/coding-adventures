@@ -13,6 +13,9 @@ You'll want to know: రా.
 రా (rā) — "come".
 You met it beside its partner vaccu-; here it opens the run. The bare command, and one of the shortest words in the language: a single syllable that is a complete sentence. The old warning still holds: the tense endings attach to vaccu-, not to rā.
 
+The word, taken apart.
+రా (rā) is native Dravidian: the command form of the verb DEDR 5270 lists as vaccu, "to come", one word with Tamil varu (command vā) and Kannada bar (command bā).
+
 What you've built.
 One more everyday action. Three more follow, and each reuses the ones before it.
 
@@ -38,6 +41,9 @@ Before the new one: what did rā mean?
 You'll want to know: కూర్చో.
 కూర్చో (kūrcō) — "sit".
 A command you will hear on entering any home, usually before anything else is said.
+
+The word, taken apart.
+కూర్చో (kūrcō) is native Dravidian, the command form of kūrcuṇḍu, "to sit", which DEDR 1900 lists with Kannada kūr, "to sit down".
 
 What you've built.
 One more everyday action. Three more follow, and each reuses the ones before it.
@@ -67,6 +73,9 @@ You'll want to know: నిల్చో.
 నిల్చో (nilcō) — "stand".
 Its pair. Telugu, like the other Dravidian languages, makes the bare stem do the work of a command with nothing added.
 
+The word, taken apart.
+నిల్చో (nilcō) is native Dravidian, the command form of nilucu, "to stand", one word with Tamil nil and Kannada nillu (DEDR 3675).
+
 What you've built.
 One more everyday action. Three more follow, and each reuses the ones before it.
 
@@ -94,6 +103,9 @@ Before the new one: what did nilcō mean?
 You'll want to know: ఇవ్వు.
 ఇవ్వు (ivvu) — "give".
 The everyday 'give'. Softening it is done with a separate politeness word rather than by changing the verb.
+
+The word, taken apart.
+ఇవ్వు (ivvu) is native Dravidian. DEDR 2598 lists the Telugu verb iccu, "to give", with the stem ivv-, beside Tamil ī and Kannada ī, "to give".
 
 What you've built.
 One more everyday action. That closes the run: four everyday actions, each met on its own.

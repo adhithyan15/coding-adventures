@@ -11,7 +11,8 @@ romanization: "hakki"
 concept_tag: KA-NOUN-BIRD
 prerequisites: [KA-C60-crow, KA-C58-thats-all]
 sounds: []
-roots: []
+roots: [sanskrit-pakshin]
+etymology_hook: "hakki ← Sanskrit pakṣin 'bird' (CDIAL 7636) through Prakrit pakkhi, with p- turned to h-"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C60-crow]
 ಹಕ್ಕಿ is the general one: any bird at all, the ಕೋಳಿ and the ಕಾಗೆ both inside it. It is Kannada's own, and it sits beside a borrowed word that covers the same ground more formally — the arrangement you already saw when ಸ್ನೇಹಿತ turned out to have ಗೆಳೆಯ living quietly beside it.
 
 One warning before you say it out loud. Written in our letters, *hakki* is *akki* with an *h* on the front, and ಅಕ್ಕಿ is the raw rice from the water-and-rice chapter. In Kannada letters they start differently and there is no danger; in a romanization there is. Say the *h*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಕ್ಕಿ** (*hakki*) comes from Sanskrit *pakṣin*, "winged; bird", through Prakrit *pakkhi* (CDIAL 7636). It is a tadbhava, old enough that its *p-* went the way of native *p-*, to *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

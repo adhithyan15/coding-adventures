@@ -13,7 +13,8 @@ gloss: "a birthday"
 concept_tag: LA-RES195-DIES-NATALIS
 prerequisites: [LA-C195-garum, LA-C195-perna]
 sounds: []
-roots: []
+roots: [natalis-latin, dies-latin, nasci-latin]
+etymology_hook: "diēs nātālis 'birthday' — diēs 'day' + nātālis 'of one's birth'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C195-perna]
 <!-- hl-knowledge: introduces=[LA-LEX-C195-RES195-05]; assesses=[] -->
 
 **diēs nātālis, diēī nātālis** — "a birthday".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**diēs nātālis** is *diēs*, "day", with *nātālis*, "of one's birth", built on *nātus*, "born", from *nāscor*, "to be born". English *natal* comes from the second word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

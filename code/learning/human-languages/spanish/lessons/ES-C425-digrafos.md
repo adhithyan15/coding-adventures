@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-DIGRAFOS
 prerequisites: [ES-C425-vocales]
 sounds: [ch-digraph, ll-digraph, rolled-rr]
 roots: []
+etymology_hook: "dígrafo ← Greek di- 'two' + graphē 'writing': two letters, one sound"
 duration:
   max_seconds: 240
 requires:

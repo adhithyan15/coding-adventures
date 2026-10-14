@@ -15,6 +15,9 @@ Native Dravidian, built off viśakkuka, the word for going hungry — the state 
 Tamil reaches for a different root here, paci, so this is one of the places where the two closest sisters part company on an everyday word.
 You already have the part of the body it reports from: vayaṟŭ, the stomach. One is the place, this is the message.
 
+The word, taken apart.
+വിശപ്പ് (viśappŭ) is native Dravidian, a noun from the verb "to be hungry"; DEDR 5384 lists the root with Tamil vicarppu.
+
 What you've built.
 The first of five things the body reports.
 
@@ -47,6 +50,9 @@ Sanskrit kṣīṇa, meaning worn away or diminished, from a root about wasting 
 In Malayalam the heavier sense has itself worn away, and the word has settled into ordinary speech for the plain tiredness of a long day.
 It opens on the ക്ഷ pair that opens kṣamikkaṇaṁ, the sorry-word — one letter riding on another, and the second one you have met wearing it.
 
+The word, taken apart.
+ക്ഷീണം (kṣīṇaṁ) from Sanskrit kṣīṇa, "worn away, feeble", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 3690).
+
 What you've built.
 Two.
 
@@ -77,6 +83,9 @@ You'll want to know: വേദന.
 Sanskrit vedanā, from the root vid, to know or to feel — pain named as the thing a body knows without being told.
 That root has been busy in this book. Vaidyan, the doctor, and vidyārtthi, the student, both grow from it: knowing, learning, healing and hurting all off one seed.
 Malayalam keeps it for bodily pain first and lets the wider sense follow, so a speaker saying വേദന (vēdana) is usually pointing somewhere.
+
+The word, taken apart.
+വേദന (vēdana) from Sanskrit vēdanā, "feeling, pain", taken over whole as a tatsama (CDIAL 12106). It is built on the root vid, "to know, to feel".
 
 What you've built.
 Three.
@@ -110,6 +119,9 @@ Native, and built the way the crow's name was built: the sound comes first and t
 Tamil went elsewhere for this one, to irumal, from a root of its own — a second parting between the two sisters inside one short chapter.
 It covers the single cough and the standing complaint alike, so a speaker adds a word about how long it has gone on when that matters.
 
+The word, taken apart.
+ചുമ (cuma) is probably native Dravidian. DEDR 1964 sets it beside Tamil cerumu, "to clear the throat, cough", and Kannada kemmu, but puts a query against the Malayalam word.
+
 What you've built.
 Four.
 
@@ -140,6 +152,9 @@ You'll want to know: പനി.
 Native Dravidian, matching Tamil paṉi — where the same word means cold, dew and frost.
 Malayalam took the shivering and let the weather go. What the two senses share is a body that cannot get warm, which is the first hour of a fever and the whole of a cold morning.
 Kerala hangs the word on the season: the weeks after the monsoon breaks are fever weeks, and പനി (pani) is the word on everybody's tongue.
+
+The word, taken apart.
+പനി (pani) is native Dravidian, one word with Tamil paṉi and Kannada pani (DEDR 4035). In Tamil the same word means "dew, cold"; Malayalam kept the shiver and made it a fever.
 
 What you've built.
 Five, and the body has said its piece: hunger, tiredness, pain, a cough and a fever.

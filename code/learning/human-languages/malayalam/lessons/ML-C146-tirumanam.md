@@ -14,7 +14,8 @@ romanization: "tīrumānaṁ"
 concept_tag: ML-WANT146-TIRUMANAM
 prerequisites: [ML-C145-paddhati, ML-C146-avasyam]
 sounds: []
-roots: []
+roots: [dravidian-tir-finish]
+etymology_hook: "tīrumānaṁ: native Dravidian, from the verb 'to be settled'; Kannada tīrumāna (DEDR 3278)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C146-avasyam]
 <!-- hl-knowledge: introduces=[ML-LEX-C146-WANT146-02]; assesses=[] -->
 
 **തീരുമാനം** — *tīrumānaṁ* — "a decision".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തീരുമാനം** (*tīrumānaṁ*) is native Dravidian, built on the verb "to be finished, settled"; DEDR 3278 lists Malayalam *tīrumānam* itself, beside Tamil *tīr* and Kannada *tīrumāna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

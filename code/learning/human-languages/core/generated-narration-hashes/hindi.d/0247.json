@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 247,
-  "sourceHash": "fnv1a64:b7248bff5c485bef",
+  "sourceHash": "fnv1a64:087a8e5d7b213fb2",
   "lessonIds": [
     "HI-C247-resam",
     "HI-C247-camra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch247.txt",
   "json": "hindi/narration/ch247.json",
-  "textHash": "fnv1a64:92761dbe2408946e",
-  "jsonHash": "fnv1a64:71fe6547d3231fdf",
+  "textHash": "fnv1a64:be2198524f3c0aa4",
+  "jsonHash": "fnv1a64:302f83190d90786f",
   "findings": []
 }

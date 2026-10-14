@@ -14,7 +14,8 @@ romanization: "kāraṇaṁ"
 concept_tag: TE-WANT108-KARANAM
 prerequisites: [TE-C108-koru, TE-C108-nirnayincu]
 sounds: []
-roots: []
+roots: [sanskrit-karana]
+etymology_hook: "kāraṇaṁ ← Sanskrit kāraṇa 'cause', a tatsama (CDIAL 3057)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C108-nirnayincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C108-WANT108-03]; assesses=[] -->
 
 **కారణం** — *kāraṇaṁ* — "a reason".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కారణం** (*kāraṇaṁ*) is Sanskrit *kāraṇa*, "cause", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 3057).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

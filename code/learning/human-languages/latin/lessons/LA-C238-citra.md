@@ -13,7 +13,8 @@ gloss: "on this side"
 concept_tag: LA-LOC238-CITRA
 prerequisites: [LA-C237-pridie, LA-C238-ultra]
 sounds: []
-roots: []
+roots: [citra-latin, cis-latin]
+etymology_hook: "citrā 'on this side' — a case form of citer, kin to cis"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C238-ultra]
 <!-- hl-knowledge: introduces=[LA-LEX-C238-LOC238-02]; assesses=[] -->
 
 **citrā** — "on this side".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**citrā** is an old case form of *citer*, "on this side" (Lewis & Short), built on the pointing element of *cis*, "on this side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "saṅgrahisu"
 concept_tag: KA-VERB-SANGRAHISU
 prerequisites: [KA-C207-kuttu, KA-C207-perisu]
 sounds: []
-roots: []
+roots: [sanskrit-sangraha]
+etymology_hook: "saṅgrahisu: Sanskrit saṅgraha 'collection' (CDIAL 12852) + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C207-perisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C207-KRIYE207-05]; assesses=[] -->
 
 **ಸಂಗ್ರಹಿಸು** — *saṅgrahisu* — "to collect, to gather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಂಗ್ರಹಿಸು** (*saṅgrahisu*) is Sanskrit *saṅgraha*, "collection, holding together" (CDIAL 12852), made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

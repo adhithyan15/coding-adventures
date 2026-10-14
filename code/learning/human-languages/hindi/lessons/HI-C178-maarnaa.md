@@ -14,7 +14,8 @@ romanization: "mārnā"
 concept_tag: HI-VERB-MAARNAA
 prerequisites: [HI-C177-talna, HI-C178-bunna]
 sounds: []
-roots: []
+roots: [sanskrit-marayati]
+etymology_hook: "mārnā ← Sanskrit mārayati 'kills', a tadbhava (CDIAL 10066)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C178-bunna]
 <!-- hl-knowledge: introduces=[HI-LEX-C178-ACT178-02]; assesses=[] -->
 
 **मारना** — *mārnā* — "to hit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मारना** (*mārnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mārayati*, "kills" (CDIAL 10066). It is the causing form of the verb "to die": to strike was "to make die".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

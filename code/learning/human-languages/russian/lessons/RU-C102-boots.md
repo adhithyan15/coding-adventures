@@ -14,7 +14,8 @@ romanization: "sapogí"
 concept_tag: RU-THINGS102-BOOTS
 prerequisites: [RU-C101-gloves, RU-C101-scarf]
 sounds: []
-roots: []
+roots: [slavic-sapogu]
+etymology_hook: "сапоги: Vasmer ties сапог to сопеть 'to wheeze', from 'pipe'; Trubachev takes it from Turkic 'boot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C101-scarf]
 <!-- hl-knowledge: introduces=[RU-LEX-C102-THINGS102-01]; assesses=[] -->
 
 **сапоги** (*sapogí*) — "boots".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сапоги** is the plural of *сапог*, "a boot", Old Church Slavonic *sapogŭ*. Vasmer reports the usual link with *сопеть*, "to wheeze", through "a pipe" and so "a boot shaft"; Trubachev, in a note, takes it from early Bulgar or Turkic *\*sapag*, "a boot with a shaft", from a word for "stem".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

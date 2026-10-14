@@ -12,6 +12,9 @@ Before the new one: say the Latin for a fingernail, then the Latin for healthy.
 You'll want to know: febris, febris.
 febris, febris — "a fever". English fever and febrile.
 
+The word, taken apart.
+febris is probably inherited, from a Proto-Indo-European root dhegwh-, "to burn" (EtymDB 2.1): a fever as a burning.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for healthy, then the Latin for a fever.
 
 You'll want to know: tussis, tussis.
 tussis, tussis — "a cough".
+
+The word, taken apart.
+tussis is probably inherited, from a Proto-Indo-European root (s)tewd-, "to push, to strike" (EtymDB 2.1). Doctors still say pertussis, "whooping cough", built from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a fever, then the Latin for a cough.
 You'll want to know: dolor, dolōris.
 dolor, dolōris — "pain, grief".
 
+The word, taken apart.
+dolor is built on doleō, "to hurt, to grieve" (Lewis & Short), with the ending -or, "a state". The family is usually traced to Proto-Indo-European delh1-, "to split, to hew" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a cough, then the Latin for pain.
 You'll want to know: medicīna, medicīnae.
 medicīna, medicīnae — "medicine". What a medicus gives you.
 
+The word, taken apart.
+medicīna is built on medicus, "a doctor", which comes from medeor, "to heal" (EtymDB 2.1). English medicine comes from it through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for pain, then the Latin for medicine.
 
 You'll want to know: morbus, morbī.
 morbus, morbī — "an illness, a disease". English morbid.
+
+The word, taken apart.
+morbus has no certain origin. It is often linked with morior, "to die" (Lewis & Short), and EtymDB 2.1 traces it to Proto-Indo-European mer-, "to die", but the link is not settled.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "yād"
 concept_tag: HI-THG186-YAD
 prerequisites: [HI-C186-sarm, HI-C186-ummid]
 sounds: []
-roots: []
+roots: [persian-yad]
+etymology_hook: "yād: usually traced to Persian yād 'memory'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C186-ummid]
 <!-- hl-knowledge: introduces=[HI-LEX-C186-THG186-05]; assesses=[] -->
 
 **याद** — *yād* — "a memory, remembering".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**याद** (*yād*) is a loan, usually traced to Persian *yād*, "memory".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

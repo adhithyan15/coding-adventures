@@ -14,7 +14,8 @@ romanization: "supermárket"
 concept_tag: RU-LOC88-SUPERMARKET
 prerequisites: [RU-C88-post-office, RU-C88-cinema]
 sounds: []
-roots: []
+roots: [supermarket-english]
+etymology_hook: "супермаркет ← English supermarket: Latin super 'above' + market, Latin mercatus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C88-cinema]
 <!-- hl-knowledge: introduces=[RU-LEX-C88-LOC88-03]; assesses=[] -->
 
 **супермаркет** (*supermárket*) — "a supermarket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**супермаркет** comes from English *supermarket*: Latin *super*, "above, beyond", with *market*, from Latin *mercātus*, "trade".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

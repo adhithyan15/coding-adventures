@@ -4,7 +4,7 @@
   "chapter": 484,
   "title": "Sacar partido",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:3d63bf7eea37d692",
+  "sourceHash": "fnv1a64:0d7584b47f3b1945",
   "lessons": [
     {
       "id": "ES-C484-utilizar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0deb25d34fd42351",
+      "sourceHash": "fnv1a64:18d5b15180107fbc",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "utilizar from French utiliser (EtymDB 2.1), built on utile, \"useful\", Latin utilis."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45e3346ff78ab3ad",
+      "sourceHash": "fnv1a64:dfe113484bde74f5",
       "notice": null,
       "blocks": [
         {
@@ -191,6 +202,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aprovechar is built on provecho, \"benefit\", from Latin profectus, \"progress, profit\" — inherited: the -ct- became -ch-, as noctem became noche. To make the most of something is to take its profit."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -201,7 +223,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -250,7 +272,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -281,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbcec00f34d52c60",
+      "sourceHash": "fnv1a64:7c5ce06cd45e2ac6",
       "notice": null,
       "blocks": [
         {
@@ -322,6 +344,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "apoyar from Italian appoggiare, \"to lean\", from spoken Latin appodiare, built on podium, \"a raised platform\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -332,7 +365,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -381,7 +414,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -412,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d533c2c24295e35",
+      "sourceHash": "fnv1a64:66ba090babee12dc",
       "notice": null,
       "blocks": [
         {
@@ -453,6 +486,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "agradecer is a- and the old verb gradecer, \"to thank\", built on grado, \"goodwill\", from Latin gratum, \"pleasing\" — the grado of de buen grado, \"willingly\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -463,7 +507,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -512,7 +556,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -543,7 +587,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0749a906f816ca4",
+      "sourceHash": "fnv1a64:f98678389c98ad93",
       "notice": null,
       "blocks": [
         {
@@ -584,6 +628,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ahorrar is built on horro, \"freed\", said of a slave set free, from Arabic ḥurr, \"free\" (EtymDB 2.1). To save was first to set free, then to spare."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -594,7 +649,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -643,7 +698,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

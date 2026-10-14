@@ -14,7 +14,8 @@ romanization: "sarapaḷi"
 concept_tag: KA-VASTU229-SARAPALI
 prerequisites: [KA-C229-tottilu, KA-C229-gantu]
 sounds: []
-roots: []
+roots: [dravidian-sarapali-chain]
+etymology_hook: "sarapaḷi: native Dravidian, one word with Tamil carappaṇi and Telugu sarapaṇi (DEDR 2358)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C229-gantu]
 <!-- hl-knowledge: introduces=[KA-LEX-C229-VASTU229-05]; assesses=[] -->
 
 **ಸರಪಳಿ** — *sarapaḷi* — "a chain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸರಪಳಿ** (*sarapaḷi*) is native Dravidian, one word with Tamil *carappaṇi*, Telugu *sarapaṇi* and Malayalam *sarappaḷi* (DEDR 2358). DEDR lists *sarapaṇi*, *sarapaḷi*, "a chain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

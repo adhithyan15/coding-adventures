@@ -14,7 +14,8 @@ romanization: "ṭavel"
 concept_tag: KA-THINGS117-TAVEL
 prerequisites: [KA-C117-bacanige, KA-C117-sabunu]
 sounds: []
-roots: []
+roots: [english-towel]
+etymology_hook: "ṭavel ← English towel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C117-sabunu]
 <!-- hl-knowledge: introduces=[KA-LEX-C117-THINGS117-05]; assesses=[] -->
 
 **ಟವೆಲ್** — *ṭavel* — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಟವೆಲ್** (*ṭavel*) is a loan from English *towel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

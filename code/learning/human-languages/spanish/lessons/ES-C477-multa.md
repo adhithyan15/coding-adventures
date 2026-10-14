@@ -10,7 +10,8 @@ gloss: "the fine"
 concept_tag: ES-REF-MULTA
 prerequisites: [ES-C477-ahorro, ES-C477-alquiler]
 sounds: []
-roots: []
+roots: [multa-latin]
+etymology_hook: "multa ← Latin multa 'a fine', a word of Roman law the Romans called Sabine or Oscan — English mulct"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C477-alquiler]
 > *They gave me a fine for parking badly.*
 
 *Poner una multa* — to give a fine. *Aparcar* is the word in Spain; in Latin America people say *estacionar*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**multa** ← Latin *multa*, "a fine, a penalty" — a word of Roman law, taken from Latin by scholars. The Romans themselves called it a Sabine or an Oscan word, from two of their Italian neighbours (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,7 @@ sounds: [retroflex-ll, telugu-vowel-sign-e]
 roots: [vellu-go-telugu, proto-dravidian-poo-go]
 etymology_hook: "వెళ్తాను is both 'I go' and 'I will go' — Telugu merged habit and future into one piece where Tamil keeps them apart — and for 'right now' it glues ఉన్న-, the be-verb just learned, onto the stem: వెళ్తున్నాను; Telugu also keeps the family's inherited go-root as పోవు, cousin of Tamil போ and Kannada ಹೋಗು"
 duration:
-  max_seconds: 250
+  max_seconds: 293
 requires:
   knowledge: [TE-LEX-C32-UNDU-01, TE-GRAMMAR-C32-UNDU-02]
 introduces:
@@ -50,7 +50,7 @@ Telugu keeps a second go-verb beside it. The family's inherited word for going i
 ***pō-***, and Telugu has it as **పోవు** (*pōvu*), **పోతాను** (*pōtānu*) — the
 same verb as Tamil **போ** (*pō*), Malayalam **പോകുക** (*pōkuka*) and Kannada
 **ಹೋಗು** (*hōgu*). So Telugu did not lose the family's word; it gave the everyday
-job to *veḷḷu*, a verb of its own whose deeper history is best left open.
+job to *veḷḷu*, which is Dravidian too: DEDR 5393 files it with Tamil *viṭu*, "to leave".
 
 ## Sounds you'll need: the doubled ళ్ళ
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

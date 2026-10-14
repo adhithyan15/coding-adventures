@@ -14,7 +14,8 @@ romanization: "ṭrāphikŭ"
 concept_tag: ML-STHALAM278-TRAPHIKU
 prerequisites: [ML-C278-valavu, ML-C278-signal]
 sounds: []
-roots: []
+roots: [english-traffic]
+etymology_hook: "ṭrāphikŭ ← English traffic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C278-signal]
 <!-- hl-knowledge: introduces=[ML-LEX-C278-STHALAM278-03]; assesses=[] -->
 
 **ട്രാഫിക്** — *ṭrāphikŭ* — "traffic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ട്രാഫിക്** (*ṭrāphikŭ*) ← English *traffic*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

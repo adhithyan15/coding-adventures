@@ -14,7 +14,8 @@ romanization: "kamala"
 concept_tag: KA-THINGS139-KAMALA
 prerequisites: [KA-C138-saks, KA-C138-kotu]
 sounds: []
-roots: []
+roots: [sanskrit-kamala]
+etymology_hook: "kamala ← Sanskrit kamala 'lotus', a tatsama (CDIAL 2764)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C138-kotu]
 <!-- hl-knowledge: introduces=[KA-LEX-C139-THINGS139-01]; assesses=[] -->
 
 **ಕಮಲ** — *kamala* — "a lotus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಮಲ** (*kamala*) is Sanskrit *kamala*, "lotus", taken over whole as a learned loan, a tatsama (CDIAL 2764). CDIAL, following Mayrhofer, takes the Sanskrit word itself to be a loan from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

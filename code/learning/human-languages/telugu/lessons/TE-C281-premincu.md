@@ -14,7 +14,8 @@ romanization: "prēmiñcu"
 concept_tag: TE-VERB-PREMINCU
 prerequisites: [TE-C281-nokku, TE-C281-tappipovu]
 sounds: []
-roots: []
+roots: [sanskrit-preman]
+etymology_hook: "prēmiñcu: Sanskrit prēman 'love' (CDIAL 8999) + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C281-tappipovu]
 <!-- hl-knowledge: introduces=[TE-LEX-C281-KRIYA281-05]; assesses=[] -->
 
 **ప్రేమించు** — *prēmiñcu* — "to love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రేమించు** (*prēmiñcu*) is Sanskrit *prēman*, "love" (CDIAL 8999), made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

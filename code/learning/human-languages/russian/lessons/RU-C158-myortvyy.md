@@ -14,7 +14,8 @@ romanization: "myórtvyy"
 concept_tag: RU-KACH158-MYORTVYY
 prerequisites: [RU-C157-udobnyy, RU-C158-zhivoy]
 sounds: []
-roots: []
+roots: [pie-mer]
+etymology_hook: "мёртвый ← Proto-Slavic *mĭrtvŭ; Latin mortuus and Sanskrit mṛta 'dead' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C158-zhivoy]
 <!-- hl-knowledge: introduces=[RU-LEX-C158-KACH158-02]; assesses=[] -->
 
 **мёртвый** (*myórtvyy*) — "dead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мёртвый** ← Proto-Slavic *\*mĭrtvŭ* — inherited from PIE *\*mṛtós*, "dead", reshaped after *живой*, "alive", as Latin *mortuus* was (Vasmer). Vasmer lists Sanskrit *mṛtá-*, "dead", and Greek *brotós*, "mortal".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

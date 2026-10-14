@@ -14,8 +14,8 @@ romanization: "āṭhvā̃ / āṭhvī̃"
 concept_tag: HI-ORDINAL-EIGHTH
 prerequisites: [HI-C76-seventh, HI-C75-third, HI-C72-kab, HI-C69-station, HI-C21-numbers-6-10, HI-C30-dopahar-widened]
 sounds: []
-roots: []
-etymology_hook: "aath gives aathvan; the retroflex th of the cardinal is kept and the ending simply follows it, which is what a regular ending does"
+roots: [sanskrit-ashta]
+etymology_hook: "āṭhvāṁ ← Sanskrit aṣṭama 'eighth', a tadbhava (CDIAL 937)"
 duration:
   max_seconds: 240
 requires:
@@ -59,6 +59,11 @@ the ending arrives after it and changes nothing on its way.
 Hold *chaṭhā* and *āṭhvā̃* side by side and hear the difference. Both have a
 retroflex **ठ**; in the sixth it belongs to the ordinal and not to the cardinal,
 and in the eighth it belongs to the cardinal and the ordinal borrowed nothing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आठवाँ** (*āṭhvāṁ*) comes from Sanskrit *aṣṭama*, "eighth" (CDIAL 937), the ordinal built on *aṣṭā*, "eight".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C76-ORDINAL-03] -->

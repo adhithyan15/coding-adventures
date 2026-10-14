@@ -11,7 +11,8 @@ romanization: "vaḻi"
 concept_tag: ML-NOUN-PATH
 prerequisites: [ML-C55-homeland, ML-C53-star]
 sounds: []
-roots: []
+roots: [dravidian-vazhi-way]
+etymology_hook: "vaḻi: native Dravidian, one word with Tamil vaḻi and Kannada baḻi (DEDR 5297)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *vaḻi*, and another ഴ word — the second in this 
 വഴി is a path you walk and also a means by which something happens. Malayalam uses it where English says *by way of* and *through*, so a letter can come by വഴി of a friend.
 
 The road and the method being one word is not peculiar to Malayalam. English *way* does the same double duty, and so does the Latin piece behind *via*. Some pictures are simply obvious to everybody.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വഴി** (*vaḻi*) is native Dravidian, one word with Tamil *vaḻi* and Kannada *baḻi* (DEDR 5297).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

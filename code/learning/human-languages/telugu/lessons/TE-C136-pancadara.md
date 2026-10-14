@@ -14,7 +14,8 @@ romanization: "pañcadāra"
 concept_tag: TE-THINGS136-PANCADARA
 prerequisites: [TE-C135-draksa, TE-C136-jamapandu]
 sounds: []
-roots: []
+roots: [telugu-pancadaara-sugar]
+etymology_hook: "pañcadāra: origin uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C136-jamapandu]
 <!-- hl-knowledge: introduces=[TE-LEX-C136-THINGS136-02]; assesses=[] -->
 
 **పంచదార** — *pañcadāra* — "sugar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **పంచదార** (*pañcadāra*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "molakettu"
 concept_tag: TE-VERB-MOLAKETTU
 prerequisites: [TE-C247-oppincu, TE-C247-batimalu]
 sounds: []
-roots: []
+roots: [dravidian-mulai-sprout]
+etymology_hook: "molakettu: native Dravidian; DEDR 4997 lists molakettu 'to sprout' with Tamil muḷai"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C247-batimalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C248-KRIYA248-01]; assesses=[] -->
 
 **మొలకెత్తు** — *molakettu* — "to sprout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మొలకెత్తు** (*molakettu*) is native Dravidian. DEDR 4997 lists *molakettu*, "to sprout, germinate", beside *molaka*, "sprout", with Tamil *muḷai*, "to sprout".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

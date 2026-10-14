@@ -14,7 +14,8 @@ romanization: "ēnādarū"
 concept_tag: KA-ILLA154-ENADARU
 prerequisites: [KA-C154-elliyu, KA-C154-yaradaru]
 sounds: []
-roots: []
+roots: [yaa-dravidian, tamil-aaku-become]
+etymology_hook: "ēnādarū: native ēnu 'what' (DEDR 5151) + ādarū 'even if it is', from āgu (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C154-yaradaru]
 <!-- hl-knowledge: introduces=[KA-LEX-C154-ILLA154-05]; assesses=[] -->
 
 **ಏನಾದರೂ** — *ēnādarū* — "anything, something". **ನಿಮಗೆ ಏನಾದರೂ ಬೇಕಾ?** — *nimage ēnādarū bēkā?* — "Do you need anything?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಏನಾದರೂ** (*ēnādarū*) is native Dravidian: *ēnu*, "what" (DEDR 5151), and *ādarū*, "even if it is", from *āgu*, "to become" (DEDR 333): "whatever it may be". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

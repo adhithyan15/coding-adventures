@@ -14,7 +14,8 @@ romanization: "bharosā"
 concept_tag: HI-NOUN-TRUST
 prerequisites: [HI-C65-permission, HI-C63-fever, HI-C64-little]
 sounds: []
-roots: []
+roots: [indo-aryan-bharavashya]
+etymology_hook: "bharosā ← *bharavaśya 'dependence on support', a reconstructed form; a tadbhava (CDIAL 9398)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C65-permission]
 Usually built on भर (*bhara*), 'a load, a support', from the root भृ (*bhṛ-*), 'to bear, to carry'. Trust is named as the thing that takes your weight.
 
 That picture runs through the way the word is said, too: a speaker puts भरोसा on someone rather than in them. The load goes on top, and the person underneath either holds or does not.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भरोसा** (*bharosā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bharavaśya*, "dependence on support", a form CDIAL reconstructs from its descendants (CDIAL 9398). It is built from *bhara*, "support", and *vaśa*, "power, control".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

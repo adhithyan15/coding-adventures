@@ -12,6 +12,9 @@ Before the new one: say the Kannada for food offered to a god and then shared, t
 You'll want to know: ಹುಡುಗ.
 ಹುಡುಗ — huḍuga — "a boy".
 
+The word, taken apart.
+ಹುಡುಗ (huḍuga) is native Dravidian (DEDR 4259). DEDR lists huḍuga, "boy, child", beside puṭṭa, "small". DEDR 4259 compares Sanskrit puṭṭ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for jewellery, then the Kannada for a boy.
 
 You'll want to know: ಹುಡುಗಿ.
 ಹುಡುಗಿ — huḍugi — "a girl".
+
+The word, taken apart.
+ಹುಡುಗಿ (huḍugi) is native Dravidian (DEDR 4259). DEDR lists huḍugi, "girl", beside puṭṭa, "small". DEDR 4259 compares Sanskrit puṭṭ.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a boy, then the Kannada for a girl.
 You'll want to know: ಗಂಡಸು.
 ಗಂಡಸು — gaṇḍasu — "a man".
 
+The word, taken apart.
+ಗಂಡಸು (gaṇḍasu) is native Dravidian, one word with Tamil kaṇṭaṉ, Telugu gaṇḍu and Malayalam kaṇṭan (DEDR 1173). DEDR lists gaṇḍasu, "male person", beside gaṇḍu, "a male, a man". DEDR 1173 compares Sanskrit gaṇḍa.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a girl, then the Kannada for a man.
 You'll want to know: ಹೆಂಗಸು.
 ಹೆಂಗಸು — heṅgasu — "a woman".
 
+The word, taken apart.
+ಹೆಂಗಸು (heṅgasu) is native Dravidian, one word with Tamil peṇ, Telugu peṇṭi and Malayalam peṇ (DEDR 4395). DEDR lists heṅgasu, "female", beside peṇ, "woman". DEDR 4395 compares Sanskrit paṇḍa.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a man, then the Kannada for a woman.
 
 You'll want to know: ಮುದುಕ.
 ಮುದುಕ — muduka — "an old man".
+
+The word, taken apart.
+ಮುದುಕ (muduka) is native Dravidian, one word with Tamil mutu, Telugu mudara and Malayalam mutu (DEDR 4954). DEDR lists mudaka, muduku, "old man".
 
 What you've built.
 One more word for this chapter.

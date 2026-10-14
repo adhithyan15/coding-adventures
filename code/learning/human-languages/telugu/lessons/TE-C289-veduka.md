@@ -14,7 +14,8 @@ romanization: "vēḍuka"
 concept_tag: TE-SAMAYAM289-VEDUKA
 prerequisites: [TE-C289-panduga, TE-C289-jatara]
 sounds: []
-roots: []
+roots: [dravidian-vendu-want]
+etymology_hook: "vēḍuka: native Dravidian; DEDR 5528 lists vēḍuka 'pleasure, joy' under vēḍu 'to wish'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C289-jatara]
 <!-- hl-knowledge: introduces=[TE-LEX-C289-SAMAYAM289-04]; assesses=[] -->
 
 **వేడుక** — *vēḍuka* — "a celebration, a ceremony".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వేడుక** (*vēḍuka*) is native Dravidian. DEDR 5528 lists *vēḍuka*, "pleasure, joy, fun", under *vēḍu*, "to wish, desire", one word with Tamil *vēṇṭu*, "to want".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

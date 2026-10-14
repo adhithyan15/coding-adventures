@@ -14,7 +14,8 @@ romanization: "toṇṭa"
 concept_tag: ML-AROGYAM192-TONTA
 prerequisites: [ML-C192-mukham, ML-C192-sariram]
 sounds: []
-roots: []
+roots: [dravidian-tondai-throat]
+etymology_hook: "toṇṭa: native Dravidian, one word with Tamil toṇṭai (DEDR 3498)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C192-sariram]
 <!-- hl-knowledge: introduces=[ML-LEX-C192-AROGYAM192-03]; assesses=[] -->
 
 **തൊണ്ട** — *toṇṭa* — "the throat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തൊണ്ട** (*toṇṭa*) is native Dravidian, one word with Tamil *toṇṭai* (DEDR 3498).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

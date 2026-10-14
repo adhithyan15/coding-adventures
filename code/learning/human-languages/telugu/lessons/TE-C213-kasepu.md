@@ -14,7 +14,8 @@ romanization: "kāsēpu"
 concept_tag: TE-SAMAYAM213-KASEPU
 prerequisites: [TE-C213-akasmattuga, TE-C213-pade-pade]
 sounds: []
-roots: []
+roots: [telugu-kasepu-while]
+etymology_hook: "kāsēpu: origin uncertain; DEDR and CDIAL list no word of this shape in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C213-pade-pade]
 <!-- hl-knowledge: introduces=[TE-LEX-C213-SAMAYAM213-03]; assesses=[] -->
 
 **కాసేపు** — *kāsēpu* — "a little while".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **కాసేపు** (*kāsēpu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "a little while".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

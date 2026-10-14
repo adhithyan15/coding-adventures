@@ -13,7 +13,8 @@ gloss: "to send"
 concept_tag: LA-VERB-MITTO
 prerequisites: [LA-C76-nato, LA-C76-voco]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "mittō 'to send' — origin uncertain; English mission and admit come from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C76-voco]
 <!-- hl-knowledge: introduces=[LA-LEX-C77-VERBA3-01]; assesses=[] -->
 
 **mittō, mittere** — "to send". English *mission*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mittō** has no secure origin; EtymDB 2.1 records a proposed Proto-Indo-European *\*meyth2-*, "to exchange, to remove", and Lewis & Short call it doubtful. English *admit* comes from it too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for usually, then the Malayalam for rarely
 You'll want to know: മുഹൂർത്തം.
 മുഹൂർത്തം — muhūrttaṁ — "an auspicious moment".
 
+The word, taken apart.
+മുഹൂർത്തം (muhūrttaṁ) from Sanskrit muhūrta, "moment", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 10229).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for rarely, then the Malayalam for an ausp
 
 You'll want to know: വാർഷികം.
 വാർഷികം — vārṣikaṁ — "an anniversary".
+
+The word, taken apart.
+വാർഷികം (vārṣikaṁ) from Sanskrit vārṣika, "belonging to the rains; annual", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 11571). It is built on varṣa, "rain; year".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for an auspicious moment, then the Malayal
 You'll want to know: ഇക്കാലത്ത്.
 ഇക്കാലത്ത് — ikkālattŭ — "nowadays".
 
+The word, taken apart.
+ഇക്കാലത്ത് (ikkālattŭ) is "in this time": the near-pointing base (DEDR 410), Sanskrit kāla, "time" (CDIAL 3084), and the Malayalam place ending.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for an anniversary, then the Malayalam for
 You'll want to know: അന്ന്.
 അന്ന് — annŭ — "on that day, back then".
 
+The word, taken apart.
+അന്ന് (annŭ) is native Dravidian: DEDR 1 lists it, "that day, then", among the far-pointing words, with Tamil aṉṟu.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for nowadays, then the Malayalam for on th
 
 You'll want to know: ഇതിനിടെ.
 ഇതിനിടെ — itiniṭe — "meanwhile".
+
+The word, taken apart.
+ഇതിനിടെ (itiniṭe) is native Dravidian: itŭ, "this" (DEDR 410), and iṭa, "interval" (DEDR 448, with Tamil iṭai): "in the meantime of this".
 
 What you've built.
 One more word for this chapter.

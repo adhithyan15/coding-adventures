@@ -13,7 +13,8 @@ gloss: "to care for"
 concept_tag: LA-VERB-CURO
 prerequisites: [LA-C98-nimis, LA-C99-cognosco]
 sounds: []
-roots: []
+roots: [curare-latin, cura-latin]
+etymology_hook: "cūrō 'to care for' — the verb made from cūra 'care'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C99-cognosco]
 <!-- hl-knowledge: introduces=[LA-LEX-C99-VERBA5-02]; assesses=[] -->
 
 **cūrō, cūrāre** — "to care for". The verb of **cūra**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cūrō** is the verb made from *cūra*, "care" (Lewis & Short), whose own origin is uncertain. English *cure* comes from the noun and the verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

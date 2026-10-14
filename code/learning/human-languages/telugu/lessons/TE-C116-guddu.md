@@ -14,7 +14,8 @@ romanization: "guḍḍu"
 concept_tag: TE-THINGS116-GUDDU
 prerequisites: [TE-C116-sambaru, TE-C116-rasam]
 sounds: []
-roots: []
+roots: [dravidian-guddu-egg]
+etymology_hook: "guḍḍu: native Dravidian, one word with Kannada guḍḍu 'eyeball, egg' (DEDR 1680)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C116-rasam]
 <!-- hl-knowledge: introduces=[TE-LEX-C116-THINGS116-03]; assesses=[] -->
 
 **గుడ్డు** — *guḍḍu* — "an egg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గుడ్డు** (*guḍḍu*) is native Dravidian, one word with Kannada *guḍḍu*, "eyeball, egg" (DEDR 1680). DEDR compares Sanskrit *guṭikā* and *guḍa*, "ball, globe" (CDIAL 4181).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

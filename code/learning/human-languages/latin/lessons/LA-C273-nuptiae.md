@@ -13,7 +13,8 @@ gloss: "a wedding"
 concept_tag: LA-RES273-NUPTIAE
 prerequisites: [LA-C272-legatus, LA-C272-scriba]
 sounds: []
-roots: []
+roots: [nuptiae-latin, nubere-latin]
+etymology_hook: "nūptiae 'wedding' — built on nūpta 'bride', from nūbō 'to marry'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C272-scriba]
 <!-- hl-knowledge: introduces=[LA-LEX-C273-RES273-01]; assesses=[] -->
 
 **nūptiae, nūptiārum** — "a wedding".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nūptiae** is built on *nūpta*, "a bride" (Lewis & Short), the participle of *nūbō*, "to marry" (EtymDB 2.1). English *nuptial* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

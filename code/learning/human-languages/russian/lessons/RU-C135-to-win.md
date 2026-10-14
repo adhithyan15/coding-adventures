@@ -14,7 +14,8 @@ romanization: "vyígryvat"
 concept_tag: RU-VERB-TO-WIN
 prerequisites: [RU-C134-to-look-for, RU-C135-to-lose]
 sounds: []
-roots: []
+roots: [slavic-igra]
+etymology_hook: "выигрывать is вы- 'out' + играть 'to play': to win something out of a game"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C135-to-lose]
 <!-- hl-knowledge: introduces=[RU-LEX-C135-ACT135-02]; assesses=[] -->
 
 **выигрывать** (*vyígryvat*) — "to win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**выигрывать** is *вы-*, "out", with *-игрывать*, from *играть*, "to play": to play something out of the game, to win.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

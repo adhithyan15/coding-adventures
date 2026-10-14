@@ -14,7 +14,8 @@ romanization: "beṇuku"
 concept_tag: TE-AROGYAM169-BENUKU
 prerequisites: [TE-C169-daddurlu, TE-C169-macca]
 sounds: []
-roots: []
+roots: [telugu-benuku-sprain]
+etymology_hook: "beṇuku: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'sprain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C169-macca]
 <!-- hl-knowledge: introduces=[TE-LEX-C169-AROGYAM169-05]; assesses=[] -->
 
 **బెణుకు** — *beṇuku* — "a sprain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **బెణుకు** (*beṇuku*) is uncertain. DEDR and CDIAL list no word of this shape meaning "sprain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

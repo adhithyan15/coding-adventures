@@ -11,7 +11,8 @@ romanization: "māṭlāḍu"
 concept_tag: TE-VERB-SPEAK
 prerequisites: [TE-C44-listen]
 sounds: []
-roots: []
+roots: [maata-word-dravidian]
+etymology_hook: "māṭlāḍu: native māṭa 'word' (DEDR 4834) + āḍu 'to play, move' (DEDR 347)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C44-listen]
 **మాట్లాడు** (*māṭlāḍu*) — "speak".
 
 From *māṭa*, 'word', plus *āḍu*, 'to play' — the same construction as Kannada's *mātāḍu*, built from the same two pieces.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మాట్లాడు** (*māṭlāḍu*) is native Dravidian: *māṭa*, "word", and *āḍu*, "to play, move". DEDR 4834 lists *māṭa* and *māṭal-āḍu*, "to speak", with Kannada *mātu*, "word"; *āḍu* is DEDR 347.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

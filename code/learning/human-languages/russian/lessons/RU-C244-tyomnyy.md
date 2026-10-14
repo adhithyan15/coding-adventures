@@ -14,7 +14,8 @@ romanization: "tyómnyy"
 concept_tag: RU-KACH244-TYOMNYY
 prerequisites: [RU-C244-gromkiy, RU-C244-yarkiy]
 sounds: []
-roots: []
+roots: [slavic-tima]
+etymology_hook: "тёмный is from тьма 'darkness'; Latin tenebrae and Sanskrit tamas 'darkness' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C244-yarkiy]
 <!-- hl-knowledge: introduces=[RU-LEX-C244-KACH244-04]; assesses=[] -->
 
 **тёмный** (*tyómnyy*) — "dark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тёмный** is built on *тьма*, "darkness", Proto-Slavic *\*tĭma*, which Vasmer relates to Lithuanian *tamsà*, Sanskrit *támas*, "darkness", and Latin *tenebrae*, "darkness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

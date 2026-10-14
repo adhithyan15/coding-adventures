@@ -50,6 +50,11 @@ Malayalam puts it behind:
 Take the two **phrases** right to left and they come out as English: *before* —
 *two o'clock*. Keep **രണ്ട് മണി** together as one piece.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുൻപ്** (*munpŭ*) is native Dravidian, built on *mun*, "front, before" (DEDR 5020, with Tamil *muṉ* and Kannada *mun*).
+
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C106-BEFORE-01, ML-GRAMMAR-C102-HOUR-DATIVE-01] -->
 

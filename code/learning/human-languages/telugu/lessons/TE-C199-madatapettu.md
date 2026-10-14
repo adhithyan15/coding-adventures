@@ -14,7 +14,8 @@ romanization: "maḍatapeṭṭu"
 concept_tag: TE-VERB-MADATAPETTU
 prerequisites: [TE-C199-nimpu, TE-C199-arabettu]
 sounds: []
-roots: []
+roots: [dravidian-madangu-fold, dravidian-pettu-put]
+etymology_hook: "maḍatapeṭṭu: native Dravidian; DEDR 4645 lists maḍata peṭṭu 'to fold'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C199-arabettu]
 <!-- hl-knowledge: introduces=[TE-LEX-C199-KRIYA199-04]; assesses=[] -->
 
 **మడతపెట్టు** — *maḍatapeṭṭu* — "to fold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మడతపెట్టు** (*maḍatapeṭṭu*) is native Dravidian. DEDR 4645 lists *maḍata peṭṭu*, "to fold, double up", with *maḍata*, "a fold", one word with Kannada *maḍate*, "a fold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

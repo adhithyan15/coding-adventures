@@ -14,7 +14,8 @@ romanization: "lēta"
 concept_tag: TE-GUNAM221-LETA
 prerequisites: [TE-C221-godhuma-rangu, TE-C221-vendi]
 sounds: []
-roots: []
+roots: [dravidian-ila-young]
+etymology_hook: "lēta: native Dravidian; DEDR 513 lists lēta 'young, tender' with Tamil iḷa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C221-vendi]
 <!-- hl-knowledge: introduces=[TE-LEX-C221-GUNAM221-03]; assesses=[] -->
 
 **లేత** — *lēta* — "pale (of a colour); tender, young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**లేత** (*lēta*) is native Dravidian. DEDR 513 lists a nasalised *lēta*, "young, tender", with Tamil *iḷa* and Kannada *eḷa*, "young, tender". DEDR compares Prakrit *līva*, "child".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "mancidi"
 concept_tag: TE-ADJ-PREDICATIVE
 prerequisites: [TE-C76-bad, TE-C33-raayu]
 sounds: []
-roots: []
+roots: [telugu-manci-good]
+etymology_hook: "mancidi: manci 'good', whose origin is uncertain, + -di 'it'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C76-bad]
 You could already say **మంచి పుస్తకం**, "a good book". You could not yet say that the book *is* good, because a Telugu adjective cannot end a sentence by itself.
 
 Add **-ది** and it becomes a thing: మంచి + ది = "a good one". **పుస్తకం మంచిది** — "the book is a good one", which is how Telugu says "the book is good".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మంచిది** (*mancidi*) is *manci*, "good", with *-di*, "it, the thing". The origin of *manci* is uncertain: neither DEDR nor CDIAL records it.
 
 ## Grammar Lens: -ది turns a describing word into a naming word
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C76-JUDGE-03]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "sālīḍu"
 concept_tag: TE-NOUN-SPIDER
 prerequisites: [TE-C70-squirrel]
 sounds: []
-roots: []
+roots: [dravidian-saali-weaver]
+etymology_hook: "sālīḍu: native Dravidian; DEDR 2475 lists the same Telugu form as 'a weaver', with Tamil cāliyaṉ"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C70-squirrel]
 It is inherited, and it is built on the old Telugu word for a weaver, so the name says what the creature does. The thread a person works with is దారం, which you already have.
 
 Ask whether one has been swept out and the answer is a plain అవును or లేదు, which is where five small creatures have got you.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సాలీడు** (*sālīḍu*) is native Dravidian. DEDR 2475 lists the same Telugu form as "a weaver", with *sāle*, "the weaver caste", beside Tamil *cāliyaṉ* and Kannada *sāliga*, "weavers". The entry does not list the spider sense: the spider is named as the weaver.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

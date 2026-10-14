@@ -14,7 +14,8 @@ romanization: "oruṅṅuka"
 concept_tag: ML-VERB-ORUNNUKA
 prerequisites: [ML-C263-bekkari, ML-C263-supparmarkkarru]
 sounds: []
-roots: []
+roots: [dravidian-orungu-ready]
+etymology_hook: "oruṅṅuka: native Dravidian, one word with Telugu oggu (DEDR 992)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C263-supparmarkkarru]
 <!-- hl-knowledge: introduces=[ML-LEX-C264-KRIYA264-01]; assesses=[] -->
 
 **ഒരുങ്ങുക** — *oruṅṅuka* — "to get ready".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒരുങ്ങുക** (*oruṅṅuka*) is native Dravidian, one word with Telugu *oggu* (DEDR 992).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

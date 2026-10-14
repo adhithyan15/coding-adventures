@@ -56,6 +56,7 @@ const QList<QPair<QString, QStringList>> &mimeExtensions()
 {
     static const QList<QPair<QString, QStringList>> table{
         {QStringLiteral("application/json"), {QStringLiteral("json")}},
+        {QStringLiteral("application/vnd.coding-adventures.visicalc+json"), {QStringLiteral("visicalc")}},
         {QStringLiteral("text/plain"), {QStringLiteral("txt")}},
         {QStringLiteral("text/markdown"), {QStringLiteral("md"), QStringLiteral("markdown")}},
         {QStringLiteral("text/csv"), {QStringLiteral("csv")}},

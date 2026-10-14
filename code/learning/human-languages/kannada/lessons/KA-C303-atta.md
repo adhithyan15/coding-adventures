@@ -14,7 +14,8 @@ romanization: "aṭṭa"
 concept_tag: KA-VASTU303-ATTA
 prerequisites: [KA-C302-bidiru, KA-C303-jagali]
 sounds: []
-roots: []
+roots: [sanskrit-atta-tower]
+etymology_hook: "aṭṭa: DEDR 93 marks it a tatsama and leaves open whether it is Indo-Aryan or Dravidian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C303-jagali]
 <!-- hl-knowledge: introduces=[KA-LEX-C303-VASTU303-02]; assesses=[] -->
 
 **ಅಟ್ಟ** — *aṭṭa* — "a loft, an attic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 93 lists **ಅಟ್ಟ** (*aṭṭa*) beside Tamil *aṭṭam*, "terraced roof", but marks the Kannada word as one of the tatsamas, and notes that it is uncertain whether the word is Indo-Aryan or Dravidian in origin. Sanskrit has *aṭṭa*, "tower" (CDIAL 180), which CDIAL calls non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

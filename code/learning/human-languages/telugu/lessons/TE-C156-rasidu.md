@@ -14,7 +14,8 @@ romanization: "rasīdu"
 concept_tag: TE-CADUVU156-RASIDU
 prerequisites: [TE-C156-adde, TE-C156-prakatana, TE-S172-letter-chha, TE-S173-letter-jha]
 sounds: []
-roots: []
+roots: [persian-rasid]
+etymology_hook: "rasīdu ← Persian rasīd 'received; a receipt', through Hindustani, + -u"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C156-prakatana]
 **రసీదు** — *rasīdu* — "a receipt". Ask for it when you pay: **రసీదు ఇస్తారా?**
 — *rasīdu istārā?* — "Could you give me the receipt?"
 [YOU READ: two words again — **ఛాయ** (*chāya*, shade) is written with ఛ, and **ఝరి** (*jhari*, a stream) with ఝ]
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రసీదు** (*rasīdu*) comes from Persian *rasīd*, "received; a receipt", which reached Telugu through Hindustani and took the Telugu ending *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

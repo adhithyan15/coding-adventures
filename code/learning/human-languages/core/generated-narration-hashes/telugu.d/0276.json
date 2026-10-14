@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 276,
-  "sourceHash": "fnv1a64:522fd66c89d0aca0",
+  "sourceHash": "fnv1a64:7199f49ccd152bd1",
   "lessonIds": [
     "TE-C276-rasayanasastram",
     "TE-C276-jivasastram",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch276.txt",
   "json": "telugu/narration/ch276.json",
-  "textHash": "fnv1a64:748365f4ab01da2f",
-  "jsonHash": "fnv1a64:cbe366ae6875b343",
+  "textHash": "fnv1a64:75b4774f3c3421ab",
+  "jsonHash": "fnv1a64:2216c23c1b46ec5f",
   "findings": []
 }

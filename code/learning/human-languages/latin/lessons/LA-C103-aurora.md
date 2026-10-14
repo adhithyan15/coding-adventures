@@ -13,7 +13,8 @@ gloss: "the dawn"
 concept_tag: LA-ANNUS-AURORA
 prerequisites: [LA-C103-annus, LA-C103-mensis]
 sounds: []
-roots: []
+roots: [aurora-latin]
+etymology_hook: "aurōra 'dawn' — inherited, usually traced to PIE *h2ewsōs 'dawn'; Greek ēōs and English east are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C103-mensis]
 <!-- hl-knowledge: introduces=[LA-LEX-C103-ANNUS-05]; assesses=[] -->
 
 **aurōra, aurōrae** — "the dawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aurōra** is inherited, usually traced to Proto-Indo-European *\*h2ewsōs*, "dawn" (EtymDB 2.1); Greek *ēōs*, "dawn", is a cousin (Lewis & Short), and so is English *east*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

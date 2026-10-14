@@ -14,7 +14,8 @@ romanization: "vénik"
 concept_tag: RU-THINGS97-BROOM
 prerequisites: [RU-C96-comb, RU-C96-rubbish]
 sounds: []
-roots: []
+roots: [slavic-viti]
+etymology_hook: "веник is linked with венок 'wreath' and вить 'to twist': a twisted bundle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C96-rubbish]
 <!-- hl-knowledge: introduces=[RU-LEX-C97-THINGS97-01]; assesses=[] -->
 
 **веник** (*vénik*) — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**веник** — Old Russian *venikŭ*, Czech *věník*, "a bundle". Vasmer links it with *венок*, "a wreath", and *вить*, "to twist": a broom is a bound bundle of twigs.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

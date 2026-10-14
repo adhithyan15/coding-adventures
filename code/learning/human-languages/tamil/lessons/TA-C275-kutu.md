@@ -47,7 +47,7 @@ reviews_of: [TA-C275-val]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**கூடு** (*kūṭu*) is native Dravidian. DEDR 1883 lists Malayalam *kūṭu*, "nest, cage" and Kannada *gūḍu*.
+**கூடு** (*kūṭu*) is native Dravidian. DEDR 1883 lists Malayalam *kūṭu*, "nest, cage" and Kannada *gūḍu*. The entry compares Sanskrit *kūṭa*, "trap" (CDIAL 3397).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

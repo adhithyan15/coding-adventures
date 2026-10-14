@@ -14,7 +14,8 @@ romanization: "sante"
 concept_tag: KA-LOC110-SANTE
 prerequisites: [KA-C109-granthalaya, KA-C109-byanku]
 sounds: []
-roots: []
+roots: [kannada-sante-market]
+etymology_hook: "sante: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C109-byanku]
 <!-- hl-knowledge: introduces=[KA-LEX-C110-LOC110-01]; assesses=[] -->
 
 **ಸಂತೆ** — *sante* — "a market".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಸಂತೆ** (*sante*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

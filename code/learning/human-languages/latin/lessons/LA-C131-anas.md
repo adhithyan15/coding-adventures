@@ -13,7 +13,8 @@ gloss: "a duck"
 concept_tag: LA-THINGS131-ANAS
 prerequisites: [LA-C131-columba, LA-C131-corvus]
 sounds: []
-roots: []
+roots: [anas-latin]
+etymology_hook: "anas 'duck' — inherited, usually traced to PIE *h2enh2ts 'duck'; German Ente is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C131-corvus]
 <!-- hl-knowledge: introduces=[LA-LEX-C131-THINGS131-05]; assesses=[] -->
 
 **anas, anatis** — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anas** is inherited, usually traced to Proto-Indo-European *\*h2enh2ts*, "duck" (EtymDB 2.1); German *Ente*, "duck", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

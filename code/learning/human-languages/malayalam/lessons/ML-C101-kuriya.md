@@ -11,7 +11,8 @@ romanization: "kuṟiya"
 concept_tag: ML-SHORT-PERSON
 prerequisites: [ML-R100-clothing-recall, ML-C42-small, ML-C71-avan-aval, ML-C36-kutti]
 sounds: []
-roots: []
+roots: [dravidian-kuru-short]
+etymology_hook: "kuṟiya: native Dravidian, from kuṟu 'short'; Tamil kuṟu (DEDR 1851)"
 duration:
   max_seconds: 250
 requires:
@@ -59,6 +60,8 @@ unchanged, exactly as the adjective chapter said.
 not much of it. **കുറിയ** is *short* — not long, and of a person, not tall.
 A child can be **ചെറിയ** and a child can be **കുറിയ**, and those say two
 different things about the child.
+
+**Where the word comes from.** It is native Dravidian, from *kuṟu*, "short, little", which DEDR 1851 lists with Tamil *kuṟu* and Kannada *kuṟu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C101-SHORT-01, ML-LEX-C42-ADJ-02, ML-LEX-C71-AVAN-AVAL-01, ML-CONCEPT-C36-KUTTI-01, ML-LEX-AANU-01] -->

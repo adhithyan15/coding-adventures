@@ -14,7 +14,8 @@ romanization: "plāsṭik"
 concept_tag: KA-VASTU301-PLASTIK
 prerequisites: [KA-C300-kadambari, KA-C301-gaju]
 sounds: []
-roots: []
+roots: [english-plastic]
+etymology_hook: "plāsṭik ← English plastic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C301-gaju]
 <!-- hl-knowledge: introduces=[KA-LEX-C301-VASTU301-02]; assesses=[] -->
 
 **ಪ್ಲಾಸ್ಟಿಕ್** — *plāsṭik* — "plastic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ಲಾಸ್ಟಿಕ್** (*plāsṭik*) is a loan from English *plastic*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rasakaramāya"
 concept_tag: ML-GUNAM284-RASAKARAMAYA
 prerequisites: [ML-C284-kurran, ML-C284-valippam]
 sounds: []
-roots: []
+roots: [sanskrit-rasa, aaka-dravidian]
+etymology_hook: "rasakaramāya: Sanskrit rasa 'taste, relish' (CDIAL 10650) + -kara 'making' + native āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C284-valippam]
 <!-- hl-knowledge: introduces=[ML-LEX-C284-GUNAM284-03]; assesses=[] -->
 
 **രസകരമായ** — *rasakaramāya* — "interesting, fun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**രസകരമായ** (*rasakaramāya*) is Sanskrit *rasa*, "sap, taste, relish" (CDIAL 10650), and *-kara*, "making", with native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

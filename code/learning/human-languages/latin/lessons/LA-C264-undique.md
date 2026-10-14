@@ -13,7 +13,8 @@ gloss: "from all sides"
 concept_tag: LA-LOC264-UNDIQUE
 prerequisites: [LA-C263-brevi, LA-C264-nusquam]
 sounds: []
-roots: []
+roots: [undique-latin, unde-latin]
+etymology_hook: "undique 'from all sides' — unde 'from where' + -que"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C264-nusquam]
 <!-- hl-knowledge: introduces=[LA-LEX-C264-LOC264-02]; assesses=[] -->
 
 **undique** — "from all sides".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**undique** is *unde*, "from where", with *-que*, "and, any" (Lewis & Short): from wherever, so from all sides.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

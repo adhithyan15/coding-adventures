@@ -14,7 +14,8 @@ romanization: "nivarttuka"
 concept_tag: ML-VERB-NIVARTTUKA
 prerequisites: [ML-C232-munnuka, ML-C232-olukuka]
 sounds: []
-roots: []
+roots: [dravidian-nimir-straight]
+etymology_hook: "nivarttuka: native Dravidian, 'make straight', from the verb to stand erect; Tamil nimir (DEDR 2922)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C232-olukuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C232-KRIYA232-05]; assesses=[] -->
 
 **നിവർത്തുക** — *nivarttuka* — "to unfold, to straighten out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിവർത്തുക** (*nivarttuka*) is native Dravidian, the causative of the verb "to stand erect, unbend"; DEDR 2922 lists the root with Tamil *nimir*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

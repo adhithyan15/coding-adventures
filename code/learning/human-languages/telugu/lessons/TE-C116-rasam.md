@@ -14,7 +14,8 @@ romanization: "rasaṁ"
 concept_tag: TE-THINGS116-RASAM
 prerequisites: [TE-C115-pappu, TE-C116-sambaru]
 sounds: []
-roots: []
+roots: [sanskrit-rasa]
+etymology_hook: "rasaṁ ← Sanskrit rasa 'sap, juice; taste', a tatsama (CDIAL 10650)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C116-sambaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C116-THINGS116-02]; assesses=[] -->
 
 **రసం** — *rasaṁ* — "rasam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రసం** (*rasaṁ*) is Sanskrit *rasa*, "sap, juice; taste", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 10650).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

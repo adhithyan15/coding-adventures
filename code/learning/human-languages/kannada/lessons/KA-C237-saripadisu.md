@@ -14,7 +14,8 @@ romanization: "saripaḍisu"
 concept_tag: KA-VERB-SARIPADISU
 prerequisites: [KA-C237-kaccu, KA-C237-balasu]
 sounds: []
-roots: []
+roots: [dravidian-padu-suffer]
+etymology_hook: "saripaḍisu: sari 'right, correct' + paḍisu 'to make become' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C237-balasu]
 <!-- hl-knowledge: introduces=[KA-LEX-C237-KRIYE237-03]; assesses=[] -->
 
 **ಸರಿಪಡಿಸು** — *saripaḍisu* — "to repair, to fix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸರಿಪಡಿಸು** (*saripaḍisu*) is *sari*, "right, correct", whose origin is uncertain, and *paḍisu*, "to cause to undergo", from native *paḍu* (DEDR 3853): "to make right".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

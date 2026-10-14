@@ -11,7 +11,8 @@ romanization: "putiya"
 concept_tag: ML-ADJ-NEW
 prerequisites: [ML-C42-good, ML-C41-this]
 sounds: []
-roots: []
+roots: [dravidian-putu-new]
+etymology_hook: "putiya: native Dravidian, one word with Tamil putiya and Kannada posa (DEDR 4275)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You met **നല്ല** *nalla* a moment ago. Put them side by side and nothing
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുതിയ** (*putiya*) is native Dravidian, one word with Tamil *putiya* and Kannada *posa* (DEDR 4275). Kannada turned the old *p-* into *h-* in its modern form *hosa*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-04, ML-LEX-C41-DEIXIS-01] -->

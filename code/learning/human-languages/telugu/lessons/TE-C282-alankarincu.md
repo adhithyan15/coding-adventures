@@ -14,7 +14,8 @@ romanization: "alaṅkariñcu"
 concept_tag: TE-VERB-ALANKARINCU
 prerequisites: [TE-C282-meyu, TE-C282-natu]
 sounds: []
-roots: []
+roots: [sanskrit-alankara]
+etymology_hook: "alaṅkariñcu: Sanskrit alaṅkāra 'ornament' + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C282-natu]
 <!-- hl-knowledge: introduces=[TE-LEX-C282-KRIYA282-03]; assesses=[] -->
 
 **అలంకరించు** — *alaṅkariñcu* — "to decorate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అలంకరించు** (*alaṅkariñcu*) is Sanskrit *alaṅkāra*, "ornament", made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1396,30 +1396,12 @@ fn run_pipeline(
             // Android (Jetpack Compose) and Desktop / iOS / Web
             // (Compose Multiplatform) from the same `.kt` output.
             //
-            // #16930: the Compose pipeline takes no `EmitOptions` yet (#14704),
-            // so it cannot render a story's fixture values or write a project
-            // shell. It used to ignore both silently, so a `--strict-fixtures`
-            // story passed while showing nothing of its fixture. Until #14704
-            // lands, say so: strict mode refuses, and otherwise both flags warn.
-            if fixtures.path.is_some() {
-                if fixtures.strict {
-                    eprintln!(
-                        "mosaic-compile: the compose pipeline cannot render --fixtures yet (#14704); \
-                         refusing under --strict-fixtures"
-                    );
-                    process::exit(1);
-                }
-                eprintln!(
-                    "mosaic-compile: warning: the compose pipeline ignores --fixtures (#14704); \
-                     the output shows no story values"
-                );
-            }
-            if emit_project {
-                eprintln!(
-                    "mosaic-compile: warning: the compose pipeline has no --emit-project shell \
-                     (#14704); writing the component only"
-                );
-            }
+            // EM-6 (#14704): `--fixtures` reach the `--emit-project` shell,
+            // as on every other pipeline backend (#14459). The shell is the
+            // permissive desktop project `pkg --emit-project` writes, built by
+            // the same generator. The values are computed even without the
+            // shell, so `--strict-fixtures` refuses a value that cannot apply.
+            let slot_values = pipeline_slot_values(fixtures, ListFixtures::Json);
             let result = mosaic_emit_compose::from_pipeline(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1434,6 +1416,44 @@ fn run_pipeline(
                 .unwrap_or_else(|| format!("{}.kt", result.component_name));
             write_file_or_die(&out, &result.output);
             eprintln!("Written: {out}");
+
+            if emit_project {
+                let base = std::path::Path::new(&out)
+                    .parent()
+                    .filter(|p| !p.as_os_str().is_empty())
+                    .map(std::path::Path::to_path_buf);
+                for (relative, contents) in
+                    mosaic_package_artifact_builder::compose_pipeline_project_files(
+                        &result.component_name,
+                        &result.output,
+                        &mosmodel_out.component.slots,
+                        &slot_values,
+                    )
+                    .unwrap_or_else(|e| {
+                        eprintln!("mosaic-compile: compose project shell error: {e}");
+                        process::exit(1);
+                    })
+                {
+                    let path = match &base {
+                        Some(dir) => dir.join(&relative),
+                        None => std::path::PathBuf::from(&relative),
+                    };
+                    if let Some(parent) = path.parent() {
+                        if !parent.as_os_str().is_empty() {
+                            if let Err(e) = std::fs::create_dir_all(parent) {
+                                eprintln!(
+                                    "mosaic-compile: failed to create {}: {e}",
+                                    parent.display()
+                                );
+                                process::exit(1);
+                            }
+                        }
+                    }
+                    let path = path.to_string_lossy().into_owned();
+                    write_file_or_die(&path, &contents);
+                    eprintln!("Written: {path}");
+                }
+            }
         }
         _ => {
             eprintln!("mosaic-compile: unsupported pipeline backend '{backend}'");

@@ -13,7 +13,8 @@ gloss: "a puppy"
 concept_tag: LA-RES251-CATULUS
 prerequisites: [LA-C250-laurus, LA-C250-viola]
 sounds: []
-roots: []
+roots: [catulus-latin]
+etymology_hook: "catulus 'puppy' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C250-viola]
 <!-- hl-knowledge: introduces=[LA-LEX-C251-RES251-01]; assesses=[] -->
 
 **catulus, catulī** — "a puppy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**catulus**, "a young animal, a puppy", has no sure origin. Lewis & Short make it a diminutive of *catus*, "a cat", but *catulus* is far older than that word for cat, so the link is unlikely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

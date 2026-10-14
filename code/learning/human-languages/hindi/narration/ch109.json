@@ -4,7 +4,7 @@
   "chapter": 109,
   "title": "Laughter and Tears",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:88897ab64ffc0720",
+  "sourceHash": "fnv1a64:9d2f9b6d401631fe",
   "lessons": [
     {
       "id": "HI-C109-hansi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8843de4edf44fe17",
+      "sourceHash": "fnv1a64:5977e9c55d14d25e",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हँसी (hãsī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hasita, \"laughter\" (CDIAL 14023)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:960ea23929734217",
+      "sourceHash": "fnv1a64:33ea8318dbe40fcf",
       "notice": null,
       "blocks": [
         {
@@ -183,6 +194,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आँसू (ā̃sū) (āṁsū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aśru, \"tear\" (CDIAL 919). CDIAL notes that the word took a nasal vowel early, as the word for \"eye\" did."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -193,7 +215,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -242,7 +264,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -273,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67ccad4714ec3efc",
+      "sourceHash": "fnv1a64:23ef970ef4de6cbd",
       "notice": null,
       "blocks": [
         {
@@ -310,6 +332,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुख (dukh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from duḥkha, \"difficulty, pain\" (CDIAL 6375). CDIAL notes that duḥkha was formed after sukha, \"ease\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -320,7 +353,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -369,7 +402,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -400,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5cbbecb172bc710",
+      "sourceHash": "fnv1a64:7da8c64422a34f1a",
       "notice": null,
       "blocks": [
         {
@@ -437,6 +470,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अकेला (akelā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ekkala, \"alone\", a form CDIAL reconstructs from its descendants (CDIAL 2506). It is built on eka, \"one\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -447,7 +491,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -496,7 +540,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -527,7 +571,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b567445c305f008",
+      "sourceHash": "fnv1a64:f7a28d0034644838",
       "notice": null,
       "blocks": [
         {
@@ -564,6 +608,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठंडा (ṭhaṇḍā) comes from a reconstructed ṭhaṇḍha, \"cold\", which CDIAL lists under Sanskrit stabdha, \"stiff, solidified\", tracing the sense from \"firm\" through \"sluggish\" to \"cold\" (CDIAL 13676). DEDR compares Dravidian words for \"cool\", such as Tamil taṇ (DEDR 3045)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -574,7 +629,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -623,7 +678,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

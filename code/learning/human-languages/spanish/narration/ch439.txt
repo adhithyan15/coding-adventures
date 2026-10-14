@@ -15,8 +15,8 @@ El tren sale del andén 4 — the train leaves from platform 4. Announcements pu
 The written accent tells you where to put the weight: an-DÉN, on the last syllable. Without it the word would be read AN-den, and the stress is the part a listener uses to recognise it.
 
 The word, taken apart.
-It does not come apart, and this time that is not a trick. Nobody knows where andén comes from.
-The tempting guess is andar, to walk, because a platform is a place you walk along. Dictionaries do not accept it: the endings do not line up, and the word turns up first in senses that have nothing to do with walking. Other proposals have been made and none has carried the field.
+It does not come apart, and this time that is not a trick. Nobody knows for certain where andén comes from.
+The tempting guess is andar, to walk, because a platform is a place you walk along. Dictionaries do not accept it: the endings do not line up. The usual proposal is Latin indago, "an encircling" (EtymDB 2.1), and even that is offered only as a perhaps.
 So the honest entry is origin uncertain, and that is worth meeting on purpose. Any book that produces an etymology for every word is inventing some of them. Spanish has a few hundred words like this, and the right response is to learn the word and let the history stay open.
 
 Guided Practice.
@@ -50,7 +50,7 @@ tras- from Latin trans, across, plus -ladar from lātus, carried.
 [a table of 2 rows, read aloud]
 tras- means across.
 -lad- means carried.
-Carried across. English has the same two pieces bolted together in translate, which is a text carried across into another language, and in relate, collate and dilate.
+Carried across. English has the same two pieces bolted together in translate, which is a text carried across into another language, and in relate and collate.
 
 Why it's said this way.
 Lātus is the odd piece, and it is worth a minute.
@@ -85,7 +85,7 @@ It also stretches past doors. Una curva cerrada is a tight bend; un acento cerra
 
 The word, taken apart.
 cerrar plus -ado, the ending that turns an -ar verb into its past participle. Nothing exotic: hablar gives hablado, cerrar gives cerrado.
-Underneath sits Latin claudere, to shut, which you met under cerrar. It is still visible in la clausura, excluir and English closure, clause and claustrophobia — a fear named for a shut room.
+Underneath sits Late Latin serare, to bolt, from sera, the bar across a door, as you met under cerrar — not Latin claudere, to shut, which is visible instead in la clausura, excluir and English closure, clause and claustrophobia.
 
 Grammar Lens: two participles, two shapes.
 abrir gave you abierto, which does not follow the pattern. cerrar gives cerrado, which does. The pair sits on opposite sides of the same shop door, and their shapes do not match.

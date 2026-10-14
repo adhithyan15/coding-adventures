@@ -11,7 +11,8 @@ romanization: "ayitē"
 concept_tag: TE-WORD-IN-THAT-CASE
 prerequisites: [TE-C64-only]
 sounds: []
-roots: []
+roots: [tamil-aaku-become]
+etymology_hook: "ayitē: native Dravidian, the 'if it is' form of agu 'to be, become' (DEDR 333)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C64-only]
 It is put together out of the piece Telugu uses for "it happened" plus the little ending that means "if", so what it literally says is "if it is so". English "well then" and "in that case" both land in the same spot.
 
 At the head of an answer, on its own, అయితే is one of the most useful things a learner can carry. It buys a moment, and it shows the other person you were listening.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అయితే** (*ayitē*) is native Dravidian: the "if it is" form of *agu*, "to be, become" (DEDR 333), one word with Tamil *āku* and Kannada *āgu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

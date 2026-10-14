@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 214,
-  "sourceHash": "fnv1a64:31d2d710f8384cd5",
+  "sourceHash": "fnv1a64:70c6f8ad8a35d2c1",
   "lessonIds": [
     "LA-C214-saevus",
     "LA-C214-ferus",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch214.txt",
   "json": "latin/narration/ch214.json",
-  "textHash": "fnv1a64:368bf4ee1160c98d",
-  "jsonHash": "fnv1a64:f0dfa02b04c1c534",
+  "textHash": "fnv1a64:18fdb852472a8c0f",
+  "jsonHash": "fnv1a64:e5f92d4d8e37fe56",
   "findings": []
 }

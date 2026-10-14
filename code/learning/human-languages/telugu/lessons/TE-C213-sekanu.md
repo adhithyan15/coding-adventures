@@ -14,7 +14,8 @@ romanization: "sekanu"
 concept_tag: TE-SAMAYAM213-SEKANU
 prerequisites: [TE-C213-pade-pade, TE-C213-kasepu]
 sounds: []
-roots: []
+roots: [english-second]
+etymology_hook: "sekanu ← English second"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C213-kasepu]
 <!-- hl-knowledge: introduces=[TE-LEX-C213-SAMAYAM213-04]; assesses=[] -->
 
 **సెకను** — *sekanu* — "a second".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సెకను** (*sekanu*) is a loan from English *second*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

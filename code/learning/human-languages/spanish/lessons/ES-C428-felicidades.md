@@ -11,6 +11,7 @@ concept_tag: ES-SOCIAL-FELICIDADES
 prerequisites: [ES-C428-guion-bajo, ES-C269-feliz]
 sounds: [s-clear, stress-penultimate, inverted-marks]
 roots: []
+etymology_hook: "felicidades — felicidad 'happiness' in the plural, from feliz: happinesses"
 duration:
   max_seconds: 240
 requires:
@@ -47,6 +48,7 @@ description of a state but a handful of good wishes thrown at somebody.
 
 The relationship to *feliz* is visible: *feliz* → *felicidad* → *felicidades*.
 An adjective, the noun made from it, and that noun pluralised into an act.
+*Felicidad* is Latin *felicitas*, from *felix*, "happy".
 
 ## Grammar Lens: which one on which occasion
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C428-03, ES-LEX-FELIZ] -->

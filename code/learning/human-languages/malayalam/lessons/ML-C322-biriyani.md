@@ -14,7 +14,8 @@ romanization: "biriyāṇi"
 concept_tag: ML-VASTU322-BIRIYANI
 prerequisites: [ML-C321-bahalamulla, ML-C321-satyasandhamaya]
 sounds: []
-roots: []
+roots: [persian-biryani]
+etymology_hook: "biriyāṇi ← Hindustani biryānī, from Persian biryān 'fried, roasted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C321-satyasandhamaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C322-VASTU322-01]; assesses=[] -->
 
 **ബിരിയാണി** — *biriyāṇi* — "biryani".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബിരിയാണി** (*biriyāṇi*) ← Hindustani *biryānī*, from Persian *biryān*, "fried, roasted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

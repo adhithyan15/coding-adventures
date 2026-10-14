@@ -10,7 +10,8 @@ gloss: "to dry"
 concept_tag: ES-VERB-SECAR
 prerequisites: [ES-C485-fregar, ES-C485-limpiar]
 sounds: []
-roots: []
+roots: [siccus-latin]
+etymology_hook: "secar ← Latin siccare 'to dry', from siccus 'dry' — inherited, kin to seco 'dry'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C485-limpiar]
 > *Dry the clothes in the sun.*
 
 *Seco* is dry.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**secar** ← Latin *siccare*, "to dry" (EtymDB 2.1), from *siccus*, "dry" — inherited: the *i* became *e*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

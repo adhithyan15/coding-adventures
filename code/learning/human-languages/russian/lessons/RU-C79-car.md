@@ -14,7 +14,8 @@ romanization: "mashína"
 concept_tag: RU-TRAVEL-CAR
 prerequisites: [RU-C79-train, RU-C79-plane]
 sounds: []
-roots: []
+roots: [machina-latin]
+etymology_hook: "машина came under Peter the Great through German Maschine from French machine, Latin machina"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C79-plane]
 <!-- hl-knowledge: introduces=[RU-LEX-C79-TRAVEL-04]; assesses=[] -->
 
 **машина** (*mashína*) — "a car".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**машина** — from Peter the Great's time; it came through German *Maschine* from French *machine*, Latin *māchina*, "a device" (Vasmer). The sense "car" is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

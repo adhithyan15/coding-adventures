@@ -13,7 +13,8 @@ gloss: "a letter of the alphabet"
 concept_tag: LA-RES278-LITTERA
 prerequisites: [LA-C278-volumen, LA-C278-pagina]
 sounds: []
-roots: []
+roots: [littera-latin]
+etymology_hook: "littera 'letter' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C278-pagina]
 <!-- hl-knowledge: introduces=[LA-LEX-C278-RES278-03]; assesses=[] -->
 
 **littera, litterae** — "a letter of the alphabet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**littera** has no sure origin; the old link with *linō*, "to smear", is doubtful, and a loan from Greek *diphthera*, "a hide for writing on", through Etruscan has also been suggested.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

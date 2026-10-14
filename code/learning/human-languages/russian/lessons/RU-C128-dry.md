@@ -14,7 +14,8 @@ romanization: "sukhóy"
 concept_tag: RU-QUAL128-DRY
 prerequisites: [RU-C128-dangerous, RU-C128-wet]
 sounds: []
-roots: []
+roots: [pie-sh2ews]
+etymology_hook: "сухой ← Proto-Slavic *suxŭ; Lithuanian sausas 'dry' and English sear are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C128-wet]
 <!-- hl-knowledge: introduces=[RU-LEX-C128-QUAL128-05]; assesses=[] -->
 
 **сухой** (*sukhóy*) — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сухой** ← Proto-Slavic *\*suxŭ* — inherited. Vasmer relates it to Lithuanian *saũsas*, Greek *aûos* and Old English *sēar*, all "dry": English *sear* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

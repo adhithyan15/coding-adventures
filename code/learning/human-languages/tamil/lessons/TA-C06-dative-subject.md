@@ -53,10 +53,12 @@ Word by word:
 | **தமிழ்** *tamiḻ* | Tamil (Ch. 5) |
 | **தெரியும்** *teriyum* | "is known / is apparent" |
 
+*Enakku* and *teriyum* are Dravidian (DEDR 5160, 3419).
+
 That extra **த்** on *enakku* is **sandhi** — a joining consonant Tamil inserts
 between certain words to smooth the seam. It belongs to neither word on its own;
-it exists only because they are next to each other. Nothing to learn yet, but
-worth noticing, because you will see it constantly.
+it exists only because they are next to each other. Nothing to learn yet; you
+will see it constantly.
 
 **You are not the subject.** *Nāṉ* is gone — the person has been moved into the
 dative. What's left in the plain, unmarked form is *tamiḻ*: the sentence is now

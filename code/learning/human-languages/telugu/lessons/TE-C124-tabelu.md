@@ -14,7 +14,8 @@ romanization: "tābēlu"
 concept_tag: TE-THINGS124-TABELU
 prerequisites: [TE-C124-nakka, TE-C124-pamu]
 sounds: []
-roots: []
+roots: [dravidian-yamai-tortoise]
+etymology_hook: "tābēlu: native Dravidian, one word with Tamil āmai 'tortoise' (DEDR 5155)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C124-pamu]
 <!-- hl-knowledge: introduces=[TE-LEX-C124-THINGS124-04]; assesses=[] -->
 
 **తాబేలు** — *tābēlu* — "a tortoise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తాబేలు** (*tābēlu*) is native Dravidian, one word with Tamil *āmai* and Kannada *āme*, "tortoise" (DEDR 5155).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

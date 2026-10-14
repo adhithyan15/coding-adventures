@@ -14,7 +14,8 @@ romanization: "sāikil"
 concept_tag: HI-THG203-SAIKIL
 prerequisites: [HI-C203-sangrahalay, HI-C203-surang]
 sounds: []
-roots: []
+roots: [english-cycle]
+etymology_hook: "sāikil ← English cycle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C203-surang]
 <!-- hl-knowledge: introduces=[HI-LEX-C203-THG203-04]; assesses=[] -->
 
 **साइकिल** — *sāikil* — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साइकिल** (*sāikil*) is a loan from English *cycle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

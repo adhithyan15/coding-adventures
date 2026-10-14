@@ -14,7 +14,8 @@ romanization: "vaḷa"
 concept_tag: ML-THINGS156-VALA
 prerequisites: [ML-C156-panru, ML-C156-kammal]
 sounds: []
-roots: []
+roots: [dravidian-valai-ring]
+etymology_hook: "vaḷa: native Dravidian, from the root 'to encircle'; Tamil vaḷai (DEDR 5313)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C156-kammal]
 <!-- hl-knowledge: introduces=[ML-LEX-C156-THINGS156-03]; assesses=[] -->
 
 **വള** — *vaḷa* — "a bangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വള** (*vaḷa*) is native Dravidian, from the root "to surround, encircle"; DEDR 5313 lists Malayalam *vaḷa*, "ring, bracelet", beside Tamil *vaḷai*, Kannada *baḷasu* and Telugu *balayu*. DEDR 5313 compares Sanskrit *val*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

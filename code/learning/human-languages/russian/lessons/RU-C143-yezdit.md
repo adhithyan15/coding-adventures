@@ -14,7 +14,8 @@ romanization: "yézdit"
 concept_tag: RU-VERB-YEZDIT
 prerequisites: [RU-C142-tolkat, RU-C143-letat]
 sounds: []
-roots: []
+roots: [slavic-jechati]
+etymology_hook: "ездить goes with езда 'a ride'; Vasmer probably ties it to ехать 'to go' and Sanskrit yāti 'travels'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C143-letat]
 <!-- hl-knowledge: introduces=[RU-LEX-C143-ACT143-02]; assesses=[] -->
 
 **ездить** (*yézdit*) — "to ride, to go (by transport)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ездить** goes with *езда*, "a ride" (Vasmer), Old Russian *ezdŭ*, "a journey". Vasmer thinks *езда* probably comes from the root of *ехать*, "to go (by vehicle)", and Sanskrit *yāti*, "travels".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

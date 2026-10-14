@@ -4,7 +4,7 @@
   "chapter": 187,
   "title": "Full, Deep, Even, Square, Sharp",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cff759eab794bc18",
+  "sourceHash": "fnv1a64:86f0c91cab17e450",
   "lessons": [
     {
       "id": "RU-C187-polnyy",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4fa45d9bb5f6706d",
+      "sourceHash": "fnv1a64:886e7e62608c76c7",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "полный (pólnyy) from Proto-Slavic pŭlnŭ — inherited. Vasmer lists Lithuanian pìlnas, Sanskrit pūrṇá-, Gothic fulls, Latin plēnus and Greek plḗrēs, all \"full\": English full is a cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9d121488dbe85b0",
+      "sourceHash": "fnv1a64:b47bbeb4317f3eef",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "глубокий (glubókiy) from Proto-Slavic glǫbokŭ — inherited. Vasmer thinks it is probably related, with an inserted nasal, to Greek glýphō, \"I hollow out\", Latin glūbō, \"I peel\", and Old Norse kljúfa, \"to split\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9544fa24d3ef536",
+      "sourceHash": "fnv1a64:13f660c6c4b6d454",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ровный (róvnyy) from Proto-Slavic orvĭnŭ — inherited; East Slavic turned or- into ро-. Vasmer relates it to Old Prussian arwis, \"true\", Avestan ravah-, \"open space\", and Irish róe, \"a level field\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5efc39db7feed18",
+      "sourceHash": "fnv1a64:144f0f68900488cc",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "квадратный (kvadrátnyy) is квадрат, \"a square\", with -ный. квадрат, recorded from 1720, came through German Quadrat from Latin quadrātum, \"a four-cornered figure\" (Vasmer)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f76397897b61a2b0",
+      "sourceHash": "fnv1a64:74e63ad84321b9c2",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "острый (óstryy) from Proto-Slavic ostrŭ — inherited. Vasmer lists Lithuanian aštrùs, \"sharp\", Greek ákros, \"topmost\", and Latin ācer, \"sharp\", from PIE h₂eḱ-, \"sharp\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

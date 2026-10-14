@@ -14,7 +14,8 @@ romanization: "kalaṁ"
 concept_tag: ML-THINGS157-KALAM
 prerequisites: [ML-C156-motiram, ML-C156-koppa, ML-C18-oru]
 sounds: []
-roots: []
+roots: [dravidian-kalam-pot]
+etymology_hook: "kalaṁ: native Dravidian, one word with Tamil kalam and Kannada kala (DEDR 1305)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C156-koppa]
 <!-- hl-knowledge: introduces=[ML-LEX-C157-THINGS157-01]; assesses=[] -->
 
 **കലം** — *kalaṁ* — "a pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കലം** (*kalaṁ*) is native Dravidian, one word with Tamil *kalam* and Kannada *kala* (DEDR 1305). DEDR 1305 compares Sanskrit *kalā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

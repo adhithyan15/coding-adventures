@@ -13,7 +13,8 @@ gloss: "because of that"
 concept_tag: LA-WHY114-PROPTEREA
 prerequisites: [LA-C113-causa, LA-C114-ratio]
 sounds: []
-roots: []
+roots: [propterea-latin, propter-latin]
+etymology_hook: "proptereā 'because of that' — propter 'because of' + ea 'these things'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C114-ratio]
 <!-- hl-knowledge: introduces=[LA-LEX-C114-WHY114-02]; assesses=[] -->
 
 **proptereā** — "because of that".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**proptereā** is *propter*, "because of", with *ea*, "these things" (EtymDB 2.1): because of that.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

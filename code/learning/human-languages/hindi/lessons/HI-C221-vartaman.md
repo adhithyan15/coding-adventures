@@ -14,7 +14,8 @@ romanization: "vartamān"
 concept_tag: HI-THG221-VARTAMAN
 prerequisites: [HI-C221-bhavisya, HI-C221-atit]
 sounds: []
-roots: []
+roots: [sanskrit-vartamana]
+etymology_hook: "vartamān ← Sanskrit vartamāna 'turning, existing, present', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C221-atit]
 <!-- hl-knowledge: introduces=[HI-LEX-C221-THG221-04]; assesses=[] -->
 
 **वर्तमान** — *vartamān* — "the present".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वर्तमान** (*vartamān*) is Sanskrit *vartamāna*, "turning, existing, present", taken over whole as a learned loan, a tatsama. It is built on *vṛt-*, "to turn, to exist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

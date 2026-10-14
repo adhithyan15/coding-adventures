@@ -4,7 +4,7 @@
   "chapter": 321,
   "title": "Spotted, Fragrant, Smelly, Noisy, Honest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e0e99493dc6bc9f0",
+  "sourceHash": "fnv1a64:c44a7274581c10bc",
   "lessons": [
     {
       "id": "ML-C321-pulliyulla",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9138eb51e2cd3ae2",
+      "sourceHash": "fnv1a64:143306469abbecea",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുള്ളിയുള്ള (puḷḷiyuḷḷa) is native Dravidian, \"having spots\": puḷḷi, \"dot, spot\" (DEDR 4327, with Tamil puḷḷi), and -uḷḷa, \"that has\" (DEDR 697)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18e1e83ed212dec4",
+      "sourceHash": "fnv1a64:0b960cc966d138ec",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സുഗന്ധമുള്ള (sugandhamuḷḷa) joins Sanskrit sugandha, \"fragrant, perfume\" (CDIAL 13454): su, \"good\", and gandha, \"smell\", to native -uḷḷa, \"that has\" (DEDR 697)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aabb09958a44f585",
+      "sourceHash": "fnv1a64:f9f6aa6884c9ab79",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നാറുന്ന (nāṟunna) is native Dravidian, a form of the verb \"to give off a smell, stink\"; DEDR 2918 lists the root with Tamil ñāṟu and Kannada nāṟu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ceb9b4963f64e4bf",
+      "sourceHash": "fnv1a64:eb78a24805b4791b",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബഹളമുള്ള (bahaḷamuḷḷa) is \"having noise\": bahaḷaṁ, \"uproar\", a word of uncertain origin, with native -uḷḷa, \"that has\" (DEDR 697)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cc6f22d131e263c",
+      "sourceHash": "fnv1a64:8dfdbf2e9559c540",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സത്യസന്ധമായ (satyasandhamāya) is Sanskrit satyasandha, \"true to one's promise\": satya, \"truth\" (CDIAL 13112), and sandhā, \"a promise\", with native āya, \"having become\" (DEDR 333). DEDR 333 compares Sanskrit ām."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

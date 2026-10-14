@@ -14,7 +14,8 @@ romanization: "stambhaṁ"
 concept_tag: TE-VASTUVU309-STAMBHAM
 prerequisites: [TE-C309-gattu, TE-C309-pasuvulu]
 sounds: []
-roots: []
+roots: [sanskrit-stambha]
+etymology_hook: "stambhaṁ ← Sanskrit stambha 'pillar, post', a tatsama (CDIAL 13682)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C309-pasuvulu]
 <!-- hl-knowledge: introduces=[TE-LEX-C309-VASTUVU309-03]; assesses=[] -->
 
 **స్తంభం** — *stambhaṁ* — "a pillar, a pole".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**స్తంభం** (*stambhaṁ*) is Sanskrit *stambha*, "pillar, post", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 13682).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

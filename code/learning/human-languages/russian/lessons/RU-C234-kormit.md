@@ -14,7 +14,8 @@ romanization: "kormít"
 concept_tag: RU-VERB-KORMIT
 prerequisites: [RU-C234-polivat, RU-C234-rasti]
 sounds: []
-roots: []
+roots: [slavic-kormu]
+etymology_hook: "кормить is from корм 'fodder'; Vasmer compares Irish cuirm 'beer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C234-rasti]
 <!-- hl-knowledge: introduces=[RU-LEX-C234-ACT234-05]; assesses=[] -->
 
 **кормить** (*kormít*) — "to feed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кормить** comes from *корм*, "fodder, food" (Vasmer), which Vasmer compares with Irish *cuirm*, "beer", and Gaulish *kourmi*, a kind of beer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

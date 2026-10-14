@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 196,
-  "sourceHash": "fnv1a64:d9ce12eb3886c663",
+  "sourceHash": "fnv1a64:466770501af21912",
   "lessonIds": [
     "KA-C196-lekhaka",
     "KA-C196-nirdesaka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch196.txt",
   "json": "kannada/narration/ch196.json",
-  "textHash": "fnv1a64:b957295a45b11247",
-  "jsonHash": "fnv1a64:c28c0b799efe3946",
+  "textHash": "fnv1a64:c31e3fe20296fb64",
+  "jsonHash": "fnv1a64:41925b93c02ab6fb",
   "findings": []
 }

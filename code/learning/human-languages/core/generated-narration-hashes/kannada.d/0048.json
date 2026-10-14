@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 48,
-  "sourceHash": "fnv1a64:7442591120ef7a1b",
+  "sourceHash": "fnv1a64:27f745730f0cced1",
   "lessonIds": [
     "KA-C48-teacher",
     "KA-C48-student",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch48.txt",
   "json": "kannada/narration/ch48.json",
-  "textHash": "fnv1a64:8680931aa7172ebf",
-  "jsonHash": "fnv1a64:976861bb458fd4c7",
+  "textHash": "fnv1a64:b46ab2bd8b8943e5",
+  "jsonHash": "fnv1a64:fe1969e4ba6435d5",
   "findings": []
 }

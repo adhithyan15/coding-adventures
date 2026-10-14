@@ -14,7 +14,8 @@ romanization: "plambar"
 concept_tag: KA-KELASA306-PLAMBAR
 prerequisites: [KA-C306-kumbara, KA-C306-mestri]
 sounds: []
-roots: []
+roots: [english-plumber]
+etymology_hook: "plambar ← English plumber"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C306-mestri]
 <!-- hl-knowledge: introduces=[KA-LEX-C306-KELASA306-04]; assesses=[] -->
 
 **ಪ್ಲಂಬರ್** — *plambar* — "a plumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ಲಂಬರ್** (*plambar*) is a loan from English *plumber*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

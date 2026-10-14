@@ -14,7 +14,8 @@ romanization: "gryáznyy"
 concept_tag: RU-KACH156-GRYAZNYY
 prerequisites: [RU-C156-bednyy, RU-C156-chistyy]
 sounds: []
-roots: []
+roots: [slavic-grezti]
+etymology_hook: "грязный is грязь 'mud' + -ный; грязь goes with грязнуть 'to sink in'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C156-chistyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C156-KACH156-04]; assesses=[] -->
 
 **грязный** (*gryáznyy*) — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**грязный** is *грязь*, "mud", with *-ный*. Vasmer puts *грязь* with *грязнуть*, "to get stuck, to sink in": mud is what you sink into.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

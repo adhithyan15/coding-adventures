@@ -11,7 +11,8 @@ romanization: "taḍavāyitu"
 concept_tag: KA-LEAVE-LATE
 prerequisites: [KA-C89-takecare, KA-C89-safely]
 sounds: []
-roots: []
+roots: [dravidian-tada-delay, tamil-aaku-become]
+etymology_hook: "taḍavāyitu: native taḍa 'delay' (DEDR 3031) + āyitu 'it became' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C89-safely]
 
 **ತಡವಾಯಿತು** (*taḍavāyitu*) — "it's late", literally "it has become late".
 **ತಡ** (*taḍa*) is "delay, lateness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಡವಾಯಿತು** (*taḍavāyitu*) is native Dravidian: *taḍa*, "delay", which DEDR 3031 lists itself, and *āyitu*, "it became", from *āgu*, "to become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to lessen, to decrease"
 concept_tag: LA-VERB-MINUO
 prerequisites: [LA-C256-transeo, LA-C256-augeo]
 sounds: []
-roots: []
+roots: [minuere-latin]
+etymology_hook: "minuō 'to lessen' — usually traced to PIE *mi-nu- 'to lessen'; kin to minor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C256-augeo]
 <!-- hl-knowledge: introduces=[LA-LEX-C256-ACT256-04]; assesses=[] -->
 
 **minuō, minuere** — "to lessen, to decrease".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**minuō** is inherited, usually traced to Proto-Indo-European *\*mi-nu-*, "to lessen, to make small" (EtymDB 2.1); Greek *minythō*, "to lessen", is a cousin (Lewis & Short), and *minor*, "smaller", shares the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 262,
-  "sourceHash": "fnv1a64:67cbbfe4f07880d9",
+  "sourceHash": "fnv1a64:7e1cf6eb4462e1f6",
   "lessonIds": [
     "ML-C262-kurippu",
     "ML-C262-udaharanam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch262.txt",
   "json": "malayalam/narration/ch262.json",
-  "textHash": "fnv1a64:3bca8c9e6d498018",
-  "jsonHash": "fnv1a64:ea133cd20e764cbd",
+  "textHash": "fnv1a64:efb4365c3cf51943",
+  "jsonHash": "fnv1a64:c0f2cfeff8e7d3c2",
   "findings": []
 }

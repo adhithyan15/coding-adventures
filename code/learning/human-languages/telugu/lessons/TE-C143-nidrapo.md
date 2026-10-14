@@ -14,7 +14,8 @@ romanization: "nidrapō"
 concept_tag: TE-VERB-NIDRAPO
 prerequisites: [TE-C143-egiru, TE-C143-parigettu]
 sounds: []
-roots: []
+roots: [sanskrit-nidra, proto-dravidian-poo-go]
+etymology_hook: "nidrapō: Sanskrit nidrā 'sleep' (CDIAL 7200) + native pō 'to go' (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C143-parigettu]
 <!-- hl-knowledge: introduces=[TE-LEX-C143-QUAL143-04]; assesses=[] -->
 
 **నిద్రపో** — *nidrapō* — "to sleep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిద్రపో** (*nidrapō*) is Sanskrit *nidrā*, "sleep" (CDIAL 7200), with native *pō*, "to go" (DEDR 4572): "go to sleep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

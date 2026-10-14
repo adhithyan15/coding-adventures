@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 115,
-  "sourceHash": "fnv1a64:d99b3ca1b3a7ac6c",
+  "sourceHash": "fnv1a64:a1ccda6825af6db7",
   "lessonIds": [
     "HI-C115-aie",
     "HI-C115-padharie",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch115.txt",
   "json": "hindi/narration/ch115.json",
-  "textHash": "fnv1a64:129af6d8b35169ec",
-  "jsonHash": "fnv1a64:ac7628e6f4683f84",
+  "textHash": "fnv1a64:952926efb6dc6973",
+  "jsonHash": "fnv1a64:b593b7e86938414d",
   "findings": []
 }

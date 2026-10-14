@@ -14,7 +14,8 @@ romanization: "phān"
 concept_tag: ML-THINGS157-PHAN
 prerequisites: [ML-C157-atuppu, ML-C157-visari]
 sounds: []
-roots: []
+roots: [english-fan]
+etymology_hook: "phān ← English fan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C157-visari]
 <!-- hl-knowledge: introduces=[ML-LEX-C157-THINGS157-04]; assesses=[] -->
 
 **ഫാൻ** — *phān* — "an electric fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഫാൻ** (*phān*) ← English *fan*, the electric kind.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

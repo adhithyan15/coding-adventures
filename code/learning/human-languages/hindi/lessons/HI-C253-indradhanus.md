@@ -14,7 +14,8 @@ romanization: "indradhanuṣ"
 concept_tag: HI-THG253-INDRADHANUS
 prerequisites: [HI-C252-kata, HI-C252-kicar]
 sounds: []
-roots: []
+roots: [sanskrit-indra, sanskrit-dhanus]
+etymology_hook: "indradhanuṣ: Sanskrit indradhanus 'Indra's bow', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C252-kicar]
 <!-- hl-knowledge: introduces=[HI-LEX-C253-THG253-01]; assesses=[] -->
 
 **इंद्रधनुष** — *indradhanuṣ* — "a rainbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इंद्रधनुष** (*indradhanuṣ*) is Sanskrit *indradhanus*, "Indra's bow", taken over whole as a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sīmā"
 concept_tag: HI-THG200-SIMA
 prerequisites: [HI-C200-rajya, HI-C200-rajdhani]
 sounds: []
-roots: []
+roots: [sanskrit-sima]
+etymology_hook: "sīmā ← Sanskrit sīmā 'boundary', a tatsama (CDIAL 13435)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C200-rajdhani]
 <!-- hl-knowledge: introduces=[HI-LEX-C200-THG200-04]; assesses=[] -->
 
 **सीमा** — *sīmā* — "a border, a limit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सीमा** (*sīmā*) is Sanskrit *sīmā*, "boundary", taken over whole as a learned loan, a tatsama (CDIAL 13435).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

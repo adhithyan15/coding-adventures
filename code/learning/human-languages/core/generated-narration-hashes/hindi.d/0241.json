@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 241,
-  "sourceHash": "fnv1a64:ada3ce7df9c38a39",
+  "sourceHash": "fnv1a64:2273aa00d46dd44c",
   "lessonIds": [
     "HI-C241-sarkari",
     "HI-C241-niji",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch241.txt",
   "json": "hindi/narration/ch241.json",
-  "textHash": "fnv1a64:a26ab331fea35769",
-  "jsonHash": "fnv1a64:16be62c6816cbe3a",
+  "textHash": "fnv1a64:b07244ec0ee90688",
+  "jsonHash": "fnv1a64:fa0f4dbe530da53c",
   "findings": []
 }

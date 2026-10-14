@@ -14,7 +14,8 @@ romanization: "śiśu"
 concept_tag: HI-THG253-SISU
 prerequisites: [HI-C253-barh, HI-C253-purus]
 sounds: []
-roots: []
+roots: [sanskrit-shishu]
+etymology_hook: "śiśu ← Sanskrit śiśu 'young of an animal, child', a tatsama (CDIAL 12476)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C253-purus]
 <!-- hl-knowledge: introduces=[HI-LEX-C253-THG253-05]; assesses=[] -->
 
 **शिशु** — *śiśu* — "a baby, an infant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शिशु** (*śiśu*) is Sanskrit *śiśu*, "young of an animal, child", taken over whole as a learned loan, a tatsama (CDIAL 12476). CDIAL lists the inherited forms as *sis* and *sisu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ḍibbā"
 concept_tag: HI-THINGS131-DIBBA
 prerequisites: [HI-C131-tauliya, HI-C131-jharu, HI-C06-tin-char-history, HI-C06-tin-char-history, HI-C06-paanch-nasal]
 sounds: []
-roots: []
+roots: [indo-aryan-dabba]
+etymology_hook: "ḍibbā: CDIAL lists ḍibbī 'small box' under *ḍibba, a non-Aryan word (CDIAL 5528)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C131-jharu]
 <!-- hl-knowledge: introduces=[HI-LEX-C131-THINGS131-03]; assesses=[] -->
 
 **डिब्बा** — *ḍibbā* — "a box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डिब्बा** (*ḍibbā*) belongs with Hindi *ḍabbā* and *ḍibbī*, "box", which CDIAL lists under a reconstructed *\*ḍabba*, "box", and its variant *\*ḍibba* (CDIAL 5528). CDIAL takes the group to be non-Aryan, perhaps Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,7 +10,8 @@ gloss: "the explanation"
 concept_tag: ES-REF-EXPLICACION
 prerequisites: [ES-C505-educacion, ES-C505-asistir]
 sounds: []
-roots: []
+roots: [plicare-latin]
+etymology_hook: "explicación ← Latin explicatio 'an unfolding', from plicare 'to fold' — kin to llegar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C505-asistir]
 > No entiendo la explicación.
 >
 > *I do not understand the explanation.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**explicación** ← Latin *explicatio*, "an unfolding" (EtymDB 2.1), from *explicare*, "to unfold": *ex-* and *plicare*, "to fold" — a learned word. Worn down in speech, *plicare* became *llegar*, "to arrive".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

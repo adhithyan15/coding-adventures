@@ -47,7 +47,7 @@ reviews_of: [TA-C272-ataiyala-attai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**வரி** (*vari*) is native Dravidian. DEDR 5263 lists Malayalam *vara*, "line" and Kannada *bare*, "writing, lines". The entry glosses "line" and "to write"; the sense "tax" is the line in a register.
+**வரி** (*vari*) is native Dravidian. DEDR 5263 lists Malayalam *vara*, "line" and Kannada *bare*, "writing, lines". The entry glosses "line" and "to write"; the sense "tax" is probably the line in a register.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

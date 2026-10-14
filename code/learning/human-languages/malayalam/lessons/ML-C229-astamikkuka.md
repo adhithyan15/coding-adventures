@@ -14,7 +14,8 @@ romanization: "astamikkuka"
 concept_tag: ML-VERB-ASTAMIKKUKA
 prerequisites: [ML-C228-asvadikkuka, ML-C228-verukkuka]
 sounds: []
-roots: []
+roots: [sanskrit-asta]
+etymology_hook: "astamikkuka ← Sanskrit astam 'home; setting' (CDIAL 973) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C228-verukkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C229-KRIYA229-01]; assesses=[] -->
 
 **അസ്തമിക്കുക** — *astamikkuka* — "to set (of the sun)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അസ്തമിക്കുക** (*astamikkuka*) is built on Sanskrit *astam*, "home", as in *astam ēti*, "goes home, sets", said of the sun (CDIAL 973).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

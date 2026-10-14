@@ -13,7 +13,8 @@ gloss: "to hurt, to grieve"
 concept_tag: LA-VERB-DOLEO
 prerequisites: [LA-C203-obliviscor, LA-C204-affirmo]
 sounds: []
-roots: []
+roots: [dolere-latin]
+etymology_hook: "doleō 'to hurt' — inherited, usually traced to PIE *delh1- 'to split, to cut'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C204-affirmo]
 <!-- hl-knowledge: introduces=[LA-LEX-C204-ACT204-02]; assesses=[] -->
 
 **doleō, dolēre** — "to hurt, to grieve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**doleō** is inherited, usually traced to Proto-Indo-European *\*delh1-*, "to split, to cut" (EtymDB 2.1): pain as a cutting.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

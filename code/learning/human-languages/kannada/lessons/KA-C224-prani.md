@@ -14,7 +14,8 @@ romanization: "prāṇi"
 concept_tag: KA-VASTU224-PRANI
 prerequisites: [KA-C224-pravaha, KA-C224-prakrti]
 sounds: []
-roots: []
+roots: [sanskrit-pranin]
+etymology_hook: "prāṇi ← Sanskrit prāṇin 'living; living creature', a tatsama (CDIAL 8932)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C224-prakrti]
 <!-- hl-knowledge: introduces=[KA-LEX-C224-VASTU224-05]; assesses=[] -->
 
 **ಪ್ರಾಣಿ** — *prāṇi* — "an animal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ರಾಣಿ** (*prāṇi*) is Sanskrit *prāṇin*, "living; living creature", taken over whole as a learned loan, a tatsama (CDIAL 8932). Kannada drops the final *-n*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 97,
-  "sourceHash": "fnv1a64:277c35c6ae0676ab",
+  "sourceHash": "fnv1a64:fa9a616c3704ec5a",
   "lessonIds": [
     "HI-C89-kar-raha-hun",
     "HI-C89-kar-rahi-hun",
@@ -15,7 +15,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch97.txt",
   "json": "hindi/narration/ch97.json",
-  "textHash": "fnv1a64:2184055bb99f0dc9",
-  "jsonHash": "fnv1a64:77f866f7c76fe494",
+  "textHash": "fnv1a64:ac30efe7f8fe20eb",
+  "jsonHash": "fnv1a64:fcc5321e4aae8dd9",
   "findings": []
 }

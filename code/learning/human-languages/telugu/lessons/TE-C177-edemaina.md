@@ -14,7 +14,8 @@ romanization: "ēdēmainā"
 concept_tag: TE-KARANAM177-EDEMAINA
 prerequisites: [TE-C177-prakaram, TE-C177-asalu]
 sounds: []
-roots: []
+roots: [yaa-dravidian, tamil-aaku-become]
+etymology_hook: "ēdēmainā: native ēdi 'which', ēmi 'what' (DEDR 5151) + ainā 'even if it is' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C177-asalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C177-KARANAM177-05]; assesses=[] -->
 
 **ఏదేమైనా** — *ēdēmainā* — "anyway, in any case".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఏదేమైనా** (*ēdēmainā*) is native Dravidian: *ēdi*, "which", and *ēmi*, "what", both on the question base *e-* (DEDR 5151), with *ainā*, "even if it is", from *agu*, "to be" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

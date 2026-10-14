@@ -14,7 +14,8 @@ romanization: "vṛttaṁ"
 concept_tag: TE-VASTUVU193-VRTTAM
 prerequisites: [TE-C192-jada, TE-C193-gita]
 sounds: []
-roots: []
+roots: [sanskrit-vrtta]
+etymology_hook: "vṛttaṁ ← Sanskrit vṛtta 'turned; rounded', a tatsama (CDIAL 12069)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C193-gita]
 <!-- hl-knowledge: introduces=[TE-LEX-C193-VASTUVU193-02]; assesses=[] -->
 
 **వృత్తం** — *vṛttaṁ* — "a circle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వృత్తం** (*vṛttaṁ*) is Sanskrit *vṛtta*, "turned; rounded", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 12069). Sanskrit already used it for "circle" too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

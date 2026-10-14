@@ -14,7 +14,8 @@ romanization: "tēkkuka"
 concept_tag: ML-VERB-TEKKUKA
 prerequisites: [ML-C263-supparmarkkarru, ML-C264-orunnuka]
 sounds: []
-roots: []
+roots: [dravidian-tey-rub]
+etymology_hook: "tēkkuka: native Dravidian, one word with Tamil tēy and Kannada tē (DEDR 3458)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C264-orunnuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C264-KRIYA264-02]; assesses=[] -->
 
 **തേക്കുക** — *tēkkuka* — "to brush (teeth), to apply".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തേക്കുക** (*tēkkuka*) is native Dravidian, one word with Tamil *tēy* and Kannada *tē* (DEDR 3458). Its first sense is "to rub".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "vidyārtthi"
 concept_tag: ML-NOUN-STUDENT
 prerequisites: [ML-C48-teacher, ML-C46-cloth]
 sounds: []
-roots: []
+roots: [sanskrit-vidya]
+etymology_hook: "vidyārtthi ← Sanskrit vidyārthin 'seeker of knowledge': vidyā 'knowledge' + arthin 'seeking' (CDIAL 11741)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Two Sanskrit pieces, and both are legible once pointed at: *vidyā*, 'knowledge'
 Kannada has ವಿದ್ಯಾರ್ಥಿ (*vidyārthi*), the identical borrowing. Where the teacher-words parted company, the student-words did not.
 
 There is a chillu here too, the ർ in the middle, doing the same job as the ൽ of the leg-word: a consonant with no vowel after it, given its own shape rather than a mark underneath.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിദ്യാർത്ഥി** (*vidyārtthi*) ← Sanskrit *vidyārthin*, "one who seeks knowledge": *vidyā*, "knowledge" (CDIAL 11741), with *arthin*, "seeking, wanting". Malayalam doubles the consonant after the r, as it does in many Sanskrit words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

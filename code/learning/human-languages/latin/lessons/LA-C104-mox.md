@@ -13,7 +13,8 @@ gloss: "soon"
 concept_tag: LA-SEMPER-MOX
 prerequisites: [LA-C104-numquam, LA-C104-nunc]
 sounds: []
-roots: []
+roots: [mox-latin]
+etymology_hook: "mox 'soon' — probably from PIE *moks 'quickly'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C104-nunc]
 <!-- hl-knowledge: introduces=[LA-LEX-C104-SEMPER-05]; assesses=[] -->
 
 **mox** — "soon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mox** is probably inherited, from a Proto-Indo-European *\*moks*, "quickly, soon" (EtymDB 2.1); Lewis & Short still call it doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

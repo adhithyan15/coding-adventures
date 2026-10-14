@@ -14,7 +14,8 @@ romanization: "shórty"
 concept_tag: RU-VESHCH248-SHORTY
 prerequisites: [RU-C248-kostyum, RU-C248-dzhinsy]
 sounds: []
-roots: []
+roots: [english-shorts]
+etymology_hook: "шорты ← English shorts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C248-dzhinsy]
 <!-- hl-knowledge: introduces=[RU-LEX-C248-VESHCH248-05]; assesses=[] -->
 
 **шорты** (*shórty*) — "shorts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шорты** comes from English *shorts*, "short trousers".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

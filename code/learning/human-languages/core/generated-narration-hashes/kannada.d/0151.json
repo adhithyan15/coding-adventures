@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 151,
-  "sourceHash": "fnv1a64:da3249d4371ee84f",
+  "sourceHash": "fnv1a64:af411ad620e990fb",
   "lessonIds": [
     "KA-C151-gellu",
     "KA-C151-solu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch151.txt",
   "json": "kannada/narration/ch151.json",
-  "textHash": "fnv1a64:0b0f869454fa48f5",
-  "jsonHash": "fnv1a64:2e7a4cad113009d0",
+  "textHash": "fnv1a64:31afe8ebb2088bb1",
+  "jsonHash": "fnv1a64:ba6ba5afab01c3ce",
   "findings": []
 }

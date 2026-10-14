@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Hair, Ear, and Throat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:97488885ae2f4eee",
+  "sourceHash": "fnv1a64:6bd619f02f083cb7",
   "lessons": [
     {
       "id": "HI-C46-hair",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f91cf5982d22fe8",
+      "sourceHash": "fnv1a64:c31b1029fddd5262",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b4222fed73e790a",
+      "sourceHash": "fnv1a64:9a21fb2da80a911f",
       "notice": null,
       "blocks": [
         {
@@ -299,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:073b266e7ef86256",
+      "sourceHash": "fnv1a64:c3fc65079f55399e",
       "notice": null,
       "blocks": [
         {
@@ -439,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd7b598db558385e",
+      "sourceHash": "fnv1a64:20b5aafc8157f59d",
       "notice": null,
       "blocks": [
         {
@@ -470,7 +470,7 @@
             },
             {
               "kind": "speech",
-              "text": "From Sanskrit nāsikā, 'nostril', by way of Prakrit — and nāsikā is a cousin of Latin nāsus and of English \"nose\", which makes this one of the clearest family resemblances anywhere on the body."
+              "text": "From Prakrit ṇakka, 'nose', which CDIAL traces, with a \"possibly\", to the old word nas-, 'nose' (CDIAL 6909) — and nas- is a cousin of Latin nāsus and of English \"nose\", so the family resemblance is probably real."
             },
             {
               "kind": "speech",
@@ -579,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1033a9a187e11fdb",
+      "sourceHash": "fnv1a64:a82f6cf81968b636",
       "notice": null,
       "blocks": [
         {

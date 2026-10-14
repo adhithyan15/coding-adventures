@@ -14,7 +14,8 @@ romanization: "kāvŭ"
 concept_tag: ML-STHALAM280-KAVU
 prerequisites: [ML-C280-parampu, ML-C280-carivu]
 sounds: []
-roots: []
+roots: [dravidian-ka-guard]
+etymology_hook: "kāvŭ: native Dravidian; DEDR 1416 lists Malayalam kāvu 'enclosure, holy enclosure' under the verb 'to guard'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C280-carivu]
 <!-- hl-knowledge: introduces=[ML-LEX-C280-STHALAM280-04]; assesses=[] -->
 
 **കാവ്** — *kāvŭ* — "a sacred grove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാവ്** (*kāvŭ*) is native Dravidian: DEDR 1416 lists it, "enclosure, garden, holy enclosure", under the verb "to guard, keep", with Tamil *kā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

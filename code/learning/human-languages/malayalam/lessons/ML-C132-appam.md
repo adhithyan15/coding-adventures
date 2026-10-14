@@ -11,7 +11,8 @@ romanization: "appaṁ"
 concept_tag: ML-DISH-APPAM
 prerequisites: [ML-C132-dosa, ML-C132-sambar]
 sounds: []
-roots: []
+roots: [dravidian-appam-cake]
+etymology_hook: "appaṁ: native Dravidian, one word with Tamil appam and Kannada appa (DEDR 155)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C132-sambar]
 <!-- hl-knowledge: introduces=[ML-LEX-C132-DISHES-03]; assesses=[] -->
 
 **അപ്പം** (*appaṁ*) — a soft rice pancake with lacy edges, made with **തേങ്ങ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അപ്പം** (*appaṁ*) is native Dravidian, one word with Tamil *appam*, Kannada *appa* and Telugu *appamu* (DEDR 155). DEDR 155 compares Sanskrit *apūpá*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

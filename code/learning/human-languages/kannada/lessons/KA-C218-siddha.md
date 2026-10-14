@@ -14,7 +14,8 @@ romanization: "siddha"
 concept_tag: KA-GUNA218-SIDDHA
 prerequisites: [KA-C217-sadila, KA-C217-dappa]
 sounds: []
-roots: []
+roots: [sanskrit-siddha]
+etymology_hook: "siddha ← Sanskrit siddha 'accomplished; prepared', a tatsama (CDIAL 13401)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C217-dappa]
 <!-- hl-knowledge: introduces=[KA-LEX-C218-GUNA218-01]; assesses=[] -->
 
 **ಸಿದ್ಧ** — *siddha* — "ready".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಿದ್ಧ** (*siddha*) is Sanskrit *siddha*, "accomplished; prepared", taken over whole as a learned loan, a tatsama (CDIAL 13401).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

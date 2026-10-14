@@ -14,7 +14,8 @@ romanization: "tāḷaṁ"
 concept_tag: TE-THINGS110-TALAM
 prerequisites: [TE-C109-duppati, TE-C109-tera]
 sounds: []
-roots: []
+roots: [dravidian-tazh-bolt]
+etymology_hook: "tāḷaṁ: native Dravidian, one word with Tamil tāḻ 'bolt' (DEDR 3179), which compares Sanskrit tāla"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C109-tera]
 <!-- hl-knowledge: introduces=[TE-LEX-C110-THINGS110-01]; assesses=[] -->
 
 **తాళం** — *tāḷaṁ* — "a lock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తాళం** (*tāḷaṁ*) is native Dravidian, one word with Tamil *tāḻ* and Kannada *tāḻ*, "bolt, bar" (DEDR 3179), which lists *tāḷamu*, "lock, key". DEDR compares Sanskrit *tāla* and *tāḍaka*, "latch, bolt" (CDIAL 5749).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

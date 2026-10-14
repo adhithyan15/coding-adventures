@@ -14,7 +14,8 @@ romanization: "stená"
 concept_tag: RU-HOME3-WALL
 prerequisites: [RU-C49-lamp, RU-C49-key]
 sounds: []
-roots: []
+roots: [pie-steyh2]
+etymology_hook: "стена ← Proto-Slavic *stěna; Gothic stains 'stone' and English stone are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C49-key]
 <!-- hl-knowledge: introduces=[RU-LEX-C50-HOME3-01]; assesses=[] -->
 
 **стена** (*stená*) — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**стена** ← Proto-Slavic *\*stěna* — inherited. Vasmer relates it to Gothic *stains*, "stone", so English *stone* is a cousin, and he holds that a loan from Germanic cannot be proved.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

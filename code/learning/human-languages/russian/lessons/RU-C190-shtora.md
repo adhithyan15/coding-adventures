@@ -14,7 +14,8 @@ romanization: "shtóra"
 concept_tag: RU-VESHCH190-SHTORA
 prerequisites: [RU-C189-inostrannyy, RU-C189-russkiy]
 sounds: []
-roots: []
+roots: [german-store]
+etymology_hook: "штора came through German Store 'a blind', as its ш- shows"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C189-russkiy]
 <!-- hl-knowledge: introduces=[RU-LEX-C190-VESHCH190-01]; assesses=[] -->
 
 **штора** (*shtóra*) — "a heavy curtain, a blind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**штора** — its *ш-* shows it came through German *Store*, "a window blind" (Vasmer); French *store* alone would not give *ш-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

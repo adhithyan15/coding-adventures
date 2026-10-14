@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "The Noun, And The Ending That Means Two Things",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:419f6e3836f496bf",
+  "sourceHash": "fnv1a64:465af1a11b943f35",
   "lessons": [
     {
       "id": "HI-C91-bacche-plural",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f2e68b2df29bdef",
+      "sourceHash": "fnv1a64:6dfc4ec5f55ac11a",
       "notice": null,
       "blocks": [
         {
@@ -86,6 +86,10 @@
             {
               "kind": "speech",
               "text": "This applies to masculine nouns ending in -आ and to those only. A noun shaped otherwise does something else, and the next lessons take those in turn."
+            },
+            {
+              "kind": "speech",
+              "text": "बच्चा itself is the loan usually traced to Persian bacca, \"child\"."
             }
           ]
         },
@@ -194,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37b899624c2ce21b",
+      "sourceHash": "fnv1a64:1f59fb9a4fd6cf9e",
       "notice": null,
       "blocks": [
         {
@@ -258,6 +262,10 @@
             {
               "kind": "speech",
               "text": "Feminine nouns ending in a consonant, like किताब, are much the commonest case, and the nasal is what your ear should catch."
+            },
+            {
+              "kind": "speech",
+              "text": "किताब is Arabic kitāb, \"book\", which reached Hindi through Persian."
             }
           ]
         },
@@ -370,7 +378,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19969658911be6f6",
+      "sourceHash": "fnv1a64:e810d9a66f9edcc2",
       "notice": null,
       "blocks": [
         {
@@ -436,6 +444,10 @@
             {
               "kind": "speech",
               "text": "The ए is written as a full letter here rather than as a mark, because भाषा ends in a vowel and there is nothing for a mark to sit on. That is the same rule that gave you आऊँगा and आओगे."
+            },
+            {
+              "kind": "speech",
+              "text": "भाषा is Sanskrit bhāṣā, \"speech\", a tatsama (CDIAL 9479)."
             }
           ]
         },
@@ -544,7 +556,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ca5976e68cc50a29",
+      "sourceHash": "fnv1a64:a141807457e298fe",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -616,6 +628,10 @@
             {
               "kind": "speech",
               "text": "This is worth expecting rather than being surprised by, because a reading paper will give you an unchanged noun and ask you to count. The number lives in the sentence, not always in the word."
+            },
+            {
+              "kind": "speech",
+              "text": "आदमी is the Arabic loan ādamī, \"human\"."
             }
           ]
         },
@@ -726,7 +742,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65a762845f33461e",
+      "sourceHash": "fnv1a64:081031ef8d2d3fa3",
       "notice": null,
       "blocks": [
         {
@@ -790,6 +806,10 @@
             {
               "kind": "speech",
               "text": "The second is the strange one to an English ear. English marks a direct object by word order and nothing else. Hindi puts को (ko) on an object when it is a person or a particular thing, and leaves it bare otherwise. Spanish does the same with a before a human object, so the demand is not unique to Hindi — only the marker is."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists को (ko) under Sanskrit kakṣa, \"armpit\" (CDIAL 14342): \"at the side of\" became \"to\"."
             }
           ]
         },
@@ -899,7 +919,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8812fb0a8bb0b0b0",
+      "sourceHash": "fnv1a64:d4d365f0dcc37219",
       "notice": null,
       "blocks": [
         {
@@ -965,6 +985,10 @@
             {
               "kind": "speech",
               "text": "So the track has taught this bend four times on four kinds of word, and this is the fourth and last kind."
+            },
+            {
+              "kind": "speech",
+              "text": "बच्चा is usually traced to Persian bacca, \"child\"."
             }
           ]
         },
@@ -1077,7 +1101,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec49dc7691148c3d",
+      "sourceHash": "fnv1a64:bb71666af97b2148",
       "notice": null,
       "blocks": [
         {
@@ -1137,6 +1161,10 @@
             {
               "kind": "speech",
               "text": "There is a second reason it matters. Hindi has no article, so यह and वह are what a writer reaches for when the would have been enough in English. A sentence that begins वह आदमी is often best read as the man rather than that man."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists यह under Sanskrit eṣa, \"this\" (CDIAL 2530)."
             }
           ]
         },

@@ -13,7 +13,8 @@ gloss: "a tiger"
 concept_tag: LA-RES251-TIGRIS
 prerequisites: [LA-C250-viola, LA-C251-catulus]
 sounds: []
-roots: []
+roots: [tigris-latin]
+etymology_hook: "tigris 'tiger' — borrowed from Greek tigris, probably from an Iranian language"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C251-catulus]
 <!-- hl-knowledge: introduces=[LA-LEX-C251-RES251-02]; assesses=[] -->
 
 **tigris, tigris** — "a tiger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tigris** was borrowed from Greek *tigris*, "tiger" (EtymDB 2.1), which probably came from an Iranian language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

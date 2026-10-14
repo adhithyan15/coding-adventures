@@ -12,6 +12,9 @@ Before the new one: say the Kannada for opposite, then the Kannada for a distric
 You'll want to know: ಸುತ್ತ.
 ಸುತ್ತ — sutta — "around".
 
+The word, taken apart.
+ಸುತ್ತ (sutta) is native Dravidian, from suttu, "to surround, go round", which DEDR 2715 lists; the entry also has Tamil cuṟṟu and Telugu cuṭṭu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a district, then the Kannada for around.
 
 You'll want to know: ಗುಡಿಸಲು.
 ಗುಡಿಸಲು — guḍisalu — "a hut".
+
+The word, taken apart.
+ಗುಡಿಸಲು (guḍisalu) is native Dravidian, one word with Tamil kuṭi, Telugu koṭika and Malayalam kuṭi (DEDR 1655). DEDR lists guḍisalu, "hut with a thatched roof". DEDR 1655 compares Sanskrit kūṭa.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for around, then the Kannada for a hut.
 You'll want to know: ಬಡಾವಣೆ.
 ಬಡಾವಣೆ — baḍāvaṇe — "a residential area, a neighbourhood".
 
+The word, taken apart.
+The origin of ಬಡಾವಣೆ (baḍāvaṇe) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a hut, then the Kannada for a residentia
 You'll want to know: ಅಂಚೆ ಕಚೇರಿ.
 ಅಂಚೆ ಕಚೇರಿ — añce kacēri — "a post office".
 
+The word, taken apart.
+ಅಂಚೆ ಕಚೇರಿ (añce kacēri) is añce, "the post, a relay", native Dravidian (DEDR 54, with Tamil añcal), and kacēri, "office", from Hindustani kacahrī.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a residential area, then the Kannada for
 
 You'll want to know: ಕಣಿವೆ.
 ಕಣಿವೆ — kaṇive — "a valley".
+
+The word, taken apart.
+ಕಣಿವೆ (kaṇive) is native Dravidian, one word with Tamil kaṇavāy (DEDR 1163). DEDR lists kaṇive, "narrow pass between two mountains".
 
 What you've built.
 One more word for this chapter.

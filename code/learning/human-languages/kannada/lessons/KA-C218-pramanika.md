@@ -14,7 +14,8 @@ romanization: "prāmāṇika"
 concept_tag: KA-GUNA218-PRAMANIKA
 prerequisites: [KA-C218-labhya, KA-C218-spasta]
 sounds: []
-roots: []
+roots: [sanskrit-pramanika]
+etymology_hook: "prāmāṇika ← Sanskrit prāmāṇika 'founded on authority', a tatsama (CDIAL 8949)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C218-spasta]
 <!-- hl-knowledge: introduces=[KA-LEX-C218-GUNA218-04]; assesses=[] -->
 
 **ಪ್ರಾಮಾಣಿಕ** — *prāmāṇika* — "honest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ರಾಮಾಣಿಕ** (*prāmāṇika*) is Sanskrit *prāmāṇika*, "founded on authority", taken over whole as a learned loan, a tatsama (CDIAL 8949). What rests on proof is honest.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

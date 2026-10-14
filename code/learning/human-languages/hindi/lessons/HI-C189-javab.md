@@ -14,7 +14,8 @@ romanization: "javāb"
 concept_tag: HI-THG189-JAVAB
 prerequisites: [HI-C189-kahani, HI-C189-saval]
 sounds: []
-roots: []
+roots: [arabic-jawab]
+etymology_hook: "javāb ← Arabic jawāb 'an answer', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C189-saval]
 <!-- hl-knowledge: introduces=[HI-LEX-C189-THG189-04]; assesses=[] -->
 
 **जवाब** — *javāb* — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जवाब** (*javāb*) is a loan from Arabic *jawāb*, "an answer", which reached Hindi through Persian. Its Arabic root is *j-w-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 138,
-  "sourceHash": "fnv1a64:ad96412fc480324b",
+  "sourceHash": "fnv1a64:48ee8df57e6bcd39",
   "lessonIds": [
     "HI-C138-lahsun",
     "HI-C138-adrak",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch138.txt",
   "json": "hindi/narration/ch138.json",
-  "textHash": "fnv1a64:8e159dcb19a86a1d",
-  "jsonHash": "fnv1a64:e77657087fbaf76b",
+  "textHash": "fnv1a64:1f664c363691922d",
+  "jsonHash": "fnv1a64:9ab10cde9d040231",
   "findings": []
 }

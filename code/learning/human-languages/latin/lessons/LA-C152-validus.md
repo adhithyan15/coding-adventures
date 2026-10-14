@@ -13,7 +13,8 @@ gloss: "strong"
 concept_tag: LA-QUAL152-VALIDUS
 prerequisites: [LA-C151-turpis, LA-C151-formosus]
 sounds: []
-roots: []
+roots: [validus-latin, valere-latin]
+etymology_hook: "validus 'strong' — built on valeō 'to be strong'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C151-formosus]
 <!-- hl-knowledge: introduces=[LA-LEX-C152-QUAL152-01]; assesses=[] -->
 
 **validus, valida, validum** — "strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**validus** is built on *valeō*, "to be strong" (Lewis & Short), with *-idus*, the ending of state adjectives. *valeō* is usually traced to Proto-Indo-European *\*h2welh1-*, "to be strong, to rule" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

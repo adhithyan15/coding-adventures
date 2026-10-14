@@ -14,7 +14,8 @@ romanization: "prinṟar"
 concept_tag: ML-VASTU255-PRINRAR
 prerequisites: [ML-C255-vebsairru, ML-C255-kyamara]
 sounds: []
-roots: []
+roots: [english-printer]
+etymology_hook: "prinṟar ← English printer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C255-kyamara]
 <!-- hl-knowledge: introduces=[ML-LEX-C255-VASTU255-05]; assesses=[] -->
 
 **പ്രിന്റർ** — *prinṟar* — "a printer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രിന്റർ** (*prinṟar*) ← English *printer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

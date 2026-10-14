@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a bakery, then the Malayalam for a sup
 You'll want to know: ഒരുങ്ങുക.
 ഒരുങ്ങുക — oruṅṅuka — "to get ready".
 
+The word, taken apart.
+ഒരുങ്ങുക (oruṅṅuka) is native Dravidian, one word with Telugu oggu (DEDR 992).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a supermarket, then the Malayalam for 
 
 You'll want to know: തേക്കുക.
 തേക്കുക — tēkkuka — "to brush (teeth), to apply".
+
+The word, taken apart.
+തേക്കുക (tēkkuka) is native Dravidian, one word with Tamil tēy and Kannada tē (DEDR 3458). Its first sense is "to rub".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for to get ready, then the Malayalam for t
 You'll want to know: തുടയ്ക്കുക.
 തുടയ്ക്കുക — tuṭaykkuka — "to wipe".
 
+The word, taken apart.
+തുടയ്ക്കുക (tuṭaykkuka) is native Dravidian, one word with Tamil tuṭai, Kannada toḍe and Telugu tuḍ(u)cu (DEDR 3301).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for to brush, then the Malayalam for to wi
 You'll want to know: അടിച്ചുവാരുക.
 അടിച്ചുവാരുക — aṭiccuvāruka — "to sweep".
 
+The word, taken apart.
+അടിച്ചുവാരുക (aṭiccuvāruka) is native Dravidian, "sweep and gather up": the verb "to sweep the ground" (DEDR 73) and the verb "to scoop up" (DEDR 5362, with Tamil vāru).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for to wipe, then the Malayalam for to swe
 
 You'll want to know: മടക്കുക.
 മടക്കുക — maṭakkuka — "to fold".
+
+The word, taken apart.
+മടക്കുക (maṭakkuka) is native Dravidian, the causative of the verb "to be bent, folded"; DEDR 4645 lists the root with Tamil maṭaṅku.
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "to shine"
 concept_tag: LA-VERB-LUCEO
 prerequisites: [LA-C157-reddo, LA-C157-ostendo]
 sounds: []
-roots: []
+roots: [lucere-latin, lux-latin]
+etymology_hook: "lūceō 'to shine' — inherited, usually traced to PIE *lowkeye-; kin to lūx 'light'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C157-ostendo]
 <!-- hl-knowledge: introduces=[LA-LEX-C157-ACT157-03]; assesses=[] -->
 
 **lūceō, lūcēre** — "to shine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lūceō** is inherited, usually traced to Proto-Indo-European *\*lowkeye-*, "to make shine" (EtymDB 2.1), from the same root as *lūx*, "light"; Greek *leukos*, "white, bright", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

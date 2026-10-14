@@ -14,7 +14,8 @@ romanization: "den"
 concept_tag: RU-TIME1-DAY
 prerequisites: [RU-C67-cheap, RU-C67-badly]
 sounds: []
-roots: []
+roots: [pie-dyew-shine]
+etymology_hook: "день ← Proto-Slavic *dĭnĭ; Sanskrit dina 'day' and Latin dies 'day' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C67-badly]
 <!-- hl-knowledge: introduces=[RU-LEX-C68-TIME1-01]; assesses=[] -->
 
 **день** (*den*) — "a day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**день** ← Proto-Slavic *\*dĭnĭ* — inherited. Vasmer lists Sanskrit *dínam*, Lithuanian *dienà* and Latin *diēs*, all "day", from the PIE root *\*dyew-*, "to shine".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -22,6 +22,9 @@ Later languages kept only fragments of this phrase — a bare ‑s, a bare ‑di
 Why it's said this way: Be honest about where this system came from.
 Rome didn't always keep a seven-day planetary week. For much of the Republic, Romans ran an eight-day market cycle (letters A through H, not planets at all). The planetary week — the Sun, Moon, and five visible planets, each ruling a day, in a fixed order — spread into Rome later, from Hellenistic astrology, and only gradually displaced the older market cycle. So diēs Lūnae and its siblings are themselves a Roman adoption, not an ancient Roman invention — a system Rome picked up and then passed on, worn down, to Spanish and French centuries later.
 
+The phrase, taken apart.
+diēs Lūnae and its siblings all start from diēs "day", which is inherited, usually traced to Proto-Indo-European dyew-, "sky; to shine" (EtymDB 2.1). Iovis "of Jupiter" belongs to the same root: it stands for an older Diovis, kin to the name of the Greek sky god Zeus (Lewis & Short). Lūna "moon" was built on the root of lūceō "I shine" (Lewis & Short).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "diēs Lūnae" — day of the Moon — then "diēs Mārtis," day of Mars]

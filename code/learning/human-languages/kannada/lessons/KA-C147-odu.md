@@ -14,7 +14,8 @@ romanization: "ōḍu"
 concept_tag: KA-VERB-ODU
 prerequisites: [KA-C146-belliya, KA-C147-kudi]
 sounds: []
-roots: []
+roots: [dravidian-odu-run]
+etymology_hook: "ōḍu: native Dravidian, one word with Tamil ōṭu and Telugu ōḍu (DEDR 1041)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C147-kudi]
 <!-- hl-knowledge: introduces=[KA-LEX-C147-ACT147-02]; assesses=[] -->
 
 **ಓಡು** — *ōḍu* — "to run".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಓಡು** (*ōḍu*) is native Dravidian, one word with Tamil *ōṭu* and Telugu *ōḍu* (DEDR 1041). DEDR lists *ōḍu* itself, "to run, flee".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 150,
-  "sourceHash": "fnv1a64:be08172515b8199c",
+  "sourceHash": "fnv1a64:0cc1fb2b241d4628",
   "lessonIds": [
     "HI-C150-kohni",
     "HI-C150-kalai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch150.txt",
   "json": "hindi/narration/ch150.json",
-  "textHash": "fnv1a64:78b1152e88652086",
-  "jsonHash": "fnv1a64:4751d47e01ed7b70",
+  "textHash": "fnv1a64:1d8bbc7b392c211c",
+  "jsonHash": "fnv1a64:fb4bb85450bb810f",
   "findings": []
 }

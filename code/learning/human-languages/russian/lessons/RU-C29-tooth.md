@@ -14,7 +14,8 @@ romanization: "zub"
 concept_tag: RU-BODY1-TOOTH
 prerequisites: [RU-C29-leg, RU-C29-belly]
 sounds: []
-roots: []
+roots: [pie-gombhos]
+etymology_hook: "зуб ← Proto-Slavic *zǫbŭ 'tooth'; English comb and Sanskrit jambha 'tooth' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C29-belly]
 <!-- hl-knowledge: introduces=[RU-LEX-C29-BODY1-05]; assesses=[] -->
 
 **зуб** (*zub*) — "a tooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**зуб** ← Proto-Slavic *\*zǫbŭ*, "tooth" — inherited. Vasmer sets it beside Sanskrit *jámbha-*, "tooth", Greek *gómphos*, "peg", and Old High German *kamb*, "comb", so English *comb* is a cousin, from PIE *\*ǵómbʰos*, "tooth, peg".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

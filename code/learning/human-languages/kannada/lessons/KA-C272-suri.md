@@ -14,7 +14,8 @@ romanization: "suri"
 concept_tag: KA-VERB-SURI
 prerequisites: [KA-C271-ilakhe, KA-C272-cellu]
 sounds: []
-roots: []
+roots: [dravidian-cor-flow]
+etymology_hook: "suri: native Dravidian, one word with Tamil cori and Telugu torāgu (DEDR 2883)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C272-cellu]
 <!-- hl-knowledge: introduces=[KA-LEX-C272-KRIYE272-02]; assesses=[] -->
 
 **ಸುರಿ** — *suri* — "to pour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುರಿ** (*suri*) is native Dravidian, one word with Tamil *cori* and Telugu *torāgu* (DEDR 2883). DEDR lists *suri*, "to flow, pour, shower".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

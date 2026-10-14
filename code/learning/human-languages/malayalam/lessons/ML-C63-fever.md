@@ -11,7 +11,8 @@ romanization: "pani"
 concept_tag: ML-NOUN-FEVER
 prerequisites: [ML-C63-cough, ML-C61-chilli]
 sounds: []
-roots: []
+roots: [dravidian-pani-dew]
+etymology_hook: "pani: native Dravidian, one word with Tamil paṉi and Kannada pani (DEDR 4035)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, matching Tamil *paṉi* — where the same word means cold, de
 Malayalam took the shivering and let the weather go. What the two senses share is a body that cannot get warm, which is the first hour of a fever and the whole of a cold morning.
 
 Kerala hangs the word on the season: the weeks after the monsoon breaks are fever weeks, and പനി is the word on everybody's tongue.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പനി** (*pani*) is native Dravidian, one word with Tamil *paṉi* and Kannada *pani* (DEDR 4035). In Tamil the same word means "dew, cold"; Malayalam kept the shiver and made it a fever.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

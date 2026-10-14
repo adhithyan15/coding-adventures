@@ -14,7 +14,8 @@ romanization: "jotege"
 concept_tag: KA-KARANA252-JOTEGE
 prerequisites: [KA-C252-salahe, KA-C252-sumaru]
 sounds: []
-roots: []
+roots: [kannada-jote]
+etymology_hook: "jotege: jote 'company' + -ge 'to'; the origin of jote is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C252-sumaru]
 <!-- hl-knowledge: introduces=[KA-LEX-C252-KARANA252-04]; assesses=[] -->
 
 **ಜೊತೆಗೆ** — *jotege* — "along with".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜೊತೆಗೆ** (*jotege*) is *jote*, "company, a companion", with *-ge*, "to": "in company with". The origin of *jote* is uncertain; neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

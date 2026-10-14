@@ -11,7 +11,8 @@ romanization: "nanna hesaru …"
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [KA-C02-nanna, KA-C02-hesaru]
 sounds: []
-roots: []
+roots: [naanu-dravidian, pesar-dravidian]
+etymology_hook: "nanna hesaru: two native words, 'my' (DEDR 5160) and 'name' (DEDR 4410), and no word for 'is'"
 duration:
   max_seconds: 180
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C02-nanna, KA-C02-hesaru]
 > **ನನ್ನ ಹೆಸರು …** = "my name …" → **"my name is…"**
 
 *Nanna hesaru Arun.* → "My name is Arun."
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನನ್ನ ಹೆಸರು …** (*nanna hesaru …*) is two native Dravidian words: *nanna*, "my" (DEDR 5160), and *hesaru*, "name" (DEDR 4410). Tamil *eṉ peyar* is built the same way, from the same two roots, also with no word for "is".
 
 ## Grammar Lens: the zero copula
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C02-NANNA-HESARU-02]; assesses=[] -->

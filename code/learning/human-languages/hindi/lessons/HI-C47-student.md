@@ -14,7 +14,8 @@ romanization: "chātra"
 concept_tag: HI-NOUN-STUDENT
 prerequisites: [HI-C47-teacher, HI-C45-cloth, HI-C46-finger]
 sounds: []
-roots: []
+roots: [sanskrit-chatra-pupil]
+etymology_hook: "chātra ← Sanskrit chātra 'pupil', a tatsama; the parasol story behind it is traditional, not settled"
 duration:
   max_seconds: 210
 requires:

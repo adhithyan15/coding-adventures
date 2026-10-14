@@ -14,7 +14,8 @@ romanization: "mehrabānī"
 concept_tag: HI-NOUN-KINDNESS
 prerequisites: [HI-C64-more, HI-C63-hunger, HI-C64-now]
 sounds: []
-roots: []
+roots: [persian-mihrban]
+etymology_hook: "mehrabānī: Persian mihrbān 'kind' + -ī"
 duration:
   max_seconds: 210
 requires:

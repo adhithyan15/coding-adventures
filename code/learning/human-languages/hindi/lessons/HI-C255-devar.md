@@ -14,7 +14,8 @@ romanization: "devar"
 concept_tag: HI-THG255-DEVAR
 prerequisites: [HI-C255-bahu, HI-C255-damad]
 sounds: []
-roots: []
+roots: [sanskrit-devr]
+etymology_hook: "devar ← Sanskrit devṛ 'husband's younger brother', a tadbhava (CDIAL 6546)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C255-damad]
 <!-- hl-knowledge: introduces=[HI-LEX-C255-THG255-03]; assesses=[] -->
 
 **देवर** — *devar* — "a husband's younger brother".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**देवर** (*devar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *devṛ*, "husband's younger brother" (CDIAL 6546).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

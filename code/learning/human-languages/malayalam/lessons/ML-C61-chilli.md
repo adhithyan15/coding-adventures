@@ -11,7 +11,8 @@ romanization: "muḷakŭ"
 concept_tag: ML-NOUN-CHILLI
 prerequisites: [ML-C61-jaggery, ML-C59-ember]
 sounds: []
-roots: []
+roots: [dravidian-milaku-pepper]
+etymology_hook: "muḷakŭ: native Dravidian; first black pepper, Tamil miḷaku (DEDR 4867), then the chilli the Portuguese brought"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, and older than the thing it now names. The chilli reached Kera
 Before that it belonged to black pepper, the crop Kerala had been selling to the world for a thousand years. Pepper kept the word with a piece added in front of it, and the newcomer walked off with the plain form.
 
 So the basket of pepper going down to the market and the മുളക് in the curry carry the same name, one of them with a syllable of warning attached.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുളക്** (*muḷakŭ*) is native Dravidian, one word with Tamil *miḷaku*, "black pepper" (DEDR 4867). It first named pepper, Kerala's own spice, and passed to the chilli when the Portuguese brought the plant from the Americas; DEDR 4867 already lists Kota and Kodagu words for "chilli" from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

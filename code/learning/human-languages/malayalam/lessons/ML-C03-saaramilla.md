@@ -12,6 +12,7 @@ concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [ML-C01-illa, ML-C01-nandi]
 sounds: [illa-negative]
 roots: [saara-sanskrit, illa-not-dravidian]
+etymology_hook: "sāramilla: Sanskrit sāra 'substance' + native illa 'is not' (CDIAL 13355, DEDR 2559)"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +53,8 @@ Malayalam: **സാരം** (*sāraṁ*, "substance, essence") is a **Sanskrit**
 Sanskrit noun, Dravidian verb, welded into one everyday word. That *illa* is the
 same "is-not" shared across **Malayalam, Tamil, and Kannada** — one of the deep
 bonds of the south (Telugu alone diverges, to *lēdu*).
+
+Sources: Sanskrit *sāra*, "the best part, the core", is CDIAL 13355; *illa* is DEDR 2559.
 
 ## Grammar Lens: ഇല്ല, the all-purpose "no"
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C01-NEGATIVE-EXISTENCE-01] -->

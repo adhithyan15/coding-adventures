@@ -13,7 +13,8 @@ gloss: "to burn, to be on fire"
 concept_tag: LA-VERB-ARDEO
 prerequisites: [LA-C166-promitto, LA-C166-permitto]
 sounds: []
-roots: []
+roots: [ardere-latin, arere-latin]
+etymology_hook: "ārdeō 'to burn' — usually linked with āreō 'to be dry'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C166-permitto]
 <!-- hl-knowledge: introduces=[LA-LEX-C167-ACT167-01]; assesses=[] -->
 
 **ārdeō, ārdēre** — "to burn, to be on fire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ārdeō** is usually linked with *āreō*, "to be dry, to be parched" (EtymDB 2.1): to burn as to be dried up by heat.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

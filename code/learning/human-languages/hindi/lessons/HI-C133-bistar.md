@@ -14,7 +14,8 @@ romanization: "bistar"
 concept_tag: HI-THINGS133-BISTAR
 prerequisites: [HI-C133-batua, HI-C133-palang]
 sounds: []
-roots: []
+roots: [persian-bistar]
+etymology_hook: "bistar: usually traced to Persian bistar 'bedding, bed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C133-palang]
 <!-- hl-knowledge: introduces=[HI-LEX-C133-THINGS133-05]; assesses=[] -->
 
 **बिस्तर** — *bistar* — "bedding, a bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बिस्तर** (*bistar*) is a loan, usually traced to Persian *bistar*, "bedding, bed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "puḻu"
 concept_tag: ML-VASTU213-PULU
 prerequisites: [ML-C212-daivam, ML-C212-mula]
 sounds: []
-roots: []
+roots: [dravidian-puzhu-worm]
+etymology_hook: "puḻu: native Dravidian, one word with Tamil puḻu and Kannada puḻu (DEDR 4312)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C212-mula]
 <!-- hl-knowledge: introduces=[ML-LEX-C213-VASTU213-01]; assesses=[] -->
 
 **പുഴു** — *puḻu* — "a worm, a caterpillar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുഴു** (*puḻu*) is native Dravidian, one word with Tamil *puḻu*, Kannada *puḻu* and Telugu *pur(u)gu* (DEDR 4312). DEDR 4312 compares Sanskrit *pīlu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

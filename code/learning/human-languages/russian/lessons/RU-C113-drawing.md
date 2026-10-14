@@ -14,7 +14,8 @@ romanization: "risúnok"
 concept_tag: RU-THINGS113-DRAWING
 prerequisites: [RU-C113-film, RU-C113-song]
 sounds: []
-roots: []
+roots: [german-reissen]
+etymology_hook: "рисунок ← Polish rysunek, from rysować 'to draw', with a German-style ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C113-song]
 <!-- hl-knowledge: introduces=[RU-LEX-C113-THINGS113-04]; assesses=[] -->
 
 **рисунок** (*risúnok*) — "a drawing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рисунок** — recorded from 1705; it comes from Polish *rysunek*, "a drawing", from *rysować*, "to draw", with an ending that reflects German *-ung* (Vasmer). Polish *rysować* goes back to German *reißen*, "to draw, to sketch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

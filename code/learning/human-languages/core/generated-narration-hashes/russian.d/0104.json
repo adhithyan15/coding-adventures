@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 104,
-  "sourceHash": "fnv1a64:b90d4de29d3ea55d",
+  "sourceHash": "fnv1a64:430483c2c639b22f",
   "lessonIds": [
     "RU-C104-beef",
     "RU-C104-vegetables",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch104.txt",
   "json": "russian/narration/ch104.json",
-  "textHash": "fnv1a64:38114c088476b1e6",
-  "jsonHash": "fnv1a64:700e607bde8db070",
+  "textHash": "fnv1a64:4630ac7eebb6974a",
+  "jsonHash": "fnv1a64:81f164a8720d6775",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "pómnit"
 concept_tag: RU-VERB-POMNIT
 prerequisites: [RU-C174-povtoryat, RU-C174-perevodit]
 sounds: []
-roots: []
+roots: [slavic-mineti]
+etymology_hook: "помнить is по- + мнить 'to think'; Lithuanian minėti 'to recall' is a cousin of мнить"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C174-perevodit]
 <!-- hl-knowledge: introduces=[RU-LEX-C174-ACT174-05]; assesses=[] -->
 
 **помнить** (*pómnit*) — "to remember".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**помнить** is *по-* with *мнить*, "to think, to suppose". Vasmer relates *мнить* to Lithuanian *minėti*, "to recall", Sanskrit *mányate*, "thinks", and Latin *mēns*, "mind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

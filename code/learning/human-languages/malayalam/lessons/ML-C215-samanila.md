@@ -14,7 +14,8 @@ romanization: "samanila"
 concept_tag: ML-VASTU215-SAMANILA
 prerequisites: [ML-C215-kalikkaran, ML-C215-tim]
 sounds: []
-roots: []
+roots: [sanskrit-sama, dravidian-nil-stand]
+etymology_hook: "samanila: Sanskrit sama 'equal' (CDIAL 13173) + native nila 'standing, position' (DEDR 3675)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C215-tim]
 <!-- hl-knowledge: introduces=[ML-LEX-C215-VASTU215-04]; assesses=[] -->
 
 **സമനില** — *samanila* — "a draw, a tie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സമനില** (*samanila*) joins Sanskrit *sama*, "equal" (CDIAL 13173), to native *nila*, "standing, position" (DEDR 3675, with Tamil *nil*): "equal standing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for several, then the Hindi for both.
 You'll want to know: हर.
 हर — har — "every, each".
 
+The word, taken apart.
+हर (har) is a loan, usually traced to Persian har, "every".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for both, then the Hindi for every.
 
 You'll want to know: सब.
 सब — sab — "all, everyone".
+
+The word, taken apart.
+सब (sab) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sarva, "all, whole" (CDIAL 13276).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for every, then the Hindi for all.
 You'll want to know: कुछ.
 कुछ — kuch — "some, something".
 
+The word, taken apart.
+कुछ (kuch) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kiṁcid, "anything" (CDIAL 3144). CDIAL notes that its -ch- comes from the masculine kaścid.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for all, then the Hindi for some.
 You'll want to know: दर्जन.
 दर्जन — darjan — "a dozen".
 
+The word, taken apart.
+दर्जन (darjan) is a loan from English dozen.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for some, then the Hindi for a dozen.
 
 You'll want to know: जोड़ा.
 जोड़ा — joṛā — "a pair".
+
+The word, taken apart.
+जोड़ा (joṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from yuṭati, "is joined", a form CDIAL reconstructs from its descendants (CDIAL 10496). CDIAL lists Hindi joṛ, "pair", with it.
 
 What you've built.
 One more word for this chapter.

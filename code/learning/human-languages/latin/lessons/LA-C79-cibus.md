@@ -13,7 +13,8 @@ gloss: "food"
 concept_tag: LA-CIBUS1-CIBUS
 prerequisites: [LA-C78-timeo, LA-C78-gaudeo]
 sounds: []
-roots: []
+roots: [cibus-latin]
+etymology_hook: "cibus 'food' — origin unknown; no proposal is generally accepted"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C78-gaudeo]
 <!-- hl-knowledge: introduces=[LA-LEX-C79-CIBUS1-01]; assesses=[] -->
 
 **cibus, cibī** — "food".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cibus**, "food", has no sure origin; no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ménedzher"
 concept_tag: RU-RABOTA229-MENEDZHER
 prerequisites: [RU-C229-sekretar, RU-C229-bukhgalter]
 sounds: []
-roots: []
+roots: [english-manager]
+etymology_hook: "менеджер ← English manager"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C229-bukhgalter]
 <!-- hl-knowledge: introduces=[RU-LEX-C229-RABOTA229-03]; assesses=[] -->
 
 **менеджер** (*ménedzher*) — "a manager".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**менеджер** comes from English *manager*, from *manage*, Italian *maneggiare*, "to handle", from Latin *manus*, "hand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

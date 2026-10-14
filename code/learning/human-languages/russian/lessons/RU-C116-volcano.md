@@ -14,7 +14,8 @@ romanization: "vulkán"
 concept_tag: RU-THINGS116-VOLCANO
 prerequisites: [RU-C115-wave, RU-C116-desert]
 sounds: []
-roots: []
+roots: [vulcanus-latin]
+etymology_hook: "вулкан ← Latin Vulcanus, the god of fire, through western languages"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C116-desert]
 <!-- hl-knowledge: introduces=[RU-LEX-C116-THINGS116-02]; assesses=[] -->
 
 **вулкан** (*vulkán*) — "a volcano".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вулкан** comes, through western European languages, from Latin *Vulcānus*, the god of fire and the forge.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

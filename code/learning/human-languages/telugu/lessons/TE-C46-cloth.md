@@ -11,7 +11,8 @@ romanization: "baṭṭa"
 concept_tag: TE-NOUN-CLOTH
 prerequisites: [TE-C46-fruit]
 sounds: []
-roots: []
+roots: [telugu-batta-cloth]
+etymology_hook: "baṭṭa: origin uncertain; not in DEDR; often set beside Sanskrit paṭṭa 'cloth' (CDIAL 7700)"
 duration:
   max_seconds: 210
 requires:
@@ -42,7 +43,12 @@ reviews_of: [TE-C46-fruit]
 
 బట్ట is the plain word for cloth: the bolt on the shelf, the washing on the line, the rag in your hand.
 
-Sanskrit has *paṭṭa*, "a strip of cloth, a bandage", and here the borrowing most likely ran the unusual way — out of Dravidian and into Sanskrit, rather than the other direction this book has shown so often. The same strip reached English by a different road: Hindi *paṭṭī*, a wrapping, is the soldier's *puttee*.
+Sanskrit has *paṭṭa*, "a strip of cloth, a bandage", and here the borrowing may have run the unusual way — into Sanskrit from a non-Aryan source, rather than the other direction this book has shown so often. The same strip reached English by a different road: Hindi *paṭṭī*, a wrapping, is the soldier's *puttee*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **బట్ట** (*baṭṭa*) is uncertain, and DEDR does not list it. It is often set beside Sanskrit *paṭṭa*, "cloth, woven silk", which CDIAL 7700 itself thinks probably came from a non-Aryan source, without naming which.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

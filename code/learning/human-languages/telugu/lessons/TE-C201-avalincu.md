@@ -14,7 +14,8 @@ romanization: "āvaliñcu"
 concept_tag: TE-VERB-AVALINCU
 prerequisites: [TE-C201-doruku, TE-C201-paduko]
 sounds: []
-roots: []
+roots: [dravidian-akalisu-yawn]
+etymology_hook: "āvaliñcu: native Dravidian; DEDR 392 lists āvalincu 'to yawn' with Tamil āvi 'to yawn'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C201-paduko]
 <!-- hl-knowledge: introduces=[TE-LEX-C201-KRIYA201-03]; assesses=[] -->
 
 **ఆవలించు** — *āvaliñcu* — "to yawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆవలించు** (*āvaliñcu*) is native Dravidian. DEDR 392 lists *āvaliñcu*, "to yawn", with Tamil *āvi* and Kannada *ākaḷisu*, "to yawn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,9 @@ You'll want to know: ఆకలి.
 The word is inherited, and it is among the first a child in a Telugu house learns to say — usually loudly, and usually before bhōjanaṁ is anywhere near ready.
 ఆకలిగా ఉందా? is a real greeting in a house you are close to. It gets asked before మీరు ఎలా ఉన్నారు? has a chance.
 
+The word, taken apart.
+ఆకలి (ākali) is native Dravidian. DEDR 2429 lists the Telugu word, "hunger, appetite", with Kui saki and Kuwi hakki, "hunger"; it has no Tamil or Kannada match.
+
 What you've built.
 The first thing to say about yourself.
 
@@ -47,6 +50,7 @@ You'll want to know: నిద్ర.
 నిద్ర (nidra) is sleep, and it takes the same shape as ఆకలి (ākali): నాకు నిద్ర (nidra) వస్తోంది, "sleep is coming to me". You do not do it; it arrives.
 The word came from Sanskrit nidrā and settled without changing. Beside it Telugu keeps నిదుర, the softer everyday form, and the two are one word wearing different clothes.
 నిద్ర (nidra) also makes a polite reason for leaving late in the evening, and it works the way గాలి worked earlier. Nobody argues with it.
+CDIAL 7200 lists Sanskrit nidrā, "sleep".
 
 What you've built.
 Two, and both of them come to you.
@@ -81,6 +85,9 @@ You'll want to know: దగ్గు.
 Like ఆకలి (ākali) and నిద్ర (nidra) it comes to you rather than from you: నాకు దగ్గు (daggu), and nobody needs telling any more than that.
 Telugu keeps దగ్గు (daggu) for the whole thing at once — the single cough, the fit of coughing, and the illness sitting behind both — where English reaches for three phrases. A మంచు morning in the hills fills a house with it.
 
+The word, taken apart.
+దగ్గు (daggu) is native Dravidian. DEDR 2939 lists daggu, "to cough; a cough", with Kolami dag-, "to cough"; it has no Tamil or Kannada match.
+
 What you've built.
 Three.
 
@@ -113,6 +120,7 @@ You'll want to know: రోగం.
 రోగం (rōgaṁ) is illness in general: not the దగ్గు (daggu) you have this week, but the thing a వైద్యుడు puts a name to.
 It is Sanskrit, from a root about breaking — an illness is something breaking in you — and Telugu took the word whole, the way it took hṛdayaṁ.
 రోగి is the person who has one. A వైద్యుడు's whole working day is spent between those two words, and so is a good deal of ordinary conversation about relatives.
+CDIAL 10829 lists Sanskrit roga, "disease".
 
 What you've built.
 Four.
@@ -146,6 +154,9 @@ You'll want to know: ఆరోగ్యం.
 ఆరోగ్యం (ārōgyaṁ) is health, and it is the word before it with a small piece stuck on the front. The piece means "not", and రోగ is the illness: health here is what is left when the illness is gone.
 That is a real difference in outlook and worth a moment. English health is something to be built up. ఆరోగ్యం (ārōgyaṁ) is a subtraction.
 మీ ఆరోగ్యం (ārōgyaṁ) ఎలా ఉంది? is what a house asks an atithi who has been ill. It is more particular than మీరు ఎలా ఉన్నారు?, and it expects a real answer.
+
+The word, taken apart.
+ఆరోగ్యం (ārōgyaṁ) is Sanskrit ārogya, "health", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 1330).
 
 What you've built.
 Five: ఆకలి (ākali), నిద్ర (nidra), దగ్గు (daggu), రోగం (rōgaṁ), ఆరోగ్యం (ārōgyaṁ). Enough to say what is wrong and to ask after somebody else.

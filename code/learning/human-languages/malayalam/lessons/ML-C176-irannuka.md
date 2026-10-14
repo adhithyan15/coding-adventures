@@ -14,7 +14,8 @@ romanization: "iṟaṅṅuka"
 concept_tag: ML-VERB-IRANNUKA
 prerequisites: [ML-C175-eriyuka, ML-C175-kayaruka, ML-S147-letter-ttha]
 sounds: []
-roots: []
+roots: [dravidian-irangu-descend]
+etymology_hook: "iṟaṅṅuka: native Dravidian, one word with Tamil iṟaṅku and Kannada eṟagu (DEDR 516)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C175-kayaruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C176-ACT176-01]; assesses=[] -->
 
 **ഇറങ്ങുക** — *iṟaṅṅuka* — "to get down, to get off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇറങ്ങുക** (*iṟaṅṅuka*) is native Dravidian, one word with Tamil *iṟaṅku*, Kannada *eṟagu* and Telugu *eṟãgu* (DEDR 516).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

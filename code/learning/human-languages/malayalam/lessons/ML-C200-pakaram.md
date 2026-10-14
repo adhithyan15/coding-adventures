@@ -14,7 +14,8 @@ romanization: "pakaraṁ"
 concept_tag: ML-KARANAM200-PAKARAM
 prerequisites: [ML-C199-cuvattil, ML-C200-venti]
 sounds: []
-roots: []
+roots: [dravidian-pakar-change]
+etymology_hook: "pakaraṁ: native Dravidian, from the verb 'to be exchanged'; Tamil pakar (DEDR 3803)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C200-venti]
 <!-- hl-knowledge: introduces=[ML-LEX-C200-KARANAM200-02]; assesses=[] -->
 
 **പകരം** — *pakaraṁ* — "instead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പകരം** (*pakaraṁ*) is native Dravidian, from the verb "to change, be exchanged"; DEDR 3803 lists the root with Tamil *pakar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

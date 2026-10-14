@@ -14,7 +14,8 @@ romanization: "závtrak"
 concept_tag: RU-MEALS-BREAKFAST
 prerequisites: [RU-C45-cucumber, RU-C45-carrot]
 sounds: []
-roots: []
+roots: [slavic-utro]
+etymology_hook: "завтрак goes with завтра 'tomorrow', from за + утро 'morning': the morning meal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C45-carrot]
 <!-- hl-knowledge: introduces=[RU-LEX-C46-MEALS-01]; assesses=[] -->
 
 **завтрак** (*závtrak*) — "breakfast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**завтрак** — built on the root of *завтра*, "tomorrow", which is *за*, "after", with *утро*, "morning". Old Russian said *zautrokŭ*, "the morning meal" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

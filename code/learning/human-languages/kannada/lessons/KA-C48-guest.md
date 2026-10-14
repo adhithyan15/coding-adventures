@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-GUEST
 prerequisites: [KA-C48-farmer, KA-C46-book]
 sounds: []
 roots: []
+etymology_hook: "atithi ← Sanskrit atithi 'guest', a well-established loan"
 duration:
   max_seconds: 210
 requires:

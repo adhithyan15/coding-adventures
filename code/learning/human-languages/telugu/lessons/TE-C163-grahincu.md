@@ -14,7 +14,8 @@ romanization: "grahiñcu"
 concept_tag: TE-VERB-GRAHINCU
 prerequisites: [TE-C162-varnincu, TE-C163-anumanincu]
 sounds: []
-roots: []
+roots: [sanskrit-grahana]
+etymology_hook: "grahiñcu: Sanskrit grah 'to seize' (its noun grahaṇa, CDIAL 4364) + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C163-anumanincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C163-KRIYA163-02]; assesses=[] -->
 
 **గ్రహించు** — *grahiñcu* — "to realize, to grasp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గ్రహించు** (*grahiñcu*) is the Sanskrit root *grah*, "to seize, grasp", made into a verb with the Telugu ending *-iñcu*. CDIAL 4364 lists its noun *grahaṇa*, "seizing, holding".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

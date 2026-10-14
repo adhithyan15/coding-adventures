@@ -14,7 +14,8 @@ romanization: "desī"
 concept_tag: HI-QUAL240-DESI
 prerequisites: [HI-C240-sthaniya, HI-C240-videsi]
 sounds: []
-roots: []
+roots: [sanskrit-deshiya]
+etymology_hook: "desī ← Sanskrit deśīya 'belonging to a country, native', a tadbhava (CDIAL 6555)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C240-videsi]
 <!-- hl-knowledge: introduces=[HI-LEX-C240-QUAL240-05]; assesses=[] -->
 
 **देसी** — *desī* — "local, homemade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**देसी** (*desī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *deśīya*, "belonging to a country, native" (CDIAL 6555).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

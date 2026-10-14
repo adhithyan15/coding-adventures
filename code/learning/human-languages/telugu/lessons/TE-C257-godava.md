@@ -14,7 +14,8 @@ romanization: "goḍava"
 concept_tag: TE-KARANAM257-GODAVA
 prerequisites: [TE-C257-rahasyam, TE-C257-sneham]
 sounds: []
-roots: []
+roots: [dravidian-godave-concern]
+etymology_hook: "goḍava: Dravidian; DEDR 2048 lists goḍava 'bother, fuss' with Kannada goḍave"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C257-sneham]
 <!-- hl-knowledge: introduces=[TE-LEX-C257-KARANAM257-04]; assesses=[] -->
 
 **గొడవ** — *goḍava* — "a quarrel, a fuss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గొడవ** (*goḍava*) is listed in DEDR 2048, "bother, worry, fuss", with Kannada *goḍave*, "concern with". DEDR 2073 *goḍava*, "danger", is filed apart.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

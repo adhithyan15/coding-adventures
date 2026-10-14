@@ -14,7 +14,8 @@ romanization: "irṣyā"
 concept_tag: HI-THG257-IRSYA
 prerequisites: [HI-C256-goli, HI-C257-nabz]
 sounds: []
-roots: []
+roots: [sanskrit-irshya]
+etymology_hook: "irṣyā ← Sanskrit īrṣyā 'envy, jealousy', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C257-nabz]
 <!-- hl-knowledge: introduces=[HI-LEX-C257-THG257-02]; assesses=[] -->
 
 **ईर्ष्या** — *irṣyā* — "jealousy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ईर्ष्या** (*irṣyā*) is Sanskrit *īrṣyā*, "envy, jealousy", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

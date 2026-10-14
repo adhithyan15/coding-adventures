@@ -14,7 +14,8 @@ romanization: "kyāreṭ"
 concept_tag: KA-VASTU293-KYARET
 prerequisites: [KA-C293-karibevu, KA-C293-tometo]
 sounds: []
-roots: []
+roots: [english-carrot]
+etymology_hook: "kyāreṭ ← English carrot"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C293-tometo]
 <!-- hl-knowledge: introduces=[KA-LEX-C293-VASTU293-05]; assesses=[] -->
 
 **ಕ್ಯಾರೆಟ್** — *kyāreṭ* — "a carrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕ್ಯಾರೆಟ್** (*kyāreṭ*) is a loan from English *carrot*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

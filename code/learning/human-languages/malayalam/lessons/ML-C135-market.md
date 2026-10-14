@@ -11,7 +11,8 @@ romanization: "canta"
 concept_tag: ML-TOWN-MARKET
 prerequisites: [ML-C134-spoon, ML-C134-plate]
 sounds: []
-roots: []
+roots: [malayalam-canta]
+etymology_hook: "canta 'market': of uncertain origin; neither DEDR nor CDIAL lists it"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C134-plate]
 <!-- hl-knowledge: introduces=[ML-LEX-C135-TOWN-01]; assesses=[] -->
 
 **ചന്ത** (*canta*) — "a market", where **മീൻ** and **പച്ചക്കറി** are sold.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചന്ത** (*canta*) is of uncertain origin; neither DEDR nor CDIAL lists it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

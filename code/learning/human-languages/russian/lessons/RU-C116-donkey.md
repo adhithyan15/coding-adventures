@@ -14,7 +14,8 @@ romanization: "osyól"
 concept_tag: RU-THINGS116-DONKEY
 prerequisites: [RU-C116-cave, RU-C116-waterfall]
 sounds: []
-roots: []
+roots: [asinus-latin]
+etymology_hook: "осёл ← Gothic asilus, from Latin asinus 'ass'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C116-waterfall]
 <!-- hl-knowledge: introduces=[RU-LEX-C116-THINGS116-05]; assesses=[] -->
 
 **осёл** (*osyól*) — "a donkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**осёл** ← Old Russian *osĭlŭ*, borrowed from Gothic *asilus*, from Latin *asinus*, "ass", and fitted to Slavic words in *-ĭlŭ* such as *козёл*, "billy goat" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

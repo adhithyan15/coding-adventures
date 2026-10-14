@@ -14,7 +14,8 @@ romanization: "mutalāḷi"
 concept_tag: ML-JOLI334-MUTALALI
 prerequisites: [ML-C333-helmerru, ML-C334-jivanakkaran]
 sounds: []
-roots: []
+roots: [dravidian-mutal-beginning, dravidian-al-male]
+etymology_hook: "mutalāḷi: native Dravidian, mutal 'capital, principal' (DEDR 4950) + āḷ 'person' (DEDR 399)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C334-jivanakkaran]
 <!-- hl-knowledge: introduces=[ML-LEX-C334-JOLI334-02]; assesses=[] -->
 
 **മുതലാളി** — *mutalāḷi* — "a boss, an employer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുതലാളി** (*mutalāḷi*) is native Dravidian: *mutal*, "beginning; principal, capital" (DEDR 4950, with Tamil *mutal*), and the word for "person" (DEDR 399): the owner of the capital.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

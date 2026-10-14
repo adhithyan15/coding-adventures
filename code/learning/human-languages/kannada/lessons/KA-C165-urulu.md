@@ -14,7 +14,8 @@ romanization: "uruḷu"
 concept_tag: KA-VERB-URULU
 prerequisites: [KA-C165-kadi, KA-C165-nenapisikollu]
 sounds: []
-roots: []
+roots: [dravidian-urul-roll]
+etymology_hook: "uruḷu: native Dravidian, one word with Tamil uruḷ and Telugu uralu (DEDR 664)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C165-nenapisikollu]
 <!-- hl-knowledge: introduces=[KA-LEX-C165-KRIYE165-03]; assesses=[] -->
 
 **ಉರುಳು** — *uruḷu* — "to roll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉರುಳು** (*uruḷu*) is native Dravidian, one word with Tamil *uruḷ*, Telugu *uralu* and Malayalam *uruḷ* (DEDR 664). DEDR lists *uruḷ*, "to roll". DEDR 664 compares Sanskrit *uṇḍeraka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

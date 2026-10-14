@@ -14,7 +14,8 @@ romanization: "chammach"
 concept_tag: HI-NOUN-SPOON
 prerequisites: [HI-C61-vessel]
 sounds: []
-roots: []
+roots: [persian-chamcha]
+etymology_hook: "chammach: usually traced to Persian chamcha 'spoon, ladle', which Persian took from Turkic"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C61-vessel]
 Sanskrit had चमस (*camasa*), a wooden ladle lifted at sacrifices, and चम्मच sits close enough to it that the two are often printed together. The road between them is not clean, though, so this book will show you the pair and stop there.
 
 What is certain is the shape of the modern word: a doubled *m* in the middle, and the stress landing forward. Say it twice and you will hear that it is built to be said quickly, the way the names of small everyday objects usually are.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चम्मच** (*chammach*) is a loan, usually traced to Persian *chamcha*, "spoon, ladle", a word Persian itself took from Turkic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

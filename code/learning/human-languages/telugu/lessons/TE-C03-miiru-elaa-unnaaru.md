@@ -12,6 +12,7 @@ concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [TE-C03-elaa, TE-C02-nuvvu-miiru]
 sounds: [double-nn, retroflex]
 roots: [dravidian-undu-be]
+etymology_hook: "mīru elā unnāru: native mīru (DEDR 3688), elā (DEDR 5151) and uṇḍu 'to be' (DEDR 697)"
 duration:
   max_seconds: 250
 requires:
@@ -48,7 +49,7 @@ The new word is **ఉన్నారు** (*unnāru*, "you are/exist"): from the
 **మీరు ఎలా ఉన్నారు?** = **మీరు** (*mīru*, "you," respectful) + **ఎలా** (*elā*,
 "how") + **ఉన్నారు** (*unnāru*, "are") — "you how are?", the verb **last**, as in
 every Telugu sentence. The verb is *uṇḍu*, "to be / to exist / to
-stay" — native Dravidian, and the workhorse behind "how are you," "I'm well," and
+stay" — native Dravidian (DEDR 697), and the workhorse behind "how are you," "I'm well," and
 (you'll see in Chapter 5) "I live."
 
 ## Grammar Lens: the verb carries "you"

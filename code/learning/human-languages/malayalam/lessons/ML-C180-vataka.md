@@ -14,7 +14,8 @@ romanization: "vāṭaka"
 concept_tag: ML-VAYANA180-VATAKA
 prerequisites: [ML-C180-samayappattika, ML-C180-ariyippu]
 sounds: []
-roots: []
+roots: [sanskrit-bhataka]
+etymology_hook: "vāṭaka: usually traced to Sanskrit bhāṭaka 'hire, rent'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C180-ariyippu]
 <!-- hl-knowledge: introduces=[ML-LEX-C180-VAYANA180-03]; assesses=[] -->
 
 **വാടക** — *vāṭaka* — "rent, hire charge". The money you pay to live in a house: **വീട്ടുവാടക** — *vīṭṭuvāṭaka* — "the rent for the house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വാടക** (*vāṭaka*) is usually traced to Sanskrit *bhāṭaka*, "hire, rent", with the *bh* softened to *v*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

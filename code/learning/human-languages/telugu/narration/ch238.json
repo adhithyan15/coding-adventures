@@ -4,7 +4,7 @@
   "chapter": 238,
   "title": "Memory, History, Geography, Science, Physics",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0b8f266ac76c24c8",
+  "sourceHash": "fnv1a64:d8ee9276ef9f5b07",
   "lessons": [
     {
       "id": "TE-C238-jnapakam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f712cf512dc40600",
+      "sourceHash": "fnv1a64:4bfff97842987f45",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జ్ఞాపకం (jñāpakaṁ) is Sanskrit jñāpaka, \"making known, reminding\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9aeba17d2a9be46",
+      "sourceHash": "fnv1a64:faa12b7102e6a9a3",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చరిత్ర (caritra) is Sanskrit caritra, \"going; behaviour\", taken over whole as a learned loan, a tatsama (CDIAL 4691). The sense \"history\" is the one Telugu gives it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a1191209f56c7ac",
+      "sourceHash": "fnv1a64:2adb588feedcf3cf",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "భూగోళశాస్త్రం (bhūgōḷaśāstraṁ) is Sanskrit: bhū, \"earth\" (CDIAL 9546), gōla, \"ball\" (CDIAL 4321), and śāstra, \"treatise\" (CDIAL 12422): \"the science of the earth-ball\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51c1a6092855d20c",
+      "sourceHash": "fnv1a64:12a9875483732864",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విజ్ఞానశాస్త్రం (vijñānaśāstraṁ) is Sanskrit: vijñāna, \"act of discerning, knowledge\" (CDIAL 11707), and śāstra, \"treatise\" (CDIAL 12422), with the Telugu ending -ṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee38c779db636ea5",
+      "sourceHash": "fnv1a64:9ca3c5acb83973fc",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "భౌతికశాస్త్రం (bhautikaśāstraṁ) is Sanskrit: bhautika, \"of the elements, material\", from bhūta, \"any being\" (CDIAL 9552), and śāstra, \"treatise\" (CDIAL 12422)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

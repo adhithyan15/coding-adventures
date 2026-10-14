@@ -11,7 +11,8 @@ romanization: "bhatta"
 concept_tag: KA-NOUN-PADDY
 prerequisites: [KA-C66-grass, KA-C64-still]
 sounds: []
-roots: []
+roots: [dravidian-app-56-batta]
+etymology_hook: "bhatta: an Indo-Aryan loan; DEDR App. 56 lists Kannada batta, bhatta 'paddy'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C66-grass]
 ಭತ್ತ completes a set you have been assembling since the water-and-rice chapter. One plant, three names, and Kannada keeps them strictly apart: ಭತ್ತ standing in the ಹೊಲ, ಅಕ್ಕಿ once it is husked and in the sack, ಅನ್ನ once it is cooked and on the plate.
 
 English makes do with *rice* for all three and adds a word when it must. Kannada gives each stage its own name, and a speaker who used the wrong one would be understood but marked as not from here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಭತ್ತ** (*bhatta*) is a loan from Indo-Aryan. DEDR lists Kannada *batta*, *bhatta*, "paddy, rice in the husk", in its appendix of such loans (DEDR App. 56).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

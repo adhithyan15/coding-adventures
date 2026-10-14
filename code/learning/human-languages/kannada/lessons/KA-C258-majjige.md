@@ -14,7 +14,8 @@ romanization: "majjige"
 concept_tag: KA-VASTU258-MAJJIGE
 prerequisites: [KA-C257-bele, KA-C257-hunasehannu]
 sounds: []
-roots: []
+roots: [dravidian-majjige-buttermilk]
+etymology_hook: "majjige: shared with Telugu majjiga (DEDR 4630); queried there as a loan from Prakrit majjiā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C257-hunasehannu]
 <!-- hl-knowledge: introduces=[KA-LEX-C258-VASTU258-01]; assesses=[] -->
 
 **ಮಜ್ಜಿಗೆ** — *majjige* — "buttermilk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಜ್ಜಿಗೆ** (*majjige*) is shared with Tamil *maccikai* and Telugu *majjiga*, "buttermilk" (DEDR 4630). DEDR 4630 suggests, with a query, that it may be a loan from Indo-Aryan, comparing Prakrit *majjiā*, a curd dish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tiḷisu"
 concept_tag: KA-VERB-TILISU
 prerequisites: [KA-C160-nadugu, KA-C161-antisu]
 sounds: []
-roots: []
+roots: [dravidian-tel-become-clear]
+etymology_hook: "tiḷisu: native Dravidian, 'make clear', from tiḷi 'to become clear' (DEDR 3433)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C161-antisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C161-KRIYE161-02]; assesses=[] -->
 
 **ತಿಳಿಸು** — *tiḷisu* — "to inform, to let know".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಿಳಿಸು** (*tiḷisu*) is native Dravidian, from *tiḷi*, "to become clear", with *-isu*, "to make": to inform is "to make clear"; DEDR 3433 lists the root with Tamil *teḷ*, Telugu *teli* and Malayalam *teḷi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

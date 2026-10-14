@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for against, then the Malayalam for around
 You'll want to know: മാലിന്യം.
 മാലിന്യം — mālinyaṁ — "rubbish, waste".
 
+The word, taken apart.
+മാലിന്യം (mālinyaṁ) from Sanskrit mālinya, "dirtiness", taken over whole as a tatsama, with Malayalam's noun ending -ṁ. It is built on malina, "dirty".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for around, then the Malayalam for rubbish
 
 You'll want to know: ഇടയിൽ.
 ഇടയിൽ — iṭayil — "between, among".
+
+The word, taken apart.
+ഇടയിൽ (iṭayil) is native Dravidian: iṭa, "interval, the place between" (DEDR 448, with Tamil iṭai), with the place ending -il.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for rubbish, then the Malayalam for betwee
 You'll want to know: അപ്പുറം.
 അപ്പുറം — appuṟaṁ — "beyond, on the far side".
 
+The word, taken apart.
+അപ്പുറം (appuṟaṁ) is native Dravidian, "that side": the far-pointing base (DEDR 1, which lists it) with puṟam, "side, outside" (DEDR 4333, with Tamil puṟam).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for between, then the Malayalam for beyond
 You'll want to know: ഇപ്പുറം.
 ഇപ്പുറം — ippuṟaṁ — "on this side".
 
+The word, taken apart.
+ഇപ്പുറം (ippuṟaṁ) is native Dravidian, "this side": DEDR 410 lists it among the near-pointing words, with Tamil i-ppuṟam, "this side".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for beyond, then the Malayalam for on this
 
 You'll want to know: ചുവട്ടിൽ.
 ചുവട്ടിൽ — cuvaṭṭil — "at the foot of".
+
+The word, taken apart.
+ചുവട്ടിൽ (cuvaṭṭil) is native Dravidian: cuvaṭu, "footprint, foot, base" (DEDR 2695, with Tamil cuvaṭu), with the place ending -il.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "mannikaina"
 concept_tag: TE-GUNAM182-MANNIKAINA
 prerequisites: [TE-C181-mamulu, TE-C182-nissabdam]
 sounds: []
-roots: []
+roots: [dravidian-mannu-last, tamil-aaku-become]
+etymology_hook: "mannikaina: native mannu 'to last' (DEDR 4778) + aina 'which is' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C182-nissabdam]
 <!-- hl-knowledge: introduces=[TE-LEX-C182-GUNAM182-02]; assesses=[] -->
 
 **మన్నికైన** — *mannikaina* — "durable, long-lasting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మన్నికైన** (*mannikaina*) is native Dravidian, built on *mannu*, "to last, be durable", one word with Tamil *maṉṉu*, "to endure" (DEDR 4778), with *aina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

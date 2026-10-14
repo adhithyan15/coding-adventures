@@ -14,7 +14,8 @@ romanization: "ijāzat"
 concept_tag: HI-LATE-PERMISSION
 prerequisites: [HI-C122-derhogai, HI-C122-aramse]
 sounds: []
-roots: []
+roots: [arabic-ijaza]
+etymology_hook: "ijāzat ← Arabic ijāza 'permission', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C122-aramse]
 
 **अब इजाज़त दीजिए** — "now please give me leave to go", the most courteous way to excuse yourself
 from a host.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इजाज़त** (*ijāzat*) is a loan from Arabic *ijāza*, "permission", which reached Hindi through Persian. Its Arabic root is *j-w-z* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

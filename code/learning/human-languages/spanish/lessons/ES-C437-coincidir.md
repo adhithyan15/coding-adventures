@@ -11,6 +11,7 @@ concept_tag: ES-VERB-COINCIDIR
 prerequisites: [ES-C437-decidir, ES-C436-grupo]
 sounds: []
 roots: []
+etymology_hook: "coincidir — co- 'together' + incidir, from Latin cadere 'to fall': falling together"
 duration:
   max_seconds: 235
 requires:
@@ -46,8 +47,9 @@ somebody gives for not taking a place.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C437-PLAN-02, ES-LEX-C437-PLAN-01] -->
 
-**co-** together, plus the same **-incidir** family as *decidir* — things
-falling together.
+**co-** together, plus **incidir**, "to fall upon", from Latin *cadere*, "to
+fall" — things falling together. It only looks like *decidir*, whose root is
+*caedere*, "to cut".
 
 Your English eye can read it without help, and that is the point worth taking:
 

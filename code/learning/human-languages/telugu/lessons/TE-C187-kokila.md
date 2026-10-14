@@ -14,7 +14,8 @@ romanization: "kōkila"
 concept_tag: TE-VASTUVU187-KOKILA
 prerequisites: [TE-C187-purugu, TE-C187-piccuka]
 sounds: []
-roots: []
+roots: [sanskrit-kokila]
+etymology_hook: "kōkila ← Sanskrit kōkila 'the Indian cuckoo', a tatsama (CDIAL 3483)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C187-piccuka]
 <!-- hl-knowledge: introduces=[TE-LEX-C187-VASTUVU187-05]; assesses=[] -->
 
 **కోకిల** — *kōkila* — "a koel, the Indian cuckoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కోకిల** (*kōkila*) is Sanskrit *kōkila*, "the Indian cuckoo", taken over whole as a learned loan, a tatsama (CDIAL 3483).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

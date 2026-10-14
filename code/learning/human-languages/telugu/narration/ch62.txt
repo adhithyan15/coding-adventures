@@ -12,8 +12,9 @@ Before the new one: what did mirapa mean?
 You'll want to know: దారం.
 దారం (dāraṁ) — "thread".
 దారం (dāraṁ) is thread — spun cotton, fine enough to sew with and strong enough to tie a knot that holds. It is the first thing in this chapter and the smallest.
-The word came in from Sanskrit, where it belongs to a family about tearing and drawing out. Thread is what you draw out of a mass of cotton.
+The word may have come in from the north; the dictionaries do not settle it.
 దారం (dāraṁ) does ceremonial work too. The thread tied round a wrist at a festival is a దారం (dāraṁ), and once it is on it stays there until it falls off by itself.
+DEDR 3167 lists Telugu dāramu, "cord, twine", with Tamil tār, "cord", and Kannada dāra, "thread", and asks, with a query, whether it came from Indo-Aryan, comparing Prakrit dāra, "waist-band", and Sanskrit davara, "string" (CDIAL 6225).
 
 What you've built.
 The first thing a house makes for itself.
@@ -47,6 +48,7 @@ You'll want to know: సూది.
 సూది (sūdi) is a needle. It arrived from Sanskrit sūcī, and Telugu wore the middle sound down to a d — a change the language makes often enough that the two shapes line up easily once you know to expect it.
 A సూది (sūdi) is useless without a దారం (dāraṁ), and a దారం (dāraṁ) is only a tangle without a సూది (sūdi). That is about as neat a pair as this book has come across.
 The same word does the వైద్యుడు's work: an injection is a సూది (sūdi), and somebody at a clinic who uses the word is not talking about mending a బట్ట.
+CDIAL 13551 lists Sanskrit sūcī, "needle".
 
 What you've built.
 Two, and neither is much use without the other.
@@ -81,6 +83,9 @@ You'll want to know: చీపురు.
 The word is inherited. Sweeping is the first work of the morning in a Telugu house, done before the ముగ్గు goes down at the doorstep.
 A చీపురు (cīpuru) is treated with a little care because of that. It is not stood on its bristles, it is not stepped over, and it is not lent out lightly.
 
+The word, taken apart.
+చీపురు (cīpuru) is native Dravidian. DEDR 2599 lists the Telugu word for "a broom" with Tamil cī, "to sweep", and Kannada cīpari, "broom".
+
 What you've built.
 Three, and this one starts the day.
 
@@ -114,6 +119,9 @@ You'll want to know: గొడుగు.
 The word is inherited. Long before cloth and wire there was a గొడుగు (goḍugu) of palm leaf, and the ceremonial one held over a deity or over a bride is still made and named the same way.
 It settles two things already met: గాలి will turn it inside out and మంచు will not, so a గొడుగు (goḍugu) goes out in one kind of weather and stays at home in the other.
 
+The word, taken apart.
+గొడుగు (goḍugu) is native Dravidian, one word with Tamil kuṭai, Kannada koḍe and Malayalam kuṭa, "umbrella" (DEDR 1663). DEDR compares Sanskrit utkūṭa, "umbrella", a word known only from lexicons.
+
 What you've built.
 Four.
 
@@ -143,9 +151,10 @@ Before the new one: what did goḍugu mean?
 
 You'll want to know: అద్దం.
 అద్దం (addaṁ) — "a mirror".
-అద్దం (addaṁ) is a mirror. Of the five things here it is the only one a household buys rather than makes, and the only one wearing a borrowed name — from Sanskrit ādarśa, "what shows back".
+అద్దం (addaṁ) is a mirror. Of the five things here it is the only one a household buys rather than makes, and the only one whose name is probably borrowed — usually traced, through Prakrit addāa, to Sanskrit ādarśa, "what shows back".
 The other four come out of whatever grows nearby: a దారం (dāraṁ) out of cotton, a చీపురు (cīpuru) out of leaf ribs, a గొడుగు (goḍugu) out of palm and cane, and a సూది (sūdi) out of a scrap of metal from the smith at the edge of the గ్రామం. An అద్దం (addaṁ) needs a factory.
 Asking for one is where దయచేసి earns its keep. అద్దం (addaṁ) ఇవ్వండి on its own lands like an instruction; with దయచేసి in front it lands like a request.
+DEDR 147 lists Telugu addamu, "mirror", notes that Tamil attam is a loan from Telugu, and compares Prakrit addāa, "mirror"; CDIAL 1143 lists Sanskrit ādarśa, "mirror".
 
 What you've built.
 Five: దారం (dāraṁ), సూది (sūdi), చీపురు (cīpuru), గొడుగు (goḍugu), అద్దం (addaṁ). Enough to ask for what you need with దయచేసి in front of it.

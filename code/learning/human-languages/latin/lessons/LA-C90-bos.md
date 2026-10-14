@@ -13,7 +13,8 @@ gloss: "an ox, a cow"
 concept_tag: LA-ANIMALIA1-BOS
 prerequisites: [LA-C89-litus, LA-C90-equus]
 sounds: []
-roots: []
+roots: [bos-latin]
+etymology_hook: "bōs 'ox, cow' — from PIE *gwows 'cow', probably through Oscan or Umbrian; English cow is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C90-equus]
 <!-- hl-knowledge: introduces=[LA-LEX-C90-ANIMALIA1-02]; assesses=[] -->
 
 **bōs, bovis** — "an ox, a cow". English *bovine*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bōs** is usually traced to Proto-Indo-European *\*gwows*, "cow" (EtymDB 2.1), but its b suggests it reached Latin from a neighbouring Italic language such as Oscan or Umbrian: Latin's own sound changes turned that gw into v. English *cow* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

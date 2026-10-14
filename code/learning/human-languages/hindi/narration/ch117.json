@@ -4,7 +4,7 @@
   "chapter": 117,
   "title": "Aunts, Uncles, In-Laws",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:98c2fd56dbc6c1a0",
+  "sourceHash": "fnv1a64:765498edadc84495",
   "lessons": [
     {
       "id": "HI-C117-mausi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71cef7f6228f8c41",
+      "sourceHash": "fnv1a64:396d2808969db1c9",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मौसी (mausī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mātuḥṣvasṛ, \"mother's sister\" (CDIAL 10001). It is built from mātṛ, \"mother\", and svasṛ, \"sister\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6d063707a2523fc",
+      "sourceHash": "fnv1a64:b80864d2c112f6fc",
       "notice": null,
       "blocks": [
         {
@@ -183,6 +194,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुआ (buā) is close to the Hindi words phūphī and phūā, \"father's sister\", which CDIAL lists under a reconstructed phupphī (CDIAL 9089). CDIAL does not list buā itself, so its exact path is uncertain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -193,7 +215,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -242,7 +264,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -273,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66303e1b8508f28b",
+      "sourceHash": "fnv1a64:cd9a0700b1ce42ac",
       "notice": null,
       "blocks": [
         {
@@ -310,6 +332,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मामा (māmā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from māma, \"uncle\" (CDIAL 10055). CDIAL calls it a nursery word and notes similar words in Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -320,7 +353,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -369,7 +402,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -400,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eeaca6ed75cbd871",
+      "sourceHash": "fnv1a64:ed6d90fa6e541eac",
       "notice": null,
       "blocks": [
         {
@@ -437,6 +470,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भाभी (bhābhī) comes from a reconstructed bhābbha-, which CDIAL calls a nursery word; it lists Hindi bhābhī, \"elder brother's wife\" (CDIAL 9453a)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -447,7 +491,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -496,7 +540,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -527,7 +571,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0bde9df9b23d5965",
+      "sourceHash": "fnv1a64:f7082c1778242306",
       "notice": null,
       "blocks": [
         {
@@ -564,6 +608,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ससुराल (sasurāl) is built on sasur, \"father-in-law\", which comes from Sanskrit śvaśura (CDIAL 12753), with the place ending -āl."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -574,7 +629,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -623,7 +678,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

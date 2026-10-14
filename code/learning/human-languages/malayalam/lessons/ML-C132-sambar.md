@@ -11,7 +11,8 @@ romanization: "sāmpār"
 concept_tag: ML-DISH-SAMBAR
 prerequisites: [ML-C131-onion, ML-C132-dosa]
 sounds: []
-roots: []
+roots: [malayalam-sambar]
+etymology_hook: "sāmpār: of uncertain origin; no dictionary source settles where the word comes from"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C132-dosa]
 
 **സാമ്പാർ** (*sāmpār*) — a lentil and **പച്ചക്കറി** stew, poured over rice or eaten with
 **ദോശ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സാമ്പാർ** (*sāmpār*) is of uncertain origin. Stories that tie it to a royal kitchen are told, but no dictionary source settles where the word comes from.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

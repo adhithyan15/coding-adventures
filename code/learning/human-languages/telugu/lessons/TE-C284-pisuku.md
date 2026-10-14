@@ -14,7 +14,8 @@ romanization: "pisuku"
 concept_tag: TE-VERB-PISUKU
 prerequisites: [TE-C284-jarugu, TE-C284-cimmu]
 sounds: []
-roots: []
+roots: [dravidian-picai-knead]
+etymology_hook: "pisuku: native Dravidian; DEDR 4135 lists pisuku 'to squeeze, knead' with Kannada pisuku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C284-cimmu]
 <!-- hl-knowledge: introduces=[TE-LEX-C284-KRIYA284-05]; assesses=[] -->
 
 **పిసుకు** — *pisuku* — "to knead, to squeeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పిసుకు** (*pisuku*) is native Dravidian. DEDR 4135 lists *pisuku*, "to squeeze, knead", with Kannada *pisuku* and Tamil *picai*, "to knead". DEDR compares Sanskrit *piccayati*, "presses flat" (CDIAL 8149).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

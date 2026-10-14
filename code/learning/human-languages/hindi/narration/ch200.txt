@@ -12,6 +12,9 @@ Before the new one: say the Hindi for the heart, then the Hindi for a bone.
 You'll want to know: त्वचा.
 त्वचा — tvacā — "skin".
 
+The word, taken apart.
+त्वचा (tvacā) is Sanskrit tvacā, "skin", taken over whole as a learned loan, a tatsama (CDIAL 6087).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a bone, then the Hindi for skin.
 
 You'll want to know: राज्य.
 राज्य — rājya — "a state".
+
+The word, taken apart.
+राज्य (rājya) is Sanskrit rājya, "kingship, kingdom", taken over whole as a learned loan, a tatsama (CDIAL 10694). CDIAL lists the inherited form as rāj, "government".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for skin, then the Hindi for a state.
 You'll want to know: राजधानी.
 राजधानी — rājdhānī — "a capital city".
 
+The word, taken apart.
+राजधानी (rājdhānī) is Sanskrit rājadhānī, "a king's seat", from rāja-, "king", and dhānī, "a holder, a seat", taken over whole as a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a state, then the Hindi for a capital city
 You'll want to know: सीमा.
 सीमा — sīmā — "a border, a limit".
 
+The word, taken apart.
+सीमा (sīmā) is Sanskrit sīmā, "boundary", taken over whole as a learned loan, a tatsama (CDIAL 13435).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a capital city, then the Hindi for a borde
 
 You'll want to know: द्वीप.
 द्वीप — dvīp — "an island".
+
+The word, taken apart.
+द्वीप (dvīp) is Sanskrit dvīpa, "land, island", taken over whole as a learned loan, a tatsama (CDIAL 6691). It is built from dvi-, "two", and ap, "water": land with water on both sides.
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "a floor"
 concept_tag: LA-LOC118-PAVIMENTUM
 prerequisites: [LA-C117-popina, LA-C117-caupona]
 sounds: []
-roots: []
+roots: [pavimentum-latin, pavire-latin]
+etymology_hook: "pavīmentum 'floor' — built on paviō 'to beat down': a beaten floor; English pavement"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C117-caupona]
 <!-- hl-knowledge: introduces=[LA-LEX-C118-LOC118-01]; assesses=[] -->
 
 **pavīmentum, pavīmentī** — "a floor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pavīmentum** is built on *paviō*, "to beat, to tread down" (Lewis & Short), with *-mentum*, an ending for a thing: a floor of beaten earth or stone. English *pavement* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

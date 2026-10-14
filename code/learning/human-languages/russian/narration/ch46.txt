@@ -12,6 +12,9 @@ Before the new one: say the Russian for a cucumber, then the Russian for a carro
 You'll want to know: завтрак.
 завтрак (závtrak) — "breakfast".
 
+The word, taken apart.
+завтрак (závtrak) — built on the root of завтра, "tomorrow", which is за, "after", with утро, "morning". Old Russian said zautrokŭ, "the morning meal" (Vasmer).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for a carrot, then the Russian for breakfast
 
 You'll want to know: обед.
 обед (obéd) — "lunch, the midday meal".
+
+The word, taken apart.
+обед (obéd) from Proto-Slavic obědŭ — об-, "around", with the root of еда, "food", and есть, "to eat" (Vasmer). That root is PIE h₁ed-, "to eat", so English eat is a cousin.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Russian for breakfast, then the Russian for lunch.
 You'll want to know: ужин.
 ужин (úzhin) — "dinner, supper".
 
+The word, taken apart.
+ужин (úzhin) — built on Proto-Slavic jugŭ, "south, noon", so it first meant "the midday meal" (Vasmer); Old Russian ужина was an afternoon meal. Latin merīdiēs is both "noon" and "south" in the same way.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Russian for lunch, then the Russian for dinner.
 You'll want to know: каша.
 каша (kásha) — "porridge".
 
+The word, taken apart.
+каша (kásha) from Proto-Slavic kaša — inherited. Vasmer relates it to Lithuanian kóšti, "to strain, to filter"; Trubachev, in a note, explains it otherwise.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Russian for dinner, then the Russian for porridge.
 
 You'll want to know: пирог.
 пирог (piróg) — "a pie".
+
+The word, taken apart.
+пирог (piróg) — Vasmer builds it on пир, "a feast", with the suffix -ог; others start from Old Russian пыро, "spelt", reshaped to match пир. Either way it is a Slavic word.
 
 What you've built.
 One more word for this chapter.

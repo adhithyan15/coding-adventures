@@ -14,7 +14,8 @@ romanization: "hiṇḍu"
 concept_tag: KA-VERB-HINDU
 prerequisites: [KA-C242-oggarane-haku, KA-C242-nenesu]
 sounds: []
-roots: []
+roots: [dravidian-pizhi-wring]
+etymology_hook: "hiṇḍu: native Dravidian, one word with Tamil piḻi (DEDR 4183)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C242-nenesu]
 <!-- hl-knowledge: introduces=[KA-LEX-C242-KRIYE242-03]; assesses=[] -->
 
 **ಹಿಂಡು** — *hiṇḍu* — "to wring, to squeeze out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿಂಡು** (*hiṇḍu*) is native Dravidian, one word with Tamil *piḻi* (DEDR 4183). DEDR lists *piṇḍu*, *hiṇḍu*, "to squeeze out, wring". DEDR 4183 compares Sanskrit *piṇyāka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

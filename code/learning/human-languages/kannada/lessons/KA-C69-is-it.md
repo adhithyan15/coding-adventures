@@ -11,9 +11,10 @@ romanization: "gottā"
 concept_tag: KA-Q-PARTICLE
 prerequisites: [KA-C68-me-neither, KA-S136-vowel-sign-uu, KA-C03-niivu-hegiddiira, KA-C53-sunshine, KA-C53-sky, KA-C45-grandfather, KA-C44-write]
 sounds: []
-roots: []
+roots: [dravidian-kuri-mark]
+etymology_hook: "gottā: native gottu 'known' (DEDR 1847) + the question ending -ā"
 duration:
-  max_seconds: 210
+  max_seconds: 240
 requires:
   knowledge: [KA-SCRIPT-RECOG-136, KA-LEX-C68-DENY-05, KA-LEX-C32-GOTTU-01, KA-LEX-C03-HEGIDDIIRA-01, KA-GRAMMAR-C03-HEGIDDIIRA-02, KA-LEX-C01-HAUDU-01]
 introduces:
@@ -43,6 +44,11 @@ reviews_of: [KA-S136-vowel-sign-uu]
 It is ಗೊತ್ತು with its ending swapped for a long **-ಆ** (*-ā*), and that ending is
 the whole question. Nothing else moved: no word order changed, nothing was added
 in front.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗೊತ್ತಾ** (*gottā*) is native Dravidian: *gottu*, "known" (DEDR 1847, the same root as Tamil *kuṟi*, "a mark"), with *-ā*, the ending that makes a question.
 
 ## Grammar Lens: one ending turns any statement into a question
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C69-ASK-02]; assesses=[] -->

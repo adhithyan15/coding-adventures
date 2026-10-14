@@ -14,7 +14,8 @@ romanization: "tīraṁ"
 concept_tag: TE-LOC104-TIRAM
 prerequisites: [TE-C103-byanku, TE-C103-santa]
 sounds: []
-roots: []
+roots: [sanskrit-tira]
+etymology_hook: "tīraṁ ← Sanskrit tīra 'shore, bank', a tatsama (CDIAL 5842)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C103-santa]
 <!-- hl-knowledge: introduces=[TE-LEX-C104-LOC104-01]; assesses=[] -->
 
 **తీరం** — *tīraṁ* — "a shore, a coast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తీరం** (*tīraṁ*) is Sanskrit *tīra*, "shore, bank", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 5842).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

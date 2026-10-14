@@ -11,7 +11,8 @@ romanization: "beraḷu"
 concept_tag: KA-NOUN-FINGER
 prerequisites: [KA-C47-hair, KA-C45-husband]
 sounds: []
-roots: []
+roots: [dravidian-viral-finger]
+etymology_hook: "beraḷu: native Dravidian, one word with Tamil viral and Telugu vēlu (DEDR 5409)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C47-hair]
 Tamil has விரல் (*viral*), Malayalam വിരൽ, Telugu వేలు (*vēlu*) — and Kannada opens the word with *b-* where its sisters have *v-*.
 
 That is the second regular exchange this book has shown you, the one already visible in ಬರೆ, 'to write', where the sisters again have a *v*. One family, two swaps: *p-* for *h-*, *v-* for *b-*. Between them they account for a great many words that look unrelated at first glance and are nothing of the kind.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆರಳು** (*beraḷu*) is native Dravidian, one word with Tamil *viral*, Telugu *vēlu* and Malayalam *viral* (DEDR 5409). DEDR gives Kannada *beral*, *beraḷ*: the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

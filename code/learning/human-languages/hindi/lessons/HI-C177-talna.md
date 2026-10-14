@@ -14,7 +14,8 @@ romanization: "talnā"
 concept_tag: HI-VERB-TALNA
 prerequisites: [HI-C177-pisna, HI-C177-ubalna]
 sounds: []
-roots: []
+roots: [indo-aryan-talati]
+etymology_hook: "talnā ← *talati 'fries', a reconstructed form; a tadbhava (CDIAL 5736)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C177-ubalna]
 <!-- hl-knowledge: introduces=[HI-LEX-C177-ACT177-05]; assesses=[] -->
 
 **तलना** — *talnā* — "to fry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तलना** (*talnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*talati*, "fries", a form CDIAL reconstructs from its descendants (CDIAL 5736).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

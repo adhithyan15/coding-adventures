@@ -14,7 +14,8 @@ romanization: "vāgdānaṁ"
 concept_tag: TE-KARANAM257-VAGDANAM
 prerequisites: [TE-C256-godamu, TE-C256-kortu]
 sounds: []
-roots: []
+roots: [sanskrit-vac, sanskrit-dana]
+etymology_hook: "vāgdānaṁ: Sanskrit vāc 'speech' + dāna 'giving' (CDIAL 6265)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C256-kortu]
 <!-- hl-knowledge: introduces=[TE-LEX-C257-KARANAM257-01]; assesses=[] -->
 
 **వాగ్దానం** — *vāgdānaṁ* — "a promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వాగ్దానం** (*vāgdānaṁ*) is Sanskrit *vāgdāna*, "giving one's word": *vāc*, "speech", and *dāna*, "giving, gift" (CDIAL 6265), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

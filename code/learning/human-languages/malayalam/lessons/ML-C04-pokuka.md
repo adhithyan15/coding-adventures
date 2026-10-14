@@ -12,6 +12,7 @@ concept_tag: ML-VERB-POKUKA
 prerequisites: [ML-C03-njaan, ML-C03-engane, ML-C03-sukham]
 sounds: [long-o, ka-infinitive]
 roots: [po-go-dravidian, va-come-dravidian]
+etymology_hook: "pōkuka and varika: native Dravidian, Tamil pō 'go' and varu 'come' (DEDR 4572, 5270)"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,8 @@ Dravidian verbs. Notice the ending **-ഉക** (*-uka*) — this is how Malayala
 a verb in the dictionary, its "to ___" form (where Tamil uses a bare stem).
 Malayalam, like all its family, does not say a plain "goodbye": it says "I go,
 and I **come back**."
+
+DEDR 4572 lists the going verb with Tamil *pō* and Kannada *pōgu*; DEDR 5270 lists the coming verb with Tamil *varu* and Kannada *bar*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-POKUKA-VARIKA-01, ML-CONCEPT-C04-UKA-DICTIONARY-FORM-01, ML-LEX-ENGANE-01, ML-LEX-NJAAN-01, ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01, ML-LEX-SUKHAM-01] -->

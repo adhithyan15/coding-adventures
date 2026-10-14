@@ -48,7 +48,7 @@ Of everything with wings around a Tamil house this is the one the house deals wi
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**காக்கை** (*kākkai*) is native Dravidian. DEDR 1425 lists Malayalam *kākka*, Kannada *kāge* and Telugu *kāki*. The word imitates the bird's call, and the entry gives the cry too.
+**காக்கை** (*kākkai*) is native Dravidian. DEDR 1425 lists Malayalam *kākka*, Kannada *kāge* and Telugu *kāki*. The word imitates the bird's call, and the entry gives the cry too. It compares Sanskrit *kāka*, "crow", and notes that some forms may be borrowed back from Indo-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

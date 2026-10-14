@@ -13,7 +13,8 @@ gloss: "eagerness; study"
 concept_tag: LA-RES226-STUDIUM
 prerequisites: [LA-C226-grammatica, LA-C226-philosophia]
 sounds: []
-roots: []
+roots: [studium-latin, studere-latin]
+etymology_hook: "studium 'eagerness, study' — built on studeō 'to be eager'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C226-philosophia]
 <!-- hl-knowledge: introduces=[LA-LEX-C226-RES226-03]; assesses=[] -->
 
 **studium, studiī** — "eagerness; study".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**studium** is built on *studeō*, "to be eager, to apply oneself" (Lewis & Short). Where *studeō* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

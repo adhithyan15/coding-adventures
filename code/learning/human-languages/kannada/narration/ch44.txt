@@ -13,6 +13,9 @@ You'll want to know: ನೋಡು.
 ನೋಡು (nōḍu) — "look".
 Also 'to see' and, in the right sentence, 'to look after'. One stem covering watching, seeing and caring for is common across the Dravidian languages.
 
+The word, taken apart.
+ನೋಡು (nōḍu) is native Dravidian. DEDR 3794 lists it with Malayalam nōṭṭam, "viewing", and Tamil nōṭṭam, "examination".
+
 What you've built.
 One more. Three follow, and each reuses the ones before.
 
@@ -41,6 +44,9 @@ You'll want to know: ಕೇಳು.
 ಕೇಳು (kēḷu) — "listen".
 And 'to ask'. Kannada uses the same stem for taking in words and for requesting them, which is less strange than it sounds — both are aimed at what someone else knows.
 
+The word, taken apart.
+ಕೇಳು (kēḷu) is native Dravidian, one word with Tamil kēḷ and Malayalam kēḷkka (DEDR 2017).
+
 What you've built.
 One more. Three follow, and each reuses the ones before.
 
@@ -68,7 +74,8 @@ Before the new one: what did kēḷu mean?
 
 You'll want to know: ಮಾತಾಡು.
 ಮಾತಾಡು (mātāḍu) — "speak".
-Built from māta, 'word' — itself from Sanskrit — plus āḍu, 'to play'. To speak is to play with words.
+Built from māta, 'word' — a native Dravidian word, not a Sanskrit one — plus āḍu, 'to play'. To speak is to play with words.
+DEDR 4834 lists Kannada mātu, māta, "word, saying", cognate with Telugu māṭa; āḍu is in DEDR 347.
 
 What you've built.
 One more. Three follow, and each reuses the ones before.
@@ -99,6 +106,9 @@ Before the new one: what did mātāḍu mean?
 You'll want to know: ಬರೆ.
 ಬರೆ (bare) — "write".
 An old Dravidian stem, unrelated to the Sanskrit words for writing. It is the same root behind baraha, 'writing'.
+
+The word, taken apart.
+ಬರೆ (bare) is native Dravidian, one word with Tamil vari and Malayalam vara (DEDR 5263). DEDR 5263 compares, with a query, Prakrit rajju, "a writer".
 
 What you've built.
 That closes the run: look, listen, speak, write.

@@ -14,7 +14,8 @@ romanization: "praṇām"
 concept_tag: HI-NOUN-SALUTATION
 prerequisites: [HI-C50-blessing, HI-C48-absolutely, HI-C49-meeting]
 sounds: []
-roots: []
+roots: [sanskrit-pranama]
+etymology_hook: "praṇām ← Sanskrit praṇāma 'a bowing', a tatsama, on nam- 'to bow'"
 duration:
   max_seconds: 210
 requires:

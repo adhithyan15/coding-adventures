@@ -14,7 +14,8 @@ romanization: "entāyāluṁ"
 concept_tag: ML-KARANAM317-ENTAYALUM
 prerequisites: [ML-C316-nattinpuram, ML-C317-taniye]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, aaka-dravidian]
+etymology_hook: "entāyāluṁ: native Dravidian, 'whatever it becomes': entŭ (DEDR 5151) + āyāl 'if it becomes' (DEDR 333) + -uṁ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C317-taniye]
 <!-- hl-knowledge: introduces=[ML-LEX-C317-KARANAM317-02]; assesses=[] -->
 
 **എന്തായാലും** — *entāyāluṁ* — "anyway, in any case".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എന്തായാലും** (*entāyāluṁ*) is native Dravidian, "whatever it may become": *entŭ*, "what" (DEDR 5151), *āyāl*, "if it becomes" (DEDR 333), and *-uṁ*, "even". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

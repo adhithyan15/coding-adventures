@@ -13,7 +13,8 @@ gloss: "a breeze"
 concept_tag: LA-RES223-AURA
 prerequisites: [LA-C222-plumbum, LA-C223-caligo]
 sounds: []
-roots: []
+roots: [aura-latin]
+etymology_hook: "aura 'breeze' — borrowed from Greek aura 'breeze'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C223-caligo]
 <!-- hl-knowledge: introduces=[LA-LEX-C223-RES223-02]; assesses=[] -->
 
 **aura, aurae** — "a breeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aura** was borrowed from Greek *aura*, "a breeze, a breath of air" (EtymDB 2.1). English *aura* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

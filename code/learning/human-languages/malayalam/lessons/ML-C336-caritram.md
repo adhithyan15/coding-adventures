@@ -14,7 +14,8 @@ romanization: "caritraṁ"
 concept_tag: ML-JOLI336-CARITRAM
 prerequisites: [ML-C336-krsi, ML-C336-sastram]
 sounds: []
-roots: []
+roots: [sanskrit-caritra]
+etymology_hook: "caritraṁ ← Sanskrit caritra 'going; behaviour', a tatsama (CDIAL 4691)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C336-sastram]
 <!-- hl-knowledge: introduces=[ML-LEX-C336-JOLI336-05]; assesses=[] -->
 
 **ചരിത്രം** — *caritraṁ* — "history".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചരിത്രം** (*caritraṁ*) ← Sanskrit *caritra*, "going; behaviour", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 4691). Conduct over time became history.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

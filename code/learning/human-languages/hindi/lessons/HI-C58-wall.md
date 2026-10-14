@@ -14,7 +14,8 @@ romanization: "dīvār"
 concept_tag: HI-NOUN-WALL
 prerequisites: [HI-C57-sweetness, HI-C56-road, HI-C57-present]
 sounds: []
-roots: []
+roots: [persian-divar]
+etymology_hook: "dīvār: usually traced to Persian dīvār 'wall'"
 duration:
   max_seconds: 210
 requires:

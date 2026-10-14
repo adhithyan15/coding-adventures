@@ -14,7 +14,8 @@ romanization: "paricay"
 concept_tag: HI-FORM-INTRODUCTION
 prerequisites: [HI-C120-hastakshar, HI-C120-pahchan]
 sounds: []
-roots: []
+roots: [sanskrit-paricaya]
+etymology_hook: "paricay ← Sanskrit paricaya 'acquaintance with', a tatsama (CDIAL 7807)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C120-pahchan]
 **परिचय** (*paricay*) — "an introduction".
 
 **अपना परिचय दीजिए** — "please introduce yourself", with the **अपना** you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परिचय** (*paricay*) is Sanskrit *paricaya*, "acquaintance with", taken over whole as a learned loan, a tatsama (CDIAL 7807).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

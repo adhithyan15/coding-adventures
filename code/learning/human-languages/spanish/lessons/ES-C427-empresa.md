@@ -11,6 +11,7 @@ concept_tag: ES-THING-EMPRESA
 prerequisites: [ES-C427-abogado]
 sounds: [m-b-cluster, pr-cluster, stress-penultimate]
 roots: [prehendere-latin]
+etymology_hook: "empresa ← Italian impresa 'an undertaking', built on Latin in- + prehendere 'to take hold of'"
 duration:
   max_seconds: 240
 requires:
@@ -40,12 +41,12 @@ sale. Say where the seller works, and notice you have no word for it.
 
 **la empresa** — "the company, the firm."
 
-From Latin **in-** + **prehendere**, "to take hold of." An *empresa* is
-literally **a thing taken on** — an undertaking.
+Spanish took it from Italian **impresa**, built on Latin **in-** +
+**prehendere**, "to take hold of." An *empresa* is literally **a thing taken
+on** — an undertaking.
 
-English took the same idea through French and got **enterprise**, from *entre-*
-+ *prendre*, the same two pieces in the other Romance language. The words are
-cousins built to the same plan.
+English took the same idea from French **enterprise**, *entre-* + *prendre*: a
+different prefix on the same verb, built to the same plan.
 
 The difference is what each language did with it afterwards. English *enterprise*
 mostly means the **venture**; Spanish *empresa* means both the venture **and the

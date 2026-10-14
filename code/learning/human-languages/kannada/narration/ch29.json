@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Good Morning",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:55ecc02c5af5b425",
+  "sourceHash": "fnv1a64:8176514400a5ef60",
   "lessons": [
     {
       "id": "KA-C29-shubhodaya",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6f86c1e71e4ea61",
+      "sourceHash": "fnv1a64:d0237fae9b03924a",
       "notice": null,
       "blocks": [
         {
@@ -183,6 +183,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಓಟ (ōṭa) is native Dravidian, the noun of ōḍu, \"to run\", and DEDR 1041 lists ōṭa itself, \"running, a race\"; the entry also has Tamil ōṭu, Telugu ōḍu and Malayalam ōṭuka."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -213,7 +224,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

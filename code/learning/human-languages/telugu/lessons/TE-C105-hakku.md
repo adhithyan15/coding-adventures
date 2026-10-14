@@ -14,7 +14,8 @@ romanization: "hakku"
 concept_tag: TE-LOC105-HAKKU
 prerequisites: [TE-C105-samarthyam, TE-C105-naipunyam]
 sounds: []
-roots: []
+roots: [arabic-haqq]
+etymology_hook: "hakku ← Arabic ḥaqq 'right, truth', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C105-naipunyam]
 <!-- hl-knowledge: introduces=[TE-LEX-C105-LOC105-05]; assesses=[] -->
 
 **హక్కు** — *hakku* — "a right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**హక్కు** (*hakku*) is a loan from Arabic *ḥaqq*, "right, truth", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-THING-ABOGADO
 prerequisites: [ES-C427-bombero]
 sounds: [b-soft, g-hard, stress-penultimate]
 roots: [vocare-latin]
+etymology_hook: "abogado ← Latin advocatus 'one called to your side': vocare 'to call' — English advocate"
 duration:
   max_seconds: 240
 requires:

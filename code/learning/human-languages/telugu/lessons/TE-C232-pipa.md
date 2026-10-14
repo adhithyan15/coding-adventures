@@ -14,7 +14,8 @@ romanization: "pīpā"
 concept_tag: TE-VASTUVU232-PIPA
 prerequisites: [TE-C232-basta, TE-C232-totti]
 sounds: []
-roots: []
+roots: [portuguese-pipa]
+etymology_hook: "pīpā: usually traced to Portuguese pipa 'cask'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C232-totti]
 <!-- hl-knowledge: introduces=[TE-LEX-C232-VASTUVU232-04]; assesses=[] -->
 
 **పీపా** — *pīpā* — "a barrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పీపా** (*pīpā*) is usually traced to Portuguese *pipa*, "cask, barrel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

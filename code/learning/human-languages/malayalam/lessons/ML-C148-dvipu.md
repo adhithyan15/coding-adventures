@@ -14,7 +14,8 @@ romanization: "dvīpŭ"
 concept_tag: ML-THINGS148-DVIPU
 prerequisites: [ML-C148-kinaru, ML-C148-tatakam, ML-C27-vaikunneram]
 sounds: []
-roots: []
+roots: [sanskrit-dvipa]
+etymology_hook: "dvīpŭ ← Sanskrit dvīpa 'island', 'land with water on both sides' (CDIAL 6691)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C148-tatakam]
 <!-- hl-knowledge: introduces=[ML-LEX-C148-THINGS148-04]; assesses=[] -->
 
 **ദ്വീപ്** — *dvīpŭ* — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ദ്വീപ്** (*dvīpŭ*) ← Sanskrit *dvīpa*, "island" (CDIAL 6691), with Malayalam's half-u at the end. The Sanskrit word is *dvi*, "two", + *ap*, "water": land with water on both sides.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

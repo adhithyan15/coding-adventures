@@ -14,7 +14,8 @@ romanization: "saikkiḷ"
 concept_tag: ML-THINGS157-SAIKKIL
 prerequisites: [ML-C157-visari, ML-C157-phan, ML-W108-question-mark, ML-W108-question-mark]
 sounds: []
-roots: []
+roots: [english-cycle]
+etymology_hook: "saikkiḷ ← English cycle, from Greek kyklos 'wheel'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C157-phan]
 <!-- hl-knowledge: introduces=[ML-LEX-C157-THINGS157-05]; assesses=[] -->
 
 **സൈക്കിൾ** — *saikkiḷ* — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സൈക്കിൾ** (*saikkiḷ*) ← English *cycle*, short for *bicycle*, from Greek *kyklos*, "wheel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

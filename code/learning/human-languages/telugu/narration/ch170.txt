@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a scar, then the Telugu for a sprain.
 You'll want to know: సమయం.
 సమయం — samayaṁ — "time".
 
+The word, taken apart.
+సమయం (samayaṁ) is Sanskrit samaya, "meeting; rule; agreement; time", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 13185).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a sprain, then the Telugu for time.
 
 You'll want to know: అప్పుడప్పుడు.
 అప్పుడప్పుడు — appuḍappuḍu — "sometimes".
+
+The word, taken apart.
+అప్పుడప్పుడు (appuḍappuḍu) is native Dravidian: appuḍu, "at that time, then", built on the far-pointing base a- (DEDR 1), said twice.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for time, then the Telugu for sometimes.
 You'll want to know: తరచుగా.
 తరచుగా — taracugā — "often".
 
+The word, taken apart.
+The origin of taracu, "often", the word in తరచుగా (taracugā), is uncertain: DEDR and CDIAL list no word of this shape with this sense. The ending -gā makes it an adverb.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for sometimes, then the Telugu for often.
 You'll want to know: తేదీ.
 తేదీ — tēdī — "a date".
 
+The word, taken apart.
+The origin of తేదీ (tēdī) is not settled. Sanskrit tithi, "a lunar day" (CDIAL 5810), is the usual suggestion, but neither CDIAL nor DEDR lists the Telugu word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for often, then the Telugu for a date.
 
 You'll want to know: వారాంతం.
 వారాంతం — vārāntaṁ — "a weekend".
+
+The word, taken apart.
+వారాంతం (vārāntaṁ) is Sanskrit: vāra, "day of the week" (CDIAL 11547), and anta, "end" (CDIAL 347), with the Telugu ending -ṁ.
 
 What you've built.
 One more word for this chapter.

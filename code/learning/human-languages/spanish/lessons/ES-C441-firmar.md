@@ -11,6 +11,7 @@ concept_tag: ES-VERB-FIRMAR
 prerequisites: [ES-C441-contrato, ES-C305-nombre, ES-C34-escribir]
 sounds: [r-tap, stress-final]
 roots: [firmus-latin]
+etymology_hook: "firmar ← Latin firmare, from firmus 'firm': to sign is to make firm — English affirm"
 duration:
   max_seconds: 265
 requires:

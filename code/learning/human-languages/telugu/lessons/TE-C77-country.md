@@ -11,7 +11,8 @@ romanization: "dēśaṁ"
 concept_tag: TE-NOUN-COUNTRY
 prerequisites: [TE-C77-town, TE-C36-kuuturu]
 sounds: []
-roots: []
+roots: [sanskrit-desha]
+etymology_hook: "dēśaṁ ← Sanskrit deśa 'region, country', a tatsama (CDIAL 6547)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C77-town]
 Sanskrit tatsama, and the same word behind Hindi *desh*. It scales the ladder up once more: గ్రామం, పట్టణం, దేశం.
 
 **ఏ దేశం?** — "which country?" is a question you will be asked in the first minute of any exam interview.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దేశం** (*dēśaṁ*) is Sanskrit *deśa*, "region, country", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 6547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -20,6 +20,9 @@ You'll want to know.
 You counted with the first. The second is the one you will meet on nearly every page from here, because a number usually has something to count.
 Tamil keeps the same pair, oru against oṉṟu, split the same way — which is a sign the split is old rather than a tidy-up Malayalam did on its own.
 
+The word, taken apart.
+ഒരു (oru) is native Dravidian, the shape "one" takes in front of a noun. DEDR 990 lists Tamil oru before a consonant and ōr before a vowel, with Kannada ondu, "one thing".
+
 Grammar Lens: the same word does the work of "a".
 Malayalam has no word for a. A bare noun covers it: പേര് on its own is name, a name, or the name, and which one it is comes from what is being talked about.
 But when a speaker wants to set one unspecified thing in front of you — the a that means some one or other — ഒരു (oru) is what they say. So the same small word carries two weights:

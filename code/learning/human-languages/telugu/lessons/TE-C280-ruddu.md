@@ -14,7 +14,8 @@ romanization: "ruddu"
 concept_tag: TE-VERB-RUDDU
 prerequisites: [TE-C279-taku, TE-C279-olucu]
 sounds: []
-roots: []
+roots: [dravidian-urai-rub]
+etymology_hook: "ruddu: native Dravidian; DEDR 665 lists ruddu 'to rub, scour' with Tamil urai 'to rub'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C279-olucu]
 <!-- hl-knowledge: introduces=[TE-LEX-C280-KRIYA280-01]; assesses=[] -->
 
 **రుద్దు** — *ruddu* — "to rub, to scrub".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రుద్దు** (*ruddu*) is native Dravidian. DEDR 665 lists *ruddu*, "to rub, scour", with Tamil *urai*, "to rub", and Kannada *ujju*, "to rub". DEDR compares, with a query, Sanskrit *uñchati*, "gleans" (CDIAL 1680).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

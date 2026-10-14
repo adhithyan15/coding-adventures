@@ -14,7 +14,8 @@ romanization: "jītaṁ"
 concept_tag: TE-PANI235-JITAM
 prerequisites: [TE-C235-notu, TE-C235-cillara]
 sounds: []
-roots: []
+roots: [sanskrit-jivita]
+etymology_hook: "jītaṁ: usually traced to Sanskrit jīvita 'living, life' (CDIAL 5252)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C235-cillara]
 <!-- hl-knowledge: introduces=[TE-LEX-C235-PANI235-03]; assesses=[] -->
 
 **జీతం** — *jītaṁ* — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జీతం** (*jītaṁ*) is usually traced to Sanskrit *jīvita*, "living, life" (CDIAL 5252), reshaped to Telugu sounds, with the Telugu ending *-ṁ*: "a living".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

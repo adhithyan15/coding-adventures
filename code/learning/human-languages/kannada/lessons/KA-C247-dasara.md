@@ -14,7 +14,8 @@ romanization: "dasarā"
 concept_tag: KA-KALA247-DASARA
 prerequisites: [KA-C246-byandej, KA-C246-madhumeha]
 sounds: []
-roots: []
+roots: [sanskrit-dashahara]
+etymology_hook: "dasarā: tadbhava of Sanskrit daśaharā, built on daśa 'ten' (CDIAL 6227)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C246-madhumeha]
 <!-- hl-knowledge: introduces=[KA-LEX-C247-KALA247-01]; assesses=[] -->
 
 **ದಸರಾ** — *dasarā* — "Dasara, the autumn festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದಸರಾ** (*dasarā*) is a tadbhava of Sanskrit *daśaharā*, "the (festival) that takes away ten", built on *daśa*, "ten" (CDIAL 6227): *ś* became *s* and the *h* dropped out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

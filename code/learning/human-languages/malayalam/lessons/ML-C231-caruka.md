@@ -14,7 +14,8 @@ romanization: "cāruka"
 concept_tag: ML-VERB-CARUKA
 prerequisites: [ML-C230-pariharikkuka, ML-C230-boratikkuka]
 sounds: []
-roots: []
+roots: [dravidian-car-lean]
+etymology_hook: "cāruka: native Dravidian, one word with Tamil cār and Kannada sār (DEDR 2460)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C230-boratikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C231-KRIYA231-01]; assesses=[] -->
 
 **ചാരുക** — *cāruka* — "to lean (against)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചാരുക** (*cāruka*) is native Dravidian, one word with Tamil *cār* and Kannada *sār* (DEDR 2460).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

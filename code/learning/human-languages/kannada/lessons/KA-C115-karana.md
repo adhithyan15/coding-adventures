@@ -14,7 +14,8 @@ romanization: "kāraṇa"
 concept_tag: KA-WHY115-KARANA
 prerequisites: [KA-C114-nirdhara, KA-C114-bayasu]
 sounds: []
-roots: []
+roots: [sanskrit-karana]
+etymology_hook: "kāraṇa ← Sanskrit kāraṇa 'cause', a tatsama (CDIAL 3057)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C114-bayasu]
 <!-- hl-knowledge: introduces=[KA-LEX-C115-WHY115-01]; assesses=[] -->
 
 **ಕಾರಣ** — *kāraṇa* — "a reason".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾರಣ** (*kāraṇa*) is Sanskrit *kāraṇa*, "cause", taken over whole as a learned loan, a tatsama (CDIAL 3057).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

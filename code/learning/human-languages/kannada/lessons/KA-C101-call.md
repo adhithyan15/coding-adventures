@@ -11,7 +11,8 @@ romanization: "kareyiri"
 concept_tag: KA-DO-CALL
 prerequisites: [KA-C101-close, KA-C101-stop]
 sounds: []
-roots: []
+roots: [dravidian-karai-call]
+etymology_hook: "kareyiri: native Dravidian, from kare 'to call' (DEDR 1291)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C101-stop]
 **ಕರೆಯಿರಿ** (*kareyiri*) — "please call (someone)".
 
 **ವೈದ್ಯರನ್ನು ಕರೆಯಿರಿ** (*vaidyarannu kareyiri*) — "please call the doctor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕರೆಯಿರಿ** (*kareyiri*) is native Dravidian, from *kare*, "to call, invite", which DEDR 1291 lists itself, with the polite ending *-iri*; the entry also has Tamil *karai*, Telugu *kraṅgu* and Malayalam *karayuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

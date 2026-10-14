@@ -10,7 +10,8 @@ gloss: "the toy"
 concept_tag: ES-REF-JUGUETE
 prerequisites: [ES-C506-regalar, ES-C506-envolver]
 sounds: []
-roots: []
+roots: [iocus-latin]
+etymology_hook: "juguete — juego 'a game' + -ete, a small thing; juego is Latin iocus 'a jest' — English joke"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C506-envolver]
 > El niño tiene muchos juguetes.
 >
 > *The child has a lot of toys.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**juguete** is built on *juego*, "a game", with the small-ending *-ete*. *Juego* is Latin *iocus*, "a joke, a jest" — inherited: the stressed *o* opened into *ue*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "becnā"
 concept_tag: HI-VERB-BECNA
 prerequisites: [HI-C163-jitna, HI-C163-harna]
 sounds: []
-roots: []
+roots: [indo-aryan-vetyayati]
+etymology_hook: "becnā ← *vetyayati 'makes a price', a reconstructed form; a tadbhava (CDIAL 12100)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C163-harna]
 <!-- hl-knowledge: introduces=[HI-LEX-C163-ACT163-03]; assesses=[] -->
 
 **बेचना** — *becnā* — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बेचना** (*becnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vetyayati*, "makes a price", a form CDIAL reconstructs from its descendants (CDIAL 12100). CDIAL builds it on *vetana*, "wages, price", and calls other proposals less probable.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

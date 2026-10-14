@@ -11,7 +11,8 @@ romanization: "mattomme"
 concept_tag: KA-REP-AGAIN
 prerequisites: [KA-C84-tablet, KA-C85-slowly]
 sounds: []
-roots: []
+roots: [matte-again-dravidian, proto-dravidian-numbers]
+etymology_hook: "mattomme: native matte 'again' (DEDR 4766) + omme 'once' (DEDR 990)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C85-slowly]
 
 **ಮತ್ತೊಮ್ಮೆ ಹೇಳಿ** (*mattomme hēḷi*) — "please say it once more", with **ಹೇಳಿ**,
 "please tell", which you already know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮತ್ತೊಮ್ಮೆ** (*mattomme*) is native Dravidian: *matte*, "again" (DEDR 4766), and *omme*, "once", which DEDR 990 lists on the root for "one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

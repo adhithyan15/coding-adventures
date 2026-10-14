@@ -12,6 +12,9 @@ Before the new one: say the Kannada for tax, then the Kannada for a bill.
 You'll want to know: ಲೇಖಕ.
 ಲೇಖಕ — lēkhaka — "a writer, an author".
 
+The word, taken apart.
+ಲೇಖಕ (lēkhaka) is Sanskrit lekhaka, "scribe", taken over whole as a learned loan, a tatsama (CDIAL 11102).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a bill, then the Kannada for a writer.
 
 You'll want to know: ನಿರ್ದೇಶಕ.
 ನಿರ್ದೇಶಕ — nirdēśaka — "a director".
+
+The word, taken apart.
+ನಿರ್ದೇಶಕ (nirdēśaka) is Sanskrit nirdeśaka, "one who points out, directs", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a writer, then the Kannada for a directo
 You'll want to know: ಆಟಗಾರ.
 ಆಟಗಾರ — āṭagāra — "a player".
 
+The word, taken apart.
+ಆಟಗಾರ (āṭagāra) is āṭa, "play, game", the noun of native āḍu, "to play" (DEDR 347), with -gāra, "one who does it".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a director, then the Kannada for a playe
 You'll want to know: ಪ್ರೇಕ್ಷಕ.
 ಪ್ರೇಕ್ಷಕ — prēkṣaka — "a spectator, a viewer".
 
+The word, taken apart.
+ಪ್ರೇಕ್ಷಕ (prēkṣaka) is Sanskrit prekṣaka, "one who looks on, a spectator", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a player, then the Kannada for a spectat
 
 You'll want to know: ಬಡಗಿ.
 ಬಡಗಿ — baḍagi — "a carpenter".
+
+The word, taken apart.
+ಬಡಗಿ (baḍagi) comes from Sanskrit vardhaki, "carpenter", reshaped to Kannada sounds: a tadbhava (CDIAL 11375). Prakrit vaḍḍhaï shows the step between.
 
 What you've built.
 One more word for this chapter.

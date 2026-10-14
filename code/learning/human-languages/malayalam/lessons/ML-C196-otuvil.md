@@ -14,7 +14,8 @@ romanization: "oṭuvil"
 concept_tag: ML-SAMAYAM196-OTUVIL
 prerequisites: [ML-C196-ituvare, ML-C196-ippolum]
 sounds: []
-roots: []
+roots: [dravidian-odu-end]
+etymology_hook: "oṭuvil: native Dravidian, oṭuvu 'the end' (DEDR 954) + the place ending -il"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C196-ippolum]
 <!-- hl-knowledge: introduces=[ML-LEX-C196-SAMAYAM196-03]; assesses=[] -->
 
 **ഒടുവിൽ** — *oṭuvil* — "finally, at last".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒടുവിൽ** (*oṭuvil*) is native Dravidian: *oṭuvu*, "the end" (DEDR 954, with Tamil *oṭuṅku*), with the place ending *-il*: "at the end".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

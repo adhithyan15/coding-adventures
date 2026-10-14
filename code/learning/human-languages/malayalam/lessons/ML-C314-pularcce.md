@@ -14,7 +14,8 @@ romanization: "pularcce"
 concept_tag: ML-SAMAYAM314-PULARCCE
 prerequisites: [ML-C314-kalantar, ML-C314-pantu2]
 sounds: []
-roots: []
+roots: [dravidian-pular-dawn]
+etymology_hook: "pularcce: native Dravidian, from pular 'dawn'; Tamil pular (DEDR 4305)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C314-pantu2]
 <!-- hl-knowledge: introduces=[ML-LEX-C314-SAMAYAM314-05]; assesses=[] -->
 
 **പുലർച്ചെ** — *pularcce* — "at dawn, very early".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുലർച്ചെ** (*pularcce*) is native Dravidian, from *pular*, "dawn"; DEDR 4305 lists Malayalam *pularcca*, "daybreak", beside Tamil *pular*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

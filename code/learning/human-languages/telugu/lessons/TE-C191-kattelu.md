@@ -14,7 +14,8 @@ romanization: "kaṭṭelu"
 concept_tag: TE-VASTUVU191-KATTELU
 prerequisites: [TE-C191-rabbaru, TE-C191-balbu]
 sounds: []
-roots: []
+roots: [telugu-katte-firewood]
+etymology_hook: "kaṭṭelu: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'firewood'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C191-balbu]
 <!-- hl-knowledge: introduces=[TE-LEX-C191-VASTUVU191-03]; assesses=[] -->
 
 **కట్టెలు** — *kaṭṭelu* — "firewood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **కట్టెలు** (*kaṭṭelu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "firewood". It may come from Prakrit *kaṭṭha*, "wood", from Sanskrit *kāṣṭha* (CDIAL 3120), but no source says so.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ēḍcu"
 concept_tag: TE-VERB-EDCU
 prerequisites: [TE-C149-teruvu, TE-C149-tagu]
 sounds: []
-roots: []
+roots: [dravidian-azhu-weep]
+etymology_hook: "ēḍcu: DEDR 282 lists ēḍucu 'to cry' beside Tamil aḻu, with a query on the Telugu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C149-tagu]
 <!-- hl-knowledge: introduces=[TE-LEX-C149-ACT149-05]; assesses=[] -->
 
 **ఏడ్చు** — *ēḍcu* — "to cry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 282 lists *ēḍucu*, "to cry, weep", beside Tamil *aḻu* and Kannada *aḻu*, "to weep", but puts a query against the Telugu forms.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 153,
   "title": "Dove, Butterfly, Ant, Mosquito, Shoulder",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7c997c6a0ff27fbb",
+  "sourceHash": "fnv1a64:8368ab67004a9f9e",
   "lessons": [
     {
       "id": "ML-C153-pravu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ac97a60ee83da6f",
+      "sourceHash": "fnv1a64:69e7692260ddfc47",
       "notice": null,
       "blocks": [
         {
@@ -62,6 +62,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രാവ് (prāvŭ) is native Dravidian, one word with Tamil puṟā and Kannada hoṟasu (DEDR 4334)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -72,7 +83,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -121,7 +132,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -152,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32b8bbe295129aa6",
+      "sourceHash": "fnv1a64:8d4413594f9a84b7",
       "notice": null,
       "blocks": [
         {
@@ -185,6 +196,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പൂമ്പാറ്റ (pūmpāṟṟa) is native Dravidian, \"the flower moth\": pū, \"flower\" (DEDR 4345), and pāṟṟa, \"moth\" (DEDR 4083, with Tulu pāntè, \"butterfly\"). DEDR 4345 compares Sanskrit puṣpa, with a query."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -195,7 +217,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -244,7 +266,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -275,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:484e3dbfc7558810",
+      "sourceHash": "fnv1a64:ba61b6e04a08aa6a",
       "notice": null,
       "blocks": [
         {
@@ -318,6 +340,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉറുമ്പ് (uṟumpŭ) is native Dravidian, one word with Tamil eṟumpu and Kannada iṟumpu (DEDR 864)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -328,7 +361,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -377,7 +410,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -408,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee9098326ae3612e",
+      "sourceHash": "fnv1a64:0cf3caf3b3569e81",
       "notice": null,
       "blocks": [
         {
@@ -441,6 +474,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൊതുക് (kotukŭ) is native Dravidian, one word with Tamil kotuku (DEDR 2086)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -451,7 +495,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -500,7 +544,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -531,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c503d2ef49d88562",
+      "sourceHash": "fnv1a64:3d8565efb0589efa",
       "notice": null,
       "blocks": [
         {
@@ -574,6 +618,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തോൾ (tōḷ) is native Dravidian, one word with Tamil tōḷ and Kannada tōḷ(u) (DEDR 3564)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -584,7 +639,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -633,7 +688,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

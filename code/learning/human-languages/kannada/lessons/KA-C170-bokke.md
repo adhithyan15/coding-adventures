@@ -14,7 +14,8 @@ romanization: "bokke"
 concept_tag: KA-AROGYA170-BOKKE
 prerequisites: [KA-C170-drsti, KA-C170-sonku]
 sounds: []
-roots: []
+roots: [dravidian-pokkul-blister]
+etymology_hook: "bokke: native Dravidian, one word with Telugu pokku and Malayalam pokkuḷa (DEDR 4455)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C170-sonku]
 <!-- hl-knowledge: introduces=[KA-LEX-C170-AROGYA170-04]; assesses=[] -->
 
 **ಬೊಕ್ಕೆ** — *bokke* — "a blister".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೊಕ್ಕೆ** (*bokke*) is native Dravidian, one word with Telugu *pokku* and Malayalam *pokkuḷa* (DEDR 4455). DEDR lists *bokke*, "blister", and compares Nepali *phoko*, "blister, boil" (CDIAL 8391).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

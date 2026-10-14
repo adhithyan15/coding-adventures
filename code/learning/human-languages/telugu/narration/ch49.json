@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Answering With More Than Yes",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a1e01f204e225303",
+  "sourceHash": "fnv1a64:55d8da262855abf8",
   "lessons": [
     {
       "id": "TE-C49-true",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1836f917bec1b1fb",
+      "sourceHash": "fnv1a64:ffceb77e66c0bd58",
       "notice": null,
       "blocks": [
         {
@@ -55,6 +55,10 @@
             {
               "kind": "speech",
               "text": "Alone it answers a doubt: nijaṁ, \"true\". With a question on the end it becomes perhaps the commonest interjection in the language: nijamā?, \"really?\""
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 7181 lists Sanskrit nija, \"innate, one's own\"."
             }
           ]
         },
@@ -159,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf0491cbcf17c76b",
+      "sourceHash": "fnv1a64:a6c4bd25bc44b375",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +204,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చాలు (cālu) is native Dravidian, one word with Tamil cāl and Kannada sālu (DEDR 2470). DEDR lists Telugu cālu, \"to be enough\", and cāla, \"abundant\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -210,7 +225,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +283,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -299,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a07d1a0b96fee18",
+      "sourceHash": "fnv1a64:6ea602fe808794ce",
       "notice": null,
       "blocks": [
         {
@@ -340,6 +355,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తప్పకుండా (tappakuṇḍā) is native Dravidian: tappu, \"to miss, to fail\", which DEDR 3071 lists with Tamil tappu, \"to err\", and Kannada tappu, \"to slip\", followed by the ending -kuṇḍā, \"without\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -350,7 +376,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -408,7 +434,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -440,7 +466,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:f02d13a8cb26bda8",
+      "sourceHash": "fnv1a64:2259c6af0f28d6a3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -495,6 +521,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఏమో (ēmō) is native Dravidian: ēmi, \"what\", which DEDR 5151 lists on the question base e-, with the doubting ending -ō."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -505,7 +542,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -554,7 +591,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -586,7 +623,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:7e52748c247e66ae",
+      "sourceHash": "fnv1a64:1d18559b4befc547",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -637,6 +674,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అలాగే (alāgē) is native Dravidian: alā, \"in that way\", built on the far-pointing base a- (DEDR 1), with the emphatic tail -gē."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -647,7 +695,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -696,7 +744,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

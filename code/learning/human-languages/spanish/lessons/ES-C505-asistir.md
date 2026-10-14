@@ -10,7 +10,8 @@ gloss: "to attend"
 concept_tag: ES-VERB-ASISTIR
 prerequisites: [ES-C504-danar, ES-C505-educacion]
 sounds: []
-roots: []
+roots: [sistere-latin]
+etymology_hook: "asistir ← Latin assistere 'to stand by': ad- + sistere 'to stand' — English assist"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C505-educacion]
 > *I attend class every day.*
 
 A false friend: *asistir a* means to attend; to help is usually *ayudar*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**asistir** ← Latin *assistere*, "to stand by" (EtymDB 2.1): *ad-* and *sistere*, "to stand" — a learned word. To attend is to stand by.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "kasēra"
 concept_tag: ML-NOUN-CHAIR
 prerequisites: [ML-C52-door, ML-C50-day-after]
 sounds: []
-roots: []
+roots: [portuguese-cadeira]
+etymology_hook: "kasēra ← Portuguese cadeira 'chair', from the Malabar coast's Portuguese century"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Portuguese *cadeira*, come ashore on the Malabar coast and settled. Kerala's Por
 Furniture travels with the people who make it, and the vocabulary of a room records who was in it. This is one of the few places in this book where the trail is only five centuries long instead of five thousand.
 
 Kannada's ಕುರ್ಚಿ (*kurci*) is a chair too, and it arrived from the north along an entirely different road.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കസേര** (*kasēra*) ← Portuguese *cadeira*, "chair", one of the household words Malayalam took from the Portuguese who traded on the Malabar coast from 1498.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

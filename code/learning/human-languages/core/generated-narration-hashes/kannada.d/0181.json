@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 181,
-  "sourceHash": "fnv1a64:5317a0403d194617",
+  "sourceHash": "fnv1a64:ca2db3c552914936",
   "lessonIds": [
     "KA-C181-upayukta",
     "KA-C181-visesa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch181.txt",
   "json": "kannada/narration/ch181.json",
-  "textHash": "fnv1a64:20080bfbac49ff5b",
-  "jsonHash": "fnv1a64:df4c2a39e97fb744",
+  "textHash": "fnv1a64:3b35ff039239097d",
+  "jsonHash": "fnv1a64:3e2fb56c3129955c",
   "findings": []
 }

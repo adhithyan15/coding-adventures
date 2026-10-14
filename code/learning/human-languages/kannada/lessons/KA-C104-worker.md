@@ -11,7 +11,8 @@ romanization: "kelasagāra"
 concept_tag: KA-JOBS-WORKER
 prerequisites: [KA-C103-state, KA-C104-business]
 sounds: []
-roots: []
+roots: [kelasa-work-dravidian]
+etymology_hook: "kelasagāra: native kelasa 'work' (DEDR 1970) + -gāra 'one who does'"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C104-business]
 
 **ಕೆಲಸಗಾರ** (*kelasagāra*) — "a worker", **ಕೆಲಸ** (*kelasa*), "work", with **‑ಗಾರ**,
 "one who does it".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೆಲಸಗಾರ** (*kelasagāra*) is *kelasa*, "work", native Dravidian (DEDR 1970, with Telugu *kelasamu*), and *-gāra*, the ending for "one who does it".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

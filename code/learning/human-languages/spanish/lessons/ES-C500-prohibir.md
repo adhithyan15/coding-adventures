@@ -10,7 +10,8 @@ gloss: "to forbid, to ban"
 concept_tag: ES-VERB-PROHIBIR
 prerequisites: [ES-C500-respetar, ES-C500-molestar]
 sounds: []
-roots: []
+roots: [habere-latin]
+etymology_hook: "prohibir ← Latin prohibere 'to hold back': pro- + habere 'to hold' — English prohibit"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C500-molestar]
 > *Smoking is forbidden.*
 
 Note the written accent in *prohíbe*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prohibir** ← Latin *prohibere*, "to hold back" (EtymDB 2.1): *pro-*, "in front", and *habere*, "to hold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

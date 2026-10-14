@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 206,
-  "sourceHash": "fnv1a64:0cb21a7dcf86750a",
+  "sourceHash": "fnv1a64:26287921cafd9f6b",
   "lessonIds": [
     "RU-C206-gasit",
     "RU-C206-stroit",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch206.txt",
   "json": "russian/narration/ch206.json",
-  "textHash": "fnv1a64:e0bc6f524ee23b3c",
-  "jsonHash": "fnv1a64:f3c566c1cdfc61f2",
+  "textHash": "fnv1a64:5a657b09b165034a",
+  "jsonHash": "fnv1a64:978f216e145628e6",
   "findings": []
 }

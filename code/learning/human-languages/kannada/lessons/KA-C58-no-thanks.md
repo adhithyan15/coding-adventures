@@ -11,7 +11,8 @@ romanization: "bēḍa"
 concept_tag: KA-WORD-NO-THANKS
 prerequisites: [KA-C58-less, KA-C56-vessel]
 sounds: []
-roots: []
+roots: [dravidian-vendu-want]
+etymology_hook: "bēḍa: native Dravidian, the 'not wanted' form of bēku (DEDR 5528); Tamil vēṇṭu"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ This is the refusal a guest actually needs, and it is not the ಇಲ್ಲ you l
 It is the negative twin of ಬೇಕು (*bēku*), "wanted, needed" — the word that turns up in the sort of sentence Kannada builds with nothing doing at all. ಬೇಕು and ಬೇಡ answer the same question in opposite directions, and neither of them bothers to name who is doing the wanting. The offer is made, and one word settles it.
 
 At a Kannada table you will be offered more food several times after you are finished. ಬೇಡ, said once and pleasantly, is the whole of the reply. Adding ಸ್ವಲ್ಪ in front turns it into "just a little", which is the answer that gets you served anyway.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೇಡ** (*bēḍa*) is native Dravidian, the negative of *bēku*, "it is wanted", and DEDR 5528 lists *bēḍa*, "it is not wanted", itself; the entry also has Telugu *vēḍu* and Malayalam *vēṇam*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

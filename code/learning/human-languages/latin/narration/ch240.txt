@@ -12,6 +12,9 @@ Before the new one: say the Latin for as if, then the Latin for because of.
 You'll want to know: asper, aspera, asperum.
 asper, aspera, asperum — "rough, harsh".
 
+The word, taken apart.
+asper has no sure origin; Lewis & Short call it doubtful, and EtymDB 2.1 records a proposed root h2esp-, "to cut".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for because of, then the Latin for rough.
 
 You'll want to know: profundus, profunda, profundum.
 profundus, profunda, profundum — "deep".
+
+The word, taken apart.
+profundus is prō, "forward, down", with fundus, "bottom" (EtymDB 2.1): reaching far down. English profound comes from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for rough, then the Latin for deep.
 You'll want to know: ignōtus, ignōta, ignōtum.
 ignōtus, ignōta, ignōtum — "unknown".
 
+The word, taken apart.
+ignōtus is in-, "not", with gnōtus, "known", the older form of nōtus (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for deep, then the Latin for unknown.
 You'll want to know: necessārius, necessāria, necessārium.
 necessārius, necessāria, necessārium — "necessary".
 
+The word, taken apart.
+necessārius is built on necesse, "unavoidable" (Lewis & Short), which is usually explained as ne, "not", with the root of cēdō, "to give way": not to be avoided.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for unknown, then the Latin for necessary.
 
 You'll want to know: inūtilis, inūtile.
 inūtilis, inūtile — "useless".
+
+The word, taken apart.
+inūtilis is in-, "not", with ūtilis, "useful" (Lewis & Short).
 
 What you've built.
 One more word for this chapter.

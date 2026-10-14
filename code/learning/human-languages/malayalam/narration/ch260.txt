@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for maize, then the Malayalam for chickpea
 You'll want to know: കച്ചവടം.
 കച്ചവടം — kaccavaṭaṁ — "business, trade".
 
+The word, taken apart.
+കച്ചവടം (kaccavaṭaṁ) is of uncertain origin; neither DEDR nor CDIAL lists it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for chickpeas, then the Malayalam for busi
 
 You'll want to know: കച്ചവടക്കാരൻ.
 കച്ചവടക്കാരൻ — kaccavaṭakkāran — "a shopkeeper, a trader".
+
+The word, taken apart.
+കച്ചവടക്കാരൻ (kaccavaṭakkāran) is kaccavaṭam, "trade", a word of uncertain origin, with -kkāran, the ending for a person who does something.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for business, then the Malayalam for a sho
 You'll want to know: തുലാസ്.
 തുലാസ് — tulāsŭ — "a weighing scale".
 
+The word, taken apart.
+തുലാസ് (tulāsŭ) is built on Sanskrit tulā, "balance, weight" (CDIAL 5886); how it came by its ending is not clear.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a shopkeeper, then the Malayalam for a
 You'll want to know: കിലോ.
 കിലോ — kilō — "a kilo".
 
+The word, taken apart.
+കിലോ (kilō) from English kilo, from French, short for kilogramme; kilo- is Greek chilioi, "thousand".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a weighing scale, then the Malayalam f
 
 You'll want to know: സാധനം.
 സാധനം — sādhanaṁ — "a thing, an item, goods".
+
+The word, taken apart.
+സാധനം (sādhanaṁ) from Sanskrit sādhana, "furthering; goods", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 13334).
 
 What you've built.
 One more word for this chapter.

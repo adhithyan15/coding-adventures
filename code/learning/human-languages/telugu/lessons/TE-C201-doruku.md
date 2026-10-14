@@ -14,7 +14,8 @@ romanization: "doruku"
 concept_tag: TE-VERB-DORUKU
 prerequisites: [TE-C200-vaddincu, TE-C200-namalu]
 sounds: []
-roots: []
+roots: [dravidian-doraku-obtain]
+etymology_hook: "doruku: native Dravidian; DEDR 3535 lists doraku 'to be found, got' with Kannada doraku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C200-namalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C201-KRIYA201-01]; assesses=[] -->
 
 **దొరుకు** — *doruku* — "to be found, to be available".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దొరుకు** (*doruku*) is native Dravidian. DEDR 3535 gives it as *doraku*, "to be found, got", with Kannada *doraku*, "to be obtained, found".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

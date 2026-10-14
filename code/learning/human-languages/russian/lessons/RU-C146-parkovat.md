@@ -14,7 +14,8 @@ romanization: "parkovát"
 concept_tag: RU-VERB-PARKOVAT
 prerequisites: [RU-C146-peresekat, RU-C146-ostanavlivatsya]
 sounds: []
-roots: []
+roots: [parricus-latin]
+etymology_hook: "парковать is парк, in the sense 'a car park', + -овать"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C146-ostanavlivatsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C146-ACT146-05]; assesses=[] -->
 
 **парковать** (*parkovát*) — "to park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**парковать** is built on *парк*, "a park", here "a parking place", with the verb ending *-овать*; English *to park* has the same history.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to suffer, to allow"
 concept_tag: LA-VERB-PATIOR
 prerequisites: [LA-C232-videor, LA-C232-servio]
 sounds: []
-roots: []
+roots: [pati-latin]
+etymology_hook: "patior 'to suffer' — origin uncertain; English passion and patient"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C232-servio]
 <!-- hl-knowledge: introduces=[LA-LEX-C232-ACT232-05]; assesses=[] -->
 
 **patior, patī** — "to suffer, to allow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**patior** has no sure origin. Lewis & Short compare Greek *penthos*, "grief", and EtymDB 2.1 records a proposed root *\*pe(i)-*, "to hurt", but neither link is settled. English *passion* and *patient* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "The House Itself",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f5b5852ddad49c5a",
+  "sourceHash": "fnv1a64:de2d7b7485576fb9",
   "lessons": [
     {
       "id": "TE-C67-wall",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d83d7515aa16318e",
+      "sourceHash": "fnv1a64:1d69c2d5847129c6",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గోడ (gōḍa) is native Dravidian, one word with Kannada gōḍe, \"wall\" (DEDR 2207)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5b8a96045b3e668",
+      "sourceHash": "fnv1a64:55e33422b62c04ae",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కప్పు (kappu) is native Dravidian, from the verb kappu, \"to cover\", one word with Tamil kappu, \"to overspread\", and Kannada kappu, \"to cover\" (DEDR 1221). DEDR compares Sanskrit kavaca, \"armour\" (CDIAL 2957), which CDIAL takes from Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +298,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:271e8e1e613f34a4",
+      "sourceHash": "fnv1a64:b2d2d73fc987bfeb",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +374,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గడప (gaḍapa) is native Dravidian. DEDR 1109 lists kaḍapa and gaḍapa, \"threshold\", under kaḍacu, \"to pass over, cross\", with Tamil kaṭa, \"to pass through\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +395,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7aa1222a1fe4b2d8",
+      "sourceHash": "fnv1a64:113774ea94757205",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +529,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మెట్టు (meṭṭu) is native Dravidian, one word with Kannada meṭṭu (DEDR 5057). DEDR lists Telugu meṭṭu, \"step, stair\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +550,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +608,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25cfcf9df7c10980",
+      "sourceHash": "fnv1a64:ef9ca944ff79651b",
       "notice": null,
       "blocks": [
         {
@@ -626,7 +670,7 @@
             },
             {
               "kind": "speech",
-              "text": "కిటికీ (kiṭikī) is a window. It is a borrowing, ultimately from Portuguese, and it arrived carrying the shape of window it names: a framed opening in a గోడ (gōḍa), rather than the small unglazed gap older houses left for గాలి."
+              "text": "కిటికీ (kiṭikī) is a window. It is a borrowing, probably from the north, where Hindi says khiṛkī, and it arrived carrying the shape of window it names: a framed opening in a గోడ (gōḍa), rather than the small unglazed gap older houses left for గాలి."
             },
             {
               "kind": "speech",
@@ -635,6 +679,10 @@
             {
               "kind": "speech",
               "text": "A house with a గోడ (gōḍa), a కప్పు (kappu), a గడప (gaḍapa), a మెట్టు (meṭṭu) and a కిటికీ (kiṭikī) is a whole house. Whoever is standing at any one of them is somebody you can greet."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 3770 traces Hindi khiṛkī and Marathi khiḍkī to Sanskrit khaṭakkikā, \"side door\"."
             }
           ]
         },

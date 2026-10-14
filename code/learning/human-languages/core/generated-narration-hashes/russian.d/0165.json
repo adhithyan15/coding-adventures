@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 165,
-  "sourceHash": "fnv1a64:51df7d46378d191f",
+  "sourceHash": "fnv1a64:76ad1504444225b2",
   "lessonIds": [
     "RU-C165-vorona",
     "RU-C165-oryol",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch165.txt",
   "json": "russian/narration/ch165.json",
-  "textHash": "fnv1a64:03b374b5ce4871ab",
-  "jsonHash": "fnv1a64:2b64967401eade09",
+  "textHash": "fnv1a64:db23b597ead05370",
+  "jsonHash": "fnv1a64:441f9ea06793473d",
   "findings": []
 }

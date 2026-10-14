@@ -13,7 +13,8 @@ gloss: "a sesterce (coin)"
 concept_tag: LA-RES190-SESTERTIUS
 prerequisites: [LA-C190-merces, LA-C190-denarius]
 sounds: []
-roots: []
+roots: [sestertius-latin, tertius-latin]
+etymology_hook: "sēstertius 'sesterce' — from sēmis tertius: two and a half"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C190-denarius]
 <!-- hl-knowledge: introduces=[LA-LEX-C190-RES190-05]; assesses=[] -->
 
 **sēstertius, sēstertiī** — "a sesterce (coin)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sēstertius** is contracted from *sēmis* "half" and *tertius* "third" (Lewis & Short): two whole units and half of the third, the coin's first value.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a hair, the hair"
 concept_tag: LA-CORPUS3-CAPILLUS
 prerequisites: [LA-C64-cor, LA-C64-sanguis]
 sounds: []
-roots: []
+roots: [capillus-latin, caput-latin, pilus]
+etymology_hook: "capillus 'hair' — linked to caput 'head', often read as caput + pilus 'a hair'; English capillary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C64-sanguis]
 <!-- hl-knowledge: introduces=[LA-LEX-C65-CORPUS3-01]; assesses=[] -->
 
 **capillus, capillī** — "a hair, the hair". A *capillary* is hair-thin.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**capillus** is linked to *caput*, "head": it is often read as *caput* plus *pilus*, "a single hair", so head-hair (EtymDB 2.1), while Lewis & Short see a diminutive beside *caput*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

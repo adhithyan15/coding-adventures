@@ -4,7 +4,7 @@
   "chapter": 449,
   "title": "El taller",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d9a6542c93af680c",
+  "sourceHash": "fnv1a64:5384a6a296677868",
   "lessons": [
     {
       "id": "ES-C449-arreglar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:722ae8ec7376a976",
+      "sourceHash": "fnv1a64:72da4e26dafc0a88",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6619ee864c61dfd0",
+      "sourceHash": "fnv1a64:4c86345eb2e2a151",
       "notice": null,
       "blocks": [
         {
@@ -340,7 +340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03dfc8f44346b65e",
+      "sourceHash": "fnv1a64:fafc8fc5926cad3e",
       "notice": null,
       "blocks": [
         {
@@ -503,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:279efcf7ef3b6497",
+      "sourceHash": "fnv1a64:9775f2b1ec643766",
       "notice": null,
       "blocks": [
         {
@@ -665,7 +665,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ab3e826bb948efd",
+      "sourceHash": "fnv1a64:4fda1aac8334c2af",
       "notice": null,
       "blocks": [
         {

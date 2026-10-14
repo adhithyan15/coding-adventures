@@ -14,7 +14,8 @@ romanization: "kuṇḍa"
 concept_tag: KA-VASTU267-KUNDA
 prerequisites: [KA-C266-tamra, KA-C267-gobbara]
 sounds: []
-roots: []
+roots: [sanskrit-kunda]
+etymology_hook: "kuṇḍa ← Sanskrit kuṇḍa 'bowl, waterpot' (CDIAL 3264)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C267-gobbara]
 <!-- hl-knowledge: introduces=[KA-LEX-C267-VASTU267-02]; assesses=[] -->
 
 **ಕುಂಡ** — *kuṇḍa* — "a flowerpot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕುಂಡ** (*kuṇḍa*) is Sanskrit *kuṇḍa*, "bowl, waterpot" (CDIAL 3264). DEDR 1669 lists Kannada *kuṇḍa*, "pit, pool", among native words, and compares the same Sanskrit word; CDIAL 3264 in turn takes the Sanskrit word from Dravidian. So the word may have gone north and come back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "hosa"
 concept_tag: KA-ADJ-NEW
 prerequisites: [KA-C42-good, KA-C41-this]
 sounds: []
-roots: []
+roots: [dravidian-putu-new]
+etymology_hook: "hosa: native Dravidian, one word with Tamil putu (DEDR 4275)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You met **ಒಳ್ಳೆಯ** *oḷḷeya* a moment ago. Put them side by side 
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೊಸ** (*hosa*) is native Dravidian, one word with Tamil *putu* (DEDR 4275). DEDR gives the older Kannada form *posa* beside *hosa*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-04, KA-LEX-C41-DEIXIS-01] -->

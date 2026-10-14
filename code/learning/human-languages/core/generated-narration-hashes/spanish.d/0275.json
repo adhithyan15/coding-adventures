@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 275,
-  "sourceHash": "fnv1a64:0df060b86b50f247",
+  "sourceHash": "fnv1a64:478ae158d5be5fd0",
   "lessonIds": [
     "ES-C275-deber-de",
     "ES-C275-cometer-un-error",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch275.txt",
   "json": "spanish/narration/ch275.json",
   "textHash": "fnv1a64:baece80ce3c01ed6",
-  "jsonHash": "fnv1a64:6ba918dafb67c020",
+  "jsonHash": "fnv1a64:4da9812a72156ee5",
   "findings": []
 }

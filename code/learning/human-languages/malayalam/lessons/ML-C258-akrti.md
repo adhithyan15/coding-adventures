@@ -14,7 +14,8 @@ romanization: "ākṛti"
 concept_tag: ML-VASTU258-AKRTI
 prerequisites: [ML-C257-uruli, ML-C258-cayam]
 sounds: []
-roots: []
+roots: [sanskrit-akrti]
+etymology_hook: "ākṛti ← Sanskrit ākṛti 'form, shape', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C258-cayam]
 <!-- hl-knowledge: introduces=[ML-LEX-C258-VASTU258-02]; assesses=[] -->
 
 **ആകൃതി** — *ākṛti* — "a shape".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആകൃതി** (*ākṛti*) ← Sanskrit *ākṛti*, "form, shape", taken over whole as a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

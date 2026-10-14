@@ -14,7 +14,8 @@ romanization: "guḍisu"
 concept_tag: KA-VERB-GUDISU
 prerequisites: [KA-C150-tole, KA-C150-oresu]
 sounds: []
-roots: []
+roots: [dravidian-kuuttu-sweep]
+etymology_hook: "guḍisu: native Dravidian, one word with Tamil kūṭṭu (DEDR 1887)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C150-oresu]
 <!-- hl-knowledge: introduces=[KA-LEX-C150-ACT150-03]; assesses=[] -->
 
 **ಗುಡಿಸು** — *guḍisu* — "to sweep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗುಡಿಸು** (*guḍisu*) is native Dravidian, one word with Tamil *kūṭṭu* (DEDR 1887). DEDR lists *guḍisu* itself, "to sweep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [TA-C178-ilavacam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**பழுத்த** (*paḻutta*) is native Dravidian. DEDR 4004 lists Malayalam *paḻukka*, "to grow ripe". It is *paḻu*, "to ripen", in the form "that has ripened".
+**பழுத்த** (*paḻutta*) is native Dravidian. DEDR 4004 lists Malayalam *paḻukka*, "to grow ripe". It is *paḻu*, "to ripen", in the form "that has ripened". The entry compares Sanskrit *phala*, "fruit" (CDIAL 9051).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

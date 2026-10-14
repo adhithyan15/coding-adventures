@@ -14,7 +14,8 @@ romanization: "sūṭkēs"
 concept_tag: KA-VASTU230-SUTKES
 prerequisites: [KA-C230-gere, KA-C230-hundi]
 sounds: []
-roots: []
+roots: [english-suitcase]
+etymology_hook: "sūṭkēs ← English suitcase"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C230-hundi]
 <!-- hl-knowledge: introduces=[KA-LEX-C230-VASTU230-03]; assesses=[] -->
 
 **ಸೂಟ್ಕೇಸ್** — *sūṭkēs* — "a suitcase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೂಟ್ಕೇಸ್** (*sūṭkēs*) is a loan from English *suitcase*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

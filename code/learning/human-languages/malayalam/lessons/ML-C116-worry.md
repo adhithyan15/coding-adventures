@@ -11,7 +11,8 @@ romanization: "āśaṅka"
 concept_tag: ML-FEEL-WORRY
 prerequisites: [ML-C116-anger, ML-C116-laughter]
 sounds: []
-roots: []
+roots: [sanskrit-ashanka]
+etymology_hook: "āśaṅka ← Sanskrit āśaṅkā 'apprehension, doubt', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C116-laughter]
 
 **ആശങ്ക** (*āśaṅka*) — "worry, anxiety". **ആശങ്ക വേണ്ട** (*āśaṅka vēṇṭa*) — "no need to
 worry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആശങ്ക** (*āśaṅka*) ← Sanskrit *āśaṅkā*, "apprehension, doubt", taken over whole as a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "odinákovyy"
 concept_tag: RU-KACH218-ODINAKOVYY
 prerequisites: [RU-C217-sovremennyy, RU-C218-raznyy]
 sounds: []
-roots: []
+roots: [pie-oynos]
+etymology_hook: "одинаковый is from один 'one': all one, the same"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C218-raznyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C218-KACH218-02]; assesses=[] -->
 
 **одинаковый** (*odinákovyy*) — "the same, identical".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**одинаковый** is built on *один*, "one", with *-аковый*: "all one", the same.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

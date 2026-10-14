@@ -14,7 +14,8 @@ romanization: "jiṅka"
 concept_tag: TE-THINGS124-JINKA
 prerequisites: [TE-C123-koti, TE-C123-kundelu]
 sounds: []
-roots: []
+roots: [dravidian-jinke-deer]
+etymology_hook: "jiṅka: native Dravidian, one word with Kannada jiṅke (DEDR 2504)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C123-kundelu]
 <!-- hl-knowledge: introduces=[TE-LEX-C124-THINGS124-01]; assesses=[] -->
 
 **జింక** — *jiṅka* — "a deer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జింక** (*jiṅka*) is native Dravidian, one word with Kannada *jiṅke* (DEDR 2504). DEDR lists Telugu *jiṅka*, "deer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

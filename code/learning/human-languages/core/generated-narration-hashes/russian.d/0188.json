@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 188,
-  "sourceHash": "fnv1a64:a078c2e992a7dd51",
+  "sourceHash": "fnv1a64:7815b923a5489ec2",
   "lessonIds": [
     "RU-C188-poleznyy",
     "RU-C188-vrednyy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch188.txt",
   "json": "russian/narration/ch188.json",
-  "textHash": "fnv1a64:0943ee2080c9c657",
-  "jsonHash": "fnv1a64:ea648fb0dab3ac4e",
+  "textHash": "fnv1a64:d7e09f4cc546d786",
+  "jsonHash": "fnv1a64:7906740dcc59772f",
   "findings": []
 }

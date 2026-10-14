@@ -14,7 +14,8 @@ romanization: "veterinár"
 concept_tag: RU-RABOTA171-VETERINAR
 prerequisites: [RU-C170-nalichnyye, RU-C171-pevets]
 sounds: []
-roots: []
+roots: [vetus-latin]
+etymology_hook: "ветеринар ← Latin veterinarius, from veterinus 'a beast of burden', as German Veterinär"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C171-pevets]
 <!-- hl-knowledge: introduces=[RU-LEX-C171-RABOTA171-02]; assesses=[] -->
 
 **ветеринар** (*veterinár*) — "a vet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ветеринар** comes, as German *Veterinär* does, from Latin *veterīnārius*, from *veterīnus*, "a beast of burden" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

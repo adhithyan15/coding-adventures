@@ -14,7 +14,8 @@ romanization: "paḍukō"
 concept_tag: TE-VERB-PADUKO
 prerequisites: [TE-C200-namalu, TE-C201-doruku]
 sounds: []
-roots: []
+roots: [dravidian-padu-lie]
+etymology_hook: "paḍukō: native paḍu 'to lie down' (DEDR 3852) + konu 'for oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C201-doruku]
 <!-- hl-knowledge: introduces=[TE-LEX-C201-KRIYA201-02]; assesses=[] -->
 
 **పడుకో** — *paḍukō* — "to lie down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పడుకో** (*paḍukō*) is native Dravidian: *paḍu*, "to lie down", which DEDR 3852 lists with Kannada *paḍu*, "to lie down", with *-konu*, "for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

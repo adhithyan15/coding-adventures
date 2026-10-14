@@ -11,7 +11,8 @@ romanization: "nakṣatraṁ"
 concept_tag: ML-NOUN-STAR
 prerequisites: [ML-C53-moon, ML-C51-blessing]
 sounds: []
-roots: []
+roots: [sanskrit-nakshatra]
+etymology_hook: "nakṣatraṁ ← Sanskrit nakṣatra 'star, asterism', a tatsama (CDIAL 6913)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *nakṣatra*. In Kerala it does a job it does not do in English: a pers
 So a Malayali may keep two birthdays a year apart from each other — the calendar one and the star one — and the star one is the one the household cooks for.
 
 Tamil reaches for the same borrowed word, *naṭcattiram*, worn down a little further. The inherited Dravidian way of naming a star was to call it a fish in the sky, and Tamil still has *viṇmīn* for it; Malayalam let that one go.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നക്ഷത്രം** (*nakṣatraṁ*) ← Sanskrit *nakṣatra*, "star, asterism", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 6913).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

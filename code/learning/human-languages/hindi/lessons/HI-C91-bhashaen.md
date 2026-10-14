@@ -14,9 +14,10 @@ romanization: "bhāṣāẽ"
 concept_tag: HI-NOUN-PLURAL-FEM-AA
 prerequisites: [HI-C91-kitaben, HI-C68-language, HI-C06-numbers-1-5]
 sounds: []
-roots: []
+roots: [sanskrit-bhasha]
+etymology_hook: "bhāṣā ← Sanskrit bhāṣā 'speech, language', a tatsama (CDIAL 9479)"
 duration:
-  max_seconds: 240
+  max_seconds: 264
 requires:
   knowledge: [HI-LEX-C91-NOUN-02, HI-LEX-C91-NOUN-01, HI-LEX-C68-ORIGIN-04, HI-CONCEPT-C06-NUMBERS-1-5-01]
 introduces:
@@ -67,6 +68,8 @@ despite ending differently.
 The **ए** is written as a full letter here rather than as a mark, because
 **भाषा** ends in a vowel and there is nothing for a mark to sit on. That is the
 same rule that gave you **आऊँगा** and **आओगे**.
+
+**भाषा** is Sanskrit *bhāṣā*, "speech", a tatsama (CDIAL 9479).
 
 ## Grammar Lens: the three shapes, in the order to ask them
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C91-NOUN-03, HI-LEX-C91-NOUN-02, HI-CONCEPT-C06-NUMBERS-1-5-01] -->

@@ -13,6 +13,9 @@ You'll want to know: ಮನೆ.
 ಮನೆ (mane) — "house, home".
 ನಮ್ಮ ಮನೆ (namma mane) — "our home".
 
+The word, taken apart.
+ಮನೆ (mane) is native Dravidian, one word with Tamil maṉai (DEDR 4776).
+
 What you've built.
 The place every question about you starts from.
 
@@ -42,6 +45,9 @@ Before the new one: say the Kannada for for no reason, then the Kannada for home
 You'll want to know: ಬೀದಿ.
 ಬೀದಿ (bīdi) — "street". It is part of an ವಿಳಾಸ, "address".
 
+The word, taken apart.
+ಬೀದಿ (bīdi) comes from Sanskrit vīthi, "road, street; line, row", reshaped to Kannada sounds: a tadbhava (CDIAL 12050). The Sanskrit v- became Kannada b-.
+
 What you've built.
 One line of an address.
 
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for home, then the Kannada for street.
 
 You'll want to know: ನಗರ.
 ನಗರ (nagara) — "city". ಊರು is any town, and home; ನಗರ is the big city.
+
+The word, taken apart.
+ನಗರ (nagara) is Sanskrit nagara, "town", taken over whole as a learned loan, a tatsama (CDIAL 6924).
 
 What you've built.
 Bigger than a town.
@@ -101,6 +110,9 @@ You'll want to know: ದೇಶ.
 ದೇಶ (dēśa) — "country".
 ನಿಮ್ಮ ದೇಶ ಯಾವುದು? (nimma dēśa yāvudu?) — "what is your country?"
 
+The word, taken apart.
+ದೇಶ (dēśa) is Sanskrit deśa, "point, region; country", taken over whole as a learned loan, a tatsama (CDIAL 6547).
+
 What you've built.
 The widest home of all.
 
@@ -129,6 +141,9 @@ Before the new one: say the Kannada for city, then the Kannada for country.
 
 You'll want to know: ರಾಜ್ಯ.
 ರಾಜ್ಯ (rājya) — "state". ಕರ್ನಾಟಕ ರಾಜ್ಯ (karnāṭaka rājya) is the state where Kannada is spoken.
+
+The word, taken apart.
+ರಾಜ್ಯ (rājya) is Sanskrit rājya, "kingship, kingdom", taken over whole as a learned loan, a tatsama (CDIAL 10694).
 
 What you've built.
 The state where Kannada lives.

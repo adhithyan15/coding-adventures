@@ -4,7 +4,7 @@
   "chapter": 128,
   "title": "Wave, Buffalo, Horse, Elephant, Tiger",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ffdcf65943e3dd1c",
+  "sourceHash": "fnv1a64:48e78219a44fbc81",
   "lessons": [
     {
       "id": "TA-C128-alai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8e50c0d84e6c126",
+      "sourceHash": "fnv1a64:97233ae348385666",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "அலை (alai) is native Dravidian. DEDR 240 lists Malayalam ala, \"wave\". It belongs with alaṅku, \"to move, to shake\"."
+              "text": "அலை (alai) is native Dravidian. DEDR 240 lists Malayalam ala, \"wave\". It belongs with alaṅku, \"to move, to shake\". The entry compares, with a query, Sanskrit alaka, \"curl\"."
             }
           ]
         },

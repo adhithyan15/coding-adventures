@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 101,
-  "sourceHash": "fnv1a64:68a32f5ada589fcf",
+  "sourceHash": "fnv1a64:1f5e01c0ad9becd0",
   "lessonIds": [
     "RU-C101-people",
     "RU-C101-jumper",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch101.txt",
   "json": "russian/narration/ch101.json",
-  "textHash": "fnv1a64:ec58258c93ca769b",
-  "jsonHash": "fnv1a64:fa0275a6576b664b",
+  "textHash": "fnv1a64:20f7ad52d943a801",
+  "jsonHash": "fnv1a64:917fe233dcb6b8e8",
   "findings": []
 }

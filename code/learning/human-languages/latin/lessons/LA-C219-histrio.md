@@ -13,7 +13,8 @@ gloss: "an actor"
 concept_tag: LA-RES219-HISTRIO
 prerequisites: [LA-C219-nuntius, LA-C219-spectaculum]
 sounds: []
-roots: []
+roots: [histrio-latin]
+etymology_hook: "histriō 'actor' — from Etruscan hister 'player', says Livy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C219-spectaculum]
 <!-- hl-knowledge: introduces=[LA-LEX-C219-RES219-04]; assesses=[] -->
 
 **histriō, histriōnis** — "an actor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**histriō** came from Etruscan: Livy says the Etruscans called a player *hister*, "actor" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

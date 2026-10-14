@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 43,
-  "sourceHash": "fnv1a64:39013d4fc3aeb3f5",
+  "sourceHash": "fnv1a64:6cddcc7cb5b7b162",
   "lessonIds": [
     "ML-C43-run",
     "ML-C43-sleep",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch43.txt",
   "json": "malayalam/narration/ch43.json",
-  "textHash": "fnv1a64:cf427c971f09228b",
-  "jsonHash": "fnv1a64:171a4e111d536a4b",
+  "textHash": "fnv1a64:24a42155b8a39845",
+  "jsonHash": "fnv1a64:b4591b2d4d27afa6",
   "findings": []
 }

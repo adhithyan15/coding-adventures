@@ -14,7 +14,8 @@ romanization: "santékhnik"
 concept_tag: RU-RABOTA202-SANTEKHNIK
 prerequisites: [RU-C201-direktor, RU-C202-elektrik]
 sounds: []
-roots: []
+roots: [greek-tekhne]
+etymology_hook: "сантехник is санитарный 'sanitary' + техник 'technician', cut short"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C202-elektrik]
 <!-- hl-knowledge: introduces=[RU-LEX-C202-RABOTA202-02]; assesses=[] -->
 
 **сантехник** (*santékhnik*) — "a plumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сантехник** is *санитарно-технический*, "sanitary-technical", cut short: *сан-*, from Latin *sānitās*, "health", with *техник*, "technician", from Greek *téchnē*, "craft".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

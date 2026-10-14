@@ -14,7 +14,8 @@ romanization: "cumakkuka"
 concept_tag: ML-VERB-CUMAKKUKA
 prerequisites: [ML-C222-barbar, ML-C222-tayyalkkaran]
 sounds: []
-roots: []
+roots: [dravidian-cuma-load]
+etymology_hook: "cumakkuka: native Dravidian, one word with Tamil cuma (DEDR 2677)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C222-tayyalkkaran]
 <!-- hl-knowledge: introduces=[ML-LEX-C223-KRIYA223-01]; assesses=[] -->
 
 **ചുമക്കുക** — *cumakkuka* — "to carry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചുമക്കുക** (*cumakkuka*) is native Dravidian, one word with Tamil *cuma* (DEDR 2677).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

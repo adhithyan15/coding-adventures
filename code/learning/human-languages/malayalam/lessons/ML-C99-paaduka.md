@@ -11,7 +11,8 @@ romanization: "pāṭuka"
 concept_tag: ML-VERB-SING
 prerequisites: [ML-C99-paattu, ML-C98-kalikkuka]
 sounds: []
-roots: []
+roots: [dravidian-padu-sing]
+etymology_hook: "pāṭuka: native Dravidian, one word with Tamil pāṭu and Kannada pāḍu (DEDR 4065)"
 duration:
   max_seconds: 250
 requires:
@@ -59,6 +60,8 @@ long, **പാടുക** does not.
 put other nouns beside their verbs — **വായന** beside **വായിക്കുക**, **ചോദ്യം**
 beside **ചോദിക്കുക** — and not one of them does this. **പാട്ട്**/**പാടുക** is
 the only pair in the book where the consonant itself changes weight.
+
+**Where the word comes from.** It is native Dravidian, one word with Tamil *pāṭu*, Kannada *pāḍu* and Telugu *pāḍu* (DEDR 4065).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C99-SING-01, ML-LEX-C99-SONG-01, ML-LEX-NJAAN-01] -->

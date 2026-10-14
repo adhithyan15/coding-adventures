@@ -14,7 +14,8 @@ romanization: "tappiñcukō"
 concept_tag: TE-VERB-TAPPINCUKO
 prerequisites: [TE-C286-vayida-veyu, TE-C286-venakadu]
 sounds: []
-roots: []
+roots: [dravidian-tappu-slip]
+etymology_hook: "tappiñcukō: native Dravidian; DEDR 3071 lists tappincu 'to extricate, free'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C286-venakadu]
 <!-- hl-knowledge: introduces=[TE-LEX-C286-KRIYA286-03]; assesses=[] -->
 
 **తప్పించుకో** — *tappiñcukō* — "to escape".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తప్పించుకో** (*tappiñcukō*) is native Dravidian. DEDR 3071 lists *tappiñcu*, "to extricate, free", under *tappu*, "to miss, escape", with *-konu*, "for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

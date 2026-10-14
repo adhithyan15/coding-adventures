@@ -14,7 +14,8 @@ romanization: "pratyēkiccŭ"
 concept_tag: ML-KARANAM281-PRATYEKICCU
 prerequisites: [ML-C281-udaharanattinu, ML-C281-atayatu]
 sounds: []
-roots: []
+roots: [sanskrit-pratyeka]
+etymology_hook: "pratyēkiccŭ: from Sanskrit pratyēka 'each one, single' + a Malayalam verb form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C281-atayatu]
 <!-- hl-knowledge: introduces=[ML-LEX-C281-KARANAM281-05]; assesses=[] -->
 
 **പ്രത്യേകിച്ച്** — *pratyēkiccŭ* — "especially".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രത്യേകിച്ച്** (*pratyēkiccŭ*) is a Malayalam verb form built on Sanskrit *pratyēka*, "each one singly": "singling out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

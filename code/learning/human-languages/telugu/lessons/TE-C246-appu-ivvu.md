@@ -14,7 +14,8 @@ romanization: "appu ivvu"
 concept_tag: TE-VERB-APPU-IVVU
 prerequisites: [TE-C245-daunlod-ceyu, TE-C245-taip-ceyu]
 sounds: []
-roots: []
+roots: [dravidian-ari-tax, dravidian-ii-give]
+etymology_hook: "appu ivvu: native appu 'loan' (DEDR 216) + ivvu 'to give' (DEDR 2598)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C245-taip-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C246-KRIYA246-01]; assesses=[] -->
 
 **అప్పు ఇవ్వు** — *appu ivvu* — "to lend (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అప్పు ఇవ్వు** (*appu ivvu*) is native Dravidian: *appu*, "loan" (DEDR 216), and *ivvu*, "to give", one word with Tamil *ī* and Kannada *ī*, "to give" (DEDR 2598).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

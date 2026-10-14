@@ -11,7 +11,8 @@ romanization: "ajja"
 concept_tag: KA-NOUN-GRANDFATHER
 prerequisites: [KA-C44-write]
 sounds: []
-roots: []
+roots: [dravidian-acca-elder]
+etymology_hook: "ajja: probably an Indo-Aryan loan, says DEDR 50, from Prakrit ajja (Sanskrit ārya); CDIAL 1347"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C44-write]
 **ಅಜ್ಜ** (*ajja*) — "grandfather".
 
 A native Dravidian word of the short, doubled shape that small children's mouths reach for first, and it carries respect well past the family: an unrelated old man can be *ajja* too. The *-a* closing it is the masculine ending.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 50 lists Kannada *ajja*, "grandfather", and *ajji*, "grandmother", with Tamil *accaṉ*, "father", but notes that the whole group is probably a loan from Indo-Aryan: Prakrit *ajja*, from Sanskrit *ārya*, "noble, honoured" (CDIAL 1347). So **ಅಜ್ಜ** (*ajja*) is most likely an old loan, not a native Dravidian word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

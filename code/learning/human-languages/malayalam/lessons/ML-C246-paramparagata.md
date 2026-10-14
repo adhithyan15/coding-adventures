@@ -14,7 +14,8 @@ romanization: "paramparāgata"
 concept_tag: ML-GUNAM246-PARAMPARAGATA
 prerequisites: [ML-C245-pinku, ML-C245-vayalarru]
 sounds: []
-roots: []
+roots: [sanskrit-parampara]
+etymology_hook: "paramparāgata ← Sanskrit paramparāgata 'come down in succession', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C245-vayalarru]
 <!-- hl-knowledge: introduces=[ML-LEX-C246-GUNAM246-01]; assesses=[] -->
 
 **പരമ്പരാഗത** — *paramparāgata* — "traditional".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരമ്പരാഗത** (*paramparāgata*) ← Sanskrit *paramparāgata*, "come down in succession", taken over whole as a tatsama. Its parts are *paramparā*, "an unbroken line", and *āgata*, "come".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

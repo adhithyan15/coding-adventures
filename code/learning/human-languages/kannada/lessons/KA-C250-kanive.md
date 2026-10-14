@@ -14,7 +14,8 @@ romanization: "kaṇive"
 concept_tag: KA-STHALA250-KANIVE
 prerequisites: [KA-C250-badavane, KA-C250-ance-kaceri]
 sounds: []
-roots: []
+roots: [dravidian-kanavai-pass]
+etymology_hook: "kaṇive: native Dravidian, one word with Tamil kaṇavāy (DEDR 1163)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C250-ance-kaceri]
 <!-- hl-knowledge: introduces=[KA-LEX-C250-STHALA250-05]; assesses=[] -->
 
 **ಕಣಿವೆ** — *kaṇive* — "a valley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಣಿವೆ** (*kaṇive*) is native Dravidian, one word with Tamil *kaṇavāy* (DEDR 1163). DEDR lists *kaṇive*, "narrow pass between two mountains".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

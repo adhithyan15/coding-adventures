@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 242,
-  "sourceHash": "fnv1a64:bfa7854ae4f3c0b3",
+  "sourceHash": "fnv1a64:c4c81c8bb6f6f9c8",
   "lessonIds": [
     "RU-C242-biblioteka",
     "RU-C242-universitet",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch242.txt",
   "json": "russian/narration/ch242.json",
-  "textHash": "fnv1a64:cd78240a1fcabece",
-  "jsonHash": "fnv1a64:3b219495f0bf0206",
+  "textHash": "fnv1a64:8dd10d496c634b12",
+  "jsonHash": "fnv1a64:72740e2757219ed6",
   "findings": []
 }

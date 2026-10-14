@@ -14,7 +14,8 @@ romanization: "uduru"
 concept_tag: KA-VERB-UDURU
 prerequisites: [KA-C166-soru, KA-C166-telu]
 sounds: []
-roots: []
+roots: [dravidian-utir-fall]
+etymology_hook: "uduru: native Dravidian, one word with Tamil utir (DEDR 615)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C166-telu]
 <!-- hl-knowledge: introduces=[KA-LEX-C167-KRIYE167-01]; assesses=[] -->
 
 **ಉದುರು** — *uduru* — "to drop off, to shed (leaves, hair)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉದುರು** (*uduru*) is native Dravidian, one word with Tamil *utir* (DEDR 615). DEDR lists *udir*, *udur*, "to fall off, drop".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

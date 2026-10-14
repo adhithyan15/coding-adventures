@@ -11,6 +11,7 @@ concept_tag: ES-VERB-DESEAR
 prerequisites: [ES-C508-aceptable, ES-C509-planear]
 sounds: []
 roots: []
+etymology_hook: "desear — from deseo 'a wish', usually traced to spoken Latin *desidium, from desidia 'idleness'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C509-planear]
 > *I wish you a happy new year.*
 
 In a shop, *¿qué desea?* — what would you like?
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desear** is built on *deseo*, "a wish", usually traced to spoken Latin *\*desidium*, built on *desidia*, "idleness" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

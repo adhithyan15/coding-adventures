@@ -13,7 +13,8 @@ gloss: "a speech"
 concept_tag: LA-RES194-ORATIO
 prerequisites: [LA-C194-sententia, LA-C194-sermo]
 sounds: []
-roots: []
+roots: [oratio-latin, orare-latin]
+etymology_hook: "ōrātiō 'a speech' — built on ōrō 'to speak, to pray'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C194-sermo]
 <!-- hl-knowledge: introduces=[LA-LEX-C194-RES194-03]; assesses=[] -->
 
 **ōrātiō, ōrātiōnis** — "a speech".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ōrātiō** is built on *ōrō*, "to speak, to plead, to pray" (Lewis & Short), with *-tiō*, an ending for an act. *ōrō* is often linked with *ōs*, "mouth" (EtymDB 2.1), but the link is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pāṭhaṁ"
 concept_tag: TE-PANI274-PATHAM
 prerequisites: [TE-C273-konugolu, TE-C274-taragati]
 sounds: []
-roots: []
+roots: [sanskrit-patha-recitation]
+etymology_hook: "pāṭhaṁ ← Sanskrit pāṭha 'text of a book; study', a tatsama (CDIAL 8035)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C274-taragati]
 <!-- hl-knowledge: introduces=[TE-LEX-C274-PANI274-02]; assesses=[] -->
 
 **పాఠం** — *pāṭhaṁ* — "a lesson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పాఠం** (*pāṭhaṁ*) is Sanskrit *pāṭha*, "text of a book; study", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 8035).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

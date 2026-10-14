@@ -14,7 +14,8 @@ romanization: "hāraṁ"
 concept_tag: TE-VASTUVU192-HARAM
 prerequisites: [TE-C192-gollem, TE-C192-kunce]
 sounds: []
-roots: []
+roots: [sanskrit-hara]
+etymology_hook: "hāraṁ ← Sanskrit hāra 'necklace', a tatsama (CDIAL 14059)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C192-kunce]
 <!-- hl-knowledge: introduces=[TE-LEX-C192-VASTUVU192-04]; assesses=[] -->
 
 **హారం** — *hāraṁ* — "a necklace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**హారం** (*hāraṁ*) is Sanskrit *hāra*, "necklace", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 14059).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

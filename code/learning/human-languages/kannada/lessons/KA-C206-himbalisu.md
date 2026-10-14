@@ -14,7 +14,8 @@ romanization: "himbālisu"
 concept_tag: KA-VERB-HIMBALISU
 prerequisites: [KA-C206-edavu, KA-C206-tevalu]
 sounds: []
-roots: []
+roots: [tamil-pin-after]
+etymology_hook: "himbālisu: built on him- 'behind' (DEDR 4205); the rest is not explained in DEDR"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C206-tevalu]
 <!-- hl-knowledge: introduces=[KA-LEX-C206-KRIYE206-03]; assesses=[] -->
 
 **ಹಿಂಬಾಲಿಸು** — *himbālisu* — "to follow (someone)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿಂಬಾಲಿಸು** (*himbālisu*) begins with *him-*, "behind", which DEDR 4205 lists as Kannada *pin*, *pim*, *him*, with Tamil *piṉ*. DEDR does not explain the rest of the word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

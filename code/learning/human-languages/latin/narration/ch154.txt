@@ -12,6 +12,9 @@ Before the new one: say the Latin for to climb, then the Latin for to go down.
 You'll want to know: iungō, iungere.
 iungō, iungere — "to join".
 
+The word, taken apart.
+iungō is inherited, usually traced to Proto-Indo-European yewg-, "to join, to yoke" (EtymDB 2.1); the n inside the present stem is an old mark of the verb. Greek zeugnymi, "to yoke", and English yoke are cousins (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to go down, then the Latin for to join.
 
 You'll want to know: vīsitō, vīsitāre.
 vīsitō, vīsitāre — "to visit".
+
+The word, taken apart.
+vīsitō is a frequentative of vīsō, "to go and see" (Lewis & Short), itself built on videō, "to see": to keep going to see.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to join, then the Latin for to visit.
 You'll want to know: cantō, cantāre.
 cantō, cantāre — "to sing".
 
+The word, taken apart.
+cantō is a frequentative of canō, "to sing" (Lewis & Short), built on its stem cant-, and in everyday Latin it came to replace canō. canō is usually traced to Proto-Indo-European keh2n-, "to sing" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to visit, then the Latin for to sing.
 You'll want to know: pingō, pingere.
 pingō, pingere — "to paint".
 
+The word, taken apart.
+pingō is inherited, usually traced to Proto-Indo-European peyk-, "to mark, to colour" (EtymDB 2.1); the n inside the present stem is missing from its participle pictus, "painted".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to sing, then the Latin for to paint.
 
 You'll want to know: dūcō, dūcere.
 dūcō, dūcere — "to lead".
+
+The word, taken apart.
+dūcō is inherited, usually traced to Proto-Indo-European dewk-, "to lead, to pull" (EtymDB 2.1); Gothic tiuhan, "to lead, to draw", is a cousin (Lewis & Short), and so are English tug and tow.
 
 What you've built.
 One more word for this chapter.

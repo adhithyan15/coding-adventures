@@ -14,7 +14,8 @@ romanization: "taḍe"
 concept_tag: KA-VERB-TADE
 prerequisites: [KA-C278-hintirugisu, KA-C278-hintirugu]
 sounds: []
-roots: []
+roots: [dravidian-tatu-hinder]
+etymology_hook: "taḍe: native Dravidian, one word with Tamil taṭu and Telugu taḍayu (DEDR 3031)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C278-hintirugu]
 <!-- hl-knowledge: introduces=[KA-LEX-C278-KRIYE278-04]; assesses=[] -->
 
 **ತಡೆ** — *taḍe* — "to prevent, to block".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಡೆ** (*taḍe*) is native Dravidian, one word with Tamil *taṭu*, Telugu *taḍayu* and Malayalam *taṭa* (DEDR 3031). DEDR lists *taḍe*, "to stop, restrain, check".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

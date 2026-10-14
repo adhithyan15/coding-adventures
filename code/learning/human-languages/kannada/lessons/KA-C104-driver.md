@@ -11,7 +11,8 @@ romanization: "cālaka"
 concept_tag: KA-JOBS-DRIVER
 prerequisites: [KA-C104-worker, KA-C104-police]
 sounds: []
-roots: []
+roots: [sanskrit-calaka]
+etymology_hook: "cālaka ← Sanskrit cālaka 'one who sets in motion'"
 duration:
   max_seconds: 200
 requires:

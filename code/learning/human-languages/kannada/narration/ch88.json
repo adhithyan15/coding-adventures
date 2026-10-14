@@ -4,7 +4,7 @@
   "chapter": 88,
   "title": "Welcome and Congratulations",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:59e711d1ee64ecb5",
+  "sourceHash": "fnv1a64:0aea4e62de7a82cf",
   "lessons": [
     {
       "id": "KA-C88-congratulations",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2f0e3e682746c72",
+      "sourceHash": "fnv1a64:9c968f7dff06dc85",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಭಿನಂದನೆಗಳು (abhinandanegaḷu) is Sanskrit abhinandana, \"rejoicing, praise, welcome\", with Kannada's plural -gaḷu: \"congratulations\" is said in the plural, as in English."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74ab84444f7d2ae2",
+      "sourceHash": "fnv1a64:b812a34a07d3a0df",
       "notice": null,
       "blocks": [
         {
@@ -179,6 +190,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಹ್ವಾನ (āhvāna) is Sanskrit āhvāna, \"a calling, a summons\", taken over whole as a learned loan, a tatsama."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -189,7 +211,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -238,7 +260,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -269,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f43d84cb6f1e726",
+      "sourceHash": "fnv1a64:6caca866cb0e4145",
       "notice": null,
       "blocks": [
         {
@@ -306,6 +328,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of ಉಡುಗೊರೆ (uḍugore) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -316,7 +349,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -365,7 +398,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -396,7 +429,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c8730d907b34c72",
+      "sourceHash": "fnv1a64:143b5a487f805d2a",
       "notice": null,
       "blocks": [
         {
@@ -429,6 +462,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಳಗೆ ಬನ್ನಿ (oḷage banni) is native Dravidian: oḷage, \"inside\", which DEDR 698 lists itself (Tamil uḷ), and banni, the polite command of baru, \"to come\" (DEDR 5270)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -439,7 +483,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -519,7 +563,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b013d59bde20297f",
+      "sourceHash": "fnv1a64:70383be16ce724a4",
       "notice": null,
       "blocks": [
         {
@@ -556,6 +600,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಾಗತ (svāgata) is Sanskrit svāgata, \"welcome\", taken over whole as a learned loan, a tatsama (CDIAL 13920). The Sanskrit word is su-, \"well\", and āgata, \"come\": \"well come\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -566,7 +621,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -615,7 +670,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

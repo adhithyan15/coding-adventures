@@ -4,7 +4,7 @@
   "chapter": 420,
   "title": "Theatre, Exhibition, Circus",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4c7eaade2d3c34c0",
+  "sourceHash": "fnv1a64:4a25ed8910f44420",
   "lessons": [
     {
       "id": "ES-C420-teatro",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07ac482d71ee99f6",
+      "sourceHash": "fnv1a64:6652db2c53c86a08",
       "notice": null,
       "blocks": [
         {
@@ -197,7 +197,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:878df9b638a24617",
+      "sourceHash": "fnv1a64:2599a788f89a8f69",
       "notice": null,
       "blocks": [
         {
@@ -365,7 +365,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a7b3bc7b963c4b7",
+      "sourceHash": "fnv1a64:5521f7e01881292c",
       "notice": null,
       "blocks": [
         {

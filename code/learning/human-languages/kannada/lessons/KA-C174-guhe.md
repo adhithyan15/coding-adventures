@@ -14,7 +14,8 @@ romanization: "guhe"
 concept_tag: KA-STHALA174-GUHE
 prerequisites: [KA-C174-pravasi, KA-C174-sarovara]
 sounds: []
-roots: []
+roots: [sanskrit-guha]
+etymology_hook: "guhe ← Sanskrit guhā 'hiding place, cave', a tatsama (CDIAL 4220)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C174-sarovara]
 <!-- hl-knowledge: introduces=[KA-LEX-C174-STHALA174-03]; assesses=[] -->
 
 **ಗುಹೆ** — *guhe* — "a cave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗುಹೆ** (*guhe*) is Sanskrit *guhā*, "hiding place, cave", taken over whole as a learned loan, a tatsama, with Kannada's *-e* for the Sanskrit *-ā* (CDIAL 4220).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

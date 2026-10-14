@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a donkey, then the Kannada for a camel.
 You'll want to know: ಇಲಿ.
 ಇಲಿ — ili — "a rat, a mouse".
 
+The word, taken apart.
+ಇಲಿ (ili) is native Dravidian, one word with Tamil eli and Telugu eluka (DEDR 833). DEDR lists eli, ili, "rat, mouse".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a camel, then the Kannada for a rat.
 
 You'll want to know: ಎಮ್ಮೆ.
 ಎಮ್ಮೆ — emme — "a buffalo".
+
+The word, taken apart.
+ಎಮ್ಮೆ (emme) is native Dravidian, one word with Tamil erumai and Telugu enumu (DEDR 816). DEDR also gives an older Kannada erme.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a rat, then the Kannada for a buffalo.
 You'll want to know: ಕುರಿ.
 ಕುರಿ — kuri — "a sheep".
 
+The word, taken apart.
+ಕುರಿ (kuri) is native Dravidian, one word with Tamil koṟi (DEDR 2165). DEDR lists Kannada kuṟi, koṟi, "sheep".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a buffalo, then the Kannada for a sheep.
 You'll want to know: ಮುಖ.
 ಮುಖ — mukha — "the face".
 
+The word, taken apart.
+ಮುಖ (mukha) is Sanskrit mukha, "mouth, face", taken over whole as a learned loan, a tatsama (CDIAL 10158).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a sheep, then the Kannada for the face.
 
 You'll want to know: ನಾಲಿಗೆ.
 ನಾಲಿಗೆ — nālige — "the tongue".
+
+The word, taken apart.
+ನಾಲಿಗೆ (nālige) is native Dravidian, one word with Tamil nā and Telugu nālika (DEDR 3633). DEDR lists nālige itself.
 
 What you've built.
 One more word for this chapter.

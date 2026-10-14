@@ -14,7 +14,8 @@ romanization: "kammari"
 concept_tag: TE-PANI277-KAMMARI
 prerequisites: [TE-C277-cakali, TE-C277-kummari]
 sounds: []
-roots: []
+roots: [sanskrit-karmakara]
+etymology_hook: "kammari: usually traced to Sanskrit karmakāra 'one who does work' (CDIAL 2888)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C277-kummari]
 <!-- hl-knowledge: introduces=[TE-LEX-C277-PANI277-05]; assesses=[] -->
 
 **కమ్మరి** — *kammari* — "a blacksmith".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కమ్మరి** (*kammari*) is usually traced to Sanskrit *karmakāra*, "one who does any work" (CDIAL 2888), reshaped to Telugu sounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

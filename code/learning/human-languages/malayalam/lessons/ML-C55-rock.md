@@ -11,7 +11,8 @@ romanization: "pāṟa"
 concept_tag: ML-NOUN-ROCK
 prerequisites: [ML-C55-river, ML-C53-sun]
 sounds: []
-roots: []
+roots: [dravidian-parai-rock]
+etymology_hook: "pāṟa: native Dravidian, one word with Tamil pāṟai (DEDR 4121)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *pāṟai*. The hard റ in the middle is the trilled 
 Kerala's ground is laterite over granite, and പാറ names the bare grey shoulders of it that show through where the soil has washed off. Quarrying is a പാറ trade, and the word turns up on lorries and on hillsides both.
 
 It goes figurative in the direction you would expect: somebody unmoved by argument has a heart of പാറ, which is the same picture English reaches for and reached for separately.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാറ** (*pāṟa*) is native Dravidian, one word with Tamil *pāṟai* (DEDR 4121).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

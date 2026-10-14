@@ -832,6 +832,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	emitShardMatrix := flag.Bool("emit-shard-matrix", false, "Output build_shards JSON for GitHub Actions matrix expansion")
 	ciGates := flag.String("ci-gates", cigates.DefaultRegistryPath, "CI gate registry (repo-relative) used to decide which Actions jobs this change needs; empty disables gating")
 	validateBuildFiles := flag.Bool("validate-build-files", true, "Validate BUILD files against inferred dependency metadata and fail on mismatches")
+	pruneLeafTargets := flag.Bool("prune-leaf-targets", false, "Delete a package's own Cargo target/ once it has built, when no package depends on it (CI disk budget; X-7)")
 	clippy := flag.Bool("clippy", false, "For Rust packages, run `cargo clippy --all-targets -- -D warnings` before the BUILD commands and fail the package on any clippy warning")
 
 	flag.Parse()
@@ -868,6 +869,8 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	// detect job.
 
 	var packages []discovery.Package
+	// Every package on this platform, before any shard or language filter.
+	var knownPackages []discovery.Package
 	var graph *directedgraph.Graph
 	var affectedSet map[string]bool
 	var changedPackageRoots map[string]bool
@@ -929,6 +932,9 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 				}
 			}
 			packages = packagesForPlatform(packages, runtime.GOOS)
+			// Before the shard and language filters narrow the list: BUILD
+			// validation resolves names against every package (X-7).
+			knownPackages = packages
 			platformState := bp.StateForPlatform(runtime.GOOS)
 
 			// Reconstruct dependency graph from edges.
@@ -1179,7 +1185,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		// discovery means "has a BUILD file". The two orphan gates independently
 		// scan Cargo manifests and direct established-lane roots so missing fronts
 		// cannot remain structurally invisible.
-		buildErr := validator.ValidateBuildFiles(packages, graph)
+		if knownPackages == nil {
+			knownPackages = packages
+		}
+		buildErr := validator.ValidateBuildFilesAgainst(packages, knownPackages, graph)
 		orphanErr := validator.ValidateNoOrphanCrates(repoRoot)
 		packageRootErr := validator.ValidateNoOrphanPackageRoots(repoRoot)
 		artifactErr := validator.ValidateNoTrackedNodeModules(repoRoot)
@@ -1268,6 +1277,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		tracker.Start()
 	}
 
+	executor.PruneLeafCargoTargets = *pruneLeafTargets
 	results := executor.ExecuteBuilds(
 		packages,
 		graph,

@@ -14,7 +14,8 @@ romanization: "aḷe"
 concept_tag: KA-VERB-ALE
 prerequisites: [KA-C204-prakatisu, KA-C204-jodisu]
 sounds: []
-roots: []
+roots: [dravidian-ala-measure]
+etymology_hook: "aḷe: native Dravidian, one word with Tamil aḷa and Telugu alavi (DEDR 295)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C204-jodisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C204-KRIYE204-03]; assesses=[] -->
 
 **ಅಳೆ** — *aḷe* — "to measure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಳೆ** (*aḷe*) is native Dravidian, one word with Tamil *aḷa* and Telugu *alavi* (DEDR 295). DEDR lists *aḷe* itself, "to measure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,6 +13,9 @@ You'll want to know: അല്ല.
 ഞാൻ അധ്യാപകൻ അല്ല. ñān adhyāpakan alla — "I am not a teacher."
 അല്ല (alla) is the negative of ആണ്. Where ആണ് says X is Y, അല്ല (alla) says X is not Y — and it sits in the same place, at the end, where the sentence closes.
 
+The word, taken apart.
+അല്ല (alla) is native Dravidian, one word with Tamil al- and Kannada alla (DEDR 234). It denies what a thing is, where illa denies that it is there at all.
+
 Grammar Lens: Malayalam negates twice, and English only once.
 You now hold two negatives, and they are not interchangeable:
 [a table of 2 rows, read aloud]
@@ -49,6 +52,9 @@ Say is not so. Then say the letter Malayalam adds to turn a statement into a gen
 You'll want to know: അല്ലേ.
 നിങ്ങൾ അധ്യാപകൻ ആണ്, അല്ലേ? niṅṅaḷ adhyāpakan āṇ, allē? — "You are a teacher, aren't you?"
 Look at the front of it. അല്ലേ (allē) opens on അല്ല (alla), the word from the last lesson, and that containment is the whole of why it means what it means: it hangs "or is it not so?" on the end of a statement you have already made.
+
+The word, taken apart.
+അല്ലേ (allē) is native Dravidian: alla, "is not" (DEDR 234, with Tamil al- and Kannada alla), with the asking ending -ē.
 
 Grammar Lens: asking, and asking for agreement.
 Malayalam has two ways to end a sentence with a question, and they want different things back:

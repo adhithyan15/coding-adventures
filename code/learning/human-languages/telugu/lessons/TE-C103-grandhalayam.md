@@ -14,7 +14,8 @@ romanization: "granthālayaṁ"
 concept_tag: TE-LOC103-GRANDHALAYAM
 prerequisites: [TE-C103-gudi, TE-C103-badi]
 sounds: []
-roots: []
+roots: [sanskrit-grantha, sanskrit-alaya]
+etymology_hook: "granthālayaṁ ← Sanskrit grantha 'book' (CDIAL 4350) + ālaya 'house' (CDIAL 1366)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C103-badi]
 <!-- hl-knowledge: introduces=[TE-LEX-C103-LOC103-03]; assesses=[] -->
 
 **గ్రంథాలయం** — *granthālayaṁ* — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గ్రంథాలయం** (*granthālayaṁ*) is Sanskrit *grantha*, "book" (CDIAL 4350), and *ālaya*, "house, dwelling" (CDIAL 1366): "the house of books".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

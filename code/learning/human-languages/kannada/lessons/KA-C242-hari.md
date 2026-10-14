@@ -14,7 +14,8 @@ romanization: "hari"
 concept_tag: KA-VERB-HARI
 prerequisites: [KA-C242-hindu, KA-C242-addu]
 sounds: []
-roots: []
+roots: [dravidian-pari-run]
+etymology_hook: "hari: native Dravidian, older paṟi 'to tear', one word with Tamil paṟi (DEDR 4027)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C242-addu]
 <!-- hl-knowledge: introduces=[KA-LEX-C242-KRIYE242-05]; assesses=[] -->
 
 **ಹರಿ** — *hari* — "to tear, to rip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹರಿ** (*hari*) is native Dravidian, one word with Tamil *paṟi*, "to pluck, be torn apart", and Malayalam *paṟiyuka*, "to tear, come off" (DEDR 4027). DEDR gives older Kannada *paṟi*, "to tear, rend": the *p-* has become *h-*. DEDR adds that this word has partly merged with *pari*, "to separate" (DEDR 3962).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

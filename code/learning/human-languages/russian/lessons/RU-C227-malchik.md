@@ -14,7 +14,8 @@ romanization: "málchik"
 concept_tag: RU-VESHCH227-MALCHIK
 prerequisites: [RU-C227-muzhchina, RU-C227-zhenshchina]
 sounds: []
-roots: []
+roots: [slavic-malu]
+etymology_hook: "мальчик is from малый 'small' + -чик: a little one"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C227-zhenshchina]
 <!-- hl-knowledge: introduces=[RU-LEX-C227-VESHCH227-05]; assesses=[] -->
 
 **мальчик** (*málchik*) — "a boy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мальчик** is built on *малый*, "small", with the diminutive *-чик*: "a little one", a boy.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

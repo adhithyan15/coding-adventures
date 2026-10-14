@@ -14,7 +14,8 @@ romanization: "māsika"
 concept_tag: ML-VASTU293-MASIKA
 prerequisites: [ML-C293-tivi, ML-C293-sanketikavidya]
 sounds: []
-roots: []
+roots: [sanskrit-masa]
+etymology_hook: "māsika ← Sanskrit māsika 'monthly', a tatsama (CDIAL 10109)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C293-sanketikavidya]
 <!-- hl-knowledge: introduces=[ML-LEX-C293-VASTU293-03]; assesses=[] -->
 
 **മാസിക** — *māsika* — "a magazine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മാസിക** (*māsika*) ← Sanskrit *māsika*, "monthly", taken over whole as a tatsama (CDIAL 10109). A monthly paper became the word for a magazine.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

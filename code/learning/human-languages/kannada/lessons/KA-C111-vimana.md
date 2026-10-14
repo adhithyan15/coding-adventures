@@ -14,7 +14,8 @@ romanization: "vimāna"
 concept_tag: KA-LOC111-VIMANA
 prerequisites: [KA-C111-hotel, KA-C111-railu]
 sounds: []
-roots: []
+roots: [sanskrit-vimana]
+etymology_hook: "vimāna ← Sanskrit vimāna 'measure; car of the gods', a tatsama (CDIAL 11823)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C111-railu]
 <!-- hl-knowledge: introduces=[KA-LEX-C111-LOC111-03]; assesses=[] -->
 
 **ವಿಮಾನ** — *vimāna* — "an aeroplane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿಮಾನ** (*vimāna*) is Sanskrit *vimāna*, "measure; car of the gods", taken over whole as a learned loan, a tatsama (CDIAL 11823). The flying car of the old stories gave its name to the aeroplane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

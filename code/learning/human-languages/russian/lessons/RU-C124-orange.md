@@ -14,7 +14,8 @@ romanization: "oránzhevyy"
 concept_tag: RU-QUAL124-ORANGE
 prerequisites: [RU-C124-brown, RU-C124-grey]
 sounds: []
-roots: []
+roots: [naranj-arabic]
+etymology_hook: "оранжевый ← French orange, from Persian and Arabic nāranj, a word from India"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C124-grey]
 <!-- hl-knowledge: introduces=[RU-LEX-C124-QUAL124-04]; assesses=[] -->
 
 **оранжевый** (*oránzhevyy*) — "orange (the colour)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**оранжевый** is a late borrowing from French *orange*, "an orange", perhaps through German; the source is Persian and Arabic *nāranj*, whose home is sought in India, Sanskrit *nāraṅga-* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

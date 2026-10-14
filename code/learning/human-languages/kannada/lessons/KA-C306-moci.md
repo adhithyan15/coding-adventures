@@ -14,7 +14,8 @@ romanization: "mōci"
 concept_tag: KA-KELASA306-MOCI
 prerequisites: [KA-C305-nata, KA-C305-patrakarta]
 sounds: []
-roots: []
+roots: [hindustani-moci]
+etymology_hook: "mōci ← Hindi mocī 'cobbler', from an Iranian word for 'shoe' (CDIAL 10349)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C305-patrakarta]
 <!-- hl-knowledge: introduces=[KA-LEX-C306-KELASA306-01]; assesses=[] -->
 
 **ಮೋಚಿ** — *mōci* — "a cobbler".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೋಚಿ** (*mōci*) is the northern word *mocī*, "cobbler", found in Hindi and Marathi; CDIAL 10349 traces it to *mōcika*, "tanner and cobbler", and takes that from an Iranian word for "shoe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 243,
-  "sourceHash": "fnv1a64:f751e9df525a692a",
+  "sourceHash": "fnv1a64:7ae7f534e4c11728",
   "lessonIds": [
     "ML-C243-olikalivu",
     "ML-C243-kurram",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch243.txt",
   "json": "malayalam/narration/ch243.json",
-  "textHash": "fnv1a64:92bd2476abd4e6da",
-  "jsonHash": "fnv1a64:707497073942f57a",
+  "textHash": "fnv1a64:f09e912a177bb9f8",
+  "jsonHash": "fnv1a64:576e01a85c2902ee",
   "findings": []
 }

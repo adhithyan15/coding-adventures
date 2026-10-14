@@ -14,7 +14,8 @@ romanization: "aḍugemane"
 concept_tag: KA-STHALA173-ADUGEMANE
 prerequisites: [KA-C172-satamana, KA-C172-ksana]
 sounds: []
-roots: []
+roots: [dravidian-adu-cook, dravidian-manai-house]
+etymology_hook: "aḍugemane: native aḍuge 'cooking' (DEDR 76) + mane 'house, room' (DEDR 4776)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C172-ksana]
 <!-- hl-knowledge: introduces=[KA-LEX-C173-STHALA173-01]; assesses=[] -->
 
 **ಅಡುಗೆಮನೆ** — *aḍugemane* — "a kitchen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಡುಗೆಮನೆ** (*aḍugemane*) is native Dravidian: *aḍuge*, "cooking" (DEDR 76), and *mane*, "house, room" (DEDR 4776): "the cooking room". DEDR 76 compares Sanskrit *aṭṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

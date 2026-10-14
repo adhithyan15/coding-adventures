@@ -14,7 +14,8 @@ romanization: "kaṇṇīru"
 concept_tag: KA-THINGS139-KANNIRU
 prerequisites: [KA-C139-godhi, KA-C139-doni]
 sounds: []
-roots: []
+roots: [proto-dravidian-kan-eye, dravidian-niir-water]
+etymology_hook: "kaṇṇīru: native kaṇ 'eye' (DEDR 1159) + nīru 'water' (DEDR 3690): 'eye-water'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C139-doni]
 <!-- hl-knowledge: introduces=[KA-LEX-C139-THINGS139-04]; assesses=[] -->
 
 **ಕಣ್ಣೀರು** — *kaṇṇīru* — "tears".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಣ್ಣೀರು** (*kaṇṇīru*) is native Dravidian, "eye-water": *kaṇ*, "eye" (DEDR 1159), and *nīru*, "water" (DEDR 3690). DEDR 1159 lists the compound itself as Kannada *kaṇ ṇīr*. DEDR 3690 compares Sanskrit *nīra*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

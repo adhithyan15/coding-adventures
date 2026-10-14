@@ -12,6 +12,9 @@ Before the new one: say the Kannada for yoga, then the Kannada for meditation.
 You'll want to know: ಕೊನೆಗೆ.
 ಕೊನೆಗೆ — konege — "finally, in the end".
 
+The word, taken apart.
+ಕೊನೆಗೆ (konege) is native Dravidian: kone, "extremity, end", which DEDR 2174 lists, with -ge, "to, at": "at the end".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for meditation, then the Kannada for finally
 
 You'll want to know: ಸಾಮಾನ್ಯವಾಗಿ.
 ಸಾಮಾನ್ಯವಾಗಿ — sāmānyavāgi — "usually".
+
+The word, taken apart.
+ಸಾಮಾನ್ಯವಾಗಿ (sāmānyavāgi) is sāmānya, "common, ordinary", from Sanskrit sāmānya, "equal, alike" (CDIAL 13351), with the adverb ending -āgi.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for finally, then the Kannada for usually.
 You'll want to know: ತಕ್ಷಣ.
 ತಕ್ಷಣ — takṣaṇa — "immediately".
 
+The word, taken apart.
+ತಕ್ಷಣ (takṣaṇa) comes from Sanskrit tatkṣaṇa, "the same moment", reshaped to Kannada sounds: a tadbhava (CDIAL 5640). Kannada simplified the cluster, as Prakrit takkhaṇa did.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for usually, then the Kannada for immediatel
 You'll want to know: ಬಿಡುವು.
 ಬಿಡುವು — biḍuvu — "free time, leisure".
 
+The word, taken apart.
+ಬಿಡುವು (biḍuvu) is native Dravidian, from biḍu, "to let go, leave", which DEDR 5393 lists; free time is time let loose; the entry also has Tamil viṭu. DEDR 5393 notes that Sanskrit avamocana, "inn", is a calque of Tamil viṭuti, "lodging place", from this root.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for immediately, then the Kannada for free t
 
 You'll want to know: ಯುಗಾದಿ.
 ಯುಗಾದಿ — yugādi — "Ugadi, the Kannada New Year".
+
+The word, taken apart.
+ಯುಗಾದಿ (yugādi) is Sanskrit yuga, "a yoke; an age of the world" (CDIAL 10482), and ādi, "beginning" (CDIAL 1152): "the beginning of an age", the new year.
 
 What you've built.
 One more word for this chapter.

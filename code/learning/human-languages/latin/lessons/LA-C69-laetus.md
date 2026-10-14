@@ -13,7 +13,8 @@ gloss: "happy, glad"
 concept_tag: LA-AFFECTUS-LAETUS
 prerequisites: [LA-C69-ira, LA-C69-timor]
 sounds: []
-roots: []
+roots: [laetus-latin]
+etymology_hook: "laetus 'glad' — origin unknown; of fields it meant 'rich, fertile'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C69-timor]
 <!-- hl-knowledge: introduces=[LA-LEX-C69-AFFECTUS-04]; assesses=[] -->
 
 **laetus, laeta, laetum** — "happy, glad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**laetus** has no sure origin; no proposal is generally accepted. Lewis & Short give it the sense "rich, fertile" for crops and fields.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

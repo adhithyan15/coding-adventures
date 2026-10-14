@@ -14,7 +14,8 @@ romanization: "guṇaṁ"
 concept_tag: ML-KARANAM202-GUNAM
 prerequisites: [ML-C202-prerana, ML-C202-nirbandham]
 sounds: []
-roots: []
+roots: [sanskrit-guna]
+etymology_hook: "guṇaṁ ← Sanskrit guṇa 'strand; quality, good quality', a tatsama (CDIAL 4190)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C202-nirbandham]
 <!-- hl-knowledge: introduces=[ML-LEX-C202-KARANAM202-03]; assesses=[] -->
 
 **ഗുണം** — *guṇaṁ* — "a good quality, a virtue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഗുണം** (*guṇaṁ*) ← Sanskrit *guṇa*, "strand; quality, good quality", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 4190). Its first sense is a strand of a cord.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

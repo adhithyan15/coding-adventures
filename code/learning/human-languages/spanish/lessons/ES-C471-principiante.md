@@ -11,6 +11,7 @@ concept_tag: ES-ASK-PRINCIPIANTE
 prerequisites: [ES-C471-avanzado, ES-C09-estudiante, ES-C348-principio]
 sounds: [nasal-n, stress-penultimate, diphthong-ia]
 roots: [principium-latin]
+etymology_hook: "principiante — principio + -ante; Latin principium, from princeps 'first-taker'"
 duration:
   max_seconds: 270
 requires:

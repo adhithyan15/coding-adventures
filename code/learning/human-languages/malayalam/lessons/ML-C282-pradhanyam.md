@@ -14,7 +14,8 @@ romanization: "prādhānyaṁ"
 concept_tag: ML-KARANAM282-PRADHANYAM
 prerequisites: [ML-C281-atayatu, ML-C281-pratyekiccu]
 sounds: []
-roots: []
+roots: [sanskrit-pradhana]
+etymology_hook: "prādhānyaṁ ← Sanskrit prādhānya 'pre-eminence', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C281-pratyekiccu]
 <!-- hl-knowledge: introduces=[ML-LEX-C282-KARANAM282-01]; assesses=[] -->
 
 **പ്രാധാന്യം** — *prādhānyaṁ* — "importance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രാധാന്യം** (*prādhānyaṁ*) ← Sanskrit *prādhānya*, "pre-eminence", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*. It is built on *pradhāna*, "chief".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "baiṅk"
 concept_tag: HI-THINGS153-BAINK
 prerequisites: [HI-C153-pul, HI-C153-daftar]
 sounds: []
-roots: []
+roots: [english-bank]
+etymology_hook: "baiṅk ← English bank"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C153-daftar]
 <!-- hl-knowledge: introduces=[HI-LEX-C153-THINGS153-05]; assesses=[] -->
 
 **बैंक** — *baiṅk* — "a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बैंक** (*baiṅk*) is a loan from English *bank*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

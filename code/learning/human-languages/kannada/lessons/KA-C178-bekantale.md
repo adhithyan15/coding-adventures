@@ -14,7 +14,8 @@ romanization: "bēkantalē"
 concept_tag: KA-KARANA178-BEKANTALE
 prerequisites: [KA-C177-parinama, KA-C177-vyatyasa]
 sounds: []
-roots: []
+roots: [dravidian-vendu-want, dravidian-en-say]
+etymology_hook: "bēkantalē: native bēku 'wanted' (DEDR 5528) + anta 'saying' (DEDR 868) + emphatic -lē"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C177-vyatyasa]
 <!-- hl-knowledge: introduces=[KA-LEX-C178-KARANA178-01]; assesses=[] -->
 
 **ಬೇಕಂತಲೇ** — *bēkantalē* — "deliberately, on purpose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೇಕಂತಲೇ** (*bēkantalē*) is native Dravidian: *bēku*, "it is wanted" (DEDR 5528), *anta*, "saying" (DEDR 868), and *-lē*, an emphatic ending: "on purpose, because it was wanted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tōraṇaṁ"
 concept_tag: TE-VASTUVU188-TORANAM
 prerequisites: [TE-C188-prasadam, TE-C188-ariselu]
 sounds: []
-roots: []
+roots: [sanskrit-torana]
+etymology_hook: "tōraṇaṁ ← Sanskrit tōraṇa 'arched or festooned doorway', a tatsama (CDIAL 5976)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C188-ariselu]
 <!-- hl-knowledge: introduces=[TE-LEX-C188-VASTUVU188-03]; assesses=[] -->
 
 **తోరణం** — *tōraṇaṁ* — "a festoon of mango leaves hung over a doorway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తోరణం** (*tōraṇaṁ*) is Sanskrit *tōraṇa*, "arched or festooned doorway", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 5976).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

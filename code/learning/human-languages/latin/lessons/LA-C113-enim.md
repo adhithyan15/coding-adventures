@@ -13,7 +13,8 @@ gloss: "for, you see"
 concept_tag: LA-WHY113-ENIM
 prerequisites: [LA-C112-quamobrem, LA-C113-nam]
 sounds: []
-roots: []
+roots: [enim-latin, latin-nam-for]
+etymology_hook: "enim 'for, you see' — perhaps a pointing element + nam 'for'; uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C113-nam]
 <!-- hl-knowledge: introduces=[LA-LEX-C113-WHY113-02]; assesses=[] -->
 
 **enim** — "for, you see".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**enim** is often explained as a short pointing element followed by *nam*, "for" (Lewis & Short), but its make-up is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kāryālay"
 concept_tag: HI-THG271-KARYALAY
 prerequisites: [HI-C270-surahi, HI-C270-matka]
 sounds: []
-roots: []
+roots: [sanskrit-karya, sanskrit-alaya]
+etymology_hook: "kāryālay: Sanskrit kārya 'work' + ālaya 'abode', a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C270-matka]
 <!-- hl-knowledge: introduces=[HI-LEX-C271-THG271-01]; assesses=[] -->
 
 **कार्यालय** — *kāryālay* — "an office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कार्यालय** (*kāryālay*) is a tatsama compound, taken over whole from Sanskrit: *kārya*, "work, business", and *ālaya*, "abode".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

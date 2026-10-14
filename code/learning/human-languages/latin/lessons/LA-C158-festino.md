@@ -13,7 +13,8 @@ gloss: "to hurry"
 concept_tag: LA-VERB-FESTINO
 prerequisites: [LA-C157-vinco, LA-C158-cresco]
 sounds: []
-roots: []
+roots: [festinare-latin]
+etymology_hook: "festīnō 'to hurry' — from festīnus 'hasty'; deeper origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C158-cresco]
 <!-- hl-knowledge: introduces=[LA-LEX-C158-ACT158-02]; assesses=[] -->
 
 **festīnō, festīnāre** — "to hurry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**festīnō** is built on an adjective *festīnus*, "hasty" (EtymDB 2.1), and belongs with *cōnfestim*, "at once"; the deeper origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

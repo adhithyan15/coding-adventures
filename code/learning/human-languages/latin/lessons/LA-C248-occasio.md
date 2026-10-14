@@ -13,7 +13,8 @@ gloss: "an opportunity"
 concept_tag: LA-RES248-OCCASIO
 prerequisites: [LA-C247-gener, LA-C247-nurus]
 sounds: []
-roots: []
+roots: [occasio-latin, cadere-latin]
+etymology_hook: "occāsiō 'opportunity' — built on occidō 'to fall': what falls one's way"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C247-nurus]
 <!-- hl-knowledge: introduces=[LA-LEX-C248-RES248-01]; assesses=[] -->
 
 **occāsiō, occāsiōnis** — "an opportunity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**occāsiō** is built on *occidō*, "to fall, to happen" (Lewis & Short), from *ob*, "towards", and *cadō*, "to fall": what falls one's way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

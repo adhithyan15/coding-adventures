@@ -13,7 +13,8 @@ gloss: "truth"
 concept_tag: LA-RES189-VERITAS
 prerequisites: [LA-C189-avunculus, LA-C189-matertera]
 sounds: []
-roots: []
+roots: [veritas-latin, verus-latin]
+etymology_hook: "vēritās 'truth' — built on vērus 'true'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C189-matertera]
 <!-- hl-knowledge: introduces=[LA-LEX-C189-RES189-04]; assesses=[] -->
 
 **vēritās, vēritātis** — "truth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vēritās** is built on *vērus*, "true" (Lewis & Short), with *-tās*, an ending for a quality. *vērus* is usually traced to Proto-Indo-European *\*weh1ros*, "true" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

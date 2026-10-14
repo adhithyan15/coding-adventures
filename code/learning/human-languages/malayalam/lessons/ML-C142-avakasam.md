@@ -14,7 +14,8 @@ romanization: "avakāśaṁ"
 concept_tag: ML-CAN142-AVAKASAM
 prerequisites: [ML-C142-kalivu, ML-C142-sakti, ML-C20-kalavastha]
 sounds: []
-roots: []
+roots: [sanskrit-avakasha]
+etymology_hook: "avakāśaṁ ← Sanskrit avakāśa 'space, room, opportunity', a tatsama (CDIAL 728)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C142-sakti]
 <!-- hl-knowledge: introduces=[ML-LEX-C142-CAN142-03]; assesses=[] -->
 
 **അവകാശം** — *avakāśaṁ* — "a right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അവകാശം** (*avakāśaṁ*) ← Sanskrit *avakāśa*, "space, room, opportunity", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 728). Room to act became a right.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "podmetát"
 concept_tag: RU-VERB-PODMETAT
 prerequisites: [RU-C233-pokazyvat, RU-C233-prinosit]
 sounds: []
-roots: []
+roots: [slavic-metati]
+etymology_hook: "подметать is под- + -метать, from мести 'to sweep', which Vasmer relates to метать 'to throw'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C233-prinosit]
 <!-- hl-knowledge: introduces=[RU-LEX-C234-ACT234-01]; assesses=[] -->
 
 **подметать** (*podmetát*) — "to sweep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**подметать** is *под-*, "under", with *-метать*, the ongoing partner of *мести*, "to sweep": to sweep up. Vasmer relates *мести* to *метать*, "to throw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

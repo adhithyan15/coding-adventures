@@ -14,7 +14,8 @@ romanization: "saṅkalppikkuka"
 concept_tag: ML-VERB-SANKALPPIKKUKA
 prerequisites: [ML-C230-nirddesikkuka, ML-C230-vimarsikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-sankalpa]
+etymology_hook: "saṅkalppikkuka ← Sanskrit saṁkalpa 'will, conception' (CDIAL 12819) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C230-vimarsikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C230-KRIYA230-03]; assesses=[] -->
 
 **സങ്കൽപ്പിക്കുക** — *saṅkalppikkuka* — "to imagine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സങ്കൽപ്പിക്കുക** (*saṅkalppikkuka*) is built on Sanskrit *saṁkalpa*, "will, desire, conception" (CDIAL 12819), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

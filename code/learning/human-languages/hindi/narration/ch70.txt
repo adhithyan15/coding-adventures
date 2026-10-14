@@ -13,6 +13,7 @@ You'll want to know: सकना.
 सकना — saknā — to be able to; can, may.
 मैं हिंदी बोल सकता हूँ. — maiṁ hindī bol saktā hūṁ. — I can speak Hindi.
 Hindi has no separate words for can, could, may and be able to. All four run through this one verb, which is why it is worth more than its size.
+सकना comes from Sanskrit śaknoti, "is able" (CDIAL 12252).
 
 Grammar Lens: सकना never stands alone.
 One move does it: strip the -ना off the first verb and put सकना behind it.
@@ -57,6 +58,7 @@ Put it beside the sentence from last lesson and one letter is different, and it 
 सकना takes the stem; चाहना takes the whole dictionary form. Both then sit last and take the ending themselves. Getting the two mixed up is the ordinary beginner's error, and hearing them back to back is the cure.
 मैं आना चाहता हूँ — I want to come. Say it against मैं आ सकता हूँ and listen for the -ना.
 Inside चाहना sits the noun चाह (chāh), "longing" or "desire." Add -ना and the noun becomes the dictionary verb: चाह becomes चाहना. A cousin of it is how Hindi wants a THING rather than an action; that separate construction comes in a later chapter.
+चाहना comes through Prakrit cāhaï, "wishes", from a root of uncertain source (CDIAL 4775).
 
 Guided Practice.
 [pause 1 second]

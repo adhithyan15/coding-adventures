@@ -13,7 +13,8 @@ gloss: "forty"
 concept_tag: LA-NUMERI-QUADRAGINTA
 prerequisites: [LA-C105-parum, LA-C106-triginta]
 sounds: []
-roots: []
+roots: [quadraginta-latin, quattuor-latin]
+etymology_hook: "quadrāgintā 'forty' — inherited, usually traced to PIE *kwetwr-dkomt 'four tens'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C106-triginta]
 <!-- hl-knowledge: introduces=[LA-LEX-C106-NUMERI-02]; assesses=[] -->
 
 **quadrāgintā** — "forty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quadrāgintā** is inherited, usually traced to Proto-Indo-European *\*kwetwr-dkomt*, "four tens" (EtymDB 2.1); its first part is the word behind *quattuor*, "four" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

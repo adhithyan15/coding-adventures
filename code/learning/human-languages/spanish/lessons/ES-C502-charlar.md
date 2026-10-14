@@ -11,6 +11,7 @@ concept_tag: ES-VERB-CHARLAR
 prerequisites: [ES-C502-presentar, ES-C502-mencionar]
 sounds: []
 roots: []
+etymology_hook: "charlar ← Italian ciarlare 'to chatter', probably imitating the sound — English charlatan is kin"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C502-mencionar]
 > *We chatted for a while in the bar.*
 
 *La charla* is the chat, or a talk.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**charlar** ← Italian *ciarlare*, "to chatter" (EtymDB 2.1), a word that probably imitates the sound of chatter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 310,
-  "sourceHash": "fnv1a64:79ebf0ec7211cf5a",
+  "sourceHash": "fnv1a64:5ae8ef9138cc693d",
   "lessonIds": [
     "TE-C310-parsu",
     "TE-C310-jabita",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch310.txt",
   "json": "telugu/narration/ch310.json",
-  "textHash": "fnv1a64:a02c9f62d777f683",
-  "jsonHash": "fnv1a64:97475e019116db5f",
+  "textHash": "fnv1a64:32d27866a415e354",
+  "jsonHash": "fnv1a64:f9a792b813003b58",
   "findings": []
 }

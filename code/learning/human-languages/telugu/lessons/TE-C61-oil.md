@@ -11,7 +11,8 @@ romanization: "nūne"
 concept_tag: TE-NOUN-OIL
 prerequisites: [TE-C61-ghee]
 sounds: []
-roots: []
+roots: [dravidian-ney-ghee]
+etymology_hook: "nūne: native Dravidian; DEDR 3746 derives it from *nū 'sesame' + ney 'ghee, oil'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C61-ghee]
 The word is inherited, and Telugu keeps it firmly apart from నెయ్యి. One comes from an animal and one comes from a విత్తనం, and no cook mixes the two up.
 
 నూనె also works outside the kitchen. It is what goes into a దీపం, and a house that has run out of it sits in the dark.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నూనె** (*nūne*) is native Dravidian. DEDR 3746 lists *nūne*, "oil", and derives it from a reconstructed \*nū, "sesame" (DEDR 3720), and *ney*, "ghee, oil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

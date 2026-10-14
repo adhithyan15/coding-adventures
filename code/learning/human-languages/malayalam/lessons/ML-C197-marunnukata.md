@@ -14,7 +14,8 @@ romanization: "marunnukaṭa"
 concept_tag: ML-STHALAM197-MARUNNUKATA
 prerequisites: [ML-C196-krtyasamayattu, ML-C196-olivusamayam]
 sounds: []
-roots: []
+roots: [dravidian-maruntu-medicine, dravidian-katai-shop]
+etymology_hook: "marunnukaṭa: native Dravidian, 'medicine shop': marunnŭ (DEDR 4719) + kaṭa (DEDR 1142)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C196-olivusamayam]
 <!-- hl-knowledge: introduces=[ML-LEX-C197-STHALAM197-01]; assesses=[] -->
 
 **മരുന്നുകട** — *marunnukaṭa* — "a pharmacy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മരുന്നുകട** (*marunnukaṭa*) is native Dravidian, "medicine shop": *marunnŭ*, "medicine" (DEDR 4719, with Tamil *maruntu*), and *kaṭa*, "shop" (DEDR 1142).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

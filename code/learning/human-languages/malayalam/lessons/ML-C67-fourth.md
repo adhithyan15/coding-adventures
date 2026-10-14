@@ -11,7 +11,8 @@ romanization: "nālāṁ"
 concept_tag: ML-ORDINAL-FOURTH
 prerequisites: [ML-C67-third, ML-C66-plough, ML-C63-cough, ML-C51-blessing]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "nālāṁ: native Dravidian, 'four' + -āṁ; Tamil nāṉkām (DEDR 3655)"
 duration:
   max_seconds: 190
 requires:
@@ -53,6 +54,11 @@ virama **്** under it, the sign that says "no vowel here". The ordinal replace
 that sign with the **ാ** of *ā* and adds the **ം**: നാല് becomes നാലാം.
 
 **നാലാം പൂവ്** (*nālāṁ pūvŭ*), the fourth flower.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നാലാം** (*nālāṁ*) is native Dravidian: DEDR 3655 lists it with Tamil *nāṉkām*, "fourth", built on *nālu*, "four".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C67-ORDINAL-06, ML-LEX-C67-ORDINAL-05] -->

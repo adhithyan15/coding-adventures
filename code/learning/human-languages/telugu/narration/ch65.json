@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "More Good Manners",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:574e3821f07af8dd",
+  "sourceHash": "fnv1a64:0db060a64339291f",
   "lessons": [
     {
       "id": "TE-C65-welcome",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5143509fe31eded7",
+      "sourceHash": "fnv1a64:205b4e9dda3dec5d",
       "notice": null,
       "blocks": [
         {
@@ -59,6 +59,10 @@
             {
               "kind": "speech",
               "text": "A house says it with the door open and a gauravaṁ behind it. The ముగ్గు at the step is the same sentence without any words in it."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 13920 lists Sanskrit svāgata, \"welcome\"."
             }
           ]
         },
@@ -163,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba44c3a94d169e47",
+      "sourceHash": "fnv1a64:fd51915cbec04bbc",
       "notice": null,
       "blocks": [
         {
@@ -203,6 +207,10 @@
             {
               "kind": "speech",
               "text": "మర్యాదగా is how it usually reaches a person: మర్యాదగా మాట్లాడు, \"speak with manners\", which sounds sterner in English than it does in Telugu. It is closer to \"be decent about it\"."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 9895 lists Sanskrit maryādā, \"region, boundary\"."
             }
           ]
         },
@@ -307,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5eee13b011e7efa",
+      "sourceHash": "fnv1a64:b0b97b63ad582577",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +360,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మనవి (manavi) is native Dravidian, one word with Tamil maṉu and Kannada manave (DEDR 4775). DEDR lists Telugu manavi, \"a respectful request, petition\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +381,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +439,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +470,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ba51a32aa742e00",
+      "sourceHash": "fnv1a64:49cdbbf201acee41",
       "notice": null,
       "blocks": [
         {
@@ -595,7 +614,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5249bef7732aed74",
+      "sourceHash": "fnv1a64:711ab8862a423dd2",
       "notice": null,
       "blocks": [
         {
@@ -635,6 +654,10 @@
             {
               "kind": "speech",
               "text": "The word also carries \"belief\" in the religious sense, and Telugu is content to let one word hold both. Trusting a person and believing a thing are the same act pointed in two directions."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 3600 lists Telugu nammu, \"to believe, trust\", and nammakamu, \"trust\", with Tamil nampu and Kannada nambu."
             }
           ]
         },

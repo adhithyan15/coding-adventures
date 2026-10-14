@@ -12,6 +12,9 @@ Before the new one: say the Hindi for an accident, then the Hindi for danger.
 You'll want to know: सुविधा.
 सुविधा — suvidhā — "a convenience, a facility".
 
+The word, taken apart.
+सुविधा (suvidhā) is Sanskrit suvidhā, "good arrangement", taken over whole as a learned loan, a tatsama. It is built from su-, "well", and vidhā, "arrangement".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for danger, then the Hindi for a convenience.
 
 You'll want to know: असुविधा.
 असुविधा — asuvidhā — "an inconvenience".
+
+The word, taken apart.
+असुविधा (asuvidhā) is suvidhā, "convenience", from Sanskrit su-, "well", and vidhā, "arrangement", with a-, "not".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a convenience, then the Hindi for an incon
 You'll want to know: नियम.
 नियम — niyam — "a rule".
 
+The word, taken apart.
+नियम (niyam) is Sanskrit niyama, "restraint, rule", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for an inconvenience, then the Hindi for a rul
 You'll want to know: सूची.
 सूची — sūcī — "a list".
 
+The word, taken apart.
+सूची (sūcī) is Sanskrit sūcī, "needle, pointer", taken over whole as a learned loan, a tatsama (CDIAL 13551). Hindi uses it for a list. CDIAL lists the inherited form of the same word as sūī, "needle".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a rule, then the Hindi for a list.
 
 You'll want to know: उम्मीदवार.
 उम्मीदवार — ummīdvār — "a candidate".
+
+The word, taken apart.
+उम्मीदवार (ummīdvār) is a loan, usually traced to Persian ummēdwār, "one who hopes; a candidate". It is built on ummēd, "hope".
 
 What you've built.
 One more word for this chapter.

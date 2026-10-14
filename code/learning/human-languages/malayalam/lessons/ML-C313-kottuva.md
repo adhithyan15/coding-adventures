@@ -14,7 +14,8 @@ romanization: "kōṭṭuvā"
 concept_tag: ML-AROGYAM313-KOTTUVA
 prerequisites: [ML-C312-ambulansu, ML-C313-ekkil]
 sounds: []
-roots: []
+roots: [dravidian-kottavi-yawn]
+etymology_hook: "kōṭṭuvā: Dravidian; DEDR 2172 sets kōṭṭāvi 'yawn' beside Kui and Kuwi words for dozing, with a query"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C313-ekkil]
 <!-- hl-knowledge: introduces=[ML-LEX-C313-AROGYAM313-02]; assesses=[] -->
 
 **കോട്ടുവാ** — *kōṭṭuvā* — "a yawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കോട്ടുവാ** (*kōṭṭuvā*) is a Dravidian word. DEDR 2172 lists it as *kōṭṭāvi*, "yawn, gaping", with Tamil *koṭṭāvi*, "yawn", and compares them, with a query, to Kui and Kuwi words for drowsiness and dozing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

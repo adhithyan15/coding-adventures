@@ -14,7 +14,8 @@ romanization: "phīju"
 concept_tag: TE-PANI196-PHIJU
 prerequisites: [TE-C195-sahodyogi, TE-C195-samavesam]
 sounds: []
-roots: []
+roots: [english-fee]
+etymology_hook: "phīju ← English fee"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C195-samavesam]
 <!-- hl-knowledge: introduces=[TE-LEX-C196-PANI196-01]; assesses=[] -->
 
 **ఫీజు** — *phīju* — "a fee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఫీజు** (*phīju*) is a loan from English *fee*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

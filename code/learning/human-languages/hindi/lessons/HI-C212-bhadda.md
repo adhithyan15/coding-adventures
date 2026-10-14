@@ -14,7 +14,8 @@ romanization: "bhaddā"
 concept_tag: HI-QUAL212-BHADDA
 prerequisites: [HI-C211-dhaniya, HI-C211-nibu]
 sounds: []
-roots: []
+roots: [bhadra-sanskrit]
+etymology_hook: "bhaddā ← Sanskrit bhadra 'fortunate, delightful', a tadbhava (CDIAL 9377)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C211-nibu]
 <!-- hl-knowledge: introduces=[HI-LEX-C212-QUAL212-01]; assesses=[] -->
 
 **भद्दा** — *bhaddā* — "ugly, clumsy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भद्दा** (*bhaddā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhadra*, "fortunate, delightful" (CDIAL 9377). Its sense turned round: CDIAL glosses the Hindi word "stupid, clumsy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

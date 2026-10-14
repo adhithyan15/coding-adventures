@@ -14,7 +14,8 @@ romanization: "gulābī raṅgu"
 concept_tag: TE-GUNAM180-GULABI-RANGU
 prerequisites: [TE-C180-mottam, TE-C180-prati]
 sounds: []
-roots: []
+roots: [persian-gulab, sanskrit-ranga]
+etymology_hook: "gulābī raṅgu: Persian gulābī 'rose-coloured' + raṅgu ← Sanskrit raṅga 'dye, colour' (CDIAL 10560)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C180-prati]
 <!-- hl-knowledge: introduces=[TE-LEX-C180-GUNAM180-04]; assesses=[] -->
 
 **గులాబీ రంగు** — *gulābī raṅgu* — "pink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గులాబీ రంగు** (*gulābī raṅgu*) pairs Persian *gulābī*, "rose-coloured", from *gulāb*, "rose", with *raṅgu*, "colour", from Sanskrit *raṅga*, "dye, colour" (CDIAL 10560).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "veṇṭanē"
 concept_tag: TE-SAMAYAM212-VENTANE
 prerequisites: [TE-C211-aviri, TE-C212-tirika]
 sounds: []
-roots: []
+roots: [dravidian-ven-back]
+etymology_hook: "veṇṭanē: native veṇṭa 'behind, along with' (DEDR 5488) + emphatic -ē"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C212-tirika]
 <!-- hl-knowledge: introduces=[TE-LEX-C212-SAMAYAM212-02]; assesses=[] -->
 
 **వెంటనే** — *veṇṭanē* — "immediately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వెంటనే** (*veṇṭanē*) is native Dravidian: *veṇṭa*, "behind, along with", which DEDR 5488 lists under the word for "back", one word with Kannada *ben*, "the back", with the emphatic *-ē*: "right behind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

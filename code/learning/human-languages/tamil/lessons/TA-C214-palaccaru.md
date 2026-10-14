@@ -47,7 +47,7 @@ reviews_of: [TA-C214-mor]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**பழச்சாறு** (*paḻaccāṟu*) is native: *paḻam*, "fruit" (DEDR 4004), and *cāṟu*, "juice" (DEDR 2484).
+**பழச்சாறு** (*paḻaccāṟu*) is native: *paḻam*, "fruit" (DEDR 4004, which compares Sanskrit *phala*), and *cāṟu*, "juice" (DEDR 2484).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

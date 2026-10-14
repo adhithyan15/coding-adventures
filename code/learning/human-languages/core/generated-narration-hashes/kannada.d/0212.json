@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 212,
-  "sourceHash": "fnv1a64:e6a8adcdd7a0f786",
+  "sourceHash": "fnv1a64:31b3fde6f5ce30cd",
   "lessonIds": [
     "KA-C212-bandaru",
     "KA-C212-karkhane",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch212.txt",
   "json": "kannada/narration/ch212.json",
-  "textHash": "fnv1a64:4be8b2df595e8fa7",
-  "jsonHash": "fnv1a64:bacf4efb9fd08886",
+  "textHash": "fnv1a64:6972589cdd2b6062",
+  "jsonHash": "fnv1a64:276db7a03338b9cd",
   "findings": []
 }

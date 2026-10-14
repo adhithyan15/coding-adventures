@@ -4,7 +4,7 @@
   "chapter": 101,
   "title": "Grandparents, Aunts and Uncles",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e27b68c6541a4ee0",
+  "sourceHash": "fnv1a64:44e65d7fcc89dc77",
   "lessons": [
     {
       "id": "TA-C101-grandfather",
@@ -433,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0e1918fb2ba078f",
+      "sourceHash": "fnv1a64:fd9961d96567589b",
       "notice": null,
       "blocks": [
         {
@@ -475,7 +475,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "அத்தை (attai) is native Dravidian. DEDR 142 lists Malayalam atta, \"mother\", Kannada atte, \"mother-in-law\" and Telugu atta, \"mother-in-law, father's sister\". The entry compares Prakrit attā, \"mother\"."
+              "text": "அத்தை (attai) is native Dravidian. DEDR 142 lists Malayalam atta, \"mother\", Kannada atte, \"mother-in-law\" and Telugu atta, \"mother-in-law, father's sister\". The entry compares Sanskrit (lexicons) and Prakrit attā, \"mother\"."
             }
           ]
         },

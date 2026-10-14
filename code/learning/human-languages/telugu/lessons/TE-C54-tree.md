@@ -11,7 +11,8 @@ romanization: "ceṭṭu"
 concept_tag: TE-NOUN-TREE
 prerequisites: [TE-C53-cloud]
 sounds: []
-roots: []
+roots: [dravidian-cedi-shrub]
+etymology_hook: "ceṭṭu: native Dravidian, one word with Tamil ceṭi and Kannada ceṭṭu (DEDR 1941)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C53-cloud]
 A meaning that moves up or down the scale like that is the commonest kind of drift there is. The word holds its place in the family; what it points at slides.
 
 మ్రాను is another Telugu word for a tree, older-sounding and now mostly literary. చెట్టు is what anybody says.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చెట్టు** (*ceṭṭu*) is native Dravidian, one word with Tamil *ceṭi*, Kannada *ceṭṭu* and Malayalam *ceṭi* (DEDR 1941). DEDR glosses the Tamil word "shrub, bush".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

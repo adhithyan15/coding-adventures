@@ -14,7 +14,8 @@ romanization: "muzhchína"
 concept_tag: RU-VESHCH227-MUZHCHINA
 prerequisites: [RU-C227-shtraf, RU-C227-chelovek]
 sounds: []
-roots: []
+roots: [pie-monu-man]
+etymology_hook: "мужчина is built on муж 'a man', with the suffix -чина"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C227-chelovek]
 <!-- hl-knowledge: introduces=[RU-LEX-C227-VESHCH227-03]; assesses=[] -->
 
 **мужчина** (*muzhchína*) — "a man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мужчина** is built on *муж*, "a man, a husband", with *-чина*, a suffix for persons. *муж* is a cousin of English *man* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

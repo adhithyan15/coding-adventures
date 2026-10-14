@@ -13,7 +13,8 @@ gloss: "to tie"
 concept_tag: LA-VERB-LIGO
 prerequisites: [LA-C233-insto, LA-C233-interrumpo]
 sounds: []
-roots: []
+roots: [ligare-latin]
+etymology_hook: "ligō 'to tie' — probably from PIE *leyg- 'to bind'; English ligament"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C233-interrumpo]
 <!-- hl-knowledge: introduces=[LA-LEX-C233-ACT233-03]; assesses=[] -->
 
 **ligō, ligāre** — "to tie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ligō** is probably inherited, from a Proto-Indo-European root *\*leyg-*, "to bind" (EtymDB 2.1). English *ligament* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

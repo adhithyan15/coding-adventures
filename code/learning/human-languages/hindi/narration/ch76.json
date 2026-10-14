@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "Ways of Going",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f39e875e98fec19a",
+  "sourceHash": "fnv1a64:340ad8be4fc1c9f3",
   "lessons": [
     {
       "id": "HI-C69-vehicle",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:377771986adcd9b8",
+      "sourceHash": "fnv1a64:d177c9bfcf54bcb6",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "From Sanskrit गर्त (garta), a cart, through the Prakrits. It began as the thing oxen pulled and it has taken in everything since: a car is a गाड़ी (gāṛī), a train is a गाड़ी (gāṛī), a bullock cart is a गाड़ी (gāṛī)."
+              "text": "From a reconstructed gāḍḍa, 'cart', which CDIAL tentatively links to words for a seat, such as Sanskrit garta, a chariot seat (CDIAL 4116). It began as the thing oxen pulled and it has taken in everything since: a car is a गाड़ी (gāṛī), a train is a गाड़ी (gāṛī), a bullock cart is a गाड़ी (gāṛī)."
             },
             {
               "kind": "speech",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:538db53ebf598439",
+      "sourceHash": "fnv1a64:9053ecbe3ed1c6f3",
       "notice": null,
       "blocks": [
         {
@@ -217,6 +217,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रेल (rel) is a loan from English rail."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -227,7 +238,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +287,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +318,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cd0607abb0af225",
+      "sourceHash": "fnv1a64:5048da4a7d538857",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +363,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्टेशन (sṭeshan) is a loan from English station."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +384,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -402,7 +424,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -433,7 +455,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e5022e3c6e7d295",
+      "sourceHash": "fnv1a64:4cf736c935afc8a9",
       "notice": null,
       "blocks": [
         {
@@ -479,6 +501,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टिकट (ṭikaṭ) is a loan from English ticket."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -489,7 +522,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -529,7 +562,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -560,7 +593,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6fec9f9dcb308ebf",
+      "sourceHash": "fnv1a64:d7f3a8ed962c8244",
       "notice": null,
       "blocks": [
         {
@@ -605,6 +638,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जाना (jānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from yāti, \"goes\" (CDIAL 10452). Sanskrit y- regularly became Hindi j-."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -615,7 +659,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -664,7 +708,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

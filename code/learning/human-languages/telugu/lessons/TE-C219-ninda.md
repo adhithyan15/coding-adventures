@@ -14,7 +14,8 @@ romanization: "ninda"
 concept_tag: TE-KARANAM219-NINDA
 prerequisites: [TE-C218-teda, TE-C218-srama]
 sounds: []
-roots: []
+roots: [sanskrit-ninda]
+etymology_hook: "ninda ← Sanskrit nindā 'blame', a tatsama (CDIAL 7212)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C218-srama]
 <!-- hl-knowledge: introduces=[TE-LEX-C219-KARANAM219-01]; assesses=[] -->
 
 **నింద** — *ninda* — "blame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నింద** (*ninda*) is Sanskrit *nindā*, "blame", taken over whole as a learned loan, a tatsama, with the final *-ā* shortened (CDIAL 7212).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

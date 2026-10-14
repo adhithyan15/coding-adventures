@@ -12,6 +12,9 @@ Before the new one: say the Hindi for cunning, then the Hindi for quarrelsome.
 You'll want to know: हज़ार.
 हज़ार — hazār — "a thousand".
 
+The word, taken apart.
+हज़ार (hazār) is a loan, usually traced to Persian hazār, "thousand".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for quarrelsome, then the Hindi for a thousand
 
 You'll want to know: लाख.
 लाख — lākh — "a hundred thousand (lakh)".
+
+The word, taken apart.
+लाख (lākh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lakṣa, "stake; mark; 100,000" (CDIAL 10881).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a thousand, then the Hindi for a hundred t
 You'll want to know: करोड़.
 करोड़ — karoṛ — "ten million (crore)".
 
+The word, taken apart.
+करोड़ (karoṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from koṭi, "ten million" (CDIAL 3498). CDIAL takes the word from an Austroasiatic language, and explains the kr- of some forms as an over-correction towards Sanskrit.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a hundred thousand, then the Hindi for ten
 You'll want to know: कई.
 कई — kaī — "several".
 
+The word, taken apart.
+कई (kaī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from katipaya, "several" (CDIAL 2696).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for ten million, then the Hindi for several.
 
 You'll want to know: दोनों.
 दोनों — donõ — "both".
+
+The word, taken apart.
+दोनों (donõ) is do, "two", with the ending -õ, which makes "both". CDIAL lists donõ, "both", beside do under Sanskrit dva, "two" (CDIAL 6648).
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "hunger"
 concept_tag: LA-AEGER-FAMES
 prerequisites: [LA-C68-aeger, LA-C68-fessus]
 sounds: []
-roots: []
+roots: [fames-latin]
+etymology_hook: "famēs 'hunger' — origin uncertain; one proposal ties it to PIE *dhH- 'to disappear'; English famine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C68-fessus]
 <!-- hl-knowledge: introduces=[LA-LEX-C68-AEGER-03]; assesses=[] -->
 
 **famēs, famis** — "hunger". English *famine*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**famēs** has no sure origin. One proposal, which EtymDB 2.1 records, ties it to a Proto-Indo-European root *\*dhH-*, "to disappear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

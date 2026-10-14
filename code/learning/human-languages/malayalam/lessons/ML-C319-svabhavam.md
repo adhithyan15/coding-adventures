@@ -14,7 +14,8 @@ romanization: "svabhāvaṁ"
 concept_tag: ML-GUNAM319-SVABHAVAM
 prerequisites: [ML-C319-onlain, ML-C319-vinayam]
 sounds: []
-roots: []
+roots: [sanskrit-svabhava]
+etymology_hook: "svabhāvaṁ ← Sanskrit svabhāva 'one's own nature', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C319-vinayam]
 <!-- hl-knowledge: introduces=[ML-LEX-C319-GUNAM319-03]; assesses=[] -->
 
 **സ്വഭാവം** — *svabhāvaṁ* — "character, a person's nature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്വഭാവം** (*svabhāvaṁ*) ← Sanskrit *svabhāva*, "one's own nature", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*. Its parts are *sva*, "own", and *bhāva*, "being".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:86abcd57baac2f81",
+  "sourceHash": "fnv1a64:6b4d21b75eba4163",
   "lessons": [
     {
       "id": "TE-C07-numbers-1-5",
@@ -12,14 +12,14 @@
       "title": "ఒకటి, రెండు, మూడు, నాలుగు, ఐదు — one to five",
       "headword": "ఒకటి రెండు మూడు నాలుగు ఐదు",
       "romanization": "okaṭi reṇḍu mūḍu nālugu aidu",
-      "gloss": "one to five — the Dravidian family numbers, with Telugu's maverick \"one\"",
+      "gloss": "one to five — the Dravidian family numbers, with Telugu's odd-looking \"one\"",
       "script": "telugu",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5de220f8b8c0c0de",
+      "sourceHash": "fnv1a64:0ce62d0e5e060d33",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four of these five are old Dravidian friends. The very first one is Telugu going its own way."
+              "text": "All five are old Dravidian friends, but the very first one wears Telugu's own shape."
             }
           ]
         },
@@ -83,7 +83,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One is where Telugu leaves the family. Its cousins agree — Tamil oṉṟu, Kannada ondu, Malayalam onnu, all from an old oṉ- — but Telugu says okaṭi, a different formation altogether. It's the number to memorise fresh rather than reason across from Tamil."
+              "text": "One is where Telugu looks least like the family. Its cousins sound alike — Tamil oṉṟu, Kannada ondu, Malayalam onnu — but Telugu says okaṭi, built differently on the same root: DEDR 990 files them together. It's the number to memorise fresh rather than reason across from Tamil."
             },
             {
               "kind": "speech",
@@ -145,11 +145,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the maverick — \"okaṭi\", NOT the oṉṟu/ondu/onnu of its cousins",
+              "instruction": "the odd shape — \"okaṭi\", beside the oṉṟu/ondu/onnu of its cousins",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the maverick — \"okaṭi\", NOT the oṉṟu/ondu/onnu of its cousins]"
+              "source": "[YOU SAY: the odd shape — \"okaṭi\", beside the oṉṟu/ondu/onnu of its cousins]"
             },
             {
               "kind": "prompt",
@@ -175,7 +175,7 @@
             },
             {
               "kind": "speech",
-              "text": "Count to five in Telugu. (Okaṭi, reṇḍu, mūḍu, nālugu, aidu.) Which number does Telugu form unlike the rest of the family, and what do the others say? (One — Telugu okaṭi vs oṉṟu / ondu / onnu.) How does reṇḍu relate to Tamil iraṇṭu? (The opening vowel was dropped.) What vowel do most Telugu words here end in? (‑u.) Next: six to ten."
+              "text": "Count to five in Telugu. (Okaṭi, reṇḍu, mūḍu, nālugu, aidu.) Which number does Telugu shape unlike the rest of the family, and what do the others say? (One — Telugu okaṭi vs oṉṟu / ondu / onnu.) How does reṇḍu relate to Tamil iraṇṭu? (The opening vowel was dropped.) What vowel do most Telugu words here end in? (‑u.) Next: six to ten."
             }
           ]
         }
@@ -526,7 +526,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6f9dbb201f6599a",
+      "sourceHash": "fnv1a64:d346635770ea4007",
       "notice": null,
       "blocks": [
         {
@@ -584,7 +584,7 @@
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart - Eight and nine strike out alone",
+          "title": "The word, taken apart - Eight and nine look least like their cousins",
           "segments": [
             {
               "kind": "speech",
@@ -606,7 +606,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can't reach enimidi and tommidi from Tamil by regular sound-change the way you can reṇḍu from iraṇṭu: tommidi is a different word entirely, and enimidi — though it shares the ancient eṇ- root behind eṭṭu — has drifted too far to derive. So unlike 2–7, learn these two fresh."
+              "text": "You can't reach enimidi and tommidi from Tamil by regular sound-change the way you can reṇḍu from iraṇṭu. Enimidi shares the ancient eṇ- root behind eṭṭu (DEDR 784) but has drifted too far to derive; tommidi matches not oṉpatu but old Tamil toṇṭu, \"nine\" (DEDR 3532). So unlike 2–7, learn these two fresh."
             },
             {
               "kind": "speech",

@@ -11,7 +11,8 @@ romanization: "yātra"
 concept_tag: ML-NOUN-JOURNEY
 prerequisites: [ML-C50-day-after, ML-C48-doctor]
 sounds: []
-roots: []
+roots: [sanskrit-yatra]
+etymology_hook: "yātra ← Sanskrit yātrā 'journey', a tatsama (CDIAL 10456)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *yātrā*, off a root meaning simply 'to go'. A journey is a going, wit
 Malayalam then does something with the word that Sanskrit did not: യാത്ര പറയുക, literally 'to say journey', is how a speaker takes leave of a household. The noun for travelling became the verb phrase for saying goodbye, because what you announce at the door is that you are going.
 
 Kannada's ಪ್ರಯಾಣ (*prayāṇa*) is the same root with a prefix in front of it — a going-forth. The sisters borrowed from the same shelf and reached for neighbouring jars.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**യാത്ര** (*yātra*) ← Sanskrit *yātrā*, "journey", taken over whole as a tatsama (CDIAL 10456). It is built on the Sanskrit root *yā*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

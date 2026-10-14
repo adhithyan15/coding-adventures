@@ -14,7 +14,8 @@ romanization: "hemmepaḍu"
 concept_tag: KA-VERB-HEMMEPADU
 prerequisites: [KA-C276-jagalavadu, KA-C276-samadhana-madu]
 sounds: []
-roots: []
+roots: [dravidian-peru-great, dravidian-padu-suffer]
+etymology_hook: "hemmepaḍu: native hemme 'pride', older perme (DEDR 4411), + paḍu 'to feel' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C276-samadhana-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C276-KRIYE276-05]; assesses=[] -->
 
 **ಹೆಮ್ಮೆಪಡು** — *hemmepaḍu* — "to be proud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೆಮ್ಮೆಪಡು** (*hemmepaḍu*) is native Dravidian: *hemme*, "pride", which DEDR 4411 lists as older *perme*, "greatness, honour, pride", from the root for "great", and *paḍu*, "to undergo, feel" (DEDR 3853).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

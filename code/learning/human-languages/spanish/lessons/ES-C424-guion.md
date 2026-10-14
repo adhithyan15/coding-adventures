@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-GUION
 prerequisites: [ES-C424-parentesis]
 sounds: []
 roots: []
+etymology_hook: "guion — built on guía 'guide'; it also names the banner at the head of a procession"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +57,9 @@ Its everyday A1 use is in names:
 
 A form asking for *apellidos* may come back with a hyphen in it, and the hyphen
 is telling you the two halves are one name rather than two.
+
+*Guion* is built on *guía*, "a guide", and it also names the banner carried at
+the head of a procession.
 
 ## Grammar Lens: the word changed its own spelling
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C424-07, ES-ORTH-C424-06] -->

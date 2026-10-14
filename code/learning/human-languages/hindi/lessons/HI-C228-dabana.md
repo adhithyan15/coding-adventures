@@ -14,7 +14,8 @@ romanization: "dabānā"
 concept_tag: HI-VERB-DABANA
 prerequisites: [HI-C228-ugana, HI-C228-pakrana]
 sounds: []
-roots: []
+roots: [indo-aryan-dabb]
+etymology_hook: "dabānā ← *dabb 'press', a reconstructed form; a tadbhava (CDIAL 6173)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C228-pakrana]
 <!-- hl-knowledge: introduces=[HI-LEX-C228-ACT228-04]; assesses=[] -->
 
 **दबाना** — *dabānā* — "to press".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दबाना** (*dabānā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dabb*, "press", a form CDIAL reconstructs from its descendants (CDIAL 6173). CDIAL notes Master's view that it comes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

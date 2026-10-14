@@ -14,7 +14,8 @@ romanization: "sāl"
 concept_tag: HI-TIME191-SAL
 prerequisites: [HI-C190-rang, HI-C191-hafta]
 sounds: []
-roots: []
+roots: [persian-sal]
+etymology_hook: "sāl: usually traced to Persian sāl 'year'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C191-hafta]
 <!-- hl-knowledge: introduces=[HI-LEX-C191-TIME191-02]; assesses=[] -->
 
 **साल** — *sāl* — "a year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साल** (*sāl*) is a loan, usually traced to Persian *sāl*, "year".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

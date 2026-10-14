@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 305,
-  "sourceHash": "fnv1a64:f597935590801437",
+  "sourceHash": "fnv1a64:c8f4c52125c55641",
   "lessonIds": [
     "ML-C305-niksepikkuka",
     "ML-C305-pinvalikkuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch305.txt",
   "json": "malayalam/narration/ch305.json",
-  "textHash": "fnv1a64:8827fbdac8aea4dc",
-  "jsonHash": "fnv1a64:d9a76531b1a49ff0",
+  "textHash": "fnv1a64:71aa6ef65970fe4b",
+  "jsonHash": "fnv1a64:c37495b0bbef9af6",
   "findings": []
 }

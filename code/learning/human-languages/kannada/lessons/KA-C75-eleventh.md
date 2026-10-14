@@ -11,7 +11,8 @@ romanization: "hannondaneya"
 concept_tag: KA-ORDINAL-ELEVENTH
 prerequisites: [KA-C75-tenth, KA-C75-sixth, KA-C72-when-clause, KA-C60-cow, KA-C20-hannondu-ippattu]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "hannondaneya: native hannondu 'eleven', ten (DEDR 3918) + one (DEDR 990), + -aneya"
 duration:
   max_seconds: 220
 requires:
@@ -49,6 +50,11 @@ Now the ordinal ending goes on top of that, and the result is a word made of thr
 parts, none of which had to be learned as a whole.
 
 **ಹನ್ನೊಂದನೆಯ ದಿನ** (*hannondaneya dina*), the eleventh day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹನ್ನೊಂದನೆಯ** (*hannondaneya*) is built from *hannondu*, "eleven", and the ordinal ending *-aneya*. *Hannondu* is native: DEDR 3918 lists *pann-*, "ten", as the form used in eleven and twelve, and *ondu*, "one", is in DEDR 990.
 
 ## Grammar Lens: the ending is a fact about numbers, not about ten
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C75-ORDINAL-07]; assesses=[KA-LEX-C75-ORDINAL-06] -->

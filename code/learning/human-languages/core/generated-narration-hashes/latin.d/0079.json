@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 79,
-  "sourceHash": "fnv1a64:ebfefd203f7f527e",
+  "sourceHash": "fnv1a64:ac0a1ea1c523c23d",
   "lessonIds": [
     "LA-C79-cibus",
     "LA-C79-cena",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch79.txt",
   "json": "latin/narration/ch79.json",
-  "textHash": "fnv1a64:83d2dd4154b03bc4",
-  "jsonHash": "fnv1a64:647ed7a8b19b4671",
+  "textHash": "fnv1a64:c63d8ab6e3722012",
+  "jsonHash": "fnv1a64:6aeb40349c9d38f0",
   "findings": []
 }

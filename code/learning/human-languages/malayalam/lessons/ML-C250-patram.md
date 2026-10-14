@@ -14,7 +14,8 @@ romanization: "patraṁ"
 concept_tag: ML-VASTU250-PATRAM
 prerequisites: [ML-C250-appu, ML-C250-vartta]
 sounds: []
-roots: []
+roots: [sanskrit-patra]
+etymology_hook: "patraṁ ← Sanskrit pattra 'leaf; leaf of a book' (CDIAL 7733)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C250-vartta]
 <!-- hl-knowledge: introduces=[ML-LEX-C250-VASTU250-04]; assesses=[] -->
 
 **പത്രം** — *patraṁ* — "a newspaper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പത്രം** (*patraṁ*) ← Sanskrit *pattra*, "leaf, petal; leaf of a book" (CDIAL 7733): a newspaper is a printed leaf.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

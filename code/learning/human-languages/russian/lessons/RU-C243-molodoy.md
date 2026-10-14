@@ -14,7 +14,8 @@ romanization: "molodóy"
 concept_tag: RU-KACH243-MOLODOY
 prerequisites: [RU-C242-zoopark, RU-C242-tsirk]
 sounds: []
-roots: []
+roots: [slavic-moldu]
+etymology_hook: "молодой ← Proto-Slavic *moldŭ; Latin mollis 'soft' and Sanskrit mṛdu 'soft' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C242-tsirk]
 <!-- hl-knowledge: introduces=[RU-LEX-C243-KACH243-01]; assesses=[] -->
 
 **молодой** (*molodóy*) — "young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**молодой** ← Proto-Slavic *\*moldŭ* — inherited; Church Slavonic has *младой*, "young". Vasmer relates it to Old Prussian *maldai*, "youths", Sanskrit *mṛdú-*, "soft", and Latin *mollis*, "soft".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

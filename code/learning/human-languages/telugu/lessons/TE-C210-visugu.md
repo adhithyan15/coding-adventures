@@ -14,7 +14,8 @@ romanization: "visugu"
 concept_tag: TE-AROGYAM210-VISUGU
 prerequisites: [TE-C210-trpti, TE-C210-nirasa]
 sounds: []
-roots: []
+roots: [dravidian-vicukku-displeasure]
+etymology_hook: "visugu: native Dravidian; DEDR 5386 lists visugu 'weariness, disgust' with Tamil vicukku 'displeasure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C210-nirasa]
 <!-- hl-knowledge: introduces=[TE-LEX-C210-AROGYAM210-04]; assesses=[] -->
 
 **విసుగు** — *visugu* — "boredom, weariness of something".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విసుగు** (*visugu*) is native Dravidian. DEDR 5386 lists *visugu*, "to be weary, disgusted; weariness", with Tamil *vicukku*, "displeasure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

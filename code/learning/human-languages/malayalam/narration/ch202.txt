@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for unfortunately, then the Malayalam for 
 You'll want to know: പ്രേരണ.
 പ്രേരണ — prēraṇa — "a motivation, an urging".
 
+The word, taken apart.
+പ്രേരണ (prēraṇa) from Sanskrit prēraṇa, "driving on, urging", taken over whole as a tatsama (CDIAL 9000).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for somehow, then the Malayalam for a moti
 
 You'll want to know: നിർബന്ധം.
 നിർബന്ധം — nirbandhaṁ — "insistence, compulsion".
+
+The word, taken apart.
+നിർബന്ധം (nirbandhaṁ) from Sanskrit nirbandha, "perseverance, insistence", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 7355). It is built on the root bandh, "to bind".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a motivation, then the Malayalam for i
 You'll want to know: ഗുണം.
 ഗുണം — guṇaṁ — "a good quality, a virtue".
 
+The word, taken apart.
+ഗുണം (guṇaṁ) from Sanskrit guṇa, "strand; quality, good quality", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 4190). Its first sense is a strand of a cord.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for insistence, then the Malayalam for a g
 You'll want to know: ദോഷം.
 ദോഷം — dōṣaṁ — "a drawback, harm".
 
+The word, taken apart.
+ദോഷം (dōṣaṁ) from Sanskrit dōṣa, "fault", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 6587).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a good quality, then the Malayalam for
 
 You'll want to know: ന്യായം.
 ന്യായം — nyāyaṁ — "fairness, a justification".
+
+The word, taken apart.
+ന്യായം (nyāyaṁ) from Sanskrit nyāya, "rule, method", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 7614).
 
 What you've built.
 One more word for this chapter.

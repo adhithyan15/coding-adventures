@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a thorn, then the Hindi for mud.
 You'll want to know: इंद्रधनुष.
 इंद्रधनुष — indradhanuṣ — "a rainbow".
 
+The word, taken apart.
+इंद्रधनुष (indradhanuṣ) is Sanskrit indradhanus, "Indra's bow", taken over whole as a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for mud, then the Hindi for a rainbow.
 
 You'll want to know: भूकंप.
 भूकंप — bhūkamp — "an earthquake".
+
+The word, taken apart.
+भूकंप (bhūkamp) is a tatsama compound, taken over whole from Sanskrit: bhū, "earth", and kampa, "trembling".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a rainbow, then the Hindi for an earthquak
 You'll want to know: बाढ़.
 बाढ़ — bāṛh — "a flood".
 
+The word, taken apart.
+बाढ़ (bāṛh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vṛddhi, "increase" (CDIAL 12076). CDIAL glosses the Hindi word "increase"; a flood is the rising of the water.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for an earthquake, then the Hindi for a flood.
 You'll want to know: पुरुष.
 पुरुष — puruṣ — "a man".
 
+The word, taken apart.
+पुरुष (puruṣ) is Sanskrit puruṣa, "man, male", taken over whole as a learned loan, a tatsama (CDIAL 8289). CDIAL lists the inherited form as purus.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a flood, then the Hindi for a man.
 
 You'll want to know: शिशु.
 शिशु — śiśu — "a baby, an infant".
+
+The word, taken apart.
+शिशु (śiśu) is Sanskrit śiśu, "young of an animal, child", taken over whole as a learned loan, a tatsama (CDIAL 12476). CDIAL lists the inherited forms as sis and sisu.
 
 What you've built.
 One more word for this chapter.

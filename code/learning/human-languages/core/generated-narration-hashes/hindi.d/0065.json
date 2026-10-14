@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 65,
-  "sourceHash": "fnv1a64:d0574bce984933ab",
+  "sourceHash": "fnv1a64:533199bf04078021",
   "lessonIds": [
     "HI-C65-kindness",
     "HI-C65-entreaty",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch65.txt",
   "json": "hindi/narration/ch65.json",
-  "textHash": "fnv1a64:087be9ea60fb6f25",
-  "jsonHash": "fnv1a64:94ff16fc4d01e5d8",
+  "textHash": "fnv1a64:508de13b5ad7eb0b",
+  "jsonHash": "fnv1a64:1bcaf9485f3a65fb",
   "findings": []
 }

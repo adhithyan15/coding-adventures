@@ -13,7 +13,8 @@ gloss: "polite, of the city"
 concept_tag: LA-QUAL180-URBANUS
 prerequisites: [LA-C179-admodum, LA-C180-commodus]
 sounds: []
-roots: []
+roots: [urbanus-latin, urbs-latin]
+etymology_hook: "urbānus 'of the city' — built on urbs 'city'; English urbane and urban"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C180-commodus]
 <!-- hl-knowledge: introduces=[LA-LEX-C180-QUAL180-02]; assesses=[] -->
 
 **urbānus, urbāna, urbānum** — "polite, of the city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**urbānus** is built on *urbs*, "a city" (Lewis & Short), with *-ānus*, "belonging to": of the city, then polished, witty. English *urbane* and *urban* both come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rána"
 concept_tag: RU-ZDOROV179-RANA
 prerequisites: [RU-C179-retsept, RU-C179-ukol]
 sounds: []
-roots: []
+roots: [slavic-rana]
+etymology_hook: "рана ← Proto-Slavic *rana; Sanskrit vraṇa 'a wound' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C179-ukol]
 <!-- hl-knowledge: introduces=[RU-LEX-C179-ZDOROV179-03]; assesses=[] -->
 
 **рана** (*rána*) — "a wound".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рана** ← Proto-Slavic *\*rana* — inherited. Vasmer relates it to Sanskrit *vraṇá-*, "a wound, a crack", and Albanian *varrë*, "a wound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

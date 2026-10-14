@@ -14,7 +14,8 @@ romanization: "pádat"
 concept_tag: RU-VERB-TO-FALL
 prerequisites: [RU-C132-to-get-up, RU-C132-to-sit-down]
 sounds: []
-roots: []
+roots: [slavic-pad]
+etymology_hook: "падать ← Proto-Slavic *padati; Sanskrit padyate 'falls' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C132-to-sit-down]
 <!-- hl-knowledge: introduces=[RU-LEX-C132-ACT132-05]; assesses=[] -->
 
 **падать** (*pádat*) — "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**падать** ← Proto-Slavic *\*padati* — inherited. Vasmer relates it to Sanskrit *padyate*, "falls, goes", and Old English *fetan*, "to fall".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

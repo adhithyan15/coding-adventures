@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a tower, then the Hindi for a garden.
 You'll want to know: चिड़ियाघर.
 चिड़ियाघर — ciṛiyāghar — "a zoo".
 
+The word, taken apart.
+चिड़ियाघर (ciṛiyāghar) is "bird-house": ciṛiyā, "bird", from Sanskrit caṭaka, "sparrow", a word imitating the call (CDIAL 4571), and ghar, "house", from ghara (CDIAL 4428).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a garden, then the Hindi for a zoo.
 
 You'll want to know: संग्रहालय.
 संग्रहालय — saṅgrahālay — "a museum".
+
+The word, taken apart.
+संग्रहालय (saṅgrahālay) is a tatsama compound, taken over whole from Sanskrit: saṅgraha, "a collection", and ālaya, "abode".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a zoo, then the Hindi for a museum.
 You'll want to know: सुरंग.
 सुरंग — suraṅg — "a tunnel".
 
+The word, taken apart.
+सुरंग (suraṅg) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from suruṅgā, "underground passage" (CDIAL 13506).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a museum, then the Hindi for a tunnel.
 You'll want to know: साइकिल.
 साइकिल — sāikil — "a bicycle".
 
+The word, taken apart.
+साइकिल (sāikil) is a loan from English cycle.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a tunnel, then the Hindi for a bicycle.
 
 You'll want to know: स्कूटर.
 स्कूटर — skūṭar — "a scooter".
+
+The word, taken apart.
+स्कूटर (skūṭar) is a loan from English scooter.
 
 What you've built.
 One more word for this chapter.

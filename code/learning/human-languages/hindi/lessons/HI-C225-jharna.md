@@ -14,7 +14,8 @@ romanization: "jhāṛnā"
 concept_tag: HI-VERB-JHARNA
 prerequisites: [HI-C224-daur, HI-C225-safkarna]
 sounds: []
-roots: []
+roots: [indo-aryan-jhatati]
+etymology_hook: "jhāṛnā: CDIAL lists it under a reconstructed *jhāṭayati 'shakes down' (CDIAL 5328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C225-safkarna]
 <!-- hl-knowledge: introduces=[HI-LEX-C225-ACT225-02]; assesses=[] -->
 
 **झाड़ना** — *jhāṛnā* — "to dust, to sweep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झाड़ना** (*jhāṛnā*) is inherited. CDIAL lists it under a reconstructed *\*jhāṭayati*, "shakes down", and asks whether the root is the same as in *jharnā*, "to flow" (CDIAL 5328).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ḍarnā"
 concept_tag: HI-VERB-DARNA
 prerequisites: [HI-C178-maarnaa, HI-C178-larna]
 sounds: []
-roots: []
+roots: [sanskrit-darati]
+etymology_hook: "ḍarnā ← Sanskrit darati 'is frightened', a tadbhava (CDIAL 6190)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C178-larna]
 <!-- hl-knowledge: introduces=[HI-LEX-C178-ACT178-04]; assesses=[] -->
 
 **डरना** — *ḍarnā* — "to be afraid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डरना** (*ḍarnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *darati*, "is frightened" (CDIAL 6190). The Sanskrit verb is known only from a list of verb roots.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

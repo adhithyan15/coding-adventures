@@ -11,7 +11,8 @@ romanization: "tiṇḍi"
 concept_tag: KA-TABLE-SNACK
 prerequisites: [KA-C93-wound, KA-C93-vomiting]
 sounds: []
-roots: []
+roots: [dravidian-tin-eat]
+etymology_hook: "tiṇḍi: native Dravidian, from tin 'to eat'; DEDR 3263 lists tiṇḍi; Tamil tiṉ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C93-vomiting]
 comes from **ತಿನ್ನು** (*tinnu*), "to eat".
 
 **ತಿಂಡಿ ಆಯ್ತಾ?** (*tiṇḍi āytā?*) — "have you had breakfast?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಿಂಡಿ** (*tiṇḍi*) is native Dravidian, from *tin*, "to eat", and DEDR 3263 lists *tiṇḍi*, "food", itself; the entry also has Tamil *tiṉ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "slow"
 concept_tag: LA-NOVUS-LENTUS
 prerequisites: [LA-C94-levis, LA-C94-celer]
 sounds: []
-roots: []
+roots: [lentus-latin]
+etymology_hook: "lentus 'slow' — probably from PIE *lentos 'pliant'; first 'supple'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C94-celer]
 <!-- hl-knowledge: introduces=[LA-LEX-C94-NOVUS-05]; assesses=[] -->
 
 **lentus, lenta, lentum** — "slow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lentus** is probably inherited, from a Proto-Indo-European *\*lentos*, "pliant, gentle" (EtymDB 2.1); its first sense was "pliant, supple". English *lithe* is often given as a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

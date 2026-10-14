@@ -11,7 +11,8 @@ romanization: "vayal"
 concept_tag: ML-NOUN-FIELD
 prerequisites: [ML-C55-path, ML-C53-sunshine]
 sounds: []
-roots: []
+roots: [dravidian-vayal-field]
+etymology_hook: "vayal: native Dravidian, one word with Tamil vayal and Kannada bayal(u) (DEDR 5258)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *vayal*, and it names a particular kind of field: the 
 That specificity is the point. A language grown in a rice country puts its sharpest word on the wet field, and Kuttanad — the stretch of Kerala farmed below sea level — is വയൽ for miles in every direction.
 
 The chillu ൽ closing it is the one you met on the door-word and the leg-word, a bare *l* with no vowel behind it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വയൽ** (*vayal*) is native Dravidian, one word with Tamil *vayal*, Kannada *bayal(u)* and Telugu *bayalu* (DEDR 5258).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [KA-C02-nanna-hesaru]
 sounds: [anusvara]
 roots: [santosha-sanskrit]
+etymology_hook: "santōṣa ← Sanskrit santoṣa 'satisfaction', taken over whole (CDIAL 12895)"
 duration:
   max_seconds: 180
 requires:
@@ -53,6 +54,8 @@ lesson that teaches the shape for *ta* inside it.
 *magiḻcci*, Kannada uses a Sanskrit word even for "pleased." The same split you
 saw over "hello" (*namaskāra*) and "thanks" (*dhanyavāda*) runs right through
 the introductions: Kannada borrows, Tamil keeps its own.
+
+CDIAL 12895 lists Sanskrit *santoṣa*, "satisfaction".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C02-SANTOSHA-01, KA-ETYMON-C02-SANTOSHA-02] -->

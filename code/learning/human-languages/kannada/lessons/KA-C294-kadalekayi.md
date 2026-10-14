@@ -14,7 +14,8 @@ romanization: "kaḍalekāyi"
 concept_tag: KA-VASTU294-KADALEKAYI
 prerequisites: [KA-C293-tometo, KA-C293-kyaret]
 sounds: []
-roots: []
+roots: [dravidian-kadalai-gram, dravidian-kaay-unripe]
+etymology_hook: "kaḍalekāyi: native kaḍale 'gram' (DEDR 1120) + kāyi 'nut, pod' (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C293-kyaret]
 <!-- hl-knowledge: introduces=[KA-LEX-C294-VASTU294-01]; assesses=[] -->
 
 **ಕಡಲೆಕಾಯಿ** — *kaḍalekāyi* — "a peanut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಡಲೆಕಾಯಿ** (*kaḍalekāyi*) is native Dravidian: *kaḍale*, "Bengal gram", one word with Tamil *kaṭalai* (DEDR 1120), and *kāyi*, "unripe fruit, nut, pod" (DEDR 1459). DEDR 1459 compares a reconstructed Indo-Aryan *\*kacca*, "raw, unripe" (CDIAL 2613).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

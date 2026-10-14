@@ -13,7 +13,8 @@ gloss: "to dance"
 concept_tag: LA-VERB-SALTO
 prerequisites: [LA-C75-laboro, LA-C75-cano]
 sounds: []
-roots: []
+roots: [saltare-latin, salire-latin]
+etymology_hook: "saltō 'to dance' — a frequentative of saliō 'to leap': to keep leaping"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C75-cano]
 <!-- hl-knowledge: introduces=[LA-LEX-C75-VERBA1-03]; assesses=[] -->
 
 **saltō, saltāre** — "to dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saltō** is a frequentative of *saliō*, "to leap" (Lewis & Short): to keep leaping, and so to dance.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hiriyaru"
 concept_tag: KA-VASTU299-HIRIYARU
 prerequisites: [KA-C299-manusya, KA-C299-aparicita]
 sounds: []
-roots: []
+roots: [dravidian-peru-great]
+etymology_hook: "hiriyaru: native Dravidian, from hiri, older piri 'greatness, age' (DEDR 4411)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C299-aparicita]
 <!-- hl-knowledge: introduces=[KA-LEX-C299-VASTU299-05]; assesses=[] -->
 
 **ಹಿರಿಯರು** — *hiriyaru* — "elders".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿರಿಯರು** (*hiriyaru*) is native Dravidian, from *hiri*, "great, older", which DEDR 4411 lists as older *piri*, "greatness, advanced age", with the plural ending *-aru*: "the older ones".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

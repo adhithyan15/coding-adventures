@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 251,
-  "sourceHash": "fnv1a64:395163d3a481d446",
+  "sourceHash": "fnv1a64:50af54e22890474a",
   "lessonIds": [
     "ES-C65-ahi-alli"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch251.txt",
   "json": "spanish/narration/ch251.json",
-  "textHash": "fnv1a64:5f7f9f18ff42d4aa",
-  "jsonHash": "fnv1a64:2457e11e18f7a1cd",
+  "textHash": "fnv1a64:7757d6cfad1114bb",
+  "jsonHash": "fnv1a64:4c162162af1ec776",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "jāgnā"
 concept_tag: HI-VERB-JAGNA
 prerequisites: [HI-C159-bhara, HI-C159-sona]
 sounds: []
-roots: []
+roots: [sanskrit-jagrati]
+etymology_hook: "jāgnā ← Sanskrit jāgrati 'are awake', a tadbhava (CDIAL 5175)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C159-sona]
 <!-- hl-knowledge: introduces=[HI-LEX-C159-QUAL159-03]; assesses=[] -->
 
 **जागना** — *jāgnā* — "to wake up, to stay awake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जागना** (*jāgnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jāgrati*, "are awake" (CDIAL 5175).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

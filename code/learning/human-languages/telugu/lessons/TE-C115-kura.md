@@ -14,7 +14,8 @@ romanization: "kūra"
 concept_tag: TE-THINGS115-KURA
 prerequisites: [TE-C115-ungaram, TE-C115-gajulu]
 sounds: []
-roots: []
+roots: [dravidian-kuura-vegetable]
+etymology_hook: "kūra: native Dravidian; DEDR 1760 lists kūra 'vegetable, curry-stuff' with Tamil kuy 'spicy seasoning'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C115-gajulu]
 <!-- hl-knowledge: introduces=[TE-LEX-C115-THINGS115-04]; assesses=[] -->
 
 **కూర** — *kūra* — "a curry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కూర** (*kūra*) is native Dravidian. DEDR 1760 lists *kūra*, "a vegetable, curry-stuff", with Tamil *kuy*, "seasoning with spices".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

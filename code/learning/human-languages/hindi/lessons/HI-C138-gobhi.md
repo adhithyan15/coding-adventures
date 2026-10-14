@@ -14,7 +14,8 @@ romanization: "gobhī"
 concept_tag: HI-THINGS138-GOBHI
 prerequisites: [HI-C138-tamatar, HI-C138-gajar]
 sounds: []
-roots: []
+roots: [sanskrit-gojihvika]
+etymology_hook: "gobhī ← Sanskrit gojihvikā 'a kind of plant', a tadbhava (CDIAL 4270)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C138-gajar]
 <!-- hl-knowledge: introduces=[HI-LEX-C138-THINGS138-05]; assesses=[] -->
 
 **गोभी** — *gobhī* — "a cauliflower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गोभी** (*gobhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gojihvikā*, "a kind of plant" (CDIAL 4270). The Sanskrit name means "cow's tongue"; CDIAL glosses the Hindi word "cabbage".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

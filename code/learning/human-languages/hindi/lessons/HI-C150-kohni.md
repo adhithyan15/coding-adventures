@@ -14,7 +14,8 @@ romanization: "kohnī"
 concept_tag: HI-THINGS150-KOHNI
 prerequisites: [HI-C149-kachua, HI-C149-cuha, HI-C05-practice]
 sounds: []
-roots: []
+roots: [sanskrit-kaphoni]
+etymology_hook: "kohnī ← Sanskrit kaphoṇi 'elbow', probably from Munda; a tadbhava (CDIAL 2757)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C149-cuha]
 <!-- hl-knowledge: introduces=[HI-LEX-C150-THINGS150-01]; assesses=[] -->
 
 **कोहनी** — *kohnī* — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोहनी** (*kohnī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaphoṇi*, "elbow" (CDIAL 2757). CDIAL prefers a Munda source for the Sanskrit word to a Dravidian one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

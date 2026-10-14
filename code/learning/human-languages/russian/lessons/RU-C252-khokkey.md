@@ -14,7 +14,8 @@ romanization: "khokkéy"
 concept_tag: RU-VESHCH252-KHOKKEY
 prerequisites: [RU-C251-golub, RU-C251-vorobey]
 sounds: []
-roots: []
+roots: [english-hockey]
+etymology_hook: "хоккей ← English hockey"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C251-vorobey]
 <!-- hl-knowledge: introduces=[RU-LEX-C252-VESHCH252-01]; assesses=[] -->
 
 **хоккей** (*khokkéy*) — "hockey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**хоккей** comes from English *hockey*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

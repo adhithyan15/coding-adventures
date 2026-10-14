@@ -14,7 +14,8 @@ romanization: "kahānī"
 concept_tag: HI-THG189-KAHANI
 prerequisites: [HI-C188-bhatija, HI-C189-citthi]
 sounds: []
-roots: []
+roots: [sanskrit-kathanaka]
+etymology_hook: "kahānī ← Sanskrit kathānaka 'a little tale', a tadbhava (CDIAL 2705)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C189-citthi]
 <!-- hl-knowledge: introduces=[HI-LEX-C189-THG189-02]; assesses=[] -->
 
 **कहानी** — *kahānī* — "a story".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कहानी** (*kahānī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kathānaka*, "a little tale" (CDIAL 2705). It is built on *kathā*, "story".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 77,
-  "sourceHash": "fnv1a64:56eb0bd4affcdfab",
+  "sourceHash": "fnv1a64:da99adace392616c",
   "lessonIds": [
     "HI-C70-game",
     "HI-C70-play",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "hindi/narration/ch77.txt",
   "json": "hindi/narration/ch77.json",
-  "textHash": "fnv1a64:f97469ef5837cda0",
-  "jsonHash": "fnv1a64:6ffbe9e16103c02a",
+  "textHash": "fnv1a64:982cd83863a950c3",
+  "jsonHash": "fnv1a64:c751f9be040d8d4d",
   "findings": []
 }

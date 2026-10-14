@@ -14,7 +14,8 @@ romanization: "sāmānu"
 concept_tag: KA-VASTU260-SAMANU
 prerequisites: [KA-C259-karavastra, KA-C259-sara]
 sounds: []
-roots: []
+roots: [persian-saman]
+etymology_hook: "sāmānu: Persian sāmān 'goods, equipment', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C259-sara]
 <!-- hl-knowledge: introduces=[KA-LEX-C260-VASTU260-01]; assesses=[] -->
 
 **ಸಾಮಾನು** — *sāmānu* — "luggage, belongings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಮಾನು** (*sāmānu*) is Persian *sāmān*, "goods, equipment", which came into Kannada through Hindustani, with a final *-u* added.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

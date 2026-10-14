@@ -14,7 +14,8 @@ romanization: "vijēta"
 concept_tag: TE-VASTUVU189-VIJETA
 prerequisites: [TE-C188-gorintaku, TE-C189-poti]
 sounds: []
-roots: []
+roots: [sanskrit-vijetr]
+etymology_hook: "vijēta ← Sanskrit vijetā 'conqueror', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C189-poti]
 <!-- hl-knowledge: introduces=[TE-LEX-C189-VASTUVU189-02]; assesses=[] -->
 
 **విజేత** — *vijēta* — "a winner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విజేత** (*vijēta*) is Sanskrit *vijetā*, "conqueror", taken over as a learned loan, a tatsama, with the final *-ā* shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

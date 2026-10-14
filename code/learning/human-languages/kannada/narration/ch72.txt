@@ -14,6 +14,9 @@ You'll want to know: ಬಂದಾಗ.
 ಯಾವಾಗ asks about a time. This is how you answer with a whole event instead of a clock: ನೀವು ಬಂದಾಗ (nīvu bandāga) — "when you come".
 It is ಬಾ / ಬರು ("come") in its past shape ಬಂದ-, with -ಆಗ (-āga) on the end — and that ending is the same ಆಗ that sits inside ಯಾವಾಗ. "When?" and "when it happens" are built from one piece.
 
+The word, taken apart.
+ಬಂದಾಗ (bandāga) is native Dravidian: banda, "who has come", from baru, "to come" (DEDR 5270), and āga, "time, then" (DEDR 1). It is "at the time of coming".
+
 Grammar Lens: the when-clause comes first, and rides on the verb.
 Kannada's when-clause comes FIRST, and the main clause follows it. There is no word for when standing between them; the ending on the verb is the join.
 ನೀವು ಬಂದಾಗ ಹೇಳಿ (nīvu bandāga hēḷi) — "tell me when you come."
@@ -59,6 +62,9 @@ You'll want to know: ನನಗೆ ಚಹಾ ಬೇಕು.
 Literally: "to me tea is wanted." Wanting happens to you in Kannada, exactly as knowing does, so this is the dative sentence you already build with ಗೊತ್ತು, with one word swapped.
 This book gave you the refusal first. ಬೇಡ (bēḍa, "no thank you") has been your answer to an offer for a while, and it is the negative half of a pair whose positive half you did not have. The word doing the wanting here is that missing half.
 On its own it answers an offer: somebody holds up the pot, you say the wanting word or you say ಬೇಡ, and that is the whole exchange.
+
+The phrase, taken apart.
+ನನಗೆ ಚಹಾ ಬೇಕು (nanage cahā bēku) is nanage, "to me" (DEDR 5160), cahā, "tea", and bēku, "it is wanted" (DEDR 5528, with Tamil vēṇṭu). Bēku and nanage are native; cahā came through Hindustani chā, which goes back to Chinese chá.
 
 Grammar Lens: the pair, and the missing half.
 ಬೇಕು and ಬೇಡ are a matched pair, and neither of them names who is doing the wanting unless you put the dative in front. That is why a single word is a complete answer.
@@ -145,6 +151,9 @@ Everything in it is already yours. ನನಗೆ ಕನ್ನಡ ಇಷ್ಟ was
 ನನಗೆ ("to me") becomes ನಿಮಗೆ ("to you") — the same -ಗೆ you have been putting on nouns, now on the polite ನೀವು. And ಇಷ್ಟ takes the question ending: ಇಷ್ಟ + -ಆ, with a ವ slipped in to keep the two vowels apart, gives ಇಷ್ಟವಾ.
 That little ವ is not a rule to learn. Kannada dislikes two vowels meeting and puts a ವ or a ಯ between them; you have heard it all along without noticing.
 
+The phrase, taken apart.
+ನಿಮಗೆ ಕಾಫಿ ಇಷ್ಟವಾ (nimage kāphi iṣṭavā) is nimage, "to you" (DEDR 3688), kāphi, "coffee", a loan from English coffee, and iṣṭa, "liked", from Sanskrit iṣṭa, "sought, beloved" (CDIAL 1597), with the question ending -ā.
+
 What you've built.
 A question about somebody else, instead of a statement about yourself. That is the turn a conversation needs.
 
@@ -186,6 +195,9 @@ You'll want to know: ನನಗೆ ಚಹಾ ಇಷ್ಟ, ಕಾಫಿ ಅಲ್
 Somebody offers you the choice with ಅಥವಾ; this is the answer. Kannada has no single word for prefer. What it does is say what you like and then deny the alternative — the liking sentence you already own, with ಅಲ್ಲ on the end of the one you are turning down.
 That is a real economy rather than a gap: ಅಲ್ಲ denies a description, and "coffee" is exactly a description here of what you like. The two halves of the sentence are doing the two things this chapter and the last one taught.
 ಚಹಾ ಅಥವಾ ಕಾಫಿ? — ನನಗೆ ಚಹಾ ಇಷ್ಟ, ಕಾಫಿ ಅಲ್ಲ (nanage cahā iṣṭa, kāphi alla). Question and answer, both of them built out of pieces you were given one at a time.
+
+The phrase, taken apart.
+ನನಗೆ ಚಹಾ ಇಷ್ಟ, ಕಾಫಿ ಅಲ್ಲ (nanage cahā iṣṭa, kāphi alla) sets two loans against each other: cahā, through Hindustani, and kāphi, from English coffee. Iṣṭa, "liked", is Sanskrit iṣṭa, "sought, beloved" (CDIAL 1597); nanage, "to me" (DEDR 5160), and alla, "is not" (DEDR 234), are native.
 
 What you've built.
 A choice offered, a choice answered. That exchange needs a word for "or", a word for "like" and a word for "is not", and all three are now yours.

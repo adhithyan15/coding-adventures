@@ -14,7 +14,8 @@ romanization: "muḍi"
 concept_tag: TE-VASTUVU308-MUDI
 prerequisites: [TE-C308-mukka, TE-C308-ancu]
 sounds: []
-roots: []
+roots: [dravidian-mudi-knot]
+etymology_hook: "muḍi: native Dravidian, one word with Tamil muṭi and Kannada muḍi (DEDR 4921)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C308-ancu]
 <!-- hl-knowledge: introduces=[TE-LEX-C308-VASTUVU308-04]; assesses=[] -->
 
 **ముడి** — *muḍi* — "a knot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ముడి** (*muḍi*) is native Dravidian, one word with Tamil *muṭi* and Kannada *muḍi* (DEDR 4921). DEDR lists Telugu *muḍi*, "knot, tie".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

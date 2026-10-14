@@ -14,7 +14,8 @@ romanization: "cetta"
 concept_tag: TE-VASTUVU224-CETTA
 prerequisites: [TE-C223-moratu, TE-C224-garite]
 sounds: []
-roots: []
+roots: [dravidian-cettai-rubbish]
+etymology_hook: "cetta: native Dravidian; DEDR 2770 lists cetta 'rubbish' with Kannada satte"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C224-garite]
 <!-- hl-knowledge: introduces=[TE-LEX-C224-VASTUVU224-02]; assesses=[] -->
 
 **చెత్త** — *cetta* — "rubbish, garbage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చెత్త** (*cetta*) is native Dravidian. DEDR 2770 lists *cetta*, "rubbish, trash", with Tamil *cettai*, "dry rubbish", and Kannada *satte*, "rubbish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

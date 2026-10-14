@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 105,
-  "sourceHash": "fnv1a64:502f07badb81fdba",
+  "sourceHash": "fnv1a64:ae7a91a4b7c74a2b",
   "lessonIds": [
     "LA-C105-raro",
     "LA-C105-iam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch105.txt",
   "json": "latin/narration/ch105.json",
-  "textHash": "fnv1a64:069fa99e6deca936",
-  "jsonHash": "fnv1a64:4a02980b8a918cb2",
+  "textHash": "fnv1a64:3f6a0d082ab8cf9e",
+  "jsonHash": "fnv1a64:a98608a656bf70e4",
   "findings": []
 }

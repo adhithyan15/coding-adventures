@@ -13,7 +13,8 @@ gloss: "a rain cloud"
 concept_tag: LA-RES191-NIMBUS
 prerequisites: [LA-C191-sidus, LA-C191-procella]
 sounds: []
-roots: []
+roots: [nimbus-latin, nebula-latin]
+etymology_hook: "nimbus 'rain cloud' — usually traced to PIE *nebhos 'cloud'; kin to nebula 'mist'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C191-procella]
 <!-- hl-knowledge: introduces=[LA-LEX-C191-RES191-05]; assesses=[] -->
 
 **nimbus, nimbī** — "a rain cloud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nimbus** is inherited, usually traced to Proto-Indo-European *\*nebhos*, "cloud" (EtymDB 2.1), in a form with an n inside; Greek *nephos*, "cloud", is a cousin (Lewis & Short), and so is *nebula*, "mist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

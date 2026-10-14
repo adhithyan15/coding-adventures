@@ -14,7 +14,8 @@ romanization: "balapaṁ"
 concept_tag: TE-PANI313-BALAPAM
 prerequisites: [TE-C313-suddamukka, TE-C313-palaka]
 sounds: []
-roots: []
+roots: [dravidian-palappam-chalk]
+etymology_hook: "balapaṁ: native Dravidian, one word with Tamil palappam and Malayalam valappam (DEDR 4014)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C313-palaka]
 <!-- hl-knowledge: introduces=[TE-LEX-C313-PANI313-03]; assesses=[] -->
 
 **బలపం** — *balapaṁ* — "a slate pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బలపం** (*balapaṁ*) is native Dravidian, one word with Tamil *palappam* and Malayalam *valappam* (DEDR 4014). DEDR lists Telugu *balapamu*, "slate", and *balapapu pulla*, "slate pencil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "band"
 concept_tag: HI-ADJ-CLOSED
 prerequisites: [HI-C74-open, HI-C73-drink, HI-C72-rupee, HI-C73-breakfast]
 sounds: []
-roots: []
+roots: [persian-band]
+etymology_hook: "band: usually traced to Persian band 'shut, bound'"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +53,11 @@ monkey you met among the animals — the eye will want to join them and they are
 unrelated. Second, बंद stands opposite **खुला** (*khulā*) on exactly the same
 signboards, so
 learn them as one pair and you have read half a street.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बंद** (*band*) is a loan, usually traced to Persian *band*, "shut, bound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

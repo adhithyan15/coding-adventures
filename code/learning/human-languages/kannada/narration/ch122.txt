@@ -12,6 +12,9 @@ Before the new one: say the Kannada for rasam, then the Kannada for sambar.
 You'll want to know: ಪಲ್ಯ.
 ಪಲ್ಯ — palya — "a dry vegetable dish".
 
+The word, taken apart.
+The origin of ಪಲ್ಯ (palya) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for sambar, then the Kannada for a dry veget
 
 You'll want to know: ಉಪ್ಪಿನಕಾಯಿ.
 ಉಪ್ಪಿನಕಾಯಿ — uppinakāyi — "a pickle".
+
+The word, taken apart.
+ಉಪ್ಪಿನಕಾಯಿ (uppinakāyi) is native Dravidian: uppina, "of salt", from uppu, "salt" (DEDR 2674), and kāyi, "unripe fruit" (DEDR 1459): fruit kept in salt. DEDR 1459 compares a reconstructed Indo-Aryan kacca, "raw, unripe" (CDIAL 2613).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a dry vegetable dish, then the Kannada f
 You'll want to know: ಮೊಟ್ಟೆ.
 ಮೊಟ್ಟೆ — moṭṭe — "an egg".
 
+The word, taken apart.
+ಮೊಟ್ಟೆ (moṭṭe) is native Dravidian, one word with Tamil muṭṭai (DEDR 4939). DEDR lists moṭṭe itself, "egg".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a pickle, then the Kannada for an egg.
 You'll want to know: ಮೀನು.
 ಮೀನು — mīnu — "a fish".
 
+The word, taken apart.
+ಮೀನು (mīnu) is native Dravidian, one word with Tamil mīṉ and Telugu mīnu (DEDR 4885). DEDR gives Kannada mīn. DEDR 4885 compares Sanskrit mīna.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for an egg, then the Kannada for a fish.
 
 You'll want to know: ಮಾಂಸ.
 ಮಾಂಸ — māṁsa — "meat".
+
+The word, taken apart.
+ಮಾಂಸ (māṁsa) is Sanskrit māṃsa, "flesh", taken over whole as a learned loan, a tatsama (CDIAL 9982).
 
 What you've built.
 One more word for this chapter.

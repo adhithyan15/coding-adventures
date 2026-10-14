@@ -371,3 +371,27 @@ extend to this third plan. New Language Ladder entries are one uniquely named
 level-2 shard above the current maximum rank. Future glyph changes edit that
 fragment plus their script-owned evidence module and do not edit either shared
 aggregate.
+
+---
+
+## 8. Post-migration whole-document digests are retired
+
+The migration-time question was whether splitting a monolith preserved its
+original bytes. A fixed pre-migration digest answered that question once. It is
+not an enduring owner for a document that continues to grow.
+
+Keeping one mutable digest file for each roadmap or session map caused every
+independent addition to that document to rewrite the same generated owner. The
+Punjabi session-map digest was touched by 23 commits from 2026-10-01 through the
+#17411 audit, even though the 918 section shards already had separate stable
+owners. The digest had become the serialization point the sharding was designed
+to remove.
+
+The mutable digest owners are retired after the migration has been established.
+Validation now reads the real shard directories and proves the durable
+properties directly: every plan path is unique, shard names and file types fail
+closed, ordering is code-unit deterministic, ignored entries are rejected, and
+reconstruction is deterministic. Historical pre-migration byte evidence remains
+in git history. A future migration may use a one-time digest during its review,
+but must not leave a whole-document checksum that every later section owner has
+to update.

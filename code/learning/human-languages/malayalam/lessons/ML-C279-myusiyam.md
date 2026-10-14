@@ -14,7 +14,8 @@ romanization: "myūsiyaṁ"
 concept_tag: ML-STHALAM279-MYUSIYAM
 prerequisites: [ML-C278-jilla, ML-C279-maitanam]
 sounds: []
-roots: []
+roots: [english-museum]
+etymology_hook: "myūsiyaṁ ← English museum"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C279-maitanam]
 <!-- hl-knowledge: introduces=[ML-LEX-C279-STHALAM279-02]; assesses=[] -->
 
 **മ്യൂസിയം** — *myūsiyaṁ* — "a museum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മ്യൂസിയം** (*myūsiyaṁ*) ← English *museum*, from Greek *mouseion*, "a seat of the Muses".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -34,7 +34,8 @@ use diagram_ir::{
     ChartTextAnchor, ChartTextBaseline, DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
     LayoutedChartDiagram, LayoutedChartItem,
     EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
-    LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram, LayoutedRailroadDiagram,
+    LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram,
+    LayoutedSwimlaneEdge, LayoutedRailroadDiagram,
     LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardCard, LayoutedBoardDiagram, LayoutedPacketDiagram,
@@ -867,6 +868,17 @@ where
             },
         ));
     }
+    for group in &diagram.groups {
+        instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(), x: group.x, y: group.y, width: group.width, height: group.height,
+            fill: None, stroke: Some("#90a4ae".into()), stroke_width: Some(1.25),
+            corner_radius: Some(6.0), stroke_dash: Some(vec![6.0, 4.0]), stroke_dash_offset: None,
+        }));
+        text_children.push(text_node(
+            &group.label, group.x + 8.0, group.y + 4.0, group.width - 16.0, 22.0,
+            options.label_font.clone(), Color { r: 69, g: 90, b: 100, a: 255 },
+        ));
+    }
     let mut hop_crossings = SwimlaneHopCrossings::default();
     for (edge_index, edge) in diagram.edges.iter().enumerate() {
         if edge.kind == SwimlaneEdgeKind::Invisible {
@@ -973,11 +985,33 @@ where
         } else {
             (edge.to.clone(), edge.from.clone())
         };
-        if let Some(line_hops) = diagram.line_hops.filter(|_| {
-            matches!(edge.curve, None | Some(SwimlaneEdgeCurve::Linear))
-        }) {
-            let crossings = hop_crossings.prior_crossings(edge_index, &edge.from, &edge.to);
-            apply_swimlane_line_hops(&mut path, &edge.from, &edge.to, &crossings, line_hops);
+        if let (Some(line_hops), Some(points)) = (
+            diagram.line_hops,
+            swimlane_line_hop_points(&diagram.direction, edge),
+        ) {
+            let mut crossings = Vec::new();
+            // Query every segment before inserting any segment of this edge:
+            // upstream crosses prior edges only, never an edge against itself.
+            for (segment_index, segment) in points.windows(2).enumerate() {
+                let length = (segment[1].x - segment[0].x).hypot(segment[1].y - segment[0].y);
+                for (t, point, other_edge, other_segment) in
+                    hop_crossings.prior_crossings(&segment[0], &segment[1])
+                {
+                    if t * length > 6.0 && (1.0 - t) * length > 6.0 {
+                        crossings.push((segment_index, t, point, other_edge, other_segment));
+                    }
+                }
+            }
+            crossings.sort_by(|left, right| left.0.cmp(&right.0)
+                .then_with(|| left.1.total_cmp(&right.1))
+                .then_with(|| left.3.cmp(&right.3))
+                .then_with(|| left.4.cmp(&right.4)));
+            for (segment_index, segment) in points.windows(2).enumerate() {
+                hop_crossings.insert_geometry(edge_index, segment_index, &segment[0], &segment[1]);
+            }
+            let crossings = crossings.into_iter().map(|(segment, t, point, _, _)| (segment, t, point))
+                .collect::<Vec<_>>();
+            apply_swimlane_line_hops(&mut path, &points, &crossings, line_hops);
         }
         if let Some(stroke_dash) = &edge.style.stroke_dash {
             path.stroke_dash = Some(stroke_dash.clone());
@@ -1042,6 +1076,18 @@ where
                 stroke: Some(stroke.clone()),
                 stroke_width: Some(stroke_width),
                 stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::Anchor => PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: node.x + 1.0,
+                cy: node.y + 1.0,
+                rx: 1.0,
+                ry: 1.0,
+                fill: Some("#000000".into()),
+                stroke: None,
+                stroke_width: None,
+                stroke_dash: None,
                 stroke_dash_offset: None,
             }),
             DiagramShape::ForkJoin => PaintInstruction::Rect(PaintRect {
@@ -1189,6 +1235,14 @@ where
                 stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
+            DiagramShape::TitledRect => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: titled_rect_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
             DiagramShape::WindowPane => PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
                 commands: window_pane_path_commands(node.x, node.y, node.width, node.height),
@@ -1197,6 +1251,38 @@ where
                 stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
+            DiagramShape::Note => {
+                let fold = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
+                let outline = PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(), commands: vec![
+                        PathCommand::MoveTo { x: node.x, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width - fold, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + fold },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x, y: node.y + node.height },
+                        PathCommand::Close,
+                    ],
+                    fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
+                    stroke_width: Some(stroke_width), stroke_cap: None,
+                    stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                    stroke_dash_offset: None,
+                });
+                let crease = PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(), commands: vec![
+                        PathCommand::MoveTo { x: node.x + node.width - fold, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width - fold, y: node.y + fold },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + fold },
+                    ],
+                    fill: None, fill_rule: None, stroke: Some(stroke.clone()),
+                    stroke_width: Some(stroke_width), stroke_cap: None,
+                    stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                    stroke_dash_offset: None,
+                });
+                PaintInstruction::Group(PaintGroup {
+                    base: PaintBase::default(), children: vec![outline, crease],
+                    transform: None, opacity: None,
+                })
+            }
             DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
             | DiagramShape::ParallelogramLeft | DiagramShape::Trapezoid
             | DiagramShape::InvertedTrapezoid | DiagramShape::Asymmetric => {
@@ -1371,7 +1457,8 @@ where
         }
         if !matches!(node.shape,
             DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::ForkJoin
-            | DiagramShape::LightningBolt | DiagramShape::FilledCircle | DiagramShape::Summary
+            | DiagramShape::LightningBolt | DiagramShape::FilledCircle | DiagramShape::Anchor
+            | DiagramShape::Summary
         ) {
             let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
                 r: 13, g: 71, b: 161, a: 255,
@@ -1391,6 +1478,7 @@ where
                 DiagramShape::LinedCylinder => (node.x + 8.0, node.y + 20.0, node.width - 16.0, node.height - 24.0),
                 DiagramShape::Display => (node.x + 22.0, node.y + 10.0, node.width - 42.0, node.height - 16.0),
                 DiagramShape::DividedRect => (node.x + 8.0, node.y + 16.0, node.width - 16.0, node.height - 22.0),
+                DiagramShape::TitledRect => (node.x + 8.0, node.y + 2.0, node.width - 16.0, node.height * 0.32 - 4.0),
                 DiagramShape::WindowPane => (node.x + 18.0, node.y + 16.0, node.width - 26.0, node.height - 22.0),
                 DiagramShape::ManualInput => (
                     node.x + 8.0,
@@ -1471,6 +1559,18 @@ where
         metadata.insert("swimlane.automaticLaneOrdering".into(), "true".into());
         metadata.insert("swimlane.laneOrder".into(), diagram.lanes.iter()
             .map(|lane| lane.id.as_str()).collect::<Vec<_>>().join(","));
+    }
+    if !diagram.ignore_cross_lane_edges {
+        metadata.insert("swimlane.ignoreCrossLaneEdges".into(), "false".into());
+        metadata.insert("swimlane.optimizeRanksByCrossings".into(),
+            diagram.optimize_ranks_by_crossings.to_string());
+    }
+    for (index, group) in diagram.groups.iter().enumerate() {
+        metadata.insert(format!("swimlane.group.{index}.id"), group.id.clone());
+        metadata.insert(format!("swimlane.group.{index}.lane"), group.lane_id.clone());
+        if let Some(parent_id) = &group.parent_id {
+            metadata.insert(format!("swimlane.group.{index}.parent"), parent_id.clone());
+        }
     }
     for (index, edge) in diagram.edges.iter().enumerate() {
         if let Some(id) = &edge.id {
@@ -1578,61 +1678,57 @@ fn swimlane_endpoint_marker(
     }
 }
 
-struct SwimlaneHopGeometry<'a> {
-    from: &'a Point,
-    to: &'a Point,
-    occurrences: Vec<usize>,
+struct SwimlaneHopGeometry {
+    from: Point,
+    to: Point,
+    occurrences: Vec<(usize, usize)>,
 }
 
-/// Keep drawing occurrences intact while indexing exact directed geometry.
-/// Same-axis cohorts cannot produce interior crossings. Oblique candidates
-/// still require the original predicate; this is not a global sweep-line bound.
+/// Own each distinct directed segment because orthogonal route points are
+/// temporary. Keep occurrence edge/segment identities and expand them only
+/// after the original predicate succeeds. Same-axis cohorts cannot cross.
+/// Arbitrary distinct oblique work still requires separate review.
 #[derive(Default)]
-struct SwimlaneHopCrossings<'a> {
+struct SwimlaneHopCrossings {
     by_geometry: BTreeMap<[u64; 4], usize>,
-    geometries: Vec<SwimlaneHopGeometry<'a>>,
+    geometries: Vec<SwimlaneHopGeometry>,
     horizontal: Vec<usize>,
     vertical: Vec<usize>,
     oblique: Vec<usize>,
 }
 
-impl<'a> SwimlaneHopCrossings<'a> {
-    fn prior_crossings(&mut self, index: usize, from: &'a Point, to: &'a Point) -> Vec<(f64, Point)> {
+impl SwimlaneHopCrossings {
+    fn prior_crossings(&self, from: &Point, to: &Point) -> Vec<(f64, Point, usize, usize)> {
         if from.x == to.x && from.y == to.y {
             return Vec::new();
         }
-        let horizontal = from.y == to.y;
-        let vertical = from.x == to.x;
-        let horizontal_candidates: &[usize] = if horizontal { &[] } else { &self.horizontal };
-        let vertical_candidates: &[usize] = if vertical { &[] } else { &self.vertical };
-        let candidate_groups = horizontal_candidates.iter()
-            .chain(vertical_candidates.iter())
-            .chain(self.oblique.iter());
+        let horizontal_candidates: &[usize] = if from.y == to.y { &[] } else { &self.horizontal };
+        let vertical_candidates: &[usize] = if from.x == to.x { &[] } else { &self.vertical };
         let mut crossings = Vec::new();
-        for &group_index in candidate_groups {
+        for &group_index in horizontal_candidates.iter().chain(vertical_candidates.iter()).chain(self.oblique.iter()) {
             let other = &self.geometries[group_index];
-            if let Some((t, point)) = swimlane_line_crossing(from, to, other.from, other.to) {
-                // Every original occurrence contributes the same hop commands.
-                crossings.extend(other.occurrences.iter().map(|&order| (t, point.clone(), order)));
+            if let Some((t, point)) = swimlane_line_crossing(from, to, &other.from, &other.to) {
+                crossings.extend(other.occurrences.iter().map(|&(edge, segment)| (t, point.clone(), edge, segment)));
             }
         }
-        crossings.sort_by(|left, right| left.0.total_cmp(&right.0).then_with(|| left.2.cmp(&right.2)));
+        crossings
+    }
+
+    fn insert_geometry(&mut self, edge: usize, segment: usize, from: &Point, to: &Point) {
+        if from.x == to.x && from.y == to.y {
+            return;
+        }
         let key = [from.x.to_bits(), from.y.to_bits(), to.x.to_bits(), to.y.to_bits()];
         if let Some(&group_index) = self.by_geometry.get(&key) {
-            self.geometries[group_index].occurrences.push(index);
+            self.geometries[group_index].occurrences.push((edge, segment));
         } else {
             let group_index = self.geometries.len();
             self.by_geometry.insert(key, group_index);
-            self.geometries.push(SwimlaneHopGeometry { from, to, occurrences: vec![index] });
-            if horizontal {
-                self.horizontal.push(group_index);
-            } else if vertical {
-                self.vertical.push(group_index);
-            } else {
-                self.oblique.push(group_index);
-            }
+            self.geometries.push(SwimlaneHopGeometry { from: from.clone(), to: to.clone(), occurrences: vec![(edge, segment)] });
+            if from.y == to.y { self.horizontal.push(group_index); }
+            else if from.x == to.x { self.vertical.push(group_index); }
+            else { self.oblique.push(group_index); }
         }
-        crossings.into_iter().map(|(t, point, _)| (t, point)).collect()
     }
 }
 
@@ -1667,38 +1763,71 @@ fn swimlane_line_crossing(
     Some((t, Point { x: from.x + dx * t, y: from.y + dy * t }))
 }
 
+fn swimlane_line_hop_points(
+    direction: &DiagramDirection, edge: &LayoutedSwimlaneEdge,
+) -> Option<Vec<Point>> {
+    let horizontal = matches!(direction, DiagramDirection::Lr | DiagramDirection::Rl);
+    let mut points = vec![edge.from.clone()];
+    match edge.curve {
+        None | Some(SwimlaneEdgeCurve::Linear) => {}
+        Some(SwimlaneEdgeCurve::Rounded | SwimlaneEdgeCurve::Step) if horizontal => {
+            let middle = (edge.from.x + edge.to.x) / 2.0;
+            points.extend([Point { x: middle, y: edge.from.y }, Point { x: middle, y: edge.to.y }]);
+        }
+        Some(SwimlaneEdgeCurve::Rounded | SwimlaneEdgeCurve::Step) => {
+            let middle = (edge.from.y + edge.to.y) / 2.0;
+            points.extend([Point { x: edge.from.x, y: middle }, Point { x: edge.to.x, y: middle }]);
+        }
+        Some(SwimlaneEdgeCurve::StepBefore) => points.push(if horizontal {
+            Point { x: edge.from.x, y: edge.to.y }
+        } else {
+            Point { x: edge.to.x, y: edge.from.y }
+        }),
+        Some(SwimlaneEdgeCurve::StepAfter) => points.push(if horizontal {
+            Point { x: edge.to.x, y: edge.from.y }
+        } else {
+            Point { x: edge.from.x, y: edge.to.y }
+        }),
+        _ => return None,
+    }
+    points.push(edge.to.clone());
+    Some(points)
+}
+
 fn apply_swimlane_line_hops(
-    path: &mut PaintPath, from: &Point, to: &Point, crossings: &[(f64, Point)],
+    path: &mut PaintPath, points: &[Point], crossings: &[(usize, f64, Point)],
     line_hops: SwimlaneLineHops,
 ) {
     if crossings.is_empty() {
         return;
     }
-    let dx = to.x - from.x;
-    let dy = to.y - from.y;
-    let length = dx.hypot(dy);
-    if length <= f64::EPSILON {
-        return;
-    }
     let radius = 6.0;
-    let unit_x = dx / length;
-    let unit_y = dy / length;
-    path.commands = vec![PathCommand::MoveTo { x: from.x, y: from.y }];
-    for (_, crossing) in crossings {
-        let before = Point { x: crossing.x - unit_x * radius, y: crossing.y - unit_y * radius };
-        let after = Point { x: crossing.x + unit_x * radius, y: crossing.y + unit_y * radius };
-        path.commands.push(PathCommand::LineTo { x: before.x, y: before.y });
-        match line_hops {
-            SwimlaneLineHops::Arc => path.commands.push(PathCommand::QuadTo {
-                cx: crossing.x - unit_y * radius * 2.0,
-                cy: crossing.y + unit_x * radius * 2.0,
-                x: after.x,
-                y: after.y,
-            }),
-            SwimlaneLineHops::Gap => path.commands.push(PathCommand::MoveTo { x: after.x, y: after.y }),
+    path.commands = vec![PathCommand::MoveTo { x: points[0].x, y: points[0].y }];
+    for (segment_index, segment) in points.windows(2).enumerate() {
+        let dx = segment[1].x - segment[0].x;
+        let dy = segment[1].y - segment[0].y;
+        let length = dx.hypot(dy);
+        if length <= f64::EPSILON {
+            continue;
         }
+        let unit_x = dx / length;
+        let unit_y = dy / length;
+        for (_, _, crossing) in crossings.iter().filter(|crossing| crossing.0 == segment_index) {
+            let before = Point { x: crossing.x - unit_x * radius, y: crossing.y - unit_y * radius };
+            let after = Point { x: crossing.x + unit_x * radius, y: crossing.y + unit_y * radius };
+            path.commands.push(PathCommand::LineTo { x: before.x, y: before.y });
+            match line_hops {
+                SwimlaneLineHops::Arc => path.commands.push(PathCommand::QuadTo {
+                    cx: crossing.x - unit_y * radius * 2.0,
+                    cy: crossing.y + unit_x * radius * 2.0,
+                    x: after.x,
+                    y: after.y,
+                }),
+                SwimlaneLineHops::Gap => path.commands.push(PathCommand::MoveTo { x: after.x, y: after.y }),
+            }
+        }
+        path.commands.push(PathCommand::LineTo { x: segment[1].x, y: segment[1].y });
     }
-    path.commands.push(PathCommand::LineTo { x: to.x, y: to.y });
 }
 
 fn rounded_swimlane_path(points: &[Point], radius: f64) -> (Vec<PathCommand>, Point, Point) {
@@ -2367,6 +2496,18 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
         DiagramShape::SmallCircle | DiagramShape::FilledCircle => {
             node_ellipse_instruction(node, 0.0, Some(node.style.stroke.clone()))
         }
+        DiagramShape::Anchor => PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx: node.x + 1.0,
+            cy: node.y + 1.0,
+            rx: 1.0,
+            ry: 1.0,
+            fill: Some("#000000".into()),
+            stroke: None,
+            stroke_width: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }),
         DiagramShape::FramedCircle => {
             let inner_inset = node.width.min(node.height) * 9.0 / 28.0;
             PaintInstruction::Group(PaintGroup {
@@ -2513,6 +2654,14 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
         DiagramShape::DividedRect => PaintInstruction::Path(PaintPath {
             base: PaintBase::default(),
             commands: divided_rect_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()), fill_rule: None,
+            stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
+        }),
+        DiagramShape::TitledRect => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: titled_rect_path_commands(node.x, node.y, node.width, node.height),
             fill: Some(node.style.fill.clone()), fill_rule: None,
             stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
             stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
@@ -2675,9 +2824,8 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
         DiagramShape::BlockArrow(directions) => block_arrow_instruction(node, directions),
         DiagramShape::Note => {
             let fold = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
-            PaintInstruction::Path(PaintPath {
-                base: PaintBase::default(),
-                commands: vec![
+            let outline = PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(), commands: vec![
                     PathCommand::MoveTo {
                         x: node.x,
                         y: node.y,
@@ -2708,6 +2856,20 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
                 stroke_join: Some(StrokeJoin::Round),
                 stroke_dash: node.style.stroke_dash.clone(),
                 stroke_dash_offset: None,
+            });
+            let crease = PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(), commands: vec![
+                    PathCommand::MoveTo { x: node.x + node.width - fold, y: node.y },
+                    PathCommand::LineTo { x: node.x + node.width - fold, y: node.y + fold },
+                    PathCommand::LineTo { x: node.x + node.width, y: node.y + fold },
+                ],
+                fill: None, fill_rule: None, stroke: Some(node.style.stroke.clone()),
+                stroke_width: Some(node.style.stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: node.style.stroke_dash.clone(),
+                stroke_dash_offset: None,
+            });
+            PaintInstruction::Group(PaintGroup {
+                base: PaintBase::default(), children: vec![outline, crease], transform: None, opacity: None,
             })
         }
         DiagramShape::Rect | DiagramShape::Bar => PaintInstruction::Rect(PaintRect {
@@ -3287,6 +3449,25 @@ fn divided_rect_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<Pa
         PathCommand::LineTo { x: x + width, y },
         PathCommand::LineTo { x: x + width, y: y + height },
         PathCommand::LineTo { x, y: y + height },
+        PathCommand::Close,
+        PathCommand::MoveTo { x, y: divider_y },
+        PathCommand::LineTo { x: x + width, y: divider_y },
+    ]
+}
+
+fn titled_rect_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    let radius = 6.0_f64.min(width / 4.0).min(height / 4.0);
+    let divider_y = y + height * 0.32;
+    vec![
+        PathCommand::MoveTo { x: x + radius, y },
+        PathCommand::LineTo { x: x + width - radius, y },
+        PathCommand::QuadTo { cx: x + width, cy: y, x: x + width, y: y + radius },
+        PathCommand::LineTo { x: x + width, y: y + height - radius },
+        PathCommand::QuadTo { cx: x + width, cy: y + height, x: x + width - radius, y: y + height },
+        PathCommand::LineTo { x: x + radius, y: y + height },
+        PathCommand::QuadTo { cx: x, cy: y + height, x, y: y + height - radius },
+        PathCommand::LineTo { x, y: y + radius },
+        PathCommand::QuadTo { cx: x, cy: y, x: x + radius, y },
         PathCommand::Close,
         PathCommand::MoveTo { x, y: divider_y },
         PathCommand::LineTo { x: x + width, y: divider_y },
@@ -8923,6 +9104,29 @@ mod tests {
         ShapingError,
     };
 
+    #[test]
+    fn swimlane_line_hops_accept_every_orthogonal_friendly_curve() {
+        let edge = |curve| LayoutedSwimlaneEdge {
+            id: None, from: Point { x: 10.0, y: 20.0 }, to: Point { x: 110.0, y: 120.0 },
+            label: None, kind: SwimlaneEdgeKind::Directed, start_marker: EdgeMarker::None,
+            end_marker: EdgeMarker::Point, min_length: 1, classes: Vec::new(),
+            style: Default::default(), animate: false, animation: None, curve,
+        };
+        for (curve, expected_points) in [
+            (None, 2),
+            (Some(SwimlaneEdgeCurve::Linear), 2),
+            (Some(SwimlaneEdgeCurve::Rounded), 4),
+            (Some(SwimlaneEdgeCurve::Step), 4),
+            (Some(SwimlaneEdgeCurve::StepBefore), 3),
+            (Some(SwimlaneEdgeCurve::StepAfter), 3),
+        ] {
+            assert_eq!(swimlane_line_hop_points(&DiagramDirection::Lr, &edge(curve)).unwrap().len(), expected_points);
+        }
+        assert!(swimlane_line_hop_points(
+            &DiagramDirection::Lr, &edge(Some(SwimlaneEdgeCurve::Basis)),
+        ).is_none());
+    }
+
     // ── Minimal fake text backend ─────────────────────────────────────────
 
     #[derive(Clone)]
@@ -10313,7 +10517,8 @@ mod tests {
         let scene = diagram_to_paint(&layout, &opts);
 
         assert!(scene.instructions.iter().any(|instruction| {
-            matches!(instruction, PaintInstruction::Path(path) if path.commands.len() == 6)
+            matches!(instruction, PaintInstruction::Group(group)
+                if group.children.iter().filter(|child| matches!(child, PaintInstruction::Path(_))).count() == 2)
         }));
         assert!(scene.instructions.iter().any(|instruction| {
             matches!(instruction, PaintInstruction::Path(path) if path.stroke_dash.is_some())

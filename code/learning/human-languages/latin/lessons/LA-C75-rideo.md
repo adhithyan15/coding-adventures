@@ -13,7 +13,8 @@ gloss: "to laugh"
 concept_tag: LA-VERB-RIDEO
 prerequisites: [LA-C75-cano, LA-C75-salto]
 sounds: []
-roots: []
+roots: [ridere-latin]
+etymology_hook: "rīdeō 'to laugh' — origin unknown; English ridiculous and deride come from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C75-salto]
 <!-- hl-knowledge: introduces=[LA-LEX-C75-VERBA1-04]; assesses=[] -->
 
 **rīdeō, rīdēre** — "to laugh". English *ridiculous*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rīdeō** has no sure origin; no proposal is generally accepted. English *deride* comes from it too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

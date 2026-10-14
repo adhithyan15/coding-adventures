@@ -14,7 +14,8 @@ romanization: "moṭṭe"
 concept_tag: KA-THINGS122-MOTTE
 prerequisites: [KA-C122-palya, KA-C122-uppinakayi]
 sounds: []
-roots: []
+roots: [dravidian-muttai-egg]
+etymology_hook: "moṭṭe: native Dravidian, one word with Tamil muṭṭai (DEDR 4939)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C122-uppinakayi]
 <!-- hl-knowledge: introduces=[KA-LEX-C122-THINGS122-03]; assesses=[] -->
 
 **ಮೊಟ್ಟೆ** — *moṭṭe* — "an egg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೊಟ್ಟೆ** (*moṭṭe*) is native Dravidian, one word with Tamil *muṭṭai* (DEDR 4939). DEDR lists *moṭṭe* itself, "egg".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

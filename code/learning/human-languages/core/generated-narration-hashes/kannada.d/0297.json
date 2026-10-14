@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 297,
-  "sourceHash": "fnv1a64:bae6b13199a38eb1",
+  "sourceHash": "fnv1a64:b0430a2883566291",
   "lessonIds": [
     "KA-C297-jenunona",
     "KA-C297-gubbacci",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch297.txt",
   "json": "kannada/narration/ch297.json",
-  "textHash": "fnv1a64:9eaaa8bde2406d34",
-  "jsonHash": "fnv1a64:6f5b8e785711c58e",
+  "textHash": "fnv1a64:bbdcd670139196d8",
+  "jsonHash": "fnv1a64:dc6333a7a6e14b98",
   "findings": []
 }

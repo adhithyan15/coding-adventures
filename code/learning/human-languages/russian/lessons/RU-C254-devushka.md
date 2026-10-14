@@ -14,7 +14,8 @@ romanization: "dévushka"
 concept_tag: RU-VESHCH254-DEVUSHKA
 prerequisites: [RU-C254-devochka, RU-C254-paren]
 sounds: []
-roots: []
+roots: [slavic-deva]
+etymology_hook: "девушка is a fond diminutive of дева 'a maiden'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C254-paren]
 <!-- hl-knowledge: introduces=[RU-LEX-C254-VESHCH254-03]; assesses=[] -->
 
 **девушка** (*dévushka*) — "a young woman, a girlfriend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**девушка** is *дева*, "a maiden", with the fond *-ушка*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "sariggā"
 concept_tag: TE-RESPOND-EXACTLY
 prerequisites: [TE-C86-wait, TE-C87-mistake]
 sounds: []
-roots: []
+roots: [sari]
+etymology_hook: "sariggā: sari 'right', of uncertain origin (usually traced to Sanskrit sadṛśa, CDIAL 13120), + -gā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C87-mistake]
 
 Said alone, **సరిగ్గా!** is "exactly!". It shares its start with **సరే**, "okay": both lean on
 **సరి**, "right, even".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సరిగ్గా** (*sariggā*) is *sari*, "right, even", with the adverb ending *-gā*. The origin of *sari* is uncertain: DEDR has no entry for it, and it is usually traced to Sanskrit *sadṛśa*, "like, equal" (CDIAL 13120).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

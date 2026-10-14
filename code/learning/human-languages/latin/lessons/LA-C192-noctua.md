@@ -13,7 +13,8 @@ gloss: "an owl"
 concept_tag: LA-RES192-NOCTUA
 prerequisites: [LA-C192-passer, LA-C192-ciconia]
 sounds: []
-roots: []
+roots: [noctua-latin, nox-latin]
+etymology_hook: "noctua 'owl' — built on nox, noctis 'night': the night bird"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C192-ciconia]
 <!-- hl-knowledge: introduces=[LA-LEX-C192-RES192-04]; assesses=[] -->
 
 **noctua, noctuae** — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**noctua** is built on *nox*, *noctis*, "night" (Lewis & Short): the night bird.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

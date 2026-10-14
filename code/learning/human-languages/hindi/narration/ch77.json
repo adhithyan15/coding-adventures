@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "After the Work Is Done",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:56eb0bd4affcdfab",
+  "sourceHash": "fnv1a64:da99adace392616c",
   "lessons": [
     {
       "id": "HI-C70-game",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1bd19f5da775a7d3",
+      "sourceHash": "fnv1a64:57a9f1259cf36c9a",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खेल (khel) is inherited from a reconstructed khel-, \"play\" (CDIAL 3918). CDIAL links it with Sanskrit krīḍati, \"plays\": if that verb has a non-Aryan source, these forms may share it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -150,7 +161,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -181,7 +192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ef49c89b0f22ce5",
+      "sourceHash": "fnv1a64:a59ebc4b41ae4cd1",
       "notice": null,
       "blocks": [
         {
@@ -235,6 +246,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खेलना (khelnā) is inherited from a reconstructed khel-, \"play\" (CDIAL 3918), the verb behind khel, \"a game\". CDIAL links it with Sanskrit krīḍati, \"plays\": if that verb has a non-Aryan source, these forms may share it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -245,7 +267,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -321,7 +343,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -352,7 +374,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f72205742f8930ea",
+      "sourceHash": "fnv1a64:e068bb69a8956758",
       "notice": null,
       "blocks": [
         {
@@ -397,6 +419,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्रिकेट (krikeṭ) is a loan from English cricket."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -407,7 +440,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -465,7 +498,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -497,7 +530,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:25897e959c391e04",
+      "sourceHash": "fnv1a64:8316a246da626058",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -553,6 +586,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गाना (gānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it under gāpayati, the second form it gives beside gāyati, \"sings\" (CDIAL 4135). The noun is the verb gānā, \"to sing\", used for what is sung."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -563,7 +607,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -612,7 +656,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -643,7 +687,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa34f5c31554b18f",
+      "sourceHash": "fnv1a64:f1bbc3f93f48fe14",
       "notice": null,
       "blocks": [
         {
@@ -688,6 +732,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आराम (ārām) is a loan, usually traced to Persian ārām, \"rest, ease\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -698,7 +753,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -765,7 +820,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

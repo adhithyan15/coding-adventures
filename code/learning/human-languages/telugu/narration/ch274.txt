@@ -12,6 +12,9 @@ Before the new one: say the Telugu for groceries, then the Telugu for a purchase
 You'll want to know: తరగతి.
 తరగతి — taragati — "a class, a grade".
 
+The word, taken apart.
+The origin of తరగతి (taragati) is uncertain. DEDR and CDIAL list no word of this shape meaning "class, grade".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a purchase, then the Telugu for a class.
 
 You'll want to know: పాఠం.
 పాఠం — pāṭhaṁ — "a lesson".
+
+The word, taken apart.
+పాఠం (pāṭhaṁ) is Sanskrit pāṭha, "text of a book; study", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 8035).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a class, then the Telugu for a lesson.
 You'll want to know: జవాబు.
 జవాబు — javābu — "an answer, a reply".
 
+The word, taken apart.
+జవాబు (javābu) is a loan from Arabic jawāb, "answer", which came through Persian and Hindustani.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a lesson, then the Telugu for an answer.
 You'll want to know: విషయం.
 విషయం — viṣayaṁ — "a subject, a matter".
 
+The word, taken apart.
+విషయం (viṣayaṁ) is Sanskrit viṣaya, "scope; sphere, region", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 11973). Sanskrit already used it for "subject matter" too.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for an answer, then the Telugu for a subject.
 
 You'll want to know: గణితం.
 గణితం — gaṇitaṁ — "mathematics".
+
+The word, taken apart.
+గణితం (gaṇitaṁ) is Sanskrit gaṇita, "counted", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 3996). Sanskrit already used it for "arithmetic" too.
 
 What you've built.
 One more word for this chapter.

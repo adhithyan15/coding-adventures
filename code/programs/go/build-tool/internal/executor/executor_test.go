@@ -1338,3 +1338,58 @@ func TestOverlappingKeySetsDoNotDeadlock(t *testing.T) {
 		t.Fatal("overlapping key sets deadlocked")
 	}
 }
+
+// X-7: a leaf's own Cargo target/ goes after its build; anything a dependent
+// might read, or that is not a package-local Cargo target, stays.
+func TestPruneLeafCargoTarget(t *testing.T) {
+	makePkg := func(name string, cargo bool, target string) discovery.Package {
+		dir := t.TempDir()
+		if cargo {
+			if err := os.WriteFile(filepath.Join(dir, "Cargo.toml"), []byte("[package]\n"), 0o644); err != nil {
+				t.Fatal(err)
+			}
+		}
+		switch target {
+		case "dir":
+			if err := os.MkdirAll(filepath.Join(dir, "target", "debug"), 0o755); err != nil {
+				t.Fatal(err)
+			}
+		case "symlink":
+			outside := t.TempDir()
+			if err := os.Symlink(outside, filepath.Join(dir, "target")); err != nil {
+				t.Skip("symlinks unavailable:", err)
+			}
+		}
+		return discovery.Package{Name: name, Path: dir}
+	}
+	graph := directedgraph.New()
+	leaf := makePkg("rust/leaf", true, "dir")
+	lib := makePkg("rust/lib", true, "dir")
+	notCargo := makePkg("go/leaf", false, "dir")
+	linked := makePkg("rust/linked", true, "symlink")
+	for _, p := range []discovery.Package{leaf, lib, notCargo, linked} {
+		graph.AddNode(p.Name)
+	}
+	graph.AddEdge("rust/lib", "rust/leaf") // leaf depends on lib
+
+	for _, p := range []discovery.Package{leaf, lib, notCargo, linked} {
+		pruneLeafCargoTarget(p, graph)
+	}
+
+	exists := func(p discovery.Package) bool {
+		_, err := os.Lstat(filepath.Join(p.Path, "target"))
+		return err == nil
+	}
+	if exists(leaf) {
+		t.Error("a leaf Cargo package's target/ should be pruned")
+	}
+	if !exists(lib) {
+		t.Error("a package with dependents must keep its target/")
+	}
+	if !exists(notCargo) {
+		t.Error("a target/ with no Cargo.toml beside it is not Cargo's and must stay")
+	}
+	if !exists(linked) {
+		t.Error("a symlinked target/ must not be followed or removed")
+	}
+}

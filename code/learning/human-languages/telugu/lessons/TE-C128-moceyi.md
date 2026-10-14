@@ -14,7 +14,8 @@ romanization: "mōcēyi"
 concept_tag: TE-THINGS128-MOCEYI
 prerequisites: [TE-C128-gaddam, TE-C128-manikattu]
 sounds: []
-roots: []
+roots: [dravidian-cey-hand]
+etymology_hook: "mōcēyi: native Dravidian; DEDR 4990 lists mō ceyyi 'elbow', the joint of the arm"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C128-manikattu]
 <!-- hl-knowledge: introduces=[TE-LEX-C128-THINGS128-03]; assesses=[] -->
 
 **మోచేయి** — *mōcēyi* — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మోచేయి** (*mōcēyi*) is native Dravidian. DEDR 4990 lists *mō ceyyi*, "elbow", the joint of the arm, with Tamil *muḻam*, "cubit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

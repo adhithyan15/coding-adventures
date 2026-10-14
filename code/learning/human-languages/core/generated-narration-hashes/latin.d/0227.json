@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 227,
-  "sourceHash": "fnv1a64:5aac94f332e87485",
+  "sourceHash": "fnv1a64:a5c1c79374a3702c",
   "lessonIds": [
     "LA-C227-fatum",
     "LA-C227-cubile",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch227.txt",
   "json": "latin/narration/ch227.json",
-  "textHash": "fnv1a64:158ed84b7cd986f0",
-  "jsonHash": "fnv1a64:48397919ed47ca67",
+  "textHash": "fnv1a64:a017b1082a99d391",
+  "jsonHash": "fnv1a64:ebcee486f1b4a8bd",
   "findings": []
 }

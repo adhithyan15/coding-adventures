@@ -13,7 +13,8 @@ gloss: "a helmsman"
 concept_tag: LA-RES186-GUBERNATOR
 prerequisites: [LA-C185-impluvium, LA-C185-fundamentum]
 sounds: []
-roots: []
+roots: [gubernator-latin, gubernare-latin]
+etymology_hook: "gubernātor 'helmsman' — built on gubernō 'to steer', from Greek kybernaō"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C185-fundamentum]
 <!-- hl-knowledge: introduces=[LA-LEX-C186-RES186-01]; assesses=[] -->
 
 **gubernātor, gubernātōris** — "a helmsman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gubernātor** is built on *gubernō*, "to steer" (EtymDB 2.1), a verb Latin took from Greek *kybernaō*, "to steer, to pilot", with *-tor*, "one who does it". English *governor* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

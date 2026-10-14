@@ -14,7 +14,8 @@ romanization: "ayañña"
 concept_tag: ML-GUNAM203-AYANNA
 prerequisites: [ML-C203-ruciyulla, ML-C203-cinna]
 sounds: []
-roots: []
+roots: [dravidian-acai-send]
+etymology_hook: "ayañña: native Dravidian, 'slackened', from the verb to slacken (DEDR 37)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C203-cinna]
 <!-- hl-knowledge: introduces=[ML-LEX-C203-GUNAM203-03]; assesses=[] -->
 
 **അയഞ്ഞ** — *ayañña* — "loose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അയഞ്ഞ** (*ayañña*) is native Dravidian, a past form of the verb "to slacken"; DEDR 37 lists the root with Tamil *acaṅku* and Kannada *asi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

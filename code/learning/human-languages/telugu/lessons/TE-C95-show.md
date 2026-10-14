@@ -11,7 +11,8 @@ romanization: "cūpiñcaṇḍi"
 concept_tag: TE-ASK-SHOW
 prerequisites: [TE-C95-howsay, TE-C95-gently]
 sounds: []
-roots: []
+roots: [dravidian-cuucu-see]
+etymology_hook: "cūpiñcaṇḍi: native cūpincu 'to show' (DEDR 2735), from cūcu 'to see', + the polite -aṇḍi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C95-gently]
 
 It is built on **చూడు**, "see": to show is to *make someone see*. When a word will not come,
 point and say **చూపించండి**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చూపించండి** (*cūpiñcaṇḍi*) is native Dravidian: *cūpincu*, "to show", which DEDR 2735 lists under *cūcu*, "to see", followed by the polite ending *-aṇḍi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

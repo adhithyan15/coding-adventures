@@ -11,7 +11,8 @@ romanization: "vaidyuḍu"
 concept_tag: TE-NOUN-DOCTOR
 prerequisites: [TE-C48-student]
 sounds: []
-roots: []
+roots: [sanskrit-vaidya]
+etymology_hook: "vaidyuḍu ← Sanskrit vaidya 'learned; physician', a tatsama (CDIAL 12140)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C48-student]
 Look at the middle of it. *vaidya* is built on the very *vid* sitting inside విద్యార్థి: a physician is one versed in the knowledge, the knowledge in question being आयुर्वेद, the science of long life.
 
 The ending **-ుడు** is not Sanskrit's but Telugu's own, marking a masculine person — the same **-ుడు** already carried by స్నేహితుడు.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వైద్యుడు** (*vaidyuḍu*) is Sanskrit *vaidya*, "learned; physician", taken over whole as a learned loan, a tatsama, with the Telugu ending *-uḍu* (CDIAL 12140).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

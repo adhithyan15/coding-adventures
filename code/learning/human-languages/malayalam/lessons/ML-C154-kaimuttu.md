@@ -14,7 +14,8 @@ romanization: "kaimuṭṭŭ"
 concept_tag: ML-THINGS154-KAIMUTTU
 prerequisites: [ML-C153-kotuku, ML-C153-tol]
 sounds: []
-roots: []
+roots: [dravidian-tala-kai, dravidian-muttu-joint]
+etymology_hook: "kaimuṭṭŭ: native Dravidian, 'arm joint': kai (DEDR 2023) + muṭṭŭ 'joint, knee' (DEDR 4935)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C153-tol]
 <!-- hl-knowledge: introduces=[ML-LEX-C154-THINGS154-01]; assesses=[] -->
 
 **കൈമുട്ട്** — *kaimuṭṭŭ* — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൈമുട്ട്** (*kaimuṭṭŭ*) is native Dravidian, "the arm's joint": *kai*, "hand, arm" (DEDR 2023), and *muṭṭŭ*, "joint, knee" (DEDR 4935, with Tamil *muṭṭu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

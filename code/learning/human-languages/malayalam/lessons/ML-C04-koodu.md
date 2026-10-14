@@ -14,7 +14,8 @@ gloss: "a nest"
 concept_tag: ML-ANCHOR-KOODU
 prerequisites: [ML-S116-letter-u, ML-C04-uduppu]
 sounds: []
-roots: []
+roots: [dravidian-kutu-nest]
+etymology_hook: "kūṭŭ: native Dravidian, one word with Tamil kūṭu and Kannada gūḍu (DEDR 1883)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *kūṭŭ*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ൂ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൂട്** (*kūṭŭ*) is native Dravidian, one word with Tamil *kūṭu* and Kannada *gūḍu* (DEDR 1883). DEDR 1883 compares Sanskrit *kūṭa*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-KOODU] -->

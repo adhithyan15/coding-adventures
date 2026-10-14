@@ -13,7 +13,8 @@ gloss: "garlic"
 concept_tag: LA-THINGS126-ALIUM
 prerequisites: [LA-C126-pomum, LA-C126-cepa]
 sounds: []
-roots: []
+roots: [alium-latin]
+etymology_hook: "ālium 'garlic' — also allium; origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C126-cepa]
 <!-- hl-knowledge: introduces=[LA-LEX-C126-THINGS126-05]; assesses=[] -->
 
 **ālium, āliī** — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ālium**, also spelled *allium* (Lewis & Short), has no sure origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

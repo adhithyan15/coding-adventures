@@ -14,7 +14,8 @@ romanization: "tarakāri"
 concept_tag: KA-THINGS123-TARAKARI
 prerequisites: [KA-C122-minu, KA-C122-mamsa]
 sounds: []
-roots: []
+roots: [persian-tarkari]
+etymology_hook: "tarakāri ← Hindustani tarkārī 'vegetables', from Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C122-mamsa]
 <!-- hl-knowledge: introduces=[KA-LEX-C123-THINGS123-01]; assesses=[] -->
 
 **ತರಕಾರಿ** — *tarakāri* — "vegetables".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತರಕಾರಿ** (*tarakāri*) came from Hindustani *tarkārī*, "vegetables, a cooked vegetable dish", a Persian word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

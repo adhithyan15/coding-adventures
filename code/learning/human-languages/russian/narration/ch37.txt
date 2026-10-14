@@ -12,6 +12,9 @@ Before the new one: say the Russian for a grandson, then the Russian for a grand
 You'll want to know: сосед.
 сосед (soséd) — "a neighbour".
 
+The word, taken apart.
+сосед (soséd) from Proto-Slavic sǫsědŭ — inherited: sǫ-, "together", with the root of сидеть, "to sit", so a neighbour is "one who sits beside you". Vasmer compares Sanskrit saṃsád, "assembly".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for a granddaughter, then the Russian for a 
 
 You'll want to know: гость.
 гость (gost) — "a guest".
+
+The word, taken apart.
+гость (gost) from Proto-Slavic gostĭ — inherited. Vasmer relates it to Gothic gasts and Latin hostis, "stranger, enemy", and rejects a loan from Germanic: English guest is a cousin, from PIE gʰóstis. In Old Russian a гость (gost) was also a travelling merchant (Vasmer).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Russian for a neighbour, then the Russian for a gues
 You'll want to know: учитель.
 учитель (uchítel) — "a teacher".
 
+The word, taken apart.
+учитель (uchítel) is учить, "to teach", with -тель, "one who does it"; Old Church Slavonic already had it. The verb goes back to Proto-Slavic učiti, "to accustom" (Vasmer).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Russian for a guest, then the Russian for a teacher.
 You'll want to know: ученик.
 ученик (ucheník) — "a pupil".
 
+The word, taken apart.
+ученик (ucheník) is учить, "to teach, to learn", with -ник, a suffix for a person: the one who learns. The verb goes back to Proto-Slavic učiti, "to accustom" (Vasmer).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Russian for a teacher, then the Russian for a pupil.
 
 You'll want to know: работа.
 работа (rabóta) — "work, a job".
+
+The word, taken apart.
+работа (rabóta) from Proto-Slavic orbota: Old Russian робота meant "work, slavery" (Vasmer). It is built on the root of раб, "slave", and Vasmer relates it to Gothic arbaiþs, "hardship", and German Arbeit, "work". Its ра- is the Church Slavonic shape; East Slavic dialects say робота.
 
 What you've built.
 One more word for this chapter.

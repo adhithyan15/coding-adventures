@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 129,
-  "sourceHash": "fnv1a64:5c3e0e2a155ba6d7",
+  "sourceHash": "fnv1a64:cdafedfc83e5de92",
   "lessonIds": [
     "LA-C129-ramus",
     "LA-C129-truncus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch129.txt",
   "json": "latin/narration/ch129.json",
-  "textHash": "fnv1a64:6d8f2bdc1f865060",
-  "jsonHash": "fnv1a64:0c755b36efe84924",
+  "textHash": "fnv1a64:a2d4866ecb3feffe",
+  "jsonHash": "fnv1a64:0fcb35068f11af8c",
   "findings": []
 }

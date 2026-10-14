@@ -13,7 +13,8 @@ gloss: "to break off, to interrupt"
 concept_tag: LA-VERB-INTERRUMPO
 prerequisites: [LA-C232-patior, LA-C233-insto]
 sounds: []
-roots: []
+roots: [interrumpere-latin, rumpere-latin]
+etymology_hook: "interrumpō 'to interrupt' — inter 'between' + rumpō 'to break'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C233-insto]
 <!-- hl-knowledge: introduces=[LA-LEX-C233-ACT233-02]; assesses=[] -->
 
 **interrumpō, interrumpere** — "to break off, to interrupt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interrumpō** is *inter*, "between", with *rumpō*, "to break" (EtymDB 2.1): to break in between. *rumpō* is usually traced to Proto-Indo-European *\*Hrewp-*, "to break".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

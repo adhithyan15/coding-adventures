@@ -13,7 +13,8 @@ gloss: "a chain"
 concept_tag: LA-RES251-CATENA
 prerequisites: [LA-C251-tigris, LA-C251-clava]
 sounds: []
-roots: []
+roots: [catena-latin]
+etymology_hook: "catēna 'chain' — origin uncertain; English chain comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C251-clava]
 <!-- hl-knowledge: introduces=[LA-LEX-C251-RES251-04]; assesses=[] -->
 
 **catēna, catēnae** — "a chain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**catēna** has no sure origin; EtymDB 2.1 records a proposed Proto-Indo-European *\*kat-*, "to twist, to plait". English *chain* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

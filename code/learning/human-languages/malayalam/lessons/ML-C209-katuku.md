@@ -14,7 +14,8 @@ romanization: "kaṭukŭ"
 concept_tag: ML-VASTU209-KATUKU
 prerequisites: [ML-C208-ten, ML-C209-kariveppila]
 sounds: []
-roots: []
+roots: [dravidian-katuku-mustard]
+etymology_hook: "kaṭukŭ: native Dravidian, one word with Tamil kaṭuku (DEDR 1137)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C209-kariveppila]
 <!-- hl-knowledge: introduces=[ML-LEX-C209-VASTU209-02]; assesses=[] -->
 
 **കടുക്** — *kaṭukŭ* — "mustard seeds".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കടുക്** (*kaṭukŭ*) is native Dravidian, one word with Tamil *kaṭuku* (DEDR 1137).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

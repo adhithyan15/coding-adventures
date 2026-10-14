@@ -13,7 +13,8 @@ gloss: "to wish for, to choose"
 concept_tag: LA-VERB-OPTO
 prerequisites: [LA-C111-malo, LA-C111-cupio]
 sounds: []
-roots: []
+roots: [optare-latin]
+etymology_hook: "optō 'to wish, to choose' — origin uncertain; English option and adopt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C111-cupio]
 <!-- hl-knowledge: introduces=[LA-LEX-C111-WANT111-03]; assesses=[] -->
 
 **optō, optāre** — "to wish for, to choose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**optō** has no sure origin; the link with a Greek root for seeing that Lewis & Short give is uncertain. English *option* and *adopt* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

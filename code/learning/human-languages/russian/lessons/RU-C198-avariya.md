@@ -14,7 +14,8 @@ romanization: "aváriya"
 concept_tag: RU-VESHCH198-AVARIYA
 prerequisites: [RU-C198-peresadka, RU-C198-probka]
 sounds: []
-roots: []
+roots: [arabic-awar]
+etymology_hook: "авария ← Italian avaria or French avarie 'damage', from Arabic ʿawār 'a flaw'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C198-probka]
 <!-- hl-knowledge: introduces=[RU-LEX-C198-VESHCH198-05]; assesses=[] -->
 
 **авария** (*aváriya*) — "an accident, a crash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**авария** comes from Italian *avaria* or French *avarie*, "damage to a ship or cargo", from Arabic *ʿawār*, "damage, a flaw" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to hide, then the Hindi for to stop.
 You'll want to know: रोकना.
 रोकना — roknā — "to stop (someone or something)".
 
+The word, taken apart.
+रोकना (roknā) is a tadbhava, a word inherited and reshaped by sound change. It comes from rokk, "stop", a form CDIAL reconstructs from its descendants (CDIAL 10827). CDIAL calls its link with Sanskrit rudh-, "to obstruct", not clear.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to stop, then the Hindi for to stop.
 
 You'll want to know: भागना.
 भागना — bhāgnā — "to run away".
+
+The word, taken apart.
+भागना (bhāgnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhajyate, "is broken" (CDIAL 9361). Bloch linked the sense "flee" with a different old verb; CDIAL finds that unnecessary, since "broken" could come to mean "routed, fled".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to stop, then the Hindi for to run away.
 You'll want to know: चढ़ना.
 चढ़ना — caṛhnā — "to climb, to board".
 
+The word, taken apart.
+चढ़ना (caṛhnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from caḍhati, "rises", a form CDIAL reconstructs from its descendants (CDIAL 4578).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to run away, then the Hindi for to climb.
 You'll want to know: उतरना.
 उतरना — utarnā — "to get down, to get off".
 
+The word, taken apart.
+उतरना (utarnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uttarati, "passes over; descends" (CDIAL 1770). CDIAL traces the sense from "crosses over" through "lands" to "gets down".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to climb, then the Hindi for to get down.
 
 You'll want to know: घूमना.
 घूमना — ghūmnā — "to stroll, to wander".
+
+The word, taken apart.
+घूमना (ghūmnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ghummati, "revolves", a form CDIAL reconstructs from its descendants (CDIAL 4485).
 
 What you've built.
 One more word for this chapter.

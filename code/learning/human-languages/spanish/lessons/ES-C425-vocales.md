@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-VOCALES
 prerequisites: [ES-C425-dos-nombres]
 sounds: [vowel-a, vowel-e, vowel-i, vowel-o, vowel-u]
 roots: []
+etymology_hook: "vocal ← Latin vocalis, from vox 'voice' — kin to voz, vocabulario; English vocal"
 duration:
   max_seconds: 240
 requires:

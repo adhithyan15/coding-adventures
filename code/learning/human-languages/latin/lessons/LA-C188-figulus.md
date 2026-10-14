@@ -13,7 +13,8 @@ gloss: "a potter"
 concept_tag: LA-RES188-FIGULUS
 prerequisites: [LA-C188-architectus, LA-C188-textor]
 sounds: []
-roots: []
+roots: [figulus-latin, fingere-latin]
+etymology_hook: "figulus 'potter' — built on fingō 'to shape': the moulder"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C188-textor]
 <!-- hl-knowledge: introduces=[LA-LEX-C188-RES188-03]; assesses=[] -->
 
 **figulus, figulī** — "a potter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**figulus** is built on *fingō*, "to shape, to mould" (Lewis & Short), on its root without the n: the moulder of clay.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

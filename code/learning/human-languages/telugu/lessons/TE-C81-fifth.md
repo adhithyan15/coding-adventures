@@ -11,7 +11,8 @@ romanization: "aidava"
 concept_tag: TE-ORDINAL-FIFTH
 prerequisites: [TE-C81-fourth, TE-C80-that, TE-C69-stick, TE-C72-shop, TE-C31-subha-madhyahnam, TE-C31-subha-madhyahnam-register]
 sounds: [independent-vowel-a]
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "aidava: native aidu 'five' (DEDR 2826) + the ordinal ending -va"
 duration:
   max_seconds: 220
 requires:
@@ -54,6 +55,11 @@ Telugu, not two — and only the final **u** is traded for **-వ**.
 
 That is one to five in order. Say *modaṭi, reṇḍava, mūḍava, nālugava, aidava*, and
 notice that only the first one had to be learned as a word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఐదవ** (*aidava*) is native Dravidian: *aidu*, "five", one word with Tamil *aintu* (DEDR 2826), with the ordinal ending *-va*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C81-ORDINAL-06] -->

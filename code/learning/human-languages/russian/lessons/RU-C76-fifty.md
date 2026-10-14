@@ -14,7 +14,8 @@ romanization: "pyatdesyát"
 concept_tag: RU-NUM2-FIFTY
 prerequisites: [RU-C75-zero, RU-C76-forty]
 sounds: []
-roots: []
+roots: [pie-penkwe, proto-indo-european-dekm]
+etymology_hook: "пятьдесят is пять 'five' + десят, an old form of десять 'ten': five tens"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C76-forty]
 <!-- hl-knowledge: introduces=[RU-LEX-C76-NUM2-02]; assesses=[] -->
 
 **пятьдесят** (*pyatdesyát*) — "fifty". **пять** + **десять**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пятьдесят** is *пять*, "five", with *десят*, an old form of *десять*, "ten": five tens.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

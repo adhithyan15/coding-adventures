@@ -10,7 +10,8 @@ gloss: "to get married"
 concept_tag: ES-VERB-CASARSE
 prerequisites: [ES-C487-relajarse, ES-C487-divertirse]
 sounds: []
-roots: []
+roots: [casa-latin]
+etymology_hook: "casarse — casar 'to marry', built on casa 'house', Latin casa 'a hut': to set up house"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C487-divertirse]
 > *They are getting married in June.*
 
 It goes with *con*: *casarse con alguien*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**casarse** is the reflexive of *casar*, "to marry" (EtymDB 2.1), built on *casa*, "house": to marry was to set up house. *Casa* is Latin *casa*, "a hut, a cottage".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

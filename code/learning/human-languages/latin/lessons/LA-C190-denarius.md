@@ -13,7 +13,8 @@ gloss: "a denarius (silver coin)"
 concept_tag: LA-RES190-DENARIUS
 prerequisites: [LA-C190-tributum, LA-C190-merces]
 sounds: []
-roots: []
+roots: [denarius-latin, decem-latin]
+etymology_hook: "dēnārius 'silver coin' — built on dēnī 'ten each': worth ten"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C190-merces]
 <!-- hl-knowledge: introduces=[LA-LEX-C190-RES190-04]; assesses=[] -->
 
 **dēnārius, dēnāriī** — "a denarius (silver coin)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēnārius** is built on *dēnī*, "ten each" (Lewis & Short): the coin was first worth ten bronze coins. *dēnī* comes from *decem*, "ten".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "karandásh"
 concept_tag: RU-SCHOOL-PENCIL
 prerequisites: [RU-C52-paper, RU-C52-notebook]
 sounds: []
-roots: []
+roots: [turkic-karatash]
+etymology_hook: "карандаш ← Turkic kara 'black' + taş 'stone': black stone, graphite"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C52-notebook]
 <!-- hl-knowledge: introduces=[RU-LEX-C52-SCHOOL-05]; assesses=[] -->
 
 **карандаш** (*karandásh*) — "a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**карандаш** ← Turkic *karadaš*, "black stone", as in Turkish *karataş*, "black slate" (Vasmer): *kara*, "black", and *taş*, "stone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

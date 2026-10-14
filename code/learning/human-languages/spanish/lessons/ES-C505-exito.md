@@ -10,7 +10,8 @@ gloss: "success"
 concept_tag: ES-REF-EXITO
 prerequisites: [ES-C505-explicacion, ES-C505-ensayar]
 sounds: []
-roots: []
+roots: [exitus-latin]
+etymology_hook: "éxito ← Latin exitus 'a going out, an outcome' — success, not English exit"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C505-ensayar]
 > *The play was a success.*
 
 A false friend: the way out is *la salida*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**éxito** ← Latin *exitus*, "a going out, an outcome" (EtymDB 2.1) — a learned word. It means success, not *exit*: Spanish kept the good outcome.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

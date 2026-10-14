@@ -13,7 +13,8 @@ gloss: "to stay, to remain"
 concept_tag: LA-VERB-MANEO
 prerequisites: [LA-C76-voco, LA-C77-mitto]
 sounds: []
-roots: []
+roots: [manere-latin]
+etymology_hook: "maneō 'to stay' — inherited, usually traced to PIE *men- 'to stay'; Greek menō is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C77-mitto]
 <!-- hl-knowledge: introduces=[LA-LEX-C77-VERBA3-02]; assesses=[] -->
 
 **maneō, manēre** — "to stay, to remain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maneō** is inherited, usually traced to Proto-Indo-European *\*men-*, "to stay" (EtymDB 2.1); Greek *menō*, "to stay", is a cousin (Lewis & Short). English *remain* and *mansion* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

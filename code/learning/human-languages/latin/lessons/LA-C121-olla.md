@@ -13,7 +13,8 @@ gloss: "a cooking pot"
 concept_tag: LA-THINGS121-OLLA
 prerequisites: [LA-C120-mappa, LA-C121-cochlear]
 sounds: []
-roots: []
+roots: [olla-latin]
+etymology_hook: "ōlla 'pot' — inherited, usually traced to PIE *Hukwsleh2 'cooking pot'; older spelling aula"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C121-cochlear]
 <!-- hl-knowledge: introduces=[LA-LEX-C121-THINGS121-02]; assesses=[] -->
 
 **ōlla, ōllae** — "a cooking pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ōlla** is inherited, usually traced through Proto-Italic *\*aukslā*, "pot", to Proto-Indo-European *\*Hukwsleh2*, "cooking pot" (EtymDB 2.1). An older Latin spelling was *aula* (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

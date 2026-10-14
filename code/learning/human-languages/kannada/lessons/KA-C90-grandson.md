@@ -11,7 +11,8 @@ romanization: "mommaga"
 concept_tag: KA-KIN-GRANDSON
 prerequisites: [KA-C89-letsgo, KA-C89-holiday]
 sounds: []
-roots: []
+roots: [proto-dravidian-maka-child]
+etymology_hook: "mommaga: native Dravidian; DEDR 4715 lists mom-maga 'grandson', built on maga 'son'"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C89-holiday]
 
 **ಮೊಮ್ಮಗ** (*mommaga*) — "grandson". It contains **ಮಗ** (*maga*), "son", which you
 already know: a grandson is a son's or daughter's son.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೊಮ್ಮಗ** (*mommaga*) is native Dravidian, built on *maga*, "son", and DEDR 4715 lists *mom-maga* itself, "grandson"; the entry also has Tamil *marumakaṉ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

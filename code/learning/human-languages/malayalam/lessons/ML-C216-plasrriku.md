@@ -14,7 +14,8 @@ romanization: "plāsṟṟikŭ"
 concept_tag: ML-VASTU216-PLASRRIKU
 prerequisites: [ML-C215-hobi, ML-C216-cempu]
 sounds: []
-roots: []
+roots: [english-plastic]
+etymology_hook: "plāsṟṟikŭ ← English plastic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C216-cempu]
 <!-- hl-knowledge: introduces=[ML-LEX-C216-VASTU216-02]; assesses=[] -->
 
 **പ്ലാസ്റ്റിക്** — *plāsṟṟikŭ* — "plastic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്ലാസ്റ്റിക്** (*plāsṟṟikŭ*) ← English *plastic*, from Greek *plastikos*, "fit for moulding".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

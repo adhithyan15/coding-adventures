@@ -12,7 +12,7 @@ concept_tag: TE-NUMBERS-6-10
 prerequisites: [TE-C07-numbers-1-5]
 sounds: [telugu-inherent-a, retroflex-da, telugu-u-ending]
 roots: [proto-dravidian-numbers]
-etymology_hook: "eight and nine — enimidi, tommidi — you can't derive from Tamil's eṭṭu/oṉpatu; seven ēḍu shows Telugu's ḻ→ḍ"
+etymology_hook: "enimidi, tommidi look least like Tamil eṭṭu/oṉpatu, but DEDR files them with eṭṭu and old toṇṭu"
 duration:
   max_seconds: 240
 requires:
@@ -56,7 +56,7 @@ interesting: Tamil *ēḻu* carries the rare **ḻ** (the *zh* of *Tamiḻ*); Ka
 hardened it to **ḷ** (*ēḷu*); **Telugu went further still** and turned it into a
 plain **ḍ** — *ēḍu*. One inherited sound, three fates across the three scripts.
 
-## The word, taken apart - Eight and nine strike out alone
+## The word, taken apart - Eight and nine look least like their cousins
 <!-- hl-knowledge: introduces=[TE-ETYMON-C07-NUMBERS-6-10-03]; assesses=[] -->
 
 Here Telugu strays furthest from its cousins —
@@ -67,9 +67,10 @@ Here Telugu strays furthest from its cousins —
 | 9 | *oṉpatu* / *onpatu* | **tommidi** |
 
 You can't reach *enimidi* and *tommidi* from Tamil by regular sound-change the
-way you can *reṇḍu* from *iraṇṭu*: *tommidi* is a different word entirely, and
-*enimidi* — though it shares the ancient *eṇ-* root behind *eṭṭu* — has drifted
-too far to derive. So unlike 2–7, learn these two **fresh**.
+way you can *reṇḍu* from *iraṇṭu*. *Enimidi* shares the ancient *eṇ-* root behind
+*eṭṭu* (DEDR 784) but has drifted too far to derive; *tommidi* matches not
+*oṉpatu* but old Tamil *toṇṭu*, "nine" (DEDR 3532). So unlike 2–7, learn these
+two **fresh**.
 
 **Ten** comes partly back into the fold — Telugu *padi* is a worn-down relative
 of the *pat‑* in Tamil *pattu* (and the *‑patu* hiding inside *tommidi* and

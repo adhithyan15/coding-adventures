@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a raindrop, then the Telugu for fog.
 You'll want to know: కవిత.
 కవిత — kavita — "a poem".
 
+The word, taken apart.
+కవిత (kavita) is Sanskrit kavitā, "poetry", from kavi, "wise man, poet" (CDIAL 2964), with the final -ā shortened.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for fog, then the Telugu for a poem.
 
 You'll want to know: చిత్రం.
 చిత్రం — citraṁ — "a painting, a picture".
+
+The word, taken apart.
+చిత్రం (citraṁ) is Sanskrit citra, "conspicuous, bright; variegated", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 4803). Telugu uses it for "a painting, a picture".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a poem, then the Telugu for a painting.
 You'll want to know: కెమెరా.
 కెమెరా — kemerā — "a camera".
 
+The word, taken apart.
+కెమెరా (kemerā) is a loan from English camera.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a painting, then the Telugu for a camera.
 You'll want to know: వినోదం.
 వినోదం — vinōdaṁ — "entertainment".
 
+The word, taken apart.
+వినోదం (vinōdaṁ) is Sanskrit vinōda, "diversion, amusement", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a camera, then the Telugu for entertainme
 
 You'll want to know: నటుడు.
 నటుడు — naṭuḍu — "an actor".
+
+The word, taken apart.
+నటుడు (naṭuḍu) is Sanskrit naṭa, "dancer, actor" (CDIAL 6933), with the Telugu ending -uḍu. CDIAL thinks naṭa probably came through Middle Indo-Aryan, and keeps it apart from a look-alike verb that it takes from Dravidian.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "prēkṣaka"
 concept_tag: KA-KELASA196-PREKSAKA
 prerequisites: [KA-C196-nirdesaka, KA-C196-atagara]
 sounds: []
-roots: []
+roots: [sanskrit-preksaka]
+etymology_hook: "prēkṣaka ← Sanskrit prekṣaka 'one who looks on', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C196-atagara]
 <!-- hl-knowledge: introduces=[KA-LEX-C196-KELASA196-04]; assesses=[] -->
 
 **ಪ್ರೇಕ್ಷಕ** — *prēkṣaka* — "a spectator, a viewer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ರೇಕ್ಷಕ** (*prēkṣaka*) is Sanskrit *prekṣaka*, "one who looks on, a spectator", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

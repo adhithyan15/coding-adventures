@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 297,
-  "sourceHash": "fnv1a64:f0d83c90d25bbc0e",
+  "sourceHash": "fnv1a64:81d8a750cb66579c",
   "lessonIds": [
     "ML-C297-maida",
     "ML-C297-aval",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch297.txt",
   "json": "malayalam/narration/ch297.json",
-  "textHash": "fnv1a64:f66c1bab1748f790",
-  "jsonHash": "fnv1a64:79b033328f9190fa",
+  "textHash": "fnv1a64:9f969ffded37b395",
+  "jsonHash": "fnv1a64:287d8edb82a19877",
   "findings": []
 }

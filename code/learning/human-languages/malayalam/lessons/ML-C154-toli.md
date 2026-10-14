@@ -14,7 +14,8 @@ romanization: "tolī"
 concept_tag: ML-THINGS154-TOLI
 prerequisites: [ML-C154-kalmuttu, ML-C154-navu]
 sounds: []
-roots: []
+roots: [dravidian-tol-skin]
+etymology_hook: "tolī: native Dravidian, one word with Tamil tōl and Kannada tōl(u) (DEDR 3559)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C154-navu]
 <!-- hl-knowledge: introduces=[ML-LEX-C154-THINGS154-04]; assesses=[] -->
 
 **തൊലി** — *tolī* — "skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തൊലി** (*tolī*) is native Dravidian, one word with Tamil *tōl* and Kannada *tōl(u)* (DEDR 3559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "false"
 concept_tag: LA-QUAL147-FALSUS
 prerequisites: [LA-C146-rectus, LA-C147-surdus]
 sounds: []
-roots: []
+roots: [falsus-latin, fallere-latin]
+etymology_hook: "falsus 'false' — the participle of fallō 'to deceive'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C147-surdus]
 <!-- hl-knowledge: introduces=[LA-LEX-C147-QUAL147-02]; assesses=[] -->
 
 **falsus, falsa, falsum** — "false".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**falsus** is the past participle of *fallō*, "to deceive, to trip up" (Lewis & Short): deceived, so false. Where *fallō* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 276,
   "title": "To scold, To tease, To quarrel, To console, To be proud",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fa7ceefb641e2e25",
+  "sourceHash": "fnv1a64:9a9755df8f85e956",
   "lessons": [
     {
       "id": "KA-C276-bai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a222ae07b362d30",
+      "sourceHash": "fnv1a64:0d11e6181d44f941",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೈ (bai) is native Dravidian, one word with Tamil vai (DEDR 5550). DEDR lists bay(i), bayyu, \"to abuse, revile\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83b73fe6c89e91b4",
+      "sourceHash": "fnv1a64:21433f61605a295d",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರೇಗಿಸು (rēgisu) is native Dravidian, from rēgu, \"to rise, be roused, be angry\", which DEDR 916 lists under ēṟu, \"to rise\": to tease is \"to make someone rise\"; the entry also has Tamil ēṟu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae34c45a8097ceff",
+      "sourceHash": "fnv1a64:3e5b0a5b6786631b",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜಗಳವಾಡು (jagaḷavāḍu) is jagaḷa, \"quarrel\", with native āḍu, \"to play, act\" (DEDR 347). Jagaḷa probably belongs with Prakrit jhagaḍa, \"quarrel\", from a reconstructed jhagaḍ, \"quarrel\" (CDIAL 5321), though CDIAL does not list the Kannada word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:477a4a20b0fb190e",
+      "sourceHash": "fnv1a64:3d201d88b3108bb8",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಾಧಾನ ಮಾಡು (samādhāna māḍu) is Sanskrit samādhāna, \"putting together, reconciliation\" (CDIAL 13210), with native māḍu, \"to do\" (DEDR 4797)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c076f0c5a808e02",
+      "sourceHash": "fnv1a64:5dd7ddf0bcb05db9",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೆಮ್ಮೆಪಡು (hemmepaḍu) is native Dravidian: hemme, \"pride\", which DEDR 4411 lists as older perme, \"greatness, honour, pride\", from the root for \"great\", and paḍu, \"to undergo, feel\" (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

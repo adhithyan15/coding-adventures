@@ -14,7 +14,8 @@ romanization: "sundar / badsūrat"
 concept_tag: HI-ADJ-LOOKS
 prerequisites: [HI-C80-aasaan-mushkil, HI-C31-suprabhat]
 sounds: []
-roots: []
+roots: [sanskrit-sundara, persian-bad, arabic-surat]
+etymology_hook: "sundar ← Sanskrit sundara 'beautiful'; badsūrat: Persian bad 'bad' + Arabic ṣūrat 'face, form'"
 duration:
   max_seconds: 240
 requires:

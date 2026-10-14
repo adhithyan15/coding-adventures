@@ -14,7 +14,8 @@ romanization: "kōyu"
 concept_tag: TE-VERB-KOYU
 prerequisites: [TE-C143-lecu, TE-C144-vandu]
 sounds: []
-roots: []
+roots: [dravidian-koy-reap]
+etymology_hook: "kōyu: native Dravidian, one word with Tamil koy and Kannada koy (DEDR 2119)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C144-vandu]
 <!-- hl-knowledge: introduces=[TE-LEX-C144-ACT144-02]; assesses=[] -->
 
 **కోయు** — *kōyu* — "to cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కోయు** (*kōyu*) is native Dravidian, one word with Tamil *koy* and Kannada *koy* (DEDR 2119). DEDR lists Telugu *kōyu*, "to cut, reap, pluck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

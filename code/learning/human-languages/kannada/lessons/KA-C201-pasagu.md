@@ -14,7 +14,8 @@ romanization: "pāsāgu"
 concept_tag: KA-VERB-PASAGU
 prerequisites: [KA-C201-mundudu, KA-C201-vivarisu]
 sounds: []
-roots: []
+roots: [english-pass, tamil-aaku-become]
+etymology_hook: "pāsāgu: English pass + native āgu 'to become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C201-vivarisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C201-KRIYE201-03]; assesses=[] -->
 
 **ಪಾಸಾಗು** — *pāsāgu* — "to pass (an exam)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಾಸಾಗು** (*pāsāgu*) is English *pass* with native *āgu*, "to become" (DEDR 333): "to become passed". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

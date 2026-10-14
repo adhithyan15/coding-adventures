@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 210,
-  "sourceHash": "fnv1a64:e3af87eaa1178a6e",
+  "sourceHash": "fnv1a64:c2b10fed60ebd253",
   "lessonIds": [
     "KA-C210-konege",
     "KA-C210-samanyavagi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch210.txt",
   "json": "kannada/narration/ch210.json",
-  "textHash": "fnv1a64:a93fe1adfee428c2",
-  "jsonHash": "fnv1a64:bb760473755cb25d",
+  "textHash": "fnv1a64:af8d60858757919c",
+  "jsonHash": "fnv1a64:f665f9c331079961",
   "findings": []
 }

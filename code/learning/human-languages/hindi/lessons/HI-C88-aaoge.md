@@ -14,7 +14,8 @@ romanization: "āoge"
 concept_tag: HI-FUTURE-TUM
 prerequisites: [HI-C88-aaenge, HI-S129-letter-o, HI-C85-bolo]
 sounds: []
-roots: []
+roots: [sanskrit-apayati, sanskrit-gata]
+etymology_hook: "āoge: ā- 'come', listed by CDIAL under āpayati (CDIAL 1200); the -ge is usually traced to gata 'gone'"
 duration:
   max_seconds: 240
 requires:
@@ -57,6 +58,8 @@ The **तुम** level has a vowel of its own, and you have already used it:
 
 Both are **-ओ**. That is not two facts to learn — it is one vowel that belongs
 to **तुम** wherever it appears, and you have had it since the commands chapter.
+
+The **-गे** is usually traced to Sanskrit *gata*, "gone".
 
 ## Grammar Lens: where the full letter shows up again
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C88-FUT-05, HI-SCRIPT-RECOG-129] -->

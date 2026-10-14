@@ -14,7 +14,8 @@ romanization: "dādāpu"
 concept_tag: TE-KARANAM294-DADAPU
 prerequisites: [TE-C294-paiga, TE-C294-annattu]
 sounds: []
-roots: []
+roots: [telugu-dadapu-almost]
+etymology_hook: "dādāpu: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'almost'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C294-annattu]
 <!-- hl-knowledge: introduces=[TE-LEX-C294-KARANAM294-04]; assesses=[] -->
 
 **దాదాపు** — *dādāpu* — "almost, nearly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **దాదాపు** (*dādāpu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "almost".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

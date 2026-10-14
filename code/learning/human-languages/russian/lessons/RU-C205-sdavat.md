@@ -14,7 +14,8 @@ romanization: "sdavát"
 concept_tag: RU-VERB-SDAVAT
 prerequisites: [RU-C205-izuchat, RU-C205-prepodavat]
 sounds: []
-roots: []
+roots: [pie-deh3-give]
+etymology_hook: "сдавать is с- + давать 'to give': to hand over, to hand in"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C205-prepodavat]
 <!-- hl-knowledge: introduces=[RU-LEX-C205-ACT205-05]; assesses=[] -->
 
 **сдавать** (*sdavát*) — "to hand in; to take (an exam)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сдавать** is *с-*, "off, over", with *давать*, "to give": to hand in, and so to take an exam.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

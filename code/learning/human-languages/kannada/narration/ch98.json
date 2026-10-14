@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Moods",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6d9b669d3c5f3919",
+  "sourceHash": "fnv1a64:8ae58e268240901c",
   "lessons": [
     {
       "id": "KA-C98-boredom",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01318196b5455d83",
+      "sourceHash": "fnv1a64:52e38f67dce290e0",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೇಸರ (bēsara) is native Dravidian, one word with Tamil vēcāṭai and Malayalam vēcāṟu (DEDR 5524). DEDR gives Kannada bēsaṟ(u), \"weariness, disgust\", and adds that some Kannada forms may instead come from Hindi bē-zār, \"weary\", a Persian word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ca6151ecf5f690d",
+      "sourceHash": "fnv1a64:c9ce1a588f0b7e7c",
       "notice": null,
       "blocks": [
         {
@@ -179,6 +190,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉತ್ಸಾಹ (utsāha) is Sanskrit utsāha, \"power, firmness; joy\", taken over whole as a learned loan, a tatsama (CDIAL 1882)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -189,7 +211,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -238,7 +260,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -269,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0496678766fad53",
+      "sourceHash": "fnv1a64:d6e2336a04a14ead",
       "notice": null,
       "blocks": [
         {
@@ -306,6 +328,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾಚಿಕೆ (nācike) is native Dravidian, from nāṇ, \"shame, modesty\", and DEDR 3639 lists the verb nācu, \"to become abashed\"; the entry also has Tamil nāṇ, Telugu nāna and Malayalam nāṇam."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -316,7 +349,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -365,7 +398,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -396,7 +429,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23ebe41a5992d77b",
+      "sourceHash": "fnv1a64:feab4e50046c71eb",
       "notice": null,
       "blocks": [
         {
@@ -433,6 +466,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಾಬರಿ (gābari) came from Hindustani ghabrā-, \"to be agitated, to panic\". Its deeper origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -443,7 +487,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -492,7 +536,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -523,7 +567,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7f4592e52439c18",
+      "sourceHash": "fnv1a64:e8db0c8bd5d68102",
       "notice": null,
       "blocks": [
         {
@@ -556,6 +600,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of ನೆಮ್ಮದಿ (nemmadi) is uncertain. It is often linked to nemmu, \"to trust, rely on\", which DEDR 3600 lists as a form of nambu, \"to trust\", but DEDR does not list nemmadi itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -566,7 +621,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -615,7 +670,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

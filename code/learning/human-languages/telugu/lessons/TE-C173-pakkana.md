@@ -14,7 +14,8 @@ romanization: "pakkana"
 concept_tag: TE-STHALAM173-PAKKANA
 prerequisites: [TE-C173-peradu, TE-C173-hotalu]
 sounds: []
-roots: []
+roots: [dravidian-prakka-side]
+etymology_hook: "pakkana: pakka 'side' (DEDR 4005, which notes convergence with MIA pakkha) + -na"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C173-hotalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C173-STHALAM173-04]; assesses=[] -->
 
 **పక్కన** — *pakkana* — "beside, next to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పక్కన** (*pakkana*) is *pakka*, "side", with the ending *-na*. DEDR 4005 lists Telugu *prakka*, "side", with Konda *paṛka*, "side", and notes that it has run together with loans of Middle Indo-Aryan *pakkha*, "side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

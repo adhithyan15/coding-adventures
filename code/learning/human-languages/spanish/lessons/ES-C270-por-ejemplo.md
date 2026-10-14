@@ -11,6 +11,7 @@ concept_tag: ARGUMENT-EVIDENCE
 prerequisites: [ES-C270-en-mi-opinion]
 sounds: [vowel-e, vowel-o]
 roots: [exemplum]
+etymology_hook: "ejemplo ← Latin exemplum 'a thing taken out' — English example, sample"
 duration:
   max_seconds: 240
 requires:

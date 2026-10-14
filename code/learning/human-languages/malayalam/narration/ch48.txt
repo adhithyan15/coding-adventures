@@ -15,6 +15,9 @@ Sanskrit adhyāpaka, 'one who causes another to study', with a Malayalam ending 
 The Sanskrit word is itself built out of a going-toward: adhi plus a root about approaching, so a teacher is the one who brings the student up to the text.
 Kannada picked a different Sanskrit word for the same job, ಶಿಕ್ಷಕ (śikṣaka). Two sisters, two borrowings, one classroom — which is a fair picture of how these languages have handled Sanskrit generally: not one loan, but a choice among several.
 
+The word, taken apart.
+അധ്യാപകൻ (adhyāpakan) from Sanskrit adhyāpaka, "teacher, one who makes others study", taken over whole as a tatsama, with the masculine ending -n (CDIAL 278).
+
 What you've built.
 The first of five words for who someone is.
 
@@ -47,6 +50,9 @@ Two Sanskrit pieces, and both are legible once pointed at: vidyā, 'knowledge', 
 Kannada has ವಿದ್ಯಾರ್ಥಿ (vidyārthi), the identical borrowing. Where the teacher-words parted company, the student-words did not.
 There is a chillu here too, the ർ in the middle, doing the same job as the ൽ of the leg-word: a consonant with no vowel after it, given its own shape rather than a mark underneath.
 
+The word, taken apart.
+വിദ്യാർത്ഥി (vidyārtthi) from Sanskrit vidyārthin, "one who seeks knowledge": vidyā, "knowledge" (CDIAL 11741), with arthin, "seeking, wanting". Malayalam doubles the consonant after the r, as it does in many Sanskrit words.
+
 What you've built.
 Two: a teacher and a student.
 
@@ -77,6 +83,9 @@ You'll want to know: വൈദ്യൻ.
 The same vidyā as the last word, stretched into an adjective: vaidya is 'the one versed in the knowledge', and the knowledge meant is the medical one. Then the masculine chillu ൻ again.
 Kannada has ವೈದ್ಯ (vaidya) without that ending. Malayalam adds it; Kannada leaves the Sanskrit word standing as it came.
 In a Kerala street today the word usually points at a practitioner of the traditional medicine, and the everyday word for a hospital doctor is the English one, worn down into Malayalam sounds. Both live side by side, which is worth saying rather than tidying away.
+
+The word, taken apart.
+വൈദ്യൻ (vaidyan) from Sanskrit vaidya, "learned; a physician", taken over whole as a tatsama, with the masculine ending -n (CDIAL 12140). Sanskrit vaidya first meant "one versed in the Vedas", then "physician".
 
 What you've built.
 Three. A teacher, a student, a doctor.
@@ -110,6 +119,9 @@ Sanskrit karṣaka, from a root about dragging or drawing — the plough pulled 
 The ending is the chillu ൻ once more, the third of these role-words to take it, and the ർ near the front is the same chillu as in the student-word. Two of them in one short word.
 Kannada went elsewhere again and says ರೈತ (raita), a word that came into the language along a different road entirely.
 
+The word, taken apart.
+കർഷകൻ (karṣakan) from Sanskrit karṣaka, "cultivator, ploughman", taken over whole as a tatsama, with the masculine ending -n (CDIAL 2906).
+
 What you've built.
 Four. A teacher, a student, a doctor, a farmer.
 
@@ -140,6 +152,9 @@ You'll want to know: അതിഥി.
 Sanskrit atithi, and Kannada ಅತಿಥಿ is the identical word — the same borrowing arriving in both languages unchanged.
 The traditional analysis inside Sanskrit takes it apart as a- plus tithi, a lunar day: the one who has no appointed day, who turns up unannounced. Whether the etymology is historically right is argued over; what matters is that Sanskrit itself understood the word that way, and built a whole ethic of hospitality on it.
 This word takes no masculine ending. It sits on the other side of the chapter from the four before it.
+
+The word, taken apart.
+അതിഥി (atithi) from Sanskrit atithi, "guest", taken over whole as a tatsama.
 
 What you've built.
 Five, and the run is closed: a teacher, a student, a doctor, a farmer, a guest.

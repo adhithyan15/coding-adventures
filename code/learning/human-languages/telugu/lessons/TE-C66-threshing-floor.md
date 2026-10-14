@@ -11,7 +11,8 @@ romanization: "kallaṁ"
 concept_tag: TE-NOUN-THRESHING-FLOOR
 prerequisites: [TE-C66-grass]
 sounds: []
-roots: []
+roots: [dravidian-kalam-floor]
+etymology_hook: "kallaṁ: native Dravidian, one word with Tamil kaḷam 'threshing floor' (DEDR 1376), which compares Sanskrit khala"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C66-grass]
 The word is inherited. A కల్లం belongs to the గ్రామం rather than to one house, and the order in which families take their turn on it is settled by custom rather than by asking — the kind of arrangement a village is full of.
 
 It gets swept with a చీపురు before anything is laid down on it, and that sweeping is taken about as seriously as the ముగ్గు at a doorstep.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కల్లం** (*kallaṁ*) is native Dravidian, one word with Tamil *kaḷam* and Malayalam *kaḷam*, "threshing floor" (DEDR 1376). DEDR compares Sanskrit *khala*, "threshing floor" (CDIAL 3834).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "maraḷu"
 concept_tag: KA-NOUN-SAND
 prerequisites: [KA-C59-mist, KA-C57-lip]
 sounds: []
-roots: []
+roots: [dravidian-manal-sand]
+etymology_hook: "maraḷu: native Dravidian; DEDR 4666 lists maḷal, maral 'sand'; Tamil maṇal"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,11 @@ skill.
 What ಮರಳು genuinely does share is a shape with a doing-word. ಮರಳು also means to turn back, to return — so the same run of letters is both the sand on a river bed and the act of going home. In a chapter about taking your leave that is a happy accident and nothing more, but it is the kind of accident worth noticing, because the two are told apart by nothing except what sits around them.
 
 The ಮರಳು you meet most is on the bank of a ನದಿ, where the river drops what it has been carrying.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮರಳು** (*maraḷu*) is native Dravidian, close kin of *maṇṇu*, "earth": DEDR 4666 lists the sand words *maḷal* and *maral* beside it; the entry also has Tamil *maṇal*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 276,
-  "sourceHash": "fnv1a64:c4212c6d5145e37c",
+  "sourceHash": "fnv1a64:c20d94ec4bc1a6a9",
   "lessonIds": [
     "LA-C276-vespa",
     "LA-C276-culex",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch276.txt",
   "json": "latin/narration/ch276.json",
-  "textHash": "fnv1a64:9a61941ed4e47999",
-  "jsonHash": "fnv1a64:1aa76cf49a85c64b",
+  "textHash": "fnv1a64:9c048cef0d14ebe2",
+  "jsonHash": "fnv1a64:e73141504f995afb",
   "findings": []
 }

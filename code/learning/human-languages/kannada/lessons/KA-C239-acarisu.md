@@ -14,7 +14,8 @@ romanization: "ācarisu"
 concept_tag: KA-VERB-ACARISU
 prerequisites: [KA-C238-nirakarisu, KA-C238-sampadisu]
 sounds: []
-roots: []
+roots: [sanskrit-acarana]
+etymology_hook: "ācarisu: Sanskrit ācaraṇa 'practice, observance' + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C238-sampadisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C239-KRIYE239-01]; assesses=[] -->
 
 **ಆಚರಿಸು** — *ācarisu* — "to celebrate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಚರಿಸು** (*ācarisu*) is Sanskrit *ācaraṇa*, "practice, observance", made into a Kannada verb with *-isu*: to celebrate a festival is to observe it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

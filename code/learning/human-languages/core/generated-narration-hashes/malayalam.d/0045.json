@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 45,
-  "sourceHash": "fnv1a64:e7a9ab26770934ff",
+  "sourceHash": "fnv1a64:39f59c0ce51a10c7",
   "lessonIds": [
     "ML-C45-grandfather",
     "ML-C45-grandmother",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch45.txt",
   "json": "malayalam/narration/ch45.json",
-  "textHash": "fnv1a64:aa321a7c9dd66c5a",
-  "jsonHash": "fnv1a64:07c819b7d980784c",
+  "textHash": "fnv1a64:f0a9f47b9282a6fe",
+  "jsonHash": "fnv1a64:a9d5a9c4ae583c18",
   "findings": []
 }

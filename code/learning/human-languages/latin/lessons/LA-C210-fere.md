@@ -13,7 +13,8 @@ gloss: "about, nearly"
 concept_tag: LA-CAUSA210-FERE
 prerequisites: [LA-C210-vero, LA-C210-profecto]
 sounds: []
-roots: []
+roots: [fere-latin]
+etymology_hook: "ferē 'nearly' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C210-profecto]
 <!-- hl-knowledge: introduces=[LA-LEX-C210-CAUSA210-04]; assesses=[] -->
 
 **ferē** — "about, nearly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ferē** has no sure origin; it is often linked through a root *\*dher-*, "to hold fast" (EtymDB 2.1), with *firmus*, "firm", but the link is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

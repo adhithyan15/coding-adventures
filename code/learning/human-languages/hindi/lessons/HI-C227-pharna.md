@@ -14,7 +14,8 @@ romanization: "phāṛnā"
 concept_tag: HI-VERB-PHARNA
 prerequisites: [HI-C226-tutna, HI-C227-phatna]
 sounds: []
-roots: []
+roots: [sanskrit-sphatayati]
+etymology_hook: "phāṛnā ← Sanskrit sphāṭayati 'causes to split', a tadbhava (CDIAL 13825)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C227-phatna]
 <!-- hl-knowledge: introduces=[HI-LEX-C227-ACT227-02]; assesses=[] -->
 
 **फाड़ना** — *phāṛnā* — "to tear (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फाड़ना** (*phāṛnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sphāṭayati*, "causes to split" (CDIAL 13825).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

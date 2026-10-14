@@ -14,7 +14,8 @@ romanization: "podúshka"
 concept_tag: RU-THINGS95-PILLOW
 prerequisites: [RU-C95-shelf, RU-C95-curtain]
 sounds: []
-roots: []
+roots: [slavic-dykh]
+etymology_hook: "подушка: usually from дух 'breath', 'a puffed-up thing'; others read под ухо 'under the ear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C95-curtain]
 <!-- hl-knowledge: introduces=[RU-LEX-C95-THINGS95-04]; assesses=[] -->
 
 **подушка** (*podúshka*) — "a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**подушка** ← Proto-Slavic *\*podušĭka*. Vasmer reports the usual link with *дух*, "breath": a pillow as "a thing blown up". Machek's reading, *под ухо*, "under the ear", has been rejected by others.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

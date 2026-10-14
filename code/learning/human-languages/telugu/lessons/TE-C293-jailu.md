@@ -14,7 +14,8 @@ romanization: "jailu"
 concept_tag: TE-STHALAM293-JAILU
 prerequisites: [TE-C292-kota, TE-C292-karkhana]
 sounds: []
-roots: []
+roots: [english-jail]
+etymology_hook: "jailu ← English jail"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C292-karkhana]
 <!-- hl-knowledge: introduces=[TE-LEX-C293-STHALAM293-01]; assesses=[] -->
 
 **జైలు** — *jailu* — "a jail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జైలు** (*jailu*) is a loan from English *jail*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

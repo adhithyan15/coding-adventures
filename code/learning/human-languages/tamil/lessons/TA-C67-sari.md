@@ -53,7 +53,7 @@ inside சட்டை.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**புடவை** (*puḍavai*) is native Dravidian. DEDR 4256 lists Malayalam *puṭava* and Kannada *puṭṭige*.
+**புடவை** (*puḍavai*) is native Dravidian. DEDR 4256 lists Malayalam *puṭava* and Kannada *puṭṭige*. The entry compares Sanskrit *phuṭṭikā*, "a kind of cloth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: CONDITION-DEPENDS
 prerequisites: [ES-C56-sintesis-condiciones]
 sounds: [vowel-e]
 roots: [de pendere]
+etymology_hook: "depende ← Latin dependere: de- 'down from' + pendere 'to hang' — English pendant, suspend"
 duration:
   max_seconds: 270
 requires:

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 213,
-  "sourceHash": "fnv1a64:099648eb0b8ddc25",
+  "sourceHash": "fnv1a64:c04286cdb5196605",
   "lessonIds": [
     "KA-C213-kote",
     "KA-C213-kalyana-mantapa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch213.txt",
   "json": "kannada/narration/ch213.json",
-  "textHash": "fnv1a64:298c09c154392b7b",
-  "jsonHash": "fnv1a64:9ffc17a1e579a1d5",
+  "textHash": "fnv1a64:9ed5fe9546d9d4dd",
+  "jsonHash": "fnv1a64:08f234867ba6537b",
   "findings": []
 }

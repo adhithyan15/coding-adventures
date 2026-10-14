@@ -14,7 +14,8 @@ romanization: "mēju"
 concept_tag: KA-THINGS137-MEJU
 prerequisites: [KA-C136-sonta, KA-C136-hubbu]
 sounds: []
-roots: []
+roots: [persian-mez]
+etymology_hook: "mēju ← Persian mēz 'table', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C136-hubbu]
 <!-- hl-knowledge: introduces=[KA-LEX-C137-THINGS137-01]; assesses=[] -->
 
 **ಮೇಜು** — *mēju* — "a table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೇಜು** (*mēju*) is a loan from Persian *mēz*, "table", which came through Hindustani. Kannada adds *-u* at the end.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

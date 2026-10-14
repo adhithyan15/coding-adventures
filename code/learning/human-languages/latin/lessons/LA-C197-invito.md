@@ -13,7 +13,8 @@ gloss: "to invite"
 concept_tag: LA-VERB-INVITO
 prerequisites: [LA-C197-osculor, LA-C197-saluto]
 sounds: []
-roots: []
+roots: [invitare-latin]
+etymology_hook: "invītō 'to invite' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C197-saluto]
 <!-- hl-knowledge: introduces=[LA-LEX-C197-ACT197-03]; assesses=[] -->
 
 **invītō, invītāre** — "to invite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**invītō** has no sure origin; no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

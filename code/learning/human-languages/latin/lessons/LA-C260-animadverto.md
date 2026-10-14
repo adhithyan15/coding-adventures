@@ -13,7 +13,8 @@ gloss: "to notice"
 concept_tag: LA-VERB-ANIMADVERTO
 prerequisites: [LA-C260-alo, LA-C260-compono]
 sounds: []
-roots: []
+roots: [animadvertere-latin, animus-latin, vertere-latin]
+etymology_hook: "animadvertō 'to notice' — from animum advertō 'I turn the mind towards'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C260-compono]
 <!-- hl-knowledge: introduces=[LA-LEX-C260-ACT260-04]; assesses=[] -->
 
 **animadvertō, animadvertere** — "to notice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**animadvertō** is contracted from *animum advertō*, "I turn the mind towards" (Lewis & Short): *animus*, "mind", and *advertō*, "to turn to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

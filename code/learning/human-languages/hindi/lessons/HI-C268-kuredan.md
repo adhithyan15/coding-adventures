@@ -14,7 +14,8 @@ romanization: "kūṛedān"
 concept_tag: HI-THG268-KUREDAN
 prerequisites: [HI-C267-tanki, HI-C268-kura]
 sounds: []
-roots: []
+roots: [sanskrit-kuta]
+etymology_hook: "kūṛedān: kūṛā 'rubbish' ← kūṭa 'heap', prob. from Dravidian (CDIAL 3392), + Persian -dān 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C268-kura]
 <!-- hl-knowledge: introduces=[HI-LEX-C268-THG268-02]; assesses=[] -->
 
 **कूड़ेदान** — *kūṛedān* — "a dustbin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कूड़ेदान** (*kūṛedān*) is *kūṛā*, "rubbish", from Sanskrit *kūṭa*, "heap", which CDIAL takes as probably from Dravidian (CDIAL 3392), with the Persian ending *-dān*, "holder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "baránina"
 concept_tag: RU-VESHCH249-BARANINA
 prerequisites: [RU-C249-tvorog, RU-C249-svinina]
 sounds: []
-roots: []
+roots: [slavic-baranu]
+etymology_hook: "баранина is баран 'a ram' + -ина; баран may be an old Alpine word or otherwise"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C249-svinina]
 <!-- hl-knowledge: introduces=[RU-LEX-C249-VESHCH249-04]; assesses=[] -->
 
 **баранина** (*baránina*) — "lamb (meat)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**баранина** is *баран*, "a ram", with *-ина*, a suffix for meat. Vasmer reports the view that *баран* is an ancient Alpine word, compared with Albanian *berr*, "sheep"; Trubachev, in a note, explains it otherwise.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,7 +10,8 @@ gloss: "to convince"
 concept_tag: ES-VERB-CONVENCER
 prerequisites: [ES-C492-cumplir, ES-C493-opinar]
 sounds: []
-roots: []
+roots: [vincere-latin]
+etymology_hook: "convencer ← Latin convincere 'to overcome': con- + vincere 'to conquer' — kin to vencer"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C493-opinar]
 > *I am not convinced by the idea.*
 
 It takes a *z* in the first person present: *convenzo*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**convencer** ← Latin *convincere*, "to overcome, to prove wrong" (EtymDB 2.1): *con-* and *vincere*, "to conquer", fitted to *vencer*, "to win". To convince is to win the argument.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

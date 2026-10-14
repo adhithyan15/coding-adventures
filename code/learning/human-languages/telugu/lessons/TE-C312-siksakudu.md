@@ -14,7 +14,8 @@ romanization: "śikṣakuḍu"
 concept_tag: TE-PANI312-SIKSAKUDU
 prerequisites: [TE-C312-ata, TE-C312-sinima]
 sounds: []
-roots: []
+roots: [sanskrit-shikshaka]
+etymology_hook: "śikṣakuḍu: Sanskrit śikṣaka 'teacher' + -uḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C312-sinima]
 <!-- hl-knowledge: introduces=[TE-LEX-C312-PANI312-04]; assesses=[] -->
 
 **శిక్షకుడు** — *śikṣakuḍu* — "a coach, a trainer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**శిక్షకుడు** (*śikṣakuḍu*) is Sanskrit *śikṣaka*, "teacher, trainer", with the Telugu ending *-uḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

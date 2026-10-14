@@ -14,7 +14,8 @@ romanization: "aṇṭu"
 concept_tag: KA-VASTU227-ANTU
 prerequisites: [KA-C227-garagasa, KA-C227-eni]
 sounds: []
-roots: []
+roots: [dravidian-antu-stick]
+etymology_hook: "aṇṭu: native Dravidian, one word with Tamil aṭṭu and Telugu aṇṭu (DEDR 96)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C227-eni]
 <!-- hl-knowledge: introduces=[KA-LEX-C227-VASTU227-03]; assesses=[] -->
 
 **ಅಂಟು** — *aṇṭu* — "glue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂಟು** (*aṇṭu*) is native Dravidian, one word with Tamil *aṭṭu* and Telugu *aṇṭu* (DEDR 96). DEDR lists *aṇṭu*, "that which is sticky, gum, paste".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

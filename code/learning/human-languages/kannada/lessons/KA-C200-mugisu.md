@@ -14,7 +14,8 @@ romanization: "mugisu"
 concept_tag: KA-VERB-MUGISU
 prerequisites: [KA-C200-turisu, KA-C200-sayu]
 sounds: []
-roots: []
+roots: [dravidian-muti-end]
+etymology_hook: "mugisu: native Dravidian; DEDR 4891 lists mugisu 'to finish' under mugi 'to end'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C200-sayu]
 <!-- hl-knowledge: introduces=[KA-LEX-C200-KRIYE200-04]; assesses=[] -->
 
 **ಮುಗಿಸು** — *mugisu* — "to finish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಗಿಸು** (*mugisu*) is native Dravidian, from *mugi*, "to end", and DEDR 4891 lists *mugisu*, "to finish", itself; the entry also has Tamil *muki* and Telugu *mugiyu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

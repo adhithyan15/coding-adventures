@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a coconut, then the Kannada for an onion
 You'll want to know: ಆಲೂಗಡ್ಡೆ.
 ಆಲೂಗಡ್ಡೆ — ālūgaḍḍe — "a potato".
 
+The word, taken apart.
+ಆಲೂಗಡ್ಡೆ (ālūgaḍḍe) is ālū, "potato", from Hindustani ālū, and gaḍḍe, "bulbous root", native Dravidian (DEDR 1171).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for an onion, then the Kannada for a potato.
 
 You'll want to know: ಬದನೆಕಾಯಿ.
 ಬದನೆಕಾಯಿ — badanekāyi — "an aubergine".
+
+The word, taken apart.
+ಬದನೆಕಾಯಿ (badanekāyi) is native Dravidian: badane, "brinjal", (DEDR 5301, with Tamil vaḻutalai), and kāyi, "fruit" (DEDR 1459). The old v- has become b-. DEDR 5301 compares Sanskrit bhaṇṭākī.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a potato, then the Kannada for an auberg
 You'll want to know: ಶುಂಠಿ.
 ಶುಂಠಿ — śuṇṭhi — "ginger".
 
+The word, taken apart.
+ಶುಂಠಿ (śuṇṭhi) is Sanskrit śuṇṭhī, "dry ginger", taken over whole as a learned loan, a tatsama, with the final -ī shortened (CDIAL 12515).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for an aubergine, then the Kannada for ginge
 You'll want to know: ಬೆಳ್ಳುಳ್ಳಿ.
 ಬೆಳ್ಳುಳ್ಳಿ — beḷḷuḷḷi — "garlic".
 
+The word, taken apart.
+ಬೆಳ್ಳುಳ್ಳಿ (beḷḷuḷḷi) is native Dravidian, "white onion": beḷ, "white" (DEDR 5496), and uḷḷi, "onion" (DEDR 705). Tamil veḷḷ-uḷḷi is built the same way. DEDR 705 compares Sanskrit ūlī.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for ginger, then the Kannada for garlic.
 
 You'll want to know: ಜೇನು.
 ಜೇನು — jēnu — "honey".
+
+The word, taken apart.
+ಜೇನು (jēnu) is native Dravidian, one word with Tamil tēṉ (DEDR 3268). DEDR lists Kannada jēnu and tēnu, "honey". DEDR 3268 compares, with a query, Prakrit tiṇisa.
 
 What you've built.
 One more word for this chapter.

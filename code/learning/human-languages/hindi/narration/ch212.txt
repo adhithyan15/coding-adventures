@@ -12,6 +12,9 @@ Before the new one: say the Hindi for coriander, then the Hindi for a lemon.
 You'll want to know: भद्दा.
 भद्दा — bhaddā — "ugly, clumsy".
 
+The word, taken apart.
+भद्दा (bhaddā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhadra, "fortunate, delightful" (CDIAL 9377). Its sense turned round: CDIAL glosses the Hindi word "stupid, clumsy".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a lemon, then the Hindi for ugly.
 
 You'll want to know: मज़बूत.
 मज़बूत — mazbūt — "strong, sturdy".
+
+The word, taken apart.
+मज़बूत (mazbūt) is a loan from Arabic maḍbūṭ, "held firm, secured", which reached Hindi through Persian. Its Arabic root is ḍ-b-ṭ (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for ugly, then the Hindi for strong.
 You'll want to know: कमज़ोर.
 कमज़ोर — kamzor — "weak".
 
+The word, taken apart.
+कमज़ोर (kamzor) is a loan, usually traced to Persian kamzōr, "weak". It is built from kam, "little", and zōr, "strength".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for strong, then the Hindi for weak.
 You'll want to know: सस्ता.
 सस्ता — sastā — "cheap".
 
+The word, taken apart.
+The origin of सस्ता (sastā) is uncertain. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for weak, then the Hindi for cheap.
 
 You'll want to know: कठिन.
 कठिन — kaṭhin — "hard, difficult".
+
+The word, taken apart.
+कठिन (kaṭhin) is Sanskrit kaṭhina, "hard, stiff", taken over whole as a learned loan, a tatsama (CDIAL 2650). CDIAL reports that this group of words has been traced to Dravidian.
 
 What you've built.
 One more word for this chapter.

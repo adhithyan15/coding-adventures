@@ -14,7 +14,8 @@ romanization: "politséyskiy"
 concept_tag: RU-THINGS108-POLICE-OFFICER
 prerequisites: [RU-C107-nurse, RU-C107-cook]
 sounds: []
-roots: []
+roots: [politia-latin]
+etymology_hook: "полицейский is from полиция 'police', through Polish or German Polizei, from Latin politia"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C107-cook]
 <!-- hl-knowledge: introduces=[RU-LEX-C108-THINGS108-01]; assesses=[] -->
 
 **полицейский** (*politséyskiy*) — "a police officer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**полицейский** is an adjective from *полиция*, "police", standing alone: "a police officer". *полиция* came, from Peter the Great's time, through Polish *policja* or German *Polizei* from Latin *polītīa*, Greek *politeía*, "citizenship, government" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

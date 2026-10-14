@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 231,
-  "sourceHash": "fnv1a64:9ccadfc185eda87b",
+  "sourceHash": "fnv1a64:f5129e5dae2e4f61",
   "lessonIds": [
     "RU-C231-kopeyka",
     "RU-C231-rubl",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch231.txt",
   "json": "russian/narration/ch231.json",
-  "textHash": "fnv1a64:e63115af78a805f7",
-  "jsonHash": "fnv1a64:c3d3e2560d83e475",
+  "textHash": "fnv1a64:966f9ca5898eb38a",
+  "jsonHash": "fnv1a64:12c0ecdc6a770ca6",
   "findings": []
 }

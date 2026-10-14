@@ -72,8 +72,8 @@ against is a daemon that replays or alters a reserved header, as above.
 
 ## Behaviour
 
-It matches the old in-daemon dispatcher's checks and failure codes. Two
-deliberate differences:
+It matches the checks and failure codes of the in-daemon channel path it
+replaced (removed in D18S P2.6d-2c). Two deliberate differences:
 - **Delivery receipts are per broker.** One agent that never acknowledges
   can only fill its own 4096, not everyone's.
 - **Receipts die with the broker.** The host receives again, as it would

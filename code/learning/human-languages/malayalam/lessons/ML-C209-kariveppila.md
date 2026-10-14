@@ -14,7 +14,8 @@ romanization: "kaṟivēppila"
 concept_tag: ML-VASTU209-KARIVEPPILA
 prerequisites: [ML-C208-venna, ML-C208-ten]
 sounds: []
-roots: []
+roots: [dravidian-kari-curry, dravidian-vembu-neem, dravidian-ilai-leaf]
+etymology_hook: "kaṟivēppila: native Dravidian, 'curry neem leaf': kaṟi (DEDR 1391) + vēppu (DEDR 5531) + ila (DEDR 497)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C208-ten]
 <!-- hl-knowledge: introduces=[ML-LEX-C209-VASTU209-01]; assesses=[] -->
 
 **കറിവേപ്പില** — *kaṟivēppila* — "curry leaves".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കറിവേപ്പില** (*kaṟivēppila*) is native Dravidian, "curry-neem leaf": *kaṟi*, "curry" (DEDR 1391), the word for the neem tree (DEDR 5531, with Tamil *vēmpu*), and *ila*, "leaf" (DEDR 497).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

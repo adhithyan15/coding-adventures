@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 244,
-  "sourceHash": "fnv1a64:3a32be508615c301",
+  "sourceHash": "fnv1a64:397c4321455dbb36",
   "lessonIds": [
     "KA-C244-sarisu",
     "KA-C244-kuggu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch244.txt",
   "json": "kannada/narration/ch244.json",
-  "textHash": "fnv1a64:f7788afb6d5ec14f",
-  "jsonHash": "fnv1a64:ca036ccee80e58db",
+  "textHash": "fnv1a64:1e6e3d52ff529293",
+  "jsonHash": "fnv1a64:061989681e7c3ace",
   "findings": []
 }

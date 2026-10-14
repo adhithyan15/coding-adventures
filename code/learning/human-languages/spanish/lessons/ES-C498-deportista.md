@@ -10,7 +10,8 @@ gloss: "the sportsperson, the athlete"
 concept_tag: ES-REF-DEPORTISTA
 prerequisites: [ES-C497-amistad, ES-C498-campeonato]
 sounds: []
-roots: []
+roots: [deportare-latin]
+etymology_hook: "deportista — deporte 'sport' + -ista; deporte first meant amusement, from Latin deportare"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C498-campeonato]
 > *She is a very well-known athlete.*
 
 The same form for a woman: *la deportista*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**deportista** is *deporte*, "sport", with *-ista*. *Deporte* first meant amusement: it comes from *deportarse*, "to enjoy oneself", Latin *deportare*, "to carry away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

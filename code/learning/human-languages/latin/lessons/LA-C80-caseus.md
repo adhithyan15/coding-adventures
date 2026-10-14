@@ -13,7 +13,8 @@ gloss: "cheese"
 concept_tag: LA-CIBUS2-CASEUS
 prerequisites: [LA-C79-ientaculum, LA-C79-caro]
 sounds: []
-roots: []
+roots: [caseus-latin]
+etymology_hook: "cāseus 'cheese' — probably from PIE *kwat- 'to ferment'; English cheese was borrowed from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C79-caro]
 <!-- hl-knowledge: introduces=[LA-LEX-C80-CIBUS2-01]; assesses=[] -->
 
 **cāseus, cāseī** — "cheese".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cāseus** is probably inherited, from a Proto-Indo-European root *\*kwat-*, "to ferment, to turn sour" (EtymDB 2.1). English *cheese* was borrowed from *cāseus* very early.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 178,
-  "sourceHash": "fnv1a64:c81ab2201c18e17e",
+  "sourceHash": "fnv1a64:e698ddddb439215d",
   "lessonIds": [
     "RU-C178-trenirovatsya",
     "RU-C178-begat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch178.txt",
   "json": "russian/narration/ch178.json",
-  "textHash": "fnv1a64:d300bb5c49349e2d",
-  "jsonHash": "fnv1a64:c22d84f78dd3bbf1",
+  "textHash": "fnv1a64:a38c714a975b51cc",
+  "jsonHash": "fnv1a64:30732a1c6acaabb6",
   "findings": []
 }

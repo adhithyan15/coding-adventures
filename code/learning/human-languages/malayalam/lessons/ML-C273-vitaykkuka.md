@@ -14,7 +14,8 @@ romanization: "vitaykkuka"
 concept_tag: ML-VERB-VITAYKKUKA
 prerequisites: [ML-C272-coruka, ML-C273-perukkuka]
 sounds: []
-roots: []
+roots: [dravidian-vittu-seed]
+etymology_hook: "vitaykkuka: native Dravidian, the verb of vittŭ 'seed'; Tamil vittu (DEDR 5401)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C273-perukkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C273-KRIYA273-02]; assesses=[] -->
 
 **വിതയ്ക്കുക** — *vitaykkuka* — "to sow (seed)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിതയ്ക്കുക** (*vitaykkuka*) is native Dravidian, the verb of *vittŭ*, "seed": "to seed"; DEDR 5401 lists the root with Tamil *vittu*, Kannada *bittu* and Telugu *vittu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

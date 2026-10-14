@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 134,
-  "sourceHash": "fnv1a64:a03ddef40a0855ee",
+  "sourceHash": "fnv1a64:19a445e1f4638536",
   "lessonIds": [
     "LA-C134-vacca",
     "LA-C134-mulus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch134.txt",
   "json": "latin/narration/ch134.json",
-  "textHash": "fnv1a64:223b9182fd4a6ebe",
-  "jsonHash": "fnv1a64:5e22b9fedbb5da01",
+  "textHash": "fnv1a64:f59fdb511b82db05",
+  "jsonHash": "fnv1a64:d6bae5a2081d23e6",
   "findings": []
 }

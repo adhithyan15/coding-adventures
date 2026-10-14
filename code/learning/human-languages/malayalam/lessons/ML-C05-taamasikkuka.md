@@ -12,6 +12,7 @@ concept_tag: ML-VERB-TAAMASIKKUKA
 prerequisites: [ML-C05-samsaarikkuka, ML-C05-thooval]
 sounds: [long-aa, double-kk]
 roots: [taamasa-sanskrit]
+etymology_hook: "tāmasikkuka ← Sanskrit tāmasa 'dark, sluggish': a delay became a stay (CDIAL 5775)"
 duration:
   max_seconds: 240
 requires:
@@ -46,10 +47,12 @@ infinitive) → **താമസിക്കുക** (*tāmasikkuka*).
 <!-- hl-knowledge: introduces=[ML-LEX-TAAMASIKKUKA-01]; assesses=[] -->
 
 **താമസിക്കുക** (*tāmasikkuka*, "to live, to reside, to stay, to delay") is
-Sanskrit-derived (from *tāmasa* / *tamas*, "dwelling, tarrying"). Malayalam often
+Sanskrit-derived (from *tāmasa*, "dark, sluggish", the quality of *tamas*, "darkness": in Malayalam a slowness became a delay, and a delay became a stay). Malayalam often
 prefers such Sanskrit-built verbs where Tamil uses a native word (*vāḻ*). "I live
 in Kochi" is **ഞാൻ കൊച്ചിയിൽ താമസിക്കുന്നു** (*ñān kocciyil tāmasikkunnu*) — again
 the same *-unnu* present, the same for every person.
+
+Sanskrit *tāmasa* is CDIAL 5775, from *tamas*, "darkness" (CDIAL 5689).
 
 ## Grammar Lens: "in" comes after the noun
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C05-POSTPOSITION-IL-01]; assesses=[ML-LEX-TAAMASIKKUKA-01] -->

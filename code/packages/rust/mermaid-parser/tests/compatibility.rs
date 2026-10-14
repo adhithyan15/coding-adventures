@@ -1464,6 +1464,20 @@ fn swimlane_dispatches_to_dedicated_ownership_ir() {
 }
 
 #[test]
+fn swimlane_loose_nodes_lower_into_the_default_lane() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph OwnedLane\n  owned[Owned node]\nend\nloose[Loose node] --> owned",
+    ).expect("loose nodes should parse into a default lane");
+
+    assert_eq!(diagram.lanes.len(), 2);
+    assert_eq!(diagram.lanes[1].id, "__swimlane_default__");
+    assert_eq!(diagram.lanes[1].label, "");
+    assert_eq!(diagram.lanes[1].node_ids, ["loose"]);
+    assert_eq!(diagram.nodes.iter().find(|node| node.id == "loose")
+        .and_then(|node| node.lane_id.as_deref()), Some("__swimlane_default__"));
+}
+
+#[test]
 fn pinned_swimlane_subset_corpus_parses_to_ownership_ir() {
     let corpus: Value = serde_json::from_str(SWIMLANE_CORPUS).expect("swimlane corpus must be JSON");
     for fixture in corpus["fixtures"].as_array().expect("fixtures must be an array") {
@@ -1623,6 +1637,60 @@ fn swimlane_text_block_attribute_reaches_semantic_ir() {
 
     assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::TextBlock);
     assert_eq!(diagram.nodes[0].label, "Context only");
+}
+
+#[test]
+fn swimlane_internal_label_rect_reaches_label_only_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Labels\n  caption@{ shape: labelRect, label: \"Context only\" }\nend",
+    ).expect("Mermaid 11.16.1 labelRect should parse");
+
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::TextBlock);
+    assert_eq!(diagram.nodes[0].label, "Context only");
+}
+
+#[test]
+fn swimlane_internal_anchor_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Routing\n  pin@{ shape: anchor }\nend",
+    ).expect("Mermaid 11.16.1 anchor should parse");
+
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::Anchor);
+}
+
+#[test]
+fn swimlane_internal_rect_with_title_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph State\n  item@{ shape: rectWithTitle, label: \"Details\" }\nend",
+    ).expect("Mermaid 11.16.1 rectWithTitle should parse");
+
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::TitledRect);
+    assert_eq!(diagram.nodes[0].label, "Details");
+}
+
+#[test]
+fn swimlane_internal_container_shapes_reach_shared_semantic_ir() {
+    use diagram_ir::DiagramShape;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Internal\n  card@{ shape: kanbanItem, label: \"Card\" }\n  topic@{ shape: mindmapCircle, label: \"Topic\" }\n  branch@{ shape: defaultMindmapNode, label: \"Branch\" }\nend\ncard --> topic --> branch",
+    ).expect("Mermaid 11.16.1 internal container shapes should parse");
+
+    assert_eq!(diagram.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+        &DiagramShape::RoundedRect,
+        &DiagramShape::Ellipse,
+        &DiagramShape::RoundedRect,
+    ]);
+}
+
+#[test]
+fn swimlane_internal_compartment_shapes_reach_titled_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Internal\n  classifier@{ shape: classBox, label: \"Class\" }\n  entity@{ shape: erBox, label: \"Entity\" }\n  requirement@{ shape: requirementBox, label: \"Requirement\" }\nend\nclassifier --> entity --> requirement",
+    ).expect("Mermaid 11.16.1 internal compartment shapes should parse");
+
+    assert!(diagram.nodes.iter().all(|node|
+        node.shape == diagram_ir::DiagramShape::TitledRect));
 }
 
 #[test]
@@ -2137,6 +2205,82 @@ fn swimlane_styled_inline_labels_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_labeled_bidirectional_links_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\nend\na<-- normal -->b<== thick ==>c<-. dotted .->d",
+    ).expect("labeled bidirectional Flowchart links should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.label.as_deref()).collect::<Vec<_>>(),
+        vec![Some("normal"), Some("thick"), Some("dotted")]);
+    assert_eq!(diagram.edges.iter().map(|edge| edge.kind).collect::<Vec<_>>(),
+        vec![SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Dotted]);
+    assert!(diagram.edges.iter().all(|edge|
+        (edge.start_marker, edge.end_marker) == (EdgeMarker::Point, EdgeMarker::Point)));
+}
+
+#[test]
+fn swimlane_labeled_circle_and_cross_links_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o-- solid circle --o b\nb x-- solid cross --x c\nc o== thick circle ==o d\nd x== thick cross ==x e\ne o-. dotted circle .-o f\nf x-. dotted cross .-x g",
+    ).expect("labeled circle and cross Flowchart links should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.kind).collect::<Vec<_>>(), vec![
+        SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Directed,
+        SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Thick,
+        SwimlaneEdgeKind::Dotted, SwimlaneEdgeKind::Dotted,
+    ]);
+    for (index, edge) in diagram.edges.iter().enumerate() {
+        let marker = if index % 2 == 0 { EdgeMarker::Circle } else { EdgeMarker::Cross };
+        assert_eq!((edge.start_marker, edge.end_marker), (marker, marker));
+        assert!(edge.label.is_some());
+    }
+}
+
+#[test]
+fn swimlane_labeled_mixed_endpoint_markers_lower_to_semantic_ir() {
+    use diagram_ir::EdgeMarker;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o-- circle to cross --x b\nb x== cross to circle ==o c\nc <-. point to cross .-x d\nd o-. circle to point .-> e\ne -- none to circle --o f\nf <== point to cross ==x g",
+    ).expect("labeled mixed endpoint markers should parse");
+
+    let markers = diagram.edges.iter().map(|edge| (edge.start_marker, edge.end_marker))
+        .collect::<Vec<_>>();
+    assert_eq!(markers, vec![
+        (EdgeMarker::Circle, EdgeMarker::Cross),
+        (EdgeMarker::Cross, EdgeMarker::Circle),
+        (EdgeMarker::Point, EdgeMarker::Cross),
+        (EdgeMarker::Circle, EdgeMarker::Point),
+        (EdgeMarker::None, EdgeMarker::Circle),
+        (EdgeMarker::Point, EdgeMarker::Cross),
+    ]);
+    assert!(diagram.edges.iter().all(|edge| edge.label.is_some()));
+}
+
+#[test]
+fn swimlane_labeled_open_links_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na -- solid open --- b\nb o-- circle open --- c\nc x== cross open === d\nd <== point open === e\ne -. dotted open .- f\nf o-. dotted circle open .- g",
+    ).expect("labeled links without end markers should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.kind).collect::<Vec<_>>(), vec![
+        SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Directed,
+        SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Thick,
+        SwimlaneEdgeKind::Dotted, SwimlaneEdgeKind::Dotted,
+    ]);
+    assert_eq!(diagram.edges.iter().map(|edge| edge.start_marker).collect::<Vec<_>>(),
+        vec![EdgeMarker::None, EdgeMarker::Circle, EdgeMarker::Cross,
+            EdgeMarker::Point, EdgeMarker::None, EdgeMarker::Circle]);
+    assert!(diagram.edges.iter().all(|edge| edge.end_marker == EdgeMarker::None));
+}
+
+#[test]
 fn swimlane_edge_ids_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done",
@@ -2163,6 +2307,36 @@ fn swimlane_edge_classes_and_styles_lower_to_semantic_ir() {
     assert_eq!(diagram.edges[1].style.stroke_width, Some(5.0));
     assert_eq!(diagram.edges[1].style.stroke_dash.as_deref(), Some([2.0, 2.0].as_slice()));
     assert_eq!(diagram.edges[1].style.text_color.as_deref(), Some("#065f46"));
+}
+
+#[test]
+fn swimlane_positional_link_styles_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\nend\na --> b\nb --> c\nc --> d\nlinkStyle default stroke:#64748b,stroke-width:2px\nlinkStyle 0, 2 stroke:#dc2626,stroke-width:5px,stroke-dasharray:7 3,color:#991b1b;",
+    ).expect("positional link styles should parse");
+
+    assert_eq!(diagram.edges[0].style.stroke.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.edges[1].style.stroke.as_deref(), Some("#64748b"));
+    assert_eq!(diagram.edges[2].style.stroke.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.edges[0].style.stroke_width, Some(5.0));
+    assert_eq!(diagram.edges[1].style.stroke_width, Some(2.0));
+    assert_eq!(diagram.edges[2].style.stroke_dash.as_deref(), Some([7.0, 3.0].as_slice()));
+    assert_eq!(diagram.edges[2].style.text_color.as_deref(), Some("#991b1b"));
+}
+
+#[test]
+fn swimlane_positional_link_curves_lower_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst --> fourth\nsecond --> third\nlinkStyle default interpolate basis\nlinkStyle 1 interpolate stepBefore;",
+    ).expect("positional link curves should parse");
+
+    assert_eq!(diagram.edges[0].curve, Some(SwimlaneEdgeCurve::Basis));
+    assert_eq!(diagram.edges[1].curve, Some(SwimlaneEdgeCurve::StepBefore));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph A\n  one[One]\n  two[Two]\nend\none --> two\nlinkStyle 0 interpolate imaginary"
+    ).is_err());
 }
 
 #[test]
@@ -2291,6 +2465,78 @@ fn swimlane_automatic_lane_ordering_config_lowers_to_semantic_ir() {
 
     assert!(enabled.automatic_lane_ordering);
     assert!(!disabled.automatic_lane_ordering);
+}
+
+#[test]
+fn swimlane_ignore_cross_lane_edges_config_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  a[A]\nend\nsubgraph B\n  b[B]\nend\na --> b";
+    let defaulted = parse_swimlane(source).expect("default cross-lane behavior should parse");
+    let enabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    ignoreCrossLaneEdges: true\n---\n{source}"))
+        .expect("ignored cross-lane edges should parse");
+    let disabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    ignoreCrossLaneEdges: false\n---\n{source}"))
+        .expect("cross-lane rank constraints should parse");
+
+    assert!(defaulted.ignore_cross_lane_edges);
+    assert!(enabled.ignore_cross_lane_edges);
+    assert!(!disabled.ignore_cross_lane_edges);
+}
+
+#[test]
+fn swimlane_optimize_ranks_by_crossings_config_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  a[A]\nend\nsubgraph B\n  b[B]\nend\na --> b";
+    let defaulted = parse_swimlane(source).expect("default rank optimization should parse");
+    let enabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    optimizeRanksByCrossings: true\n---\n{source}"))
+        .expect("rank crossing optimization should parse");
+    let disabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    optimizeRanksByCrossings: false\n---\n{source}"))
+        .expect("disabled rank crossing optimization should parse");
+
+    assert!(defaulted.optimize_ranks_by_crossings);
+    assert!(enabled.optimize_ranks_by_crossings);
+    assert!(!disabled.optimize_ranks_by_crossings);
+}
+
+#[test]
+fn swimlane_nested_subgraphs_reach_semantic_ir() {
+    let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Engineering\n  subgraph Platform[Platform]\n    plan[Plan]\n    subgraph Runtime[Runtime]\n      build[Build]\n    end\n  end\n  deploy[Deploy]\nend\nsubgraph Operations\n  observe[Observe]\nend\nplan --> build --> deploy --> observe")
+        .expect("nested Swimlane subgraphs should parse");
+
+    assert_eq!(diagram.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
+        vec!["Engineering", "Operations"]);
+    assert_eq!(diagram.groups.len(), 2);
+    assert_eq!(diagram.groups[0].lane_id, "Engineering");
+    assert_eq!(diagram.groups[0].parent_id, None);
+    assert_eq!(diagram.groups[0].node_ids, vec!["plan"]);
+    assert_eq!(diagram.groups[1].parent_id.as_deref(), Some("Platform"));
+    assert_eq!(diagram.groups[1].node_ids, vec!["build"]);
+}
+
+#[test]
+fn swimlane_state_choice_and_note_attributes_reach_semantic_ir() {
+    use diagram_ir::DiagramShape;
+    let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Workflow\n  pending@{ shape: state, label: \"Pending\" }\n  branch@{ shape: choice, label: \"Choose\" }\n  memo@{ shape: note, label: \"Decision note\" }\nend\npending --> branch --> memo")
+        .expect("state, choice, and note shapes should parse");
+
+    assert_eq!(diagram.nodes[0].shape, DiagramShape::RoundedRect);
+    assert_eq!(diagram.nodes[1].shape, DiagramShape::Diamond);
+    assert_eq!(diagram.nodes[2].shape, DiagramShape::Note);
+}
+
+#[test]
+fn swimlane_legacy_internal_shape_aliases_reach_semantic_ir() {
+    use diagram_ir::DiagramShape;
+    let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Legacy\n  process@{ shape: squareRect, label: \"Process\" }\n  event@{ shape: roundedRect, label: \"Event\" }\n  start@{ shape: stateStart }\n  stop@{ shape: stateEnd }\n  branch@{ shape: forkJoin }\n  manual@{ shape: inv_trapezoid, label: \"Manual\" }\n  final@{ shape: doublecircle, label: \"Final\" }\n  odd@{ shape: rect_left_inv_arrow, label: \"Odd\" }\nend\nstart --> process --> event --> branch --> manual --> final --> stop\nbranch --> odd --> final")
+        .expect("legacy internal ShapeIDs accepted by Mermaid 11.16.1 should parse");
+
+    assert_eq!(diagram.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+        &DiagramShape::Rect,
+        &DiagramShape::RoundedRect,
+        &DiagramShape::SmallCircle,
+        &DiagramShape::FramedCircle,
+        &DiagramShape::ForkJoin,
+        &DiagramShape::InvertedTrapezoid,
+        &DiagramShape::DoubleCircle,
+        &DiagramShape::Asymmetric,
+    ]);
 }
 
 #[test]

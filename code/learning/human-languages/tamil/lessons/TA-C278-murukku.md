@@ -47,7 +47,7 @@ reviews_of: [TA-C278-tarpucani]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**முறுக்கு** (*muṟukku*) is native Dravidian. DEDR 5012 lists Malayalam *muṟukuka*, "to be twisted" and Kannada *muṟuku*. The entry glosses *muṟukku* as "a twisted cake", from "to twist".
+**முறுக்கு** (*muṟukku*) is native Dravidian. DEDR 5012 lists Malayalam *muṟukuka*, "to be twisted" and Kannada *muṟuku*. Its Malayalam *muṟukku* is glossed "a twisted cake", from "to twist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-ASK-MANGO
 prerequisites: [ES-C470-paraguas, ES-C451-cola, ES-C24-mano]
 sounds: [nasal-n, g-hard, stress-penultimate]
 roots: [latin-manus]
+etymology_hook: "mango — 'handle', built on Latin manus 'hand' — kin to mano; English manual"
 duration:
   max_seconds: 270
 requires:

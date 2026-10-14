@@ -12,6 +12,9 @@ Before the new one: say the Latin for the tongue; a language, then the Latin for
 You'll want to know: collum, collī.
 collum, collī — "the neck". A collar goes round it.
 
+The word, taken apart.
+collum is inherited, usually traced to Proto-Indo-European kwolso-, "neck" (EtymDB 2.1), perhaps from a root kwel-, "to turn".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for the nose, then the Latin for the neck.
 
 You'll want to know: umerus, umerī.
 umerus, umerī — "the shoulder".
+
+The word, taken apart.
+umerus is inherited, usually traced to Proto-Indo-European h3emsos, "shoulder" (EtymDB 2.1); Greek ōmos, "shoulder", is a cousin (Lewis & Short). English humerus, the upper-arm bone, is the same word with a later h.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for the neck, then the Latin for the shoulder.
 You'll want to know: genū, genūs.
 genū, genūs — "a knee". Genuflect: to bend the knee.
 
+The word, taken apart.
+genū is inherited, usually traced to Proto-Indo-European gonu, "knee" (EtymDB 2.1). English knee is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for the shoulder, then the Latin for a knee.
 You'll want to know: cor, cordis.
 cor, cordis — "the heart". English cordial, from the genitive cordis.
 
+The word, taken apart.
+cor is inherited, usually traced to Proto-Indo-European krd-, "heart" (EtymDB 2.1). Greek kardia, "heart", and English heart are cousins (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a knee, then the Latin for the heart.
 
 You'll want to know: sanguis, sanguinis.
 sanguis, sanguinis — "blood".
+
+The word, taken apart.
+sanguis has no agreed origin; Lewis & Short call it doubtful. EtymDB 2.1 records a proposal that ties it to Proto-Indo-European h1esh2r, "blood", but not everyone accepts it. English sanguine comes from it.
 
 What you've built.
 One more word for this chapter.

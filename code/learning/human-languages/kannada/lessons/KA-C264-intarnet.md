@@ -14,7 +14,8 @@ romanization: "iṇṭarneṭ"
 concept_tag: KA-VASTU264-INTARNET
 prerequisites: [KA-C263-hengasu, KA-C263-muduka]
 sounds: []
-roots: []
+roots: [english-internet]
+etymology_hook: "iṇṭarneṭ ← English internet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C263-muduka]
 <!-- hl-knowledge: introduces=[KA-LEX-C264-VASTU264-01]; assesses=[] -->
 
 **ಇಂಟರ್ನೆಟ್** — *iṇṭarneṭ* — "the internet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇಂಟರ್ನೆಟ್** (*iṇṭarneṭ*) is a loan from English *internet*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

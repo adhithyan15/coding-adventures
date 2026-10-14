@@ -14,7 +14,8 @@ romanization: "abhinayikkuka"
 concept_tag: ML-VERB-ABHINAYIKKUKA
 prerequisites: [ML-C307-valarttuka, ML-C307-valaruka]
 sounds: []
-roots: []
+roots: [sanskrit-abhinaya]
+etymology_hook: "abhinayikkuka ← Sanskrit abhinaya 'expression, acting' + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C307-valaruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C307-KRIYA307-03]; assesses=[] -->
 
 **അഭിനയിക്കുക** — *abhinayikkuka* — "to act (in a play or film)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അഭിനയിക്കുക** (*abhinayikkuka*) is built on Sanskrit *abhinaya*, "dramatic expression, acting", with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

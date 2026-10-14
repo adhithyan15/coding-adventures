@@ -14,7 +14,8 @@ romanization: "vāṭuka"
 concept_tag: ML-VERB-VATUKA
 prerequisites: [ML-C229-astamikkuka, ML-C229-tilannuka]
 sounds: []
-roots: []
+roots: [dravidian-vadu-wither]
+etymology_hook: "vāṭuka: native Dravidian, one word with Tamil vāṭu and Kannada bāḍu (DEDR 5342)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C229-tilannuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C229-KRIYA229-03]; assesses=[] -->
 
 **വാടുക** — *vāṭuka* — "to wilt, to wither".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വാടുക** (*vāṭuka*) is native Dravidian, one word with Tamil *vāṭu*, Kannada *bāḍu* and Telugu *vāḍu* (DEDR 5342).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

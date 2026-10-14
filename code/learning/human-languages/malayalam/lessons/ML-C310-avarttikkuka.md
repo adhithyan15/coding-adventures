@@ -14,7 +14,8 @@ romanization: "āvarttikkuka"
 concept_tag: ML-VERB-AVARTTIKKUKA
 prerequisites: [ML-C310-alikkuka, ML-C310-upeksikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-avartana]
+etymology_hook: "āvarttikkuka ← Sanskrit āvartana 'turning round, recurrence' (CDIAL 1420) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C310-upeksikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C310-KRIYA310-05]; assesses=[] -->
 
 **ആവർത്തിക്കുക** — *āvarttikkuka* — "to repeat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആവർത്തിക്കുക** (*āvarttikkuka*) is built on Sanskrit *āvartana*, "turning round, recurrence" (CDIAL 1420), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

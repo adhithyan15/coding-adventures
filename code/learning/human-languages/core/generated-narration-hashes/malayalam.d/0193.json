@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 193,
-  "sourceHash": "fnv1a64:b3ba8212e5cc2fcd",
+  "sourceHash": "fnv1a64:a2b45557a0e0e83e",
   "lessonIds": [
     "ML-C193-apakatam",
     "ML-C193-asuya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch193.txt",
   "json": "malayalam/narration/ch193.json",
-  "textHash": "fnv1a64:2f7772220406c6d6",
-  "jsonHash": "fnv1a64:6412b8a30329ba5a",
+  "textHash": "fnv1a64:88ecc0334b24b46a",
+  "jsonHash": "fnv1a64:21ea2b5798f56d50",
   "findings": []
 }

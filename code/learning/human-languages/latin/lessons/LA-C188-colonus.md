@@ -13,7 +13,8 @@ gloss: "a tenant farmer"
 concept_tag: LA-RES188-COLONUS
 prerequisites: [LA-C188-figulus, LA-C188-vilicus]
 sounds: []
-roots: []
+roots: [colonus-latin, colere-latin]
+etymology_hook: "colōnus 'tenant farmer' — built on colō 'to till'; English colony"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C188-vilicus]
 <!-- hl-knowledge: introduces=[LA-LEX-C188-RES188-05]; assesses=[] -->
 
 **colōnus, colōnī** — "a tenant farmer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colōnus** is built on *colō*, "to till, to tend" (Lewis & Short): one who tills the land. *colō* is usually traced to Proto-Indo-European *\*kwel-*, "to turn, to move about" (EtymDB 2.1). English *colony* comes from the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

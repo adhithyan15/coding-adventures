@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 249,
-  "sourceHash": "fnv1a64:39fd79079ee2a1a5",
+  "sourceHash": "fnv1a64:75302c3e7bc6c541",
   "lessonIds": [
     "TE-C249-bharincu",
     "TE-C249-paku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch249.txt",
   "json": "telugu/narration/ch249.json",
-  "textHash": "fnv1a64:1f328c9b036a9071",
-  "jsonHash": "fnv1a64:a8a93973168d4aaa",
+  "textHash": "fnv1a64:5c6c6de400d8dd6c",
+  "jsonHash": "fnv1a64:b86a91f48bcc65f1",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 203,
-  "sourceHash": "fnv1a64:d1df5c97761a139d",
+  "sourceHash": "fnv1a64:996a5789e78cccbe",
   "lessonIds": [
     "KA-C203-belesu",
     "KA-C203-aralu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch203.txt",
   "json": "kannada/narration/ch203.json",
-  "textHash": "fnv1a64:e4769f706f52e0b3",
-  "jsonHash": "fnv1a64:f709e5345c8671b3",
+  "textHash": "fnv1a64:2a20d7b50823b8e9",
+  "jsonHash": "fnv1a64:6769cbb224752612",
   "findings": []
 }

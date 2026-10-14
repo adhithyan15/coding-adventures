@@ -18,6 +18,7 @@ The letters in this word.
 The word, taken apart.
 ಹೆಸರು (hesaru, "name") is native Dravidian, from Proto-Dravidian pesar — and it hides a famous Kannada sound-law: an old initial p became h. So pesar becomes hesar becomes hesaru. That makes it a cousin of Tamil peyar (same root; Tamil kept the p, Kannada softened it to h) — and, like peyar, not related to Sanskrit nāma (Hindi nām, English name).
 Across the family: Kannada hesaru, Tamil peyar, Telugu pēru, Malayalam pēr — one Dravidian word; only Hindi nām / English name are Indo-European.
+DEDR 4410 gives the older Kannada spelling pesar(u), with the p- still in place.
 
 Across the family — the same idea, five ways.
 [a table of 6 rows, read aloud]
@@ -58,6 +59,7 @@ The letters in this word.
 
 The word, taken apart.
 ನನ್ನ (nanna) means "my." It belongs to Kannada's native Dravidian first-person family, not to the Indo-European family behind English I/my. The stem underneath is Dravidian nān — the same one behind Tamil nāṉ / eṉ. You will meet the related word for "I" in its own lesson; today you only need nanna.
+DEDR 5160 lists Kannada nān, "I", with the stem nan- that nanna is built on, beside Tamil nāṉ and Telugu nēnu.
 
 Guided Practice.
 [pause 1 second]
@@ -82,6 +84,9 @@ You'll want to know: The phrase, assembled.
 nanna (my) + hesaru (name) + your name.
 ನನ್ನ ಹೆಸರು … (nanna hesaru …) = "my name …" becomes "my name is…"
 Nanna hesaru Arun. becomes "My name is Arun."
+
+The phrase, taken apart.
+ನನ್ನ ಹೆಸರು … (nanna hesaru …) is two native Dravidian words: nanna, "my" (DEDR 5160), and hesaru, "name" (DEDR 4410). Tamil eṉ peyar is built the same way, from the same two roots, also with no word for "is".
 
 Grammar Lens: the zero copula.
 There is no verb. Kannada sets "my name" beside "Arun" and lets the "is" be understood — the zero copula of the Dravidian family (just like Tamil). Nanna hesaru Arun = literally "my name Arun."
@@ -113,6 +118,7 @@ The letters in this word.
 
 The word, taken apart.
 ನೀನು (nīnu, familiar "you") from Proto-Dravidian nīn — the same native root as Tamil nī. ನೀವು (nīvu) is the respectful/plural "you."
+DEDR 3684 lists Kannada nīn(u) with Tamil nī; DEDR 3688 lists the plural nīvu with Tamil nīm and Telugu mīru.
 
 Grammar Lens: respect by the plural.
 nīnu (familiar) vs. nīvu (respectful, and literally plural) — the same politeness-by-plural as Tamil nīṅgaḷ and French vous: one respected person addressed as "you all." For a first meeting, nīvu.
@@ -144,6 +150,7 @@ The letters in this word.
 
 The word, taken apart.
 ಏನು (ēnu, "what") is native Dravidian, on the interrogative stem yā- / e- — the same Dravidian question-root as Tamil eṉṉa, heading Kannada's question family: ēnu (what), yāru (who), elli (where), yāke (why).
+DEDR 5151 lists Kannada ēn, "what", with Tamil ētu and Telugu ēdi.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -172,6 +179,9 @@ You'll want to know: The phrase, assembled.
 ನಿಮ್ಮ (nimma, "your") = the possessive of nīvu ("you," respectful).
 ನಿಮ್ಮ ಹೆಸರು ಏನು? (nimma hesaru ēnu?) = literally "your name what?" = "what's your name?"
 Three words, no verb — the zero copula holds for questions too.
+
+The phrase, taken apart.
+ನಿಮ್ಮ ಹೆಸರು ಏನು? (nimma hesaru ēnu?) is three native Dravidian words: nimma, "your" (DEDR 3688), hesaru, "name" (DEDR 4410), and ēnu, "what" (DEDR 5151).
 
 Grammar Lens: answer, and the familiar version.
 Answer with the sentence you built: Nanna hesaru Arun. The familiar "your" is ninna (from nīnu): ninna hesaru ēnu?
@@ -235,6 +245,7 @@ Today it stays a spoken word. Its written form waits a few chapters, for the les
 
 The word, taken apart.
 Santōṣa ("joy, contentment") is Sanskrit — sam- ("fully") + toṣa ("satisfaction") — not native. Where Tamil reaches for its home-grown magiḻcci, Kannada uses a Sanskrit word even for "pleased." The same split you saw over "hello" (namaskāra) and "thanks" (dhanyavāda) runs right through the introductions: Kannada borrows, Tamil keeps its own.
+CDIAL 12895 lists Sanskrit santoṣa, "satisfaction".
 
 Guided Practice.
 [pause 1 second]

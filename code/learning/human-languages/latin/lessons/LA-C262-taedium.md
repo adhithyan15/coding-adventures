@@ -13,7 +13,8 @@ gloss: "boredom, weariness"
 concept_tag: LA-VALE262-TAEDIUM
 prerequisites: [LA-C262-pudor, LA-C262-invidia]
 sounds: []
-roots: []
+roots: [taedium-latin, taedere-latin]
+etymology_hook: "taedium 'boredom' — built on taedet 'it wearies'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C262-invidia]
 <!-- hl-knowledge: introduces=[LA-LEX-C262-VALE262-05]; assesses=[] -->
 
 **taedium, taediī** — "boredom, weariness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**taedium** is built on *taedet*, "it wearies, it disgusts" (Lewis & Short). Where *taedet* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

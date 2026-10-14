@@ -11,7 +11,8 @@ romanization: "svalpa"
 concept_tag: KA-WORD-A-LITTLE
 prerequisites: [KA-C57-bone, KA-C56-mat]
 sounds: []
-roots: []
+roots: [sanskrit-svalpa]
+etymology_hook: "svalpa ← Sanskrit svalpa 'very small, very little', su- 'well' + alpa 'small'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit, and it comes apart cleanly: *su-*, "well, nicely", on *alpa*, "small".
 But the useful thing about ಸ್ವಲ್ಪ is not its size. It is what it does to whatever follows it. Ask for something flat and you are instructing; put ಸ್ವಲ್ಪ in front and you are asking. ಸ್ವಲ್ಪ ನೀರು ಕೊಡಿ leaves the other person room to move in a way that ನೀರು ಕೊಡಿ does not.
 
 The word measures a quantity in the dictionary and a manner in the mouth. English does the same thing with "just" and "a bit", and neither of those measures much any more either.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ವಲ್ಪ** (*svalpa*) is Sanskrit *svalpa*, "very little", taken over whole: *su-*, "well, very", and *alpa*, "small".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

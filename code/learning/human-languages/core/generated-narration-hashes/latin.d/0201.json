@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 201,
-  "sourceHash": "fnv1a64:27ab6a73e8305496",
+  "sourceHash": "fnv1a64:a24c18bd0147c94c",
   "lessonIds": [
     "LA-C201-colloquor",
     "LA-C201-trado",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch201.txt",
   "json": "latin/narration/ch201.json",
-  "textHash": "fnv1a64:2e02e960fadfc1e5",
-  "jsonHash": "fnv1a64:6c5d366e46ef9c67",
+  "textHash": "fnv1a64:eea5e79e4ed14b76",
+  "jsonHash": "fnv1a64:fcc37a9eb36cf9ec",
   "findings": []
 }

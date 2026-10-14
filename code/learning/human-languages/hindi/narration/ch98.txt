@@ -21,6 +21,7 @@ English: from home. Hindi: घर से (se).
 English: by hand. Hindi: हाथ से (se).
 Both are the same idea seen from two angles. Where something starts and what it travels through are, to Hindi, one relation: the thing proceeds from the noun. A journey proceeds from your house; an action proceeds from your hand.
 Once you see that, the second use stops being a second word to learn. A vehicle you travel in takes से (se) for exactly the same reason your hand does.
+CDIAL traces से (se) to Sanskrit sahita, "together with" (CDIAL 13310), and lists it under sama, "equal", too (CDIAL 13173).
 
 Grammar Lens: two postpositions, one habit.
 [a table of 2 rows, read aloud]
@@ -101,6 +102,7 @@ The word, taken apart.
 The stem is उठ-, and it opens with a vowel where no consonant can carry the mark — so the word begins with the full letter उ, which is why this is the first word in the track to start that way.
 The verb is broader than English get up. It covers a person leaving a bed, a person standing from a chair, smoke rising, and a price going up. What all of those share is movement away from the ground, and Hindi treats that as one action.
 Its opposite, बैठना, is to sit — the same idea in the other direction.
+उठना (uṭhnā) comes from a reconstructed ut-sthāti, "stands up" (CDIAL 1900).
 
 Grammar Lens: it takes the endings you already have.
 [a table of 4 rows, read aloud]
@@ -184,6 +186,7 @@ It does two jobs, and the difference is where it stands:
 in front of the sentence means first, to begin with.
 after a time word means before that time.
 सुबह से (se) पहले (pahle) is before morning — the time word, से (se), then पहले (pahle). That is the second use, and it is why this lesson comes after the one on से (se).
+पहला comes from a reconstructed prathila, "first" (CDIAL 8652).
 
 Grammar Lens: sequencing a day.
 [a table of 2 rows, read aloud]

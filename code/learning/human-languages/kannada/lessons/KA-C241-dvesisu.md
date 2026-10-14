@@ -14,7 +14,8 @@ romanization: "dvēṣisu"
 concept_tag: KA-VERB-DVESISU
 prerequisites: [KA-C241-tikisu, KA-C241-hancikollu]
 sounds: []
-roots: []
+roots: [sanskrit-dvesha]
+etymology_hook: "dvēṣisu: Sanskrit dveṣa 'hatred' (CDIAL 6696) + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C241-hancikollu]
 <!-- hl-knowledge: introduces=[KA-LEX-C241-KRIYE241-03]; assesses=[] -->
 
 **ದ್ವೇಷಿಸು** — *dvēṣisu* — "to hate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದ್ವೇಷಿಸು** (*dvēṣisu*) is Sanskrit *dveṣa*, "hatred" (CDIAL 6696), made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

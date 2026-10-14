@@ -14,7 +14,8 @@ romanization: "muḷḷu"
 concept_tag: KA-VASTU188-MULLU
 prerequisites: [KA-C188-balli, KA-C188-moggu]
 sounds: []
-roots: []
+roots: [dravidian-mul-thorn]
+etymology_hook: "muḷḷu: native Dravidian, one word with Tamil muḷ and Telugu mulu (DEDR 4995)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C188-moggu]
 <!-- hl-knowledge: introduces=[KA-LEX-C188-VASTU188-04]; assesses=[] -->
 
 **ಮುಳ್ಳು** — *muḷḷu* — "a thorn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಳ್ಳು** (*muḷḷu*) is native Dravidian, one word with Tamil *muḷ*, Telugu *mulu* and Malayalam *muḷ* (DEDR 4995). DEDR lists *muḷḷu* itself, "thorn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "anukūlamaina"
 concept_tag: TE-GUNAM296-ANUKULAMAINA
 prerequisites: [TE-C296-kathinamaina, TE-C296-pratyeka]
 sounds: []
-roots: []
+roots: [sanskrit-anukula, tamil-aaku-become]
+etymology_hook: "anukūlamaina: Sanskrit anukūla 'favourable' + native aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C296-pratyeka]
 <!-- hl-knowledge: introduces=[TE-LEX-C296-GUNAM296-03]; assesses=[] -->
 
 **అనుకూలమైన** — *anukūlamaina* — "convenient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అనుకూలమైన** (*anukūlamaina*) is Sanskrit *anukūla*, "favourable, agreeable", with native *aina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

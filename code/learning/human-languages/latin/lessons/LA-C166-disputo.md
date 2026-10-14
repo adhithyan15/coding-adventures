@@ -13,7 +13,8 @@ gloss: "to discuss, to argue"
 concept_tag: LA-VERB-DISPUTO
 prerequisites: [LA-C166-probo, LA-C166-signo]
 sounds: []
-roots: []
+roots: [disputare-latin, putare-latin]
+etymology_hook: "disputō 'to argue' — dis- 'apart' + putō 'to reckon': first a word of accounts"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C166-signo]
 <!-- hl-knowledge: introduces=[LA-LEX-C166-ACT166-03]; assesses=[] -->
 
 **disputō, disputāre** — "to discuss, to argue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**disputō** is *dis-*, "apart", with *putō*, "to reckon" (EtymDB 2.1). Lewis & Short note that *disputō* was first a word of accounts: to go over a reckoning item by item.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

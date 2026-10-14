@@ -45,6 +45,11 @@ hands you two more of them.
 
 You have been able to say **പണം** for a while. Now you can say where it lives.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബാങ്ക്** (*bāṅkŭ*) ← English *bank*, which goes back through French and Italian *banca*, "bench", the money-changer's table.
+
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C112-BANK-01, ML-LEX-C110-PHONE-01] -->
 

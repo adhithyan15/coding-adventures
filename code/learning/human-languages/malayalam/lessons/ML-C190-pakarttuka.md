@@ -14,7 +14,8 @@ romanization: "pakarttuka"
 concept_tag: ML-VERB-PAKARTTUKA
 prerequisites: [ML-C189-uruttuka, ML-C189-ilayuka]
 sounds: []
-roots: []
+roots: [dravidian-pakar-change]
+etymology_hook: "pakarttuka: native Dravidian, from the verb 'to change place'; Tamil pakar (DEDR 3803)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C189-ilayuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C190-KRIYA190-01]; assesses=[] -->
 
 **പകർത്തുക** — *pakarttuka* — "to copy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പകർത്തുക** (*pakarttuka*) is native Dravidian, from the verb "to change place, be exchanged": a copy moves a text to a new page; DEDR 3803 lists the root with Tamil *pakar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

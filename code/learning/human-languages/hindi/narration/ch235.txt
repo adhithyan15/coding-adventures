@@ -12,6 +12,9 @@ Before the new one: say the Hindi for the middle, then the Hindi for a corner.
 You'll want to know: ऊपर.
 ऊपर — ūpar — "up, above".
 
+The word, taken apart.
+ऊपर (ūpar) is a tadbhava, a word inherited and reshaped by sound change. It comes from uppari, "above", a form CDIAL reconstructs from its descendants (CDIAL 2333). It is Sanskrit upari, "above", with its consonant doubled for emphasis.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a corner, then the Hindi for up.
 
 You'll want to know: नीचे.
 नीचे — nīce — "down, below".
+
+The word, taken apart.
+नीचे (nīce) is the adverb form of nīcā, "low", which comes from Sanskrit nīca, "low" (CDIAL 7540).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for up, then the Hindi for down.
 You'll want to know: आगे.
 आगे — āge — "ahead, in front".
 
+The word, taken apart.
+आगे (āge) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from agra, "top, front" (CDIAL 68). āge continues the Sanskrit forms agre, agreṇa, "in front".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for down, then the Hindi for ahead.
 You'll want to know: पीछे.
 पीछे — pīche — "behind".
 
+The word, taken apart.
+पीछे (pīche) is a tadbhava, a word inherited and reshaped by sound change. It comes from paśca, "hinder part", a form CDIAL reconstructs from its descendants (CDIAL 7990). pīche is an old case form that took the place of Sanskrit paścāt, "behind".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for ahead, then the Hindi for behind.
 
 You'll want to know: अंदर.
 अंदर — andar — "inside".
+
+The word, taken apart.
+अंदर (andar) is a loan, usually traced to Persian andar, "inside".
 
 What you've built.
 One more word for this chapter.

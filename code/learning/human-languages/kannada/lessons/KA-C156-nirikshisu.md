@@ -14,7 +14,8 @@ romanization: "nirīkṣisu"
 concept_tag: KA-VERB-NIRIKSHISU
 prerequisites: [KA-C156-bhavishya, KA-C156-nirdharisu]
 sounds: []
-roots: []
+roots: [sanskrit-niriksha]
+etymology_hook: "nirīkṣisu: Sanskrit nirīkṣā 'looking at' (CDIAL 7280) + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C156-nirdharisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C156-MUNDE156-05]; assesses=[] -->
 
 **ನಿರೀಕ್ಷಿಸು** — *nirīkṣisu* — "to expect, to wait for". **ನಾನು ನಿಮ್ಮ ಉತ್ತರವನ್ನು ನಿರೀಕ್ಷಿಸುತ್ತೇನೆ** — *nānu nimma uttaravannu nirīkṣisuttēne* — "I will wait for your answer."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿರೀಕ್ಷಿಸು** (*nirīkṣisu*) is Sanskrit *nirīkṣā*, "a looking at, expectation" (CDIAL 7280), made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

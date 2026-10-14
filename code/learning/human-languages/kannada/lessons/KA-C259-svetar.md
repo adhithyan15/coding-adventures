@@ -14,7 +14,8 @@ romanization: "sveṭar"
 concept_tag: KA-VASTU259-SVETAR
 prerequisites: [KA-C258-bred, KA-C259-gundi]
 sounds: []
-roots: []
+roots: [english-sweater]
+etymology_hook: "sveṭar ← English sweater"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C259-gundi]
 <!-- hl-knowledge: introduces=[KA-LEX-C259-VASTU259-02]; assesses=[] -->
 
 **ಸ್ವೆಟರ್** — *sveṭar* — "a sweater".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ವೆಟರ್** (*sveṭar*) is a loan from English *sweater*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

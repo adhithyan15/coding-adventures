@@ -11,7 +11,8 @@ romanization: "bāva"
 concept_tag: TE-NOUN-BROTHER-IN-LAW
 prerequisites: [TE-C71-aunt]
 sounds: []
-roots: []
+roots: [telugu-baava-brother-in-law]
+etymology_hook: "bāva: origin not settled; perhaps with Sanskrit bhāvuka 'sister's husband', cited in CDIAL 9455"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C71-aunt]
 So the word covers a bond that is close, level and a little teasing. Two men who call each other బావ can joke in a way an అన్న and a తమ్ముడు cannot.
 
 City Telugu now uses it for a friend, roughly where English says mate. That irritates some people and has stopped nobody.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **బావ** (*bāva*) comes from is not settled, and DEDR does not list it. CDIAL 9455 cites Sanskrit *bhāvuka*, "sister's husband", a word of the drama, beside *bhāma*, which it takes as probably a pet name made from *bhrātṛ*, "brother"; the Telugu word may belong with them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

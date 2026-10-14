@@ -14,7 +14,8 @@ romanization: "āpko / use"
 concept_tag: HI-PRON-OBLIQUE-YOU-HIM
 prerequisites: [HI-C86-hamen-tumhen]
 sounds: []
-roots: []
+roots: [sanskrit-atman, sanskrit-asau]
+etymology_hook: "āpko: āp ← Sanskrit ātman 'self' (CDIAL 1135); use: us, from asau 'that' (CDIAL 972), with -e"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +53,11 @@ they take a postposition, *ko*, meaning *to*:
 
 *Use* is the worn-down version of the same thing: *us* + *ko*, squeezed
 together by centuries of use, exactly as *maiṅ* + *ko* became *mujhe*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आपको / उसे** (*āpko / use*) is *āp*, "you", with *ko*, "to", and *us*, "him, her", with the ending *-e*. *āp* comes from Sanskrit *ātman*, "self" (CDIAL 1135); CDIAL lists *us* under *asau*, "that" (CDIAL 972).
 
 ## Grammar Lens: the whole set, at last
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C86-PRON-04, HI-LEX-C86-PRON-03, HI-LEX-C84-POSS-03, HI-LEX-C86-PRON-02] -->

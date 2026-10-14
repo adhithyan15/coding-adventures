@@ -12,6 +12,9 @@ Before the new one: say the Latin for an envoy, then the Latin for a clerk.
 You'll want to know: nūptiae, nūptiārum.
 nūptiae, nūptiārum — "a wedding".
 
+The word, taken apart.
+nūptiae is built on nūpta, "a bride" (Lewis & Short), the participle of nūbō, "to marry" (EtymDB 2.1). English nuptial comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a clerk, then the Latin for a wedding.
 
 You'll want to know: coniūnx, coniugis.
 coniūnx, coniugis — "a husband or wife, a spouse".
+
+The word, taken apart.
+coniūnx is built on coniungō, "to join together", from con-, "together", and iungō, "to join": one joined in marriage. Its root is the one in iugum, "a yoke".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a wedding, then the Latin for a husband or
 You'll want to know: parēns, parentis.
 parēns, parentis — "a parent".
 
+The word, taken apart.
+parēns is the present participle of pariō, "to bring forth, to give birth to" (EtymDB 2.1): the one who brings forth. It is a different word from pārēns, "obeying", from pāreō, "to obey".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a husband or wife, then the Latin for a pa
 You'll want to know: nepōs, nepōtis.
 nepōs, nepōtis — "a grandson".
 
+The word, taken apart.
+nepōs is inherited, usually traced to Proto-Indo-European nepōts, "grandson, nephew" (EtymDB 2.1); German Neffe, "nephew", is a cousin (Lewis & Short). English nephew comes from nepōs through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a parent, then the Latin for a grandson.
 
 You'll want to know: neptis, neptis.
 neptis, neptis — "a granddaughter".
+
+The word, taken apart.
+neptis is inherited, usually traced to Proto-Indo-European neptih2, "granddaughter, niece" (EtymDB 2.1), the feminine partner of nepōs, "grandson" (Lewis & Short). English niece comes from it through French.
 
 What you've built.
 One more word for this chapter.

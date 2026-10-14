@@ -14,7 +14,8 @@ romanization: "nēra"
 concept_tag: KA-LOC107-NERA
 prerequisites: [KA-C107-bala, KA-C107-eda]
 sounds: []
-roots: []
+roots: [dravidian-neer-straight]
+etymology_hook: "nēra: native Dravidian, one word with Tamil nēr (DEDR 3772)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C107-eda]
 <!-- hl-knowledge: introduces=[KA-LEX-C107-LOC107-03]; assesses=[] -->
 
 **ನೇರ** — *nēra* — "straight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೇರ** (*nēra*) is native Dravidian, one word with Tamil *nēr* (DEDR 3772). DEDR lists *nēra* itself, "straightness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

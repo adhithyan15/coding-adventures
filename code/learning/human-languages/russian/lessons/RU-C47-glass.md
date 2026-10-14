@@ -14,7 +14,8 @@ romanization: "stakán"
 concept_tag: RU-PANTRY-GLASS
 prerequisites: [RU-C47-rice, RU-C47-mushroom]
 sounds: []
-roots: []
+roots: [turkic-tostakan]
+etymology_hook: "стакан is usually traced to a Turkic word for a wooden bowl, Chagatai tostakan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C47-mushroom]
 <!-- hl-knowledge: introduces=[RU-LEX-C47-PANTRY-05]; assesses=[] -->
 
 **стакан** (*stakán*) — "a glass (for drinking)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**стакан** — Old Russian *dostokanŭ*, recorded from the 1300s. It is usually taken from Turkic: Vasmer cites Chagatai *tostakan*, "a wooden bowl", and Kazakh *tustaghan*, "a cup, a ladle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

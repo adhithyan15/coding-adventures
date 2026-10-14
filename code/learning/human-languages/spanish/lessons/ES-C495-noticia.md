@@ -10,7 +10,8 @@ gloss: "the piece of news"
 concept_tag: ES-REF-NOTICIA
 prerequisites: [ES-C494-encender, ES-C494-calentar]
 sounds: []
-roots: []
+roots: [noscere-latin]
+etymology_hook: "noticia ← Latin notitia 'a being known', from notus 'known' — English notice"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C494-calentar]
 > *I have some good news.*
 
 *Las noticias* on television are the news.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**noticia** ← Latin *notitia*, "a being known, knowledge" (EtymDB 2.1), from *notus*, "known" — a learned word: the *-ti-* became *-ci-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

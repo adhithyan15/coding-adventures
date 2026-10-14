@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 117,
-  "sourceHash": "fnv1a64:e42c4c29e9929d1e",
+  "sourceHash": "fnv1a64:dd6f67c0fd5afd8c",
   "lessonIds": [
     "ML-C117-thirst",
     "ML-C117-sweat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch117.txt",
   "json": "malayalam/narration/ch117.json",
-  "textHash": "fnv1a64:23ed77d24edf31db",
-  "jsonHash": "fnv1a64:81584aad8e9367fc",
+  "textHash": "fnv1a64:3bae7d8c8fb34152",
+  "jsonHash": "fnv1a64:4ffce183c97d70a7",
   "findings": []
 }

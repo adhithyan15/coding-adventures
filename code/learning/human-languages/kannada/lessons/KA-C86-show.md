@@ -11,7 +11,8 @@ romanization: "tōrisi"
 concept_tag: KA-REP-SHOW
 prerequisites: [KA-C86-oneminute, KA-C86-wait]
 sounds: []
-roots: []
+roots: [dravidian-toru-appear]
+etymology_hook: "tōrisi: native tōrisu 'to make appear, show' (DEDR 3566); Tamil tōṉṟu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C86-wait]
 
 **ದಾರಿ ತೋರಿಸಿ** (*dāri tōrisi*) — "please show me the way", with **ದಾರಿ**,
 "way, road".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೋರಿಸಿ** (*tōrisi*) is native Dravidian: the polite command of *tōrisu*, "to show", literally "to make appear", from *tōru*, "to appear", which DEDR 3566 lists as Kannada *tōṟu* with Tamil *tōṉṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

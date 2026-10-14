@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 249,
-  "sourceHash": "fnv1a64:895f3a1f9884bfbe",
+  "sourceHash": "fnv1a64:028f28036201568d",
   "lessonIds": [
     "KA-C249-purva",
     "KA-C249-pascima",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch249.txt",
   "json": "kannada/narration/ch249.json",
-  "textHash": "fnv1a64:beb496e7f14a6c98",
-  "jsonHash": "fnv1a64:b0f164a630240269",
+  "textHash": "fnv1a64:a09dde43981327a1",
+  "jsonHash": "fnv1a64:8ae9b67c978df1c0",
   "findings": []
 }

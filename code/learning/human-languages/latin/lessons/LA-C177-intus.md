@@ -13,7 +13,8 @@ gloss: "within, indoors"
 concept_tag: LA-LOC177-INTUS
 prerequisites: [LA-C177-alibi, LA-C177-illic]
 sounds: []
-roots: []
+roots: [intus-latin, in-latin]
+etymology_hook: "intus 'within' — in 'in' + the old ending -tus; Greek entos 'within' is built alike"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C177-illic]
 <!-- hl-knowledge: introduces=[LA-LEX-C177-LOC177-04]; assesses=[] -->
 
 **intus** — "within, indoors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**intus** is *in*, "in", with *-tus*, an old ending meaning "from" (Lewis & Short); Greek *entos*, "within", is built the same way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

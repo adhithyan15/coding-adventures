@@ -14,7 +14,8 @@ romanization: "bacpan"
 concept_tag: HI-THG220-BACPAN
 prerequisites: [HI-C219-sena, HI-C220-jhanda]
 sounds: []
-roots: []
+roots: [persian-bacca]
+etymology_hook: "bacpan: baccā 'child', usually traced to Persian bacca, + -pan '-hood'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C220-jhanda]
 <!-- hl-knowledge: introduces=[HI-LEX-C220-THG220-02]; assesses=[] -->
 
 **बचपन** — *bacpan* — "childhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बचपन** (*bacpan*) is *baccā*, "child", with *-pan*, "-hood". *Baccā* is the loan usually traced to Persian *bacca*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

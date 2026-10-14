@@ -14,7 +14,8 @@ romanization: "sahajavāgi"
 concept_tag: KA-KARANA177-SAHAJAVAGI
 prerequisites: [KA-C176-badalu, KA-C177-nikharavagi]
 sounds: []
-roots: []
+roots: [sanskrit-sahaja]
+etymology_hook: "sahajavāgi: Sanskrit sahaja 'born together, innate' (CDIAL 13302) + -āgi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C177-nikharavagi]
 <!-- hl-knowledge: introduces=[KA-LEX-C177-KARANA177-02]; assesses=[] -->
 
 **ಸಹಜವಾಗಿ** — *sahajavāgi* — "naturally, of course".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಹಜವಾಗಿ** (*sahajavāgi*) is *sahaja*, "natural", from Sanskrit *sahaja*, "born together, innate" (CDIAL 13302), with the adverb ending *-āgi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

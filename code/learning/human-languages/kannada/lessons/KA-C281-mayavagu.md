@@ -14,7 +14,8 @@ romanization: "māyavāgu"
 concept_tag: KA-VERB-MAYAVAGU
 prerequisites: [KA-C280-talupisu, KA-C280-hindikku]
 sounds: []
-roots: []
+roots: [sanskrit-maya, tamil-aaku-become]
+etymology_hook: "māyavāgu: Sanskrit māyā 'illusion' (CDIAL 10060) + native āgu 'to become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C280-hindikku]
 <!-- hl-knowledge: introduces=[KA-LEX-C281-KRIYE281-01]; assesses=[] -->
 
 **ಮಾಯವಾಗು** — *māyavāgu* — "to vanish, to disappear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಾಯವಾಗು** (*māyavāgu*) is Sanskrit *māyā*, "illusion, magic" (CDIAL 10060), with native *āgu*, "to become" (DEDR 333): "to become magic", to vanish as if by a trick. DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pampu"
 concept_tag: TE-VERB-PAMPU
 prerequisites: [TE-C144-koyu, TE-C144-pagalagottu]
 sounds: []
-roots: []
+roots: [dravidian-panucu-send]
+etymology_hook: "pampu: native Dravidian; DEDR 3887 lists panucu 'to send'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C144-pagalagottu]
 <!-- hl-knowledge: introduces=[TE-LEX-C144-ACT144-04]; assesses=[] -->
 
 **పంపు** — *pampu* — "to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పంపు** (*pampu*) is native Dravidian. DEDR 3887 lists *panucu*, "to send, command", and *pani*, "errand". DEDR compares Prakrit *peṇḍavaï*, "sends".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

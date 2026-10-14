@@ -14,7 +14,8 @@ romanization: "yōjikkuka"
 concept_tag: ML-VERB-YOJIKKUKA
 prerequisites: [ML-C229-vatuka, ML-C229-samsayikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-yuj]
+etymology_hook: "yōjikkuka ← Sanskrit yōjana 'joining' (CDIAL 10530), from yuj 'to yoke'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C229-samsayikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C229-KRIYA229-05]; assesses=[] -->
 
 **യോജിക്കുക** — *yōjikkuka* — "to agree (with a view)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**യോജിക്കുക** (*yōjikkuka*) is built on the Sanskrit root *yuj*, "to yoke, to join", as in *yōjana*, "a team, joining" (CDIAL 10530): to agree is to be joined.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bākki"
 concept_tag: ML-JOLI219-BAKKI
 prerequisites: [ML-C219-nottu, ML-C219-cillara]
 sounds: []
-roots: []
+roots: [arabic-baqi]
+etymology_hook: "bākki ← Arabic bāqī 'remaining', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C219-cillara]
 <!-- hl-knowledge: introduces=[ML-LEX-C219-JOLI219-04]; assesses=[] -->
 
 **ബാക്കി** — *bākki* — "the balance, the change given back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബാക്കി** (*bākki*) ← Arabic *bāqī*, "remaining", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

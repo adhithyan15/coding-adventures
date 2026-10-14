@@ -11,6 +11,7 @@ concept_tag: ES-WORK-INSTALACION
 prerequisites: [ES-C453-limpieza, ES-C449-arreglar, ES-C346-oficina]
 sounds: [accent-acute, soft-c, stress-final]
 roots: [installare]
+etymology_hook: "instalación ← French installer: in- + stalle 'a seat in a choir' — English install"
 duration:
   max_seconds: 275
 requires:

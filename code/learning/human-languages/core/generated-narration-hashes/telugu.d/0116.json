@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 116,
-  "sourceHash": "fnv1a64:1aa6050d41fe39b4",
+  "sourceHash": "fnv1a64:781f654d9e84072a",
   "lessonIds": [
     "TE-C116-sambaru",
     "TE-C116-rasam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch116.txt",
   "json": "telugu/narration/ch116.json",
-  "textHash": "fnv1a64:d09b3133de8c3e82",
-  "jsonHash": "fnv1a64:8737e376d163d198",
+  "textHash": "fnv1a64:c8b25519884d7f70",
+  "jsonHash": "fnv1a64:8a2766c9907e1898",
   "findings": []
 }

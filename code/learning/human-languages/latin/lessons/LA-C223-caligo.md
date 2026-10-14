@@ -13,7 +13,8 @@ gloss: "mist, darkness"
 concept_tag: LA-RES223-CALIGO
 prerequisites: [LA-C222-ferrum, LA-C222-plumbum]
 sounds: []
-roots: []
+roots: [caligo-latin]
+etymology_hook: "cālīgō 'mist' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C222-plumbum]
 <!-- hl-knowledge: introduces=[LA-LEX-C223-RES223-01]; assesses=[] -->
 
 **cālīgō, cālīginis** — "mist, darkness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cālīgō** has no sure origin; no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

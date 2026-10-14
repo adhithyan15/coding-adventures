@@ -14,7 +14,8 @@ romanization: "bhautikaśāstraṁ"
 concept_tag: TE-PANI238-BHAUTIKASASTRAM
 prerequisites: [TE-C238-bhugolasastram, TE-C238-vijnanasastram]
 sounds: []
-roots: []
+roots: [sanskrit-bhuta, sanskrit-shastra]
+etymology_hook: "bhautikaśāstraṁ: Sanskrit bhautika 'of the elements', from bhūta (CDIAL 9552), + śāstra (CDIAL 12422)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C238-vijnanasastram]
 <!-- hl-knowledge: introduces=[TE-LEX-C238-PANI238-05]; assesses=[] -->
 
 **భౌతికశాస్త్రం** — *bhautikaśāstraṁ* — "physics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**భౌతికశాస్త్రం** (*bhautikaśāstraṁ*) is Sanskrit: *bhautika*, "of the elements, material", from *bhūta*, "any being" (CDIAL 9552), and *śāstra*, "treatise" (CDIAL 12422).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Latin for a rose, then the Latin for a lily.
 You'll want to know: rāmus, rāmī.
 rāmus, rāmī — "a branch".
 
+The word, taken apart.
+rāmus is probably related to rādīx, "root", from an older rādmus (Lewis & Short); both are traced to Proto-Indo-European wreh2d-, "root, branch" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a lily, then the Latin for a branch.
 
 You'll want to know: truncus, truncī.
 truncus, truncī — "a tree trunk".
+
+The word, taken apart.
+truncus is the adjective truncus, "cut off, maimed" (Lewis & Short), used as a noun: the stem of a tree, without its branches. English trunk comes from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a branch, then the Latin for a tree trunk.
 You'll want to know: sēmen, sēminis.
 sēmen, sēminis — "a seed".
 
+The word, taken apart.
+sēmen is inherited, usually traced to Proto-Indo-European seh1mn, "seed", from seh1-, "to sow" (EtymDB 2.1); serō, "to sow", belongs to the same family (Lewis & Short), and English seed is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a tree trunk, then the Latin for a seed.
 You'll want to know: saxum, saxī.
 saxum, saxī — "a rock, a boulder".
 
+The word, taken apart.
+saxum is often traced to Proto-Indo-European sek-, "to cut" (EtymDB 2.1), the root of secāre, "to cut" (Lewis & Short), but the link is not certain.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a seed, then the Latin for a rock.
 
 You'll want to know: rīpa, rīpae.
 rīpa, rīpae — "a river bank".
+
+The word, taken apart.
+rīpa is probably inherited, from a Proto-Indo-European h1reypeh2, "steep slope", from a root for tearing (EtymDB 2.1); Greek ereipō, "to tear down", is often compared. Lewis & Short call it doubtful.
 
 What you've built.
 One more word for this chapter.

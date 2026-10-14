@@ -14,7 +14,8 @@ romanization: "eccarisu"
 concept_tag: KA-VERB-ECCARISU
 prerequisites: [KA-C162-tiddu, KA-C162-nakalu-madu]
 sounds: []
-roots: []
+roots: [dravidian-ezhu-rise]
+etymology_hook: "eccarisu: native Dravidian; DEDR 851 lists eccaṟisu 'to awaken, warn'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C162-nakalu-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C162-KRIYE162-03]; assesses=[] -->
 
 **ಎಚ್ಚರಿಸು** — *eccarisu* — "to warn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಚ್ಚರಿಸು** (*eccarisu*) is native Dravidian, of the root for "to rise, awake", and DEDR 851 lists *eccaṟisu*, "to awaken, warn", itself; the entry also has Telugu *eccarincu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

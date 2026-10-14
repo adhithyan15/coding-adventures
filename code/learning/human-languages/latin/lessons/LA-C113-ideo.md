@@ -13,7 +13,8 @@ gloss: "for that reason"
 concept_tag: LA-WHY113-IDEO
 prerequisites: [LA-C113-nam, LA-C113-enim]
 sounds: []
-roots: []
+roots: [ideo-latin, is-latin]
+etymology_hook: "ideō 'for that reason' — id 'that' + eō 'for that'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C113-enim]
 <!-- hl-knowledge: introduces=[LA-LEX-C113-WHY113-03]; assesses=[] -->
 
 **ideō** — "for that reason".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ideō** is built from *id*, "that", and *eō*, "for that" (Lewis & Short): for that reason.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

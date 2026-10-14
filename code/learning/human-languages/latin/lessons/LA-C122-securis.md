@@ -13,7 +13,8 @@ gloss: "an axe"
 concept_tag: LA-THINGS122-SECURIS
 prerequisites: [LA-C122-malleus, LA-C122-serra]
 sounds: []
-roots: []
+roots: [securis-latin, secare-latin]
+etymology_hook: "secūris 'axe' — built on secō 'to cut': the cutting tool"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C122-serra]
 <!-- hl-knowledge: introduces=[LA-LEX-C122-THINGS122-04]; assesses=[] -->
 
 **secūris, secūris** — "an axe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**secūris** is built on *secō*, "to cut" (Lewis & Short): the cutting tool.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

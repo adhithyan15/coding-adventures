@@ -11,7 +11,8 @@ romanization: "avasaraṁ"
 concept_tag: TE-POLITE-NEED
 prerequisites: [TE-C94-apology, TE-C94-offer]
 sounds: []
-roots: []
+roots: [sanskrit-avasara]
+etymology_hook: "avasaraṁ ← Sanskrit avasara 'occasion, opportunity', a tatsama (CDIAL 858)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C94-offer]
 
 **అవసరం లేదు** — "there is no need", the polite way to refuse help, with the **లేదు** of
 your first chapter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అవసరం** (*avasaraṁ*) is Sanskrit *avasara*, "occasion, opportunity", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 858). The sense "need" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

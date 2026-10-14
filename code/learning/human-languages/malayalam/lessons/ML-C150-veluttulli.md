@@ -14,7 +14,8 @@ romanization: "veḷuttuḷḷi"
 concept_tag: ML-THINGS150-VELUTTULLI
 prerequisites: [ML-C150-valutana, ML-C150-kurumulaku, ML-C28-uchakazhinju]
 sounds: []
-roots: []
+roots: [dravidian-vel-white, dravidian-ulli-onion]
+etymology_hook: "veḷuttuḷḷi: native Dravidian, 'white onion': veḷutta 'white' (DEDR 5496) + uḷḷi 'onion' (DEDR 705)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C150-kurumulaku]
 <!-- hl-knowledge: introduces=[ML-LEX-C150-THINGS150-05]; assesses=[] -->
 
 **വെളുത്തുള്ളി** — *veḷuttuḷḷi* — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വെളുത്തുള്ളി** (*veḷuttuḷḷi*) is native Dravidian, "the white onion": *veḷutta*, "white" (DEDR 5496, with Tamil *veḷ*), and *uḷḷi*, "onion" (DEDR 705). DEDR 705 compares Sanskrit *ūlī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

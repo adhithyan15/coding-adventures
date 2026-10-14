@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 251,
-  "sourceHash": "fnv1a64:b2d065c08f59d06e",
+  "sourceHash": "fnv1a64:7a8bea05d4de6f0a",
   "lessonIds": [
     "HI-C251-thok",
     "HI-C251-tarazu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch251.txt",
   "json": "hindi/narration/ch251.json",
-  "textHash": "fnv1a64:fd8ca3ece05268a5",
-  "jsonHash": "fnv1a64:70e04ba2ccdb805d",
+  "textHash": "fnv1a64:0c06bc89a9607fba",
+  "jsonHash": "fnv1a64:62fe30c17a3d500f",
   "findings": []
 }

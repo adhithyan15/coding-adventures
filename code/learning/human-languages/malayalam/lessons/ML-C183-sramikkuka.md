@@ -14,7 +14,8 @@ romanization: "śramikkuka"
 concept_tag: ML-VERB-SRAMIKKUKA
 prerequisites: [ML-C183-tirannetukkuka, ML-C183-upayogikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-shrama]
+etymology_hook: "śramikkuka ← Sanskrit śrama 'labour, effort' (CDIAL 12682) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C183-upayogikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C183-KRIYA183-03]; assesses=[] -->
 
 **ശ്രമിക്കുക** — *śramikkuka* — "to try".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ശ്രമിക്കുക** (*śramikkuka*) is built on Sanskrit *śrama*, "labour, effort" (CDIAL 12682), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

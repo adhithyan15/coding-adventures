@@ -14,7 +14,8 @@ romanization: "āie"
 concept_tag: HI-COMEIN-COME
 prerequisites: [HI-C114-shubhkamnaen, HI-C114-nimantran]
 sounds: []
-roots: []
+roots: [sanskrit-apayati]
+etymology_hook: "āie: the respectful command of ānā 'to come', from Sanskrit āpayati 'causes to reach' (CDIAL 1200)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C114-nimantran]
 
 It is **आना**, "to come", with the respectful **-इए**. **आइए, आइए!** — doubled, it is a
 warm welcome at the door.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आइए** (*āie*) is the respectful command of **आना**, "to come". CDIAL lists the verb under Sanskrit *āpayati*, "causes to reach" (CDIAL 1200).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

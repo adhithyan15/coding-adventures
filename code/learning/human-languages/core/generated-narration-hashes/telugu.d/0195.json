@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 195,
-  "sourceHash": "fnv1a64:208741e7db717845",
+  "sourceHash": "fnv1a64:b1432fd4e236e3ae",
   "lessonIds": [
     "TE-C195-adhikari",
     "TE-C195-gumasta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch195.txt",
   "json": "telugu/narration/ch195.json",
-  "textHash": "fnv1a64:b0dd6a2219c26a53",
-  "jsonHash": "fnv1a64:9afafbf244f3ed20",
+  "textHash": "fnv1a64:c40aebd49d4a159a",
+  "jsonHash": "fnv1a64:3d31a6689c5b3d2b",
   "findings": []
 }

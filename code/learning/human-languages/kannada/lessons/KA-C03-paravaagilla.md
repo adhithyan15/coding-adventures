@@ -12,6 +12,7 @@ concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [KA-C01-illa, KA-C01-dhanyavada]
 sounds: [illa-negative]
 roots: [illa-not-dravidian]
+etymology_hook: "paravāgilla: Persian parvā 'care', through Hindustani, + native illa 'is not' (DEDR 2559)"
 duration:
   max_seconds: 240
 requires:
@@ -39,21 +40,20 @@ reply, built on a word you met in Chapter 1.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಪರವಾ** (*paravā*, "harm, concern") + **ಗಿಲ್ಲ** (*gilla*, a fused form of *āgi* +
+**ಪರವಾ** (*paravā*, "care, concern", Persian *parvā* through Hindustani) + **ಗಿಲ್ಲ** (*gilla*, a fused form of *āgi* +
 **ಇಲ್ಲ** *illa*, "is not") → **ಪರವಾಗಿಲ್ಲ** (*paravāgilla*).
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[KA-LEX-C03-PARAVAAGILLA-01, KA-ETYMON-C03-PARAVAAGILLA-02]; assesses=[] -->
 
 **ಪರವಾಗಿಲ್ಲ** means "**it does not matter / there is no harm**" — *paravā*
-("harm, concern") + **ಇಲ್ಲ** (*illa*, "is-not"). It serves as "it's okay / no
+("care, concern") + **ಇಲ್ಲ** (*illa*, "is-not"). It serves as "it's okay / no
 worries / never mind / you're welcome." The key atom, **ಇಲ್ಲ** (*illa*), you met
 in Chapter 1 — Kannada's word for negation and non-existence, the mirror of *iru*
 ("to be"). Where *iru* says "it is," *illa* says "it is not." This *illa* is
 shared, almost unchanged, across **Kannada, Tamil, and Malayalam** — one of the
-deep bonds of the Dravidian south. (Telugu alone breaks away, to *lēdu* — so
-Telugu's "no problem" is *paravālēdu*, Kannada's is *paravāgilla*, each on its own
-"not.")
+deep bonds of the Dravidian south. (Telugu's *lēdu* looks different, but DEDR 2559 files it with
+them — Telugu's "no problem" is *paravālēdu*, Kannada's is *paravāgilla*.)
 
 ## Grammar Lens: ಇಲ್ಲ, the all-purpose "no"
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C03-PARAVAAGILLA-03]; assesses=[] -->

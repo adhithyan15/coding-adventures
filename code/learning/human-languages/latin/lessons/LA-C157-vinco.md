@@ -13,7 +13,8 @@ gloss: "to win, to defeat"
 concept_tag: LA-VERB-VINCO
 prerequisites: [LA-C157-luceo, LA-C157-perdo]
 sounds: []
-roots: []
+roots: [vincere-latin]
+etymology_hook: "vincō 'to win' — inherited, usually traced to PIE *weyk- 'to fight'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C157-perdo]
 <!-- hl-knowledge: introduces=[LA-LEX-C157-ACT157-05]; assesses=[] -->
 
 **vincō, vincere** — "to win, to defeat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vincō** is inherited, usually traced to Proto-Indo-European *\*weyk-*, "to fight, to conquer", with an n inside the present stem, *\*wi-n-k-*, "to conquer" (EtymDB 2.1); the n is missing from *vīcī*, "I won".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

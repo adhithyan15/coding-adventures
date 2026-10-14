@@ -14,7 +14,8 @@ romanization: "kumhār"
 concept_tag: HI-THG261-KUMHAR
 prerequisites: [HI-C261-naukarani, HI-C261-mali]
 sounds: []
-roots: []
+roots: [sanskrit-kumbhakara]
+etymology_hook: "kumhār ← Sanskrit kumbhakāra 'potter', a tadbhava (CDIAL 3310)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C261-mali]
 <!-- hl-knowledge: introduces=[HI-LEX-C261-THG261-03]; assesses=[] -->
 
 **कुम्हार** — *kumhār* — "a potter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुम्हार** (*kumhār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kumbhakāra*, "potter" (CDIAL 3310). It is built from *kumbha*, "pot", and *kāra*, "maker".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

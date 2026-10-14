@@ -14,7 +14,8 @@ romanization: "kalaṇṭar"
 concept_tag: ML-SAMAYAM314-KALANTAR
 prerequisites: [ML-C314-nurrantu, ML-C314-patirrantu]
 sounds: []
-roots: []
+roots: [english-calendar]
+etymology_hook: "kalaṇṭar ← English calendar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C314-patirrantu]
 <!-- hl-knowledge: introduces=[ML-LEX-C314-SAMAYAM314-03]; assesses=[] -->
 
 **കലണ്ടർ** — *kalaṇṭar* — "a calendar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കലണ്ടർ** (*kalaṇṭar*) ← English *calendar*, from Latin *calendae*, the first day of the month.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

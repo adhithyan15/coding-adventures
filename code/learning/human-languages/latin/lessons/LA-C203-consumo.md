@@ -13,7 +13,8 @@ gloss: "to use up"
 concept_tag: LA-VERB-CONSUMO
 prerequisites: [LA-C203-dubito, LA-C203-quaero]
 sounds: []
-roots: []
+roots: [consumere-latin, sumere-latin]
+etymology_hook: "cōnsūmō 'to use up' — con- 'completely' + sūmō 'to take'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C203-quaero]
 <!-- hl-knowledge: introduces=[LA-LEX-C203-ACT203-03]; assesses=[] -->
 
 **cōnsūmō, cōnsūmere** — "to use up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cōnsūmō** is *con-*, "completely", with *sūmō*, "to take" (EtymDB 2.1): to take wholly, to use up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

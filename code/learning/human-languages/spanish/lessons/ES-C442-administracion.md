@@ -11,6 +11,7 @@ concept_tag: ES-INST-ADMINISTRACION
 prerequisites: [ES-C441-sintesis-trato, ES-C346-oficina, ES-C406-documento, ES-C386-servir]
 sounds: [written-accent, stress-final]
 roots: [magis-minus-latin]
+etymology_hook: "administración ← Latin administratio: ad- + minister 'servant', from minus 'less'"
 duration:
   max_seconds: 275
 requires:

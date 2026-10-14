@@ -13,7 +13,8 @@ gloss: "to celebrate"
 concept_tag: LA-VERB-CELEBRO
 prerequisites: [LA-C201-trado, LA-C201-corrigo]
 sounds: []
-roots: []
+roots: [celebrare-latin, celeber-latin]
+etymology_hook: "celebrō 'to celebrate' — built on celeber 'crowded': to throng"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C201-corrigo]
 <!-- hl-knowledge: introduces=[LA-LEX-C201-ACT201-04]; assesses=[] -->
 
 **celebrō, celebrāre** — "to celebrate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**celebrō** is built on *celeber*, "crowded, much visited" (Lewis & Short): to throng a place, then to honour it with crowds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

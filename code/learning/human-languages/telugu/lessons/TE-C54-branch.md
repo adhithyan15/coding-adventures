@@ -11,7 +11,8 @@ romanization: "komma"
 concept_tag: TE-NOUN-BRANCH
 prerequisites: [TE-C54-tree]
 sounds: []
-roots: []
+roots: [dravidian-kombu-horn]
+etymology_hook: "komma: native Dravidian, one word with Tamil kompu and Kannada kombu (DEDR 2115)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C54-tree]
 It stands very close to కొమ్ము, the horn of an animal, and the closeness is not an accident: both are the thing that grows out and forks. A tree wearing horns is a fair description of a tree in winter.
 
 కొమ్మ turns up in old poetry meaning a young woman, by way of the slenderness of a branch. That sense has gone quiet, but it is why the word looks odd inside a love poem.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కొమ్మ** (*komma*) is native Dravidian, one word with Tamil *kompu*, Kannada *kombu* and Malayalam *kompu* (DEDR 2115). DEDR lists Telugu *kommu*, "horn", and *komma*, "branch", together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

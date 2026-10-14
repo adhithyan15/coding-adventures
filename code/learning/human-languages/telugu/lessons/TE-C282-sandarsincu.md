@@ -14,7 +14,8 @@ romanization: "sandarśiñcu"
 concept_tag: TE-VERB-SANDARSINCU
 prerequisites: [TE-C282-alankarincu, TE-C282-pancu]
 sounds: []
-roots: []
+roots: [sanskrit-sandarshana]
+etymology_hook: "sandarśiñcu: Sanskrit sandarśana 'seeing' (CDIAL 12899) + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C282-pancu]
 <!-- hl-knowledge: introduces=[TE-LEX-C282-KRIYA282-05]; assesses=[] -->
 
 **సందర్శించు** — *sandarśiñcu* — "to visit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సందర్శించు** (*sandarśiñcu*) is Sanskrit *sandarśana*, "view; seeing" (CDIAL 12899), made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

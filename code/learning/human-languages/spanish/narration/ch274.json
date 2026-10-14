@@ -4,7 +4,7 @@
   "chapter": 274,
   "title": "What a Phrase Carries --- Authority, a Story, a Silence, a Sense of Charm",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f6d1337876a5e344",
+  "sourceHash": "fnv1a64:278384102d54977b",
   "lessons": [
     {
       "id": "ES-C274-mas-vale-pajaro",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:839d15c8ccbe8b9b",
+      "sourceHash": "fnv1a64:5e6c9a4091b26cd6",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +179,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d36244da95ea724a",
+      "sourceHash": "fnv1a64:0bd26db7ffbf06a3",
       "notice": null,
       "blocks": [
         {
@@ -327,7 +327,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca67271fa4c5dd8f",
+      "sourceHash": "fnv1a64:455c7184bf3f3b59",
       "notice": null,
       "blocks": [
         {
@@ -385,6 +385,10 @@
             {
               "kind": "speech",
               "text": "English has exactly the same shelf — pass away, pass on, depart, rest — and for the same reason. A euphemism is not politeness for its own sake. It is a language routing around a subject its speakers find hard to name."
+            },
+            {
+              "kind": "speech",
+              "text": "Pasar comes from spoken Latin passare, built on passus, \"a step\"; mejor is Latin melior, \"better\", and vida is Latin vita, \"life\"."
             }
           ]
         },
@@ -479,7 +483,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:597651ef61ae8f52",
+      "sourceHash": "fnv1a64:30ebad0c7c0a5c3b",
       "notice": null,
       "blocks": [
         {

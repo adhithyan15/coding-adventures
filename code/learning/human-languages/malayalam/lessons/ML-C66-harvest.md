@@ -11,7 +11,8 @@ romanization: "koyttŭ"
 concept_tag: ML-NOUN-HARVEST
 prerequisites: [ML-C66-plough, ML-C64-but, ML-C65-request, ML-C65-permission]
 sounds: []
-roots: []
+roots: [dravidian-koy-reap]
+etymology_hook: "koyttŭ: native Dravidian, a noun from the verb 'to reap'; Tamil koy, Telugu kōyu (DEDR 2119)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, made from *koyyuka*, to cut or to reap — the harvest named f
 Kerala's largest festival is the harvest festival, and the flower pattern laid at the doorway for it, *pūkkaḷaṁ*, is the one the flower-lesson already named.
 
 So the run closes where the year does: the grain, the grass, the ripe ear, the plough that opened the ground, and the cutting that ends it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൊയ്ത്ത്** (*koyttŭ*) is native Dravidian, a noun from the verb "to cut, to reap"; DEDR 2119 lists the root with Tamil *koy*, Kannada *koy* and Telugu *kōyu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

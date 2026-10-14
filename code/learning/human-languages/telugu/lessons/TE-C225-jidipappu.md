@@ -14,7 +14,8 @@ romanization: "jīḍipappu"
 concept_tag: TE-VASTUVU225-JIDIPAPPU
 prerequisites: [TE-C225-boppayi, TE-C225-puccakaya]
 sounds: []
-roots: []
+roots: [dravidian-cer-markingnut, dravidian-paruppu-pulse]
+etymology_hook: "jīḍipappu: jīḍi (DEDR 2005, queried) + native pappu 'kernel' (DEDR 3978)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C225-puccakaya]
 <!-- hl-knowledge: introduces=[TE-LEX-C225-VASTUVU225-05]; assesses=[] -->
 
 **జీడిపప్పు** — *jīḍipappu* — "cashew nuts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 2005 lists *jīḍi*, with a query, beside Tamil *cēr*, "marking-nut tree"; *pappu*, "kernel, split pulse", is native, one word with Tamil *paruppu* (DEDR 3978). **జీడిపప్పు** (*jīḍipappu*) joins them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

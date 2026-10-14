@@ -14,7 +14,8 @@ romanization: "tankhvāh"
 concept_tag: HI-THG182-TANKHVAH
 prerequisites: [HI-C182-nav, HI-C182-sit]
 sounds: []
-roots: []
+roots: [persian-tankhwah]
+etymology_hook: "tankhvāh: usually traced to Persian tankhwāh 'salary'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C182-sit]
 <!-- hl-knowledge: introduces=[HI-LEX-C182-THG182-03]; assesses=[] -->
 
 **तनख़्वाह** — *tankhvāh* — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तनख़्वाह** (*tankhvāh*) is a loan, usually traced to Persian *tankhwāh*, "salary".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

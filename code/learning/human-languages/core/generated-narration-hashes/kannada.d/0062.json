@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 62,
-  "sourceHash": "fnv1a64:c44f060f90e025db",
+  "sourceHash": "fnv1a64:dae9e7bed68a6c7a",
   "lessonIds": [
     "KA-C62-thread",
     "KA-C62-needle",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch62.txt",
   "json": "kannada/narration/ch62.json",
-  "textHash": "fnv1a64:d3d1d67c00343f76",
-  "jsonHash": "fnv1a64:3475b8c5d665b9cd",
+  "textHash": "fnv1a64:de47ab14b64065db",
+  "jsonHash": "fnv1a64:92f7adb090d7ba30",
   "findings": []
 }

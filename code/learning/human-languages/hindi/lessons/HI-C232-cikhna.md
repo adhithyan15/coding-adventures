@@ -15,6 +15,7 @@ concept_tag: HI-VERB-CIKHNA
 prerequisites: [HI-C232-kapna, HI-C232-muskurana]
 sounds: []
 roots: []
+etymology_hook: "cīkhnā 'to scream': origin uncertain; CDIAL has only cīkhnā 'to taste' (4557), a different word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C232-muskurana]
 <!-- hl-knowledge: introduces=[HI-LEX-C232-ACT232-03]; assesses=[] -->
 
 **चीखना** — *cīkhnā* — "to scream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **चीखना** (*cīkhnā*) is uncertain. CDIAL lists a *cīkhnā* only in the sense "to taste" (CDIAL 4557), which is a different word. It may be imitative, like *cĩghāṛnā*, "to screech" (CDIAL 4787).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
