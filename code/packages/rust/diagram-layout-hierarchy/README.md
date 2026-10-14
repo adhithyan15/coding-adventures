@@ -24,10 +24,11 @@ the constraint-index bound does not certify either heuristic.
 
 For canonical unique-lane automatic ordering, each adjacent trial uses lane
 balances and one borrowed pair-weight lookup. The original nine starts, UTF16
-seeds, strict cost improvement and source-distance ties are preserved. Each
-start visits weighted pairs only to initialize cost, balances and the pair index;
-all nine starts require at most27W such visits and O(9 L² log(W + 2)) trial
-lookups, with O(L + W) auxiliary storage. Identifier comparison and source/edge
-construction remain separate costs. Malformed duplicate-lane direct IR retains
+seeds, strict cost improvement and source-distance ties are preserved. Greedy
+evaluation visits weighted pairs to initialize cost, balances and the pair index;
+all nine evaluations require at most27W such visits. Initialization/index work
+is O(9 (L + W log(W + 2))); trials use O(9 L² log(W + 2)) lookups, with
+O(L + W) auxiliary storage. The unchanged restart seed/signature construction,
+identifier comparison and outer source/edge construction remain separate costs. Malformed duplicate-lane direct IR retains
 the original full-cost fallback and is outside that optimized work guarantee;
 authored duplicate subgraph IDs remain refused by the parser.

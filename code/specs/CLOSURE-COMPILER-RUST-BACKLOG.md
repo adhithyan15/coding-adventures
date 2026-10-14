@@ -3,41 +3,46 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a current-main reconciliation -->
-October14 scoped source `f64d21883cc58f9c92e1ff715c3ae76672a83f9c` integrates audited main
-`fdf1a247b9c1b6b5abdcdcc67bafdf9f2e7926d0`. Actual native validator39928
-EXIT0: full ALGOL compiler/parser/layout/paint1465/15 plus four exact backend
-controls pass **1469 tests/docs across19 targets**, zero failures/ignores;
-the three repeated focused tests are excluded. Eight new quadruple computed-name
-value programs produce exact9/1, all24 prior paired programs and the upstream
-quadruple control pass on every available standard backend. Sixteen paired new
-compiler cells retain specific name refusal and one value-result formatter.
-The canonical upstream depth4/fifth-layer refusal and all six production MAX
-constants, owned alias/shared-root/finite tests and8192 work bound are retained.
+October14 ordering source `47747b20f72d72211ffedff92cb3b10b8a89f4a9` / integrated mainfdf1a247:
+actual validator83452 EXIT0 completes **612 tests/docs across10 targets**, zero
+failures/ignores, full metadata-derived two-package cone plus parser boundary
+suite, strict3, lessons1193 and whitespace. Six repeated focus tests are excluded.
+Greedy cost/balance/index visits fall from17280 to3240 under the unchanged bound.
+All729 four-lane graphs/all17496 initial permutations match the independent
+original full-cost oracle, including nine starts/UTF16 seeds. All48 authored
+full PaintScene/metadata fixtures pass across four directions, hop false/arc/gap,
+enabled/disabled ordering and two graph families. Original13 hierarchy/103 paint
+test bodies and paint production remain byte-identical. Independent scoped
+security PASS/no findings: CV04a-ordering-security-47747b20.md,
+SHA256 115ae65b65c04398c6b7dfc9bdb64e45c71b32b8114414a8088516b6c063f991. Whole-PR final security PENDING.
 
-Platform-neutral authored typography compares the entire ordered FontQuery trace
-(family/weight/style/stretch), every glyph-run text/size/fill/ref and both exact
-styled widths. Strict all-target lint for five affected packages, doc shards,
-lessons1192 and whitespace pass. This does not certify OS font/device behavior.
-Independent exact-source security **PASS for these scoped components only**:
-CV04a-quadruple-typography-security-f64d2188.md, SHA256 014901147b8627cbe2bfd5b0aebf48731e44b54b924328abc1b973fed80ca195.
-Whole-PR final security remains PENDING.
+The27W counter bounds three greedy initialization traversals per start; unchanged
+seed/signature construction and source/edge/identifier work remain separate.
+Cost/balance/delta arithmetic is checked; original source-distance tie summation
+is retained. Malformed non-bijective direct IR keeps the original full-cost
+fallback and is excluded from the optimized guarantee; authored duplicate lane
+IDs remain refused. Pre-existing self-loop NaN endpoints are compared bitwise
+before test-only equality normalization; finite self-loop routing is unaccepted.
 
-Closed49-path import proof records38 exact pure imports,11 owned overlaps and134
-unchanged owned paths. Earlier4238 selector858/7, bd361 four-consumer658/14 and
-282/main160 native3347/211 retain their original source attribution. All original
-failed/partial logs and pre-merge stage snapshots persist; none are relabeled.
-The refreshed metadata plan38seeds/453affected including dev dependencies is
-not full-cone acceptance. Current-source LANG production11/native48, changed
-downstream domains, ordering/unique-oblique work and repaired hosted Linux
-remain PENDING.
+Actual LANG validator54386 EXIT0 at `a20c12ac29538863807209b4ccb935950064b2be` completes
+all eleven unchanged production BUILD commands and48 exact native controls:
+**322/108**, zero failures/one existing archive ignore. Earlier quadruple/
+typography1469/19 and scoped review remain f64 source-attributed. Prior red/
+partial/compile logs and import stages persist. Owned paint-source truncation in
+this new checkout was recovered from exact committed bytes and only the new
+tests reapplied; independent final equality proves no production/control loss.
+The original tested checkout and frozen Miri inputs were unchanged.
 
-Sole Closure/shared PR17288 stays published at822, with terminal Linux/CI-gate
-failures and auto-mergeOFF; fresh build-plan artifact UNAVAILABLE (preserved
-archive hashes are historical). No push/merge/cleanup/CV04b selection occurred.
+Fresh full audit80290 sees main `cbd9a37c8f02d7269c212a944f79588f559b50e2`;
+new quintuple name-actual/edge-label typography, Mosaic and content imports need
+closed reconciliation. Broader453-cone, arbitrary unique-oblique work, whole final
+security and repaired hosted Linux remain PENDING. Sole Closure/sharedPR17288
+stays published at822, DIRTY, terminal Linux/CI-gate failures, auto-mergeOFF.
+Expired build-plan artifact UNAVAILABLE; original preserved hashes historical.
+No publication/merge/cleanup/CV04b selection. Base ESTree/own types/no new crates.io.
 Full final-source Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/
-checkout/receipts/target untouched and unpolled. Base ESTree, own types and no
-new crates.io dependencies remain binding. Full parity/output source joins/all
-transformation lineage and objective OPEN; heartbeat ACTIVE.
+checkout/receipts/target untouched and unpolled. Full parity/output source joins/
+all transformation lineage and objective OPEN; heartbeat ACTIVE.
 <!-- /CV04a current-main reconciliation -->
 
 <!-- CV04a BEAM heap native continuation -->

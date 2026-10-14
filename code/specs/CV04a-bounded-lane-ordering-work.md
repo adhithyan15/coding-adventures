@@ -104,3 +104,20 @@ The test-source whitespace helper's truncation was confined to this new checkout
 original bytes and failure receipt are archived, committed e363 paint bytes were
 restored exactly and only the owned reference/test was reapplied. Native a20
 checkout remained unchanged. No security/current-main/hosted acceptance inferred.
+
+
+## Scoped acceptance
+
+Actual source `47747b20f72d72211ffedff92cb3b10b8a89f4a9` completes validator83452 EXIT0,612/10
+nonduplicated, full metadata2 cone plus parser boundary suite, strict3/docs;
+focus6 excluded. Actual3240 greedy cost/balance/index visits retain the3240 bound,
+all729 global graphs/17496 permutations/48 complete authored scenes match the
+original oracle. The counter excludes unchanged seed/signature construction and
+outer source/edge/identifier costs. Cost, balances and delta are checked; original
+source-distance tie summation is unchanged. Scoped independent review PASS,
+SHA256 115ae65b65c04398c6b7dfc9bdb64e45c71b32b8114414a8088516b6c063f991; whole-PR acceptance PENDING.
+All original failures, recovery snapshots and prior source frames remain intact.
+Fresh main `cbd9a37c8f02d7269c212a944f79588f559b50e2` still needs bounded closed
+quintuple/edge-label/Mosaic/content reconciliation. Full453-cone, arbitrary unique
+oblique work, final whole security and hosted gates remain PENDING.
+Full final-source Miri DEFERRED/PENDING; full objective OPEN, heartbeat ACTIVE.
