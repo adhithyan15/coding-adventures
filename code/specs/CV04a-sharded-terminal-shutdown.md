@@ -28,6 +28,12 @@ remains required before publication.
 Existing optional stop wake handles are used; Windows retains bounded poll
 fallback. Coordinated stop cannot preempt an application callback that blocks
 forever, nor prove an OS cancellation packet arrived before observing it.
+Review of source2a74 also identified a retained converter defect: Some(Duration)
+could saturate to DWORD_MAX, which is the INFINITE sentinel. Reserve INFINITE
+exclusively for None; finite requests saturate to DWORD_MAX-1. Pin zero, ordinary,
+last finite, sentinel-sized and Duration::MAX conversion boundaries. No executed
+hang is claimed. Stop latency on Windows remains bounded by configured finite
+poll_timeout, potentially very long; this does not promise immediate wakeup.
 Miri DEFERRED/PENDING, frozen run untouched. Numerical spacing, full37/standalone,
 whole456/general P2/native3OS/exact-head CI/conflict/full Closure parity and
 lineage gates remain OPEN; full objective incomplete and heartbeat ACTIVE.
