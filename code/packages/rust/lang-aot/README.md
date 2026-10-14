@@ -1168,3 +1168,10 @@ lose formatter admission after alias promotion; value formals retain one real
 formatter call and local snapshots. Sixteen complete native programs check exact
 4/9/4/8 stdout on every available standard backend. Both ^ and ** are covered;
 existing alias, finite-value and production-limit controls remain required.
+
+Computed name-actual branches carry proof on their materialized conditional
+result, established for both arms after selector effects. Later name captures
+cannot erase that scalar's provenance; a selector that promotes either root
+still refuses output. Paired direct/assigned name refusal and value controls
+check both actuals and outcomes, with exact -1/1 native stdout. Every earlier
+alias, shared-root, tracked-literal and production-limit control stays required.

@@ -154,6 +154,10 @@ impl ScalarType {
 struct ExprValue {
     slot: String,
     ty: ScalarType,
+    /// The fresh conditional result was proven after condition effects and
+    /// before either branch captured name dependencies. This belongs to the
+    /// materialized scalar, never to a mutable root or an earlier AST snapshot.
+    selector_result_proven: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1552,6 +1556,7 @@ impl Compiler {
             binding.ty.iir(),
         ));
         Ok(ExprValue {
+            selector_result_proven: false,
             slot: dest,
             ty: binding.ty,
         })
@@ -2360,7 +2365,9 @@ impl Compiler {
             // Lowering a selector can promote a formerly local branch root
             // through a by-name actual. Both proof snapshots must admit output.
             let allow_runtime_real =
-                allow_runtime_real && self.is_runtime_real_output_after_lowering(actual);
+                allow_runtime_real
+                    && (value.selector_result_proven
+                        || self.is_runtime_real_output_after_lowering(actual));
             self.emit_standard_output_value(name, value, allow_runtime_real)?;
         }
 
@@ -5587,7 +5594,7 @@ impl Compiler {
         srcs.extend(arg_slots.into_iter().map(Operand::Var));
         self.emit(IIRInstr::new("call", dest.clone(), srcs, type_hint));
         Ok(match (dest, sig.ret) {
-            (Some(slot), Some(ty)) => Some(ExprValue { slot, ty }),
+            (Some(slot), Some(ty)) => Some(ExprValue { selector_result_proven: false, slot, ty }),
             _ => None,
         })
     }
@@ -6304,6 +6311,7 @@ impl Compiler {
         ));
         // then: dest := -value
         let neg = self.emit_unary_minus(ExprValue {
+            selector_result_proven: false,
             slot: value.slot.clone(),
             ty,
         })?;
@@ -6329,7 +6337,7 @@ impl Compiler {
         ));
         self.emit_label(&end_label);
 
-        Ok(ExprValue { slot: dest, ty })
+        Ok(ExprValue { selector_result_proven: false, slot: dest, ty })
     }
 
     /// `sign(E)` — the *signum*: `+1` if `E > 0`, `-1` if `E < 0`, `0` if
@@ -6454,6 +6462,7 @@ impl Compiler {
         self.emit_label(&end_label);
 
         Ok(ExprValue {
+            selector_result_proven: false,
             slot: dest,
             ty: ScalarType::Integer,
         })
@@ -6499,6 +6508,7 @@ impl Compiler {
             ScalarType::Integer.iir(),
         ));
         Ok(ExprValue {
+            selector_result_proven: false,
             slot: dest,
             ty: ScalarType::Integer,
         })
@@ -6533,6 +6543,7 @@ impl Compiler {
             ScalarType::Real.iir(),
         ));
         Ok(ExprValue {
+            selector_result_proven: false,
             slot: dest,
             ty: ScalarType::Real,
         })
@@ -6575,6 +6586,7 @@ impl Compiler {
             ScalarType::Real.iir(),
         ));
         Ok(ExprValue {
+            selector_result_proven: false,
             slot: dest,
             ty: ScalarType::Real,
         })
@@ -6712,6 +6724,7 @@ impl Compiler {
                     self.emit_named_scalar_write(
                         &name,
                         ExprValue {
+                            selector_result_proven: false,
                             slot: value,
                             ty: ScalarType::String,
                         },
@@ -6798,6 +6811,7 @@ impl Compiler {
                         self.emit_named_scalar_write(
                             &name,
                             ExprValue {
+                                selector_result_proven: false,
                                 slot: src_slot.clone(),
                                 ty: ScalarType::String,
                             },
@@ -6860,7 +6874,9 @@ impl Compiler {
         // in the actual alias state afterward. A newly valid post-state alone
         // cannot turn an originally unproven expression into a safe value.
         let runtime_real_value =
-            runtime_real_value && self.is_runtime_real_assignment_value(expr);
+            runtime_real_value
+                && (rhs.selector_result_proven
+                    || self.is_runtime_real_assignment_value(expr));
 
         for left in left_parts {
             let var_node = first_direct_node(left, "variable")
@@ -7102,6 +7118,7 @@ impl Compiler {
                 let done_label = self.fresh_label("switch_done");
                 for (i, target) in targets.iter().enumerate() {
                     let k = ExprValue {
+                        selector_result_proven: false,
                         slot: self.emit_const(ScalarType::Integer, Operand::Int((i as i64) + 1)),
                         ty: ScalarType::Integer,
                     };
@@ -10340,6 +10357,7 @@ impl Compiler {
         self.emit_for_target_write(
             target,
             ExprValue {
+                selector_result_proven: false,
                 slot: next,
                 ty: target_ty,
             },
@@ -10412,11 +10430,13 @@ impl Compiler {
                 binding.ty.iir(),
             ));
             ExprValue {
+                selector_result_proven: false,
                 slot: dest,
                 ty: binding.ty,
             }
         } else {
             ExprValue {
+                selector_result_proven: false,
                 slot: binding.slot,
                 ty: binding.ty,
             }
@@ -10536,6 +10556,13 @@ impl Compiler {
             ));
         }
 
+        // A selector can invalidate roots before the selected value exists.
+        // Prove both arms now, in the post-condition state. Branch name calls
+        // may subsequently capture dependencies, but their scalar results join
+        // into a new slot. Capturing a root in the condition grants no proof.
+        let selector_result_proven = self.is_selector_call_safe_runtime_real_root(then_node)
+            && self.is_selector_call_safe_runtime_real_root(else_node);
+
         let else_label = self.fresh_label("expr_else");
         let end_label = self.fresh_label("expr_end");
         let dest = self.fresh_temp();
@@ -10577,6 +10604,7 @@ impl Compiler {
         self.emit_label(&end_label);
 
         Ok(ExprValue {
+            selector_result_proven: selector_result_proven && then_value.ty == ScalarType::Real,
             slot: dest,
             ty: then_value.ty,
         })
@@ -10645,6 +10673,7 @@ impl Compiler {
                 })?;
                 let slot = self.emit_const(ScalarType::Integer, Operand::Int(value));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot,
                     ty: ScalarType::Integer,
                 })
@@ -10659,6 +10688,7 @@ impl Compiler {
                 })?;
                 let slot = self.emit_const(ScalarType::Real, Operand::Float(value));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot,
                     ty: ScalarType::Real,
                 })
@@ -10672,6 +10702,7 @@ impl Compiler {
                     "str",
                 ));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot,
                     ty: ScalarType::String,
                 })
@@ -10679,6 +10710,7 @@ impl Compiler {
             ("KEYWORD", "true") => {
                 let slot = self.emit_const(ScalarType::Boolean, Operand::Bool(true));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot,
                     ty: ScalarType::Boolean,
                 })
@@ -10686,6 +10718,7 @@ impl Compiler {
             ("KEYWORD", "false") => {
                 let slot = self.emit_const(ScalarType::Boolean, Operand::Bool(false));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot,
                     ty: ScalarType::Boolean,
                 })
@@ -10933,6 +10966,7 @@ impl Compiler {
                 "f64",
             ));
             return Ok(ExprValue {
+                selector_result_proven: false,
                 slot: dest,
                 ty: ScalarType::Real,
             });
@@ -10955,7 +10989,7 @@ impl Compiler {
                 ScalarType::Real => self.emit_const(ScalarType::Real, Operand::Float(1.0)),
                 _ => self.emit_const(ScalarType::Integer, Operand::Int(1)),
             };
-            return ExprValue { slot: one, ty };
+            return ExprValue { selector_result_proven: false, slot: one, ty };
         }
         let base_slot = base.slot.clone();
         let mut acc = base.slot;
@@ -10969,7 +11003,7 @@ impl Compiler {
             ));
             acc = dest;
         }
-        ExprValue { slot: acc, ty }
+        ExprValue { selector_result_proven: false, slot: acc, ty }
     }
 
     /// Widen an integer value to `real` with the shared IIR conversion.
@@ -10983,6 +11017,7 @@ impl Compiler {
             ScalarType::Real.iir(),
         ));
         ExprValue {
+            selector_result_proven: false,
             slot: dest,
             ty: ScalarType::Real,
         }
@@ -11058,7 +11093,7 @@ impl Compiler {
                     vec![Operand::Var(lhs.slot), Operand::Var(rhs.slot)],
                     ty.iir(),
                 ));
-                Ok(ExprValue { slot: dest, ty })
+                Ok(ExprValue { selector_result_proven: false, slot: dest, ty })
             }
             "div" | "mod" => {
                 // `div` (integer division) and `mod` are integer-only operators
@@ -11076,6 +11111,7 @@ impl Compiler {
                     "i64",
                 ));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot: dest,
                     ty: ScalarType::Integer,
                 })
@@ -11094,6 +11130,7 @@ impl Compiler {
                     "f64",
                 ));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot: dest,
                     ty: ScalarType::Real,
                 })
@@ -11172,6 +11209,7 @@ impl Compiler {
                         _ => unreachable!(),
                     }
                     return Ok(ExprValue {
+                        selector_result_proven: false,
                         slot: dest,
                         ty: ScalarType::Boolean,
                     });
@@ -11206,6 +11244,7 @@ impl Compiler {
                     lhs.ty.iir(),
                 ));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot: dest,
                     ty: ScalarType::Boolean,
                 })
@@ -11221,6 +11260,7 @@ impl Compiler {
                     "bool",
                 ));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot: dest,
                     ty: ScalarType::Boolean,
                 })
@@ -11240,6 +11280,7 @@ impl Compiler {
                     "bool",
                 ));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot: dest,
                     ty: ScalarType::Boolean,
                 })
@@ -11280,6 +11321,7 @@ impl Compiler {
             "bool",
         ));
         Ok(ExprValue {
+            selector_result_proven: false,
             slot: dest,
             ty: ScalarType::Boolean,
         })
@@ -11305,7 +11347,7 @@ impl Compiler {
             vec![Operand::Var(zero), Operand::Var(value.slot)],
             ty.iir(),
         ));
-        Ok(ExprValue { slot: dest, ty })
+        Ok(ExprValue { selector_result_proven: false, slot: dest, ty })
     }
 
     fn emit_const(&mut self, ty: ScalarType, operand: Operand) -> String {
