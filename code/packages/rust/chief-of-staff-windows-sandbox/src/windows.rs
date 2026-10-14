@@ -14,6 +14,7 @@ use chief_of_staff_spawn_isolation::VerifiedExecutable;
 use std::ffi::c_void;
 use std::fs::File;
 use std::io;
+use std::os::windows::ffi::OsStringExt;
 use std::os::windows::io::{AsRawHandle, FromRawHandle, OwnedHandle, RawHandle};
 use std::os::windows::process::ExitStatusExt;
 use std::process::ExitStatus;
@@ -166,7 +167,7 @@ impl WindowsConfinement {
                 .iter()
                 .map(|(name, value)| (name.as_str(), value.as_str())),
         )?;
-        let live = LiveInstance::claim(&self.name)?;
+        let mut live = LiveInstance::claim(&self.name)?;
         let mut environment = request.environment.clone();
         environment.push(("SystemRoot".to_string(), self.system_root.clone()));
         if !request.inherited.is_empty() {
@@ -329,8 +330,16 @@ impl WindowsConfinement {
         // previous suspend count, or u32::MAX on failure.
         let previous = unsafe { ResumeThread(raw(&thread)) };
         if previous != 1 {
-            // SAFETY: as above.
-            unsafe { TerminateJobObject(raw(&job), 1) };
+            // A count of 0 would mean something else had resumed it, so it
+            // may have run: its claim is released only once it has exited.
+            // SAFETY: both handles are open.
+            let exited = unsafe {
+                TerminateJobObject(raw(&job), 1);
+                WaitForSingleObject(raw(&process), EXIT_WAIT_MS)
+            } == WAIT_OBJECT_0;
+            if !exited {
+                live.keep();
+            }
             return Err(ConfinementError::Verification(format!(
                 "ResumeThread returned {previous}, expected 1"
             )));
@@ -721,9 +730,11 @@ fn storage_folder(name: &str, sid: &OwnedSid) -> Result<std::path::PathBuf, Conf
         return Err(refuse(format!("GetAppContainerFolderPath: {found:#x}")));
     }
     // SAFETY: a NUL-terminated string from GetAppContainerFolderPath.
+    // Exactly, not lossily: a changed path would make the removal check
+    // look somewhere else and find nothing.
     let path = unsafe {
         let length = (0..).take_while(|&i| *folder.add(i) != 0).count();
-        String::from_utf16_lossy(std::slice::from_raw_parts(folder, length))
+        std::ffi::OsString::from_wide(std::slice::from_raw_parts(folder, length))
     };
     // SAFETY: allocated by GetAppContainerFolderPath; freed once.
     unsafe { CoTaskMemFree(folder as *const c_void) };

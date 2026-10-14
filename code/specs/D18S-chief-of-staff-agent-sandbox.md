@@ -2455,8 +2455,11 @@ through S-I3 before two weeks are spent on Windows.
    - *One supervisor per user.* The profile span and the one-instance rule
      hold within one supervisor process. A second supervisor, or any tool
      of the same user, managing the same agent's profile could make a
-     creation fail (its profile removed early, `ERROR_FILE_NOT_FOUND`);
-     that never confines less, and the daemon is the only supervisor.
+     creation fail (its profile removed early, `ERROR_FILE_NOT_FOUND`).
+     A second supervisor running the same agent would also reopen the
+     shared-SID window above, caught then only by the folder check (the
+     profile's registry key is not re-checked). The daemon is the only
+     supervisor.
    - *Old image ACEs.* An agent's image keeps the ACE for its SID after
      the agent is gone; reinstalling the agent reuses it.
    - *Grants.* No `Direct` grant exists until 8c; a plan with one is
