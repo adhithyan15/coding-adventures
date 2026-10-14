@@ -9751,7 +9751,7 @@ mod tests {
         let bare=mermaid_parser::parse_swimlane(&body).unwrap();
         let source=format!("---\nconfig:\n  flowchart:\n    nodeSpacing: 96\n    rankSpacing: 28\n    diagramPadding: 32\n---\n%%{{init: {{\"flowchart\": {{\"nodeSpacing\": 72, \"rankSpacing\": 24, \"diagramPadding\": 18}}}}}}%%\n{body}");
         let mut parsed=mermaid_parser::parse_swimlane(&source).unwrap();
-        assert_eq!(parsed.flowchart_config,diagram_ir::SwimlaneFlowchartConfig{node_spacing:Some(72.0),rank_spacing:Some(24.0),diagram_padding:Some(18.0),wrapping_width:None,curve:None});
+        assert_eq!(parsed.flowchart_config,diagram_ir::SwimlaneFlowchartConfig{node_spacing:Some(72.0),rank_spacing:Some(24.0),diagram_padding:Some(18.0),wrapping_width:None,padding:None,curve:None});
         parsed.flowchart_config=Default::default();assert_eq!(parsed,bare);
         for field in ["nodeSpacing","rankSpacing","diagramPadding"] {
             for value in ["-1","not-a-number","NaN","inf","-inf"] {
