@@ -15,7 +15,7 @@ concept_tag: AR-THINGS126-SHAMA
 prerequisites: [AR-C125-salla, AR-C125-sunduq, AR-C28-jaa, AR-C28-jaa]
 sounds: []
 roots: [sh-m-ʿ]
-etymology_hook: "shamʿa: built on the root sh-m-ʿ, 'wax' (Lane); Lane's shamʿ is wax"
+etymology_hook: "shamʿa: one candle of shamʿ 'wax', a native noun that Lane files under the root sh-m-ʿ"
 duration:
   max_seconds: 200
 requires:
@@ -49,7 +49,7 @@ reviews_of: [AR-C125-sunduq]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**شمعة** (*shamʿa*) is built on the native Arabic root *sh-m-ʿ*, "wax" (Lane). Lane's *shamʿ* is wax; *shamʿa* is one candle.
+**شمعة** (*shamʿa*) is built on *shamʿ*, "wax", a native noun, filed under the root *sh-m-ʿ* (Lane); *shamʿa* is one candle.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

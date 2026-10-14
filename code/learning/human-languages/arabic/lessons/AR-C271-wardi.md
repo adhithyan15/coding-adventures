@@ -15,7 +15,7 @@ concept_tag: AR-SIFA271-WARDI
 prerequisites: [AR-C271-wahid, AR-C271-burtuqali]
 sounds: []
 roots: [w-r-d]
-etymology_hook: "wardī: ward 'roses' + -ī; ward is said to be arabicized (Lane); not settled"
+etymology_hook: "wardī: ward 'roses' + -ī; ward is said to be arabicized (Lane), usually from Iranian via Aramaic"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C271-burtuqali]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**وردي** (*wardī*) is *ward*, "roses", with the adjective ending *-ī*. Lane notes that *ward* is said to be arabicized; its origin is not settled.
+**وردي** (*wardī*) is *ward*, "roses", with the adjective ending *-ī*. Lane notes that *ward* is said to be arabicized; it is usually given an Iranian origin, probably by way of Aramaic *wardā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

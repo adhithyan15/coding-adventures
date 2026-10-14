@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "Forest, River, Stone, Sand, Field",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aa03c493d38d3dae",
+  "sourceHash": "fnv1a64:3a1cd2161335cae9",
   "lessons": [
     {
       "id": "AR-C76-ghaba",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85505b91158c09d1",
+      "sourceHash": "fnv1a64:82cf57d678e90001",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "رمل (raml) is built on the native Arabic root r-m-l, \"sand\" (Lane). An old noun with its own root in Lane."
+              "text": "رمل (raml), \"sand\", is an old native noun, filed under the root r-m-l (Lane)."
             }
           ]
         },

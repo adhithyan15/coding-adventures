@@ -15,7 +15,7 @@ concept_tag: AR-SHAY246-AMMA
 prerequisites: [AR-C246-usra, AR-C246-hafid]
 sounds: []
 roots: [ʿ-m-m]
-etymology_hook: "ʿamma: built on the root ʿ-m-m, 'a paternal uncle' (Lane); ʿamma is the feminine of ʿamm"
+etymology_hook: "ʿamma: the feminine of ʿamm 'a paternal uncle', listed by Lane under ʿ-m-m, 'to be general'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C246-hafid]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**عمة** (*ʿamma*) is built on the native Arabic root *ʿ-m-m*, "a paternal uncle" (Lane). *ʿAmma* is the feminine of *ʿamm*.
+**عمة** (*ʿamma*) is the feminine of *ʿamm*, "a paternal uncle", an old native noun, filed under the root *ʿ-m-m* (Lane), "to be general, to include all".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ concept_tag: AR-FOOD69-DAJAJ
 prerequisites: [AR-C68-futur, AR-C69-asir]
 sounds: []
 roots: [d-j-j]
-etymology_hook: "dajāj: built on the root d-j-j, 'the domestic fowl' (Lane); Lane lists dajāj, the common fowl, under d-j-j"
+etymology_hook: "dajāj: an old noun for the domestic fowl, listed by Lane under the native Arabic root d-j-j"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C69-asir]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**دجاج** (*dajāj*) is built on the native Arabic root *d-j-j*, "the domestic fowl" (Lane). Lane lists *dajāj*, the common fowl, under *d-j-j*.
+**دجاج** (*dajāj*), the common fowl, is an old native noun, filed under the root *d-j-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

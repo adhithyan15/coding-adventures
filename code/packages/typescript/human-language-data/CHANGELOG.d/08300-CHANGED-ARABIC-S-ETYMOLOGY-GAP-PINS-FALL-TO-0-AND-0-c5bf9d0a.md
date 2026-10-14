@@ -9,7 +9,7 @@
 - **Sources.**
   - Lane's *Arabic-English Lexicon* (laneslexicon/lexicon_xml) for every native root and its sense, checked by script: the root exists, the word or its base form is in the article, and the gloss fits Lane's sense.
   - EtymDB 2.1 for loan donors, each row read beside Lane rather than taken on trust.
-- **Uncertain origins.** 33 say the origin is not settled, with competing accounts named.
+- **Uncertain origins.** About 39 keep a "not settled" clause, most for one part or a disputed route. An independent review of all 1,262 changed lessons fixed about 228 (18%), chiefly blocks that had put the noun's own meaning where the root's sense belongs.
 - **The Arabic root ledger.** Each block's root or donor became a `roots:` slug, so `tests/corpus/arabic/pins-arabic-root-ledger-*.case.ts` moves from 107 to 943 roots; the payoffs it now counts are reuses of one root as Lane files it, and loans that only look like a root keep slugs of their own.
 - **More detail.** The Arabic track changelog covers the counts by origin kind; no `max_seconds` value was raised.
 - **No code changed.** Only the pins and the owner's rationale moved.

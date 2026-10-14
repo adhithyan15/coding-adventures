@@ -15,7 +15,7 @@ concept_tag: AR-THINGS141-SAQ
 prerequisites: [AR-C141-lisan, AR-C141-batn]
 sounds: []
 roots: [s-w-q]
-etymology_hook: "sāq: built on the root s-w-q, 'the shank' (Lane); Lane's sāq is the shank, the leg between knee and ankle"
+etymology_hook: "sāq: an old native noun Lane files under s-w-q; Lane's sāq is the shank, the leg between knee and ankle"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C141-batn]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ساق** (*sāq*) is built on the native Arabic root *s-w-q*, "the shank" (Lane). Lane's *sāq* is the shank, the leg between knee and ankle.
+**ساق** (*sāq*), "the shank", is an old native noun, filed under the root *s-w-q* (Lane). Lane's *sāq* is the shank, the leg between knee and ankle.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

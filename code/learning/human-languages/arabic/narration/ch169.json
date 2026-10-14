@@ -4,7 +4,7 @@
   "chapter": 169,
   "title": "Mood, Exercise, Fitness, Injury, Pill",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c3e895058cb962ac",
+  "sourceHash": "fnv1a64:8ca596740566a465",
   "lessons": [
     {
       "id": "AR-C169-mizaj",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a75a465ebc8828cb",
+      "sourceHash": "fnv1a64:ce958a1b0bed3a39",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "لياقة (liyāqa) is built on the native Arabic root l-y-q, \"to be fit, to suit\" (Lane). Liyāqa is fitness."
+              "text": "لياقة (liyāqa) is built on the native Arabic root l-y-q, \"to befit, to suit\" (Lane). Liyāqa is fitness."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2b4f0e2757e33ce",
+      "sourceHash": "fnv1a64:f919795ceecbe6f4",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "إصابة (iṣāba) is built on the native Arabic root ṣ-w-b, \"to hit the mark\" (Lane). Iṣāba is the verbal noun of Form IV, \"being hit\", hence \"an injury\"."
+              "text": "إصابة (iṣāba) is built on the native Arabic root ṣ-w-b, \"to hit the mark\" (Lane). Iṣāba is the verbal noun of Form IV aṣāba, \"to hit, to strike\": a hit, hence \"an injury\"."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b360a5bd3998361",
+      "sourceHash": "fnv1a64:bf33537338eae367",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "حبة (ḥabba) is built on the native Arabic root ḥ-b-b, \"a grain, a seed\" (Lane). Ḥabba is one grain, hence a pill."
+              "text": "حبة (ḥabba) is one grain of ḥabb, \"grain, seed\", a native noun, filed under the root ḥ-b-b (Lane); a pill is a later sense."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 123,
   "title": "Blanket, Pillow, Ladder, Stove, Vessel",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9a548f676770d3d4",
+  "sourceHash": "fnv1a64:bad65f6ca6a61550",
   "lessons": [
     {
       "id": "AR-C123-battaniyya",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96f90915929e6cfb",
+      "sourceHash": "fnv1a64:337187bd2b280784",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سلم (sullam) is built on the native Arabic root s-l-m, \"a ladder\" (Lane). Lane lists sullam under s-l-m; Hebrew sullam, \"ladder\", is a cousin."
+              "text": "سلم (sullam), \"a ladder\", is an old noun, filed under the root s-l-m (Lane); Hebrew sullam, \"ladder\", is a cousin."
             }
           ]
         },
@@ -565,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8cb396194061bb8a",
+      "sourceHash": "fnv1a64:ba61839a8068677c",
       "notice": null,
       "blocks": [
         {
@@ -603,7 +603,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "إناء (ināʾ) is built on the native Arabic root ʾ-n-y, \"a vessel\" (Lane). Lane's ināʾ is a vessel, a container."
+              "text": "إناء (ināʾ), \"a vessel\", is an old native noun, filed under the root ʾ-n-y (Lane). Lane's ināʾ is a vessel, a container."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 174,
   "title": "Reason, Result, Therefore, So, So that",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:09ac4ff0ee76d36b",
+  "sourceHash": "fnv1a64:7b0f1e0e8c44a420",
   "lessons": [
     {
       "id": "AR-C174-sabab",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c013836852b0f302",
+      "sourceHash": "fnv1a64:fcd27519a6026959",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سبب (sabab) is built on the native Arabic root s-b-b, \"a rope; a means\" (Lane). Lane's sabab is a rope by which one reaches a thing, hence a means, a cause."
+              "text": "سبب (sabab) is a native noun, filed under the root s-b-b (Lane). Lane's sabab is a rope by which one reaches a thing, hence a means, a cause."
             }
           ]
         },

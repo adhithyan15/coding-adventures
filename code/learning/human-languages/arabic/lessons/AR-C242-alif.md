@@ -15,7 +15,7 @@ concept_tag: AR-SIFA242-ALIF
 prerequisites: [AR-C242-mayyit, AR-C242-barri]
 sounds: []
 roots: [ʾ-l-f]
-etymology_hook: "alīf: built on the root ʾ-l-f, 'a thousand' (Lane); alīf is 'familiar, tame'"
+etymology_hook: "alīf: built on the root ʾ-l-f, 'to be familiar with; a thousand' (Lane); alīf is 'familiar, tame'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C242-barri]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**أليف** (*alīf*) is built on the native Arabic root *ʾ-l-f*, "a thousand; to be familiar with" (Lane). *Alīf* is "familiar, tame".
+**أليف** (*alīf*) is built on the native Arabic root *ʾ-l-f*, "to be familiar with; a thousand" (Lane). *Alīf* is "familiar, tame".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

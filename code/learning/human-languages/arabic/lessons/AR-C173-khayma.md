@@ -15,7 +15,7 @@ concept_tag: AR-MAKAN173-KHAYMA
 prerequisites: [AR-C172-muqabil, AR-C173-bustan]
 sounds: []
 roots: [kh-y-m]
-etymology_hook: "khayma: built on the root kh-y-m, 'a tent' (Lane); Lane's khayma is a tent or booth"
+etymology_hook: "khayma: an old native noun Lane files under kh-y-m; Lane's khayma is a tent or booth"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C173-bustan]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**خيمة** (*khayma*) is built on the native Arabic root *kh-y-m*, "a tent" (Lane). Lane's *khayma* is a tent or booth.
+**خيمة** (*khayma*), "a tent", is an old native noun, filed under the root *kh-y-m* (Lane). Lane's *khayma* is a tent or booth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

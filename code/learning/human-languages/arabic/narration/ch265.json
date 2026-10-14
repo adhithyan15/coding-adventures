@@ -4,7 +4,7 @@
   "chapter": 265,
   "title": "Theatre, Cinema, Club, Farm, Countryside",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:76e26b9132bbe7b3",
+  "sourceHash": "fnv1a64:465b3d1bd8960342",
   "lessons": [
     {
       "id": "AR-C265-masrah",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d06ce4527d21dfe",
+      "sourceHash": "fnv1a64:d45e8e1baa215faf",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "نادي (nādī) is built on the native Arabic root n-d-w, \"to assemble\" (Lane). Lane's nādī is a place of assembly."
+              "text": "نادي (nādī) is built on the native Arabic root n-d-w (Lane), which gives nidāʾ, \"calling out\", and nadiyy, \"an assembly\". Nādī is a meeting place; the club is a modern sense."
             }
           ]
         },

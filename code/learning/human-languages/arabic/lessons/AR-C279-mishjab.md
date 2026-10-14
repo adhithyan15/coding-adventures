@@ -15,7 +15,7 @@ concept_tag: AR-SHAY279-MISHJAB
 prerequisites: [AR-C278-barmil, AR-C279-mustatil]
 sounds: []
 roots: [sh-j-b]
-etymology_hook: "mishjab: built on the root sh-j-b, 'a peg for hanging clothes' (Lane); mishjab is a thing to hang clothes on"
+etymology_hook: "mishjab: an old noun listed by Lane under sh-j-b: pieces of wood bound together to put clothes on"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C279-mustatil]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**مشجب** (*mishjab*) is built on the native Arabic root *sh-j-b*, "a peg for hanging clothes" (Lane). *Mishjab* is a thing to hang clothes on.
+**مشجب** (*mishjab*) is an old native noun, filed under the root *sh-j-b* (Lane): pieces of wood bound together on which clothes are put. *Mishjab* is a thing to hang clothes on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

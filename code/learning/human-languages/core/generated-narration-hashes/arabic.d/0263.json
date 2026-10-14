@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 263,
-  "sourceHash": "fnv1a64:5e256a6fe3abbeb9",
+  "sourceHash": "fnv1a64:4e62d48899bcd66c",
   "lessonIds": [
     "AR-C263-laqah",
     "AR-C263-araq",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch263.txt",
   "json": "arabic/narration/ch263.json",
-  "textHash": "fnv1a64:50198a2f80894b72",
-  "jsonHash": "fnv1a64:b73c8ee61c011266",
+  "textHash": "fnv1a64:88a4127568e9ff73",
+  "jsonHash": "fnv1a64:75a28e7649aa8076",
   "findings": []
 }

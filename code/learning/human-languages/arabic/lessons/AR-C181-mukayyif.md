@@ -15,7 +15,7 @@ concept_tag: AR-SHAY181-MUKAYYIF
 prerequisites: [AR-C180-musattah, AR-C181-ghassala]
 sounds: []
 roots: [k-y-f]
-etymology_hook: "mukayyif: built on the root k-y-f, 'how' (Lane)"
+etymology_hook: "mukayyif: a modern Form II participle built from kayfa 'how' (k-y-f, Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C181-ghassala]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**مكيف** (*mukayyif*) is built on the native Arabic root *k-y-f*, "how; the state of a thing" (Lane). *Mukayyif* is a modern Form II participle, "one that sets the state (of the air)", built from *kayfa*, "how".
+**مكيف** (*mukayyif*) is built on *k-y-f*, the letters of *kayfa*, "how" (Lane). *Mukayyif* is a modern Form II participle, "one that sets the state (of the air)", built from *kayfa*, "how".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

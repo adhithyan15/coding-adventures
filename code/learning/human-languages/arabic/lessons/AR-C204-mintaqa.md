@@ -47,7 +47,7 @@ reviews_of: [AR-C204-nahwa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**منطقة** (*minṭaqa*) is built on the native Arabic root *n-ṭ-q*, "to speak; a girdle" (Lane). Lane's *minṭaqa* is a girdle; the zone, like Greek *zōnē*, "belt", grew from it.
+**منطقة** (*minṭaqa*) is built on the native Arabic root *n-ṭ-q*, "to speak" (Lane). Lane's *minṭaqa* is a girdle; the zone, like Greek *zōnē*, "belt", probably grew from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

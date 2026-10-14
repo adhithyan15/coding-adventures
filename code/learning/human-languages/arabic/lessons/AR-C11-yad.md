@@ -12,7 +12,7 @@ concept_tag: AR-BODY-HAND
 prerequisites: [AR-C11-ras]
 sounds: [arabic-rtl, short-word]
 roots: [semitic-yad]
-etymology_hook: "yad: an inherited Semitic noun, listed by Lane under y-d-y; Hebrew yad 'hand' is its cousin"
+etymology_hook: "yad: an inherited Semitic noun, listed by Lane under the key y-d; Hebrew yad 'hand' is its cousin"
 duration:
   max_seconds: 240
 requires:
@@ -52,7 +52,7 @@ Semitic family.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**يد** (*yad*) is an old Semitic noun, inherited, and listed by Lane under *y-d-y*; Hebrew *yad*, "hand", is its cousin.
+**يد** (*yad*) is an old Semitic noun, inherited, and listed by Lane under the two-letter key *y-d*; Hebrew *yad*, "hand", is its cousin.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C11-YAD-01, AR-CONCEPT-C11-YAD-02] -->

@@ -4,7 +4,7 @@
   "chapter": 241,
   "title": "Polite, Patient, Modest, Funny, Serious",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:33938af4b5dc040d",
+  "sourceHash": "fnv1a64:0894eed3fa3708df",
   "lessons": [
     {
       "id": "AR-C241-muhadhdhab",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5806bfde970de6e9",
+      "sourceHash": "fnv1a64:707ec199eb48be75",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جاد (jādd) is built on the native Arabic root j-d-d, \"earnestness\" (Lane). Jādd is the active participle, \"in earnest\", hence \"serious\"."
+              "text": "جاد (jādd) is built on the native Arabic root j-d-d, \"to cut; to be in earnest\" (Lane). Jādd is the active participle, \"in earnest\", hence \"serious\"."
             }
           ]
         },

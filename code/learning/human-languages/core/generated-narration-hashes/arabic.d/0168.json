@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 168,
-  "sourceHash": "fnv1a64:cc34bba8e53e60d7",
+  "sourceHash": "fnv1a64:530e475b4347cce4",
   "lessonIds": [
     "AR-C168-dhira",
     "AR-C168-jism",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch168.txt",
   "json": "arabic/narration/ch168.json",
-  "textHash": "fnv1a64:88dcc397ca012030",
-  "jsonHash": "fnv1a64:bd1b5b3b47a27ebf",
+  "textHash": "fnv1a64:3a96a859001ecef7",
+  "jsonHash": "fnv1a64:bae293804ebae8aa",
   "findings": []
 }

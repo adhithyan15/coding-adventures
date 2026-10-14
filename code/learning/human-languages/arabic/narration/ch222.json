@@ -4,7 +4,7 @@
   "chapter": 222,
   "title": "Science, Chemistry, Physics, Literature, Merchant",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:875a110cc75c3358",
+  "sourceHash": "fnv1a64:255efb2a04c22707",
   "lessons": [
     {
       "id": "AR-C222-ulum",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cad8777269b30b11",
+      "sourceHash": "fnv1a64:819d7d0356466519",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "أدب (adab) is built on the native Arabic root ʾ-d-b, \"good manners, discipline\" (Lane). Lane notes that adab for the literary sciences is a later, Islamic-era use."
+              "text": "أدب (adab) is built on the native Arabic root ʾ-d-b (Lane), whose verb adaba is \"to invite to a meal\"; adab is good manners, discipline. Lane notes that adab for the literary sciences is a later, Islamic-era use."
             }
           ]
         },

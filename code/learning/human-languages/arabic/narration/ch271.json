@@ -4,7 +4,7 @@
   "chapter": 271,
   "title": "Stubborn, Lonely, Orange, Pink, Purple",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e333556ab4c642a9",
+  "sourceHash": "fnv1a64:f142991b87cda5ff",
   "lessons": [
     {
       "id": "AR-C271-anid",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91112d8b9d6b1fbe",
+      "sourceHash": "fnv1a64:1cb9cf989eb69824",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "برتقالي (burtuqālī) is built from burtuqāl, \"orange\", with the adjective ending -ī; burtuqāl is named after Portugal, whose traders brought the sweet orange."
+              "text": "برتقالي (burtuqālī) is built from burtuqāl, \"orange\", with the adjective ending -ī; burtuqāl is named after Portugal, whose traders are usually said to have brought the sweet orange."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ffa67948837534c5",
+      "sourceHash": "fnv1a64:6727f3733a643057",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "وردي (wardī) is ward, \"roses\", with the adjective ending -ī. Lane notes that ward is said to be arabicized; its origin is not settled."
+              "text": "وردي (wardī) is ward, \"roses\", with the adjective ending -ī. Lane notes that ward is said to be arabicized; it is usually given an Iranian origin, probably by way of Aramaic wardā."
             }
           ]
         },

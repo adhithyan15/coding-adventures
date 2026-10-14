@@ -47,7 +47,7 @@ reviews_of: [AR-C231-iyada]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**صيدلية** (*ṣaydaliyya*) is built on *ṣaydalānī*, "druggist". Lane's sources derive that word from a place called Ṣaydalān, or from *ṣaydal*, or call it a Persian word arabicized; the origin is not settled.
+**صيدلية** (*ṣaydaliyya*) is built on *ṣaydalānī*, "druggist". Lane's sources derive that word from a place called Ṣaydalān, or from *ṣaydal*, or call it a Persian word arabicized. Lane also records the by-form *ṣandalānī*, which points to *ṣandal*, "sandalwood"; the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

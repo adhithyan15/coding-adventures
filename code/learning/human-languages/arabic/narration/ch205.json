@@ -4,7 +4,7 @@
   "chapter": 205,
   "title": "Nature, Dust, Mud, Borders, Planet",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0d328f44d79e7317",
+  "sourceHash": "fnv1a64:97a4c12ddac8c156",
   "lessons": [
     {
       "id": "AR-C205-tabia",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96ba81468cd05c8f",
+      "sourceHash": "fnv1a64:d4bc230a1336b8c5",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "تراب (turāb) is built on the native Arabic root t-r-b, \"dust, earth\" (Lane). An old noun with its own root in Lane."
+              "text": "تراب (turāb), \"dust, earth\", is an old native noun, listed under the root t-r-b (Lane) beside a verb meaning \"to become dusty\"."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e20a725296efbb2f",
+      "sourceHash": "fnv1a64:d2d9d3878c2798a0",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "طين (ṭīn) is built on the native Arabic root ṭ-y-n, \"clay, mud\" (Lane). An old noun with its own root in Lane."
+              "text": "طين (ṭīn), \"clay, mud\", is an old native noun, listed under the root ṭ-y-n (Lane) beside a verb meaning \"to plaster with clay\"."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f839dab1f3acaaa7",
+      "sourceHash": "fnv1a64:033d486627509bf8",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "كوكب (kawkab) is listed by Lane under k-w-k-b, where he notes the grammarians' dispute over its letters and suggests, in his own note, that it came from Hebrew kōkhāv, \"star\". The two are better taken as Semitic cousins."
+              "text": "كوكب (kawkab) is listed by Lane under k-k-b, where he notes the grammarians' dispute over its letters and suggests, in his own note, that it came from Hebrew kōkhāv, \"star\". The two are better taken as Semitic cousins."
             }
           ]
         },

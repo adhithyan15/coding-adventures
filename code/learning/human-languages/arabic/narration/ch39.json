@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Denying, and Asking",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:c888dbd89070e6e4",
+  "sourceHash": "fnv1a64:0110199eb2e2db5e",
   "lessons": [
     {
       "id": "AR-C39-laysa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ea34aee1ed6f70b",
+      "sourceHash": "fnv1a64:9f9f83453773ee64",
       "notice": null,
       "blocks": [
         {
@@ -82,7 +82,7 @@
             },
             {
               "kind": "speech",
-              "text": "That reading is the grammarians' own, and the origin is not settled; Aramaic layt, \"there is not\", is usually compared."
+              "text": "That reading is the grammarians' own, and comparison bears it out: Aramaic layt, \"there is not\", is likewise lā with an old word for \"there is\"."
             }
           ]
         },

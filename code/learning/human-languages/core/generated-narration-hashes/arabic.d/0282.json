@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 282,
-  "sourceHash": "fnv1a64:4f2a730701924304",
+  "sourceHash": "fnv1a64:1bd6684a95518027",
   "lessonIds": [
     "AR-C282-hasiba",
     "AR-C282-miqlama",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch282.txt",
   "json": "arabic/narration/ch282.json",
-  "textHash": "fnv1a64:fd36fd70ff7cbc3b",
-  "jsonHash": "fnv1a64:56726ff3ec0f9fd2",
+  "textHash": "fnv1a64:687b02b706ae5b34",
+  "jsonHash": "fnv1a64:428c566c6a0d071a",
   "findings": []
 }

@@ -47,7 +47,7 @@ reviews_of: [AR-C281-mudhi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ممثل** (*mumaththil*) is built on the native Arabic root *m-th-l*, "to be like" (Lane). *Mumaththil* is the Form II participle, "one who represents".
+**ممثل** (*mumaththil*) is built on the native Arabic root *m-th-l*, "to be like" (Lane). *Mumaththil* is the Form II participle, "one who represents"; the actor is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

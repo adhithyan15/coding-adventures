@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Longing, Ambition, Purpose, Project, Suggestion",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5f21d84e4097b970",
+  "sourceHash": "fnv1a64:45500a47f6615548",
   "lessons": [
     {
       "id": "AR-C112-shawq",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0862281dce17d254",
+      "sourceHash": "fnv1a64:70acbdf34ab47663",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "غاية (ghāya) is built on the native Arabic root gh-y-y, \"the utmost limit, a goal\" (Lane). Lane's ghāya is the furthest point of a thing."
+              "text": "غاية (ghāya), \"the utmost limit, a goal\", is an old native noun, filed under the root gh-y-y (Lane). Lane's ghāya is the furthest point of a thing."
             }
           ]
         },
@@ -565,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5797e4b7b854dbba",
+      "sourceHash": "fnv1a64:c2161bc688223bff",
       "notice": null,
       "blocks": [
         {
@@ -603,7 +603,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "اقتراح (iqtirāḥ) is built on the native Arabic root q-r-ḥ, \"to devise, to propose\" (Lane). Iqtirāḥ is the verbal noun of Form VIII, \"proposing\"."
+              "text": "اقتراح (iqtirāḥ) is built on the native Arabic root q-r-ḥ, \"to wound\" (Lane). Iqtirāḥ is the verbal noun of Form VIII iqtaraḥa, which Lane gives as \"to originate, to devise (a thing)\"; \"proposing\" is the modern sense."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 110,
   "title": "Tool, To own, To lose, To keep, Talent",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b8f5dcfebb812631",
+  "sourceHash": "fnv1a64:1cd7b9c5c678b9bb",
   "lessons": [
     {
       "id": "AR-C110-adat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d38320fbc33758f1",
+      "sourceHash": "fnv1a64:d104e4867dc7140d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "أداة (adāt) is built on the native Arabic root ʾ-d-w, \"a tool, an implement\" (Lane). Lane's adāt is an instrument or tool."
+              "text": "أداة (adāt) is built on the native Arabic root ʾ-d-w, \"to equip oneself, to get ready\" (Lane). Lane's adāt is an instrument or tool."
             }
           ]
         },

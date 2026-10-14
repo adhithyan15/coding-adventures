@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 86,
-  "sourceHash": "fnv1a64:6adf86fbc6b25d33",
+  "sourceHash": "fnv1a64:d7973bea6eef1bab",
   "lessonIds": [
     "AR-C86-jamil",
     "AR-C86-bunni",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch86.txt",
   "json": "arabic/narration/ch86.json",
-  "textHash": "fnv1a64:ce9545bc551cdda1",
-  "jsonHash": "fnv1a64:9e8de817a159ce64",
+  "textHash": "fnv1a64:e6b6d200b84d9bb8",
+  "jsonHash": "fnv1a64:57bf4cadb6baf488",
   "findings": []
 }

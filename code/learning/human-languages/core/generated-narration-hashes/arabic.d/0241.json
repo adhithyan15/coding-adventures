@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 241,
-  "sourceHash": "fnv1a64:33938af4b5dc040d",
+  "sourceHash": "fnv1a64:0894eed3fa3708df",
   "lessonIds": [
     "AR-C241-muhadhdhab",
     "AR-C241-sabur",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch241.txt",
   "json": "arabic/narration/ch241.json",
-  "textHash": "fnv1a64:e4895b51b10ac1ed",
-  "jsonHash": "fnv1a64:83f15e75d8a7ea2c",
+  "textHash": "fnv1a64:2f02cdf76d65216d",
+  "jsonHash": "fnv1a64:1e1028364511777c",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 248,
-  "sourceHash": "fnv1a64:c96c39e101459da1",
+  "sourceHash": "fnv1a64:62ae50c87edf56c4",
   "lessonIds": [
     "AR-C248-intarnit",
     "AR-C248-mawqi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch248.txt",
   "json": "arabic/narration/ch248.json",
-  "textHash": "fnv1a64:bf9a38699ab41f8e",
-  "jsonHash": "fnv1a64:158d2deec17758d7",
+  "textHash": "fnv1a64:4735c1149a66845d",
+  "jsonHash": "fnv1a64:e16a80e80e535f29",
   "findings": []
 }

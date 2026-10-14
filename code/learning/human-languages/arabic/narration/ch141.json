@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "Tongue, Belly, Leg, Skin, Bone",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5725c82b9a651fe0",
+  "sourceHash": "fnv1a64:dfd63b2b1a4c13d2",
   "lessons": [
     {
       "id": "AR-C141-lisan",
@@ -297,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc0a96ac2149d521",
+      "sourceHash": "fnv1a64:92bf5e145d0159e0",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ساق (sāq) is built on the native Arabic root s-w-q, \"the shank\" (Lane). Lane's sāq is the shank, the leg between knee and ankle."
+              "text": "ساق (sāq), \"the shank\", is an old native noun, filed under the root s-w-q (Lane). Lane's sāq is the shank, the leg between knee and ankle."
             }
           ]
         },
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a41fd013f991544",
+      "sourceHash": "fnv1a64:dbf8556a00808276",
       "notice": null,
       "blocks": [
         {
@@ -469,7 +469,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جلد (jild) is built on the native Arabic root j-l-d, \"skin, hide\" (Lane). An old noun with its own root in Lane."
+              "text": "جلد (jild), \"skin, hide\", is an old native noun, listed under the root j-l-d (Lane) beside a verb meaning \"to strike the skin, to flog\"."
             }
           ]
         },

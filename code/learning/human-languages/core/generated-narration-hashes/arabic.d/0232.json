@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 232,
-  "sourceHash": "fnv1a64:779b516ab95c81e0",
+  "sourceHash": "fnv1a64:49a9c5da1f3039ec",
   "lessonIds": [
     "AR-C232-duwar",
     "AR-C232-marham",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch232.txt",
   "json": "arabic/narration/ch232.json",
-  "textHash": "fnv1a64:e5809accaf69178f",
-  "jsonHash": "fnv1a64:dc2a66fe14ad14f2",
+  "textHash": "fnv1a64:76d2f57e3eb43ff4",
+  "jsonHash": "fnv1a64:63a65d78d335798c",
   "findings": []
 }

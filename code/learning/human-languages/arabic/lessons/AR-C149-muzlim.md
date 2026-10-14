@@ -47,7 +47,7 @@ reviews_of: [AR-C148-hadd]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**مظلم** (*muẓlim*) is built on the native Arabic root *ẓ-l-m*, "darkness" (Lane). *Muẓlim* is the Form IV participle, "growing dark".
+**مظلم** (*muẓlim*) is built on the native Arabic root *ẓ-l-m*, "darkness; to do wrong" (Lane). *Muẓlim* is the Form IV participle, "growing dark".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

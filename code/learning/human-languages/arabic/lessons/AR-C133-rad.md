@@ -15,7 +15,7 @@ concept_tag: AR-THINGS133-RAD
 prerequisites: [AR-C133-buhayra, AR-C133-barq, AR-C32-saada, AR-C32-saada]
 sounds: []
 roots: [r-ʿ-d]
-etymology_hook: "raʿd: built on the root r-ʿ-d, 'thunder' (Lane); an old noun with its own root in Lane"
+etymology_hook: "raʿd: built on the root r-ʿ-d, 'to thunder; to tremble' (Lane); raʿd is the thunder itself"
 duration:
   max_seconds: 200
 requires:
@@ -49,7 +49,7 @@ reviews_of: [AR-C133-barq]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**رعد** (*raʿd*) is built on the native Arabic root *r-ʿ-d*, "thunder; to tremble" (Lane). An old noun with its own root in Lane.
+**رعد** (*raʿd*) is built on the native Arabic root *r-ʿ-d*, "to thunder; to tremble" (Lane). *Raʿd* is the thunder itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ concept_tag: AR-SIHHA232-NAZIF
 prerequisites: [AR-C232-jarrah, AR-C232-ukkaz]
 sounds: []
 roots: [n-z-f]
-etymology_hook: "nazīf: built on the root n-z-f, 'to draw out (blood)' (Lane); nazīf is bleeding"
+etymology_hook: "nazīf: built on the root n-z-f, 'to drain (a well) dry' (Lane); nazīf is bleeding, blood drained away"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C232-ukkaz]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**نزيف** (*nazīf*) is built on the native Arabic root *n-z-f*, "to draw out (blood)" (Lane). *Nazīf* is bleeding.
+**نزيف** (*nazīf*) is built on the native Arabic root *n-z-f*, "to drain (a well) dry" (Lane). *Nazīf* is bleeding, blood drained away.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

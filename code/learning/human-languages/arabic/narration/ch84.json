@@ -4,7 +4,7 @@
   "chapter": 84,
   "title": "Empty, Rich, Poor, Clean, Dirty",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:235b65efad61fbac",
+  "sourceHash": "fnv1a64:a459f499506eb6e3",
   "lessons": [
     {
       "id": "AR-C84-farigh",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69abcc401a83c9dc",
+      "sourceHash": "fnv1a64:41c5029bb9a1d4df",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "فقير (faqīr) is built on the native Arabic root f-q-r, \"a vertebra; to be poor\" (Lane). English fakir comes from faqīr."
+              "text": "فقير (faqīr) is built on the native Arabic root f-q-r, \"to be poor; a vertebra\" (Lane). English fakir comes from faqīr."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e88c6ea455626bdb",
+      "sourceHash": "fnv1a64:278f510d3e023a12",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "نظيف (naẓīf) is built on the native Arabic root n-ẓ-f, \"to be clean\" (Lane). Naẓīf is the faʿīl adjective, \"clean\"."
+              "text": "نظيف (naẓīf) is built on the native Arabic root n-ẓ-f, \"to be clean\"; Lane's short article on this root does not treat it. Naẓīf is the faʿīl adjective, \"clean\"."
             }
           ]
         },

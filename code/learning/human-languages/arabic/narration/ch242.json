@@ -4,7 +4,7 @@
   "chapter": 242,
   "title": "Noisy, Dead, Wild, Tame, Poisonous",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:111b6364d2ac84c5",
+  "sourceHash": "fnv1a64:8249db6ff10b992c",
   "lessons": [
     {
       "id": "AR-C242-sakhib",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d94b2c33baa6049",
+      "sourceHash": "fnv1a64:ab802a1bf3b0f42f",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "بري (barrī) is built on the native Arabic root b-r-r, \"land, the open country\" (Lane). Barrī is barr, \"the land, the wild\", with the adjective ending -ī."
+              "text": "بري (barrī) is barr, \"the land, the wild\", with the adjective ending -ī. barr is filed under the native Arabic root b-r-r (Lane), which also gives birr, \"piety\"."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01bb71ed8e0d1fe5",
+      "sourceHash": "fnv1a64:6b2b6654e6e0d7e1",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "أليف (alīf) is built on the native Arabic root ʾ-l-f, \"a thousand; to be familiar with\" (Lane). Alīf is \"familiar, tame\"."
+              "text": "أليف (alīf) is built on the native Arabic root ʾ-l-f, \"to be familiar with; a thousand\" (Lane). Alīf is \"familiar, tame\"."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "Fork, Bottle, Door, Kitchen, Garden",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:578901562fbdf825",
+  "sourceHash": "fnv1a64:c6cc0470c02cb297",
   "lessons": [
     {
       "id": "AR-C72-shawka",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95853255b4372d47",
+      "sourceHash": "fnv1a64:6c7db2c8c633ac56",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "زجاجة (zujāja) is built on the native Arabic root z-j-j, \"glass\" (Lane). Zujāja is a single piece or vessel of zujāj, \"glass\"."
+              "text": "زجاجة (zujāja) is a single piece or vessel of zujāj, \"glass\", an old native noun, filed under the root z-j-j (Lane)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:662d58deca3e1d37",
+      "sourceHash": "fnv1a64:b3e92689a8bf80bb",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "حديقة (ḥadīqa) is built on the native Arabic root ḥ-d-q, \"a walled garden\" (Lane). Lane's ḥadīqa is a garden surrounded by a wall."
+              "text": "حديقة (ḥadīqa) is an old native noun, filed under the root ḥ-d-q (Lane). Lane's ḥadīqa is a garden surrounded by a wall."
             }
           ]
         },

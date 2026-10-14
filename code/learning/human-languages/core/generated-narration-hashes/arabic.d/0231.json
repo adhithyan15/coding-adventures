@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 231,
-  "sourceHash": "fnv1a64:254ec40f0a0ae9da",
+  "sourceHash": "fnv1a64:7aedc7d0604ea9be",
   "lessonIds": [
     "AR-C231-ilaj",
     "AR-C231-wasfa",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch231.txt",
   "json": "arabic/narration/ch231.json",
-  "textHash": "fnv1a64:e184a64e4ae57f5b",
-  "jsonHash": "fnv1a64:4e23587b1d971c0c",
+  "textHash": "fnv1a64:b3cbde9a37f768e2",
+  "jsonHash": "fnv1a64:8b7731084f0db94a",
   "findings": []
 }

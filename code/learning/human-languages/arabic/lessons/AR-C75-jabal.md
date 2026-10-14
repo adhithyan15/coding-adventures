@@ -15,7 +15,7 @@ concept_tag: AR-SCHOOL75-JABAL
 prerequisites: [AR-C75-shajara, AR-C75-zahra]
 sounds: []
 roots: [j-b-l]
-etymology_hook: "jabal: built on the root j-b-l, 'a mountain' (Lane); Gibraltar is Jabal Ṭāriq, 'the mountain of Ṭāriq'"
+etymology_hook: "jabal: an old noun for a mountain, listed by Lane under j-b-l; Gibraltar is Jabal Ṭāriq"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C75-zahra]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**جبل** (*jabal*) is built on the native Arabic root *j-b-l*, "a mountain" (Lane). Gibraltar is *Jabal Ṭāriq*, "the mountain of Ṭāriq".
+**جبل** (*jabal*), "a mountain", is an old native noun, filed under the root *j-b-l* (Lane). Gibraltar is *Jabal Ṭāriq*, "the mountain of Ṭāriq".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

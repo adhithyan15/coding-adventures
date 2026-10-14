@@ -15,7 +15,7 @@ concept_tag: AR-THINGS123-INA
 prerequisites: [AR-C123-sullam, AR-C123-mawqid]
 sounds: []
 roots: [ʾ-n-y]
-etymology_hook: "ināʾ: built on the root ʾ-n-y, 'a vessel' (Lane); Lane's ināʾ is a vessel, a container"
+etymology_hook: "ināʾ: an old native noun Lane files under ʾ-n-y; Lane's ināʾ is a vessel, a container"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C123-mawqid]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**إناء** (*ināʾ*) is built on the native Arabic root *ʾ-n-y*, "a vessel" (Lane). Lane's *ināʾ* is a vessel, a container.
+**إناء** (*ināʾ*), "a vessel", is an old native noun, filed under the root *ʾ-n-y* (Lane). Lane's *ināʾ* is a vessel, a container.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

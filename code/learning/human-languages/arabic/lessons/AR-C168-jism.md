@@ -15,7 +15,7 @@ concept_tag: AR-SIHHA168-JISM
 prerequisites: [AR-C167-ikhtafa, AR-C168-dhira]
 sounds: []
 roots: [j-s-m]
-etymology_hook: "jism: built on the root j-s-m, 'the body' (Lane); an old noun with its own root in Lane"
+etymology_hook: "jism: built on the root j-s-m, 'to be large of body' (Lane); jism is the body"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C168-dhira]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**جسم** (*jism*) is built on the native Arabic root *j-s-m*, "the body" (Lane). An old noun with its own root in Lane.
+**جسم** (*jism*) is built on the native Arabic root *j-s-m*, "to be large of body" (Lane). *Jism* is the body.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

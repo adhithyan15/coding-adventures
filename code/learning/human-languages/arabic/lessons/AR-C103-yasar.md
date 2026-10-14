@@ -15,7 +15,7 @@ concept_tag: AR-LOC103-YASAR
 prerequisites: [AR-C102-bayna, AR-C103-bijanib]
 sounds: []
 roots: [y-s-r]
-etymology_hook: "yasār: built on the root y-s-r, 'ease' (Lane); Lane gives yasār as the left hand and also as ease, wealth"
+etymology_hook: "yasār: built on the root y-s-r, 'to be easy, gentle' (Lane); Lane gives yasār as the left hand and as ease, wealth"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C103-bijanib]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**يسار** (*yasār*) is built on the native Arabic root *y-s-r*, "ease; the left hand" (Lane). Lane gives *yasār* as the left hand and also as ease, wealth.
+**يسار** (*yasār*) is built on the native Arabic root *y-s-r*, "to be easy, gentle" (Lane). Lane gives *yasār* as the left hand and also as ease, wealth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

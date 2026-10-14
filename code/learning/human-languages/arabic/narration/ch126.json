@@ -4,7 +4,7 @@
   "chapter": 126,
   "title": "Candle, Carpet, Doll, Toy, Fridge",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:11a65e38bc68d497",
+  "sourceHash": "fnv1a64:3d40f59ee5236ee4",
   "lessons": [
     {
       "id": "AR-C126-shama",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67e41f9440c8420a",
+      "sourceHash": "fnv1a64:ae0d8ee3826d86bb",
       "notice": null,
       "blocks": [
         {
@@ -67,7 +67,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "شمعة (shamʿa) is built on the native Arabic root sh-m-ʿ, \"wax\" (Lane). Lane's shamʿ is wax; shamʿa is one candle."
+              "text": "شمعة (shamʿa) is built on shamʿ, \"wax\", a native noun, filed under the root sh-m-ʿ (Lane); shamʿa is one candle."
             }
           ]
         },
@@ -297,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95f1812b1d3a6e7d",
+      "sourceHash": "fnv1a64:1dc69325dfaec8ed",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "دمية (dumya) is built on the native Arabic root d-m-y, \"an image, a statue\" (Lane). Lane's dumya is an image, a statue."
+              "text": "دمية (dumya), \"an image, a statue\", is an old native noun, filed under the root d-m-y (Lane). Lane's dumya is an image, a statue."
             }
           ]
         },

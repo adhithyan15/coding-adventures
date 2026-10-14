@@ -4,7 +4,7 @@
   "chapter": 158,
   "title": "A Timetable, a Sign, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:74e10c5fad9c7e42",
+  "sourceHash": "fnv1a64:420743e6669615c9",
   "lessons": [
     {
       "id": "AR-C158-jadwal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:afbc63068f7ae062",
+      "sourceHash": "fnv1a64:4886a689240460e2",
       "notice": null,
       "blocks": [
         {
@@ -70,7 +70,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جدول (jadwal) is built on the native Arabic root j-d-l, \"a rivulet\" (Lane). Lane's jadwal is a small stream or irrigation channel, and its verb means to rule a book with lines."
+              "text": "جدول (jadwal) is a noun filed under the root j-d-l, \"to twist firmly\" (Lane). Lane's jadwal is a small stream or irrigation channel, and its verb means to rule a book with lines."
             }
           ]
         },
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:392cb9424148f2ce",
+      "sourceHash": "fnv1a64:9bbbda395f17836c",
       "notice": null,
       "blocks": [
         {
@@ -351,7 +351,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "إيجار (ījār) is built on the native Arabic root ʾ-j-r, \"a reward, a wage; to hire\" (Lane). The word ījār is the verbal noun of Form IV, \"letting for hire\"."
+              "text": "إيجار (ījār) is built on the native Arabic root ʾ-j-r, \"to reward; to hire\" (Lane). The word ījār is the verbal noun of Form IV, \"letting for hire\"."
             }
           ]
         },

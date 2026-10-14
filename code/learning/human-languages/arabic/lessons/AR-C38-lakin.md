@@ -12,7 +12,7 @@ concept_tag: AR-JOIN-LAKIN
 prerequisites: [AR-C38-aw, AR-C37-la-afham, AR-C33-shay]
 sounds: [lam-alif-ligature]
 roots: [lakin-but]
-etymology_hook: "lākin: the grammarians see lā 'not' with an old particle behind it; the full origin is not settled"
+etymology_hook: "lākin: a native particle; the grammarians see lā 'not' with an old particle behind it"
 duration:
   max_seconds: 240
 requires:
@@ -69,7 +69,7 @@ In writing you will also meet **لكنّ** with a shadda, which takes a followin
 noun in the accusative. The plain **لكن** in this lesson joins clauses and asks
 nothing of what follows.
 
-The grammarians differ over which old particle stands behind *lā*, so the full origin of *lākin* is not settled.
+*Lākin* is a native particle (Lane, under *l-k-n*); the grammarians differ over which old particle stands behind *lā*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C38-LAKIN-01, AR-LEX-C38-WA-01, AR-FUNC-C37-LA-AFHAM-01, AR-CONCEPT-C33-HALIB-01] -->

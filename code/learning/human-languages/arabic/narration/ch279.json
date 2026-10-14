@@ -4,7 +4,7 @@
   "chapter": 279,
   "title": "Rectangle, Coat hanger, Sponge, Tape, Glue",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1e895d937a62ba01",
+  "sourceHash": "fnv1a64:ade4a0300ee475e2",
   "lessons": [
     {
       "id": "AR-C279-mustatil",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0e72c47f8e1d217",
+      "sourceHash": "fnv1a64:00456f0648ad44ec",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مشجب (mishjab) is built on the native Arabic root sh-j-b, \"a peg for hanging clothes\" (Lane). Mishjab is a thing to hang clothes on."
+              "text": "مشجب (mishjab) is an old native noun, filed under the root sh-j-b (Lane): pieces of wood bound together on which clothes are put. Mishjab is a thing to hang clothes on."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e737dc6bb4c0331",
+      "sourceHash": "fnv1a64:233df326fb7e869c",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "شريط (sharīṭ) is built on the native Arabic root sh-r-ṭ, \"a twisted cord\" (Lane). Lane's sharīṭ is a twisted cord."
+              "text": "شريط (sharīṭ) is built on the native Arabic root sh-r-ṭ, \"to stipulate; to slit\" (Lane). Lane's sharīṭ is a cord of twisted palm-leaves."
             }
           ]
         },

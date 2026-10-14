@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 55,
-  "sourceHash": "fnv1a64:957a878042fb538f",
+  "sourceHash": "fnv1a64:c8548dd868b0b7a7",
   "lessonIds": [
     "AR-C55-jadda",
     "AR-C55-amm",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch55.txt",
   "json": "arabic/narration/ch55.json",
-  "textHash": "fnv1a64:dd9593c6dd614316",
-  "jsonHash": "fnv1a64:b83111b41f685730",
+  "textHash": "fnv1a64:e484ddbc368cf96e",
+  "jsonHash": "fnv1a64:a8b5ad83bbe1f97a",
   "findings": []
 }

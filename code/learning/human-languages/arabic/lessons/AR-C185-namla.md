@@ -15,7 +15,7 @@ concept_tag: AR-SHAY185-NAMLA
 prerequisites: [AR-C185-dulfin, AR-C185-babbagha]
 sounds: []
 roots: [n-m-l]
-etymology_hook: "namla: built on the root n-m-l, 'ants' (Lane); namla is one ant"
+etymology_hook: "namla: one ant of naml 'ants', an old native noun that Lane files under the root n-m-l"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C185-babbagha]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**نملة** (*namla*) is built on the native Arabic root *n-m-l*, "ants" (Lane). *Namla* is one ant.
+**نملة** (*namla*) is one ant of *naml*, "ants", an old native noun, filed under the root *n-m-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

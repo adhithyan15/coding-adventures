@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 204,
-  "sourceHash": "fnv1a64:9953baf3a4cd9559",
+  "sourceHash": "fnv1a64:201550967f99981c",
   "lessonIds": [
     "AR-C204-nahwa",
     "AR-C204-mintaqa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch204.txt",
   "json": "arabic/narration/ch204.json",
-  "textHash": "fnv1a64:9c13b198f3f0a308",
-  "jsonHash": "fnv1a64:6d2618e9e5815c45",
+  "textHash": "fnv1a64:9b9e67843f94780c",
+  "jsonHash": "fnv1a64:f84601eef14513e4",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 273,
   "title": "Chocolate, Sweets, Pasta, Flour, Spices",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2ce611307bacf42c",
+  "sourceHash": "fnv1a64:a8f6c963529910e0",
   "lessons": [
     {
       "id": "AR-C273-shukulata",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4aa7866452ee8f16",
+      "sourceHash": "fnv1a64:38e25ba1f8447023",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "توابل (tawābil) is built on the native Arabic root t-b-l, \"seeds for seasoning\" (Lane). Lane's tābal is seeds for seasoning food, such as cumin and coriander, and he notes it is said to be arabicized."
+              "text": "توابل (tawābil) is the plural of tābal, seeds for seasoning food such as cumin and coriander, which Lane lists under t-b-l and notes is said to be arabicized. EtymDB derives it from Aramaic tablā, \"spice\"."
             }
           ]
         },

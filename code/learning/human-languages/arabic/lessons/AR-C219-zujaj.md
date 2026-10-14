@@ -15,7 +15,7 @@ concept_tag: AR-SHAY219-ZUJAJ
 prerequisites: [AR-C219-khartum, AR-C219-khashab]
 sounds: []
 roots: [z-j-j]
-etymology_hook: "zujāj: built on the root z-j-j, 'glass' (Lane); an old noun with its own root in Lane"
+etymology_hook: "zujāj: an old noun for glass, listed by Lane under the native Arabic root z-j-j"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C219-khashab]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**زجاج** (*zujāj*) is built on the native Arabic root *z-j-j*, "glass" (Lane). An old noun with its own root in Lane.
+**زجاج** (*zujāj*), "glass", is an old native noun, filed under the root *z-j-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

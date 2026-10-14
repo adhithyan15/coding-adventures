@@ -15,7 +15,7 @@ concept_tag: AR-CAN109-FANN
 prerequisites: [AR-C109-ada, AR-C109-mahara, AR-C09-aswad-abyad, AR-C09-aswad-abyad]
 sounds: []
 roots: [f-n-n]
-etymology_hook: "fann: built on the root f-n-n, 'a kind, a sort' (Lane); Lane's fann is a kind or species of a thing"
+etymology_hook: "fann: an old native noun Lane files under f-n-n; Lane's fann is a kind or species of a thing"
 duration:
   max_seconds: 200
 requires:
@@ -49,7 +49,7 @@ reviews_of: [AR-C109-mahara]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**فن** (*fann*) is built on the native Arabic root *f-n-n*, "a kind, a sort" (Lane). Lane's *fann* is a kind or species of a thing; "art" is a later sense.
+**فن** (*fann*), "a kind, a sort", is an old native noun, filed under the root *f-n-n* (Lane). Lane's *fann* is a kind or species of a thing; "art" is a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

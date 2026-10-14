@@ -15,7 +15,7 @@ concept_tag: AR-SHAY187-HABL
 prerequisites: [AR-C187-unbub, AR-C187-silk]
 sounds: []
 roots: [ḥ-b-l]
-etymology_hook: "ḥabl: built on the root ḥ-b-l, 'a rope' (Lane); an old noun with its own root in Lane"
+etymology_hook: "ḥabl: an old native noun listed by Lane under ḥ-b-l, beside a verb meaning 'to bind with a rope'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C187-silk]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**حبل** (*ḥabl*) is built on the native Arabic root *ḥ-b-l*, "a rope" (Lane). An old noun with its own root in Lane.
+**حبل** (*ḥabl*), "a rope", is an old native noun, listed under the root *ḥ-b-l* (Lane) beside a verb meaning "to bind with a rope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

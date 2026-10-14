@@ -15,7 +15,7 @@ concept_tag: AR-WAQT234-DUHA
 prerequisites: [AR-C233-milad, AR-C234-sanawi]
 sounds: []
 roots: [ḍ-ḥ-w]
-etymology_hook: "ḍuḥā: built on the root ḍ-ḥ-w, 'the forenoon' (Lane); an old noun with its own root in Lane"
+etymology_hook: "ḍuḥā: an old noun for the forenoon, listed by Lane under ḍ-ḥ-w, whose verb ḍaḥā is 'to appear'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C234-sanawi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ضحى** (*ḍuḥā*) is built on the native Arabic root *ḍ-ḥ-w*, "the forenoon" (Lane). An old noun with its own root in Lane.
+**ضحى** (*ḍuḥā*), "the forenoon", is an old native noun, filed under the root *ḍ-ḥ-w* (Lane), whose verb *ḍaḥā* is "to appear, to come into view".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

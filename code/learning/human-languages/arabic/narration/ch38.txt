@@ -15,7 +15,7 @@ You'll want to know: و.
 One letter, and it is written joined to the word that follows it, never with a space after it. That is why it looks like part of the next word and why it has been on the page in front of you since chapter one without ever being a word you owned.
 
 The word, taken apart.
-و (wa-) is the same conjunction Hebrew and Aramaic write with a single letter, in the same job, and it has held that job for three thousand years. It is by a wide margin the commonest word in written Arabic: Arabic prose strings clauses with و (wa-) where English would use a full stop, so a page of Arabic has far more ands in it than a page of English ever does.
+و (wa-) is the same conjunction Hebrew and Aramaic write with a single letter, in the same job, as far back as those languages are written. It is by a wide margin the commonest word in written Arabic: Arabic prose strings clauses with و (wa-) where English would use a full stop, so a page of Arabic has far more ands in it than a page of English ever does.
 Note that و (wa-) is also the letter wāw, the long ū inside كوب and يوم. One shape, two jobs, told apart by whether it stands alone at the head of a word.
 Wa is inherited from the Semitic parent language, a cousin of Hebrew wə-, "and".
 
@@ -94,7 +94,7 @@ The word, taken apart.
 Look at the first two letters: لا, the negator this book taught in chapter five, with an old particle behind it. Arabic's but has a not inside it.
 English did the same thing by a different road. But is Old English be-ūtan, "be out, except" — and out is still visible in it if you look. Two unrelated languages built their adversative out of a word for leaving something aside.
 In writing you will also meet لكنّ with a shadda, which takes a following noun in the accusative. The plain لكن (lākin) in this lesson joins clauses and asks nothing of what follows.
-The grammarians differ over which old particle stands behind lā, so the full origin of lākin is not settled.
+Lākin is a native particle (Lane, under l-k-n); the grammarians differ over which old particle stands behind lā.
 
 Guided Practice.
 [pause 1 second]

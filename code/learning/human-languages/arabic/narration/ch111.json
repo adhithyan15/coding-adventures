@@ -4,7 +4,7 @@
   "chapter": 111,
   "title": "To long for, Expectation, Enthusiasm, Wish, Preference",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0088aaa4671086d0",
+  "sourceHash": "fnv1a64:e08ce05e3332b5d9",
   "lessons": [
     {
       "id": "AR-C111-ishtaqa",
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:099e207bb151e00a",
+      "sourceHash": "fnv1a64:a6de46c56315fc97",
       "notice": null,
       "blocks": [
         {
@@ -469,7 +469,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "أمنية (umniyya) is built on the native Arabic root m-n-y, \"to wish, to desire\" (Lane). Lane's umniyya is a thing wished for."
+              "text": "أمنية (umniyya) is built on the native Arabic root m-n-y (Lane), whose Form V tamannā means \"to wish\". Lane's umniyya is a thing wished for."
             }
           ]
         },

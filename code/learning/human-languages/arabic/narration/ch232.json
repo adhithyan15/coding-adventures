@@ -4,7 +4,7 @@
   "chapter": 232,
   "title": "Dizziness, Ointment, Surgeon, Crutch, Bleeding",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:779b516ab95c81e0",
+  "sourceHash": "fnv1a64:49a9c5da1f3039ec",
   "lessons": [
     {
       "id": "AR-C232-duwar",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25036abd569f7dcd",
+      "sourceHash": "fnv1a64:b606b46503fd2af6",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "نزيف (nazīf) is built on the native Arabic root n-z-f, \"to draw out (blood)\" (Lane). Nazīf is bleeding."
+              "text": "نزيف (nazīf) is built on the native Arabic root n-z-f, \"to drain (a well) dry\" (Lane). Nazīf is bleeding, blood drained away."
             }
           ]
         },

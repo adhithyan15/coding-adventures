@@ -15,7 +15,7 @@ concept_tag: AR-SHAY216-DABAB
 prerequisites: [AR-C216-sirr, AR-C216-wad]
 sounds: []
 roots: [ḍ-b-b]
-etymology_hook: "ḍabāb: built on the root ḍ-b-b, 'mist, fog' (Lane); an old noun with its own root in Lane"
+etymology_hook: "ḍabāb: an old noun for mist or fog, listed by Lane under ḍ-b-b, whose verb is 'to cleave to the ground'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C216-wad]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ضباب** (*ḍabāb*) is built on the native Arabic root *ḍ-b-b*, "mist, fog" (Lane). An old noun with its own root in Lane.
+**ضباب** (*ḍabāb*), "mist, fog", is an old native noun, filed under the root *ḍ-b-b* (Lane), whose verb *ḍabba* he gives first as "to cleave to the ground".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

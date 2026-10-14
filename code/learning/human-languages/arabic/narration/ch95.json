@@ -4,7 +4,7 @@
   "chapter": 95,
   "title": "Pocket, Ring, Hat, Shoe, Coat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:45475e3b3c330465",
+  "sourceHash": "fnv1a64:b772b2e7719755ff",
   "lessons": [
     {
       "id": "AR-C95-jayb",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5edb52a63d2dc5c",
+      "sourceHash": "fnv1a64:bada94ab98de067f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جيب (jayb) is built on the native Arabic root j-y-b, \"the opening of a shirt at the neck\" (Lane). Lane's jayb is the opening at the neck and bosom of a shirt; \"pocket\" came later. Medieval Latin translators read the Arabic word for a sine, a loan from Sanskrit jyā, as this word and rendered it sinus, the source of English sine."
+              "text": "جيب (jayb) is built on the native Arabic root j-y-b, which Lane treats under j-w-b, \"to cut through, to hollow out\". Lane's jayb is the opening at the neck and bosom of a shirt; \"pocket\" came later. The usual account is that medieval Latin translators read the Arabic word for a sine, a loan from Sanskrit jyā, as this word and rendered it sinus, the source of English sine."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de4d189057c35f87",
+      "sourceHash": "fnv1a64:c581c381c686f96f",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "قبعة (qubbaʿa) is usually traced to Syriac qubbaʿā, \"cap\" (EtymDB); Lane has no entry for it, though a root q-b-ʿ exists in his lexicon."
+              "text": "قبعة (qubbaʿa) is usually traced to Syriac qubbaʿā, \"hood\" (EtymDB); Lane has no entry for it, though a root q-b-ʿ exists in his lexicon."
             }
           ]
         },

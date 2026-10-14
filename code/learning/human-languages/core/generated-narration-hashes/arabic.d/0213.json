@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 213,
-  "sourceHash": "fnv1a64:fabfdadfb12f8289",
+  "sourceHash": "fnv1a64:a85ec0be132acf8d",
   "lessonIds": [
     "AR-C213-arika",
     "AR-C213-fursha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch213.txt",
   "json": "arabic/narration/ch213.json",
-  "textHash": "fnv1a64:98870110f441b4e0",
-  "jsonHash": "fnv1a64:bb1978939a2a49b6",
+  "textHash": "fnv1a64:9de0df08b73d710e",
+  "jsonHash": "fnv1a64:fe20857c05e53c17",
   "findings": []
 }

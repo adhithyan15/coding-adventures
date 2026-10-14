@@ -4,7 +4,7 @@
   "chapter": 151,
   "title": "Thin, Fat, Wet, Dry, Dirty",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c8258ac4d9b540b5",
+  "sourceHash": "fnv1a64:d2f7fde004c8c44c",
   "lessons": [
     {
       "id": "AR-C151-nahif",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40b10b4becfe0715",
+      "sourceHash": "fnv1a64:1bba0d70ef01e2ea",
       "notice": null,
       "blocks": [
         {
@@ -67,7 +67,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "نحيف (naḥīf) is built on the native Arabic root n-ḥ-f, \"to be lean\" (Lane). Naḥīf is the faʿīl adjective, \"lean, thin\"."
+              "text": "نحيف (naḥīf) is built on the native Arabic root n-ḥ-f; Lane's short article gives only naḥīf itself, \"slender, lean\" (Lane). It has the faʿīl adjective shape."
             }
           ]
         },

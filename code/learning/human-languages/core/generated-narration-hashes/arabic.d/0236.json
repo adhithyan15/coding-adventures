@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 236,
-  "sourceHash": "fnv1a64:cc0bc173cc894465",
+  "sourceHash": "fnv1a64:a2485e90092cf998",
   "lessonIds": [
     "AR-C236-zilzal",
     "AR-C236-fayadan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch236.txt",
   "json": "arabic/narration/ch236.json",
-  "textHash": "fnv1a64:0744c82554ce26de",
-  "jsonHash": "fnv1a64:41c757e0f18b850c",
+  "textHash": "fnv1a64:9ec8df4c8b150652",
+  "jsonHash": "fnv1a64:267d91ef38898737",
   "findings": []
 }

@@ -15,7 +15,7 @@ concept_tag: AR-SHAY213-ATHATH
 prerequisites: [AR-C213-fursha, AR-C213-ghita]
 sounds: []
 roots: [ʾ-th-th]
-etymology_hook: "athāth: built on the root ʾ-th-th, 'goods, furniture' (Lane); Lane's athāth is household goods"
+etymology_hook: "athāth: built on the root ʾ-th-th, 'to be abundant' (Lane); Lane's athāth is household goods"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C213-ghita]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**أثاث** (*athāth*) is built on the native Arabic root *ʾ-th-th*, "goods, furniture" (Lane). Lane's *athāth* is household goods.
+**أثاث** (*athāth*) is built on the native Arabic root *ʾ-th-th*, "to be abundant" (Lane). Lane's *athāth* is household goods.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

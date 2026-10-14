@@ -15,7 +15,7 @@ concept_tag: AR-THINGS132-KAHF
 prerequisites: [AR-C132-sahil, AR-C132-shallal]
 sounds: []
 roots: [k-h-f]
-etymology_hook: "kahf: built on the root k-h-f, 'a cave' (Lane); an old noun"
+etymology_hook: "kahf: a cave, an old native noun on k-h-f; Lane has no article on the root but uses kahf to explain ghār"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C132-shallal]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**كهف** (*kahf*) is built on the native Arabic root *k-h-f*, "a cave" (Lane). An old noun; Lane uses it for a cavern in a mountain.
+**كهف** (*kahf*), "a cave", is an old native noun built on the letters *k-h-f*. Lane has no article on this root, but his sources use *kahf* to explain *ghār*, a cavern in a mountain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

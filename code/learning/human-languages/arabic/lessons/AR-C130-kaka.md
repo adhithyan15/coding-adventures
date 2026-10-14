@@ -15,7 +15,7 @@ concept_tag: AR-THINGS130-KAKA
 prerequisites: [AR-C130-mishmish, AR-C130-hasa]
 sounds: []
 roots: [k-ʿ-k]
-etymology_hook: "kaʿka: a bread or biscuit in Lane (k-ʿ-k); often traced to Persian kāk; not settled"
+etymology_hook: "kaʿka: a bread in Lane (k-ʿ-k); Persian kāk and Syriac kaʿkā are both compared; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C130-hasa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**كعكة** (*kaʿka*) is listed by Lane under *k-ʿ-k* as a well-known bread or biscuit. It is often traced to Persian *kāk*, a dry bread, but Lane gives no source, and the origin is not settled.
+**كعكة** (*kaʿka*) is listed by Lane under *k-ʿ-k* as a well-known bread or biscuit. It is often traced to Persian *kāk*, a dry bread, but Lane gives no source; EtymDB sets it beside Syriac *kaʿkā*, "cake, loaf", and the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

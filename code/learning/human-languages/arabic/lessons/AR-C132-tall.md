@@ -15,7 +15,7 @@ concept_tag: AR-THINGS132-TALL
 prerequisites: [AR-C132-kahf, AR-C132-wadi]
 sounds: []
 roots: [t-l-l]
-etymology_hook: "tall: built on the root t-l-l, 'a hill, a mound' (Lane); English tell, an archaeologist's mound, comes from it"
+etymology_hook: "tall: a hill, an old native noun Lane files under t-l-l; English tell, an archaeologist's mound, comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C132-wadi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**تل** (*tall*) is built on the native Arabic root *t-l-l*, "a hill, a mound" (Lane). English *tell*, an archaeologist's mound, comes from it; Hebrew *tel* is a cousin.
+**تل** (*tall*), "a hill, a mound", is an old native noun, filed under the root *t-l-l* (Lane). English *tell*, an archaeologist's mound, comes from it; Hebrew *tel* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

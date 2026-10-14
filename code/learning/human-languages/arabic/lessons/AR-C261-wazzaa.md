@@ -15,7 +15,7 @@ concept_tag: AR-VERB-WAZZAA
 prerequisites: [AR-C261-rakana, AR-C261-istaffa]
 sounds: []
 roots: [w-z-ʿ]
-etymology_hook: "wazzaʿa: built on the root w-z-ʿ, 'to restrain' (Lane); wazzaʿa is Form II, 'to share out'"
+etymology_hook: "wazzaʿa: built on the root w-z-ʿ, 'to restrain; to distribute'; wazzaʿa is Form II, 'to share out'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C261-istaffa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**وزع** (*wazzaʿa*) is built on the native Arabic root *w-z-ʿ*, "to restrain; to distribute" (Lane). *Wazzaʿa* is Form II, "to share out".
+**وزع** (*wazzaʿa*) is built on the native Arabic root *w-z-ʿ*, "to restrain; to distribute"; Lane's short article on this root does not treat the verb. *Wazzaʿa* is Form II, "to share out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

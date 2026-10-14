@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 265,
-  "sourceHash": "fnv1a64:76e26b9132bbe7b3",
+  "sourceHash": "fnv1a64:465b3d1bd8960342",
   "lessonIds": [
     "AR-C265-masrah",
     "AR-C265-sinima",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch265.txt",
   "json": "arabic/narration/ch265.json",
-  "textHash": "fnv1a64:ea364dae1f8e03a0",
-  "jsonHash": "fnv1a64:21e639ab85832157",
+  "textHash": "fnv1a64:23302a53dccdfad6",
+  "jsonHash": "fnv1a64:3c9c97421de2e7dd",
   "findings": []
 }

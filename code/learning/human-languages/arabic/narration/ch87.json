@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "Yesterday, Tomorrow, Now, Sometimes, Before",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ad834c4e5b2741cb",
+  "sourceHash": "fnv1a64:be42b9b8b498ac09",
   "lessons": [
     {
       "id": "AR-C87-ams",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d2ffbe84271f9bb",
+      "sourceHash": "fnv1a64:75cb25b8021ec475",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "غدا (ghadan) is built on the native Arabic root gh-d-w, \"tomorrow; early morning\" (Lane). Lane gives ghad, \"tomorrow\", and ghudwa, \"early morning\", on one root."
+              "text": "غدا (ghadan) is built on the native Arabic root gh-d-w, \"to go forth early in the morning\" (Lane). Lane gives ghad, \"tomorrow\", and ghudwa, \"early morning\", on one root."
             }
           ]
         },

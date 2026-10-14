@@ -4,7 +4,7 @@
   "chapter": 282,
   "title": "Calculator, Pencil case, Page, Sentence, Barber",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:4f2a730701924304",
+  "sourceHash": "fnv1a64:1bd6684a95518027",
   "lessons": [
     {
       "id": "AR-C282-hasiba",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdaf40ccb94504b3",
+      "sourceHash": "fnv1a64:53cb338b5827c264",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مقلمة (miqlama) is built on the native Arabic root q-l-m, \"a reed pen\" (Lane). Miqlama is a case for pens."
+              "text": "مقلمة (miqlama) is a case for pens (qalam). Lane lists qalam under q-l-m, and it is usually traced to Greek kalamos, \"reed pen\"."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac819e7266e452ab",
+      "sourceHash": "fnv1a64:ece029cbdd31149e",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جملة (jumla) is built on the native Arabic root j-m-l, \"the whole, the sum\" (Lane). Jumla is a sum, a whole: a sentence."
+              "text": "جملة (jumla) is built on the native Arabic root j-m-l, \"to collect\" (Lane). Jumla is a sum, a whole: a sentence."
             }
           ]
         },

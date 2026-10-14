@@ -15,7 +15,7 @@ concept_tag: AR-SHAY186-LAWHA
 prerequisites: [AR-C186-shitranj, AR-C186-riwaya]
 sounds: []
 roots: [l-w-ḥ]
-etymology_hook: "lawḥa: built on the root l-w-ḥ, 'a board, a plank' (Lane); lawḥa is a board"
+etymology_hook: "lawḥa: a board, an old native noun Lane files under l-w-ḥ; the painting is a later sense"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C186-riwaya]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**لوحة** (*lawḥa*) is built on the native Arabic root *l-w-ḥ*, "a board, a plank" (Lane). *Lawḥa* is a board; the painting is a later sense.
+**لوحة** (*lawḥa*), "a board, a plank", is an old native noun, filed under the root *l-w-ḥ* (Lane). *Lawḥa* is a board; the painting is a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

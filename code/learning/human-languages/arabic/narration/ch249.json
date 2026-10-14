@@ -4,7 +4,7 @@
   "chapter": 249,
   "title": "Quantity, Quality, Celebration, Congratulations, Cooking pot",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f3e629489f6a669e",
+  "sourceHash": "fnv1a64:a6fa3324c5010797",
   "lessons": [
     {
       "id": "AR-C249-kammiyya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cf776a1dab6b37a",
+      "sourceHash": "fnv1a64:fe5e00d8811af208",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "كمية (kammiyya) is built from kam, \"how much\", with the abstract ending -iyya: \"how-much-ness\", a coinage of the medieval philosophers."
+              "text": "كمية (kammiyya) is built from kam, \"how much\", with the abstract ending -iyya: \"how-much-ness\", usually described as a coinage of the medieval philosophers."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47a3dda36029be50",
+      "sourceHash": "fnv1a64:bb5c64b71a2eb9d2",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "طنجرة (ṭanjara) is a later form of Lane's ṭinjīr, a cooking pot, which his sources call an arabicized word; the source language is not named, and the origin is not settled."
+              "text": "طنجرة (ṭanjara) is a later form of Lane's ṭinjīr, a cooking pot, which his sources call an arabicized word, giving Persian pātīla for it; Lane notes the spoken form ṭanjara for a saucepan. The source of ṭinjīr is not settled."
             }
           ]
         },

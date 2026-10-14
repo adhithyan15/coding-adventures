@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 233,
-  "sourceHash": "fnv1a64:dd8c5f0cdef0554d",
+  "sourceHash": "fnv1a64:63dcee628e1a1924",
   "lessonIds": [
     "AR-C233-mundhu",
     "AR-C233-fajr",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch233.txt",
   "json": "arabic/narration/ch233.json",
-  "textHash": "fnv1a64:a01fdd2ddc60c05b",
-  "jsonHash": "fnv1a64:5f324646ba43bd2e",
+  "textHash": "fnv1a64:b5cab5ffc5eb9442",
+  "jsonHash": "fnv1a64:e239facde7eeb881",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 109,
   "title": "Wealth, Experience, Habit, Skill, Art",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f9590164f5fe98fd",
+  "sourceHash": "fnv1a64:0322087005879974",
   "lessons": [
     {
       "id": "AR-C109-tharwa",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5c4199355a3a3b1",
+      "sourceHash": "fnv1a64:56d7cf7e0658b0dc",
       "notice": null,
       "blocks": [
         {
@@ -603,7 +603,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "فن (fann) is built on the native Arabic root f-n-n, \"a kind, a sort\" (Lane). Lane's fann is a kind or species of a thing; \"art\" is a later sense."
+              "text": "فن (fann), \"a kind, a sort\", is an old native noun, filed under the root f-n-n (Lane). Lane's fann is a kind or species of a thing; \"art\" is a later sense."
             }
           ]
         },

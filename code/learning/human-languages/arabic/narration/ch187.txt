@@ -45,7 +45,7 @@ You'll want to know: صنبور.
 صنبور — ṣunbūr — "a tap".
 
 The word, taken apart.
-صنبور (ṣunbūr) is built on the native Arabic root ṣ-n-b-r, "a lone palm tree" (Lane). Lane's ṣunbūr is a lone palm tree, slender at its base; the tap is a later sense.
+صنبور (ṣunbūr) is a native noun, filed under ṣ-n-b-r (Lane). Lane's ṣunbūr is a lone palm tree, slender at its base, and also the metal pipe of a leather water vessel, from which the tap comes.
 
 What you've built.
 One more word for this chapter.
@@ -77,7 +77,7 @@ You'll want to know: أنبوب.
 أنبوب — unbūb — "a pipe, a tube".
 
 The word, taken apart.
-أنبوب (unbūb) is built on the native Arabic root n-b-b, "the joint of a reed" (Lane). Lane's unbūb is the length of reed between two knots, and the spout of a jug.
+أنبوب (unbūb), "the joint of a reed", is an old native noun, filed under the root n-b-b (Lane). Lane's unbūb is the length of reed between two knots, and the spout of a jug.
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: حبل.
 حبل — ḥabl — "a rope".
 
 The word, taken apart.
-حبل (ḥabl) is built on the native Arabic root ḥ-b-l, "a rope" (Lane). An old noun with its own root in Lane.
+حبل (ḥabl), "a rope", is an old native noun, listed under the root ḥ-b-l (Lane) beside a verb meaning "to bind with a rope".
 
 What you've built.
 One more word for this chapter.

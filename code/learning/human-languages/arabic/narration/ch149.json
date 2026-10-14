@@ -4,7 +4,7 @@
   "chapter": 149,
   "title": "Dark, Colourful, Elegant, Strange, Enjoyable",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:468c61ea12338648",
+  "sourceHash": "fnv1a64:0aa428246d7b6ae8",
   "lessons": [
     {
       "id": "AR-C149-muzlim",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2379efe94bc3296",
+      "sourceHash": "fnv1a64:8787bf642ff37e96",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مظلم (muẓlim) is built on the native Arabic root ẓ-l-m, \"darkness\" (Lane). Muẓlim is the Form IV participle, \"growing dark\"."
+              "text": "مظلم (muẓlim) is built on the native Arabic root ẓ-l-m, \"darkness; to do wrong\" (Lane). Muẓlim is the Form IV participle, \"growing dark\"."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 226,
   "title": "To set off, To charge, To apologise, To inform, To agree",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e935969fd964fabb",
+  "sourceHash": "fnv1a64:eef99056010837fe",
   "lessons": [
     {
       "id": "AR-C226-intalaqa",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80126a20dbea0c92",
+      "sourceHash": "fnv1a64:9e1f9f24ed7981c0",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "شحن (shaḥana) is built on the native Arabic root sh-ḥ-n, \"to load, to fill\" (Lane). Shaḥana is to load a ship, hence to charge."
+              "text": "شحن (shaḥana) is built on the native Arabic root sh-ḥ-n, \"to load, to fill\" (Lane). Shaḥana is to load a ship; charging a battery is a modern sense."
             }
           ]
         },

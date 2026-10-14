@@ -4,7 +4,7 @@
   "chapter": 125,
   "title": "Bucket, Broom, Rubbish, Basket, Box",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cbe5c90d744930e5",
+  "sourceHash": "fnv1a64:7996b3f9f8b549eb",
   "lessons": [
     {
       "id": "AR-C125-dalw",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c779b12ed147c7da",
+      "sourceHash": "fnv1a64:8773a6a37d2d2035",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سلة (salla) is built on the native Arabic root s-l-l, \"to draw out\" (Lane). Lane's salla is a basket; Syriac has a related word (EtymDB)."
+              "text": "سلة (salla), a basket, is listed by Lane under s-l-l, though nothing ties it to that root's sense, \"to draw out\"; EtymDB derives it from Syriac saʾlā, \"basket\"."
             }
           ]
         },

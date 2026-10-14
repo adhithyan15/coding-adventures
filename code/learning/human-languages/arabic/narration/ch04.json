@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:79f8b069d5c4eaf3",
+  "sourceHash": "fnv1a64:28b03cf4f1085281",
   "lessons": [
     {
       "id": "AR-W10-ayn",
@@ -574,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6d2dd46f889c69e",
+      "sourceHash": "fnv1a64:10828b63690e3620",
       "notice": null,
       "blocks": [
         {
@@ -650,7 +650,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "maʿa from Semitic ʿimma, and its Hebrew cousin is עִם (ʿim), \"with.\" The same pairing you met with salām / shalom in Chapter 1 and ism / shem in Chapter 2. Three chapters, three cousins — the family resemblance is systematic, not a coincidence."
+              "text": "maʿa is usually set beside Hebrew עִם (ʿim), \"with\", though how the two are linked is debated. Compare the sure pairings you met with salām / shalom in Chapter 1 and ism / shem in Chapter 2: there the family resemblance is systematic, not a coincidence."
             }
           ]
         },

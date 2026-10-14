@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 112,
-  "sourceHash": "fnv1a64:5f21d84e4097b970",
+  "sourceHash": "fnv1a64:45500a47f6615548",
   "lessonIds": [
     "AR-C112-shawq",
     "AR-C112-tumuh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch112.txt",
   "json": "arabic/narration/ch112.json",
-  "textHash": "fnv1a64:e5f0251c77fdd1fb",
-  "jsonHash": "fnv1a64:50a62ab6e07f4086",
+  "textHash": "fnv1a64:def92a931d21a699",
+  "jsonHash": "fnv1a64:c7c95f8c402fd8be",
   "findings": []
 }

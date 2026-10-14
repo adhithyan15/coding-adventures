@@ -15,7 +15,7 @@ concept_tag: AR-QIRAA158-IJAR
 prerequisites: [AR-C158-jadwal, AR-C158-lafita]
 sounds: []
 roots: [ʾ-j-r]
-etymology_hook: "ījār: built on the root ʾ-j-r, 'a reward, a wage' (Lane)"
+etymology_hook: "ījār: built on the root ʾ-j-r, 'to reward; to hire' (Lane); ījār is the Form IV verbal noun, 'letting for hire'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C158-lafita]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**إيجار** (*ījār*) is built on the native Arabic root *ʾ-j-r*, "a reward, a wage; to hire" (Lane). The word *ījār* is the verbal noun of Form IV, "letting for hire".
+**إيجار** (*ījār*) is built on the native Arabic root *ʾ-j-r*, "to reward; to hire" (Lane). The word *ījār* is the verbal noun of Form IV, "letting for hire".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

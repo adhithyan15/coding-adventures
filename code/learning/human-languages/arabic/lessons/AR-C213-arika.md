@@ -15,7 +15,7 @@ concept_tag: AR-SHAY213-ARIKA
 prerequisites: [AR-C212-shaffaf, AR-C212-lami]
 sounds: []
 roots: [ʾ-r-k]
-etymology_hook: "arīka: built on the root ʾ-r-k, 'a couch' (Lane); Lane's arīka is a couch within a curtained canopy"
+etymology_hook: "arīka: an old native noun Lane files under ʾ-r-k; Lane's arīka is a couch within a curtained canopy"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C212-lami]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**أريكة** (*arīka*) is built on the native Arabic root *ʾ-r-k*, "a couch" (Lane). Lane's *arīka* is a couch within a curtained canopy.
+**أريكة** (*arīka*), "a couch", is an old native noun, filed under the root *ʾ-r-k* (Lane). Lane's *arīka* is a couch within a curtained canopy.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

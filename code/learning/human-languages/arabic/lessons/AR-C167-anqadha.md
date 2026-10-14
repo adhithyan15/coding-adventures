@@ -15,7 +15,7 @@ concept_tag: AR-VERB-ANQADHA
 prerequisites: [AR-C167-taaththara, AR-C167-inzalaqa]
 sounds: []
 roots: [n-q-dh]
-etymology_hook: "anqadha: built on the root n-q-dh, 'to rescue' (Lane); anqadha is Form IV, 'to rescue'"
+etymology_hook: "anqadha: built on the root n-q-dh, 'to be saved, to escape' (Lane); anqadha is Form IV, 'to rescue'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C167-inzalaqa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**أنقذ** (*anqadha*) is built on the native Arabic root *n-q-dh*, "to rescue" (Lane). *Anqadha* is Form IV, "to rescue".
+**أنقذ** (*anqadha*) is built on the native Arabic root *n-q-dh*, "to be saved, to escape" (Lane). *Anqadha* is Form IV, "to rescue".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

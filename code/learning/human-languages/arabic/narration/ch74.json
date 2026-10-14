@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "Bag, Money, Map, Lesson, Answer",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:bff9f83ed8fd334d",
+  "sourceHash": "fnv1a64:eb1b38688abc2e24",
   "lessons": [
     {
       "id": "AR-C74-haqiba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d99e3d358cf5b905",
+      "sourceHash": "fnv1a64:b76748b034398518",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "حقيبة (ḥaqība) is built on the native Arabic root ḥ-q-b, \"a bag for travelling provisions\" (Lane). Lane's ḥaqība is the bag in which a traveller carries provisions."
+              "text": "حقيبة (ḥaqība) is an old native noun, filed under the root ḥ-q-b (Lane). Lane's ḥaqība is the bag in which a traveller carries provisions."
             }
           ]
         },

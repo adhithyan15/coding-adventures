@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "Gazelle, Fox, Pigeon, Duck, Turtle",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a2582e0ea99638c3",
+  "sourceHash": "fnv1a64:05e81c1391573c55",
   "lessons": [
     {
       "id": "AR-C135-ghazal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c478569fa8b154a8",
+      "sourceHash": "fnv1a64:d66e2a9f81e97cc5",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "غزال (ghazāl) is built on the native Arabic root gh-z-l, \"a young gazelle; to spin\" (Lane). English gazelle comes from ghazāl through French."
+              "text": "غزال (ghazāl), \"a young gazelle\", is a native noun, filed under the root gh-z-l (Lane), whose verb means \"to spin\". English gazelle comes from ghazāl through French."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72f02e4c6fbdd01f",
+      "sourceHash": "fnv1a64:fd9e7406dd78836e",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "حمامة (ḥamāma) is built on the native Arabic root ḥ-m-m, \"pigeons, doves\" (Lane). Ḥamāma is one bird of ḥamām; Lane lists it under ḥ-m-m."
+              "text": "حمامة (ḥamāma) is one bird of ḥamām, \"pigeons, doves\", a native noun, filed under the root ḥ-m-m (Lane)."
             }
           ]
         },

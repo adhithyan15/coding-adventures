@@ -4,7 +4,7 @@
   "chapter": 167,
   "title": "To trip, To slip, To rescue, To escape, To disappear",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:4f0c1c7cdf1eb8cd",
+  "sourceHash": "fnv1a64:ccaf0582b03840cf",
   "lessons": [
     {
       "id": "AR-C167-taaththara",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ff60154b858274b",
+      "sourceHash": "fnv1a64:5db206756268d440",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "أنقذ (anqadha) is built on the native Arabic root n-q-dh, \"to rescue\" (Lane). Anqadha is Form IV, \"to rescue\"."
+              "text": "أنقذ (anqadha) is built on the native Arabic root n-q-dh, \"to be saved, to escape\" (Lane). Anqadha is Form IV, \"to rescue\"."
             }
           ]
         },

@@ -15,7 +15,7 @@ concept_tag: AR-ADJ84-NAZIF
 prerequisites: [AR-C84-ghani, AR-C84-faqir]
 sounds: []
 roots: [n-ẓ-f]
-etymology_hook: "naẓīf: built on the root n-ẓ-f, 'to be clean' (Lane); naẓīf is the faʿīl adjective, 'clean'"
+etymology_hook: "naẓīf: built on the root n-ẓ-f, 'to be clean'; naẓīf is the faʿīl adjective, 'clean'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C84-faqir]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**نظيف** (*naẓīf*) is built on the native Arabic root *n-ẓ-f*, "to be clean" (Lane). *Naẓīf* is the *faʿīl* adjective, "clean".
+**نظيف** (*naẓīf*) is built on the native Arabic root *n-ẓ-f*, "to be clean"; Lane's short article on this root does not treat it. *Naẓīf* is the *faʿīl* adjective, "clean".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

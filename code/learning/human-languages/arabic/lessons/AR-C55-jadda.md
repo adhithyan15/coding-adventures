@@ -15,7 +15,7 @@ concept_tag: AR-FAMILY55-JADDA
 prerequisites: [AR-C54-tabib, AR-C54-jadd]
 sounds: []
 roots: [j-d-d]
-etymology_hook: "jadda: built on the root j-d-d, 'a grandfather' (Lane); jadda is the feminine of jadd, 'grandfather'"
+etymology_hook: "jadda: the feminine of jadd 'grandfather', an old noun listed by Lane under j-d-d, 'to cut'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C54-jadd]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**جدة** (*jadda*) is built on the native Arabic root *j-d-d*, "a grandfather; a grandmother" (Lane). *Jadda* is the feminine of *jadd*, "grandfather".
+**جدة** (*jadda*) is the feminine of *jadd*, "grandfather", an old native noun, filed under the root *j-d-d* (Lane), whose verb *jadda* is "to cut".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

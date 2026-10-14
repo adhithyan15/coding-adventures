@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 274,
-  "sourceHash": "fnv1a64:598abd7711ed1456",
+  "sourceHash": "fnv1a64:42731932eef9c799",
   "lessonIds": [
     "AR-C274-tabia2",
     "AR-C274-hibr",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch274.txt",
   "json": "arabic/narration/ch274.json",
-  "textHash": "fnv1a64:6090fab1e70a45b3",
-  "jsonHash": "fnv1a64:acdf222164299f25",
+  "textHash": "fnv1a64:680010b16b7b0d69",
+  "jsonHash": "fnv1a64:6c39138b0df041dc",
   "findings": []
 }

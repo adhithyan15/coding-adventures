@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Word, Picture, Tree, Flower, Mountain",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:75c4f5cdb74c9002",
+  "sourceHash": "fnv1a64:3a81572f0bdee027",
   "lessons": [
     {
       "id": "AR-C75-kalima",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2bff8d0161c2ce0",
+      "sourceHash": "fnv1a64:954b4841a2f9a1b2",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "شجرة (shajara) is built on the native Arabic root sh-j-r, \"trees\" (Lane). Shajara is one tree; shajar, \"trees\", is the collective."
+              "text": "شجرة (shajara) is built on the native Arabic root sh-j-r, \"to be intertwined; trees\" (Lane). Shajara is one tree; shajar, \"trees\", is the collective."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fed9d8e535f63283",
+      "sourceHash": "fnv1a64:83d0996a33bb0ce6",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "زهرة (zahra) is built on the native Arabic root z-h-r, \"a flower, a blossom\" (Lane). Zahra is a single flower."
+              "text": "زهرة (zahra) is built on the native Arabic root z-h-r, \"to shine; flowers\" (Lane). Zahra is a single flower."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72c85821a99e30c3",
+      "sourceHash": "fnv1a64:9f14d3bccf2eb60f",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جبل (jabal) is built on the native Arabic root j-b-l, \"a mountain\" (Lane). Gibraltar is Jabal Ṭāriq, \"the mountain of Ṭāriq\"."
+              "text": "جبل (jabal), \"a mountain\", is an old native noun, filed under the root j-b-l (Lane). Gibraltar is Jabal Ṭāriq, \"the mountain of Ṭāriq\"."
             }
           ]
         },

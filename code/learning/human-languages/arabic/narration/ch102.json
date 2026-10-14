@@ -4,7 +4,7 @@
   "chapter": 102,
   "title": "Roof, Stairs, Ceiling, Behind, Between",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:528609ef32fb28a4",
+  "sourceHash": "fnv1a64:3e12e2fa6c218e76",
   "lessons": [
     {
       "id": "AR-C102-sath",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22cd5796f3b94bd0",
+      "sourceHash": "fnv1a64:da0c0f51f77e5666",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سقف (saqf) is built on the native Arabic root s-q-f, \"a roof, a ceiling\" (Lane). An old noun with its own root in Lane."
+              "text": "سقف (saqf), \"a roof, a ceiling\", is an old native noun, listed under the root s-q-f (Lane) beside a verb meaning \"to roof a house\"."
             }
           ]
         },

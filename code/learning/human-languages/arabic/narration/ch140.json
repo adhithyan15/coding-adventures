@@ -4,7 +4,7 @@
   "chapter": 140,
   "title": "Palm, Fingernail, Brain, Heel, Lip",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:10ee70e0f2592a4e",
+  "sourceHash": "fnv1a64:447b23eeae57cf8a",
   "lessons": [
     {
       "id": "AR-C140-kaff",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3528e76e0ae7b7fe",
+      "sourceHash": "fnv1a64:b9b22a1d42366c5e",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ظفر (ẓufr) is built on the native Arabic root ẓ-f-r, \"a nail, a claw\" (Lane). Hebrew tsipporen, \"fingernail\", is usually counted a cousin."
+              "text": "ظفر (ẓufr), \"a nail, a claw\", is an old native noun, filed under the root ẓ-f-r (Lane). Hebrew tsipporen, \"fingernail\", is usually counted a cousin."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1b4f8f90182eeb9",
+      "sourceHash": "fnv1a64:9ac5d295a4359a60",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "دماغ (dimāgh) is built on the native Arabic root d-m-gh, \"the brain\" (Lane). An old noun with its own root in Lane."
+              "text": "دماغ (dimāgh), \"the brain\", is an old native noun, listed under the root d-m-gh (Lane) beside a verb meaning \"to wound the head down to the brain\"."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:834e76ae1e9b1cdc",
+      "sourceHash": "fnv1a64:a394bfd3844603d6",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "كعب (kaʿb) is built on the native Arabic root k-ʿ-b, \"the ankle-bone; a cube\" (Lane). The same root gives the Kaʿba, the cube-shaped shrine at Mecca."
+              "text": "كعب (kaʿb) is built on the native Arabic root k-ʿ-b, \"to swell, to be prominent\" (Lane); kaʿb is the ankle-bone. The same root gives the Kaʿba, the cube-shaped shrine at Mecca."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 172,
-  "sourceHash": "fnv1a64:036d3f9838448c72",
+  "sourceHash": "fnv1a64:6518ffa0559cc536",
   "lessonIds": [
     "AR-C172-sala",
     "AR-C172-makhbaz",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch172.txt",
   "json": "arabic/narration/ch172.json",
-  "textHash": "fnv1a64:a5df9355aacc2d39",
-  "jsonHash": "fnv1a64:8605521d8bfb834d",
+  "textHash": "fnv1a64:daef858381c85fdd",
+  "jsonHash": "fnv1a64:93046e7049c726c9",
   "findings": []
 }

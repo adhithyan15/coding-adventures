@@ -47,7 +47,7 @@ reviews_of: [AR-C169-liyaqa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**إصابة** (*iṣāba*) is built on the native Arabic root *ṣ-w-b*, "to hit the mark" (Lane). *Iṣāba* is the verbal noun of Form IV, "being hit", hence "an injury".
+**إصابة** (*iṣāba*) is built on the native Arabic root *ṣ-w-b*, "to hit the mark" (Lane). *Iṣāba* is the verbal noun of Form IV *aṣāba*, "to hit, to strike": a hit, hence "an injury".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

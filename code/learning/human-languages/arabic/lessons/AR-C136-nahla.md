@@ -15,7 +15,7 @@ concept_tag: AR-THINGS136-NAHLA
 prerequisites: [AR-C136-bauda, AR-C136-dhubaba]
 sounds: []
 roots: [n-ḥ-l]
-etymology_hook: "naḥla: built on the root n-ḥ-l, 'bees' (Lane); naḥla is one bee"
+etymology_hook: "naḥla: one bee of naḥl 'bees', an old native noun on n-ḥ-l; Lane's brief article on the root omits it"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C136-dhubaba]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**نحلة** (*naḥla*) is built on the native Arabic root *n-ḥ-l*, "bees" (Lane). *Naḥla* is one bee.
+**نحلة** (*naḥla*) is one bee of *naḥl*, "bees", an old native noun built on *n-ḥ-l*; Lane's brief article on this root does not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

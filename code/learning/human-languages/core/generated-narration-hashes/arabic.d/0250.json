@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 250,
-  "sourceHash": "fnv1a64:66c423edac89a96a",
+  "sourceHash": "fnv1a64:dc5317e9b9e8f5e8",
   "lessonIds": [
     "AR-C250-kartun",
     "AR-C250-tub",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch250.txt",
   "json": "arabic/narration/ch250.json",
-  "textHash": "fnv1a64:cc7233c942f1ccf2",
-  "jsonHash": "fnv1a64:236d9f3a39514454",
+  "textHash": "fnv1a64:86f5c04e3596513e",
+  "jsonHash": "fnv1a64:0aa7796f18faa2fe",
   "findings": []
 }

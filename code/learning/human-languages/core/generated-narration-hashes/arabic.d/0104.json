@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 104,
-  "sourceHash": "fnv1a64:83de1d5f774f0357",
+  "sourceHash": "fnv1a64:afa008c6e3db6943",
   "lessonIds": [
     "AR-C104-janub",
     "AR-C104-sharq",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch104.txt",
   "json": "arabic/narration/ch104.json",
-  "textHash": "fnv1a64:c1b9f4a06139d8cf",
-  "jsonHash": "fnv1a64:852ace1184d8c253",
+  "textHash": "fnv1a64:cda03edd50679af3",
+  "jsonHash": "fnv1a64:c345e47447df64c1",
   "findings": []
 }

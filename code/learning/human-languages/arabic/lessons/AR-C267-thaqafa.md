@@ -47,7 +47,7 @@ reviews_of: [AR-C267-taqlid]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ثقافة** (*thaqāfa*) is built on the native Arabic root *th-q-f*, "to be skilful, to be sharp" (Lane). *Thaqāfa* is skill, cultivation; the same root gives *thiqāf*, a tool for straightening spears.
+**ثقافة** (*thaqāfa*) is built on the native Arabic root *th-q-f*, "to be skilful, to be sharp" (Lane). *Thaqāfa* is skill, cultivation, and in modern use culture; the same root gives *thiqāf*, a tool for straightening spears.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

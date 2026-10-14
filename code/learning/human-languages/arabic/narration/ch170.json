@@ -4,7 +4,7 @@
   "chapter": 170,
   "title": "Early, Daily, Delay, Late, Never",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:de5076ba339140fe",
+  "sourceHash": "fnv1a64:70051eb6949e31fa",
   "lessons": [
     {
       "id": "AR-C170-mubakkiran",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc65c8a7878c3bd7",
+      "sourceHash": "fnv1a64:316cfba5c8b584df",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "أبدا (abadan) is built on the native Arabic root ʾ-b-d, \"endless time\" (Lane). Abadan is abad, \"endless time\", with the adverb ending -an."
+              "text": "أبدا (abadan) is built on the native Arabic root ʾ-b-d, \"to stay for ever\" (Lane). Abadan is abad, \"endless time\", with the adverb ending -an."
             }
           ]
         },

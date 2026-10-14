@@ -47,7 +47,7 @@ reviews_of: [AR-C215-amtia]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**شاحن** (*shāḥin*) is built on the native Arabic root *sh-ḥ-n*, "to load, to fill" (Lane). *Shāḥin* is the active participle, "one that loads": a charger.
+**شاحن** (*shāḥin*) is built on the native Arabic root *sh-ḥ-n*, "to load, to fill" (Lane). *Shāḥin* is the active participle, "one that loads"; the charger is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 213,
   "title": "Sofa, Brush, Lid, Furniture, Laundry",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fabfdadfb12f8289",
+  "sourceHash": "fnv1a64:a85ec0be132acf8d",
   "lessons": [
     {
       "id": "AR-C213-arika",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8eedafdfb57aa704",
+      "sourceHash": "fnv1a64:9943977aa3c99158",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "أريكة (arīka) is built on the native Arabic root ʾ-r-k, \"a couch\" (Lane). Lane's arīka is a couch within a curtained canopy."
+              "text": "أريكة (arīka), \"a couch\", is an old native noun, filed under the root ʾ-r-k (Lane). Lane's arīka is a couch within a curtained canopy."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4950d51a9a15c2e0",
+      "sourceHash": "fnv1a64:330764b272b4e68d",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "أثاث (athāth) is built on the native Arabic root ʾ-th-th, \"goods, furniture\" (Lane). Lane's athāth is household goods."
+              "text": "أثاث (athāth) is built on the native Arabic root ʾ-th-th, \"to be abundant\" (Lane). Lane's athāth is household goods."
             }
           ]
         },

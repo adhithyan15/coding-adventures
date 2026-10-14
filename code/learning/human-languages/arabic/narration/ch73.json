@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "Book, Notebook, Pen, Sheet of paper, School",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f532179d7ea796a5",
+  "sourceHash": "fnv1a64:da67d3b68f581e16",
   "lessons": [
     {
       "id": "AR-C73-kitab",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33e10f0b1a590973",
+      "sourceHash": "fnv1a64:3b0cf5076ca38ca3",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "قلم (qalam) is listed by Lane under q-l-m as a reed prepared for writing. Many trace it to Greek kalamos, \"reed, reed pen\" (EtymDB), perhaps through Aramaic; Lane gives no foreign source, and the account is not settled."
+              "text": "قلم (qalam) is listed by Lane under q-l-m as a reed prepared for writing. It is usually traced to Greek kalamos, \"reed, reed pen\" (EtymDB), perhaps through Aramaic, though Lane gives no foreign source."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:365a73f9626422be",
+      "sourceHash": "fnv1a64:2177b3286b3340cd",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ورقة (waraqa) is built on the native Arabic root w-r-q, \"leaves\" (Lane). Lane's waraq covers the leaves of a tree and the leaves of a book."
+              "text": "ورقة (waraqa) is built on the native Arabic root w-r-q, \"leaves\" (Lane). Lane's short article on this root gives shajar wāriq, \"leafy trees\"; waraq is leaves, of a tree and of a book, and waraqa is one."
             }
           ]
         },

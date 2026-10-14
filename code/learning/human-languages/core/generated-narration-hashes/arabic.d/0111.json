@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 111,
-  "sourceHash": "fnv1a64:0088aaa4671086d0",
+  "sourceHash": "fnv1a64:e08ce05e3332b5d9",
   "lessonIds": [
     "AR-C111-ishtaqa",
     "AR-C111-tawaqqu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch111.txt",
   "json": "arabic/narration/ch111.json",
-  "textHash": "fnv1a64:e21748d5dbeee84f",
-  "jsonHash": "fnv1a64:88ec79315924e91d",
+  "textHash": "fnv1a64:b760cdeeed67ece0",
+  "jsonHash": "fnv1a64:12fd208d5ef0358c",
   "findings": []
 }

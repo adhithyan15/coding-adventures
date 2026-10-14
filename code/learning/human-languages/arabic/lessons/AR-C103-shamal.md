@@ -15,7 +15,7 @@ concept_tag: AR-LOC103-SHAMAL
 prerequisites: [AR-C103-wasat, AR-C103-zawiya]
 sounds: []
 roots: [sh-m-l]
-etymology_hook: "shamāl: built on the root sh-m-l, 'the left hand' (Lane)"
+etymology_hook: "shamāl: a native noun under sh-m-l (Lane): shamāl is the north wind, shimāl the left hand"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C103-zawiya]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**شمال** (*shamāl*) is built on the native Arabic root *sh-m-l*, "the left hand; the north wind" (Lane). Lane gives *shimāl* as the left hand and *shamāl* as the north wind; facing the sunrise, north is on the left.
+**شمال** (*shamāl*) is a native noun, filed under the root *sh-m-l* (Lane). Lane gives *shimāl* as the left hand and *shamāl* as the north wind; facing the sunrise, north is on the left.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

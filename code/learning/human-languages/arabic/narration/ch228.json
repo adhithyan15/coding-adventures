@@ -4,7 +4,7 @@
   "chapter": 228,
   "title": "To watch, To listen, To draw, To sing, To photograph",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:91a426d703e5cb7b",
+  "sourceHash": "fnv1a64:ce84917770a9cba9",
   "lessons": [
     {
       "id": "AR-C228-shahada",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13c26ba14d0f148a",
+      "sourceHash": "fnv1a64:3912b3de94d12293",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "غنى (ghannā) is built on the native Arabic root gh-n-y, \"to sing\" (Lane). Ghannā is Form II, \"to sing\"."
+              "text": "غنى (ghannā) is built on the native Arabic root gh-n-y, \"to be free from want; to sing\" (Lane). Ghannā is Form II, \"to sing\"; the same root gives ghinā, \"wealth\"."
             }
           ]
         },

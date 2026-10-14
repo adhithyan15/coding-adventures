@@ -4,7 +4,7 @@
   "chapter": 117,
   "title": "Television, Newspaper, Magazine, Letter, Envelope",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:04f98b69e3244279",
+  "sourceHash": "fnv1a64:64bf377f900dc7fe",
   "lessons": [
     {
       "id": "AR-C117-tilfaz",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9abb84ccab17d57",
+      "sourceHash": "fnv1a64:41b89e0ef7a7c326",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مجلة (majalla) is built on the native Arabic root j-l-l, \"a book, a scroll\" (Lane). Lane's majalla is a book or scroll; the magazine is a modern sense."
+              "text": "مجلة (majalla) is filed by Lane under j-l-l as a book or scroll, and one of his sources ties it to jill, \"a book's cover\". It is often compared with Aramaic megillā, \"scroll\", and may be borrowed from it; the magazine is a modern sense."
             }
           ]
         },
@@ -565,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef09eec99f54c068",
+      "sourceHash": "fnv1a64:3d199921ceb0f1ca",
       "notice": null,
       "blocks": [
         {
@@ -603,7 +603,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ظرف (ẓarf) is built on the native Arabic root ẓ-r-f, \"a vessel, a receptacle\" (Lane). Lane's ẓarf is a vessel; the envelope is a later sense."
+              "text": "ظرف (ẓarf), \"a vessel, a receptacle\", is an old native noun, filed under the root ẓ-r-f (Lane), whose verb means \"to be elegant, clever\". Lane's ẓarf is a vessel; the envelope is a later sense."
             }
           ]
         },

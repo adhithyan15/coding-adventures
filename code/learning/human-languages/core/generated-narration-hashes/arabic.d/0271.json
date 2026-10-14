@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 271,
-  "sourceHash": "fnv1a64:e333556ab4c642a9",
+  "sourceHash": "fnv1a64:f142991b87cda5ff",
   "lessonIds": [
     "AR-C271-anid",
     "AR-C271-wahid",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch271.txt",
   "json": "arabic/narration/ch271.json",
-  "textHash": "fnv1a64:c40f7ce23ff1c85c",
-  "jsonHash": "fnv1a64:014bd04e8b1f123c",
+  "textHash": "fnv1a64:4515681968b048c4",
+  "jsonHash": "fnv1a64:56253d6dc7d16294",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Head and Hand",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e53077a88999d2fa",
+  "sourceHash": "fnv1a64:fe652a6d7e7eb058",
   "lessons": [
     {
       "id": "AR-C11-ras",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22edfb222869e501",
+      "sourceHash": "fnv1a64:8c5df53b55b4c75b",
       "notice": null,
       "blocks": [
         {
@@ -171,7 +171,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "يد (yad) is an old Semitic noun, inherited, and listed by Lane under y-d-y; Hebrew yad, \"hand\", is its cousin."
+              "text": "يد (yad) is an old Semitic noun, inherited, and listed by Lane under the two-letter key y-d; Hebrew yad, \"hand\", is its cousin."
             }
           ]
         },

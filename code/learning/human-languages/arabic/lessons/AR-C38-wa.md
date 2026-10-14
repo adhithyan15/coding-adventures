@@ -57,7 +57,7 @@ owned.
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C38-WA-01, AR-CONCEPT-C34-MILH-01] -->
 
 **و** is the same conjunction Hebrew and Aramaic write with a single letter, in
-the same job, and it has held that job for three thousand years. It is by a wide
+the same job, as far back as those languages are written. It is by a wide
 margin the commonest word in written Arabic: Arabic prose strings clauses with
 **و** where English would use a full stop, so a page of Arabic has far more
 *ands* in it than a page of English ever does.

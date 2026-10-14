@@ -4,7 +4,7 @@
   "chapter": 280,
   "title": "Client, Engineer, Lawyer, Pilot, Pharmacist",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fbcf94b49f4b3270",
+  "sourceHash": "fnv1a64:ddefd00f8c8e0ea9",
   "lessons": [
     {
       "id": "AR-C280-amil2",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af69885f0e5eb97f",
+      "sourceHash": "fnv1a64:aeb130e85e5f4e23",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "محامي (muḥāmī) is built on the native Arabic root ḥ-m-y, \"to protect, to defend\" (Lane). Muḥāmī is the Form III participle, \"one who defends\"."
+              "text": "محامي (muḥāmī) is built on the native Arabic root ḥ-m-y, \"to protect, to defend\" (Lane). Muḥāmī is the Form III participle, \"one who defends\"; the lawyer is a modern sense."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac9fddb3c5ddca1c",
+      "sourceHash": "fnv1a64:5c28193adfe74cd4",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "صيدلي (ṣaydalī) is the druggist, from ṣaydalānī. Lane's sources derive that word from a place called Ṣaydalān, or from ṣaydal, or call it a Persian word arabicized; the origin is not settled."
+              "text": "صيدلي (ṣaydalī) is the druggist, from ṣaydalānī. Lane's sources derive that word from a place called Ṣaydalān, or from ṣaydal, or call it a Persian word arabicized. Lane also records the by-form ṣandalānī, which points to ṣandal, \"sandalwood\"; the origin is not settled."
             }
           ]
         },

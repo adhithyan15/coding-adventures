@@ -4,7 +4,7 @@
   "chapter": 181,
   "title": "Washing machine, Air conditioner, Tin, Sink, Shelf",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b50a4de3b00ce44a",
+  "sourceHash": "fnv1a64:45bd21196c99b8f9",
   "lessons": [
     {
       "id": "AR-C181-ghassala",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a00cbb1954c3fe2",
+      "sourceHash": "fnv1a64:a7ce835b2f1e767b",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مكيف (mukayyif) is built on the native Arabic root k-y-f, \"how; the state of a thing\" (Lane). Mukayyif is a modern Form II participle, \"one that sets the state (of the air)\", built from kayfa, \"how\"."
+              "text": "مكيف (mukayyif) is built on k-y-f, the letters of kayfa, \"how\" (Lane). Mukayyif is a modern Form II participle, \"one that sets the state (of the air)\", built from kayfa, \"how\"."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b9f8c117d3a11c1",
+      "sourceHash": "fnv1a64:f0f28c71d06b8fda",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "علبة (ʿulba) is built on the native Arabic root ʿ-l-b, \"a milking vessel\" (Lane). Lane's ʿulba is a milking vessel of skin or wood; the tin can is a modern sense."
+              "text": "علبة (ʿulba), \"a milking vessel\", is an old native noun, filed under the root ʿ-l-b (Lane). Lane's ʿulba is a milking vessel of skin or wood; the tin can is a modern sense."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a427f80ce901e201",
+      "sourceHash": "fnv1a64:703f115c37753f1e",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "رف (raff) is built on the native Arabic root r-f-f, \"a shelf\" (Lane). Lane's raff is a ledge on which the choice vessels of a house are set."
+              "text": "رف (raff), \"a shelf\", is an old native noun, filed under the root r-f-f (Lane). Lane's raff is a ledge on which the choice vessels of a house are set."
             }
           ]
         },

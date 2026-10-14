@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "To speak, To carry, To win, To go down, Fish",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a5235998eeddc3c2",
+  "sourceHash": "fnv1a64:c0eabc36d1723815",
   "lessons": [
     {
       "id": "AR-C65-takallama",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69473cefc1ff6de7",
+      "sourceHash": "fnv1a64:440106d32a3066c1",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سمك (samak) is built on the native Arabic root s-m-k, \"fish\" (Lane). Lane lists samak, \"fish\", under s-m-k."
+              "text": "سمك (samak), \"fish\", is an old native noun, filed under the root s-m-k (Lane), beside the verb samaka, \"to rise, to be high\"."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [AR-C248-intarnit]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**موقع** (*mawqiʿ*) is built on the native Arabic root *w-q-ʿ*, "to fall" (Lane). *Mawqiʿ* is the *ma-* place noun, "a place where a thing falls", hence "a site".
+**موقع** (*mawqiʿ*) is built on the native Arabic root *w-q-ʿ*, "to fall" (Lane). *Mawqiʿ* is the *ma-* place noun, "a place where a thing falls", hence "a site"; the website is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

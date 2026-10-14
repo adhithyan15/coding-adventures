@@ -15,7 +15,7 @@ concept_tag: AR-THINGS141-JILD
 prerequisites: [AR-C141-batn, AR-C141-saq]
 sounds: []
 roots: [j-l-d]
-etymology_hook: "jild: built on the root j-l-d, 'skin, hide' (Lane); an old noun with its own root in Lane"
+etymology_hook: "jild: an old native noun listed by Lane under j-l-d, beside a verb meaning 'to strike the skin, to flog'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C141-saq]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**جلد** (*jild*) is built on the native Arabic root *j-l-d*, "skin, hide" (Lane). An old noun with its own root in Lane.
+**جلد** (*jild*), "skin, hide", is an old native noun, listed under the root *j-l-d* (Lane) beside a verb meaning "to strike the skin, to flog".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

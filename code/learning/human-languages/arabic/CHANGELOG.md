@@ -13,6 +13,8 @@ HL24 §9 asks every lesson that introduces a word to say where the word comes fr
 - **Root slugs.** Each block's root or donor became a `roots:` slug, reusing the slugs the track already had; the Arabic root ledger grows from 107 to 943 roots.
 - **Durations.** No `max_seconds` value was raised. AR-C17-kam-umruka's new block was kept short so the lesson stays under 300 seconds.
 
+- **Review.** Two independent reviewers read all 1,262 changed lessons against Lane (including its supplement files) and EtymDB. About 228 lessons (18%) needed a content fix, all made. The main fault came from the generating template, which had put the noun's own meaning where the root's sense belongs ("root *s-m-k*, 'fish'"); each block now gives the root's sense as Lane gives it ("*s-m-k*, 'to rise, to be high'"), or says the noun is an old native noun filed under its root. Claims Lane does not make were removed (*naḥla*, *kura*, *nādī*, *waraqa*), modern senses are now marked as later (*darrāja*, *sifāra*, *mawqiʿ*, *thaqāfa*, *khuṭṭa*), loans called native are corrected (*tawābil* from Aramaic *tablā*, *salla* from Syriac, *miqlama* on Greek-derived *qalam*), and speculative claims were softened (no shared Afroasiatic root for *qiṭṭ* and Latin *cattus*; Nubian is not Afroasiatic; *yawm* has no established link to an Egyptian word for "sun"). Several "not settled" origins now give a hedged account (*barīd*, *ward*, *shāsha*, *warsha*, *bunnī*, *laysa*, *lākin*).
+
 ## Fixed — lessons stop leaning on words a later lesson teaches
 
 A lesson that writes a word a later lesson teaches as its headword is a forward reference (human-language-data `measureContinuity`). Each one in this track was read in place. Forward references 10 → 0.

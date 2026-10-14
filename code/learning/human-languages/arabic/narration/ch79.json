@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "Cow, Goat, Sheep, Mouse, Lion",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cbb7b81b648bdf78",
+  "sourceHash": "fnv1a64:2911d8c8fe80ef12",
   "lessons": [
     {
       "id": "AR-C79-baqara",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6085964aea1bd972",
+      "sourceHash": "fnv1a64:88a79f256f519eb8",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "خروف (kharūf) is built on the native Arabic root kh-r-f, \"a lamb; autumn\" (Lane). The same root gives kharīf, \"autumn\"."
+              "text": "خروف (kharūf) is built on the native Arabic root kh-r-f, \"to gather fruit; to graze\" (Lane). Lane's kharūf is a lamb, said to be so called because it grazes here and there; the same root gives kharīf, \"autumn\"."
             }
           ]
         },

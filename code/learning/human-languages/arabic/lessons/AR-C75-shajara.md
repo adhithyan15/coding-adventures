@@ -15,7 +15,7 @@ concept_tag: AR-SCHOOL75-SHAJARA
 prerequisites: [AR-C75-kalima, AR-C75-sura]
 sounds: []
 roots: [sh-j-r]
-etymology_hook: "shajara: built on the root sh-j-r, 'trees' (Lane); shajara is one tree"
+etymology_hook: "shajara: built on the root sh-j-r, 'to be intertwined; trees' (Lane); shajara is one tree"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C75-sura]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**شجرة** (*shajara*) is built on the native Arabic root *sh-j-r*, "trees" (Lane). *Shajara* is one tree; *shajar*, "trees", is the collective.
+**شجرة** (*shajara*) is built on the native Arabic root *sh-j-r*, "to be intertwined; trees" (Lane). *Shajara* is one tree; *shajar*, "trees", is the collective.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

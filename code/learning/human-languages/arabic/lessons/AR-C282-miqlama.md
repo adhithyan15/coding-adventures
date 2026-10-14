@@ -14,8 +14,8 @@ romanization: "miqlama"
 concept_tag: AR-AMAL282-MIQLAMA
 prerequisites: [AR-C281-mumaththil, AR-C282-hasiba]
 sounds: []
-roots: [q-l-m]
-etymology_hook: "miqlama: built on the root q-l-m, 'a reed pen' (Lane); miqlama is a case for pens"
+roots: [greek-kalamos]
+etymology_hook: "miqlama: a case for pens (qalam); qalam is usually traced to Greek kalamos 'reed pen'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C282-hasiba]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**مقلمة** (*miqlama*) is built on the native Arabic root *q-l-m*, "a reed pen" (Lane). *Miqlama* is a case for pens.
+**مقلمة** (*miqlama*) is a case for pens (*qalam*). Lane lists *qalam* under *q-l-m*, and it is usually traced to Greek *kalamos*, "reed pen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -69,7 +69,7 @@ You have watched it work already:
 So *qahwa* is feminine, while *shāy*, *ḥalīb* and *sukkar* are masculine — and
 the ending alone told you.
 
-The road out of Arabic is short and well lit. Ottoman **Turkish** took *qahwa*
+Lane uses *qahwa* for wine; coffee is the later sense. Ottoman **Turkish** took *qahwa*
 as **kahve**; Venetian traders took *kahve* as Italian **caffè**; from Italian
 came French **café**, German **Kaffee** and English **coffee**. The English
 word in your mouth is this Arabic one.

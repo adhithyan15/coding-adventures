@@ -4,7 +4,7 @@
   "chapter": 274,
   "title": "Printer, Ink, Blackboard, Dictionary, File",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:598abd7711ed1456",
+  "sourceHash": "fnv1a64:42731932eef9c799",
   "lessons": [
     {
       "id": "AR-C274-tabia2",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37b6694b49cf89af",
+      "sourceHash": "fnv1a64:0131dbb1ac0e99b7",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "طابعة (ṭābiʿa) is built on the native Arabic root ṭ-b-ʿ, \"to seal, to stamp\" (Lane). Ṭābiʿa is the feminine active participle, \"a thing that prints\"."
+              "text": "طابعة (ṭābiʿa) is built on the native Arabic root ṭ-b-ʿ, \"to seal, to stamp\" (Lane). Ṭābiʿa is the feminine active participle, \"a thing that prints\"; the printing sense is modern."
             }
           ]
         },

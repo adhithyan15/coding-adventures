@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Here, There, Right, Shop, Street",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d59d368adf3a2578",
+  "sourceHash": "fnv1a64:ac6721f4f67a8934",
   "lessons": [
     {
       "id": "AR-C90-huna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:210a141ad2d597bb",
+      "sourceHash": "fnv1a64:0e6ec5dc04e20358",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "هنا (hunā) is an old Arabic pointing word of place. It is not built on a three-letter root, and its deeper origin is not settled; Hebrew hēnnā, \"hither\", is often compared."
+              "text": "هنا (hunā) is an old Arabic pointing word of place. It is not built on a three-letter root; Hebrew hēnnā, \"hither\", is often compared."
             }
           ]
         },

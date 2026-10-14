@@ -4,7 +4,7 @@
   "chapter": 201,
   "title": "Injection, Operation, Bruise, Burn, Stomach cramp",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c465bb02bb9ad92c",
+  "sourceHash": "fnv1a64:64102c3248e058df",
   "lessons": [
     {
       "id": "AR-C201-huqna",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ae1712c2c81db21",
+      "sourceHash": "fnv1a64:db8d6dda455e193a",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "كدمة (kadma) is built on the native Arabic root k-d-m, \"to bite with the front of the mouth\" (Lane). Kadma is one bite-mark, a bruise."
+              "text": "كدمة (kadma) is built on the native Arabic root k-d-m, \"to bite with the front of the mouth\" (Lane). Kadma, one bite, is a bruise in modern use; Lane does not list it."
             }
           ]
         },

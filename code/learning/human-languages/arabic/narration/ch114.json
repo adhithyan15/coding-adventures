@@ -4,7 +4,7 @@
   "chapter": 114,
   "title": "Goal, Plan, Need, To need, To wish",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:82815895762548ad",
+  "sourceHash": "fnv1a64:7e4c59b8ef5d5619",
   "lessons": [
     {
       "id": "AR-C114-hadaf",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70dd746d169e955c",
+      "sourceHash": "fnv1a64:c4bb1b7f8816ec67",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "هدف (hadaf) is built on the native Arabic root h-d-f, \"a target, a raised mark\" (Lane). Lane's hadaf is a mound or target shot at."
+              "text": "هدف (hadaf) is a native noun built on the root h-d-f. Lane's brief article gives it as a high building, and as a butt, a target shot at."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77e3a4bbeac53bb8",
+      "sourceHash": "fnv1a64:aca941cab91a3bf0",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "خطة (khuṭṭa) is built on the native Arabic root kh-ṭ-ṭ, \"to draw a line\" (Lane). Khuṭṭa is a plan, a thing marked out."
+              "text": "خطة (khuṭṭa) is built on the native Arabic root kh-ṭ-ṭ, \"to draw a line\" (Lane). Lane's khuṭṭa is a line, or an affair; the plan, a thing marked out, is a later sense."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60f7e7efcc488222",
+      "sourceHash": "fnv1a64:a38d5e6a911c48df",
       "notice": null,
       "blocks": [
         {
@@ -603,7 +603,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "تمنى (tamannā) is built on the native Arabic root m-n-y, \"to wish, to desire\" (Lane). Tamannā is Form V, \"to wish\"."
+              "text": "تمنى (tamannā) is built on the native Arabic root m-n-y (Lane). Tamannā is Form V, \"to wish\"."
             }
           ]
         },

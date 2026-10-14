@@ -4,7 +4,7 @@
   "chapter": 203,
   "title": "Previously, Finally, During, Century, Weekly",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a400b44911aaa482",
+  "sourceHash": "fnv1a64:ee70d80b71da29da",
   "lessons": [
     {
       "id": "AR-C203-sabiqan",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b2ef20fedf17779",
+      "sourceHash": "fnv1a64:a43d69b725ecfd2f",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "قرن (qarn) is built on the native Arabic root q-r-n, \"a horn; a generation\" (Lane). Lane's qarn is a horn and a generation of men; the century is a later sense."
+              "text": "قرن (qarn) is a native noun on the root q-r-n, \"to join, to couple\" (Lane). Lane's qarn is a horn and a generation of men; the century is a later sense."
             }
           ]
         },

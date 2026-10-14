@@ -15,7 +15,7 @@ concept_tag: AR-FOOD67-ASAL
 prerequisites: [AR-C67-jazar, AR-C67-zubda]
 sounds: []
 roots: [ʿ-s-l]
-etymology_hook: "ʿasal: built on the root ʿ-s-l, 'honey' (Lane); an old Semitic noun"
+etymology_hook: "ʿasal: built on the root ʿ-s-l, 'honey' (Lane); Lane's verb ʿasala is to prepare food with honey"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C67-zubda]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**عسل** (*ʿasal*) is built on the native Arabic root *ʿ-s-l*, "honey; to season with honey" (Lane). An old Semitic noun; Lane's verb *ʿasala* means to prepare food with honey.
+**عسل** (*ʿasal*) is built on the native Arabic root *ʿ-s-l*, "honey; to season with honey" (Lane). Lane's verb *ʿasala* means to prepare food with honey.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

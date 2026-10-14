@@ -4,7 +4,7 @@
   "chapter": 215,
   "title": "Identity card, Visa, Luggage, Charger, Taxi",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aca37b25ab937ee8",
+  "sourceHash": "fnv1a64:2fc270c7e4468dec",
   "lessons": [
     {
       "id": "AR-C215-hawiyya",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ca1a860cc883866",
+      "sourceHash": "fnv1a64:876581a0da34f614",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "تأشيرة (taʾshīra) is built on the native Arabic root ʾ-sh-r, \"to notch, to mark\" (Lane). Taʾshīra is a modern word from Form II ashshara, \"to mark\": a visa is a mark in a passport."
+              "text": "تأشيرة (taʾshīra) is built on the native Arabic root ʾ-sh-r, \"to saw, to notch\" (Lane). Taʾshīra comes from the modern Form II verb ashshara, \"to mark (a document)\", a sense not in Lane: a visa is a mark in a passport."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c641815ed3fb5c3",
+      "sourceHash": "fnv1a64:a2c9da2b2972e9bf",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "شاحن (shāḥin) is built on the native Arabic root sh-ḥ-n, \"to load, to fill\" (Lane). Shāḥin is the active participle, \"one that loads\": a charger."
+              "text": "شاحن (shāḥin) is built on the native Arabic root sh-ḥ-n, \"to load, to fill\" (Lane). Shāḥin is the active participle, \"one that loads\"; the charger is a modern sense."
             }
           ]
         },

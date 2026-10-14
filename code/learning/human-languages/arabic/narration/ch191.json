@@ -4,7 +4,7 @@
   "chapter": 191,
   "title": "Plumber, Grocer, Fisherman, Workshop, Signature",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:fd35da9327bd4cba",
+  "sourceHash": "fnv1a64:79ebf4fcb24167dc",
   "lessons": [
     {
       "id": "AR-C191-sabbak",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8184b2942bf7fba",
+      "sourceHash": "fnv1a64:bcab1799b43ef926",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ورشة (warsha) is a modern word for a workshop; it has no entry in Lane, and its origin is not settled."
+              "text": "ورشة (warsha) is a modern word for a workshop, usually explained as borrowed from English workshop; it has no entry in Lane."
             }
           ]
         },

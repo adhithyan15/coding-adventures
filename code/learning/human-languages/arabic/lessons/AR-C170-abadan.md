@@ -15,7 +15,7 @@ concept_tag: AR-WAQT170-ABADAN
 prerequisites: [AR-C170-takhir, AR-C170-mutaakhkhiran]
 sounds: []
 roots: [ʾ-b-d]
-etymology_hook: "abadan: built on the root ʾ-b-d, 'endless time' (Lane); abadan is abad, 'endless time', with the adverb ending -an"
+etymology_hook: "abadan: built on the root ʾ-b-d, 'to stay for ever' (Lane); abadan is abad, 'endless time', with the ending -an"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C170-mutaakhkhiran]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**أبدا** (*abadan*) is built on the native Arabic root *ʾ-b-d*, "endless time" (Lane). *Abadan* is *abad*, "endless time", with the adverb ending *-an*.
+**أبدا** (*abadan*) is built on the native Arabic root *ʾ-b-d*, "to stay for ever" (Lane). *Abadan* is *abad*, "endless time", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

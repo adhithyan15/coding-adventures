@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 89,
-  "sourceHash": "fnv1a64:05f22367742f218e",
+  "sourceHash": "fnv1a64:60fcef74556287a0",
   "lessonIds": [
     "AR-C89-kharij",
     "AR-C89-fawqa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch89.txt",
   "json": "arabic/narration/ch89.json",
-  "textHash": "fnv1a64:4e7876e6029fb6c5",
-  "jsonHash": "fnv1a64:099739e9d61128cd",
+  "textHash": "fnv1a64:70a1b32b4847e5e2",
+  "jsonHash": "fnv1a64:ffcac0fa90cb5173",
   "findings": []
 }

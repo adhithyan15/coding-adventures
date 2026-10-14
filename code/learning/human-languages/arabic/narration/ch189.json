@@ -4,7 +4,7 @@
   "chapter": 189,
   "title": "Accountant, Journalist, Worker, Translator, Interview",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cc82bff06b1922fd",
+  "sourceHash": "fnv1a64:6dce61f9479fe779",
   "lessons": [
     {
       "id": "AR-C189-muhasib",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f70fd4d11b2e261",
+      "sourceHash": "fnv1a64:0d5bb2c1c4794c47",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "صحفي (ṣuḥufī) is built on the native Arabic root ṣ-ḥ-f, \"a sheet, a page\" (Lane). Ṣuḥufī is ṣuḥuf, \"sheets, papers\", with the adjective ending -ī; it is a modern word."
+              "text": "صحفي (ṣuḥufī) is built on ṣaḥīfa, \"a sheet, a page\", a native noun, filed under the root ṣ-ḥ-f (Lane). Ṣuḥufī is ṣuḥuf, \"sheets, papers\", with the adjective ending -ī; it is a modern word."
             }
           ]
         },

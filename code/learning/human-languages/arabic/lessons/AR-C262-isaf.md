@@ -47,7 +47,7 @@ reviews_of: [AR-C261-wazzaa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**إسعاف** (*isʿāf*) is built on the native Arabic root *s-ʿ-f*, "to help" (Lane). *Isʿāf* is the verbal noun of Form IV, "giving help".
+**إسعاف** (*isʿāf*) is built on the native Arabic root *s-ʿ-f*, "to help" (Lane). *Isʿāf* is the verbal noun of Form IV, "giving help"; the ambulance is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

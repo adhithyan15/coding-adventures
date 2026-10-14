@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 51,
-  "sourceHash": "fnv1a64:c22818cf85396ac1",
+  "sourceHash": "fnv1a64:da1f704e6afe0f85",
   "lessonIds": [
     "AR-C51-shar",
     "AR-C51-qadam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch51.txt",
   "json": "arabic/narration/ch51.json",
-  "textHash": "fnv1a64:e103c8864f42d73e",
-  "jsonHash": "fnv1a64:ff66c3077220950d",
+  "textHash": "fnv1a64:287cf4710baeb5d3",
+  "jsonHash": "fnv1a64:31608fc0b9284ea6",
   "findings": []
 }

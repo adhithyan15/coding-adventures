@@ -4,7 +4,7 @@
   "chapter": 142,
   "title": "Bicycle, Ship, Traveller, Factory, Square",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:44ef5cc0e9cf0bb5",
+  "sourceHash": "fnv1a64:8662d41a092e49d5",
   "lessons": [
     {
       "id": "AR-C142-darraja",
@@ -565,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:819d3b06306f27ae",
+      "sourceHash": "fnv1a64:480690b47d545d9d",
       "notice": null,
       "blocks": [
         {
@@ -603,7 +603,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ساحة (sāḥa) is built on the native Arabic root s-w-ḥ, \"an open court\" (Lane). Lane's sāḥa is the open space of a house."
+              "text": "ساحة (sāḥa), \"an open court\", is an old native noun, filed under the root s-w-ḥ (Lane). Lane's sāḥa is the open space of a house."
             }
           ]
         },

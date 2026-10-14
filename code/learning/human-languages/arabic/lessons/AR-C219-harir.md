@@ -15,7 +15,7 @@ concept_tag: AR-SHAY219-HARIR
 prerequisites: [AR-C219-zujaj, AR-C219-nuhas]
 sounds: []
 roots: [ḥ-r-r]
-etymology_hook: "ḥarīr: built on the root ḥ-r-r, 'to be free' (Lane); an old noun"
+etymology_hook: "ḥarīr: an old noun for silk, listed by Lane under ḥ-r-r, the root of ḥarr 'heat' and ḥurr 'free'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C219-nuhas]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**حرير** (*ḥarīr*) is built on the native Arabic root *ḥ-r-r*, "to be free; silk" (Lane). An old noun; Lane lists *ḥarīr*, "silk", under *ḥ-r-r*.
+**حرير** (*ḥarīr*), "silk", is an old native noun, filed under the root *ḥ-r-r* (Lane), the root of *ḥarr*, "heat", and *ḥurr*, "free"; Lane does not tie silk to either sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ concept_tag: AR-SHAY187-UNBUB
 prerequisites: [AR-C187-khallat, AR-C187-sunbur]
 sounds: []
 roots: [n-b-b]
-etymology_hook: "unbūb: built on the root n-b-b, 'the joint of a reed' (Lane)"
+etymology_hook: "unbūb: an old native noun Lane files under n-b-b; Lane's unbūb is the joint of a reed, and a jug's spout"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C187-sunbur]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**أنبوب** (*unbūb*) is built on the native Arabic root *n-b-b*, "the joint of a reed" (Lane). Lane's *unbūb* is the length of reed between two knots, and the spout of a jug.
+**أنبوب** (*unbūb*), "the joint of a reed", is an old native noun, filed under the root *n-b-b* (Lane). Lane's *unbūb* is the length of reed between two knots, and the spout of a jug.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

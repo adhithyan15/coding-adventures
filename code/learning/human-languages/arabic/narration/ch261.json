@@ -4,7 +4,7 @@
   "chapter": 261,
   "title": "To melt, To freeze, To park, To queue, To hand out",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d4cc1ea4a9152738",
+  "sourceHash": "fnv1a64:960fe24c76e56012",
   "lessons": [
     {
       "id": "AR-C261-dhaba",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f7050827b7b8e2f",
+      "sourceHash": "fnv1a64:6961e0a2c1272ddf",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ركن (rakana) is built on the native Arabic root r-k-n, \"to lean, to rest upon\" (Lane). Rakana is \"to rest, to settle\", hence to park."
+              "text": "ركن (rakana) is built on the native Arabic root r-k-n, \"to lean, to rest upon\" (Lane). Rakana is \"to rest, to settle\"; parking a car is a modern sense."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:839f50779095b93d",
+      "sourceHash": "fnv1a64:e62bad9355d81813",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "وزع (wazzaʿa) is built on the native Arabic root w-z-ʿ, \"to restrain; to distribute\" (Lane). Wazzaʿa is Form II, \"to share out\"."
+              "text": "وزع (wazzaʿa) is built on the native Arabic root w-z-ʿ, \"to restrain; to distribute\"; Lane's short article on this root does not treat the verb. Wazzaʿa is Form II, \"to share out\"."
             }
           ]
         },

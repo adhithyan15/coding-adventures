@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 247,
-  "sourceHash": "fnv1a64:189e3e3cb1962f76",
+  "sourceHash": "fnv1a64:62c608d26a0326cd",
   "lessonIds": [
     "AR-C247-hawa",
     "AR-C247-mawja",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch247.txt",
   "json": "arabic/narration/ch247.json",
-  "textHash": "fnv1a64:707d49db4791fb9d",
-  "jsonHash": "fnv1a64:993cddb43147e4f1",
+  "textHash": "fnv1a64:d28d68b716454e27",
+  "jsonHash": "fnv1a64:6a511de2b215a800",
   "findings": []
 }

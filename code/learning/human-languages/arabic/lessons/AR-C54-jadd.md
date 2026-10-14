@@ -15,7 +15,7 @@ concept_tag: AR-HEALTH54-JADD
 prerequisites: [AR-C54-hazin, AR-C54-tabib]
 sounds: []
 roots: [j-d-d]
-etymology_hook: "jadd: built on the root j-d-d, 'a grandfather' (Lane); Lane gives jadd both as the grandfather and as fortune"
+etymology_hook: "jadd: an old noun listed by Lane under j-d-d, 'to cut'; Lane gives jadd as grandfather and as fortune"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C54-tabib]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**جد** (*jadd*) is built on the native Arabic root *j-d-d*, "a grandfather; fortune, good luck" (Lane). Lane gives *jadd* both as the grandfather and as fortune.
+**جد** (*jadd*) is an old native noun, filed under the root *j-d-d* (Lane), whose verb *jadda* is "to cut". Lane gives *jadd* both as the grandfather and as fortune.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

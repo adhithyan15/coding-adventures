@@ -47,7 +47,7 @@ reviews_of: [AR-C100-mamarr]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ميدان** (*maydān*) is listed by Lane under *m-y-d* as a race-ground for horses. He quotes two native derivations, from *māda*, "to move", or from *madana*, "to dwell"; some modern scholars trace it instead to an Iranian source, so the origin is not settled.
+**ميدان** (*maydān*) is listed by Lane under *m-y-d* as a race-ground for horses. He quotes several native derivations, among them *māda*, "to move", and *madana*, "to dwell"; some modern scholars trace it instead to an Iranian source, so the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

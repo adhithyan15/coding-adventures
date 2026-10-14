@@ -4,7 +4,7 @@
   "chapter": 237,
   "title": "Patience, Generosity, Feeling, Morals, Personality",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:27a7809f1c5d347f",
+  "sourceHash": "fnv1a64:b27499d414a244a1",
   "lessons": [
     {
       "id": "AR-C237-sabr",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:701bcf8e16b41a95",
+      "sourceHash": "fnv1a64:742e0dac6d4f03cc",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "شخصية (shakhṣiyya) is built on the native Arabic root sh-kh-ṣ, \"a person seen from afar\" (Lane). Shakhṣiyya is shakhṣ, \"a person\", with the abstract ending -iyya."
+              "text": "شخصية (shakhṣiyya) is built on the native Arabic root sh-kh-ṣ, \"to rise into view\" (Lane). Shakhṣiyya is shakhṣ, \"a person\", with the abstract ending -iyya."
             }
           ]
         },

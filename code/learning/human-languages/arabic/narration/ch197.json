@@ -4,7 +4,7 @@
   "chapter": 197,
   "title": "To discuss, To compare, To notice, To pay attention, To consider",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:07f15da4c8cbe8f0",
+  "sourceHash": "fnv1a64:e8ffccb5b3b0d782",
   "lessons": [
     {
       "id": "AR-C197-naqasha",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98fd4a19fbf68531",
+      "sourceHash": "fnv1a64:0b4bff56f5698ca4",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "انتبه (intabaha) is built on the native Arabic root n-b-h, \"to wake, to be alert\" (Lane). Intabaha is Form VIII, \"to become alert\"."
+              "text": "انتبه (intabaha) is built on the native Arabic root n-b-h, \"to take notice, to become aware\" (Lane). Intabaha is Form VIII, \"to become alert\"."
             }
           ]
         },

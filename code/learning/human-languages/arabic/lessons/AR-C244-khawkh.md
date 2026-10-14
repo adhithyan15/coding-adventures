@@ -15,7 +15,7 @@ concept_tag: AR-SHAY244-KHAWKH
 prerequisites: [AR-C243-muzayyaf, AR-C244-zabadi]
 sounds: []
 roots: [kh-w-kh]
-etymology_hook: "khawkh: built on the root kh-w-kh, 'the peach' (Lane); Lane lists khawkh as a well-known fruit"
+etymology_hook: "khawkh: listed by Lane under kh-w-kh as the peach; EtymDB derives it from Aramaic ḥūḥā"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C244-zabadi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**خوخ** (*khawkh*) is built on the native Arabic root *kh-w-kh*, "the peach" (Lane). Lane lists *khawkh* as a well-known fruit; Aramaic *ḥūḥā* is the same word (EtymDB).
+**خوخ** (*khawkh*) is listed by Lane under *kh-w-kh* as a well-known fruit, the peach, with no foreign source given; EtymDB derives it from Aramaic *ḥūḥā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Juice, Chicken, House, Room, Window",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ce29391556111362",
+  "sourceHash": "fnv1a64:d33d5e5dd2b88849",
   "lessons": [
     {
       "id": "AR-C69-asir",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f58acceec9cb1eb",
+      "sourceHash": "fnv1a64:a78758eb255471bf",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "دجاج (dajāj) is built on the native Arabic root d-j-j, \"the domestic fowl\" (Lane). Lane lists dajāj, the common fowl, under d-j-j."
+              "text": "دجاج (dajāj), the common fowl, is an old native noun, filed under the root d-j-j (Lane)."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 130,
-  "sourceHash": "fnv1a64:dd78af6c578bfa11",
+  "sourceHash": "fnv1a64:a350be7824647ebc",
   "lessonIds": [
     "AR-C130-tin",
     "AR-C130-bittikh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch130.txt",
   "json": "arabic/narration/ch130.json",
-  "textHash": "fnv1a64:f7d7e0daa7f6be43",
-  "jsonHash": "fnv1a64:b875f45ed3988863",
+  "textHash": "fnv1a64:a3828d2bc958e791",
+  "jsonHash": "fnv1a64:1176799d146ff762",
   "findings": []
 }

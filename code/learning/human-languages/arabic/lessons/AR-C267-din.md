@@ -15,7 +15,7 @@ concept_tag: AR-SABAB267-DIN
 prerequisites: [AR-C267-taqlid, AR-C267-thaqafa]
 sounds: []
 roots: [d-y-n]
-etymology_hook: "dīn: listed by Lane under d-y-n; some trace 'religion' to Middle Persian dēn; not settled"
+etymology_hook: "dīn: listed by Lane under d-y-n; Aramaic dīn 'judgement' is compared, and Middle Persian dēn for 'religion'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C267-thaqafa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**دين** (*dīn*) is listed by Lane under *d-y-n* with the senses recompense, obedience and religion. Some trace the sense "religion" to Middle Persian *dēn*, "religion"; the question is not settled.
+**دين** (*dīn*) is listed by Lane under *d-y-n* with the senses recompense, obedience and religion. The sense of judgement is shared with Aramaic and Hebrew *dīn*, and some trace the sense "religion" to Middle Persian *dēn*; which account holds for "religion" is debated.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

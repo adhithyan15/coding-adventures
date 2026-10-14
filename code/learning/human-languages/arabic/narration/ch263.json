@@ -4,7 +4,7 @@
   "chapter": 263,
   "title": "Vaccine, Sweat, Wrist, Thumb, Muscle",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5e256a6fe3abbeb9",
+  "sourceHash": "fnv1a64:4e62d48899bcd66c",
   "lessons": [
     {
       "id": "AR-C263-laqah",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2e90199f4831ed9",
+      "sourceHash": "fnv1a64:4e634bcc4063b665",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "معصم (miʿṣam) is built on the native Arabic root ʿ-ṣ-m, \"the wrist\" (Lane). Miʿṣam is the wrist."
+              "text": "معصم (miʿṣam) is built on the native Arabic root ʿ-ṣ-m, \"to hold back, to protect\" (Lane). Lane's miʿṣam is the wrist, the place of the bracelet."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35b9849ebcf4acb0",
+      "sourceHash": "fnv1a64:803c148d27ba5ce4",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "عضلة (ʿaḍala) is built on the native Arabic root ʿ-ḍ-l, \"a muscle\" (Lane). ʿAḍala is a muscle."
+              "text": "عضلة (ʿaḍala), \"a muscle\", is an old native noun, filed under the root ʿ-ḍ-l (Lane), beside the verb ʿaḍala, \"to hinder\"."
             }
           ]
         },

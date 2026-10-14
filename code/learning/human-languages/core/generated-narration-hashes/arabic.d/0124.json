@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 124,
-  "sourceHash": "fnv1a64:4493751ba0b30cd2",
+  "sourceHash": "fnv1a64:e7ee3c798d28e29f",
   "lessonIds": [
     "AR-C124-miqass",
     "AR-C124-ibra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch124.txt",
   "json": "arabic/narration/ch124.json",
-  "textHash": "fnv1a64:0ba9473482159fd8",
-  "jsonHash": "fnv1a64:0ff122b951903ba8",
+  "textHash": "fnv1a64:618a12d2725889ff",
+  "jsonHash": "fnv1a64:a3a22c69576b1c16",
   "findings": []
 }

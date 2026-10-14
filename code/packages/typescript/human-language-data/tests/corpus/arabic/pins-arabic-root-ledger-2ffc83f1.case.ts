@@ -20,10 +20,14 @@ it("pins Arabic's root ledger", () => {
     // loans that only look like a root (jazar 'carrot', khiyar 'cucumber')
     // keep slugs of their own. Most roots are still spent once or not at
     // all, which is the honest state of a vocabulary list.
-    roots: 943,
-    underspent: 915,
-    neverSpent: 697,
-    payoffDistribution: { "0": 697, "1": 165, "2": 53, "3": 19, "4": 7, "5": 1, "6": 1 },
+    //
+    // The independent review then moved two lessons off native-root slugs:
+    // miqlama joins qalam on greek-kalamos (one more payoff), and tawabil
+    // takes aramaic-tabla, so 943 -> 942 roots.
+    roots: 942,
+    underspent: 914,
+    neverSpent: 695,
+    payoffDistribution: { "0": 695, "1": 166, "2": 53, "3": 19, "4": 7, "5": 1, "6": 1 },
     underspentPercent: 97,
   });
 });

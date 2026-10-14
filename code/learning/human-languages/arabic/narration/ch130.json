@@ -4,7 +4,7 @@
   "chapter": 130,
   "title": "Figs, Watermelon, Apricots, Soup, Cake",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dd78af6c578bfa11",
+  "sourceHash": "fnv1a64:a350be7824647ebc",
   "lessons": [
     {
       "id": "AR-C130-tin",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ea7de3846046150",
+      "sourceHash": "fnv1a64:4faca4dd16295964",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مشمش (mishmish) is listed by Lane as a well-known fruit, with a Kufan variant mashmash. He gives no source, and its origin is not settled."
+              "text": "مشمش (mishmish) is listed by Lane as a well-known fruit, with a Kufan variant mashmash. He gives no source; Aramaic has the same fruit-name, and a borrowing from Aramaic has been proposed, but the origin is not settled."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:556b96521fb2dc18",
+      "sourceHash": "fnv1a64:a14a21a279e0811f",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "كعكة (kaʿka) is listed by Lane under k-ʿ-k as a well-known bread or biscuit. It is often traced to Persian kāk, a dry bread, but Lane gives no source, and the origin is not settled."
+              "text": "كعكة (kaʿka) is listed by Lane under k-ʿ-k as a well-known bread or biscuit. It is often traced to Persian kāk, a dry bread, but Lane gives no source; EtymDB sets it beside Syriac kaʿkā, \"cake, loaf\", and the origin is not settled."
             }
           ]
         },

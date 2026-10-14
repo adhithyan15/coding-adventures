@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 16,
-  "sourceHash": "fnv1a64:26b6250101eee355",
+  "sourceHash": "fnv1a64:34601278d4562d2a",
   "lessonIds": [
     "AR-C16-al-saa"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "arabic/narration/ch16.txt",
   "json": "arabic/narration/ch16.json",
-  "textHash": "fnv1a64:98ca67c254ce3294",
-  "jsonHash": "fnv1a64:3e07ffe02031133a",
+  "textHash": "fnv1a64:1907360c3ffc07f6",
+  "jsonHash": "fnv1a64:b547bfb8cc42dedf",
   "findings": []
 }

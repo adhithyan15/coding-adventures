@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 138,
-  "sourceHash": "fnv1a64:808c34b02469c198",
+  "sourceHash": "fnv1a64:09117c9efe7dfe67",
   "lessonIds": [
     "AR-C138-nasr",
     "AR-C138-difda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch138.txt",
   "json": "arabic/narration/ch138.json",
-  "textHash": "fnv1a64:3944fca280b7e211",
-  "jsonHash": "fnv1a64:ff375442fa53f3c8",
+  "textHash": "fnv1a64:d480dbf76262b2b9",
+  "jsonHash": "fnv1a64:8249c6d6b088d804",
   "findings": []
 }

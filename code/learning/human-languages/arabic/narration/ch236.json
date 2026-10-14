@@ -4,7 +4,7 @@
   "chapter": 236,
   "title": "Earthquake, Flood, Ice, Citizen, Inhabitants",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cc0bc173cc894465",
+  "sourceHash": "fnv1a64:a2485e90092cf998",
   "lessons": [
     {
       "id": "AR-C236-zilzal",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2a9a178e8e9e6bc",
+      "sourceHash": "fnv1a64:de1b9b7c8db2893b",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جليد (jalīd) is built on the native Arabic root j-l-d, \"hoar-frost; skin\" (Lane). Lane's jalīd is hoar-frost."
+              "text": "جليد (jalīd) is filed under the native Arabic root j-l-d (Lane), the root of jild, \"skin\". Lane's jalīd is hoar-frost; \"ice\" is the usual modern sense."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d37a298f176f1176",
+      "sourceHash": "fnv1a64:32127dd05e4a1ab6",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مواطن (muwāṭin) is built on the native Arabic root w-ṭ-n, \"a homeland; to dwell\" (Lane). Muwāṭin is the Form III participle, \"a fellow-dweller\"."
+              "text": "مواطن (muwāṭin) is built on the native Arabic root w-ṭ-n, \"a homeland; to dwell\" (Lane). Muwāṭin is the Form III participle, \"a fellow-dweller\"; the citizen is a modern sense."
             }
           ]
         },

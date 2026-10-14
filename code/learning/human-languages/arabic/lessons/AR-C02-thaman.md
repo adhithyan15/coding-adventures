@@ -15,7 +15,7 @@ concept_tag: AR-ANCHOR-THAMAN
 prerequisites: [AR-C02-practice]
 sounds: []
 roots: [th-m-n]
-etymology_hook: "thaman: built on the root th-m-n, 'a price' (Lane); Lane's thaman is what a seller receives in return for a thing sold"
+etymology_hook: "thaman: a native noun Lane files under th-m-n: what a seller receives in return for a thing sold"
 duration:
   max_seconds: 120
 requires:
@@ -49,7 +49,7 @@ piece of it, **ن، ت، ث**, and writes it on its own.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ثمن** (*thaman*) is built on the native Arabic root *th-m-n*, "a price" (Lane). Lane's *thaman* is what a seller receives in return for a thing sold.
+**ثمن** (*thaman*), "a price", is a native noun, filed under the root *th-m-n* (Lane), which also gives *thamāniya*, "eight". Lane's *thaman* is what a seller receives in return for a thing sold.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-THAMAN] -->

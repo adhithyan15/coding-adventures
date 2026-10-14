@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 194,
-  "sourceHash": "fnv1a64:1bc0cc908b8b1bd9",
+  "sourceHash": "fnv1a64:dd7e506945d58c29",
   "lessonIds": [
     "AR-C194-ibtalaa",
     "AR-C194-madagha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch194.txt",
   "json": "arabic/narration/ch194.json",
-  "textHash": "fnv1a64:b89120672f5b74f1",
-  "jsonHash": "fnv1a64:d30a251de9a8527e",
+  "textHash": "fnv1a64:c05934bce245c061",
+  "jsonHash": "fnv1a64:05d8cb81f46d2ac3",
   "findings": []
 }

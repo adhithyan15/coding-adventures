@@ -4,7 +4,7 @@
   "chapter": 177,
   "title": "Expensive, Free, Raw, Cooked, Fried",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8e4fe33f570e44cc",
+  "sourceHash": "fnv1a64:b392091248824e4b",
   "lessons": [
     {
       "id": "AR-C177-mukallif",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51e71a4473273241",
+      "sourceHash": "fnv1a64:d8d07fa31d1ea55c",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مجاني (majjānī) is built on the native Arabic root m-j-n, \"to jest; a thing given free\" (Lane). Lane's majjān is the gift of a thing without price; majjānī adds the adjective ending -ī."
+              "text": "مجاني (majjānī) is built on the native Arabic root m-j-n, \"to care nothing for what one does or hears\" (Lane). Lane's majjān is the gift of a thing without price; majjānī adds the adjective ending -ī."
             }
           ]
         },

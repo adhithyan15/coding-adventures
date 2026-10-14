@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Face, Blood, Knee, Back, Heart",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4e0d598280745dd1",
+  "sourceHash": "fnv1a64:92137e1da961ed59",
   "lessons": [
     {
       "id": "AR-C52-wajh",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65fc00b6263b7349",
+      "sourceHash": "fnv1a64:9340656a7306f066",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "قلب (qalb) is built on the native Arabic root q-l-b, \"to turn over, to turn about\" (Lane). The heart is named on the root of turning; Lane gives both under q-l-b."
+              "text": "قلب (qalb) is built on the native Arabic root q-l-b, \"to turn over, to turn about\" (Lane). Lane reports that the heart is said to be named for its turning about; both are under q-l-b."
             }
           ]
         },

@@ -61,7 +61,7 @@ neither *ḥalīb*'s open opening nor *milḥ*'s tailed ending.
 Now the twin, and it is the best one in this book. Hebrew's **לֶחֶם**
 (*leḥem*) is the same root — and it means **bread**.
 
-Neither language changed the meaning. The old Semitic root named **the staple
+The usual explanation: the old Semitic root named **the staple
 food**, and each people filled it with whatever theirs was: meat where herds
 mattered, bread where grain did.
 

@@ -7,7 +7,7 @@ chapter: 25
 type: word
 headword: يوم
 romanization: "yawm"
-gloss: "day" — a true pan-Semitic word, cognate with Hebrew yom (as in Yom Kippur), and possibly tracing all the way back to an ancient word for "sun"
+gloss: "day" — a true pan-Semitic word, cognate with Hebrew yom (as in Yom Kippur)
 concept_tag: TIME-DAY
 prerequisites: [AR-C08-al-ahad-al-khamis]
 sounds: [waw-glide, meem]
@@ -61,18 +61,13 @@ Hebrew **יוֹם** (*yōm* — yes, the *yom* in **Yom Kippur**, "Day of
 Atonement"), Akkadian **ūmum**, and Aramaic **yawmā**. Four different
 Semitic languages, one shared ancient word for "day."
 
-## Why it's said this way — A speculative deeper link — honestly flagged
+## Why it's said this way — Beyond Semitic, honestly flagged
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Some scholars push the trail back even further, to a proposed
-**Proto-Afroasiatic** root, ***\*yam-*** ("day") — and speculatively connect
-it to Egyptian **ỉmy**, meaning "**sun**" (literally "the eye"). Be
-honest: this deeper connection is a genuinely **proposed**, citable
-scholarly idea within comparative Afroasiatic linguistics — but a minority
-one, not accepted by most Egyptologists (standard Egyptian dictionaries
-gloss *ỉmy* as a common grammatical form, "who/which is in," not "sun,"
-and ordinary Egyptian for "day" is an unrelated word, *ḥrw*). Not settled
-fact the way the Semitic-family cognates are.
+Links beyond the Semitic family have been proposed, but none is
+established. A suggested tie to an Egyptian word for "sun" does not hold
+up: Egyptian's ordinary word for "day", *ḥrw*, is unrelated. The Semitic
+cognates above are the solid part of this word's story.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C25-YAWM-01, AR-CONCEPT-C25-YAWM-02] -->
@@ -80,8 +75,8 @@ fact the way the Semitic-family cognates are.
 [PAUSE 1s]
 - [YOU SAY: "yawm" — "day"]
 - [YOU SAY: the Semitic family — yawm, yōm (Yom Kippur), ūmum, yawmā]
-- [YOU SAY: the honest deeper speculation — possibly Egyptian "sun," not
-  settled]
+- [YOU SAY: the honest limit — the Semitic family is solid; links beyond it
+  are not established]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C25-YAWM-01, AR-CONCEPT-C25-YAWM-02] -->
@@ -89,5 +84,5 @@ fact the way the Semitic-family cognates are.
 [PAUSE 3s] What Hebrew word, familiar from a well-known holiday name, is
 **yawm**'s direct cognate? (**Yōm**, as in **Yom Kippur**.) Name two other
 Semitic languages that share this exact word for "day." (**Akkadian**
-*ūmum*, **Aramaic** *yawmā*.) Is the proposed Egyptian "sun" connection
-settled fact? (**No** — a genuinely proposed but speculative deeper link.)
+*ūmum*, **Aramaic** *yawmā*.) Is any link beyond the Semitic family
+established? (**No** — the Semitic cognates are the solid part.)

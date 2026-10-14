@@ -15,7 +15,7 @@ concept_tag: AR-THINGS140-DIMAGH
 prerequisites: [AR-C140-kaff, AR-C140-zufr]
 sounds: []
 roots: [d-m-gh]
-etymology_hook: "dimāgh: built on the root d-m-gh, 'the brain' (Lane); an old noun with its own root in Lane"
+etymology_hook: "dimāgh: an old native noun listed by Lane under d-m-gh, beside a verb meaning 'to wound the head down to the brain'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C140-zufr]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**دماغ** (*dimāgh*) is built on the native Arabic root *d-m-gh*, "the brain" (Lane). An old noun with its own root in Lane.
+**دماغ** (*dimāgh*), "the brain", is an old native noun, listed under the root *d-m-gh* (Lane) beside a verb meaning "to wound the head down to the brain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

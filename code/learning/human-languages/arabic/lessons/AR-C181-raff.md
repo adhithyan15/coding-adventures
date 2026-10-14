@@ -15,7 +15,7 @@ concept_tag: AR-SHAY181-RAFF
 prerequisites: [AR-C181-ulba, AR-C181-maghsala]
 sounds: []
 roots: [r-f-f]
-etymology_hook: "raff: built on the root r-f-f, 'a shelf' (Lane); Lane's raff is a ledge on which the choice vessels of a house are set"
+etymology_hook: "raff: an old native noun Lane files under r-f-f; Lane's raff is a ledge for a house's choice vessels"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C181-maghsala]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**رف** (*raff*) is built on the native Arabic root *r-f-f*, "a shelf" (Lane). Lane's *raff* is a ledge on which the choice vessels of a house are set.
+**رف** (*raff*), "a shelf", is an old native noun, filed under the root *r-f-f* (Lane). Lane's *raff* is a ledge on which the choice vessels of a house are set.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

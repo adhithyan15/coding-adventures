@@ -47,7 +47,7 @@ reviews_of: [AR-C281-malumat]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**مذيع** (*mudhīʿ*) is built on the native Arabic root *dh-y-ʿ*, "to spread abroad (news)" (Lane). *Mudhīʿ* is the Form IV participle, "one who broadcasts".
+**مذيع** (*mudhīʿ*) is built on the native Arabic root *dh-y-ʿ*, "to spread abroad (news)" (Lane). *Mudhīʿ* is the Form IV participle, "one who spreads (news) abroad"; broadcasting is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

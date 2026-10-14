@@ -15,7 +15,7 @@ concept_tag: AR-SHAY275-SHAKHS
 prerequisites: [AR-C274-malaff, AR-C275-arus]
 sounds: []
 roots: [sh-kh-ṣ]
-etymology_hook: "shakhṣ: built on the root sh-kh-ṣ, 'a figure seen from afar' (Lane); shakhṣ is a person"
+etymology_hook: "shakhṣ: built on the root sh-kh-ṣ, 'to rise into view' (Lane): a figure seen from afar, a person"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C275-arus]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**شخص** (*shakhṣ*) is built on the native Arabic root *sh-kh-ṣ*, "a figure seen from afar" (Lane). *Shakhṣ* is a person.
+**شخص** (*shakhṣ*) is built on the native Arabic root *sh-kh-ṣ*, "to rise into view" (Lane). Lane's *shakhṣ* is a figure seen from afar, hence a person.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

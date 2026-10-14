@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 275,
-  "sourceHash": "fnv1a64:05d72548c0238251",
+  "sourceHash": "fnv1a64:8d26311c3dec491f",
   "lessonIds": [
     "AR-C275-arus",
     "AR-C275-shakhs",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch275.txt",
   "json": "arabic/narration/ch275.json",
-  "textHash": "fnv1a64:a2cfede9024ce604",
-  "jsonHash": "fnv1a64:4b01bafd1770b72b",
+  "textHash": "fnv1a64:efcd1437d96cf815",
+  "jsonHash": "fnv1a64:ace5c44f47013078",
   "findings": []
 }

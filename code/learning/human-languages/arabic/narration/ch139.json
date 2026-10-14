@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "Beard, Moustache, Chest, Waist, Elbow",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:a1e87264b96a5fc5",
+  "sourceHash": "fnv1a64:5e629d2826861512",
   "lessons": [
     {
       "id": "AR-C139-lihya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e8ef6cf48529243",
+      "sourceHash": "fnv1a64:72bd3bdf5dd67706",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "لحية (liḥya) is built on the native Arabic root l-ḥ-y, \"a beard\" (Lane). An old noun with its own root in Lane."
+              "text": "لحية (liḥya), \"a beard\", is an old native noun, filed under the root l-ḥ-y (Lane)."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f0d4b14973d5392",
+      "sourceHash": "fnv1a64:c2a49277d6e29577",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "خصر (khaṣr) is built on the native Arabic root kh-ṣ-r, \"the waist\" (Lane). An old noun with its own root in Lane."
+              "text": "خصر (khaṣr), \"the waist\", is an old native noun, filed under the root kh-ṣ-r (Lane)."
             }
           ]
         },

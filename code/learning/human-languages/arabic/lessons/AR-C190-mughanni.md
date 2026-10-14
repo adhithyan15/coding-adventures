@@ -15,7 +15,7 @@ concept_tag: AR-AMAL190-MUGHANNI
 prerequisites: [AR-C189-mutarjim, AR-C189-muqabala]
 sounds: []
 roots: [gh-n-y]
-etymology_hook: "mughannī: built on the root gh-n-y, 'to sing' (Lane); mughannī is the Form II participle, 'one who sings'"
+etymology_hook: "mughannī: built on the root gh-n-y (Lane), whose Form II ghannā is 'to sing'; mughannī is its participle"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C189-muqabala]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**مغني** (*mughannī*) is built on the native Arabic root *gh-n-y*, "to sing" (Lane). *Mughannī* is the Form II participle, "one who sings".
+**مغني** (*mughannī*) is built on the native Arabic root *gh-n-y*, "to be free from want" (Lane), whose Form II *ghannā* means "to sing". *Mughannī* is the Form II participle, "one who sings".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

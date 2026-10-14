@@ -47,7 +47,7 @@ reviews_of: [AR-C281-raqm]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**مكالمة** (*mukālama*) is built on the native Arabic root *k-l-m*, "speech; to speak to" (Lane). *Mukālama* is the verbal noun of Form III, "speaking with one another".
+**مكالمة** (*mukālama*) is built on the native Arabic root *k-l-m*, "speech; to speak to" (Lane). *Mukālama* is the verbal noun of Form III, "speaking with one another"; the phone call is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

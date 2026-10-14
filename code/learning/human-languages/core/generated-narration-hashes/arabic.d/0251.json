@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 251,
-  "sourceHash": "fnv1a64:3a8379776e56f988",
+  "sourceHash": "fnv1a64:0bba306e2de11ffb",
   "lessonIds": [
     "AR-C251-nadil",
     "AR-C251-mudir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch251.txt",
   "json": "arabic/narration/ch251.json",
-  "textHash": "fnv1a64:6ba2afc31f9437f7",
-  "jsonHash": "fnv1a64:6f9da45802849d16",
+  "textHash": "fnv1a64:7d929760fbf2af7a",
+  "jsonHash": "fnv1a64:85552ad0ae8d7c64",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Oranges, Lemons, Eggs, Onions, Breakfast",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1101adb449103593",
+  "sourceHash": "fnv1a64:d5e18e044b8f2dd7",
   "lessons": [
     {
       "id": "AR-C68-burtuqal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b21362854d14db3e",
+      "sourceHash": "fnv1a64:89ea89efbc94fb52",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "برتقال (burtuqāl) is named after Portugal, whose traders brought the sweet orange from the east; the same name runs through Turkish portakal and Greek portokali. It has no Arabic root."
+              "text": "برتقال (burtuqāl) is named after Portugal, whose traders are usually said to have brought the sweet orange from the east; EtymDB takes the Arabic from Greek portokali, and Turkish has portakal. It has no Arabic root."
             }
           ]
         },

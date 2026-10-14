@@ -15,7 +15,7 @@ concept_tag: AR-SHAY277-KURA
 prerequisites: [AR-C276-zarafa, AR-C276-hut]
 sounds: []
 roots: [k-r-w]
-etymology_hook: "kura: built on the root k-r-w, 'a ball' (Lane); kura is a ball"
+etymology_hook: "kura: on the root k-r-w; Lane's short article gives kurī 'spherical'; kura is a ball"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C276-hut]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**كرة** (*kura*) is built on the native Arabic root *k-r-w*, "a ball" (Lane). *Kura* is a ball.
+**كرة** (*kura*) is built on the native Arabic root *k-r-w*; Lane's short article on this root gives *kurī*, "spherical". *Kura* is a ball.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

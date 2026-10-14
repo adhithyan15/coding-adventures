@@ -4,7 +4,7 @@
   "chapter": 217,
   "title": "Tail, Wing, Camera, Headphones, Battery",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6a3a91736cb2b647",
+  "sourceHash": "fnv1a64:230229bf3d5ad1d8",
   "lessons": [
     {
       "id": "AR-C217-dhayl",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d6c77977e58db56",
+      "sourceHash": "fnv1a64:81e0d058df295f7b",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "بطارية (baṭṭāriyya) is borrowed from European battery, Italian batteria; it has no Arabic root."
+              "text": "بطارية (baṭṭāriyya) is borrowed from a European word for a battery, usually given as Italian batteria; it has no Arabic root."
             }
           ]
         },

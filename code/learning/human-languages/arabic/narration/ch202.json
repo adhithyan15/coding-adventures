@@ -4,7 +4,7 @@
   "chapter": 202,
   "title": "Usually, Immediately, Later, Date, Moment",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:da3825ac803752e4",
+  "sourceHash": "fnv1a64:2b9b493732708742",
   "lessons": [
     {
       "id": "AR-C202-ghaliban",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2653895c8abed1ae",
+      "sourceHash": "fnv1a64:a554b007351a6d7c",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "لحظة (laḥẓa) is built on the native Arabic root l-ḥ-ẓ, \"a glance\" (Lane). Laḥẓa is one glance, a moment."
+              "text": "لحظة (laḥẓa) is built on the native Arabic root l-ḥ-ẓ, \"to look with the corner of the eye\" (Lane). Laḥẓa is one glance, a moment."
             }
           ]
         },

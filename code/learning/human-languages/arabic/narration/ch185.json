@@ -4,7 +4,7 @@
   "chapter": 185,
   "title": "Dolphin, Parrot, Ant, Bull, Insect",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:1a18819551a0182d",
+  "sourceHash": "fnv1a64:dbb46ecff2d3cdbc",
   "lessons": [
     {
       "id": "AR-C185-dulfin",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5828f457ac18f96",
+      "sourceHash": "fnv1a64:fb1314e15d33f73e",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "نملة (namla) is built on the native Arabic root n-m-l, \"ants\" (Lane). Namla is one ant."
+              "text": "نملة (namla) is one ant of naml, \"ants\", an old native noun, filed under the root n-m-l (Lane)."
             }
           ]
         },

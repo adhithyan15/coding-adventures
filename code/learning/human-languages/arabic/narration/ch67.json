@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "Tomatoes, Carrots, Butter, Honey, Grapes",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:904f9f0d1b700547",
+  "sourceHash": "fnv1a64:20fceb9542202c0e",
   "lessons": [
     {
       "id": "AR-C67-tamatim",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e549836b391db2cb",
+      "sourceHash": "fnv1a64:9005260fd97d72ce",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "عسل (ʿasal) is built on the native Arabic root ʿ-s-l, \"honey; to season with honey\" (Lane). An old Semitic noun; Lane's verb ʿasala means to prepare food with honey."
+              "text": "عسل (ʿasal) is built on the native Arabic root ʿ-s-l, \"honey; to season with honey\" (Lane). Lane's verb ʿasala means to prepare food with honey."
             }
           ]
         },

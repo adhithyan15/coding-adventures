@@ -47,7 +47,7 @@ reviews_of: [AR-C280-muhandis]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**محامي** (*muḥāmī*) is built on the native Arabic root *ḥ-m-y*, "to protect, to defend" (Lane). *Muḥāmī* is the Form III participle, "one who defends".
+**محامي** (*muḥāmī*) is built on the native Arabic root *ḥ-m-y*, "to protect, to defend" (Lane). *Muḥāmī* is the Form III participle, "one who defends"; the lawyer is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

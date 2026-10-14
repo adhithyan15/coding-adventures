@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 149,
-  "sourceHash": "fnv1a64:468c61ea12338648",
+  "sourceHash": "fnv1a64:0aa428246d7b6ae8",
   "lessonIds": [
     "AR-C149-muzlim",
     "AR-C149-mulawwan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch149.txt",
   "json": "arabic/narration/ch149.json",
-  "textHash": "fnv1a64:91e4bd4b6724faf6",
-  "jsonHash": "fnv1a64:2f1a9261c5728b53",
+  "textHash": "fnv1a64:206a5274496f95c8",
+  "jsonHash": "fnv1a64:f7ab81572d6ca287",
   "findings": []
 }

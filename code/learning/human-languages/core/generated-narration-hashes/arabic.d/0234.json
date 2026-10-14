@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 234,
-  "sourceHash": "fnv1a64:c105c22bc40833b3",
+  "sourceHash": "fnv1a64:7a81760cacedef1d",
   "lessonIds": [
     "AR-C234-sanawi",
     "AR-C234-duha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch234.txt",
   "json": "arabic/narration/ch234.json",
-  "textHash": "fnv1a64:f0d4f1998dc7a7ee",
-  "jsonHash": "fnv1a64:353bcbccf5217aad",
+  "textHash": "fnv1a64:1beb497cce59dca7",
+  "jsonHash": "fnv1a64:4476d5751c6c2876",
   "findings": []
 }

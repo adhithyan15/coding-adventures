@@ -15,7 +15,7 @@ concept_tag: AR-SIHHA169-HABBA
 prerequisites: [AR-C169-liyaqa, AR-C169-isaba]
 sounds: []
 roots: [h-b-b]
-etymology_hook: "ḥabba: built on the root ḥ-b-b, 'a grain, a seed' (Lane); ḥabba is one grain, hence a pill"
+etymology_hook: "ḥabba: one grain of ḥabb 'grain', a native noun that Lane files under ḥ-b-b; the pill is a later sense"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C169-isaba]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**حبة** (*ḥabba*) is built on the native Arabic root *ḥ-b-b*, "a grain, a seed" (Lane). *Ḥabba* is one grain, hence a pill.
+**حبة** (*ḥabba*) is one grain of *ḥabb*, "grain, seed", a native noun, filed under the root *ḥ-b-b* (Lane); a pill is a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

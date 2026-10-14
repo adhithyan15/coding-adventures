@@ -15,7 +15,7 @@ concept_tag: AR-THINGS133-BUHAYRA
 prerequisites: [AR-C132-tall, AR-C133-sahra]
 sounds: []
 roots: [b-ḥ-r]
-etymology_hook: "buḥayra: built on the root b-ḥ-r, 'the sea' (Lane); buḥayra is the diminutive, 'a little sea'"
+etymology_hook: "buḥayra: built on the root b-ḥ-r (Lane), whose baḥr is 'the sea'; buḥayra is the diminutive, 'a little sea'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C133-sahra]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**بحيرة** (*buḥayra*) is built on the native Arabic root *b-ḥ-r*, "the sea" (Lane). *Buḥayra* is the diminutive, "a little sea".
+**بحيرة** (*buḥayra*) is built on the native Arabic root *b-ḥ-r* (Lane), whose noun *baḥr* is "the sea". *Buḥayra* is the diminutive, "a little sea".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

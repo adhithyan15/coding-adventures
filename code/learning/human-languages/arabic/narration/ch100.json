@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "Lift, Corridor, Public square, Airport, Port",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ffee406b5dad9aff",
+  "sourceHash": "fnv1a64:fb8b33d8552ac4a5",
   "lessons": [
     {
       "id": "AR-C100-misad",
@@ -306,7 +306,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0a1b9c291b6914d",
+      "sourceHash": "fnv1a64:75118b0e0d746935",
       "notice": null,
       "blocks": [
         {
@@ -344,7 +344,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ميدان (maydān) is listed by Lane under m-y-d as a race-ground for horses. He quotes two native derivations, from māda, \"to move\", or from madana, \"to dwell\"; some modern scholars trace it instead to an Iranian source, so the origin is not settled."
+              "text": "ميدان (maydān) is listed by Lane under m-y-d as a race-ground for horses. He quotes several native derivations, among them māda, \"to move\", and madana, \"to dwell\"; some modern scholars trace it instead to an Iranian source, so the origin is not settled."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 132,
   "title": "Coast, Waterfall, Cave, Valley, Hill",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7485123c881aca73",
+  "sourceHash": "fnv1a64:0c9cbde2b27ee561",
   "lessons": [
     {
       "id": "AR-C132-sahil",
@@ -302,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14801654ed2ecebd",
+      "sourceHash": "fnv1a64:628a60eb49b5240a",
       "notice": null,
       "blocks": [
         {
@@ -340,7 +340,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "كهف (kahf) is built on the native Arabic root k-h-f, \"a cave\" (Lane). An old noun; Lane uses it for a cavern in a mountain."
+              "text": "كهف (kahf), \"a cave\", is an old native noun built on the letters k-h-f. Lane has no article on this root, but his sources use kahf to explain ghār, a cavern in a mountain."
             }
           ]
         },
@@ -436,7 +436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cd87c261baf54ff",
+      "sourceHash": "fnv1a64:a74b37c13ec40c74",
       "notice": null,
       "blocks": [
         {
@@ -474,7 +474,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "وادي (wādī) is built on the native Arabic root w-d-y, \"a valley, a river bed\" (Lane). English wadi comes from it."
+              "text": "وادي (wādī), \"a valley, a river bed\", is an old native noun, filed under the root w-d-y (Lane). English wadi comes from it."
             }
           ]
         },
@@ -570,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f8daffc702e32e7",
+      "sourceHash": "fnv1a64:9b11b593807fd55e",
       "notice": null,
       "blocks": [
         {
@@ -608,7 +608,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "تل (tall) is built on the native Arabic root t-l-l, \"a hill, a mound\" (Lane). English tell, an archaeologist's mound, comes from it; Hebrew tel is a cousin."
+              "text": "تل (tall), \"a hill, a mound\", is an old native noun, filed under the root t-l-l (Lane). English tell, an archaeologist's mound, comes from it; Hebrew tel is a cousin."
             }
           ]
         },

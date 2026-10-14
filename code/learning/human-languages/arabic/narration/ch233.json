@@ -4,7 +4,7 @@
   "chapter": 233,
   "title": "Since, Dawn, Sunrise, Sunset, Birth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dd8c5f0cdef0554d",
+  "sourceHash": "fnv1a64:63dcee628e1a1924",
   "lessons": [
     {
       "id": "AR-C233-mundhu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:102d1fc66359ea49",
+      "sourceHash": "fnv1a64:97e221d01aec7fed",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "منذ (mundhu) is an old particle of time. The grammarians took it apart in different ways, and its origin is not settled; it is not built on a three-letter root."
+              "text": "منذ (mundhu) is an old particle of time. Lane reports that some call it a simple word and others a compound, and its origin is not settled; it is not built on a three-letter root."
             }
           ]
         },

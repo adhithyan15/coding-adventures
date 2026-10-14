@@ -15,7 +15,7 @@ concept_tag: AR-SHAY249-KAMMIYYA
 prerequisites: [AR-C248-jihaz, AR-C248-musalsal]
 sounds: []
 roots: [kam-how-much]
-etymology_hook: "kammiyya: built from kam 'how much' + -iyya, a coinage of the medieval philosophers"
+etymology_hook: "kammiyya: kam 'how much' + -iyya, usually described as a coinage of the medieval philosophers"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C248-musalsal]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**كمية** (*kammiyya*) is built from *kam*, "how much", with the abstract ending *-iyya*: "how-much-ness", a coinage of the medieval philosophers.
+**كمية** (*kammiyya*) is built from *kam*, "how much", with the abstract ending *-iyya*: "how-much-ness", usually described as a coinage of the medieval philosophers.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

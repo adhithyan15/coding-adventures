@@ -4,7 +4,7 @@
   "chapter": 105,
   "title": "Entrance, Exit, Straight ahead, Around, At",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:23409df27f5de5ed",
+  "sourceHash": "fnv1a64:2fedaaeb56aaeb6d",
   "lessons": [
     {
       "id": "AR-C105-madkhal",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4047638c9c84bad7",
+      "sourceHash": "fnv1a64:b1591676a5a9165d",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "عند (ʿinda) is built on the native Arabic root ʿ-n-d, \"at, near, by\" (Lane). An old preposition with its own root in Lane."
+              "text": "عند (ʿinda), \"at, near, by\", is an old preposition, filed under the root ʿ-n-d (Lane), beside ʿand, \"vicinity\"."
             }
           ]
         },

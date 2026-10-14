@@ -15,7 +15,7 @@ concept_tag: AR-SHAY276-ZARAFA
 prerequisites: [AR-C276-tayr, AR-C276-usfur]
 sounds: []
 roots: [z-r-f]
-etymology_hook: "zarāfa: Lane's link to 'a company' looks folk; origin not settled; English giraffe comes from it"
+etymology_hook: "zarāfa: Lane's link to 'a company' looks folk; EtymDB gives Syriac zarīpā; English giraffe is from it"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C276-usfur]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**زرافة** (*zarāfa*) is listed by Lane under *z-r-f*, with an explanation linking it to a word for "a company", because it seems an assemblage of animals; that looks like a folk explanation, and the origin is not settled. English *giraffe* comes from *zarāfa* through Italian.
+**زرافة** (*zarāfa*) is listed by Lane under *z-r-f*, with an explanation linking it to a word for "a company", because it seems an assemblage of animals; that looks like a folk explanation. EtymDB derives it from Syriac *zarīpā*; the origin is not certain. English *giraffe* comes from *zarāfa* through Italian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

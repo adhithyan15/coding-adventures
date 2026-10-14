@@ -4,7 +4,7 @@
   "chapter": 235,
   "title": "Museum, Stadium, Pavement, Crossroads, Embassy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:015a13d9bd7e1369",
+  "sourceHash": "fnv1a64:eb2633928c7a2490",
   "lessons": [
     {
       "id": "AR-C235-mathaf",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:896e4eed2dd729b5",
+      "sourceHash": "fnv1a64:6f28215a8f22da22",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سفارة (sifāra) is built on the native Arabic root s-f-r, \"to make peace between\" (Lane). Sifāra is the office of safīr, \"a go-between\"."
+              "text": "سفارة (sifāra) is built on the native Arabic root s-f-r, \"to sweep, to uncover\" (Lane), which also gives safara bayna, \"to make peace between\". Sifāra is the office of safīr, \"a go-between\"; the embassy is a modern sense."
             }
           ]
         },

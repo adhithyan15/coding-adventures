@@ -74,10 +74,10 @@ to** something.
 ## Why it's said this way — The Semitic cousin
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*maʿa* ← Semitic *\*ʿimma*, and its Hebrew cousin is **עִם** (*ʿim*), "with." The
-same pairing you met with **salām / shalom** in Chapter 1 and **ism / shem** in
-Chapter 2. Three chapters, three cousins — the family resemblance is systematic,
-not a coincidence.
+*maʿa* is usually set beside Hebrew **עִם** (*ʿim*), "with", though how the two
+are linked is debated. Compare the sure pairings you met with **salām /
+shalom** in Chapter 1 and **ism / shem** in Chapter 2: there the family
+resemblance is systematic, not a coincidence.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C04-MAA-WITH-01, AR-CONCEPT-C04-MAA-WITH-02] -->

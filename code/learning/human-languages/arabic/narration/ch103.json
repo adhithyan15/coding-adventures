@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "Beside, Left, Middle, Corner, North",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7eb389b9628c1398",
+  "sourceHash": "fnv1a64:07c7e0f3d82aace5",
   "lessons": [
     {
       "id": "AR-C103-bijanib",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90c7c19524029887",
+      "sourceHash": "fnv1a64:f53fdf88b5b8bbb9",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "يسار (yasār) is built on the native Arabic root y-s-r, \"ease; the left hand\" (Lane). Lane gives yasār as the left hand and also as ease, wealth."
+              "text": "يسار (yasār) is built on the native Arabic root y-s-r, \"to be easy, gentle\" (Lane). Lane gives yasār as the left hand and also as ease, wealth."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13e11afb1934acda",
+      "sourceHash": "fnv1a64:93dd9076744c121b",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "وسط (wasaṭ) is built on the native Arabic root w-s-ṭ, \"the middle\" (Lane). An old noun with its own root in Lane."
+              "text": "وسط (wasaṭ), \"the middle\", is an old native noun, listed under the root w-s-ṭ (Lane) beside a verb meaning \"to sit in the middle\"."
             }
           ]
         },
@@ -565,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:649e55c8b147fca2",
+      "sourceHash": "fnv1a64:95136c51b1d66c28",
       "notice": null,
       "blocks": [
         {
@@ -603,7 +603,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "شمال (shamāl) is built on the native Arabic root sh-m-l, \"the left hand; the north wind\" (Lane). Lane gives shimāl as the left hand and shamāl as the north wind; facing the sunrise, north is on the left."
+              "text": "شمال (shamāl) is a native noun, filed under the root sh-m-l (Lane). Lane gives shimāl as the left hand and shamāl as the north wind; facing the sunrise, north is on the left."
             }
           ]
         },

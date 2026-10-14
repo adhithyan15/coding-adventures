@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 237,
-  "sourceHash": "fnv1a64:27a7809f1c5d347f",
+  "sourceHash": "fnv1a64:b27499d414a244a1",
   "lessonIds": [
     "AR-C237-sabr",
     "AR-C237-karam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch237.txt",
   "json": "arabic/narration/ch237.json",
-  "textHash": "fnv1a64:1cd3dd549b5b8d87",
-  "jsonHash": "fnv1a64:4ec92635fe4f2a0d",
+  "textHash": "fnv1a64:5e6bf0b48d4cb71d",
+  "jsonHash": "fnv1a64:40d64f92e4c41c3f",
   "findings": []
 }

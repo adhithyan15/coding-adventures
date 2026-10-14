@@ -15,7 +15,7 @@ concept_tag: AR-CAN106-ITQAN
 prerequisites: [AR-C106-sulta, AR-C106-najah]
 sounds: []
 roots: [t-q-n]
-etymology_hook: "itqān: built on the root t-q-n, 'to make firm, to do skilfully' (Lane)"
+etymology_hook: "itqān: verbal noun of Form IV atqana 'to make firm, to do skilfully', on the root t-q-n (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C106-najah]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**إتقان** (*itqān*) is built on the native Arabic root *t-q-n*, "to make firm, to do skilfully" (Lane). *Itqān* is the verbal noun of Form IV *atqana*, "to make firm, to perfect".
+**إتقان** (*itqān*) is built on the native Arabic root *t-q-n* (Lane). *Itqān* is the verbal noun of Form IV *atqana*, "to make firm, to do skilfully".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

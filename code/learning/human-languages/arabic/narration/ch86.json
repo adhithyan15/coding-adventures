@@ -4,7 +4,7 @@
   "chapter": 86,
   "title": "Beautiful, Brown, Week, Month, Minute",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6adf86fbc6b25d33",
+  "sourceHash": "fnv1a64:d7973bea6eef1bab",
   "lessons": [
     {
       "id": "AR-C86-jamil",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac0cba3f1b767bca",
+      "sourceHash": "fnv1a64:3683d5417dab84c3",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "بني (bunnī) is the colour of bunn, coffee beans, with the adjective ending -ī. Lane records bunn as coffee berries. It is linked to Ethiopian words for coffee, such as Amharic bunna; which way the word travelled is not settled."
+              "text": "بني (bunnī) is the colour of bunn, coffee beans, with the adjective ending -ī. Lane records bunn as coffee berries, and EtymDB derives it from Amharic bunna, \"coffee\"."
             }
           ]
         },

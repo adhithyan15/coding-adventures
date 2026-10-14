@@ -47,7 +47,7 @@ reviews_of: [AR-C273-tawabil]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**طابعة** (*ṭābiʿa*) is built on the native Arabic root *ṭ-b-ʿ*, "to seal, to stamp" (Lane). *Ṭābiʿa* is the feminine active participle, "a thing that prints".
+**طابعة** (*ṭābiʿa*) is built on the native Arabic root *ṭ-b-ʿ*, "to seal, to stamp" (Lane). *Ṭābiʿa* is the feminine active participle, "a thing that prints"; the printing sense is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

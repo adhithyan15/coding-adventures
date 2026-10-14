@@ -15,7 +15,7 @@ concept_tag: AR-CAN110-ADAT
 prerequisites: [AR-C109-mahara, AR-C109-fann]
 sounds: []
 roots: [ʾ-d-w]
-etymology_hook: "adāt: built on the root ʾ-d-w, 'a tool, an implement' (Lane); Lane's adāt is an instrument or tool"
+etymology_hook: "adāt: built on the root ʾ-d-w, 'to equip oneself, to get ready' (Lane); Lane's adāt is an instrument or tool"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C109-fann]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**أداة** (*adāt*) is built on the native Arabic root *ʾ-d-w*, "a tool, an implement" (Lane). Lane's *adāt* is an instrument or tool.
+**أداة** (*adāt*) is built on the native Arabic root *ʾ-d-w*, "to equip oneself, to get ready" (Lane). Lane's *adāt* is an instrument or tool.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

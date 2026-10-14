@@ -15,7 +15,7 @@ concept_tag: AR-ANIMALS79-KHARUF
 prerequisites: [AR-C79-baqara, AR-C79-maiz]
 sounds: []
 roots: [khariif-autumn]
-etymology_hook: "kharūf: built on the root kh-r-f, 'a lamb' (Lane); the same root gives kharīf, 'autumn'"
+etymology_hook: "kharūf: root kh-r-f, 'to gather fruit; to graze' (Lane): a lamb, said to graze here and there"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C79-maiz]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**خروف** (*kharūf*) is built on the native Arabic root *kh-r-f*, "a lamb; autumn" (Lane). The same root gives *kharīf*, "autumn".
+**خروف** (*kharūf*) is built on the native Arabic root *kh-r-f*, "to gather fruit; to graze" (Lane). Lane's *kharūf* is a lamb, said to be so called because it grazes here and there; the same root gives *kharīf*, "autumn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

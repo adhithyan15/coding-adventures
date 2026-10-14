@@ -15,7 +15,7 @@ concept_tag: AR-THINGS140-ZUFR
 prerequisites: [AR-C139-mirfaq, AR-C140-kaff]
 sounds: []
 roots: [ẓ-f-r]
-etymology_hook: "ẓufr: built on the root ẓ-f-r, 'a nail, a claw' (Lane); Hebrew tsipporen, 'fingernail', is usually counted a cousin"
+etymology_hook: "ẓufr: a nail, a claw, an old native noun Lane files under ẓ-f-r; Hebrew tsipporen is usually counted a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C140-kaff]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ظفر** (*ẓufr*) is built on the native Arabic root *ẓ-f-r*, "a nail, a claw" (Lane). Hebrew *tsipporen*, "fingernail", is usually counted a cousin.
+**ظفر** (*ẓufr*), "a nail, a claw", is an old native noun, filed under the root *ẓ-f-r* (Lane). Hebrew *tsipporen*, "fingernail", is usually counted a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

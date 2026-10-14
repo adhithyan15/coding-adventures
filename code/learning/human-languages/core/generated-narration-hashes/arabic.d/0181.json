@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 181,
-  "sourceHash": "fnv1a64:b50a4de3b00ce44a",
+  "sourceHash": "fnv1a64:45bd21196c99b8f9",
   "lessonIds": [
     "AR-C181-ghassala",
     "AR-C181-mukayyif",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch181.txt",
   "json": "arabic/narration/ch181.json",
-  "textHash": "fnv1a64:cdd119145021d604",
-  "jsonHash": "fnv1a64:6dd1845bc6f59a4d",
+  "textHash": "fnv1a64:e0368e682cac3510",
+  "jsonHash": "fnv1a64:08949f92f7505675",
   "findings": []
 }

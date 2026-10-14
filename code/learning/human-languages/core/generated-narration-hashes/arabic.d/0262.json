@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 262,
-  "sourceHash": "fnv1a64:9a03f39d0fbfabea",
+  "sourceHash": "fnv1a64:93cc96ffa1ae5403",
   "lessonIds": [
     "AR-C262-isaf",
     "AR-C262-harara",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch262.txt",
   "json": "arabic/narration/ch262.json",
-  "textHash": "fnv1a64:811b615ddedb5f5f",
-  "jsonHash": "fnv1a64:d1c90f7749277b79",
+  "textHash": "fnv1a64:234335fbbbaf3af3",
+  "jsonHash": "fnv1a64:140c8a627b9688f3",
   "findings": []
 }

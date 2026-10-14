@@ -47,7 +47,7 @@ reviews_of: [AR-C218-wazn]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**خرطوم** (*kharṭūm*) is built on the native Arabic root *kh-r-ṭ-m*, "the fore part of the nose; a trunk" (Lane). Lane's *kharṭūm* is the fore part of the nose, and an elephant's trunk.
+**خرطوم** (*kharṭūm*) is built on the native Arabic root *kh-r-ṭ-m*, "the fore part of the nose; a trunk" (Lane). Lane's *kharṭūm* is the fore part of the nose, and an elephant's trunk; the hose is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

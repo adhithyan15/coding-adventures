@@ -15,7 +15,7 @@ concept_tag: AR-SHAY217-BATTARIYYA
 prerequisites: [AR-C217-kamira, AR-C217-sammaa]
 sounds: []
 roots: [italian-batteria]
-etymology_hook: "baṭṭāriyya: a modern loan from European battery, Italian batteria"
+etymology_hook: "baṭṭāriyya: a modern loan from a European word for a battery, usually given as Italian batteria"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C217-sammaa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**بطارية** (*baṭṭāriyya*) is borrowed from European *battery*, Italian *batteria*; it has no Arabic root.
+**بطارية** (*baṭṭāriyya*) is borrowed from a European word for a battery, usually given as Italian *batteria*; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

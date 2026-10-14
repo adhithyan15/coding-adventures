@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "South, East, West, Place, Address",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:83de1d5f774f0357",
+  "sourceHash": "fnv1a64:afa008c6e3db6943",
   "lessons": [
     {
       "id": "AR-C104-janub",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80612f68b79829ef",
+      "sourceHash": "fnv1a64:769452ad97c5d015",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جنوب (janūb) is built on the native Arabic root j-n-b, \"the side; the south wind\" (Lane). Lane gives janūb as the south wind; the same root gives jānib, \"side\"."
+              "text": "جنوب (janūb) is built on the native Arabic root j-n-b, \"the side\" (Lane). Lane gives janūb as the south wind; the same root gives jānib, \"side\"."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37a1ad14bd73a53f",
+      "sourceHash": "fnv1a64:335f67f6cf1d54c4",
       "notice": null,
       "blocks": [
         {
@@ -603,7 +603,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "عنوان (ʿunwān) is built on the native Arabic root ʿ-n-w, \"the title of a letter or book\" (Lane). Lane's ʿunwān is the title or superscription of a writing; the postal address is a later sense."
+              "text": "عنوان (ʿunwān), \"the title of a letter or book\", is an old native noun, filed under the root ʿ-n-w (Lane). Lane's ʿunwān is the title or superscription of a writing; the postal address is a later sense."
             }
           ]
         },

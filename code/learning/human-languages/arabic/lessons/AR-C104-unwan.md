@@ -15,7 +15,7 @@ concept_tag: AR-LOC104-UNWAN
 prerequisites: [AR-C104-gharb, AR-C104-makan, AR-C01-masa-al-khayr, AR-C01-masa-al-khayr]
 sounds: []
 roots: [ʿ-n-w]
-etymology_hook: "ʿunwān: built on the root ʿ-n-w, 'the title of a letter or book' (Lane)"
+etymology_hook: "ʿunwān: a native noun Lane files under ʿ-n-w and ʿ-n-n: the title or superscription of a writing"
 duration:
   max_seconds: 200
 requires:
@@ -49,7 +49,7 @@ reviews_of: [AR-C104-makan]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**عنوان** (*ʿunwān*) is built on the native Arabic root *ʿ-n-w*, "the title of a letter or book" (Lane). Lane's *ʿunwān* is the title or superscription of a writing; the postal address is a later sense.
+**عنوان** (*ʿunwān*), "the title of a letter or book", is an old native noun, filed under the root *ʿ-n-w* (Lane). Lane's *ʿunwān* is the title or superscription of a writing; the postal address is a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

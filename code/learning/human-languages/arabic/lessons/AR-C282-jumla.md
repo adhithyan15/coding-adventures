@@ -15,7 +15,7 @@ concept_tag: AR-AMAL282-JUMLA
 prerequisites: [AR-C282-miqlama, AR-C282-safha]
 sounds: []
 roots: [j-m-l]
-etymology_hook: "jumla: built on the root j-m-l, 'the whole, the sum' (Lane); jumla is a sum, a whole: a sentence"
+etymology_hook: "jumla: built on the root j-m-l, 'to collect' (Lane); jumla is a sum, a whole: a sentence"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C282-safha]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**جملة** (*jumla*) is built on the native Arabic root *j-m-l*, "the whole, the sum" (Lane). *Jumla* is a sum, a whole: a sentence.
+**جملة** (*jumla*) is built on the native Arabic root *j-m-l*, "to collect" (Lane). *Jumla* is a sum, a whole: a sentence.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

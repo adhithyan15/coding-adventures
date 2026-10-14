@@ -15,7 +15,7 @@ concept_tag: AR-THINGS121-ZATAR
 prerequisites: [AR-C121-nana, AR-C121-baqdunis]
 sounds: []
 roots: [zatar-thyme]
-etymology_hook: "zaʿtar: not in Lane; an Aramaic source has been suggested; origin not settled"
+etymology_hook: "zaʿtar: Lane's saʿtar or ṣaʿtar, a herb, written with z in his day; deeper origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C121-baqdunis]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**زعتر** (*zaʿtar*) has no entry in Lane; an Aramaic source has been suggested, and the origin is not settled.
+**زعتر** (*zaʿtar*) is Lane's *saʿtar* or *ṣaʿtar*, a well-known herb, and he notes that in his day it was also written with *z*. An Aramaic source has been suggested, and its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

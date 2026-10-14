@@ -4,7 +4,7 @@
   "chapter": 251,
   "title": "Waiter, Manager, Employee, Colleague, Company",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3a8379776e56f988",
+  "sourceHash": "fnv1a64:0bba306e2de11ffb",
   "lessons": [
     {
       "id": "AR-C251-nadil",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48259f73bf765773",
+      "sourceHash": "fnv1a64:67038b6d66f4bcd2",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "موظف (muwaẓẓaf) is built on the native Arabic root w-ẓ-f, \"a daily allowance\" (Lane). Muwaẓẓaf is the Form II passive participle, \"one given a fixed post\"."
+              "text": "موظف (muwaẓẓaf) is built on the native Arabic root w-ẓ-f, \"to appoint (work); a daily allowance\" (Lane). Muwaẓẓaf is the Form II passive participle, \"one given a fixed post\"."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38877433a1d06935",
+      "sourceHash": "fnv1a64:3f52d78191c702c2",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "زميل (zamīl) is built on the native Arabic root z-m-l, \"one who rides behind another\" (Lane). Lane's zamīl is one who rides behind another on the same beast; a colleague is a later sense."
+              "text": "زميل (zamīl) is built on the native Arabic root z-m-l (Lane). Lane's zamīl is one who rides behind another on the same beast; a colleague is a later sense."
             }
           ]
         },

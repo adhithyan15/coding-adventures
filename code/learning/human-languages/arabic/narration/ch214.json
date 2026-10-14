@@ -4,7 +4,7 @@
   "chapter": 214,
   "title": "Suit, Sandals, Fabric, Cotton, Wool",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f1119fb18a865525",
+  "sourceHash": "fnv1a64:98e8d553375bd849",
   "lessons": [
     {
       "id": "AR-C214-badla",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa19906dc93e221e",
+      "sourceHash": "fnv1a64:0c4c52f0dfad1bde",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "قماش (qumāsh) is built on the native Arabic root q-m-sh, \"household stuff\" (Lane). Lane gives qammāsh as a seller of household goods; qumāsh is stuff, and fabric is the modern sense."
+              "text": "قماش (qumāsh) is built on the native Arabic root q-m-sh, \"to gather up from here and there\" (Lane). Lane gives qammāsh as a seller of household goods; qumāsh is stuff, and fabric is the modern sense."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91f6e469f367dda1",
+      "sourceHash": "fnv1a64:4465afdd21318ea6",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "قطن (quṭn) is built on the native Arabic root q-ṭ-n, \"cotton\" (Lane). English cotton comes from quṭn through French."
+              "text": "قطن (quṭn), \"cotton\", is an old native noun, filed under the root q-ṭ-n (Lane). English cotton comes from quṭn through French."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8531c2dcdc3330b8",
+      "sourceHash": "fnv1a64:3e8cd2ac2f926721",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "صوف (ṣūf) is built on the native Arabic root ṣ-w-f, \"wool\" (Lane). An old noun with its own root in Lane."
+              "text": "صوف (ṣūf), \"wool\", is an old native noun, listed under the root ṣ-w-f (Lane) beside a verb meaning \"to have much wool\"."
             }
           ]
         },

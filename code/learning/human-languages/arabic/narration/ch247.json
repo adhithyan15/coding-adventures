@@ -4,7 +4,7 @@
   "chapter": 247,
   "title": "Air, Wave, Roses, Palm tree, Jasmine",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:189e3e3cb1962f76",
+  "sourceHash": "fnv1a64:62c608d26a0326cd",
   "lessons": [
     {
       "id": "AR-C247-hawa",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abce67f3a13f9efd",
+      "sourceHash": "fnv1a64:2f5c8fe6f5e57ce9",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ورد (ward) is listed by Lane under w-r-d, with a source calling it arabicized. Aramaic wardā, \"rose\", is the same word, and an Iranian origin is usually given; the details are not settled."
+              "text": "ورد (ward) is listed by Lane under w-r-d, with a source calling it arabicized. It is usually given an Iranian origin, probably by way of Aramaic wardā, \"rose\"; EtymDB sets it beside wardā."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9789f415b9099f1",
+      "sourceHash": "fnv1a64:f96d9eabfc6543e5",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "نخلة (nakhla) is built on the native Arabic root n-kh-l, \"palm trees\" (Lane). Nakhla is one palm tree."
+              "text": "نخلة (nakhla) is one palm tree of nakhl, \"palm trees\", built on the native Arabic root n-kh-l. Lane's short article on this root gives nakhala, \"to sift\", and nakhlī, \"a cultivator of palm-trees\"."
             }
           ]
         },

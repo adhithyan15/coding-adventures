@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 69,
-  "sourceHash": "fnv1a64:ce29391556111362",
+  "sourceHash": "fnv1a64:d33d5e5dd2b88849",
   "lessonIds": [
     "AR-C69-asir",
     "AR-C69-dajaj",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch69.txt",
   "json": "arabic/narration/ch69.json",
-  "textHash": "fnv1a64:1be14421d8022e73",
-  "jsonHash": "fnv1a64:7c4d07a776843a16",
+  "textHash": "fnv1a64:3be7e236f88faa8e",
+  "jsonHash": "fnv1a64:4bda115317112068",
   "findings": []
 }

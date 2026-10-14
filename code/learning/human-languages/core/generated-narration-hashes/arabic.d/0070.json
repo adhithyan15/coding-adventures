@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 70,
-  "sourceHash": "fnv1a64:f8a063bdfc97f426",
+  "sourceHash": "fnv1a64:18967ea194f925de",
   "lessonIds": [
     "AR-C70-kursi",
     "AR-C70-tawila",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch70.txt",
   "json": "arabic/narration/ch70.json",
-  "textHash": "fnv1a64:a51ca05ec9640c5c",
-  "jsonHash": "fnv1a64:0192c7d7e3956108",
+  "textHash": "fnv1a64:582bfb8a71d2079c",
+  "jsonHash": "fnv1a64:9d518b09b08a5edd",
   "findings": []
 }

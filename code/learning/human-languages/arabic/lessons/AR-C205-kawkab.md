@@ -15,7 +15,7 @@ concept_tag: AR-MAKAN205-KAWKAB
 prerequisites: [AR-C205-tin, AR-C205-hudud]
 sounds: []
 roots: [semitic-kawkab]
-etymology_hook: "kawkab: Lane suggests a loan from Hebrew kōkhāv 'star'; better taken as Semitic cousins"
+etymology_hook: "kawkab: Lane (under k-k-b) suggests a loan from Hebrew kōkhāv 'star'; better taken as Semitic cousins"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C205-hudud]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**كوكب** (*kawkab*) is listed by Lane under *k-w-k-b*, where he notes the grammarians' dispute over its letters and suggests, in his own note, that it came from Hebrew *kōkhāv*, "star". The two are better taken as Semitic cousins.
+**كوكب** (*kawkab*) is listed by Lane under *k-k-b*, where he notes the grammarians' dispute over its letters and suggests, in his own note, that it came from Hebrew *kōkhāv*, "star". The two are better taken as Semitic cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

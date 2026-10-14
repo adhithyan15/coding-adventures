@@ -4,7 +4,7 @@
   "chapter": 252,
   "title": "Mark, Lecture, School subject, Fees, Post",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1a6bb7f4ee610fcd",
+  "sourceHash": "fnv1a64:3a64331e73ee8255",
   "lessons": [
     {
       "id": "AR-C252-alama",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5e4685cba853ed0",
+      "sourceHash": "fnv1a64:c553199e0c0bb32e",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "بريد (barīd) is disputed. Lane's sources call it of Persian origin, from a phrase for the docked tails of post-mules; EtymDB traces it to Greek beredos, from Late Latin veredus, \"post-horse\". The origin is not settled."
+              "text": "بريد (barīd) is usually traced to Late Latin veredus, \"post-horse\", through Greek beredos (EtymDB), probably by way of Aramaic. Lane's sources call it Persian, from a phrase for the docked tails of post-mules, an account that looks like a folk etymology."
             }
           ]
         },

@@ -15,7 +15,7 @@ concept_tag: AR-SIFA241-JADD
 prerequisites: [AR-C241-mutawadi, AR-C241-mudhik]
 sounds: []
 roots: [j-d-d]
-etymology_hook: "jādd: built on the root j-d-d, 'earnestness' (Lane); jādd is the active participle, 'in earnest', hence 'serious'"
+etymology_hook: "jādd: built on the root j-d-d, 'to cut; to be in earnest' (Lane); jādd is 'in earnest', hence 'serious'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C241-mudhik]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**جاد** (*jādd*) is built on the native Arabic root *j-d-d*, "earnestness" (Lane). *Jādd* is the active participle, "in earnest", hence "serious".
+**جاد** (*jādd*) is built on the native Arabic root *j-d-d*, "to cut; to be in earnest" (Lane). *Jādd* is the active participle, "in earnest", hence "serious".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 270,
   "title": "Boring, Booked, Available, International, Local",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5dd23834ffeec5f1",
+  "sourceHash": "fnv1a64:e019e46dfbd1b7d7",
   "lessons": [
     {
       "id": "AR-C270-mumill",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55f9f4be661a0d47",
+      "sourceHash": "fnv1a64:1fde31575ab92941",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "دولي (duwalī) is built on the native Arabic root d-w-l, \"to go round in turn\" (Lane). Duwalī is duwal, \"states\", with the adjective ending -ī."
+              "text": "دولي (duwalī) is built on the native Arabic root d-w-l, \"to go round in turn\" (Lane). Duwalī is duwal, plural of dawla, \"a turn of fortune\" in Lane and now \"a state\", with the adjective ending -ī."
             }
           ]
         },

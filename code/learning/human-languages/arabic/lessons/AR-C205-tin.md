@@ -15,7 +15,7 @@ concept_tag: AR-MAKAN205-TIN
 prerequisites: [AR-C205-tabia, AR-C205-turab]
 sounds: []
 roots: [ṭ-y-n]
-etymology_hook: "ṭīn: built on the root ṭ-y-n, 'clay, mud' (Lane); an old noun with its own root in Lane"
+etymology_hook: "ṭīn: an old native noun listed by Lane under ṭ-y-n, beside a verb meaning 'to plaster with clay'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C205-turab]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**طين** (*ṭīn*) is built on the native Arabic root *ṭ-y-n*, "clay, mud" (Lane). An old noun with its own root in Lane.
+**طين** (*ṭīn*), "clay, mud", is an old native noun, listed under the root *ṭ-y-n* (Lane) beside a verb meaning "to plaster with clay".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

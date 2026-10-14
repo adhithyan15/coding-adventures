@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Asking for Food",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b3b128d6a96338e6",
+  "sourceHash": "fnv1a64:72fe2b75cef143a1",
   "lessons": [
     {
       "id": "AR-C34-milh",
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:47924fdde0e1929e",
+      "sourceHash": "fnv1a64:082fed1925643644",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -265,7 +265,7 @@
             },
             {
               "kind": "speech",
-              "text": "Neither language changed the meaning. The old Semitic root named the staple food, and each people filled it with whatever theirs was: meat where herds mattered, bread where grain did."
+              "text": "The usual explanation: the old Semitic root named the staple food, and each people filled it with whatever theirs was: meat where herds mattered, bread where grain did."
             },
             {
               "kind": "speech",

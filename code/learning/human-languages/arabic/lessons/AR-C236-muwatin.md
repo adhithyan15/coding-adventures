@@ -47,7 +47,7 @@ reviews_of: [AR-C236-jalid]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**مواطن** (*muwāṭin*) is built on the native Arabic root *w-ṭ-n*, "a homeland; to dwell" (Lane). *Muwāṭin* is the Form III participle, "a fellow-dweller".
+**مواطن** (*muwāṭin*) is built on the native Arabic root *w-ṭ-n*, "a homeland; to dwell" (Lane). *Muwāṭin* is the Form III participle, "a fellow-dweller"; the citizen is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

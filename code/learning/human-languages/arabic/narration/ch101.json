@@ -4,7 +4,7 @@
   "chapter": 101,
   "title": "Neighbourhood, Alley, Building, Bathroom, Balcony",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9fe4c1973ad98e95",
+  "sourceHash": "fnv1a64:ea07bb37a30c17ef",
   "lessons": [
     {
       "id": "AR-C101-hayy",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5fbc4de620347e35",
+      "sourceHash": "fnv1a64:86e608c4ac4a3fd8",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "زقاق (zuqāq) is built on the native Arabic root z-q-q, \"a lane, a narrow street\" (Lane). Lane's zuqāq is a by-street narrower than a sikka."
+              "text": "زقاق (zuqāq), \"a lane, a narrow street\", is an old native noun, filed under the root z-q-q (Lane). Lane's zuqāq is a by-street narrower than a sikka."
             }
           ]
         },

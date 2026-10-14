@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 106,
-  "sourceHash": "fnv1a64:1330c33643b8ba14",
+  "sourceHash": "fnv1a64:353893eceb7b4462",
   "lessonIds": [
     "AR-C106-imkaniyya",
     "AR-C106-sulta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch106.txt",
   "json": "arabic/narration/ch106.json",
-  "textHash": "fnv1a64:47fc2c1fee000d6f",
-  "jsonHash": "fnv1a64:f9970ba2dfdefe61",
+  "textHash": "fnv1a64:b58481fa79a004ba",
+  "jsonHash": "fnv1a64:0b138731bfd319f4",
   "findings": []
 }

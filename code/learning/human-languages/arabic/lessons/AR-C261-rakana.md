@@ -15,7 +15,7 @@ concept_tag: AR-VERB-RAKANA
 prerequisites: [AR-C261-dhaba, AR-C261-tajammada]
 sounds: []
 roots: [r-k-n]
-etymology_hook: "rakana: built on the root r-k-n, 'to lean, to rest upon' (Lane); rakana is 'to rest, to settle', hence to park"
+etymology_hook: "rakana: built on the root r-k-n, 'to lean, to rest upon' (Lane); parking a car is a modern sense"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C261-tajammada]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ركن** (*rakana*) is built on the native Arabic root *r-k-n*, "to lean, to rest upon" (Lane). *Rakana* is "to rest, to settle", hence to park.
+**ركن** (*rakana*) is built on the native Arabic root *r-k-n*, "to lean, to rest upon" (Lane). *Rakana* is "to rest, to settle"; parking a car is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

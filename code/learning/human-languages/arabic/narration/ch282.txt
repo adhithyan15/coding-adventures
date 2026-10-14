@@ -45,7 +45,7 @@ You'll want to know: مقلمة.
 مقلمة — miqlama — "a pencil case".
 
 The word, taken apart.
-مقلمة (miqlama) is built on the native Arabic root q-l-m, "a reed pen" (Lane). Miqlama is a case for pens.
+مقلمة (miqlama) is a case for pens (qalam). Lane lists qalam under q-l-m, and it is usually traced to Greek kalamos, "reed pen".
 
 What you've built.
 One more word for this chapter.
@@ -109,7 +109,7 @@ You'll want to know: جملة.
 جملة — jumla — "a sentence".
 
 The word, taken apart.
-جملة (jumla) is built on the native Arabic root j-m-l, "the whole, the sum" (Lane). Jumla is a sum, a whole: a sentence.
+جملة (jumla) is built on the native Arabic root j-m-l, "to collect" (Lane). Jumla is a sum, a whole: a sentence.
 
 What you've built.
 One more word for this chapter.

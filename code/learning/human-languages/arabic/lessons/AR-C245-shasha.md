@@ -15,7 +15,7 @@ concept_tag: AR-SHAY245-SHASHA
 prerequisites: [AR-C245-hatif, AR-C245-jawwal]
 sounds: []
 roots: [shasha-screen]
-etymology_hook: "shāsha: a modern word for a screen; not in Lane; origin not settled"
+etymology_hook: "shāsha: a modern word, usually explained from shāsh 'muslin, white linen' (EtymDB): a cloth screen"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C245-jawwal]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**شاشة** (*shāsha*) is a modern word for a screen; it has no entry in Lane, and its origin is not settled.
+**شاشة** (*shāsha*) is a modern word for a screen, usually explained from *shāsh*, "muslin, white linen" (EtymDB), the first screens being white cloth. It has no entry in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

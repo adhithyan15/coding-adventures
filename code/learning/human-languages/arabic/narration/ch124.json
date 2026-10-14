@@ -4,7 +4,7 @@
   "chapter": 124,
   "title": "Scissors, Needle, Thread, Button, Nail",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4493751ba0b30cd2",
+  "sourceHash": "fnv1a64:e7ee3c798d28e29f",
   "lessons": [
     {
       "id": "AR-C124-miqass",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b02c7be447f483d",
+      "sourceHash": "fnv1a64:57426fd4387d0c40",
       "notice": null,
       "blocks": [
         {
@@ -603,7 +603,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مسمار (mismār) is built on the native Arabic root s-m-r, \"a nail\" (Lane). Lane lists mismār under s-m-r; Aramaic masmrā is the same word (EtymDB), and Hebrew has masmer."
+              "text": "مسمار (mismār), \"a nail\", is listed by Lane under the root s-m-r; Aramaic masmrā is the same word (EtymDB), and Hebrew has masmer."
             }
           ]
         },

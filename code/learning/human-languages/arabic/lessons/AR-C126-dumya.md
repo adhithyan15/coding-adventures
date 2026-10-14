@@ -15,7 +15,7 @@ concept_tag: AR-THINGS126-DUMYA
 prerequisites: [AR-C126-shama, AR-C126-sajjada]
 sounds: []
 roots: [d-m-y]
-etymology_hook: "dumya: built on the root d-m-y, 'an image, a statue' (Lane); Lane's dumya is an image, a statue"
+etymology_hook: "dumya: an old native noun Lane files under d-m-y; Lane's dumya is an image, a statue"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C126-sajjada]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**دمية** (*dumya*) is built on the native Arabic root *d-m-y*, "an image, a statue" (Lane). Lane's *dumya* is an image, a statue.
+**دمية** (*dumya*), "an image, a statue", is an old native noun, filed under the root *d-m-y* (Lane). Lane's *dumya* is an image, a statue.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

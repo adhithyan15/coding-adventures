@@ -4,7 +4,7 @@
   "chapter": 187,
   "title": "Blender, Tap, Pipe, Wire, Rope",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:51d70a4b9c737806",
+  "sourceHash": "fnv1a64:c6a59d2b8c1d49a2",
   "lessons": [
     {
       "id": "AR-C187-khallat",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c9b169653b1a368",
+      "sourceHash": "fnv1a64:2b6655f72b78b90f",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "صنبور (ṣunbūr) is built on the native Arabic root ṣ-n-b-r, \"a lone palm tree\" (Lane). Lane's ṣunbūr is a lone palm tree, slender at its base; the tap is a later sense."
+              "text": "صنبور (ṣunbūr) is a native noun, filed under ṣ-n-b-r (Lane). Lane's ṣunbūr is a lone palm tree, slender at its base, and also the metal pipe of a leather water vessel, from which the tap comes."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17a1de86b3cb253f",
+      "sourceHash": "fnv1a64:e0657d864627b1f9",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "أنبوب (unbūb) is built on the native Arabic root n-b-b, \"the joint of a reed\" (Lane). Lane's unbūb is the length of reed between two knots, and the spout of a jug."
+              "text": "أنبوب (unbūb), \"the joint of a reed\", is an old native noun, filed under the root n-b-b (Lane). Lane's unbūb is the length of reed between two knots, and the spout of a jug."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b02db863d3aa28d",
+      "sourceHash": "fnv1a64:7eeb733ba317bf02",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "حبل (ḥabl) is built on the native Arabic root ḥ-b-l, \"a rope\" (Lane). An old noun with its own root in Lane."
+              "text": "حبل (ḥabl), \"a rope\", is an old native noun, listed under the root ḥ-b-l (Lane) beside a verb meaning \"to bind with a rope\"."
             }
           ]
         },

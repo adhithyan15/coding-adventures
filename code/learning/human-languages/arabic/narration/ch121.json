@@ -4,7 +4,7 @@
   "chapter": 121,
   "title": "Cabbage, Mint, Parsley, Thyme, Cumin",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:16830b9092ae360c",
+  "sourceHash": "fnv1a64:ea81b256688b8a26",
   "lessons": [
     {
       "id": "AR-C121-malfuf",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff2f103686b4c6af",
+      "sourceHash": "fnv1a64:8be66160648bcf88",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "نعناع (naʿnāʿ) is a reduplicated word with no entry in Lane; its origin is not settled."
+              "text": "نعناع (naʿnāʿ) is a reduplicated word with no entry in Lane. EtymDB sets it beside Syriac nanʿā, \"mint\", but which way the word travelled is not settled."
             }
           ]
         },
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f101867992930de1",
+      "sourceHash": "fnv1a64:8353633ec9940a2f",
       "notice": null,
       "blocks": [
         {
@@ -469,7 +469,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "زعتر (zaʿtar) has no entry in Lane; an Aramaic source has been suggested, and the origin is not settled."
+              "text": "زعتر (zaʿtar) is Lane's saʿtar or ṣaʿtar, a well-known herb, and he notes that in his day it was also written with z. An Aramaic source has been suggested, and its deeper origin is not settled."
             }
           ]
         },

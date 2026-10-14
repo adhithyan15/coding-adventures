@@ -15,7 +15,7 @@ concept_tag: AR-THINGS131-GHUSN
 prerequisites: [AR-C131-bidhra, AR-C131-jidhr]
 sounds: []
 roots: [gh-ṣ-n]
-etymology_hook: "ghuṣn: built on the root gh-ṣ-n, 'a branch' (Lane); an old noun with its own root in Lane"
+etymology_hook: "ghuṣn: a branch, an old native noun that Lane files under the root gh-ṣ-n"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C131-jidhr]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**غصن** (*ghuṣn*) is built on the native Arabic root *gh-ṣ-n*, "a branch" (Lane). An old noun with its own root in Lane.
+**غصن** (*ghuṣn*), "a branch", is an old native noun, filed under the root *gh-ṣ-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

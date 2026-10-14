@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 117,
-  "sourceHash": "fnv1a64:04f98b69e3244279",
+  "sourceHash": "fnv1a64:64bf377f900dc7fe",
   "lessonIds": [
     "AR-C117-tilfaz",
     "AR-C117-jarida",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch117.txt",
   "json": "arabic/narration/ch117.json",
-  "textHash": "fnv1a64:2c7ad1e0ab44474f",
-  "jsonHash": "fnv1a64:a17a309e6c1b73d9",
+  "textHash": "fnv1a64:1849ee894c841e5a",
+  "jsonHash": "fnv1a64:4a36fc9c25ec4ab4",
   "findings": []
 }

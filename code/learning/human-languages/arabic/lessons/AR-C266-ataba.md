@@ -15,7 +15,7 @@ concept_tag: AR-MAKAN266-ATABA
 prerequisites: [AR-C266-qabw, AR-C266-midkhana]
 sounds: []
 roots: [ʿ-t-b]
-etymology_hook: "ʿataba: built on the root ʿ-t-b, 'a threshold, a step' (Lane); ʿataba is a threshold"
+etymology_hook: "ʿataba: an old noun for a threshold, listed by Lane under ʿ-t-b, beside ʿataba 'to blame'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C266-midkhana]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**عتبة** (*ʿataba*) is built on the native Arabic root *ʿ-t-b*, "a threshold, a step" (Lane). *ʿAtaba* is a threshold.
+**عتبة** (*ʿataba*), "a threshold, a step", is an old native noun, filed under the root *ʿ-t-b* (Lane), beside the verb *ʿataba*, "to blame".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

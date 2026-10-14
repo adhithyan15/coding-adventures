@@ -15,7 +15,7 @@ concept_tag: AR-SHAY275-NAS
 prerequisites: [AR-C275-arus, AR-C275-shakhs]
 sounds: []
 roots: [n-w-s]
-etymology_hook: "nās: built on the root n-w-s, 'to move to and fro' (Lane); Lane lists nās, 'people', under n-w-s"
+etymology_hook: "nās: listed by Lane under n-w-s, 'to move to and fro'; many derive it instead from unās, kin to insān"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C275-shakhs]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ناس** (*nās*) is built on the native Arabic root *n-w-s*, "to move to and fro; people" (Lane). Lane lists *nās*, "people", under *n-w-s*.
+**ناس** (*nās*), "people", is filed under the native Arabic root *n-w-s*, "to move to and fro" (Lane), but Lane reports that many derive it from *unās*, a plural on the root of *insān*, "a human being".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

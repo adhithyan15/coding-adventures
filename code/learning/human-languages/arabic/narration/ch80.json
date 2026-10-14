@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "Tiger, Elephant, Monkey, Snake, Bear",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8d28f2f833b4ec32",
+  "sourceHash": "fnv1a64:ce03a3061c0602ca",
   "lessons": [
     {
       "id": "AR-C80-namir",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84eb7962ae868612",
+      "sourceHash": "fnv1a64:9c7e316a84de4116",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "قرد (qird) is built on the native Arabic root q-r-d, \"an ape, a monkey\" (Lane). An old noun with its own root in Lane."
+              "text": "قرد (qird), \"an ape, a monkey\", is an old native noun, filed under the root q-r-d (Lane)."
             }
           ]
         },

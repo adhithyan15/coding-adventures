@@ -15,7 +15,7 @@ concept_tag: AR-SHAY247-WARD
 prerequisites: [AR-C247-hawa, AR-C247-mawja]
 sounds: []
 roots: [w-r-d]
-etymology_hook: "ward: Lane notes it is said to be arabicized; Aramaic wardā; Iranian origin usually given"
+etymology_hook: "ward: said in Lane to be arabicized; usually given an Iranian origin, probably via Aramaic wardā"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C247-mawja]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ورد** (*ward*) is listed by Lane under *w-r-d*, with a source calling it arabicized. Aramaic *wardā*, "rose", is the same word, and an Iranian origin is usually given; the details are not settled.
+**ورد** (*ward*) is listed by Lane under *w-r-d*, with a source calling it arabicized. It is usually given an Iranian origin, probably by way of Aramaic *wardā*, "rose"; EtymDB sets it beside *wardā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 119,
-  "sourceHash": "fnv1a64:c69513afaf69d4b0",
+  "sourceHash": "fnv1a64:b1c0ad763f5e935e",
   "lessonIds": [
     "AR-C119-quffaz",
     "AR-C119-wishah",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch119.txt",
   "json": "arabic/narration/ch119.json",
-  "textHash": "fnv1a64:61135c29fa2ef9e4",
-  "jsonHash": "fnv1a64:db451d289d76a9cd",
+  "textHash": "fnv1a64:2f770d61c36688b5",
+  "jsonHash": "fnv1a64:34a858f6e306a229",
   "findings": []
 }

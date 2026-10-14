@@ -15,7 +15,7 @@ concept_tag: AR-QIRAA158-JADWAL
 prerequisites: [AR-C157-qarrara, AR-C157-nawa]
 sounds: []
 roots: [j-d-l]
-etymology_hook: "jadwal: built on the root j-d-l, 'a rivulet' (Lane)"
+etymology_hook: "jadwal: Lane's jadwal is a rivulet, filed under j-d-l 'to twist firmly'; his jadwala is to rule lines"
 duration:
   max_seconds: 200
 requires:
@@ -52,7 +52,7 @@ as-sāʿa ath-thāmina ṣabāḥan* — "Bus time: 8 a.m." Be there before eigh
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**جدول** (*jadwal*) is built on the native Arabic root *j-d-l*, "a rivulet" (Lane). Lane's *jadwal* is a small stream or irrigation channel, and its verb means to rule a book with lines.
+**جدول** (*jadwal*) is a noun filed under the root *j-d-l*, "to twist firmly" (Lane). Lane's *jadwal* is a small stream or irrigation channel, and its verb means to rule a book with lines.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ concept_tag: AR-NATURE77-QAMAR
 prerequisites: [AR-C77-sahaba, AR-C77-shams]
 sounds: []
 roots: [q-m-r]
-etymology_hook: "qamar: built on the root q-m-r, 'the moon' (Lane); an old noun with its own root in Lane"
+etymology_hook: "qamar: an old noun for the moon, listed by Lane under q-m-r, beside qamira 'to be dazzled'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C77-shams]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**قمر** (*qamar*) is built on the native Arabic root *q-m-r*, "the moon" (Lane). An old noun with its own root in Lane.
+**قمر** (*qamar*), "the moon", is an old native noun, filed under the root *q-m-r* (Lane), beside the verb *qamira*, "to be dazzled (as by moonlight)".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

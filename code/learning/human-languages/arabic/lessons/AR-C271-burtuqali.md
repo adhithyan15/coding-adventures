@@ -47,7 +47,7 @@ reviews_of: [AR-C271-wahid]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**برتقالي** (*burtuqālī*) is built from *burtuqāl*, "orange", with the adjective ending *-ī*; *burtuqāl* is named after Portugal, whose traders brought the sweet orange.
+**برتقالي** (*burtuqālī*) is built from *burtuqāl*, "orange", with the adjective ending *-ī*; *burtuqāl* is named after Portugal, whose traders are usually said to have brought the sweet orange.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

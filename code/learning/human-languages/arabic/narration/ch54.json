@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "Hunger, Happy, Sad, Doctor, Grandfather",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6d54e38a8a3292dd",
+  "sourceHash": "fnv1a64:460c06bdc9e99a12",
   "lessons": [
     {
       "id": "AR-C54-ju",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2736e2049d243ac3",
+      "sourceHash": "fnv1a64:9471552bf9236d24",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جد (jadd) is built on the native Arabic root j-d-d, \"a grandfather; fortune, good luck\" (Lane). Lane gives jadd both as the grandfather and as fortune."
+              "text": "جد (jadd) is an old native noun, filed under the root j-d-d (Lane), whose verb jadda is \"to cut\". Lane gives jadd both as the grandfather and as fortune."
             }
           ]
         },

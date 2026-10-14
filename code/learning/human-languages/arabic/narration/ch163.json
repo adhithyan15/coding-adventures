@@ -4,7 +4,7 @@
   "chapter": 163,
   "title": "To celebrate, To invite, To marry, To shake hands with, To hug",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:49252f86ba10bec4",
+  "sourceHash": "fnv1a64:d2ac9aacee8828a2",
   "lessons": [
     {
       "id": "AR-C163-ihtafala",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41c2378e6635dddb",
+      "sourceHash": "fnv1a64:df1327de3b802b0d",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "تزوج (tazawwaja) is built on the native Arabic root z-w-j, \"one of a pair, a mate\" (Lane). Tazawwaja is Form V, \"to take a mate\", built from zawj, which is usually traced through Aramaic to Greek zeugos, \"yoke, pair\" (EtymDB)."
+              "text": "تزوج (tazawwaja) is built on the root z-w-j, \"one of a pair, a mate\" (Lane). Tazawwaja is Form V, \"to take a mate\", built from zawj, which is usually traced through Aramaic to Greek zeugos, \"yoke, pair\" (EtymDB)."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0164041a58fef80",
+      "sourceHash": "fnv1a64:9e9d2052c550fb55",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "صافح (ṣāfaḥa) is built on the native Arabic root ṣ-f-ḥ, \"the flat of the hand\" (Lane). Ṣāfaḥa is Form III, \"to lay palm to palm\"."
+              "text": "صافح (ṣāfaḥa) is built on the native Arabic root ṣ-f-ḥ (Lane), whose ṣafḥ is the broad, flat side of a thing. Ṣāfaḥa is Form III, \"to lay palm to palm\"."
             }
           ]
         },

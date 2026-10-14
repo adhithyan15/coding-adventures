@@ -15,7 +15,7 @@ concept_tag: AR-ANCHOR-MUDARRIS
 prerequisites: [AR-W05-ya-and-my-name]
 sounds: []
 roots: [d-r-s]
-etymology_hook: "mudarris: built on the root d-r-s, 'to become effaced' (Lane)"
+etymology_hook: "mudarris: Form II participle on d-r-s, 'to become effaced; to study' (Lane): one who makes others study"
 duration:
   max_seconds: 120
 requires:

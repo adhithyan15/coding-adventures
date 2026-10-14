@@ -4,7 +4,7 @@
   "chapter": 204,
   "title": "Towards, Area, Centre, Capital city, Where",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9953baf3a4cd9559",
+  "sourceHash": "fnv1a64:201550967f99981c",
   "lessons": [
     {
       "id": "AR-C204-nahwa",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:911b73d40b2e3e7e",
+      "sourceHash": "fnv1a64:9593c2ba7ced6ce0",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "منطقة (minṭaqa) is built on the native Arabic root n-ṭ-q, \"to speak; a girdle\" (Lane). Lane's minṭaqa is a girdle; the zone, like Greek zōnē, \"belt\", grew from it."
+              "text": "منطقة (minṭaqa) is built on the native Arabic root n-ṭ-q, \"to speak\" (Lane). Lane's minṭaqa is a girdle; the zone, like Greek zōnē, \"belt\", probably grew from it."
             }
           ]
         },

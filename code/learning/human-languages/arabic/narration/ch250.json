@@ -4,7 +4,7 @@
   "chapter": 250,
   "title": "Cardboard, Bricks, Marble, Rubber, Triangle",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:66c423edac89a96a",
+  "sourceHash": "fnv1a64:dc5317e9b9e8f5e8",
   "lessons": [
     {
       "id": "AR-C250-kartun",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fbd994207ffaf82e",
+      "sourceHash": "fnv1a64:9ecef33c945ea7fa",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "رخام (rukhām) is built on the native Arabic root r-kh-m, \"marble\" (Lane). An old noun with its own root in Lane."
+              "text": "رخام (rukhām), \"marble\", is an old native noun, filed under the root r-kh-m (Lane)."
             }
           ]
         },

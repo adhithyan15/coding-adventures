@@ -15,7 +15,7 @@ concept_tag: AR-WAQT264-ASR
 prerequisites: [AR-C264-sahra, AR-C264-ramadan]
 sounds: []
 roots: [ʿ-ṣ-r]
-etymology_hook: "ʿaṣr: built on the root ʿ-ṣ-r, 'a time, an age' (Lane); ʿaṣr is the late afternoon, and an age"
+etymology_hook: "ʿaṣr: listed by Lane under ʿ-ṣ-r, 'to press', as 'time, an age'; ʿaṣr is the late afternoon, and an age"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C264-ramadan]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**عصر** (*ʿaṣr*) is built on the native Arabic root *ʿ-ṣ-r*, "a time, an age; the afternoon" (Lane). *ʿAṣr* is the late afternoon, and an age.
+**عصر** (*ʿaṣr*) is built on the native Arabic root *ʿ-ṣ-r*, "to press, to squeeze" (Lane), under which Lane also gives *ʿaṣr*, "time, an age". *ʿAṣr* is the late afternoon, and an age.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ concept_tag: AR-MAKAN266-FINA
 prerequisites: [AR-C266-ataba, AR-C266-siyaj]
 sounds: []
 roots: [f-n-y]
-etymology_hook: "fināʾ: built on the root f-n-y, 'the open space before a house' (Lane); Lane's fināʾ is the open court before a house"
+etymology_hook: "fināʾ: listed by Lane under f-n-y, beside faniya 'to pass away'; Lane's fināʾ is the court before a house"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C266-siyaj]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**فناء** (*fināʾ*) is built on the native Arabic root *f-n-y*, "the open space before a house" (Lane). Lane's *fināʾ* is the open court before a house.
+**فناء** (*fināʾ*) is an old native noun, filed under the root *f-n-y* (Lane), beside the verb *faniya*, "to pass away". Lane's *fināʾ* is the open court before a house.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "Child, Boy, Man, Woman, Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:743cb03395047f3f",
+  "sourceHash": "fnv1a64:72e5e2f8797bf3bd",
   "lessons": [
     {
       "id": "AR-C56-tifl",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1649b346223fc8af",
+      "sourceHash": "fnv1a64:ed7e763563fbc32c",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "امرأة (imraʾa) is built on the native Arabic root m-r-ʾ, \"a man, a person\" (Lane). Imraʾa is the feminine of imruʾ, marʾ, \"a man\"."
+              "text": "امرأة (imraʾa) is the feminine of imruʾ, marʾ, \"a man\", an old native noun, filed under the root m-r-ʾ (Lane)."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 276,
   "title": "Animal, Birds, Sparrow, Giraffe, Whale",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6f0a6e129b76ba14",
+  "sourceHash": "fnv1a64:4186d28e46129b77",
   "lessons": [
     {
       "id": "AR-C276-hayawan",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e49618ed935c0e96",
+      "sourceHash": "fnv1a64:b54e8120ef199efa",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "زرافة (zarāfa) is listed by Lane under z-r-f, with an explanation linking it to a word for \"a company\", because it seems an assemblage of animals; that looks like a folk explanation, and the origin is not settled. English giraffe comes from zarāfa through Italian."
+              "text": "زرافة (zarāfa) is listed by Lane under z-r-f, with an explanation linking it to a word for \"a company\", because it seems an assemblage of animals; that looks like a folk explanation. EtymDB derives it from Syriac zarīpā; the origin is not certain. English giraffe comes from zarāfa through Italian."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b45d03c925c1160c",
+      "sourceHash": "fnv1a64:be64e4dac0156c9c",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "حوت (ḥūt) is built on the native Arabic root ḥ-w-t, \"a fish, a large fish\" (Lane). Ḥūt is a large fish, a whale."
+              "text": "حوت (ḥūt), \"a fish, a large fish\", is an old native noun, filed under the root ḥ-w-t (Lane); it is now a whale."
             }
           ]
         },

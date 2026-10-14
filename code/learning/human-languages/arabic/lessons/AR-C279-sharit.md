@@ -15,7 +15,7 @@ concept_tag: AR-SHAY279-SHARIT
 prerequisites: [AR-C279-mishjab, AR-C279-isfanja]
 sounds: []
 roots: [sh-r-ṭ]
-etymology_hook: "sharīṭ: built on the root sh-r-ṭ, 'a twisted cord' (Lane); Lane's sharīṭ is a twisted cord"
+etymology_hook: "sharīṭ: built on the root sh-r-ṭ, 'to stipulate; to slit' (Lane); Lane's sharīṭ is a twisted cord"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C279-isfanja]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**شريط** (*sharīṭ*) is built on the native Arabic root *sh-r-ṭ*, "a twisted cord" (Lane). Lane's *sharīṭ* is a twisted cord.
+**شريط** (*sharīṭ*) is built on the native Arabic root *sh-r-ṭ*, "to stipulate; to slit" (Lane). Lane's *sharīṭ* is a cord of twisted palm-leaves.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

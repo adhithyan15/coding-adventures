@@ -15,7 +15,7 @@ concept_tag: AR-THINGS139-KHASR
 prerequisites: [AR-C139-sharib, AR-C139-sadr]
 sounds: []
 roots: [kh-ṣ-r]
-etymology_hook: "khaṣr: built on the root kh-ṣ-r, 'the waist' (Lane); an old noun with its own root in Lane"
+etymology_hook: "khaṣr: the waist, an old native noun that Lane files under the root kh-ṣ-r"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C139-sadr]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**خصر** (*khaṣr*) is built on the native Arabic root *kh-ṣ-r*, "the waist" (Lane). An old noun with its own root in Lane.
+**خصر** (*khaṣr*), "the waist", is an old native noun, filed under the root *kh-ṣ-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

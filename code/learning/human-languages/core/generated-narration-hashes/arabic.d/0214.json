@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 214,
-  "sourceHash": "fnv1a64:f1119fb18a865525",
+  "sourceHash": "fnv1a64:98e8d553375bd849",
   "lessonIds": [
     "AR-C214-badla",
     "AR-C214-sandal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch214.txt",
   "json": "arabic/narration/ch214.json",
-  "textHash": "fnv1a64:f4527edffd50d734",
-  "jsonHash": "fnv1a64:3396302542497492",
+  "textHash": "fnv1a64:19eca3b8358c8fa1",
+  "jsonHash": "fnv1a64:5957cd7773fdb153",
   "findings": []
 }

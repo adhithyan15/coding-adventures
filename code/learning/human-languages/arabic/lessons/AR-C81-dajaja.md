@@ -15,7 +15,7 @@ concept_tag: AR-ANIMALS81-DAJAJA
 prerequisites: [AR-C81-jamal, AR-C81-himar]
 sounds: []
 roots: [d-j-j]
-etymology_hook: "dajāja: built on the root d-j-j, 'the domestic fowl' (Lane); dajāja is one bird of dajāj, 'fowls': a hen"
+etymology_hook: "dajāja: one bird of dajāj 'fowls', an old noun listed by Lane under d-j-j: a hen"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C81-himar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**دجاجة** (*dajāja*) is built on the native Arabic root *d-j-j*, "the domestic fowl" (Lane). *Dajāja* is one bird of *dajāj*, "fowls": a hen.
+**دجاجة** (*dajāja*) is one bird of *dajāj*, "fowls", an old native noun, filed under the root *d-j-j* (Lane): a hen.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

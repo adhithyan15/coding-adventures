@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 123,
-  "sourceHash": "fnv1a64:9a548f676770d3d4",
+  "sourceHash": "fnv1a64:bad65f6ca6a61550",
   "lessonIds": [
     "AR-C123-battaniyya",
     "AR-C123-wisada",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch123.txt",
   "json": "arabic/narration/ch123.json",
-  "textHash": "fnv1a64:54701ca3ae8106b5",
-  "jsonHash": "fnv1a64:6a24eca6a63dacd7",
+  "textHash": "fnv1a64:8971c98cade37c45",
+  "jsonHash": "fnv1a64:430992afc23d908a",
   "findings": []
 }

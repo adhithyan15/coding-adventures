@@ -4,7 +4,7 @@
   "chapter": 131,
   "title": "Grass, Seed, Root, Branch, Island",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:31300fa73549aab2",
+  "sourceHash": "fnv1a64:62ae72ed57e38979",
   "lessons": [
     {
       "id": "AR-C131-ushb",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34b8e2ada36dccfb",
+      "sourceHash": "fnv1a64:52885e80aa7374f2",
       "notice": null,
       "blocks": [
         {
@@ -67,7 +67,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "عشب (ʿushb) is built on the native Arabic root ʿ-sh-b, \"fresh herbage\" (Lane). Hebrew ʿesev, \"grass\", is its cousin."
+              "text": "عشب (ʿushb), \"fresh herbage\", is an old native noun, filed under the root ʿ-sh-b (Lane). Hebrew ʿesev, \"grass\", is its cousin."
             }
           ]
         },
@@ -297,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:881740ed80343a5c",
+      "sourceHash": "fnv1a64:0193c52580919f0b",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جذر (jidhr) is built on the native Arabic root j-dh-r, \"a root, a base\" (Lane). Jidhr is the root of a plant or of a number."
+              "text": "جذر (jidhr) is built on the native Arabic root j-dh-r, \"to cut off, to uproot\" (Lane). Jidhr is the root of a plant or of a number."
             }
           ]
         },
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6710a61688b52f50",
+      "sourceHash": "fnv1a64:b5c53fb0212edcc1",
       "notice": null,
       "blocks": [
         {
@@ -469,7 +469,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "غصن (ghuṣn) is built on the native Arabic root gh-ṣ-n, \"a branch\" (Lane). An old noun with its own root in Lane."
+              "text": "غصن (ghuṣn), \"a branch\", is an old native noun, filed under the root gh-ṣ-n (Lane)."
             }
           ]
         },

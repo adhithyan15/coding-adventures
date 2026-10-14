@@ -4,7 +4,7 @@
   "chapter": 262,
   "title": "Ambulance, Temperature, Bandage, Accident, Stress",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9a03f39d0fbfabea",
+  "sourceHash": "fnv1a64:93cc96ffa1ae5403",
   "lessons": [
     {
       "id": "AR-C262-isaf",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:487f022c9b4e2179",
+      "sourceHash": "fnv1a64:a897f4a13cbd9253",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "إسعاف (isʿāf) is built on the native Arabic root s-ʿ-f, \"to help\" (Lane). Isʿāf is the verbal noun of Form IV, \"giving help\"."
+              "text": "إسعاف (isʿāf) is built on the native Arabic root s-ʿ-f, \"to help\" (Lane). Isʿāf is the verbal noun of Form IV, \"giving help\"; the ambulance is a modern sense."
             }
           ]
         },

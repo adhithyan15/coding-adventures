@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 120,
-  "sourceHash": "fnv1a64:49b2800dc2e43881",
+  "sourceHash": "fnv1a64:a909b395a4fb8d77",
   "lessonIds": [
     "AR-C120-murabba",
     "AR-C120-rumman",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch120.txt",
   "json": "arabic/narration/ch120.json",
-  "textHash": "fnv1a64:52e34ff39d2fad3c",
-  "jsonHash": "fnv1a64:7b88ebcb51239e3a",
+  "textHash": "fnv1a64:e6260196f081482b",
+  "jsonHash": "fnv1a64:f97a8680d5c97b79",
   "findings": []
 }

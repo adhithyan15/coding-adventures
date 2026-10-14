@@ -15,7 +15,7 @@ concept_tag: AR-SHAY249-TANJARA
 prerequisites: [AR-C249-ihtifal, AR-C249-mabruk]
 sounds: []
 roots: [tinjir-pot]
-etymology_hook: "ṭanjara: Lane's ṭinjīr, called arabicized; the source is not named; not settled"
+etymology_hook: "ṭanjara: from Lane's ṭinjīr, a cooking pot called arabicized, with Persian pātīla given for it"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C249-mabruk]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**طنجرة** (*ṭanjara*) is a later form of Lane's *ṭinjīr*, a cooking pot, which his sources call an arabicized word; the source language is not named, and the origin is not settled.
+**طنجرة** (*ṭanjara*) is a later form of Lane's *ṭinjīr*, a cooking pot, which his sources call an arabicized word, giving Persian *pātīla* for it; Lane notes the spoken form *ṭanjara* for a saucepan. The source of *ṭinjīr* is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

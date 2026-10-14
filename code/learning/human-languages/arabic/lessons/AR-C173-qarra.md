@@ -47,7 +47,7 @@ reviews_of: [AR-C173-mawqif]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**قارة** (*qārra*) is built on the native Arabic root *q-r-r*, "to settle, to be still" (Lane). *Qārra* is the feminine active participle, "settled, firm": the mainland, now a continent.
+**قارة** (*qārra*) is built on the native Arabic root *q-r-r*, "to settle, to be still" (Lane). *Qārra* is the feminine active participle, "settled, firm"; the continent, the firm land, is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

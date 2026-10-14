@@ -15,7 +15,7 @@ concept_tag: AR-WORLD98-UGHNIYA
 prerequisites: [AR-C97-alf, AR-C98-lawn]
 sounds: []
 roots: [gh-n-y]
-etymology_hook: "ughniya: built on the root gh-n-y, 'to sing' (Lane); ughniya is a song"
+etymology_hook: "ughniya: built on the root gh-n-y, 'to be free from want; to sing' (Lane); ughniya is a song"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C98-lawn]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**أغنية** (*ughniya*) is built on the native Arabic root *gh-n-y*, "to sing" (Lane). *Ughniya* is a song.
+**أغنية** (*ughniya*) is built on the native Arabic root *gh-n-y*, "to be free from want; to sing" (Lane). *Ughniya* is a song.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

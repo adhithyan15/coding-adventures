@@ -15,7 +15,7 @@ concept_tag: AR-THINGS142-SAHA
 prerequisites: [AR-C142-musafir, AR-C142-masna]
 sounds: []
 roots: [s-w-ḥ]
-etymology_hook: "sāḥa: built on the root s-w-ḥ, 'an open court' (Lane); Lane's sāḥa is the open space of a house"
+etymology_hook: "sāḥa: an old native noun Lane files under s-w-ḥ; Lane's sāḥa is the open space of a house"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C142-masna]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ساحة** (*sāḥa*) is built on the native Arabic root *s-w-ḥ*, "an open court" (Lane). Lane's *sāḥa* is the open space of a house.
+**ساحة** (*sāḥa*), "an open court", is an old native noun, filed under the root *s-w-ḥ* (Lane). Lane's *sāḥa* is the open space of a house.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

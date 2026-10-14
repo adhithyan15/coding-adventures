@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 95,
-  "sourceHash": "fnv1a64:45475e3b3c330465",
+  "sourceHash": "fnv1a64:b772b2e7719755ff",
   "lessonIds": [
     "AR-C95-jayb",
     "AR-C95-khatam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch95.txt",
   "json": "arabic/narration/ch95.json",
-  "textHash": "fnv1a64:0aac03ae5b6c0dcf",
-  "jsonHash": "fnv1a64:6985b91b5bf1a161",
+  "textHash": "fnv1a64:25add3e05f0dfbdc",
+  "jsonHash": "fnv1a64:0eb836e3652296f6",
   "findings": []
 }

@@ -15,7 +15,7 @@ concept_tag: AR-WAQT203-QARN
 prerequisites: [AR-C203-akhiran, AR-C203-athnaa]
 sounds: []
 roots: [q-r-n]
-etymology_hook: "qarn: built on the root q-r-n, 'a horn' (Lane); Lane's qarn is a horn and a generation of men"
+etymology_hook: "qarn: a native noun on q-r-n, 'to join' (Lane); Lane's qarn is a horn and a generation of men"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C203-athnaa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**قرن** (*qarn*) is built on the native Arabic root *q-r-n*, "a horn; a generation" (Lane). Lane's *qarn* is a horn and a generation of men; the century is a later sense.
+**قرن** (*qarn*) is a native noun on the root *q-r-n*, "to join, to couple" (Lane). Lane's *qarn* is a horn and a generation of men; the century is a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

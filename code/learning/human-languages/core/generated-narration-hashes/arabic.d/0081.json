@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 81,
-  "sourceHash": "fnv1a64:a4268cd185eaf571",
+  "sourceHash": "fnv1a64:ae5cdaab3248cc9e",
   "lessonIds": [
     "AR-C81-jamal",
     "AR-C81-himar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch81.txt",
   "json": "arabic/narration/ch81.json",
-  "textHash": "fnv1a64:31363f867c8e9eff",
-  "jsonHash": "fnv1a64:e544a62287c38e6d",
+  "textHash": "fnv1a64:330c414c4571cb10",
+  "jsonHash": "fnv1a64:002bc1053fc58cb7",
   "findings": []
 }

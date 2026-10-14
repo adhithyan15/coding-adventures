@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 87,
-  "sourceHash": "fnv1a64:ad834c4e5b2741cb",
+  "sourceHash": "fnv1a64:be42b9b8b498ac09",
   "lessonIds": [
     "AR-C87-ams",
     "AR-C87-ghadan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch87.txt",
   "json": "arabic/narration/ch87.json",
-  "textHash": "fnv1a64:9a72f442670a1621",
-  "jsonHash": "fnv1a64:0ff6ad263eb5a9e6",
+  "textHash": "fnv1a64:195e142f6d478a47",
+  "jsonHash": "fnv1a64:77939c81ded761dc",
   "findings": []
 }

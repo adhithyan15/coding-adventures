@@ -4,7 +4,7 @@
   "chapter": 244,
   "title": "Yoghurt, Peaches, Pears, Pineapple, Almonds",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:afece9c5e6e5b415",
+  "sourceHash": "fnv1a64:5a4ea17c00546b2e",
   "lessons": [
     {
       "id": "AR-C244-zabadi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e10531e29a0874c",
+      "sourceHash": "fnv1a64:8147912160e84556",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "زبادي (zabādī) is a modern word for yoghurt. It may be linked with zubd, \"fresh butter\", on the root z-b-d (Lane), but its formation is not settled."
+              "text": "زبادي (zabādī) is a modern word for yoghurt. It may be linked with the root z-b-d, which gives zubd, \"fresh butter\", and zubād, \"thin milk\" (Lane), but its formation is not settled."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a258c32289a61617",
+      "sourceHash": "fnv1a64:dcae4eba33e14e45",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "خوخ (khawkh) is built on the native Arabic root kh-w-kh, \"the peach\" (Lane). Lane lists khawkh as a well-known fruit; Aramaic ḥūḥā is the same word (EtymDB)."
+              "text": "خوخ (khawkh) is listed by Lane under kh-w-kh as a well-known fruit, the peach, with no foreign source given; EtymDB derives it from Aramaic ḥūḥā."
             }
           ]
         },

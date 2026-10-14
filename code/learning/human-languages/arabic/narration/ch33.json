@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Asking for a Drink",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4c613da6629cb44a",
+  "sourceHash": "fnv1a64:c91ee7b313c598a1",
   "lessons": [
     {
       "id": "AR-C33-shay",
@@ -556,7 +556,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:864b6f773e619ddb",
+      "sourceHash": "fnv1a64:d995f55f4a3bd77b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -631,7 +631,7 @@
             },
             {
               "kind": "speech",
-              "text": "The road out of Arabic is short and well lit. Ottoman Turkish took qahwa as kahve; Venetian traders took kahve as Italian caffè; from Italian came French café, German Kaffee and English coffee. The English word in your mouth is this Arabic one."
+              "text": "Lane uses qahwa for wine; coffee is the later sense. Ottoman Turkish took qahwa as kahve; Venetian traders took kahve as Italian caffè; from Italian came French café, German Kaffee and English coffee. The English word in your mouth is this Arabic one."
             }
           ]
         },

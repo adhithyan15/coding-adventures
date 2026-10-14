@@ -15,7 +15,7 @@ concept_tag: AR-THINGS131-JIDHR
 prerequisites: [AR-C131-ushb, AR-C131-bidhra]
 sounds: []
 roots: [j-dh-r]
-etymology_hook: "jidhr: built on the root j-dh-r, 'a root, a base' (Lane); jidhr is the root of a plant or of a number"
+etymology_hook: "jidhr: built on the root j-dh-r, 'to cut off, to uproot' (Lane); jidhr is the root of a plant or of a number"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C131-bidhra]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**جذر** (*jidhr*) is built on the native Arabic root *j-dh-r*, "a root, a base" (Lane). *Jidhr* is the root of a plant or of a number.
+**جذر** (*jidhr*) is built on the native Arabic root *j-dh-r*, "to cut off, to uproot" (Lane). *Jidhr* is the root of a plant or of a number.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

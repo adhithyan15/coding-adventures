@@ -4,7 +4,7 @@
   "chapter": 190,
   "title": "Singer, Player, Coach, Mathematics, Geography",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:10440ac8fe5eb063",
+  "sourceHash": "fnv1a64:f1e9f824635e0e4c",
   "lessons": [
     {
       "id": "AR-C190-mughanni",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad55ef352242b21b",
+      "sourceHash": "fnv1a64:e4c744605177a62d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مغني (mughannī) is built on the native Arabic root gh-n-y, \"to sing\" (Lane). Mughannī is the Form II participle, \"one who sings\"."
+              "text": "مغني (mughannī) is built on the native Arabic root gh-n-y, \"to be free from want\" (Lane), whose Form II ghannā means \"to sing\". Mughannī is the Form II participle, \"one who sings\"."
             }
           ]
         },

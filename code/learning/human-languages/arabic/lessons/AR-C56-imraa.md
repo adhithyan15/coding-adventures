@@ -15,7 +15,7 @@ concept_tag: AR-FAMILY56-IMRAA
 prerequisites: [AR-C56-walad, AR-C56-rajul]
 sounds: []
 roots: [m-r-ʾ]
-etymology_hook: "imraʾa: built on the root m-r-ʾ, 'a man, a person' (Lane); imraʾa is the feminine of imruʾ, marʾ, 'a man'"
+etymology_hook: "imraʾa: the feminine of imruʾ, marʾ 'a man', an old noun listed by Lane under the native Arabic root m-r-ʾ"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C56-rajul]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**امرأة** (*imraʾa*) is built on the native Arabic root *m-r-ʾ*, "a man, a person" (Lane). *Imraʾa* is the feminine of *imruʾ*, *marʾ*, "a man".
+**امرأة** (*imraʾa*) is the feminine of *imruʾ*, *marʾ*, "a man", an old native noun, filed under the root *m-r-ʾ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

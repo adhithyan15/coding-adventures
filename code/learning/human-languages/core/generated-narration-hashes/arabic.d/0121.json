@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 121,
-  "sourceHash": "fnv1a64:16830b9092ae360c",
+  "sourceHash": "fnv1a64:ea81b256688b8a26",
   "lessonIds": [
     "AR-C121-malfuf",
     "AR-C121-nana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch121.txt",
   "json": "arabic/narration/ch121.json",
-  "textHash": "fnv1a64:b7ef9de8d50a21e5",
-  "jsonHash": "fnv1a64:1f68b38e0e37c4e6",
+  "textHash": "fnv1a64:f62d0d45b9999801",
+  "jsonHash": "fnv1a64:01af56642182df39",
   "findings": []
 }

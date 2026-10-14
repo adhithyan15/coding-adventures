@@ -15,7 +15,7 @@ concept_tag: AR-ANIMALS81-JAMAL
 prerequisites: [AR-C80-thuban, AR-C80-dubb]
 sounds: []
 roots: [j-m-l]
-etymology_hook: "jamal: built on the root j-m-l, 'a camel' (Lane)"
+etymology_hook: "jamal: an old noun for a camel, listed by Lane under j-m-l; Hebrew gamal is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C80-dubb]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**جمل** (*jamal*) is built on the native Arabic root *j-m-l*, "a camel" (Lane). Hebrew *gamal* is its cousin, and English *camel* came through Greek *kamēlos* from a Semitic word of this kind.
+**جمل** (*jamal*), "a camel", is an old noun that Lane lists under the native Arabic root *j-m-l*. Hebrew *gamal* is its cousin, and English *camel* came through Greek *kamēlos* from a Semitic word of this kind.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

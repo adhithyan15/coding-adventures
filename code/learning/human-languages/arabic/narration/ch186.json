@@ -4,7 +4,7 @@
   "chapter": 186,
   "title": "Hobby, Chess, Novel, Painting, Machine",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c506ccd35681faa0",
+  "sourceHash": "fnv1a64:ac337c40ce9b0651",
   "lessons": [
     {
       "id": "AR-C186-hiwaya",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d396d410e515b865",
+      "sourceHash": "fnv1a64:ef643c6fd27e7363",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "لوحة (lawḥa) is built on the native Arabic root l-w-ḥ, \"a board, a plank\" (Lane). Lawḥa is a board; the painting is a later sense."
+              "text": "لوحة (lawḥa), \"a board, a plank\", is an old native noun, filed under the root l-w-ḥ (Lane). Lawḥa is a board; the painting is a later sense."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6b425b32fc00c0e",
+      "sourceHash": "fnv1a64:650aaa44106d53df",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "آلة (āla) is built on the native Arabic root ʾ-w-l, \"an instrument\" (Lane). Lane's āla is an instrument or tool."
+              "text": "آلة (āla), \"an instrument\", is an old native noun, filed under the root ʾ-w-l (Lane). Lane's āla is an instrument or tool."
             }
           ]
         },

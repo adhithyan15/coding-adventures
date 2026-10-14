@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Two at Once",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e8de1735e0d7e796",
+  "sourceHash": "fnv1a64:48e11a90da94a75a",
   "lessons": [
     {
       "id": "AR-C38-wa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23754271b81ba64b",
+      "sourceHash": "fnv1a64:f90630c9bcf4844f",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "و (wa-) is the same conjunction Hebrew and Aramaic write with a single letter, in the same job, and it has held that job for three thousand years. It is by a wide margin the commonest word in written Arabic: Arabic prose strings clauses with و (wa-) where English would use a full stop, so a page of Arabic has far more ands in it than a page of English ever does."
+              "text": "و (wa-) is the same conjunction Hebrew and Aramaic write with a single letter, in the same job, as far back as those languages are written. It is by a wide margin the commonest word in written Arabic: Arabic prose strings clauses with و (wa-) where English would use a full stop, so a page of Arabic has far more ands in it than a page of English ever does."
             },
             {
               "kind": "speech",
@@ -317,7 +317,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:1d8b32b608b8a7e0",
+      "sourceHash": "fnv1a64:814cacdf0b20e248",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -395,7 +395,7 @@
             },
             {
               "kind": "speech",
-              "text": "The grammarians differ over which old particle stands behind lā, so the full origin of lākin is not settled."
+              "text": "Lākin is a native particle (Lane, under l-k-n); the grammarians differ over which old particle stands behind lā."
             }
           ]
         },

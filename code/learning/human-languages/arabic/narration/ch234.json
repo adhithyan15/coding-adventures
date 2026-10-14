@@ -4,7 +4,7 @@
   "chapter": 234,
   "title": "Yearly, Late morning, Soon, Alarm clock, Calendar",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c105c22bc40833b3",
+  "sourceHash": "fnv1a64:7a81760cacedef1d",
   "lessons": [
     {
       "id": "AR-C234-sanawi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c89c84eaa93aea0",
+      "sourceHash": "fnv1a64:8cd6bed993e19a8f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سنوي (sanawī) is built on the native Arabic root s-n-w, \"a year\" (Lane). Sanawī is sana, \"year\", with the adjective ending -ī."
+              "text": "سنوي (sanawī) is built on sana, \"a year\", which Lane treats under the native Arabic root s-n-w. Sanawī is sana with the adjective ending -ī."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b03abbdfe906d3c7",
+      "sourceHash": "fnv1a64:82582dc974ec595c",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ضحى (ḍuḥā) is built on the native Arabic root ḍ-ḥ-w, \"the forenoon\" (Lane). An old noun with its own root in Lane."
+              "text": "ضحى (ḍuḥā), \"the forenoon\", is an old native noun, filed under the root ḍ-ḥ-w (Lane), whose verb ḍaḥā is \"to appear, to come into view\"."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2915b668e0aa1905",
+      "sourceHash": "fnv1a64:90b68e5d9ff8ca07",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "منبه (munabbih) is built on the native Arabic root n-b-h, \"to wake, to be alert\" (Lane). Munabbih is the Form II participle, \"one that wakes\"."
+              "text": "منبه (munabbih) is built on the native Arabic root n-b-h, \"to take notice, to be aware\" (Lane). Munabbih is the Form II participle, \"one that gives notice\"; the alarm clock is a modern sense."
             }
           ]
         },

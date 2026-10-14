@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 270,
-  "sourceHash": "fnv1a64:5dd23834ffeec5f1",
+  "sourceHash": "fnv1a64:e019e46dfbd1b7d7",
   "lessonIds": [
     "AR-C270-mumill",
     "AR-C270-mahjuz",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch270.txt",
   "json": "arabic/narration/ch270.json",
-  "textHash": "fnv1a64:6106c30c637a4192",
-  "jsonHash": "fnv1a64:b40c62bcd5c1a760",
+  "textHash": "fnv1a64:792289998543607a",
+  "jsonHash": "fnv1a64:3cb33c4cfea44f65",
   "findings": []
 }

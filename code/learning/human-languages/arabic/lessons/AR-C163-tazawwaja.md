@@ -15,7 +15,7 @@ concept_tag: AR-VERB-TAZAWWAJA
 prerequisites: [AR-C163-ihtafala, AR-C163-daa]
 sounds: []
 roots: [z-w-j]
-etymology_hook: "tazawwaja: built on the root z-w-j, 'one of a pair, a mate' (Lane)"
+etymology_hook: "tazawwaja: Form V from zawj 'a mate' (Lane), usually traced through Aramaic to Greek zeugos 'yoke'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C163-daa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**تزوج** (*tazawwaja*) is built on the native Arabic root *z-w-j*, "one of a pair, a mate" (Lane). *Tazawwaja* is Form V, "to take a mate", built from *zawj*, which is usually traced through Aramaic to Greek *zeugos*, "yoke, pair" (EtymDB).
+**تزوج** (*tazawwaja*) is built on the root *z-w-j*, "one of a pair, a mate" (Lane). *Tazawwaja* is Form V, "to take a mate", built from *zawj*, which is usually traced through Aramaic to Greek *zeugos*, "yoke, pair" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

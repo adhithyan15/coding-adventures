@@ -4,7 +4,7 @@
   "chapter": 267,
   "title": "Tradition, Culture, Religion, Prayer, Relationship",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c5d15f6ff5331733",
+  "sourceHash": "fnv1a64:c683026e591ec58c",
   "lessons": [
     {
       "id": "AR-C267-taqlid",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b9ff9cbc119549b",
+      "sourceHash": "fnv1a64:47a1a2d9dd25b697",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ثقافة (thaqāfa) is built on the native Arabic root th-q-f, \"to be skilful, to be sharp\" (Lane). Thaqāfa is skill, cultivation; the same root gives thiqāf, a tool for straightening spears."
+              "text": "ثقافة (thaqāfa) is built on the native Arabic root th-q-f, \"to be skilful, to be sharp\" (Lane). Thaqāfa is skill, cultivation, and in modern use culture; the same root gives thiqāf, a tool for straightening spears."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:091c3e2b9cc2ab08",
+      "sourceHash": "fnv1a64:255bdd811f08c102",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "دين (dīn) is listed by Lane under d-y-n with the senses recompense, obedience and religion. Some trace the sense \"religion\" to Middle Persian dēn, \"religion\"; the question is not settled."
+              "text": "دين (dīn) is listed by Lane under d-y-n with the senses recompense, obedience and religion. The sense of judgement is shared with Aramaic and Hebrew dīn, and some trace the sense \"religion\" to Middle Persian dēn; which account holds for \"religion\" is debated."
             }
           ]
         },

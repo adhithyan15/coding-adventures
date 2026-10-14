@@ -15,7 +15,7 @@ concept_tag: AR-SHAY250-RUKHAM
 prerequisites: [AR-C250-kartun, AR-C250-tub]
 sounds: []
 roots: [r-kh-m]
-etymology_hook: "rukhām: built on the root r-kh-m, 'marble' (Lane); an old noun with its own root in Lane"
+etymology_hook: "rukhām: an old noun for marble, listed by Lane under the native Arabic root r-kh-m"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C250-tub]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**رخام** (*rukhām*) is built on the native Arabic root *r-kh-m*, "marble" (Lane). An old noun with its own root in Lane.
+**رخام** (*rukhām*), "marble", is an old native noun, filed under the root *r-kh-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

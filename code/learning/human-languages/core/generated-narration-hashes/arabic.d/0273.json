@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 273,
-  "sourceHash": "fnv1a64:2ce611307bacf42c",
+  "sourceHash": "fnv1a64:a8f6c963529910e0",
   "lessonIds": [
     "AR-C273-shukulata",
     "AR-C273-halwa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch273.txt",
   "json": "arabic/narration/ch273.json",
-  "textHash": "fnv1a64:26c1d02219c2fe01",
-  "jsonHash": "fnv1a64:a1e778edb882054d",
+  "textHash": "fnv1a64:025f720fb29d7a03",
+  "jsonHash": "fnv1a64:47e212826597b3a1",
   "findings": []
 }

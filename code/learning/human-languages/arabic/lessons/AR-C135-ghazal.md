@@ -15,7 +15,7 @@ concept_tag: AR-THINGS135-GHAZAL
 prerequisites: [AR-C134-ghayma, AR-C134-arnab]
 sounds: []
 roots: [gh-z-l]
-etymology_hook: "ghazāl: built on the root gh-z-l, 'a young gazelle' (Lane); English gazelle comes from ghazāl through French"
+etymology_hook: "ghazāl: a native noun Lane files under gh-z-l; English gazelle comes from ghazāl through French"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C134-arnab]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**غزال** (*ghazāl*) is built on the native Arabic root *gh-z-l*, "a young gazelle; to spin" (Lane). English *gazelle* comes from *ghazāl* through French.
+**غزال** (*ghazāl*), "a young gazelle", is a native noun, filed under the root *gh-z-l* (Lane), whose verb means "to spin". English *gazelle* comes from *ghazāl* through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

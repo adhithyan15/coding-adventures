@@ -12,7 +12,7 @@ concept_tag: AR-NEG-LAYSA
 prerequisites: [AR-R38-two-at-once, AR-C02-ismii, AR-C33-halib]
 sounds: [ay-diphthong]
 roots: [laysa-not]
-etymology_hook: "laysa: the grammarians read it as lā 'not' + ays 'there is'; Aramaic layt is compared; not settled"
+etymology_hook: "laysa: the grammarians read it as lā 'not' + ays 'there is'; Aramaic layt 'there is not' is built alike"
 duration:
   max_seconds: 245
 requires:
@@ -65,7 +65,7 @@ Arab grammarians read **ليس** as **لا** — the negator of chapter five —
 it still behaves like a verb: it takes person endings, even though nothing it
 denies is a verb. It is a fossil doing a job nothing else in the language does.
 
-That reading is the grammarians' own, and the origin is not settled; Aramaic *layt*, "there is not", is usually compared.
+That reading is the grammarians' own, and comparison bears it out: Aramaic *layt*, "there is not", is likewise *lā* with an old word for "there is".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-GRAMMAR-C39-LAYSA-01, AR-CONCEPT-C02-ISMII-01, AR-CONCEPT-C33-SHAY-01, AR-CONCEPT-C13-MAA-KHUBZ-01] -->

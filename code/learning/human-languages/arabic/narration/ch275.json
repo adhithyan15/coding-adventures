@@ -4,7 +4,7 @@
   "chapter": 275,
   "title": "Bride, Person, People, Party, Wedding",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:05d72548c0238251",
+  "sourceHash": "fnv1a64:8d26311c3dec491f",
   "lessons": [
     {
       "id": "AR-C275-arus",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52a83188c3737370",
+      "sourceHash": "fnv1a64:63bc183162bc81c0",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "شخص (shakhṣ) is built on the native Arabic root sh-kh-ṣ, \"a figure seen from afar\" (Lane). Shakhṣ is a person."
+              "text": "شخص (shakhṣ) is built on the native Arabic root sh-kh-ṣ, \"to rise into view\" (Lane). Lane's shakhṣ is a figure seen from afar, hence a person."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5fb66e23d9fd09bc",
+      "sourceHash": "fnv1a64:19cd6fe31d61b493",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ناس (nās) is built on the native Arabic root n-w-s, \"to move to and fro; people\" (Lane). Lane lists nās, \"people\", under n-w-s."
+              "text": "ناس (nās), \"people\", is filed under the native Arabic root n-w-s, \"to move to and fro\" (Lane), but Lane reports that many derive it from unās, a plural on the root of insān, \"a human being\"."
             }
           ]
         },

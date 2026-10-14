@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 189,
-  "sourceHash": "fnv1a64:cc82bff06b1922fd",
+  "sourceHash": "fnv1a64:6dce61f9479fe779",
   "lessonIds": [
     "AR-C189-muhasib",
     "AR-C189-suhufi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch189.txt",
   "json": "arabic/narration/ch189.json",
-  "textHash": "fnv1a64:87b56c0001143736",
-  "jsonHash": "fnv1a64:31e37fa43e95aee6",
+  "textHash": "fnv1a64:9ee072ccb032f847",
+  "jsonHash": "fnv1a64:f47973b408ad0911",
   "findings": []
 }

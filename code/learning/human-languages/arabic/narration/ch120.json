@@ -4,7 +4,7 @@
   "chapter": 120,
   "title": "Jam, Pomegranate, Strawberries, Lettuce, Aubergine",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:49b2800dc2e43881",
+  "sourceHash": "fnv1a64:a909b395a4fb8d77",
   "lessons": [
     {
       "id": "AR-C120-murabba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad45043f3f03d685",
+      "sourceHash": "fnv1a64:fa838328303d9459",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مربى (murabbā) is built on the native Arabic root r-b-b, \"thickened fruit juice (rubb)\" (Lane). Murabbā is fruit preserved, usually linked with rubb, the thickened fruit juice that Lane describes."
+              "text": "مربى (murabbā) is fruit preserved in rubb, a thickened fruit juice: Lane gives murabbab and murabbā for ginger so preserved, under the root r-b-b (Lane). Jam is the later use."
             }
           ]
         },

@@ -15,7 +15,7 @@ concept_tag: AR-QUAL151-NAHIF
 prerequisites: [AR-C150-arid, AR-C150-dayyiq, AR-C21-kalb-qitt, AR-C21-kalb-qitt, AR-C22-akhdar-asfar, AR-C22-akhdar-asfar]
 sounds: []
 roots: [n-ḥ-f]
-etymology_hook: "naḥīf: built on the root n-ḥ-f, 'to be lean' (Lane); naḥīf is the faʿīl adjective, 'lean, thin'"
+etymology_hook: "naḥīf: on the root n-ḥ-f; Lane's short article gives only naḥīf, 'slender, lean', a faʿīl adjective"
 duration:
   max_seconds: 200
 requires:
@@ -49,7 +49,7 @@ reviews_of: [AR-C150-dayyiq]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**نحيف** (*naḥīf*) is built on the native Arabic root *n-ḥ-f*, "to be lean" (Lane). *Naḥīf* is the *faʿīl* adjective, "lean, thin".
+**نحيف** (*naḥīf*) is built on the native Arabic root *n-ḥ-f*; Lane's short article gives only *naḥīf* itself, "slender, lean" (Lane). It has the *faʿīl* adjective shape.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

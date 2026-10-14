@@ -15,7 +15,7 @@ concept_tag: AR-THINGS119-GHADA
 prerequisites: [AR-C119-quffaz, AR-C119-wishah]
 sounds: []
 roots: [gh-d-w]
-etymology_hook: "ghadāʾ: built on the root gh-d-w, 'tomorrow' (Lane); ghadāʾ was the morning meal"
+etymology_hook: "ghadāʾ: built on the root gh-d-w, 'to go forth early in the morning' (Lane); ghadāʾ was the morning meal"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C119-wishah]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**غداء** (*ghadāʾ*) is built on the native Arabic root *gh-d-w*, "tomorrow; early morning" (Lane). *Ghadāʾ* was the morning meal; it has moved to midday.
+**غداء** (*ghadāʾ*) is built on the native Arabic root *gh-d-w*, "to go forth early in the morning" (Lane). *Ghadāʾ* was the morning meal; it has moved to midday.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

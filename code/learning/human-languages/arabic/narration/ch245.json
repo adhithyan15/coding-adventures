@@ -4,7 +4,7 @@
   "chapter": 245,
   "title": "Necklace, Size, Telephone, Mobile phone, Screen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b25e11925d13b921",
+  "sourceHash": "fnv1a64:09e620d6761595ec",
   "lessons": [
     {
       "id": "AR-C245-qilada",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2283ed76a1c64d9",
+      "sourceHash": "fnv1a64:eb4b216b5d3c55ad",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "شاشة (shāsha) is a modern word for a screen; it has no entry in Lane, and its origin is not settled."
+              "text": "شاشة (shāsha) is a modern word for a screen, usually explained from shāsh, \"muslin, white linen\" (EtymDB), the first screens being white cloth. It has no entry in Lane."
             }
           ]
         },

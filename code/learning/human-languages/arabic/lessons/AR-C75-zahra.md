@@ -15,7 +15,7 @@ concept_tag: AR-SCHOOL75-ZAHRA
 prerequisites: [AR-C75-sura, AR-C75-shajara]
 sounds: []
 roots: [z-h-r]
-etymology_hook: "zahra: built on the root z-h-r, 'a flower, a blossom' (Lane); zahra is a single flower"
+etymology_hook: "zahra: built on the root z-h-r, 'to shine; flowers' (Lane); zahra is a single flower"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C75-shajara]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**زهرة** (*zahra*) is built on the native Arabic root *z-h-r*, "a flower, a blossom" (Lane). *Zahra* is a single flower.
+**زهرة** (*zahra*) is built on the native Arabic root *z-h-r*, "to shine; flowers" (Lane). *Zahra* is a single flower.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

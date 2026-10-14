@@ -15,7 +15,7 @@ concept_tag: AR-AMAL252-BARID
 prerequisites: [AR-C252-madda, AR-C252-rusum]
 sounds: []
 roots: [latin-veredus]
-etymology_hook: "barīd: Persian per Lane's sources; Late Latin veredus 'post-horse' per EtymDB; not settled"
+etymology_hook: "barīd: usually traced to Latin veredus 'post-horse' via Greek (EtymDB); Lane's Persian account looks folk"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C252-rusum]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**بريد** (*barīd*) is disputed. Lane's sources call it of Persian origin, from a phrase for the docked tails of post-mules; EtymDB traces it to Greek *beredos*, from Late Latin *veredus*, "post-horse". The origin is not settled.
+**بريد** (*barīd*) is usually traced to Late Latin *veredus*, "post-horse", through Greek *beredos* (EtymDB), probably by way of Aramaic. Lane's sources call it Persian, from a phrase for the docked tails of post-mules, an account that looks like a folk etymology.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

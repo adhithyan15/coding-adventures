@@ -15,7 +15,7 @@ concept_tag: AR-THINGS137-DIK
 prerequisites: [AR-C136-farasha, AR-C137-ankabut, AR-C01-al, AR-C01-al, AR-C01-al]
 sounds: []
 roots: [d-y-k]
-etymology_hook: "dīk: built on the root d-y-k, 'a cock' (Lane); an old noun with its own root in Lane"
+etymology_hook: "dīk: a cock, an old native noun at the centre of Lane's article on d-y-k"
 duration:
   max_seconds: 200
 requires:
@@ -49,7 +49,7 @@ reviews_of: [AR-C137-ankabut]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ديك** (*dīk*) is built on the native Arabic root *d-y-k*, "a cock" (Lane). An old noun with its own root in Lane.
+**ديك** (*dīk*), "a cock", is an old native noun at the centre of the root *d-y-k* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

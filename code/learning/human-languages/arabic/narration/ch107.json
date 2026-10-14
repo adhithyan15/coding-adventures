@@ -4,7 +4,7 @@
   "chapter": 107,
   "title": "Competence, Certificate, Ownership, To be able to, To be able to",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fff91d1e17854ea5",
+  "sourceHash": "fnv1a64:0065c79f7ef8bcfb",
   "lessons": [
     {
       "id": "AR-C107-kafaa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53eee3c3f937a03e",
+      "sourceHash": "fnv1a64:f70b40256989bfb0",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "كفاءة (kafāʾa) is built on the native Arabic root k-f-ʾ, \"to be equal, to suffice\" (Lane). Kafāʾa is equality, fitness; \"competence\" is the modern sense."
+              "text": "كفاءة (kafāʾa) is built on the native Arabic root k-f-ʾ, \"to be equal, to match\" (Lane). Kafāʾa is equality, fitness; \"competence\" is the modern sense."
             }
           ]
         },

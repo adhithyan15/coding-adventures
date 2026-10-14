@@ -47,7 +47,7 @@ reviews_of: [AR-C246-usra]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**حفيد** (*ḥafīd*) is built on the native Arabic root *ḥ-f-d*, "to serve quickly" (Lane). Lane gives *ḥāfid*, plural *ḥafada*, as a helper who serves quickly; "grandson" is the sense that lives on.
+**حفيد** (*ḥafīd*) is built on the native Arabic root *ḥ-f-d*, "to serve quickly" (Lane). Lane gives *ḥāfid*, plural *ḥafada*, as a helper who serves quickly, and also gives *ḥafada* and *ḥafīd* for grandchildren.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

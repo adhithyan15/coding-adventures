@@ -4,7 +4,7 @@
   "chapter": 119,
   "title": "Glove, Scarf, Lunch, Dinner, Vinegar",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:c69513afaf69d4b0",
+  "sourceHash": "fnv1a64:b1c0ad763f5e935e",
   "lessons": [
     {
       "id": "AR-C119-quffaz",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:244997500b24c7fb",
+      "sourceHash": "fnv1a64:47f9a33c690f7a93",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "غداء (ghadāʾ) is built on the native Arabic root gh-d-w, \"tomorrow; early morning\" (Lane). Ghadāʾ was the morning meal; it has moved to midday."
+              "text": "غداء (ghadāʾ) is built on the native Arabic root gh-d-w, \"to go forth early in the morning\" (Lane). Ghadāʾ was the morning meal; it has moved to midday."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:715e478bcc6f6398",
+      "sourceHash": "fnv1a64:a1463f7b5fe6f2ea",
       "notice": null,
       "blocks": [
         {
@@ -603,7 +603,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "خل (khall) is built on the native Arabic root kh-l-l, \"vinegar\" (Lane). An old noun; Lane lists it under kh-l-l."
+              "text": "خل (khall), \"vinegar\", is an old native noun, filed under the root kh-l-l (Lane)."
             }
           ]
         },

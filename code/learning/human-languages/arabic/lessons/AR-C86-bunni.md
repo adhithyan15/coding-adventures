@@ -15,7 +15,7 @@ concept_tag: AR-ADJ86-BUNNI
 prerequisites: [AR-C85-muhimm, AR-C86-jamil]
 sounds: []
 roots: [bunn-coffee]
-etymology_hook: "bunnī: bunn 'coffee beans' (Lane) + -ī; linked to Amharic bunna, direction not settled"
+etymology_hook: "bunnī: bunn 'coffee beans' (Lane) + -ī; EtymDB derives bunn from Amharic bunna 'coffee'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C86-jamil]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**بني** (*bunnī*) is the colour of *bunn*, coffee beans, with the adjective ending *-ī*. Lane records *bunn* as coffee berries. It is linked to Ethiopian words for coffee, such as Amharic *bunna*; which way the word travelled is not settled.
+**بني** (*bunnī*) is the colour of *bunn*, coffee beans, with the adjective ending *-ī*. Lane records *bunn* as coffee berries, and EtymDB derives it from Amharic *bunna*, "coffee".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

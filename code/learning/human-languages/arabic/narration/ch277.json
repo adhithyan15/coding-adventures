@@ -4,7 +4,7 @@
   "chapter": 277,
   "title": "Ball, Match, Team, Race, Sport",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:d18031a8283ea4c4",
+  "sourceHash": "fnv1a64:9da6b78c5215e24b",
   "lessons": [
     {
       "id": "AR-C277-kura",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c3786fef3635a86",
+      "sourceHash": "fnv1a64:a51e22ef76d7cd38",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "كرة (kura) is built on the native Arabic root k-r-w, \"a ball\" (Lane). Kura is a ball."
+              "text": "كرة (kura) is built on the native Arabic root k-r-w; Lane's short article on this root gives kurī, \"spherical\". Kura is a ball."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6746ef651ae573b",
+      "sourceHash": "fnv1a64:e395153f2f4500ae",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مباراة (mubārā) is built on the native Arabic root b-r-y, \"to rival\" (Lane). Mubārāh is the verbal noun of Form III, \"a contest\"."
+              "text": "مباراة (mubārā) is built on the native Arabic root b-r-y, \"to pare\" (Lane), whose Form III bārā is \"to vie with\". Mubārā is the verbal noun of Form III, \"a contest\"."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 266,
   "title": "Basement, Chimney, Doorstep, Fence, Courtyard",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c8c9865061bf5109",
+  "sourceHash": "fnv1a64:7ad524ef194bc388",
   "lessons": [
     {
       "id": "AR-C266-qabw",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b201aae12af55476",
+      "sourceHash": "fnv1a64:524e82aa8981b592",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "عتبة (ʿataba) is built on the native Arabic root ʿ-t-b, \"a threshold, a step\" (Lane). ʿAtaba is a threshold."
+              "text": "عتبة (ʿataba), \"a threshold, a step\", is an old native noun, filed under the root ʿ-t-b (Lane), beside the verb ʿataba, \"to blame\"."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2afcb64b83ba345",
+      "sourceHash": "fnv1a64:58d3723e5efd1d75",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سياج (siyāj) is built on the native Arabic root s-w-j, \"an enclosure of thorns\" (Lane). Lane lists siyāj under s-w-j as an enclosure of thorns set round a vineyard; a fence is the same idea."
+              "text": "سياج (siyāj) is an old native noun, filed under the root s-w-j (Lane) as an enclosure of thorns set round a vineyard; a fence is the same idea."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:780b3cd6a66df04c",
+      "sourceHash": "fnv1a64:79a0510db7c95680",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "فناء (fināʾ) is built on the native Arabic root f-n-y, \"the open space before a house\" (Lane). Lane's fināʾ is the open court before a house."
+              "text": "فناء (fināʾ) is an old native noun, filed under the root f-n-y (Lane), beside the verb faniya, \"to pass away\". Lane's fināʾ is the open court before a house."
             }
           ]
         },

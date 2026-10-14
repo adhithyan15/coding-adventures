@@ -4,7 +4,7 @@
   "chapter": 155,
   "title": "Necessary, Ugly, Precious, Hot, Crowded",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:a3e0efb4dd2b9f0b",
+  "sourceHash": "fnv1a64:d80abc211c6bd6ce",
   "lessons": [
     {
       "id": "AR-C155-daruri",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d6667498844f97a",
+      "sourceHash": "fnv1a64:9f24cd1ef94a02c3",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ثمين (thamīn) is built on the native Arabic root th-m-n, \"a price\" (Lane). Thamīn is \"of great price\"."
+              "text": "ثمين (thamīn) is built on thaman, \"a price\", a native noun, filed under the root th-m-n (Lane). Thamīn is \"of great price\"."
             }
           ]
         },

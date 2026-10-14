@@ -4,7 +4,7 @@
   "chapter": 168,
   "title": "Arm, Body, Ankle, Throat, Headache",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cc34bba8e53e60d7",
+  "sourceHash": "fnv1a64:530e475b4347cce4",
   "lessons": [
     {
       "id": "AR-C168-dhira",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9b4ee60a907151d",
+      "sourceHash": "fnv1a64:4207126155170af5",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جسم (jism) is built on the native Arabic root j-s-m, \"the body\" (Lane). An old noun with its own root in Lane."
+              "text": "جسم (jism) is built on the native Arabic root j-s-m, \"to be large of body\" (Lane). Jism is the body."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8365071cfb1bc30",
+      "sourceHash": "fnv1a64:b9b9f0359c1cf5e6",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "كاحل (kāḥil) is built on the native Arabic root k-ḥ-l, \"to blacken the eyelids with kohl\" (Lane). Lane has no entry for kāḥil; the same root gives kuḥl, \"kohl\", and English alcohol comes from al-kuḥl."
+              "text": "كاحل (kāḥil) has no entry in Lane. It shares its letters with k-ḥ-l, \"to blacken the eyelids with kohl\" (Lane), the root of kuḥl, \"kohl\", and of English alcohol, from al-kuḥl; how the ankle came by the word is not settled."
             }
           ]
         },

@@ -15,7 +15,7 @@ concept_tag: AR-PLACE89-WARAA
 prerequisites: [AR-C89-tahta, AR-C89-amama]
 sounds: []
 roots: [w-r-y]
-etymology_hook: "warāʾa: built on the root w-r-y, 'behind' (Lane); Lane gives warāʾ as what is behind, the side at one's back"
+etymology_hook: "warāʾa: built on the root w-r-y, 'to hide' (Lane); Lane gives warāʾ as what is behind one's back"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C89-amama]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**وراء** (*warāʾa*) is built on the native Arabic root *w-r-y*, "behind" (Lane). Lane gives *warāʾ* as what is behind, the side at one's back.
+**وراء** (*warāʾa*) is built on the native Arabic root *w-r-y*, "to hide, to conceal" (Lane). Lane gives *warāʾ* as what is behind, the side at one's back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "Grandmother, Uncle, Uncle, Husband, Wife",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:957a878042fb538f",
+  "sourceHash": "fnv1a64:c8548dd868b0b7a7",
   "lessons": [
     {
       "id": "AR-C55-jadda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da9bc07041171a8a",
+      "sourceHash": "fnv1a64:3f24777e89d1bd60",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جدة (jadda) is built on the native Arabic root j-d-d, \"a grandfather; a grandmother\" (Lane). Jadda is the feminine of jadd, \"grandfather\"."
+              "text": "جدة (jadda) is the feminine of jadd, \"grandfather\", an old native noun, filed under the root j-d-d (Lane), whose verb jadda is \"to cut\"."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b1ab59a1b00d904",
+      "sourceHash": "fnv1a64:eb6c58d273cf64e6",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "عم (ʿamm) is built on the native Arabic root ʿ-m-m, \"a paternal uncle; to be general, to include all\" (Lane). ʿAmm is the father's brother."
+              "text": "عم (ʿamm), the father's brother, is an old native noun, filed under the root ʿ-m-m (Lane), \"to be general, to include all\"."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5521593dcfeaa013",
+      "sourceHash": "fnv1a64:12e5de40b2c024e2",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "خال (khāl) is built on the native Arabic root kh-w-l, \"a maternal uncle\" (Lane). Khāl is the mother's brother; Lane lists it under kh-w-l."
+              "text": "خال (khāl), the mother's brother, is an old native noun, filed under the root kh-w-l (Lane)."
             }
           ]
         },

@@ -15,7 +15,7 @@ concept_tag: AR-THINGS140-KAB
 prerequisites: [AR-C140-zufr, AR-C140-dimagh]
 sounds: []
 roots: [k-ʿ-b]
-etymology_hook: "kaʿb: built on the root k-ʿ-b, 'the ankle-bone' (Lane); the same root gives the Kaʿba, the cube-shaped shrine at Mecca"
+etymology_hook: "kaʿb: on k-ʿ-b, 'to swell, to be prominent' (Lane); the same root gives the Kaʿba, the cube-shaped shrine"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C140-dimagh]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**كعب** (*kaʿb*) is built on the native Arabic root *k-ʿ-b*, "the ankle-bone; a cube" (Lane). The same root gives the Kaʿba, the cube-shaped shrine at Mecca.
+**كعب** (*kaʿb*) is built on the native Arabic root *k-ʿ-b*, "to swell, to be prominent" (Lane); *kaʿb* is the ankle-bone. The same root gives the Kaʿba, the cube-shaped shrine at Mecca.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

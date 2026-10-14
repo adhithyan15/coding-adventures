@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "Star, Cloud, Sun, Moon, Sea",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:da20718bbf84aaee",
+  "sourceHash": "fnv1a64:a307aee8a08d6f27",
   "lessons": [
     {
       "id": "AR-C77-najm",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90456a3e8eb838c6",
+      "sourceHash": "fnv1a64:0a61212e6d1946d3",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "قمر (qamar) is built on the native Arabic root q-m-r, \"the moon\" (Lane). An old noun with its own root in Lane."
+              "text": "قمر (qamar), \"the moon\", is an old native noun, filed under the root q-m-r (Lane), beside the verb qamira, \"to be dazzled (as by moonlight)\"."
             }
           ]
         },

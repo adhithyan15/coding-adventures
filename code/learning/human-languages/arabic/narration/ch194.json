@@ -4,7 +4,7 @@
   "chapter": 194,
   "title": "To swallow, To chew, To touch, To smell, To hold",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1bc0cc908b8b1bd9",
+  "sourceHash": "fnv1a64:dd7e506945d58c29",
   "lessons": [
     {
       "id": "AR-C194-ibtalaa",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:282c5382b5ea9bcf",
+      "sourceHash": "fnv1a64:f5ae2db528853f37",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مضغ (maḍagha) is built on the native Arabic root m-ḍ-gh, \"to chew\" (Lane). Maḍagha is the plain verb, \"he chewed\"."
+              "text": "مضغ (maḍagha) is built on the native Arabic root m-ḍ-gh, \"to chew\"; Lane's short article gives muḍgha, as much flesh as is chewed at once (Lane). Maḍagha is the plain verb, \"he chewed\"."
             }
           ]
         },

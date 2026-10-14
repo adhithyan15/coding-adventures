@@ -15,7 +15,7 @@ concept_tag: AR-VERB-INTABAHA
 prerequisites: [AR-C197-qarana, AR-C197-lahaza]
 sounds: []
 roots: [n-b-h]
-etymology_hook: "intabaha: built on the root n-b-h, 'to wake, to be alert' (Lane); intabaha is Form VIII, 'to become alert'"
+etymology_hook: "intabaha: built on the root n-b-h, 'to take notice, to become aware' (Lane); intabaha is Form VIII"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C197-lahaza]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**انتبه** (*intabaha*) is built on the native Arabic root *n-b-h*, "to wake, to be alert" (Lane). *Intabaha* is Form VIII, "to become alert".
+**انتبه** (*intabaha*) is built on the native Arabic root *n-b-h*, "to take notice, to become aware" (Lane). *Intabaha* is Form VIII, "to become alert".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

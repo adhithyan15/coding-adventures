@@ -47,7 +47,7 @@ reviews_of: [AR-C114-hadaf]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**خطة** (*khuṭṭa*) is built on the native Arabic root *kh-ṭ-ṭ*, "to draw a line" (Lane). *Khuṭṭa* is a plan, a thing marked out.
+**خطة** (*khuṭṭa*) is built on the native Arabic root *kh-ṭ-ṭ*, "to draw a line" (Lane). Lane's *khuṭṭa* is a line, or an affair; the plan, a thing marked out, is a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

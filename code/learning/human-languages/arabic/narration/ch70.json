@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Chair, Table, Wall, Bed, Floor",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f8a063bdfc97f426",
+  "sourceHash": "fnv1a64:18967ea194f925de",
   "lessons": [
     {
       "id": "AR-C70-kursi",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:945e370ae11e12c5",
+      "sourceHash": "fnv1a64:0cb04ef21e6ece02",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سرير (sarīr) is built on the native Arabic root s-r-r, \"a couch, a bedstead, a throne\" (Lane). Lane gives a couch on a frame, a bedstead and a throne."
+              "text": "سرير (sarīr) is an old native noun, filed under the root s-r-r (Lane): a couch on a frame, a bedstead and a throne."
             }
           ]
         },

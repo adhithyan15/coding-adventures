@@ -4,7 +4,7 @@
   "chapter": 116,
   "title": "Jug, Frying pan, Oven, Fan, Computer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b820496fee0c5845",
+  "sourceHash": "fnv1a64:f8ebe79e745a21ee",
   "lessons": [
     {
       "id": "AR-C116-ibriq",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3ee633bb99d4f0f",
+      "sourceHash": "fnv1a64:4f0dc5679da5941b",
       "notice": null,
       "blocks": [
         {
@@ -67,7 +67,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "إبريق (ibrīq) is usually traced to Persian ābrīz, \"water-pourer\"; it has no Arabic root."
+              "text": "إبريق (ibrīq) is a loan: Lane's sources call it a Persian word, arabicized, from āb-rīz, \"water-pourer\"; it has no Arabic root."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 103,
-  "sourceHash": "fnv1a64:7eb389b9628c1398",
+  "sourceHash": "fnv1a64:07c7e0f3d82aace5",
   "lessonIds": [
     "AR-C103-bijanib",
     "AR-C103-yasar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch103.txt",
   "json": "arabic/narration/ch103.json",
-  "textHash": "fnv1a64:2cdc085e2354f725",
-  "jsonHash": "fnv1a64:4f53138b94b371b9",
+  "textHash": "fnv1a64:09f4f37a83aaa04c",
+  "jsonHash": "fnv1a64:29dcb08b89bb1356",
   "findings": []
 }

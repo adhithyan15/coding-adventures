@@ -15,7 +15,7 @@ concept_tag: AR-ADJ84-FAQIR
 prerequisites: [AR-C84-farigh, AR-C84-ghani]
 sounds: []
 roots: [f-q-r]
-etymology_hook: "faqīr: built on the root f-q-r, 'a vertebra' (Lane); English fakir comes from faqīr"
+etymology_hook: "faqīr: built on the root f-q-r, 'to be poor; a vertebra' (Lane); English fakir comes from faqīr"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [AR-C84-ghani]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**فقير** (*faqīr*) is built on the native Arabic root *f-q-r*, "a vertebra; to be poor" (Lane). English *fakir* comes from *faqīr*.
+**فقير** (*faqīr*) is built on the native Arabic root *f-q-r*, "to be poor; a vertebra" (Lane). English *fakir* comes from *faqīr*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

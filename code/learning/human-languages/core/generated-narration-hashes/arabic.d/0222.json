@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 222,
-  "sourceHash": "fnv1a64:875a110cc75c3358",
+  "sourceHash": "fnv1a64:255efb2a04c22707",
   "lessonIds": [
     "AR-C222-ulum",
     "AR-C222-kimiya",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch222.txt",
   "json": "arabic/narration/ch222.json",
-  "textHash": "fnv1a64:529b37e073489bd2",
-  "jsonHash": "fnv1a64:eeb45b4b4bff34a6",
+  "textHash": "fnv1a64:0b58a40999522a56",
+  "jsonHash": "fnv1a64:e3ab6874162e9461",
   "findings": []
 }

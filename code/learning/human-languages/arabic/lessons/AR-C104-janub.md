@@ -47,7 +47,7 @@ reviews_of: [AR-C103-shamal]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**جنوب** (*janūb*) is built on the native Arabic root *j-n-b*, "the side; the south wind" (Lane). Lane gives *janūb* as the south wind; the same root gives *jānib*, "side".
+**جنوب** (*janūb*) is built on the native Arabic root *j-n-b*, "the side" (Lane). Lane gives *janūb* as the south wind; the same root gives *jānib*, "side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
