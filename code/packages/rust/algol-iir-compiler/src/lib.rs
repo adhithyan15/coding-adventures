@@ -150,6 +150,25 @@ impl ScalarType {
     }
 }
 
+// Observe real classifier entry work only in the dedicated per-thread control.
+// A test budget stops the old pathological refusal without waiting for a timer;
+// ordinary tests have no active budget and production has no counter or cap.
+#[cfg(test)]
+std::thread_local! {
+    static SELECTOR_CLASSIFIER_BUDGET: Cell<Option<(usize, usize)>> = const { Cell::new(None) };
+}
+
+#[cfg(test)]
+fn selector_classifier_visit() {
+    SELECTOR_CLASSIFIER_BUDGET.with(|counter| {
+        if let Some((visits, limit)) = counter.get() {
+            let next = visits + 1;
+            counter.set(Some((next, limit)));
+            assert!(next <= limit, "selector classifier exceeded {limit} visits: actual {next}");
+        }
+    });
+}
+
 #[derive(Debug, Clone)]
 struct ExprValue {
     slot: String,
@@ -3822,6 +3841,8 @@ impl Compiler {
     }
 
     fn is_direct_formatter_safe_real_procedure_call(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
         if node.rule_name == "proc_call" {
             let Some(source_name) = direct_tokens(node)
                 .into_iter()
@@ -3867,6 +3888,8 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_real_procedure_result(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
         if node.rule_name == "proc_call" {
             let Some(source_name) = direct_tokens(node)
                 .into_iter()
@@ -3908,6 +3931,8 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
         if node.rule_name == "proc_call" {
             let source_name = direct_tokens(node)
                 .into_iter()
@@ -3935,6 +3960,8 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_signed_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
         if self.is_selector_call_safe_entier_sign_root(node) {
             return true;
         }
@@ -3954,6 +3981,8 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_additive_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
         if self.is_selector_call_safe_signed_entier_sign_root(node) {
             return true;
         }
@@ -4003,6 +4032,8 @@ impl Compiler {
         &self,
         node: &GrammarASTNode,
     ) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
         if self.is_selector_call_safe_additive_entier_sign_root(node) {
             return true;
         }
@@ -4044,6 +4075,8 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_powered_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
         if self.is_selector_call_safe_multiplicative_entier_sign_root(node) {
             return true;
         }
@@ -4087,6 +4120,8 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_standard_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
         self.is_selector_call_safe_standard_entier_sign_root_with_depth(node, 3)
     }
 
@@ -4095,6 +4130,8 @@ impl Compiler {
         node: &GrammarASTNode,
         remaining_standard_calls: usize,
     ) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
         if self.is_selector_call_safe_powered_entier_sign_root(node) {
             return true;
         }
@@ -4847,6 +4884,8 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_runtime_real_value(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
         if self.is_selector_call_safe_real_procedure_result(node) {
             return true;
         }
@@ -4989,6 +5028,8 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_runtime_real_root(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
         if self.is_selector_call_safe_runtime_real_value(node) {
             return true;
         }
@@ -5116,6 +5157,8 @@ impl Compiler {
     }
 
     fn is_runtime_real_assignment_value(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
         if self.is_direct_formatter_safe_real_procedure_call(node) {
             return true;
         }
@@ -15961,6 +16004,30 @@ mod tests {
                     assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "exactly one runtime real output");
                     assert!(!main.instructions.iter().any(|instruction| matches!(instruction.op.as_str(), "global_load" | "global_store")), "value selector must keep additive snapshots local");
                     }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_computed_name_selector_refusals_bound_classifier_work() {
+        struct BudgetGuard;
+        impl Drop for BudgetGuard {
+            fn drop(&mut self) { SELECTOR_CLASSIFIER_BUDGET.with(|counter| counter.set(None)); }
+        }
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then relay(entier(sign(left))) else relay(entier(sign(right)))");
+                    let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    SELECTOR_CLASSIFIER_BUDGET.with(|counter| counter.set(Some((0, 8192))));
+                    let _guard = BudgetGuard;
+                    let error = compile_source(&source, "classifier-work").expect_err("selector alias must still refuse the computed-name result");
+                    assert!(format!("{error:?}").contains("cannot print a real value"), "root={root}, condition={condition}, assigned={assigned}: {error:?}");
+                    let (visits, limit) = SELECTOR_CLASSIFIER_BUDGET.with(Cell::get).expect("budget active");
+                    assert!(visits > 0 && visits <= limit);
+                    eprintln!("computed-name refusal root={root} condition={condition} assigned={assigned}: {visits} classifier visits");
                 }
             }
         }
