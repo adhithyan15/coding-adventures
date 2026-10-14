@@ -75,3 +75,50 @@ fn railroad_singleton_and_empty_sequence_have_exact_exit_geometry() {
     let normal=try_layout_railroad(&input(E::Terminal("A".into()),RailroadConfig::default(),false)).unwrap();
     assert_eq!((normal.width,normal.height),(420.0,116.0));
 }
+
+#[test]
+fn railroad_sequences_preserve_complete_ordered_leaf_connector_and_exit_geometry() {
+    for config in [RailroadConfig{padding:0.0,vertical_separation:0.0,horizontal_separation:0.0},
+        RailroadConfig::default(),RailroadConfig{padding:0.1,vertical_separation:0.5,horizontal_separation:0.3},
+        RailroadConfig{padding:65536.0,vertical_separation:65536.0,horizontal_separation:65536.0}] {
+        let p=config.padding;let gap=config.horizontal_separation;let width=44.0+2.0*p;
+        let height=16.0+2.0*p;let sequence_height=height.max(36.0);
+        let origin=p+130.0;let content_y=16.0+2.0*p;
+        let leaf_y=content_y+(sequence_height-height)/2.0;let center=content_y+sequence_height/2.0;
+        let close=|actual:f64,expected:f64|assert!((actual-expected).abs()<1e-7,"{actual} != {expected}, config={config:?}");
+        for nested in [false,true] {
+            let a=E::Terminal("A".into());let b=E::NonTerminal("B".into());let c=E::Special("C".into());
+            let expression=if nested {E::Sequence(vec![a,E::Sequence(vec![b,c])])}else{E::Sequence(vec![a,b,c])};
+            let layout=try_layout_railroad(&input(expression,config.clone(),false)).unwrap();let rule=&layout.rules[0];
+            assert_eq!(rule.elements.len(),3);
+            for (index,(element,(label,kind))) in rule.elements.iter().zip([
+                ("A",diagram_ir::RailroadElementKind::Terminal),("B",diagram_ir::RailroadElementKind::NonTerminal),
+                ("C",diagram_ir::RailroadElementKind::Special)]).enumerate() {
+                assert_eq!((&*element.label,&element.kind),(label,&kind));
+                close(element.x,origin+index as f64*(width+gap));close(element.y,leaf_y);
+                close(element.width,width);close(element.height,height);
+            }
+            // Recursive lowering emits the inner connector before the outer
+            // connector. These whole ordered paths are an independent golden,
+            // not just a count or a canvas-enclosure invariant.
+            let pairs=if nested{[(1,2),(0,1)]}else{[(0,1),(1,2)]};
+            let mut expected:Vec<Vec<(f64,f64)>>=pairs.into_iter().map(|(from,to)|vec![
+                (origin+from as f64*(width+gap)+width,center),(origin+to as f64*(width+gap),center)]).collect();
+            let right=origin+3.0*width+2.0*gap;
+            expected.push(vec![(p+106.0,center),(origin,center)]);
+            expected.push(vec![(right,center),(right+24.0,center)]);
+            assert_eq!(rule.paths.len(),4);
+            for (path,points) in rule.paths.iter().zip(expected) {
+                assert!(!path.loopback);assert_eq!(path.points.len(),points.len());
+                for (actual,(x,y)) in path.points.iter().zip(points) {close(actual.x,x);close(actual.y,y);}
+            }
+        }
+        // Two rows prove the vertical gap independently of recursive choices.
+        let mut rows=input(E::Terminal("A".into()),config.clone(),false);
+        rows.rules.push(RailroadRule{name:"s".into(),definition:E::Terminal("B".into())});
+        let layout=try_layout_railroad(&rows).unwrap();let row_height=40.0+4.0*p;
+        assert_eq!(layout.rules.iter().map(|r|r.name.as_str()).collect::<Vec<_>>(),["r","s"]);
+        close(layout.rules[0].y,8.0+p);close(layout.rules[1].y,8.0+p+row_height+config.vertical_separation);
+        close(layout.height,8.0+2.0*p+2.0*row_height+2.0*config.vertical_separation);
+    }
+}
