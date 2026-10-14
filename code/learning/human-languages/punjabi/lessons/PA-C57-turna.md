@@ -14,7 +14,8 @@ romanization: "turnā"
 concept_tag: PA-VERB-TURNA
 prerequisites: [PA-C56-sauna, PA-C57-utthna]
 sounds: []
-roots: []
+roots: [sanskrit-turati]
+etymology_hook: "turnā ← Sanskrit turati 'hurries, presses forward', a tadbhava (CDIAL 5878)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C57-utthna]
 <!-- hl-knowledge: introduces=[PA-LEX-C57-VERBS57-02]; assesses=[] -->
 
 **ਤੁਰਨਾ** — *turnā* — "to walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤੁਰਨਾ** (*turnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *turati*, "hurries, presses forward" (CDIAL 5878).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

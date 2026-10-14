@@ -14,7 +14,8 @@ romanization: "amīr"
 concept_tag: PA-QUAL147-AMIR
 prerequisites: [PA-C146-sacca, PA-C146-jhutha]
 sounds: []
-roots: []
+roots: [arabic-amir]
+etymology_hook: "amīr ← Arabic amīr 'commander, prince', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C146-jhutha]
 <!-- hl-knowledge: introduces=[PA-LEX-C147-QUAL147-01]; assesses=[] -->
 
 **ਅਮੀਰ** — *amīr* — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਅਮੀਰ** (*amīr*) is a loan from Arabic *amīr*, "commander, prince", which reached Punjabi through Persian. Its Arabic root is *ʾ-m-r* (Lane). Punjabi uses it for "rich".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

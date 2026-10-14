@@ -14,7 +14,8 @@ romanization: "lukṇā"
 concept_tag: PA-VERB-LUKNA
 prerequisites: [PA-C147-takra, PA-C147-kamzor, PA-C45-form]
 sounds: []
-roots: []
+roots: [sanskrit-lupyate]
+etymology_hook: "lukṇā 'to hide': listed in CDIAL's entry for Sanskrit lupyate 'is lost, is removed' (CDIAL 11083)"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ What does this person do? (A job, *naukarī*.)
 <!-- hl-knowledge: introduces=[PA-LEX-C148-ACT148-01]; assesses=[] -->
 
 **ਲੁਕਣਾ** — *lukṇā* — "to hide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ਲੁਕਣਾ** (*lukṇā*), "to hide", in its entry for Sanskrit *lupyate*, "is lost, is removed" (CDIAL 11083).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

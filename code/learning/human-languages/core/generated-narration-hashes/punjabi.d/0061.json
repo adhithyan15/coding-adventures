@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 61,
-  "sourceHash": "fnv1a64:119548560361d52e",
+  "sourceHash": "fnv1a64:30e4753564154346",
   "lessonIds": [
     "PA-C61-ginna",
     "PA-C61-pharna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch61.txt",
   "json": "punjabi/narration/ch61.json",
-  "textHash": "fnv1a64:d00080e9249ab8bb",
-  "jsonHash": "fnv1a64:208c7481e68e013e",
+  "textHash": "fnv1a64:85d3b4a0a97dfe31",
+  "jsonHash": "fnv1a64:f754cae0dbc5f37f",
   "findings": []
 }

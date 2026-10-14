@@ -14,7 +14,8 @@ romanization: "gurduārā"
 concept_tag: PA-TOWN91-GURDUARA
 prerequisites: [PA-C91-bass, PA-C91-pul]
 sounds: []
-roots: []
+roots: [sanskrit-guru, indo-aryan-duvara]
+etymology_hook: "gurduārā: guru 'teacher' + duārā 'door, gateway', from *duvāra, beside Sanskrit dvāra 'door' (CDIAL 6459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C91-pul]
 <!-- hl-knowledge: introduces=[PA-LEX-C91-TOWN91-03]; assesses=[] -->
 
 **ਗੁਰਦੁਆਰਾ** — *gurduārā* — "a gurdwara".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗੁਰਦੁਆਰਾ** (*gurduārā*) is built in Punjabi from two older words: *gur*, from Sanskrit *guru*, "teacher", and *duārā*, "door, gateway", which CDIAL lists under *\*duvāra*, a form beside Sanskrit *dvāra*, "door" (CDIAL 6459). It is "the guru's door".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

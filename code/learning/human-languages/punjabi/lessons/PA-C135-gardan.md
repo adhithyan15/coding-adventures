@@ -14,7 +14,8 @@ romanization: "gardan"
 concept_tag: PA-THINGS135-GARDAN
 prerequisites: [PA-C134-darhi, PA-C134-mucch]
 sounds: []
-roots: []
+roots: [persian-gardan]
+etymology_hook: "gardan: usually traced to Persian gardan 'neck'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C134-mucch]
 <!-- hl-knowledge: introduces=[PA-LEX-C135-THINGS135-01]; assesses=[] -->
 
 **ਗਰਦਨ** — *gardan* — "a neck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗਰਦਨ** (*gardan*) is a loan, usually traced to Persian *gardan*, "neck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for to use, then the Punjabi for to make.
 You'll want to know: ਸਿਉਣਾ.
 ਸਿਉਣਾ — siuṇā — "to sew".
 
+The word, taken apart.
+ਸਿਉਣਾ (siuṇā) is inherited. CDIAL lists it, as siūṁṇā, under sīvayati, the second form beside Sanskrit sīvyati, "sews" (CDIAL 13444).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for to make, then the Punjabi for to sew.
 
 You'll want to know: ਭਰਨਾ.
 ਭਰਨਾ — bharnā — "to fill".
+
+The word, taken apart.
+ਭਰਨਾ (bharnā) is inherited from Sanskrit bharati, "bears, brings; fills". CDIAL lists bharnā, "to bear", from the Punjabi of Ludhiana, and Lahnda bharaṇ, "to fill" (CDIAL 9397).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for to sew, then the Punjabi for to fill.
 You'll want to know: ਖਿੱਚਣਾ.
 ਖਿੱਚਣਾ — khiccṇā — "to pull".
 
+The word, taken apart.
+ਖਿੱਚਣਾ (khiccṇā) is a tadbhava, a word inherited and reshaped by sound change. It comes from khiñc, "drag, pull", a form CDIAL reconstructs from its descendants (CDIAL 3881).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for to fill, then the Punjabi for to pull.
 You'll want to know: ਜਾਗਣਾ.
 ਜਾਗਣਾ — jāgṇā — "to wake up".
 
+The word, taken apart.
+ਜਾਗਣਾ (jāgṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāgrati, "are awake" (CDIAL 5175).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for to pull, then the Punjabi for to wake up
 
 You'll want to know: ਚਲਾਉਣਾ.
 ਚਲਾਉਣਾ — calāuṇā — "to drive, to run (a machine)".
+
+The word, taken apart.
+ਚਲਾਉਣਾ (calāuṇā) is the causing form of calṇā, "to move, to go": to drive is "to make go". CDIAL lists the verb under Sanskrit calati, "goes away; shakes, trembles" (CDIAL 4715).
 
 What you've built.
 One more word for this chapter.

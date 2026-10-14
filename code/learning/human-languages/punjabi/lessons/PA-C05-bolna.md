@@ -12,6 +12,7 @@ concept_tag: PA-VERB-BOLNA
 prerequisites: [PA-C04-practice]
 sounds: [hora-o, retroflex-na]
 roots: [bol-speak]
+etymology_hook: "bolṇā ← *bōll 'speak', reconstructed behind Prakrit bollaï (CDIAL 9321); a Dravidian source is very doubtful"
 duration:
   max_seconds: 220
 requires:

@@ -14,7 +14,8 @@ romanization: "kill"
 concept_tag: PA-THINGS116-KILL
 prerequisites: [PA-C116-dhaga, PA-C116-batan]
 sounds: []
-roots: []
+roots: [sanskrit-kila]
+etymology_hook: "kill ← *kīlla 'stake, peg', perhaps non-Aryan (CDIAL 3202)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C116-batan]
 <!-- hl-knowledge: introduces=[PA-LEX-C116-THINGS116-03]; assesses=[] -->
 
 **ਕਿੱਲ** — *kill* — "a nail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕਿੱਲ** (*kill*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kīlla*, "stake, peg", a form CDIAL reconstructs from its descendants (CDIAL 3202). CDIAL sets it beside Sanskrit *kīla*, "stake, peg", and thinks the variation in its forms points to a non-Aryan origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 127,
   "title": "Shore, Waterfall, Cave, Valley, Sand hill",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:df27aa027a97a2dc",
+  "sourceHash": "fnv1a64:61e1614d4b028702",
   "lessons": [
     {
       "id": "PA-C127-kinara",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:522959eb6e2786fa",
+      "sourceHash": "fnv1a64:e6450f71d5715be8",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਿਨਾਰਾ (kinārā) is a loan, usually traced to Persian kinār, \"edge, shore\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:801046c27a8429ab",
+      "sourceHash": "fnv1a64:bc8cf1f4fe92c237",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਝਰਨਾ (jharnā) belongs to the root jhar, \"flow down\", but CDIAL does not list it in the sense \"waterfall\". It gives Hindi jharī, \"waterfall\", under Sanskrit jhara, \"waterfall\" (CDIAL 5343), and a Punjabi jharnā only as \"grating in a waterway\", under jharaṇa, as in jharaṇodaka, \"water from a cascade\" (CDIAL 5344)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5843c414bc339c3e",
+      "sourceHash": "fnv1a64:4df55c09d9b26a35",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists ਗੁਫ਼ਾ (gufā), in the spelling guphā, \"cave\", under a reconstructed gupphā, \"cave\" (CDIAL 4204). CDIAL calls its own further link with Sanskrit guhā, \"cave\", very doubtful."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d23c4bebc0e5028",
+      "sourceHash": "fnv1a64:4da91de50ff628d0",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵਾਦੀ (vādī) is a loan from Arabic wādī, \"valley, river bed\", which reached Punjabi through Persian. Its Arabic root is w-d-y (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:181bac9f37e55983",
+      "sourceHash": "fnv1a64:5155ca5e8a7243f3",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਟਿੱਬਾ (ṭibbā) is inherited. CDIAL lists it, \"mound, sandbank, hill\", under ṭibba, one of the variant forms it groups under ṭappa, \"hill\" (CDIAL 5446)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

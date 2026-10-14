@@ -14,7 +14,8 @@ romanization: "tīh"
 concept_tag: PA-NUMBERS96-TIH
 prerequisites: [PA-C96-baram, PA-C96-vih]
 sounds: []
-roots: []
+roots: [sanskrit-trimshat]
+etymology_hook: "tīh ← Sanskrit triṁśat 'thirty', a tadbhava (CDIAL 6015)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C96-vih]
 <!-- hl-knowledge: introduces=[PA-LEX-C96-NUMBERS96-03]; assesses=[] -->
 
 **ਤੀਹ** — *tīh* — "thirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤੀਹ** (*tīh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *triṁśat*, "thirty" (CDIAL 6015).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

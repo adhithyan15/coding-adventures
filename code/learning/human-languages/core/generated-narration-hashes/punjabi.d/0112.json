@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 112,
-  "sourceHash": "fnv1a64:81638bed8e1d2fb7",
+  "sourceHash": "fnv1a64:20806600114813f2",
   "lessonIds": [
     "PA-C112-kala",
     "PA-C112-sand",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch112.txt",
   "json": "punjabi/narration/ch112.json",
-  "textHash": "fnv1a64:27f3a6cbf9e98dbd",
-  "jsonHash": "fnv1a64:070b12289256f2d7",
+  "textHash": "fnv1a64:a833728beed6b620",
+  "jsonHash": "fnv1a64:9eba5debed11bb1c",
   "findings": []
 }

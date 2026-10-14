@@ -14,7 +14,8 @@ romanization: "makkhaṇ"
 concept_tag: PA-FOOD65-MAKKHAN
 prerequisites: [PA-C65-khand, PA-C65-lun]
 sounds: []
-roots: []
+roots: [sanskrit-mrakshana]
+etymology_hook: "makkhaṇ ← Sanskrit mrakṣaṇa 'rubbing in; ointment, oil', a tadbhava (CDIAL 10378)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C65-lun]
 <!-- hl-knowledge: introduces=[PA-LEX-C65-FOOD65-05]; assesses=[] -->
 
 **ਮੱਖਣ** — *makkhaṇ* — "butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੱਖਣ** (*makkhaṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mrakṣaṇa*, "rubbing in; ointment, oil" (CDIAL 10378).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

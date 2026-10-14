@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a station, then the Punjabi for a car; a
 You'll want to know: ਬੱਸ.
 ਬੱਸ — bass — "a bus".
 
+The word, taken apart.
+ਬੱਸ (bass) is a loan from English bus.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a car; a train, then the Punjabi for a b
 
 You'll want to know: ਪੁਲ.
 ਪੁਲ — pul — "a bridge".
+
+The word, taken apart.
+ਪੁਲ (pul) is a loan, usually traced to Persian pul, "bridge".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a bus, then the Punjabi for a bridge.
 You'll want to know: ਗੁਰਦੁਆਰਾ.
 ਗੁਰਦੁਆਰਾ — gurduārā — "a gurdwara".
 
+The word, taken apart.
+ਗੁਰਦੁਆਰਾ (gurduārā) is built in Punjabi from two older words: gur, from Sanskrit guru, "teacher", and duārā, "door, gateway", which CDIAL lists under duvāra, a form beside Sanskrit dvāra, "door" (CDIAL 6459). It is "the guru's door".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a bridge, then the Punjabi for a gurdwar
 You'll want to know: ਮੰਦਰ.
 ਮੰਦਰ — mandar — "a temple".
 
+The word, taken apart.
+ਮੰਦਰ (mandar) is a semi-tatsama: Sanskrit mandira, "any dwelling, camp, town, temple", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9852). CDIAL lists no Punjabi form.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a gurdwara, then the Punjabi for a templ
 
 You'll want to know: ਹੋਟਲ.
 ਹੋਟਲ — hoṭal — "a hotel".
+
+The word, taken apart.
+ਹੋਟਲ (hoṭal) is a loan from English hotel.
 
 What you've built.
 One more word for this chapter.

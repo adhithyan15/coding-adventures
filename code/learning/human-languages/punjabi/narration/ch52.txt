@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a hospital, then the Punjabi for ill.
 You'll want to know: ਦਰਦ.
 ਦਰਦ — darad — "pain".
 
+The word, taken apart.
+ਦਰਦ (darad) is a loan, usually traced to Persian dard, "pain". Punjabi breaks up the -rd with a vowel.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for ill, then the Punjabi for pain.
 
 You'll want to know: ਦਵਾਈ.
 ਦਵਾਈ — davāī — "medicine".
+
+The word, taken apart.
+ਦਵਾਈ (davāī) is built on davā, a loan from Arabic dawāʾ, "remedy, medicine", which reached Punjabi through Persian. Its Arabic root is d-w-y (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for pain, then the Punjabi for medicine.
 You'll want to know: ਪਿਆਸ.
 ਪਿਆਸ — piās — "thirst".
 
+The word, taken apart.
+ਪਿਆਸ (piās) goes back to Sanskrit pipāsā, "thirst". CDIAL lists no Punjabi form, but gives the matching Hindi piyās under it (CDIAL 8199), and it marks the Punjabi adjective peāsā, "thirsty", as taken from Hindi (CDIAL 8200).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for medicine, then the Punjabi for thirst.
 You'll want to know: ਭੁੱਖ.
 ਭੁੱਖ — bhukkh — "hunger".
 
+The word, taken apart.
+ਭੁੱਖ (bhukkh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bubhukṣā, "desire to eat, hunger" (CDIAL 9286).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for thirst, then the Punjabi for hunger.
 
 You'll want to know: ਖ਼ੁਸ਼.
 ਖ਼ੁਸ਼ — khush — "happy".
+
+The word, taken apart.
+ਖ਼ੁਸ਼ (khush) is a loan, usually traced to Persian khush, "happy, pleasant".
 
 What you've built.
 One more word for this chapter.

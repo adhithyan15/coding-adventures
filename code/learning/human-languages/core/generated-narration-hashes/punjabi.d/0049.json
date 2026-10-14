@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 49,
-  "sourceHash": "fnv1a64:79b31879b18ed30f",
+  "sourceHash": "fnv1a64:7a38329f76db9a37",
   "lessonIds": [
     "PA-C49-hatth",
     "PA-C49-pair",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch49.txt",
   "json": "punjabi/narration/ch49.json",
-  "textHash": "fnv1a64:1eb7e222efdb9413",
-  "jsonHash": "fnv1a64:adc161bd181f9a01",
+  "textHash": "fnv1a64:4eb8d4547ad416c0",
+  "jsonHash": "fnv1a64:d82d132e40ac3cfe",
   "findings": []
 }

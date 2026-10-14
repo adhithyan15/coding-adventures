@@ -16,6 +16,7 @@ The word, taken apart.
 ਦੁੱਧ ਅਤੇ ਰੋਟੀ — dudh ate roṭī — milk and bread.
 ਅਤੇ (ate) stands between the two things it joins, exactly where English puts and.
 It has a shorter twin. In ordinary speech Punjabi very often says just ਤੇ, and the two are the same word — ਅਤੇ (ate) is the fuller, more written form. That matters here for an odd reason: the short ਤੇ is also a syllable this book drills in its script lessons, so a search of the corpus for and kept finding the drill and never the conjunction. The word looked present and was absent.
+CDIAL lists the short te, "and", under Sanskrit tathāpi, "even so, nevertheless" (CDIAL 5647); it has no entry for the fuller ate.
 
 Guided Practice.
 [pause 1 second]
@@ -47,6 +48,7 @@ No ending appears, no word moves. That is why and is the joining word to learn f
 And it composes with the chapter behind you — the second half is free to be a negative:
 … ਅਤੇ … (… ate …) ਨਹੀਂ …
 That is a two-clause sentence, and it is the first one this book has been able to make. Until now the longest thing the track taught was a single clause of four slots.
+Ate goes with its short twin te, which CDIAL lists under Sanskrit tathāpi, "even so, nevertheless" (CDIAL 5647); it has no entry for ate itself.
 
 Guided Practice.
 [pause 1 second]
@@ -101,6 +103,7 @@ The word, taken apart.
 ਦੁੱਧ ਜਾਂ ਰੋਟੀ — dudh jāṁ roṭī — milk or bread.
 Same position, different job: it stands between the two things and asks the listener to choose. The bindi on it is not decoration — the vowel goes through the nose, and this book has been marking that since its earliest script lessons.
 This is the word a shopkeeper uses on you, and the one you need to answer with.
+Where jāṁ comes from is not settled: CDIAL has no entry for it in this sense.
 
 Guided Practice.
 [pause 1 second]
@@ -130,6 +133,7 @@ English uses two different words — neither and nor. Punjabi repeats one:
 ਨਾ (first thing) ਨਾ (second thing) — "neither … nor …"
 ਨਾ is the short bare negative you have already met beside ਨਹੀਂ. Here it does the joining and the negating at once, standing in front of each item rather than between them.
 That is worth noticing against ਅਤੇ (ate) and ਜਾਂ (jāṁ), which stand between. This is the first joining pattern in the book that goes in front of both halves.
+Nā is inherited: CDIAL lists Punjabi na, "not", under Sanskrit na (CDIAL 6906).
 
 Guided Practice.
 [pause 1 second]

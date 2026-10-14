@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for to wake up, then the Punjabi for to driv
 You'll want to know: ਕਹਿਣਾ.
 ਕਹਿਣਾ — kahiṇā — "to say".
 
+The word, taken apart.
+ਕਹਿਣਾ (kahiṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kathayati, "converses with, describes" (CDIAL 2703).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for to drive, then the Punjabi for to say.
 
 You'll want to know: ਜੀਉਣਾ.
 ਜੀਉਣਾ — jīuṇā — "to live".
+
+The word, taken apart.
+ਜੀਉਣਾ (jīuṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jīvati, "is alive" (CDIAL 5241).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for to say, then the Punjabi for to live.
 You'll want to know: ਖ਼ਰਚਣਾ.
 ਖ਼ਰਚਣਾ — kharcṇā — "to spend".
 
+The word, taken apart.
+ਖ਼ਰਚਣਾ (kharcṇā) is built on kharc, "expense", usually traced through Persian kharch to Arabic kharj, "expenditure"; its Arabic root is kh-r-j (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for to live, then the Punjabi for to spend.
 You'll want to know: ਬਚਾਉਣਾ.
 ਬਚਾਉਣਾ — bacāuṇā — "to save".
 
+The word, taken apart.
+ਬਚਾਉਣਾ (bacāuṇā) goes back to Sanskrit vañcati, "moves; escapes from": CDIAL lists bacāuṇā under it and marks the Punjabi word as taken from Hindi. In the same entry it lists the form vacāuṇā, "to save", under the second headword, vacyate, "flies, is poured forth" (CDIAL 11208).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for to spend, then the Punjabi for to save.
 
 You'll want to know: ਬੀਜਣਾ.
 ਬੀਜਣਾ — bījṇā — "to sow".
+
+The word, taken apart.
+ਬੀਜਣਾ (bījṇā) is built on bīj, "seed", from Sanskrit bīja, "seed" (CDIAL 9250). CDIAL does not list the verb itself.
 
 What you've built.
 One more word for this chapter.

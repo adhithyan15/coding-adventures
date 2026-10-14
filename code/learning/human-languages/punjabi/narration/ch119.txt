@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a doll, then the Punjabi for a toy.
 You'll want to know: ਮੰਜਾ.
 ਮੰਜਾ — mañjā — "a cot".
 
+The word, taken apart.
+ਮੰਜਾ (mañjā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mañca, "stage, platform; bed" (CDIAL 9715). CDIAL says Hindi mãjā, "bed", was taken from Punjabi.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a toy, then the Punjabi for a cot.
 
 You'll want to know: ਪਜਾਮਾ.
 ਪਜਾਮਾ — pajāmā — "pyjamas".
+
+The word, taken apart.
+ਪਜਾਮਾ (pajāmā) is a loan, usually traced to Persian pāy-jāma, "leg garment". It is built from pāy, "leg", and jāma, "garment".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a cot, then the Punjabi for pyjamas.
 You'll want to know: ਸਲਵਾਰ.
 ਸਲਵਾਰ — salvār — "a salwar".
 
+The word, taken apart.
+ਸਲਵਾਰ (salvār) is a loan, usually traced to Persian shalvār, "trousers".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for pyjamas, then the Punjabi for a salwar.
 You'll want to know: ਚੁੰਨੀ.
 ਚੁੰਨੀ — cunnī — "a scarf, a chunni".
 
+The word, taken apart.
+Where ਚੁੰਨੀ (cunnī) comes from is not settled: CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a salwar, then the Punjabi for a scarf.
 
 You'll want to know: ਪੇਟੀ.
 ਪੇਟੀ — peṭī — "a belt".
+
+The word, taken apart.
+ਪੇਟੀ (peṭī) is a tadbhava, a word inherited and reshaped by sound change. It comes from peṭṭa, "belly", a form CDIAL reconstructs from its descendants (CDIAL 8376). CDIAL lists Punjabi peṭī, "girdle", beside peṭ, "belly".
 
 What you've built.
 One more word for this chapter.

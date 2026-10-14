@@ -14,7 +14,8 @@ romanization: "kitāb"
 concept_tag: PA-HOME71-KITAB
 prerequisites: [PA-C70-rasoi, PA-C71-kamra]
 sounds: []
-roots: []
+roots: [arabic-ktb]
+etymology_hook: "kitāb ← Arabic kitāb 'book, writing', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C71-kamra]
 <!-- hl-knowledge: introduces=[PA-LEX-C71-HOME71-02]; assesses=[] -->
 
 **ਕਿਤਾਬ** — *kitāb* — "a book".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕਿਤਾਬ** (*kitāb*) is a loan from Arabic *kitāb*, "book, writing", which reached Punjabi through Persian. Its Arabic root is *k-t-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

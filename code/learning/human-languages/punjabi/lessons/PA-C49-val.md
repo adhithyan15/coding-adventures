@@ -14,7 +14,8 @@ romanization: "vāl"
 concept_tag: PA-BODY49-VAL
 prerequisites: [PA-C49-hatth, PA-C49-pair]
 sounds: []
-roots: []
+roots: [sanskrit-vala-hair]
+etymology_hook: "vāl ← Sanskrit vāla 'hair of the tail, hair', a tadbhava (CDIAL 11572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C49-pair]
 <!-- hl-knowledge: introduces=[PA-LEX-C49-BODY49-03]; assesses=[] -->
 
 **ਵਾਲ** — *vāl* — "hair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਵਾਲ** (*vāl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vāla*, "hair of the tail, hair" (CDIAL 11572).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

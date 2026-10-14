@@ -14,7 +14,8 @@ romanization: "siuṇā"
 concept_tag: PA-VERB-SIUNA
 prerequisites: [PA-C149-vartna, PA-C149-banauna]
 sounds: []
-roots: []
+roots: [sanskrit-sivyati]
+etymology_hook: "siuṇā: listed under sīvayati, the second form beside Sanskrit sīvyati 'sews' (CDIAL 13444)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C149-banauna]
 <!-- hl-knowledge: introduces=[PA-LEX-C150-ACT150-01]; assesses=[] -->
 
 **ਸਿਉਣਾ** — *siuṇā* — "to sew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਿਉਣਾ** (*siuṇā*) is inherited. CDIAL lists it, as *siūṁṇā*, under *sīvayati*, the second form beside Sanskrit *sīvyati*, "sews" (CDIAL 13444).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

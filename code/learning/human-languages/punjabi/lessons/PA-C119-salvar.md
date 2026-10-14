@@ -14,7 +14,8 @@ romanization: "salvār"
 concept_tag: PA-THINGS119-SALVAR
 prerequisites: [PA-C119-manja, PA-C119-pajama]
 sounds: []
-roots: []
+roots: [persian-shalvar]
+etymology_hook: "salvār: usually traced to Persian shalvār 'trousers'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C119-pajama]
 <!-- hl-knowledge: introduces=[PA-LEX-C119-THINGS119-03]; assesses=[] -->
 
 **ਸਲਵਾਰ** — *salvār* — "a salwar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਲਵਾਰ** (*salvār*) is a loan, usually traced to Persian *shalvār*, "trousers".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

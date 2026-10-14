@@ -6198,6 +6198,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     let automatic_lane_ordering = parse_swimlane_automatic_lane_ordering(source)?;
     let ignore_cross_lane_edges = parse_swimlane_ignore_cross_lane_edges(source)?;
     let optimize_ranks_by_crossings = parse_swimlane_optimize_ranks_by_crossings(source)?;
+    let flowchart_config = parse_swimlane_flowchart_config(source)?;
     let theme = parse_swimlane_theme(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_swimlane(&prepared).map_err(|message| ParseError {
@@ -6231,6 +6232,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         automatic_lane_ordering,
         ignore_cross_lane_edges,
         optimize_ranks_by_crossings,
+        flowchart_config,
         theme,
     };
     let mut current_lane: Option<usize> = None;
@@ -6559,6 +6561,34 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         }
     }
     Ok(diagram)
+}
+
+fn parse_swimlane_flowchart_config(source: &str) -> Result<diagram_ir::SwimlaneFlowchartConfig, ParseError> {
+    let front_matter = mermaid_front_matter_section(source, &["config", "flowchart"]);
+    let config_source = mermaid_directive_object(source, "flowchart")
+        .or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(config_source, name).or_else(|| config_source.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        })).filter(|value| !value.is_empty())
+    };
+    let parse = |name: &str| -> Result<Option<f64>, ParseError> {
+        let Some(value) = value(name) else { return Ok(None); };
+        let parsed = value.parse::<f64>().map_err(|_| swimlane_error(
+            1, format!("Swimlane flowchart {name} must be a non-negative number"),
+        ))?;
+        if !parsed.is_finite() || parsed < 0.0 {
+            return Err(swimlane_error(1,
+                format!("Swimlane flowchart {name} must be a non-negative number")));
+        }
+        Ok(Some(parsed))
+    };
+    Ok(diagram_ir::SwimlaneFlowchartConfig {
+        node_spacing: parse("nodeSpacing")?,
+        rank_spacing: parse("rankSpacing")?,
+        diagram_padding: parse("diagramPadding")?,
+    })
 }
 
 fn parse_swimlane_theme(source: &str) -> diagram_ir::SwimlaneTheme {

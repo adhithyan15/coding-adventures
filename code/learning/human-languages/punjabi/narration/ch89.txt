@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for on, then the Punjabi for below.
 You'll want to know: ਸਾਹਮਣੇ.
 ਸਾਹਮਣੇ — sāhmaṇe — "in front".
 
+The word, taken apart.
+ਸਾਹਮਣੇ (sāhmaṇe) goes with Hindi sāmhnā, "front part", which CDIAL lists under Sanskrit saṁmukha, "facing, present", beside Punjabi saũhe, "in front" (CDIAL 12982).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for below, then the Punjabi for in front.
 
 You'll want to know: ਪਿੱਛੇ.
 ਪਿੱਛੇ — pichchhe — "behind".
+
+The word, taken apart.
+ਪਿੱਛੇ (pichchhe) is a tadbhava, a word inherited and reshaped by sound change. It comes from paśca, "hinder part", a form CDIAL reconstructs from its descendants (CDIAL 7990). CDIAL says the form was drawn from Sanskrit paścāt, "behind".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for in front, then the Punjabi for behind.
 You'll want to know: ਇੱਥੇ.
 ਇੱਥੇ — itthe — "here".
 
+The word, taken apart.
+ਇੱਥੇ (itthe) is inherited: CDIAL lists it under Sanskrit ittham, "thus" (CDIAL 1564).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for behind, then the Punjabi for here.
 You'll want to know: ਉੱਥੇ.
 ਉੱਥੇ — utthe — "there".
 
+The word, taken apart.
+ਉੱਥੇ (utthe) is inherited. CDIAL lists it beside itthe, "here", under Sanskrit ittham, "thus", with its u- taken from the stem of asau, "that" (CDIAL 1564).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for here, then the Punjabi for there.
 
 You'll want to know: ਦੁਕਾਨ.
 ਦੁਕਾਨ — dukān — "a shop".
+
+The word, taken apart.
+ਦੁਕਾਨ (dukān) is a loan from Arabic dukkān, "shop", which reached Punjabi through Persian. Its Arabic root is d-k-n (Lane).
 
 What you've built.
 One more word for this chapter.

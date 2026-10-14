@@ -14,7 +14,8 @@ romanization: "baddal"
 concept_tag: PA-NATURE75-BADDAL
 prerequisites: [PA-C75-ret, PA-C75-khet]
 sounds: []
-roots: []
+roots: [sanskrit-vardala]
+etymology_hook: "baddal ← Sanskrit vārdala 'rainy day, bad weather', a tadbhava (CDIAL 11567)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C75-khet]
 <!-- hl-knowledge: introduces=[PA-LEX-C75-NATURE75-03]; assesses=[] -->
 
 **ਬੱਦਲ** — *baddal* — "a cloud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬੱਦਲ** (*baddal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vārdala*, "rainy day, bad weather" (CDIAL 11567).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

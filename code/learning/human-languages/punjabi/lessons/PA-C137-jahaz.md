@@ -14,7 +14,8 @@ romanization: "jahāz"
 concept_tag: PA-THINGS137-JAHAZ
 prerequisites: [PA-C136-addi, PA-C136-gitta]
 sounds: []
-roots: []
+roots: [arabic-jahaz]
+etymology_hook: "jahāz ← Arabic jahāz 'equipment, gear', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C136-gitta]
 <!-- hl-knowledge: introduces=[PA-LEX-C137-THINGS137-01]; assesses=[] -->
 
 **ਜਹਾਜ਼** — *jahāz* — "a ship, an aeroplane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜਹਾਜ਼** (*jahāz*) is a loan from Arabic *jahāz*, "equipment, gear", which reached Punjabi through Persian. Its Arabic root is *j-h-z* (Lane). Persian used it for a ship, and Punjabi for a plane too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

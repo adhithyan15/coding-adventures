@@ -15,6 +15,7 @@ concept_tag: PA-FOOD66-SANTRA
 prerequisites: [PA-C66-shahid, PA-C66-angur]
 sounds: []
 roots: []
+etymology_hook: "santrā: origin uncertain; often linked with Cintra (Sintra) in Portugal; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C66-angur]
 <!-- hl-knowledge: introduces=[PA-LEX-C66-FOOD66-04]; assesses=[] -->
 
 **ਸੰਤਰਾ** — *santrā* — "an orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਸੰਤਰਾ** (*santrā*) comes from is uncertain. It is often linked with Cintra (Sintra) in Portugal, but CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mārūthal"
 concept_tag: PA-THINGS128-MARUTHAL
 prerequisites: [PA-C127-vadi, PA-C127-tibba]
 sounds: []
-roots: []
+roots: [sanskrit-maru, sanskrit-sthala]
+etymology_hook: "mārūthal: maru 'wilderness, waterless country' (CDIAL 9876a) + thal 'sandy region' ← sthala 'dry land' (CDIAL 13744)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C127-tibba]
 <!-- hl-knowledge: introduces=[PA-LEX-C128-THINGS128-01]; assesses=[] -->
 
 **ਮਾਰੂਥਲ** — *mārūthal* — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਾਰੂਥਲ** (*mārūthal*) is built from two old words: *mārū*, from Sanskrit *maru*, "wilderness" (CDIAL 9876a), and *thal*, "sandy region, desert", which CDIAL lists under Sanskrit *sthala*, "dry land" (CDIAL 13744).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

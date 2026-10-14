@@ -14,7 +14,8 @@ romanization: "mandar"
 concept_tag: PA-TOWN91-MANDAR
 prerequisites: [PA-C91-pul, PA-C91-gurduara]
 sounds: []
-roots: []
+roots: [sanskrit-mandira]
+etymology_hook: "mandar ← Sanskrit mandira 'any dwelling, camp, town, temple', a semi-tatsama (CDIAL 9852)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C91-gurduara]
 <!-- hl-knowledge: introduces=[PA-LEX-C91-TOWN91-04]; assesses=[] -->
 
 **ਮੰਦਰ** — *mandar* — "a temple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੰਦਰ** (*mandar*) is a semi-tatsama: Sanskrit *mandira*, "any dwelling, camp, town, temple", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9852). CDIAL lists no Punjabi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

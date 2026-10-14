@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 51,
-  "sourceHash": "fnv1a64:4a57b102489a93fe",
+  "sourceHash": "fnv1a64:8bd936ecf783978e",
   "lessonIds": [
     "PA-C51-latt",
     "PA-C51-goda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch51.txt",
   "json": "punjabi/narration/ch51.json",
-  "textHash": "fnv1a64:be4c3f9f4e0d8b0e",
-  "jsonHash": "fnv1a64:5c023da6821e5ef9",
+  "textHash": "fnv1a64:c1cbcb425a84bfff",
+  "jsonHash": "fnv1a64:702f8c68d15a2a85",
   "findings": []
 }

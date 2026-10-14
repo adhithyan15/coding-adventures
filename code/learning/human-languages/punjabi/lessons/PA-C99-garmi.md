@@ -14,7 +14,8 @@ romanization: "garmī"
 concept_tag: PA-TIME99-GARMI
 prerequisites: [PA-C99-tarka, PA-C99-parso]
 sounds: []
-roots: []
+roots: [persian-garmi]
+etymology_hook: "garmī: usually traced to Persian garmī 'heat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C99-parso]
 <!-- hl-knowledge: introduces=[PA-LEX-C99-TIME99-04]; assesses=[] -->
 
 **ਗਰਮੀ** — *garmī* — "summer, the heat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗਰਮੀ** (*garmī*) is a loan, usually traced to Persian *garmī*, "heat". It is Persian *garm*, "hot", with the ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

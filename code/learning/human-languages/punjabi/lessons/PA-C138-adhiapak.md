@@ -14,7 +14,8 @@ romanization: "adhiāpak"
 concept_tag: PA-THINGS138-ADHIAPAK
 prerequisites: [PA-C138-painsil, PA-C138-jamat]
 sounds: []
-roots: []
+roots: [sanskrit-adhyapaka]
+etymology_hook: "adhiāpak ← Sanskrit adhyāpaka 'teacher', a tatsama (CDIAL 278)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C138-jamat]
 <!-- hl-knowledge: introduces=[PA-LEX-C138-THINGS138-05]; assesses=[] -->
 
 **ਅਧਿਆਪਕ** — *adhiāpak* — "a teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਅਧਿਆਪਕ** (*adhiāpak*) is Sanskrit *adhyāpaka*, "teacher", taken over whole as a learned loan, a tatsama (CDIAL 278).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

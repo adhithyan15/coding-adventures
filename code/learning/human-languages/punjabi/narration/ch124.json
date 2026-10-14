@@ -4,7 +4,7 @@
   "chapter": 124,
   "title": "Guava, Peanuts, Cooked greens, Lassi, Rice pudding",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2aafd2241b318a76",
+  "sourceHash": "fnv1a64:5875e819c7568aa5",
   "lessons": [
     {
       "id": "PA-C124-amrud",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7de48d0f1f4a6d43",
+      "sourceHash": "fnv1a64:316de8d4fe32e784",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅਮਰੂਦ (amrūd) is a loan, usually traced to Persian amrūd, \"pear\". Punjabi uses it for the guava."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9823ccb08c88a3f4",
+      "sourceHash": "fnv1a64:568a14b5f56deeb1",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੂੰਗਫਲੀ (mū̃gphalī) (mūṁgphalī) is built in Punjabi from two old words: mūṁg, \"mung bean\", from Sanskrit mudga (CDIAL 10198), and phalī, \"pod\", from phala, \"fruit\" (CDIAL 9051). CDIAL marks Punjabi mūṁg, with a query, as perhaps taken from Hindi."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ccbac57a118e3989",
+      "sourceHash": "fnv1a64:db070009592ff97e",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਾਗ (sāg) goes back to Sanskrit śāka, \"potherb, vegetable\". CDIAL lists the Prakrit form sāga, but no Punjabi one (CDIAL 12370)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d27219eeab96eb6",
+      "sourceHash": "fnv1a64:78154780d684924a",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲੱਸੀ (lassī) is a tadbhava, a word inherited and reshaped by sound change. It comes from lassī, \"buttermilk\", a form CDIAL reconstructs from its descendants (CDIAL 10998)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f9d5c7b7ecbb131",
+      "sourceHash": "fnv1a64:8b34f37e0dd3152a",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖੀਰ (khīr) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣīrī, \"a dish prepared with milk\" (CDIAL 3705). It is built on Sanskrit kṣīra, \"milk\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

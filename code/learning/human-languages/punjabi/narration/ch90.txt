@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for there, then the Punjabi for a shop.
 You'll want to know: ਸੜਕ.
 ਸੜਕ — saṛak — "a road".
 
+The word, taken apart.
+ਸੜਕ (saṛak) matches Hindi and Lahnda saṛak. CDIAL lists the word first under Sanskrit sṛti, "road, path" (CDIAL 13577), and then in its addenda under śaṭati, "goes" (CDIAL 12269). It gives no Punjabi form.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a shop, then the Punjabi for a road.
 
 You'll want to know: ਗਲੀ.
 ਗਲੀ — galī — "a lane".
+
+The word, taken apart.
+ਗਲੀ (galī) is a tadbhava, a word inherited and reshaped by sound change. It comes from galī, "defile, lane", a form CDIAL reconstructs from its descendants (CDIAL 4085).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a road, then the Punjabi for a lane.
 You'll want to know: ਬੈਂਕ.
 ਬੈਂਕ — baiṅk — "a bank".
 
+The word, taken apart.
+ਬੈਂਕ (baiṅk) is a loan from English bank.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a lane, then the Punjabi for a bank.
 You'll want to know: ਸਟੇਸ਼ਨ.
 ਸਟੇਸ਼ਨ — saṭeshan — "a station".
 
+The word, taken apart.
+ਸਟੇਸ਼ਨ (saṭeshan) is a loan from English station.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a bank, then the Punjabi for a station.
 
 You'll want to know: ਗੱਡੀ.
 ਗੱਡੀ — gaḍḍī — "a car; a train".
+
+The word, taken apart.
+ਗੱਡੀ (gaḍḍī) is a tadbhava, a word inherited and reshaped by sound change. It comes from gāḍḍa, "cart", a form CDIAL reconstructs from its descendants (CDIAL 4116). CDIAL thinks it possibly the same word as garda, "seat"; Punjabi now uses it for a car or a train.
 
 What you've built.
 One more word for this chapter.

@@ -15,6 +15,7 @@ concept_tag: PA-DEF106-KITE
 prerequisites: [PA-C105-magh, PA-C105-phaggan]
 sounds: []
 roots: []
+etymology_hook: "kite 'somewhere': its origin is not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C105-phaggan]
 <!-- hl-knowledge: introduces=[PA-LEX-C106-DEF106-01]; assesses=[] -->
 
 **ਕਿਤੇ** — *kite* — "somewhere".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਕਿਤੇ** (*kite*) comes from is not settled: CDIAL has no entry for it. It has the question *k-* of *kitthe*, "where".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ādat"
 concept_tag: PA-CAN111-ADAT
 prerequisites: [PA-C111-malak, PA-C111-tajarba]
 sounds: []
-roots: []
+roots: [arabic-ada]
+etymology_hook: "ādat ← Arabic ʿāda 'custom, habit', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C111-tajarba]
 <!-- hl-knowledge: introduces=[PA-LEX-C111-CAN111-04]; assesses=[] -->
 
 **ਆਦਤ** — *ādat* — "a habit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਆਦਤ** (*ādat*) is a loan from Arabic *ʿāda*, "custom, habit", which reached Punjabi through Persian. Its Arabic root is *ʿ-w-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

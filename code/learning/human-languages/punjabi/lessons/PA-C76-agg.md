@@ -14,7 +14,8 @@ romanization: "agg"
 concept_tag: PA-NATURE76-AGG
 prerequisites: [PA-C75-chann, PA-C76-samundar]
 sounds: []
-roots: []
+roots: [sanskrit-agni]
+etymology_hook: "agg ← Sanskrit agni 'fire', a tadbhava (CDIAL 55)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C76-samundar]
 <!-- hl-knowledge: introduces=[PA-LEX-C76-NATURE76-02]; assesses=[] -->
 
 **ਅੱਗ** — *agg* — "fire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਅੱਗ** (*agg*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *agni*, "fire" (CDIAL 55).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

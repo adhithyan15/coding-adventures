@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 110,
-  "sourceHash": "fnv1a64:1a8283a74be13e85",
+  "sourceHash": "fnv1a64:a3ea2cefc4dde233",
   "lessonIds": [
     "PA-C110-shakti",
     "PA-C110-hakk",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch110.txt",
   "json": "punjabi/narration/ch110.json",
-  "textHash": "fnv1a64:490113b910b3ab6a",
-  "jsonHash": "fnv1a64:536c473f889b7d5f",
+  "textHash": "fnv1a64:c112e5dacb918e94",
+  "jsonHash": "fnv1a64:e3cb9d72cc73cc00",
   "findings": []
 }

@@ -17,6 +17,7 @@ The pattern, taken apart.
 ਮੈਂ (…) ਨਹੀਂ (nahī̃) (verb) — "I do not (verb)".
 That is the whole rule. Punjabi does not add a helper the way English adds do — it drops one word in front of the verb and leaves the rest alone.
 Because the position is fixed, every sentence you already own has a negative twin, and you can make it without learning anything else.
+Nahīṁ is inherited: it matches Hindi nahīṁ, which CDIAL lists under Sanskrit nahi, "surely not" (CDIAL 7035).
 
 Guided Practice.
 [pause 1 second]
@@ -45,6 +46,7 @@ The sentence, taken apart.
 ਮੈਨੂੰ ਸਮਝ ਨਹੀਂ ਆਈ — mainū̃ samajh nahī̃ āī — "understanding did not come to me".
 Punjabi does not make you the subject of understanding. It makes understanding something that arrives, and you are the one it arrives at — which is exactly the shape you already met in ਮੈਨੂੰ … ਪਸੰਦ ਹੈ, "X is pleasing to me".
 So this is not a new grammar. It is the dative frame you own, with a different noun in it and ਨਹੀਂ (nahī̃) in the slot the last lesson gave you.
+Samajh is the stem of samajhṇā, "to understand", which CDIAL lists under Sanskrit saṁbudhyate, "wakes up, understands" (CDIAL 12959), and āī is a form of āuṇā, "to come", from āpayati (CDIAL 1200).
 
 Why it's said this way.
 This is the sentence that buys you a second attempt. Without it a learner whose conversation has run away has only silence or an English apology, and the conversation ends there. It is worth more than any noun in this book, and it should arrive fast enough to be said without assembling it.
@@ -103,6 +105,7 @@ The sentence, taken apart.
 Punjabi keeps these two admissions apart, and so should you:
 ਮੈਨੂੰ ਸਮਝ ਨਹੀਂ ਆਈ (mainū̃ samajh nahī̃ āī) — I did not follow you.
 ਮੈਨੂੰ ਨਹੀਂ ਪਤਾ (mainū̃ nahī̃ patā) — I do not have the fact.
+Where patā comes from is not settled. CDIAL has no entry for it, though it lists Punjabi patījṇā, "to trust", under Sanskrit pratyaya, "belief" (CDIAL 8640).
 
 Guided Practice.
 [pause 1 second]

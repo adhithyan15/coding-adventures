@@ -14,7 +14,8 @@ romanization: "jaṅgal"
 concept_tag: PA-NATURE74-JANGAL
 prerequisites: [PA-C73-patta, PA-C74-pahar]
 sounds: []
-roots: []
+roots: [sanskrit-jangala]
+etymology_hook: "jaṅgal ← Sanskrit jāṅgala 'arid, sparingly grown with trees', perhaps non-Aryan; a tadbhava (CDIAL 5177)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C74-pahar]
 <!-- hl-knowledge: introduces=[PA-LEX-C74-NATURE74-02]; assesses=[] -->
 
 **ਜੰਗਲ** — *jaṅgal* — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜੰਗਲ** (*jaṅgal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jāṅgala*, "arid, sparingly grown with trees" (CDIAL 5177). CDIAL notes evidence for a non-Aryan origin; Punjabi *jaṅgal* means "desert, forest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

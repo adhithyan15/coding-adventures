@@ -14,7 +14,8 @@ romanization: "painsil"
 concept_tag: PA-THINGS138-PAINSIL
 prerequisites: [PA-C138-caunk, PA-C138-bag]
 sounds: []
-roots: []
+roots: [english-pencil]
+etymology_hook: "painsil ← English pencil"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C138-bag]
 <!-- hl-knowledge: introduces=[PA-LEX-C138-THINGS138-03]; assesses=[] -->
 
 **ਪੈਨਸਿਲ** — *painsil* — "a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੈਨਸਿਲ** (*painsil*) is a loan from English *pencil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

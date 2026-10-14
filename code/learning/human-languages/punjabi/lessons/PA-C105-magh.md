@@ -14,7 +14,8 @@ romanization: "māgh"
 concept_tag: PA-TIME105-MAGH
 prerequisites: [PA-C105-magghar, PA-C105-poh]
 sounds: []
-roots: []
+roots: [sanskrit-magha]
+etymology_hook: "māgh ← Sanskrit māgha 'the month January-February', a semi-tatsama (CDIAL 9993)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C105-poh]
 <!-- hl-knowledge: introduces=[PA-LEX-C105-TIME105-04]; assesses=[] -->
 
 **ਮਾਘ** — *māgh* — "Magh, a Punjabi month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਾਘ** (*māgh*) is a semi-tatsama: Sanskrit *māgha*, "the month January-February", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9993). CDIAL lists the inherited Punjabi form as *māh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

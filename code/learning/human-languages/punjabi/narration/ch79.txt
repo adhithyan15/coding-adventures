@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for an elephant, then the Punjabi for a monk
 You'll want to know: ਸੱਪ.
 ਸੱਪ — sapp — "a snake".
 
+The word, taken apart.
+ਸੱਪ (sapp) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sarpa, "snake" (CDIAL 13271).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a monkey, then the Punjabi for a snake.
 
 You'll want to know: ਵੱਡਾ.
 ਵੱਡਾ — vaḍḍā — "big".
+
+The word, taken apart.
+ਵੱਡਾ (vaḍḍā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vaḍra, "big" (CDIAL 11225). CDIAL notes that the Sanskrit word is known only from the old word-lists, and doubts a link with vṛddha, "grown".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a snake, then the Punjabi for big.
 You'll want to know: ਛੋਟਾ.
 ਛੋਟਾ — chhoṭā — "small".
 
+The word, taken apart.
+ਛੋਟਾ (chhoṭā) is a tadbhava, a word inherited and reshaped by sound change. It comes from choṭṭa, "small", a form CDIAL reconstructs from its descendants (CDIAL 5071).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for big, then the Punjabi for small.
 You'll want to know: ਨਵਾਂ.
 ਨਵਾਂ — navāṁ — "new".
 
+The word, taken apart.
+ਨਵਾਂ (navāṁ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nava, "new, young" (CDIAL 6983).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for small, then the Punjabi for new.
 
 You'll want to know: ਪੁਰਾਣਾ.
 ਪੁਰਾਣਾ — purāṇā — "old".
+
+The word, taken apart.
+ਪੁਰਾਣਾ (purāṇā) is inherited from Sanskrit purāṇa, "ancient". CDIAL lists the matching Lahnda purāṇā under it (CDIAL 8283).
 
 What you've built.
 One more word for this chapter.

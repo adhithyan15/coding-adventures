@@ -14,7 +14,8 @@ romanization: "kangaṇ"
 concept_tag: PA-THINGS120-KANGAN
 prerequisites: [PA-C120-kot, PA-C120-anguthi]
 sounds: []
-roots: []
+roots: [sanskrit-kankana]
+etymology_hook: "kangaṇ ← Sanskrit kaṅkaṇa 'bracelet', a tadbhava (CDIAL 2597)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C120-anguthi]
 <!-- hl-knowledge: introduces=[PA-LEX-C120-THINGS120-05]; assesses=[] -->
 
 **ਕੰਗਣ** — *kangaṇ* — "a bangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੰਗਣ** (*kangaṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṅkaṇa*, "bracelet" (CDIAL 2597).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

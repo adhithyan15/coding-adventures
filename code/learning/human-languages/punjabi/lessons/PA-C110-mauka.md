@@ -14,7 +14,8 @@ romanization: "maukā"
 concept_tag: PA-CAN110-MAUKA
 prerequisites: [PA-C110-hakk, PA-C110-adhikar]
 sounds: []
-roots: []
+roots: [arabic-mawqi]
+etymology_hook: "maukā ← Arabic mawqiʿ 'place, position; occasion', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C110-adhikar]
 <!-- hl-knowledge: introduces=[PA-LEX-C110-CAN110-04]; assesses=[] -->
 
 **ਮੌਕਾ** — *maukā* — "a chance, an opportunity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੌਕਾ** (*maukā*) is a loan from Arabic *mawqiʿ*, "place, position; occasion", which reached Punjabi through Persian. Its Arabic root is *w-q-ʿ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

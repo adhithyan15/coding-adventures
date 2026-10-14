@@ -1184,6 +1184,10 @@ undirected weights, source order wins equal-cost ties, and the resolved order su
 `swimlane.ignoreCrossLaneEdges` defaults to `true`; setting it to `false` adds cross-lane links
 to deterministic, cycle-safe rank constraints while preserving authored order within each lane. The
 resolved non-default setting survives as scene metadata.
+Shared Flowchart `nodeSpacing`, `rankSpacing`, and `diagramPadding` configuration from front matter or
+init directives survives semantic and layout IR. The values control ownership-lane separation,
+consecutive-rank separation, and outer scene padding respectively, and remain visible in backend-neutral
+scene metadata.
 When cross-lane ranking is active, `swimlane.optimizeRanksByCrossings` defaults to `true` and performs
 up to four deterministic local-search passes. Feasible rank delays propagate through downstream
 constraints and are retained only when the lane/rank segment crossing count strictly improves; the

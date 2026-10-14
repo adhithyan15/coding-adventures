@@ -14,7 +14,8 @@ romanization: "bhullṇā"
 concept_tag: PA-VERB-BHULLNA
 prerequisites: [PA-C59-nachchna, PA-C60-sikkhna]
 sounds: []
-roots: []
+roots: [indo-aryan-bhull]
+etymology_hook: "bhullṇā ← *bhull 'err, forget', a reconstructed form; a tadbhava (CDIAL 9538)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C60-sikkhna]
 <!-- hl-knowledge: introduces=[PA-LEX-C60-VERBS60-02]; assesses=[] -->
 
 **ਭੁੱਲਣਾ** — *bhullṇā* — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਭੁੱਲਣਾ** (*bhullṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhull*, "err, forget", a form CDIAL reconstructs from its descendants (CDIAL 9538).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

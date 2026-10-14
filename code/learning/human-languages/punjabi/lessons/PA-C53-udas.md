@@ -14,7 +14,8 @@ romanization: "udās"
 concept_tag: PA-HEALTH53-UDAS
 prerequisites: [PA-C52-bhukkh, PA-C52-khush]
 sounds: []
-roots: []
+roots: [sanskrit-udasa]
+etymology_hook: "udās: usually traced to Sanskrit udāsa 'indifference'; CDIAL does not list it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C52-khush]
 <!-- hl-knowledge: introduces=[PA-LEX-C53-HEALTH53-01]; assesses=[] -->
 
 **ਉਦਾਸ** — *udās* — "sad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਉਦਾਸ** (*udās*) is usually traced to Sanskrit *udāsa*, "indifference". CDIAL does not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

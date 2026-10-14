@@ -14,7 +14,8 @@ romanization: "takṛā"
 concept_tag: PA-QUAL147-TAKRA
 prerequisites: [PA-C147-garib, PA-C147-javan]
 sounds: []
-roots: []
+roots: [indo-aryan-targa]
+etymology_hook: "takṛā: matches Lahnda takṛā 'strong', listed under *targa 'terrible, strong', with an unexplained k (CDIAL 5718)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C147-javan]
 <!-- hl-knowledge: introduces=[PA-LEX-C147-QUAL147-04]; assesses=[] -->
 
 **ਤਕੜਾ** — *takṛā* — "strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤਕੜਾ** (*takṛā*) matches Lahnda *takṛā*, "strong, diligent", which CDIAL lists under a reconstructed *\*targa*, "terrible, strong", noting that its *k* is unexplained (CDIAL 5718).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

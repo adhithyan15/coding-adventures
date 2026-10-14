@@ -14,7 +14,8 @@ romanization: "giddaṛ"
 concept_tag: PA-THINGS130-GIDDAR
 prerequisites: [PA-C130-hiran, PA-C130-ricch]
 sounds: []
-roots: []
+roots: [indo-aryan-gidda]
+etymology_hook: "giddaṛ ← *gidda 'jackal, fox', a reconstructed form; a tadbhava (CDIAL 4158)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C130-ricch]
 <!-- hl-knowledge: introduces=[PA-LEX-C130-THINGS130-03]; assesses=[] -->
 
 **ਗਿੱਦੜ** — *giddaṛ* — "a jackal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗਿੱਦੜ** (*giddaṛ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*gidda*, "jackal, fox", a form CDIAL reconstructs from its descendants (CDIAL 4158). CDIAL lists Punjabi *giddaṛ*, with an added *-ṛ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

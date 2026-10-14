@@ -14,7 +14,8 @@ romanization: "jāṇkārī"
 concept_tag: PA-CAN109-JANKARI
 prerequisites: [PA-C108-hor, PA-C109-mahar]
 sounds: []
-roots: []
+roots: [sanskrit-janati]
+etymology_hook: "jāṇkārī: built on jāṇ-, the stem of jāṇnā 'to know' ← Sanskrit jānāti 'knows' (CDIAL 5193)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C109-mahar]
 <!-- hl-knowledge: introduces=[PA-LEX-C109-CAN109-02]; assesses=[] -->
 
 **ਜਾਣਕਾਰੀ** — *jāṇkārī* — "knowledge, information".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜਾਣਕਾਰੀ** (*jāṇkārī*) is built in Punjabi on *jāṇ-*, the stem of *jāṇnā*, "to know", which CDIAL lists under Sanskrit *jānāti*, "knows" (CDIAL 5193), with the ending *-kārī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

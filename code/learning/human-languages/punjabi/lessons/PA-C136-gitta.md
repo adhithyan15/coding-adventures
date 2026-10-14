@@ -15,6 +15,7 @@ concept_tag: PA-THINGS136-GITTA
 prerequisites: [PA-C136-dimag, PA-C136-addi]
 sounds: []
 roots: []
+etymology_hook: "giṭṭā 'ankle': its origin is not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C136-addi]
 <!-- hl-knowledge: introduces=[PA-LEX-C136-THINGS136-05]; assesses=[] -->
 
 **ਗਿੱਟਾ** — *giṭṭā* — "an ankle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਗਿੱਟਾ** (*giṭṭā*) comes from is not settled: CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

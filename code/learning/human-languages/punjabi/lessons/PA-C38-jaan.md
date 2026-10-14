@@ -12,7 +12,7 @@ concept_tag: PA-JOIN-JAAN
 prerequisites: [PA-C38-ate-write, PA-C38-ate]
 sounds: [kanna-aa, bindi-nasal]
 roots: []
-etymology_hook: ਜਾਂ stands where ਅਤੇ stands and asks the listener to pick one instead of taking both.
+etymology_hook: "jāṁ 'or': its origin is not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 230
 requires:
@@ -53,6 +53,8 @@ listener to choose. The bindi on it is not decoration — the vowel goes through
 the nose, and this book has been marking that since its earliest script lessons.
 
 This is the word a shopkeeper uses on you, and the one you need to answer with.
+
+Where *jāṁ* comes from is not settled: CDIAL has no entry for it in this sense.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-JOIN-JAAN-01, PA-JOIN-ATE-01] -->

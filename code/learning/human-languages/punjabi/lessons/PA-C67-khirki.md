@@ -14,7 +14,8 @@ romanization: "khiṛkī"
 concept_tag: PA-FOOD67-KHIRKI
 prerequisites: [PA-C67-anda, PA-C67-ghar]
 sounds: []
-roots: []
+roots: [sanskrit-khatakkika]
+etymology_hook: "khiṛkī ← Sanskrit khaṭakkikā 'side door', a tadbhava (CDIAL 3770)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C67-ghar]
 <!-- hl-knowledge: introduces=[PA-LEX-C67-FOOD67-04]; assesses=[] -->
 
 **ਖਿੜਕੀ** — *khiṛkī* — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਖਿੜਕੀ** (*khiṛkī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khaṭakkikā*, "side door" (CDIAL 3770). CDIAL lists Punjabi *khiṛkī*, "back door, window".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

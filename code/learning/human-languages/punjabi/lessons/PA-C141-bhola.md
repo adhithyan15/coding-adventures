@@ -14,7 +14,8 @@ romanization: "bholā"
 concept_tag: PA-QUAL141-BHOLA
 prerequisites: [PA-C141-calak, PA-C141-siana]
 sounds: []
-roots: []
+roots: [indo-aryan-bhulla]
+etymology_hook: "bholā: listed under *bhōla, in CDIAL's entry *bhulla 'defective' (CDIAL 9539)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C141-siana]
 <!-- hl-knowledge: introduces=[PA-LEX-C141-QUAL141-03]; assesses=[] -->
 
 **ਭੋਲਾ** — *bholā* — "innocent, simple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਭੋਲਾ** (*bholā*) is inherited. CDIAL lists it, "simple-minded", under *\*bhōla*, in its entry *\*bhulla*, "defective" (CDIAL 9539).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

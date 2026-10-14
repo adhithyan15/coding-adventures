@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 90,
-  "sourceHash": "fnv1a64:04b83aa67f123812",
+  "sourceHash": "fnv1a64:83651c1d32857fd9",
   "lessonIds": [
     "PA-C90-sarak",
     "PA-C90-gali",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch90.txt",
   "json": "punjabi/narration/ch90.json",
-  "textHash": "fnv1a64:14f5d7195140a69b",
-  "jsonHash": "fnv1a64:a055154051720106",
+  "textHash": "fnv1a64:8a5215cb008357f4",
+  "jsonHash": "fnv1a64:dc2e6b6df1bd1fcf",
   "findings": []
 }

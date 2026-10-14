@@ -14,7 +14,8 @@ romanization: "chaul"
 concept_tag: PA-VERBS63-CHAUL
 prerequisites: [PA-C63-mit, PA-C63-machchhi]
 sounds: []
-roots: []
+roots: [indo-aryan-cavala]
+etymology_hook: "chaul ← *cāvala 'husked rice', a reconstructed form; a tadbhava (CDIAL 4749)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C63-machchhi]
 <!-- hl-knowledge: introduces=[PA-LEX-C63-VERBS63-05]; assesses=[] -->
 
 **ਚੌਲ** — *chaul* — "rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚੌਲ** (*chaul*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cāvala*, "husked rice", a form CDIAL reconstructs from its descendants (CDIAL 4749). CDIAL thinks it possibly shares a non-Aryan origin with Sanskrit *taṇḍula*, "rice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a class, then the Punjabi for a teacher.
 You'll want to know: ਤਨਖ਼ਾਹ.
 ਤਨਖ਼ਾਹ — tankhāh — "a salary".
 
+The word, taken apart.
+ਤਨਖ਼ਾਹ (tankhāh) is a loan, usually traced to Persian tankhwāh, "salary".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a teacher, then the Punjabi for a salary
 
 You'll want to know: ਦਰਜ਼ੀ.
 ਦਰਜ਼ੀ — darzī — "a tailor".
+
+The word, taken apart.
+ਦਰਜ਼ੀ (darzī) is a loan, usually traced to Persian darzī, "tailor".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a salary, then the Punjabi for a tailor.
 You'll want to know: ਤਰਖਾਣ.
 ਤਰਖਾਣ — tarkhāṇ — "a carpenter".
 
+The word, taken apart.
+ਤਰਖਾਣ (tarkhāṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from takṣan, "carpenter" (CDIAL 5621). CDIAL notes its intrusive r.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a tailor, then the Punjabi for a carpent
 You'll want to know: ਲੁਹਾਰ.
 ਲੁਹਾਰ — luhār — "a blacksmith".
 
+The word, taken apart.
+ਲੁਹਾਰ (luhār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lohakāra, "iron-worker" (CDIAL 11159).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a carpenter, then the Punjabi for a blac
 
 You'll want to know: ਘੁਮਿਆਰ.
 ਘੁਮਿਆਰ — ghumiār — "a potter".
+
+The word, taken apart.
+Where ਘੁਮਿਆਰ (ghumiār) comes from is not fully settled. CDIAL lists Punjabi kumhār, "potter", under Sanskrit kumbhakāra, "potter", literally "pot-maker" (CDIAL 3310), but it does not list ghumiār, which looks like the same word.
 
 What you've built.
 One more word for this chapter.

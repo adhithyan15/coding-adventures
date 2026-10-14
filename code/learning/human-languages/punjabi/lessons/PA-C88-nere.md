@@ -14,7 +14,8 @@ romanization: "neṛe"
 concept_tag: PA-PLACE88-NERE
 prerequisites: [PA-C87-pahilam, PA-C87-dur]
 sounds: []
-roots: []
+roots: [sanskrit-nikatam]
+etymology_hook: "neṛe ← Sanskrit nikaṭam 'near', a tadbhava (CDIAL 7136)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C87-dur]
 <!-- hl-knowledge: introduces=[PA-LEX-C88-PLACE88-01]; assesses=[] -->
 
 **ਨੇੜੇ** — *neṛe* — "near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਨੇੜੇ** (*neṛe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nikaṭam*, "near" (CDIAL 7136). CDIAL calls a Munda origin unlikely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

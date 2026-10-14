@@ -14,7 +14,8 @@ romanization: "huṇ"
 concept_tag: PA-TIME87-HUN
 prerequisites: [PA-C86-mint, PA-C86-ajj]
 sounds: []
-roots: []
+roots: [sanskrit-adhuna]
+etymology_hook: "huṇ ← Sanskrit adhunā 'now', a tadbhava (CDIAL 268)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C86-ajj]
 <!-- hl-knowledge: introduces=[PA-LEX-C87-TIME87-01]; assesses=[] -->
 
 **ਹੁਣ** — *huṇ* — "now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹੁਣ** (*huṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *adhunā*, "now" (CDIAL 268).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

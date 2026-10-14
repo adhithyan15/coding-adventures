@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for chickpeas, then the Punjabi for mung bea
 You'll want to know: ਬਾਜਰਾ.
 ਬਾਜਰਾ — bājrā — "millet".
 
+The word, taken apart.
+ਬਾਜਰਾ (bājrā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bājjara, "millet", a form CDIAL reconstructs from its descendants (CDIAL 9201).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for mung beans, then the Punjabi for millet.
 
 You'll want to know: ਕਣਕ.
 ਕਣਕ — kaṇak — "wheat".
+
+The word, taken apart.
+ਕਣਕ (kaṇak) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaṇika, "grain" (CDIAL 2665). Punjabi narrowed "grain" to "wheat".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for millet, then the Punjabi for wheat.
 You'll want to know: ਮੱਕੀ.
 ਮੱਕੀ — makkī — "maize".
 
+The word, taken apart.
+Where ਮੱਕੀ (makkī) comes from is not settled. CDIAL lists it under markaka, a bird-name known only from the old word-lists, and does not explain the link (CDIAL 9879).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for wheat, then the Punjabi for maize.
 You'll want to know: ਬੈਂਗਣ.
 ਬੈਂਗਣ — baĩgaṇ — "an aubergine".
 
+The word, taken apart.
+ਬੈਂਗਣ (baĩgaṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vātiṅgaṇa, "the egg-plant" (CDIAL 11503). CDIAL reports a view that the name is of Dravidian origin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for maize, then the Punjabi for an aubergine
 
 You'll want to know: ਗੋਭੀ.
 ਗੋਭੀ — gobhī — "a cauliflower, a cabbage".
+
+The word, taken apart.
+ਗੋਭੀ (gobhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gojihvikā, "a particular kind of plant" (CDIAL 4270). CDIAL lists Punjabi gobhī, "cabbage".
 
 What you've built.
 One more word for this chapter.

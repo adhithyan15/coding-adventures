@@ -14,7 +14,8 @@ romanization: "bājrā"
 concept_tag: PA-THINGS122-BAJRA
 prerequisites: [PA-C121-chole, PA-C121-mugi]
 sounds: []
-roots: []
+roots: [indo-aryan-bajjara]
+etymology_hook: "bājrā ← *bājjara 'millet', a reconstructed form; a tadbhava (CDIAL 9201)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C121-mugi]
 <!-- hl-knowledge: introduces=[PA-LEX-C122-THINGS122-01]; assesses=[] -->
 
 **ਬਾਜਰਾ** — *bājrā* — "millet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬਾਜਰਾ** (*bājrā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bājjara*, "millet", a form CDIAL reconstructs from its descendants (CDIAL 9201).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

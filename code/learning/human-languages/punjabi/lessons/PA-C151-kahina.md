@@ -14,7 +14,8 @@ romanization: "kahiṇā"
 concept_tag: PA-VERB-KAHINA
 prerequisites: [PA-C150-jagna, PA-C150-calauna]
 sounds: []
-roots: []
+roots: [sanskrit-kathayati]
+etymology_hook: "kahiṇā ← Sanskrit kathayati 'converses with, describes', a tadbhava (CDIAL 2703)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C150-calauna]
 <!-- hl-knowledge: introduces=[PA-LEX-C151-ACT151-01]; assesses=[] -->
 
 **ਕਹਿਣਾ** — *kahiṇā* — "to say".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕਹਿਣਾ** (*kahiṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kathayati*, "converses with, describes" (CDIAL 2703).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

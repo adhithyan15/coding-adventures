@@ -14,7 +14,8 @@ romanization: "caṛhnā"
 concept_tag: PA-VERB-CARHNA
 prerequisites: [PA-C148-tappna, PA-C149-tarna]
 sounds: []
-roots: []
+roots: [indo-aryan-cadhati]
+etymology_hook: "caṛhnā ← *caḍhati 'rises', a reconstructed form; a tadbhava (CDIAL 4578)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C149-tarna]
 <!-- hl-knowledge: introduces=[PA-LEX-C149-ACT149-02]; assesses=[] -->
 
 **ਚੜ੍ਹਨਾ** — *caṛhnā* — "to climb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚੜ੍ਹਨਾ** (*caṛhnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*caḍhati*, "rises", a form CDIAL reconstructs from its descendants (CDIAL 4578).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

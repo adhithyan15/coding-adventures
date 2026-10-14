@@ -14,7 +14,8 @@ romanization: "khaṭṭā"
 concept_tag: PA-QUAL143-KHATTA
 prerequisites: [PA-C143-sukka, PA-C143-ganda]
 sounds: []
-roots: []
+roots: [sanskrit-khatta]
+etymology_hook: "khaṭṭā ← Sanskrit khaṭṭa 'sour', a tadbhava (CDIAL 3777)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C143-ganda]
 <!-- hl-knowledge: introduces=[PA-LEX-C143-QUAL143-03]; assesses=[] -->
 
 **ਖੱਟਾ** — *khaṭṭā* — "sour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਖੱਟਾ** (*khaṭṭā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khaṭṭa*, "sour" (CDIAL 3777). CDIAL asks whether it is linked with *kaṭu*, "pungent", and says Hindi *khaṭṭā* was taken from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

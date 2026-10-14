@@ -11,8 +11,8 @@ gloss: the one who ... that one ... - the relative pair, both ends marked
 concept_tag: PA-JOIN-JO-OH
 prerequisites: [PA-C42-jo, PA-C41-je-tan]
 sounds: [hora-o, aunkar-u]
-roots: []
-etymology_hook: The same two-ended shape as ਜੇ ... ਤਾਂ ...: one habit, and now three uses of it.
+roots: [sanskrit-ya-relative, sanskrit-asau]
+etymology_hook: "jo ← the relative ya- (CDIAL 10391); oh ← asau 'that' (CDIAL 972): both inherited"
 duration:
   max_seconds: 260
 requires:
@@ -59,6 +59,8 @@ Now the whole system is visible:
 > **ਜ-** opens the clause · **ਉ-** / **ਤ-** points at what it refers to
 
 **ਜੇ … ਤਾਂ**, **ਜੋ … ਉਹ**. One habit, and you have met it twice.
+
+Both halves are inherited: *jo* from the Sanskrit relative *ya-* (CDIAL 10391), and *oh* from *asau*, "that" (CDIAL 972).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-JOIN-JO-OH-01, PA-PRON-JO-01] -->

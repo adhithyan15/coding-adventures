@@ -14,7 +14,8 @@ romanization: "chākū"
 concept_tag: PA-HOME70-CHAKU
 prerequisites: [PA-C69-thali, PA-C70-chamcha]
 sounds: []
-roots: []
+roots: [persian-chaqu]
+etymology_hook: "chākū: usually traced to Persian chāqū 'knife'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C70-chamcha]
 <!-- hl-knowledge: introduces=[PA-LEX-C70-HOME70-02]; assesses=[] -->
 
 **ਚਾਕੂ** — *chākū* — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚਾਕੂ** (*chākū*) is a loan, usually traced to Persian *chāqū*, "knife". Persian itself took the word from Turkic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

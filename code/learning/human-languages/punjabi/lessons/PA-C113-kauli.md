@@ -14,7 +14,8 @@ romanization: "kaulī"
 concept_tag: PA-THINGS113-KAULI
 prerequisites: [PA-C112-harna, PA-C113-chatri]
 sounds: []
-roots: []
+roots: [sanskrit-kapala]
+etymology_hook: "kaulī: listed under *kapalla, beside Sanskrit kapāla 'skull; cup, bowl' (CDIAL 2744)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C113-chatri]
 <!-- hl-knowledge: introduces=[PA-LEX-C113-THINGS113-02]; assesses=[] -->
 
 **ਕੌਲੀ** — *kaulī* — "a bowl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੌਲੀ** (*kaulī*) is inherited. CDIAL lists it, "little brass bowl", under *\*kapalla*, a form beside Sanskrit *kapāla*, "skull, cranium; cup, jar, bowl" (CDIAL 2744). CDIAL thinks the variant forms show at least some Austroasiatic influence.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

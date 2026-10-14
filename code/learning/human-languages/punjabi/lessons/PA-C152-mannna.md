@@ -14,7 +14,8 @@ romanization: "mannṇā"
 concept_tag: PA-VERB-MANNNA
 prerequisites: [PA-C152-ghummna, PA-C152-rukna]
 sounds: []
-roots: []
+roots: [sanskrit-manyate]
+etymology_hook: "mannṇā ← Sanskrit manyate 'thinks, honours; agrees', a tadbhava (CDIAL 9857)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C152-rukna]
 <!-- hl-knowledge: introduces=[PA-LEX-C152-ACT152-04]; assesses=[] -->
 
 **ਮੰਨਣਾ** — *mannṇā* — "to believe, to agree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੰਨਣਾ** (*mannṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *manyate*, "thinks, honours; agrees" (CDIAL 9857).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

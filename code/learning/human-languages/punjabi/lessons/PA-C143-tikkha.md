@@ -14,7 +14,8 @@ romanization: "tikkhā"
 concept_tag: PA-QUAL143-TIKKHA
 prerequisites: [PA-C143-khatta, PA-C143-kaura]
 sounds: []
-roots: []
+roots: [sanskrit-tikshna]
+etymology_hook: "tikkhā ← Sanskrit tīkṣṇa 'sharp; hot, pungent', a tadbhava (CDIAL 5839)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C143-kaura]
 <!-- hl-knowledge: introduces=[PA-LEX-C143-QUAL143-05]; assesses=[] -->
 
 **ਤਿੱਖਾ** — *tikkhā* — "sharp, spicy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤਿੱਖਾ** (*tikkhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tīkṣṇa*, "sharp; hot, pungent" (CDIAL 5839).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

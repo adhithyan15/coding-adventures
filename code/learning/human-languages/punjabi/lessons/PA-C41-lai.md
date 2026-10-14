@@ -11,8 +11,8 @@ gloss: for, in order to - the reason stated forwards
 concept_tag: PA-JOIN-LAI
 prerequisites: [PA-C41-jadon, PA-C40-kyunki]
 sounds: [bihari-ii]
-roots: []
-etymology_hook: ਕਿਉਂਕਿ looks back at a cause; ਲਈ looks forward to a purpose, and unlike the j- words it FOLLOWS what it applies to.
+roots: [sanskrit-labhate]
+etymology_hook: "laī: usually explained as a form of laiṇā 'to take', which goes back to Sanskrit labhate 'takes' (CDIAL 10948)"
 duration:
   max_seconds: 250
 requires:
@@ -57,6 +57,8 @@ Two habits, and the word tells you which one it belongs to by where it sits.
 
 Cause and purpose are different answers to the same *why*, and a language that
 used one word for both would make its learners guess. Punjabi does not.
+
+*Laī* is usually explained as a form of *laiṇā*, "to take", which goes back to Sanskrit *labhate*, "catches, takes" (CDIAL 10948).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-JOIN-LAI-01, PA-JOIN-KYUNKI-01] -->

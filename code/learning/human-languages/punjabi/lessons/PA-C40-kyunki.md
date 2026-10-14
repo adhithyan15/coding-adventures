@@ -11,8 +11,8 @@ gloss: because - the question word with the swallowing word stuck to it
 concept_tag: CONNECTIVE-BECAUSE
 prerequisites: [PA-C40-kyon, PA-C40-ki]
 sounds: [bindi-nasal, sihari-i]
-roots: []
-etymology_hook: ਕਿਉਂਕਿ is ਕਿਉਂ plus ਕਿ - both halves learned in this chapter, and the join is the only new thing.
+roots: [ka-interrogative, persian-ki]
+etymology_hook: "kyoṁki: kyoṁ 'why', on the inherited question stem ka-, + ki 'that', usually traced to Persian ki"
 duration:
   max_seconds: 250
 requires:
@@ -57,6 +57,8 @@ then follows as a whole sentence.
 
 Note the **ਕਿ** at the end is the short sihari one — the *that* you learned, not
 the *what*. Reading the word slowly is its own revision of the pair.
+
+Its two halves come from two sources: *kyoṁ* is built on the inherited question stem *ka-*, while *ki* is usually traced to Persian *ki*, "that".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-JOIN-KYUNKI-01, PA-Q-KYON-01] -->

@@ -14,7 +14,8 @@ romanization: "saver"
 concept_tag: PA-ADJ85-SAVER
 prerequisites: [PA-C85-din, PA-C85-sham]
 sounds: []
-roots: []
+roots: [indo-aryan-savela]
+etymology_hook: "saver ← *savela 'in time, early', a reconstructed form; a tadbhava (CDIAL 13291)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C85-sham]
 <!-- hl-knowledge: introduces=[PA-LEX-C85-ADJ85-04]; assesses=[] -->
 
 **ਸਵੇਰ** — *saver* — "morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਵੇਰ** (*saver*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*savela*, "in time, early", a form CDIAL reconstructs from its descendants (CDIAL 13291). It is built from *sa-*, "with", and *velā*, "time"; Punjabi *saver* means "morning, dawn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

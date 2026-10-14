@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "Grandfather, Grandmother, Grandfather, Grandmother, Husband",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fb0d0c9a5d2ed171",
+  "sourceHash": "fnv1a64:b819ffe491d10194",
   "lessons": [
     {
       "id": "PA-C54-dada",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5060d645f97d4e68",
+      "sourceHash": "fnv1a64:22d01e06e97fa461",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦਾਦਾ (dādā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, \"father or other elderly relative\", a form CDIAL reconstructs from its descendants (CDIAL 6261). CDIAL lists Punjabi dāddā, \"father's father\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6e3bed148835c49",
+      "sourceHash": "fnv1a64:ec1f4eab3c4c54ec",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦਾਦੀ (dādī) is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, \"father or other elderly relative\", a form CDIAL reconstructs from its descendants (CDIAL 6261). It is the feminine of dādā; CDIAL lists Punjabi dāddī beside dāddā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98bb3ecbf5cf81f2",
+      "sourceHash": "fnv1a64:383a2fec433c86bd",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਾਨਾ (nānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from nānna, \"a term of respect for an older relative\", a form CDIAL reconstructs from its descendants (CDIAL 7059). CDIAL lists Punjabi nānā, \"mother's father\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f853f8dd277db212",
+      "sourceHash": "fnv1a64:ca6fa652d28f0887",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਾਨੀ (nānī) is a tadbhava, a word inherited and reshaped by sound change. It comes from nānna, \"a term of respect for an older relative\", a form CDIAL reconstructs from its descendants (CDIAL 7059). It is the feminine of nānā, \"mother's father\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3bcac5e095afc7d0",
+      "sourceHash": "fnv1a64:38f837e214f25f41",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਤੀ (patī) is Sanskrit pati, \"master, husband\", taken over whole as a learned loan, a tatsama (CDIAL 7727). CDIAL lists the inherited Punjabi form as paī, \"husband\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

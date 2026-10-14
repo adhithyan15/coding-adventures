@@ -14,7 +14,8 @@ romanization: "sirhāṇā"
 concept_tag: PA-THINGS118-SIRHANA
 prerequisites: [PA-C118-macis, PA-C118-galica]
 sounds: []
-roots: []
+roots: [indo-aryan-shiraadhana]
+etymology_hook: "sirhāṇā ← *śiraādhāna 'resting-place for the head', a reconstructed form; a tadbhava (CDIAL 12449)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C118-galica]
 <!-- hl-knowledge: introduces=[PA-LEX-C118-THINGS118-03]; assesses=[] -->
 
 **ਸਿਰਹਾਣਾ** — *sirhāṇā* — "a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਿਰਹਾਣਾ** (*sirhāṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*śiraādhāna*, "resting-place for the head", a form CDIAL reconstructs from its descendants (CDIAL 12449). CDIAL builds it from Sanskrit *śiras*, "head", and *ādhāna*, "placing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

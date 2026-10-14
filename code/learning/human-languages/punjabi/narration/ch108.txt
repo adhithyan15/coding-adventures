@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for both, then the Punjabi for several.
 You'll want to know: ਇੰਨਾ.
 ਇੰਨਾ — innā — "this much".
 
+The word, taken apart.
+ਇੰਨਾ (innā) goes with Punjabi itṇā, which CDIAL lists under Sanskrit iyattaka, "so little", built on iyant, "so much" (CDIAL 1589). CDIAL does not list innā itself.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for several, then the Punjabi for this much.
 
 You'll want to know: ਉੰਨਾ.
 ਉੰਨਾ — unnā — "that much".
+
+The word, taken apart.
+ਉੰਨਾ (unnā) goes with Punjabi utṇā, which CDIAL lists under Sanskrit iyattaka, "so little", with its u- taken from asau, "that" (CDIAL 1589). CDIAL does not list unnā itself.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for this much, then the Punjabi for that muc
 You'll want to know: ਇਵੇਂ.
 ਇਵੇਂ — ivẽ — "like this".
 
+The word, taken apart.
+ਇਵੇਂ (ivẽ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from evam eva, "exactly so" (CDIAL 2528). CDIAL lists Punjabi ivẽ, "in this way".
+
 What you've built.
 One more word for this chapter.
 
@@ -98,6 +107,9 @@ Before the new one: say the Punjabi for that much, then the Punjabi for like thi
 
 You'll want to know: ਉਵੇਂ.
 ਉਵੇਂ — uvẽ — "like that".
+
+The word, taken apart.
+ਉਵੇਂ (uvẽ) is the partner of ivẽ, "like this", which CDIAL lists under Sanskrit evam eva, "exactly so" (CDIAL 2528). CDIAL has no entry for uvẽ, which has the u- of oh, "that".
 
 What you've built.
 One more word for this chapter.
@@ -129,6 +141,9 @@ Two Punjabi verbs mean "to see." Which is the more Punjabi-sounding one, and whi
 
 You'll want to know: ਹੋਰ.
 ਹੋਰ — hor — "other, more".
+
+The word, taken apart.
+ਹੋਰ (hor) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from apara, "posterior; different, other" (CDIAL 434). CDIAL lists Punjabi hor, "other, more".
 
 What you've built.
 One more word for this chapter.

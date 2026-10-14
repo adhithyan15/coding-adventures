@@ -14,7 +14,8 @@ romanization: "heṭhāṁ"
 concept_tag: PA-PLACE88-HETHAM
 prerequisites: [PA-C88-bahar, PA-C88-utte]
 sounds: []
-roots: []
+roots: [sanskrit-adhastat]
+etymology_hook: "heṭhāṁ: with heṭh 'below', listed under *adhiṣṭāt, a form beside Sanskrit adhastāt 'underneath' (CDIAL 248)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C88-utte]
 <!-- hl-knowledge: introduces=[PA-LEX-C88-PLACE88-05]; assesses=[] -->
 
 **ਹੇਠਾਂ** — *heṭhāṁ* — "below".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹੇਠਾਂ** (*heṭhāṁ*) goes with *heṭh*, "below", which CDIAL lists under *\*adhiṣṭāt*, a form it sets beside Sanskrit *adhastāt*, "underneath" (CDIAL 248).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

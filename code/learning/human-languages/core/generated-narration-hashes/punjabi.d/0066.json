@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 66,
-  "sourceHash": "fnv1a64:0dcb8e24ba2702dc",
+  "sourceHash": "fnv1a64:330b1437d95e903e",
   "lessonIds": [
     "PA-C66-panir",
     "PA-C66-shahid",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch66.txt",
   "json": "punjabi/narration/ch66.json",
-  "textHash": "fnv1a64:2276a274ee791d59",
-  "jsonHash": "fnv1a64:43dab4b84477f419",
+  "textHash": "fnv1a64:f95a0b688d911914",
+  "jsonHash": "fnv1a64:c530e09e79ac45bf",
   "findings": []
 }

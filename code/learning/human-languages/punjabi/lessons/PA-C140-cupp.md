@@ -14,7 +14,8 @@ romanization: "cupp"
 concept_tag: PA-QUAL140-CUPP
 prerequisites: [PA-C139-luhar, PA-C139-ghumiar]
 sounds: []
-roots: []
+roots: [indo-aryan-cuppa]
+etymology_hook: "cupp ← *cuppa 'silent', perhaps imitative (CDIAL 4864)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C139-ghumiar]
 <!-- hl-knowledge: introduces=[PA-LEX-C140-QUAL140-01]; assesses=[] -->
 
 **ਚੁੱਪ** — *cupp* — "silent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚੁੱਪ** (*cupp*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cuppa*, "silent", a form CDIAL reconstructs from its descendants (CDIAL 4864). CDIAL suggests, hesitantly, that it may be imitative.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

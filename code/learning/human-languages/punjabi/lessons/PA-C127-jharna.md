@@ -14,7 +14,8 @@ romanization: "jharnā"
 concept_tag: PA-THINGS127-JHARNA
 prerequisites: [PA-C126-tapu, PA-C127-kinara]
 sounds: []
-roots: []
+roots: [indo-aryan-jharati]
+etymology_hook: "jharnā: on the root jhar 'flow down', as Hindi jharī 'waterfall' ← jhara is (CDIAL 5343); CDIAL lacks this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C127-kinara]
 <!-- hl-knowledge: introduces=[PA-LEX-C127-THINGS127-02]; assesses=[] -->
 
 **ਝਰਨਾ** — *jharnā* — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਝਰਨਾ** (*jharnā*) belongs to the root *jhar*, "flow down", but CDIAL does not list it in the sense "waterfall". It gives Hindi *jharī*, "waterfall", under Sanskrit *jhara*, "waterfall" (CDIAL 5343), and a Punjabi *jharnā* only as "grating in a waterway", under *jharaṇa*, as in *jharaṇodaka*, "water from a cascade" (CDIAL 5344).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

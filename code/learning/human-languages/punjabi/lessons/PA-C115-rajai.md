@@ -15,6 +15,7 @@ concept_tag: PA-THINGS115-RAJAI
 prerequisites: [PA-C114-cadar, PA-C114-kambal]
 sounds: []
 roots: []
+etymology_hook: "rajāī: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C114-kambal]
 <!-- hl-knowledge: introduces=[PA-LEX-C115-THINGS115-01]; assesses=[] -->
 
 **ਰਜਾਈ** — *rajāī* — "a quilt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਰਜਾਈ** (*rajāī*) comes from is not settled: CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

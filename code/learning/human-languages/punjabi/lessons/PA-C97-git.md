@@ -14,7 +14,8 @@ romanization: "gīt"
 concept_tag: PA-NUMBERS97-GIT
 prerequisites: [PA-C97-dunia, PA-C97-rang]
 sounds: []
-roots: []
+roots: [sanskrit-gita]
+etymology_hook: "gīt ← Sanskrit gīta 'singing', a tatsama (CDIAL 4167)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C97-rang]
 <!-- hl-knowledge: introduces=[PA-LEX-C97-NUMBERS97-04]; assesses=[] -->
 
 **ਗੀਤ** — *gīt* — "a song".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗੀਤ** (*gīt*) is Sanskrit *gīta*, "singing", taken over whole as a learned loan, a tatsama (CDIAL 4167).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

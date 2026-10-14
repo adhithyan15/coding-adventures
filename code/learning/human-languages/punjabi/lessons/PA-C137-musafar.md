@@ -14,7 +14,8 @@ romanization: "musāfar"
 concept_tag: PA-THINGS137-MUSAFAR
 prerequisites: [PA-C136-gitta, PA-C137-jahaz]
 sounds: []
-roots: []
+roots: [arabic-musafir]
+etymology_hook: "musāfar ← Arabic musāfir 'traveller', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C137-jahaz]
 <!-- hl-knowledge: introduces=[PA-LEX-C137-THINGS137-02]; assesses=[] -->
 
 **ਮੁਸਾਫ਼ਰ** — *musāfar* — "a traveller".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੁਸਾਫ਼ਰ** (*musāfar*) is a loan from Arabic *musāfir*, "traveller", which reached Punjabi through Persian. Its Arabic root is *s-f-r* (Lane). It shares its root with *safar*, "a journey".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 98,
-  "sourceHash": "fnv1a64:48e7b6b874734554",
+  "sourceHash": "fnv1a64:ce57c36c9042f0ad",
   "lessonIds": [
     "PA-C98-chhutti",
     "PA-C98-piar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "punjabi/narration/ch98.txt",
   "json": "punjabi/narration/ch98.json",
-  "textHash": "fnv1a64:66a7f19ad6eb466d",
-  "jsonHash": "fnv1a64:f062582a18f5ded3",
+  "textHash": "fnv1a64:ce5dac598cb922bd",
+  "jsonHash": "fnv1a64:309f4b4dbc8fd181",
   "findings": []
 }

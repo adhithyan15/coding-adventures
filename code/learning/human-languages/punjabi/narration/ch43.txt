@@ -21,6 +21,7 @@ The same ਕ as every question word. This one has an odd history in this book: i
 That is a different kind of gap from the missing ones. The book told you it existed and never handed it over.
 Now hold the two families side by side, because they answer each other:
 ਕ- asks, ਜ- opens the clause that answers, ਉ- points at it.
+Kauṇ is a tadbhava, inherited and worn down by sound change: CDIAL lists it under Sanskrit kaḥ punar, "who, then", glossed "who" (CDIAL 2575).
 
 Guided Practice.
 [pause 1 second]
@@ -54,6 +55,7 @@ Put them side by side. This is the neatest pattern in the chapter:
 ਕਦੋਂ (kadoṁ) — when?, ਜਦੋਂ — when …
 One letter apart. The ਕ asks; the ਜ answers. You learned the answer two chapters ago without knowing it was half of a pair, and the question costs you almost nothing now.
 That pairing runs through the whole language, and you have now seen it three times: ਜੇ … ਤਾਂ, ਜੋ … ਉਹ, and now ਕਦੋਂ (kadoṁ) against ਜਦੋਂ.
+Kadoṁ is built on the old question stem ka-, as jadoṁ is built on the relative ya-. CDIAL has no entry for it.
 
 Guided Practice.
 [pause 1 second]
@@ -122,6 +124,7 @@ In pieces: ਕ, the ਿ sihari before it, the ੱ addak that doubles the next so
 [once you have stopped driving — read: the word in pieces]
 The addak is doing real work. It doubles the ਥ (tha), which is why the word is kit-the and not ki-the. Leave it off and the word loses its middle.
 This is the question that asks where somebody lives, and asking that is most of what a spoken interview at this level is for. The book has taught house, city and village for many chapters and could not ask where any of them was.
+CDIAL has no entry for kitthe itself, but it lists its partners itthe, "here", and utthe, "there", under Sanskrit ittham, "thus" (CDIAL 1564); kitthe is the same shape with the question k-.
 
 Guided Practice.
 [pause 1 second]
@@ -155,6 +158,7 @@ The same ਕ one last time, now asking about quantity. With it the family this b
 ਕੀ what, ਕਿਵੇਂ how, ਕਿਉਂ why, ਕੌਣ (kauṇ) who, ਕਦੋਂ (kadoṁ) when,
 ਕਿੱਥੇ (kitthe) where, ਕਿੰਨੇ (kinne) how many.
 Two of those you had before this run. Five arrived in the last four chapters, and only one of the five cost a new letter.
+CDIAL lists the fuller Punjabi kitnā, "how great", under a reconstructed kiyatta, "how great" (CDIAL 3167); it does not list kinnā.
 
 Guided Practice.
 [pause 1 second]

@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a girl, then the Punjabi for a man.
 You'll want to know: ਮਹਿਮਾਨ.
 ਮਹਿਮਾਨ — mahimān — "a guest".
 
+The word, taken apart.
+ਮਹਿਮਾਨ (mahimān) is a loan, usually traced to Persian mihmān, "guest".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a man, then the Punjabi for a guest.
 
 You'll want to know: ਪੀਣਾ.
 ਪੀਣਾ — pīṇā — "to drink".
+
+The word, taken apart.
+ਪੀਣਾ (pīṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pibati, "drinks" (CDIAL 8209).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a guest, then the Punjabi for to drink.
 You'll want to know: ਸੁਣਨਾ.
 ਸੁਣਨਾ — suṇnā — "to hear, to listen".
 
+The word, taken apart.
+ਸੁਣਨਾ (suṇnā) is inherited. CDIAL lists no Punjabi form, but gives the matching Lahnda suṇaṇ and Hindi sunnā under Sanskrit śṛṇoti, "hears" (CDIAL 12598).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for to drink, then the Punjabi for to hear.
 You'll want to know: ਬੈਠਣਾ.
 ਬੈਠਣਾ — baiṭhṇā — "to sit".
 
+The word, taken apart.
+ਬੈਠਣਾ (baiṭhṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from upaviśati, "sits down" (CDIAL 2245). The -ṭh- goes back to its past form upaviṣṭa, "seated".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for to hear, then the Punjabi for to sit.
 
 You'll want to know: ਸੌਣਾ.
 ਸੌਣਾ — sauṇā — "to sleep".
+
+The word, taken apart.
+ਸੌਣਾ (sauṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from svapati, "sleeps" (CDIAL 13902).
 
 What you've built.
 One more word for this chapter.

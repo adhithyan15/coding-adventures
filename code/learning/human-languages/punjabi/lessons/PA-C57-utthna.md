@@ -14,7 +14,8 @@ romanization: "uṭṭhṇā"
 concept_tag: PA-VERB-UTTHNA
 prerequisites: [PA-C56-baithna, PA-C56-sauna]
 sounds: []
-roots: []
+roots: [indo-aryan-ut-sthati]
+etymology_hook: "uṭṭhṇā ← *ut-sthāti 'stands up', a reconstructed form; a tadbhava (CDIAL 1900)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C56-sauna]
 <!-- hl-knowledge: introduces=[PA-LEX-C57-VERBS57-01]; assesses=[] -->
 
 **ਉੱਠਣਾ** — *uṭṭhṇā* — "to get up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਉੱਠਣਾ** (*uṭṭhṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ut-sthāti*, "stands up", a form CDIAL reconstructs from its descendants (CDIAL 1900).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mātā"
 concept_tag: PA-HEALTH53-MATA
 prerequisites: [PA-C53-udas, PA-C53-pita]
 sounds: []
-roots: []
+roots: [sanskrit-matr]
+etymology_hook: "mātā: Sanskrit mātā 'mother', a tatsama; the inherited form is māṁ (CDIAL 10016)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C53-pita]
 <!-- hl-knowledge: introduces=[PA-LEX-C53-HEALTH53-03]; assesses=[] -->
 
 **ਮਾਤਾ** — *mātā* — "a mother".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਾਤਾ** (*mātā*) is Sanskrit *mātā*, the nominative of *mātṛ*, "mother", taken over whole, a tatsama. The inherited form is *māṁ*, which CDIAL lists under *mātṛ* (CDIAL 10016).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

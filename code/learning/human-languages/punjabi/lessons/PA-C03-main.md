@@ -12,6 +12,7 @@ concept_tag: PRONOUN-I
 prerequisites: [PA-C02-mera, PA-S02-mamma-rara-lava, PA-S03-nanna-bihari-dulava]
 sounds: [dulankar-ai, bindi-nasal]
 roots: [ma-first-person]
+etymology_hook: "maiṁ ← Sanskrit mayā 'by me', from the first-person base ma- (CDIAL 9691)"
 duration:
   max_seconds: 200
 requires:

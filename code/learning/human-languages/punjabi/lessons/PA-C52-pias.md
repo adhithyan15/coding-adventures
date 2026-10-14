@@ -14,7 +14,8 @@ romanization: "piās"
 concept_tag: PA-HEALTH52-PIAS
 prerequisites: [PA-C52-darad, PA-C52-davai]
 sounds: []
-roots: []
+roots: [sanskrit-pipasa]
+etymology_hook: "piās: matches Hindi piyās, which CDIAL lists under Sanskrit pipāsā 'thirst' (CDIAL 8199); no Punjabi form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C52-davai]
 <!-- hl-knowledge: introduces=[PA-LEX-C52-HEALTH52-03]; assesses=[] -->
 
 **ਪਿਆਸ** — *piās* — "thirst".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਿਆਸ** (*piās*) goes back to Sanskrit *pipāsā*, "thirst". CDIAL lists no Punjabi form, but gives the matching Hindi *piyās* under it (CDIAL 8199), and it marks the Punjabi adjective *peāsā*, "thirsty", as taken from Hindi (CDIAL 8200).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

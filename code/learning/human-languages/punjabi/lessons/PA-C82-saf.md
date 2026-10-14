@@ -14,7 +14,8 @@ romanization: "sāf"
 concept_tag: PA-ADJ82-SAF
 prerequisites: [PA-C82-bharia, PA-C82-khali]
 sounds: []
-roots: []
+roots: [arabic-safi]
+etymology_hook: "sāf ← Arabic ṣāfī 'pure, clear', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C82-khali]
 <!-- hl-knowledge: introduces=[PA-LEX-C82-ADJ82-03]; assesses=[] -->
 
 **ਸਾਫ਼** — *sāf* — "clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਾਫ਼** (*sāf*) is a loan from Arabic *ṣāfī*, "pure, clear", which reached Punjabi through Persian. Its Arabic root is *ṣ-f-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

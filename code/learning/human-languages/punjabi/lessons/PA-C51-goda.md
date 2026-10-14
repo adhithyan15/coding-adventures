@@ -14,7 +14,8 @@ romanization: "goḍā"
 concept_tag: PA-BODY51-GODA
 prerequisites: [PA-C50-khun, PA-C51-latt]
 sounds: []
-roots: []
+roots: [indo-aryan-godda]
+etymology_hook: "goḍā ← *goḍḍa 'foot, leg, knee', a reconstructed form; a tadbhava (CDIAL 4272)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C51-latt]
 <!-- hl-knowledge: introduces=[PA-LEX-C51-BODY51-02]; assesses=[] -->
 
 **ਗੋਡਾ** — *goḍā* — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗੋਡਾ** (*goḍā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*goḍḍa*, "foot, leg, knee", a form CDIAL reconstructs from its descendants (CDIAL 4272).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

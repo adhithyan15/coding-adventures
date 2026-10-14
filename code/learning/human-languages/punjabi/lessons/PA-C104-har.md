@@ -14,7 +14,8 @@ romanization: "hāṛ"
 concept_tag: PA-TIME104-HAR
 prerequisites: [PA-C103-visakh, PA-C104-jeth]
 sounds: []
-roots: []
+roots: [sanskrit-ashadha]
+etymology_hook: "hāṛ ← Sanskrit āṣāḍha 'the month June-July', a tadbhava (CDIAL 1473)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C104-jeth]
 <!-- hl-knowledge: introduces=[PA-LEX-C104-TIME104-02]; assesses=[] -->
 
 **ਹਾੜ** — *hāṛ* — "Harh, a Punjabi month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹਾੜ** (*hāṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *āṣāḍha*, "the month June-July" (CDIAL 1473). CDIAL lists Punjabi *hāṛh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

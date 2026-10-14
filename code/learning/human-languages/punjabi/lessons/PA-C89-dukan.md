@@ -14,7 +14,8 @@ romanization: "dukān"
 concept_tag: PA-PLACE89-DUKAN
 prerequisites: [PA-C89-itthe, PA-C89-utthe]
 sounds: []
-roots: []
+roots: [arabic-dukkan]
+etymology_hook: "dukān ← Arabic dukkān 'shop', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C89-utthe]
 <!-- hl-knowledge: introduces=[PA-LEX-C89-PLACE89-05]; assesses=[] -->
 
 **ਦੁਕਾਨ** — *dukān* — "a shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦੁਕਾਨ** (*dukān*) is a loan from Arabic *dukkān*, "shop", which reached Punjabi through Persian. Its Arabic root is *d-k-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

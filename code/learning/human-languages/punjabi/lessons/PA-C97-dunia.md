@@ -14,7 +14,8 @@ romanization: "dunīā"
 concept_tag: PA-NUMBERS97-DUNIA
 prerequisites: [PA-C96-sau, PA-C97-hazar]
 sounds: []
-roots: []
+roots: [arabic-dunya]
+etymology_hook: "dunīā ← Arabic dunyā 'the world, this nearer life', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C97-hazar]
 <!-- hl-knowledge: introduces=[PA-LEX-C97-NUMBERS97-02]; assesses=[] -->
 
 **ਦੁਨੀਆ** — *dunīā* — "the world".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦੁਨੀਆ** (*dunīā*) is a loan from Arabic *dunyā*, "the world, this nearer life", which reached Punjabi through Persian. Its Arabic root is *d-n-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

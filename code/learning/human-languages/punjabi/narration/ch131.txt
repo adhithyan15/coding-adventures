@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a wolf, then the Punjabi for a pigeon.
 You'll want to know: ਬੱਤਖ਼.
 ਬੱਤਖ਼ — battakh — "a duck".
 
+The word, taken apart.
+ਬੱਤਖ਼ (battakh) is usually traced to Persian baṭ, "duck". Lane calls the matching Arabic baṭṭ a Persian word, or an imitation of the bird's cry.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a pigeon, then the Punjabi for a duck.
 
 You'll want to know: ਕਿਰਲੀ.
 ਕਿਰਲੀ — kirlī — "a lizard".
+
+The word, taken apart.
+Where ਕਿਰਲੀ (kirlī) comes from is not settled: CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a duck, then the Punjabi for a lizard.
 You'll want to know: ਕੱਛੂ.
 ਕੱਛੂ — kacchū — "a turtle".
 
+The word, taken apart.
+ਕੱਛੂ (kacchū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kacchapa, "turtle, tortoise" (CDIAL 2619).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a lizard, then the Punjabi for a turtle.
 You'll want to know: ਮਗਰਮੱਛ.
 ਮਗਰਮੱਛ — magarmacch — "a crocodile".
 
+The word, taken apart.
+ਮਗਰਮੱਛ (magarmacch) is "crocodile-fish": magar from Sanskrit makara, "crocodile", through Prakrit magara (CDIAL 9692), and macch, "fish", from matsya (CDIAL 9758).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a turtle, then the Punjabi for a crocodi
 
 You'll want to know: ਮੱਛਰ.
 ਮੱਛਰ — macchar — "a mosquito".
+
+The word, taken apart.
+ਮੱਛਰ (macchar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from matsara, "mosquito, fly" (CDIAL 9757). CDIAL calls a Prakrit source for the Sanskrit word possible, though unsupported.
 
 What you've built.
 One more word for this chapter.

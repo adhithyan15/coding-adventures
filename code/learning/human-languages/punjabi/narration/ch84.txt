@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for important, then the Punjabi for green.
 You'll want to know: ਪੀਲਾ.
 ਪੀਲਾ — pīlā — "yellow".
 
+The word, taken apart.
+ਪੀਲਾ (pīlā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pītala, "yellow" (CDIAL 8233). It is built on Sanskrit pīta, "yellow".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for green, then the Punjabi for yellow.
 
 You'll want to know: ਲਾਲ.
 ਲਾਲ — lāl — "red".
+
+The word, taken apart.
+ਲਾਲ (lāl) is a loan, usually traced to Persian lāl, "red".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for yellow, then the Punjabi for red.
 You'll want to know: ਨੀਲਾ.
 ਨੀਲਾ — nīlā — "blue".
 
+The word, taken apart.
+ਨੀਲਾ (nīlā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nīla, "dark blue, dark green, black" (CDIAL 7563).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for red, then the Punjabi for blue.
 You'll want to know: ਕਾਲਾ.
 ਕਾਲਾ — kālā — "black".
 
+The word, taken apart.
+ਕਾਲਾ (kālā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kāla, "black, dark-blue" (CDIAL 3083). CDIAL derives the Sanskrit word itself, through kāḍa, from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for blue, then the Punjabi for black.
 
 You'll want to know: ਚਿੱਟਾ.
 ਚਿੱਟਾ — chiṭṭā — "white".
+
+The word, taken apart.
+ਚਿੱਟਾ (chiṭṭā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śvitra, "white" (CDIAL 12772).
 
 What you've built.
 One more word for this chapter.

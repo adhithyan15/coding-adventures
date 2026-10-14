@@ -14,7 +14,8 @@ romanization: "talī"
 concept_tag: PA-THINGS136-TALI
 prerequisites: [PA-C135-lakk, PA-C135-kuhni]
 sounds: []
-roots: []
+roots: [sanskrit-tala]
+etymology_hook: "talī ← Sanskrit tala 'base; palm, sole', a tadbhava (CDIAL 5731)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C135-kuhni]
 <!-- hl-knowledge: introduces=[PA-LEX-C136-THINGS136-01]; assesses=[] -->
 
 **ਤਲੀ** — *talī* — "a palm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤਲੀ** (*talī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tala*, "base; palm, sole" (CDIAL 5731).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

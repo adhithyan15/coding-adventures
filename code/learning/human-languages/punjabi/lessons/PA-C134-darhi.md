@@ -14,7 +14,8 @@ romanization: "dāṛhī"
 concept_tag: PA-THINGS134-DARHI
 prerequisites: [PA-C134-mattha, PA-C134-bharavatta]
 sounds: []
-roots: []
+roots: [indo-aryan-damshtra]
+etymology_hook: "dāṛhī ← *dāṁṣṭra 'fang, tusk, beard', a reconstructed form; a tadbhava (CDIAL 6250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C134-bharavatta]
 <!-- hl-knowledge: introduces=[PA-LEX-C134-THINGS134-04]; assesses=[] -->
 
 **ਦਾੜ੍ਹੀ** — *dāṛhī* — "a beard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦਾੜ੍ਹੀ** (*dāṛhī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dāṁṣṭra*, "fang, tusk, beard", a form CDIAL reconstructs from its descendants (CDIAL 6250). CDIAL sets it beside Sanskrit *daṁṣṭra*, "tusk, fang".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

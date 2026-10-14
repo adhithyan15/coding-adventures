@@ -14,7 +14,8 @@ romanization: "sūraj"
 concept_tag: PA-NATURE75-SURAJ
 prerequisites: [PA-C75-khet, PA-C75-baddal]
 sounds: []
-roots: []
+roots: [sanskrit-surya]
+etymology_hook: "sūraj: usually traced to Sanskrit sūrya 'sun' (CDIAL 13574 lists no Punjabi form)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C75-baddal]
 <!-- hl-knowledge: introduces=[PA-LEX-C75-NATURE75-04]; assesses=[] -->
 
 **ਸੂਰਜ** — *sūraj* — "the sun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸੂਰਜ** (*sūraj*) is usually traced to Sanskrit *sūrya*, "sun". CDIAL lists no Punjabi form under *sūrya* (CDIAL 13574).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

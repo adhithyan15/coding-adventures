@@ -3584,6 +3584,25 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.theme.edgeLabelBackground")),
                     Some(&"#dbeafe".to_string()));
             }
+            if fixture_name == "flowchart-spacing-config" {
+                assert_eq!(layout.flowchart_config.node_spacing, Some(96.0));
+                assert_eq!(layout.flowchart_config.rank_spacing, Some(28.0));
+                assert_eq!(layout.flowchart_config.diagram_padding, Some(32.0));
+                assert_eq!(layout.lanes[0].x, 32.0,
+                    "diagramPadding must place lanes inside the portable scene bounds");
+                assert_eq!(layout.lanes[1].y - layout.lanes[0].y - layout.lanes[0].height, 96.0,
+                    "nodeSpacing must separate same-rank ownership lanes");
+                let first = layout.nodes.iter().find(|node| node.id == "receive").expect("receive node");
+                let second = layout.nodes.iter().find(|node| node.id == "validate").expect("validate node");
+                assert_eq!(second.x - first.x - first.width, 28.0,
+                    "rankSpacing must separate consecutive ranks");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.nodeSpacing")), Some(&"96".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.rankSpacing")), Some(&"28".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.diagramPadding")), Some(&"32".to_string()));
+            }
             if fixture_name == "node-typography-styles" {
                 assert!(layout.nodes[0].width > layout.nodes[1].width,
                     "larger bold text must reserve more backend-neutral node width");

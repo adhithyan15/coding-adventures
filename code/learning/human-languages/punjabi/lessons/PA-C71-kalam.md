@@ -14,7 +14,8 @@ romanization: "kalam"
 concept_tag: PA-HOME71-KALAM
 prerequisites: [PA-C71-kamra, PA-C71-kitab]
 sounds: []
-roots: []
+roots: [arabic-qalam]
+etymology_hook: "kalam ← Arabic qalam 'reed pen', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C71-kitab]
 <!-- hl-knowledge: introduces=[PA-LEX-C71-HOME71-03]; assesses=[] -->
 
 **ਕਲਮ** — *kalam* — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕਲਮ** (*kalam*) is a loan from Arabic *qalam*, "reed pen", which reached Punjabi through Persian. Its Arabic root is *q-l-m* (Lane). Arabic *qalam* is itself usually traced to Greek *kalamos*, "reed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

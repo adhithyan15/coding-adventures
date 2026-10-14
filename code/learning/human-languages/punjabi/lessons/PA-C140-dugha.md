@@ -14,7 +14,8 @@ romanization: "ḍū̃ghā"
 concept_tag: PA-QUAL140-DUGHA
 prerequisites: [PA-C140-cupp, PA-C140-kimti]
 sounds: []
-roots: []
+roots: [sanskrit-gudha]
+etymology_hook: "ḍūṁghā: CDIAL lists it under Sanskrit gūḍha 'hidden', following a view that its sounds were swapped (CDIAL 4223)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C140-kimti]
 <!-- hl-knowledge: introduces=[PA-LEX-C140-QUAL140-03]; assesses=[] -->
 
 **ਡੂੰਘਾ** — *ḍū̃ghā* — "deep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ਡੂੰਘਾ** (*ḍūṁghā*), "deep", under Sanskrit *gūḍha*, "hidden", following another scholar's view that its sounds were swapped (CDIAL 4223).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

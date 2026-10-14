@@ -14,7 +14,8 @@ romanization: "kuttā"
 concept_tag: PA-ANIMALS77-KUTTA
 prerequisites: [PA-C76-mimh, PA-C76-hava]
 sounds: []
-roots: []
+roots: [uncertain-kutta]
+etymology_hook: "kuttā ← *kutta 'dog', which CDIAL calls imitative (CDIAL 3275)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C76-hava]
 <!-- hl-knowledge: introduces=[PA-LEX-C77-ANIMALS77-01]; assesses=[] -->
 
 **ਕੁੱਤਾ** — *kuttā* — "a dog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੁੱਤਾ** (*kuttā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kutta*, "dog", a form CDIAL reconstructs from its descendants (CDIAL 3275). CDIAL calls it imitative, comparing Santali *kutu kutu*, the call to a puppy.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

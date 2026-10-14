@@ -14,7 +14,8 @@ romanization: "daftar"
 concept_tag: PA-THINGS137-DAFTAR
 prerequisites: [PA-C137-jahaz, PA-C137-musafar]
 sounds: []
-roots: []
+roots: [persian-daftar]
+etymology_hook: "daftar: usually traced, through Persian, to Arabic daftar 'register' (Lane), itself taken from Greek"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C137-musafar]
 <!-- hl-knowledge: introduces=[PA-LEX-C137-THINGS137-03]; assesses=[] -->
 
 **ਦਫ਼ਤਰ** — *daftar* — "an office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦਫ਼ਤਰ** (*daftar*) is usually traced, through Persian, to Arabic *daftar*, "register" (Lane), which Arabic itself took from Greek.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

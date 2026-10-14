@@ -14,7 +14,8 @@ romanization: "deṇā"
 concept_tag: PA-VERB-DENA
 prerequisites: [PA-C57-kharidna, PA-C58-vechna]
 sounds: []
-roots: []
+roots: [sanskrit-dadati]
+etymology_hook: "deṇā ← Sanskrit dadāti 'gives', a tadbhava (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C58-vechna]
 <!-- hl-knowledge: introduces=[PA-LEX-C58-VERBS58-02]; assesses=[] -->
 
 **ਦੇਣਾ** — *deṇā* — "to give".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦੇਣਾ** (*deṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

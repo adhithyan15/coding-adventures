@@ -14,7 +14,8 @@ romanization: "sauṇā"
 concept_tag: PA-VERB-SAUNA
 prerequisites: [PA-C56-sunna, PA-C56-baithna]
 sounds: []
-roots: []
+roots: [sanskrit-svapati]
+etymology_hook: "sauṇā ← Sanskrit svapati 'sleeps', a tadbhava (CDIAL 13902)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C56-baithna]
 <!-- hl-knowledge: introduces=[PA-LEX-C56-FAMILY56-05]; assesses=[] -->
 
 **ਸੌਣਾ** — *sauṇā* — "to sleep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸੌਣਾ** (*sauṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *svapati*, "sleeps" (CDIAL 13902).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

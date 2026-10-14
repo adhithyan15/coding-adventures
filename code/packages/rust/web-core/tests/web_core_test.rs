@@ -514,15 +514,9 @@ fn e2e_on_server_stop_fires_after_serve_exits() {
 /// Bind and start a `ShardedWebServer` on port 0 with `worker_count` shards,
 /// returning the port and a stop handle. Mirrors `start_server` but parallel.
 ///
-/// **Not built on Windows.** Sharded serving needs `SO_REUSEPORT`, which the
-/// Windows TCP provider does not have, so `bind_windows_sharded` can never
-/// succeed there (see the constructor's docs, and
-/// `sharded_bind_is_unsupported_on_windows` below, which pins that). Every
-/// caller of this helper is therefore `cfg(not(windows))`; the helper carries
-/// the SAME gate so it is not compiled into a build that has no use for it —
-/// an ungated helper whose only callers are gated is exactly the shape that
-/// `-D warnings` rejects as dead code.
-#[cfg(not(target_os = "windows"))]
+/// On Windows the shards are fed by `tcp-runtime`'s accept fan-out (Windows has
+/// no load-balancing `SO_REUSEPORT`); on Linux by `SO_REUSEPORT`; on macOS/BSD
+/// by the same fan-out as Windows.
 fn start_sharded_server(
     app: WebApp,
     worker_count: usize,
@@ -554,6 +548,15 @@ fn start_sharded_server(
     )
     .expect("bind epoll sharded");
 
+    #[cfg(target_os = "windows")]
+    let mut server = ShardedWebServer::bind_windows_sharded(
+        "127.0.0.1:0",
+        HttpServerOptions::default(),
+        worker_count,
+        Arc::clone(&app),
+    )
+    .expect("bind windows sharded");
+
     let port = server.local_addr().port();
     let shards = server.worker_count();
     let stop = server.stop_handle();
@@ -572,7 +575,6 @@ fn start_sharded_server(
 /// concurrent handlers proves real cross-shard parallelism. Every client also
 /// gets a correct 200, so parallelism does not corrupt the request/response
 /// contract.
-#[cfg(not(target_os = "windows"))]
 #[test]
 fn sharded_web_server_handles_requests_concurrently() {
     let worker_count = 4;
@@ -643,7 +645,6 @@ fn sharded_web_server_handles_requests_concurrently() {
 /// is latency-bound and would not scale). It serves the same concurrent load on
 /// a 1-shard and an N-shard server and prints both wall-clock times; with real
 /// cores the N-shard run finishes meaningfully faster.
-#[cfg(not(target_os = "windows"))]
 #[test]
 #[ignore]
 fn sharded_web_server_cpu_bound_throughput_scales() {
@@ -715,11 +716,8 @@ fn sharded_web_server_cpu_bound_throughput_scales() {
 /// it. Mirrors `start_server` / `start_sharded_server`, but the mailbox stack is
 /// cross-platform (one `bind`) and `serve` takes `&self`, so we serve a clone.
 ///
-/// Unlike `start_sharded_server` this helper is built on EVERY platform,
-/// because the mailbox stack really is cross-platform: on Unix the comparative
-/// benchmark below uses it, and on Windows `mailbox_web_server_serves_on_windows`
-/// does. That is the point of the mailbox mode — it is the parallel server you
-/// can actually run on Windows.
+/// Built on every platform: the comparative benchmark below uses it, and on
+/// Windows `mailbox_web_server_serves_on_windows` does too.
 fn start_mailbox_server(app: WebApp, worker_count: usize) -> (u16, MailboxWebServer) {
     let app = Arc::new(app);
     let server = MailboxWebServer::bind(
@@ -761,7 +759,6 @@ fn start_mailbox_server(app: WebApp, worker_count: usize) -> (u16, MailboxWebSer
 /// (`Connection: close`) clients — the spread shows where their dispatch models
 /// differ (sharded parallelises across connections; mailbox across requests, so
 /// it also overlaps sequential keep-alive on one connection — see WEB01b-1a/2).
-#[cfg(not(target_os = "windows"))]
 #[test]
 #[ignore]
 fn web_serving_modes_cpu_bound_comparison() {
@@ -853,72 +850,16 @@ fn web_serving_modes_cpu_bound_comparison() {
 // Windows platform contract — which parallel serving mode actually works there
 // ---------------------------------------------------------------------------
 //
-// The two benchmarks above and the sharded concurrency proof are all
-// `cfg(not(windows))`, which used to leave `start_sharded_server` compiled but
-// uncalled on Windows (`-D warnings` dead_code). The gates are right; what was
-// missing is a test that states WHY, so the two below pin the platform contract
-// from the Windows side instead of leaving it as folklore in a `cfg`.
-
-/// `ShardedWebServer` cannot be bound on Windows — and that is a hard property
-/// of the platform, not a missing feature.
-///
-/// Sharded serving fans out by having every shard bind the *same* address under
-/// `SO_REUSEPORT` and letting the kernel spread accepted connections across
-/// them. The Windows TCP provider has no `SO_REUSEPORT` (its `SO_REUSEADDR` only
-/// permits rebinding — it does not load-balance), so `transport-platform`'s
-/// Windows `configure_listener_socket` rejects `reuse_port` before any listener
-/// exists. `bind_windows_sharded` therefore fails at *bind* time.
-///
-/// The bind is attempted with `worker_count = 4` deliberately. `tcp-runtime`
-/// sets `reuse_port` only when `worker_count > 1` (one worker needs no fan-out),
-/// so `worker_count = 1` would bind successfully — a one-shard "sharded" server,
-/// which is just a `WebServer` with extra indirection. Asserting on the
-/// degenerate case would prove nothing about sharding.
-///
-/// This test exists so that (a) the `bind_windows_sharded` call site stays
-/// compiled and executed on Windows rather than silently rotting, and (b) if the
-/// Windows transport ever gains real fan-out, this test fails and tells the next
-/// person to un-gate the sharded suite instead of leaving it off forever.
-#[cfg(target_os = "windows")]
-#[test]
-fn sharded_bind_is_unsupported_on_windows() {
-    use web_core::ShardedWebServer;
-
-    let mut app = WebApp::new();
-    app.get("/ping", |_| WebResponse::text("pong"));
-
-    let result = ShardedWebServer::bind_windows_sharded(
-        "127.0.0.1:0",
-        HttpServerOptions::default(),
-        4,
-        Arc::new(app),
-    );
-
-    let err = match result {
-        Ok(_) => panic!(
-            "bind_windows_sharded unexpectedly SUCCEEDED. Windows gained \
-             SO_REUSEPORT-style listener fan-out: drop the \
-             `cfg(not(target_os = \"windows\"))` gates on start_sharded_server \
-             and the sharded tests, and delete this test."
-        ),
-        Err(e) => e,
-    };
-
-    let rendered = format!("{err:?}");
-    assert!(
-        rendered.contains("SO_REUSEPORT"),
-        "expected the bind to fail on the missing SO_REUSEPORT option, got: {rendered}"
-    );
-}
+// The sharded suite above runs on Windows too, since `tcp-runtime` serves
+// multi-worker runtimes there through an accept fan-out. This one pins that the
+// other parallel mode, the mailbox server, also serves on Windows.
 
 /// The mailbox server — the parallel mode that *is* cross-platform — really does
 /// serve requests on Windows.
 ///
 /// `MailboxWebServer` parallelises by *request* over a single listener, so it
-/// never asks for `SO_REUSEPORT` and needs no per-shard bind. That is what makes
-/// it the answer to the test above: on Windows it is the way to serve a `WebApp`
-/// on more than one thread. Asserting a real 200 over a real socket keeps that
-/// claim honest rather than merely documented.
+/// never asks for `SO_REUSEPORT` and needs no per-shard bind. Asserting a real
+/// 200 over a real socket keeps that claim honest rather than merely documented.
 #[cfg(target_os = "windows")]
 #[test]
 fn mailbox_web_server_serves_on_windows() {

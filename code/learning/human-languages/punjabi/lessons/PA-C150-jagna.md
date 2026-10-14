@@ -14,7 +14,8 @@ romanization: "jāgṇā"
 concept_tag: PA-VERB-JAGNA
 prerequisites: [PA-C150-bharna, PA-C150-khiccna]
 sounds: []
-roots: []
+roots: [sanskrit-jagrati]
+etymology_hook: "jāgṇā ← Sanskrit jāgrati 'are awake', a tadbhava (CDIAL 5175)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C150-khiccna]
 <!-- hl-knowledge: introduces=[PA-LEX-C150-ACT150-04]; assesses=[] -->
 
 **ਜਾਗਣਾ** — *jāgṇā* — "to wake up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜਾਗਣਾ** (*jāgṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jāgrati*, "are awake" (CDIAL 5175).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

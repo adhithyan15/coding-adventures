@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for an answer, then the Punjabi for a word.
 You'll want to know: ਖੇਡ.
 ਖੇਡ — kheḍ — "a game".
 
+The word, taken apart.
+ਖੇਡ (kheḍ) is a tadbhava, a word inherited and reshaped by sound change. It comes from kheḍḍ, "play", a form CDIAL reconstructs from its descendants (CDIAL 3918). It is the noun beside kheḍṇā, "to play".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a word, then the Punjabi for a game.
 
 You'll want to know: ਚਿੱਠੀ.
 ਚਿੱਠੀ — chiṭṭhī — "a letter (post)".
+
+The word, taken apart.
+ਚਿੱਠੀ (chiṭṭhī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ciṣṭa, "message", a form CDIAL reconstructs from its descendants (CDIAL 4832).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a game, then the Punjabi for a letter.
 You'll want to know: ਰੁੱਖ.
 ਰੁੱਖ — rukkh — "a tree".
 
+The word, taken apart.
+ਰੁੱਖ (rukkh) is a tadbhava, a word inherited and reshaped by sound change. It comes from rukṣa, "tree", a form CDIAL reconstructs from its descendants (CDIAL 10757). CDIAL sets it beside Sanskrit vṛkṣa, "tree".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a letter, then the Punjabi for a tree.
 You'll want to know: ਫੁੱਲ.
 ਫੁੱਲ — phull — "a flower".
 
+The word, taken apart.
+ਫੁੱਲ (phull) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from phulla, "expanded, blown (of flowers)" (CDIAL 9092).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a tree, then the Punjabi for a flower.
 
 You'll want to know: ਪੱਤਾ.
 ਪੱਤਾ — pattā — "a leaf".
+
+The word, taken apart.
+ਪੱਤਾ (pattā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pattra, "wing-feather; leaf" (CDIAL 7733).
 
 What you've built.
 One more word for this chapter.
