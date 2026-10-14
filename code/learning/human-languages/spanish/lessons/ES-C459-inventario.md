@@ -11,6 +11,7 @@ concept_tag: ES-STOCK-INVENTARIO
 prerequisites: [ES-C459-seccion, ES-C13-venir, ES-C452-almacen]
 sounds: [nasal-n, diphthong-io, stress-penultimate]
 roots: [venire-latin]
+etymology_hook: "inventario ← Latin invenire 'to come upon, to find' — kin to venir; English inventory"
 duration:
   max_seconds: 275
 requires:

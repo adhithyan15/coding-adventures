@@ -11,6 +11,7 @@ concept_tag: ES-ASK-ENCUESTA
 prerequisites: [ES-C472-usuario, ES-C35-preguntar, ES-C11-querer]
 sounds: [k-hard, s-clear, stress-penultimate, diphthong-ue]
 roots: [quaerere-latin]
+etymology_hook: "encuesta ← French enquête, from Latin inquirere 'to seek out' — kin to querer"
 duration:
   max_seconds: 275
 requires:
@@ -64,7 +65,7 @@ survey speaks, not the people in it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C472-ENCUESTA-02, ES-ETYMON-QUAERERE] -->
 
-Latin **inquisita**, things sought out, from **inquirere**: **in-** plus
+French **enquête**, an inquiry, from Latin **inquirere**: **in-** plus
 **quaerere**, to seek.
 
 Now look at what you already hold. **Querer** is that same **quaerere**. The

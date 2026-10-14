@@ -11,6 +11,7 @@ concept_tag: ES-COUNT-HARDWORKING
 prerequisites: [ES-C423-inteligente, ES-C421-actor]
 sounds: [b-soft, r-tap, stress-final]
 roots: [tripalium-latin]
+etymology_hook: "trabajador — trabajar + -dor, the worn-down Latin -tor of actor"
 duration:
   max_seconds: 240
 requires:

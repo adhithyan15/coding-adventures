@@ -6237,6 +6237,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     let mut class_styles = HashMap::new();
     let mut pending_classes = Vec::new();
     let mut pending_styles = Vec::new();
+    let mut pending_link_styles = Vec::new();
     let mut pending_edge_configs = Vec::new();
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
@@ -6335,6 +6336,10 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         }
         if let Some(value) = line.strip_prefix("style ") {
             pending_styles.push(parse_swimlane_style(value, line_number)?);
+            continue;
+        }
+        if let Some(value) = line.strip_prefix("linkStyle ") {
+            pending_link_styles.push(parse_swimlane_link_style(value, line_number)?);
             continue;
         }
         if let Some(config) = parse_swimlane_edge_config(line, line_number)? {
@@ -6464,6 +6469,30 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         }
         if !matched {
             return Err(swimlane_error(line, format!("Swimlane style references unknown node or edge {target_id:?}")));
+        }
+    }
+    for (targets, style, curve, line) in pending_link_styles {
+        match targets {
+            SwimlaneLinkStyleTargets::Default => {
+                for edge in &mut diagram.edges {
+                    merge_state_style(&mut edge.style, &style);
+                    if let Some(curve) = curve {
+                        edge.curve = Some(curve);
+                    }
+                }
+            }
+            SwimlaneLinkStyleTargets::Indices(indices) => {
+                for index in indices {
+                    let edge = diagram.edges.get_mut(index).ok_or_else(|| swimlane_error(
+                        line,
+                        format!("Swimlane linkStyle references unknown edge index {index}"),
+                    ))?;
+                    merge_state_style(&mut edge.style, &style);
+                    if let Some(curve) = curve {
+                        edge.curve = Some(curve);
+                    }
+                }
+            }
         }
     }
     Ok(diagram)
@@ -6645,6 +6674,53 @@ fn parse_swimlane_style(value: &str, line: usize) -> Result<(String, DiagramStyl
     Ok((node_id.to_string(), parse_swimlane_style_declarations(declarations, line)?, line))
 }
 
+enum SwimlaneLinkStyleTargets {
+    Default,
+    Indices(Vec<usize>),
+}
+
+fn parse_swimlane_link_style(
+    value: &str,
+    line: usize,
+) -> Result<(SwimlaneLinkStyleTargets, DiagramStyle, Option<SwimlaneEdgeCurve>, usize), ParseError> {
+    let value = value.strip_suffix(';').unwrap_or(value).trim_end();
+    let value = value.trim();
+    let (selector, declarations) = if let Some(declarations) = value.strip_prefix("default") {
+        if !declarations.starts_with(char::is_whitespace) {
+            return Err(swimlane_error(line, "Swimlane linkStyle requires targets and declarations"));
+        }
+        ("default", declarations.trim_start())
+    } else {
+        let Some(declaration_start) = value.find(char::is_alphabetic) else {
+            return Err(swimlane_error(line, "Swimlane linkStyle requires targets and declarations"));
+        };
+        (value[..declaration_start].trim(), value[declaration_start..].trim())
+    };
+    let targets = if selector.eq_ignore_ascii_case("default") {
+        SwimlaneLinkStyleTargets::Default
+    } else {
+        let indices = selector.split(',').map(str::trim).map(|index| {
+            index.parse::<usize>().map_err(|_| swimlane_error(
+                line,
+                format!("invalid Swimlane linkStyle edge index {index:?}"),
+            ))
+        }).collect::<Result<Vec<_>, _>>()?;
+        if indices.is_empty() {
+            return Err(swimlane_error(line, "Swimlane linkStyle requires at least one edge index"));
+        }
+        SwimlaneLinkStyleTargets::Indices(indices)
+    };
+    let (style, curve) = if let Some(curve) = declarations.strip_prefix("interpolate") {
+        if !curve.starts_with(char::is_whitespace) {
+            return Err(swimlane_error(line, "Swimlane linkStyle interpolate requires a curve"));
+        }
+        (DiagramStyle::default(), Some(parse_swimlane_edge_curve(curve.trim(), line)?))
+    } else {
+        (parse_swimlane_style_declarations(declarations, line)?, None)
+    };
+    Ok((targets, style, curve, line))
+}
+
 fn parse_swimlane_edge_config(
     value: &str,
     line: usize,
@@ -6684,22 +6760,7 @@ fn parse_swimlane_edge_config(
                 "fast" => SwimlaneEdgeAnimation::Fast,
                 _ => return Err(swimlane_error(line, "Swimlane edge animation must be slow or fast")),
             }),
-            "curve" => curve = Some(match value.to_ascii_lowercase().as_str() {
-                "linear" => SwimlaneEdgeCurve::Linear,
-                "basis" => SwimlaneEdgeCurve::Basis,
-                "bumpx" | "bump-x" => SwimlaneEdgeCurve::BumpX,
-                "bumpy" | "bump-y" => SwimlaneEdgeCurve::BumpY,
-                "cardinal" => SwimlaneEdgeCurve::Cardinal,
-                "catmullrom" | "catmull-rom" => SwimlaneEdgeCurve::CatmullRom,
-                "monotonex" | "monotone-x" => SwimlaneEdgeCurve::MonotoneX,
-                "monotoney" | "monotone-y" => SwimlaneEdgeCurve::MonotoneY,
-                "natural" => SwimlaneEdgeCurve::Natural,
-                "rounded" => SwimlaneEdgeCurve::Rounded,
-                "step" => SwimlaneEdgeCurve::Step,
-                "stepbefore" | "step-before" => SwimlaneEdgeCurve::StepBefore,
-                "stepafter" | "step-after" => SwimlaneEdgeCurve::StepAfter,
-                _ => return Err(swimlane_error(line, "unsupported Swimlane edge curve")),
-            }),
+            "curve" => curve = Some(parse_swimlane_edge_curve(&value, line)?),
             other => return Err(swimlane_error(line, format!("unsupported Swimlane edge configuration {other:?}"))),
         }
     }
@@ -6710,6 +6771,25 @@ fn parse_swimlane_edge_config(
         curve,
         line,
     }))
+}
+
+fn parse_swimlane_edge_curve(value: &str, line: usize) -> Result<SwimlaneEdgeCurve, ParseError> {
+    match value.to_ascii_lowercase().as_str() {
+        "linear" => Ok(SwimlaneEdgeCurve::Linear),
+        "basis" => Ok(SwimlaneEdgeCurve::Basis),
+        "bumpx" | "bump-x" => Ok(SwimlaneEdgeCurve::BumpX),
+        "bumpy" | "bump-y" => Ok(SwimlaneEdgeCurve::BumpY),
+        "cardinal" => Ok(SwimlaneEdgeCurve::Cardinal),
+        "catmullrom" | "catmull-rom" => Ok(SwimlaneEdgeCurve::CatmullRom),
+        "monotonex" | "monotone-x" => Ok(SwimlaneEdgeCurve::MonotoneX),
+        "monotoney" | "monotone-y" => Ok(SwimlaneEdgeCurve::MonotoneY),
+        "natural" => Ok(SwimlaneEdgeCurve::Natural),
+        "rounded" => Ok(SwimlaneEdgeCurve::Rounded),
+        "step" => Ok(SwimlaneEdgeCurve::Step),
+        "stepbefore" | "step-before" => Ok(SwimlaneEdgeCurve::StepBefore),
+        "stepafter" | "step-after" => Ok(SwimlaneEdgeCurve::StepAfter),
+        _ => Err(swimlane_error(line, "unsupported Swimlane edge curve")),
+    }
 }
 
 fn parse_swimlane_style_declarations(value: &str, line: usize) -> Result<DiagramStyle, ParseError> {

@@ -4,7 +4,7 @@
   "chapter": 427,
   "title": "People Named By What They Do",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:7093ed4349cfdfd4",
+  "sourceHash": "fnv1a64:fa10775f08b3ce11",
   "lessons": [
     {
       "id": "ES-C427-vendedor",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb5fb0e60b4eee83",
+      "sourceHash": "fnv1a64:d578dc29bc95bd81",
       "notice": null,
       "blocks": [
         {
@@ -70,6 +70,10 @@
             {
               "kind": "speech",
               "text": "The ending is productive, which is the property worth having. You are not learning a word; you are learning a machine that turns any verb you know into the person who does it."
+            },
+            {
+              "kind": "speech",
+              "text": "Vender is Latin vendere, \"to sell\"."
             }
           ]
         },
@@ -169,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:011b9874ee37380a",
+      "sourceHash": "fnv1a64:74ae2bb5a2e561b8",
       "notice": null,
       "blocks": [
         {
@@ -215,6 +219,10 @@
                 "side: sells. verb: vender. person: el vendedor.",
                 "side: buys. verb: comprar. person: el comprador."
               ]
+            },
+            {
+              "kind": "speech",
+              "text": "Comprar is Latin comparare, \"to procure\", worn down in speech; vender is Latin vendere, \"to sell\"."
             }
           ]
         },
@@ -314,7 +322,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efd846ae9436a9e8",
+      "sourceHash": "fnv1a64:649c7c27ec7b2f80",
       "notice": null,
       "blocks": [
         {
@@ -480,7 +488,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d02c3d7473de9278",
+      "sourceHash": "fnv1a64:b556d0aa4f153140",
       "notice": null,
       "blocks": [
         {
@@ -538,6 +546,10 @@
             {
               "kind": "speech",
               "text": "So Spanish has -dor for the one who does the action and -ero for the one who works with the thing."
+            },
+            {
+              "kind": "speech",
+              "text": "Bomba is usually taken to imitate the sound of a boom."
             }
           ]
         },
@@ -648,7 +660,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a939a90750754f4c",
+      "sourceHash": "fnv1a64:f1165f1cfe94ce82",
       "notice": null,
       "blocks": [
         {
@@ -819,7 +831,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1f437a082ffa2b6",
+      "sourceHash": "fnv1a64:1e87882097693046",
       "notice": null,
       "blocks": [
         {
@@ -850,15 +862,11 @@
             },
             {
               "kind": "speech",
-              "text": "From Latin in- + prehendere, \"to take hold of.\" An empresa is literally a thing taken on — an undertaking."
+              "text": "Spanish took it from Italian impresa, built on Latin in- + prehendere, \"to take hold of.\" An empresa is literally a thing taken on — an undertaking."
             },
             {
               "kind": "speech",
-              "text": "English took the same idea through French and got enterprise, from entre-."
-            },
-            {
-              "kind": "speech",
-              "text": "prendre, the same two pieces in the other Romance language. The words are cousins built to the same plan."
+              "text": "English took the same idea from French enterprise, entre- + prendre: a different prefix on the same verb, built to the same plan."
             },
             {
               "kind": "speech",

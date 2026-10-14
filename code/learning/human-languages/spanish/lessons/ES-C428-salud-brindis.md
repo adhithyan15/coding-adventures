@@ -11,6 +11,7 @@ concept_tag: ES-SOCIAL-BRINDIS
 prerequisites: [ES-C428-felicidades, ES-C334-salud]
 sounds: [s-clear, stress-final, inverted-marks]
 roots: []
+etymology_hook: "salud ← Latin salus, salutem 'health': a toast is a wish of health"
 introduces_senses: [ES-SENSE-SALUD-TOAST-01]
 duration:
   max_seconds: 240
@@ -49,6 +50,8 @@ That is what almost every toast in Europe is. English *cheers* wishes
 cheerfulness; Irish *sláinte* is literally *health*; and *¡Salud!* is the Spanish
 member of the same family. Raising a glass is wishing somebody well, and most
 languages say so plainly.
+
+*Salud* is Latin *salus*, *salutem*, "health".
 
 ## Grammar Lens: the same word, two occasions
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C428-04, ES-LEX-C334-BODY-31] -->

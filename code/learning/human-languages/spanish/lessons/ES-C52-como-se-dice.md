@@ -10,9 +10,9 @@ gloss: the single most useful sentence a learner owns — and it is this chapter
 concept_tag: ES-PHRASE-COMO-SE-DICE
 prerequisites: [ES-C52-se-venden]
 sounds: []
-roots: []
+roots: [dicere-latin]
 teaches_cells: []
-etymology_hook: "no new grammar — the most useful sentence in a learner's mouth turns out to be the impersonal se, asking how a thing gets said without asking who says it"
+etymology_hook: "¿cómo se dice? — dice is decir, Latin dicere 'to say': how is it said"
 duration:
   max_seconds: 299
 requires:
@@ -48,8 +48,8 @@ asks how a thing **gets said**, without asking who says it. Not *how do **you**
 say it*, though that is the natural English — Spanish is not pointing at the
 person you are talking to. It is asking about the language itself.
 
-Which is exactly right, because you are not asking for their personal opinion.
-You are asking what the word is.
+*Dice* is *decir*, Latin *dicere*, "to say": the question asks how a thing is
+said.
 
 > *¿Cómo se dice "book" en español?* — How do you say "book" in Spanish?
 > *¿Cómo se dice, por favor?*

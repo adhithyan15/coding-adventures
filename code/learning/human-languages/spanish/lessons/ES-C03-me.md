@@ -11,8 +11,9 @@ concept_tag: PRONOUN-ME
 prerequisites: [ES-C02-practice]
 sounds: [vowel-e]
 roots: [me-latin]
+etymology_hook: "me ← Latin me 'me', and English me is a true cousin from the same ancient root"
 duration:
-  max_seconds: 180
+  max_seconds: 182
 requires:
   knowledge: [ES-LEX-HOLA]
 introduces:
@@ -49,7 +50,7 @@ a coincidence.
 Here's the satisfying part: English **me** is a **genuine cousin**, not a
 false friend. Spanish *me* comes from Latin *me*; English *me* comes from
 Proto-Germanic — but both trace back to the *same* ancient ancestor (the
-Proto-Indo-European root *me-*, "me"). So do English **my** and **mine**.
+Proto-Indo-European root *\*me-*, "me"). So do English **my** and **mine**.
 This is the opposite of the *hola*/*hello* trap you saw earlier: here the
 resemblance is real, and you can lean on it hard. Spanish *me* = English
 *me*, all the way down.

@@ -10,7 +10,8 @@ gloss: "to wrap"
 concept_tag: ES-VERB-ENVOLVER
 prerequisites: [ES-C505-exito, ES-C506-regalar]
 sounds: []
-roots: []
+roots: [volvere-latin]
+etymology_hook: "envolver ← Latin involvere 'to roll in, to wrap' — English involve"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C506-regalar]
 > *Could you gift-wrap it for me?*
 
 The o breaks into ue under stress: *envuelvo*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**envolver** ← Latin *involvere*, "to roll in, to wrap up" (EtymDB 2.1) — inherited: *in-* became *en-*, and the stressed *o* opens into *ue* in *envuelvo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

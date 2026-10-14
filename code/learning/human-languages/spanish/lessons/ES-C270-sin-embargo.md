@@ -11,6 +11,7 @@ concept_tag: CONNECTIVE-HOWEVER
 prerequisites: [ES-C270-por-ejemplo]
 sounds: [vowel-e, vowel-o]
 roots: [imbarricare]
+etymology_hook: "sin embargo — 'without hindrance'; embargo traces to spoken Latin *imbarricare 'to bar in'"
 duration:
   max_seconds: 240
 requires:
@@ -52,7 +53,7 @@ reviews_of: [ES-C270-por-ejemplo]
 
 Literally **"without hindrance."** *Embargo* is a hindrance, a seizure, an
 impediment — the same word English borrowed whole for a trade **embargo**, and it
-traces to a Latin-derived *imbarricare*, "to bar in."
+traces to a spoken-Latin *\*imbarricare*, "to bar in."
 
 So the phrase says: *that obstacle notwithstanding*. Whatever was just conceded,
 it does not stop what comes next.

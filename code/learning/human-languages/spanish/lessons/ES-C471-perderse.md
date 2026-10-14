@@ -11,6 +11,7 @@ concept_tag: ES-VERB-PERDERSE
 prerequisites: [ES-C471-sencillo, ES-C437-equivocarse, ES-C395-perder]
 sounds: [r-tap, s-clear, stress-penultimate]
 roots: [perdere-latin]
+etymology_hook: "perder ← Latin perdere: per- + dare 'to give': to give away for good"
 duration:
   max_seconds: 275
 requires:

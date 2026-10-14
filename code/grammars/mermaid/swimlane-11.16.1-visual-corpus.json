@@ -63,6 +63,8 @@
     "labeled-open-links",
     "edge-identifiers",
     "edge-class-styles",
+    "positional-link-styles",
+    "positional-link-curves",
     "edge-animation-config",
     "edge-curve-config",
     "edge-step-curves",

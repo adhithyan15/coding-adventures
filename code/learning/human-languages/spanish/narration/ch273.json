@@ -4,7 +4,7 @@
   "chapter": 273,
   "title": "Building a Paragraph --- Plan, Add, Join, Refer Back",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f32644187fb29698",
+  "sourceHash": "fnv1a64:bdf63900c6af513d",
   "lessons": [
     {
       "id": "ES-C273-en-primer-lugar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f304ad2439a0426c",
+      "sourceHash": "fnv1a64:ec108c99a5e897ed",
       "notice": null,
       "blocks": [
         {
@@ -76,7 +76,7 @@
             },
             {
               "kind": "speech",
-              "text": "Primer is Latin primarius, \"of the first rank\" — English primary, prime. Lugar is locus, \"place\" — English local, locate. Literally: in the first place, and English kept the phrase intact."
+              "text": "Primer is Latin primarius, \"of the first rank\" — English primary, prime. Lugar is Latin localis, \"of a place\", from locus, \"place\" — English local, locate. Literally: in the first place, and English kept the phrase intact."
             },
             {
               "kind": "speech",
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09b77ffc3fe533b8",
+      "sourceHash": "fnv1a64:8b580890d19080fd",
       "notice": null,
       "blocks": [
         {
@@ -237,6 +237,10 @@
             {
               "kind": "speech",
               "text": "So it means, quite literally, \"in addition to more.\" Spanish built its heaviest additive connector out of its lightest pieces."
+            },
+            {
+              "kind": "speech",
+              "text": "A is Latin ad, de is Latin de, and más is Latin magis, \"more\"."
             }
           ]
         },
@@ -331,7 +335,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:779650b4b448159d",
+      "sourceHash": "fnv1a64:8417a7377161115f",
       "notice": null,
       "blocks": [
         {
@@ -487,7 +491,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8cd4b7550c395f4",
+      "sourceHash": "fnv1a64:e26c85f68f49ece3",
       "notice": null,
       "blocks": [
         {
@@ -544,7 +548,7 @@
             },
             {
               "kind": "speech",
-              "text": "Cual is Latin qualis, \"of what kind\" — English quality and the -al of equal. The neuter lo in front is what widens its target: not a noun, but everything just said."
+              "text": "Cual is Latin qualis, \"of what kind\" — English quality. The neuter lo in front is what widens its target: not a noun, but everything just said."
             },
             {
               "kind": "speech",

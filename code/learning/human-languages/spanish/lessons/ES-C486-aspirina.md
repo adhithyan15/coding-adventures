@@ -11,6 +11,7 @@ concept_tag: ES-REF-ASPIRINA
 prerequisites: [ES-C486-toser, ES-C486-respirar]
 sounds: []
 roots: []
+etymology_hook: "aspirina ← German Aspirin, a 1899 Bayer brand: a- 'acetyl' + spir- from Spiraea, meadowsweet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C486-respirar]
 > Tómate una aspirina con agua.
 >
 > *Take an aspirin with water.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aspirina** ← German *Aspirin*, a brand name coined by the Bayer company in 1899: *a-* for acetyl, *-spir-* for *Spiraea*, the meadowsweet plant, and the chemists' ending *-in*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

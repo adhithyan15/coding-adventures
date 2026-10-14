@@ -4,7 +4,7 @@
   "chapter": 275,
   "title": "Fine Shades --- Four Differences a Translation Loses",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0df060b86b50f247",
+  "sourceHash": "fnv1a64:478ae158d5be5fd0",
   "lessons": [
     {
       "id": "ES-C275-deber-de",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c06a778b467957e",
+      "sourceHash": "fnv1a64:af99d66b386d641d",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +179,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f440a73b21da936",
+      "sourceHash": "fnv1a64:34e7a473a7a6aa98",
       "notice": null,
       "blocks": [
         {
@@ -339,7 +339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e10abd492dc25c51",
+      "sourceHash": "fnv1a64:0e58e8e87a84c000",
       "notice": null,
       "blocks": [
         {
@@ -495,7 +495,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40d35042b60a83e5",
+      "sourceHash": "fnv1a64:c746b0753a05e8fe",
       "notice": null,
       "blocks": [
         {

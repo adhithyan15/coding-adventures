@@ -10,7 +10,8 @@ gloss: "to share"
 concept_tag: ES-VERB-COMPARTIR
 prerequisites: [ES-C499-anadir, ES-C499-apetecer]
 sounds: []
-roots: []
+roots: [partem-latin]
+etymology_hook: "compartir ← Late Latin compartiri 'to share out', built on pars 'a part' — English part"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C499-apetecer]
 > Compartimos una pizza.
 >
 > *We share a pizza.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**compartir** ← Late Latin *compartiri*, "to share out" (EtymDB 2.1): *con-* and *partiri*, "to divide", built on *pars*, "a part".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

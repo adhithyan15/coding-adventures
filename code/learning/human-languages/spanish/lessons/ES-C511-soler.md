@@ -10,7 +10,8 @@ gloss: "to usually do"
 concept_tag: ES-VERB-SOLER
 prerequisites: [ES-C511-tratar, ES-C511-realizar]
 sounds: []
-roots: []
+roots: [solere-latin]
+etymology_hook: "soler ← Latin solere 'to be accustomed' — inherited: suele has the ue of a stressed o"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C511-realizar]
 > *I usually have dinner at nine.*
 
 Always followed by an infinitive. The o breaks into ue: *suelo*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soler** ← Latin *solere*, "to be in the habit of" (EtymDB 2.1) — inherited: the stressed *o* opens into *ue* in *suele*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

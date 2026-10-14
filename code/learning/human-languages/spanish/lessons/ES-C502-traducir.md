@@ -10,7 +10,8 @@ gloss: "to translate"
 concept_tag: ES-VERB-TRADUCIR
 prerequisites: [ES-C502-charlar, ES-C502-chiste]
 sounds: []
-roots: []
+roots: [ducere-latin]
+etymology_hook: "traducir ← Latin traducere 'to lead across': trans + ducere — English traduce"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C502-chiste]
 > *Can you translate this message for me?*
 
 It takes *zc* in the first person present: *traduzco*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**traducir** ← Latin *traducere*, "to lead across" (EtymDB 2.1): *trans*, "across", and *ducere*, "to lead". A translation carries words across into another language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

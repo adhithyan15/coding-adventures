@@ -11,6 +11,7 @@ concept_tag: ES-REF-CURRICULUM
 prerequisites: [ES-C434-cargador, ES-C394-trabajo]
 sounds: []
 roots: []
+etymology_hook: "currículum ← Latin curriculum 'a running', from currere 'to run' — kept whole"
 duration:
   max_seconds: 245
 requires:

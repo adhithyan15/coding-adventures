@@ -10,7 +10,8 @@ gloss: "to communicate, to inform"
 concept_tag: ES-VERB-COMUNICAR
 prerequisites: [ES-C479-sustituir, ES-C480-afirmar]
 sounds: []
-roots: []
+roots: [communis-latin]
+etymology_hook: "comunicar ← Latin communicare 'to share', from communis 'common' — English communicate"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C480-afirmar]
 > *We inform you that your order has arrived.*
 
 In Spain, *está comunicando* on the phone means the line is busy; elsewhere people say *está ocupado*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**comunicar** ← Latin *communicare*, "to share, to make common" (EtymDB 2.1), from *communis*, "common" — a learned borrowing: the *-c-* between vowels did not become *-g-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

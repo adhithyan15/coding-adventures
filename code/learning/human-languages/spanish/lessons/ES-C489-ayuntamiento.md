@@ -10,7 +10,8 @@ gloss: "the town hall, the city council"
 concept_tag: ES-REF-AYUNTAMIENTO
 prerequisites: [ES-C489-atasco, ES-C489-gasolina]
 sounds: []
-roots: []
+roots: [iungere-latin]
+etymology_hook: "ayuntamiento — first 'a meeting', from old ayuntar 'to join', Latin adiunctus 'joined'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C489-gasolina]
 > El ayuntamiento abre a las nueve.
 >
 > *The town hall opens at nine.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ayuntamiento** first meant a joining, a meeting: it is built on the old verb *ayuntar*, "to join", from Latin *adiunctus*, "joined to", a relative of *junto*, "together". The council is the meeting.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

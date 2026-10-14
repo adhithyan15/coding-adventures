@@ -6,12 +6,12 @@ sequence: 5210
 chapter: 321
 type: word
 headword: el consejo
-gloss: advice, and also a council — Latin consilium; English counsel and council are the same word that stopped being one
+gloss: advice, and also a council — Latin consilium; English counsel is the same word, and council a look-alike from concilium
 concept_tag: ES-COURT-ADVICE
 prerequisites: [ES-C321-paciencia]
 sounds: [j-jota, vowel-e]
 roots: [consilium-latin]
-etymology_hook: "consejo is Latin consilium, a sitting-together to decide -- English counsel and council are that one word split in two, and the -lium went to a jota by the same road that took allium to ajo"
+etymology_hook: "consejo ← Latin consilium 'a considering together' — English counsel; -lium became jota, as in ajo"
 duration:
   max_seconds: 240
 requires:
@@ -52,14 +52,15 @@ reviews_of: [ES-C321-paciencia, ES-C297-ajo]
 
 **el consejo** — "advice." And also "a council."
 
-Latin **consilium** was a sitting-together to decide: both the deliberation and
-the body of people doing it. Spanish kept the pair. *Un consejo* is a piece of
+Latin **consilium** was a considering-together (Lewis & Short): both the
+deliberation and the body of people doing it. Spanish kept the pair. *Un consejo* is a piece of
 advice; *el consejo* can be the board that meets. Advice, in Spanish, still
 sounds faintly like a committee.
 
-English split them and then mixed them up. **Counsel** is the advising —
-*counsel for the defence*. A **council** is the body. Two spellings, one Latin
-word, and speakers have been confusing them ever since.
+English has two look-alikes. **Counsel**, the advising — *counsel for the
+defence* — is *consilium*. A **council**, the body, is a different Latin word,
+*concilium*, a calling-together, and speakers have been confusing the two ever
+since.
 
 Now the ending, because you have walked this road once. *Allium* became *ajo*:
 the *-lium* collapsed into a jota. **Consilium** did the same thing —
@@ -72,7 +73,7 @@ Spanish pulled it back into the throat.
 Ten courtesy words. The first five name what politeness handles: the good turn,
 the weight, the cost, the token drawn and the fault. These five name what you
 offer back: the pleasure, the reckoning, the second look, the undergoing, and
-the sitting-down-together.
+the considering-together.
 
 Not one of them is a set phrase. Each is a thing you can put where you need it.
 

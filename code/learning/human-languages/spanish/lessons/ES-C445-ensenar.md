@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ENSENAR
 prerequisites: [ES-C445-exigente, ES-C396-aprender, ES-C358-clase]
 sounds: [enye, stress-final]
 roots: [signum-latin]
+etymology_hook: "enseñar ← Latin insignare 'to put a mark in', from signum 'a sign' — English ensign"
 duration:
   max_seconds: 280
 requires:

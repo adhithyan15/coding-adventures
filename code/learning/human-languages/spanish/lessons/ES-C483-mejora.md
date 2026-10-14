@@ -10,7 +10,8 @@ gloss: "the improvement"
 concept_tag: ES-REF-MEJORA
 prerequisites: [ES-C483-costumbre, ES-C483-finalidad]
 sounds: []
-roots: []
+roots: [melior-latin]
+etymology_hook: "mejora — from mejorar, built on mejor 'better', Latin melior: the -li- became j"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C483-finalidad]
 > *You can see the improvement in the marks.*
 
 The noun of *mejorar*, to improve.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mejora** is the noun of *mejorar*, "to improve", built on *mejor*, "better", from Latin *melior* — inherited: the *-li-* became *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

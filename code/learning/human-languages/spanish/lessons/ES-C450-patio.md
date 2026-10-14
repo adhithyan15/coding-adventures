@@ -11,6 +11,7 @@ concept_tag: ES-GROUND-PATIO
 prerequisites: [ES-C449-sintesis-taller, ES-C354-jardin, ES-C302-calle]
 sounds: [diphthong-io, t-dental, stress-penultimate]
 roots: []
+etymology_hook: "patio — origin unresolved: Occitan pati 'waste ground', or Latin patere 'to lie open'"
 duration:
   max_seconds: 270
 requires:

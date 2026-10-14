@@ -4,7 +4,7 @@
   "chapter": 251,
   "title": "Ahí, Allí --- The Other Two Places",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:395163d3a481d446",
+  "sourceHash": "fnv1a64:50af54e22890474a",
   "lessons": [
     {
       "id": "ES-C65-ahi-alli",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:325897e8d77e4f53",
+      "sourceHash": "fnv1a64:f03e35f156d5efee",
       "notice": null,
       "blocks": [
         {
@@ -103,6 +103,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "allí is Latin illic, \"in that place\" (Lewis & Short), with a- on the front. ahí is usually explained as a- and the old Spanish hi, \"there\", from Latin ibi — the same old word for \"there\" that sits in hay."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -139,7 +150,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -232,7 +243,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -10,7 +10,8 @@ gloss: "to breathe"
 concept_tag: ES-VERB-RESPIRAR
 prerequisites: [ES-C486-afeitarse, ES-C486-toser]
 sounds: []
-roots: []
+roots: [spirare-latin]
+etymology_hook: "respirar ← Latin respirare: re- + spirare 'to breathe' — English respiration, spirit"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C486-toser]
 > Respire hondo, por favor.
 >
 > *Breathe deeply, please.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**respirar** ← Latin *respirare*, "to breathe out, to breathe again" (EtymDB 2.1): *re-* and *spirare*, "to breathe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

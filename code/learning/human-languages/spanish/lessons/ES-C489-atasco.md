@@ -11,6 +11,7 @@ concept_tag: ES-REF-ATASCO
 prerequisites: [ES-C488-saludar, ES-C489-aparcar]
 sounds: []
 roots: []
+etymology_hook: "atasco — from atascar 'to clog', usually a- + tasco 'coarse tow', once used to plug gaps"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C489-aparcar]
 > *There is a traffic jam at the entrance to the city.*
 
 In much of Latin America people say *el embotellamiento* or *el tráfico*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**atasco** is the noun of *atascar*, "to block, to clog", usually explained as *a-* and *tasco*, the coarse fibre left from beating flax or hemp, once used to plug gaps; where *tasco* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

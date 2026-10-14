@@ -10,7 +10,8 @@ gloss: "the receipt"
 concept_tag: ES-REF-RECIBO
 prerequisites: [ES-C490-huelga, ES-C490-negocio]
 sounds: []
-roots: []
+roots: [recipere-latin]
+etymology_hook: "recibo — noun of recibir 'to receive', Latin recipere: the -p- became -b- — English receipt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C490-negocio]
 > Guarde el recibo para cambiar el producto.
 >
 > *Keep the receipt to exchange the item.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recibo** is the noun of *recibir*, "to receive", from Latin *recipere*, "to take back" — inherited: the *-p-* became *-b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

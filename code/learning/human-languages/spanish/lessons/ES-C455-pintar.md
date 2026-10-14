@@ -11,6 +11,7 @@ concept_tag: ES-VERB-PINTAR
 prerequisites: [ES-C454-sintesis-corte, ES-C33-verde, ES-C449-arreglar]
 sounds: [nasal-n, t-dental, stress-final]
 roots: [pingere-latin]
+etymology_hook: "pintar — from Latin pingere 'to paint, to embroider' — English paint, picture"
 duration:
   max_seconds: 270
 requires:
@@ -82,7 +83,8 @@ surface.
 So painting and needlework were one verb in Latin, because both put a design
 onto cloth. The relatives come off the painting side: English **picture**,
 **pigment**, **paint** and **pictorial**, and Spanish **pintoresco** —
-worth-painting — which English borrowed through French as **picturesque**.
+worth-painting — whose English partner, **picturesque**, came from Italian
+through French.
 
 The Latin participle *pictus* is where the harder consonants survived:
 Spanish kept the soft, spoken *pintar* and borrowed the bookish *pictórico*

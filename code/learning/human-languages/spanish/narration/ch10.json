@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "The Written Accent",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:06130b946ce85324",
+  "sourceHash": "fnv1a64:f4cdf88aceaebffa",
   "lessons": [
     {
       "id": "ES-W01-acento",
@@ -156,7 +156,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:76337bd27b8b94e5",
+      "sourceHash": "fnv1a64:5a62ae90e908358c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -214,6 +214,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "él, \"he\", is Latin ille, \"that one\" — the same Latin word that gave the article el. The two were once one word; the accent is a much later spelling mark that tells them apart on the page."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +264,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

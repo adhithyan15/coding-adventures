@@ -11,6 +11,7 @@ concept_tag: ES-VERB-CONCERTAR
 prerequisites: [ES-C442-envio, ES-C356-cita, ES-C413-concierto, ES-C29-la-hora]
 sounds: [soft-c, stress-final]
 roots: [concertare-latin]
+etymology_hook: "concertar ← Latin concertare 'to contend', the same word as concierto"
 duration:
   max_seconds: 280
 requires:

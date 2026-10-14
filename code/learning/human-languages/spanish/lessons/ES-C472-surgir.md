@@ -11,6 +11,7 @@ concept_tag: ES-VERB-SURGIR
 prerequisites: [ES-C472-encuesta, ES-C471-sintesis-curso, ES-C353-biblioteca]
 sounds: [j-jota, r-tap, stress-final]
 roots: [surgere-latin]
+etymology_hook: "surgir ← Latin surgere 'to rise', from sub- + regere — English surge, insurgent"
 duration:
   max_seconds: 270
 requires:

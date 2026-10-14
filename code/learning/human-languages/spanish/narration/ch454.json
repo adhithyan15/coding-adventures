@@ -4,7 +4,7 @@
   "chapter": 454,
   "title": "La vía cortada",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:2a16b34377bd1093",
+  "sourceHash": "fnv1a64:27f6a47489435732",
   "lessons": [
     {
       "id": "ES-C454-obra",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abb3e18f0d30c83a",
+      "sourceHash": "fnv1a64:c9a66448e4aebcb8",
       "notice": null,
       "blocks": [
         {
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eaca2f47767263a7",
+      "sourceHash": "fnv1a64:41b8dccbfdd8b479",
       "notice": null,
       "blocks": [
         {
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d618bf10e52c335",
+      "sourceHash": "fnv1a64:1f63ccc65072d3b4",
       "notice": null,
       "blocks": [
         {
@@ -531,7 +531,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1101e27d3effd16a",
+      "sourceHash": "fnv1a64:434e28911e6579b3",
       "notice": null,
       "blocks": [
         {

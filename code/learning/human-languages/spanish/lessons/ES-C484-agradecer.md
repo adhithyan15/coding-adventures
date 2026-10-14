@@ -10,7 +10,8 @@ gloss: "to thank for, to be grateful for"
 concept_tag: ES-VERB-AGRADECER
 prerequisites: [ES-C484-aprovechar, ES-C484-apoyar]
 sounds: []
-roots: []
+roots: [gratus]
+etymology_hook: "agradecer — a- + old gradecer, built on grado 'goodwill', Latin gratum 'pleasing' — English grateful"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C484-apoyar]
 > *I am grateful for your help.*
 
 It takes a *z* in the first person present: *agradezco*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**agradecer** is *a-* and the old verb *gradecer*, "to thank", built on *grado*, "goodwill", from Latin *gratum*, "pleasing" — the *grado* of *de buen grado*, "willingly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

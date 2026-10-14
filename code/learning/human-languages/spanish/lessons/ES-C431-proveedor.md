@@ -11,6 +11,7 @@ concept_tag: ES-REF-PROVEEDOR
 prerequisites: [ES-C431-retraso, ES-C311-tienda]
 sounds: []
 roots: []
+etymology_hook: "proveedor — proveer 'to provide' + -dor, the ending that makes a doer"
 duration:
   max_seconds: 225
 requires:
@@ -59,6 +60,8 @@ regular and it turns verbs you already hold into people and machines:
 
 Once you notice **-dor**, a long unfamiliar noun often decomposes into a verb
 you know plus *the one who does it*. That is a reading strategy, not a word.
+
+*Proveer* is Latin *providere*, "to see ahead, to provide", worn down in speech.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C431-PEDIDO-04, ES-LEX-C431-PEDIDO-03] -->

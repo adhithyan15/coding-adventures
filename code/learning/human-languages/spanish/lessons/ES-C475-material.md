@@ -10,7 +10,8 @@ gloss: "the material, the equipment"
 concept_tag: ES-REF-MATERIAL
 prerequisites: [ES-C475-iniciativa, ES-C475-titulo]
 sounds: []
-roots: []
+roots: [materia-latin]
+etymology_hook: "material ← Late Latin materialis, from materia 'stuff' — the learned twin of madera 'wood'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C475-titulo]
 > *The company provides the equipment.*
 
 *El material escolar* — school supplies.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**material** ← Late Latin *materialis*, "of matter" (Lewis & Short), from *materia*, "stuff, timber" — a learned word. *La madera*, "wood", is the same *materia* worn down in speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

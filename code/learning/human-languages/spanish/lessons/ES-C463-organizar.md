@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ORGANIZAR
 prerequisites: [ES-C462-sintesis-jefe, ES-C349-agenda, ES-C457-encargar]
 sounds: [g-hard, z-as-th-or-s, stress-final]
 roots: [organon-greek, organum-latin]
+etymology_hook: "organizar — from órgano, Greek organon 'a tool', from ergon 'work' — English organise"
 duration:
   max_seconds: 275
 requires:

@@ -10,7 +10,8 @@ gloss: "acceptable"
 concept_tag: ES-REF-ACEPTABLE
 prerequisites: [ES-C508-conocido, ES-C508-actual]
 sounds: []
-roots: []
+roots: [capere-latin]
+etymology_hook: "aceptable ← Latin acceptabilis, from acceptare 'to receive', built on capere 'to take'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C508-actual]
 > El resultado es aceptable.
 >
 > *The result is acceptable.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aceptable** ← Latin *acceptabilis*, "acceptable" (EtymDB 2.1), from *acceptare*, "to receive", built on *capere*, "to take". A learned word: the *-pt-* was kept, where *septem* became *siete*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

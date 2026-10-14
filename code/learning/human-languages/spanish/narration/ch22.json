@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Espanol, and Your First Built Sentence",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fd716df1951a00d7",
+  "sourceHash": "fnv1a64:3691943af2f6aee3",
   "lessons": [
     {
       "id": "ES-C06-espanol",
@@ -134,7 +134,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9afec1ea9dfee22f",
+      "sourceHash": "fnv1a64:9347fa335b9c9125",
       "notice": null,
       "blocks": [
         {
@@ -191,6 +191,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hablo español is two words you have taken apart: hablo is hablar, Latin fabulari, \"to chat\", its f- turned to h-; español was built on Hispania, the Roman name for the peninsula."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: languages go bare",
           "segments": [
@@ -205,7 +216,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -245,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -264,7 +275,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -10,7 +10,8 @@ gloss: "to sign up, to enrol"
 concept_tag: ES-VERB-INSCRIBIRSE
 prerequisites: [ES-C478-espacio, ES-C478-disponible]
 sounds: []
-roots: []
+roots: [scribere-latin]
+etymology_hook: "inscribirse ← Latin inscribere 'to write on': in- + scribere 'to write' — English inscribe"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C478-disponible]
 > *I am signing up for the cooking class.*
 
 *La inscripción* is the registration.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**inscribir** ← Latin *inscribere*, "to write on" (EtymDB 2.1): *in-*, "on", and *scribere*, "to write" — a learned word beside the inherited *escribir*, "to write". To sign up is to write your name in.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

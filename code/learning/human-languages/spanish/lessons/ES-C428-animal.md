@@ -11,6 +11,7 @@ concept_tag: ES-THING-ANIMAL
 prerequisites: [ES-C428-salud-brindis]
 sounds: [l-clear, stress-final]
 roots: [anima-latin]
+etymology_hook: "animal ← Latin animal, from anima 'breath, soul' — English animate, unanimous"
 duration:
   max_seconds: 240
 requires:

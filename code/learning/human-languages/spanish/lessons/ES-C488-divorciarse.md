@@ -10,7 +10,8 @@ gloss: "to get divorced"
 concept_tag: ES-VERB-DIVORCIARSE
 prerequisites: [ES-C487-divertirse, ES-C488-casarse]
 sounds: []
-roots: []
+roots: [divertere-latin]
+etymology_hook: "divorciarse — from divorcio, Latin divortium 'a separation', from divertere — kin to divertirse"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C488-casarse]
 > Mis tíos se divorciaron hace años.
 >
 > *My aunt and uncle got divorced years ago.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**divorciarse** is built on *divorcio*, "divorce", Latin *divortium*, "a separation" (Lewis & Short), from *divertere*, "to turn different ways" — the verb behind *divertirse*, "to have fun". *Divorcio* is learned: its *-ti-* became *-ci-*, not the *z* of speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

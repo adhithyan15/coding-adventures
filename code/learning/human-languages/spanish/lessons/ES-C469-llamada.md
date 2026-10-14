@@ -11,6 +11,7 @@ concept_tag: ES-ASK-LLAMADA
 prerequisites: [ES-C469-conectar, ES-C431-devolver, ES-C431-pedido]
 sounds: [ll-y, stress-penultimate]
 roots: [clamare]
+etymology_hook: "llamada — from llamar, Latin clamare 'to cry out': a crying-out"
 duration:
   max_seconds: 270
 requires:

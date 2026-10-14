@@ -10,7 +10,8 @@ gloss: "to interrupt"
 concept_tag: ES-VERB-INTERRUMPIR
 prerequisites: [ES-C480-afirmar, ES-C480-comunicar]
 sounds: []
-roots: []
+roots: [rumpere-latin]
+etymology_hook: "interrumpir ← Latin interrumpere 'to break off': inter + rumpere — kin to romper, English interrupt"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C480-comunicar]
 > *Sorry to interrupt you.*
 
 *Sin interrumpir* — without interrupting.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interrumpir** ← Latin *interrumpere*, "to break off, to break apart" (EtymDB 2.1): *inter*, "between", and *rumpere*, "to break" — a learned word; *romper*, "to break", is the inherited one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

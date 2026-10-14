@@ -11,6 +11,7 @@ concept_tag: ES-ROOM-CLARO
 prerequisites: [ES-C455-dormitorio, ES-C272-si-claro, ES-C33-verde]
 sounds: [l-clear, r-tap, stress-penultimate]
 roots: [clarus]
+etymology_hook: "claro ← Latin clarus 'bright, clear' — the claro of sí, claro; English clear"
 duration:
   max_seconds: 280
 requires:

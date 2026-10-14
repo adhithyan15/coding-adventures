@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ENCARGAR
 prerequisites: [ES-C457-medicamento, ES-C456-cargo, ES-C431-pedido]
 sounds: [g-hard, rolled-rr, stress-final]
 roots: [carrus-latin]
+etymology_hook: "encargar — en- + cargar 'to load', Latin carricare: to load a task onto someone"
 duration:
   max_seconds: 275
 requires:

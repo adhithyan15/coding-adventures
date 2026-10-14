@@ -263,6 +263,14 @@
       "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done\nclassDef urgent stroke:#dc2626,stroke-width:4px,stroke-dasharray:8 3,color:#991b1b\nclass submit urgent\nstyle release stroke:#059669,stroke-width:5px,stroke-dasharray:2 2,color:#065f46"
     },
     {
+      "name": "positional-link-styles",
+      "source": "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\nend\na --> b\nb --> c\nc --> d\nlinkStyle default stroke:#64748b,stroke-width:2px\nlinkStyle 0, 2 stroke:#dc2626,stroke-width:5px,stroke-dasharray:7 3,color:#991b1b;"
+    },
+    {
+      "name": "positional-link-curves",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst --> fourth\nsecond --> third\nlinkStyle default interpolate basis\nlinkStyle 1 interpolate stepBefore;"
+    },
+    {
       "name": "edge-animation-config",
       "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done\nsubmit@{ animate: true, animation: fast }\nrelease@{ animation: slow }"
     },

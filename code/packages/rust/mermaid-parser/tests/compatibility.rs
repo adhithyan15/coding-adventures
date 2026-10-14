@@ -2296,6 +2296,36 @@ fn swimlane_edge_classes_and_styles_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_positional_link_styles_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\nend\na --> b\nb --> c\nc --> d\nlinkStyle default stroke:#64748b,stroke-width:2px\nlinkStyle 0, 2 stroke:#dc2626,stroke-width:5px,stroke-dasharray:7 3,color:#991b1b;",
+    ).expect("positional link styles should parse");
+
+    assert_eq!(diagram.edges[0].style.stroke.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.edges[1].style.stroke.as_deref(), Some("#64748b"));
+    assert_eq!(diagram.edges[2].style.stroke.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.edges[0].style.stroke_width, Some(5.0));
+    assert_eq!(diagram.edges[1].style.stroke_width, Some(2.0));
+    assert_eq!(diagram.edges[2].style.stroke_dash.as_deref(), Some([7.0, 3.0].as_slice()));
+    assert_eq!(diagram.edges[2].style.text_color.as_deref(), Some("#991b1b"));
+}
+
+#[test]
+fn swimlane_positional_link_curves_lower_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst --> fourth\nsecond --> third\nlinkStyle default interpolate basis\nlinkStyle 1 interpolate stepBefore;",
+    ).expect("positional link curves should parse");
+
+    assert_eq!(diagram.edges[0].curve, Some(SwimlaneEdgeCurve::Basis));
+    assert_eq!(diagram.edges[1].curve, Some(SwimlaneEdgeCurve::StepBefore));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph A\n  one[One]\n  two[Two]\nend\none --> two\nlinkStyle 0 interpolate imaginary"
+    ).is_err());
+}
+
+#[test]
 fn swimlane_edge_animation_config_lowers_to_semantic_ir() {
     use diagram_ir::SwimlaneEdgeAnimation;
 

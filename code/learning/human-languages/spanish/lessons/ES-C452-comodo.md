@@ -11,6 +11,7 @@ concept_tag: ES-TRADE-COMODO
 prerequisites: [ES-C452-seguimiento, ES-C331-modo, ES-C448-duro]
 sounds: [written-accent, stress-antepenultimate]
 roots: [modus-latin]
+etymology_hook: "cómodo ← Latin commodus 'with measure': com- + modus — English accommodate"
 duration:
   max_seconds: 275
 requires:

@@ -10,7 +10,8 @@ gloss: "the strike"
 concept_tag: ES-REF-HUELGA
 prerequisites: [ES-C490-sueldo, ES-C490-entrevista]
 sounds: []
-roots: []
+roots: [follis-latin]
+etymology_hook: "huelga — from holgar 'to rest', Late Latin follicare 'to pant', built on follis 'bellows'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C490-entrevista]
 > *Tomorrow there is a train strike.*
 
 *Estar en huelga* — to be on strike.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**huelga** is the noun of *holgar*, "to rest, to be idle" (EtymDB 2.1), from Late Latin *follicare*, "to puff, to pant", built on *follis*, "bellows" — inherited: *f-* became *h-* and the stressed *o* opened into *ue*. A strike is a stopping of work.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

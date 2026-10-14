@@ -10,7 +10,8 @@ gloss: "to promise"
 concept_tag: ES-VERB-PROMETER
 prerequisites: [ES-C480-comunicar, ES-C480-interrumpir]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "prometer ← Latin promittere 'to send forward, to promise' — kin to meter, English promise"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C480-interrumpir]
 > *I promise you I will be back soon.*
 
 *La promesa* is the promise.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prometer** ← Latin *promittere*, "to send forward; to promise" (EtymDB 2.1) — inherited, through Old Spanish *prometer*: the short *i* became *e*, as in *meter*, "to put", from *mittere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

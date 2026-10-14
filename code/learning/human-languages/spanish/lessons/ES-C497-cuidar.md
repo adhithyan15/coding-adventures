@@ -10,7 +10,8 @@ gloss: "to look after, to take care of"
 concept_tag: ES-VERB-CUIDAR
 prerequisites: [ES-C497-fallecer, ES-C497-heredar]
 sounds: []
-roots: []
+roots: [cogitare-latin]
+etymology_hook: "cuidar ← Latin cogitare 'to think', through Old Spanish coidar: to care was to think of"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C497-heredar]
 > *I look after my little brother.*
 
 The verb behind *el cuidado*, care.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cuidar** ← Latin *cogitare*, "to think" (EtymDB 2.1), through Old Spanish *coidar*, "to think, to be concerned" — inherited. Caring for someone began as thinking about them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

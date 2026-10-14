@@ -10,7 +10,8 @@ gloss: "to recycle"
 concept_tag: ES-VERB-RECICLAR
 prerequisites: [ES-C503-presion, ES-C503-paciente]
 sounds: []
-roots: []
+roots: [cyclus-latin]
+etymology_hook: "reciclar — re- + ciclo 'cycle' + -ar, like English recycle; ciclo is Greek kyklos 'wheel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C503-paciente]
 > Reciclamos el papel y el vidrio.
 >
 > *We recycle paper and glass.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reciclar** is *re-*, *ciclo*, "a cycle", and *-ar*: to send round again, built like English *recycle*. *Ciclo* is Latin *cyclus*, from Greek *kyklos*, "a circle, a wheel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,7 +10,8 @@ gloss: "to be glad"
 concept_tag: ES-VERB-ALEGRARSE
 prerequisites: [ES-C486-aspirina, ES-C486-vacuna]
 sounds: []
-roots: []
+roots: [alacer-latin]
+etymology_hook: "alegrarse — built on alegre 'cheerful', from Latin alacer 'lively' — English alacrity"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C486-vacuna]
 > *I am glad to see you.*
 
 It goes with *de*: *alegrarse de algo*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alegrarse** is built on *alegre*, "cheerful", from Latin *alacer*, "lively, brisk" (Lewis & Short), through a spoken form *\*alecris* — inherited: the *-c-* became *-g-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

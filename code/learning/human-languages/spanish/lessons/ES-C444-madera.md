@@ -11,6 +11,7 @@ concept_tag: ES-THING-MADERA
 prerequisites: [ES-C444-calefaccion, ES-C310-mesa, ES-C279-silla, ES-C278-arbol]
 sounds: [d-soft, stress-penultimate]
 roots: [materia-latin]
+etymology_hook: "madera ← Latin materia 'timber, stuff' — the worn-down twin of materia; English matter"
 duration:
   max_seconds: 280
 requires:
@@ -52,8 +53,9 @@ walk in is *el bosque* — three words where English stretches one.
 **madera** is Latin **māteria**, and *māteria* meant **timber** before it meant
 anything else.
 
-Behind it sits **māter**, mother. A tree's *māteria* was its trunk — the part
-that puts out the branches, the mothering stock. Only later did Roman
+Lewis & Short sets it beside **māter**, mother, and one explanation follows from
+that: a tree's *māteria* was its trunk — the part that puts out the branches,
+the mothering stock. Only later did Roman
 philosophers borrow the word for *the stuff a thing is made of* in general.
 
 So the abstract sense came **second**. Matter was named after wood, not the

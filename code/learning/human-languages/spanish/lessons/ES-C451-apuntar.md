@@ -11,6 +11,7 @@ concept_tag: ES-VERB-APUNTAR
 prerequisites: [ES-C451-cola, ES-C342-punto]
 sounds: [nasal-n, diphthong-ua, stress-final]
 roots: [pungere-latin]
+etymology_hook: "apuntar — a- + punto 'point', Latin punctum, from pungere 'to pierce'"
 duration:
   max_seconds: 275
 requires:

@@ -10,7 +10,8 @@ gloss: "to seem"
 concept_tag: ES-VERB-PARECER
 prerequisites: [ES-C510-odiar, ES-C510-sorprender]
 sounds: []
-roots: []
+roots: [apparere-latin]
+etymology_hook: "parecer ← spoken Latin *parescere, built on parere 'to appear' — English apparent"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C510-sorprender]
 > *It seems easy, but it is not.*
 
 *¿Qué te parece?* — what do you think? It takes a *z* in *parezco*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parecer** comes from spoken Latin *\*parescere*, built on *parere*, "to appear" (Lewis & Short), with the ending *-ecer*. You met its participle as *parecido*, "alike".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

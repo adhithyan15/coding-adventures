@@ -11,6 +11,7 @@ concept_tag: ES-VERB-SOLICITAR
 prerequisites: [ES-C460-herramienta, ES-C356-cita, ES-C458-entregar]
 sounds: [soft-c, s-clear, stress-final]
 roots: [citare-latin]
+etymology_hook: "solicitar ← Latin sollicitare 'to stir up entirely' — English solicitous, solicitude"
 duration:
   max_seconds: 275
 requires:

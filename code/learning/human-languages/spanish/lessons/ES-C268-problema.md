@@ -11,6 +11,7 @@ concept_tag: PROBLEM-REPORT
 prerequisites: [ES-C268-habitacion, ES-C267-no-verbo, ES-C267-no-nada, ES-C267-negar-preguntar]
 sounds: [vowel-a, vowel-e]
 roots: [problema-greek]
+etymology_hook: "problema ← Greek problēma 'a thing thrown forward': pro- + ballein 'to throw'"
 duration:
   max_seconds: 240
 requires:

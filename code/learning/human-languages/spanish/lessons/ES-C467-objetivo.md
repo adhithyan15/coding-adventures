@@ -11,6 +11,7 @@ concept_tag: ES-ASK-OBJETIVO
 prerequisites: [ES-C467-alimentar, ES-C345-objeto, ES-C453-rotativo]
 sounds: [stress-penultimate, v-b]
 roots: [iacere-latin]
+etymology_hook: "objetivo — objeto + -ivo; Latin ob- + iacere 'to throw' — English objective"
 duration:
   max_seconds: 275
 requires:

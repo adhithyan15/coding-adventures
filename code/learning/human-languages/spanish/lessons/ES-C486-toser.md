@@ -10,7 +10,8 @@ gloss: "to cough"
 concept_tag: ES-VERB-TOSER
 prerequisites: [ES-C485-basura, ES-C486-afeitarse]
 sounds: []
-roots: []
+roots: [tussis-latin]
+etymology_hook: "toser ← Latin tussire 'to cough', inherited — la tos 'cough' is Latin tussis"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C486-afeitarse]
 > *The child coughs a lot at night.*
 
 *La tos* is the cough.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**toser** ← Latin *tussire*, "to cough" (EtymDB 2.1) — inherited: the *u* became *o*. *La tos*, "the cough", is Latin *tussis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: SYNTHESIS-MULTI-SOURCE
 prerequisites: [ES-C277-es-decir]
 sounds: [vowel-e, vowel-o]
 roots: [latus]
+etymology_hook: "lado ← Latin latus 'side, flank' — English lateral, bilateral"
 duration:
   max_seconds: 240
 requires:

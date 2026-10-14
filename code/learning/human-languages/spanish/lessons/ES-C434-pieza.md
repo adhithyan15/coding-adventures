@@ -11,6 +11,7 @@ concept_tag: ES-REF-PIEZA
 prerequisites: [ES-C434-maquina]
 sounds: []
 roots: []
+etymology_hook: "pieza ← Gaulish *pettia 'a piece', taken into spoken Latin — English piece"
 duration:
   max_seconds: 225
 requires:
@@ -57,6 +58,9 @@ regions, and a **piece of music** almost everywhere.
 A word that covers several English words is not being vague. It is naming
 something English happens to split: *a discrete thing that belongs to a larger
 whole*. Hold that idea and all three uses follow from it.
+
+*Pieza* goes back to Gaulish *\*pettia*, "a piece", taken into spoken Latin —
+the same word as French *pièce* and English *piece*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C434-MAQ-03, ES-LEX-C434-MAQ-02] -->

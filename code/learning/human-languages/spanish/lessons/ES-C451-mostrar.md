@@ -11,6 +11,7 @@ concept_tag: ES-VERB-MOSTRAR
 prerequisites: [ES-C451-carne, ES-C16-ver, ES-C449-rueda]
 sounds: [diphthong-ue, s-t-cluster, stress-final]
 roots: [monstrare-latin]
+etymology_hook: "mostrar ← Latin monstrare 'to point out', from monstrum 'an omen' — English demonstrate"
 duration:
   max_seconds: 280
 requires:

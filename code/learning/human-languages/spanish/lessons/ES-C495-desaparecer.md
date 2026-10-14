@@ -10,7 +10,8 @@ gloss: "to disappear"
 concept_tag: ES-VERB-DESAPARECER
 prerequisites: [ES-C495-ocurrir, ES-C495-suceder]
 sounds: []
-roots: []
+roots: [apparere-latin]
+etymology_hook: "desaparecer — des- + aparecer 'to appear', built on Latin apparere — English disappear"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C495-suceder]
 > *A dog disappeared in the park.*
 
 It takes a *z* in the first person present: *desaparezco*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desaparecer** is *des-*, which undoes, and *aparecer*, "to appear", built on Latin *apparere*, "to come into view".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 454,
-  "sourceHash": "fnv1a64:2a16b34377bd1093",
+  "sourceHash": "fnv1a64:27f6a47489435732",
   "lessonIds": [
     "ES-C454-obra",
     "ES-C454-via",
@@ -15,6 +15,6 @@
   "text": "spanish/narration/ch454.txt",
   "json": "spanish/narration/ch454.json",
   "textHash": "fnv1a64:db71490bbb0411f3",
-  "jsonHash": "fnv1a64:3a43b8b1d9235f98",
+  "jsonHash": "fnv1a64:da11880a7e753a90",
   "findings": []
 }

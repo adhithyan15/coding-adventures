@@ -284,7 +284,18 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // and give Vasmer's usual account with his hedges.
   russian: { withoutHook: 0, withoutVisible: 0 },
   sanskrit: { withoutHook: 1200, withoutVisible: 1099 },
-  spanish: { withoutHook: 486, withoutVisible: 209 },
+  // spanish: 486 / 209 -> 0 / 0. 287 lessons with an origin in their body gained a hook that
+  // agrees with it, 199 gained a "taken apart" block and a hook (185 of them the generated
+  // wave ES-C475-profesional through ES-C511-soler), and the ten hook-only lessons gained a
+  // block or, for ES-C52-como-se-dice at 299 s, one origin sentence. Sources: EtymDB 2.1
+  // (Fourrier & Sagot 2020), CC BY-SA 4.0, checked row by row and relabelled by Spanish sound
+  // change, with Lewis & Short for Latin forms EtymDB lacks; Arabic loans name the Arabic word.
+  // 16 new ones say the origin is uncertain or only usually traced. 41 older passages that
+  // misreported an origin were corrected, and 22 blocks that never named one gained a sentence.
+  // A full review of all 497 then fixed loan routes (empresa, bailar, ruta), etyma (aceptar,
+  // opinión, portero, apoyar), hedges (andén, jubilar, copiar) and labels, and gave 26 more
+  // blocks that named only Spanish parts a sentence saying where the parts come from.
+  spanish: { withoutHook: 0, withoutVisible: 0 },
   // tamil: 1185 / 1144 -> 0 / 4. Every Tamil word lesson now has an etymology_hook, and all
   // but four have a "taken apart" block: native words cite the Dravidian Etymological
   // Dictionary (Burrow & Emeneau, DEDR) and Sanskrit loans cite Turner's CDIAL, both read
@@ -304,6 +315,54 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // sources by form and by gloss.
   telugu: { withoutHook: 0, withoutVisible: 0 },
   urdu: { withoutHook: 1123, withoutVisible: 1137 },
+};
+
+/**
+ * Empty etymology blocks per track (HL24 §9.4): AN EXACT PIN THAT MAY ONLY BE LOWERED.
+ *
+ * A word lesson counted visible above only because a "taken apart" block or
+ * an origin heading is there, while nothing in the lesson says where the word
+ * came from: the block takes apart a sentence, or lists the word's parts and
+ * stops. `hasEmptyEtymologyBlock` in src/etymology-coverage.ts; its loose
+ * origin signals, their measured rescues and their known misses are in the
+ * module comment.
+ *
+ * Disjoint from `withoutVisible` above: a lesson is in one count or the
+ * other, never both. Same ratchet, same two directions. A rise names the
+ * newest lessons; the fix is a sentence in the block saying where the word
+ * comes from (from a cited source, or "unknown"/"disputed" stated plainly),
+ * never a raised pin. A fall asks for the pin to be lowered with it.
+ *
+ * Measured when the pin was added: 475 of 25,682 word lessons, of 4,782
+ * whose visible etymology rested on structure alone with no rule-3 origin
+ * statement anywhere; the loose signals read 4,307 of those as origins.
+ * Spanish's etymology pass (#17455) landed before this pin and filled 40 of
+ * its 88, so the pins start at 435.
+ */
+const EMPTY_ETYMOLOGY_BLOCK_PINS: Readonly<Record<string, number>> = {
+  arabic: 19,
+  bengali: 3,
+  chinese: 43,
+  french: 66,
+  german: 43,
+  gujarati: 24,
+  hindi: 7,
+  italian: 7,
+  japanese: 2,
+  kannada: 8,
+  latin: 31,
+  malayalam: 6,
+  marathi: 5,
+  marwadi: 0,
+  persian: 2,
+  portuguese: 5,
+  punjabi: 31,
+  russian: 52,
+  sanskrit: 12,
+  spanish: 48,
+  tamil: 12,
+  telugu: 8,
+  urdu: 1,
 };
 
 /**
@@ -354,6 +413,38 @@ describe("the committed corpus", () => {
         expect(found.length, message).toBe(pinned);
       });
     }
+  }
+
+  it("pins empty etymology blocks for every track, and no track that is gone", () => {
+    expect(Object.keys(EMPTY_ETYMOLOGY_BLOCK_PINS).sort()).toEqual(
+      etymology.tracks.map((track) => track.language).sort(),
+    );
+  });
+
+  for (const [language, pinned] of Object.entries(EMPTY_ETYMOLOGY_BLOCK_PINS)) {
+    it(`holds ${language}'s word lessons with an empty etymology block at exactly ${pinned} (a pin that may only be lowered)`, () => {
+      const found = etymology.gaps.filter((gap) => gap.language === language && gap.emptyEtymologyBlock);
+      // The per-track count and the gap list are one measurement; if they
+      // ever disagree, the pin would be checking the wrong thing.
+      expect(found.length).toBe(
+        etymology.tracks.find((track) => track.language === language)?.wordLessonsWithEmptyEtymologyBlock,
+      );
+      const newest = [...found]
+        .sort((a, b) => b.position - a.position)
+        .slice(0, NEWEST_GAPS_SHOWN)
+        .map((gap) => gap.lessonId)
+        .join(", ");
+      const message =
+        found.length > pinned
+          ? `${language} has ${found.length} word lessons whose "taken apart" block or origin heading never ` +
+            `says where the word comes from, above its pin of ${pinned}. Say it in the block (HL24 §9.4) -- ` +
+            `from a cited source, or "unknown"/"disputed" stated plainly; never invented. Fix the lessons, ` +
+            `not the pin. Newest ${Math.min(found.length, NEWEST_GAPS_SHOWN)}, latest first: ${newest}`
+          : `${language} has ${found.length} word lessons with an empty etymology block, below its pin of ` +
+            `${pinned}. The pin may only fall: lower EMPTY_ETYMOLOGY_BLOCK_PINS.${language} to ` +
+            `${found.length} in this change.`;
+      expect(found.length, message).toBe(pinned);
+    });
   }
 
   it("uses the policy's configured minimum rather than a constant", () => {

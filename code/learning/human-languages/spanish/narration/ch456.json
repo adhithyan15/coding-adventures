@@ -4,7 +4,7 @@
   "chapter": 456,
   "title": "La cuenta",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:20706dedbc2c3ac2",
+  "sourceHash": "fnv1a64:7024c96685d42030",
   "lessons": [
     {
       "id": "ES-C456-ensalada",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a8879ba66221787",
+      "sourceHash": "fnv1a64:53873eb2023be08d",
       "notice": null,
       "blocks": [
         {
@@ -178,7 +178,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebda4e581d426a10",
+      "sourceHash": "fnv1a64:3f87a0b8c5e56bb9",
       "notice": null,
       "blocks": [
         {
@@ -336,7 +336,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0fbb0306e16c24f",
+      "sourceHash": "fnv1a64:06b50d9de03d9c05",
       "notice": null,
       "blocks": [
         {
@@ -418,7 +418,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin accipere: ad-, towards, plus capere, to take."
+              "text": "Latin acceptare, built on accipere: ad-, towards, plus capere, to take."
             },
             {
               "kind": "speech",
@@ -506,7 +506,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94aa5865a4ce7b92",
+      "sourceHash": "fnv1a64:f4b90047578a3198",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:affe9f25d7dc28dc",
+      "sourceHash": "fnv1a64:f9214e165eb1b630",
       "notice": {
         "modality": "sight",
         "needs": [

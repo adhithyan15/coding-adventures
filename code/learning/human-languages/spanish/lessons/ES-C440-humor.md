@@ -11,6 +11,7 @@ concept_tag: ES-STATE-HUMOR
 prerequisites: [ES-C440-disfrutar, ES-C438-reir, ES-C380-alegre]
 sounds: [silent-h, stress-final]
 roots: [humor-latin]
+etymology_hook: "humor ← Latin umor 'moisture, a fluid': a temperament was once a body fluid — English humid"
 duration:
   max_seconds: 280
 requires:

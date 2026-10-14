@@ -11,8 +11,9 @@ concept_tag: PRONOUN-YOU
 prerequisites: [ES-C03-me-llamo]
 sounds: [vowel-u, accent-mark, d-soft]
 roots: [tu-latin]
+etymology_hook: "tú ← Latin tu, a true cousin of English thou; usted takes its own lesson"
 duration:
-  max_seconds: 200
+  max_seconds: 253
 requires:
   knowledge: [ES-LEX-ME, ES-LEX-ME-LLAMO]
 introduces:
@@ -46,7 +47,7 @@ you are on easy terms with.
 > Root: Latin **tū**. This is a **true cousin** of English **thou** — the
 > word English used to have for exactly this job, the intimate "you"
 > (*thou/thee/thy*), before it faded out around 400 years ago. Both *tú* and
-> *thou* come straight from the same ancient root (*tu-*). So Spanish still
+> *thou* come straight from the same ancient root (*\*tu-*). So Spanish still
 > uses, every day, the pronoun English quietly retired.
 
 **usted** — "you," **formal**. For strangers, elders, officials, customers,

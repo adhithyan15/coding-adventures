@@ -11,6 +11,7 @@ concept_tag: ES-STOCK-SECCION
 prerequisites: [ES-C458-sintesis-plazo, ES-C439-cortar, ES-C452-almacen]
 sounds: [accent-acute, soft-c, k-hard, stress-final]
 roots: [secare-latin]
+etymology_hook: "sección ← Latin sectio 'a cutting', from secare 'to cut' — English section, insect"
 duration:
   max_seconds: 275
 requires:

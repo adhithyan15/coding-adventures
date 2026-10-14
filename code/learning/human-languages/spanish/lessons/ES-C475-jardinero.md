@@ -11,6 +11,7 @@ concept_tag: ES-REF-JARDINERO
 prerequisites: [ES-C475-titulo, ES-C475-material]
 sounds: []
 roots: []
+etymology_hook: "jardinero — jardín 'garden' + -ero; jardín is French jardin, of Germanic origin — English garden"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C475-material]
 > *The gardener comes on Tuesdays.*
 
 A woman who does the job is *la jardinera*; *el jardín* is the garden.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jardinero** is *jardín*, "a garden", with *-ero*, the ending for a person who works with a thing. *Jardín* came from French *jardin*, a word of Germanic origin for an enclosed plot.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

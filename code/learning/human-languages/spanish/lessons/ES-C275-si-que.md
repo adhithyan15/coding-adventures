@@ -11,6 +11,7 @@ concept_tag: EMPHASIS-DEVICE
 prerequisites: [ES-C275-cometer-un-error]
 sounds: [vowel-a, vowel-e]
 roots: [sic]
+etymology_hook: "sí ← Latin sic 'thus, so' — the sic of an English quotation"
 duration:
   max_seconds: 240
 requires:

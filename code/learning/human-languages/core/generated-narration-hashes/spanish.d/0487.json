@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 487,
-  "sourceHash": "fnv1a64:9303ea4e68fdeb9f",
+  "sourceHash": "fnv1a64:83e33eb4758f06ba",
   "lessonIds": [
     "ES-C487-alegrarse",
     "ES-C487-enfadarse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch487.txt",
   "json": "spanish/narration/ch487.json",
-  "textHash": "fnv1a64:a299b460c0744d4c",
-  "jsonHash": "fnv1a64:95d69f988185d004",
+  "textHash": "fnv1a64:0be7e3b79bb46246",
+  "jsonHash": "fnv1a64:0af2ce95e09a51d0",
   "findings": []
 }

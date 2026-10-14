@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 493,
-  "sourceHash": "fnv1a64:26ecb0fd2ebb6792",
+  "sourceHash": "fnv1a64:4d1f9483da1c9684",
   "lessonIds": [
     "ES-C493-opinar",
     "ES-C493-convencer",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "spanish/narration/ch493.txt",
   "json": "spanish/narration/ch493.json",
-  "textHash": "fnv1a64:155ef8926fd5bf40",
-  "jsonHash": "fnv1a64:f43bfade1e8570cd",
+  "textHash": "fnv1a64:2bcaba70131db444",
+  "jsonHash": "fnv1a64:f32070380fdbbf44",
   "findings": []
 }

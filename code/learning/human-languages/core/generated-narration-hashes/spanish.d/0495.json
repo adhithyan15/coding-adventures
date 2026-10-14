@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 495,
-  "sourceHash": "fnv1a64:d0a4c8960716ab71",
+  "sourceHash": "fnv1a64:6cadd043954543c4",
   "lessonIds": [
     "ES-C495-noticia",
     "ES-C495-ocurrir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch495.txt",
   "json": "spanish/narration/ch495.json",
-  "textHash": "fnv1a64:000d20e1d16b7280",
-  "jsonHash": "fnv1a64:e0eb66aab68e039a",
+  "textHash": "fnv1a64:ab7c75aab83f1e94",
+  "jsonHash": "fnv1a64:ae7b019ae8728e7e",
   "findings": []
 }

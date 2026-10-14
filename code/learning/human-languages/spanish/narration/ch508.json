@@ -4,7 +4,7 @@
   "chapter": 508,
   "title": "Cómo es",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f7c183de4964e993",
+  "sourceHash": "fnv1a64:8de8a3c784e1058f",
   "lessons": [
     {
       "id": "ES-C508-increible",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:932bcf3a637174c8",
+      "sourceHash": "fnv1a64:4309e2b0d8649b11",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "increíble from Latin incredibilis, \"not to be believed\" (EtymDB 2.1): in-, \"not\", and credibilis, from credere, \"to believe\" — the verb worn down in creer, \"to believe\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a801c777b8dee30b",
+      "sourceHash": "fnv1a64:ad008b18ceeb1fb4",
       "notice": null,
       "blocks": [
         {
@@ -183,6 +194,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "independiente is in-, \"not\", and dependiente, \"depending\", from depender, the verb of depende, built on Latin pendere, \"to hang\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -193,7 +215,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -242,7 +264,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -273,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0293172d999dba37",
+      "sourceHash": "fnv1a64:ef7a2097dddf2927",
       "notice": null,
       "blocks": [
         {
@@ -314,6 +336,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "conocido is the participle of conocer, \"to know\", from Latin cognoscere, \"to get to know\" — inherited: the g before n fell away."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -324,7 +357,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -373,7 +406,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -404,7 +437,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dcfe6b8265c3aec",
+      "sourceHash": "fnv1a64:fe7720154efbc2b1",
       "notice": null,
       "blocks": [
         {
@@ -445,6 +478,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "actual from Late Latin actualis, \"active, practical\" (EtymDB 2.1), from actus, \"a doing\" — a learned word. It means current, not English actual."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -455,7 +499,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -504,7 +548,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -535,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b269fb201aea479",
+      "sourceHash": "fnv1a64:cc7a0f78b67b326e",
       "notice": null,
       "blocks": [
         {
@@ -572,6 +616,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aceptable from Latin acceptabilis, \"acceptable\" (EtymDB 2.1), from acceptare, \"to receive\", built on capere, \"to take\". A learned word: the -pt- was kept, where septem became siete."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -582,7 +637,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -631,7 +686,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

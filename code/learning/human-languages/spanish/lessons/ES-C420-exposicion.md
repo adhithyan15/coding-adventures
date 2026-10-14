@@ -11,6 +11,7 @@ concept_tag: ES-WHERE-EXHIBITION
 prerequisites: [ES-C353-museo, ES-C420-teatro]
 sounds: [accent-acute, stress-final, ci-th-s]
 roots: [ponere-latin]
+etymology_hook: "exposición ← Latin expositio: ex- 'out' + ponere 'to place' — a putting-out"
 duration:
   max_seconds: 240
 requires:

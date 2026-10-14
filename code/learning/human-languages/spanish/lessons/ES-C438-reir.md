@@ -11,6 +11,7 @@ concept_tag: ES-VERB-REIR
 prerequisites: [ES-C438-descansar, ES-C315-risa]
 sounds: [written-accent, r-tap]
 roots: [ridere-latin]
+etymology_hook: "reír ← Latin ridere 'to laugh', in one piece — no re- prefix in it"
 duration:
   max_seconds: 275
 requires:

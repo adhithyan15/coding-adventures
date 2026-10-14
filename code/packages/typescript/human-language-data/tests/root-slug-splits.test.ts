@@ -335,10 +335,16 @@ describe("the live corpus", () => {
     // bare-vs-tagged entries wrapping a shape entry, and the shape entries are
     // what went away.
     //
+    // 82 -> 78. The Spanish etymology review read both sides of four pairs and
+    // moved the bare Spanish slugs onto the tagged spelling the corpus already
+    // used: dicere (ES-C277-es-decir), habitare (ES-C268-habitacion and the new
+    // ES-C507-habitante), merces (ES-C03-usted-origin) and sperare
+    // (ES-C269-espero). Each pair was the same Latin word.
+    //
     // THIS NUMBER MAY ONLY FALL.
     const baselineFile = loadRootSlugBaseline(defaultCurriculumRoot());
-    expect(baselineFile.splits).toHaveLength(82);
-    expect(findRootSlugSplits()).toHaveLength(82);
+    expect(baselineFile.splits).toHaveLength(78);
+    expect(findRootSlugSplits()).toHaveLength(78);
     expect(findRootSlugSplits().every((split) => split.kind === "bare-vs-tagged")).toBe(true);
   });
 });

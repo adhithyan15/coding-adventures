@@ -11,6 +11,7 @@ concept_tag: ES-VERB-DECIDIR
 prerequisites: [ES-C436-recoger, ES-C436-ofrecer]
 sounds: []
 roots: [caedere-latin]
+etymology_hook: "decidir ← Latin decidere: de- 'off' + caedere 'to cut' — kin to preciso, conciso"
 duration:
   max_seconds: 240
 requires:

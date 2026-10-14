@@ -10,7 +10,8 @@ gloss: "professional"
 concept_tag: ES-REF-PROFESIONAL
 prerequisites: [ES-C474-descontar, ES-C474-golpe]
 sounds: []
-roots: []
+roots: [profiteri-latin]
+etymology_hook: "profesional — profesión + -al; Latin professio, 'a public declaration' — English profession"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C474-golpe]
 > *We are looking for a professional team.*
 
 It is an adjective and a noun: *un profesional* is a professional, a person who does the job for a living.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**profesional** is built from *profesión*, "a profession", with *-al*. *Profesión* is Latin *professio*, "a public declaration" (Lewis & Short), from *profiteri*, "to declare openly": a profession was the work you declared. *Profesión* is learned: speech would have turned its *-ssi-* into *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-ASK-CUADERNO
 prerequisites: [ES-C464-sintesis-cita, ES-C451-carne, ES-C43-libro, ES-C301-papel]
 sounds: [diphthong-ua, stress-penultimate]
 roots: [quaternum-latin, quattuor-latin]
+etymology_hook: "cuaderno ← Latin quaternum 'a set of four' sheets — kin to carné, cuatro; English quire"
 duration:
   max_seconds: 270
 requires:

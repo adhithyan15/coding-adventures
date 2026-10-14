@@ -11,6 +11,7 @@ concept_tag: ES-REF-COMPANERO
 prerequisites: [ES-C435-jubilado, ES-C26-pan]
 sounds: [ny-palatal]
 roots: [panis-latin]
+etymology_hook: "compañero — com- 'with' + pan 'bread' + -ero: the one you share bread with"
 teaches_cells: []
 duration:
   max_seconds: 240
@@ -63,6 +64,9 @@ On its own, **mi compañero** is ambiguous between a work partner and a life
 partner, and Spanish speakers disambiguate with *de trabajo*, *de piso*, *de
 clase* when it matters. That ambiguity is not sloppiness; the word never
 promised more than *the one I share things with*.
+
+Its base is the old *compaña*, "company", spoken Latin *\*compania*: *com-* and
+*panis*, "bread".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C436-GENTE-01, ES-ETYMON-COMPANION-03] -->

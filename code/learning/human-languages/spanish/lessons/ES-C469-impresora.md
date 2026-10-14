@@ -11,6 +11,7 @@ concept_tag: ES-ASK-IMPRESORA
 prerequisites: [ES-C469-imprimir, ES-C432-lavadora, ES-C406-impreso]
 sounds: [stress-penultimate, r-tap]
 roots: [impressus-latin]
+etymology_hook: "impresora — from imprimir, Latin imprimere 'to press into': the printing machine"
 duration:
   max_seconds: 275
 requires:

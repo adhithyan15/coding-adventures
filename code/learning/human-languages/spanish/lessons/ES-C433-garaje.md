@@ -11,6 +11,7 @@ concept_tag: ES-REF-GARAJE
 prerequisites: [ES-C433-portera, ES-C363-coche]
 sounds: [palatal-j]
 roots: []
+etymology_hook: "garaje ← French garage, respelled with Spanish j"
 duration:
   max_seconds: 230
 requires:

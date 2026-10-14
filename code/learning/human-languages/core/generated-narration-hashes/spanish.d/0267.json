@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 267,
-  "sourceHash": "fnv1a64:1013e33352bc0172",
+  "sourceHash": "fnv1a64:5024f3398b604af2",
   "lessonIds": [
     "ES-C267-no-verbo",
     "ES-C267-no-nada",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch267.txt",
   "json": "spanish/narration/ch267.json",
-  "textHash": "fnv1a64:6bcfb9b1e58147b2",
-  "jsonHash": "fnv1a64:a354d60a71a0a8bf",
+  "textHash": "fnv1a64:5655e04c5e4c2c3e",
+  "jsonHash": "fnv1a64:cc6f3bb0b04b902b",
   "findings": []
 }
