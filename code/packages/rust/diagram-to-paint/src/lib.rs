@@ -1704,6 +1704,140 @@ fn swimlane_endpoint_marker(
     }
 }
 
+/// Count every new index traversal/refresh/eligibility/drop step in tests.
+/// Existing geometry-key lookup and rendering remain separate work.
+fn swimlane_hop_index_work() {
+    #[cfg(test)]
+    SWIMLANE_HOP_INDEX_WORK.with(|count| count.set(count.get().checked_add(1).expect("index work counter overflow")));
+}
+
+/// A private owned AVL tree: strict endpoint inversions are the only candidates
+/// on certified integer supports. Subtree extrema reject empty quadrants without
+/// walking every old geometry. Stable geometry IDs distinguish equal endpoints.
+struct SwimlaneHopEndpointNode {
+    key: (i64, usize),
+    second: i64,
+    height: usize,
+    min_first: i64,
+    max_first: i64,
+    min_second: i64,
+    max_second: i64,
+    left: Option<Box<Self>>,
+    right: Option<Box<Self>>,
+}
+
+impl Drop for SwimlaneHopEndpointNode {
+    fn drop(&mut self) { swimlane_hop_index_work(); }
+}
+
+impl SwimlaneHopEndpointNode {
+    fn height(node: &Option<Box<Self>>) -> usize { node.as_ref().map_or(0, |node| node.height) }
+
+    fn refresh(&mut self) {
+        swimlane_hop_index_work();
+        self.height = 1 + Self::height(&self.left).max(Self::height(&self.right));
+        self.min_first = self.key.0;
+        self.max_first = self.key.0;
+        self.min_second = self.second;
+        self.max_second = self.second;
+        for child in [&self.left, &self.right].into_iter().flatten() {
+            self.min_first = self.min_first.min(child.min_first);
+            self.max_first = self.max_first.max(child.max_first);
+            self.min_second = self.min_second.min(child.min_second);
+            self.max_second = self.max_second.max(child.max_second);
+        }
+    }
+
+    fn rotate_left(mut node: Box<Self>) -> Box<Self> {
+        let mut root = node.right.take().expect("AVL right child");
+        node.right = root.left.take();
+        node.refresh();
+        root.left = Some(node);
+        root.refresh();
+        root
+    }
+
+    fn rotate_right(mut node: Box<Self>) -> Box<Self> {
+        let mut root = node.left.take().expect("AVL left child");
+        node.left = root.right.take();
+        node.refresh();
+        root.right = Some(node);
+        root.refresh();
+        root
+    }
+
+    fn insert(tree: Option<Box<Self>>, key: (i64, usize), second: i64) -> Box<Self> {
+        swimlane_hop_index_work();
+        let Some(mut node) = tree else {
+            return Box::new(Self { key, second, height: 1, min_first: key.0, max_first: key.0, min_second: second, max_second: second, left: None, right: None });
+        };
+        if key < node.key { node.left = Some(Self::insert(node.left.take(), key, second)); }
+        else { node.right = Some(Self::insert(node.right.take(), key, second)); }
+        node.refresh();
+        if Self::height(&node.left) > Self::height(&node.right) + 1 {
+            let left = node.left.as_ref().expect("AVL left subtree");
+            if Self::height(&left.right) > Self::height(&left.left) {
+                node.left = Some(Self::rotate_left(node.left.take().expect("AVL left subtree")));
+            }
+            return Self::rotate_right(node);
+        }
+        if Self::height(&node.right) > Self::height(&node.left) + 1 {
+            let right = node.right.as_ref().expect("AVL right subtree");
+            if Self::height(&right.left) > Self::height(&right.right) {
+                node.right = Some(Self::rotate_right(node.right.take().expect("AVL right subtree")));
+            }
+            return Self::rotate_left(node);
+        }
+        node
+    }
+
+    fn inversions(&self, first: i64, second: i64, smaller_first: bool, output: &mut Vec<usize>) {
+        swimlane_hop_index_work();
+        if smaller_first {
+            if self.min_first >= first || self.max_second <= second { return; }
+        } else if self.max_first <= first || self.min_second >= second { return; }
+        if let Some(left) = &self.left { left.inversions(first, second, smaller_first, output); }
+        if (smaller_first && self.key.0 < first && self.second > second)
+            || (!smaller_first && self.key.0 > first && self.second < second) {
+            output.push(self.key.1);
+        }
+        if let Some(right) = &self.right { right.inversions(first, second, smaller_first, output); }
+    }
+}
+
+struct SwimlaneHopSupportCohort {
+    supports: [i64; 2],
+    tree: Option<Box<SwimlaneHopEndpointNode>>,
+}
+
+/// q=1 alone is certified here. All original coordinate differences/products/
+/// determinant and numerator subtractions are exact below 2^53. Other values
+/// keep the original predicate traversal rather than being rounded or refused.
+fn swimlane_hop_integer_supports(from: &Point, to: &Point, exchange: bool) -> Option<([i64; 2], i64, i64)> {
+    swimlane_hop_index_work();
+    let values = if exchange { [from.y, from.x, to.y, to.x] } else { [from.x, from.y, to.x, to.y] };
+    if !values.iter().all(|value| value.is_finite() && value.abs() <= 16_777_216.0 && value.fract() == 0.0) { return None; }
+    let [first, coordinate, last, end_coordinate] = values.map(|value| value as i64);
+    if first < last { Some(([first, last], coordinate, end_coordinate)) }
+    else if last < first { Some(([last, first], end_coordinate, coordinate)) }
+    else { None }
+}
+
+fn swimlane_hop_observe_cohort(cohort: &mut Option<SwimlaneHopSupportCohort>, first_geometry: bool, coordinates: Option<([i64; 2], i64, i64)>, geometry: usize) {
+    swimlane_hop_index_work();
+    if first_geometry {
+        *cohort = coordinates.map(|(supports, first, second)| SwimlaneHopSupportCohort { supports, tree: Some(SwimlaneHopEndpointNode::insert(None, (first, geometry), second)) });
+    } else if let Some(index) = cohort {
+        if let Some((supports, first, second)) = coordinates.filter(|(supports, _, _)| *supports == index.supports) {
+            debug_assert_eq!(supports, index.supports);
+            index.tree = Some(SwimlaneHopEndpointNode::insert(index.tree.take(), (first, geometry), second));
+        } else {
+            // Invalidate once; never rescan/rebuild the old oblique vector.
+            *cohort = None;
+        }
+    }
+}
+
 struct SwimlaneHopGeometry {
     from: Point,
     to: Point,
@@ -1721,6 +1855,8 @@ struct SwimlaneHopCrossings {
     horizontal: Vec<usize>,
     vertical: Vec<usize>,
     oblique: Vec<usize>,
+    integer_x_cohort: Option<SwimlaneHopSupportCohort>,
+    integer_y_cohort: Option<SwimlaneHopSupportCohort>,
 }
 
 impl SwimlaneHopCrossings {
@@ -1731,13 +1867,32 @@ impl SwimlaneHopCrossings {
         let horizontal_candidates: &[usize] = if from.y == to.y { &[] } else { &self.horizontal };
         let vertical_candidates: &[usize] = if from.x == to.x { &[] } else { &self.vertical };
         let mut crossings = Vec::new();
-        for &group_index in horizontal_candidates.iter().chain(vertical_candidates.iter()).chain(self.oblique.iter()) {
+        let indexed = self.integer_oblique_candidates(from, to);
+        let oblique_candidates = indexed.as_deref().unwrap_or(&self.oblique);
+        for &group_index in horizontal_candidates.iter().chain(vertical_candidates.iter()).chain(oblique_candidates.iter()) {
             let other = &self.geometries[group_index];
             if let Some((t, point)) = swimlane_line_crossing(from, to, &other.from, &other.to) {
                 crossings.extend(other.occurrences.iter().map(|&(edge, segment)| (t, point.clone(), edge, segment)));
             }
         }
         crossings
+    }
+
+    fn integer_oblique_candidates(&self, from: &Point, to: &Point) -> Option<Vec<usize>> {
+        // Keep the original constant-size single-geometry/duplicate contract.
+        if self.oblique.len() < 2 { return None; }
+        for (exchange, cohort) in [(false, &self.integer_x_cohort), (true, &self.integer_y_cohort)] {
+            let Some(cohort) = cohort else { continue; };
+            let Some((supports, first, second)) = swimlane_hop_integer_supports(from, to, exchange) else { continue; };
+            if cohort.supports != supports { continue; }
+            let mut output = Vec::new();
+            if let Some(tree) = &cohort.tree {
+                tree.inversions(first, second, true, &mut output);
+                tree.inversions(first, second, false, &mut output);
+            }
+            return Some(output);
+        }
+        None
     }
 
     fn insert_geometry(&mut self, edge: usize, segment: usize, from: &Point, to: &Point) {
@@ -1753,7 +1908,12 @@ impl SwimlaneHopCrossings {
             self.geometries.push(SwimlaneHopGeometry { from: from.clone(), to: to.clone(), occurrences: vec![(edge, segment)] });
             if from.y == to.y { self.horizontal.push(group_index); }
             else if from.x == to.x { self.vertical.push(group_index); }
-            else { self.oblique.push(group_index); }
+            else {
+                let first_geometry = self.oblique.is_empty();
+                swimlane_hop_observe_cohort(&mut self.integer_x_cohort, first_geometry, swimlane_hop_integer_supports(from, to, false), group_index);
+                swimlane_hop_observe_cohort(&mut self.integer_y_cohort, first_geometry, swimlane_hop_integer_supports(from, to, true), group_index);
+                self.oblique.push(group_index);
+            }
         }
     }
 }
