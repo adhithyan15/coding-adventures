@@ -2331,6 +2331,24 @@ fn swimlane_edge_classes_and_styles_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_edge_label_typography_lowers_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@-- submit --> review release@-- release --> done\nclassDef urgent font-size:22px,font-weight:bold,font-style:italic,font-family:\"Helvetica Neue\",color:#7c2d12\nclass submit urgent\nstyle release font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d",
+    ).expect("Flowchart edge label typography should parse");
+
+    let submit = &diagram.edges[0].style;
+    assert_eq!(submit.font_size, Some(22.0));
+    assert_eq!(submit.font_weight, Some(700));
+    assert_eq!(submit.font_italic, Some(true));
+    assert_eq!(submit.font_family.as_deref(), Some("Helvetica Neue"));
+    let release = &diagram.edges[1].style;
+    assert_eq!(release.font_size, Some(18.0));
+    assert_eq!(release.font_weight, Some(500));
+    assert_eq!(release.font_italic, Some(false));
+    assert_eq!(release.font_family.as_deref(), Some("Helvetica"));
+}
+
+#[test]
 fn swimlane_positional_link_styles_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\nend\na --> b\nb --> c\nc --> d\nlinkStyle default stroke:#64748b,stroke-width:2px\nlinkStyle 0, 2 stroke:#dc2626,stroke-width:5px,stroke-dasharray:7 3,color:#991b1b;",
