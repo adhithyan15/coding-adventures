@@ -1453,7 +1453,9 @@ backend immediately) come before the enabler-dependent items.
   in `sign(...)`, including the exact `entier(sign(...))` root; broader runtime
   `entier` operands remain conservative.
   The bounded sign-rooted transform may include one exact additive unit offset;
-  multiple, non-unit, and dynamic offsets remain conservative.
+  the cap is preserved through parentheses and supported standard-function
+  wrappers and applied independently to each runtime conditional path. Multiple,
+  non-unit, and dynamic offsets remain conservative.
   Globals, captured locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The
