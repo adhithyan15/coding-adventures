@@ -2607,6 +2607,28 @@ fn swimlane_flowchart_spacing_config_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_flowchart_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let source = "swimlane-beta LR\nsubgraph A\n  first[First]\n  second[Second]\n  third[Third]\nend\nfirst --> second\nsecond override@--> third\noverride@{ curve: linear }";
+    let front_matter = parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    curve: stepAfter\n---\n{source}"
+    )).expect("Flowchart curve front matter should parse for Swimlane");
+    let directive = parse_swimlane(&format!(
+        "%%{{init: {{\"flowchart\": {{\"curve\": \"basis\"}}}}}}%%\n{source}"
+    )).expect("Flowchart curve init directive should parse for Swimlane");
+
+    assert_eq!(front_matter.flowchart_config.curve, Some(SwimlaneEdgeCurve::StepAfter));
+    assert_eq!(directive.flowchart_config.curve, Some(SwimlaneEdgeCurve::Basis));
+    assert_eq!(front_matter.edges[0].curve, None,
+        "the parser must keep the global curve separate from per-edge overrides");
+    assert_eq!(front_matter.edges[1].curve, Some(SwimlaneEdgeCurve::Linear));
+    assert!(parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    curve: unsupported\n---\n{source}"
+    )).is_err(), "unsupported Flowchart curves must be rejected");
+}
+
+#[test]
 fn swimlane_nested_subgraphs_reach_semantic_ir() {
     let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Engineering\n  subgraph Platform[Platform]\n    plan[Plan]\n    subgraph Runtime[Runtime]\n      build[Build]\n    end\n  end\n  deploy[Deploy]\nend\nsubgraph Operations\n  observe[Observe]\nend\nplan --> build --> deploy --> observe")
         .expect("nested Swimlane subgraphs should parse");

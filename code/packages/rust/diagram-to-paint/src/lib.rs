@@ -1642,6 +1642,9 @@ where
     if let Some(padding) = diagram.flowchart_config.diagram_padding {
         metadata.insert("swimlane.flowchart.diagramPadding".into(), padding.to_string());
     }
+    if let Some(curve) = diagram.flowchart_config.curve {
+        metadata.insert("swimlane.flowchart.curve".into(), swimlane_curve_name(curve).into());
+    }
     for (index, group) in diagram.groups.iter().enumerate() {
         metadata.insert(format!("swimlane.group.{index}.id"), group.id.clone());
         metadata.insert(format!("swimlane.group.{index}.lane"), group.lane_id.clone());
@@ -1666,21 +1669,7 @@ where
             }.into());
         }
         if let Some(curve) = edge.curve {
-            metadata.insert(format!("swimlane.edge.{index}.curve"), match curve {
-                SwimlaneEdgeCurve::Linear => "linear",
-                SwimlaneEdgeCurve::Basis => "basis",
-                SwimlaneEdgeCurve::BumpX => "bumpX",
-                SwimlaneEdgeCurve::BumpY => "bumpY",
-                SwimlaneEdgeCurve::Cardinal => "cardinal",
-                SwimlaneEdgeCurve::CatmullRom => "catmullRom",
-                SwimlaneEdgeCurve::MonotoneX => "monotoneX",
-                SwimlaneEdgeCurve::MonotoneY => "monotoneY",
-                SwimlaneEdgeCurve::Natural => "natural",
-                SwimlaneEdgeCurve::Rounded => "rounded",
-                SwimlaneEdgeCurve::Step => "step",
-                SwimlaneEdgeCurve::StepBefore => "stepBefore",
-                SwimlaneEdgeCurve::StepAfter => "stepAfter",
-            }.into());
+            metadata.insert(format!("swimlane.edge.{index}.curve"), swimlane_curve_name(curve).into());
         }
     }
     for link in &diagram.links {
@@ -1725,6 +1714,24 @@ where
         instructions,
         id: None,
         metadata: (!metadata.is_empty()).then_some(metadata),
+    }
+}
+
+fn swimlane_curve_name(curve: SwimlaneEdgeCurve) -> &'static str {
+    match curve {
+        SwimlaneEdgeCurve::Linear => "linear",
+        SwimlaneEdgeCurve::Basis => "basis",
+        SwimlaneEdgeCurve::BumpX => "bumpX",
+        SwimlaneEdgeCurve::BumpY => "bumpY",
+        SwimlaneEdgeCurve::Cardinal => "cardinal",
+        SwimlaneEdgeCurve::CatmullRom => "catmullRom",
+        SwimlaneEdgeCurve::MonotoneX => "monotoneX",
+        SwimlaneEdgeCurve::MonotoneY => "monotoneY",
+        SwimlaneEdgeCurve::Natural => "natural",
+        SwimlaneEdgeCurve::Rounded => "rounded",
+        SwimlaneEdgeCurve::Step => "step",
+        SwimlaneEdgeCurve::StepBefore => "stepBefore",
+        SwimlaneEdgeCurve::StepAfter => "stepAfter",
     }
 }
 

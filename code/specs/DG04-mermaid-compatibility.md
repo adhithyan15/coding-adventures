@@ -1104,6 +1104,9 @@ Shared Flowchart `nodeSpacing`, `rankSpacing`, and `diagramPadding` configuratio
 init directives survives semantic and layout IR. The values control ownership-lane separation,
 consecutive-rank separation, and outer scene padding respectively, and remain visible in backend-neutral
 scene metadata.
+Shared Flowchart `curve` configuration accepts the complete supported curve catalog and supplies the
+layout-time default for edges without a direct or class-resolved curve. Per-edge curves retain precedence,
+and the resolved modes lower to backend-neutral line, quadratic, or cubic paint paths.
 When cross-lane ranking is active, `swimlane.optimizeRanksByCrossings` defaults to `true` and performs
 up to four deterministic local-search passes. Feasible rank delays propagate through downstream
 constraints and are retained only when the lane/rank segment crossing count strictly improves; the

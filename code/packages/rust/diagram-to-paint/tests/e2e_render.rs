@@ -3603,6 +3603,22 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata|
                     metadata.get("swimlane.flowchart.diagramPadding")), Some(&"32".to_string()));
             }
+            if fixture_name == "flowchart-curve-config" {
+                assert_eq!(layout.flowchart_config.curve,
+                    Some(diagram_ir::SwimlaneEdgeCurve::StepAfter));
+                assert_eq!(layout.edges[0].curve, Some(diagram_ir::SwimlaneEdgeCurve::StepAfter));
+                assert_eq!(layout.edges[1].curve, Some(diagram_ir::SwimlaneEdgeCurve::Linear),
+                    "a per-edge curve must override the shared Flowchart curve");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 3
+                )), "the global step-after curve must lower to an orthogonal paint path");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.curve")), Some(&"stepAfter".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.edge.0.curve")), Some(&"stepAfter".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.edge.1.curve")), Some(&"linear".to_string()));
+            }
             if fixture_name == "node-typography-styles" {
                 assert!(layout.nodes[0].width > layout.nodes[1].width,
                     "larger bold text must reserve more backend-neutral node width");

@@ -486,7 +486,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 style: edge.style.clone(),
                 animate: edge.animate,
                 animation: edge.animation,
-                curve: edge.curve,
+                curve: edge.curve.or(diagram.flowchart_config.curve),
             })
         })
         .collect();
