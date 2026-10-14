@@ -3,47 +3,46 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a current-main reconciliation -->
-October14 ordering source `47747b20f72d72211ffedff92cb3b10b8a89f4a9` / integrated mainfdf1a247:
-actual validator83452 EXIT0 completes **612 tests/docs across10 targets**, zero
-failures/ignores, full metadata-derived two-package cone plus parser boundary
-suite, strict3, lessons1193 and whitespace. Six repeated focus tests are excluded.
-Greedy cost/balance/index visits fall from17280 to3240 under the unchanged bound.
-All729 four-lane graphs/all17496 initial permutations match the independent
-original full-cost oracle, including nine starts/UTF16 seeds. All48 authored
-full PaintScene/metadata fixtures pass across four directions, hop false/arc/gap,
-enabled/disabled ordering and two graph families. Original13 hierarchy/103 paint
-test bodies and paint production remain byte-identical. Independent scoped
-security PASS/no findings: CV04a-ordering-security-47747b20.md,
-SHA256 115ae65b65c04398c6b7dfc9bdb64e45c71b32b8114414a8088516b6c063f991. Whole-PR final security PENDING.
+October14 reconciliation: integrated audited main7b6da667; native source
+`76d54e429f81273cc644c7548797984a7167d8a5` in isolated staging. Main now includes quintuple name
+actuals, edge typography/corners, Mosaic and Windows host imports. Complete
+closed proof preserves3721 pure import objects,18 overlaps and130 owned objects;
+all376 registry name/version/source/checksum identities remain unchanged.
 
-The27W counter bounds three greedy initialization traversals per start; unchanged
-seed/signature construction and source/edge/identifier work remain separate.
-Cost/balance/delta arithmetic is checked; original source-distance tie summation
-is retained. Malformed non-bijective direct IR keeps the original full-cost
-fallback and is excluded from the optimized guarantee; authored duplicate lane
-IDs remain refused. Pre-existing self-loop NaN endpoints are compared bitwise
-before test-only equality normalization; finite self-loop routing is unaccepted.
+Original9455 actualEXIT1 at85: nonLANG55 4606PASS/1FAIL/176targets/two existing
+ignores; WinUI used the default persistent profile. Child-only isolated profile
+retains every native assertion. Original87820 actualEXIT1 at894: 4608/1/176,
+same ignores; real WinUI builds/launches/completes interaction, but Synology's
+fixed20ms failure test stops before its callback. Seven related worker fixtures
+now await the Release/Acquire failure callback under five seconds before exact
+error/stop/join assertions. Native76 daemon focus54/1 PASS; full runner77435
+RUNNING (full56 changed-main cone, native40 paired programs/upstream, exact11
+production BUILD/48 native roster, strict56/docs). Never infer whole acceptance.
 
-Actual LANG validator54386 EXIT0 at `a20c12ac29538863807209b4ccb935950064b2be` completes
-all eleven unchanged production BUILD commands and48 exact native controls:
-**322/108**, zero failures/one existing archive ignore. Earlier quadruple/
-typography1469/19 and scoped review remain f64 source-attributed. Prior red/
-partial/compile logs and import stages persist. Owned paint-source truncation in
-this new checkout was recovered from exact committed bytes and only the new
-tests reapplied; independent final equality proves no production/control loss.
-The original tested checkout and frozen Miri inputs were unchanged.
+Exact same-root depth controls PASS at894 (two tests plus strict compiler), and
+repeat at76. Five layers accept all true/false direct/assigned cells; assigned
+sixth source gives Type/formatter refusal, direct sixth source gives Parse135.
+Public compile_ast paired5/6 checks both exact relay replacements/call counts/
+roots and semantic refusal for all four cells. Cloned positions are excluded
+from source-map/provenance evidence. The earlier d49/ee50 parser/assertion
+failures remain failed receipts. Edge controls compare complete font-query/
+glyph traces and every ordered PaintRect field with specific numeric refusals.
+Scoped security85/894/76 PASS/no introduced findings; whole final review pending.
 
-Fresh full audit80290 sees main `cbd9a37c8f02d7269c212a944f79588f559b50e2`;
-new edge-label typography, Mosaic and content imports need closed reconciliation.
-The separately owned quintuple PR is still open in that audit; do not treat it
-as a merged main import. Broader453-cone, arbitrary unique-oblique work, whole final
-security and repaired hosted Linux remain PENDING. Sole Closure/sharedPR17288
-stays published at822, DIRTY, terminal Linux/CI-gate failures, auto-mergeOFF.
-Expired build-plan artifact UNAVAILABLE; original preserved hashes historical.
-No publication/merge/cleanup/CV04b selection. Base ESTree/own types/no new crates.io.
-Full final-source Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/
-checkout/receipts/target untouched and unpolled. Full parity/output source joins/
-all transformation lineage and objective OPEN; heartbeat ACTIVE.
+Fresh delivery metadata plan43seeds/456affected includesdev, not native approval.
+Distinct noncrossing oblique segments still cause G(G-1)/2 empty predicates;
+two-support/near-degeneracy-safe repair and exact golden/work controls are next
+before final security. Older ordering612/10, LANG322/108 and quadruple1469/19
+remain477/a20/f64 source-attributed. Prior original failures/stages are retained.
+Sole Closure/sharedPR17288 remains published822, auto-mergeOFF; no publication,
+merge, cleanup or CV04b. Hosted Linux/required CI/review/conflict gates pending.
+
+Base ESTree/own types/no new crates.io retained. Full parity/CV04b/output byte
+source joins/all transformation lineage and goal OPEN. Full final-source Miri
+**DEFERRED/PENDING**, never passed; frozen497inputs/run/checkout/receipts/target
+untouched/unpolled. Implementation/delivery first, genuine Miri later.
+Heartbeat ACTIVE. External current source receipt: CV04a-quintuple-main-native-
+76d54e42.json; actual run77435 must finish before changing its staging/target.
 <!-- /CV04a current-main reconciliation -->
 
 <!-- CV04a BEAM heap native continuation -->

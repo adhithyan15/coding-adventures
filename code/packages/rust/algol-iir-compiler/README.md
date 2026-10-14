@@ -596,3 +596,14 @@ selector matrix, with a per-program limit of 8192. Zero-token grammar wrappers
 take the same single-child fallback before alternative proofs repeat it; typed
 call/variable nodes, operator tokens and standard-call depth keep their guards.
 This bounds the tested refusal family without claiming whole-compiler linearity.
+
+
+Selector depth boundary controls distinguish source parsing from the public AST
+compiler contract. Five supported standard wrappers around the same proven
+entier/sign name actual compile through both consumers. At six layers, assigned
+source reaches the real formatter refusal; direct output reaches the existing
+parser nesting limit135. The separate paired parsed-AST control verifies the
+semantic depth refusal through both consumers, without claiming that cloned
+position metadata establishes a new source map. Computed-name selector tests
+also cover both roots/outcomes/consumers; value-copy selectors retain their
+private snapshots while by-name promotion remains refused.
