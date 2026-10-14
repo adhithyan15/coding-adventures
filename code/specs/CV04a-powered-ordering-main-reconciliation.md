@@ -135,6 +135,15 @@ guard remain unchanged. This is value provenance, not permission to re-admit
 shared roots or restore stale AST proof globally. Keep the original failed run
 and its eight diagnostics; rerun the complete compiler and relevant native cases.
 
+New paired test source4694b035 preserves an actual direct-output positive failure
+at the formatter boundary. Its negative matrix remained unfinished after more
+than ten minutes; stop only exact candidate test PID28860, preserving session10295
+actual EXIT1 and child0xffffffff log. No negative PASS or complete test summary
+is claimed. Original session18101's complete845PASS/8FAIL evidence remains the
+full red baseline. All new negative cells must complete on the repaired source.
+Probe parsing and lowering separately before attributing the long run to either;
+do not change a classifier or parser based solely on elapsed time.
+
 Preserve the upstream bounded provenance rule and every existing alias/capture,
 name/value, branch-intersection and formatter refusal. Both `^` and `**` require
 controls. A by-name selector may promote either local actual to shared storage;

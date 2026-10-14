@@ -20,6 +20,16 @@ and arbitrary-oblique work assessment, changed compiler/native/downstream suites
 exact-final independent security review and genuine repaired hosted Linux remain
 pending. Earlier3347/211 native acceptance stays attributed to source282/main160.
 
+Powered controls at7f84f9f5 expose actual full compiler session18101 EXIT1
+(Cargo101), 845PASS/8FAIL/five targets. Both powered policy tests (32 cells) pass;
+native and lint phases were unreached. Eight imported computed-name branches fail
+the formatter gate after their captures promote roots. Spec3d594174 precedes new
+paired controls4694b035 and repair11466347, which carries proof only on a fresh
+conditional scalar proven for both arms after condition effects. Its execution
+acceptance remains PENDING. New positive red is observed; stopped candidate-only
+session10295 preserves actual EXIT1/child0xffffffff and unfinished negative cells,
+never a negative PASS. Miri was neither queried nor stopped.
+
 Fresh complete PR/backlog/epic audit session30949 sees main
 `fd6df512b7c750733095c8d87f3c6c10db17ec83`; its extra commit changes human-language
 source/tests/specs only and is not yet imported or runtime-accepted here. Sole
