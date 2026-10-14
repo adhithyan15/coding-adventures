@@ -108,3 +108,14 @@ the unchosen branch never runs, and the process exits normally. Preserve all
 previous8192-budget, alias, range, producer and native controls. This is a
 semantic call specialization requiring independent exact-source review, not
 permission to forward cached proof metadata.
+
+Actual7f diagnostics confirm a second lifecycle boundary: emit_proc_call clears
+local proofs before emit_call_common, even before capture. Recognize the exact
+identity at the value-call entry before that generic invalidation. Its complete
+read-only signature/arity/declaration checks must precede any actual evaluation;
+the actual's own calls still invalidate aliases normally. Leave statement calls
+and every fallback call path unchanged. No proof snapshot is restored by the
+new path. The initial ede candidate's generic bare-name helper also accepts
+malformed token-free wrappers; replace only this new guard with the exact
+generalized-parser RHS chain ending an exact single-NAME variable. Reject
+proc_call/unknown wrappers, omitted wrappers and extra variable tokens/children.
