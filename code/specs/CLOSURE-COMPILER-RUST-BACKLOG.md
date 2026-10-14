@@ -3,54 +3,55 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a current-main reconciliation -->
-October14: source baa06e72ad67e8b0f993b3be56b0ba6356152f99 in the isolated
-ordering sibling adds native evidence while original broad run28ac remains
-source-frozen. Both validators are now actually terminal:32295 EXIT1 and95720
-EXIT0 for its scoped evidence protocol, which explicitly contains a failing red.
-No all-tests-passed or whole acceptance. One active PR17288, no push/merge.
+October14 current implementation checkpoint: tested sourcec5b00f8362c114a17d951735b8df7b6120fd3767;
+production2f25e31e, followed by an exact old greater-than oracle correction.
+Actual validator41518 EXIT0: completeJVM200/3/0ignore (69lib124integration7docs),
+original8 real JVM array rows Exit42, float-array compute42/process0 plus exact
+descriptor-only negativeVerifyError, real IEEE84 table (2widths6relations7pairs),
+strictJVM/LANG/Twig alltargets. Focused6 compiler controls included in200.
+Independent exact-source security PASS, report SHA
+84f4fe59a3d0b50bda652540236e3a37ca6788d6c900d7211b7ae1b1f4410689;
+publication/whole acceptance withheld. Source-specific receipts/log hashes
+preserved under the local A root.
 
-Fresh audits/main imports: ec1c21paths10pure11overlap196retained/24transport;
-f9a76bdc12paths6pure6overlap202merge-time retained/24transport/1278ALGOL-LANG.
-Finalbaa retains201/202 with the sole deliberate appended LANG native-test
-exception; owned paint overlaps contain new controls. All prior paint tests,
-hierarchy/transport/ALGOL production remain exact;376 registry tuples unchanged.
-Frame f9 was enumerated after actual74639 mergeEXIT0 from immutable parent refs,
-under precommitted speca847. No new crates.io dependency or unsafe added.
+The revised direct-call writer counts actual argument load slots, keeps the
+non-call8 bound, consumes unused returns, checks255 static parameter slots and
+argument/result/reference descriptors. Float-array descriptors now agree with
+allocation[F. f32/f64 comparisons use typed loads and ordered NaN semantics;
+mixed floating types refuse. Original full2f suite69lib+123integrationPASS1FAIL
+was the old dcmpg greater-than oracle; real84 checks justify exactdcmpl/ifle
+assertion adaptation, with no test deletion. Initial serializer API compile
+error and missing-launcherUTF8 ClassFormatError are harness failures, not causal
+descriptor evidence. Corrected positive then exposed realf32 wrong-type loads;
+spec-first typedcomparison repair retained the original computation control.
 
-Actual positive controls: cluster128cases; node/edge theme192cases complete
-IR/layout/PaintScene/defaults/overrides/exact marker fields; owned nested-entier
-8sources/48normal-exit native cells across6backends (CLR unavailable). Keep
-producer test/shared helper unchanged. Actual scoped14 safety834PASS/32targets/
-0ignore excludes only the new expected-red test already executed separately;
-strict15 EXIT0. Subset/focused counts are not added to full-suite totals.
+Actual earlier da unfilteredLANG81763 EXIT1/Cargo101:463PASS9FAIL0ignore;
+all9 are native ABI refusals (8 dedicated captured/forwarded arrays plus matrix
+duplicate). The former JVM proven-columns stack VerifyError is resolved.
+That oldsource463 count is not latestsource execution/whole acceptance. Exact
+prepared-CIR diagnostics prove3D6/4D8 call/formal arity, MsX64guard4/SysVguard6.
+Native bounded8 stackargs spec exists but no production implementation yet.
+Do not skip original rows, change Exit42, lower limits or bypass requiredCI.
 
-Actual general-hop red: Cargo101,1PASS/1FAIL. All32 cases preserve complete
-scenes/endpoint bits/occurrences but exceed counted predicate bounds:
-N32:496 vs448; N64:2016 vs1024. Existing index work132/260 is not full candidate/
-event/key/collector accounting. General P2/production discovery design remain OPEN.
+Main99f58 actual import4d2ddb48 supersedes initial45fa frame:2236 total paths,
+2224pure exactimports,12overlap,205retained,24transport/57backend baseline objects,
+376registry identities unchanged. Two wrapping_widthNone literals adapted only.
+Producer curriculum/TS/device imports are not new native/content acceptance.
+Previously accepted bounded node/cluster/entier controls and safety assertions
+remain; varied-support generalhop work stillFAILS32/32. General discovery design
+and full candidate/key/event/collector accounting open; no failing test ignored.
 
-Actual broad28ac downstream failure:1857PASS/10FAIL/1existingignore/59targets;
-18 requested packages were not all completed; strict was not reached. NativeAOT
-captured3D/4D array BackendRefused(main), JVM main()J VerifyError Stack size too
-large. Preserve failed log SHA5fd907b26eb268c9e7a1689f3dbf92295c0ac6bb91d17c7099f3740d24051f54.
-Spec CV04a-captured-array-backend-failures.md requires emitted-IIR/ABI/stack
-trace before repair; no row/expected-output/limit weakening or silent skip.
-No undefined-behavior failure inferred from a refusal/verifier error.
-
-Independent scoped source/control/terminal reviews PASS atbaa, hashes
-733ae67870ca00072737b5722840378e986f7ea6754b1bcfd05940b735740edf and
-d9ac355ac0f3142e2b7f5ff128e8ad71065f701897c5d65e0abcc432754eff0d.
-These preserve whole acceptance withheld for actual array/resource failures.
-Prior rank/global-curve/native receipts retain their original source attribution.
-Completed delivery incremental cache reclamation11,788,278,503bytes preserved
-active targets/binaries/inputs/receipts/worktrees/frozen Miri.
-
-Sole PR17288 still published82209953/old failedCI/autoOFF; current conflict/review/
-terminal required checks and actual merge reachability remain required. Full
-Closure parity/CV04b/output-byte source/all transformation lineage/pass-sweep/
-stable identities/spans remain OPEN. Base ESTree/own types preserved.
-Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/source/target/receipts
-untouched and unpolled. Full objective incomplete; heartbeat ACTIVE.
+SolePR17288 stays prior published822, conflicting/failedCI/autoOFF. No push,
+merge, cleanup or exact-head hosted acceptance. Re-audit main/openPR/backlog/
+epic eachresume. Next implement native8 stack-argument caller/callee ABI with
+alignment/shadow/checked offsets/GC roots/order/recursion/refusal tests, run
+complete affected native/downstream suites and independent security. Final
+documentation/requiredCI/review/conflict gates still apply. Full Closure parity,
+output-byte/source joins and fold/rename/inline/motion/merge/delete lineage,
+pass/sweep/stableIDs/spans/CV04b remain OPEN. ExistingCLOC27 leaf-token bridge
+is real and prior epic bridge-allNone audit stale; audit before extending.
+Miri DEFERRED/PENDING, never passed: frozen497 run/source/inputs/target/receipts
+untouched/unpolled. Delivery first, genuine final-source Miri afterward. Heartbeat ACTIVE.
 <!-- /CV04a current-main reconciliation -->
 
 <!-- CV04a BEAM heap native continuation -->

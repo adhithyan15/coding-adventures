@@ -1,5 +1,18 @@
 # Changelog — iir-to-jvm-class-file
 
+## [Unreleased] — captured-array JVM call and float validation
+
+- Direct calls derive their stack peak from actual typed loads, enforce the static255 parameter-slot descriptor bound, discard unused returns, and check argument/result type and reference descriptor compatibility. Float arrays use [F consistently with NEWARRAY T_FLOAT. f32/f64 comparisons load their own types, reject mixed floating types and keep all ordered comparisons false for NaN, with inequality true.
+
+Actual c5b00f83 validation completed: full JVM200 tests/docs across3 targets
+(69 library,124 integration,7 docs), the original8 real JVM rows, positive/
+negative float-array verification, real IEEE84 checks and strictJVM/LANG/Twig
+alltargets passed. Focused controls are included in200, not additive. Earlier
+source da45489b unfiltered LANG validation actually failed:463PASS9 native ABI
+refusals. Latest full/native/hosted/merge acceptance remains open, along with
+general-hop32/32 work failures. Miri **DEFERRED/PENDING**, never passed; frozen
+run/source/inputs/target/receipts preserved and unpolled. No new crates.io deps.
+
 ## 0.35.0 - 2026-10-05 - floating-point module globals
 
 Module globals carrying `f32` or `f64` values now use JVM fields with `F` or

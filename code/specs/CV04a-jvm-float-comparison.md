@@ -36,3 +36,13 @@ dcmpg for greater-than. Real JVM table84 comparisons now pass, including NaN
 on either side: greater-than must use dcmpl with ifle to keep unordered false.
 Reconcile the existing assertion to that exact semantic opcode/branch pair;
 retain its test and the original failing suite receipt rather than deleting it.
+
+Actual revised c5b00f83 validation41518 completed EXIT0. Complete JVM200/3
+(69 library,124 integration,7 docs), unchanged original8 real JVM array rows,
+float-array positive/negative verifier controls, real IEEE84 checks and strict
+JVM/LANG/Twig alltargets pass. Independent exact-source/control/terminal security
+PASS SHA84f4fe59a3d0b50bda652540236e3a37ca6788d6c900d7211b7ae1b1f4410689.
+The old2f complete-suite receipt retains the erroneous greater-than oracle
+failure; it is not labeled all-pass. Latest full/native/hosted acceptance still
+pending, with nine original native arity failures and generalhop32 resource
+failure open. Miri DEFERRED/PENDING; full completion contract unchanged.

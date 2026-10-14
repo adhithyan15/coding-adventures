@@ -29,3 +29,13 @@ stack-argument implementation and general-hop resource failures remain open.
 Full Closure parity and complete transformation lineage are still open. Miri
 is DEFERRED/PENDING, never passed; frozen checkout/run/inputs/target/receipts
 remain untouched and unpolled. No publication or merge until required gates.
+
+Revised source c5b00f83 actually passes the unchanged computation control on
+the real JVM: float-array store/call/load/return/comparison computes42 and the
+process exits0 under full verification. A descriptor-only [F to [I mutation
+of that emitted class is independently rejected with VerifyError in read([I)F.
+Initial serializer API and missing launcher UTF8 failures are preserved as
+harness failures. The positive control exposed an additional typed-comparison
+failure, repaired under CV04a-jvm-float-comparison.md. Full JVM200/3, original8
+JVM rows, IEEE84 and strict3 pass; scoped independent review PASS. Native ABI
+and whole/publication/final-source Miri gates remain open, Miri DEFERRED/PENDING.

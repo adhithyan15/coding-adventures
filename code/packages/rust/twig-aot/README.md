@@ -136,3 +136,17 @@ return early for the separately tracked precise-GC frame-walk gap (VM-031).
 FLOW-MATIC EOF support (VM-039a): `input_more()` uses a non-consuming stdio
 peek alongside `input_i64`. The native/LLVM input stream proof includes empty
 input and repeated EOF reads; this does not change existing integer parsing.
+
+
+## Captured-array JVM validation checkpoint
+
+Eight exact existing ALGOL captured/forwarded array fixtures pass through the real native preparation/inference/specialisation/stack-map compiler for diagnostic purposes, with an own in-repository ALGOL frontend dev dependency. Diagnostics expose actual six/eight-argument/formal arity refusals at physical register limits4MsX64/6SysV. Diagnostic success is not native object/execution acceptance; stack-argument implementation remains pending.
+
+Actual c5b00f83 validation completed: full JVM200 tests/docs across3 targets
+(69 library,124 integration,7 docs), the original8 real JVM rows, positive/
+negative float-array verification, real IEEE84 checks and strictJVM/LANG/Twig
+alltargets passed. Focused controls are included in200, not additive. Earlier
+source da45489b unfiltered LANG validation actually failed:463PASS9 native ABI
+refusals. Latest full/native/hosted/merge acceptance remains open, along with
+general-hop32/32 work failures. Miri **DEFERRED/PENDING**, never passed; frozen
+run/source/inputs/target/receipts preserved and unpolled. No new crates.io deps.
