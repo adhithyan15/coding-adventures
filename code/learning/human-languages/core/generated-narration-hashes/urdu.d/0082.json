@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 82,
-  "sourceHash": "fnv1a64:6fe1ff262dfdc537",
+  "sourceHash": "fnv1a64:f4cf82e3fa551dee",
   "lessonIds": [
     "UR-C82-kapre",
     "UR-C82-kurta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch82.txt",
   "json": "urdu/narration/ch82.json",
-  "textHash": "fnv1a64:79cbf8d41216cc26",
-  "jsonHash": "fnv1a64:d943da210a7ce3f3",
+  "textHash": "fnv1a64:d6ce509689bafbe2",
+  "jsonHash": "fnv1a64:fa614ed3dcc5c516",
   "findings": []
 }

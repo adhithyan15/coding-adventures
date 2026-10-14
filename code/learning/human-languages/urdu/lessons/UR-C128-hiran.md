@@ -14,7 +14,8 @@ romanization: "hiran"
 concept_tag: UR-THINGS128-HIRAN
 prerequisites: [UR-C127-makkhi, UR-C127-khargosh]
 sounds: []
-roots: []
+roots: [sanskrit-harina]
+etymology_hook: "hiran ← Sanskrit hariṇa 'deer', a tadbhava (CDIAL 13982)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C127-khargosh]
 <!-- hl-knowledge: introduces=[UR-LEX-C128-THINGS128-01]; assesses=[] -->
 
 **ہرن** — *hiran* — "a deer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہرن** (*hiran*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hariṇa*, "deer" (CDIAL 13982). It is built on *hari*, "yellow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shāyad"
 concept_tag: UR-VAJAH192-SHAYAD
 prerequisites: [UR-C191-minar, UR-C192-balki]
 sounds: []
-roots: []
+roots: [persian-shayad]
+etymology_hook: "shāyad: usually traced to Persian shāyad 'it may be'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C192-balki]
 <!-- hl-knowledge: introduces=[UR-LEX-C192-VAJAH192-02]; assesses=[] -->
 
 **شاید** — *shāyad* — "perhaps".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شاید** (*shāyad*) is a loan, usually traced to Persian *shāyad*, "it may be".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

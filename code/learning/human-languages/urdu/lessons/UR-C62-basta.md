@@ -14,7 +14,8 @@ romanization: "bastā"
 concept_tag: UR-SCHOOL62-BASTA
 prerequisites: [UR-C61-akhbar, UR-C61-iskul]
 sounds: []
-roots: []
+roots: [persian-basta]
+etymology_hook: "bastā: usually traced to Persian basta 'tied up; a bundle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C61-iskul]
 <!-- hl-knowledge: introduces=[UR-LEX-C62-SCHOOL62-01]; assesses=[] -->
 
 **بستہ** — *bastā* — "a school bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بستہ** (*bastā*) is a loan, usually traced to Persian *basta*, "tied up; a bundle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

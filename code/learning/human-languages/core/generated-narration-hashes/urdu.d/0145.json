@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 145,
-  "sourceHash": "fnv1a64:166f3ce4ba3cf5b9",
+  "sourceHash": "fnv1a64:55a9118ee6792752",
   "lessonIds": [
     "UR-C145-mustaqbil",
     "UR-C145-ainda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch145.txt",
   "json": "urdu/narration/ch145.json",
-  "textHash": "fnv1a64:e6f4115e81fb3782",
-  "jsonHash": "fnv1a64:12f5d7bbb10a0fe9",
+  "textHash": "fnv1a64:decaec841d6bf04a",
+  "jsonHash": "fnv1a64:a1f148962a31376a",
   "findings": []
 }

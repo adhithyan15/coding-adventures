@@ -14,7 +14,8 @@ romanization: "phūldān"
 concept_tag: UR-CHIZ251-PHULDAN
 prerequisites: [UR-C250-ketli, UR-C251-guriya]
 sounds: []
-roots: []
+roots: [sanskrit-phulla, persian-dan]
+etymology_hook: "phūldān: phūl 'flower' ← Sanskrit phulla (CDIAL 9092) + Persian -dān 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C251-guriya]
 <!-- hl-knowledge: introduces=[UR-LEX-C251-CHIZ251-02]; assesses=[] -->
 
 **پھولدان** — *phūldān* — "a vase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پھولدان** (*phūldān*) is "flower-holder". *phūl*, "flower", comes from Sanskrit *phulla*, "blown, opened out" (CDIAL 9092), and *-dān*, "holder, vessel", is Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a wolf, then the Urdu for a squirrel.
 You'll want to know: تیراکی.
 تیراکی — tairākī — "swimming".
 
+The word, taken apart.
+تیراکی (tairākī) is built on tairnā, "to swim", with the ending -ākī. CDIAL lists tairnā under Sanskrit tirate, "crosses over", and explains its ai as a blend with another verb (CDIAL 5821).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a squirrel, then the Urdu for swimming.
 
 You'll want to know: ٹیم.
 ٹیم — ṭīm — "a team".
+
+The word, taken apart.
+ٹیم (ṭīm) is a loan from English team.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for swimming, then the Urdu for a team.
 You'll want to know: کھلاڑی.
 کھلاڑی — khilāṛī — "a player".
 
+The word, taken apart.
+کھلاڑی (khilāṛī) is built on khel-, "play", with the ending -āṛī, "one who does it". CDIAL lists the verb under a reconstructed khel-, "play" (CDIAL 3918).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a team, then the Urdu for a player.
 You'll want to know: فلم.
 فلم — film — "a film".
 
+The word, taken apart.
+فلم (film) is a loan from English film.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a player, then the Urdu for a film.
 
 You'll want to know: ناٹک.
 ناٹک — nāṭak — "a play, a drama".
+
+The word, taken apart.
+ناٹک (nāṭak) is Sanskrit nāṭaka, "a play, a drama", taken over whole as a learned loan, a tatsama. It is built on naṭa, "actor, dancer".
 
 What you've built.
 One more word for this chapter.

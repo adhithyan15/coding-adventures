@@ -14,7 +14,8 @@ romanization: "khizāṅ"
 concept_tag: UR-TIME95-KHIZAN
 prerequisites: [UR-C94-garmiyan, UR-C94-sardiyan]
 sounds: []
-roots: []
+roots: [persian-khazan]
+etymology_hook: "khizāṅ: usually traced to Persian khazān 'autumn'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C94-sardiyan]
 <!-- hl-knowledge: introduces=[UR-LEX-C95-TIME95-01]; assesses=[] -->
 
 **خزاں** — *khizāṅ* — "autumn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خزاں** (*khizāṅ*) is a loan, usually traced to Persian *khazān*, "autumn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

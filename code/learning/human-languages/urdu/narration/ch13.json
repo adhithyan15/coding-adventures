@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Four Colors",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ab378ebc5c59fc95",
+  "sourceHash": "fnv1a64:8960284f190257e1",
   "lessons": [
     {
       "id": "UR-C13-lal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:158c58cc2e5e0c90",
+      "sourceHash": "fnv1a64:ed90e0ba02dd03ce",
       "notice": null,
       "blocks": [
         {
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3951c1a8c57abd0",
+      "sourceHash": "fnv1a64:e30f73024ba7c696",
       "notice": null,
       "blocks": [
         {
@@ -288,7 +288,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e3e90c0ba5b28d8",
+      "sourceHash": "fnv1a64:30a65f76ce4b876e",
       "notice": null,
       "blocks": [
         {
@@ -345,7 +345,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "کالا (kālā) is inherited from Sanskrit kāla, \"black, dark\" — so far, the same kind of story as bhāī or āṅkh. But کالا (kālā)'s root does not continue into Proto-Indo-European at all. It is usually traced instead to Proto-Dravidian kār-, \"black, to be burnt\": Sanskrit itself borrowed this color word from its Dravidian neighbours, long before any of it reached Urdu. Inherited from Sanskrit, yes — but Sanskrit's own source sits outside the Indo-European family this book has been tracing."
+              "text": "کالا (kālā) is inherited from Sanskrit kāla, \"black, dark\" — so far, the same kind of story as bhāī or āṅkh. But کالا (kālā)'s root does not continue into Proto-Indo-European at all. CDIAL takes it instead, through a form kāḍa-, from Dravidian (CDIAL 3083), where Tamil has karu, \"black\" (DEDR 1278): Sanskrit itself borrowed this color word from its Dravidian neighbours, long before any of it reached Urdu. Inherited from Sanskrit, yes — but Sanskrit's own source sits outside the Indo-European family this book has been tracing."
             }
           ]
         },
@@ -428,7 +428,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bf8009f99a33c0a",
+      "sourceHash": "fnv1a64:c625a8b5212fccdf",
       "notice": null,
       "blocks": [
         {
@@ -474,7 +474,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "نیلا (nīlā) comes from Sanskrit nīla, \"dark blue.\" No further root is documented behind it — an honest dead end backward, unlike کالا (kālā)'s root, which kept going sideways into Dravidian."
+              "text": "نیلا (nīlā) comes from Sanskrit nīla, \"dark blue\" (CDIAL 7563). No further root is documented behind it — an honest dead end backward, unlike کالا (kālā)'s root, which kept going sideways into Dravidian."
             },
             {
               "kind": "speech",

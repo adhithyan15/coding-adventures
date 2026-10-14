@@ -11,8 +11,8 @@ gloss: or — two letters, borrowed from Persian, and the word an offer cannot b
 concept_tag: UR-JOIN-YA
 prerequisites: [UR-C20-aur, UR-C12-pani, UR-C12-doodh]
 sounds: []
-roots: []
-etymology_hook: "یا is Persian yā, itself from Old Persian and cousin to the Avestan particle — one of the few purely Persian function words Urdu took whole, beside the inherited اور it now sits opposite"
+roots: [persian-ya]
+etymology_hook: "ya: usually traced to Persian yā 'or'"
 duration:
   max_seconds: 235
 requires:

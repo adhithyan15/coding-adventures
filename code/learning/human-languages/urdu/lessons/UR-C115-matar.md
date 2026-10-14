@@ -14,7 +14,8 @@ romanization: "maṭar"
 concept_tag: UR-THINGS115-MATAR
 prerequisites: [UR-C115-adrak, UR-C115-gobhi]
 sounds: []
-roots: []
+roots: [indo-aryan-mattara]
+etymology_hook: "maṭar ← *maṭṭara 'pea', a reconstructed form; a tadbhava (CDIAL 9724)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C115-gobhi]
 <!-- hl-knowledge: introduces=[UR-LEX-C115-THINGS115-03]; assesses=[] -->
 
 **مٹر** — *maṭar* — "peas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مٹر** (*maṭar*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*maṭṭara*, "pea", a form CDIAL reconstructs from its descendants (CDIAL 9724).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

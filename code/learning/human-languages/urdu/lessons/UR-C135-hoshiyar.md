@@ -14,7 +14,8 @@ romanization: "hoshiyār"
 concept_tag: UR-QUAL135-HOSHIYAR
 prerequisites: [UR-C135-mashhur, UR-C135-bahadur]
 sounds: []
-roots: []
+roots: [persian-hosh]
+etymology_hook: "hoshiyār: usually traced to Persian hoshyār 'alert, wise'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C135-bahadur]
 <!-- hl-knowledge: introduces=[UR-LEX-C135-QUAL135-03]; assesses=[] -->
 
 **ہوشیار** — *hoshiyār* — "clever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہوشیار** (*hoshiyār*) is a loan, usually traced to Persian *hoshyār*, "alert, wise". It is built on *hosh*, "the senses, one's wits".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

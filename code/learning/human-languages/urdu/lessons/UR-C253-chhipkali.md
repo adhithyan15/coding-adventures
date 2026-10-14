@@ -14,7 +14,8 @@ romanization: "chhipkalī"
 concept_tag: UR-CHIZ253-CHHIPKALI
 prerequisites: [UR-C252-nariyal, UR-C252-kaju]
 sounds: []
-roots: []
+roots: [sanskrit-shepya]
+etymology_hook: "chhipkalī: CDIAL lists it under Sanskrit śepyā, glossed with a reconstructed sense 'tail' (CDIAL 12607)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C252-kaju]
 <!-- hl-knowledge: introduces=[UR-LEX-C253-CHIZ253-01]; assesses=[] -->
 
 **چھپکلی** — *chhipkalī* — "a lizard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Hindi *chipkalī*, "lizard", under Sanskrit *śepyā*, for which it reconstructs a sense "tail" (CDIAL 12607). How the word came to name the lizard is not explained.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

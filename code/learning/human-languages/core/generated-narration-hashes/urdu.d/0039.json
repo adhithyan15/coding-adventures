@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 39,
-  "sourceHash": "fnv1a64:3ec60bd98d7bf523",
+  "sourceHash": "fnv1a64:28be2334b83ce562",
   "lessonIds": [
     "UR-C39-pet",
     "UR-C39-kandha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch39.txt",
   "json": "urdu/narration/ch39.json",
-  "textHash": "fnv1a64:7e03ee8e86141510",
-  "jsonHash": "fnv1a64:b590959c8ff6dbfa",
+  "textHash": "fnv1a64:2390b7516a04e04e",
+  "jsonHash": "fnv1a64:e7843ad44e197afa",
   "findings": []
 }

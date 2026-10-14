@@ -14,7 +14,8 @@ romanization: "miṭṭī"
 concept_tag: UR-THINGS123-MITTI
 prerequisites: [UR-C122-pahari, UR-C123-nadi]
 sounds: []
-roots: []
+roots: [sanskrit-mrttika]
+etymology_hook: "miṭṭī ← Sanskrit mṛttikā 'earth, clay', a tadbhava (CDIAL 10286)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C123-nadi]
 <!-- hl-knowledge: introduces=[UR-LEX-C123-THINGS123-02]; assesses=[] -->
 
 **مٹی** — *miṭṭī* — "earth, soil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مٹی** (*miṭṭī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mṛttikā*, "earth, clay" (CDIAL 10286).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

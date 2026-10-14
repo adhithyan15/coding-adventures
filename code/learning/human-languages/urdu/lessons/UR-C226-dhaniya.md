@@ -14,7 +14,8 @@ romanization: "dhaniyā"
 concept_tag: UR-CHIZ226-DHANIYA
 prerequisites: [UR-C225-rabar, UR-C225-fail]
 sounds: []
-roots: []
+roots: [sanskrit-dhanaka]
+etymology_hook: "dhaniyā ← Sanskrit dhāneyaka 'coriander', a tadbhava (CDIAL 6776)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C225-fail]
 <!-- hl-knowledge: introduces=[UR-LEX-C226-CHIZ226-01]; assesses=[] -->
 
 **دھنیا** — *dhaniyā* — "coriander".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دھنیا** (*dhaniyā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dhāneyaka*, "coriander" (CDIAL 6776). CDIAL lists it beside *dhānaka*, "coriander".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

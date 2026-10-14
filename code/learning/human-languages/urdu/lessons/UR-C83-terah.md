@@ -14,7 +14,8 @@ romanization: "terah"
 concept_tag: UR-CLOTHES83-TERAH
 prerequisites: [UR-C83-gyarah, UR-C83-barah]
 sounds: []
-roots: []
+roots: [sanskrit-trayodasha]
+etymology_hook: "terah ← *trayedaśa, CDIAL's variant of Sanskrit trayodaśa 'thirteen'; a tadbhava (CDIAL 6001)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C83-barah]
 <!-- hl-knowledge: introduces=[UR-LEX-C83-CLOTHES83-05]; assesses=[] -->
 
 **تیرہ** — *terah* — "thirteen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تیرہ** (*terah*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*trayedaśa*, "thirteen", a form CDIAL reconstructs from its descendants (CDIAL 6001). It is a variant CDIAL reconstructs beside Sanskrit *trayodaśa*, "thirteen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

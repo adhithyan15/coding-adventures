@@ -14,7 +14,8 @@ romanization: "solah"
 concept_tag: UR-NUMBERS84-SOLAH
 prerequisites: [UR-C84-chaudah, UR-C84-pandrah]
 sounds: []
-roots: []
+roots: [sanskrit-shodasha]
+etymology_hook: "solah ← Sanskrit ṣoḍaśa 'sixteen', a tadbhava (CDIAL 12812)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C84-pandrah]
 <!-- hl-knowledge: introduces=[UR-LEX-C84-NUMBERS84-03]; assesses=[] -->
 
 **سولہ** — *solah* — "sixteen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سولہ** (*solah*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ṣoḍaśa*, "sixteen" (CDIAL 12812).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "naujavān"
 concept_tag: UR-SIFAT196-NAUJAVAN
 prerequisites: [UR-C196-badnam, UR-C196-nek]
 sounds: []
-roots: []
+roots: [persian-nau, persian-javan]
+etymology_hook: "naujavān: Persian nau 'new' + javān 'young'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C196-nek]
 <!-- hl-knowledge: introduces=[UR-LEX-C196-SIFAT196-04]; assesses=[] -->
 
 **نوجوان** — *naujavān* — "youthful; a young person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نوجوان** (*naujavān*) joins Persian *nau*, "new", and *javān*, "young".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

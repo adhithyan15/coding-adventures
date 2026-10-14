@@ -14,7 +14,8 @@ romanization: "mazbūt"
 concept_tag: UR-QUAL132-MAZBUT
 prerequisites: [UR-C132-amir, UR-C132-sach]
 sounds: []
-roots: []
+roots: [arabic-madbut]
+etymology_hook: "mazbūt ← Arabic maḍbūṭ 'held firm, secured', through Persian (Lane, root ḍ-b-ṭ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C132-sach]
 <!-- hl-knowledge: introduces=[UR-LEX-C132-QUAL132-04]; assesses=[] -->
 
 **مضبوط** — *mazbūt* — "strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مضبوط** (*mazbūt*) is a loan from Arabic *maḍbūṭ*, "held firm, secured", which reached Urdu through Persian. Its Arabic root is *ḍ-b-ṭ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

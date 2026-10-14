@@ -14,7 +14,8 @@ romanization: "nabz"
 concept_tag: UR-SEHAT216-NABZ
 prerequisites: [UR-C215-shak-karna, UR-C215-nafrat-karna]
 sounds: []
-roots: []
+roots: [arabic-nabd]
+etymology_hook: "nabz ← Arabic nabḍ 'pulse, a throbbing', through Persian (Lane, root n-b-ḍ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C215-nafrat-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C216-SEHAT216-01]; assesses=[] -->
 
 **نبض** — *nabz* — "a pulse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نبض** (*nabz*) is a loan from Arabic *nabḍ*, "pulse, a throbbing", which reached Urdu through Persian. Its Arabic root is *n-b-ḍ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

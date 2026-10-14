@@ -14,7 +14,8 @@ romanization: "sabaq"
 concept_tag: UR-SCHOOL62-SABAQ
 prerequisites: [UR-C62-paisa, UR-C62-naqsha]
 sounds: []
-roots: []
+roots: [arabic-sabaq]
+etymology_hook: "sabaq ← Arabic sabaq, root s-b-q 'to go before' (Lane), through Persian; in Urdu 'a lesson'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C62-naqsha]
 <!-- hl-knowledge: introduces=[UR-LEX-C62-SCHOOL62-04]; assesses=[] -->
 
 **سبق** — *sabaq* — "a lesson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سبق** (*sabaq*) is a loan from Arabic *sabaq*, which reached Urdu through Persian. Its root *s-b-q* means "to go before, to outstrip" (Lane), and in Persian and Urdu the noun came to mean "a lesson".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

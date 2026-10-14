@@ -14,7 +14,8 @@ romanization: "bāl"
 concept_tag: UR-BODY38-BAL
 prerequisites: [UR-C38-hath, UR-C38-sar]
 sounds: []
-roots: []
+roots: [sanskrit-vala-hair]
+etymology_hook: "bāl ← Sanskrit vāla 'hair of the tail, hair', a tadbhava (CDIAL 11572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C38-sar]
 <!-- hl-knowledge: introduces=[UR-LEX-C38-BODY38-03]; assesses=[] -->
 
 **بال** — *bāl* — "hair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بال** (*bāl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vāla*, "hair of the tail, hair" (CDIAL 11572).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

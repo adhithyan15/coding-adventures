@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 116,
-  "sourceHash": "fnv1a64:96c89adbe92a1d0a",
+  "sourceHash": "fnv1a64:a2a07c6a3179e12e",
   "lessonIds": [
     "UR-C116-kharbuza",
     "UR-C116-anar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch116.txt",
   "json": "urdu/narration/ch116.json",
-  "textHash": "fnv1a64:776637810a709b7b",
-  "jsonHash": "fnv1a64:1594abaf3cde3e67",
+  "textHash": "fnv1a64:1946387a38c39ed9",
+  "jsonHash": "fnv1a64:fcf1cee4354be6fb",
   "findings": []
 }

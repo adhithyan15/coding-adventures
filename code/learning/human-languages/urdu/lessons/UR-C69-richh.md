@@ -14,7 +14,8 @@ romanization: "rīchh"
 concept_tag: UR-ANIMALS69-RICHH
 prerequisites: [UR-C69-bandar, UR-C69-sap]
 sounds: []
-roots: []
+roots: [sanskrit-rksha]
+etymology_hook: "rīchh ← Sanskrit ṛkṣa 'bear', a tadbhava (CDIAL 2445)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C69-sap]
 <!-- hl-knowledge: introduces=[UR-LEX-C69-ANIMALS69-04]; assesses=[] -->
 
 **ریچھ** — *rīchh* — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ریچھ** (*rīchh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ṛkṣa*, "bear" (CDIAL 2445).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

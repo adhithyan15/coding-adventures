@@ -14,7 +14,8 @@ romanization: "māṅgnā"
 concept_tag: UR-VERB-MANGNA
 prerequisites: [UR-C140-sikhana, UR-C140-samjhana]
 sounds: []
-roots: []
+roots: [sanskrit-margati]
+etymology_hook: "māṅgnā ← Sanskrit mārgati 'seeks, requests', a tadbhava (CDIAL 10074)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C140-samjhana]
 <!-- hl-knowledge: introduces=[UR-LEX-C140-ACT140-05]; assesses=[] -->
 
 **مانگنا** — *māṅgnā* — "to ask for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مانگنا** (*māṅgnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mārgati*, "seeks, requests" (CDIAL 10074). It is built on *mārga*, "path": to seek was "to track".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

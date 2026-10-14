@@ -12,6 +12,9 @@ Before the new one: say the Urdu for tired, then the Urdu for hungry.
 You'll want to know: پیاسا.
 پیاسا — pyāsā — "thirsty".
 
+The word, taken apart.
+پیاسا (pyāsā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pipāsaka, "thirsty", a form CDIAL reconstructs beside Sanskrit pipāsita (CDIAL 8200).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for hungry, then the Urdu for thirsty.
 
 You'll want to know: تازہ.
 تازہ — tāzā — "fresh".
+
+The word, taken apart.
+تازہ (tāzā) is a loan, usually traced to Persian tāza, "fresh".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for thirsty, then the Urdu for fresh.
 You'll want to know: کچا.
 کچا — kachchā — "raw, unripe".
 
+The word, taken apart.
+کچا (kachchā) goes back to a reconstructed kacca, "raw, unripe" (CDIAL 2613). CDIAL lists Hindi kācā and marks kaccā as taken over from Punjabi.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for fresh, then the Urdu for raw.
 You'll want to know: پکا.
 پکا — pakkā — "ripe, firm".
 
+The word, taken apart.
+پکا (pakkā) goes back to Sanskrit pakva, "cooked, ripe" (CDIAL 7621). CDIAL marks the Hindi form as taken over from Punjabi; "firm, sure" grew out of "ripe, mature".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for raw, then the Urdu for ripe.
 
 You'll want to know: گلابی.
 گلابی — gulābī — "pink".
+
+The word, taken apart.
+گلابی (gulābī) is a loan, usually traced to Persian gulābī, "rose-coloured". It is built on gulāb, "rose-water", from gul, "rose", and āb, "water".
 
 What you've built.
 One more word for this chapter.

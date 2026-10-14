@@ -11,7 +11,8 @@ gloss: I do not understand — the sentence chapter one promised and never came 
 concept_tag: VERB-NEGATE
 prerequisites: [UR-C01-nahin, UR-C04-main-hun, UR-C07-samajhna, UR-C06-jana]
 sounds: [nasal-vowel]
-roots: []
+roots: [ma-first-person, sanskrit-nahi, sanskrit-sambudhyate]
+etymology_hook: "maiṅ ← mayā 'by me' (CDIAL 9691); nahīṅ ← nahi (CDIAL 7035); samajh ← saṃbudhyate (CDIAL 12959)"
 duration:
   max_seconds: 245
 requires:
@@ -54,6 +55,11 @@ Take the affirmative frame chapter seven built, *maiṅ samajhtā hūṅ*, and p
 disappear: with **نہیں** in the sentence, the closing **ہوں** is usually dropped
 in speech. Both *maiṅ nahīṅ samajhtā* and *maiṅ nahīṅ samajhtā hūṅ* are correct;
 the shorter one is what people say.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**میں نہیں سمجھتا** (*maiṅ nahīṅ samajhtā*) is three inherited words. *maiṅ*, "I", is listed by CDIAL under the Sanskrit first-person base *ma-*, whose form *mayā* meant "by me" (CDIAL 9691); *nahīṅ*, "not", comes from *nahi*, "surely not" (CDIAL 7035); and *samajhtā* is the present of *samajhnā*, "to understand", from *saṃbudhyate*, "wakes up, understands" (CDIAL 12959).
 
 ## Grammar Lens: where the negator stands
 <!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-NAHIN-VERB, UR-LEX-NAHIN] -->

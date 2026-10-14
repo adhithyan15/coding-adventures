@@ -14,7 +14,8 @@ romanization: "kīṛā"
 concept_tag: UR-CHIZ235-KIRA
 prerequisites: [UR-C234-nihari, UR-C234-qima]
 sounds: []
-roots: []
+roots: [sanskrit-kita]
+etymology_hook: "kīṛā ← Sanskrit kīṭa 'insect, worm', a tadbhava (CDIAL 3193)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C234-qima]
 <!-- hl-knowledge: introduces=[UR-LEX-C235-CHIZ235-01]; assesses=[] -->
 
 **کیڑا** — *kīṛā* — "an insect, a worm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کیڑا** (*kīṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kīṭa*, "insect, worm" (CDIAL 3193).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

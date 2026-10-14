@@ -14,7 +14,8 @@ romanization: "dhaṛkan"
 concept_tag: UR-SEHAT154-DHARKAN
 prerequisites: [UR-C153-bhau, UR-C154-tika]
 sounds: []
-roots: []
+roots: [indo-aryan-dhad]
+etymology_hook: "dhaṛkan: the noun of dhaṛaknā 'to throb' ← *dhaḍ 'throb, beat' (CDIAL 6711)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C154-tika]
 <!-- hl-knowledge: introduces=[UR-LEX-C154-SEHAT154-02]; assesses=[] -->
 
 **دھڑکن** — *dhaṛkan* — "a heartbeat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دھڑکن** (*dhaṛkan*) is the noun of *dhaṛaknā*, "to throb", which CDIAL lists under a reconstructed *\*dhaḍ*, "throb, beat" (CDIAL 6711).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

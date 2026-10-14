@@ -14,7 +14,8 @@ romanization: "pareshān"
 concept_tag: UR-SIFAT193-PARESHAN
 prerequisites: [UR-C193-kanjus, UR-C193-lalchi]
 sounds: []
-roots: []
+roots: [persian-pareshan]
+etymology_hook: "pareshān: usually traced to Persian parēshān 'scattered; distressed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C193-lalchi]
 <!-- hl-knowledge: introduces=[UR-LEX-C193-SIFAT193-05]; assesses=[] -->
 
 **پریشان** — *pareshān* — "worried".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پریشان** (*pareshān*) is a loan, usually traced to Persian *parēshān*, "scattered; distressed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

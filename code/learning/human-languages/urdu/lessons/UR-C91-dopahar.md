@@ -14,7 +14,8 @@ romanization: "dopahar"
 concept_tag: UR-TIME91-DOPAHAR
 prerequisites: [UR-C90-vala, UR-C90-idhar]
 sounds: []
-roots: []
+roots: [do-two, sanskrit-prahara]
+etymology_hook: "dopahar: do 'two' + pahar 'a watch of three hours' (CDIAL 8900), which CDIAL asks may echo Persian pahra"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C90-idhar]
 <!-- hl-knowledge: introduces=[UR-LEX-C91-TIME91-01]; assesses=[] -->
 
 **دوپہر** — *dopahar* — "midday, afternoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دوپہر** (*dopahar*) is "two watches": *do*, "two" (CDIAL 6648), and *pahar*, a watch of about three hours, counted from sunrise. CDIAL lists *pahar* under Sanskrit *prahara*, "a watch", and asks whether that word is a Sanskritization of Persian *pahra*, "watch" (CDIAL 8900).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

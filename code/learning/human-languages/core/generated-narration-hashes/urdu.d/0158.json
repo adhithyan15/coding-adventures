@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 158,
-  "sourceHash": "fnv1a64:ed506ae0c9724ac6",
+  "sourceHash": "fnv1a64:72245f370bec05d8",
   "lessonIds": [
     "UR-C158-qaum",
     "UR-C158-basti",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch158.txt",
   "json": "urdu/narration/ch158.json",
-  "textHash": "fnv1a64:97607ab649b7e565",
-  "jsonHash": "fnv1a64:344740854527bbe5",
+  "textHash": "fnv1a64:527fcb1ce412c8ce",
+  "jsonHash": "fnv1a64:041d5504fb1ac2ed",
   "findings": []
 }

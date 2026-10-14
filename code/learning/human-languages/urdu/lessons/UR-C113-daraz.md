@@ -14,7 +14,8 @@ romanization: "darāz"
 concept_tag: UR-THINGS113-DARAZ
 prerequisites: [UR-C112-patang, UR-C112-palang]
 sounds: []
-roots: []
+roots: [english-drawer]
+etymology_hook: "darāz: usually traced to English drawer; it only looks like Persian darāz 'long'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C112-palang]
 <!-- hl-knowledge: introduces=[UR-LEX-C113-THINGS113-01]; assesses=[] -->
 
 **دراز** — *darāz* — "a drawer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دراز** (*darāz*) is usually traced to English *drawer*. It only looks like Persian *darāz*, "long", a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

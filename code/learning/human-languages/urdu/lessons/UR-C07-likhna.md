@@ -11,8 +11,8 @@ gloss: to write — an inherited verb for an act whose every tool Urdu named in 
 concept_tag: VERB-WRITE
 prerequisites: [UR-C07-parhna]
 sounds: [rtl, do-chashmi-he, long-a]
-roots: [sanskrit-likh, arabic-ktb]
-etymology_hook: likhnā is Sanskrit likhati, "scratches, scrapes" — writing as incision, the same picture behind Latin scrībere and Greek gráphein from unrelated roots; yet Urdu's pen (qalam), book (kitāb) and script (nastaʿlīq) are all borrowed, so the deed is Indo-Aryan and the equipment is not.
+roots: [sanskrit-likh, arabic-ktb, sanskrit-likhati]
+etymology_hook: "likhnā ← Sanskrit likhati 'scratches; writes' (CDIAL 11048): writing began as scratching"
 duration:
   max_seconds: 285
 requires:
@@ -70,7 +70,7 @@ One machine, four verbs, and *maiṅ … hūṅ* holding the ends of every sente
 ## The word, taken apart — the deed is inherited, the desk is borrowed
 <!-- hl-knowledge: introduces=[UR-REGISTER-WRITING-BORROWED]; assesses=[UR-LEX-LIKHNA, UR-REGISTER-INDO-ARYAN-CORE, UR-ETYMON-SOCHNA-GRIEVE, UR-ETYMON-SAMAJHNA-WAKE, UR-ETYMON-PARHNA-RECITE] -->
 
-**likhnā** is Sanskrit *likhati*, “**scratches, scrapes**.” Writing was cutting a
+**likhnā** is Sanskrit *likhati*, “**scratches, scrapes**” (CDIAL 11048). Writing was cutting a
 mark into a surface. Three other families reached for that picture out of three
 unrelated roots: Latin *scrībere* “to incise,” behind **scribe** and **script**;
 Greek *gráphein* “to scratch,” behind **graph**; Old English *wrītan* “to score,

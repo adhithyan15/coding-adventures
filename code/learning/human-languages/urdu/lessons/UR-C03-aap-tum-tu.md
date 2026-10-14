@@ -11,8 +11,8 @@ gloss: you — respectful / familiar / intimate
 concept_tag: PRONOUN-YOU
 prerequisites: [UR-C02-mera-naam]
 sounds: [rtl, alif-madd, short-vowels-unwritten, long-u]
-roots: [indo-aryan-aap, sanskrit-tvam]
-etymology_hook: Tum and tū continue the ancient tvam-tu familiar-you family behind English thou; āp grew from a self-word into respectful address.
+roots: [indo-aryan-aap, sanskrit-tvam, sanskrit-atman, sanskrit-yushmad]
+etymology_hook: "āp ← Sanskrit ātman 'self' (CDIAL 1135); tū ← tvam 'thou' (5889); tum: yuṣmad 'you' with t- from tvam (10511)"
 duration:
   max_seconds: 240
 requires:
@@ -53,6 +53,11 @@ To ask the other person's name, begin with the respectful form.
 **تم** is **ت** *t* plus the **م** that ends *salām*. The third form, *tū*,
 shares that **ت**; its written form, with one new shape for the long *ū*,
 waits for the next lesson.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+All three forms are inherited. **آپ** (*āp*) comes from Sanskrit *ātman*, "self", and became a respectful "you" (CDIAL 1135). *tū* comes from Sanskrit *tvam*, "thou", the same ancient word as English *thou* (CDIAL 5889). CDIAL lists **تم** (*tum*) under *yuṣmad*, the Sanskrit base of the plural "you", with its *t-* taken from *tvam* (CDIAL 10511).
 
 ## Grammar Lens: choose the relationship first
 <!-- hl-knowledge: introduces=[UR-PRAGMATICS-YOU-REGISTER]; assesses=[] -->

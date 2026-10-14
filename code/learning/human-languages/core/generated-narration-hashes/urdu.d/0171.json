@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 171,
-  "sourceHash": "fnv1a64:ecb7faee45ba4d2e",
+  "sourceHash": "fnv1a64:3261498b8201ec3e",
   "lessonIds": [
     "UR-C171-shahri",
     "UR-C171-sayyah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch171.txt",
   "json": "urdu/narration/ch171.json",
-  "textHash": "fnv1a64:4e15c166d2740102",
-  "jsonHash": "fnv1a64:9166bc79f5e36b2c",
+  "textHash": "fnv1a64:b55a767d001b8e68",
+  "jsonHash": "fnv1a64:d3b1ea54fb833064",
   "findings": []
 }

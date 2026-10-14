@@ -14,7 +14,8 @@ romanization: "dunyā"
 concept_tag: UR-NUMBERS86-DUNYA
 prerequisites: [UR-C86-assi, UR-C86-navve]
 sounds: []
-roots: []
+roots: [arabic-dunya]
+etymology_hook: "dunyā ← Arabic dunyā 'the world, this nearer life', through Persian (Lane, root d-n-w)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C86-navve]
 <!-- hl-knowledge: introduces=[UR-LEX-C86-NUMBERS86-04]; assesses=[] -->
 
 **دنیا** — *dunyā* — "the world".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دنیا** (*dunyā*) is a loan from Arabic *dunyā*, "the world, this nearer life", which reached Urdu through Persian. Its Arabic root is *d-n-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

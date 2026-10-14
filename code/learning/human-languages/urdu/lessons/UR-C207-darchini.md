@@ -14,7 +14,8 @@ romanization: "dārchīnī"
 concept_tag: UR-CHIZ207-DARCHINI
 prerequisites: [UR-C207-laung, UR-C207-ilaichi]
 sounds: []
-roots: []
+roots: [persian-darchini]
+etymology_hook: "dārchīnī: usually traced to Persian dārchīnī 'Chinese wood'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C207-ilaichi]
 <!-- hl-knowledge: introduces=[UR-LEX-C207-CHIZ207-03]; assesses=[] -->
 
 **دارچینی** — *dārchīnī* — "cinnamon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دارچینی** (*dārchīnī*) is usually traced to Persian *dārchīnī*, "Chinese wood", built from *dār*, "wood", and *chīnī*, "of China".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khush"
 concept_tag: UR-HEALTH42-KHUSH
 prerequisites: [UR-C41-pyas, UR-C42-bhuk]
 sounds: []
-roots: []
+roots: [khush-persian]
+etymology_hook: "khush: usually traced to Persian khush 'happy, pleasant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C42-bhuk]
 <!-- hl-knowledge: introduces=[UR-LEX-C42-HEALTH42-02]; assesses=[] -->
 
 **خوش** — *khush* — "happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خوش** (*khush*) is a loan, usually traced to Persian *khush*, "happy, pleasant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: bread — an honest dead end, and پسند put back to work on everything
 concept_tag: UR-BREAD
 prerequisites: [UR-C12-doodh]
 sounds: [rtl, retroflex-t, long-i]
-roots: [sanskrit-rotika]
-etymology_hook: roti continues Sauraseni Prakrit rotta-, from Sanskrit roṭikā, "a kind of bread," built inside Sanskrit itself on a root meaning "to strike, to crush" -- the pounding and rolling that makes flatbread -- with no further Indo-European ancestry behind that root, the same honest stop paṭh- and karṇa hit earlier.
+roots: [sanskrit-rotika, indo-aryan-rotta]
+etymology_hook: "roṭī ← *roṭṭa 'bread', a form CDIAL reconstructs; late Sanskrit has roṭikā (CDIAL 10837)"
 duration:
   max_seconds: 290
 requires:
@@ -53,8 +53,7 @@ chapter's fourth and final word is the one you would eat, not drink.
 ## The word, taken apart — another honest dead end
 <!-- hl-knowledge: introduces=[UR-ETYMON-ROTI-STRIKE]; assesses=[UR-LEX-ROTI] -->
 
-**roṭī** continues Sauraseni Prakrit *roṭṭa-*, from Sanskrit *roṭikā*, "a kind of bread." That word is built inside Sanskrit itself,
-on a root meaning "to **strike, to crush**" — the pounding and rolling that
+**roṭī** goes back to a form CDIAL reconstructs as *\*roṭṭa*, "bread"; late Sanskrit has *roṭikā* (CDIAL 10837). One view relates it to Sanskrit *roṭate*, "**strikes against**" — the pounding and rolling that
 turns grain into flatbread. The trail stops there: no proposed
 Proto-Indo-European ancestor, no English cousin. **کان** and *paṛhnā* hit
 the same honest wall earlier in this book. Not every word gets a Greek or

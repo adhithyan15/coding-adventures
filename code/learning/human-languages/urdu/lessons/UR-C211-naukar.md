@@ -14,7 +14,8 @@ romanization: "naukar"
 concept_tag: UR-KAM211-NAUKAR
 prerequisites: [UR-C211-mainejar, UR-C211-klas]
 sounds: []
-roots: []
+roots: [persian-naukar]
+etymology_hook: "naukar: usually traced to Persian naukar 'servant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C211-klas]
 <!-- hl-knowledge: introduces=[UR-LEX-C211-KAM211-04]; assesses=[] -->
 
 **نوکر** — *naukar* — "a servant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نوکر** (*naukar*) is a loan, usually traced to Persian *naukar*, "servant". Persian took it from Mongolic *nökör*, "companion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

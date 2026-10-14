@@ -14,7 +14,8 @@ romanization: "pūrī"
 concept_tag: UR-CHIZ234-PURI
 prerequisites: [UR-C233-sailab, UR-C234-papar]
 sounds: []
-roots: []
+roots: [sanskrit-purika]
+etymology_hook: "pūrī ← Sanskrit pūrikā 'cake', a tadbhava (CDIAL 8331)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C234-papar]
 <!-- hl-knowledge: introduces=[UR-LEX-C234-CHIZ234-02]; assesses=[] -->
 
 **پوری** — *pūrī* — "a puri".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پوری** (*pūrī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pūrikā*, "cake" (CDIAL 8331). CDIAL thinks it possibly connected with *apūpa*, "cake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

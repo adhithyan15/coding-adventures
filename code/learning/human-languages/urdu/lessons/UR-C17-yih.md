@@ -11,8 +11,8 @@ gloss: this — the nearer of Urdu's two pointing words, and a word whose second
 concept_tag: UR-THIS
 prerequisites: [UR-C16-practice, UR-C12-roti, UR-C13-lal, UR-C13-safed]
 sounds: [rtl, short-vowels-unwritten]
-roots: [sanskrit-iyam]
-etymology_hook: yih descends from Old Indo-Aryan *iyam / *idam, the near demonstrative of Sanskrit, and it keeps the same job it had then -- pointing at the thing beside you rather than the thing across the room; its far partner voh comes from the matching *asau line, so Urdu's two pointing words are a pair inherited whole rather than a pair invented.
+roots: [sanskrit-esha]
+etymology_hook: "yih ← Sanskrit eṣa 'this' (CDIAL 2530); its far partner voh comes from asau 'that' (CDIAL 972)"
 duration:
   max_seconds: 250
 requires:
@@ -65,8 +65,7 @@ Say the word now; you will write it shortly.
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-YIH] -->
 
 **یہ** points at what is **near** you. Urdu keeps a second word for what is
-**far**, and the two arrived together: both descend from the Old Indo-Aryan
-demonstratives that Sanskrit wrote as *iyam* and *asau*. English lost most of
+**far**, and the two arrived together: both descend from Old Indo-Aryan demonstratives. CDIAL lists Hindi *yah*, "this", under Sanskrit *eṣa*, "this" (CDIAL 2530), and *vah*, "that", under *asau*, "that" (CDIAL 972). English lost most of
 that system and kept a thinner **this**/**that**; Urdu kept the pair intact.
 
 There is a gap in what you can do with **یہ** so far, and it is worth naming.

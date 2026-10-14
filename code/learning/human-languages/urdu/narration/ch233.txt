@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a chain, then the Urdu for a screw.
 You'll want to know: کہرا.
 کہرا — kohrā — "fog".
 
+The word, taken apart.
+کہرا (kohrā) is a tadbhava, a word inherited and reshaped by sound change. It comes from kuha, "fog, mist", a form CDIAL reconstructs from its descendants (CDIAL 3386).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a screw, then the Urdu for fog.
 
 You'll want to know: اوس.
 اوس — os — "dew".
+
+The word, taken apart.
+اوس (os) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from avaśyā, "hoar-frost, dew" (CDIAL 855).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for fog, then the Urdu for dew.
 You'll want to know: اولے.
 اولے — ole — "hail".
 
+The word, taken apart.
+اولے (ole) is the plural of olā, "a hailstone", which CDIAL lists under Sanskrit upala, "stone, rock" (CDIAL 2223): hail is "stones" falling from the sky.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for dew, then the Urdu for hail.
 You'll want to know: زلزلہ.
 زلزلہ — zalzalā — "an earthquake".
 
+The word, taken apart.
+زلزلہ (zalzalā) is a loan from Arabic zalzala, "a shaking, an earthquake", which reached Urdu through Persian. Its Arabic root is z-l-l (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for hail, then the Urdu for an earthquake.
 
 You'll want to know: سیلاب.
 سیلاب — sailāb — "a flood".
+
+The word, taken apart.
+سیلاب (sailāb) joins Arabic sayl, "a torrent, a flood" (Lane, root s-y-l), and Persian āb, "water", put together in Persian.
 
 What you've built.
 One more word for this chapter.

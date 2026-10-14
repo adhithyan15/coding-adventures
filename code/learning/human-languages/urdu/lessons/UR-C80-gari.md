@@ -14,7 +14,8 @@ romanization: "gāṛī"
 concept_tag: UR-TOWN80-GARI
 prerequisites: [UR-C79-baink, UR-C80-isteshan]
 sounds: []
-roots: []
+roots: [indo-aryan-gadda]
+etymology_hook: "gāṛī ← *gāḍḍa 'cart', which CDIAL tentatively links to Sanskrit garta 'chariot seat' (CDIAL 4116)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C80-isteshan]
 <!-- hl-knowledge: introduces=[UR-LEX-C80-TOWN80-02]; assesses=[] -->
 
 **گاڑی** — *gāṛī* — "a car; a train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گاڑی** (*gāṛī*) goes back to a reconstructed *\*gāḍḍa*, "cart", which CDIAL links, tentatively, with Sanskrit *garta*, "seat of a chariot" (CDIAL 4116).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

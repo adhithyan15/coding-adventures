@@ -14,7 +14,8 @@ romanization: "mīṭhā"
 concept_tag: UR-ADJ72-MITHA
 prerequisites: [UR-C72-bhara, UR-C72-khali]
 sounds: []
-roots: []
+roots: [sanskrit-mishta]
+etymology_hook: "mīṭhā ← Sanskrit miṣṭa 'dainty, sweet', a tadbhava (CDIAL 10299)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C72-khali]
 <!-- hl-knowledge: introduces=[UR-LEX-C72-ADJ72-05]; assesses=[] -->
 
 **میٹھا** — *mīṭhā* — "sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**میٹھا** (*mīṭhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *miṣṭa*, "dainty, sweet" (CDIAL 10299). CDIAL lists it under *mṛṣṭa*, "pure; prepared, savoury", of which *miṣṭa* is an early variant.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

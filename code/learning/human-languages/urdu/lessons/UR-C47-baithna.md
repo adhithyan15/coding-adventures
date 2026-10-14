@@ -14,7 +14,8 @@ romanization: "baiṭhnā"
 concept_tag: UR-VERB-BAITHNA
 prerequisites: [UR-C46-dekhna, UR-C46-sunna]
 sounds: []
-roots: []
+roots: [sanskrit-upavishati]
+etymology_hook: "baiṭhnā ← Sanskrit upaviśati 'sits down', a tadbhava (CDIAL 2245)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C46-sunna]
 <!-- hl-knowledge: introduces=[UR-LEX-C47-VERBS47-01]; assesses=[] -->
 
 **بیٹھنا** — *baiṭhnā* — "to sit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بیٹھنا** (*baiṭhnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *upaviśati*, "sits down" (CDIAL 2245). The *-ṭh-* goes back to its past form *upaviṣṭa*, "seated".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

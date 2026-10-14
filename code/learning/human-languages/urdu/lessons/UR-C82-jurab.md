@@ -14,7 +14,8 @@ romanization: "jurāb"
 concept_tag: UR-CLOTHES82-JURAB
 prerequisites: [UR-C82-kurta, UR-C82-patlun]
 sounds: []
-roots: []
+roots: [persian-jurab]
+etymology_hook: "jurāb: usually traced to Persian jurāb 'stocking, sock'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C82-patlun]
 <!-- hl-knowledge: introduces=[UR-LEX-C82-CLOTHES82-04]; assesses=[] -->
 
 **جراب** — *jurāb* — "a sock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جراب** (*jurāb*) is a loan, usually traced to Persian *jurāb*, "stocking, sock".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

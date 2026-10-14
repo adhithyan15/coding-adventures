@@ -14,7 +14,8 @@ romanization: "chāṅdnī"
 concept_tag: UR-CHIZ206-CHANDNI
 prerequisites: [UR-C206-dhuan, UR-C206-rakh]
 sounds: []
-roots: []
+roots: [indo-aryan-candrana]
+etymology_hook: "chāṅdnī ← *cāndraṇa 'moonlight', a reconstructed form; a tadbhava (CDIAL 4745)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C206-rakh]
 <!-- hl-knowledge: introduces=[UR-LEX-C206-CHIZ206-04]; assesses=[] -->
 
 **چاندنی** — *chāṅdnī* — "moonlight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چاندنی** (*chāṅdnī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cāndraṇa*, "moonlight", a form CDIAL reconstructs from its descendants (CDIAL 4745). It is built on *candra*, "moon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

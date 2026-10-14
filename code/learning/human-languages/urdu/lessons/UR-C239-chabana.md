@@ -14,7 +14,8 @@ romanization: "chabānā"
 concept_tag: UR-VERB-CHABANA
 prerequisites: [UR-C238-kumhar, UR-C239-nigalna]
 sounds: []
-roots: []
+roots: [sanskrit-carvati]
+etymology_hook: "chabānā ← Sanskrit carvati 'chews', a tadbhava (CDIAL 4711)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C239-nigalna]
 <!-- hl-knowledge: introduces=[UR-LEX-C239-ACT239-02]; assesses=[] -->
 
 **چبانا** — *chabānā* — "to chew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چبانا** (*chabānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *carvati*, "chews" (CDIAL 4711).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nānī"
 concept_tag: UR-FAMILY44-NANI
 prerequisites: [UR-C43-dadi, UR-C44-nana]
 sounds: []
-roots: []
+roots: [indo-aryan-nanna]
+etymology_hook: "nānī ← *nānna 'a term of respect for an older relative', a reconstructed form; a tadbhava (CDIAL 7059)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C44-nana]
 <!-- hl-knowledge: introduces=[UR-LEX-C44-FAMILY44-02]; assesses=[] -->
 
 **نانی** — *nānī* — "a grandmother (mother's mother)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نانی** (*nānī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*nānna*, "a term of respect for an older relative", a form CDIAL reconstructs from its descendants (CDIAL 7059). *nānī* is the feminine of *nānā*, "grandfather". CDIAL compares Sanskrit *nanā*, "mother".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

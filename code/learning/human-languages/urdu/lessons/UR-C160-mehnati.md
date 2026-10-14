@@ -14,7 +14,8 @@ romanization: "mehnatī"
 concept_tag: UR-SIFAT160-MEHNATI
 prerequisites: [UR-C160-bevaquf, UR-C160-sust]
 sounds: []
-roots: []
+roots: [arabic-mihna]
+etymology_hook: "mehnatī: mehnat 'toil', from Arabic miḥna 'trial, ordeal' through Persian, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C160-sust]
 <!-- hl-knowledge: introduces=[UR-LEX-C160-SIFAT160-05]; assesses=[] -->
 
 **محنتی** — *mehnatī* — "hardworking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**محنتی** (*mehnatī*) is *mehnat*, "toil", with the ending *-ī*, "one who has it". *mehnat* is Arabic *miḥna*, "trial, ordeal", which reached Urdu through Persian (Lane, root *m-ḥ-n*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

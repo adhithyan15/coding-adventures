@@ -14,7 +14,8 @@ romanization: "ghaṛī"
 concept_tag: UR-CLOTHES83-GHARI
 prerequisites: [UR-C82-jeb, UR-C83-anguthi]
 sounds: []
-roots: []
+roots: [sanskrit-ghati]
+etymology_hook: "ghaṛī ← Sanskrit ghaṭī 'pot, water-clock', a tadbhava (CDIAL 4406)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C83-anguthi]
 <!-- hl-knowledge: introduces=[UR-LEX-C83-CLOTHES83-02]; assesses=[] -->
 
 **گھڑی** — *ghaṛī* — "a watch, a clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گھڑی** (*ghaṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghaṭī*, "pot, water-clock" (CDIAL 4406). A *ghaṭī* was a small pot that sank as it filled, timing a short period.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kamānā"
 concept_tag: UR-VERB-KAMANA
 prerequisites: [UR-C214-der-karna, UR-C214-chhupana]
 sounds: []
-roots: []
+roots: [indo-aryan-karmapayati]
+etymology_hook: "kamānā ← *karmāpayati 'works, earns', a reconstructed form; a tadbhava (CDIAL 2897)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C214-chhupana]
 <!-- hl-knowledge: introduces=[UR-LEX-C214-ACT214-04]; assesses=[] -->
 
 **کمانا** — *kamānā* — "to earn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کمانا** (*kamānā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*karmāpayati*, "works, earns", a form CDIAL reconstructs from its descendants (CDIAL 2897). It is built on *karman*, "work", the source of *kām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

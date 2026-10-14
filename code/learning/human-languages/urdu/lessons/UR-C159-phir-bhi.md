@@ -14,7 +14,8 @@ romanization: "phir bhī"
 concept_tag: UR-VAJAH159-PHIR-BHI
 prerequisites: [UR-C159-chunki, UR-C159-agar]
 sounds: []
-roots: []
+roots: [indo-aryan-phirati, sanskrit-api]
+etymology_hook: "phir 'again' ← *phirati 'turns' (CDIAL 9078); bhī 'also' ← Sanskrit api (CDIAL 485)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C159-agar]
 <!-- hl-knowledge: introduces=[UR-LEX-C159-VAJAH159-04]; assesses=[] -->
 
 **پھر بھی** — *phir bhī* — "even so, still".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پھر بھی** (*phir bhī*) is "again also". *phir*, "again", comes from a reconstructed *\*phirati*, "turns" (CDIAL 9078), and *bhī*, "also, even", from Sanskrit *api*, "also, even" (CDIAL 485).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

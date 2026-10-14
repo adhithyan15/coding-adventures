@@ -11,8 +11,8 @@ gloss: to know — the Urdu cousin of English know, Latin notice, and Greek gnos
 concept_tag: VERB-KNOW
 prerequisites: [UR-C06-bolna, UR-C05-hafiz, UR-C06-hona]
 sounds: [rtl, long-a, geminate-nun]
-roots: [sanskrit-jna, pie-gneh3]
-etymology_hook: jānnā continues Sanskrit jānāti from the root jñā-, from PIE *ǵneh₃- — the same root as English know, can, and cunning.
+roots: [sanskrit-jna, pie-gneh3, sanskrit-janati]
+etymology_hook: "jānnā ← Sanskrit jānāti 'knows' (CDIAL 5193), on the root jñā-, kin to English know"
 duration:
   max_seconds: 255
 requires:
@@ -57,7 +57,7 @@ One letter, and the whole meaning turns.
 ## The word, taken apart — the widest family in the chapter
 <!-- hl-knowledge: introduces=[UR-ETYMON-JANNA-KNOW]; assesses=[] -->
 
-**jānnā** continues Sanskrit *jānāti*, from the root *jñā-*, “know.” That
+**jānnā** continues Sanskrit *jānāti*, “knows” (CDIAL 5193), from the root *jñā-*, “know.” That
 root is Indo-European \**ǵneh₃-*, and English is stuffed with it.
 
 Straight down the Germanic line: **know**, **knowledge**, **can** (once “to

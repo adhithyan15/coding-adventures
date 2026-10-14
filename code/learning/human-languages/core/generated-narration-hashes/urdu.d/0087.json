@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 87,
-  "sourceHash": "fnv1a64:77ae55a80622ece7",
+  "sourceHash": "fnv1a64:f11a2ed36312a729",
   "lessonIds": [
     "UR-C87-git",
     "UR-C87-safar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch87.txt",
   "json": "urdu/narration/ch87.json",
-  "textHash": "fnv1a64:448351f8beb9ddb7",
-  "jsonHash": "fnv1a64:9ade448b46400666",
+  "textHash": "fnv1a64:f6f71fb987b11608",
+  "jsonHash": "fnv1a64:686020fee2c14905",
   "findings": []
 }

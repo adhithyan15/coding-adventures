@@ -14,7 +14,8 @@ romanization: "paudā"
 concept_tag: UR-CHIZ173-PAUDA
 prerequisites: [UR-C173-divar-ghari, UR-C173-gamla]
 sounds: []
-roots: []
+roots: [sanskrit-pravrddha]
+etymology_hook: "paudā ← Sanskrit pravṛddha 'grown up, great', a tadbhava (CDIAL 8807)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C173-gamla]
 <!-- hl-knowledge: introduces=[UR-LEX-C173-CHIZ173-03]; assesses=[] -->
 
 **پودا** — *paudā* — "a plant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پودا** (*paudā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pravṛddha*, "grown up, great" (CDIAL 8807). It is built on *vṛdh-*, "to grow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

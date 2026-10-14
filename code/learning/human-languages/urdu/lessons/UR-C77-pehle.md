@@ -14,7 +14,8 @@ romanization: "pehle"
 concept_tag: UR-TIME77-PEHLE
 prerequisites: [UR-C77-jaldi, UR-C77-der]
 sounds: []
-roots: []
+roots: [indo-aryan-prathila]
+etymology_hook: "pehle: the adverb of pahlā 'first' ← *prathilla, a variant of *prathila 'first' (CDIAL 8652)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C77-der]
 <!-- hl-knowledge: introduces=[UR-LEX-C77-TIME77-05]; assesses=[] -->
 
 **پہلے** — *pehle* — "before, first".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پہلے** (*pehle*) is the adverb form of *pahlā*, "first". CDIAL lists *pahlā* under *\*prathilla*, a variant of a reconstructed *\*prathila*, "first", built on Sanskrit *prathama*, "first" (CDIAL 8652).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

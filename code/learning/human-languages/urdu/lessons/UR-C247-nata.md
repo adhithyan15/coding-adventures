@@ -14,7 +14,8 @@ romanization: "nāṭā"
 concept_tag: UR-SIFAT247-NATA
 prerequisites: [UR-C246-sarhad, UR-C246-hukumat]
 sounds: []
-roots: []
+roots: [indo-aryan-natta]
+etymology_hook: "nāṭā ← *naṭṭa 'defective', a reconstructed form; a tadbhava (CDIAL 6935)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C246-hukumat]
 <!-- hl-knowledge: introduces=[UR-LEX-C247-SIFAT247-01]; assesses=[] -->
 
 **ناٹا** — *nāṭā* — "short (of a person)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناٹا** (*nāṭā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*naṭṭa*, "defective", a form CDIAL reconstructs from its descendants (CDIAL 6935). CDIAL glosses the Hindi word "short, dwarfish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

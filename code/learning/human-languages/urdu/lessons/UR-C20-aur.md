@@ -11,8 +11,8 @@ gloss: and — the commonest word in Urdu, asked for once in a chapter-15 practi
 concept_tag: UR-JOIN-AUR
 prerequisites: [UR-R19-three-refusals, UR-C15-barish, UR-C15-hawa]
 sounds: [long-o]
-roots: []
-etymology_hook: "اور is inherited from Sanskrit aparam, 'the other, the further one', by way of Prakrit — the same shape behind Bengali ār, and a conjunction that began life as an adjective meaning 'more', which is still its meaning when it stands alone in front of a noun"
+roots: [sanskrit-apara]
+etymology_hook: "aur ← Sanskrit aparam 'again, moreover', the adverb of apara 'other' (CDIAL 434)"
 duration:
   max_seconds: 235
 requires:
@@ -59,8 +59,7 @@ Three letters, all of them yours: **ا**, **و**, **ر**. The middle one is the
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-AUR] -->
 
-**اور** is inherited, not borrowed — Sanskrit *aparam*, "the other one, the
-further one," worn through Prakrit into one syllable. The counting sense is
+**اور** is inherited, not borrowed — Sanskrit *aparam*, "again, moreover", the adverb of *apara*, "other" (CDIAL 434), worn through Prakrit into one syllable. The counting sense is
 still there when the word stands alone in front of a noun: **اور پانی** means
 *more water*, not *and water*. Bengali's *ār* is the same word by the same
 road, which is the sort of relative Urdu's Persian layer usually hides.

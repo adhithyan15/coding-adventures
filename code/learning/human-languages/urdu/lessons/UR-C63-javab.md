@@ -14,7 +14,8 @@ romanization: "javāb"
 concept_tag: UR-SCHOOL63-JAVAB
 prerequisites: [UR-C62-sabaq, UR-C62-saval]
 sounds: []
-roots: []
+roots: [arabic-jawab]
+etymology_hook: "javāb ← Arabic jawāb 'an answer', through Persian (Lane, root j-w-b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C62-saval]
 <!-- hl-knowledge: introduces=[UR-LEX-C63-SCHOOL63-01]; assesses=[] -->
 
 **جواب** — *javāb* — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جواب** (*javāb*) is a loan from Arabic *jawāb*, "an answer", which reached Urdu through Persian. Its Arabic root is *j-w-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: how — addressing a man / addressing a woman
 concept_tag: QUESTION-HOW
 prerequisites: [UR-C03-practice, UR-C01-nahin]
 sounds: [rtl, ai-diphthong, long-i, final-ye]
-roots: [indo-aryan-k-question-family]
-etymology_hook: Kaise and kaisī belong to the inherited Indo-Aryan k-question family already visible in kyā; Urdu lets the form agree with the person addressed.
+roots: [indo-aryan-k-question-family, sanskrit-kidrsha]
+etymology_hook: "kaise, kaisī: forms of kaisā ← Sanskrit kīdṛśa 'of what kind', with ka- for kī- (CDIAL 3197)"
 duration:
   max_seconds: 240
 requires:
@@ -51,6 +51,11 @@ reviews_of: [UR-C03-practice, UR-C03-kya]
 Both begin **ک** *k* + **ی** carrying the *ai* sound. At the left edge, **کیسے**
 ends in broad **ے** *e*, while **کیسی** ends in **ی** long *ī*.
 [YOU READ: the whole word before isolating the final shape]
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کیسے / کیسی** (*kaise / kaisī*) are forms of *kaisā*, "of what kind", which CDIAL lists under Sanskrit *kīdṛśa*, "of what kind", with the question stem *ka-* in place of *kī-*, after *jaisā*, "such as" (CDIAL 3197).
 
 ## Grammar Lens: one agreement contrast
 <!-- hl-knowledge: introduces=[UR-GRAMMAR-HOW-GENDER]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hawāī jahāz"
 concept_tag: UR-LOC103-HAWAIJAHAZ
 prerequisites: [UR-C102-daftar, UR-C102-kutubkhana]
 sounds: []
-roots: []
+roots: [arabic-jahaz]
+etymology_hook: "hawāī: hawā 'air' (Arabic hawāʾ) + -ī; jahāz ← Arabic jahāz 'equipment', a ship in Persian (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C102-kutubkhana]
 <!-- hl-knowledge: introduces=[UR-LEX-C103-LOC103-01]; assesses=[] -->
 
 **ہوائی جہاز** — *hawāī jahāz* — "an aeroplane".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہوائی جہاز** (*hawāī jahāz*) is "air-ship": *hawāī*, "of the air", from Arabic *hawāʾ*, "air", and *jahāz*, "ship", from Arabic *jahāz*, "equipment", both through Persian (Lane, roots *h-w-y*, *j-h-z*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

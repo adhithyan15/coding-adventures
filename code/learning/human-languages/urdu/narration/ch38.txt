@@ -12,6 +12,9 @@ Before the new one: say the Urdu for third, then the Urdu for fourth.
 You'll want to know: ہاتھ.
 ہاتھ — hāth — "a hand".
 
+The word, taken apart.
+ہاتھ (hāth) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hasta, "hand" (CDIAL 14024).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for fourth, then the Urdu for a hand.
 
 You'll want to know: سر.
 سر — sar — "the head".
+
+The word, taken apart.
+سر (sar) is a loan, usually traced to Persian sar, "head". Persian sar and Sanskrit śiras, the source of Hindi sir (CDIAL 12452), are usually taken to be the same ancient word, kept separately by the two branches.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a hand, then the Urdu for the head.
 You'll want to know: بال.
 بال — bāl — "hair".
 
+The word, taken apart.
+بال (bāl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāla, "hair of the tail, hair" (CDIAL 11572).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for the head, then the Urdu for hair.
 You'll want to know: دانت.
 دانت — dānt — "a tooth".
 
+The word, taken apart.
+دانت (dānt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from danta, "tooth" (CDIAL 6152). It is the same ancient word as Latin dēns and English tooth.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for hair, then the Urdu for a tooth.
 
 You'll want to know: گلا.
 گلا — galā — "the throat".
+
+The word, taken apart.
+گلا (galā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gala, "throat, neck" (CDIAL 4070).
 
 What you've built.
 One more word for this chapter.

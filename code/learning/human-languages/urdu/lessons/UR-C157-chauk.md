@@ -14,7 +14,8 @@ romanization: "chauk"
 concept_tag: UR-JAGAH157-CHAUK
 prerequisites: [UR-C157-mohalla, UR-C157-futpath]
 sounds: []
-roots: []
+roots: [sanskrit-catushka]
+etymology_hook: "chauk ← Sanskrit catuṣka 'set of four; a square courtyard', a tadbhava (CDIAL 4629)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C157-futpath]
 <!-- hl-knowledge: introduces=[UR-LEX-C157-JAGAH157-04]; assesses=[] -->
 
 **چوک** — *chauk* — "a town square, a market square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چوک** (*chauk*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *catuṣka*, "set of four; a square courtyard" (CDIAL 4629). It is built on *catur*, "four".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

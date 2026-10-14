@@ -12,7 +12,7 @@ concept_tag: UR-FRIEND
 prerequisites: [UR-C09-bahan, UR-C03-aap-tum-tu-more]
 sounds: [rtl, long-o, short-vowels-unwritten]
 roots: [persian-dausta, pie-geus]
-etymology_hook: dost is Persian, inherited from Old Persian dauštā, from Proto-Iranian *jawštā́, from Proto-Indo-European *ǵews- "to taste, to choose, to enjoy" — the same root behind English choose and Latin gustus (English gusto), so a friend is etymologically someone chosen, the way pūchhnā and Persian porsīdan were two roads down one root.
+etymology_hook: "dost: usually traced to Persian dōst 'friend', from Old Persian dauštā, on the root *ǵews- 'choose'"
 duration:
   max_seconds: 280
 requires:

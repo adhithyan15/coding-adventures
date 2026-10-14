@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "Nail, Hammer, Lock, Fan, Electricity",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6ba0ed5e22c4909b",
+  "sourceHash": "fnv1a64:b710539d19adba2b",
   "lessons": [
     {
       "id": "UR-C108-kil",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:154cfc7927ab331e",
+      "sourceHash": "fnv1a64:aecff6c2882942a4",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کیل (kīl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kīla, \"stake, peg\" (CDIAL 3202). CDIAL notes that both an Indo-European and a non-Aryan source have been proposed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f357cd3db9f22cda",
+      "sourceHash": "fnv1a64:d13b203a37810201",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ہتھوڑا (hathauṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from hastakūṭa, \"hand hammer\", a form CDIAL reconstructs from its descendants (CDIAL 14028). It is built from hasta, \"hand\", and kūṭa, \"hammer\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab3838c1e99715a8",
+      "sourceHash": "fnv1a64:81ee8abcc8137b52",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تالا (tālā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tāla, \"latch, bolt\" (CDIAL 5749). CDIAL compares a Tamil word for \"bar, bolt, latch\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfcacf8be3e9808f",
+      "sourceHash": "fnv1a64:d3bbc24abdce6e29",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پنکھا (pankhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pakṣa, \"wing, feather; fan\" (CDIAL 7627). CDIAL notes the nasal and asks whether puṅkha, \"feathered end of an arrow\", crossed with it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ae4cd60efe0f577",
+      "sourceHash": "fnv1a64:703475fdc43f7cd1",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بجلی (bijlī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vidyullatā, \"forked lightning\" (CDIAL 11745). It is built from vidyut, \"lightning\", and latā, \"creeper\": lightning as a forking vine. The sense \"electricity\" came later."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

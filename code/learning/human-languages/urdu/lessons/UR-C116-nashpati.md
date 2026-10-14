@@ -14,7 +14,8 @@ romanization: "nāshpātī"
 concept_tag: UR-THINGS116-NASHPATI
 prerequisites: [UR-C116-anar, UR-C116-amrud]
 sounds: []
-roots: []
+roots: [persian-nashpati]
+etymology_hook: "nāshpātī: usually traced to Persian nāshpātī 'pear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C116-amrud]
 <!-- hl-knowledge: introduces=[UR-LEX-C116-THINGS116-04]; assesses=[] -->
 
 **ناشپاتی** — *nāshpātī* — "a pear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناشپاتی** (*nāshpātī*) is a loan, usually traced to Persian *nāshpātī*, "pear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

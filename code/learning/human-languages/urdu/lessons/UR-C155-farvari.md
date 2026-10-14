@@ -14,7 +14,8 @@ romanization: "farvarī"
 concept_tag: UR-VAQT155-FARVARI
 prerequisites: [UR-C155-adha-ghanta, UR-C155-janvari]
 sounds: []
-roots: []
+roots: [english-february]
+etymology_hook: "farvarī ← English February"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C155-janvari]
 <!-- hl-knowledge: introduces=[UR-LEX-C155-VAQT155-04]; assesses=[] -->
 
 **فروری** — *farvarī* — "February".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فروری** (*farvarī*) is a loan from English *February*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

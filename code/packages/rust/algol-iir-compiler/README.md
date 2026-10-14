@@ -241,7 +241,9 @@ Built-in integer `abs` may also map that bounded result to exact `0` or `1`
 before `entier`; a user-declared `abs` remains conservative.
 Variable-free exact additive zero terms and one exact unit offset may surround
 that bounded result before `entier`; multiple, non-unit, and dynamic additive
-terms remain conservative.
+terms remain conservative. The one-offset cap is preserved through parentheses,
+supported standard-function wrappers, and runtime conditional branches; each
+conditional path may independently contain one offset.
 Variable-free exact multiplicative unit factors may likewise surround it;
 non-unit or variable factors remain conservative.
 Exact unit division is also permitted when the bounded result is the numerator;

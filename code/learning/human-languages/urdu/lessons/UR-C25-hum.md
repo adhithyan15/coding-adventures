@@ -11,8 +11,8 @@ gloss: we — the first plural pronoun this book has had, and one that Urdu also
 concept_tag: UR-LEX-HUM
 prerequisites: [UR-C25-oblique-plural, UR-C04-main-hun, UR-C03-aap-tum-tu, UR-C24-yahan]
 sounds: []
-roots: []
-etymology_hook: "ہم is Sanskrit vayam worn down past recognition, and it is the same word Hindi uses; the two languages part company on almost nothing at this level, which is the plainest evidence that they are one spoken language written two ways."
+roots: [sanskrit-asmad]
+etymology_hook: "ham ← Sanskrit asmad 'we, us (the base of the plural forms)', a tadbhava (CDIAL 986)"
 duration:
   max_seconds: 240
 requires:
@@ -50,6 +50,11 @@ or **آپ**, and nobody else. **ہم** is the first pronoun that covers a group.
 Notice the verb. **میں … ہوں** but **ہم … ہیں**: the plural subject takes the
 plural form of *to be*, and it is the same **ہیں** you have been saying to **آپ**
 since chapter four.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہم** (*ham*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *asmad*, "we, us (the base of the plural forms)" (CDIAL 986). CDIAL lists it under this base rather than under Sanskrit *vayam*, "we".
 
 ## Grammar Lens: a "we" that is sometimes one person
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-HUM, UR-LEX-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-LEX-MAIN] -->

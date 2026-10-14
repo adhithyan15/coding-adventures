@@ -14,7 +14,8 @@ romanization: "narm"
 concept_tag: UR-QUAL133-NARM
 prerequisites: [UR-C133-burha, UR-C133-pyara]
 sounds: []
-roots: []
+roots: [persian-narm]
+etymology_hook: "narm: usually traced to Persian narm 'soft'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C133-pyara]
 <!-- hl-knowledge: introduces=[UR-LEX-C133-QUAL133-04]; assesses=[] -->
 
 **نرم** — *narm* — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نرم** (*narm*) is a loan, usually traced to Persian *narm*, "soft".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

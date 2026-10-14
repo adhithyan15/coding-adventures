@@ -18,7 +18,7 @@ maiṅ pānī letā hūṅ. — I take/get water (man speaking). maiṅ pānī l
 لینا's stem le- slots a noun in front of it the same way any transitive verb does. You already hold the whole verb; پانی (pānī) is the first noun you have had to put in front of it.
 
 The word, taken apart — a drink-word, not a water-word.
-pānī continues Sanskrit pānīya, "water, drink," built on pā-, "to drink," from Proto-Indo-European peh₃-. English water is unrelated — it comes from an entirely different PIE root. But peh₃- itself did reach English, by a different door: Latin potare, "to drink," gave English potion and, by way of a sense narrowed to "a poisoned drink," poison. پانی is, underneath, "the drinkable thing" — the same idea English kept for what you drink, not for the substance itself.
+pānī continues Sanskrit pānīya, "water, drink" (CDIAL 8082), built on pā-, "to drink," from Proto-Indo-European peh₃-. English water is unrelated — it comes from an entirely different PIE root. But peh₃- itself did reach English, by a different door: Latin potare, "to drink," gave English potion and, by way of a sense narrowed to "a poisoned drink," poison. پانی is, underneath, "the drinkable thing" — the same idea English kept for what you drink, not for the substance itself.
 
 Guided Practice.
 [your turn — say: pānī — water; then merā pānī]
@@ -95,7 +95,7 @@ The letters in this word.
 From the right edge: د d, then و carrying long ū, then د again, then ھ. دھ extends the two-eyed he to a sixth base letter: it has now aspirated jīm, ṭe, ṛe, che, kāf, and here it aspirates د, giving dh.
 
 The word, taken apart — the cousin you'd guess wrong.
-dūdh continues Sanskrit dugdhá, literally "milked," from Proto-Indo-European dʰewgʰ-, "to be fit, to yield, to produce." That root also gives Sanskrit duh-, "to milk" — the verb sitting directly under this noun.
+dūdh continues Sanskrit dugdhá, literally "milked" (CDIAL 6391), from Proto-Indo-European dʰewgʰ-, "to be fit, to yield, to produce." That root also gives Sanskrit duh-, "to milk" — the verb sitting directly under this noun.
 Here is the trap. English dough looks like the obvious match, and it is not: dough comes from a completely different PIE root, dʰeigʰ-, "to knead, to form" — the root behind the shape of bread, not the substance of milk. The real English cousin of دودھ (dūdh) is a quieter word: doughty, "brave, capable," from the very same dʰewgʰ-, "fit for, of use." A doughty person and milked milk share an ancestor; bread dough does not.
 
 Guided Practice.
@@ -129,7 +129,7 @@ You'll want to know first — one word.
 روٹی (roṭī) is feminine.
 
 The word, taken apart — another honest dead end.
-roṭī continues Sauraseni Prakrit roṭṭa-, from Sanskrit roṭikā, "a kind of bread." That word is built inside Sanskrit itself, on a root meaning "to strike, to crush" — the pounding and rolling that turns grain into flatbread. The trail stops there: no proposed Proto-Indo-European ancestor, no English cousin. کان and paṛhnā hit the same honest wall earlier in this book. Not every word gets a Greek or Latin relative, and saying so plainly is better than inventing one.
+roṭī goes back to a form CDIAL reconstructs as roṭṭa, "bread"; late Sanskrit has roṭikā (CDIAL 10837). One view relates it to Sanskrit roṭate, "strikes against" — the pounding and rolling that turns grain into flatbread. The trail stops there: no proposed Proto-Indo-European ancestor, no English cousin. کان and paṛhnā hit the same honest wall earlier in this book. Not every word gets a Greek or Latin relative, and saying so plainly is better than inventing one.
 
 Grammar Lens: mujhe... pasand ہے, one more time.
 mujhe roṭī pasand hai. — I like bread.

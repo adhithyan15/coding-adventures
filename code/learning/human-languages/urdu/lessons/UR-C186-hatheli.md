@@ -14,7 +14,8 @@ romanization: "hathelī"
 concept_tag: UR-SEHAT186-HATHELI
 prerequisites: [UR-C186-eri, UR-C186-mutthi]
 sounds: []
-roots: []
+roots: [sanskrit-hastatala]
+etymology_hook: "hathelī ← Sanskrit hastatala 'palm of the hand', a tadbhava (CDIAL 14029)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C186-mutthi]
 <!-- hl-knowledge: introduces=[UR-LEX-C186-SEHAT186-03]; assesses=[] -->
 
 **ہتھیلی** — *hathelī* — "a palm (of the hand)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہتھیلی** (*hathelī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hastatala*, "palm of the hand" (CDIAL 14029). It is built from *hasta*, "hand", and *tala*, "surface".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

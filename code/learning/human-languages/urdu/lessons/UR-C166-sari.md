@@ -14,7 +14,8 @@ romanization: "sāṛī"
 concept_tag: UR-CHIZ166-SARI
 prerequisites: [UR-C165-printar, UR-C165-charjar]
 sounds: []
-roots: []
+roots: [sanskrit-shati]
+etymology_hook: "sāṛī ← Sanskrit śāṭī 'strip of cloth, garment', a tadbhava (CDIAL 12381)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C165-charjar]
 <!-- hl-knowledge: introduces=[UR-LEX-C166-CHIZ166-01]; assesses=[] -->
 
 **ساڑی** — *sāṛī* — "a sari".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ساڑی** (*sāṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śāṭī*, "strip of cloth, garment" (CDIAL 12381). CDIAL notes that the word also travelled west, to Pashto and to Persian *shāl*, the source of English *shawl*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

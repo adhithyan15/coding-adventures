@@ -14,7 +14,8 @@ romanization: "sikhānā"
 concept_tag: UR-VERB-SIKHANA
 prerequisites: [UR-C140-jitna, UR-C140-harna]
 sounds: []
-roots: []
+roots: [sanskrit-shikshate]
+etymology_hook: "sikhānā: the causing form of sīkhnā 'to learn', from Sanskrit śikṣate 'learns' (CDIAL 12430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C140-harna]
 <!-- hl-knowledge: introduces=[UR-LEX-C140-ACT140-03]; assesses=[] -->
 
 **سکھانا** — *sikhānā* — "to teach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سکھانا** (*sikhānā*) is the causing form of *sīkhnā*, "to learn": to teach is to make someone learn. CDIAL lists both under Sanskrit *śikṣate*, "learns" (CDIAL 12430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

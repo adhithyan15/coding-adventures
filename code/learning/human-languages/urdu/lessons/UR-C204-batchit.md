@@ -14,7 +14,8 @@ romanization: "bātchīt"
 concept_tag: UR-CHIZ204-BATCHIT
 prerequisites: [UR-C204-khabar, UR-C204-bat]
 sounds: []
-roots: []
+roots: [sanskrit-varta, sanskrit-citti]
+etymology_hook: "bātchīt: bāt 'talk' (CDIAL 11564) with chīt, from citti 'thought' (CDIAL 4801)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C204-bat]
 <!-- hl-knowledge: introduces=[UR-LEX-C204-CHIZ204-04]; assesses=[] -->
 
 **بات چیت** — *bātchīt* — "a conversation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بات چیت** (*bātchīt*) is a rhyming pair: *bāt*, "talk", from Sanskrit *vārttā* (CDIAL 11564), and *chīt*, which CDIAL lists in this very pair under *citti*, "thought" (CDIAL 4801).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

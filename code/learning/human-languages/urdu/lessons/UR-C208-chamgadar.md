@@ -14,7 +14,8 @@ romanization: "chamgādaṛ"
 concept_tag: UR-CHIZ208-CHAMGADAR
 prerequisites: [UR-C208-saras, UR-C208-giddh]
 sounds: []
-roots: []
+roots: [sanskrit-carmacataka]
+etymology_hook: "chamgādaṛ: CDIAL lists cām-gīdaṛ 'bat' under Sanskrit carmacaṭaka 'bat' (CDIAL 4700)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C208-giddh]
 <!-- hl-knowledge: introduces=[UR-LEX-C208-CHIZ208-04]; assesses=[] -->
 
 **چمگادڑ** — *chamgādaṛ* — "a bat (animal)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چمگادڑ** (*chamgādaṛ*) goes back to Sanskrit *carmacaṭaka*, "bat", "the leather sparrow", built from *carman*, "skin, leather", and *caṭaka*, "sparrow". CDIAL lists Hindi *cām-gīdaṛ*, "bat", under it (CDIAL 4700).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

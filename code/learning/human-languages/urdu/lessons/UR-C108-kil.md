@@ -14,7 +14,8 @@ romanization: "kīl"
 concept_tag: UR-THINGS108-KIL
 prerequisites: [UR-C107-balti, UR-C107-rassi]
 sounds: []
-roots: []
+roots: [sanskrit-kila]
+etymology_hook: "kīl ← Sanskrit kīla 'stake, peg', a tadbhava (CDIAL 3202)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C107-rassi]
 <!-- hl-knowledge: introduces=[UR-LEX-C108-THINGS108-01]; assesses=[] -->
 
 **کیل** — *kīl* — "a nail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کیل** (*kīl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kīla*, "stake, peg" (CDIAL 3202). CDIAL notes that both an Indo-European and a non-Aryan source have been proposed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

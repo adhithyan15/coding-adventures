@@ -14,7 +14,8 @@ romanization: "qīmā"
 concept_tag: UR-CHIZ234-QIMA
 prerequisites: [UR-C234-halim, UR-C234-nihari]
 sounds: []
-roots: []
+roots: [turkish-qiyma]
+etymology_hook: "qīmā: usually traced, through Persian, to Turkic qïyma 'minced'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C234-nihari]
 <!-- hl-knowledge: introduces=[UR-LEX-C234-CHIZ234-05]; assesses=[] -->
 
 **قیمہ** — *qīmā* — "minced meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قیمہ** (*qīmā*) is usually traced, through Persian, to a Turkic word, *qïyma*, "minced, chopped fine".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

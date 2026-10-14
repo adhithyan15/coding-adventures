@@ -14,7 +14,8 @@ romanization: "khud"
 concept_tag: UR-DEF90-KHUD
 prerequisites: [UR-C89-donon, UR-C90-tamam]
 sounds: []
-roots: []
+roots: [persian-khud]
+etymology_hook: "khud: usually traced to Persian khud 'self'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C90-tamam]
 <!-- hl-knowledge: introduces=[UR-LEX-C90-DEF90-02]; assesses=[] -->
 
 **خود** — *khud* — "oneself".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خود** (*khud*) is a loan, usually traced to Persian *khud*, "self".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

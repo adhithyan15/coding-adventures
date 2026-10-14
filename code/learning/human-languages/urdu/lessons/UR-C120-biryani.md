@@ -14,7 +14,8 @@ romanization: "biryānī"
 concept_tag: UR-THINGS120-BIRYANI
 prerequisites: [UR-C120-chatni, UR-C120-kabab]
 sounds: []
-roots: []
+roots: [persian-biryan]
+etymology_hook: "biryānī: usually traced to Persian biryān 'fried, roasted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C120-kabab]
 <!-- hl-knowledge: introduces=[UR-LEX-C120-THINGS120-05]; assesses=[] -->
 
 **بریانی** — *biryānī* — "biryani".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بریانی** (*biryānī*) is a loan, usually traced to Persian *biryān*, "fried, roasted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

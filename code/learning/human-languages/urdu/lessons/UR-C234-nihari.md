@@ -14,7 +14,8 @@ romanization: "nihārī"
 concept_tag: UR-CHIZ234-NIHARI
 prerequisites: [UR-C234-puri, UR-C234-halim]
 sounds: []
-roots: []
+roots: [arabic-nahar]
+etymology_hook: "nihārī: usually explained from Arabic nahār 'day, morning' (Lane, root n-h-r), the dish eaten at dawn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C234-halim]
 <!-- hl-knowledge: introduces=[UR-LEX-C234-CHIZ234-04]; assesses=[] -->
 
 **نہاری** — *nihārī* — "nihari".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نہاری** (*nihārī*) is usually explained from Arabic *nahār*, "day, daytime" (Lane, root *n-h-r*): the stew is eaten early in the morning.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

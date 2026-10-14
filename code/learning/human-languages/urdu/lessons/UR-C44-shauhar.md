@@ -14,7 +14,8 @@ romanization: "shauhar"
 concept_tag: UR-FAMILY44-SHAUHAR
 prerequisites: [UR-C44-nana, UR-C44-nani]
 sounds: []
-roots: []
+roots: [persian-shauhar]
+etymology_hook: "shauhar: usually traced to Persian shauhar 'husband'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C44-nani]
 <!-- hl-knowledge: introduces=[UR-LEX-C44-FAMILY44-03]; assesses=[] -->
 
 **شوہر** — *shauhar* — "a husband".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شوہر** (*shauhar*) is a loan, usually traced to Persian *shauhar*, "husband".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

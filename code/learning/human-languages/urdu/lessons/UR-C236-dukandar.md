@@ -14,7 +14,8 @@ romanization: "dukāndār"
 concept_tag: UR-KAM236-DUKANDAR
 prerequisites: [UR-C236-bachat, UR-C236-qimat]
 sounds: []
-roots: []
+roots: [arabic-dukkan, persian-dar-holder]
+etymology_hook: "dukāndār: Arabic dukkān 'shop' (Lane) + Persian -dār 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C236-qimat]
 <!-- hl-knowledge: introduces=[UR-LEX-C236-KAM236-03]; assesses=[] -->
 
 **دکاندار** — *dukāndār* — "a shopkeeper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دکاندار** (*dukāndār*) is "shop-holder". It joins *dukān*, "shop", from Arabic *dukkān*, which reached Urdu through Persian (Lane, root *d-k-n*), and the Persian *-dār*, "holder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

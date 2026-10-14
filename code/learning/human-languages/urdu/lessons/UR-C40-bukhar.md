@@ -14,7 +14,8 @@ romanization: "bukhār"
 concept_tag: UR-BODY40-BUKHAR
 prerequisites: [UR-C40-tang, UR-C40-ghutna]
 sounds: []
-roots: []
+roots: [arabic-bukhar]
+etymology_hook: "bukhār ← Arabic bukhār 'vapour, steam', through Persian (Lane, root b-kh-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C40-ghutna]
 <!-- hl-knowledge: introduces=[UR-LEX-C40-BODY40-05]; assesses=[] -->
 
 **بخار** — *bukhār* — "a fever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بخار** (*bukhār*) is a loan from Arabic *bukhār*, "vapour, steam", which reached Urdu through Persian. Its Arabic root is *b-kh-r* (Lane). In Urdu it came to mean "fever".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

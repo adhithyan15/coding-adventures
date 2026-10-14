@@ -14,7 +14,8 @@ romanization: "dauṛ"
 concept_tag: UR-CHIZ201-DAUR
 prerequisites: [UR-C201-shatranj, UR-C201-tash]
 sounds: []
-roots: []
+roots: [sanskrit-dravati]
+etymology_hook: "dauṛ: the noun of dauṛnā 'to run' ← Sanskrit dravati 'runs' (CDIAL 6624)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C201-tash]
 <!-- hl-knowledge: introduces=[UR-LEX-C201-CHIZ201-05]; assesses=[] -->
 
 **دوڑ** — *dauṛ* — "a race".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دوڑ** (*dauṛ*) is the noun of *dauṛnā*, "to run", which CDIAL lists under Sanskrit *dravati*, "runs" (CDIAL 6624).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

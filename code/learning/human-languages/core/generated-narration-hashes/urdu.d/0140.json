@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 140,
-  "sourceHash": "fnv1a64:3dd9f4b8d1f2d0b0",
+  "sourceHash": "fnv1a64:977c701cebe10895",
   "lessonIds": [
     "UR-C140-jitna",
     "UR-C140-harna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch140.txt",
   "json": "urdu/narration/ch140.json",
-  "textHash": "fnv1a64:9a470eab7ed6a2bf",
-  "jsonHash": "fnv1a64:7dc338e0952e947b",
+  "textHash": "fnv1a64:0d851fb3aad9e820",
+  "jsonHash": "fnv1a64:fa5480657ca0e3b1",
   "findings": []
 }

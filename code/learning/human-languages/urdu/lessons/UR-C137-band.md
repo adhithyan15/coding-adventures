@@ -14,7 +14,8 @@ romanization: "band"
 concept_tag: UR-QUAL137-BAND
 prerequisites: [UR-C137-jamni, UR-C137-sunahra]
 sounds: []
-roots: []
+roots: [persian-band]
+etymology_hook: "band: usually traced to Persian band 'shut, bound'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C137-sunahra]
 <!-- hl-knowledge: introduces=[UR-LEX-C137-QUAL137-03]; assesses=[] -->
 
 **بند** — *band* — "closed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بند** (*band*) is a loan, usually traced to Persian *band*, "shut, bound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

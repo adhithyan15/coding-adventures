@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 225,
-  "sourceHash": "fnv1a64:04d442d5377f138f",
+  "sourceHash": "fnv1a64:3dc4182397225c0a",
   "lessonIds": [
     "UR-C225-lifafa",
     "UR-C225-parsal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch225.txt",
   "json": "urdu/narration/ch225.json",
-  "textHash": "fnv1a64:ed7790ec32b42890",
-  "jsonHash": "fnv1a64:1932ccaac1dabb22",
+  "textHash": "fnv1a64:f388abb9f99c5ea1",
+  "jsonHash": "fnv1a64:66e722cdd03b1b14",
   "findings": []
 }

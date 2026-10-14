@@ -14,7 +14,8 @@ romanization: "sīṭ"
 concept_tag: UR-CHIZ229-SIT
 prerequisites: [UR-C229-petrol, UR-C229-petrol-pamp]
 sounds: []
-roots: []
+roots: [english-seat]
+etymology_hook: "sīṭ ← English seat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C229-petrol-pamp]
 <!-- hl-knowledge: introduces=[UR-LEX-C229-CHIZ229-05]; assesses=[] -->
 
 **سیٹ** — *sīṭ* — "a seat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سیٹ** (*sīṭ*) is a loan from English *seat*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "friij"
 concept_tag: UR-THINGS109-FRIIJ
 prerequisites: [UR-C109-thali, UR-C109-glas]
 sounds: []
-roots: []
+roots: [english-fridge]
+etymology_hook: "friij ← English fridge"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C109-glas]
 <!-- hl-knowledge: introduces=[UR-LEX-C109-THINGS109-05]; assesses=[] -->
 
 **فریج** — *friij* — "a fridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فریج** (*friij*) is a loan from English *fridge*. English *fridge* is short for *refrigerator*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

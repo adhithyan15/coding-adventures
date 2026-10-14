@@ -14,7 +14,8 @@ romanization: "sāinsdān"
 concept_tag: UR-KAM262-SAINSDAN
 prerequisites: [UR-C262-shagird, UR-C262-injiniyar]
 sounds: []
-roots: []
+roots: [english-science, persian-danistan]
+etymology_hook: "sāinsdān: sāins ← English science + the Persian ending -dān 'one who knows'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C262-injiniyar]
 <!-- hl-knowledge: introduces=[UR-LEX-C262-KAM262-04]; assesses=[] -->
 
 **سائنسدان** — *sāinsdān* — "a scientist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سائنسدان** (*sāinsdān*) is "one who knows science": *sāins* is borrowed from English *science*, and *-dān*, "one who knows", is a Persian ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

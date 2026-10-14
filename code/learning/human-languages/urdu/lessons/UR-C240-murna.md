@@ -14,7 +14,8 @@ romanization: "muṛnā"
 concept_tag: UR-VERB-MURNA
 prerequisites: [UR-C240-chalana, UR-C240-rukna]
 sounds: []
-roots: []
+roots: [sanskrit-mutati]
+etymology_hook: "muṛnā ← Sanskrit muṭati 'twists', a tadbhava (CDIAL 10186)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C240-rukna]
 <!-- hl-knowledge: introduces=[UR-LEX-C240-ACT240-05]; assesses=[] -->
 
 **مڑنا** — *muṛnā* — "to turn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مڑنا** (*muṛnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *muṭati*, "twists" (CDIAL 10186).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

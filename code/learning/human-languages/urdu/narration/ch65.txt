@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a river, then the Urdu for a lake.
 You'll want to know: پتھر.
 پتھر — patthar — "a stone".
 
+The word, taken apart.
+پتھر (patthar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prastara, "anything strewn; flat surface; stone" (CDIAL 8857).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a lake, then the Urdu for a stone.
 
 You'll want to know: ریت.
 ریت — ret — "sand".
+
+The word, taken apart.
+ریت (ret) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from retra, "perfumed powder" (CDIAL 10816). CDIAL doubts a suggested Munda source; the Sanskrit word is known only from the old word-lists.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a stone, then the Urdu for sand.
 You'll want to know: کھیت.
 کھیت — khet — "a field".
 
+The word, taken apart.
+کھیت (khet) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣetra, "land, field" (CDIAL 3735).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for sand, then the Urdu for a field.
 You'll want to know: ستارہ.
 ستارہ — sitārā — "a star".
 
+The word, taken apart.
+ستارہ (sitārā) is a loan, usually traced to Persian sitāra, "star". It is usually taken as a distant cousin of English star.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a field, then the Urdu for a star.
 
 You'll want to know: بادل.
 بادل — bādal — "a cloud".
+
+The word, taken apart.
+بادل (bādal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vārdala, "rainy day, bad weather" (CDIAL 11567).
 
 What you've built.
 One more word for this chapter.

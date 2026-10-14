@@ -14,7 +14,8 @@ romanization: "latīfā"
 concept_tag: UR-CHIZ231-LATIFA
 prerequisites: [UR-C231-jhut, UR-C231-raz]
 sounds: []
-roots: []
+roots: [arabic-latifa]
+etymology_hook: "latīfā ← Arabic laṭīfa 'a subtle or witty saying', through Persian (Lane, root l-ṭ-f)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C231-raz]
 <!-- hl-knowledge: introduces=[UR-LEX-C231-CHIZ231-04]; assesses=[] -->
 
 **لطیفہ** — *latīfā* — "a joke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لطیفہ** (*latīfā*) is a loan from Arabic *laṭīfa*, "a subtle or witty saying", which reached Urdu through Persian. Its Arabic root is *l-ṭ-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jald hī"
 concept_tag: UR-MUST145-JALD-HI
 prerequisites: [UR-C145-mustaqbil, UR-C145-ainda]
 sounds: []
-roots: []
+roots: [persian-jald]
+etymology_hook: "jald: usually traced to Persian jald 'quick', of Arabic origin; hī is the emphatic 'very'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C145-ainda]
 <!-- hl-knowledge: introduces=[UR-LEX-C145-MUST145-03]; assesses=[] -->
 
 **جلد ہی** — *jald hī* — "soon". **جلد** has two readings: *jild*, "skin" or "a volume", and *jald*, "quickly". Here it is *jald*, with the emphatic **ہی**: **وہ جلد ہی آئے گا۔** — *voh jald hī āegā* — "He will come soon."
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جلد ہی** (*jald hī*) is *jald*, "quick", usually traced to Persian *jald*, a word of Arabic origin, with the emphatic *hī*, "very".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sālgirah"
 concept_tag: UR-VAQT245-SALGIRAH
 prerequisites: [UR-C245-aj-kal, UR-C245-akhir]
 sounds: []
-roots: []
+roots: [persian-sal, persian-girah]
+etymology_hook: "sālgirah: Persian sāl 'year' + girah 'knot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C245-akhir]
 <!-- hl-knowledge: introduces=[UR-LEX-C245-VAQT245-05]; assesses=[] -->
 
 **سالگرہ** — *sālgirah* — "a birthday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سالگرہ** (*sālgirah*) is "the year's knot", usually explained by the custom of tying a knot in a cord for each year of life. It joins Persian *sāl*, "year", and *girah*, "knot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

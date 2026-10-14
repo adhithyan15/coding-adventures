@@ -14,7 +14,8 @@ romanization: "nayā sāl"
 concept_tag: UR-VAQT156-NAYA-SAL
 prerequisites: [UR-C155-march, UR-C156-tahvar]
 sounds: []
-roots: []
+roots: [sanskrit-navya, persian-sal]
+etymology_hook: "nayā ← naviya, a variant of navya 'new' (CDIAL 7025); sāl 'year' usually traced to Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C156-tahvar]
 <!-- hl-knowledge: introduces=[UR-LEX-C156-VAQT156-02]; assesses=[] -->
 
 **نیا سال** — *nayā sāl* — "New Year".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نیا سال** (*nayā sāl*) joins *nayā*, "new", and *sāl*, "year". *nayā* comes from Sanskrit *naviya*, a variant of *navya*, "new" (CDIAL 7025); *sāl* is usually traced to Persian *sāl*, "year".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

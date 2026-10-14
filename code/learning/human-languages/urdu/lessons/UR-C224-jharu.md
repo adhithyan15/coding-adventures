@@ -14,7 +14,8 @@ romanization: "jhāṛū"
 concept_tag: UR-CHIZ224-JHARU
 prerequisites: [UR-C223-hasin, UR-C224-istri]
 sounds: []
-roots: []
+roots: [indo-aryan-jhatati]
+etymology_hook: "jhāṛū: from jhāṛnā 'to sweep, shake off', listed under *jhāṭayati 'shakes down' (CDIAL 5328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C224-istri]
 <!-- hl-knowledge: introduces=[UR-LEX-C224-CHIZ224-02]; assesses=[] -->
 
 **جھاڑو** — *jhāṛū* — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جھاڑو** (*jhāṛū*) is built on *jhāṛnā*, "to sweep, shake off", which CDIAL lists under a reconstructed *\*jhāṭayati*, "shakes down" (CDIAL 5328).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

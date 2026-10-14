@@ -14,7 +14,8 @@ romanization: "shikāyat karnā"
 concept_tag: UR-VERB-SHIKAYAT-KARNA
 prerequisites: [UR-C241-jharu-lagana, UR-C241-ponchhna]
 sounds: []
-roots: []
+roots: [arabic-shikaya, kr-do]
+etymology_hook: "shikāyat ← Arabic shikāya 'complaint', through Persian (Lane, root sh-k-w); karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C241-ponchhna]
 <!-- hl-knowledge: introduces=[UR-LEX-C242-ACT242-01]; assesses=[] -->
 
 **شکایت کرنا** — *shikāyat karnā* — "to complain".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شکایت کرنا** (*shikāyat karnā*) joins *shikāyat*, "a complaint", and *karnā*, "to do". *shikāyat* is Arabic *shikāya*, "complaint", which reached Urdu through Persian (Lane, root *sh-k-w*); *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

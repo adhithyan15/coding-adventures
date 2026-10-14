@@ -12,7 +12,7 @@ concept_tag: UR-BROTHER
 prerequisites: [UR-C08-pasand, UR-C06-ana, UR-C06-bolna]
 sounds: [rtl, do-chashmi-he, hamza-ye]
 roots: [sanskrit-bhratr, pie-bhrehter]
-etymology_hook: bhāī descends from Sanskrit bhrā́tṛ, "brother," from Proto-Indo-Iranian *bʰráHtā, from Proto-Indo-European *bʰréh₂tēr — the very root English inherited as brother, so the two words are real cousins, not a coincidence like pasand's disputed Persian-Sanskrit near-miss.
+etymology_hook: "bhāī ← Sanskrit bhrātṛ 'brother' (CDIAL 9661), from PIE *bʰréh₂tēr, the root of English brother"
 duration:
   max_seconds: 260
 requires:
@@ -74,7 +74,7 @@ agrees this easily; the next lesson breaks the pattern.
 ## The word, taken apart — a real cousin, not a resemblance
 <!-- hl-knowledge: introduces=[UR-ETYMON-BHAI-BROTHER]; assesses=[UR-LEX-PASAND] -->
 
-**bhāī** comes from Sanskrit *bhrā́tṛ*, "brother," from
+**bhāī** comes from Sanskrit *bhrā́tṛ*, "brother" (CDIAL 9661), from
 Proto-Indo-Iranian **\*bʰráHtā**, from Proto-Indo-European
 **\*bʰréh₂tēr**. English **brother** comes from the very same root. Unlike
 *pasand*'s disputed link to *candēre* two lessons ago, this one is settled:

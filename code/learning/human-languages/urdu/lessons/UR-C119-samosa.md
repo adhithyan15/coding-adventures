@@ -14,7 +14,8 @@ romanization: "samosā"
 concept_tag: UR-THINGS119-SAMOSA
 prerequisites: [UR-C119-nan, UR-C119-paratha]
 sounds: []
-roots: []
+roots: [persian-sanbosa]
+etymology_hook: "samosā: usually traced to Persian sanbosa 'a fried pastry'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C119-paratha]
 <!-- hl-knowledge: introduces=[UR-LEX-C119-THINGS119-05]; assesses=[] -->
 
 **سموسہ** — *samosā* — "a samosa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سموسہ** (*samosā*) is a loan, usually traced to Persian *sanbosa*, "a fried pastry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

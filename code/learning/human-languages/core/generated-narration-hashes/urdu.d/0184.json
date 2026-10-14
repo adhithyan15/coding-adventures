@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 184,
-  "sourceHash": "fnv1a64:cf79b54b24daefbf",
+  "sourceHash": "fnv1a64:a11e36b9ae0d30c7",
   "lessonIds": [
     "UR-C184-bimar-parna",
     "UR-C184-sujna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch184.txt",
   "json": "urdu/narration/ch184.json",
-  "textHash": "fnv1a64:312862a324240b9d",
-  "jsonHash": "fnv1a64:881b899559a8ed3e",
+  "textHash": "fnv1a64:49fb6bfa7727311c",
+  "jsonHash": "fnv1a64:eeeb65cec29e2a1d",
   "findings": []
 }

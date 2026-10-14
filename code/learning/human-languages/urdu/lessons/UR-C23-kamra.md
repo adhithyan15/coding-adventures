@@ -11,8 +11,8 @@ gloss: room — a noun this chapter needs something to be inside, and the one ev
 concept_tag: LODGING-ROOM
 prerequisites: [UR-R22-when-you-are-lost, UR-C13-kala, UR-C18-purana, UR-C17-yih, UR-C18-voh]
 sounds: []
-roots: []
-etymology_hook: "کمرہ is Portuguese câmara, carried into Urdu by the sea trade of the sixteenth century and cousin to English chamber and camera — the Latin word for a vaulted room, which is what a camera obscura is."
+roots: [portuguese-camara]
+etymology_hook: "kamrā: usually traced to Portuguese câmara 'room', from Latin camera 'vaulted chamber'"
 duration:
   max_seconds: 230
 requires:

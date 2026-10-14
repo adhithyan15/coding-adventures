@@ -14,7 +14,8 @@ romanization: "khaṭṭā"
 concept_tag: UR-QUAL131-KHATTA
 prerequisites: [UR-C130-sina, UR-C131-karva]
 sounds: []
-roots: []
+roots: [sanskrit-khatta]
+etymology_hook: "khaṭṭā ← Sanskrit khaṭṭa 'sour'; CDIAL marks the Hindi form as taken from Punjabi (CDIAL 3777)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C131-karva]
 <!-- hl-knowledge: introduces=[UR-LEX-C131-QUAL131-02]; assesses=[] -->
 
 **کھٹا** — *khaṭṭā* — "sour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھٹا** (*khaṭṭā*) goes back to Sanskrit *khaṭṭa*, "sour", a word known only from the old word-lists (CDIAL 3777). CDIAL marks the Hindi form as taken over from Punjabi, and asks whether *khaṭṭa* is connected with *kaṭu*, "bitter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mushkil"
 concept_tag: UR-ADJ71-MUSHKIL
 prerequisites: [UR-C71-garm, UR-C71-ahista]
 sounds: []
-roots: []
+roots: [arabic-mushkil]
+etymology_hook: "mushkil ← Arabic mushkil 'difficult, doubtful', through Persian (Lane, root sh-k-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C71-ahista]
 <!-- hl-knowledge: introduces=[UR-LEX-C71-ADJ71-03]; assesses=[] -->
 
 **مشکل** — *mushkil* — "difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مشکل** (*mushkil*) is a loan from Arabic *mushkil*, "difficult, doubtful", which reached Urdu through Persian. Its Arabic root is *sh-k-l* (Lane). The same root gives *shakl*, "shape".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 249,
-  "sourceHash": "fnv1a64:b636d67a1db82425",
+  "sourceHash": "fnv1a64:d6cb412d0da25ccb",
   "lessonIds": [
     "UR-C249-dubla",
     "UR-C249-rangin",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch249.txt",
   "json": "urdu/narration/ch249.json",
-  "textHash": "fnv1a64:5a214af857e4e712",
-  "jsonHash": "fnv1a64:a1395764beee5899",
+  "textHash": "fnv1a64:94a2f03160540187",
+  "jsonHash": "fnv1a64:922f43ed229eb5e2",
   "findings": []
 }

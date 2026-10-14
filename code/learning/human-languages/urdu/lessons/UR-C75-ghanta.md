@@ -14,7 +14,8 @@ romanization: "ghaṇṭā"
 concept_tag: UR-TIME75-GHANTA
 prerequisites: [UR-C75-mahina, UR-C75-sal]
 sounds: []
-roots: []
+roots: [sanskrit-ghanta-bell]
+etymology_hook: "ghaṇṭā ← Sanskrit ghaṇṭā 'bell', a tadbhava (CDIAL 4421)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C75-sal]
 <!-- hl-knowledge: introduces=[UR-LEX-C75-TIME75-05]; assesses=[] -->
 
 **گھنٹہ** — *ghaṇṭā* — "an hour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گھنٹہ** (*ghaṇṭā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghaṇṭā*, "bell" (CDIAL 4421). Clocks once marked the hour by striking a bell, and CDIAL glosses the Hindi word "bell, clock, hour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

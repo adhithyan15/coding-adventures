@@ -14,7 +14,8 @@ romanization: "jhagaṛnā"
 concept_tag: UR-VERB-JHAGARNA
 prerequisites: [UR-C179-badshah, UR-C180-sharmana]
 sounds: []
-roots: []
+roots: [indo-aryan-jhagad]
+etymology_hook: "jhagaṛnā ← *jhaggaḍ 'quarrel', a reconstructed form; a tadbhava (CDIAL 5321)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C180-sharmana]
 <!-- hl-knowledge: introduces=[UR-LEX-C180-ACT180-02]; assesses=[] -->
 
 **جھگڑنا** — *jhagaṛnā* — "to quarrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جھگڑنا** (*jhagaṛnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhaggaḍ*, "quarrel", a form CDIAL reconstructs from its descendants (CDIAL 5321). It is a form CDIAL gives beside a reconstructed *\*jhagaḍ*, "quarrel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

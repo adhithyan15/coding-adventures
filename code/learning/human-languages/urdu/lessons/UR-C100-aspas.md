@@ -14,7 +14,8 @@ romanization: "ās pās"
 concept_tag: UR-LOC100-ASPAS
 prerequisites: [UR-C98-mor, UR-C100-chauraha]
 sounds: []
-roots: []
+roots: [sanskrit-parshva]
+etymology_hook: "ās pās: pās 'near' ← Sanskrit pārśve 'near', a form of pārśva 'side' (CDIAL 8118), with a rhyming ās"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C100-chauraha]
 <!-- hl-knowledge: introduces=[UR-LEX-C100-LOC100-02]; assesses=[] -->
 
 **آس پاس** — *ās pās* — "around, nearby".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آس پاس** (*ās pās*) is built on *pās*, "near", from Sanskrit *pārśve*, "near", a form of *pārśva*, "side" (CDIAL 8118). *ās* is a rhyming partner put in front of it; its own source is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

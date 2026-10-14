@@ -15,6 +15,7 @@ concept_tag: UR-THINGS109-BARTAN
 prerequisites: [UR-C108-bijli, UR-C109-chulha]
 sounds: []
 roots: []
+etymology_hook: "bartan: origin uncertain; often traced to Sanskrit vartana, but CDIAL does not list it (CDIAL 11354 is 'turning')"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C109-chulha]
 <!-- hl-knowledge: introduces=[UR-LEX-C109-THINGS109-02]; assesses=[] -->
 
 **برتن** — *bartan* — "a pot, a dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **برتن** (*bartan*) is uncertain. It is often traced to Sanskrit *vartana*, but CDIAL does not list it, and its *vartana* means "turning, rolling" (CDIAL 11354).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

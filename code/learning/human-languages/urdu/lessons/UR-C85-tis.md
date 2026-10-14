@@ -14,7 +14,8 @@ romanization: "tīs"
 concept_tag: UR-NUMBERS85-TIS
 prerequisites: [UR-C84-atharah, UR-C85-unnis]
 sounds: []
-roots: []
+roots: [sanskrit-trimshat]
+etymology_hook: "tīs ← Sanskrit triṃśat 'thirty', a tadbhava (CDIAL 6015)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C85-unnis]
 <!-- hl-knowledge: introduces=[UR-LEX-C85-NUMBERS85-02]; assesses=[] -->
 
 **تیس** — *tīs* — "thirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تیس** (*tīs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *triṃśat*, "thirty" (CDIAL 6015).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

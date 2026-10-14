@@ -11,8 +11,8 @@ gloss: to read — and to study, and to recite, because it never meant reading s
 concept_tag: VERB-READ
 prerequisites: [UR-C07-samajhna]
 sounds: [rtl, retroflex-flap-rre, do-chashmi-he, be-vs-pe-dots]
-roots: [sanskrit-path, arabic-hfz]
-etymology_hook: paṛhnā comes from Prakrit paḍhaï, from Sanskrit paṭh- "to recite, to read aloud" — the root has no secure Indo-European ancestry and no English cousin, but its original sense is alive in namāz paṛhnā, "to pray", where nothing is read off a page at all.
+roots: [sanskrit-path, arabic-hfz, sanskrit-pathati]
+etymology_hook: "paṛhnā ← Sanskrit paṭhati 'repeats aloud, reads', through Prakrit paḍhaï (CDIAL 7712)"
 duration:
   max_seconds: 291
 requires:
@@ -74,12 +74,10 @@ shape is handed to you.
 ## The word, taken apart — reading was always out loud
 <!-- hl-knowledge: introduces=[UR-ETYMON-PARHNA-RECITE]; assesses=[UR-LEX-PARHNA, UR-LEX-HAFIZ, UR-ETYMON-HAFIZ-ARABIC] -->
 
-**paṛhnā** comes from Prakrit *paḍhaï*, from Sanskrit **paṭh-**, “**to recite;
-to read aloud**.” Its *ṭh* softened into the flapped *ṛh* you have
+**paṛhnā** comes from Prakrit *paḍhaï*, from Sanskrit **paṭh-**, “**to recite; to read aloud**” (CDIAL 7712). Its *ṭh* softened into the flapped *ṛh* you have
 learned, and the meaning widened from reciting to reading to studying.
 
-Be honest about the far end: **paṭh-** has **no secure Indo-European ancestry**.
-There is no English cousin, and the trail stops inside India.
+Be honest about the far end: CDIAL takes **paṭh-** as a Middle Indo-Aryan form of an older *\*pṛthati*, and there is no English cousin.
 
 The near end is better. The oldest sense — *speaking a text you hold in memory* —
 is everyday, not a fossil. To perform the Muslim ritual prayer is

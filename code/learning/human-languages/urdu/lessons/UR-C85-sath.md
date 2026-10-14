@@ -14,7 +14,8 @@ romanization: "sāṭh"
 concept_tag: UR-NUMBERS85-SATH
 prerequisites: [UR-C85-chalis, UR-C85-pachas]
 sounds: []
-roots: []
+roots: [sanskrit-shashti]
+etymology_hook: "sāṭh ← Sanskrit ṣaṣṭi 'sixty', a tadbhava (CDIAL 12804)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C85-pachas]
 <!-- hl-knowledge: introduces=[UR-LEX-C85-NUMBERS85-05]; assesses=[] -->
 
 **ساٹھ** — *sāṭh* — "sixty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ساٹھ** (*sāṭh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ṣaṣṭi*, "sixty" (CDIAL 12804).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

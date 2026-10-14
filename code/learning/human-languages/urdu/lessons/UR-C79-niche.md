@@ -14,7 +14,8 @@ romanization: "nīche"
 concept_tag: UR-PLACE79-NICHE
 prerequisites: [UR-C78-bahar, UR-C79-upar]
 sounds: []
-roots: []
+roots: [sanskrit-nica]
+etymology_hook: "nīche: the -e form of nīchā 'low', from Sanskrit nīca 'low' (CDIAL 7540)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C79-upar]
 <!-- hl-knowledge: introduces=[UR-LEX-C79-PLACE79-02]; assesses=[] -->
 
 **نیچے** — *nīche* — "below, down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نیچے** (*nīche*) is the adverb form of *nīchā*, "low", which comes from Sanskrit *nīca*, "low" (CDIAL 7540).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

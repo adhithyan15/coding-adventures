@@ -14,7 +14,8 @@ romanization: "hõṭ"
 concept_tag: UR-BODY39-HOT
 prerequisites: [UR-C39-kandha, UR-C39-ungli]
 sounds: []
-roots: []
+roots: [sanskrit-oshtha]
+etymology_hook: "hõṭ ← Sanskrit oṣṭha 'lip' (CDIAL 2563); the h- and nasal may come from *adhamauṣṭha 'lower lip' (CDIAL 247a)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C39-ungli]
 <!-- hl-knowledge: introduces=[UR-LEX-C39-BODY39-04]; assesses=[] -->
 
 **ہونٹ** — *hõṭ* — "a lip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہونٹ** (*hõṭ*) is inherited. CDIAL lists Hindi *hõṭh*, "lip", under Sanskrit *oṣṭha*, "lip" (CDIAL 2563); its addenda also list *hõṭh* under a reconstructed compound *\*adhamauṣṭha*, "lower lip", which would account for the *h-* (CDIAL 247a).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

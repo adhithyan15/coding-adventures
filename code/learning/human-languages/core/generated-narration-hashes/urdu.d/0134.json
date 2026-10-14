@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 134,
-  "sourceHash": "fnv1a64:b6f975f5348260af",
+  "sourceHash": "fnv1a64:0e364eab0db38b83",
   "lessonIds": [
     "UR-C134-gila",
     "UR-C134-sukha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch134.txt",
   "json": "urdu/narration/ch134.json",
-  "textHash": "fnv1a64:3d441904d2426ae7",
-  "jsonHash": "fnv1a64:3e5848a8da8523fd",
+  "textHash": "fnv1a64:7da43bf9d7fee1c0",
+  "jsonHash": "fnv1a64:04cd31f486eaf913",
   "findings": []
 }

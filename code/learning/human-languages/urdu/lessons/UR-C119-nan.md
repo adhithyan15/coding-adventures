@@ -14,7 +14,8 @@ romanization: "nān"
 concept_tag: UR-THINGS119-NAN
 prerequisites: [UR-C119-jus, UR-C119-sup]
 sounds: []
-roots: []
+roots: [persian-nan]
+etymology_hook: "nān: usually traced to Persian nān 'bread'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C119-sup]
 <!-- hl-knowledge: introduces=[UR-LEX-C119-THINGS119-03]; assesses=[] -->
 
 **نان** — *nān* — "naan bread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نان** (*nān*) is a loan, usually traced to Persian *nān*, "bread".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

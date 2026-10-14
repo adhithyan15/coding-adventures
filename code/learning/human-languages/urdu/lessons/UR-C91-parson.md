@@ -14,7 +14,8 @@ romanization: "parsoṅ"
 concept_tag: UR-TIME91-PARSON
 prerequisites: [UR-C91-savera, UR-C91-adhirat]
 sounds: []
-roots: []
+roots: [sanskrit-parashvas]
+etymology_hook: "parsoṅ ← Sanskrit paraśvas 'the day after tomorrow', a tadbhava (CDIAL 7799j)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C91-adhirat]
 <!-- hl-knowledge: introduces=[UR-LEX-C91-TIME91-04]; assesses=[] -->
 
 **پرسوں** — *parsoṅ* — "the day after tomorrow; the day before yesterday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پرسوں** (*parsoṅ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *paraśvas*, "the day after tomorrow" (CDIAL 7799j).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

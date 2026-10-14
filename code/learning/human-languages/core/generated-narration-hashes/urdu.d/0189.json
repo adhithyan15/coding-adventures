@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 189,
-  "sourceHash": "fnv1a64:70f518f4bf12143c",
+  "sourceHash": "fnv1a64:58b807bbc61213b2",
   "lessonIds": [
     "UR-C189-jab-tak",
     "UR-C189-tab-tak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch189.txt",
   "json": "urdu/narration/ch189.json",
-  "textHash": "fnv1a64:1e842714061bfb26",
-  "jsonHash": "fnv1a64:8a3c2677fd286371",
+  "textHash": "fnv1a64:a3d97bbf64f63f3e",
+  "jsonHash": "fnv1a64:86bb435205bf4775",
   "findings": []
 }

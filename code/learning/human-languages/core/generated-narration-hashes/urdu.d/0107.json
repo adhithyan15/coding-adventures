@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 107,
-  "sourceHash": "fnv1a64:850f4c3398dc9975",
+  "sourceHash": "fnv1a64:7007370c5c41f91c",
   "lessonIds": [
     "UR-C107-kambal",
     "UR-C107-parda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch107.txt",
   "json": "urdu/narration/ch107.json",
-  "textHash": "fnv1a64:123e6e58fc200f93",
-  "jsonHash": "fnv1a64:5843819e4218067c",
+  "textHash": "fnv1a64:3b8c3ee0b9a1ae5b",
+  "jsonHash": "fnv1a64:1603338d138ef3ed",
   "findings": []
 }

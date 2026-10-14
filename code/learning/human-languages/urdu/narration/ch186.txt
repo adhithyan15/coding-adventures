@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a wound, then the Urdu for an injury.
 You'll want to know: ایڑی.
 ایڑی — eṛī — "a heel".
 
+The word, taken apart.
+ایڑی (eṛī) comes from a reconstructed ēḍḍi, a form CDIAL gives beside aḍḍi, "heel" (CDIAL 191). CDIAL records Bloch's view that the word came from Dravidian, comparing Tamil aḍi, "foot".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for an injury, then the Urdu for a heel.
 
 You'll want to know: مٹھی.
 مٹھی — muṭṭhī — "a fist".
+
+The word, taken apart.
+مٹھی (muṭṭhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from muṣṭi, "clenched hand, fist" (CDIAL 10221).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a heel, then the Urdu for a fist.
 You'll want to know: ہتھیلی.
 ہتھیلی — hathelī — "a palm (of the hand)".
 
+The word, taken apart.
+ہتھیلی (hathelī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hastatala, "palm of the hand" (CDIAL 14029). It is built from hasta, "hand", and tala, "surface".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a fist, then the Urdu for a palm.
 You'll want to know: جگر.
 جگر — jigar — "the liver".
 
+The word, taken apart.
+جگر (jigar) is a loan, usually traced to Persian jigar, "the liver".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a palm, then the Urdu for the liver.
 
 You'll want to know: پھیپھڑا.
 پھیپھڑا — phephṛā — "a lung".
+
+The word, taken apart.
+پھیپھڑا (phephṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from phupphusa, "lungs" (CDIAL 9090). CDIAL thinks it probably imitates the sound of blowing.
 
 What you've built.
 One more word for this chapter.

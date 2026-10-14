@@ -14,7 +14,8 @@ romanization: "moṭā"
 concept_tag: UR-ADJ73-MOTA
 prerequisites: [UR-C72-khali, UR-C72-mitha]
 sounds: []
-roots: []
+roots: [indo-aryan-mutta]
+etymology_hook: "moṭā ← *mōṭṭa, in a word group CDIAL heads *muṭṭa 'defective' (CDIAL 10187)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C72-mitha]
 <!-- hl-knowledge: introduces=[UR-LEX-C73-ADJ73-01]; assesses=[] -->
 
 **موٹا** — *moṭā* — "fat, thick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موٹا** (*moṭā*) comes from a reconstructed *\*mōṭṭa*, one of a group of related forms that CDIAL heads *\*muṭṭa*, "defective" (CDIAL 10187): words for things stumpy, blunt or lumpish. CDIAL glosses the Hindi word "fat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

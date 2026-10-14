@@ -14,7 +14,8 @@ romanization: "nayā"
 concept_tag: UR-ADJ70-NAYA
 prerequisites: [UR-C69-bara, UR-C70-chhota]
 sounds: []
-roots: []
+roots: [sanskrit-navya]
+etymology_hook: "nayā ← Sanskrit naviya, a variant of navya 'new', a tadbhava (CDIAL 7025)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C70-chhota]
 <!-- hl-knowledge: introduces=[UR-LEX-C70-ADJ70-02]; assesses=[] -->
 
 **نیا** — *nayā* — "new".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نیا** (*nayā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *naviya*, "new" (CDIAL 7025). It is a variant of Sanskrit *navya*, "new".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

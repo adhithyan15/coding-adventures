@@ -14,7 +14,8 @@ romanization: "jugnū"
 concept_tag: UR-CHIZ235-JUGNU
 prerequisites: [UR-C234-qima, UR-C235-kira]
 sounds: []
-roots: []
+roots: [sanskrit-jyotiringana]
+etymology_hook: "jugnū ← Sanskrit jyotiriṅgaṇa 'firefly', a tadbhava (CDIAL 5298)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C235-kira]
 <!-- hl-knowledge: introduces=[UR-LEX-C235-CHIZ235-02]; assesses=[] -->
 
 **جگنو** — *jugnū* — "a firefly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جگنو** (*jugnū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jyotiriṅgaṇa*, "firefly" (CDIAL 5298). It is built from *jyotis*, "light", and *iṅgaṇa*, "moving".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

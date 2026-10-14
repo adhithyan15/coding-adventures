@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to throw, then the Urdu for to pull.
 You'll want to know: جلدی کرنا.
 جلدی کرنا — jaldī karnā — "to hurry".
 
+The phrase, taken apart.
+جلدی کرنا (jaldī karnā) is "to do quickness". jaldī is jald, "quick", usually traced to Persian jald, a word of Arabic origin, with the ending -ī; karnā comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to pull, then the Urdu for to hurry.
 
 You'll want to know: دیر کرنا.
 دیر کرنا — der karnā — "to be late, to delay".
+
+The phrase, taken apart.
+دیر کرنا (der karnā) joins der, "lateness", usually traced to Persian dēr, "late, a long time", and karnā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to hurry, then the Urdu for to be late.
 You'll want to know: چھپانا.
 چھپانا — chhupānā — "to conceal, to hide (something)".
 
+The word, taken apart.
+چھپانا (chhupānā) is the causing form of chhupnā, "to be hidden", which CDIAL lists under a reconstructed chupp, "cover, hide" (CDIAL 5058).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to be late, then the Urdu for to conceal.
 You'll want to know: کمانا.
 کمانا — kamānā — "to earn".
 
+The word, taken apart.
+کمانا (kamānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from karmāpayati, "works, earns", a form CDIAL reconstructs from its descendants (CDIAL 2897). It is built on karman, "work", the source of kām.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to conceal, then the Urdu for to earn.
 
 You'll want to know: سنبھالنا.
 سنبھالنا — sambhālnā — "to look after, to handle".
+
+The word, taken apart.
+سنبھالنا (sambhālnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṃbharati, "brings together, prepares" (CDIAL 12961).
 
 What you've built.
 One more word for this chapter.

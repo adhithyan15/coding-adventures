@@ -14,7 +14,8 @@ romanization: "tab"
 concept_tag: UR-TIME93-TAB
 prerequisites: [UR-C93-adha, UR-C93-ab]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva]
+etymology_hook: "tab: CDIAL lists it under Sanskrit evam eva 'exactly so', crossed with the pronoun stem ta- (CDIAL 2528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C93-ab]
 <!-- hl-knowledge: introduces=[UR-LEX-C93-TIME93-04]; assesses=[] -->
 
 **تب** — *tab* — "then".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تب** (*tab*) is inherited. CDIAL lists it beside *ab*, "now", under Sanskrit *evam eva*, "exactly so", crossed with the pointing stem *ta-*, "that" (CDIAL 2528).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

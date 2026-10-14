@@ -14,7 +14,8 @@ romanization: "rimoṭ"
 concept_tag: UR-CHIZ165-RIMOT
 prerequisites: [UR-C164-qalin, UR-C165-balb]
 sounds: []
-roots: []
+roots: [english-remote]
+etymology_hook: "rimoṭ ← English remote"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C165-balb]
 <!-- hl-knowledge: introduces=[UR-LEX-C165-CHIZ165-02]; assesses=[] -->
 
 **ریموٹ** — *rimoṭ* — "a remote control".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ریموٹ** (*rimoṭ*) is a loan from English *remote*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

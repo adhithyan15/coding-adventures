@@ -14,7 +14,8 @@ romanization: "chaudah"
 concept_tag: UR-NUMBERS84-CHAUDAH
 prerequisites: [UR-C83-barah, UR-C83-terah]
 sounds: []
-roots: []
+roots: [sanskrit-chaturdasha]
+etymology_hook: "chaudah ← Sanskrit caturdaśa 'fourteen', a tadbhava (CDIAL 4605)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C83-terah]
 <!-- hl-knowledge: introduces=[UR-LEX-C84-NUMBERS84-01]; assesses=[] -->
 
 **چودہ** — *chaudah* — "fourteen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چودہ** (*chaudah*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *caturdaśa*, "fourteen" (CDIAL 4605).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bulbul"
 concept_tag: UR-CHIZ208-BULBUL
 prerequisites: [UR-C207-kali-mirch, UR-C207-sirka]
 sounds: []
-roots: []
+roots: [persian-bulbul]
+etymology_hook: "bulbul: usually traced to Persian bulbul 'nightingale'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C207-sirka]
 <!-- hl-knowledge: introduces=[UR-LEX-C208-CHIZ208-01]; assesses=[] -->
 
 **بلبل** — *bulbul* — "a nightingale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بلبل** (*bulbul*) is a loan, usually traced to Persian *bulbul*, "nightingale".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

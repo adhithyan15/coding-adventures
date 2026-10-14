@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 19,
-  "sourceHash": "fnv1a64:91d7e9b51ca4e503",
+  "sourceHash": "fnv1a64:e51746cefa2ae6e6",
   "lessonIds": [
     "UR-C19-nahin-verb",
     "UR-C19-kya-polar",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "urdu/narration/ch19.txt",
   "json": "urdu/narration/ch19.json",
-  "textHash": "fnv1a64:5019a6b3438ec998",
-  "jsonHash": "fnv1a64:1e99aa7a181a7000",
+  "textHash": "fnv1a64:bb707e71856d8f59",
+  "jsonHash": "fnv1a64:5e5e537e451906f3",
   "findings": []
 }

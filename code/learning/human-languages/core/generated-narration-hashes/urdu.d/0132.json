@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 132,
-  "sourceHash": "fnv1a64:654d7bf8b0c7c87f",
+  "sourceHash": "fnv1a64:8fbb82f8ee29e7a8",
   "lessonIds": [
     "UR-C132-ganda",
     "UR-C132-amir",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch132.txt",
   "json": "urdu/narration/ch132.json",
-  "textHash": "fnv1a64:a8206cff1bb364df",
-  "jsonHash": "fnv1a64:e4f808d12909cbba",
+  "textHash": "fnv1a64:a4a6761e8ac71563",
+  "jsonHash": "fnv1a64:1f4860858592ceda",
   "findings": []
 }

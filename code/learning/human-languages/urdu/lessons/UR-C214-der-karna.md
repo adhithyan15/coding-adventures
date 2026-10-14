@@ -14,7 +14,8 @@ romanization: "der karnā"
 concept_tag: UR-VERB-DER-KARNA
 prerequisites: [UR-C213-khinchna, UR-C214-jaldi-karna]
 sounds: []
-roots: []
+roots: [persian-der, kr-do]
+etymology_hook: "der 'lateness' usually traced to Persian dēr; karnā 'to do' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C214-jaldi-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C214-ACT214-02]; assesses=[] -->
 
 **دیر کرنا** — *der karnā* — "to be late, to delay".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دیر کرنا** (*der karnā*) joins *der*, "lateness", usually traced to Persian *dēr*, "late, a long time", and *karnā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

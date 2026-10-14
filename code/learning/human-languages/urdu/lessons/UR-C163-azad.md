@@ -14,7 +14,8 @@ romanization: "āzād"
 concept_tag: UR-SIFAT163-AZAD
 prerequisites: [UR-C163-fuzul, UR-C163-majbur]
 sounds: []
-roots: []
+roots: [persian-azad]
+etymology_hook: "āzād: usually traced to Persian āzād 'free'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C163-majbur]
 <!-- hl-knowledge: introduces=[UR-LEX-C163-SIFAT163-03]; assesses=[] -->
 
 **آزاد** — *āzād* — "free (not captive)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آزاد** (*āzād*) is a loan, usually traced to Persian *āzād*, "free".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

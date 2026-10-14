@@ -14,7 +14,8 @@ romanization: "machherā"
 concept_tag: UR-KAM178-MACHHERA
 prerequisites: [UR-C178-pailat, UR-C178-mallah]
 sounds: []
-roots: []
+roots: [sanskrit-matsya]
+etymology_hook: "machherā: built on machh 'fish' ← Sanskrit matsya 'fish' (CDIAL 9758)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C178-mallah]
 <!-- hl-knowledge: introduces=[UR-LEX-C178-KAM178-04]; assesses=[] -->
 
 **مچھیرا** — *machherā* — "a fisherman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مچھیرا** (*machherā*) is "one who works with fish". It is built on *machh*, "fish", which CDIAL lists, as Hindi *māch*, under Sanskrit *matsya*, "fish" (CDIAL 9758).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

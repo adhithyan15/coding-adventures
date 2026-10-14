@@ -14,7 +14,8 @@ romanization: "taraqqī"
 concept_tag: UR-CHIZ205-TARAQQI
 prerequisites: [UR-C205-haq, UR-C205-farz]
 sounds: []
-roots: []
+roots: [arabic-taraqqi]
+etymology_hook: "taraqqī ← Arabic taraqqī 'rising, advancement', through Persian (Lane, root r-q-y)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C205-farz]
 <!-- hl-knowledge: introduces=[UR-LEX-C205-CHIZ205-04]; assesses=[] -->
 
 **ترقی** — *taraqqī* — "progress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ترقی** (*taraqqī*) is a loan from Arabic *taraqqī*, "rising, advancement", which reached Urdu through Persian. Its Arabic root is *r-q-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

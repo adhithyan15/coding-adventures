@@ -14,7 +14,8 @@ romanization: "klinik"
 concept_tag: UR-SEHAT243-KLINIK
 prerequisites: [UR-C243-vazan, UR-C243-qad]
 sounds: []
-roots: []
+roots: [english-clinic]
+etymology_hook: "klinik ← English clinic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C243-qad]
 <!-- hl-knowledge: introduces=[UR-LEX-C243-SEHAT243-05]; assesses=[] -->
 
 **کلینک** — *klinik* — "a clinic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کلینک** (*klinik*) is a loan from English *clinic*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hunar"
 concept_tag: UR-CAN104-HUNAR
 prerequisites: [UR-C103-sakna, UR-C103-pana]
 sounds: []
-roots: []
+roots: [persian-hunar]
+etymology_hook: "hunar: usually traced to Persian hunar 'skill, art'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C103-pana]
 <!-- hl-knowledge: introduces=[UR-LEX-C104-CAN104-01]; assesses=[] -->
 
 **ہنر** — *hunar* — "a skill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہنر** (*hunar*) is a loan, usually traced to Persian *hunar*, "skill, art".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

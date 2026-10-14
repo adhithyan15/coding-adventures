@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a phone, then the Urdu for glasses, spectac
 You'll want to know: بٹوا.
 بٹوا — baṭuā — "a wallet, a purse".
 
+The word, taken apart.
+The origin of بٹوا (baṭuā) is uncertain. CDIAL lists a Bihari baṭuā, "metal dish", under vartu, "something round" (CDIAL 11364), but not this word for a purse.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for glasses, spectacles, then the Urdu for a wa
 
 You'll want to know: چھتری.
 چھتری — chhatrī — "an umbrella".
+
+The word, taken apart.
+چھتری (chhatrī) belongs with Sanskrit chattra, "parasol", and its feminine chattrikā. CDIAL lists the inherited Hindi forms chātā and chātī, "umbrella" (CDIAL 4972); chhatrī keeps more of the Sanskrit shape and is not listed itself.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a wallet, then the Urdu for an umbrella.
 You'll want to know: تھیلا.
 تھیلا — thailā — "a bag".
 
+The word, taken apart.
+تھیلا (thailā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sthavi, "sack, bag" (CDIAL 13746). The -l- is an added suffix; the Sanskrit word is known only from the old word-lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for an umbrella, then the Urdu for a bag.
 You'll want to know: ٹوکری.
 ٹوکری — ṭokrī — "a basket".
 
+The word, taken apart.
+ٹوکری (ṭokrī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭokka, "basket", a form CDIAL reconstructs from its descendants (CDIAL 5477). The -r- is an added suffix.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a bag, then the Urdu for a basket.
 
 You'll want to know: موم بتی.
 موم بتی — mombattī — "a candle".
+
+The word, taken apart.
+موم بتی (mombattī) is "wax-wick". mom, "wax", is usually traced to Persian mom, and battī, "wick", comes from Sanskrit varti, "wick" (CDIAL 11359).
 
 What you've built.
 One more word for this chapter.

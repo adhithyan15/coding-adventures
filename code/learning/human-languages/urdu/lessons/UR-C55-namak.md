@@ -14,7 +14,8 @@ romanization: "namak"
 concept_tag: UR-FOOD55-NAMAK
 prerequisites: [UR-C55-gajar, UR-C55-chini]
 sounds: []
-roots: []
+roots: [persian-namak]
+etymology_hook: "namak: usually traced to Persian namak 'salt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C55-chini]
 <!-- hl-knowledge: introduces=[UR-LEX-C55-FOOD55-05]; assesses=[] -->
 
 **نمک** — *namak* — "salt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نمک** (*namak*) is a loan, usually traced to Persian *namak*, "salt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kampanī"
 concept_tag: UR-KAM261-KAMPANI
 prerequisites: [UR-C260-jalebi, UR-C260-gulab-jamun]
 sounds: []
-roots: []
+roots: [english-company]
+etymology_hook: "kampanī ← English company"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C260-gulab-jamun]
 <!-- hl-knowledge: introduces=[UR-LEX-C261-KAM261-01]; assesses=[] -->
 
 **کمپنی** — *kampanī* — "a company".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کمپنی** (*kampanī*) is a loan from English *company*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

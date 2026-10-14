@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "The Word That Was Deferred",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:91d7e9b51ca4e503",
+  "sourceHash": "fnv1a64:e51746cefa2ae6e6",
   "lessons": [
     {
       "id": "UR-C19-nahin-verb",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6c931a12e19a0b7",
+      "sourceHash": "fnv1a64:0d4a701d67263d20",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "میں نہیں سمجھتا (maiṅ nahīṅ samajhtā) is three inherited words. maiṅ, \"I\", is listed by CDIAL under the Sanskrit first-person base ma-, whose form mayā meant \"by me\" (CDIAL 9691); nahīṅ, \"not\", comes from nahi, \"surely not\" (CDIAL 7035); and samajhtā is the present of samajhnā, \"to understand\", from saṃbudhyate, \"wakes up, understands\" (CDIAL 12959)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: where the negator stands",
           "segments": [
@@ -97,7 +108,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -146,7 +157,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

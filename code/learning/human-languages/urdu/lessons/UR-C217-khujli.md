@@ -14,7 +14,8 @@ romanization: "khujlī"
 concept_tag: UR-SEHAT217-KHUJLI
 prerequisites: [UR-C217-tandurusti, UR-C217-dant-dard]
 sounds: []
-roots: []
+roots: [sanskrit-kharju]
+etymology_hook: "khujlī ← Sanskrit kharju 'itching, scab', a tadbhava (CDIAL 3827)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C217-dant-dard]
 <!-- hl-knowledge: introduces=[UR-LEX-C217-SEHAT217-05]; assesses=[] -->
 
 **کھجلی** — *khujlī* — "an itch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھجلی** (*khujlī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kharju*, "itching, scab" (CDIAL 3827). CDIAL takes the word from Dravidian. The Sanskrit word is known only from the old word-lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

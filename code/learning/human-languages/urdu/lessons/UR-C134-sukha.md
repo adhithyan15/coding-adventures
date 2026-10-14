@@ -14,7 +14,8 @@ romanization: "sūkhā"
 concept_tag: UR-QUAL134-SUKHA
 prerequisites: [UR-C133-sakht, UR-C134-gila]
 sounds: []
-roots: []
+roots: [sanskrit-shushka]
+etymology_hook: "sūkhā ← Sanskrit śuṣka 'dried', a tadbhava (CDIAL 12548)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C134-gila]
 <!-- hl-knowledge: introduces=[UR-LEX-C134-QUAL134-02]; assesses=[] -->
 
 **سوکھا** — *sūkhā* — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سوکھا** (*sūkhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śuṣka*, "dried" (CDIAL 12548).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

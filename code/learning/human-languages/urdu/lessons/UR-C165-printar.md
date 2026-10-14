@@ -14,7 +14,8 @@ romanization: "printar"
 concept_tag: UR-CHIZ165-PRINTAR
 prerequisites: [UR-C165-rimot, UR-C165-laiptap]
 sounds: []
-roots: []
+roots: [english-printer]
+etymology_hook: "printar ← English printer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C165-laiptap]
 <!-- hl-knowledge: introduces=[UR-LEX-C165-CHIZ165-04]; assesses=[] -->
 
 **پرنٹر** — *printar* — "a printer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پرنٹر** (*printar*) is a loan from English *printer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

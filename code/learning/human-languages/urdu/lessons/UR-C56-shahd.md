@@ -14,7 +14,8 @@ romanization: "shahd"
 concept_tag: UR-FOOD56-SHAHD
 prerequisites: [UR-C56-makkhan, UR-C56-panir]
 sounds: []
-roots: []
+roots: [arabic-shahd]
+etymology_hook: "shahd ← Arabic shahd 'honey', through Persian (Lane, root sh-h-d)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C56-panir]
 <!-- hl-knowledge: introduces=[UR-LEX-C56-FOOD56-04]; assesses=[] -->
 
 **شہد** — *shahd* — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شہد** (*shahd*) is a loan from Arabic *shahd*, "honey", which reached Urdu through Persian. Its Arabic root is *sh-h-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

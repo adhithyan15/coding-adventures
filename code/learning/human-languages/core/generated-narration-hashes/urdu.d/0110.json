@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 110,
-  "sourceHash": "fnv1a64:066fd63d7c6127d7",
+  "sourceHash": "fnv1a64:550de1c3ecabb77f",
   "lessonIds": [
     "UR-C110-tivi",
     "UR-C110-kampyutar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch110.txt",
   "json": "urdu/narration/ch110.json",
-  "textHash": "fnv1a64:adf34b5a4430efc3",
-  "jsonHash": "fnv1a64:f9f2cc383ca23223",
+  "textHash": "fnv1a64:7ec7b48751cd8052",
+  "jsonHash": "fnv1a64:1d6de9311338a5f0",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "tang"
 concept_tag: UR-QUAL134-TANG
 prerequisites: [UR-C134-sukha, UR-C134-chaura]
 sounds: []
-roots: []
+roots: [persian-tang]
+etymology_hook: "tang: usually traced to Persian tang 'narrow, tight'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C134-chaura]
 <!-- hl-knowledge: introduces=[UR-LEX-C134-QUAL134-04]; assesses=[] -->
 
 **تنگ** — *tang* — "narrow, tight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تنگ** (*tang*) is a loan, usually traced to Persian *tang*, "narrow, tight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

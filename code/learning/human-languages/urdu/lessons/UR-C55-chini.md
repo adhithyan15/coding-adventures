@@ -14,7 +14,8 @@ romanization: "chīnī"
 concept_tag: UR-FOOD55-CHINI
 prerequisites: [UR-C55-tamatar, UR-C55-gajar]
 sounds: []
-roots: []
+roots: [sanskrit-cina]
+etymology_hook: "chīnī: 'Chinese', from Sanskrit cīna 'Chinese' (CDIAL 4841): sugar named after China"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C55-gajar]
 <!-- hl-knowledge: introduces=[UR-LEX-C55-FOOD55-04]; assesses=[] -->
 
 **چینی** — *chīnī* — "sugar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چینی** (*chīnī*) means "Chinese": sugar was named after China. CDIAL lists Hindi *cīnā*, "Chinese", under Sanskrit *cīna*, "Chinese" (CDIAL 4841); *chīnī* is the same name with the ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

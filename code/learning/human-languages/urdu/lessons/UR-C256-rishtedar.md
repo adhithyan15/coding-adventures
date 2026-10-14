@@ -14,7 +14,8 @@ romanization: "rishtedār"
 concept_tag: UR-CHIZ256-RISHTEDAR
 prerequisites: [UR-C255-parking, UR-C256-shadi]
 sounds: []
-roots: []
+roots: [persian-rishtadar]
+etymology_hook: "rishtedār: usually traced to Persian rishtadār 'a relative'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C256-shadi]
 <!-- hl-knowledge: introduces=[UR-LEX-C256-CHIZ256-02]; assesses=[] -->
 
 **رشتہ دار** — *rishtedār* — "a relative".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رشتہ دار** (*rishtedār*) is a loan, usually traced to Persian *rishtadār*, "a relative". It is built from *rishta*, "thread, tie", and *-dār*, "holder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

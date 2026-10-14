@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a star, then the Urdu for a cloud.
 You'll want to know: سورج.
 سورج — sūraj — "the sun".
 
+The word, taken apart.
+سورج (sūraj) is usually traced to Sanskrit sūrya, "sun". CDIAL lists that word, but no Hindi or Urdu form under it (CDIAL 13574).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a cloud, then the Urdu for the sun.
 
 You'll want to know: چاند.
 چاند — chā̃d — "the moon".
+
+The word, taken apart.
+چاند (chā̃d) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from candra, "moon" (CDIAL 4661). CDIAL lists it under the noun candra, "moon", built on the adjective candra, "shining".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for the sun, then the Urdu for the moon.
 You'll want to know: سمندر.
 سمندر — samandar — "the sea".
 
+The word, taken apart.
+سمندر (samandar) goes back to Sanskrit samudra, "sea", with an added nasal. CDIAL gives no Hindi or Urdu form in this entry, but it lists Old Awadhi samuṃda, "sea", with the same nasal (CDIAL 13236).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for the moon, then the Urdu for the sea.
 You'll want to know: آگ.
 آگ — āg — "fire".
 
+The word, taken apart.
+آگ (āg) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from agni, "fire" (CDIAL 55).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for the sea, then the Urdu for fire.
 
 You'll want to know: برف.
 برف — barf — "snow; ice".
+
+The word, taken apart.
+برف (barf) is a loan, usually traced to Persian barf, "snow, ice".
 
 What you've built.
 One more word for this chapter.

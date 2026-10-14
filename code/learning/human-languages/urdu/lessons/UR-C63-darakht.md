@@ -14,7 +14,8 @@ romanization: "darakht"
 concept_tag: UR-SCHOOL63-DARAKHT
 prerequisites: [UR-C63-lafz, UR-C63-khel]
 sounds: []
-roots: []
+roots: [persian-darakht]
+etymology_hook: "darakht: usually traced to Persian darakht 'tree'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C63-khel]
 <!-- hl-knowledge: introduces=[UR-LEX-C63-SCHOOL63-04]; assesses=[] -->
 
 **درخت** — *darakht* — "a tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**درخت** (*darakht*) is a loan, usually traced to Persian *darakht*, "tree".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sukūn"
 concept_tag: UR-CHIZ172-SUKUN
 prerequisites: [UR-C171-matlab, UR-C172-hairat]
 sounds: []
-roots: []
+roots: [arabic-sukun]
+etymology_hook: "sukūn ← Arabic sukūn 'stillness, rest', through Persian (Lane, root s-k-n)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C172-hairat]
 <!-- hl-knowledge: introduces=[UR-LEX-C172-CHIZ172-02]; assesses=[] -->
 
 **سکون** — *sukūn* — "calm, peace of mind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سکون** (*sukūn*) is a loan from Arabic *sukūn*, "stillness, rest", which reached Urdu through Persian. Its Arabic root is *s-k-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

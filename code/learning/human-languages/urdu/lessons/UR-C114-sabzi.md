@@ -14,7 +14,8 @@ romanization: "sabzī"
 concept_tag: UR-THINGS114-SABZI
 prerequisites: [UR-C114-imtihan, UR-C114-zaban]
 sounds: []
-roots: []
+roots: [persian-sabzi]
+etymology_hook: "sabzī: usually traced to Persian sabzī 'greenness, greens'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C114-zaban]
 <!-- hl-knowledge: introduces=[UR-LEX-C114-THINGS114-03]; assesses=[] -->
 
 **سبزی** — *sabzī* — "a vegetable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سبزی** (*sabzī*) is a loan, usually traced to Persian *sabzī*, "greenness, greens". It is built on *sabz*, "green".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

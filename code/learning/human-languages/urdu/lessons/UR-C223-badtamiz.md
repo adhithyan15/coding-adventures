@@ -14,7 +14,8 @@ romanization: "badtamīz"
 concept_tag: UR-SIFAT223-BADTAMIZ
 prerequisites: [UR-C223-chalak, UR-C223-sharif]
 sounds: []
-roots: []
+roots: [persian-bad, arabic-tamyiz]
+etymology_hook: "badtamīz: Persian bad 'bad' + Arabic tamyīz 'discernment' (Lane, root m-y-z)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C223-sharif]
 <!-- hl-knowledge: introduces=[UR-LEX-C223-SIFAT223-03]; assesses=[] -->
 
 **بدتمیز** — *badtamīz* — "rude".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بدتمیز** (*badtamīz*) is "bad in manners". It joins Persian *bad*, "bad", and *tamīz*, "manners", Arabic *tamyīz*, "discernment, telling apart" (Lane, root *m-y-z*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

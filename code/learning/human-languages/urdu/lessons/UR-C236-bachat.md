@@ -14,7 +14,8 @@ romanization: "bachat"
 concept_tag: UR-KAM236-BACHAT
 prerequisites: [UR-C235-kekra, UR-C235-jhinga]
 sounds: []
-roots: []
+roots: [sanskrit-vancati]
+etymology_hook: "bachat: from bachnā 'to escape, be saved' (CDIAL 11208)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C235-jhinga]
 <!-- hl-knowledge: introduces=[UR-LEX-C236-KAM236-01]; assesses=[] -->
 
 **بچت** — *bachat* — "savings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بچت** (*bachat*) is the noun of *bachnā*, "to be saved, to be left over", which CDIAL lists under Sanskrit *vañcati*, "moves; escapes from" (CDIAL 11208).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

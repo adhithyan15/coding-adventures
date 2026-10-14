@@ -12,7 +12,7 @@ concept_tag: UR-BLUE
 prerequisites: [UR-C13-kala, UR-C05-khuda-hafiz-more]
 sounds: [rtl, long-i]
 roots: [sanskrit-nila]
-etymology_hook: nīlā comes from Sanskrit nīla ("dark blue"), and no further root is documented behind it -- a dead end backward, like کالا's root was not. But nīlī, Sanskrit's word for the indigo plant from the same root, travelled forward through Persian and Arabic an-nīl into Portuguese anil and then into English aniline, the dye-chemistry name -- the same word arriving in English by an entirely different, much later road than khudā, dil, or safed did.
+etymology_hook: "nīlā ← Sanskrit nīla 'dark blue' (CDIAL 7563); its cousin nīlī 'indigo' reached English as aniline"
 duration:
   max_seconds: 290
 requires:
@@ -55,7 +55,7 @@ Urdu again, centuries later, and became an English word.
 ## The word, taken apart — a dead end, and then a long way forward
 <!-- hl-knowledge: introduces=[UR-ETYMON-NILA-ANILINE]; assesses=[UR-LEX-NILA, UR-LEX-SAFED] -->
 
-**نیلا** comes from Sanskrit *nīla*, "dark blue." No further root
+**نیلا** comes from Sanskrit *nīla*, "dark blue" (CDIAL 7563). No further root
 is documented behind it — an honest dead end backward, unlike **کالا**'s
 root, which kept going sideways into Dravidian.
 

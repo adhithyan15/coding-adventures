@@ -14,7 +14,8 @@ romanization: "jānvar"
 concept_tag: UR-CHIZ227-JANVAR
 prerequisites: [UR-C226-kaddu, UR-C226-palak2]
 sounds: []
-roots: []
+roots: [persian-janvar]
+etymology_hook: "jānvar: usually traced to Persian jānvar 'animal, living creature'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C226-palak2]
 <!-- hl-knowledge: introduces=[UR-LEX-C227-CHIZ227-01]; assesses=[] -->
 
 **جانور** — *jānvar* — "an animal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جانور** (*jānvar*) is a loan, usually traced to Persian *jānvar*, "animal, living creature". It is built on *jān*, "life".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

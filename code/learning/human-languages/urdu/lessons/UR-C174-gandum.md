@@ -14,7 +14,8 @@ romanization: "gandum"
 concept_tag: UR-CHIZ174-GANDUM
 prerequisites: [UR-C173-kichar, UR-C174-makai]
 sounds: []
-roots: []
+roots: [persian-gandum]
+etymology_hook: "gandum: usually traced to Persian gandum 'wheat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C174-makai]
 <!-- hl-knowledge: introduces=[UR-LEX-C174-CHIZ174-02]; assesses=[] -->
 
 **گندم** — *gandum* — "wheat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گندم** (*gandum*) is a loan, usually traced to Persian *gandum*, "wheat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

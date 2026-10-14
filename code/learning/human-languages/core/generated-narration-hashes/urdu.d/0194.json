@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 194,
-  "sourceHash": "fnv1a64:a0595af081adead9",
+  "sourceHash": "fnv1a64:98c6d226826a6e19",
   "lessonIds": [
     "UR-C194-chaukor",
     "UR-C194-terha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch194.txt",
   "json": "urdu/narration/ch194.json",
-  "textHash": "fnv1a64:f12330cc5c825af1",
-  "jsonHash": "fnv1a64:6b25e02ee5fb775b",
+  "textHash": "fnv1a64:066bb3849d83e0e4",
+  "jsonHash": "fnv1a64:dd8c851551170287",
   "findings": []
 }

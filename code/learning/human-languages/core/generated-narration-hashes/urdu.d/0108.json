@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 108,
-  "sourceHash": "fnv1a64:6ba0ed5e22c4909b",
+  "sourceHash": "fnv1a64:b710539d19adba2b",
   "lessonIds": [
     "UR-C108-kil",
     "UR-C108-hathaura",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch108.txt",
   "json": "urdu/narration/ch108.json",
-  "textHash": "fnv1a64:14107119680db747",
-  "jsonHash": "fnv1a64:86df09b0dc3bbd64",
+  "textHash": "fnv1a64:d638838fcb925fa4",
+  "jsonHash": "fnv1a64:ae961a18fefb87a2",
   "findings": []
 }

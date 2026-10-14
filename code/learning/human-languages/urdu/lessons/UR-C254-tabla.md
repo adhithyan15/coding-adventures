@@ -14,7 +14,8 @@ romanization: "tablā"
 concept_tag: UR-CHIZ254-TABLA
 prerequisites: [UR-C254-sitar, UR-C254-gitar]
 sounds: []
-roots: []
+roots: [arabic-tabl]
+etymology_hook: "tablā ← Arabic ṭabl 'a drum', through Persian (Lane, root ṭ-b-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C254-gitar]
 <!-- hl-knowledge: introduces=[UR-LEX-C254-CHIZ254-05]; assesses=[] -->
 
 **طبلہ** — *tablā* — "a tabla".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طبلہ** (*tablā*) is a loan from Arabic *ṭabl*, "a drum", which reached Urdu through Persian. Its Arabic root is *ṭ-b-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

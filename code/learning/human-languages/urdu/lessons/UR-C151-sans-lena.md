@@ -14,7 +14,8 @@ romanization: "sāṅs lenā"
 concept_tag: UR-VERB-SANS-LENA
 prerequisites: [UR-C151-chhinkna, UR-C151-khansna]
 sounds: []
-roots: []
+roots: [sanskrit-shvasa, sanskrit-labhate]
+etymology_hook: "sāṅs ← Sanskrit śvāsa 'breath' (CDIAL 12769); lenā ← labhate 'takes' (CDIAL 10948)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C151-khansna]
 <!-- hl-knowledge: introduces=[UR-LEX-C151-ACT151-05]; assesses=[] -->
 
 **سانس لینا** — *sāṅs lenā* — "to breathe".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سانس لینا** (*sāṅs lenā*) is "to take breath". *sāṅs* comes from Sanskrit *śvāsa*, "breath, breathing" (CDIAL 12769), and *lenā* from Sanskrit *labhate*, "catches, takes" (CDIAL 10948).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

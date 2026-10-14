@@ -14,7 +14,8 @@ romanization: "bhūlnā"
 concept_tag: UR-VERB-BHULNA
 prerequisites: [UR-C50-rahna, UR-C50-sikhna]
 sounds: []
-roots: []
+roots: [indo-aryan-bhull]
+etymology_hook: "bhūlnā ← *bhull 'err, forget', a reconstructed form; a tadbhava (CDIAL 9538)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C50-sikhna]
 <!-- hl-knowledge: introduces=[UR-LEX-C51-VERBS51-01]; assesses=[] -->
 
 **بھولنا** — *bhūlnā* — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھولنا** (*bhūlnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhull*, "err, forget", a form CDIAL reconstructs from its descendants (CDIAL 9538).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

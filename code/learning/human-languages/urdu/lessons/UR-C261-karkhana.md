@@ -14,7 +14,8 @@ romanization: "kārkhānā"
 concept_tag: UR-KAM261-KARKHANA
 prerequisites: [UR-C260-gulab-jamun, UR-C261-kampani]
 sounds: []
-roots: []
+roots: [persian-karkhana]
+etymology_hook: "kārkhānā: usually traced to Persian kārkhāna 'workshop'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C261-kampani]
 <!-- hl-knowledge: introduces=[UR-LEX-C261-KAM261-02]; assesses=[] -->
 
 **کارخانہ** — *kārkhānā* — "a factory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کارخانہ** (*kārkhānā*) is a loan, usually traced to Persian *kārkhāna*, "workshop". It is built from *kār*, "work", and *khāna*, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

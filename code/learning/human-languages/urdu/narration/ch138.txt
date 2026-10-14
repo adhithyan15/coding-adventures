@@ -12,6 +12,9 @@ Before the new one: say the Urdu for open, then the Urdu for to wake up.
 You'll want to know: گرنا.
 گرنا — girnā — "to fall".
 
+The word, taken apart.
+گرنا (girnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from girati, "drips, falls", a form CDIAL reconstructs from its descendants (CDIAL 4159).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to wake up, then the Urdu for to fall.
 
 You'll want to know: اڑنا.
 اڑنا — uṛnā — "to fly".
+
+The word, taken apart.
+اڑنا (uṛnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uḍḍayate, "flies up" (CDIAL 1697). It is the form CDIAL gives beside uḍḍīyate, "flies up".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to fall, then the Urdu for to fly.
 You'll want to know: تیرنا.
 تیرنا — tairnā — "to swim".
 
+The word, taken apart.
+تیرنا (tairnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tirate, "crosses over" (CDIAL 5821). CDIAL rejects a Dravidian source proposed by Bloch, and explains the ai as a blend with another verb.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to fly, then the Urdu for to swim.
 You'll want to know: بجانا.
 بجانا — bajānā — "to play (an instrument), to ring".
 
+The word, taken apart.
+بجانا (bajānā) is the causing form of bajnā, "to sound", which CDIAL lists under Sanskrit vādyate, "is made to sound" (CDIAL 11513).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to swim, then the Urdu for to play.
 
 You'll want to know: چھونا.
 چھونا — chhūnā — "to touch".
+
+The word, taken apart.
+چھونا (chhūnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from chupati, "touches" (CDIAL 5055). The Sanskrit verb is known only from a list of verb roots.
 
 What you've built.
 One more word for this chapter.

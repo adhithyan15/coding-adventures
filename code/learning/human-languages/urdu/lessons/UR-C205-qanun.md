@@ -14,7 +14,8 @@ romanization: "qānūn"
 concept_tag: UR-CHIZ205-QANUN
 prerequisites: [UR-C204-batchit, UR-C204-mashvara]
 sounds: []
-roots: []
+roots: [arabic-qanun]
+etymology_hook: "qānūn: usually traced, through Persian, to Arabic qānūn 'rule', itself from Greek kanōn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C204-mashvara]
 <!-- hl-knowledge: introduces=[UR-LEX-C205-CHIZ205-01]; assesses=[] -->
 
 **قانون** — *qānūn* — "a law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قانون** (*qānūn*) is usually traced, through Persian, to Arabic *qānūn*, "rule, canon", a word Arabic itself took from Greek *kanōn*, "rule".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

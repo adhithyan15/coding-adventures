@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 159,
-  "sourceHash": "fnv1a64:679b1c004a9af962",
+  "sourceHash": "fnv1a64:2584ca0d9a497e66",
   "lessonIds": [
     "UR-C159-is-liye",
     "UR-C159-chunki",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch159.txt",
   "json": "urdu/narration/ch159.json",
-  "textHash": "fnv1a64:3efa42e71a48dea6",
-  "jsonHash": "fnv1a64:6862be73206ddcbf",
+  "textHash": "fnv1a64:6e7e3cdc12b60273",
+  "jsonHash": "fnv1a64:7385378570008993",
   "findings": []
 }

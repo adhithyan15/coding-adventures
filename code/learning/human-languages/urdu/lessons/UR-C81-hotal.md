@@ -14,7 +14,8 @@ romanization: "hoṭal"
 concept_tag: UR-TOWN81-HOTAL
 prerequisites: [UR-C80-masjid, UR-C81-mandir]
 sounds: []
-roots: []
+roots: [english-hotel]
+etymology_hook: "hoṭal ← English hotel, from Latin hospitāle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C81-mandir]
 <!-- hl-knowledge: introduces=[UR-LEX-C81-TOWN81-02]; assesses=[] -->
 
 **ہوٹل** — *hoṭal* — "a hotel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہوٹل** (*hoṭal*) is a loan from English *hotel*. English had it, through French, from Latin *hospitāle*, "guest-house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

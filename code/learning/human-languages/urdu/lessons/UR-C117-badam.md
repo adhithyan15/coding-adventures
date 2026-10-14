@@ -14,7 +14,8 @@ romanization: "bādām"
 concept_tag: UR-THINGS117-BADAM
 prerequisites: [UR-C116-nashpati, UR-C116-khajur]
 sounds: []
-roots: []
+roots: [persian-badam]
+etymology_hook: "bādām: usually traced to Persian bādām 'almond'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C116-khajur]
 <!-- hl-knowledge: introduces=[UR-LEX-C117-THINGS117-01]; assesses=[] -->
 
 **بادام** — *bādām* — "an almond".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بادام** (*bādām*) is a loan, usually traced to Persian *bādām*, "almond".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

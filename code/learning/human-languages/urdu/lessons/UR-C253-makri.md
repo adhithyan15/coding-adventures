@@ -14,7 +14,8 @@ romanization: "makṛī"
 concept_tag: UR-CHIZ253-MAKRI
 prerequisites: [UR-C253-magarmachh, UR-C253-zarafa]
 sounds: []
-roots: []
+roots: [sanskrit-markata-spider]
+etymology_hook: "makṛī ← Sanskrit markaṭa 'spider', a tadbhava (CDIAL 9883)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C253-zarafa]
 <!-- hl-knowledge: introduces=[UR-LEX-C253-CHIZ253-05]; assesses=[] -->
 
 **مکڑی** — *makṛī* — "a spider".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مکڑی** (*makṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *markaṭa*, "spider" (CDIAL 9883). The Sanskrit word is known only from the old word-lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

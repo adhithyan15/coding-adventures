@@ -14,7 +14,8 @@ romanization: "mīnār"
 concept_tag: UR-JAGAH191-MINAR
 prerequisites: [UR-C191-gurdvara, UR-C191-qabristan]
 sounds: []
-roots: []
+roots: [arabic-manar]
+etymology_hook: "mīnār ← Arabic manār 'a lighthouse, a minaret', through Persian (Lane, root n-w-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C191-qabristan]
 <!-- hl-knowledge: introduces=[UR-LEX-C191-JAGAH191-05]; assesses=[] -->
 
 **مینار** — *mīnār* — "a minaret, a tower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مینار** (*mīnār*) is a loan from Arabic *manār*, "a lighthouse, a minaret", which reached Urdu through Persian. Its Arabic root is *n-w-r* (Lane). It is built on the same root as *nūr*, "light".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

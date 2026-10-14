@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 117,
-  "sourceHash": "fnv1a64:53ce468d1c220009",
+  "sourceHash": "fnv1a64:8fea0b04136eda7a",
   "lessonIds": [
     "UR-C117-badam",
     "UR-C117-mungphali",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch117.txt",
   "json": "urdu/narration/ch117.json",
-  "textHash": "fnv1a64:a92f900c381c6fb6",
-  "jsonHash": "fnv1a64:f7db03c29627ae10",
+  "textHash": "fnv1a64:957e5cd506208822",
+  "jsonHash": "fnv1a64:addce4eeff24c0c3",
   "findings": []
 }

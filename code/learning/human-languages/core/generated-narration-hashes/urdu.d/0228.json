@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 228,
-  "sourceHash": "fnv1a64:a7637647ff9e8e54",
+  "sourceHash": "fnv1a64:0b67be9fd3f76d21",
   "lessonIds": [
     "UR-C228-tairaki",
     "UR-C228-tim",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch228.txt",
   "json": "urdu/narration/ch228.json",
-  "textHash": "fnv1a64:e276a7881a88c10d",
-  "jsonHash": "fnv1a64:cddc449d03ff7be2",
+  "textHash": "fnv1a64:766ce041f3a6c818",
+  "jsonHash": "fnv1a64:ba93b453f0a9379e",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 106,
-  "sourceHash": "fnv1a64:9a69d68cc9c56f2b",
+  "sourceHash": "fnv1a64:c795e95cb8b38bab",
   "lessonIds": [
     "UR-C106-dhaga",
     "UR-C106-tauliya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch106.txt",
   "json": "urdu/narration/ch106.json",
-  "textHash": "fnv1a64:0fe0052e332375a7",
-  "jsonHash": "fnv1a64:d7ee9294b431c554",
+  "textHash": "fnv1a64:79bfd70ce62f5f99",
+  "jsonHash": "fnv1a64:3eeda54647af3e73",
   "findings": []
 }

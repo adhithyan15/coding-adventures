@@ -14,7 +14,8 @@ romanization: "sūjī"
 concept_tag: UR-CHIZ259-SUJI
 prerequisites: [UR-C259-chatpata, UR-C259-maida]
 sounds: []
-roots: []
+roots: [indo-aryan-sujji]
+etymology_hook: "sūjī ← *sūjjī 'coarse wheat meal', a reconstructed form; a tadbhava (CDIAL 13552)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C259-maida]
 <!-- hl-knowledge: introduces=[UR-LEX-C259-CHIZ259-05]; assesses=[] -->
 
 **سوجی** — *sūjī* — "semolina".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سوجی** (*sūjī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*sūjjī*, "coarse wheat meal", a form CDIAL reconstructs from its descendants (CDIAL 13552).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

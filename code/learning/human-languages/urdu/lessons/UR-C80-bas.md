@@ -14,7 +14,8 @@ romanization: "bas"
 concept_tag: UR-TOWN80-BAS
 prerequisites: [UR-C80-isteshan, UR-C80-gari]
 sounds: []
-roots: []
+roots: [english-bus, persian-bas]
+etymology_hook: "bas 'bus' ← English bus, short for omnibus; bas 'enough' is usually traced to Persian bas"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C80-gari]
 <!-- hl-knowledge: introduces=[UR-LEX-C80-TOWN80-03]; assesses=[] -->
 
 **بس** — *bas* — "a bus; enough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بس** (*bas*) is two words spelled alike. *bas*, "a bus", is a loan from English *bus*, short for *omnibus*; *bas*, "enough", is usually traced to Persian *bas*, "enough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jalebī"
 concept_tag: UR-CHIZ260-JALEBI
 prerequisites: [UR-C260-tikka, UR-C260-karhi]
 sounds: []
-roots: []
+roots: [arabic-zalabiya]
+etymology_hook: "jalebī: usually traced, through Persian zalībiya, to Arabic zalābiya, a fried sweet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C260-karhi]
 <!-- hl-knowledge: introduces=[UR-LEX-C260-CHIZ260-04]; assesses=[] -->
 
 **جلیبی** — *jalebī* — "a jalebi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جلیبی** (*jalebī*) is usually traced, through Persian *zalībiya*, to Arabic *zalābiya*, the name of a fried sweet.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hasīn"
 concept_tag: UR-SIFAT223-HASIN
 prerequisites: [UR-C223-badtamiz, UR-C223-tamizdar]
 sounds: []
-roots: []
+roots: [arabic-hasin]
+etymology_hook: "hasīn ← Arabic ḥasīn 'beautiful, comely', through Persian (Lane, root ḥ-s-n)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C223-tamizdar]
 <!-- hl-knowledge: introduces=[UR-LEX-C223-SIFAT223-05]; assesses=[] -->
 
 **حسین** — *hasīn* — "beautiful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حسین** (*hasīn*) is a loan from Arabic *ḥasīn*, "beautiful, comely", which reached Urdu through Persian. Its Arabic root is *ḥ-s-n* (Lane). It is built on the same root as *ḥusn*, "beauty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

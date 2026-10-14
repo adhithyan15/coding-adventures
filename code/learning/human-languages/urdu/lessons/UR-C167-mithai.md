@@ -14,7 +14,8 @@ romanization: "miṭhāī"
 concept_tag: UR-CHIZ167-MITHAI
 prerequisites: [UR-C167-murabba, UR-C167-keik]
 sounds: []
-roots: []
+roots: [sanskrit-mishta]
+etymology_hook: "miṭhāī: mīṭhā 'sweet' + -āī; mīṭhā ← Sanskrit miṣṭa 'dainty, sweet' (CDIAL 10299)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C167-keik]
 <!-- hl-knowledge: introduces=[UR-LEX-C167-CHIZ167-05]; assesses=[] -->
 
 **مٹھائی** — *miṭhāī* — "sweets".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مٹھائی** (*miṭhāī*) is *mīṭhā*, "sweet", with the ending *-āī* that makes a noun. CDIAL lists *mīṭhā* under Sanskrit *mṛṣṭa*, "pure; prepared, savoury", of which *miṣṭa*, "dainty, sweet", is an early variant (CDIAL 10299).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

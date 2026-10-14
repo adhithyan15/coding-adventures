@@ -14,7 +14,8 @@ romanization: "pyālī"
 concept_tag: UR-HOME60-PYALI
 prerequisites: [UR-C59-batti, UR-C60-chabi]
 sounds: []
-roots: []
+roots: [persian-piyala]
+etymology_hook: "pyālī: the small form of pyālā 'cup', usually traced to Persian piyāla 'cup'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C60-chabi]
 <!-- hl-knowledge: introduces=[UR-LEX-C60-HOME60-02]; assesses=[] -->
 
 **پیالی** — *pyālī* — "a cup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیالی** (*pyālī*) is the small form of *pyālā*, "a cup, a bowl", which is usually traced to Persian *piyāla*, "cup".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

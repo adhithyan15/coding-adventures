@@ -14,7 +14,8 @@ romanization: "sāthī"
 concept_tag: UR-KAM177-SATHI
 prerequisites: [UR-C176-sikka, UR-C177-mulazim]
 sounds: []
-roots: []
+roots: [indo-aryan-sarthin]
+etymology_hook: "sāthī ← *sārthin 'having part in a company', a reconstructed form; a tadbhava (CDIAL 13366)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C177-mulazim]
 <!-- hl-knowledge: introduces=[UR-LEX-C177-KAM177-02]; assesses=[] -->
 
 **ساتھی** — *sāthī* — "a colleague, a companion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ساتھی** (*sāthī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*sārthin*, "having part in a company", a form CDIAL reconstructs from its descendants (CDIAL 13366). It is built on *sārtha*, "company".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

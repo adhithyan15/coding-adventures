@@ -14,7 +14,8 @@ romanization: "kelā"
 concept_tag: UR-FOOD54-KELA
 prerequisites: [UR-C54-phal, UR-C54-seb]
 sounds: []
-roots: []
+roots: [sanskrit-kadala]
+etymology_hook: "kelā ← Sanskrit kadala 'banana plant', itself from Austroasiatic; a tadbhava (CDIAL 2712)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C54-seb]
 <!-- hl-knowledge: introduces=[UR-LEX-C54-FOOD54-05]; assesses=[] -->
 
 **کیلا** — *kelā* — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کیلا** (*kelā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kadala*, "banana plant" (CDIAL 2712). CDIAL takes the Sanskrit word from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

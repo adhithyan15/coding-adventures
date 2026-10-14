@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 226,
-  "sourceHash": "fnv1a64:5df48330da4e54fd",
+  "sourceHash": "fnv1a64:b9e9f315bd0c7c9b",
   "lessonIds": [
     "UR-C226-dhaniya",
     "UR-C226-pudina",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch226.txt",
   "json": "urdu/narration/ch226.json",
-  "textHash": "fnv1a64:cbedec333be31682",
-  "jsonHash": "fnv1a64:f408e9f565ea0172",
+  "textHash": "fnv1a64:18db68bbd5829ce2",
+  "jsonHash": "fnv1a64:485c23699f93c51b",
   "findings": []
 }

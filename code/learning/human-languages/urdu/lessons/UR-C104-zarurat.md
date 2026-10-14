@@ -14,7 +14,8 @@ romanization: "zarūrat"
 concept_tag: UR-CAN104-ZARURAT
 prerequisites: [UR-C104-chahiye, UR-C104-khvahish]
 sounds: []
-roots: []
+roots: [arabic-darura]
+etymology_hook: "zarūrat ← Arabic ḍarūra 'necessity', through Persian (Lane, root ḍ-r-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C104-khvahish]
 <!-- hl-knowledge: introduces=[UR-LEX-C104-CAN104-05]; assesses=[] -->
 
 **ضرورت** — *zarūrat* — "a need".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضرورت** (*zarūrat*) is a loan from Arabic *ḍarūra*, "necessity", which reached Urdu through Persian. Its Arabic root is *ḍ-r-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

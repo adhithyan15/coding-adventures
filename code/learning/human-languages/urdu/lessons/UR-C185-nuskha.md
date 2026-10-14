@@ -14,7 +14,8 @@ romanization: "nuskhā"
 concept_tag: UR-SEHAT185-NUSKHA
 prerequisites: [UR-C184-safar-karna, UR-C185-goli]
 sounds: []
-roots: []
+roots: [arabic-nuskha]
+etymology_hook: "nuskhā ← Arabic nuskha 'a copy, a written text', through Persian (Lane, root n-s-kh)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C185-goli]
 <!-- hl-knowledge: introduces=[UR-LEX-C185-SEHAT185-02]; assesses=[] -->
 
 **نسخہ** — *nuskhā* — "a prescription".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نسخہ** (*nuskhā*) is a loan from Arabic *nuskha*, "a copy, a written text", which reached Urdu through Persian. Its Arabic root is *n-s-kh* (Lane). Urdu uses it for a doctor's written prescription.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

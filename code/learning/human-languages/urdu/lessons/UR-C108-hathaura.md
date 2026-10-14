@@ -14,7 +14,8 @@ romanization: "hathauṛā"
 concept_tag: UR-THINGS108-HATHAURA
 prerequisites: [UR-C107-rassi, UR-C108-kil]
 sounds: []
-roots: []
+roots: [indo-aryan-hastakuta]
+etymology_hook: "hathauṛā ← *hastakūṭa 'hand hammer', a reconstructed form; a tadbhava (CDIAL 14028)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C108-kil]
 <!-- hl-knowledge: introduces=[UR-LEX-C108-THINGS108-02]; assesses=[] -->
 
 **ہتھوڑا** — *hathauṛā* — "a hammer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہتھوڑا** (*hathauṛā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*hastakūṭa*, "hand hammer", a form CDIAL reconstructs from its descendants (CDIAL 14028). It is built from *hasta*, "hand", and *kūṭa*, "hammer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

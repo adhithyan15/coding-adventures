@@ -12,6 +12,9 @@ Before the new one: say the Urdu for even so, then the Urdu for otherwise.
 You'll want to know: مہربان.
 مہربان — mehrbān — "kind".
 
+The word, taken apart.
+مہربان (mehrbān) is a loan, usually traced to Persian mihrbān, "kind". It is built on mihr, "love, kindness".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for otherwise, then the Urdu for kind.
 
 You'll want to know: سمجھدار.
 سمجھدار — samajhdār — "sensible".
+
+The word, taken apart.
+سمجھدار (samajhdār) is "holding understanding". samajh belongs with samajhnā, "to understand", which CDIAL lists under Sanskrit saṃbudhyate, "wakes up, understands" (CDIAL 12959), and -dār, "holder", is Persian.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for kind, then the Urdu for sensible.
 You'll want to know: بیوقوف.
 بیوقوف — bevaqūf — "foolish".
 
+The word, taken apart.
+بیوقوف (bevaqūf) is "without understanding". It joins the Persian be-, "without", and Arabic wuqūf, "standing; acquaintance with a matter" (Lane, root w-q-f).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for sensible, then the Urdu for foolish.
 You'll want to know: سست.
 سست — sust — "lazy, sluggish".
 
+The word, taken apart.
+سست (sust) is a loan, usually traced to Persian sust, "weak, slack".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for foolish, then the Urdu for lazy.
 
 You'll want to know: محنتی.
 محنتی — mehnatī — "hardworking".
+
+The word, taken apart.
+محنتی (mehnatī) is mehnat, "toil", with the ending -ī, "one who has it". mehnat is Arabic miḥna, "trial, ordeal", which reached Urdu through Persian (Lane, root m-ḥ-n).
 
 What you've built.
 One more word for this chapter.

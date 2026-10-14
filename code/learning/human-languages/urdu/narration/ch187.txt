@@ -12,6 +12,9 @@ Before the new one: say the Urdu for the liver, then the Urdu for a lung.
 You'll want to know: سوجن.
 سوجن — sūjan — "a swelling".
 
+The word, taken apart.
+سوجن (sūjan) is the noun of sūjnā, "to swell", which CDIAL lists under Sanskrit śūyate, "is swollen" (CDIAL 12568).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a lung, then the Urdu for a swelling.
 
 You'll want to know: خوراک.
 خوراک — khurāk — "a dose; food, diet".
+
+The word, taken apart.
+خوراک (khurāk) is a loan, usually traced to Persian khurāk, "food". It is built on khurdan, "to eat".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a swelling, then the Urdu for a dose; food.
 You'll want to know: پرہیز.
 پرہیز — parhez — "a diet (what you avoid)".
 
+The word, taken apart.
+پرہیز (parhez) is a loan, usually traced to Persian parhez, "abstinence, keeping away".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a dose; food, then the Urdu for a diet.
 You'll want to know: ورزش.
 ورزش — varzish — "exercise".
 
+The word, taken apart.
+ورزش (varzish) is a loan, usually traced to Persian varzish, "exercise, practice".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a diet, then the Urdu for exercise.
 
 You'll want to know: جسم.
 جسم — jism — "the body".
+
+The word, taken apart.
+جسم (jism) is a loan from Arabic jism, "body", which reached Urdu through Persian. Its Arabic root is j-s-m (Lane).
 
 What you've built.
 One more word for this chapter.

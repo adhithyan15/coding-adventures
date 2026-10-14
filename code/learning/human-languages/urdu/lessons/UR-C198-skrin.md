@@ -14,7 +14,8 @@ romanization: "skrīn"
 concept_tag: UR-CHIZ198-SKRIN
 prerequisites: [UR-C197-ustara, UR-C198-tar]
 sounds: []
-roots: []
+roots: [english-screen]
+etymology_hook: "skrīn ← English screen"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C198-tar]
 <!-- hl-knowledge: introduces=[UR-LEX-C198-CHIZ198-02]; assesses=[] -->
 
 **سکرین** — *skrīn* — "a screen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سکرین** (*skrīn*) is a loan from English *screen*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

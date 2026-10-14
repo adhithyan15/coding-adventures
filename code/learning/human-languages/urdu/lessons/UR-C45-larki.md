@@ -14,7 +14,8 @@ romanization: "laṛkī"
 concept_tag: UR-FAMILY45-LARKI
 prerequisites: [UR-C44-bachcha, UR-C45-larka]
 sounds: []
-roots: []
+roots: [indo-aryan-ladikka]
+etymology_hook: "laṛkī ← *laḍikka 'child', a reconstructed form; a tadbhava (CDIAL 10924)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C45-larka]
 <!-- hl-knowledge: introduces=[UR-LEX-C45-FAMILY45-02]; assesses=[] -->
 
 **لڑکی** — *laṛkī* — "a girl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لڑکی** (*laṛkī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*laḍikka*, "child", a form CDIAL reconstructs from its descendants (CDIAL 10924). *laṛkī* is the feminine of *laṛkā*, "boy". CDIAL calls the group a "defective" word for children and notes similar formations in Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

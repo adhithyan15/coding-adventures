@@ -14,7 +14,8 @@ romanization: "jhūṭā"
 concept_tag: UR-SIFAT248-JHUTA
 prerequisites: [UR-C247-mufid, UR-C247-khatarnak]
 sounds: []
-roots: []
+roots: [indo-aryan-jhuttha]
+etymology_hook: "jhūṭā ← *jhūṭṭha 'false', a reconstructed form; a tadbhava (CDIAL 5407)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C247-khatarnak]
 <!-- hl-knowledge: introduces=[UR-LEX-C248-SIFAT248-01]; assesses=[] -->
 
 **جھوٹا** — *jhūṭā* — "false, lying".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جھوٹا** (*jhūṭā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhūṭṭha*, "false", a form CDIAL reconstructs from its descendants (CDIAL 5407).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

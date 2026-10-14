@@ -14,7 +14,8 @@ romanization: "mehrbān"
 concept_tag: UR-SIFAT160-MEHRBAN
 prerequisites: [UR-C159-phir-bhi, UR-C159-varna]
 sounds: []
-roots: []
+roots: [persian-mihrban]
+etymology_hook: "mehrbān: usually traced to Persian mihrbān 'kind'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C159-varna]
 <!-- hl-knowledge: introduces=[UR-LEX-C160-SIFAT160-01]; assesses=[] -->
 
 **مہربان** — *mehrbān* — "kind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مہربان** (*mehrbān*) is a loan, usually traced to Persian *mihrbān*, "kind". It is built on *mihr*, "love, kindness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

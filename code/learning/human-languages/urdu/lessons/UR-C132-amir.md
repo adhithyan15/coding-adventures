@@ -14,7 +14,8 @@ romanization: "amīr"
 concept_tag: UR-QUAL132-AMIR
 prerequisites: [UR-C131-dhima, UR-C132-ganda]
 sounds: []
-roots: []
+roots: [arabic-amir]
+etymology_hook: "amīr ← Arabic amīr 'commander, prince', through Persian (Lane, root ʾ-m-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C132-ganda]
 <!-- hl-knowledge: introduces=[UR-LEX-C132-QUAL132-02]; assesses=[] -->
 
 **امیر** — *amīr* — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**امیر** (*amīr*) is a loan from Arabic *amīr*, "commander, prince", which reached Urdu through Persian. Its Arabic root is *ʾ-m-r* (Lane). In Urdu it came to mean "rich".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

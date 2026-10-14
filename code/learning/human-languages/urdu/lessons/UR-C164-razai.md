@@ -15,6 +15,7 @@ concept_tag: UR-CHIZ164-RAZAI
 prerequisites: [UR-C164-chiz, UR-C164-farnichar]
 sounds: []
 roots: []
+etymology_hook: "razāī: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C164-farnichar]
 <!-- hl-knowledge: introduces=[UR-LEX-C164-CHIZ164-04]; assesses=[] -->
 
 **رضائی** — *razāī* — "a quilt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **رضائی** (*razāī*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for black pepper, then the Urdu for vinegar.
 You'll want to know: بلبل.
 بلبل — bulbul — "a nightingale".
 
+The word, taken apart.
+بلبل (bulbul) is a loan, usually traced to Persian bulbul, "nightingale".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for vinegar, then the Urdu for a nightingale.
 
 You'll want to know: سارس.
 سارس — sāras — "a crane (bird)".
+
+The word, taken apart.
+سارس (sāras) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sārasa, "the crane" (CDIAL 13359). It is built on saras, "lake".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a nightingale, then the Urdu for a crane.
 You'll want to know: گدھ.
 گدھ — giddh — "a vulture".
 
+The word, taken apart.
+گدھ (giddh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gṛdhra, "greedy; a vulture" (CDIAL 4233).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a crane, then the Urdu for a vulture.
 You'll want to know: چمگادڑ.
 چمگادڑ — chamgādaṛ — "a bat (animal)".
 
+The word, taken apart.
+چمگادڑ (chamgādaṛ) goes back to Sanskrit carmacaṭaka, "bat", "the leather sparrow", built from carman, "skin, leather", and caṭaka, "sparrow". CDIAL lists Hindi cām-gīdaṛ, "bat", under it (CDIAL 4700).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a vulture, then the Urdu for a bat.
 
 You'll want to know: بچھو.
 بچھو — bichchhū — "a scorpion".
+
+The word, taken apart.
+بچھو (bichchhū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vṛścika, "scorpion" (CDIAL 12081). CDIAL asks whether the many shapes of this word come from a taboo on naming the scorpion.
 
 What you've built.
 One more word for this chapter.

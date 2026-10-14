@@ -15,6 +15,7 @@ concept_tag: UR-CHIZ173-TANA
 prerequisites: [UR-C173-gamla, UR-C173-pauda]
 sounds: []
 roots: []
+etymology_hook: "tanā 'trunk': usually traced to Persian tana 'trunk; body', built on tan 'body'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C173-pauda]
 <!-- hl-knowledge: introduces=[UR-LEX-C173-CHIZ173-04]; assesses=[] -->
 
 **تنا** — *tanā* — "a tree trunk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تنا** (*tanā*) is usually traced to Persian *tana*, "trunk of a tree; body", built on *tan*, "body". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

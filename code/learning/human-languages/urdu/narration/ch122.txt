@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a jacket, then the Urdu for pyjamas.
 You'll want to know: چپل.
 چپل — chappal — "a sandal, a slipper".
 
+The word, taken apart.
+The origin of چپل (chappal) is uncertain, and CDIAL has no entry for it. DEDR, under Dravidian words for "sandal" such as Telugu ceppu, adds "Cf. H. cappal" (DEDR 1963): a comparison, not a settled source.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for pyjamas, then the Urdu for a sandal.
 
 You'll want to know: بٹن.
 بٹن — baṭan — "a button".
+
+The word, taken apart.
+بٹن (baṭan) is a loan from English button.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a sandal, then the Urdu for a button.
 You'll want to know: ٹائی.
 ٹائی — ṭāī — "a tie".
 
+The word, taken apart.
+ٹائی (ṭāī) is a loan from English tie.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a button, then the Urdu for a tie.
 You'll want to know: دستانے.
 دستانے — dastāne — "gloves".
 
+The word, taken apart.
+دستانے (dastāne) is the plural of dastānā, "a glove", which is usually traced to Persian dastāna, built on dast, "hand".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a tie, then the Urdu for gloves.
 
 You'll want to know: پہاڑی.
 پہاڑی — pahāṛī — "a hill".
+
+The word, taken apart.
+پہاڑی (pahāṛī) is pahāṛ, "a mountain", with the ending -ī that makes a smaller one. pahāṛ comes from a reconstructed pāhāḍa, "rock, hill", which CDIAL connects, probably, with Sanskrit pāṣāṇa, "stone" (CDIAL 8141).
 
 What you've built.
 One more word for this chapter.

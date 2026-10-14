@@ -15,6 +15,7 @@ concept_tag: UR-CHIZ199-CHAPATI
 prerequisites: [UR-C198-pasport, UR-C198-viza]
 sounds: []
 roots: []
+etymology_hook: "chapātī: usually traced to chapānā 'to flatten'; CDIAL lists capnā 'to be pressed' under *capp (4674)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C198-viza]
 <!-- hl-knowledge: introduces=[UR-LEX-C199-CHIZ199-01]; assesses=[] -->
 
 **چپاتی** — *chapātī* — "a chapati".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چپاتی** (*chapātī*) is usually traced to *chapānā*, "to flatten", since the dough is pressed thin. CDIAL has no entry for *chapātī* itself; it lists Hindi *capnā*, "to be pressed", under a reconstructed *\*capp*, "press", which it thinks may be of non-Aryan origin (CDIAL 4674).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

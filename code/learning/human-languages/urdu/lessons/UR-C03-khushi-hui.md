@@ -12,7 +12,7 @@ concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [UR-C03-aap-ka-naam-kya-hai]
 sounds: [rtl, kh, sh, long-i]
 roots: [persian-khosh, indo-aryan-mil, indo-aryan-ho]
-etymology_hook: Urdu pairs Persian khush happiness vocabulary with inherited Indo-Aryan mil meet and huī happened, making its layered history audible in one welcome.
+etymology_hook: "khushī ← Persian khush 'happy' + -ī; mil (CDIAL 10133) and huī (CDIAL 9552) are inherited"
 duration:
   max_seconds: 240
 requires:
@@ -63,8 +63,7 @@ happened.”** The phrase is one social move; later lessons can generalize *se*,
 <!-- hl-knowledge: introduces=[UR-ETYMON-KHUSH-PERSIAN]; assesses=[] -->
 
 **Khushī** “happiness” comes from Persian **khosh/khush** “pleasant, happy.”
-**Mil** “meet” and **huī** “happened” belong to Urdu's inherited Indo-Aryan
-grammar. The sentence therefore joins Urdu's two major historical layers
+**Mil** “meet” and **huī** “happened” belong to Urdu's inherited Indo-Aryan grammar: CDIAL lists *milnā* under Sanskrit *milati*, “meets” (CDIAL 10133), and *huā*, of which **huī** is the feminine, under *bhūta*, “become” (CDIAL 9552). The sentence therefore joins Urdu's two major historical layers
 without becoming any less ordinary Urdu.
 
 ## Guided Practice

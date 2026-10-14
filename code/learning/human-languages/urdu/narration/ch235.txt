@@ -12,6 +12,9 @@ Before the new one: say the Urdu for nihari, then the Urdu for minced meat.
 You'll want to know: کیڑا.
 کیڑا — kīṛā — "an insect, a worm".
 
+The word, taken apart.
+کیڑا (kīṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kīṭa, "insect, worm" (CDIAL 3193).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for minced meat, then the Urdu for an insect.
 
 You'll want to know: جگنو.
 جگنو — jugnū — "a firefly".
+
+The word, taken apart.
+جگنو (jugnū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jyotiriṅgaṇa, "firefly" (CDIAL 5298). It is built from jyotis, "light", and iṅgaṇa, "moving".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for an insect, then the Urdu for a firefly.
 You'll want to know: کھٹمل.
 کھٹمل — khaṭmal — "a bedbug".
 
+The word, taken apart.
+کھٹمل (khaṭmal) is usually explained as khāṭ, "bedstead", with mal, "dirt": the pest of the bed. CDIAL lists khāṭ under Sanskrit khaṭvā, "bedstead" (CDIAL 3781), and mal under mala, "dirt" (CDIAL 9899), but it has no entry for khaṭmal itself, so the account is not certain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a firefly, then the Urdu for a bedbug.
 You'll want to know: کیکڑا.
 کیکڑا — kekṛā — "a crab".
 
+The word, taken apart.
+کیکڑا (kekṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karkaṭa, "crab" (CDIAL 2816). CDIAL thinks the word probably non-Aryan, and doubts the usual link with Latin cancer.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a bedbug, then the Urdu for a crab.
 
 You'll want to know: جھینگا.
 جھینگا — jhīṅgā — "a prawn".
+
+The word, taken apart.
+جھینگا (jhīṅgā) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhiṅga, "prawn", a form CDIAL reconstructs from its descendants (CDIAL 5385).
 
 What you've built.
 One more word for this chapter.

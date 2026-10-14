@@ -15,6 +15,7 @@ concept_tag: UR-VERB-LAUTNA
 prerequisites: [UR-C140-mangna, UR-C141-thaharna, UR-C06-jana]
 sounds: []
 roots: []
+etymology_hook: "lauṭnā: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ This lesson's verb is the way back.
 <!-- hl-knowledge: introduces=[UR-LEX-C141-ACT141-02]; assesses=[] -->
 
 **لوٹنا** — *lauṭnā* — "to come back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **لوٹنا** (*lauṭnā*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

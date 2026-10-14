@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 25,
-  "sourceHash": "fnv1a64:ca386465b6b40ad5",
+  "sourceHash": "fnv1a64:5a8293b32a58d87a",
   "lessonIds": [
     "UR-C25-plural",
     "UR-C25-oblique-plural",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch25.txt",
   "json": "urdu/narration/ch25.json",
-  "textHash": "fnv1a64:ef8834ee1283afc7",
-  "jsonHash": "fnv1a64:49ba90cfc6a5e1a5",
+  "textHash": "fnv1a64:138715061c696344",
+  "jsonHash": "fnv1a64:be389ce37f96a7a9",
   "findings": []
 }

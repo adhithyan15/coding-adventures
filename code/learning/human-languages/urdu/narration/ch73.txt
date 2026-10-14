@@ -12,6 +12,9 @@ Before the new one: say the Urdu for empty, then the Urdu for sweet.
 You'll want to know: موٹا.
 موٹا — moṭā — "fat, thick".
 
+The word, taken apart.
+موٹا (moṭā) comes from a reconstructed mōṭṭa, one of a group of related forms that CDIAL heads muṭṭa, "defective" (CDIAL 10187): words for things stumpy, blunt or lumpish. CDIAL glosses the Hindi word "fat".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for sweet, then the Urdu for fat.
 
 You'll want to know: پتلا.
 پتلا — patlā — "thin".
+
+The word, taken apart.
+پتلا (patlā) goes back to Sanskrit pattrala, "leafy", which CDIAL takes to have meant "leaf-like, thin" (CDIAL 7736). It is built on pattra, "leaf": a thin thing is as flat as a leaf.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for fat, then the Urdu for thin.
 You'll want to know: ہلکا.
 ہلکا — halkā — "light (in weight)".
 
+The word, taken apart.
+ہلکا (halkā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from laghu, "light" (CDIAL 10896). CDIAL notes that its l and h swapped places and that it took an added -k-.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for thin, then the Urdu for light.
 You'll want to know: بھاری.
 بھاری — bhārī — "heavy".
 
+The word, taken apart.
+بھاری (bhārī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhārika, "forming a load, heavy" (CDIAL 9465). It is built on bhāra, "load".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for light, then the Urdu for heavy.
 
 You'll want to know: ضروری.
 ضروری — zarūrī — "important, necessary".
+
+The word, taken apart.
+ضروری (zarūrī) is a loan from Arabic ḍarūrī, "necessary", which reached Urdu through Persian. Its Arabic root is ḍ-r-r (Lane).
 
 What you've built.
 One more word for this chapter.

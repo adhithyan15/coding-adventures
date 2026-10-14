@@ -14,7 +14,8 @@ romanization: "os"
 concept_tag: UR-CHIZ233-OS
 prerequisites: [UR-C232-pech, UR-C233-kohra]
 sounds: []
-roots: []
+roots: [sanskrit-avashya]
+etymology_hook: "os ← Sanskrit avaśyā 'hoar-frost, dew', a tadbhava (CDIAL 855)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C233-kohra]
 <!-- hl-knowledge: introduces=[UR-LEX-C233-CHIZ233-02]; assesses=[] -->
 
 **اوس** — *os* — "dew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اوس** (*os*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *avaśyā*, "hoar-frost, dew" (CDIAL 855).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

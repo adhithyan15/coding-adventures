@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 197,
-  "sourceHash": "fnv1a64:0a5534b3979f52c7",
+  "sourceHash": "fnv1a64:1ad313054e009194",
   "lessonIds": [
     "UR-C197-chatai",
     "UR-C197-shaimpu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch197.txt",
   "json": "urdu/narration/ch197.json",
-  "textHash": "fnv1a64:291a58d94b2f0682",
-  "jsonHash": "fnv1a64:72333e59795595a2",
+  "textHash": "fnv1a64:ca21f168a8d3e445",
+  "jsonHash": "fnv1a64:f374e3a30c7b5f30",
   "findings": []
 }

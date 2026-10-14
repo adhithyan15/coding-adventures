@@ -14,7 +14,8 @@ romanization: "pesh ānā"
 concept_tag: UR-VERB-PESH-ANA
 prerequisites: [UR-C144-mazi, UR-C144-guzashta]
 sounds: []
-roots: []
+roots: [persian-pesh, sanskrit-apayati]
+etymology_hook: "pesh 'front' is usually traced to Persian pesh; ānā 'to come' ← Sanskrit āpayati (CDIAL 1200)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C144-guzashta]
 <!-- hl-knowledge: introduces=[UR-LEX-C144-MAZI144-05]; assesses=[] -->
 
 **پیش آنا** — *pesh ānā* — "to happen, to occur". Said of events: **کل ایک مسئلہ پیش آیا۔** — *kal ek mas'alā pesh āyā* — "A problem came up yesterday." Its past is **پیش آیا**, or **پیش آئی** with a feminine subject.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیش آنا** (*pesh ānā*) is "to come to the front". *pesh*, "front, before", is usually traced to Persian *pesh*; *ānā*, "to come", comes from Sanskrit *āpayati*, "causes to reach" (CDIAL 1200).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

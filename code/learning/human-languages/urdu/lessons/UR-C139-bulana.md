@@ -14,7 +14,8 @@ romanization: "bulānā"
 concept_tag: UR-VERB-BULANA
 prerequisites: [UR-C139-jalana, UR-C139-bhagna]
 sounds: []
-roots: []
+roots: [bol-speak]
+etymology_hook: "bulānā: the causing form of bolnā, listed under a reconstructed *boll- 'speak' (CDIAL 9321)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C139-bhagna]
 <!-- hl-knowledge: introduces=[UR-LEX-C139-ACT139-05]; assesses=[] -->
 
 **بلانا** — *bulānā* — "to call".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بلانا** (*bulānā*) is the causing form of *bolnā*, "to speak": to call someone is to make them speak back. CDIAL lists both under a reconstructed *\*boll-*, "speak" (CDIAL 9321).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

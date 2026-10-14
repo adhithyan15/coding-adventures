@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a delay; late, then the Urdu for before.
 You'll want to know: وقت.
 وقت — vaqt — "time".
 
+The word, taken apart.
+وقت (vaqt) is a loan from Arabic waqt, "time, an appointed time", which reached Urdu through Persian. Its Arabic root is w-q-t (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for before, then the Urdu for time.
 
 You'll want to know: دور.
 دور — dūr — "far".
+
+The word, taken apart.
+دور (dūr) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dūra, "distant" (CDIAL 6495).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for time, then the Urdu for far.
 You'll want to know: قریب.
 قریب — qarīb — "near".
 
+The word, taken apart.
+قریب (qarīb) is a loan from Arabic qarīb, "near", which reached Urdu through Persian. Its Arabic root is q-r-b (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for far, then the Urdu for near.
 You'll want to know: اندر.
 اندر — andar — "inside".
 
+The word, taken apart.
+اندر (andar) is a loan, usually traced to Persian andar, "inside".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for near, then the Urdu for inside.
 
 You'll want to know: باہر.
 باہر — bāhar — "outside".
+
+The word, taken apart.
+باہر (bāhar) is a tadbhava, a word inherited and reshaped by sound change. It comes from bāhira, "external", a form CDIAL reconstructs from its descendants (CDIAL 9226).
 
 What you've built.
 One more word for this chapter.

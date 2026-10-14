@@ -11,8 +11,8 @@ gloss: to say — the verb beside بولنا that carries the words themselves, 
 concept_tag: VERB-SAY
 prerequisites: [UR-R21-why-and-what-for, UR-C06-bolna, UR-C21-ki]
 sounds: []
-roots: []
-etymology_hook: "کہنا is Sanskrit kathayati, 'to tell, to relate', from the noun kathā, 'a story' — the same word behind Urdu کہانی, the tale, so 'to say' and 'a story' are one root two syllables apart"
+roots: [sanskrit-kathayati, sanskrit-kathanaka]
+etymology_hook: "kahnā ← Sanskrit kathayati 'converses with, describes', a tadbhava (CDIAL 2703)"
 duration:
   max_seconds: 240
 requires:
@@ -58,8 +58,7 @@ after **کہنا** the clause introduced by **کہ** follows naturally.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAHNA, UR-GRAMMAR-KI-COMPLEMENTISER] -->
 
-**کہنا** is Sanskrit *kathayati*, "to tell, to relate," on the noun *kathā*, "a
-story." That noun is still in Urdu as **کہانی**, *kahānī*, "a tale" — the word a
+**کہنا** is Sanskrit *kathayati*, "converses with, describes" (CDIAL 2703), on the noun *kathā*, "a story." Its family is still in Urdu as **کہانی**, *kahānī*, "a tale", from *kathānaka*, "a little tale" (CDIAL 2705) — the word a
 chapter-seventeen writing lesson already put in front of you. *To say* and *a
 story* are one root, two syllables apart.
 
