@@ -2028,6 +2028,27 @@ fn swimlane_inline_node_styles_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_node_typography_lowers_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  emphasized[Typographic approval step]\n  direct[Typographic delivery step]\nend\nclassDef emphasis font-size:22px,font-weight:bold,font-style:italic,font-family:\"Helvetica Neue\",color:#7c2d12\nclass emphasized emphasis\nstyle direct font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d\nemphasized --> direct",
+    ).expect("Swimlane node typography should parse");
+
+    let emphasized = &diagram.nodes[0].style;
+    assert_eq!(emphasized.font_size, Some(22.0));
+    assert_eq!(emphasized.font_weight, Some(700));
+    assert_eq!(emphasized.font_italic, Some(true));
+    assert_eq!(emphasized.font_family.as_deref(), Some("Helvetica Neue"));
+    let direct = &diagram.nodes[1].style;
+    assert_eq!(direct.font_size, Some(18.0));
+    assert_eq!(direct.font_weight, Some(500));
+    assert_eq!(direct.font_italic, Some(false));
+    assert_eq!(direct.font_family.as_deref(), Some("Helvetica"));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph A\n  one[One]\nend\nstyle one font-weight:heavy"
+    ).is_err());
+}
+
+#[test]
 fn swimlane_named_classes_resolve_into_semantic_styles() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclass request accent\nclassDef default fill:#f8fafc,stroke:#64748b\nclassDef accent fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nstyle request fill:#dcfce7\nrequest --> done",

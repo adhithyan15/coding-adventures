@@ -1060,7 +1060,9 @@ or absent markers at either endpoint, titles, and accessibility
 metadata with named and numeric entity
 decoding. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
-decorators cover fill, stroke, text color, stroke width, and dash patterns. URL
+decorators cover fill, stroke, text color, stroke width, dash patterns, font family, font size,
+weight, and italic/oblique style. Typography survives semantic IR, informs node width, and lowers
+to backend-neutral glyph runs. URL
 clicks, tooltips, standard browser link targets, explicit `call` callback
 actions, and legacy callback aliases survive as scene metadata. Flowchart edge identifiers
 survive semantic IR, layout, and scene metadata; named classes and direct styles for identified
