@@ -31,9 +31,9 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
     "wordLessons": 25690,
-    "wordLessonsWithoutEtymologyHook": 5411,
-    "wordLessonsWithoutVisibleEtymology": 5492,
-    "wordLessonsWithEmptyEtymologyBlock": 372,
+    "wordLessonsWithoutEtymologyHook": 4810,
+    "wordLessonsWithoutVisibleEtymology": 4804,
+    "wordLessonsWithEmptyEtymologyBlock": 370,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
@@ -341674,10 +341674,10 @@
       {
         "language": "japanese",
         "wordLessons": 695,
-        "wordLessonsWithoutEtymologyHook": 601,
-        "wordLessonsWithoutVisibleEtymology": 688,
-        "wordLessonsWithoutAnyEtymology": 600,
-        "wordLessonsWithEmptyEtymologyBlock": 2
+        "wordLessonsWithoutEtymologyHook": 0,
+        "wordLessonsWithoutVisibleEtymology": 0,
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "kannada",
@@ -341794,12 +341794,12 @@
     ],
     "summary": {
       "wordLessons": 25690,
-      "wordLessonsWithoutEtymologyHook": 5411,
-      "wordLessonsWithoutVisibleEtymology": 5492,
-      "wordLessonsWithoutAnyEtymology": 5293,
-      "wordLessonsWithEmptyEtymologyBlock": 372,
-      "hookPercent": 78,
-      "visiblePercent": 78
+      "wordLessonsWithoutEtymologyHook": 4810,
+      "wordLessonsWithoutVisibleEtymology": 4804,
+      "wordLessonsWithoutAnyEtymology": 4693,
+      "wordLessonsWithEmptyEtymologyBlock": 370,
+      "hookPercent": 81,
+      "visiblePercent": 81
     }
   },
   "writingStages": {
@@ -454411,20 +454411,20 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 17105,
-    "underspent": 16168,
-    "neverSpent": 12721,
+    "roots": 17810,
+    "underspent": 16850,
+    "neverSpent": 13293,
     "payoffDistribution": {
-      "0": 12721,
-      "1": 2482,
-      "2": 965,
-      "3": 458,
-      "4": 221,
-      "5": 108,
-      "6": 51,
-      "7": 35,
+      "0": 13293,
+      "1": 2563,
+      "2": 994,
+      "3": 467,
+      "4": 226,
+      "5": 112,
+      "6": 53,
+      "7": 37,
       "8": 12,
-      "9": 10,
+      "9": 11,
       "10": 8,
       "11": 3,
       "12": 6,
@@ -454469,22 +454469,22 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 29098,
-    "usesBeforeIntroduction": 53199,
-    "technicalUsesBeforeIntroduction": 8513,
-    "technicalLessons": 5459,
+    "lessonsUsingTerms": 29113,
+    "usesBeforeIntroduction": 53347,
+    "technicalUsesBeforeIntroduction": 8563,
+    "technicalLessons": 5503,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 3169
+        "lessons": 3181
       },
       {
         "term": "noun",
-        "lessons": 1728
+        "lessons": 1756
       },
       {
         "term": "adjective",
-        "lessons": 416
+        "lessons": 426
       },
       {
         "term": "participle",
