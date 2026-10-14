@@ -169,3 +169,83 @@ fn original_epsilon_interval_is_pinned_by_integer_golden_queries() {
         }
     }
 }
+
+#[test]
+fn rational_comparator_and_rotated_extrema_are_independent() {
+    use crate::swimlane_hop_origin::{Node, Projection, Slope};
+    let limit=1i64<<25;
+    let ordered=[(-limit,1,0),(-limit+1,1,1),(-1,1,2),(-1,2,3),(0,1,4),
+                 (1,limit,5),(1,2,6),(2,4,6),(1,1,7),(limit-1,1,8),(limit,1,9)];
+    for &(a,b,rank) in &ordered {
+        let left=Slope::new(a,b).unwrap();
+        for &(c,d,other_rank) in &ordered {
+            let right=Slope::new(c,d).unwrap();
+            assert_eq!(left.compare(right),rank.cmp(&other_rank));
+            assert_eq!(left.compare(right),right.compare(left).reverse());
+            for &(e,f,_) in &ordered {
+                let last=Slope::new(e,f).unwrap();
+                if left.compare(right).is_le() && right.compare(last).is_le() {
+                    assert!(left.compare(last).is_le());
+                }
+            }
+        }
+    }
+    for (n,d) in [(0,0),(1,-1),(limit+1,1),(1,limit+1),(-limit-1,1)] {
+        assert!(Slope::new(n,d).is_none());
+    }
+    fn validate(node:&Node)->(usize,Vec<(Projection,usize)>) {
+        let(lh,mut all)=node.left.as_ref().map_or((0,Vec::new()),|n|validate(n));
+        let(rh,right)=node.right.as_ref().map_or((0,Vec::new()),|n|validate(n));
+        let key=(node.entry.start,node.ordinal);
+        assert!(all.iter().all(|(p,id)|(p.start,*id)<key));
+        assert!(right.iter().all(|(p,id)|(p.start,*id)>key));
+        assert!(lh.abs_diff(rh)<=1);
+        assert_eq!(node.height,1+lh.max(rh));
+        all.push((node.entry,node.ordinal));all.extend(right);
+        assert_eq!(node.min_start,all.iter().map(|(p,_)|p.start).min().unwrap());
+        assert_eq!(node.max_start,all.iter().map(|(p,_)|p.start).max().unwrap());
+        assert_eq!(node.min_end,all.iter().map(|(p,_)|p.end).min().unwrap());
+        assert_eq!(node.max_end,all.iter().map(|(p,_)|p.end).max().unwrap());
+        assert_eq!(node.min_dx,all.iter().map(|(p,_)|p.slope.denominator).min().unwrap());
+        assert_eq!(node.max_dx,all.iter().map(|(p,_)|p.slope.denominator).max().unwrap());
+        // Recompute from every descendant, never from cached child extrema.
+        let cmp=|a:&&Projection,b:&&Projection| (i128::from(a.slope.numerator)*i128::from(b.slope.denominator))
+            .cmp(&(i128::from(b.slope.numerator)*i128::from(a.slope.denominator)));
+        let entries=all.iter().map(|(p,_)|p).collect::<Vec<_>>();
+        let low=entries.iter().copied().min_by(cmp).unwrap().slope;
+        let high=entries.iter().copied().max_by(cmp).unwrap().slope;
+        assert_eq!((node.min_slope.numerator,node.min_slope.denominator),(low.numerator,low.denominator));
+        assert_eq!((node.max_slope.numerator,node.max_slope.denominator),(high.numerator,high.denominator));
+        (1+lh.max(rh),all)
+    }
+    for permutation in 0..4 {
+        let mut tree=None;
+        for i in 0..63usize {
+            let k=match permutation {0=>i,1=>62-i,2=>i*17%63,_=>i*23%63};
+            let start=k as i64-31;let end=(k*37%127) as i64-63;
+            let p=Projection{origin:0,start,end,slope:Slope::new(end-start,100+k as i64).unwrap()};
+            tree=Some(Node::insert(tree,p,i));
+            assert_eq!(validate(tree.as_ref().unwrap()).1.len(),i+1);
+        }
+    }
+}
+
+#[test]
+fn origin_work_counts_actual_candidates_and_occurrences() {
+    use crate::swimlane_hop_origin::{reset_work,work_snapshot,Work};
+    reset_work();
+    {
+        let mut index=SwimlaneHopCrossings::default();
+        for i in 0..24usize {
+            index.insert_geometry(i,0,&Point{x:0.0,y:i as f64},&Point{x:(100+i) as f64,y:(100-i) as f64});
+        }
+        let result=index.prior_crossings(&Point{x:0.0,y:30.0},&Point{x:200.0,y:-60.0});
+        assert!(!result.is_empty());
+        assert!(work_snapshot()[Work::Occurrence as usize]>=result.len());
+    }
+    let counts=work_snapshot();
+    for kind in [Work::Certificate,Work::Observe,Work::Insert,Work::Refresh,Work::Query,
+                 Work::Compare,Work::Rotation,Work::Drop,Work::Candidate,Work::Sort,Work::Occurrence] {
+        assert!(counts[kind as usize]>0,"actual {kind:?} counter is exercised: {counts:?}");
+    }
+}
