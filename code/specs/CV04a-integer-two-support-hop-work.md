@@ -77,3 +77,15 @@ runner79938 reports fullcore/parser618PASS/10targets, but strict Clippy exits101
 on the new test oracle's nested tuple return type; whole runner EXIT1, not PASS.
 Use a test-local named entry type without suppressing or weakening strict lint.
 Keep this original failed receipt and rerun the affected checks on the new head.
+
+Actual d200 runner57436 EXIT0: the 48 empty-work scenes include4096/8192
+distinct oblique geometries, each with one original predicate call. Full
+core/parser618PASS/10targets and strict3/lessons/whitespace pass. General
+floating/arbitrary-support fallback remains unaccepted.
+
+Authored a038 runner focus exits101 with2PASS1FAIL: every rendered field and
+the asserted integer endpoints match, but removing the sole hop flag leaves
+Some(empty metadata) versus the disabled scene's None. Assert both metadata
+representations explicitly, then normalize that proven sole flag before the
+unchanged complete scene comparison. Keep the failed receipt and rerun all
+affected checks; this is an oracle correction, with no renderer change.

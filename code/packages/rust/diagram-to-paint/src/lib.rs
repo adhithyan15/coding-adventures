@@ -10111,8 +10111,11 @@ emphasized --> direct
                 let predicates = SWIMLANE_LINE_CROSSING_VISITS.with(std::cell::Cell::get);
                 let work = SWIMLANE_HOP_INDEX_WORK.with(std::cell::Cell::get);
                 assert_eq!(enabled.metadata.as_mut().unwrap().remove("swimlane.lineHops").as_deref(), Some(mode));
+                assert!(enabled.metadata.as_ref().unwrap().is_empty(), "the authored scene has exactly the hop flag as scene metadata");
+                enabled.metadata = None;
                 layout.line_hops = None;
                 let disabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                assert!(disabled.metadata.is_none(), "the disabled authored scene has no scene metadata");
                 assert_eq!(enabled, disabled, "all authored nodes, labels, paths, markers and metadata survive");
                 assert!(predicates <= 1, "authored count={count}, predicates={predicates}");
                 let budget = 64 * count * ((usize::BITS - count.leading_zeros()) as usize + 1);
