@@ -279,7 +279,8 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     let cross_lane_ranks = swimlane_cross_lane_ranks(diagram);
     let max_rank = cross_lane_ranks.as_ref().and_then(|ranks| ranks.values().max().copied()).unwrap_or(0);
     let rank_slot_width = diagram.nodes.iter().map(|node|
-        swimlane_node_width(&node.shape, &node.label, &node.style, diagram.theme.font_size.unwrap_or(13.0))
+        swimlane_node_width(&node.shape, &node.label, &node.style,
+            diagram.theme.font_size.unwrap_or(13.0), diagram.flowchart_config.wrapping_width)
     ).fold(node_width, f64::max);
     let max_group_depth = diagram.groups.iter().map(|group| {
         let mut depth = 1usize;
@@ -302,6 +303,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 diagram.nodes.iter().find(|node| &node.id == node_id)
                     .map(|node| swimlane_node_width(
                         &node.shape, &node.label, &node.style, diagram.theme.font_size.unwrap_or(13.0),
+                        diagram.flowchart_config.wrapping_width,
                     ))
             }).collect::<Vec<_>>();
             let gap_units = lane.node_ids.windows(2).map(|pair|
@@ -384,6 +386,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 DiagramShape::LightningBolt => (35.0, 70.0),
                 _ if horizontal_flow => (swimlane_node_width(
                     &node.shape, &node.label, &node.style, diagram.theme.font_size.unwrap_or(13.0),
+                    diagram.flowchart_config.wrapping_width,
                 ), node_height),
                 _ => (node_width, node_height),
             };
@@ -649,6 +652,7 @@ fn swimlane_node_width(
     label: &str,
     style: &diagram_ir::DiagramStyle,
     theme_font_size: f64,
+    wrapping_width: Option<f64>,
 ) -> f64 {
     match shape {
         DiagramShape::Anchor => 2.0,
@@ -660,7 +664,7 @@ fn swimlane_node_width(
             let font_scale = style.font_size.unwrap_or(theme_font_size) / 13.0;
             let weight_scale = if style.font_weight.unwrap_or(400) >= 600 { 1.06 } else { 1.0 };
             (label.chars().count() as f64 * 7.2 * font_scale * weight_scale + 28.0)
-                .clamp(132.0, 360.0)
+                .clamp(132.0, wrapping_width.unwrap_or(360.0).max(132.0))
         }
     }
 }
