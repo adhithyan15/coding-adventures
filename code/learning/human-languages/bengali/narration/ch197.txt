@@ -12,6 +12,9 @@ Before the new one: say the Bengali for pickle, then the Bengali for chutney.
 You'll want to know: ফুটবল.
 ফুটবল — phuṭbôl — "football".
 
+The word, taken apart.
+ফুটবল (phuṭbôl) is a loan from English football.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for chutney, then the Bengali for football.
 
 You'll want to know: হকি.
 হকি — hôki — "hockey".
+
+The word, taken apart.
+হকি (hôki) is a loan from English hockey.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for football, then the Bengali for hockey.
 You'll want to know: টেনিস.
 টেনিস — ṭenis — "tennis".
 
+The word, taken apart.
+টেনিস (ṭenis) is a loan from English tennis.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for hockey, then the Bengali for tennis.
 You'll want to know: দাবা.
 দাবা — dābā — "chess".
 
+The word, taken apart.
+The origin of দাবা (dābā), "chess", is not settled: CDIAL has no entry for it, and its Bengali dābā, "to press down" (CDIAL 6173), is a different word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for tennis, then the Bengali for chess.
 
 You'll want to know: তাস.
 তাস — tās — "playing cards".
+
+The word, taken apart.
+The origin of তাস (tās) is not settled. CDIAL does not list the noun, though it lists a Bengali verb tāsā, "to brush, dust, shuffle (cards)", under Sanskrit trāsayati, "makes tremble" (CDIAL 6014).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "phôlāphôl"
 concept_tag: BN-KARON190-PHOLAPHOL
 prerequisites: [BN-C190-nishchoyi, BN-C190-durbhagyoboshoto]
 sounds: []
-roots: []
+roots: [sanskrit-phala]
+etymology_hook: "phôlāphôl: Sanskrit phala 'fruit, result' + aphala 'fruitless': 'result and no result'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C190-durbhagyoboshoto]
 <!-- hl-knowledge: introduces=[BN-LEX-C190-KARON190-05]; assesses=[] -->
 
 **ফলাফল** — *phôlāphôl* — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফলাফল** (*phôlāphôl*) is Sanskrit *phala*, "fruit, result", + *aphala*, "no result", both taken over whole: "result or no result". CDIAL lists the inherited Bengali *phal*, "fruit" (CDIAL 9051).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

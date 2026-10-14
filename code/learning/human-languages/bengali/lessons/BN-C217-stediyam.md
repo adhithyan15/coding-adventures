@@ -14,7 +14,8 @@ romanization: "sṭeḍiyām"
 concept_tag: BN-JAYGA217-STEDIYAM
 prerequisites: [BN-C217-bimanbondor, BN-C217-rum]
 sounds: []
-roots: []
+roots: [english-stadium]
+etymology_hook: "sṭeḍiyām ← English stadium"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C217-rum]
 <!-- hl-knowledge: introduces=[BN-LEX-C217-JAYGA217-05]; assesses=[] -->
 
 **স্টেডিয়াম** — *sṭeḍiyām* — "a stadium".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**স্টেডিয়াম** (*sṭeḍiyām*) is a loan from English *stadium*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

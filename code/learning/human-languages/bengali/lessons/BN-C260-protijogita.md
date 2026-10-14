@@ -14,7 +14,8 @@ romanization: "prôtijogitā"
 concept_tag: BN-JINIS260-PROTIJOGITA
 prerequisites: [BN-C260-puroskar, BN-C260-shasti]
 sounds: []
-roots: []
+roots: [sanskrit-pratiyogita]
+etymology_hook: "prôtijogitā ← Sanskrit pratiyogitā 'rivalry', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C260-shasti]
 <!-- hl-knowledge: introduces=[BN-LEX-C260-JINIS260-04]; assesses=[] -->
 
 **প্রতিযোগিতা** — *prôtijogitā* — "a competition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রতিযোগিতা** (*prôtijogitā*) is Sanskrit *pratiyogitā*, "rivalry", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

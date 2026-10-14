@@ -14,7 +14,8 @@ romanization: "chhād"
 concept_tag: BN-HOME60-CHHAD
 prerequisites: [BN-C60-tebil, BN-C60-deyal]
 sounds: []
-roots: []
+roots: [sanskrit-chadman]
+etymology_hook: "chhād ← Sanskrit chadman 'roof', a tadbhava (CDIAL 4981)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C60-deyal]
 <!-- hl-knowledge: introduces=[BN-LEX-C60-HOME60-04]; assesses=[] -->
 
 **ছাদ** — *chhād* — "a roof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছাদ** (*chhād*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *chadman*, "roof" (CDIAL 4981).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

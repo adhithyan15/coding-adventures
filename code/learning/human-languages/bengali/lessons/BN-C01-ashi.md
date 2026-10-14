@@ -11,7 +11,8 @@ gloss: goodbye, lit. "I'll come [again]" (āshi)
 concept_tag: FAREWELL
 prerequisites: [BN-C01-achchha]
 sounds: [s-to-sh, i-sign-before]
-roots: [asa-come]
+roots: [asa-come, sanskrit-asadati]
+etymology_hook: "āshi 'I come': CDIAL lists āsā under Sanskrit āsadati 'approaches' (CDIAL 1483); Chatterji preferred āviśati"
 duration:
   max_seconds: 240
 requires:
@@ -46,8 +47,7 @@ is **written before** the consonant it follows but **read after** it. **আস�
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-ACHCHHA-01, BN-CONCEPT-C01-ASHI-01] -->
 
-**আসি** (*āshi*) literally means "**I come**," from the verb *āsā* ("to come," a
-Sanskrit root shared with Hindi *ānā*). Yet it is how Bengalis say *goodbye* —
+**আসি** (*āshi*) literally means "**I come**," from the verb *āsā* ("to come"), which CDIAL lists under Sanskrit *āsadati*, "approaches" (CDIAL 1483), while noting that Chatterji derived it from *āviśati*, "enters". Yet it is how Bengalis say *goodbye* —
 never "I'm leaving" (unlucky, too final) but "I'll come [again]": **আসি**, or the
 fuller *āschhi* ("I am coming"). It is the very same "promise of return" farewell
 Tamil and Marathi reach for — a whole culture's optimism folded into one verb.

@@ -14,7 +14,8 @@ romanization: "hāsi"
 concept_tag: BN-JINIS253-HASI
 prerequisites: [BN-C253-rohosyo, BN-C253-rosikota]
 sounds: []
-roots: []
+roots: [sanskrit-hasya]
+etymology_hook: "hāsi ← Sanskrit hāsya 'laughable; laughter', a tadbhava (CDIAL 14071)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C253-rosikota]
 <!-- hl-knowledge: introduces=[BN-LEX-C253-JINIS253-04]; assesses=[] -->
 
 **হাসি** — *hāsi* — "a smile, laughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাসি** (*hāsi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hāsya*, "laughable; laughter" (CDIAL 14071). CDIAL lists Bengali *hāsi*, "laughter, smile".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

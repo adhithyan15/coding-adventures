@@ -14,7 +14,8 @@ romanization: "pôtrikā"
 concept_tag: BN-JINIS248-POTRIKA
 prerequisites: [BN-C248-bhisa, BN-C248-parsel]
 sounds: []
-roots: []
+roots: [sanskrit-patrika]
+etymology_hook: "pôtrikā ← Sanskrit patrikā 'a letter, a document', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C248-parsel]
 <!-- hl-knowledge: introduces=[BN-LEX-C248-JINIS248-05]; assesses=[] -->
 
 **পত্রিকা** — *pôtrikā* — "a magazine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পত্রিকা** (*pôtrikā*) is Sanskrit *patrikā*, "a letter, a document", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a flower, then the Bengali for a leaf.
 You'll want to know: পাহাড়.
 পাহাড় — pāhāṛ — "a mountain".
 
+The word, taken apart.
+পাহাড় (pāhāṛ) is a tadbhava, a word inherited and reshaped by sound change. It comes from pāhāḍa, "rock, hill", a form CDIAL reconstructs from its descendants (CDIAL 8141). CDIAL thinks it probably connected with Sanskrit pāṣāṇa, "stone".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a leaf, then the Bengali for a mountain.
 
 You'll want to know: বন.
 বন — bôn — "a forest".
+
+The word, taken apart.
+বন (bôn) is inherited from Sanskrit vana, "forest", and has come down with almost no change (CDIAL 11258).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a mountain, then the Bengali for a fores
 You'll want to know: নদী.
 নদী — nôdi — "a river".
 
+The word, taken apart.
+নদী (nôdi) is Sanskrit nadī, "river", taken over whole as a learned loan, a tatsama (CDIAL 6943). The word inherited from it is naï, which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a forest, then the Bengali for a river.
 You'll want to know: পুকুর.
 পুকুর — pukur — "a pond".
 
+The word, taken apart.
+পুকুর (pukur) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pauṣkara, "pertaining to the blue lotus" (CDIAL 8425). It is built on puṣkara, "blue lotus".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a river, then the Bengali for a pond.
 
 You'll want to know: পাথর.
 পাথর — pāthôr — "a stone".
+
+The word, taken apart.
+পাথর (pāthôr) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prastara, "anything strewn, flat surface; stone" (CDIAL 8857).
 
 What you've built.
 One more word for this chapter.

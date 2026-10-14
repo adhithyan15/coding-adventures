@@ -1449,8 +1449,9 @@ backend immediately) come before the enabler-dependent items.
   static terms, then used as the sole dynamic base of a power chain with finite
   static exponents. Up to six supported built-in numeric standard functions,
   including integer-valued `sign`, may wrap that powered exact name actual.
-  Unrestricted runtime `entier`, globals, captured
-  locals, and other real-name branches remain conservative. Additive composition,
+  One additional built-in `entier` may directly wrap the exact bounded
+  `entier(sign(...))` root; broader runtime `entier` operands remain conservative.
+  Globals, captured locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The
   real-valued standard functions `abs`, `sqrt`, `sin`, `cos`, `ln`, `exp`, and

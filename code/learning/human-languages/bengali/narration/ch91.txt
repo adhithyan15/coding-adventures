@@ -12,6 +12,9 @@ Before the new one: say the Bengali for the day after tomorrow, then the Bengali
 You'll want to know: আগামীকাল.
 আগামীকাল — āgāmikāl — "tomorrow".
 
+The word, taken apart.
+আগামীকাল (āgāmikāl) is āgāmi, "coming", Sanskrit āgāmin taken over whole, + kāl, "yesterday, tomorrow", from Sanskrit kalya, "dawn" (CDIAL 3104).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for yesterday, then the Bengali for tomorrow
 
 You'll want to know: সোমবার.
 সোমবার — sombār — "Monday".
+
+The word, taken apart.
+সোমবার (sombār) is Sanskrit somavāra, "Monday", taken over whole as a learned loan, a tatsama. It is soma, "the moon", + vāra, "day of the week".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for tomorrow, then the Bengali for Monday.
 You'll want to know: বুধবার.
 বুধবার — budhbār — "Wednesday".
 
+The word, taken apart.
+বুধবার (budhbār) is Sanskrit budhavāra, "Wednesday", taken over whole as a learned loan, a tatsama. It is budha, "Mercury", + vāra, "day of the week".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for Monday, then the Bengali for Wednesday.
 You'll want to know: বৃহস্পতিবার.
 বৃহস্পতিবার — brihôspôtibār — "Thursday".
 
+The word, taken apart.
+বৃহস্পতিবার (brihôspôtibār) is Sanskrit bṛhaspativāra, "Thursday", taken over whole as a learned loan, a tatsama. It is bṛhaspati, "Jupiter", + vāra, "day of the week".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for Wednesday, then the Bengali for Thursday
 
 You'll want to know: শুক্রবার.
 শুক্রবার — shukrôbār — "Friday".
+
+The word, taken apart.
+শুক্রবার (shukrôbār) is Sanskrit śukravāra, "Friday", taken over whole as a learned loan, a tatsama. It is śukra, "Venus", + vāra, "day of the week".
 
 What you've built.
 One more word for this chapter.

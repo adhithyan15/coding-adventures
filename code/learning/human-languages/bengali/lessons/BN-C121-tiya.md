@@ -15,6 +15,7 @@ concept_tag: BN-THINGS121-TIYA
 prerequisites: [BN-C120-badur, BN-C121-pyacha]
 sounds: []
 roots: []
+etymology_hook: "ṭiyā: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C121-pyacha]
 <!-- hl-knowledge: introduces=[BN-LEX-C121-THINGS121-02]; assesses=[] -->
 
 **টিয়া** — *tiyā* — "a parrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **টিয়া** (*tiyā*) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "parrot" finds nothing close.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

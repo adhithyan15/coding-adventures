@@ -14,7 +14,8 @@ romanization: "chāmôch"
 concept_tag: BN-HOME62-CHAMOCH
 prerequisites: [BN-C62-tala, BN-C62-thala]
 sounds: []
-roots: []
+roots: [persian-chamcha]
+etymology_hook: "chāmôch: usually traced to Persian chamcha 'spoon, ladle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C62-thala]
 <!-- hl-knowledge: introduces=[BN-LEX-C62-HOME62-05]; assesses=[] -->
 
 **চামচ** — *chāmôch* — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চামচ** (*chāmôch*) is a loan, usually traced to Persian *chamcha*, "spoon, ladle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

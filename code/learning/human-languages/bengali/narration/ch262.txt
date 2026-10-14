@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a gatekeeper, then the Bengali for an ar
 You'll want to know: লেখক.
 লেখক — lekhôk — "a writer".
 
+The word, taken apart.
+লেখক (lekhôk) is Sanskrit lekhaka, "scribe", taken over whole as a learned loan, a tatsama (CDIAL 11102).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for an army, then the Bengali for a writer.
 
 You'll want to know: কবি.
 কবি — kôbi — "a poet".
+
+The word, taken apart.
+কবি (kôbi) is Sanskrit kavi, "wise; poet", taken over whole as a learned loan, a tatsama (CDIAL 2964).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a writer, then the Bengali for a poet.
 You'll want to know: শিল্পী.
 শিল্পী — shilpī — "an artist".
 
+The word, taken apart.
+শিল্পী (shilpī) is Sanskrit śilpin, "artist, craftsman", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a poet, then the Bengali for an artist.
 You'll want to know: গায়িকা.
 গায়িকা — gāyikā — "a female singer".
 
+The word, taken apart.
+গায়িকা (gāyikā) is Sanskrit gāyikā, "female singer", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for an artist, then the Bengali for a female
 
 You'll want to know: নর্তকী.
 নর্তকী — nôrtôkī — "a female dancer".
+
+The word, taken apart.
+নর্তকী (nôrtôkī) is Sanskrit nartakī, "female dancer", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

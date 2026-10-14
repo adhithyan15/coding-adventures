@@ -14,7 +14,8 @@ romanization: "bhôrāno"
 concept_tag: BN-VERB-BHORANO
 prerequisites: [BN-C101-ranna, BN-C101-jora]
 sounds: []
-roots: []
+roots: [sanskrit-bharati]
+etymology_hook: "bhôrāno ← Sanskrit bharati 'bears, fills', a tadbhava (CDIAL 9397)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C101-jora]
 <!-- hl-knowledge: introduces=[BN-LEX-C101-ACT101-03]; assesses=[] -->
 
 **ভরানো** — *bhôrāno* — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভরানো** (*bhôrāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bharati*, "bears, fills" (CDIAL 9397). *Bhôrāno* is the causing form of *bharā*, the verb CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

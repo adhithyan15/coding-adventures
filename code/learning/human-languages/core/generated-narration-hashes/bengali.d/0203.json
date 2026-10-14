@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 203,
-  "sourceHash": "fnv1a64:41f19edf5201c35a",
+  "sourceHash": "fnv1a64:fee3d5bc33bb27ab",
   "lessonIds": [
     "BN-C203-svobhab",
     "BN-C203-mejaj",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch203.txt",
   "json": "bengali/narration/ch203.json",
-  "textHash": "fnv1a64:dd389a031c59eb7b",
-  "jsonHash": "fnv1a64:46ec3b655e10fbd7",
+  "textHash": "fnv1a64:664c62f3285cd13f",
+  "jsonHash": "fnv1a64:96020b7a6f549f7a",
   "findings": []
 }

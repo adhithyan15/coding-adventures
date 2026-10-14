@@ -14,7 +14,8 @@ romanization: "dôrji"
 concept_tag: BN-THINGS126-DORJI
 prerequisites: [BN-C125-tati, BN-C126-napit]
 sounds: []
-roots: []
+roots: [persian-darzi]
+etymology_hook: "dôrji: usually traced to Persian darzī 'tailor'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C126-napit]
 <!-- hl-knowledge: introduces=[BN-LEX-C126-THINGS126-02]; assesses=[] -->
 
 **দর্জি** — *dôrji* — "a tailor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দর্জি** (*dôrji*) is a loan, usually traced to Persian *darzī*, "tailor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

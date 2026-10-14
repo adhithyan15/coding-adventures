@@ -14,7 +14,8 @@ romanization: "āin"
 concept_tag: BN-JINIS200-AIN
 prerequisites: [BN-C200-juddho, BN-C200-svadhinota]
 sounds: []
-roots: []
+roots: [persian-ain]
+etymology_hook: "āin: usually traced to Persian āʾīn 'custom, rule'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C200-svadhinota]
 <!-- hl-knowledge: introduces=[BN-LEX-C200-JINIS200-03]; assesses=[] -->
 
 **আইন** — *āin* — "a law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আইন** (*āin*) is a loan, usually traced to Persian *āʾīn*, "custom, rule".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

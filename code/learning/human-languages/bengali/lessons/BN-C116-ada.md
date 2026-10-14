@@ -14,7 +14,8 @@ romanization: "ādā"
 concept_tag: BN-THINGS116-ADA
 prerequisites: [BN-C116-begun, BN-C116-rosun]
 sounds: []
-roots: []
+roots: [sanskrit-ardraka]
+etymology_hook: "ādā ← Sanskrit ārdraka 'fresh ginger', a tadbhava (CDIAL 1341)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C116-rosun]
 <!-- hl-knowledge: introduces=[BN-LEX-C116-THINGS116-04]; assesses=[] -->
 
 **আদা** — *ādā* — "ginger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আদা** (*ādā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ārdraka*, "fresh ginger" (CDIAL 1341).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "lôjjā pāoyā"
 concept_tag: BN-VERB-LOJJA-PAOYA
 prerequisites: [BN-C211-chechano, BN-C211-rag-kora]
 sounds: []
-roots: []
+roots: [sanskrit-lajja, sanskrit-prapayati]
+etymology_hook: "lôjjā pāoyā: lôjjā 'shame', Sanskrit lajjā (CDIAL 10910), + pāoyā 'to get' ← prāpayati (CDIAL 8943)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C211-rag-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C211-ACT211-03]; assesses=[] -->
 
 **লজ্জা পাওয়া** — *lôjjā pāoyā* — "to feel shy".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লজ্জা পাওয়া** (*lôjjā pāoyā*) is *lôjjā*, "shame", Sanskrit *lajjā* taken over whole (CDIAL 10910), + *pāoyā*, "to get", from Sanskrit *prāpayati*, "causes to reach" (CDIAL 8943): "to get shame".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

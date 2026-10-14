@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 197,
-  "sourceHash": "fnv1a64:acf2ebcf4bd558a0",
+  "sourceHash": "fnv1a64:e3f81ef13133bb18",
   "lessonIds": [
     "BN-C197-phutbol",
     "BN-C197-hoki",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch197.txt",
   "json": "bengali/narration/ch197.json",
-  "textHash": "fnv1a64:2c5166fc74cb2f28",
-  "jsonHash": "fnv1a64:63c034da4bf4ba91",
+  "textHash": "fnv1a64:a6fcd81be9c2e5c4",
+  "jsonHash": "fnv1a64:6032f379d4bd00bf",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "nômbôr"
 concept_tag: BN-JINIS227-NOMBOR
 prerequisites: [BN-C227-podobi, BN-C227-boyos]
 sounds: []
-roots: []
+roots: [english-number]
+etymology_hook: "nômbôr ← English number"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C227-boyos]
 <!-- hl-knowledge: introduces=[BN-LEX-C227-JINIS227-03]; assesses=[] -->
 
 **নম্বর** — *nômbôr* — "a number".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নম্বর** (*nômbôr*) is a loan from English *number*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

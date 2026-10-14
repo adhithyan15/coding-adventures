@@ -14,7 +14,8 @@ romanization: "bhāg"
 concept_tag: BN-ACT103-BHAG
 prerequisites: [BN-C103-laphano, BN-C103-mara]
 sounds: []
-roots: []
+roots: [sanskrit-bhaga]
+etymology_hook: "bhāg ← Sanskrit bhāga 'share, portion', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C103-mara]
 <!-- hl-knowledge: introduces=[BN-LEX-C103-ACT103-05]; assesses=[] -->
 
 **ভাগ** — *bhāg* — "a share".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভাগ** (*bhāg*) is Sanskrit *bhāga*, "share, portion", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

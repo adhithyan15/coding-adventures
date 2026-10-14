@@ -14,7 +14,8 @@ romanization: "kāk"
 concept_tag: BN-ANIMALS70-KAK
 prerequisites: [BN-C70-banor, BN-C70-sap]
 sounds: []
-roots: []
+roots: [sanskrit-kaka]
+etymology_hook: "kāk ← Sanskrit kāka 'crow', a tatsama; CDIAL lists the inherited form kāuā (CDIAL 2993)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C70-sap]
 <!-- hl-knowledge: introduces=[BN-LEX-C70-ANIMALS70-05]; assesses=[] -->
 
 **কাক** — *kāk* — "a crow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাক** (*kāk*) is Sanskrit *kāka*, "crow", taken over whole as a learned loan, a tatsama (CDIAL 2993). The word inherited from it is *kāuā*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

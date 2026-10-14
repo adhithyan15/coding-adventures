@@ -14,7 +14,8 @@ romanization: "kukur"
 concept_tag: BN-NATURE68-KUKUR
 prerequisites: [BN-C68-batas, BN-C68-akash]
 sounds: []
-roots: []
+roots: [sanskrit-kukkura]
+etymology_hook: "kukur ← Sanskrit kukkura 'dog', a tadbhava (CDIAL 3329)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C68-akash]
 <!-- hl-knowledge: introduces=[BN-LEX-C68-NATURE68-04]; assesses=[] -->
 
 **কুকুর** — *kukur* — "a dog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কুকুর** (*kukur*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kukkura*, "dog" (CDIAL 3329). CDIAL calls the word imitative of the animal's sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

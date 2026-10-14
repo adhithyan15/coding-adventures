@@ -14,7 +14,8 @@ romanization: "āgāmikāl"
 concept_tag: BN-TIME91-AGAMIKAL
 prerequisites: [BN-C90-porshu, BN-C90-gotokal]
 sounds: []
-roots: []
+roots: [sanskrit-agamin, sanskrit-kalya]
+etymology_hook: "āgāmikāl: āgāmi 'coming', Sanskrit āgāmin, a tatsama, + kāl ← kalya 'dawn, tomorrow' (CDIAL 3104)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C90-gotokal]
 <!-- hl-knowledge: introduces=[BN-LEX-C91-TIME91-01]; assesses=[] -->
 
 **আগামীকাল** — *āgāmikāl* — "tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আগামীকাল** (*āgāmikāl*) is *āgāmi*, "coming", Sanskrit *āgāmin* taken over whole, + *kāl*, "yesterday, tomorrow", from Sanskrit *kalya*, "dawn" (CDIAL 3104).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

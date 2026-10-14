@@ -14,7 +14,8 @@ romanization: "mejāj"
 concept_tag: BN-JINIS203-MEJAJ
 prerequisites: [BN-C202-bhot, BN-C203-svobhab]
 sounds: []
-roots: []
+roots: [arabic-mizaj]
+etymology_hook: "mejāj ← Arabic mizāj 'mixture; temperament', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C203-svobhab]
 <!-- hl-knowledge: introduces=[BN-LEX-C203-JINIS203-02]; assesses=[] -->
 
 **মেজাজ** — *mejāj* — "a mood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মেজাজ** (*mejāj*) is a loan from Arabic *mizāj*, "mixture; temperament", which reached Bengali through Persian. Its Arabic root is *m-z-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

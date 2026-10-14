@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 117,
-  "sourceHash": "fnv1a64:c7e4cd197004ed5a",
+  "sourceHash": "fnv1a64:6ec43a3164f0abf6",
   "lessonIds": [
     "BN-C117-shim",
     "BN-C117-kumro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch117.txt",
   "json": "bengali/narration/ch117.json",
-  "textHash": "fnv1a64:ebac9b97bf85d916",
-  "jsonHash": "fnv1a64:54870cf9512595eb",
+  "textHash": "fnv1a64:ec8fb2ec375dad94",
+  "jsonHash": "fnv1a64:3b276181a39b92cf",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "bājāno"
 concept_tag: BN-VERB-BAJANO
 prerequisites: [BN-C239-chumu-khaoya, BN-C239-rong-kora]
 sounds: []
-roots: []
+roots: [sanskrit-vadyate]
+etymology_hook: "bājāno ← Sanskrit vādyate 'is made to sound', a tadbhava (CDIAL 11513)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C239-rong-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C239-ACT239-03]; assesses=[] -->
 
 **বাজানো** — *bājāno* — "to play music, to play (an instrument)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাজানো** (*bājāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vādyate*, "is made to sound" (CDIAL 11513). CDIAL lists Bengali *bājā*, "to sound"; *bājāno* is its causing form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jām"
 concept_tag: BN-JINIS173-JAM
 prerequisites: [BN-C173-laddu, BN-C173-gur]
 sounds: []
-roots: []
+roots: [sanskrit-jambu]
+etymology_hook: "jām ← Sanskrit jambū 'the rose-apple tree', a tadbhava (CDIAL 5131)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C173-gur]
 <!-- hl-knowledge: introduces=[BN-LEX-C173-JINIS173-04]; assesses=[] -->
 
 **জাম** — *jām* — "a black plum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জাম** (*jām*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jambū*, "the rose-apple tree" (CDIAL 5131). CDIAL lists Bengali *jām* for the tree and its fruit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 157,
-  "sourceHash": "fnv1a64:5f50b3778452802f",
+  "sourceHash": "fnv1a64:b33d10ef4e7c045f",
   "lessonIds": [
     "BN-C157-jayga",
     "BN-C157-phutpat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch157.txt",
   "json": "bengali/narration/ch157.json",
-  "textHash": "fnv1a64:1925d4e3ef7d831a",
-  "jsonHash": "fnv1a64:ed82aec74111a6bc",
+  "textHash": "fnv1a64:78d568f1382a2199",
+  "jsonHash": "fnv1a64:f9039a1028ebe652",
   "findings": []
 }

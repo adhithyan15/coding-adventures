@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to burn, then the Bengali for sewing.
 You'll want to know: বোনা.
 বোনা — bonā — "to weave".
 
+The word, taken apart.
+বোনা (bonā) is a tadbhava, a word inherited and reshaped by sound change. It comes from vunāti, "weaves", a form CDIAL reconstructs from its descendants (CDIAL 11773). CDIAL writes the Bengali verb bunā.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for sewing, then the Bengali for to weave.
 
 You'll want to know: লাগানো.
 লাগানো — lāgāno — "to attach".
+
+The word, taken apart.
+লাগানো (lāgāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lagyati, "adheres to" (CDIAL 10895). Lāgāno is the causing form of lāgā, "to stick", which CDIAL lists.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to weave, then the Bengali for to attach
 You'll want to know: সরানো.
 সরানো — sôrāno — "to move aside".
 
+The word, taken apart.
+সরানো (sôrāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sarati, "moves" (CDIAL 13250). Sôrāno is the causing form of sarā, "to move, glide", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to attach, then the Bengali for to move 
 You'll want to know: জাগানো.
 জাগানো — jāgāno — "to wake someone".
 
+The word, taken apart.
+জাগানো (jāgāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāgrati, "are awake" (CDIAL 5175). Jāgāno is the causing form of jāgā, "to wake"; CDIAL lists both.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to move aside, then the Bengali for to w
 
 You'll want to know: বাঁচানো.
 বাঁচানো — bā̃chāno — "to save".
+
+The word, taken apart.
+বাঁচানো (bā̃chāno) (bāṁchāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vañcati, "moves, escapes from" (CDIAL 11208). Bāṁchāno is the causing form of bāṁcā, "to escape", which CDIAL lists.
 
 What you've built.
 One more word for this chapter.

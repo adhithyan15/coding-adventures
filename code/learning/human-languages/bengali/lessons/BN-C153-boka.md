@@ -14,7 +14,8 @@ romanization: "bôkā"
 concept_tag: BN-VERB-BOKA
 prerequisites: [BN-C153-alochona-kora, BN-C153-proshongsa-kora]
 sounds: []
-roots: []
+roots: [indo-aryan-bakk]
+etymology_hook: "bôkā ← *bakk 'chatter', a reconstructed form; a tadbhava (CDIAL 9117)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C153-proshongsa-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C153-ACT153-03]; assesses=[] -->
 
 **বকা** — *bôkā* — "to scold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বকা** (*bôkā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bakk*, "chatter", a form CDIAL reconstructs from its descendants (CDIAL 9117). CDIAL lists Bengali *bakā*, "to prattle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

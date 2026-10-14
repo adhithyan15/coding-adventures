@@ -14,7 +14,8 @@ romanization: "phælā"
 concept_tag: BN-VERB-PHLA
 prerequisites: [BN-C53-pora, BN-C53-chhara]
 sounds: []
-roots: []
+roots: [sanskrit-prathita]
+etymology_hook: "phælā: listed by CDIAL under prathita 'spread out', perhaps crossed with *prēlayati (CDIAL 8651)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C53-chhara]
 <!-- hl-knowledge: introduces=[BN-LEX-C53-VERBS53-03]; assesses=[] -->
 
 **ফেলা** — *phælā* — "to throw, to drop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ফেলা** (*phælā*) under Sanskrit *prathita*, "spread out", as a form extended with *-ll-*, and asks whether it was crossed with *\*prēlayati*, "pushes on", a form it reconstructs (CDIAL 8651).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

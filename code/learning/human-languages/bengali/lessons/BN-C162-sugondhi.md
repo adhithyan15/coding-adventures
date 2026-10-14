@@ -14,7 +14,8 @@ romanization: "sugôndhi"
 concept_tag: BN-GUN162-SUGONDHI
 prerequisites: [BN-C161-sukhi, BN-C161-birokto]
 sounds: []
-roots: []
+roots: [sanskrit-sugandhi]
+etymology_hook: "sugôndhi ← Sanskrit sugandhi 'fragrant', a tatsama (CDIAL 13455)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C161-birokto]
 <!-- hl-knowledge: introduces=[BN-LEX-C162-GUN162-01]; assesses=[] -->
 
 **সুগন্ধি** — *sugôndhi* — "fragrant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সুগন্ধি** (*sugôndhi*) is Sanskrit *sugandhi*, "fragrant", taken over whole as a learned loan, a tatsama (CDIAL 13455). The word inherited from it is Middle Bengali *sundhi*, "scented", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

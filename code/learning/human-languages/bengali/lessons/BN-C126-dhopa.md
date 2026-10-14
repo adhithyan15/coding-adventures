@@ -14,7 +14,8 @@ romanization: "dhopā"
 concept_tag: BN-THINGS126-DHOPA
 prerequisites: [BN-C126-napit, BN-C126-dorji]
 sounds: []
-roots: []
+roots: [indo-aryan-dhauvati]
+etymology_hook: "dhopā ← *dhauvati 'washes', a reconstructed form; a tadbhava (CDIAL 6886)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C126-dorji]
 <!-- hl-knowledge: introduces=[BN-LEX-C126-THINGS126-03]; assesses=[] -->
 
 **ধোপা** — *dhopā* — "a washerman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধোপা** (*dhopā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhauvati*, "washes", a form CDIAL reconstructs from its descendants (CDIAL 6886). CDIAL lists *dhopā*, "washerman", among the later forms built on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

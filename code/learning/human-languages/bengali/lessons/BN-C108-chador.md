@@ -14,7 +14,8 @@ romanization: "chādôr"
 concept_tag: BN-THINGS108-CHADOR
 prerequisites: [BN-C108-jhata, BN-C108-balish]
 sounds: []
-roots: []
+roots: [persian-chadar]
+etymology_hook: "chādôr: usually traced to Persian chādar 'sheet, veil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C108-balish]
 <!-- hl-knowledge: introduces=[BN-LEX-C108-THINGS108-03]; assesses=[] -->
 
 **চাদর** — *chādôr* — "a sheet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চাদর** (*chādôr*) is a loan, usually traced to Persian *chādar*, "sheet, veil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

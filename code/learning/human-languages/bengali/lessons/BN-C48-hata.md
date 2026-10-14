@@ -14,7 +14,8 @@ romanization: "hā̃ṭā"
 concept_tag: BN-VERB-HATA
 prerequisites: [BN-C48-shona, BN-C48-bosa]
 sounds: []
-roots: []
+roots: [indo-aryan-hatt]
+etymology_hook: "hāṁṭā ← *haṇṭ 'move', a reconstructed form; a tadbhava (CDIAL 13943)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C48-bosa]
 <!-- hl-knowledge: introduces=[BN-LEX-C48-FAMILY48-05]; assesses=[] -->
 
 **হাঁটা** — *hā̃ṭā* — "to walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাঁটা** (*hāṁṭā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*haṇṭ*, "move", a form CDIAL reconstructs from its descendants (CDIAL 13943). (In CDIAL the entry is headed *\*haṭṭ*, "move", and the Bengali verb sits under its variant *\*haṇṭ-*.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

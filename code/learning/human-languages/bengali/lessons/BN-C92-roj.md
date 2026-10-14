@@ -14,7 +14,8 @@ romanization: "roj"
 concept_tag: BN-TIME92-ROJ
 prerequisites: [BN-C92-robibar, BN-C92-protidin]
 sounds: []
-roots: []
+roots: [persian-roz]
+etymology_hook: "roj: usually traced to Persian rōz 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C92-protidin]
 <!-- hl-knowledge: introduces=[BN-LEX-C92-TIME92-04]; assesses=[] -->
 
 **রোজ** — *roj* — "daily".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রোজ** (*roj*) is a loan, usually traced to Persian *rōz*, "day". In Bengali it means "daily".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

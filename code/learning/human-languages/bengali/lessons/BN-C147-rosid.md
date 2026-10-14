@@ -14,7 +14,8 @@ romanization: "rôsid"
 concept_tag: BN-PORA147-ROSID
 prerequisites: [BN-C147-bhara, BN-C147-bigyapon]
 sounds: []
-roots: []
+roots: [persian-rasid]
+etymology_hook: "rôsid: usually traced to Persian rasīd 'arrived; a receipt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C147-bigyapon]
 <!-- hl-knowledge: introduces=[BN-LEX-C147-PORA147-05]; assesses=[] -->
 
 **রসিদ** — *rôsid* — "a receipt". Ask for it when you pay: **রসিদটা দিন** — *rôsidṭā din* — "The receipt, please."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রসিদ** (*rôsid*) is a loan, usually traced to Persian *rasīd*, "arrived; a receipt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

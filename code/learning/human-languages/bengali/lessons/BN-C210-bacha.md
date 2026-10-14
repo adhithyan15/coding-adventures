@@ -14,7 +14,8 @@ romanization: "bā̃chā"
 concept_tag: BN-VERB-BACHA
 prerequisites: [BN-C210-dkha-kora, BN-C210-biye-kora]
 sounds: []
-roots: []
+roots: [sanskrit-vancati]
+etymology_hook: "bāṁchā ← Sanskrit vañcati 'moves; escapes from', a tadbhava (CDIAL 11208)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C210-biye-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C210-ACT210-05]; assesses=[] -->
 
 **বাঁচা** — *bā̃chā* — "to survive, to live".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাঁচা** (*bāṁchā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vañcati*, "moves; escapes from" (CDIAL 11208). CDIAL lists Bengali *bāṁcā*, "to escape".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṭre"
 concept_tag: BN-JINIS206-TRE
 prerequisites: [BN-C206-kukar, BN-C206-miksi]
 sounds: []
-roots: []
+roots: [english-tray]
+etymology_hook: "ṭre ← English tray"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C206-miksi]
 <!-- hl-knowledge: introduces=[BN-LEX-C206-JINIS206-04]; assesses=[] -->
 
 **ট্রে** — *ṭre* — "a tray".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ট্রে** (*ṭre*) is a loan from English *tray*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pishi"
 concept_tag: BN-FAMILY47-PISHI
 prerequisites: [BN-C46-mama, BN-C46-mashi]
 sounds: []
-roots: []
+roots: [sanskrit-pituhshvasr]
+etymology_hook: "pishi ← Sanskrit pituḥṣvasṛ 'father's sister', a tadbhava (CDIAL 8177)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C46-mashi]
 <!-- hl-knowledge: introduces=[BN-LEX-C47-FAMILY47-01]; assesses=[] -->
 
 **পিসি** — *pishi* — "an aunt (father's sister)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পিসি** (*pishi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pituḥṣvasṛ*, "father's sister" (CDIAL 8177). It is *pitṛ*, "father", + *svasṛ*, "sister".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

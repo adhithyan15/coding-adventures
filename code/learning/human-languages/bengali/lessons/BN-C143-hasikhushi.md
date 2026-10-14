@@ -14,7 +14,8 @@ romanization: "hāsikhushi"
 concept_tag: BN-QUAL143-HASIKHUSHI
 prerequisites: [BN-C143-borosoro, BN-C143-chhotokhato]
 sounds: []
-roots: []
+roots: [sanskrit-hasya, khush-persian]
+etymology_hook: "hāsikhushi: hāsi 'laughter' ← hāsya (CDIAL 14071) + khushi 'happiness', usually traced to Persian khushī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C143-chhotokhato]
 <!-- hl-knowledge: introduces=[BN-LEX-C143-QUAL143-05]; assesses=[] -->
 
 **হাসিখুশি** — *hāsikhushi* — "cheerful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাসিখুশি** (*hāsikhushi*) is *hāsi*, "laughter", from Sanskrit *hāsya* (CDIAL 14071), + *khushi*, "happiness", usually traced to Persian *khushī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sômbhôb"
 concept_tag: BN-GUN191-SOMBHOB
 prerequisites: [BN-C190-pholaphol, BN-C191-dorkari]
 sounds: []
-roots: []
+roots: [sanskrit-sambhava]
+etymology_hook: "sômbhôb ← Sanskrit saṁbhava 'coming into being; possible', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C191-dorkari]
 <!-- hl-knowledge: introduces=[BN-LEX-C191-GUN191-02]; assesses=[] -->
 
 **সম্ভব** — *sômbhôb* — "possible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সম্ভব** (*sômbhôb*) is Sanskrit *saṁbhava*, "coming into being; possible", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

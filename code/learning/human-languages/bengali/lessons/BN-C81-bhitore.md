@@ -14,7 +14,8 @@ romanization: "bhitôre"
 concept_tag: BN-PLACE81-BHITORE
 prerequisites: [BN-C80-dupur, BN-C81-kachhe]
 sounds: []
-roots: []
+roots: [indo-aryan-bhiyantara]
+etymology_hook: "bhitôre ← *bhiyantara 'inner', a reconstructed form; a tadbhava (CDIAL 9504)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C81-kachhe]
 <!-- hl-knowledge: introduces=[BN-LEX-C81-PLACE81-02]; assesses=[] -->
 
 **ভিতরে** — *bhitôre* — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভিতরে** (*bhitôre*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhiyantara*, "inner", a form CDIAL reconstructs from its descendants (CDIAL 9504). It stands beside Sanskrit *abhyantara*, "inner"; CDIAL lists Bengali *bhitar*, "inside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

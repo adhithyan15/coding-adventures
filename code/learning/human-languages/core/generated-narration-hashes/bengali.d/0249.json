@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 249,
-  "sourceHash": "fnv1a64:68393f44f9ff56e0",
+  "sourceHash": "fnv1a64:31aaff0be79d5c37",
   "lessonIds": [
     "BN-C249-moshla",
     "BN-C249-jire",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch249.txt",
   "json": "bengali/narration/ch249.json",
-  "textHash": "fnv1a64:6239a5f29162805f",
-  "jsonHash": "fnv1a64:ca0fac2567a6115b",
+  "textHash": "fnv1a64:920ec2152aac833a",
+  "jsonHash": "fnv1a64:28b3aec6a652a479",
   "findings": []
 }

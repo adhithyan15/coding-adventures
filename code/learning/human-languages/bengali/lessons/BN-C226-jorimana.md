@@ -14,7 +14,8 @@ romanization: "jôrimānā"
 concept_tag: BN-JINIS226-JORIMANA
 prerequisites: [BN-C225-kobita, BN-C226-janjot]
 sounds: []
-roots: []
+roots: [persian-jarimana]
+etymology_hook: "jôrimānā: usually traced to Persian jarīmāna 'a fine'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C226-janjot]
 <!-- hl-knowledge: introduces=[BN-LEX-C226-JINIS226-02]; assesses=[] -->
 
 **জরিমানা** — *jôrimānā* — "a penalty, a fine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জরিমানা** (*jôrimānā*) is a loan, usually traced to Persian *jarīmāna*, "a fine".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

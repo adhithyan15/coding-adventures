@@ -14,7 +14,8 @@ romanization: "ḍrôyār"
 concept_tag: BN-JINIS201-DROYAR
 prerequisites: [BN-C201-besin, BN-C201-shaoyar]
 sounds: []
-roots: []
+roots: [english-drawer]
+etymology_hook: "ḍrôyār ← English drawer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C201-shaoyar]
 <!-- hl-knowledge: introduces=[BN-LEX-C201-JINIS201-03]; assesses=[] -->
 
 **ড্রয়ার** — *ḍrôyār* — "a drawer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ড্রয়ার** (*ḍrôyār*) is a loan from English *drawer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

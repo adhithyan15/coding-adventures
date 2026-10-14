@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a laptop, then the Bengali for a printer
 You'll want to know: চুড়ি.
 চুড়ি — chuṛi — "a bangle".
 
+The word, taken apart.
+চুড়ি (chuṛi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cūḍa, "bracelet" (CDIAL 4884). CDIAL lists Bengali cuṛī, "bracelet", and asks whether the word is the same as cūḍa, "tuft of hair".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a printer, then the Bengali for a bangle
 
 You'll want to know: খাবার.
 খাবার — khābār — "food".
+
+The word, taken apart.
+খাবার (khābār), "food", is built on khāoyā, "to eat", from Sanskrit khādati, "chews, eats" (CDIAL 3865): "what is to be eaten".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a bangle, then the Bengali for food.
 You'll want to know: তরকারি.
 তরকারি — tôrkāri — "a vegetable curry".
 
+The word, taken apart.
+তরকারি (tôrkāri) is a loan, usually traced to Persian tarkārī, "vegetables".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for food, then the Bengali for a vegetable c
 You'll want to know: চিংড়ি.
 চিংড়ি — chingṛi — "a prawn".
 
+The word, taken apart.
+চিংড়ি (chingṛi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ciṅgaṭa, "shrimp" (CDIAL 4786). CDIAL lists Bengali ciṅṛi, "prawn".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a vegetable curry, then the Bengali for 
 
 You'll want to know: ইলিশ.
 ইলিশ — ilish — "hilsa (fish)".
+
+The word, taken apart.
+ইলিশ (ilish) matches Sanskrit ilīśa, a name of this fish, beside illiśa; CDIAL lists the Bengali form ilsā (CDIAL 1594).
 
 What you've built.
 One more word for this chapter.

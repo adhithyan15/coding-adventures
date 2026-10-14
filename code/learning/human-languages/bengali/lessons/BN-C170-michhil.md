@@ -15,6 +15,7 @@ concept_tag: BN-JINIS170-MICHHIL
 prerequisites: [BN-C170-tukro, BN-C170-lain]
 sounds: []
 roots: []
+etymology_hook: "michhil: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C170-lain]
 <!-- hl-knowledge: introduces=[BN-LEX-C170-JINIS170-04]; assesses=[] -->
 
 **মিছিল** — *michhil* — "a procession".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **মিছিল** (*michhil*) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "procession" finds nothing close.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

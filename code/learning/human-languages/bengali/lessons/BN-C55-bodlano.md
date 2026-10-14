@@ -14,7 +14,8 @@ romanization: "bôdlāno"
 concept_tag: BN-VERB-BODLANO
 prerequisites: [BN-C54-lukano, BN-C54-jeta]
 sounds: []
-roots: []
+roots: [arabic-badal]
+etymology_hook: "bôdlāno ← Arabic badal 'a substitute, an exchange', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C54-jeta]
 <!-- hl-knowledge: introduces=[BN-LEX-C55-VERBS55-01]; assesses=[] -->
 
 **বদলানো** — *bôdlāno* — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বদলানো** (*bôdlāno*) is a loan from Arabic *badal*, "a substitute, an exchange", which reached Bengali through Persian. Its Arabic root is *b-d-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

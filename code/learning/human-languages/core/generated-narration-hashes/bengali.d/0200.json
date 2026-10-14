@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 200,
-  "sourceHash": "fnv1a64:f8dd6d138879f546",
+  "sourceHash": "fnv1a64:104af98b6ff4a935",
   "lessonIds": [
     "BN-C200-juddho",
     "BN-C200-svadhinota",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch200.txt",
   "json": "bengali/narration/ch200.json",
-  "textHash": "fnv1a64:c7de058d5c3fe58f",
-  "jsonHash": "fnv1a64:2ee3bd066ff63343",
+  "textHash": "fnv1a64:ce097ede8c57e383",
+  "jsonHash": "fnv1a64:65a9695d74afcb5b",
   "findings": []
 }

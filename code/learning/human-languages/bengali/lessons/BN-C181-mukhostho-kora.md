@@ -14,7 +14,8 @@ romanization: "mukhôsthô kôrā"
 concept_tag: BN-VERB-MUKHOSTHO-KORA
 prerequisites: [BN-C181-kapa, BN-C181-bheja]
 sounds: []
-roots: []
+roots: [sanskrit-mukha, sanskrit-karoti]
+etymology_hook: "mukhôsthô kôrā: Sanskrit mukha 'mouth' + -stha 'standing in', 'held in the mouth', + kôrā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C181-bheja]
 <!-- hl-knowledge: introduces=[BN-LEX-C181-ACT181-04]; assesses=[] -->
 
 **মুখস্থ করা** — *mukhôsthô kôrā* — "to memorise".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মুখস্থ করা** (*mukhôsthô kôrā*) is *mukhôsthô*, "by heart", built from Sanskrit *mukha*, "mouth", and *-stha*, "standing in": "held in the mouth", + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

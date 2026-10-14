@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Somebody Else",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7e0f97ee1695c039",
+  "sourceHash": "fnv1a64:3bce05f2f9785858",
   "lessons": [
     {
       "id": "BN-C23-she",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f2b25c6587e9026",
+      "sourceHash": "fnv1a64:ecad9e247be0960f",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সে (she) is Sanskrit sa, \"he, that\": CDIAL lists the Bengali word under it (CDIAL 12815)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the third row of a table you already half know",
           "segments": [
@@ -94,7 +105,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -143,7 +154,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -178,7 +189,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:47b5eae22da8c076",
+      "sourceHash": "fnv1a64:7c53892de73cfd9c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -241,6 +252,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Bengali tā and tāhā, \"him, her\", under Sanskrit ta-, \"that\" (CDIAL 5612). তিনি (tini) is built on the same t-; CDIAL does not take its ending apart, so that part is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the cost of getting it wrong",
           "segments": [
@@ -259,7 +281,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -308,7 +330,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -343,7 +365,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cd7d44e62564911",
+      "sourceHash": "fnv1a64:452d2af55fe686bc",
       "notice": null,
       "blocks": [
         {
@@ -398,6 +420,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Middle Bengali oū and ohā, \"that\", under Sanskrit asau, \"that\" (CDIAL 972), the old far pointer behind ও (o)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: near, there, and away",
           "segments": [
@@ -428,7 +461,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -477,7 +510,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -512,7 +545,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9661005c3988b7ed",
+      "sourceHash": "fnv1a64:a5000ad0ec128d4f",
       "notice": null,
       "blocks": [
         {
@@ -576,6 +609,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Bengali tā and tāhā under Sanskrit ta-, \"that\" (CDIAL 5612); তার (tār) is that stem with the possessive -র."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: order does not change",
           "segments": [
@@ -594,7 +638,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -643,7 +687,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

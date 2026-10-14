@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a dog, then the Bengali for a cat.
 You'll want to know: গরু.
 গরু — gôru — "a cow".
 
+The word, taken apart.
+গরু (gôru) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gorūpa, "cow-shaped" (CDIAL 4313). It is go, "cow", + rūpa, "shape".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a cat, then the Bengali for a cow.
 
 You'll want to know: ছাগল.
 ছাগল — chhāgôl — "a goat".
+
+The word, taken apart.
+ছাগল (chhāgôl) is Sanskrit chāgala, "of a goat; a goat", taken over whole as a learned loan, a tatsama (CDIAL 4963). CDIAL lists the inherited form cheli, "goat", under the related chagala.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a cow, then the Bengali for a goat.
 You'll want to know: ভেড়া.
 ভেড়া — bheṛā — "a sheep".
 
+The word, taken apart.
+ভেড়া (bheṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bheḍra, "ram" (CDIAL 9606). CDIAL takes it, following Przyluski, from Austroasiatic.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a goat, then the Bengali for a sheep.
 You'll want to know: পাখি.
 পাখি — pākhi — "a bird".
 
+The word, taken apart.
+পাখি (pākhi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pakṣin, "winged; bird" (CDIAL 7636).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a sheep, then the Bengali for a bird.
 
 You'll want to know: ইঁদুর.
 ইঁদুর — ĩdur — "a mouse".
+
+The word, taken apart.
+ইঁদুর (ĩdur) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from indūra, "rat, mouse" (CDIAL 2095). CDIAL takes the word, in its other form undura, from Austroasiatic.
 
 What you've built.
 One more word for this chapter.

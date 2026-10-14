@@ -14,7 +14,8 @@ romanization: "jāygā"
 concept_tag: BN-JAYGA157-JAYGA
 prerequisites: [BN-C156-jonmodin, BN-C156-derite]
 sounds: []
-roots: []
+roots: [persian-jaygah]
+etymology_hook: "jāygā: usually traced to Persian jāygāh 'place, position'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C156-derite]
 <!-- hl-knowledge: introduces=[BN-LEX-C157-JAYGA157-01]; assesses=[] -->
 
 **জায়গা** — *jāygā* — "a place".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জায়গা** (*jāygā*) is a loan, usually traced to Persian *jāygāh*, "place, position".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

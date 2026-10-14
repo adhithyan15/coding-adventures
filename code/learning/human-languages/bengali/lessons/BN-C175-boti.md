@@ -15,6 +15,7 @@ concept_tag: BN-JINIS175-BOTI
 prerequisites: [BN-C175-durgondho, BN-C175-jharon]
 sounds: []
 roots: []
+etymology_hook: "bõṭi 'kitchen blade': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C175-jharon]
 <!-- hl-knowledge: introduces=[BN-LEX-C175-JINIS175-03]; assesses=[] -->
 
 **বঁটি** — *bõṭi* — "a bonti (a kitchen blade)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **বঁটি** (*bõṭi*) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "blade" and "knife" finds only words of other shapes, such as Bengali *phal*, "blade" (CDIAL 9052).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

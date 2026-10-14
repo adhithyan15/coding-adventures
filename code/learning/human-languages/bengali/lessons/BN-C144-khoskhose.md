@@ -14,7 +14,8 @@ romanization: "khôskhôse"
 concept_tag: BN-QUAL144-KHOSKHOSE
 prerequisites: [BN-C144-chupchap, BN-C144-molayem]
 sounds: []
-roots: []
+roots: [indo-aryan-khasa]
+etymology_hook: "khôskhôse: CDIAL lists khaskhas 'harsh, rough to the touch' under *khasa (CDIAL 3855)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C144-molayem]
 <!-- hl-knowledge: introduces=[BN-LEX-C144-QUAL144-05]; assesses=[] -->
 
 **খসখসে** — *khôskhôse* — "rough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Bengali *khaskhas*, "harsh, rough to the touch", under *\*khasa*, a form it reconstructs (CDIAL 3855); **খসখসে** (*khôskhôse*) is that word with the ending *-e*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

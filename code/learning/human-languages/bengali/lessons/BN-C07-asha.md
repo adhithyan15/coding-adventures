@@ -11,7 +11,7 @@ gloss: to come — the verb that never asks whether a man or a woman is speaking
 concept_tag: VERB-COME
 prerequisites: [BN-C07-jaowa, BN-C01-ashi]
 sounds: [s-to-sh, long-aa]
-roots: [aa-hither, asa-come]
+roots: [aa-hither, asa-come, sanskrit-asadati]
 etymology_hook: "আসা carries Sanskrit's আ- 'hither', the very prefix that turns going into coming in Hindi ānā — and it is the plainest place to state Bengali's biggest simplification: the language has no grammatical gender at all, so āmi āsi is one form where Hindi splits ātā/ātī and Marathi yeto/yete"
 duration:
   max_seconds: 270
@@ -51,8 +51,7 @@ whole of it — and the one question it refuses to ask you.
 The **আ-** in front is Sanskrit's *ā-*, "hither, toward" — the very prefix that
 turns going into coming. Hindi's *ānā* is that *ā-* welded onto *yā-*, the go-verb
 of the last lesson: "go, but this way." Bengali shows the same prefix on a
-different stem, and the honest position on that stem is that its history is
-unsettled; this book will not invent one for it.
+different stem, and that stem's history is not settled: CDIAL lists **আসা** under Sanskrit *āsadati*, "approaches" (CDIAL 1483), while Chatterji derived it from *āviśati*, "enters" (CDIAL 1437).
 
 ## Sounds you'll need: স
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

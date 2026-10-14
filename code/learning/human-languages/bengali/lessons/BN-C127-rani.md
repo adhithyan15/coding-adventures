@@ -14,7 +14,8 @@ romanization: "rāni"
 concept_tag: BN-THINGS127-RANI
 prerequisites: [BN-C126-nars, BN-C127-raja]
 sounds: []
-roots: []
+roots: [sanskrit-rajni]
+etymology_hook: "rāni ← Sanskrit rājñī 'queen'; CDIAL lists Assamese rāni and Oriya rāṇi, 'queen' (CDIAL 10692)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C127-raja]
 <!-- hl-knowledge: introduces=[BN-LEX-C127-THINGS127-02]; assesses=[] -->
 
 **রানি** — *rāni* — "a queen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রানি** (*rāni*) goes back to Sanskrit *rājñī*, "queen". CDIAL gives no Bengali form under that entry, but it lists Assamese *rāni* and Oriya *rāṇi*, "queen", the forms nearest to Bengali (CDIAL 10692).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

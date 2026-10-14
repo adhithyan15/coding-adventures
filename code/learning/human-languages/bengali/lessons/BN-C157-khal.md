@@ -14,7 +14,8 @@ romanization: "khāl"
 concept_tag: BN-JAYGA157-KHAL
 prerequisites: [BN-C157-phutpat, BN-C157-mor]
 sounds: []
-roots: []
+roots: [sanskrit-khalla]
+etymology_hook: "khāl ← *khāla 'trench, creek, canal', a reconstructed form; a tadbhava (CDIAL 3849)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C157-mor]
 <!-- hl-knowledge: introduces=[BN-LEX-C157-JAYGA157-04]; assesses=[] -->
 
 **খাল** — *khāl* — "a canal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খাল** (*khāl*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khāla*, "trench, creek, canal", a form CDIAL reconstructs from its descendants (CDIAL 3849). CDIAL lists Bengali *khāl*, "trench, canal", beside Sanskrit *khalla*, "canal".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

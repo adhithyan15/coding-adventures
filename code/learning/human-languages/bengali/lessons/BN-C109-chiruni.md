@@ -14,7 +14,8 @@ romanization: "chiruni"
 concept_tag: BN-THINGS109-CHIRUNI
 prerequisites: [BN-C108-lep, BN-C108-madur]
 sounds: []
-roots: []
+roots: [indo-aryan-cirayati]
+etymology_hook: "chiruni: looks like a noun from cirā 'to split' ← *cīrayati (CDIAL 4844); CDIAL does not list it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C108-madur]
 <!-- hl-knowledge: introduces=[BN-LEX-C109-THINGS109-01]; assesses=[] -->
 
 **চিরুনি** — *chiruni* — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চিরুনি** (*chiruni*) looks like a noun made from *cirā*, "to split", which CDIAL lists under *\*cīrayati*, "splits" (CDIAL 4844); CDIAL does not list **চিরুনি** (*chiruni*) itself, so the link is not confirmed. The inherited word for a comb, *kāṁkui*, comes from Sanskrit *kaṅkata* (CDIAL 2598).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

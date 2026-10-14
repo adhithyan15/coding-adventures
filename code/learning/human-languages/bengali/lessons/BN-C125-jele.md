@@ -14,7 +14,8 @@ romanization: "jele"
 concept_tag: BN-THINGS125-JELE
 prerequisites: [BN-C124-har2, BN-C125-chamra]
 sounds: []
-roots: []
+roots: [sanskrit-jalika]
+etymology_hook: "jele ← Sanskrit jālika 'bird-catcher', a tadbhava (CDIAL 5217)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C125-chamra]
 <!-- hl-knowledge: introduces=[BN-LEX-C125-THINGS125-02]; assesses=[] -->
 
 **জেলে** — *jele* — "a fisherman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জেলে** (*jele*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jālika*, "bird-catcher" (CDIAL 5217). CDIAL writes the Bengali form *jāle*, "fisherman"; it is built on *jāla*, "net".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

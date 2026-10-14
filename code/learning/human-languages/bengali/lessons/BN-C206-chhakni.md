@@ -15,6 +15,7 @@ concept_tag: BN-JINIS206-CHHAKNI
 prerequisites: [BN-C206-miksi, BN-C206-tre]
 sounds: []
 roots: []
+etymology_hook: "chhāṁkni: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C206-tre]
 <!-- hl-knowledge: introduces=[BN-LEX-C206-JINIS206-05]; assesses=[] -->
 
 **ছাঁকনি** — *chhā̃kni* — "a strainer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ছাঁকনি** (*chhāṁkni*) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "strain" and "sieve" finds only words of other shapes, such as Bengali *cālan*, "sieve" (CDIAL 4771).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

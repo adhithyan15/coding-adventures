@@ -14,7 +14,8 @@ romanization: "bhuru"
 concept_tag: BN-THINGS124-BHURU
 prerequisites: [BN-C124-gal, BN-C124-kopal]
 sounds: []
-roots: []
+roots: [sanskrit-bhru]
+etymology_hook: "bhuru ← Sanskrit bhrū 'eyebrow', a semi-tatsama; CDIAL lists the inherited form bhomā (CDIAL 9688)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C124-kopal]
 <!-- hl-knowledge: introduces=[BN-LEX-C124-THINGS124-04]; assesses=[] -->
 
 **ভুরু** — *bhuru* — "an eyebrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভুরু** (*bhuru*) is a semi-tatsama: Sanskrit *bhrū*, "eyebrow", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9688). The word inherited from it is *bhomā*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

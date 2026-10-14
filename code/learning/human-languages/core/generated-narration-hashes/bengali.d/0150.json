@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 150,
-  "sourceHash": "fnv1a64:810ccf94f69812ee",
+  "sourceHash": "fnv1a64:ed604853e34aa8d2",
   "lessonIds": [
     "BN-C150-sondeh-kora",
     "BN-C150-torko-kora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch150.txt",
   "json": "bengali/narration/ch150.json",
-  "textHash": "fnv1a64:07decf4989b647e2",
-  "jsonHash": "fnv1a64:3144b747b9282639",
+  "textHash": "fnv1a64:a879732762dca5e9",
+  "jsonHash": "fnv1a64:21cd7134c7f9ffc8",
   "findings": []
 }

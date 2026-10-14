@@ -14,7 +14,8 @@ romanization: "gôru"
 concept_tag: BN-ANIMALS69-GORU
 prerequisites: [BN-C68-kukur, BN-C68-biral]
 sounds: []
-roots: []
+roots: [sanskrit-gorupa]
+etymology_hook: "gôru ← Sanskrit gorūpa 'cow-shaped', a tadbhava (CDIAL 4313)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C68-biral]
 <!-- hl-knowledge: introduces=[BN-LEX-C69-ANIMALS69-01]; assesses=[] -->
 
 **গরু** — *gôru* — "a cow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গরু** (*gôru*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gorūpa*, "cow-shaped" (CDIAL 4313). It is *go*, "cow", + *rūpa*, "shape".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

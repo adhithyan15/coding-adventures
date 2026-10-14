@@ -14,7 +14,8 @@ romanization: "chāṭni"
 concept_tag: BN-JINIS196-CHATNI
 prerequisites: [BN-C196-chop, BN-C196-achar]
 sounds: []
-roots: []
+roots: [indo-aryan-catt]
+etymology_hook: "chāṭni: not in CDIAL; often tied to chāṭā 'to lick', under *caṭṭ (CDIAL 4573)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C196-achar]
 <!-- hl-knowledge: introduces=[BN-LEX-C196-JINIS196-05]; assesses=[] -->
 
 **চাটনি** — *chāṭni* — "chutney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চাটনি** (*chāṭni*) is not in CDIAL. It is often tied to the verb *chāṭā*, "to lick", which CDIAL lists under *\*caṭṭ*, "lick, taste", a form it reconstructs (CDIAL 4573), but that link is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

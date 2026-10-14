@@ -14,7 +14,8 @@ romanization: "chhāpā"
 concept_tag: BN-VERB-CHHAPA
 prerequisites: [BN-C180-pala, BN-C180-jol-deoya]
 sounds: []
-roots: []
+roots: [indo-aryan-chapp]
+etymology_hook: "chhāpā ← *chapp 'press, cover, hide', a reconstructed form; a tadbhava (CDIAL 4994)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C180-jol-deoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C180-ACT180-05]; assesses=[] -->
 
 **ছাপা** — *chhāpā* — "to print".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছাপা** (*chhāpā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*chapp*, "press, cover, hide", a form CDIAL reconstructs from its descendants (CDIAL 4994). CDIAL lists Bengali *chāpā*, "to be concealed, to print".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

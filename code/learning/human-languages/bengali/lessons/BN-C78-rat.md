@@ -14,7 +14,8 @@ romanization: "rāt"
 concept_tag: BN-TIME78-RAT
 prerequisites: [BN-C77-sundor, BN-C77-din]
 sounds: []
-roots: []
+roots: [sanskrit-ratri]
+etymology_hook: "rāt ← Sanskrit rātrī 'night', a tadbhava (CDIAL 10702)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C77-din]
 <!-- hl-knowledge: introduces=[BN-LEX-C78-TIME78-01]; assesses=[] -->
 
 **রাত** — *rāt* — "night".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রাত** (*rāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rātrī*, "night" (CDIAL 10702).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

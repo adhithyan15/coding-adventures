@@ -14,7 +14,8 @@ romanization: "bālti"
 concept_tag: BN-THINGS107-BALTI
 prerequisites: [BN-C107-korai, BN-C107-kolsi]
 sounds: []
-roots: []
+roots: [portuguese-balde]
+etymology_hook: "bālti ← Portuguese balde 'bucket'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C107-kolsi]
 <!-- hl-knowledge: introduces=[BN-LEX-C107-THINGS107-05]; assesses=[] -->
 
 **বালতি** — *bālti* — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বালতি** (*bālti*) is a loan from Portuguese *balde*, "bucket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

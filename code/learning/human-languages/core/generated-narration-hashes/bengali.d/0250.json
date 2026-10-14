@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 250,
-  "sourceHash": "fnv1a64:6f8ff6a5249fada1",
+  "sourceHash": "fnv1a64:47196147c2f45226",
   "lessonIds": [
     "BN-C250-kumir",
     "BN-C250-jiraph",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch250.txt",
   "json": "bengali/narration/ch250.json",
-  "textHash": "fnv1a64:1bbf9d73e85cdfac",
-  "jsonHash": "fnv1a64:98fee7d0afdddc83",
+  "textHash": "fnv1a64:f60cdd9338a54ff6",
+  "jsonHash": "fnv1a64:d31a92ff2f435fd6",
   "findings": []
 }

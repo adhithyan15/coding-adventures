@@ -14,7 +14,8 @@ romanization: "joyār"
 concept_tag: BN-JINIS171-JOYAR
 prerequisites: [BN-C171-bot, BN-C171-dhan]
 sounds: []
-roots: []
+roots: [indo-aryan-javacara]
+etymology_hook: "joyār ← *javacāra 'flood-tide', a reconstructed form; a tadbhava (CDIAL 5167)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C171-dhan]
 <!-- hl-knowledge: introduces=[BN-LEX-C171-JINIS171-05]; assesses=[] -->
 
 **জোয়ার** — *joyār* — "high tide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জোয়ার** (*joyār*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*javacāra*, "flood-tide", a form CDIAL reconstructs from its descendants (CDIAL 5167).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

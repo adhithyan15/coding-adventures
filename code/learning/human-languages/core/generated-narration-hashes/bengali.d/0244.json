@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 244,
-  "sourceHash": "fnv1a64:6faacbb80ead3439",
+  "sourceHash": "fnv1a64:248fd970102346dd",
   "lessonIds": [
     "BN-C244-simanto",
     "BN-C244-sorkar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch244.txt",
   "json": "bengali/narration/ch244.json",
-  "textHash": "fnv1a64:597a2e752d036cd1",
-  "jsonHash": "fnv1a64:157750007640d9ea",
+  "textHash": "fnv1a64:1e20794afd3e8eb6",
+  "jsonHash": "fnv1a64:841b58e868b808b4",
   "findings": []
 }

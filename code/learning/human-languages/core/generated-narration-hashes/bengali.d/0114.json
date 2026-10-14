@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 114,
-  "sourceHash": "fnv1a64:f508b2752eb5d523",
+  "sourceHash": "fnv1a64:3adfeeab4182bc43",
   "lessonIds": [
     "BN-C114-kuyasha",
     "BN-C114-shishir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch114.txt",
   "json": "bengali/narration/ch114.json",
-  "textHash": "fnv1a64:5eef00e6d6d560f3",
-  "jsonHash": "fnv1a64:9b07f5a743f3f075",
+  "textHash": "fnv1a64:c995a07c915e9dfc",
+  "jsonHash": "fnv1a64:87fb13f1f9e3cad2",
   "findings": []
 }

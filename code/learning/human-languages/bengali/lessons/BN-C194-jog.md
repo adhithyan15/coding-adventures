@@ -14,7 +14,8 @@ romanization: "jôg"
 concept_tag: BN-JINIS194-JOG
 prerequisites: [BN-C194-brash, BN-C194-istri]
 sounds: []
-roots: []
+roots: [english-jug]
+etymology_hook: "jôg ← English jug"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C194-istri]
 <!-- hl-knowledge: introduces=[BN-LEX-C194-JINIS194-03]; assesses=[] -->
 
 **জগ** — *jôg* — "a jug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জগ** (*jôg*) is a loan from English *jug*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

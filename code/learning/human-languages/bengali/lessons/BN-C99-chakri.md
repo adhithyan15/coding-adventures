@@ -14,7 +14,8 @@ romanization: "chākri"
 concept_tag: BN-CAN99-CHAKRI
 prerequisites: [BN-C99-sompotti, BN-C99-ay]
 sounds: []
-roots: []
+roots: [persian-chakar]
+etymology_hook: "chākri: chākôr 'servant' + -i; chākar is usually traced to Persian chākar 'servant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C99-ay]
 <!-- hl-knowledge: introduces=[BN-LEX-C99-CAN99-03]; assesses=[] -->
 
 **চাকরি** — *chākri* — "a job".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চাকরি** (*chākri*) is *chākôr*, "servant", with the ending *-i*: "service". *Chākôr* is usually traced to Persian *chākar*, "servant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

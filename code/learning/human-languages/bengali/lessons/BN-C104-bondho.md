@@ -14,7 +14,8 @@ romanization: "bôndhô"
 concept_tag: BN-ACT104-BONDHO
 prerequisites: [BN-C104-darano, BN-C104-shoya]
 sounds: []
-roots: []
+roots: [sanskrit-bandha, persian-band]
+etymology_hook: "bôndhô matches Sanskrit bandha 'bond' (CDIAL 9136) and Persian band 'shut, bound'; the two may have merged"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C104-shoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C104-ACT104-04]; assesses=[] -->
 
 **বন্ধ** — *bôndhô* — "closed, shut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বন্ধ** (*bôndhô*) is spelled as Sanskrit *bandha*, "bond, binding", whose inherited form CDIAL gives as *bāṁdh* (CDIAL 9136); in the sense "closed" it also matches Persian *band*, "shut, bound", and the two may have run together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

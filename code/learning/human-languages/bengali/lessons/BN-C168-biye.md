@@ -14,7 +14,8 @@ romanization: "biye"
 concept_tag: BN-JINIS168-BIYE
 prerequisites: [BN-C168-bor, BN-C168-kone]
 sounds: []
-roots: []
+roots: [sanskrit-vivaha]
+etymology_hook: "biye ← Sanskrit vivāha 'marriage', a tadbhava (CDIAL 11920)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C168-kone]
 <!-- hl-knowledge: introduces=[BN-LEX-C168-JINIS168-04]; assesses=[] -->
 
 **বিয়ে** — *biye* — "a wedding".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিয়ে** (*biye*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vivāha*, "marriage" (CDIAL 11920). CDIAL lists Bengali *biyā*, "marriage".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

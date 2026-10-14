@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 51,
-  "sourceHash": "fnv1a64:d8e1f8f29668c0ef",
+  "sourceHash": "fnv1a64:a24b33eb45ac3f19",
   "lessonIds": [
     "BN-C51-shekha",
     "BN-C51-bhola",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch51.txt",
   "json": "bengali/narration/ch51.json",
-  "textHash": "fnv1a64:aef40285d32eaf6f",
-  "jsonHash": "fnv1a64:35ad30ff0b621874",
+  "textHash": "fnv1a64:a8e5efe64d143b24",
+  "jsonHash": "fnv1a64:295dc448fa719a59",
   "findings": []
 }

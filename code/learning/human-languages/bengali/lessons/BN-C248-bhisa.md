@@ -14,7 +14,8 @@ romanization: "bhisā"
 concept_tag: BN-JINIS248-BHISA
 prerequisites: [BN-C248-charjar, BN-C248-pasport]
 sounds: []
-roots: []
+roots: [english-visa]
+etymology_hook: "bhisā ← English visa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C248-pasport]
 <!-- hl-knowledge: introduces=[BN-LEX-C248-JINIS248-03]; assesses=[] -->
 
 **ভিসা** — *bhisā* — "a visa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভিসা** (*bhisā*) is a loan from English *visa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jhāṛôn"
 concept_tag: BN-JINIS175-JHARON
 prerequisites: [BN-C174-brek, BN-C175-durgondho]
 sounds: []
-roots: []
+roots: [indo-aryan-jhatati]
+etymology_hook: "jhāṛôn: on jhāṛā 'to shake off', listed under *jhāṭayati 'shakes down' (CDIAL 5328), + -ôn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C175-durgondho]
 <!-- hl-knowledge: introduces=[BN-LEX-C175-JINIS175-02]; assesses=[] -->
 
 **ঝাড়ন** — *jhāṛôn* — "a duster".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ঝাড়ন** (*jhāṛôn*) is built on the verb *jhāṛā*, "to shake off", which CDIAL lists under *\*jhāṭayati*, "shakes down", a form it reconstructs (CDIAL 5328), + *-ôn*, an ending for a tool: "a thing for shaking off dust".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

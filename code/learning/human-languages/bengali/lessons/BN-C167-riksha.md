@@ -14,7 +14,8 @@ romanization: "rikshā"
 concept_tag: BN-JINIS167-RIKSHA
 prerequisites: [BN-C167-jatri, BN-C167-tksi]
 sounds: []
-roots: []
+roots: [english-rickshaw]
+etymology_hook: "rikshā ← English rickshaw"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C167-tksi]
 <!-- hl-knowledge: introduces=[BN-LEX-C167-JINIS167-03]; assesses=[] -->
 
 **রিকশা** — *rikshā* — "a rickshaw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রিকশা** (*rikshā*) is a loan from English *rickshaw*. English took it from Japanese *jinrikisha*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

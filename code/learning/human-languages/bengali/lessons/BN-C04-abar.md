@@ -12,6 +12,7 @@ concept_tag: BN-WORD-ABAR
 prerequisites: [BN-C03-ami, BN-C03-kemon]
 sounds: [independent-aa, long-aa]
 roots: [abar-again]
+etymology_hook: "ābār: origin not settled; CDIAL has no entry for it, though bār 'turn, time' ← vāra (CDIAL 11547)"
 duration:
   max_seconds: 180
 requires:
@@ -48,6 +49,8 @@ time**."
 English cognate, but a familiar *job*: it turns a parting into a promise. Chapter
 1 gave you **আসি** (*āshi*, "I'll come [again]") as goodbye; add *ābār* and you
 can say outright "we'll meet **again**."
+
+Its origin is not settled: CDIAL has no entry for *ābār*. Its second half looks like *bār*, "turn, time", from Sanskrit *vāra* (CDIAL 11547), but CDIAL does not take the word apart.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C04-ABAR-01, BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C03-KEMON-01] -->

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for envy, then the Bengali for respect.
 You'll want to know: আতা.
 আতা — ātā — "a custard apple".
 
+The word, taken apart.
+The origin of আতা (ātā) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "custard apple" finds nothing close.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for respect, then the Bengali for a custard 
 
 You'll want to know: বেদানা.
 বেদানা — bedānā — "a pomegranate".
+
+The word, taken apart.
+বেদানা (bedānā) is usually traced to Persian bēdāna, "seedless", a name given to a fine kind of pomegranate.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a custard apple, then the Bengali for a 
 You'll want to know: পেয়ারা.
 পেয়ারা — peyārā — "a guava".
 
+The word, taken apart.
+পেয়ারা (peyārā) is usually traced to Portuguese pera, "pear".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a pomegranate, then the Bengali for a gu
 You'll want to know: খেজুর.
 খেজুর — khejur — "a date (fruit)".
 
+The word, taken apart.
+খেজুর (khejur) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kharjūra, "the date-palm" (CDIAL 3828). CDIAL lists Bengali khejur and khājur for the tree and its fruit.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a guava, then the Bengali for a date.
 
 You'll want to know: বাদাম.
 বাদাম — bādām — "a nut".
+
+The word, taken apart.
+বাদাম (bādām) is a loan, usually traced to Persian bādām, "almond".
 
 What you've built.
 One more word for this chapter.

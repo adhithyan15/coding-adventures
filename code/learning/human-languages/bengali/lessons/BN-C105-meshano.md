@@ -14,7 +14,8 @@ romanization: "meshāno"
 concept_tag: BN-VERB-MESHANO
 prerequisites: [BN-C105-sajano, BN-C105-bhaja]
 sounds: []
-roots: []
+roots: [sanskrit-mishrayati]
+etymology_hook: "meshāno ← Sanskrit miśrayati 'mixes', a tadbhava (CDIAL 10137)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C105-bhaja]
 <!-- hl-knowledge: introduces=[BN-LEX-C105-ACT105-05]; assesses=[] -->
 
 **মেশানো** — *meshāno* — "to mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মেশানো** (*meshāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *miśrayati*, "mixes" (CDIAL 10137). CDIAL writes the Bengali verb *misāna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

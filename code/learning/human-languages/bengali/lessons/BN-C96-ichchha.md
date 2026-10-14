@@ -14,7 +14,8 @@ romanization: "ichchhā"
 concept_tag: BN-WANT96-ICHCHHA
 prerequisites: [BN-C95-dupurbela, BN-C95-sokalbela]
 sounds: []
-roots: []
+roots: [sanskrit-iccha]
+etymology_hook: "ichchhā ← Sanskrit icchā 'wish', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C95-sokalbela]
 <!-- hl-knowledge: introduces=[BN-LEX-C96-WANT96-01]; assesses=[] -->
 
 **ইচ্ছা** — *ichchhā* — "a wish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ইচ্ছা** (*ichchhā*) is Sanskrit *icchā*, "wish", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

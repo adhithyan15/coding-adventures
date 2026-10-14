@@ -14,7 +14,8 @@ romanization: "chhoṭo"
 concept_tag: BN-ADJ72-CHHOTO
 prerequisites: [BN-C71-murgi, BN-C72-boro]
 sounds: []
-roots: []
+roots: [indo-aryan-chotta]
+etymology_hook: "chhoṭo ← *choṭṭa 'small', a reconstructed form; a tadbhava (CDIAL 5071)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C72-boro]
 <!-- hl-knowledge: introduces=[BN-LEX-C72-ADJ72-02]; assesses=[] -->
 
 **ছোট** — *chhoṭo* — "small".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছোট** (*chhoṭo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*choṭṭa*, "small", a form CDIAL reconstructs from its descendants (CDIAL 5071).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

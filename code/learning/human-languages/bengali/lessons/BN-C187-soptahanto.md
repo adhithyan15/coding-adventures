@@ -14,7 +14,8 @@ romanization: "sôptāhāntô"
 concept_tag: BN-SOMOY187-SOPTAHANTO
 prerequisites: [BN-C187-jug, BN-C187-doshok]
 sounds: []
-roots: []
+roots: [sanskrit-saptaha, sanskrit-anta]
+etymology_hook: "sôptāhāntô: Sanskrit saptāha 'week' + anta 'end', a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C187-doshok]
 <!-- hl-knowledge: introduces=[BN-LEX-C187-SOMOY187-05]; assesses=[] -->
 
 **সপ্তাহান্ত** — *sôptāhāntô* — "a weekend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সপ্তাহান্ত** (*sôptāhāntô*) is built from Sanskrit *saptāha*, "a week", and *anta*, "end", a modern compound of Sanskrit parts.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

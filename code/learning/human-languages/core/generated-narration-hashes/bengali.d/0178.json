@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 178,
-  "sourceHash": "fnv1a64:14d853d3cfc7fb21",
+  "sourceHash": "fnv1a64:8d91455fd86e1b21",
   "lessonIds": [
     "BN-C178-dater-daktar",
     "BN-C178-domkol",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch178.txt",
   "json": "bengali/narration/ch178.json",
-  "textHash": "fnv1a64:adec36dfc9611a80",
-  "jsonHash": "fnv1a64:2aa5ce7885fe282d",
+  "textHash": "fnv1a64:5fb3d4a49723cde9",
+  "jsonHash": "fnv1a64:e239d1931c531a64",
   "findings": []
 }

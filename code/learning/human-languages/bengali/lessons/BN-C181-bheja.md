@@ -14,7 +14,8 @@ romanization: "bhejā"
 concept_tag: BN-VERB-BHEJA
 prerequisites: [BN-C181-nihshvas-neoya, BN-C181-kapa]
 sounds: []
-roots: []
+roots: [indo-aryan-bhiyajyate]
+etymology_hook: "bhejā ← *bhiyajyate 'is smeared, gets wet', a reconstructed form; a tadbhava (CDIAL 9502)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C181-kapa]
 <!-- hl-knowledge: introduces=[BN-LEX-C181-ACT181-03]; assesses=[] -->
 
 **ভেজা** — *bhejā* — "to get wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভেজা** (*bhejā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhiyajyate*, "is smeared, gets wet", a form CDIAL reconstructs from its descendants (CDIAL 9502). CDIAL writes the Bengali verb *bhijā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

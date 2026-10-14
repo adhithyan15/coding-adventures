@@ -14,7 +14,8 @@ romanization: "jug"
 concept_tag: BN-SOMOY187-JUG
 prerequisites: [BN-C187-somoymoto, BN-C187-shotabdi]
 sounds: []
-roots: []
+roots: [sanskrit-yuga]
+etymology_hook: "jug ← Sanskrit yuga 'yoke; age', a tatsama (CDIAL 10482)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C187-shotabdi]
 <!-- hl-knowledge: introduces=[BN-LEX-C187-SOMOY187-03]; assesses=[] -->
 
 **যুগ** — *jug* — "an era, an age".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**যুগ** (*jug*) is Sanskrit *yuga*, "yoke; age", taken over whole as a learned loan, a tatsama (CDIAL 10482). The word inherited from it is *jū*, "yoke", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

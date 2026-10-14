@@ -12,6 +12,9 @@ Before the new one: say the Bengali for sturdy, then the Bengali for weak.
 You'll want to know: শক্তিশালী.
 শক্তিশালী — shôktishāli — "powerful".
 
+The word, taken apart.
+শক্তিশালী (shôktishāli) is shôkti, "power", Sanskrit śakti, + -shāli, "possessing", Sanskrit -śālin: both parts are taken over whole from Sanskrit.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for weak, then the Bengali for powerful.
 
 You'll want to know: সুস্বাদু.
 সুস্বাদু — susbādu — "tasty".
+
+The word, taken apart.
+সুস্বাদু (susbādu) is Sanskrit susvādu, "very tasty", taken over whole as a learned loan, a tatsama. It is su, "well", + svādu, "sweet, tasty".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for powerful, then the Bengali for tasty.
 You'll want to know: বড়সড়.
 বড়সড় — bôṛôsôṛô — "fairly big".
 
+The word, taken apart.
+বড়সড় (bôṛôsôṛô) is bôṛo, "big", from Sanskrit vaḍra (CDIAL 11225), followed by sôṛô, an echo of it with no meaning of its own, which softens it to "fairly big".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for tasty, then the Bengali for fairly big.
 You'll want to know: ছোটখাটো.
 ছোটখাটো — chhoṭôkhāṭo — "small, minor".
 
+The word, taken apart.
+ছোটখাটো (chhoṭôkhāṭo) is chhoṭo, "small", from chōṭṭa, a form CDIAL reconstructs (CDIAL 5071), followed by khāṭo, an echo of it with no meaning of its own.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for fairly big, then the Bengali for small.
 
 You'll want to know: হাসিখুশি.
 হাসিখুশি — hāsikhushi — "cheerful".
+
+The word, taken apart.
+হাসিখুশি (hāsikhushi) is hāsi, "laughter", from Sanskrit hāsya (CDIAL 14071), + khushi, "happiness", usually traced to Persian khushī.
 
 What you've built.
 One more word for this chapter.

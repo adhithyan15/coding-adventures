@@ -14,7 +14,8 @@ romanization: "kāshi"
 concept_tag: BN-SVASTHYO154-KASHI
 prerequisites: [BN-C154-rog, BN-C154-sordi]
 sounds: []
-roots: []
+roots: [sanskrit-kasika]
+etymology_hook: "kāshi ← Sanskrit kāsikā 'cough', a tadbhava (CDIAL 3138)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C154-sordi]
 <!-- hl-knowledge: introduces=[BN-LEX-C154-SVASTHYO154-03]; assesses=[] -->
 
 **কাশি** — *kāshi* — "a cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাশি** (*kāshi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kāsikā*, "cough" (CDIAL 3138). CDIAL lists Bengali *kāsi*, "cough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

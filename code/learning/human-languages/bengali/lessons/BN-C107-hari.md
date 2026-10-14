@@ -14,7 +14,8 @@ romanization: "hā̃ṛi"
 concept_tag: BN-THINGS107-HARI
 prerequisites: [BN-C106-chalano, BN-C107-bati]
 sounds: []
-roots: []
+roots: [sanskrit-handa-pot]
+etymology_hook: "hāṁṛi ← *hāṇḍa 'pot', a reconstructed form; a tadbhava (CDIAL 14050)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C107-bati]
 <!-- hl-knowledge: introduces=[BN-LEX-C107-THINGS107-02]; assesses=[] -->
 
 **হাঁড়ি** — *hā̃ṛi* — "a cooking pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাঁড়ি** (*hāṁṛi*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*hāṇḍa*, "pot", a form CDIAL reconstructs from its descendants (CDIAL 14050). Late Sanskrit has *haṇḍikā*, "earthen pot"; CDIAL calls any link with *bhāṇḍa*, "pot", unclear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 102,
-  "sourceHash": "fnv1a64:8e446a8ca162f53a",
+  "sourceHash": "fnv1a64:e790d8b5f721610f",
   "lessonIds": [
     "BN-C102-bona",
     "BN-C102-lagano",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch102.txt",
   "json": "bengali/narration/ch102.json",
-  "textHash": "fnv1a64:15a7fbf32cfa5f37",
-  "jsonHash": "fnv1a64:44a9053a102f3c2d",
+  "textHash": "fnv1a64:bed8f60d19d3be70",
+  "jsonHash": "fnv1a64:cc44361b8b008037",
   "findings": []
 }

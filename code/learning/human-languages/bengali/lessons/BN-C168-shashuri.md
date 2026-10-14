@@ -14,7 +14,8 @@ romanization: "shāshuṛi"
 concept_tag: BN-JINIS168-SHASHURI
 prerequisites: [BN-C167-motorsaikel, BN-C167-trak]
 sounds: []
-roots: []
+roots: [sanskrit-shvashru]
+etymology_hook: "shāshuṛi ← Sanskrit śvaśrū 'husband's or wife's mother', a tadbhava (CDIAL 12759)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C167-trak]
 <!-- hl-knowledge: introduces=[BN-LEX-C168-JINIS168-01]; assesses=[] -->
 
 **শাশুড়ি** — *shāshuṛi* — "a mother-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শাশুড়ি** (*shāshuṛi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śvaśrū*, "husband's or wife's mother" (CDIAL 12759). CDIAL lists Bengali *sāsuṛi* and the shorter *sās*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

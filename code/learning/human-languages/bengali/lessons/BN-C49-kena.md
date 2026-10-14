@@ -14,7 +14,8 @@ romanization: "kenā"
 concept_tag: BN-VERB-KENA
 prerequisites: [BN-C48-hata, BN-C49-khla]
 sounds: []
-roots: []
+roots: [sanskrit-krinati]
+etymology_hook: "kenā ← Sanskrit krīṇāti 'buys', a tadbhava (CDIAL 3594)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C49-khla]
 <!-- hl-knowledge: introduces=[BN-LEX-C49-VERBS49-02]; assesses=[] -->
 
 **কেনা** — *kenā* — "to buy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কেনা** (*kenā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *krīṇāti*, "buys" (CDIAL 3594). CDIAL writes the Bengali verb *kinā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

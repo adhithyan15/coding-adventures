@@ -14,7 +14,8 @@ romanization: "pôrā"
 concept_tag: BN-VERB-PORA
 prerequisites: [BN-C52-khoja, BN-C52-harano]
 sounds: []
-roots: []
+roots: [sanskrit-paridadhati]
+etymology_hook: "pôrā ← Sanskrit paridadhāti 'sets round, puts on clothes', a tadbhava (CDIAL 7835)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C52-harano]
 <!-- hl-knowledge: introduces=[BN-LEX-C53-VERBS53-01]; assesses=[] -->
 
 **পরা** — *pôrā* — "to wear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পরা** (*pôrā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *paridadhāti*, "sets round, puts on clothes" (CDIAL 7835). CDIAL notes that Chatterji preferred the passive *paridhīyate*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

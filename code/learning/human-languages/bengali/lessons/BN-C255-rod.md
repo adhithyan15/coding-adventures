@@ -14,7 +14,8 @@ romanization: "rod"
 concept_tag: BN-JINIS255-ROD
 prerequisites: [BN-C254-nirapotta, BN-C254-aoyaj]
 sounds: []
-roots: []
+roots: [sanskrit-raudra]
+etymology_hook: "rod ← Sanskrit raudra 'terrible; heat, sunshine', a tadbhava (CDIAL 10872)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C254-aoyaj]
 <!-- hl-knowledge: introduces=[BN-LEX-C255-JINIS255-01]; assesses=[] -->
 
 **রোদ** — *rod* — "sunshine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রোদ** (*rod*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *raudra*, "terrible; heat, sunshine" (CDIAL 10872). CDIAL lists Bengali *rod*, "sunshine".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

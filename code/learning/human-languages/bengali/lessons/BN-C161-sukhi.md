@@ -14,7 +14,8 @@ romanization: "sukhī"
 concept_tag: BN-GUN161-SUKHI
 prerequisites: [BN-C161-komol, BN-C161-kora]
 sounds: []
-roots: []
+roots: [sanskrit-sukhin]
+etymology_hook: "sukhī ← Sanskrit sukhin 'happy', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C161-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C161-GUN161-04]; assesses=[] -->
 
 **সুখী** — *sukhī* — "contented, happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সুখী** (*sukhī*) is Sanskrit *sukhin*, "happy", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

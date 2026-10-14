@@ -14,7 +14,8 @@ romanization: "bāṛāno"
 concept_tag: BN-VERB-BARANO
 prerequisites: [BN-C237-berano, BN-C238-mora]
 sounds: []
-roots: []
+roots: [sanskrit-vardhate]
+etymology_hook: "bāṛāno ← Sanskrit vardhate 'grows, increases', a tadbhava (CDIAL 11376)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C238-mora]
 <!-- hl-knowledge: introduces=[BN-LEX-C238-ACT238-02]; assesses=[] -->
 
 **বাড়ানো** — *bāṛāno* — "to increase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাড়ানো** (*bāṛāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vardhate*, "grows, increases" (CDIAL 11376). CDIAL lists Bengali *bāṛā*, "to increase"; *bāṛāno* is its causing form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

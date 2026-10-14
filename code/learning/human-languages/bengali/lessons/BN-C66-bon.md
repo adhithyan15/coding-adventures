@@ -14,7 +14,8 @@ romanization: "bôn"
 concept_tag: BN-NATURE66-BON
 prerequisites: [BN-C65-pata, BN-C66-pahar]
 sounds: []
-roots: []
+roots: [sanskrit-vana]
+etymology_hook: "bôn ← Sanskrit vana 'forest', inherited (CDIAL 11258)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C66-pahar]
 <!-- hl-knowledge: introduces=[BN-LEX-C66-NATURE66-02]; assesses=[] -->
 
 **বন** — *bôn* — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বন** (*bôn*) is inherited from Sanskrit *vana*, "forest", and has come down with almost no change (CDIAL 11258).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

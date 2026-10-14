@@ -14,7 +14,8 @@ romanization: "shilnoṛā"
 concept_tag: BN-JINIS175-SHILNORA
 prerequisites: [BN-C175-jharon, BN-C175-boti]
 sounds: []
-roots: []
+roots: [sanskrit-shila-stone, sanskrit-lotha]
+etymology_hook: "shilnoṛā: sil 'grinding slab' ← śilā (CDIAL 12459) + noṛā 'rolling-pin' (CDIAL 11134)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C175-boti]
 <!-- hl-knowledge: introduces=[BN-LEX-C175-JINIS175-04]; assesses=[] -->
 
 **শিলনোড়া** — *shilnoṛā* — "a grinding stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শিলনোড়া** (*shilnoṛā*) is *shil*, "flat stone for grinding on", from Sanskrit *śilā*, "rock" (CDIAL 12459), + *noṛā*, "rolling-pin", which CDIAL lists under Sanskrit *lōṭha*, "rolling" (CDIAL 11134).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

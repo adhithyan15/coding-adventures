@@ -12,7 +12,7 @@ concept_tag: BN-GRAM-PLURAL-RA
 prerequisites: [BN-C22-animacy, BN-C11-bhai, BN-C11-bon, BN-C11-bondhu]
 sounds: []
 roots: []
-etymology_hook: "Bengali does not mark plural the way English does, on every noun without asking. It marks it only when it matters and only in the way the noun's own group allows — which is why this ending and the next one are two endings and not one."
+etymology_hook: "-rā: origin not settled; CDIAL, a dictionary of words, has no entry for the plural ending"
 duration:
   max_seconds: 230
 requires:
@@ -56,6 +56,11 @@ When the noun ends in a consonant, an **এ** appears to carry the ending:
 > **বোন** — *bôn* — sister.
 
 > **বোনেরা** — *bônerā* — **sisters.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **রা** comes from is not settled: CDIAL, a dictionary of words rather than endings, has no entry for it.
 
 ## Grammar Lens: Bengali does not insist
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C22-PLURAL-RA-01, BN-GRAMMAR-C22-ANIMACY-01, BN-LEX-C11-PORIBAR-01] -->

@@ -14,7 +14,8 @@ romanization: "āṭ"
 concept_tag: BN-CLOTHES86-AT
 prerequisites: [BN-C86-chhoy, BN-C86-sat]
 sounds: []
-roots: []
+roots: [sanskrit-ashta]
+etymology_hook: "āṭ ← Sanskrit aṣṭā 'eight', a tadbhava (CDIAL 941)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C86-sat]
 <!-- hl-knowledge: introduces=[BN-LEX-C86-CLOTHES86-04]; assesses=[] -->
 
 **আট** — *āṭ* — "eight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আট** (*āṭ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṣṭā*, "eight" (CDIAL 941).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

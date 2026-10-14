@@ -14,7 +14,8 @@ romanization: "peshi"
 concept_tag: BN-SVASTHYO186-PESHI
 prerequisites: [BN-C186-talu, BN-C186-mogoj]
 sounds: []
-roots: []
+roots: [sanskrit-peshi]
+etymology_hook: "peshi ← Sanskrit peśī 'muscle', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C186-mogoj]
 <!-- hl-knowledge: introduces=[BN-LEX-C186-SVASTHYO186-05]; assesses=[] -->
 
 **পেশি** — *peshi* — "a muscle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পেশি** (*peshi*) is Sanskrit *peśī*, "muscle", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

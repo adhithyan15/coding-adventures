@@ -14,7 +14,8 @@ romanization: "dā̃t"
 concept_tag: BN-BODY42-DAT
 prerequisites: [BN-C42-hat, BN-C42-chul]
 sounds: []
-roots: []
+roots: [danta-sanskrit]
+etymology_hook: "dāṁt ← Sanskrit danta 'tooth', a tadbhava (CDIAL 6152)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C42-chul]
 <!-- hl-knowledge: introduces=[BN-LEX-C42-BODY42-03]; assesses=[] -->
 
 **দাঁত** — *dā̃t* — "a tooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দাঁত** (*dāṁt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *danta*, "tooth" (CDIAL 6152).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

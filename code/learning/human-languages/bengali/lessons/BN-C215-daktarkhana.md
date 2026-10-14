@@ -14,7 +14,8 @@ romanization: "ḍāktārkhānā"
 concept_tag: BN-SVASTHYO215-DAKTARKHANA
 prerequisites: [BN-C214-narano, BN-C215-molom]
 sounds: []
-roots: []
+roots: [english-doctor, persian-khana]
+etymology_hook: "ḍāktārkhānā: ḍāktār ← English doctor + khānā 'house', usually traced to Persian khāna"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C215-molom]
 <!-- hl-knowledge: introduces=[BN-LEX-C215-SVASTHYO215-02]; assesses=[] -->
 
 **ডাক্তারখানা** — *ḍāktārkhānā* — "a doctor's surgery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ডাক্তারখানা** (*ḍāktārkhānā*) is *ḍāktār*, from English *doctor*, + *khānā*, "house", usually traced to Persian *khāna*, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

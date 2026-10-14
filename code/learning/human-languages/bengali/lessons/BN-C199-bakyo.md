@@ -14,7 +14,8 @@ romanization: "bākyô"
 concept_tag: BN-JINIS199-BAKYO
 prerequisites: [BN-C199-nagorik, BN-C199-porjotok]
 sounds: []
-roots: []
+roots: [sanskrit-vakya]
+etymology_hook: "bākyô ← Sanskrit vākya 'speech, words', a tatsama (CDIAL 11468)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C199-porjotok]
 <!-- hl-knowledge: introduces=[BN-LEX-C199-JINIS199-03]; assesses=[] -->
 
 **বাক্য** — *bākyô* — "a sentence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাক্য** (*bākyô*) is Sanskrit *vākya*, "speech, words", taken over whole as a learned loan, a tatsama (CDIAL 11468).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

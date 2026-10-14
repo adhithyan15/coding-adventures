@@ -14,7 +14,8 @@ romanization: "bheṛā"
 concept_tag: BN-ANIMALS69-BHERA
 prerequisites: [BN-C69-goru, BN-C69-chhagol]
 sounds: []
-roots: []
+roots: [sanskrit-bhedra]
+etymology_hook: "bheṛā ← Sanskrit bhēḍra 'ram', which CDIAL takes from Austroasiatic (CDIAL 9606)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C69-chhagol]
 <!-- hl-knowledge: introduces=[BN-LEX-C69-ANIMALS69-03]; assesses=[] -->
 
 **ভেড়া** — *bheṛā* — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভেড়া** (*bheṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bheḍra*, "ram" (CDIAL 9606). CDIAL takes it, following Przyluski, from Austroasiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

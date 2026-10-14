@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 154,
-  "sourceHash": "fnv1a64:293281850af09086",
+  "sourceHash": "fnv1a64:9ad29ae44a8eae90",
   "lessonIds": [
     "BN-C154-rog",
     "BN-C154-sordi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch154.txt",
   "json": "bengali/narration/ch154.json",
-  "textHash": "fnv1a64:96a949caf8e53f59",
-  "jsonHash": "fnv1a64:528b88abe5eae19c",
+  "textHash": "fnv1a64:28b7b9b2a1c20380",
+  "jsonHash": "fnv1a64:a3dd35abecd46136",
   "findings": []
 }

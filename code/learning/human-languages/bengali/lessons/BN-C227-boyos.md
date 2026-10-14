@@ -14,7 +14,8 @@ romanization: "bôyôs"
 concept_tag: BN-JINIS227-BOYOS
 prerequisites: [BN-C226-lokjon, BN-C227-podobi]
 sounds: []
-roots: []
+roots: [sanskrit-vayas-vigor-age]
+etymology_hook: "bôyôs ← Sanskrit vayas 'vigour, age', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C227-podobi]
 <!-- hl-knowledge: introduces=[BN-LEX-C227-JINIS227-02]; assesses=[] -->
 
 **বয়স** — *bôyôs* — "an age".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বয়স** (*bôyôs*) is Sanskrit *vayas*, "vigour, age", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

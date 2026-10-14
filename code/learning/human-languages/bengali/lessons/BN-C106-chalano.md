@@ -14,7 +14,8 @@ romanization: "chālāno"
 concept_tag: BN-VERB-CHALANO
 prerequisites: [BN-C106-aka, BN-C106-phera]
 sounds: []
-roots: []
+roots: [indo-aryan-calyati]
+etymology_hook: "chālāno ← *calyati 'goes', a reconstructed form; a tadbhava (CDIAL 4721)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C106-phera]
 <!-- hl-knowledge: introduces=[BN-LEX-C106-ACT106-05]; assesses=[] -->
 
 **চালানো** — *chālāno* — "to drive, to run (a machine)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চালানো** (*chālāno*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*calyati*, "goes", a form CDIAL reconstructs from its descendants (CDIAL 4721). *Chālāno* is the causing form of a verb CDIAL lists as Bengali *cālā*, "to be moved".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gærej"
 concept_tag: BN-JAYGA216-GREJ
 prerequisites: [BN-C215-nari, BN-C215-nihshvas]
 sounds: []
-roots: []
+roots: [english-garage]
+etymology_hook: "gærej ← English garage"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C215-nihshvas]
 <!-- hl-knowledge: introduces=[BN-LEX-C216-JAYGA216-01]; assesses=[] -->
 
 **গ্যারেজ** — *gærej* — "a garage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গ্যারেজ** (*gærej*) is a loan from English *garage*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

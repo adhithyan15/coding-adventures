@@ -14,7 +14,8 @@ romanization: "sujog"
 concept_tag: BN-CAN98-SUJOG
 prerequisites: [BN-C98-para, BN-C98-shokti]
 sounds: []
-roots: []
+roots: [sanskrit-suyoga]
+etymology_hook: "sujog ← Sanskrit suyoga 'a good juncture', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C98-shokti]
 <!-- hl-knowledge: introduces=[BN-LEX-C98-CAN98-03]; assesses=[] -->
 
 **সুযোগ** — *sujog* — "a chance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সুযোগ** (*sujog*) is Sanskrit *suyoga*, "a good juncture", taken over whole as a learned loan, a tatsama. In Bengali it means "a chance".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 215,
-  "sourceHash": "fnv1a64:61107be980704fbd",
+  "sourceHash": "fnv1a64:26ed502eb52bf518",
   "lessonIds": [
     "BN-C215-molom",
     "BN-C215-daktarkhana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch215.txt",
   "json": "bengali/narration/ch215.json",
-  "textHash": "fnv1a64:20428ea60ece9d7f",
-  "jsonHash": "fnv1a64:edbb7f3af019c5b0",
+  "textHash": "fnv1a64:c3a7497f4ba4ec8e",
+  "jsonHash": "fnv1a64:c120091f12d68bff",
   "findings": []
 }

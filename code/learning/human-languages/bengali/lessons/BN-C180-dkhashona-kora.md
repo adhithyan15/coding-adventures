@@ -14,7 +14,8 @@ romanization: "dækhāshonā kôrā"
 concept_tag: BN-VERB-DKHASHONA-KORA
 prerequisites: [BN-C179-bachha, BN-C180-rojgar-kora]
 sounds: []
-roots: []
+roots: [indo-aryan-drkshati, sanskrit-shrnoti, sanskrit-karoti]
+etymology_hook: "dækhāshonā kôrā: dækhā 'seeing' (CDIAL 6507) + shonā 'hearing' ← śṛṇoti (CDIAL 12598) + kôrā 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C180-rojgar-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C180-ACT180-02]; assesses=[] -->
 
 **দেখাশোনা করা** — *dækhāshonā kôrā* — "to look after".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দেখাশোনা করা** (*dækhāshonā kôrā*) is *dækhā*, "seeing", which CDIAL lists under *\*dṛkṣati*, "sees" (CDIAL 6507), + *shonā*, "hearing", from Sanskrit *śṛṇoti*, "hears" (CDIAL 12598), "seeing and hearing", + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

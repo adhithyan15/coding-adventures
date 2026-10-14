@@ -14,7 +14,8 @@ romanization: "dupur"
 concept_tag: BN-TIME80-DUPUR
 prerequisites: [BN-C80-pore, BN-C80-somoy]
 sounds: []
-roots: []
+roots: [sanskrit-prahara]
+etymology_hook: "dupur: usually explained as dviprahara 'the second watch'; CDIAL lists prahara as pahar (CDIAL 8900)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C80-somoy]
 <!-- hl-knowledge: introduces=[BN-LEX-C80-TIME80-05]; assesses=[] -->
 
 **দুপুর** — *dupur* — "midday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দুপুর** (*dupur*) is usually explained as Sanskrit *dviprahara*, "the second watch" of the day: *dvi*, "two", + *prahara*, "a watch of about three hours", which CDIAL lists as Bengali *pahar* (CDIAL 8900). CDIAL has no entry for the compound, and asks whether *prahara* is a Sanskrit form of Persian *pahra*, "watch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

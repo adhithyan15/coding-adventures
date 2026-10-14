@@ -14,7 +14,8 @@ romanization: "dôshôk"
 concept_tag: BN-SOMOY187-DOSHOK
 prerequisites: [BN-C187-shotabdi, BN-C187-jug]
 sounds: []
-roots: []
+roots: [sanskrit-dashaka]
+etymology_hook: "dôshôk ← Sanskrit daśaka 'consisting of ten', a tatsama (CDIAL 6228)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C187-jug]
 <!-- hl-knowledge: introduces=[BN-LEX-C187-SOMOY187-04]; assesses=[] -->
 
 **দশক** — *dôshôk* — "a decade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দশক** (*dôshôk*) is Sanskrit *daśaka*, "consisting of ten", taken over whole as a learned loan, a tatsama (CDIAL 6228).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

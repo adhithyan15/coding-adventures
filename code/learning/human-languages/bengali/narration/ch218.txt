@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a room (in a hotel), then the Bengali fo
 You'll want to know: যদিও.
 যদিও — jôdio — "although".
 
+The word, taken apart.
+যদিও (jôdio) is jôdi, "if", Sanskrit yadi (CDIAL 10410), + -o, "even": "even if".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a stadium, then the Bengali for although
 
 You'll want to know: যেমন.
 যেমন — jæmôn — "such as, like".
+
+The word, taken apart.
+যেমন (jæmôn) is built on je, "which", from the Sanskrit pronoun ya- (CDIAL 10391). CDIAL has no entry for the word itself, so how its ending formed is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for although, then the Bengali for such as.
 You'll want to know: যাতে.
 যাতে — jāte — "so that".
 
+The word, taken apart.
+যাতে (jāte) is jā, "which", the relative pronoun CDIAL lists as Bengali je under Sanskrit ya- (CDIAL 10391), + -te, "in": "in which way".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for such as, then the Bengali for so that.
 You'll want to know: তাহলে.
 তাহলে — tāhôle — "then, in that case".
 
+The word, taken apart.
+তাহলে (tāhôle) is tā, "that", listed under the Sanskrit pronoun base ta- (CDIAL 5612), + hôle, "if it is", from hôoyā, "to be", from Sanskrit bhavati (CDIAL 9416): "if that is so".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for so that, then the Bengali for then.
 
 You'll want to know: মানে.
 মানে — māne — "that is, it means".
+
+The word, taken apart.
+মানে (māne) is a loan from Arabic maʿnā, "meaning, sense", which reached Bengali through Persian. Its Arabic root is ʿ-n-y (Lane). Bengali adds the ending -e.
 
 What you've built.
 One more word for this chapter.

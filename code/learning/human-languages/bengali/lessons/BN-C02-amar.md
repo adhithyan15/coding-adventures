@@ -12,6 +12,7 @@ concept_tag: PRONOUN-MY
 prerequisites: [BN-C02-naam, BN-C01-ashi]
 sounds: [independent-aa]
 roots: [asmad-first-person]
+etymology_hook: "āmār: the possessive of āmi, which CDIAL lists under Sanskrit asmad, the stem of 'we' (CDIAL 986)"
 duration:
   max_seconds: 180
 requires:

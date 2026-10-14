@@ -14,7 +14,8 @@ romanization: "dhār"
 concept_tag: BN-KAJ176-DHAR
 prerequisites: [BN-C175-gs, BN-C176-pesha]
 sounds: []
-roots: []
+roots: [sanskrit-uddhara]
+etymology_hook: "dhār ← Sanskrit uddhāra 'loan', a tadbhava (CDIAL 2018)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C176-pesha]
 <!-- hl-knowledge: introduces=[BN-LEX-C176-KAJ176-02]; assesses=[] -->
 
 **ধার** — *dhār* — "a debt, a loan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধার** (*dhār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *uddhāra*, "loan" (CDIAL 2018). CDIAL lists Middle Bengali *udhāra* and Bengali *dhār*, "loan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

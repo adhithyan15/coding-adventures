@@ -14,7 +14,8 @@ romanization: "kôrmī"
 concept_tag: BN-KAJ236-KORMI
 prerequisites: [BN-C235-chhutor, BN-C236-klas]
 sounds: []
-roots: []
+roots: [sanskrit-karmin]
+etymology_hook: "kôrmī ← Sanskrit karmin 'worker', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C236-klas]
 <!-- hl-knowledge: introduces=[BN-LEX-C236-KAJ236-02]; assesses=[] -->
 
 **কর্মী** — *kôrmī* — "a worker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কর্মী** (*kôrmī*) is Sanskrit *karmin*, "worker", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṭukro"
 concept_tag: BN-JINIS170-TUKRO
 prerequisites: [BN-C169-shanti, BN-C170-akar]
 sounds: []
-roots: []
+roots: [indo-aryan-tukka]
+etymology_hook: "ṭukro ← *ṭukka 'piece', a reconstructed form; a tadbhava (CDIAL 5466)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C170-akar]
 <!-- hl-knowledge: introduces=[BN-LEX-C170-JINIS170-02]; assesses=[] -->
 
 **টুকরো** — *ṭukro* — "a piece".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টুকরো** (*ṭukro*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭukka*, "piece", a form CDIAL reconstructs from its descendants (CDIAL 5466). CDIAL lists Bengali *ṭukrā*, "small piece", made with an extra *-r-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

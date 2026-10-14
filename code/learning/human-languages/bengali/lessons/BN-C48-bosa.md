@@ -14,7 +14,8 @@ romanization: "bôsā"
 concept_tag: BN-VERB-BOSA
 prerequisites: [BN-C48-protibeshi, BN-C48-shona]
 sounds: []
-roots: []
+roots: [sanskrit-vasati]
+etymology_hook: "bôsā ← Sanskrit vasati 'stays, dwells', a tadbhava (CDIAL 11435)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C48-shona]
 <!-- hl-knowledge: introduces=[BN-LEX-C48-FAMILY48-04]; assesses=[] -->
 
 **বসা** — *bôsā* — "to sit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বসা** (*bôsā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vasati*, "stays, dwells" (CDIAL 11435). CDIAL also gives *basā* under *upaviśati*, "sits down", and asks whether it belongs there instead (CDIAL 2245).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sôkāl"
 concept_tag: BN-TIME78-SOKAL
 prerequisites: [BN-C78-rat, BN-C78-sondhya]
 sounds: []
-roots: []
+roots: [sanskrit-sakala-early]
+etymology_hook: "sôkāl matches Sanskrit sakāla 'seasonable', sakālam 'early in the morning'; CDIAL has no Bengali form (CDIAL 13067)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C78-sondhya]
 <!-- hl-knowledge: introduces=[BN-LEX-C78-TIME78-03]; assesses=[] -->
 
 **সকাল** — *sôkāl* — "morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সকাল** (*sôkāl*) matches Sanskrit *sakāla*, "seasonable", whose adverb *sakālam* means "early in the morning". CDIAL has that entry but lists no Bengali form under it (CDIAL 13067).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

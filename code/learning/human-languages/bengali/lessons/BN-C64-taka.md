@@ -14,7 +14,8 @@ romanization: "ṭākā"
 concept_tag: BN-SCHOOL64-TAKA
 prerequisites: [BN-C64-kagoj, BN-C64-skul]
 sounds: []
-roots: []
+roots: [indo-aryan-takka]
+etymology_hook: "ṭākā ← *ṭakka, beside Sanskrit ṭaṅka 'a stamped coin', which Bloch took from Tatar (CDIAL 5426)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C64-skul]
 <!-- hl-knowledge: introduces=[BN-LEX-C64-SCHOOL64-04]; assesses=[] -->
 
 **টাকা** — *ṭākā* — "money; taka".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টাকা** (*ṭākā*) comes from *\*ṭakka*, a form CDIAL reconstructs beside Sanskrit *ṭaṅka*, "a stamped coin" (CDIAL 5426). CDIAL reports Bloch's view that *ṭaṅka* itself came from a Tatar word *tanka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

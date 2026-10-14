@@ -14,7 +14,8 @@ romanization: "susthô"
 concept_tag: BN-QUAL137-SUSTHO
 prerequisites: [BN-C137-ragi, BN-C137-klanto]
 sounds: []
-roots: []
+roots: [sanskrit-sustha]
+etymology_hook: "susthô ← Sanskrit sustha 'healthy, comfortable', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C137-klanto]
 <!-- hl-knowledge: introduces=[BN-LEX-C137-QUAL137-05]; assesses=[] -->
 
 **সুস্থ** — *susthô* — "healthy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সুস্থ** (*susthô*) is Sanskrit *sustha*, "healthy, comfortable", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

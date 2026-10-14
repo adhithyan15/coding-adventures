@@ -12,6 +12,9 @@ Before the new one: say the Bengali for an owner, then the Bengali for land.
 You'll want to know: সম্পত্তি.
 সম্পত্তি — sômpôtti — "property".
 
+The word, taken apart.
+সম্পত্তি (sômpôtti) is Sanskrit saṁpatti, "acquisition, prosperity", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for land, then the Bengali for property.
 
 You'll want to know: আয়.
 আয় — āy — "income".
+
+The word, taken apart.
+আয় (āy) is Sanskrit āya, "arrival; income", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for property, then the Bengali for income.
 You'll want to know: চাকরি.
 চাকরি — chākri — "a job".
 
+The word, taken apart.
+চাকরি (chākri) is chākôr, "servant", with the ending -i: "service". Chākôr is usually traced to Persian chākar, "servant".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for income, then the Bengali for a job.
 You'll want to know: বুদ্ধি.
 বুদ্ধি — buddhi — "intelligence".
 
+The word, taken apart.
+বুদ্ধি (buddhi) is Sanskrit buddhi, "intelligence", taken over whole as a learned loan, a tatsama (CDIAL 9277). Middle Bengali budhi, "intellect", is the inherited form CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a job, then the Bengali for intelligence
 
 You'll want to know: জ্ঞান.
 জ্ঞান — gyān — "knowledge".
+
+The word, taken apart.
+জ্ঞান (gyān) is Sanskrit jñāna, "knowledge", taken over whole as a learned loan, a tatsama (CDIAL 5281). The inherited form, with j-, is jān, which CDIAL lists.
 
 What you've built.
 One more word for this chapter.

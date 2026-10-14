@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 120,
-  "sourceHash": "fnv1a64:d39fb93c20c40d8a",
+  "sourceHash": "fnv1a64:ab24665d906596c5",
   "lessonIds": [
     "BN-C120-choti",
     "BN-C120-maphlar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch120.txt",
   "json": "bengali/narration/ch120.json",
-  "textHash": "fnv1a64:0a49e5e89d0006c4",
-  "jsonHash": "fnv1a64:469a2db8fb20be13",
+  "textHash": "fnv1a64:1a2cb44b4335b6ec",
+  "jsonHash": "fnv1a64:d83ee7549cd2d75d",
   "findings": []
 }

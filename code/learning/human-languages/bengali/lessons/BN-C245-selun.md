@@ -14,7 +14,8 @@ romanization: "selun"
 concept_tag: BN-JAYGA245-SELUN
 prerequisites: [BN-C245-sinema-hol, BN-C245-jim]
 sounds: []
-roots: []
+roots: [english-saloon]
+etymology_hook: "selun ← English saloon"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C245-jim]
 <!-- hl-knowledge: introduces=[BN-LEX-C245-JAYGA245-03]; assesses=[] -->
 
 **সেলুন** — *selun* — "a hair salon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সেলুন** (*selun*) is a loan from English *saloon*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

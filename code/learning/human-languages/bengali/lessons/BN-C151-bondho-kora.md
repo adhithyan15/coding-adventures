@@ -14,7 +14,8 @@ romanization: "bôndhô kôrā"
 concept_tag: BN-VERB-BONDHO-KORA
 prerequisites: [BN-C150-hacha, BN-C150-kasha]
 sounds: []
-roots: []
+roots: [sanskrit-bandha, persian-band, sanskrit-karoti]
+etymology_hook: "bôndhô kôrā: bôndhô 'closed', spelled as Sanskrit bandha and matching Persian band 'shut', + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C150-kasha]
 <!-- hl-knowledge: introduces=[BN-LEX-C151-ACT151-01]; assesses=[] -->
 
 **বন্ধ করা** — *bôndhô kôrā* — "to close".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বন্ধ করা** (*bôndhô kôrā*) is *bôndhô*, "closed", spelled as Sanskrit *bandha*, "binding" (CDIAL 9136), and matching Persian *band*, "shut", + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

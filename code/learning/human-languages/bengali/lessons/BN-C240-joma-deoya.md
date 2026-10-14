@@ -14,7 +14,8 @@ romanization: "jômā deoyā"
 concept_tag: BN-VERB-JOMA-DEOYA
 prerequisites: [BN-C239-mone-rakha, BN-C240-atkano]
 sounds: []
-roots: []
+roots: [arabic-jam, sanskrit-dadati]
+etymology_hook: "jômā deoyā: jômā 'a deposit, a sum' ← Arabic jamʿ 'a gathering', through Persian, + deoyā (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C240-atkano]
 <!-- hl-knowledge: introduces=[BN-LEX-C240-ACT240-02]; assesses=[] -->
 
 **জমা দেওয়া** — *jômā deoyā* — "to hand in, to deposit".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জমা দেওয়া** (*jômā deoyā*) is *jômā*, "a deposit, a sum", from Arabic *jamʿ*, "a gathering together", which reached Bengali through Persian (Lane), + *deoyā*, "to give", from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

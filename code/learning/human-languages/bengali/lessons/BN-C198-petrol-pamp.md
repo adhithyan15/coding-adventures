@@ -14,7 +14,8 @@ romanization: "peṭrol pāmp"
 concept_tag: BN-JINIS198-PETROL-PAMP
 prerequisites: [BN-C198-biman, BN-C198-petrol]
 sounds: []
-roots: []
+roots: [english-petrol, english-pump]
+etymology_hook: "peṭrol pāmp ← English petrol pump"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C198-petrol]
 <!-- hl-knowledge: introduces=[BN-LEX-C198-JINIS198-03]; assesses=[] -->
 
 **পেট্রোল পাম্প** — *peṭrol pāmp* — "a petrol station".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পেট্রোল পাম্প** (*peṭrol pāmp*) is a loan from English *petrol pump*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

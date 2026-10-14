@@ -14,7 +14,8 @@ romanization: "dhônyôbād deoyā"
 concept_tag: BN-VERB-DHONYOBAD-DEOYA
 prerequisites: [BN-C153-proshongsa-kora, BN-C153-boka]
 sounds: []
-roots: []
+roots: [dhanya, vada, sanskrit-dadati]
+etymology_hook: "dhônyôbād deoyā: dhônyôbād 'thanks', Sanskrit dhanya + vāda, + deoyā 'to give' ← dadāti (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C153-boka]
 <!-- hl-knowledge: introduces=[BN-LEX-C153-ACT153-04]; assesses=[] -->
 
 **ধন্যবাদ দেওয়া** — *dhônyôbād deoyā* — "to thank".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধন্যবাদ দেওয়া** (*dhônyôbād deoyā*) is *dhônyôbād*, "thanks", built from Sanskrit *dhanya*, "fortunate", and *vāda*, "a saying", + *deoyā*, "to give", from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

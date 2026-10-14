@@ -14,7 +14,8 @@ romanization: "gôli"
 concept_tag: BN-PLACE82-GOLI
 prerequisites: [BN-C82-dokan, BN-C82-rasta]
 sounds: []
-roots: []
+roots: [indo-aryan-gali]
+etymology_hook: "gôli ← *galī 'defile, lane', a reconstructed form; a tadbhava (CDIAL 4085)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C82-rasta]
 <!-- hl-knowledge: introduces=[BN-LEX-C82-PLACE82-04]; assesses=[] -->
 
 **গলি** — *gôli* — "a lane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গলি** (*gôli*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*galī*, "defile, lane", a form CDIAL reconstructs from its descendants (CDIAL 4085).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

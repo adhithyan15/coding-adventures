@@ -14,7 +14,8 @@ romanization: "mulo"
 concept_tag: BN-THINGS117-MULO
 prerequisites: [BN-C117-kumro, BN-C117-shak]
 sounds: []
-roots: []
+roots: [sanskrit-mula]
+etymology_hook: "mulo ← Sanskrit mūla 'root; radish', perhaps of Dravidian origin (CDIAL 10250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C117-shak]
 <!-- hl-knowledge: introduces=[BN-LEX-C117-THINGS117-04]; assesses=[] -->
 
 **মুলো** — *mulo* — "a radish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মুলো** (*mulo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mūla*, "root; radish" (CDIAL 10250). CDIAL thinks the word perhaps of Dravidian origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:d38258c8c9326993",
+  "sourceHash": "fnv1a64:0af9b8e409a3a4e1",
   "lessons": [
     {
       "id": "BN-C02-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:18f1ef77431ae164",
+      "sourceHash": "fnv1a64:6af031fc25de401a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dbc7ad43b0de5a43",
+      "sourceHash": "fnv1a64:d8acaded8b5ac20c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -285,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51f36094f8387681",
+      "sourceHash": "fnv1a64:77c5b3b13510f080",
       "notice": null,
       "blocks": [
         {
@@ -318,6 +318,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both words are inherited. আমার (āmār) is the possessive of āmi, \"I\", which CDIAL lists under Sanskrit asmad, the stem of \"we\" (CDIAL 986); নাম (nām) is Sanskrit nāman, \"name\" (CDIAL 7067)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: Bengali drops \"is\" in the present",
           "segments": [
@@ -328,7 +339,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -359,7 +370,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -390,7 +401,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:46d2a4b1854cff7f",
+      "sourceHash": "fnv1a64:1c00d2a281c84310",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -504,7 +515,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b603971a1a368623",
+      "sourceHash": "fnv1a64:17e93c2ff00f805b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -618,7 +629,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7e3ec66910475361",
+      "sourceHash": "fnv1a64:b1ba7d777c85a69e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -670,7 +681,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "তুমি (tumi, familiar \"you\") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu. Bengali grades respect in three levels:"
+              "text": "তুমি (tumi, familiar \"you\") goes back to the Sanskrit plural yuṣmad-, \"you\", with its t- taken from singular tvam, \"thou\" (CDIAL 10511); tvam is from PIE tū — the same root as English archaic thou, Latin tū, French tu. Bengali grades respect in three levels:"
             },
             {
               "kind": "speech",
@@ -687,6 +698,10 @@
             {
               "kind": "speech",
               "text": "(This is like Hindi's tū / tum / āp, and finer than the two-way split of the Romance tracks.) For a first meeting, use আপনি."
+            },
+            {
+              "kind": "speech",
+              "text": "আপনি (āpni) is Sanskrit ātman, \"self\": CDIAL lists the respectful Bengali pronoun under it (CDIAL 1135), so the polite \"you\" is, at the root, \"your self\"."
             }
           ]
         },
@@ -771,7 +786,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a8a0acd1ee1432b",
+      "sourceHash": "fnv1a64:f7f0992afddd9348",
       "notice": null,
       "blocks": [
         {
@@ -804,6 +819,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তোমার is the possessive of tumi, from Sanskrit yuṣmad-, \"you\" (CDIAL 10511); নাম (nām) is Sanskrit nāman, \"name\" (CDIAL 7067); কি (ki) is Sanskrit kim, \"what\" (CDIAL 3164)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: answering, and the respectful form",
           "segments": [
@@ -814,7 +840,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -854,7 +880,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

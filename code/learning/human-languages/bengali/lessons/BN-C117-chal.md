@@ -14,7 +14,8 @@ romanization: "chāl"
 concept_tag: BN-THINGS117-CHAL
 prerequisites: [BN-C117-shak, BN-C117-mulo]
 sounds: []
-roots: []
+roots: [indo-aryan-camala]
+etymology_hook: "chāl ← *cāmala 'husked rice', a reconstructed form, possibly non-Aryan (CDIAL 4749)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C117-mulo]
 <!-- hl-knowledge: introduces=[BN-LEX-C117-THINGS117-05]; assesses=[] -->
 
 **চাল** — *chāl* — "uncooked rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চাল** (*chāl*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cāmala*, "husked rice", a form CDIAL reconstructs from its descendants (CDIAL 4749). CDIAL thinks it possibly of the same non-Aryan origin as Sanskrit *taṇḍula*, "rice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

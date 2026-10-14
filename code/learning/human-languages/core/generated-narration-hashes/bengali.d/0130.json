@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 130,
-  "sourceHash": "fnv1a64:2310d3e86582451b",
+  "sourceHash": "fnv1a64:47b91916fb09c1c6",
   "lessonIds": [
     "BN-C130-manibyag",
     "BN-C130-poysa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch130.txt",
   "json": "bengali/narration/ch130.json",
-  "textHash": "fnv1a64:b6c54376079bfab0",
-  "jsonHash": "fnv1a64:7417474239109a24",
+  "textHash": "fnv1a64:b00d681953d7005a",
+  "jsonHash": "fnv1a64:f9eba0c733dce72e",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "bæṭāri"
 concept_tag: BN-JINIS258-BTARI
 prerequisites: [BN-C258-barta, BN-C258-pasoyard]
 sounds: []
-roots: []
+roots: [english-battery]
+etymology_hook: "bæṭāri ← English battery"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C258-pasoyard]
 <!-- hl-knowledge: introduces=[BN-LEX-C258-JINIS258-04]; assesses=[] -->
 
 **ব্যাটারি** — *bæṭāri* — "a battery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ব্যাটারি** (*bæṭāri*) is a loan from English *battery*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

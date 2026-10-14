@@ -14,7 +14,8 @@ romanization: "tolā"
 concept_tag: BN-VERB-TOLA
 prerequisites: [BN-C53-shekhano, BN-C54-banano]
 sounds: []
-roots: []
+roots: [sanskrit-tolayati]
+etymology_hook: "tolā ← Sanskrit tolayati 'lifts, weighs', a tadbhava (CDIAL 5979)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C54-banano]
 <!-- hl-knowledge: introduces=[BN-LEX-C54-VERBS54-02]; assesses=[] -->
 
 **তোলা** — *tolā* — "to lift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তোলা** (*tolā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tolayati*, "lifts, weighs" (CDIAL 5979).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mitthā"
 concept_tag: BN-ADJ77-MITTHA
 prerequisites: [BN-C76-bhari, BN-C76-sotti]
 sounds: []
-roots: []
+roots: [sanskrit-mithya]
+etymology_hook: "mitthā ← Sanskrit mithyā 'falsely', a tatsama; CDIAL lists the inherited form michā 'untrue' (CDIAL 10130)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C76-sotti]
 <!-- hl-knowledge: introduces=[BN-LEX-C77-ADJ77-01]; assesses=[] -->
 
 **মিথ্যা** — *mitthā* — "false".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মিথ্যা** (*mitthā*) is Sanskrit *mithyā*, "wrongly, falsely", taken over whole as a learned loan, a tatsama (CDIAL 10130). The word inherited from it is *michā*, "untrue", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

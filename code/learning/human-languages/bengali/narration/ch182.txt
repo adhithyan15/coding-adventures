@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to memorise, then the Bengali for to exp
 You'll want to know: ছেঁড়া.
 ছেঁড়া — chhẽṛā — "to tear".
 
+The word, taken apart.
+ছেঁড়া (chhẽṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from chidra, "torn asunder; hole" (CDIAL 5043). CDIAL lists Bengali chẽṛā, "to break, tear".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to explain, then the Bengali for to tear
 
 You'll want to know: ভাঁজ করা.
 ভাঁজ করা — bhā̃j kôrā — "to fold".
+
+The phrase, taken apart.
+ভাঁজ করা (bhā̃j kôrā) (bhāṁj kôrā) is bhāṁj, "fold", which CDIAL lists under bhañja, "breaking" (CDIAL 9362), + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to tear, then the Bengali for to fold.
 You'll want to know: জড়ো করা.
 জড়ো করা — jôṛo kôrā — "to gather".
 
+The phrase, taken apart.
+জড়ো করা (jôṛo kôrā) is jôṛo, "gathered", which belongs with Bengali jaṛ, "heaped together", listed under jaḍati, "joins", which CDIAL takes from Dravidian (CDIAL 5091), + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to fold, then the Bengali for to gather.
 You'll want to know: ভাগ করা.
 ভাগ করা — bhāg kôrā — "to share, to divide".
 
+The phrase, taken apart.
+ভাগ করা (bhāg kôrā) is bhāg, "a share", Sanskrit bhāga taken over whole, + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to gather, then the Bengali for to share
 
 You'll want to know: যোগ করা.
 যোগ করা — jog kôrā — "to add".
+
+The phrase, taken apart.
+যোগ করা (jog kôrā) is jog, "joining, adding", Sanskrit yoga taken over whole, + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

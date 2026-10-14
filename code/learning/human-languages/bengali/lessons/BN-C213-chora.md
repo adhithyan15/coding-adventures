@@ -14,7 +14,8 @@ romanization: "chôṛā"
 concept_tag: BN-VERB-CHORA
 prerequisites: [BN-C213-prostut-hooya, BN-C213-roona-deoya]
 sounds: []
-roots: []
+roots: [indo-aryan-cadhati]
+etymology_hook: "chôṛā ← *caḍhati 'rises', a reconstructed form; a tadbhava (CDIAL 4578)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C213-roona-deoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C213-ACT213-05]; assesses=[] -->
 
 **চড়া** — *chôṛā* — "to ride, to climb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চড়া** (*chôṛā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*caḍhati*, "rises", a form CDIAL reconstructs from its descendants (CDIAL 4578). CDIAL lists Bengali *caṛā*, "to mount".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

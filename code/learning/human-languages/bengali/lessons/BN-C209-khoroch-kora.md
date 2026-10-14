@@ -14,7 +14,8 @@ romanization: "khôrôch kôrā"
 concept_tag: BN-VERB-KHOROCH-KORA
 prerequisites: [BN-C209-dhar-deoya, BN-C209-jomano]
 sounds: []
-roots: []
+roots: [arabic-kharj, sanskrit-karoti]
+etymology_hook: "khôrôch kôrā: khôrôch ← Arabic kharj 'expenditure', through Persian, + kôrā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C209-jomano]
 <!-- hl-knowledge: introduces=[BN-LEX-C209-ACT209-04]; assesses=[] -->
 
 **খরচ করা** — *khôrôch kôrā* — "to spend".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খরচ করা** (*khôrôch kôrā*) is *khôrôch*, "expense", from Arabic *kharj*, "expenditure", which reached Bengali through Persian (Lane), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bichhānā"
 concept_tag: BN-HOME60-BICHHANA
 prerequisites: [BN-C60-deyal, BN-C60-chhad]
 sounds: []
-roots: []
+roots: [indo-aryan-vicchadana]
+etymology_hook: "bichhānā ← *vicchādana 'covering over', a reconstructed form; a tadbhava (CDIAL 11691)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C60-chhad]
 <!-- hl-knowledge: introduces=[BN-LEX-C60-HOME60-05]; assesses=[] -->
 
 **বিছানা** — *bichhānā* — "a bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিছানা** (*bichhānā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vicchādana*, "covering over", a form CDIAL reconstructs from its descendants (CDIAL 11691).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

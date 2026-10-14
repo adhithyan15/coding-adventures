@@ -14,7 +14,8 @@ romanization: "bādur"
 concept_tag: BN-THINGS120-BADUR
 prerequisites: [BN-C120-har, BN-C120-shiyal]
 sounds: []
-roots: []
+roots: [indo-aryan-valduda]
+etymology_hook: "bāduṛ ← *vālduḍa, beside Sanskrit vālguda 'bat', which Bloch took from Dravidian (CDIAL 11584)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C120-shiyal]
 <!-- hl-knowledge: introduces=[BN-LEX-C120-THINGS120-05]; assesses=[] -->
 
 **বাদুড়** — *bādur* — "a bat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাদুড়** (*bādur*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vālduḍa*, "bat", a form CDIAL reconstructs from its descendants (CDIAL 11584). It stands beside Sanskrit *vālguda*, "bat"; CDIAL reports Bloch's view that the word is Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

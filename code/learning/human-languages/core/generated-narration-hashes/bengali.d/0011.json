@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 11,
-  "sourceHash": "fnv1a64:943d7162fde05526",
+  "sourceHash": "fnv1a64:07ab2f3bc63037a5",
   "lessonIds": [
     "BN-C05-bola",
     "BN-C05-ami-bangla-boli",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch11.txt",
   "json": "bengali/narration/ch11.json",
-  "textHash": "fnv1a64:d22a6ffa966adfc1",
-  "jsonHash": "fnv1a64:d109ee3c2ad6227e",
+  "textHash": "fnv1a64:b406a573cfb62882",
+  "jsonHash": "fnv1a64:65dc6e66a0f3a54c",
   "findings": []
 }

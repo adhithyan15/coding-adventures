@@ -14,7 +14,8 @@ romanization: "shukno"
 concept_tag: BN-QUAL135-SHUKNO
 prerequisites: [BN-C134-norom, BN-C135-bhije]
 sounds: []
-roots: []
+roots: [sanskrit-shushka]
+etymology_hook: "shukno ← Sanskrit śuṣka 'dried', a tadbhava (CDIAL 12548)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C135-bhije]
 <!-- hl-knowledge: introduces=[BN-LEX-C135-QUAL135-02]; assesses=[] -->
 
 **শুকনো** — *shukno* — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শুকনো** (*shukno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śuṣka*, "dried" (CDIAL 12548). CDIAL writes the Bengali form *sukhā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

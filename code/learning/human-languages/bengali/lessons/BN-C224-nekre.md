@@ -15,6 +15,7 @@ concept_tag: BN-JINIS224-NEKRE
 prerequisites: [BN-C224-chita, BN-C224-sheyal]
 sounds: []
 roots: []
+etymology_hook: "nekṛe: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C224-sheyal]
 <!-- hl-knowledge: introduces=[BN-LEX-C224-JINIS224-05]; assesses=[] -->
 
 **নেকড়ে** — *nekṛe* — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **নেকড়ে** (*nekṛe*) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "wolf" finds nothing close; its Bengali *nekṛā*, "rag" (CDIAL 11044), is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

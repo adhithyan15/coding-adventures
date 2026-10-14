@@ -14,7 +14,8 @@ romanization: "khejur"
 concept_tag: BN-JINIS204-KHEJUR
 prerequisites: [BN-C204-bedana, BN-C204-peyara]
 sounds: []
-roots: []
+roots: [sanskrit-kharjura]
+etymology_hook: "khejur ← Sanskrit kharjūra 'the date-palm', a tadbhava (CDIAL 3828)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C204-peyara]
 <!-- hl-knowledge: introduces=[BN-LEX-C204-JINIS204-04]; assesses=[] -->
 
 **খেজুর** — *khejur* — "a date (fruit)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খেজুর** (*khejur*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kharjūra*, "the date-palm" (CDIAL 3828). CDIAL lists Bengali *khejur* and *khājur* for the tree and its fruit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

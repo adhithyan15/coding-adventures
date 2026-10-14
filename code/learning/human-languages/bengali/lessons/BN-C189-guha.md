@@ -14,7 +14,8 @@ romanization: "guhā"
 concept_tag: BN-JAYGA189-GUHA
 prerequisites: [BN-C189-adalot, BN-C189-jel]
 sounds: []
-roots: []
+roots: [sanskrit-guha]
+etymology_hook: "guhā ← Sanskrit guhā 'hiding place, cave', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C189-jel]
 <!-- hl-knowledge: introduces=[BN-LEX-C189-JAYGA189-03]; assesses=[] -->
 
 **গুহা** — *guhā* — "a cave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গুহা** (*guhā*) is Sanskrit *guhā*, "hiding place, cave", taken over whole as a learned loan, a tatsama. CDIAL lists Bengali *gophā*, "cave", under *\*gupphā* (CDIAL 4204), which it links to *guhā* only doubtfully.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ānôndô"
 concept_tag: BN-JINIS169-ANONDO
 prerequisites: [BN-C168-biye, BN-C168-atmiyo]
 sounds: []
-roots: []
+roots: [ananda-sanskrit]
+etymology_hook: "ānôndô ← Sanskrit ānanda 'happiness', a tatsama (CDIAL 1172)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C168-atmiyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C169-JINIS169-01]; assesses=[] -->
 
 **আনন্দ** — *ānôndô* — "joy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আনন্দ** (*ānôndô*) is Sanskrit *ānanda*, "happiness", taken over whole as a learned loan, a tatsama (CDIAL 1172).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

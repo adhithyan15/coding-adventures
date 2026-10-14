@@ -14,7 +14,8 @@ romanization: "āsôl"
 concept_tag: BN-GUN191-ASOL
 prerequisites: [BN-C191-adhunik, BN-C191-prachin]
 sounds: []
-roots: []
+roots: [arabic-asl]
+etymology_hook: "āsôl ← Arabic aṣl 'root, origin', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C191-prachin]
 <!-- hl-knowledge: introduces=[BN-LEX-C191-GUN191-05]; assesses=[] -->
 
 **আসল** — *āsôl* — "real, genuine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আসল** (*āsôl*) is a loan from Arabic *aṣl*, "root, origin", which reached Bengali through Persian. Its Arabic root is *ʾ-ṣ-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

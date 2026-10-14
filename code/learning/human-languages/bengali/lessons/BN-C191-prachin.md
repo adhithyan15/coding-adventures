@@ -14,7 +14,8 @@ romanization: "prāchīn"
 concept_tag: BN-GUN191-PRACHIN
 prerequisites: [BN-C191-sombhob, BN-C191-adhunik]
 sounds: []
-roots: []
+roots: [sanskrit-pracina]
+etymology_hook: "prāchīn ← Sanskrit prācīna 'turned east; former, old', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C191-adhunik]
 <!-- hl-knowledge: introduces=[BN-LEX-C191-GUN191-04]; assesses=[] -->
 
 **প্রাচীন** — *prāchīn* — "ancient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রাচীন** (*prāchīn*) is Sanskrit *prācīna*, "turned east; former, old", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

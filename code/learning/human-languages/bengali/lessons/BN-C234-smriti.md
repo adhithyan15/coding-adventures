@@ -14,7 +14,8 @@ romanization: "smriti"
 concept_tag: BN-JINIS234-SMRITI
 prerequisites: [BN-C233-khuchro, BN-C234-shishi]
 sounds: []
-roots: []
+roots: [sanskrit-smrti]
+etymology_hook: "smriti ← Sanskrit smṛti 'memory', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C234-shishi]
 <!-- hl-knowledge: introduces=[BN-LEX-C234-JINIS234-02]; assesses=[] -->
 
 **স্মৃতি** — *smriti* — "a memory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**স্মৃতি** (*smriti*) is Sanskrit *smṛti*, "memory", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

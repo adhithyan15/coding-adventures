@@ -14,7 +14,8 @@ romanization: "sôrbôt"
 concept_tag: BN-THINGS119-SORBOT
 prerequisites: [BN-C118-muri, BN-C118-kophi]
 sounds: []
-roots: []
+roots: [arabic-sharbat]
+etymology_hook: "sôrbôt ← Arabic sharbat 'a drink', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C118-kophi]
 <!-- hl-knowledge: introduces=[BN-LEX-C119-THINGS119-01]; assesses=[] -->
 
 **শরবত** — *sôrbôt* — "a sherbet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শরবত** (*sôrbôt*) is a loan from Arabic *sharbat*, "a drink", which reached Bengali through Persian. Its Arabic root is *sh-r-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

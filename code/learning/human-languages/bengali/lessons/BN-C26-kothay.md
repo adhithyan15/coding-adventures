@@ -11,10 +11,10 @@ gloss: where? — the ninth cell of the grid, and the question an A1 candidate i
 concept_tag: BN-LEX-KOTHAY
 prerequisites: [BN-C26-okhane, BN-C25-ke-who, BN-C11-poribar, BN-C15-jama]
 sounds: []
-roots: []
-etymology_hook: "The asking head ক- on the place frame, and the last of the nine cells. Every question word in this book has now been shown to be the same letter on a different frame, which is a system a learner can extend without being taught each new word."
+roots: [ka-interrogative]
+etymology_hook: "kothāy: ko- on the question stem ka- (CDIAL 2574); CDIAL has no entry for kothā, so the rest is not settled"
 duration:
-  max_seconds: 240
+  max_seconds: 295
 requires:
   knowledge: [BN-LEX-C26-OKHANE-01, BN-LEX-C26-EKHANE-01, BN-LEX-C25-KE-WHO-01, BN-SCRIPT-THA-01]
 introduces:
@@ -59,6 +59,11 @@ The ninth cell, and the grid is closed:
 
 Three heads, three frames, nine words — and you were shown the first head six
 chapters ago and have been filling the table in ever since.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Its head is the question stem *ka-* (CDIAL 2574); CDIAL has no entry for *kothā*, so the rest is not settled.
 
 ## Grammar Lens: the question and its answer are the same shape
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C26-KOTHAY-01, BN-LEX-C26-EKHANE-01, BN-LEX-C26-OKHANE-01, BN-LEX-C19-JOKHON-01] -->

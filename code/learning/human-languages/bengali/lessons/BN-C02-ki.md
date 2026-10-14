@@ -12,6 +12,7 @@ concept_tag: QUESTION-WHAT
 prerequisites: [BN-C02-naam]
 sounds: [i-sign]
 roots: [ka-interrogative]
+etymology_hook: "ki ← Sanskrit kim 'what, why' (CDIAL 3164), on the question stem ka-, kin to the wh- of English what"
 duration:
   max_seconds: 180
 requires:

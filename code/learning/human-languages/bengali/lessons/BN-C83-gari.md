@@ -14,7 +14,8 @@ romanization: "gāṛi"
 concept_tag: BN-TOWN83-GARI
 prerequisites: [BN-C82-goli, BN-C82-steshon]
 sounds: []
-roots: []
+roots: [indo-aryan-gadda]
+etymology_hook: "gāṛi ← *gāḍḍa 'cart', a reconstructed form; a tadbhava (CDIAL 4116)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C82-steshon]
 <!-- hl-knowledge: introduces=[BN-LEX-C83-TOWN83-01]; assesses=[] -->
 
 **গাড়ি** — *gāṛi* — "a car".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গাড়ি** (*gāṛi*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*gāḍḍa*, "cart", a form CDIAL reconstructs from its descendants (CDIAL 4116). CDIAL suggests it may be one word with a form meaning "seat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

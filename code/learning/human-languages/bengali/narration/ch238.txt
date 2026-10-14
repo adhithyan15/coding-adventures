@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to cross, then the Bengali for to go on 
 You'll want to know: মরা.
 মরা — môrā — "to die".
 
+The word, taken apart.
+মরা (môrā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from marate, "will die" (CDIAL 9871). CDIAL lists Bengali marā, "dies", and thinks it possible or even probable that the verb continues this form directly.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to go on an outing, then the Bengali for
 
 You'll want to know: বাড়ানো.
 বাড়ানো — bāṛāno — "to increase".
+
+The word, taken apart.
+বাড়ানো (bāṛāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vardhate, "grows, increases" (CDIAL 11376). CDIAL lists Bengali bāṛā, "to increase"; bāṛāno is its causing form.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to die, then the Bengali for to increase
 You'll want to know: কমানো.
 কমানো — kômāno — "to reduce".
 
+The word, taken apart.
+কমানো (kômāno) is built on kôm, "less", usually traced to Persian kam, "little, less", with the causing ending -āno: "to make less".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to increase, then the Bengali for to red
 You'll want to know: তাড়া করা.
 তাড়া করা — tāṛā kôrā — "to chase".
 
+The phrase, taken apart.
+তাড়া করা (tāṛā kôrā) is tāṛā, "a chase", which belongs with Bengali tāṛāna, "to drive away", from Sanskrit tāḍayati, "beats, strikes" (CDIAL 5752), + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to reduce, then the Bengali for to chase
 
 You'll want to know: বিশ্বাস করা.
 বিশ্বাস করা — bishvās kôrā — "to believe, to trust".
+
+The phrase, taken apart.
+বিশ্বাস করা (bishvās kôrā) is bishvās, "trust", Sanskrit viśvāsa taken over whole, + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

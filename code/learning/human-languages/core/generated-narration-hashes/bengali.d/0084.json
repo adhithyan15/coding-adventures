@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 84,
-  "sourceHash": "fnv1a64:8c52dfcfff85c79e",
+  "sourceHash": "fnv1a64:4ae7db933a0f5c00",
   "lessonIds": [
     "BN-C84-pulish",
     "BN-C84-saikel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch84.txt",
   "json": "bengali/narration/ch84.json",
-  "textHash": "fnv1a64:9c98eec7973b48d6",
-  "jsonHash": "fnv1a64:068898a52e5226da",
+  "textHash": "fnv1a64:d70ed7616fbaa1dd",
+  "jsonHash": "fnv1a64:62e41657cefa28f5",
   "findings": []
 }

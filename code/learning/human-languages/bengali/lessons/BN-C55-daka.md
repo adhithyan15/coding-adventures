@@ -14,7 +14,8 @@ romanization: "ḍākā"
 concept_tag: BN-VERB-DAKA
 prerequisites: [BN-C54-jeta, BN-C55-bodlano]
 sounds: []
-roots: []
+roots: [indo-aryan-dakk]
+etymology_hook: "ḍākā ← *ḍakk 'shout', a reconstructed form; a tadbhava (CDIAL 5516)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C55-bodlano]
 <!-- hl-knowledge: introduces=[BN-LEX-C55-VERBS55-02]; assesses=[] -->
 
 **ডাকা** — *ḍākā* — "to call".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ডাকা** (*ḍākā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ḍakk*, "shout", a form CDIAL reconstructs from its descendants (CDIAL 5516).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

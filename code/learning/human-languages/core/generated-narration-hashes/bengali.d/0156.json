@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 156,
-  "sourceHash": "fnv1a64:e256c1d5d73b26ef",
+  "sourceHash": "fnv1a64:5da1cf943b0b2f2a",
   "lessonIds": [
     "BN-C156-majhe-majhe",
     "BN-C156-prothome",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch156.txt",
   "json": "bengali/narration/ch156.json",
-  "textHash": "fnv1a64:86fe5a0f1917e856",
-  "jsonHash": "fnv1a64:49f7753c220a3911",
+  "textHash": "fnv1a64:e4b25818a5cda909",
+  "jsonHash": "fnv1a64:ba4848b0e80e6d9f",
   "findings": []
 }

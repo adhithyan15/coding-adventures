@@ -14,7 +14,8 @@ romanization: "ṭin"
 concept_tag: BN-JINIS233-TIN
 prerequisites: [BN-C233-mitar, BN-C233-pket]
 sounds: []
-roots: []
+roots: [english-tin]
+etymology_hook: "ṭin ← English tin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C233-pket]
 <!-- hl-knowledge: introduces=[BN-LEX-C233-JINIS233-03]; assesses=[] -->
 
 **টিন** — *ṭin* — "a tin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টিন** (*ṭin*) is a loan from English *tin*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

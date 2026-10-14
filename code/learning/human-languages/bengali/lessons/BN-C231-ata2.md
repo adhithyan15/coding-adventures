@@ -14,7 +14,8 @@ romanization: "āṭā"
 concept_tag: BN-JINIS231-ATA2
 prerequisites: [BN-C231-jhamela, BN-C231-somadhan]
 sounds: []
-roots: []
+roots: [indo-aryan-arta]
+etymology_hook: "āṭā ← *ārta 'flour', a reconstructed form; a tadbhava (CDIAL 1338)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C231-somadhan]
 <!-- hl-knowledge: introduces=[BN-LEX-C231-JINIS231-03]; assesses=[] -->
 
 **আটা** — *āṭā* — "wholemeal flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আটা** (*āṭā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ārta*, "flour", a form CDIAL reconstructs from its descendants (CDIAL 1338). CDIAL lists Bengali *āṭā*, "flour", and compares Persian *ārd*, "flour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

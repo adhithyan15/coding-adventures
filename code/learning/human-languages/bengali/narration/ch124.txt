@@ -12,6 +12,9 @@ Before the new one: say the Bengali for the waist, then the Bengali for an ankle
 You'll want to know: নখ.
 নখ — nôkh — "a fingernail".
 
+The word, taken apart.
+নখ (nôkh) is Sanskrit nakha, "nail of finger or toe, claw", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for an ankle, then the Bengali for a fingern
 
 You'll want to know: গাল.
 গাল — gāl — "a cheek".
+
+The word, taken apart.
+গাল (gāl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from galla, "cheek" (CDIAL 4089). CDIAL compares it with gaṇḍa, "cheek", which it takes from Dravidian.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a fingernail, then the Bengali for a che
 You'll want to know: কপাল.
 কপাল — kopāl — "the forehead".
 
+The word, taken apart.
+কপাল (kopāl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kapāla, "skull, cranium" (CDIAL 2744). CDIAL glosses the Bengali form "forehead, fate".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a cheek, then the Bengali for the forehe
 You'll want to know: ভুরু.
 ভুরু — bhuru — "an eyebrow".
 
+The word, taken apart.
+ভুরু (bhuru) is a semi-tatsama: Sanskrit bhrū, "eyebrow", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9688). The word inherited from it is bhomā, which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for the forehead, then the Bengali for an ey
 
 You'll want to know: হাড়.
 হাড় — hāṛ — "a bone".
+
+The word, taken apart.
+হাড় (hāṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from haḍḍa, "bone" (CDIAL 13952). CDIAL doubts a link with Sanskrit asthi, "bone".
 
 What you've built.
 One more word for this chapter.

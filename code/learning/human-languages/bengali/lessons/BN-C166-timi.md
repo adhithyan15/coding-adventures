@@ -14,7 +14,8 @@ romanization: "timi"
 concept_tag: BN-JINIS166-TIMI
 prerequisites: [BN-C165-porota, BN-C166-shokun]
 sounds: []
-roots: []
+roots: [sanskrit-timi]
+etymology_hook: "timi ← Sanskrit timi 'a large fabled fish', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C166-shokun]
 <!-- hl-knowledge: introduces=[BN-LEX-C166-JINIS166-02]; assesses=[] -->
 
 **তিমি** — *timi* — "a whale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তিমি** (*timi*) is Sanskrit *timi*, "a large fabled fish", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

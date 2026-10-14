@@ -11,7 +11,7 @@ gloss: another one — আর plus এক plus the classifier, and the second ha
 concept_tag: BN-LEX-AREKTA
 prerequisites: [BN-C20-ekta, BN-C17-ar, BN-C10-cha, BN-C14-lal]
 sounds: []
-roots: []
+roots: [sanskrit-apara, sanskrit-eka]
 etymology_hook: "আরেক is আর and এক run together, which is why it means and-one-more rather than merely another: the joiner is still audible inside the word, and a Bengali speaker hears it."
 duration:
   max_seconds: 240
@@ -48,6 +48,11 @@ Take the word apart and it is already three things you own:
 
 Which is why it does not merely mean *a different one*. It means **one more**,
 with the *and* still inside it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আর** goes back to Sanskrit *apara*, "other", and *aparam*, "again, moreover" (CDIAL 434); **এক** to *ēka*, "one" (CDIAL 2462). The classifier's own origin is not settled.
 
 ## Grammar Lens: the pair that hands things out one at a time
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C20-AREKTA-01, BN-GRAMMAR-C20-EKTA-01, BN-LEX-C14-LAL-01, BN-LEX-C14-KALO-01] -->

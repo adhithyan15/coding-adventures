@@ -14,7 +14,8 @@ romanization: "shôhure"
 concept_tag: BN-GUN221-SHOHURE
 prerequisites: [BN-C221-jatiyo, BN-C221-antorjatik]
 sounds: []
-roots: []
+roots: [persian-shahr]
+etymology_hook: "shôhure: shôhôr 'city', usually traced to Persian shahr, + -e 'of'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C221-antorjatik]
 <!-- hl-knowledge: introduces=[BN-LEX-C221-GUN221-04]; assesses=[] -->
 
 **শহুরে** — *shôhure* — "urban".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শহুরে** (*shôhure*) is built on *shôhôr*, "city", usually traced to Persian *shahr*, "city", with an ending meaning "of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

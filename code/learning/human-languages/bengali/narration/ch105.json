@@ -4,7 +4,7 @@
   "chapter": 105,
   "title": "To dust, To tidy up, To decorate, To fry, To mix",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:50f94027517f235b",
+  "sourceHash": "fnv1a64:ff597961ad5ef712",
   "lessons": [
     {
       "id": "BN-C105-jhara",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19c40a9b0e6fd60f",
+      "sourceHash": "fnv1a64:0faabb32ecfc82ce",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঝাড়া (jhāṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhāṭayati, \"shakes down\", a form CDIAL reconstructs from its descendants (CDIAL 5328). CDIAL is unsure of its deeper source."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfc906b94f06e346",
+      "sourceHash": "fnv1a64:87764a72f266aa25",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গোছানো (gochhāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from guccha, \"bunch of flowers\" (CDIAL 4172). CDIAL lists Bengali gochāna, \"to arrange\", under it, with a query."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:146013ff3a0bfdb4",
+      "sourceHash": "fnv1a64:8e76434b8622fb6e",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাজানো (sājāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sajjayati, \"makes ready, equips\" (CDIAL 13091). Sājāno is the causing form of sājā, \"to make ready, dress\"; CDIAL lists both."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42a46832dedb04b9",
+      "sourceHash": "fnv1a64:58ece594070f65b5",
       "notice": null,
       "blocks": [
         {
@@ -431,6 +464,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাজা (bhājā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhṛjjati, \"fries, parches\" (CDIAL 9583). CDIAL lists the Bengali verb under the variant bharjayati."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -441,7 +485,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -490,7 +534,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -521,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e592da1096830f47",
+      "sourceHash": "fnv1a64:ad292f5da86cc662",
       "notice": null,
       "blocks": [
         {
@@ -554,6 +598,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মেশানো (meshāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from miśrayati, \"mixes\" (CDIAL 10137). CDIAL writes the Bengali verb misāna."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -564,7 +619,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -613,7 +668,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

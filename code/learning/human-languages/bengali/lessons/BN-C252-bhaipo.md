@@ -14,7 +14,8 @@ romanization: "bhāipo"
 concept_tag: BN-JINIS252-BHAIPO
 prerequisites: [BN-C251-jatra, BN-C252-kakima]
 sounds: []
-roots: []
+roots: [sanskrit-bhratr, sanskrit-pota]
+etymology_hook: "bhāipo: bhāi 'brother' ← bhrātṛ (CDIAL 9661) + po 'son' ← pota 'young' (CDIAL 8399)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C252-kakima]
 <!-- hl-knowledge: introduces=[BN-LEX-C252-JINIS252-02]; assesses=[] -->
 
 **ভাইপো** — *bhāipo* — "a nephew (brother's son)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভাইপো** (*bhāipo*) is *bhāi*, "brother", from Sanskrit *bhrātṛ* (CDIAL 9661), + *po*, "son", from Sanskrit *pota*, "young of an animal or plant", a word CDIAL takes as non-Aryan, probably Dravidian (CDIAL 8399): "brother's son".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

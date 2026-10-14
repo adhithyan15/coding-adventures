@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 181,
-  "sourceHash": "fnv1a64:81bd0ed4a0baee27",
+  "sourceHash": "fnv1a64:1dce155147055f1e",
   "lessonIds": [
     "BN-C181-nihshvas-neoya",
     "BN-C181-kapa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch181.txt",
   "json": "bengali/narration/ch181.json",
-  "textHash": "fnv1a64:247a6530463a48cf",
-  "jsonHash": "fnv1a64:c85ab602343748e7",
+  "textHash": "fnv1a64:c9c1c9371bb7a5bb",
+  "jsonHash": "fnv1a64:fbce7ff4a5ccb32c",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "dômkôl"
 concept_tag: BN-KAJ178-DOMKOL
 prerequisites: [BN-C177-gayok, BN-C178-dater-daktar]
 sounds: []
-roots: []
+roots: [persian-dam, sanskrit-kala-art]
+etymology_hook: "dômkôl: dôm 'breath, pressure', usually traced to Persian dam, + kôl 'machine' (CDIAL 2927)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C178-dater-daktar]
 <!-- hl-knowledge: introduces=[BN-LEX-C178-KAJ178-02]; assesses=[] -->
 
 **দমকল** — *dômkôl* — "the fire brigade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দমকল** (*dômkôl*) is *dôm*, "breath, pressure", usually traced to Persian *dam*, "breath", + *kôl*, "machine", which CDIAL lists under Sanskrit *kalā*, "any practical art" (CDIAL 2927): "the pressure machine", the fire pump.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ḍākāt"
 concept_tag: BN-JINIS202-DAKAT
 prerequisites: [BN-C202-bhata, BN-C202-chor]
 sounds: []
-roots: []
+roots: [indo-aryan-dakka-robber]
+etymology_hook: "ḍākāt ← *ḍākka 'robber, robbery', a reconstructed form; a tadbhava (CDIAL 5543)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C202-chor]
 <!-- hl-knowledge: introduces=[BN-LEX-C202-JINIS202-03]; assesses=[] -->
 
 **ডাকাত** — *ḍākāt* — "a robber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ডাকাত** (*ḍākāt*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ḍākka*, "robber, robbery", a form CDIAL reconstructs from its descendants (CDIAL 5543). CDIAL lists Bengali *ḍakāit* and *ḍāku*, "robber", and reports a view that the word is non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

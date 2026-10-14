@@ -14,7 +14,8 @@ romanization: "shānti"
 concept_tag: BN-JINIS169-SHANTI
 prerequisites: [BN-C169-bhoy, BN-C169-rag]
 sounds: []
-roots: []
+roots: [sanskrit-shanti]
+etymology_hook: "shānti ← Sanskrit śānti 'rest, peace', a tatsama (CDIAL 12391)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C169-rag]
 <!-- hl-knowledge: introduces=[BN-LEX-C169-JINIS169-05]; assesses=[] -->
 
 **শান্তি** — *shānti* — "peace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শান্তি** (*shānti*) is Sanskrit *śānti*, "rest, peace", taken over whole as a learned loan, a tatsama (CDIAL 12391).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

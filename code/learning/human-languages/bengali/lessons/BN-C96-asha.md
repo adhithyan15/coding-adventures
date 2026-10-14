@@ -14,7 +14,8 @@ romanization: "āshā"
 concept_tag: BN-WANT96-ASHA
 prerequisites: [BN-C95-sokalbela, BN-C96-ichchha]
 sounds: []
-roots: []
+roots: [sanskrit-asha]
+etymology_hook: "āshā ← Sanskrit āśā 'wish, expectation', a tatsama; CDIAL lists the inherited ās 'hope' (CDIAL 1456)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C96-ichchha]
 <!-- hl-knowledge: introduces=[BN-LEX-C96-WANT96-02]; assesses=[] -->
 
 **আশা** — *āshā* — "hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আশা** (*āshā*) is Sanskrit *āśā*, "wish, expectation", taken over whole as a learned loan, a tatsama (CDIAL 1456). The word inherited from it is *ās*, "hope", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

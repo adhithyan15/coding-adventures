@@ -14,7 +14,8 @@ romanization: "chingṛi"
 concept_tag: BN-JINIS223-CHINGRI
 prerequisites: [BN-C223-khabar, BN-C223-torkari]
 sounds: []
-roots: []
+roots: [sanskrit-cingata]
+etymology_hook: "chingṛi ← Sanskrit ciṅgaṭa 'shrimp', a tadbhava (CDIAL 4786)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C223-torkari]
 <!-- hl-knowledge: introduces=[BN-LEX-C223-JINIS223-04]; assesses=[] -->
 
 **চিংড়ি** — *chingṛi* — "a prawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চিংড়ি** (*chingṛi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ciṅgaṭa*, "shrimp" (CDIAL 4786). CDIAL lists Bengali *ciṅṛi*, "prawn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bājār"
 concept_tag: BN-TOWN84-BAJAR
 prerequisites: [BN-C84-pulish, BN-C84-saikel]
 sounds: []
-roots: []
+roots: [persian-bazar]
+etymology_hook: "bājār: usually traced to Persian bāzār 'market'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C84-saikel]
 <!-- hl-knowledge: introduces=[BN-LEX-C84-TOWN84-03]; assesses=[] -->
 
 **বাজার** — *bājār* — "a market".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাজার** (*bājār*) is a loan, usually traced to Persian *bāzār*, "market".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

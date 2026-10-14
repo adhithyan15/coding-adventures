@@ -14,7 +14,8 @@ romanization: "bhôdrô"
 concept_tag: BN-GUN161-BHODRO
 prerequisites: [BN-C160-chintito, BN-C160-buro]
 sounds: []
-roots: []
+roots: [bhadra-sanskrit]
+etymology_hook: "bhôdrô ← Sanskrit bhadra 'fortunate, good', a tatsama (CDIAL 9377)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C160-buro]
 <!-- hl-knowledge: introduces=[BN-LEX-C161-GUN161-01]; assesses=[] -->
 
 **ভদ্র** — *bhôdrô* — "polite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভদ্র** (*bhôdrô*) is Sanskrit *bhadra*, "fortunate, good", taken over whole as a learned loan, a tatsama (CDIAL 9377).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

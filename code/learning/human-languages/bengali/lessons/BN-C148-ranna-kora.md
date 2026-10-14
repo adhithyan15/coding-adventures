@@ -14,7 +14,8 @@ romanization: "rānnā kôrā"
 concept_tag: BN-VERB-RANNA-KORA
 prerequisites: [BN-C147-bigyapon, BN-C147-rosid]
 sounds: []
-roots: []
+roots: [sanskrit-randhana, sanskrit-karoti]
+etymology_hook: "rānnā kôrā: rānnā 'cooking' ← randhana (CDIAL 10615) + kôrā 'to do' ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C147-rosid]
 <!-- hl-knowledge: introduces=[BN-LEX-C148-ACT148-01]; assesses=[] -->
 
 **রান্না করা** — *rānnā kôrā* — "to cook".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রান্না করা** (*rānnā kôrā*) is *rānnā*, "cooking", from Sanskrit *randhana*, "cooking" (CDIAL 10615), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

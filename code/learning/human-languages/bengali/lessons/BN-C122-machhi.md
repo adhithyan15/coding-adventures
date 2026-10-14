@@ -14,7 +14,8 @@ romanization: "māchhi"
 concept_tag: BN-THINGS122-MACHHI
 prerequisites: [BN-C121-chorui, BN-C121-bok]
 sounds: []
-roots: []
+roots: [sanskrit-makshika]
+etymology_hook: "māchhi ← Sanskrit makṣikā 'fly, bee', a tadbhava (CDIAL 9696)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C121-bok]
 <!-- hl-knowledge: introduces=[BN-LEX-C122-THINGS122-01]; assesses=[] -->
 
 **মাছি** — *māchhi* — "a fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাছি** (*māchhi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *makṣikā*, "fly, bee" (CDIAL 9696).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

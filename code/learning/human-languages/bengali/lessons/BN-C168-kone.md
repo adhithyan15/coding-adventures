@@ -14,7 +14,8 @@ romanization: "kône"
 concept_tag: BN-JINIS168-KONE
 prerequisites: [BN-C168-shashuri, BN-C168-bor]
 sounds: []
-roots: []
+roots: [sanskrit-kanya]
+etymology_hook: "kône: apparently ← Sanskrit kanyā 'maiden' (CDIAL 2737), though CDIAL gives no Bengali form there"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C168-bor]
 <!-- hl-knowledge: introduces=[BN-LEX-C168-JINIS168-03]; assesses=[] -->
 
 **কনে** — *kône* — "a bride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কনে** (*kône*) appears to go back to Sanskrit *kanyā*, "maiden", but CDIAL gives no Bengali form under that entry, only Assamese *kanāi* in a ritual sense (CDIAL 2737).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

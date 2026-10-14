@@ -14,7 +14,8 @@ romanization: "tā̃ti"
 concept_tag: BN-THINGS125-TATI
 prerequisites: [BN-C125-kamar, BN-C125-kumor]
 sounds: []
-roots: []
+roots: [indo-aryan-tantrika]
+etymology_hook: "tāṁti ← *tantrika 'weaver', a reconstructed form; a tadbhava (CDIAL 5666)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C125-kumor]
 <!-- hl-knowledge: introduces=[BN-LEX-C125-THINGS125-05]; assesses=[] -->
 
 **তাঁতি** — *tā̃ti* — "a weaver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তাঁতি** (*tāṁti*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*tantrika*, "weaver", a form CDIAL reconstructs from its descendants (CDIAL 5666).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

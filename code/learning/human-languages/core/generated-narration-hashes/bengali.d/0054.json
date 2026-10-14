@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 54,
-  "sourceHash": "fnv1a64:bea810ae55e761e3",
+  "sourceHash": "fnv1a64:99c536f37cb3dfab",
   "lessonIds": [
     "BN-C54-banano",
     "BN-C54-tola",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch54.txt",
   "json": "bengali/narration/ch54.json",
-  "textHash": "fnv1a64:8adb2dd6d86804a0",
-  "jsonHash": "fnv1a64:f66cd6a1f4a21b2e",
+  "textHash": "fnv1a64:2df85767896493c9",
+  "jsonHash": "fnv1a64:e33f8026737f8862",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "khichuṛi"
 concept_tag: BN-JINIS196-KHICHURI
 prerequisites: [BN-C195-dul, BN-C196-biriyani]
 sounds: []
-roots: []
+roots: [sanskrit-khicca]
+etymology_hook: "khichuṛi ← Sanskrit khiccā 'dish of rice and peas', a tadbhava (CDIAL 3880)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C196-biriyani]
 <!-- hl-knowledge: introduces=[BN-LEX-C196-JINIS196-02]; assesses=[] -->
 
 **খিচুড়ি** — *khichuṛi* — "khichuri".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খিচুড়ি** (*khichuṛi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khiccā*, "dish of rice and peas" (CDIAL 3880). CDIAL lists Bengali *khicaṛi*, "rice and lentils".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 232,
-  "sourceHash": "fnv1a64:8831ab5bcc833ffd",
+  "sourceHash": "fnv1a64:a18981c18c160f60",
   "lessonIds": [
     "BN-C232-shosa",
     "BN-C232-mashrum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch232.txt",
   "json": "bengali/narration/ch232.json",
-  "textHash": "fnv1a64:4c58e4824e8e28bd",
-  "jsonHash": "fnv1a64:44ebca3bcc9f8c1a",
+  "textHash": "fnv1a64:ab32c050c64f1ded",
+  "jsonHash": "fnv1a64:4a9b08d6b65ac7b8",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "ṭrāk"
 concept_tag: BN-JINIS167-TRAK
 prerequisites: [BN-C167-riksha, BN-C167-motorsaikel]
 sounds: []
-roots: []
+roots: [english-truck]
+etymology_hook: "ṭrāk ← English truck"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C167-motorsaikel]
 <!-- hl-knowledge: introduces=[BN-LEX-C167-JINIS167-05]; assesses=[] -->
 
 **ট্রাক** — *ṭrāk* — "a lorry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ট্রাক** (*ṭrāk*) is a loan from English *truck*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shôktishāli"
 concept_tag: BN-QUAL143-SHOKTISHALI
 prerequisites: [BN-C142-mojbut, BN-C142-durbol]
 sounds: []
-roots: []
+roots: [sanskrit-shakti, sanskrit-shalin]
+etymology_hook: "shôktishāli: Sanskrit śakti 'power' + -śālin 'possessing', both taken over whole"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C142-durbol]
 <!-- hl-knowledge: introduces=[BN-LEX-C143-QUAL143-01]; assesses=[] -->
 
 **শক্তিশালী** — *shôktishāli* — "powerful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শক্তিশালী** (*shôktishāli*) is *shôkti*, "power", Sanskrit *śakti*, + *-shāli*, "possessing", Sanskrit *-śālin*: both parts are taken over whole from Sanskrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

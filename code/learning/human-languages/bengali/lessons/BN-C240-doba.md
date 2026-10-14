@@ -14,7 +14,8 @@ romanization: "ḍobā"
 concept_tag: BN-VERB-DOBA
 prerequisites: [BN-C240-joma-deoya, BN-C240-jhap-deoya]
 sounds: []
-roots: []
+roots: [indo-aryan-dubb]
+etymology_hook: "ḍobā ← *ḍubb 'sink', a reconstructed form; a tadbhava (CDIAL 5561)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C240-jhap-deoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C240-ACT240-04]; assesses=[] -->
 
 **ডোবা** — *ḍobā* — "to sink, to drown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ডোবা** (*ḍobā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ḍubb*, "sink", a form CDIAL reconstructs from its descendants (CDIAL 5561). CDIAL lists Bengali *ḍubā*, "to sink", and takes the form as a reshuffling of Middle Indo-Aryan *buḍḍaï*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

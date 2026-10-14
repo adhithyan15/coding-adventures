@@ -14,7 +14,8 @@ romanization: "ā̃chṛāno"
 concept_tag: BN-VERB-ACHRANO
 prerequisites: [BN-C152-bhejano, BN-C152-kacha]
 sounds: []
-roots: []
+roots: [indo-aryan-anca]
+etymology_hook: "āṁchṛāno: apparently with Assamese āṁsor 'scratch', which CDIAL lists under *añca 'curve' (CDIAL 165)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C152-kacha]
 <!-- hl-knowledge: introduces=[BN-LEX-C152-ACT152-04]; assesses=[] -->
 
 **আঁচড়ানো** — *ā̃chṛāno* — "to comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আঁচড়ানো** (*āṁchṛāno*), "to comb, to scratch", appears to belong with Assamese *āṁsor*, "scratch", which CDIAL lists under *\*añca*, "curve", a form it reconstructs (CDIAL 165); CDIAL gives no Bengali form there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

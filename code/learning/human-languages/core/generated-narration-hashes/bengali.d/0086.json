@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 86,
-  "sourceHash": "fnv1a64:24128a106682e60e",
+  "sourceHash": "fnv1a64:5b0d86e0a81a30d7",
   "lessonIds": [
     "BN-C86-juto",
     "BN-C86-chhoy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch86.txt",
   "json": "bengali/narration/ch86.json",
-  "textHash": "fnv1a64:106bbdaaecc2270b",
-  "jsonHash": "fnv1a64:62debcb2f600a5a8",
+  "textHash": "fnv1a64:9adafd0c3e8b2e1c",
+  "jsonHash": "fnv1a64:b3bab7d59d136a7b",
   "findings": []
 }
