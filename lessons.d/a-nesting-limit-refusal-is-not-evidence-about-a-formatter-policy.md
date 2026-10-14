@@ -16,3 +16,11 @@ The first locked test was also refused before compilation because metadata
 the lock before failing to fetch an uncached existing platform crate. Compare
 registry names/versions/sources/checksums and prove the locked test executes;
 do not label the failed metadata command successful or introduce new versions.
+
+
+Six standard wrappers around even the simplified proven entier/sign root also
+hit cap135. The0PASS/1FAIL receipt is parser evidence only. Keep a separate
+source/parser refusal control and use an explicitly constructed parsed-AST
+pair to test the public compiler depth boundary. Compare exact call counts,
+root tokens, original acceptance and the semantic diagnostic; never claim
+the AST control certifies deeper source parsing or cloned source positions.

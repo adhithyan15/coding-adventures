@@ -105,3 +105,27 @@ do not manufacture a full-program depth result or raise the parser cap.
 Full pending native/strict/current-main delivery/hosted/security gates remain
 pending. Full final-source Miri DEFERRED/PENDING; frozen497inputs/run/checkout/
 receipts/target remain untouched and unpolled. The full objective is OPEN.
+
+
+### Parser and public AST boundaries are separate
+
+Actual validator73464 EXIT1/Cargo101 atd49c6ac7 records0PASS/1FAIL: the
+six-layer same-root source reaches the unchanged parser cap135, not the
+formatter classifier. WinUI was not reached by that stopped helper. Preserve
+the receipt. A source control must explicitly require that parser rejection;
+it must not be counted as semantic depth refusal. Its five-layer counterpart
+must parse and produce exactly one formatter for all four consumer/outcome cells.
+
+For the public compile_ast contract, parse the same valid five-layer program,
+retain an exact clone, and transform only each of its two relay actuals. Clone
+the parsed outer abs expression, replace that one call's expression actual with
+the original five-layer expression, and install it back as the relay actual.
+Assert exactly two actual replacements and exactly five/six abs names with one
+entier/sign and the same local root per actual. The resulting grammar structure
+uses parser-produced node/token shapes. compile_ast of the original must accept;
+compile_ast of the sixth-layer clone must give the semantic formatter diagnostic.
+This isolates the compiler budget for parsed AST inputs, not six-layer source
+acceptance or source-position/provenance validation; cloned position metadata
+is not evidence of a new source map. Cover true/false and direct/assigned.
+No production parser cap, classifier budget, policy or older assertion changes.
+Full final-source Miri DEFERRED/PENDING and whole delivery acceptance PENDING.
