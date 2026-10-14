@@ -11,8 +11,8 @@ romanization: hǎo bu hǎo
 gloss: is it good, written from three characters already yours and no new shape at all
 prerequisites: [ZH-C19-hear-haobuhao]
 sounds: [tone-3, tone-neutral]
-roots: []
-etymology_hook: The oldest characters in the book, in the order good-not-good, make a question that needs nothing new.
+roots: [middle-chinese-xawx, middle-chinese-pjuw]
+etymology_hook: "hǎo bu hǎo: a Chinese pattern on two inherited words, Middle Chinese xawX 'good' and pjuw 'not'"
 duration:
   max_seconds: 160
 requires:
@@ -63,6 +63,13 @@ verb the way English does.
 
 Both would be written with a question mark of Chinese's own at the end. That
 mark is not taught yet, so it is left off here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**好不好** is a Chinese pattern, not a borrowing: both words are inherited from
+Middle Chinese, *xawX*, "good", and *pjuw*, "not" (Guangyun, in Baxter's
+transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-GRAMMAR-V-NOT-V-01, ZH-LEX-HAOBUHAO-01] -->

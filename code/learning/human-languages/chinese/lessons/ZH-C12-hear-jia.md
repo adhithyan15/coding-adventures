@@ -11,8 +11,8 @@ gloss: home; family
 concept_tag: ZH-FAMILY-HOME
 prerequisites: [ZH-C12-nuer]
 sounds: [tone-1]
-roots: []
-etymology_hook: Home arrives as one high, level syllable before its ten-stroke character appears.
+roots: [middle-chinese-kae]
+etymology_hook: "jiā 'home': inherited, from Middle Chinese kae 'dwelling'"
 duration:
   max_seconds: 135
 requires:
@@ -44,6 +44,8 @@ reviews_of: [ZH-C12-nuer, ZH-C12-erzi, ZH-C12-ren]
 Hold the pitch high and level: *jiā*. The word can name the household place or
 the family belonging to it. Keep the character covered; it has ten strokes, and
 the next lesson gives them to you in two familiar-sized pieces.
+
+*Jiā* is inherited from Middle Chinese *kae*, "dwelling".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-JIA-01] -->

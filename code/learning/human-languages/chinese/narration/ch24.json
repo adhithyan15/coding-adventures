@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Have, and Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:22614bef68a0baf7",
+  "sourceHash": "fnv1a64:6801b87ba03d5dcb",
   "lessons": [
     {
       "id": "ZH-W24-you",
@@ -221,7 +221,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40f65447cac3f7e3",
+      "sourceHash": "fnv1a64:da943d6b391b77b1",
       "notice": null,
       "blocks": [
         {
@@ -347,6 +347,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "有 yǒu is inherited from Middle Chinese hjuwX, \"to have; to exist\" (Guangyun, in Baxter's transcription); both of its jobs are old ones."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -380,7 +391,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -597,7 +608,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62191a91f597bcd4",
+      "sourceHash": "fnv1a64:2c957064aeb2f134",
       "notice": null,
       "blocks": [
         {
@@ -719,6 +730,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "个 (gè) is inherited from Middle Chinese kaH, which the Guangyun glosses \"a counted piece\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -752,7 +774,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

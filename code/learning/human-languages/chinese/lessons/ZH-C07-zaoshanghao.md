@@ -11,8 +11,8 @@ gloss: good morning — and proof that 好 was a building block
 concept_tag: GREETING-MORNING
 prerequisites: [ZH-C07-zaoshang]
 sounds: [tone-3, tone-neutral]
-roots: []
-etymology_hook: 早上好 reuses the 好 the reader met in the very first greeting, which turns 你好 from a memorised phrase into a pattern with a slot.
+roots: [middle-chinese-tsawx, middle-chinese-dzyangh, middle-chinese-xawx]
+etymology_hook: "zǎoshang hǎo: Chinese 'morning' + 'good'; all three pieces inherited from Middle Chinese"
 duration:
   max_seconds: 250
 requires:
@@ -56,6 +56,10 @@ half is reusable:
 learned two greetings; you have learned a **frame** and filled it twice. Every
 one of the other times of day works the same way, and you will be able to build
 those greetings the moment you have the words for those times.
+
+Every piece is inherited from Middle Chinese, *tsawX* "early", *dzyangH* "above"
+and *xawX* "good" (Guangyun, in Baxter's transcription), and Chinese put the
+greeting together from them.
 
 ## Sounds you'll need — why nothing moves here
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-TONE-NEUTRAL, ZH-LEX-ZAOSHANGHAO] -->

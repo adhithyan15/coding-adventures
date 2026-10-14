@@ -1,5 +1,17 @@
 # Changelog — Mandarin Chinese track
 
+## Changed — every word lesson says where its word comes from
+
+HL24 section 9 asks every lesson that introduces a word to say where the word comes from, in the body the book prints and in the `etymology_hook`. Every Chinese hook was present, but they took characters apart or described tones; 62 lessons showed no origin in their body, and 43 "taken apart" blocks took the characters apart without saying where the word came from (human-language-data: etymology gap pin 0 / 62 -> 0 / 0, empty taken-apart blocks 43 -> 0).
+
+- **What changed.** 30 word lessons gained a `## The word, taken apart` block; the 32 listening lessons (`hear-*`) gained one origin sentence in pinyin in "You'll want to know", because their characters are still covered there; the 43 existing blocks gained one origin sentence each. All 105 hooks were replaced with origin hooks. The character stories (woman beside child, the open mouth, the hand over the eye, the sound-borrowed 四) stay, now labelled as the history of the writing, not of the word.
+- **Inherited words** give their Middle Chinese reading in Baxter's transcription, read from the Guangyun categories with the `tshet-uinh` data (all 57 readings checked by script, choosing the reading that matches the Mandarin sound and sense: *daH* for dà, *khanH* for kàn, *dzyangX* "go up" in shàngxué and *dzyangH* "above" in zǎoshang), and Unihan glosses. Where the Guangyun gloss shows an older sense, the lesson says so: 谢 "to decline, take leave", 字 "to nurse, to rear" (quoting the Shuowen), 汉 a river's name, 书 "writing", 对 "to answer; to match", 岁 "year". Compounds name each piece (中国 first "the central states"; 大学 the title of the *Great Learning*; 家人 a hexagram's name).
+- **Counts by origin kind.** 41 lessons teach a single inherited word, 58 a compound or pattern of inherited words, 5 a word whose origin is stated as not settled (什么, 吗 twice, 的, 呢; 吗 is given the usual hedged account from *mju* "not have", 的 from a Tang-period particle read *tejX*), and 1 the Hindu-Arabic digits. No Sanskrit, Iranian, Mongolic, Japanese-coined or Western loanword is among these lessons. Four lessons (五, 六, 九, 日) carry a hedged Tibetan comparison; no Old Chinese or Proto-Sino-Tibetan form is given.
+- **Roots.** 100 lessons gained `roots:` slugs in the `middle-chinese-<reading>` form, reusing the Japanese track's slug for the same character in 23 of the 51 slugs (`middle-chinese-haewk`, `-trjuwng`, `-ngjoX` and others) and minting 28 new ones; 同 is `middle-chinese-duwng-same` so it never merges with 筒, which shares its reading.
+- **Durations.** No `max_seconds` was raised. ZH-C06-zaijian was tightened to make room (288 s -> 279 s computed); the longest touched lesson is ZH-C26-dui at 290 s computed.
+
+Regenerated: book chapters, narration, modality records and hash ledgers.
+
 ## Fixed — every atom is practised again after the lesson that taught it
 
 Every atom a lesson introduces is now practised again by a later lesson, either in its `practises.knowledge` or in a block's `assesses` (human-language-data: `atomsNeverRevisited` 134 → 1 across the corpus). Three of the four are fixed. The fourth is the last lesson of the track.

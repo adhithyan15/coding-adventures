@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "From study to university student",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:de9e8d46857990e4",
+  "sourceHash": "fnv1a64:e8c533bfff4eb833",
   "lessons": [
     {
       "id": "ZH-C13-hear-da",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d56ee99d4aeeab23",
+      "sourceHash": "fnv1a64:4c4cdce5541f9b78",
       "notice": null,
       "blocks": [
         {
@@ -51,6 +51,10 @@
             {
               "kind": "speech",
               "text": "Let the voice fall firmly on the single syllable: dà. Keep the character covered for now. The next lesson gives its three strokes one at a time."
+            },
+            {
+              "kind": "speech",
+              "text": "Dà is inherited from Middle Chinese daH, \"big\"; the Guangyun also lists a second reading, dajH."
             }
           ]
         },
@@ -207,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d4137e0196451b0",
+      "sourceHash": "fnv1a64:6c7df2b827dfbf12",
       "notice": null,
       "blocks": [
         {
@@ -257,6 +261,10 @@
             {
               "kind": "speech",
               "text": "Then say it once with a clear fourth-tone fall."
+            },
+            {
+              "kind": "speech",
+              "text": "大 (dà) is inherited from Middle Chinese daH, \"big\"; the Guangyun also lists a second reading, dajH (Guangyun, in Baxter's transcription)."
             }
           ]
         },
@@ -321,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:940ff167494369c5",
+      "sourceHash": "fnv1a64:843bce3f06cc670c",
       "notice": null,
       "blocks": [
         {
@@ -353,6 +361,10 @@
             {
               "kind": "speech",
               "text": "Hear two beats: falling dà, then level jiā. The whole word means everyone. Its written form will contain only characters you already know."
+            },
+            {
+              "kind": "speech",
+              "text": "Dàjiā is built from Middle Chinese daH, \"big\", and kae, \"household\"."
             }
           ]
         },
@@ -402,7 +414,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:5cea47fa960fe801",
+      "sourceHash": "fnv1a64:848cca76dd361c01",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -446,6 +458,10 @@
             {
               "kind": "speech",
               "text": "Close the gap. Read the two characters as one word and keep both tone shapes."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese, daH and kae (Guangyun, in Baxter's transcription). Older texts use the pair for a great household; \"everyone\" is the later sense."
             }
           ]
         },
@@ -505,7 +521,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8d71054dd0266b2",
+      "sourceHash": "fnv1a64:ab0b560589c44e7e",
       "notice": null,
       "blocks": [
         {
@@ -537,6 +553,10 @@
             {
               "kind": "speech",
               "text": "Begin low enough to rise clearly through xué. Stay with sound and meaning; the eight-stroke character comes next in small groups."
+            },
+            {
+              "kind": "speech",
+              "text": "Xué is inherited from Middle Chinese haewk, \"to learn\"."
             }
           ]
         },
@@ -696,7 +716,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b81788c6a54a0ed4",
+      "sourceHash": "fnv1a64:6c141c034a0e37eb",
       "notice": null,
       "blocks": [
         {
@@ -742,6 +762,10 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **学** without pinyin, then give the syllable a clear rise]"
+            },
+            {
+              "kind": "speech",
+              "text": "学 (xué) is inherited from Middle Chinese haewk, \"to learn\" (Guangyun, in Baxter's transcription); Mandarin lost the final k."
             }
           ]
         },
@@ -806,7 +830,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08d06b82449f54af",
+      "sourceHash": "fnv1a64:67c7c3b412a6f5f0",
       "notice": null,
       "blocks": [
         {
@@ -838,6 +862,10 @@
             {
               "kind": "speech",
               "text": "Rise on xué. Keep sheng short and light. Hold the second character back; the next lesson gives its five strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "Xuésheng is built from Middle Chinese haewk, \"to learn\", and srjaeng, \"life, birth\"."
             }
           ]
         },
@@ -989,7 +1017,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd60256e647ae2d1",
+      "sourceHash": "fnv1a64:47445a7e5a491183",
       "notice": null,
       "blocks": [
         {
@@ -1039,6 +1067,10 @@
             {
               "kind": "speech",
               "text": "Keep the second syllable light."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese: haewk, \"to learn\", and srjaeng, \"life, birth\", long used for a young scholar (Guangyun, in Baxter's transcription). The pair is an old Chinese compound."
             }
           ]
         },
@@ -1103,7 +1135,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80be82c2020d545e",
+      "sourceHash": "fnv1a64:8473f8a6d9dc776b",
       "notice": null,
       "blocks": [
         {
@@ -1135,6 +1167,10 @@
             {
               "kind": "speech",
               "text": "Let dà fall, then let xué rise. Together they name a university or college."
+            },
+            {
+              "kind": "speech",
+              "text": "Dàxué is built from Middle Chinese daH, \"big\", and haewk, \"learning\"."
             }
           ]
         },
@@ -1185,7 +1221,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:5f961651fe2a2f65",
+      "sourceHash": "fnv1a64:89c40f20308e2bd3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1229,6 +1265,10 @@
             {
               "kind": "speech",
               "text": "Now read the pair as one word: fall, then rise."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese, daH and haewk (Guangyun, in Baxter's transcription). The pair is old, the title of a Confucian classic, the Great Learning; the sense \"university\" is modern."
             }
           ]
         },
@@ -1288,7 +1328,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6113d8d01c7492fa",
+      "sourceHash": "fnv1a64:feb7e3e2735e718c",
       "notice": null,
       "blocks": [
         {
@@ -1320,6 +1360,10 @@
             {
               "kind": "speech",
               "text": "Say three beats: falling dà, rising xué, light sheng. Do not repeat xué; the two familiar words overlap there."
+            },
+            {
+              "kind": "speech",
+              "text": "Dàxuésheng is built from Middle Chinese daH, haewk and srjaeng: big, learning, life."
             }
           ]
         },
@@ -1371,7 +1415,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:4093985f75f50fb8",
+      "sourceHash": "fnv1a64:2107b6d5a118b0e6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1415,6 +1459,10 @@
             {
               "kind": "speech",
               "text": "Track three characters and three beats. The middle 学 (xué) belongs to the whole word only once."
+            },
+            {
+              "kind": "speech",
+              "text": "All three pieces are inherited from Middle Chinese, daH, haewk and srjaeng (Guangyun, in Baxter's transcription), and Chinese joined them as university plus student."
             }
           ]
         },

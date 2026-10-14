@@ -11,8 +11,8 @@ gloss: big; large
 concept_tag: ZH-SCHOOL-BIG
 prerequisites: [ZH-C12-practice]
 sounds: [tone-4]
-roots: []
-etymology_hook: The meaning arrives as one falling syllable before its three-stroke character appears.
+roots: [middle-chinese-dajh]
+etymology_hook: "dà 'big': inherited, from Middle Chinese daH; the Guangyun also lists a second reading, dajH"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +43,9 @@ reviews_of: [ZH-C12-practice]
 
 Let the voice fall firmly on the single syllable: *dà*. Keep the character
 covered for now. The next lesson gives its three strokes one at a time.
+
+*Dà* is inherited from Middle Chinese *daH*, "big"; the Guangyun also lists a
+second reading, *dajH*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DA-01] -->

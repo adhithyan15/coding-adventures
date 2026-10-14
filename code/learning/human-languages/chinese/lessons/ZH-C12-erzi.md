@@ -11,8 +11,8 @@ concept_tag: ZH-FAMILY-SON
 gloss: son, now read and written
 prerequisites: [ZH-W12-er]
 sounds: [tone-2, tone-neutral]
-roots: []
-etymology_hook: 儿 and 子 both point toward child; the spoken compound fixes the everyday kinship meaning son.
+roots: [middle-chinese-nye, middle-chinese-tsix]
+etymology_hook: "érzi 'son': 'infant' + 'offspring', inherited from Middle Chinese nye and tsiX"
 duration:
   max_seconds: 180
 requires:
@@ -44,6 +44,9 @@ reviews_of: [ZH-C12-hear-erzi, ZH-W12-er, ZH-W01-zi]
 The first syllable rises. The second is light. Both characters carry child
 meanings, but the whole word—not either character alone—is the ordinary kinship
 word **son**.
+
+Both are inherited from Middle Chinese: *nye*, "infant", and *tsiX*, "offspring"
+(Guangyun, in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ERZI-01, ZH-SCRIPT-ER-CHAR-01, ZH-SCRIPT-ZI-01] -->

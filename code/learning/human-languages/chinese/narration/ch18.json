@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Looking and reading",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:57f5ee2c0afa25d2",
+  "sourceHash": "fnv1a64:192edac42411b09b",
   "lessons": [
     {
       "id": "ZH-C18-hear-kan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d094e5275bddf9ea",
+      "sourceHash": "fnv1a64:7cd41feb557ac9de",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,10 @@
             {
               "kind": "speech",
               "text": "Start high and let the tone fall cleanly. The written form stays hidden in this first step so sound and meaning can settle before handwriting begins."
+            },
+            {
+              "kind": "speech",
+              "text": "Kàn is inherited from Middle Chinese khanH, \"to look\", also read khan."
             }
           ]
         },
@@ -432,7 +436,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:5728a57127879b95",
+      "sourceHash": "fnv1a64:3a4955f44041e18c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -476,6 +480,10 @@
             {
               "kind": "speech",
               "text": "Hide the pinyin. Read 看 (kàn) from the hand-over-eye shape, say the falling tone, then give the meaning. One form now connects listening, speaking, reading, and writing."
+            },
+            {
+              "kind": "speech",
+              "text": "看 is inherited from Middle Chinese, where the Guangyun lists it as khan and khanH, \"to look\" (Guangyun, in Baxter's transcription); Mandarin kàn continues the second. The hand over the eye is the history of the character."
             }
           ]
         },
@@ -538,7 +546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4859d0169922ad26",
+      "sourceHash": "fnv1a64:f2475cdf7a383846",
       "notice": null,
       "blocks": [
         {
@@ -570,6 +578,10 @@
             {
               "kind": "speech",
               "text": "Both syllables fall. The familiar jiàn now follows kàn: you look and successfully perceive. Keep the characters hidden for this sound-first step."
+            },
+            {
+              "kind": "speech",
+              "text": "Kànjiàn is built from Middle Chinese khanH, \"to look\", and kenH, \"to see\"."
             }
           ]
         },
@@ -620,7 +632,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3592a71e8a245b9",
+      "sourceHash": "fnv1a64:bd49f4d3f9356ab9",
       "notice": null,
       "blocks": [
         {
@@ -679,6 +691,10 @@
             {
               "kind": "speech",
               "text": "看 (kàn) supplies looking; 见 marks the perceived result."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese: khanH, \"look\", and kenH, \"see\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },
@@ -744,7 +760,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:18d0e9f329ce9320",
+      "sourceHash": "fnv1a64:27a5f19d3c7512e0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -783,6 +799,10 @@
             {
               "kind": "speech",
               "text": "Let hǎo dip, then let kàn fall. This is a description, not an instruction to look. The characters wait until the next tiny step."
+            },
+            {
+              "kind": "speech",
+              "text": "Hǎokàn is built from Middle Chinese xawX, \"good\", and khanH, \"to look\"."
             }
           ]
         },
@@ -835,7 +855,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:c0ef82ffe194f096",
+      "sourceHash": "fnv1a64:ae11398565746f66",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -880,6 +900,10 @@
             {
               "kind": "speech",
               "text": "No new character is hiding here. Read 好, then 看 (kàn), and let the literal pieces carry you to the whole meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese: xawX, \"good\", and khanH, \"look\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },
@@ -1037,7 +1061,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90f375b28ada21e6",
+      "sourceHash": "fnv1a64:5f25871fe48e49ff",
       "notice": null,
       "blocks": [
         {
@@ -1069,6 +1093,10 @@
             {
               "kind": "speech",
               "text": "Hold one level first tone. Do not add kàn yet; this step is only the object, book. Its four-stroke written form waits until the next lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "Shū is inherited from Middle Chinese syo, \"writing\"."
             }
           ]
         },
@@ -1434,7 +1462,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1cc0acee0f9c757",
+      "sourceHash": "fnv1a64:4bb0ffe3cb283ada",
       "notice": null,
       "blocks": [
         {
@@ -1480,6 +1508,10 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 书, hold the level first tone, then give its meaning]"
+            },
+            {
+              "kind": "speech",
+              "text": "书 (shū) is inherited from Middle Chinese syo, \"writing\" (Guangyun, in Baxter's transcription); \"book\" grew from it."
             }
           ]
         },
@@ -1550,7 +1582,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e01116b3a4da36f",
+      "sourceHash": "fnv1a64:8855c0ea2061fc47",
       "notice": null,
       "blocks": [
         {
@@ -1582,6 +1614,10 @@
             {
               "kind": "speech",
               "text": "Let kàn fall and keep shū level. Mandarin says look-at + book for the activity read. Keep the characters hidden for one more tiny step."
+            },
+            {
+              "kind": "speech",
+              "text": "Kànshū is built from Middle Chinese khanH, \"to look\", and syo, \"writing\"."
             }
           ]
         },
@@ -1634,7 +1670,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:6fe1fcad9f309f60",
+      "sourceHash": "fnv1a64:5f317676b3c9814b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1678,6 +1714,10 @@
             {
               "kind": "speech",
               "text": "Read the action first and its object second. No new character is hiding here: 看 (kàn) + 书 (shū) gives the whole reading activity."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese: khanH, \"look\", and syo, \"writing, book\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },

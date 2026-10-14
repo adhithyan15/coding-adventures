@@ -46,6 +46,9 @@ First tone: high and flat. Start high and stay there — not a question, not a s
 [repeat that twice]
 One honest note, so it does not surprise you later. 一 does not always keep this tone. In front of certain syllables it shifts to yí or yì — the same kind of change that turned 你好 into ní hǎo. Counting is exactly where it stays yī, so counting is where this book leaves it.
 
+The word, taken apart.
+一 yī is inherited from Middle Chinese 'jit, "one" (Guangyun, in Baxter's transcription). The single stroke is the history of the character; the word is the inherited one.
+
 Guided Practice.
 [your turn — say: yī — high and flat, held]
 [pause 8 seconds for the answer]
@@ -105,6 +108,9 @@ Now hold èr next to a piece you already know:
 尔 ěr — the sound-component inside 你 二 èr — the number two.
 Same syllable. Different tone. Completely unrelated characters. One dips; one falls. Nothing else separates them.
 You met this idea once already, when 好 hǎo "good" turned into 好 hào "fond of" on a change of pitch alone. That was one character with two readings; this is two characters colliding in sound. Both are the same lesson: in Mandarin the pitch is not decoration on the word. It is part of the word.
+
+The word, taken apart.
+二 èr is inherited from Middle Chinese nyijH, "two" (Guangyun, in Baxter's transcription).
 
 Guided Practice.
 [your turn — say: èr — falling, dropped firmly]
@@ -173,6 +179,9 @@ Three characters in, one stroke per unit, a system so regular it barely needs te
 Every counting system humans have built hits the same wall in the same place. Roman numerals go I, II, III and then break to IV, because stacked marks stop being readable at about three. This one breaks for exactly the same reason.
 You are being told now so that the next character feels like a solved problem rather than a broken promise.
 
+The word, taken apart.
+三 sān is inherited from Middle Chinese sam, "three" (Guangyun, in Baxter's transcription). The final m has since become n.
+
 Guided Practice.
 [your turn — say: yī, èr, sān — level, down, level]
 [pause 8 seconds for the answer]
@@ -240,6 +249,9 @@ sì (falling) — four sǐ (dipping) — die.
 Separated by pitch alone — the third time this chapter has shown you that tone is part of a Mandarin word's identity, not an accent on it.
 Not a curiosity, either: it is why many buildings in China number floors 1, 2, 3, 5, skipping four the way some Western buildings skip thirteen.
 
+The word, taken apart.
+四 sì is inherited from Middle Chinese sijH, "four" (Guangyun, in Baxter's transcription). The sound-borrowing above is the history of the character: the word came first, and a shape was borrowed to write it.
+
 Guided Practice.
 [your turn — say: sì — falling, firm]
 [pause 8 seconds for the answer]
@@ -306,6 +318,9 @@ You can now count:
 一 二 三 四 五 yī, èr, sān, sì, wǔ.
 Say it as one run, not five separate words. The tone shape is level, down, level, down, dip, and that rhythm is what a listener hears first.
 Five characters, and three ways one can come to you: two you derived, one was borrowed for its sound, and two you simply learned. That mix is Chinese writing in miniature, and you have now met all of it.
+
+The word, taken apart.
+五 wǔ is inherited from Middle Chinese nguX, "five", whose ng Mandarin has lost (Guangyun, in Baxter's transcription). It is usually compared with Tibetan lnga, a likely Sino-Tibetan cognate.
 
 Guided Practice.
 [your turn — say: nǐ, hǎo, wǔ — three dips, one shape]

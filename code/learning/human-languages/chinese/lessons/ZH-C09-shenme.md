@@ -12,7 +12,7 @@ concept_tag: QUESTION-WHAT
 prerequisites: [ZH-W09-me]
 sounds: [tone-2, tone-neutral]
 roots: []
-etymology_hook: 什么 is the first word the reader can use to get something back, rather than only to answer or to state.
+etymology_hook: "shénme 'what': origin not settled; it appears from about the Tang, its characters chosen for sound"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +56,10 @@ not for anything it means.
 And keep the levels apart. The pieces you drew *inside* 什 — the person and the
 ten — belong to that **character**, not to this **word**. "Person plus ten"
 explains nothing about *what*. Some words are built; some are just words.
+
+Where the word comes from is not settled. It appears in writing from about the
+Tang dynasty, spelled several ways, and its two characters were chosen for their
+sound (Unihan).
 
 ## Why it's said this way — 什么 on its own
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SHENME] -->

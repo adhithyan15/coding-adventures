@@ -11,8 +11,8 @@ gloss: "a hundred — and the one word in the run whose tone moves"
 concept_tag: ZH-NUMBER-HUNDRED
 prerequisites: [ZH-W21-bai]
 sounds: [tone-3, tone-lexical]
-roots: []
-etymology_hook: "yi bai is where 一 stops being first tone: before a third tone it is said as a falling yi, which is the first time this book has heard 一 move."
+roots: [middle-chinese-jit, middle-chinese-paek]
+etymology_hook: "yìbǎi: 'one' + 'hundred', both inherited, from Middle Chinese 'jit and paek"
 duration:
   max_seconds: 270
 requires:
@@ -61,6 +61,9 @@ instead.
 
 So the number that sounds simplest in the run is the one that changes most, and
 a hundred is where a learner meets it first.
+
+Both words are inherited from Middle Chinese: *'jit*, "one", and *paek*,
+"hundred" (Guangyun, in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUM-BAI, ZH-TONE-SANDHI-YI, ZH-LEX-NUM-YI] -->

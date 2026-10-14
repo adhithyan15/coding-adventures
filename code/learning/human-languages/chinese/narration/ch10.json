@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "One Character, Two Courtesies",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:973a39a8619cdb55",
+  "sourceHash": "fnv1a64:81d6563ef6681737",
   "lessons": [
     {
       "id": "ZH-W10-yan",
@@ -359,7 +359,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9399b653410e48df",
+      "sourceHash": "fnv1a64:96e22dfe70e4af37",
       "notice": null,
       "blocks": [
         {
@@ -399,6 +399,10 @@
             {
               "kind": "speech",
               "text": "Two cautions about this particular word, so you do not over-apply it. 谢谢 (xièxie) is a fixed expression, not something you assemble fresh each time — it does not mean \"to thank briefly\". And 谢 (xiè) is not said on its own: it lives inside words, so do not reach for a bare 谢 (xiè) and expect it to work."
+            },
+            {
+              "kind": "speech",
+              "text": "谢 (xiè) is inherited from Middle Chinese zjaeH, glossed \"to decline, take leave\" (Guangyun, in Baxter's transcription); \"to thank\" is a later sense, and the doubled form is a Chinese formation."
             }
           ]
         },
@@ -516,7 +520,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7e1862970bcf35d",
+      "sourceHash": "fnv1a64:4b1fac99a2ea32b0",
       "notice": null,
       "blocks": [
         {
@@ -556,6 +560,10 @@
             {
               "kind": "speech",
               "text": "It works the way 不是 works: put 不 in front of the word and you turn it. Here turning it is a polite refusal of the thanks — no need to thank me — which is how a great many languages answer being thanked."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese: pjuw, \"not\", and zjaeH, \"to decline, to thank\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },

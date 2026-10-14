@@ -10,8 +10,8 @@ romanization: hǎokàn
 gloss: good-looking or nice to look at
 prerequisites: [ZH-C18-kanjian]
 sounds: [tone-3, tone-4]
-roots: []
-etymology_hook: The familiar hǎo, good, comes before kàn, look: good to look at.
+roots: [middle-chinese-xawx, middle-chinese-khan]
+etymology_hook: "hǎokàn: built from Middle Chinese xawX 'good' and khanH 'to look'"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +43,8 @@ answers.
 
 Let *hǎo* dip, then let *kàn* fall. This is a description, not an instruction
 to look. The characters wait until the next tiny step.
+
+*Hǎokàn* is built from Middle Chinese *xawX*, "good", and *khanH*, "to look".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HAOKAN-01] -->

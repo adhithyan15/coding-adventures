@@ -11,8 +11,8 @@ gloss: middle; centre
 concept_tag: ZH-SCHOOL-MIDDLE
 prerequisites: [ZH-C14-practice]
 sounds: [tone-1]
-roots: []
-etymology_hook: Middle arrives first as one level-tone syllable; its character waits for the next tiny step.
+roots: [middle-chinese-trjuwng]
+etymology_hook: "zhōng 'middle': inherited, from Middle Chinese trjuwng"
 duration:
   max_seconds: 115
 requires:
@@ -43,6 +43,8 @@ reviews_of: [ZH-C14-practice]
 
 Hold one high, level tone: *zhōng*. Stay with sound and meaning. The written
 shape comes next.
+
+*Zhōng* is inherited from Middle Chinese *trjuwng*, "middle".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONG-01] -->

@@ -104,6 +104,7 @@ A woman beside a child, and the character means "good". That picture is the hook
 Two cautions, because a memory aid that pretends to be history rots:
 "Woman + child = good" is the traditional gloss. It is genuinely useful for remembering the shape, but palaeographers do not all accept it as the historical origin; some read the child component as a phonetic element instead. A picture that helps, not a proven derivation.
 Component glosses are hooks, not translations. 好 (hǎo) does not "mean" woman-child. It means good.
+The word itself is inherited from Middle Chinese xawX, "good" (Guangyun, in Baxter's transcription). The picture belongs to the writing, not to the word.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -142,6 +143,9 @@ Nobody hearing 你好 (nǐ hǎo) parses it as "you good", any more than an Engli
 
 Why it's said this way.
 你好 (nǐ hǎo) is safe, neutral, and understood everywhere — which is exactly why a course teaches it first. But it is worth knowing that it is used less freely than English "hello". Between people who already know each other, a Mandarin speaker is more likely to open with a small situational remark than with 你好 (nǐ hǎo) at all. Reserve it for meeting someone, and you will sound right.
+
+The word, taken apart.
+你好 (nǐ hǎo) is a compound Chinese made from two inherited words: hǎo, "good", from Middle Chinese xawX, and nǐ, "you", usually traced to the older second-person word nyeX (Guangyun, in Baxter's transcription).
 
 Guided Practice.
 [your turn — say: nǐ hǎo — greeting someone you have just met]
@@ -202,6 +206,7 @@ Same strokes. Same components. Same shape on the page. Two words.
 This is the cleanest proof available of what the first lesson claimed. Tone is not decoration on a word; it is inside the word, doing the job a consonant does in English. Change hǎo to hào and you have not said "good" with feeling — you have said a different word, the way bat and pat are different words.
 The two readings are related in meaning, and the relation is a good hook: what is good is what one is fond of. That is a link inside Chinese, between two readings of one character. It is not a link to English. There is none.
 You are not asked to produce hào yet. Recognising it is the point: when a familiar character turns up wearing an unfamiliar tone, the tone is telling you this is a different word.
+Both readings are inherited from Middle Chinese: the Guangyun lists xawX, "good", and xawH, "to be fond of" (in Baxter's transcription). Making a related word by moving it into the falling tone is a well-known pattern of Middle Chinese.
 
 Guided Practice.
 [your turn — answer: hǎo or hào — which one means "good"?]

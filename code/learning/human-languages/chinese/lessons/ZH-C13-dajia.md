@@ -11,8 +11,8 @@ concept_tag: ZH-SCHOOL-EVERYONE
 gloss: everyone, built from known characters
 prerequisites: [ZH-C13-hear-dajia]
 sounds: [tone-4, tone-1]
-roots: []
-etymology_hook: No new shape is needed: 大 and 家 are retrieved as one word.
+roots: [middle-chinese-dajh, middle-chinese-kae]
+etymology_hook: "dàjiā: from Middle Chinese daH 'big' + kae 'household'; once a great household, now everyone"
 duration:
   max_seconds: 150
 requires:
@@ -42,6 +42,10 @@ reviews_of: [ZH-C13-hear-dajia, ZH-C13-da, ZH-C12-jia]
 > **大家** — *dàjiā* — **everyone**
 
 Close the gap. Read the two characters as one word and keep both tone shapes.
+
+Both are inherited from Middle Chinese, *daH* and *kae* (Guangyun, in Baxter's
+transcription). Older texts use the pair for a great household; "everyone" is
+the later sense.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DAJIA-01] -->

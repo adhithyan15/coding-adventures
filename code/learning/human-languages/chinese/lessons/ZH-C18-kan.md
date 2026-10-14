@@ -11,8 +11,8 @@ romanization: kàn
 gloss: to look at or watch, recovered without pinyin
 prerequisites: [ZH-W18-kan-delayed]
 sounds: [tone-4]
-roots: []
-etymology_hook: The hand-over-eye image now carries the spoken verb kàn.
+roots: [middle-chinese-khan]
+etymology_hook: "kàn 'to look': inherited, from Middle Chinese khan or khanH; the hand over the eye is the character"
 duration:
   max_seconds: 145
 requires:
@@ -44,6 +44,10 @@ reviews_of: [ZH-C18-hear-kan, ZH-W18-kan-delayed]
 Hide the pinyin. Read 看 from the hand-over-eye shape, say the falling tone,
 then give the meaning. One form now connects listening, speaking, reading, and
 writing.
+
+**看** is inherited from Middle Chinese, where the Guangyun lists it as *khan*
+and *khanH*, "to look" (Guangyun, in Baxter's transcription); Mandarin *kàn*
+continues the second. The hand over the eye is the history of the character.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-KAN-01] -->

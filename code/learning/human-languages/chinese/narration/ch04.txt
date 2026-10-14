@@ -55,6 +55,9 @@ You have already met pieces that live inside other characters — 女 and 子 si
 The size matters. A full-height frame around a whole character is a different piece doing a different job; the mouth hint is for the small one tucked into a corner.
 That is worth more than the word itself. You are not going to memorise five thousand characters as pictures; you are going to learn a few hundred pieces and read the rest as combinations. 口 (kǒu) is one of the commonest pieces there is.
 
+The word, taken apart.
+口 kǒu is inherited from Middle Chinese khuwX, "mouth" (Guangyun, in Baxter's transcription). The open-mouth picture is the history of the character; the word is the inherited one.
+
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [your turn — say: kǒu — low and dipping]
@@ -120,6 +123,9 @@ Why it's said this way — one word, two jobs.
 Sun and day in the same word is not a Chinese quirk. It is what happens in language after language, because the sun is how a day was counted before anybody had a clock. English does the same thing from the other end: we say the sun rose and three days later, and nobody finds it strange that a day is both the light and the span.
 So this is one of the rare characters where you get two meanings and have to learn neither: they are the same idea, and the context tells you which.
 Like 口 (kǒu), this one turns up inside other characters, and when it does it is almost always about the sun, light, or time.
+
+The word, taken apart.
+日 rì is inherited from Middle Chinese nyit, "sun, day" (Guangyun, in Baxter's transcription). It is usually compared with Tibetan nyi, "sun", a likely Sino-Tibetan cognate.
 
 Guided Practice.
 [your turn — say: rì — falling, and the r of measure]
@@ -187,6 +193,9 @@ English has one. So does French, Spanish, Russian. Mandarin does not. What it ha
 So when someone asks you a yes-or-no question in Mandarin, you do not answer with a word for "no". You answer by negating the thing they asked about. Ask whether something is 好, and "no" comes back as 不好 (bù hǎo).
 This sounds like extra work and is actually less: you already know 好, so you already know how to refuse it, and the same holds for every word you have so far.
 One word will break the pattern later — Mandarin has a second negator for having, and you will meet it with the word it belongs to. Everything in this book up to now takes 不 (bù).
+
+The word, taken apart.
+不 bù is inherited from Middle Chinese pjuw, "not" (Guangyun, in Baxter's transcription), and it is already a negator in the oldest Chinese writing.
 
 Guided Practice.
 [your turn — say: bù — falling, firm]

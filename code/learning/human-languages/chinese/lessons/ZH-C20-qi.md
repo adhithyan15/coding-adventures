@@ -11,8 +11,8 @@ gloss: "seven — first tone, and a consonant English does not have"
 concept_tag: ZH-NUMBER-SEVEN
 prerequisites: [ZH-W20-qi]
 sounds: [tone-1, tone-lexical]
-roots: []
-etymology_hook: "qi is first tone and opens with a sound English has no letter for: the tongue is where it is for a y, and the air comes out as it does for a ch."
+roots: [middle-chinese-tshit]
+etymology_hook: "qī 'seven': inherited, from Middle Chinese tshit; Mandarin turned ts into q and dropped the t"
 duration:
   max_seconds: 255
 requires:
@@ -52,6 +52,13 @@ The **q** is the piece to work on, because English has no letter for it. Put the
 tongue where it goes for **y** in *yes*, then release the air the way you do for
 **ch**. It is not the *k* of *queen* and it is not an English *ch*; it is the
 tongue of one and the release of the other.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**七** *qī* is inherited from Middle Chinese *tshit*, "seven" (Guangyun, in
+Baxter's transcription). Mandarin turned its *ts* into the *q* you are
+practising and dropped the final *t*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUM-QI, ZH-LEX-NUM-YI, ZH-LEX-NUM-LIU] -->

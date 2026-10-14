@@ -10,8 +10,8 @@ romanization: zhōngwén
 gloss: Chinese; the Chinese language
 prerequisites: [ZH-C16-practice]
 sounds: [tone-1, tone-2]
-roots: []
-etymology_hook: The known zhōng, middle or China, gains wén, writing or language.
+roots: [middle-chinese-trjuwng, middle-chinese-mjun-writing]
+etymology_hook: "zhōngwén: built from Middle Chinese trjuwng 'middle' and mjun 'writing'"
 duration:
   max_seconds: 125
 requires:
@@ -44,6 +44,9 @@ language, Chinese character, written character**. Then say the sound of 中:
 
 Keep the level first tone in *zhōng*. Let *wén* rise in second tone. The new
 second character stays hidden for now; this step is only sound and meaning.
+
+*Zhōngwén* is built from Middle Chinese *trjuwng*, "middle", and *mjun*,
+"writing".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONGWEN-01] -->

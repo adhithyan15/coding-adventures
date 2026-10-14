@@ -11,8 +11,8 @@ gloss: you're welcome — real and understood everywhere, though not the commone
 concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [ZH-C10-xiexie]
 sounds: [tone-4, tone-2, tone-sandhi-bu]
-roots: []
-etymology_hook: 不谢 is the negator the reader already owns put in front of the character they just learned, and it makes the reply to thanks out of nothing new at all.
+roots: [middle-chinese-pjuw, middle-chinese-zjaeh]
+etymology_hook: "bú xiè: 'not' + 'thank', two words inherited from Middle Chinese pjuw and zjaeH"
 duration:
   max_seconds: 240
 requires:
@@ -50,6 +50,9 @@ Nothing new. You could have built this yourself.
 It works the way 不是 works: **put 不 in front of the word and you turn it.** Here
 turning it is a polite refusal of the thanks — *no need to thank me* — which is
 how a great many languages answer being thanked.
+
+Both are inherited from Middle Chinese: *pjuw*, "not", and *zjaeH*, "to decline,
+to thank" (Guangyun, in Baxter's transcription).
 
 ## Sounds you'll need — you have met this rule
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-TONE-SANDHI-BU, ZH-LEX-BUXIE] -->

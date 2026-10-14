@@ -11,8 +11,8 @@ gloss: "suì — years of age, and the sentence that says how old you are withou
 concept_tag: ZH-LEX-AGE
 prerequisites: [ZH-W27-sui, ZH-C26-ne, ZH-C23-de, ZH-W19-ma-observe, ZH-W18-kan-delayed, ZH-C09-shenme]
 sounds: [tone-4]
-roots: []
-etymology_hook: "The numerals reached ninety-nine two chapters ago and had nothing to count; this is the first thing they measure."
+roots: [middle-chinese-sjwejh]
+etymology_hook: "suì: inherited, from Middle Chinese sjwejH 'year'; counting years of age is its modern use"
 duration:
   max_seconds: 225
 requires:
@@ -87,6 +87,12 @@ paper asks for, and the last of them was waiting on this one character.
 **One habit worth knowing.** Mandarin asks a small child's age with one question
 and an adult's with another, and both need words this book has not taught yet.
 What this lesson gives you is the answer, which is the half you are asked for.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**岁** is inherited from Middle Chinese *sjwejH*, "year" (Guangyun); counting
+years of age is the modern use.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SUI-01, ZH-GRAMMAR-AGE-NO-VERB-01] -->

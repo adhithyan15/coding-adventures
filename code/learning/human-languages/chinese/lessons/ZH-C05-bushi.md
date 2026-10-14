@@ -11,8 +11,8 @@ gloss: is not — and a pitch that moves to get out of the way
 concept_tag: ZH-WORD-BUSHI
 prerequisites: [ZH-C05-shi]
 sounds: [tone-4, tone-2, tone-sandhi-bu, tone-lexical]
-roots: []
-etymology_hook: 不是 is where 不 changes its own tone rather than collide with the falling one after it.
+roots: [middle-chinese-pjuw, middle-chinese-dzyex]
+etymology_hook: "bú shì: 'not' + 'to be', two words inherited from Middle Chinese pjuw and dzyeX"
 duration:
   max_seconds: 260
 requires:
@@ -47,6 +47,9 @@ have. It means **is not**.
 But say the two words you just warmed up with, one after the other, and
 something is wrong. **bù** falls. **shì** falls. Two sharp drops in a row, back to
 back, and your mouth does not want to make them.
+
+Both words are inherited from Middle Chinese: *pjuw*, "not", and *dzyeX*, "this,
+to be" (Guangyun, in Baxter's transcription).
 
 ## Why it's said this way — 不 gets out of the way
 <!-- hl-knowledge: introduces=[ZH-TONE-SANDHI-BU]; assesses=[ZH-TONE-SANDHI-THIRD] -->

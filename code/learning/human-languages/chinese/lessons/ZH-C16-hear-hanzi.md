@@ -11,8 +11,8 @@ gloss: Chinese character; Han character
 concept_tag: ZH-LANGUAGE-IDENTITY-HANZI
 prerequisites: [ZH-C16-zi]
 sounds: [tone-4]
-roots: []
-etymology_hook: The known word zì gains hàn, the Han-Chinese label, to name a Chinese character precisely.
+roots: [middle-chinese-xanh, middle-chinese-dzih]
+etymology_hook: "hànzì: from Middle Chinese xanH, a river and then the Han dynasty, and dziH 'written character'"
 duration:
   max_seconds: 125
 requires:
@@ -44,6 +44,9 @@ reviews_of: [ZH-C16-zi]
 The second half is your known *zì*, written character. The first half, *hàn*,
 labels it as Han Chinese. Hear two clean falling tones: *hàn-zì*. The new first
 character stays hidden until the next lesson.
+
+*Hànzì* is built from Middle Chinese *xanH*, first a river's name and then the
+Han dynasty's, and *dziH*, "written character".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HANZI-01] -->

@@ -11,8 +11,8 @@ romanization: hǎokàn
 gloss: good-looking or nice to look at
 prerequisites: [ZH-C18-hear-haokan]
 sounds: [tone-3, tone-4]
-roots: []
-etymology_hook: Two known characters compose literally: 好, good, plus 看, look.
+roots: [middle-chinese-xawx, middle-chinese-khan]
+etymology_hook: "hǎokàn: 'good' + 'look', from Middle Chinese xawX and khanH"
 duration:
   max_seconds: 145
 requires:
@@ -43,6 +43,9 @@ reviews_of: [ZH-C18-hear-haokan, ZH-C18-kan, ZH-C01-hao]
 
 No new character is hiding here. Read 好, then 看, and let the literal pieces
 carry you to the whole meaning.
+
+Both are inherited from Middle Chinese: *xawX*, "good", and *khanH*, "look"
+(Guangyun, in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-HAOKAN-01] -->

@@ -11,8 +11,8 @@ gloss: sun, and also day
 concept_tag: ZH-WORD-RI
 prerequisites: [ZH-W04-ri]
 sounds: [tone-4, tone-lexical]
-roots: []
-etymology_hook: 日 is a picture of the sun that came to mean the day it measures out — one word doing two jobs, as it does in English too.
+roots: [middle-chinese-nyit]
+etymology_hook: "rì 'sun, day': inherited, from Middle Chinese nyit; usually compared with Tibetan nyi 'sun'"
 duration:
   max_seconds: 210
 requires:
@@ -66,6 +66,13 @@ learn neither: they are the same idea, and the context tells you which.
 
 Like 口, this one turns up **inside** other characters, and when it does it is
 almost always about the sun, light, or time.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**日** *rì* is inherited from Middle Chinese *nyit*, "sun, day" (Guangyun, in
+Baxter's transcription). It is usually compared with Tibetan *nyi*, "sun", a
+likely Sino-Tibetan cognate.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-RI, ZH-SCRIPT-RI] -->

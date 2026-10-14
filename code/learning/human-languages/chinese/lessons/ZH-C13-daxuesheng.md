@@ -11,8 +11,8 @@ concept_tag: ZH-SCHOOL-UNIVERSITY-STUDENT
 gloss: university student, built from known characters
 prerequisites: [ZH-C13-hear-daxuesheng]
 sounds: [tone-4, tone-2, tone-neutral]
-roots: []
-etymology_hook: Three known characters carry the longest word in this cluster without adding visual load.
+roots: [middle-chinese-dajh, middle-chinese-haewk, middle-chinese-srjaeng]
+etymology_hook: "dàxuésheng: dàxué + sheng, all three pieces inherited from Middle Chinese daH, haewk, srjaeng"
 duration:
   max_seconds: 165
 requires:
@@ -43,6 +43,10 @@ reviews_of: [ZH-C13-hear-daxuesheng, ZH-C13-daxue, ZH-C13-xuesheng]
 
 Track three characters and three beats. The middle 学 belongs to the whole word
 only once.
+
+All three pieces are inherited from Middle Chinese, *daH*, *haewk* and *srjaeng*
+(Guangyun, in Baxter's transcription), and Chinese joined them as university
+plus student.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DAXUESHENG-01] -->

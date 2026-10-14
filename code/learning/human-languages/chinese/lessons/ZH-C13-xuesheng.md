@@ -11,8 +11,8 @@ concept_tag: ZH-SCHOOL-STUDENT
 gloss: student, now read and written
 prerequisites: [ZH-W13-sheng]
 sounds: [tone-2, tone-neutral]
-roots: []
-etymology_hook: Two newly secured characters now carry the already familiar spoken word.
+roots: [middle-chinese-haewk, middle-chinese-srjaeng]
+etymology_hook: "xuésheng: 'learn' + 'life, birth', from Middle Chinese haewk and srjaeng; an old compound"
 duration:
   max_seconds: 165
 requires:
@@ -46,6 +46,10 @@ Say **study**, then **student**.
 [YOU READ: the two-character word without pinyin]
 
 Keep the second syllable light.
+
+Both are inherited from Middle Chinese: *haewk*, "to learn", and *srjaeng*,
+"life, birth", long used for a young scholar (Guangyun, in Baxter's
+transcription). The pair is an old Chinese compound.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUESHENG-01] -->

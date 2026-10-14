@@ -11,8 +11,8 @@ gloss: to be fond of — the same character, a different tone, a different word
 concept_tag: ZH-WORD-HAO-FOND
 prerequisites: [ZH-C01-tone-sandhi]
 sounds: [tone-4, tone-3, tone-lexical]
-roots: []
-etymology_hook: One character, two readings — 好 hǎo is "good" and 好 hào is "to be fond of"; only the tone tells them apart.
+roots: [middle-chinese-xawx, middle-chinese-xawh]
+etymology_hook: "hào 'to be fond of': Middle Chinese xawH, a falling-tone derivative of xawX 'good'; the pair is old"
 duration:
   max_seconds: 190
 requires:
@@ -60,6 +60,11 @@ readings of one character. It is not a link to English. There is none.
 You are not asked to produce **hào** yet. Recognising it is the point: when a
 familiar character turns up wearing an unfamiliar tone, the tone is telling you
 this is a different word.
+
+Both readings are inherited from Middle Chinese: the Guangyun lists *xawX*,
+"good", and *xawH*, "to be fond of" (in Baxter's transcription). Making a
+related word by moving it into the falling tone is a well-known pattern of
+Middle Chinese.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HAO-FOND, ZH-LEX-HAO, ZH-TONE-LEXICAL, ZH-METHOD-COMPONENT-HOOK] -->

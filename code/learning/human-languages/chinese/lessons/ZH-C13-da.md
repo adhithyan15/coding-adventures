@@ -11,8 +11,8 @@ concept_tag: ZH-SCHOOL-BIG
 gloss: big; large, now read and written
 prerequisites: [ZH-W13-da]
 sounds: [tone-4]
-roots: []
-etymology_hook: The heard falling syllable now attaches to a three-stroke square form.
+roots: [middle-chinese-dajh]
+etymology_hook: "dà 'big': inherited, from Middle Chinese daH, beside a second reading dajH"
 duration:
   max_seconds: 145
 requires:
@@ -44,6 +44,9 @@ reviews_of: [ZH-C13-hear-da, ZH-W13-da]
 [YOU READ: the character without pinyin]
 
 Then say it once with a clear fourth-tone fall.
+
+**大** is inherited from Middle Chinese *daH*, "big"; the Guangyun also lists a
+second reading, *dajH* (Guangyun, in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DA-01, ZH-SCRIPT-DA-01] -->

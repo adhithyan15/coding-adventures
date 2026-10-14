@@ -12,7 +12,7 @@ concept_tag: ZH-PARTICLE-NE
 prerequisites: [ZH-W26-ne, ZH-C25-le-dongci, ZH-C22-buyizhi, ZH-C19-shima, ZH-R17-writing-five, ZH-C13-hear-da]
 sounds: [tone-neutral]
 roots: []
-etymology_hook: "你呢 is two syllables and a complete conversational turn, and it is the commonest thing a beginner says after being asked anything."
+etymology_hook: "ne: its character was borrowed for the sound; where the particle comes from is not settled"
 duration:
   max_seconds: 225
 requires:
@@ -82,6 +82,12 @@ question you meant.
 toneless word after 吗 and 的. **A Mandarin sentence's grammar lives in words
 like these** — small, unstressed, unchanging, and placed rather than inflected.
 That is what the reader is learning each time one arrives.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**呢** borrowed its character for the sound; where the particle itself comes from
+is not settled (Unihan).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NE-01, ZH-GRAMMAR-NE-FOLLOWUP-01] -->
