@@ -3967,7 +3967,7 @@ impl Compiler {
                 if !self.proc_sigs.contains_key(&target_name) && target_name == "entier" {
                     let actuals = self.standard_fn_actuals(node);
                     return actuals.len() == 1
-                        && self.builtin_outer_entier_operand(actuals[0]).is_some_and(|operand| {
+                        && self.builtin_outer_entier_operand(actuals[0], Self::is_selector_call_safe_runtime_real_root).is_some_and(|operand| {
                             self.is_selector_call_safe_runtime_real_root(operand)
                         });
                 }
@@ -4184,7 +4184,7 @@ impl Compiler {
                 if !self.proc_sigs.contains_key(&target_name) && target_name == "entier" {
                     let actuals = self.standard_fn_actuals(node);
                     return actuals.len() == 1
-                        && self.builtin_outer_entier_operand(actuals[0]).is_some_and(|operand| {
+                        && self.builtin_outer_entier_operand(actuals[0], Self::is_selector_call_safe_runtime_real_root).is_some_and(|operand| {
                             self.is_selector_call_safe_runtime_real_root(operand)
                         });
                 }
@@ -4787,6 +4787,7 @@ impl Compiler {
     fn builtin_outer_entier_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
+        branch_safe: fn(&Self, &GrammarASTNode) -> bool,
     ) -> Option<&'n GrammarASTNode> {
         #[cfg(test)]
         selector_classifier_visit();
@@ -4811,8 +4812,10 @@ impl Compiler {
         let (_condition, then_node, else_node) = self.conditional_expression_parts(front)?;
         let then_root = self.builtin_outer_entier_flat_operand(then_node)?;
         let else_root = self.builtin_outer_entier_flat_operand(else_node)?;
-        (self.is_selector_call_safe_runtime_real_root(then_root)
-            && self.is_selector_call_safe_runtime_real_root(else_root)).then_some(then_root)
+        // Use this consumer's existing policy for BOTH arms. Assignment proofs
+        // already distinguish tracked global captures from strict local roots;
+        // a new conditional must not collapse those separate post-state rules.
+        (branch_safe(self, then_root) && branch_safe(self, else_root)).then_some(then_root)
     }
 
     fn builtin_outer_entier_flat_operand<'n>(
@@ -5144,7 +5147,7 @@ impl Compiler {
                         let actuals = self.standard_fn_actuals(node);
                         if actuals.len() == 1
                             && self
-                                .builtin_outer_entier_operand(actuals[0])
+                                .builtin_outer_entier_operand(actuals[0], Self::is_selector_call_safe_runtime_real_value)
                                 .is_some_and(|operand| {
                                     self.is_selector_call_safe_runtime_real_value(operand)
                                 })
@@ -5349,7 +5352,7 @@ impl Compiler {
                     let actuals = self.standard_fn_actuals(node);
                     return actuals.len() == 1
                         && self
-                            .builtin_outer_entier_operand(actuals[0])
+                            .builtin_outer_entier_operand(actuals[0], Self::is_runtime_real_assignment_value)
                             .is_some_and(|operand| {
                                 self.is_runtime_real_assignment_value(operand)
                             });
