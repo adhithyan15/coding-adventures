@@ -75,3 +75,36 @@ direct consumer, outside this helper's bounded rule; keep original standalone
 variable refusals and all producer non-unit/second-unit refusals. Replace that
 unjustified new universal-refusal fixture with the actual alias-effect control.
 Generic conditional/range proof composition remains explicitly OPEN.
+
+The c39 consumer-predicate experiment actually remains4PASS2FAIL. Capture
+occurs before the argument is lowered, so Integer conditional arms cannot
+carry the fresh Real selector witness. WITHHOLD that candidate. Revert the
+consumer-parameter experiment to the original strict-root conditional guard;
+never turn cached name-binding metadata or a return slot into fresh evidence.
+
+Instead specialize only an exact read-once identity procedure at this call
+boundary: resolved declaration/signature agrees; Real result; one Name Real
+formal distinct from the result name; sole unlabeled direct statement assigning
+the bare formal to the sole procedure-result target. Reject blocks, labels,
+compound bodies, extra targets/statements/declarations, arithmetic, calls,
+captures, recursion, value mode and forwarded/formal-procedure identities.
+Use stable resolved procedure identity, not a spelling heuristic. Malformed
+or mismatched declarations must fall back to the original validation path.
+
+The actual must itself be the builtin entier applied to one conditional front
+whose two flat arms satisfy the dedicated strict-root proof. This narrow
+gate does not optimize arbitrary identity calls. After ordinary call resolution
+and arity validation, evaluate that actual once in its caller, coerce to Real,
+and return the scalar with no new proof bit. A sole result assignment reads
+the name actual once with no intervening effects, so this retains evaluation
+order and avoids unnecessary root capture. Existing assignment/output pre/post
+checks still apply. A name-writing condition must still invalidate either
+branch root; a value-writing condition must retain each caller root.
+
+Add structural tests over parsed declarations plus damaged AST/signature and
+lexical shadowing controls; public exact formatter admission/refusal controls;
+runtime markers prove the condition and chosen branch execute exactly once,
+the unchosen branch never runs, and the process exits normally. Preserve all
+previous8192-budget, alias, range, producer and native controls. This is a
+semantic call specialization requiring independent exact-source review, not
+permission to forward cached proof metadata.
