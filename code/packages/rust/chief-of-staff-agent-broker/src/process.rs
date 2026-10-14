@@ -97,6 +97,11 @@ fn run() -> Result<(), u8> {
 /// a non-zero decimal number, none repeated, in slot order. No variable
 /// at all is the same as an empty one, and right only for no slots.
 ///
+/// A handle value is a multiple of 4 below 2^32: Windows ignores a
+/// value's low two bits, so 312 and 313 name one handle (two owners, one
+/// key in two slots), and a value at 2^63 or above is a negative
+/// pseudo-handle (the process, the thread, the token). Both are refused.
+///
 /// ```text
 ///   count  value          result
 ///   2      "312,316"      [312, 316]
@@ -119,9 +124,9 @@ fn key_handles(value: Option<&std::ffi::OsStr>, count: usize) -> Result<Vec<usiz
                 if value.is_empty() || !value.bytes().all(|byte| byte.is_ascii_digit()) {
                     return Err(66u8);
                 }
-                match value.parse::<usize>() {
-                    Ok(0) | Err(_) => Err(66u8),
-                    Ok(handle) => Ok(handle),
+                match value.parse::<u32>() {
+                    Ok(handle) if handle != 0 && handle % 4 == 0 => Ok(handle as usize),
+                    _ => Err(66u8),
                 }
             })
             .collect::<Result<Vec<_>, _>>()?
@@ -221,6 +226,10 @@ mod tests {
             (Some(" 312"), 1),
             (Some("0x138"), 1),
             (Some("99999999999999999999999"), 1),
+            (Some("312,313"), 2),
+            (Some("313"), 1),
+            (Some("4294967296"), 1),
+            (Some("18446744073709551612"), 1),
         ] {
             assert_eq!(
                 key_handles(value.map(OsStr::new), count),

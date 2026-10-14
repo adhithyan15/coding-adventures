@@ -276,17 +276,20 @@ impl WindowsConfinement {
         // made inheritable, and the spawn lock is held from here until this
         // process has closed its copies of them: a std spawn on another
         // thread, which inherits every inheritable handle, waits for it
-        // (D18S P2.8b-1). The lock is released only after the handles are
-        // closed, on every path.
-        let spawning = chief_of_staff_spawn_isolation::spawn_lock();
+        // (D18S P2.8b-1). The handles and the lock are one value, whose
+        // fields drop in order, so the handles are closed before the lock is
+        // released on every path, a panic's included.
+        let spawning = Inheritable {
+            _handles: (child_stdin, child_stdout, stderr, request.inherited),
+            _lock: chief_of_staff_spawn_isolation::spawn_lock(),
+        };
         for &handle in &listed {
-            // SAFETY: each is a handle this process owns, open until it is
-            // dropped right after the creation below.
+            // SAFETY: each is a handle this process owns (in `spawning`),
+            // open until `spawning` is dropped right after the creation.
             if unsafe { SetHandleInformation(handle, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT) }
                 == 0
             {
                 let error = create_error("SetHandleInformation");
-                drop((child_stdin, child_stdout, stderr, request.inherited));
                 drop(spawning);
                 return Err(error);
             }
@@ -327,7 +330,6 @@ impl WindowsConfinement {
         // one's: this process lets go of them either way. On failure the
         // caller's handles are gone too, so a retry needs new ones.
         drop(attributes);
-        drop((child_stdin, child_stdout, stderr, request.inherited));
         drop(spawning);
         // The profile goes before the agent's first instruction, whatever
         // happened: it was needed only for the creation.
@@ -501,6 +503,14 @@ impl WindowsConfinement {
         }
         Ok(())
     }
+}
+
+/// The handles that are inheritable for one creation, and the spawn lock
+/// held while they are. Fields drop in declaration order: the handles are
+/// closed first, then the lock is released (D18S P2.8b-1).
+struct Inheritable {
+    _handles: (OwnedHandle, OwnedHandle, OwnedHandle, Vec<OwnedHandle>),
+    _lock: std::sync::MutexGuard<'static, ()>,
 }
 
 /// A confined agent. Dropping it kills the agent: its job is ended (and,

@@ -15,9 +15,9 @@ use windows_sys::Win32::Security::{
     AclSizeInformation, EqualSid, GetAce, GetAclInformation, GetKernelObjectSecurity, GetLengthSid,
     GetSecurityDescriptorControl, GetSecurityDescriptorDacl, GetSecurityDescriptorOwner,
     GetTokenInformation, IsWellKnownSid, TokenUser, WinBuiltinAdministratorsSid,
-    WinCreatorOwnerSid, WinLocalSystemSid, ACCESS_ALLOWED_ACE, ACL, ACL_SIZE_INFORMATION,
-    DACL_SECURITY_INFORMATION, INHERIT_ONLY_ACE, OWNER_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR,
-    SE_DACL_PROTECTED, TOKEN_USER,
+    WinCreatorOwnerSid, WinLocalSystemSid, ACCESS_ALLOWED_ACE, ACE_HEADER, ACL,
+    ACL_SIZE_INFORMATION, DACL_SECURITY_INFORMATION, INHERIT_ONLY_ACE, OWNER_SECURITY_INFORMATION,
+    PSECURITY_DESCRIPTOR, SE_DACL_PROTECTED, TOKEN_USER,
 };
 #[cfg(any(test, feature = "test-support"))]
 use windows_sys::Win32::Security::{
@@ -219,22 +219,24 @@ fn verify_directory_acl(raw: HANDLE) -> Result<(), SecretFileError> {
         if unsafe { GetAce(dacl, index, &mut ace_pointer) } == 0 || ace_pointer.is_null() {
             return Err(SecretFileError::AccessFailed);
         }
-        let ace = unsafe { &*ace_pointer.cast::<ACCESS_ALLOWED_ACE>() };
-        match u32::from(ace.Header.AceType) {
+        // The header first, through a raw pointer: the type and size say
+        // what follows, and the SID is reached from the ACE's own pointer,
+        // never through a reference narrower than the ACE.
+        let header = unsafe { ace_pointer.cast::<ACE_HEADER>().read_unaligned() };
+        match u32::from(header.AceType) {
             ACCESS_DENIED_ACE_TYPE => continue,
             ACCESS_ALLOWED_ACE_TYPE => {}
             _ => return Err(SecretFileError::InsecurePermissions),
         }
-        if usize::from(ace.Header.AceSize) < sid_offset + MINIMUM_SID_BYTES {
+        if usize::from(header.AceSize) < sid_offset + MINIMUM_SID_BYTES {
             return Err(SecretFileError::InsecurePermissions);
         }
-        let sid: PSID = addr_of!(ace.SidStart).cast_mut().cast();
+        let sid: PSID = unsafe { ace_pointer.cast::<u8>().add(sid_offset) }.cast();
         let sid_bytes = unsafe { GetLengthSid(sid) } as usize;
-        if sid_bytes < MINIMUM_SID_BYTES || usize::from(ace.Header.AceSize) < sid_offset + sid_bytes
-        {
+        if sid_bytes < MINIMUM_SID_BYTES || usize::from(header.AceSize) < sid_offset + sid_bytes {
             return Err(SecretFileError::InsecurePermissions);
         }
-        let creator = u32::from(ace.Header.AceFlags) & INHERIT_ONLY_ACE != 0
+        let creator = u32::from(header.AceFlags) & INHERIT_ONLY_ACE != 0
             && unsafe { IsWellKnownSid(sid, WinCreatorOwnerSid) } != 0;
         if !trusted(sid) && !creator {
             return Err(SecretFileError::InsecurePermissions);

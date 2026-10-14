@@ -2461,8 +2461,9 @@ through S-I3 before two weeks are spent on Windows.
      Windows spawn in the supervisor takes one spawn lock** (std's and this
      applier's; P2.8b-1), so the window holds no other spawn. It ends
      entirely when every agent spawn goes through this applier (step 9).
-     A spawn made by a library the supervisor links, outside the lock,
-     is not covered; the daemon makes none.
+     Every std spawn in the daemon process takes it: the host, the
+     broker launcher's, and the approval helpers' (notification,
+     biometric, hardware key). A new spawn site must too.
    - *One agent, two instances.* Two launches of one `agent_id` would share
      a SID, and processes of one AppContainer can open each other; either
      could also write into the profile the other's spawn registers. So a
@@ -2508,15 +2509,21 @@ through S-I3 before two weeks are spent on Windows.
           broker inherits, and the broker checks it again before reading
           exactly the key's length from it. A secret directory passes if
           the user, SYSTEM or Administrators own it and every allow ACE
-          names one of those three (a user profile's own directories pass
-          as created); nothing else may list or change it.
+          names one of those three, or CREATOR OWNER on an inherit-only
+          entry (it becomes a child's creator, and only those three can
+          create here); a user profile's own directories pass as created,
+          and nothing else may list or change it.
         - *One spawn lock.* `chief_of_staff_spawn_isolation::spawn_lock()`
           is a process-wide lock. Every process creation in the
           supervisor holds it: the applier's whole inheritable span (from
           marking the listed handles to closing its copies), and every
-          std `Command::spawn` the supervisor makes (`spawn_host`). So no
-          std child, which inherits every inheritable handle, can be
-          created while a broker's key handles are inheritable.
+          std `Command::spawn` in the daemon process makes (the host, the
+          launcher's, the approval helpers'), through
+          `chief_of_staff_spawn_isolation::spawn`. So no std child, which
+          inherits every inheritable handle, can be created while a
+          broker's key handles are inheritable. The applier's listed
+          handles and the lock are one value, so the handles are closed
+          before the lock is released on every path, a panic's included.
         - *The broker's own container.* `WindowsConfinement` gains a
           broker role. Its container is named
           `chief-of-staff-broker.<32 hex>` over the same digest of the
@@ -2527,7 +2534,10 @@ through S-I3 before two weeks are spent on Windows.
         - *The broker adopts its keys.* On Windows the broker reads
           `CHIEF_OF_STAFF_HANDLES` (the applier's variable), adopts
           exactly as many handles as the bootstrap names slots, in order,
-          and refuses (exit 66) a count that differs. This replaces the
+          and refuses (exit 66) a count that differs, a repeat, or a value
+          that is not a multiple of 4 below 2^32 (Windows ignores a handle
+          value's low two bits; larger values are pseudo-handles). This
+          replaces the
           Unix descriptor walk; `serve_process` is unchanged.
         - Each is tested on `windows-2025`: the key-file policy and its
           refusals, the lock's exclusion, two containers for one agent,
