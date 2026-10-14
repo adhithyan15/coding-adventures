@@ -185,9 +185,18 @@ fn read_exact_bounded(
 
 #[cfg(any(test, feature = "test-support"))]
 pub(super) fn write_test_secret(path: &Path, bytes: &[u8]) {
-    use std::fs;
-    use std::os::unix::fs::PermissionsExt;
+    use std::io::Write;
+    use std::os::unix::fs::OpenOptionsExt;
 
-    fs::write(path, bytes).unwrap();
-    fs::set_permissions(path, fs::Permissions::from_mode(0o600)).unwrap();
+    // Created new and 0600 in one step, as the Windows writer is: never
+    // briefly readable, never through a link, never over an existing file.
+    let mut file = std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .mode(0o600)
+        .custom_flags(libc::O_NOFOLLOW)
+        .open(path)
+        .unwrap();
+    file.write_all(bytes).unwrap();
+    file.sync_all().unwrap();
 }

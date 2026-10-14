@@ -43,8 +43,8 @@
     launch check now names itself in its error.
   - The probe starts Winsock itself in `connect` (the fourth windows-2025
     run's confined `connect` printed nothing: std panics when
-    `WSAStartup` fails, and inside the container that failure is the
-    denial), and prints any panic on stdout; the network test reports the
+    `WSAStartup` fails, and inside the container that failure is likely
+    the denial), and prints any panic on stdout; the network test reports the
     exit code with an unexpected output.
   - One instance of an agent at a time: `spawn` refuses an agent whose
     previous `ConfinedChild` is still alive (`Container`), and dropping a
