@@ -6,6 +6,12 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
+- Classify discovery language and package/program identity from the configured
+  code-root bucket, preserving basename case and rejecting borrowed ancestor or
+  later language names. Exclude the leading specification subtree before BUILD
+  reads and reuse all 27 embedded generated-directory components with exact
+  case-sensitive matching. Keep the public structural `inferLanguage` helper.
+
 - Exclude the exact Dune `_build` component during package discovery while
   retaining `_Build` and `_build-example`; pin all four OCaml package BUILD
   records from the shared language-registry fixture through Hspec.
@@ -14,6 +20,12 @@ All notable changes to this package will be documented in this file.
   `blib` exclusion and advanced the canonical registry digest.
 
 ### Added
+
+- A full native consumer of the shared 29-file/25-package discovery registry,
+  alongside the retained narrow Dune consumer. Supplemental Hspec regressions
+  cover all 23 language buckets, same-basename package/program pairs, every
+  generated component and separate near-case source branch, checkout ancestry,
+  exact unknown buckets, sorted output and bounded inert fixture materialization.
 
 - A typed, process-free graph and diff-selection core consuming the exact
   eight graph and twelve diff-selection neutral fixtures through Hspec, with

@@ -3,6 +3,7 @@ import ToolchainDetectionSpec (toolchainDetectionSpec)
 
 import BuildToolSpec (buildToolSpec)
 import DiscoveryDuneSpec (discoveryDuneSpec)
+import DiscoveryRegistrySpec (discoveryRegistrySpec)
 import GraphDiffSpec (graphDiffSpec)
 import HashingSpec (hashingSpec)
 import ResolutionUtf8Spec
@@ -28,6 +29,7 @@ spec :: Spec
 spec = do
     buildToolSpec
     discoveryDuneSpec
+    discoveryRegistrySpec
     graphDiffSpec
     hashingSpec
     resolutionUtf8Spec
