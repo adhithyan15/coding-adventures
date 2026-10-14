@@ -49,3 +49,12 @@ cargo test -p stream-reactor
 cargo check -p stream-reactor --tests --target x86_64-unknown-linux-gnu
 cargo check -p stream-reactor --tests --target x86_64-pc-windows-msvc
 ```
+
+
+## Bounded spacing and transport reconciliation
+
+Pending fan-out adoption has a separate max_connections quota. Reservations follow commands through drained vectors, errors and callback unwinding. Shrinking the setter preserves admitted reservations and refuses new admission until below the new limit. Stop, serve exit/error/unwind and reactor Drop close admission; shutdown closes it before application callbacks. Existing optional wake handles are used; Windows uses its configured finite poll timeout. Stop cannot preempt a permanently blocked callback.
+
+Validation is source-attributed: Windows applicable packages and standalone
+checks are recorded separately from Unix-only/hosted and whole-PR gates.
+Final-source Miri is **DEFERRED/PENDING**, never passed.

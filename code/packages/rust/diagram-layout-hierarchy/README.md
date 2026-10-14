@@ -32,3 +32,12 @@ O(L + W) auxiliary storage. The unchanged restart seed/signature construction,
 identifier comparison and outer source/edge construction remain separate costs. Malformed duplicate-lane direct IR retains
 the original full-cost fallback and is outside that optimized work guarantee;
 authored duplicate subgraph IDs remain refused by the parser.
+
+
+## Bounded spacing and transport reconciliation
+
+try_layout_swimlane returns own typed UnsupportedSpacing or InvalidDerivedGeometry errors. The legacy layout_swimlane wrapper explicitly panics on unsupported input. Supported large padding expands minimum canvas extent so lane dimensions stay nonnegative. Coincident node centers use exact right-side/source and top-side/target anchors; other endpoint formulas remain unchanged. This checked boundary covers spacing/derived geometry on previously supported structural/numeric IR; inherited unchecked rank arithmetic remains open, and arbitrary cyclic/malformed caller IR is not certified.
+
+Validation is source-attributed: Windows applicable packages and standalone
+checks are recorded separately from Unix-only/hosted and whole-PR gates.
+Final-source Miri is **DEFERRED/PENDING**, never passed.

@@ -1273,3 +1273,15 @@ description is not a standalone edge identifier. Existing valid animation
 configuration forms and malformed/unknown-target refusals remain required.
 Native public-parser controls must compare these contexts with the same complete
 ordinary diagram after replacing only the intended label or node shape.
+
+
+### Bounded Swimlane spacing delivery policy
+
+Swimlane flowchart spacing uses the own IR range0..=65536, with exact excessive
+value refusals and unchanged negative/nonfinite/precedence controls. This is a
+deliberate bounded policy, not unrestricted upstream parity. Checked hierarchy
+layout refuses invalid derived geometry; coincident centers have finite source
+right/target top boundary anchors. Complete default/ordinary scenes, work bounds
+and endpoint-bit/reference assertions remain required. See
+`CV04a-bounded-swimlane-spacing.md`. Inherited direct-IR rank arithmetic and
+general floating work remain OPEN. Final-source Miri is DEFERRED/PENDING.

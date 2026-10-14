@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add checked spacing/derived geometry boundary and explicit legacy-wrapper refusal. Keep large-padding lane dimensions nonnegative. Repair coincident-center NaN endpoints with finite anchors, preserving all endpoint bits/reference/work assertions and adding independent exact anchor controls. Inherited rank arithmetic remains open.
+- Final-source Miri **DEFERRED/PENDING**; native/hosted and whole-PR gates remain separately attributed.
+
 - Evaluate adjacent automatic lane swaps from checked lane balances and a
   borrowed pair-weight index, preserving nine starts, seeded shuffles, strict
   improvement and source-distance ties. Canonical unique-lane graphs visit each

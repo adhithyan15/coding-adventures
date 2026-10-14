@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Signal all participants before terminal owned-provider destruction, including unstarted closure disposal. Stop and join after partial fallible startup; surface worker/acceptor panics. Add real later-worker panic and explicit guard-order controls.
+- Final-source Miri **DEFERRED/PENDING**; native/hosted and whole-PR gates remain separately attributed.
+
 - The fan-out acceptor no longer stops for good on the first accept error.
   A peer that connects and resets before the accept (ECONNABORTED /
   WSAECONNRESET), or a passing descriptor/buffer shortage, used to end the

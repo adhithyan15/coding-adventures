@@ -334,3 +334,12 @@ operator families and positional link styles. Dispatch handles positional styles
 then complete edge chains, then standalone edge configurations; endpoint node
 shape metadata therefore remains in its original context. Exact endpoint metadata
 and counted label/edge-target controls remain enabled after integration.
+
+
+## Bounded spacing and transport reconciliation
+
+Swimlane flowchart spacing fields accept only finite values in 0..=65536. Existing negative/nonnumeric/nonfinite messages stay unchanged; excessive finite values report FIELD must not exceed 65536 at(1,1). Directive/front-matter precedence stays unchanged.
+
+Validation is source-attributed: Windows applicable packages and standalone
+checks are recorded separately from Unix-only/hosted and whole-PR gates.
+Final-source Miri is **DEFERRED/PENDING**, never passed.

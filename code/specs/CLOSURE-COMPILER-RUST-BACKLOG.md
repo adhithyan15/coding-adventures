@@ -3,44 +3,43 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a current-main reconciliation -->
-October14: current source0389f753 integrates audited/fetched main
-`c351402c3b6096464273663a0e95aaba00bfa7fd`. Spec8ba51734 preceded
-mergeb59914a8; actual one-conflict merge stages preserved. Full1782-path
-partition proves1776 pure imports/6 overlaps/166 retained owned objects,
-1276 complete ALGOL/LANG objects retained,376 registry identities unchanged.
-No new crates.io dependency; ESTree canonical boundary and own types preserved.
+October14: bounded spacing/transport repair source `cf1674c74c16333b9500b18f64730998b721491a` integrates main
+`c351402c3b6096464273663a0e95aaba00bfa7fd`. Spec-first slices repair Windows
+terminal-operation lifetime/AcceptEx BOOL/failed packet handling, bounded pending
+adoption ownership through drain/error/unwind/shrink, coordinated participant
+shutdown before provider destruction, and finite timeout sentinel conversion.
+Spacing now has production cap65536, typed checked layout refusals, nonnegative
+padding extents and independently pinned finite coincident-center anchors.
+All ordinary fullscene/reference-bit/work controls retained; obsolete NaN masking
+replaced mandatory finite assertions. Original0389 infinite-extent, f14 lint,
+f62/2a74 withheld reviews, b9 selfloop and7b Unix-only compile failures preserved.
 
-Current spacing focus79311 actual EXIT1: exact complete-layout/scene/default
-control PASS and directive/precedence/refusal IR control PASS; finite-input
-safety control FAIL. Actual accepted LR/nodeSpacing1e308 produces extent
-(420,inf). Initial7156 compiler-field error preserved separately, not behavioral
-acceptance. Ordinary controls remain; numerical repair contract/implementation
-and complete37 reverse-consumer/standalone benchmark validation are pending.
+Actual Windows continuation:39 applicable packages, 1156 tests across
+87 targets, 5 existing ignores,0fail; strict39 plus standalone
+benchmark tests/strict pass. Complete reverse cone remains40: unchanged
+tcp-reactor explicitly refuses Windows Unix-style FD compilation; supported
+Unix native/hosted acceptance remains OPEN, not Windows success. No heavy
+benchmark execution is claimed.376 registry identities unchanged; standalone
+registry subset verified,1276 ALGOL/LANG objects retained with original96b/f26
+native acceptance. Prior scoped diagram643/12 and transport26/8 counts are
+repeated subsets, not added to continuation totals.
 
-Independent exact-source e5b9163a transport review WITHHELD:
-Windows destructor can free pending OVERLAPPED/buffers before cancellation
-completion; AcceptEx FALSE is incorrectly checked against SOCKET_ERROR;
-fan-out adoption queue is unbounded. Static OS-contract findings are not an
-executed UB reproduction. Worker/acceptor failure shutdown also needs repair.
-Report SHA99871bbc99f1cdb9ae0e724cd7f79bf9e631b5493f7eddcdeff014c6f028b92d.
-Spec-first lifetime/failed-completion repair selected; bounded admission,
-coordinated fault shutdown and numerical geometry repair remain required.
+Independent scoped transport review PASS at sourceb9, retained complete objects,
+SHA98c1f06ccb803078672dfe02a014d11063ce71b32d2f70ad3a073e5c09237abc.
+Independent scoped spacing review PASScf,
+SHAdf8a3d5eae1ef2a3f3d9fbf4f2067b3b3db08d25fc72b0ca93b386a3ecc0fc25.
+Checked API acceptance covers previously supported structural/numeric IR;
+inherited unchecked rank arithmetic remains OPEN/static/unexecuted. General
+arbitrary-support/floating P2 and whole456 acceptance remain OPEN.
 
-Earlier source96b26233/f26 native core1509/17 and downstream1258/176,
-48 real sign cells/six backends and actual WinUI acceptance remain attributed
-to that source. Documentation5fff24f6 had complete1695/1698 object proof and
-exact documentation review PASS; none accepts current changed imports.
-All initial failures and immutable receipts retained. No assertions weakened.
-
-Sole active Closure/sharedPR17288, published82209953, auto-mergeOFF;
-latest audit135035Z found failed Linux/CI gate and unknown mergeability.
-No publication, merge or cleanup. Whole456/general floating P2/hosted native3OS/
-exact published-head review/requiredCI/conflict gates OPEN. Full Closure parity,
-CV04b/output-byte source joins/all folding-renaming-inlining-motion-merging-
-deletion lineage/pass-sweep/identity/span evidence remain OPEN.
+Sole Closure/sharedPR17288 remains unpushed here, published82209953/autoOFF.
+Fresh publication audit, exact-head hosted native3OS/requiredCI/review/conflict
+and actual merge proof/cleanup remain required. Docs-only retention review
+pending. Full Closure parity/CV04b/output-byte source/all folding-renaming-
+inlining-motion-merging-deletion lineage/pass-sweep/identity/span evidence OPEN.
 Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/checkout/target/
-receipts untouched and unpolled. Delivery first, genuine final-source Miri
-afterward. Full objective incomplete; heartbeat ACTIVE.
+receipts untouched and unpolled. Deliver first, genuine final-source Miri later.
+Full objective incomplete; heartbeat ACTIVE.
 <!-- /CV04a current-main reconciliation -->
 
 <!-- CV04a BEAM heap native continuation -->

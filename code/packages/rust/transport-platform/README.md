@@ -15,10 +15,9 @@ The current providers are:
 - `linux::EpollTransportPlatform` for Linux
 - `windows::WindowsTransportPlatform` for Windows
 
-The Windows provider is intentionally phase one. It uses nonblocking sockets,
-`WSAPoll`, loopback wakeup sockets, and user-space timers today so the seam is
-usable immediately. A fuller IOCP-backed provider can replace that internals
-later without changing the public contract.
+The Windows provider uses IOCP with overlapped stream operations and AcceptEx.
+Timers remain managed in user space. Cross-thread wake_handle is not available
+on Windows; reactors retain their configured finite polling fallback.
 
 All three providers expose one repository-owned contract for:
 
@@ -46,3 +45,12 @@ cargo test -p transport-platform
 cargo check -p transport-platform --tests --target x86_64-unknown-linux-gnu
 cargo check -p transport-platform --tests --target x86_64-pc-windows-msvc
 ```
+
+
+## Bounded spacing and transport reconciliation
+
+Windows IOCP teardown closes stream/listener, pending AcceptEx and completed-but-unadopted sockets, then retains operation buffers and the completion port until matching terminal packets arrive. A fatal wait error deliberately retains outstanding storage for process lifetime; it is not successful completion. AcceptEx uses its BOOL return convention and records only successful or pending submissions.
+
+Validation is source-attributed: Windows applicable packages and standalone
+checks are recorded separately from Unix-only/hosted and whole-PR gates.
+Final-source Miri is **DEFERRED/PENDING**, never passed.

@@ -127,3 +127,12 @@ same authored font/color baseline after removing only proven rectangles and
 their exact metadata entry. Default textColor metadata is preserved in the
 integer two-support complete-scene work controls. General arbitrary-support
 and floating work remains open; final-source Miri is DEFERRED/PENDING.
+
+
+## Bounded spacing and transport reconciliation
+
+Authored spacing controls preserve complete ordinary/zero/default layout and PaintScene equality, precedence/refusal IR, finite supported boundaries and exact excessive-value refusals. Caller-owned invalid spacing and NaN-derived geometry have distinct typed refusals; the original infinite-extent and self-loop failures remain preserved. Existing work, style, glyph, classifier and scene controls remain required.
+
+Validation is source-attributed: Windows applicable packages and standalone
+checks are recorded separately from Unix-only/hosted and whole-PR gates.
+Final-source Miri is **DEFERRED/PENDING**, never passed.

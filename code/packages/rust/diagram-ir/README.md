@@ -52,3 +52,12 @@ let node = GraphNode {
 
 See `code/specs/DG00-diagram-ir.md` for the full architecture and
 `code/specs/DG01-dot-pipeline-rust.md` for the Rust-specific pipeline.
+
+
+## Bounded spacing and transport reconciliation
+
+MAX_SWIMLANE_FLOWCHART_SPACING defines the own IR production range 0..=65536 for nodeSpacing, rankSpacing and diagramPadding. This bounded policy is separate from unrestricted upstream parity.
+
+Validation is source-attributed: Windows applicable packages and standalone
+checks are recorded separately from Unix-only/hosted and whole-PR gates.
+Final-source Miri is **DEFERRED/PENDING**, never passed.
