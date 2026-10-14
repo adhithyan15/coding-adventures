@@ -3,29 +3,34 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a active delivery checkpoint -->
-October14 fixed5c71da1c final20-package unfiltered validation ACTUALLY PASS:
-2613/0/1existingignore across110targets; LANG478/0/0, ALGOL849/0/0.
-Strict alltargets EXIT0. Native receipt SHAed23184670868245eb67c1a0338c41f986f84a53a84856e6bde2ea1e493608ec.
-Independent scoped exact-head source/security/docscarrier PASS29ca653f;
-fresh Go12fixture tests/vet/build and unforced3-native Closure selection PASS.
-No hosted/native-hardware/merge acceptance inferred. Registry376 exact.
+October14 source3d0f3896: final affected14-package diagram/parser/paint/downstream
+suites ACTUALLY PASS855/0/0 over32targets, strictalltargets EXIT0. TestslogSHA
+7b2de39591d272bdbb96a454d93110380fead1dfd19397857560f962d22c7df6.
+Actualmain925 import86ea closed13paths/6pure/7exactthreewayoverlaps/225122retained.
+Both new subgraph title margin fields have exact finite0..65536 admission.
+Nested title-band reserves and padding/group-aware tails enclose all accepted
+positive margins; complete zero/default layouts remain exact.
 
-The dedicated unit-offset proof repairs five demonstrated over-admissions;
-owned12sources/72unique backend cells require exact stdout+normalExit0.
-TitleTopMargin40invalid red/80complete-layout positive/focused2PASS;
-original32/new16 hop cases and all8192/production-limit controls retained.
-Cancelled4a79530 remains actualEXIT1/incomplete, never accepted. All old
-failed logs/reviews preserved. Generic Boolean formatter range tracking and
-general arbitrary-F work remain OPEN.
+Spec-first controls preserve actualred80invalid/134geometry, b81fourgroup-tail,
+2d75fortyeightouterpadding and c97twohundredfiftysixpaddedshape failures.
+Final80typed/16128geometry/36completepaintedtitleglyph cells pass. No capacity,
+ownership/safety/work/production-limit control weakened; all original32/new16
+hop cases and8192 controls retained. Registry376 identities/checksums exact.
+Independent773source review PASSf04c1d4a; final3d/carrier review required.
 
-New actual main925f9f4cd5a adds subGraphTitleMargin top/bottom in13paths after
-c25. Spec CV04a-subgraph-title-margin-main-reconciliation.md precedes import.
-Next closed producer reconciliation, exact scalar-admission red controls,
-affected diagram suites/strict and final security/carrier/docs/build-plan.
-Prove compiler/native inputs unchanged from5c rather than repeat its accepted
-long matrix for diagram-only changes. SolePR17288 still old822/failed/conflicting,
-autoOFF; publication and exact-head hosted CI/review/conflict/merge gates OPEN.
+Fixed5c native/compiler complete20-package unfiltered suite ACTUALLY PASS
+2613/0/1existingignore over110targets; LANG478/0, ALGOL849/0, strict0.
+Independent forward dependency proof166localpackages/2798objects retains
+all2796non-doc objects through773; only2changelog docs differ. Counts remain
+separate source-specific receipts, not additive or a new native execution.
+Finalcarrier must retain these objects. Fresh5c Go12fixtures/vet/build/3native
+selection PASS; refresh current production plan after docs. Cancelled4a79530
+remains actualEXIT1/incomplete, never accepted; all failed receipts preserved.
 
+Next finaldocs/checker/lessons, exact-head independent source/carrier review,
+current unforced production plan and samePR17288 publication; hosted exact-head
+CI/review/conflict/actualmerge gates remain OPEN, autoOFF until acceptable.
+General floating resource work and generic Boolean formatter range tracking OPEN.
 Full Closure parity/output-byte source/full fold-rename-inline-motion-merge-
 delete lineage/pass-sweep/stableIDs/spans/CV04b/whole objective remain OPEN.
 Existing CLOC27 leaf-token bridge is real; stale epic allNone audit is not scope.

@@ -171,3 +171,9 @@ repair adds padding to the existing finite inclusive spacing guard. Final
 affected suites and exact-source security acceptance are recorded separately;
 whole/downstream/hosted/merge acceptance remains withheld. Final-source Miri
 is **DEFERRED/PENDING**.
+
+Subgraph title-margin controls compare complete emitted glyph runs and bounds
+across36 direction/padding/margin cells, preserving the complete input layout.
+They complement16128 checked-layout enclosure/default cells; metadata presence
+alone is insufficient. Final3d affected14-package validation passes855/0/0 over
+32targets and strict alltargets EXIT0. Miri DEFERRED/PENDING, never passed.

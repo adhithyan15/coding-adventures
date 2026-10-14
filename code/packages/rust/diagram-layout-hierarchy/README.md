@@ -67,3 +67,10 @@ Global flowchart curve is applied only when an edge has no explicit curve. Rank 
 Affected Windows suites/strict lint are source-attributed to e2fd7e9c;
 producer native macOS rendering, general floating work and whole-PR/hosted
 gates remain separate. Final-source Miri is **DEFERRED/PENDING**.
+
+Checked subgraph title margins retain finite inclusive0..65536 top/bottom
+admission, with space for every nested title band in all directions. Positive
+margins account for admitted node/outer padding and fixed-height shapes;
+complete default/zero layouts remain exact. Spec-first80 invalid controls and
+16128 geometry cells pass. Final3d full affected14-package validation passes
+855/0/0 over32targets with strict alltargets EXIT0. Miri DEFERRED/PENDING.
