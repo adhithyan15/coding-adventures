@@ -69,3 +69,11 @@ remain pending. Full parity/output source/all lineage/CV04b/goal remain OPEN.
 Full final-source Miri DEFERRED/PENDING, never passed; frozen497inputs/run/
 checkout/receipts/target remain untouched and unpolled. No publication/merge/
 cleanup or heartbeat disable until the actual full contract is satisfied.
+
+Actual original red87142 at77be83eb compiles:Cargo101/0PASS1FAIL,32edges496
+predicates after complete scene equality. Actual first focus2279 at60 passes
+the empty matrix and retained128duplicate/127predicate control. Source834
+runner79938 reports fullcore/parser618PASS/10targets, but strict Clippy exits101
+on the new test oracle's nested tuple return type; whole runner EXIT1, not PASS.
+Use a test-local named entry type without suppressing or weakening strict lint.
+Keep this original failed receipt and rerun the affected checks on the new head.

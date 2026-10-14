@@ -10090,7 +10090,8 @@ emphasized --> direct
 
     #[test]
     fn line_hop_integer_two_support_tree_and_original_predicate_agree() {
-        fn validate(node: &SwimlaneHopEndpointNode) -> (usize, Vec<((i64, usize), i64)>) {
+        type EndpointEntry = ((i64, usize), i64);
+        fn validate(node: &SwimlaneHopEndpointNode) -> (usize, Vec<EndpointEntry>) {
             let (left_height, mut left) = node.left.as_ref().map_or((0, Vec::new()), |child| validate(child));
             let (right_height, right) = node.right.as_ref().map_or((0, Vec::new()), |child| validate(child));
             assert!(left.iter().all(|(key, _)| *key < node.key));
