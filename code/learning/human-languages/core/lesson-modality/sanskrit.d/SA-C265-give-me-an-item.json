@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C265-give-me-an-item",
+    "language": "sanskrit",
+    "chapter": 265,
+    "sequence": 15720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:668bc53967d15429"
+  },
+  "findings": []
+}

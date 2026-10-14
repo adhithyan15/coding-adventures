@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:260ad26565f084bb",
+  "lessonIds": [
+    "SA-C265-meal-and-restaurant-recall",
+    "SA-C265-dadatu",
+    "SA-C265-give-me-an-item",
+    "SA-C265-polite-order-contrast",
+    "SA-C265-mixed-order-practice",
+    "SA-C265-restaurant-order-retrieval"
+  ],
+  "tex": "sanskrit/book/chapters/ch265-a-gentle-order-at-a-meal.tex"
+}

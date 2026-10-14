@@ -1,0 +1,11 @@
+{
+  "id": "SA-C265-restaurant-order-retrieval",
+  "pathSegment": "SA-PATH-265-ORDER265",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-265-ORDER265",
+      "order": 5
+    }
+  ]
+}
