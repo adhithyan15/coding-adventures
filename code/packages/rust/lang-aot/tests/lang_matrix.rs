@@ -23723,24 +23723,54 @@ fn algol_quintuple_computed_name_selector_value_snapshots_run_on_every_available
     }
 }
 
+// This scoped proof requires successful termination as well as stdout.
+// The shared helper also serves programs with intentional nonzero returns.
+fn assert_sextuple_native_completed(backend: Backend, program: &Prog, result: RunResult) {
+    match &result {
+        RunResult::Completed { code, stdout } => {
+            assert_eq!(*code, Some(0), "{backend:?} sixth native source must terminate normally: {stdout:?}; source: {}", program.src);
+        }
+        RunResult::Trapped => panic!("{backend:?} sixth native source must not trap: {}", program.src),
+    }
+    assert_cell(backend, program, result);
+}
+
+#[test]
+fn sextuple_native_stdout_rejects_abnormal_completion() {
+    for stdout in ["9", "1"] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: "begin output(9) end", expect: Expect::Stdout(stdout), backends: &[NativeAot] };
+        for code in [None, Some(1), Some(-1)] {
+            let rejected = std::panic::catch_unwind(|| assert_sextuple_native_completed(NativeAot, &program, RunResult::Completed { code, stdout: stdout.to_owned() }));
+            assert!(rejected.is_err(), "matching stdout cannot conceal abnormal termination: {stdout:?}/{code:?}");
+        }
+        assert_sextuple_native_completed(NativeAot, &program, RunResult::Completed { code: Some(0), stdout: stdout.to_owned() });
+    }
+}
+
 #[test]
 fn algol_sextuple_computed_name_assigned_value_snapshots_run_on_every_available_standard_backend() {
     // Four complete source programs distinguish either captured root and
     // both selected outcomes. Direct source has a separate parser135 oracle.
     for (source, expected) in [
-        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(result) end", "9"),
-        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(result) end", "1"),
-        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(result) end", "9"),
-        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(result) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(left) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(saved) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(left) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(saved) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(right) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(saved) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(right) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(saved) end", "1"),
     ] {
         let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        let mut completed = 0;
         for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
             let available = toolchain_available(backend);
             let Some(result) = run(backend, &program) else {
                 assert!(!available, "{backend:?} available but sixth assigned computed-name selector control did not complete");
                 continue;
             };
-            assert_cell(backend, &program, result);
+            if let RunResult::Completed { code, stdout } = &result {
+                eprintln!("sixth native observed backend={backend:?} expected={expected:?} code={code:?} stdout={stdout:?}");
+            }
+            assert_sextuple_native_completed(backend, &program, result);
+            completed += 1;
         }
+        assert!(completed > 0, "sixth native program needs at least one actual completed backend: {source}");
     }
 }
