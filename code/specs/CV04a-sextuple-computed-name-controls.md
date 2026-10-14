@@ -47,3 +47,22 @@ conflict gates and full parity/output provenance/all lineage remain OPEN.
 Base ESTree/own types/no new crates.io stay binding. Final-source Miri
 DEFERRED/PENDING, never passed; frozen497inputs/run/checkout/target/receipts
 untouched and unpolled. Delivery first, genuine final-source Miri later.
+
+## Independent native evidence correction
+
+Actual54630 EXIT0 at2638: three AST/source tests pass, full compiler869/5 and
+strict2/whitespace pass. Four assigned native programs pass the existing stdout
+helper, but independent review identifies that helper ignores Completed.code.
+These programs name a scalar result, which is ALGOL's intentional main-return
+convention; stdout alone proves neither successful termination nor execution
+of a backend if all are unavailable. Preserve this original receipt and the
+review finding, with new native acceptance withheld until the scoped fix runs.
+
+Rename only the new native source local to saved, retaining the same selected
+arm/snapshot/stdout9-or-1 behavior while default main returns integer0. Require
+Completed.code Some(0), exact existing stdout assertion, and at least one
+completed available backend per program. Log each actual completed backend,
+code and stdout. Keep every earlier test and shared stdout helper unchanged,
+since some conformance programs intentionally return values. Add adversarial
+matched stdout with nonzero/absent exit to prove the new acceptance check rejects
+the specific loophole; these simulated cases are not native runtime evidence.
