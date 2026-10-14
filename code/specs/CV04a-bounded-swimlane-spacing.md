@@ -35,6 +35,17 @@ boundary0/65536. Verify finite/nonnegative canvas, all lanes/groups/nodes and
 finite edge endpoints, plus full ordinary/default scenes. Pin large-padding
 minimum extents separately. Preserve complete old work/classifier controls.
 
+Full suite atb9ff49f6 exposed an existing self-loop defect: the exact ordering
+reference control already documented NaN endpoints from a zero displacement
+vector. The new checked boundary correctly refused it. Repair coincident-center
+endpoint construction before normalization: source right-side midpoint and
+target top-side midpoint, using each node's dimensions. Other endpoints remain
+bit-identical. This pins finite distinct anchors, not a claim of full loop-path
+topology. Keep the complete ordering/reference equality and every endpoint-bit
+assertion; replace obsolete NaN normalization with mandatory finite assertions.
+Add exact independent self-loop anchor expectations in all four directions,
+with ordering/hops variations. Preserve the original failing suite receipt.
+
 Run full affected diagram suites, complete updated reverse cone and standalone
 transport benchmark, strict lint/docs plus independent exact-source review.
 Prior source-attributed transport scoped acceptance does not accept this repair.
