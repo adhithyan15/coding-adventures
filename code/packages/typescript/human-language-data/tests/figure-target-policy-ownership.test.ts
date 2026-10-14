@@ -88,7 +88,7 @@ describe("figure-target policy ownership", () => {
     ).toThrow();
     expect(readdirSync(evidenceOwnerDirectory)).toEqual(
       expect.arrayContaining([
-        "real-corpus-bengali-figure-targets-8f043f10.case.ts",
+        "real-corpus-bengali-telugu-figure-targets-e3f520d1.case.ts",
         "real-corpus-devanagari-figure-targets-803c533e.case.ts",
         "real-corpus-gujarati-figure-targets-b0baaa53.case.ts",
         "real-corpus-latin-figure-targets-28d94b6f.case.ts",
