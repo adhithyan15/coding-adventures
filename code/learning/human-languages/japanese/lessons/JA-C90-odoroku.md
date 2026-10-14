@@ -14,7 +14,8 @@ romanization: "odoroku"
 concept_tag: JA-VERB-ODOROKU
 prerequisites: [JA-C89-tsukamu, JA-C89-tatamu]
 sounds: []
-roots: []
+roots: [japanese-odoroku]
+etymology_hook: "odoroku: native Japanese, inherited, not borrowed; kanji 驚く attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C89-tatamu]
 <!-- hl-knowledge: introduces=[JA-LEX-C90-ACT90-01]; assesses=[] -->
 
 **おどろく** — *odoroku* — "to be surprised".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おどろく** (*odoroku*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

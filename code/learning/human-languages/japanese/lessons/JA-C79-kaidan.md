@@ -14,7 +14,8 @@ romanization: "kaidan"
 concept_tag: JA-LOC79-KAIDAN
 prerequisites: [JA-C79-temae, JA-C79-kado]
 sounds: []
-roots: []
+roots: [middle-chinese-keaj, middle-chinese-dwanh]
+etymology_hook: "kaidan: Sino-Japanese 階 'stairs' + 段 'step', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C79-kado]
 <!-- hl-knowledge: introduces=[JA-LEX-C79-LOC79-04]; assesses=[] -->
 
 **かいだん** — *kaidan* — "stairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かいだん** (*kaidan*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kai*, "stairs, storey" (Middle Chinese *keaj*) and *dan*, "step, section" (*dwanH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

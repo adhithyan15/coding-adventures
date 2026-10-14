@@ -14,7 +14,8 @@ romanization: "makkuro"
 concept_tag: JA-QUAL130-MAKKURO
 prerequisites: [JA-C129-tanomoshii, JA-C130-masshiro]
 sounds: []
-roots: []
+roots: [japanese-ma-true, japanese-kuroi]
+etymology_hook: "makkuro: native ma 'true, very' + kuro 'black'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C130-masshiro]
 <!-- hl-knowledge: introduces=[JA-LEX-C130-QUAL130-02]; assesses=[] -->
 
 **まっくろ** — *makkuro* — "pitch black".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まっくろ** (*makkuro*) is native: *ma*, "true, very", with the colour word *kuro*, "black", the base of *kuroi*, the consonant doubled where they meet (JMdict, KANJIDIC2). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

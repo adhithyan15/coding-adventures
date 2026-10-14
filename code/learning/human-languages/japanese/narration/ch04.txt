@@ -143,6 +143,9 @@ Grammar Lens — politeness is grammar here, not word choice.
 That is the difference this chapter has to name. In many languages politeness is a choice between two words for "you." Japanese instead marks it on the predicate, and every sentence has one, so every sentence is marked. There is no neutral setting: ありがとう to a friend and ありがとうございます (arigatō gozaimasu) to a stranger are not two styles of the same form, they are two different grammatical levels, and choosing wrongly is heard immediately.
 At the far end of the system, even the verb can be replaced: ordinary iu, "to say," has the respectful form ossharu and the humble form mōsu. Same act, three verbs, chosen by who is doing what to whom. That is keigo, and this lesson is only its front door. Their spellings belong in later, separately taught script lessons.
 
+The word, taken apart.
+ありがとうございます (arigatō gozaimasu) joins two pieces. Arigatō comes from arigataku, "in a way hard to come by" (JMdict). Gozaimasu, the polite "to be", comes from gozaru, built from the honorific go and za, "seat", both borrowed from Chinese, with native aru, "to be"; -masu is the polite ending (JMdict).
+
 Guided Practice.
 [your turn — say: ありがとうございます (arigatō gozaimasu) — ten beats, final su light]
 [pause 8 seconds for the answer]

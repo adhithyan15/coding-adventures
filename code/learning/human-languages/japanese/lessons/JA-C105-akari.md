@@ -14,7 +14,8 @@ romanization: "akari"
 concept_tag: JA-THINGS105-AKARI
 prerequisites: [JA-C105-yukata, JA-C105-honoo]
 sounds: []
-roots: []
+roots: [japanese-akarui]
+etymology_hook: "akari: native, a noun on the root of akarui 'bright'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C105-honoo]
 <!-- hl-knowledge: introduces=[JA-LEX-C105-THINGS105-04]; assesses=[] -->
 
 **あかり** — *akari* — "a lamp, a light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あかり** (*akari*) is native, a noun on the same root as *akarui*, "bright" (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

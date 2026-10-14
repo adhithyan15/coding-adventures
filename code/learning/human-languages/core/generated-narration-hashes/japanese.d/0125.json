@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 125,
-  "sourceHash": "fnv1a64:7683964fbddc20cb",
+  "sourceHash": "fnv1a64:6b0a43d0aa4907e4",
   "lessonIds": [
     "JA-C125-sugoi",
     "JA-C125-hidoi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch125.txt",
   "json": "japanese/narration/ch125.json",
-  "textHash": "fnv1a64:41e9442756098e5b",
-  "jsonHash": "fnv1a64:9ed13164668d9f73",
+  "textHash": "fnv1a64:3bdaae38b7968dea",
+  "jsonHash": "fnv1a64:ed9f8f55158b5698",
   "findings": []
 }

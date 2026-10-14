@@ -14,7 +14,8 @@ romanization: "yasashii"
 concept_tag: JA-ADJ49-YASASHII
 prerequisites: [JA-C49-yasui, JA-C49-hayai]
 sounds: []
-roots: []
+roots: [japanese-yasashii]
+etymology_hook: "yasashii: native Japanese, inherited, not borrowed; 易しい 'easy' and 優しい 'kind' as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C49-hayai]
 <!-- hl-knowledge: introduces=[JA-LEX-C49-ADJ49-05]; assesses=[] -->
 
 **やさしい** — *yasashii* — "easy; kind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**やさしい** (*yasashii*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. JMdict writes it with one character for "easy", usually left in kana, and another for "kind"; both are kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

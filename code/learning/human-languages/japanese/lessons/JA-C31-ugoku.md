@@ -14,7 +14,8 @@ romanization: "ugoku"
 concept_tag: JA-VERB-UGOKU
 prerequisites: [JA-C31-otosu, JA-C31-naosu]
 sounds: []
-roots: []
+roots: [japanese-ugoku]
+etymology_hook: "ugoku: native Japanese, inherited, not borrowed; kanji 動く attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C31-naosu]
 <!-- hl-knowledge: introduces=[JA-LEX-C31-VERBS31-04]; assesses=[] -->
 
 **うごく** — *ugoku* — "to move".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**うごく** (*ugoku*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

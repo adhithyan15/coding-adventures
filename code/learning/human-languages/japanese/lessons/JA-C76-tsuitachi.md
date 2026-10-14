@@ -14,7 +14,8 @@ romanization: "tsuitachi"
 concept_tag: JA-TIME76-TSUITACHI
 prerequisites: [JA-C76-ichinichi, JA-C76-hannichi]
 sounds: []
-roots: []
+roots: [japanese-tsuitachi]
+etymology_hook: "tsuitachi: native; usually tsuki 'moon, month' + tachi 'start' (from tatsu)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C76-hannichi]
 <!-- hl-knowledge: introduces=[JA-LEX-C76-TIME76-05]; assesses=[] -->
 
 **ついたち** — *tsuitachi* — "the first of the month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ついたち** (*tsuitachi*) is a native word, inherited rather than borrowed. It is usually explained as *tsuki*, "moon, month", and *tachi*, "rising, starting", from *tatsu*: the month's beginning. JMdict writes it with the characters for "one" and "day", read as a whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

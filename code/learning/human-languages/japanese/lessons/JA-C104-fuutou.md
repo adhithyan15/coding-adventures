@@ -14,7 +14,8 @@ romanization: "fuutou"
 concept_tag: JA-THINGS104-FUUTOU
 prerequisites: [JA-C103-kan, JA-C104-tsutsumi]
 sounds: []
-roots: []
+roots: [middle-chinese-pjowng, middle-chinese-duwng]
+etymology_hook: "fuutou: Sino-Japanese 封 'envelope' + 筒 'tube', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C104-tsutsumi]
 <!-- hl-knowledge: introduces=[JA-LEX-C104-THINGS104-02]; assesses=[] -->
 
 **ふうとう** — *fuutou* — "an envelope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふうとう** (*fuutou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *fū*, "envelope, seal" (Middle Chinese *pjowng*) and *tō*, "tube, pipe" (*duwng*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tsumori"
 concept_tag: JA-FUT141-TSUMORI
 prerequisites: [JA-C141-rainen, JA-C140-sakki, JA-C132-sore]
 sounds: []
-roots: []
+roots: [japanese-tsumori]
+etymology_hook: "tsumori: native, the noun from tsumoru 'to pile up, to estimate'; usually written in kana"
 duration:
   max_seconds: 200
 requires:
@@ -54,6 +55,11 @@ It follows a verb in its dictionary form, and **です** closes the sentence.
 Here the dictionary form matters: *iku*, not *ikimasu*, comes before
 **つもり**. **ます** goes at the very end of a polite sentence, and
 **です** does that job here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**つもり** (*tsumori*) is native: the noun made from *tsumoru*, "to pile up, to estimate", by its stem, and JMdict writes both with the same kanji. It is inherited rather than borrowed, and usually written in kana (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C141-TSUMORI, JA-LEX-C141-RAINEN] -->

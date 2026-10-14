@@ -11,8 +11,8 @@ gloss: seven things — the one word in this chapter the borrowed count already 
 concept_tag: JA-NATIVE-SEVEN
 prerequisites: [JA-C17-muttsu, JA-C15-nana, JA-W08-na, JA-W10-shi]
 sounds: [mora]
-roots: []
-etymology_hook: nana is a native word that the borrowed count adopted, exactly as yon was; seven is the second place the seam shows.
+roots: [japanese-nana-seven, japanese-tsu-counter]
+etymology_hook: "nanatsu: native nana 'seven' + native counter -tsu"
 duration:
   max_seconds: 185
 requires:
@@ -63,6 +63,11 @@ saw at four with **よん**. Set the two rows side by side and the pattern is ex
 Two places in ten where the native word walked into the borrowed count and
 stayed, and both of them are places where the borrowed reading collides with
 another word. This is the seam, and you have now seen both ends of it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ななつ** (*nanatsu*) is native: *nana*, the inherited word for "seven", with the counter *-tsu* (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NANATSU, JA-LEX-NANA, JA-GRAMMAR-KUN-IN-THE-COUNT] -->

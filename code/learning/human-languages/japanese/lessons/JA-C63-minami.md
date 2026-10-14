@@ -14,7 +14,8 @@ romanization: "minami"
 concept_tag: JA-WORLD63-MINAMI
 prerequisites: [JA-C63-nishi, JA-C63-higashi]
 sounds: []
-roots: []
+roots: [japanese-minami]
+etymology_hook: "minami: native Japanese, inherited, not borrowed; kanji 南 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C63-higashi]
 <!-- hl-knowledge: introduces=[JA-LEX-C63-WORLD63-05]; assesses=[] -->
 
 **みなみ** — *minami* — "south".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**みなみ** (*minami*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

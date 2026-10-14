@@ -14,7 +14,8 @@ romanization: "otama"
 concept_tag: JA-THINGS103-OTAMA
 prerequisites: [JA-C102-kama, JA-C102-manaita]
 sounds: []
-roots: []
+roots: [japanese-tama]
+etymology_hook: "otama: native o- + tama 'ball'; a shortened word (JMdict)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C102-manaita]
 <!-- hl-knowledge: introduces=[JA-LEX-C103-THINGS103-01]; assesses=[] -->
 
 **おたま** — *otama* — "a ladle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おたま** (*otama*) is native: the polite *o-* and *tama*, "ball", the ladle's round bowl. JMdict marks it as a shortened word. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

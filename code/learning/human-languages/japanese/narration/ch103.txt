@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a rice pot, then the Japanese for a cho
 You'll want to know: おたま.
 おたま — otama — "a ladle".
 
+The word, taken apart.
+おたま (otama) is native: the polite o- and tama, "ball", the ladle's round bowl. JMdict marks it as a shortened word. It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a chopping board, then the Japanese for
 
 You'll want to know: すいどう.
 すいどう — suidou — "the water supply".
+
+The word, taken apart.
+すいどう (suidou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sui, "water" (Middle Chinese sywijX) and dō, "way, path" (dawX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a ladle, then the Japanese for the wate
 You'll want to know: やかん.
 やかん — yakan — "a kettle".
 
+The word, taken apart.
+やかん (yakan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yaku, "medicine" (Middle Chinese yak) and kan, "jar" (kwanH, the reading of its fuller older form) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). It was a pot for brewing medicine, and yaku shortened to ya; JMdict marks it as usually written in kana.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for the water supply, then the Japanese for
 You'll want to know: おぼん.
 おぼん — obon — "a tray".
 
+The word, taken apart.
+おぼん (obon) is the native polite prefix o- with bon, "tray, basin", the on'yomi of its character, borrowed from Chinese (Middle Chinese bwon; JMdict, Unihan).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a kettle, then the Japanese for a tray.
 
 You'll want to know: かん.
 かん — kan — "a can, a tin".
+
+The word, taken apart.
+かん (kan) is a loanword: JMdict gives its source as Dutch kan, or English can. Its kanji, a character for an earthen jar, is marked as ateji, chosen for its sound.
 
 What you've built.
 One more word for this chapter.

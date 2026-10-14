@@ -14,7 +14,8 @@ romanization: "aida"
 concept_tag: JA-LOC81-AIDA
 prerequisites: [JA-C81-fumoto, JA-C81-tokai]
 sounds: []
-roots: []
+roots: [japanese-aida]
+etymology_hook: "aida: native Japanese, inherited, not borrowed; kanji 間 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C81-tokai]
 <!-- hl-knowledge: introduces=[JA-LEX-C81-LOC81-04]; assesses=[] -->
 
 **あいだ** — *aida* — "between".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あいだ** (*aida*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

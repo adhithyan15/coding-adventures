@@ -14,7 +14,8 @@ romanization: "toufu"
 concept_tag: JA-FOOD34-TOUFU
 prerequisites: [JA-C34-daikon, JA-C34-ninjin]
 sounds: []
-roots: []
+roots: [middle-chinese-duwh, middle-chinese-bjux]
+etymology_hook: "toufu: Sino-Japanese 豆 'bean' + 腐 'rot', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C34-ninjin]
 <!-- hl-knowledge: introduces=[JA-LEX-C34-FOOD34-04]; assesses=[] -->
 
 **とうふ** — *toufu* — "tofu".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**とうふ** (*toufu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tō*, "bean" (Middle Chinese *duwH*) and *fu*, "rot, decay" (*bjuX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

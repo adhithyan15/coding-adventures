@@ -14,7 +14,8 @@ romanization: "toku"
 concept_tag: JA-VERB-TOKU
 prerequisites: [JA-C85-haku, JA-C86-saku]
 sounds: []
-roots: []
+roots: [japanese-toku]
+etymology_hook: "toku: native Japanese, inherited, not borrowed; kanji 解く attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C86-saku]
 <!-- hl-knowledge: introduces=[JA-LEX-C86-ACT86-02]; assesses=[] -->
 
 **とく** — *toku* — "to solve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**とく** (*toku*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "The Last Four Hiragana: Ki, Ke, Nu and He",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:eb02f8950e57be05",
+  "sourceHash": "fnv1a64:8ad059c2f5a18f66",
   "lessons": [
     {
       "id": "JA-C133-eki",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c71e2e7334d4a170",
+      "sourceHash": "fnv1a64:65ed92723f76778f",
       "notice": null,
       "blocks": [
         {
@@ -74,6 +74,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えき (eki) is Sino-Japanese (kango): the on'yomi of a character meaning \"relay station\", a reading borrowed from Chinese (Middle Chinese yek in Baxter's transcription; Unihan, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -113,7 +124,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -354,7 +365,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17e576dc436a2278",
+      "sourceHash": "fnv1a64:894e8a247265e614",
       "notice": null,
       "blocks": [
         {
@@ -418,6 +429,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きのう (kinō) is a native word, inherited rather than borrowed. JMdict writes it with characters for \"previous\" and \"day\", read as a whole; read sakujitsu, the same characters are Sino-Japanese. Its older origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -457,7 +479,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -508,7 +530,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9640ad8801d4d36f",
+      "sourceHash": "fnv1a64:797622571f98f92c",
       "notice": null,
       "blocks": [
         {
@@ -572,6 +594,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いけ (ike) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -611,7 +644,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -851,7 +884,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f4c7779b04a4dc6",
+      "sourceHash": "fnv1a64:74d31ff494faea92",
       "notice": null,
       "blocks": [
         {
@@ -915,6 +948,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けさ (kesa) is a native word, inherited rather than borrowed, usually explained as ending in a form of asa, \"morning\". JMdict writes it with \"now\" and \"morning\", read as a whole; read konchō, the same characters are Sino-Japanese."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -954,7 +998,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1004,7 +1048,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f082b973b8b5a09",
+      "sourceHash": "fnv1a64:0759b64a42609262",
       "notice": null,
       "blocks": [
         {
@@ -1068,6 +1112,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いぬ (inu) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1107,7 +1162,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1351,7 +1406,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c0c6b016e5b72a2",
+      "sourceHash": "fnv1a64:e5bd721042b1dcb2",
       "notice": null,
       "blocks": [
         {
@@ -1406,6 +1461,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぬの (nuno) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1445,7 +1511,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1495,7 +1561,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f564e9991141c6de",
+      "sourceHash": "fnv1a64:da1dc2cf0a85d641",
       "notice": null,
       "blocks": [
         {
@@ -1550,6 +1616,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "へや (heya) is a native word, inherited rather than borrowed, ending in ya, \"house\". JMdict writes it with characters for \"section\" and \"house\", read as a whole. Where the first part comes from is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1589,7 +1666,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

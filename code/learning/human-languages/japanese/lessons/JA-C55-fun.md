@@ -14,7 +14,8 @@ romanization: "fun"
 concept_tag: JA-TIME55-FUN
 prerequisites: [JA-C54-mainichi, JA-C54-toshi]
 sounds: []
-roots: []
+roots: [middle-chinese-pjun]
+etymology_hook: "fun: Sino-Japanese, the on'yomi of 分 'divide', from Middle Chinese pjun"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C54-toshi]
 <!-- hl-knowledge: introduces=[JA-LEX-C55-TIME55-01]; assesses=[] -->
 
 **ふん** — *fun* — "a minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふん** (*fun*) is Sino-Japanese (kango): the on'yomi of a character meaning "divide; a minute", a reading borrowed from Chinese (Middle Chinese *pjun* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

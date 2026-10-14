@@ -11,8 +11,8 @@ gloss: seven — the second place the native word stands inside the borrowed cou
 concept_tag: JA-NUMBER-SEVEN
 prerequisites: [JA-R14-one-to-five, JA-W08-na, JA-C13-haha, JA-C08-sayounara]
 sounds: [mora]
-roots: []
-etymology_hook: Wiktionary's readings box for the kanji seven lists shichi as the on'yomi and nana as the kun'yomi, exactly as the box for four did.
+roots: [japanese-nana-seven, middle-chinese-tshit]
+etymology_hook: "nana: native, the kun'yomi of 七 'seven'; shichi is the on'yomi, from Middle Chinese tshit"
 duration:
   max_seconds: 180
 requires:
@@ -51,6 +51,11 @@ costs a new sign, and both of those wait until the end.
 > **しち** — *shichi* — **seven**, the same number said the other way
 
 All three signs are yours: **な**, **し**, **ち**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**なな** (*nana*) is native: the kun'yomi of the character for "seven", a word inherited, not borrowed. The borrowed reading is *shichi*, from Chinese (Middle Chinese *tshit* in Baxter's transcription; KANJIDIC2).
 
 ## What you've built — the same seam, a second time
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NANA, JA-GRAMMAR-KUN-IN-THE-COUNT, JA-LEX-YON] -->

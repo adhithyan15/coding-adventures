@@ -14,7 +14,8 @@ romanization: "tashika"
 concept_tag: JA-QUAL130-TASHIKA
 prerequisites: [JA-C130-makka, JA-C130-aimai]
 sounds: []
-roots: []
+roots: [japanese-tashika]
+etymology_hook: "tashika: native Japanese, inherited, not borrowed; kanji 確か attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C130-aimai]
 <!-- hl-knowledge: introduces=[JA-LEX-C130-QUAL130-05]; assesses=[] -->
 
 **たしか** — *tashika* — "certain, sure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たしか** (*tashika*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

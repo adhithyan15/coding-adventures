@@ -14,7 +14,8 @@ romanization: "hoshi"
 concept_tag: JA-NATURE43-HOSHI
 prerequisites: [JA-C43-suna, JA-C43-tanbo]
 sounds: []
-roots: []
+roots: [japanese-hoshi]
+etymology_hook: "hoshi: native Japanese, inherited, not borrowed; kanji 星 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C43-tanbo]
 <!-- hl-knowledge: introduces=[JA-LEX-C43-NATURE43-03]; assesses=[] -->
 
 **ほし** — *hoshi* — "a star".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ほし** (*hoshi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

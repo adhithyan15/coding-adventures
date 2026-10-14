@@ -14,7 +14,8 @@ romanization: "okane"
 concept_tag: JA-SCHOOL41-OKANE
 prerequisites: [JA-C41-jikan, JA-C41-namae]
 sounds: []
-roots: []
+roots: [japanese-kane-metal]
+etymology_hook: "okane: polite o- + native kane 'metal, money' (お金)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C41-namae]
 <!-- hl-knowledge: introduces=[JA-LEX-C41-SCHOOL41-04]; assesses=[] -->
 
 **おかね** — *okane* — "money".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おかね** (*okane*) is the polite prefix *o-* with native *kane*, "metal; money", read as the kun'yomi of the character for gold and metal. It is inherited rather than borrowed (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

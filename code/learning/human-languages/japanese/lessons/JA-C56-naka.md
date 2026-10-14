@@ -14,7 +14,8 @@ romanization: "naka"
 concept_tag: JA-TIME56-NAKA
 prerequisites: [JA-C56-mae, JA-C56-ue]
 sounds: []
-roots: []
+roots: [japanese-naka-middle]
+etymology_hook: "naka: native Japanese, inherited, not borrowed; kanji 中 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C56-ue]
 <!-- hl-knowledge: introduces=[JA-LEX-C56-TIME56-04]; assesses=[] -->
 
 **なか** — *naka* — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**なか** (*naka*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

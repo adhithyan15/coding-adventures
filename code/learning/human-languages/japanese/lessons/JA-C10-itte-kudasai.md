@@ -11,8 +11,8 @@ gloss: please say it
 concept_tag: JA-REQUEST-ITTE-KUDASAI
 prerequisites: [JA-W10-yu]
 sounds: [mora, geminate, dakuten]
-roots: []
-etymology_hook: Itte is the linking request form of iu, to say, and kudasai turns that action into a polite request directed to the listener.
+roots: [japanese-iu-say, japanese-kudasaru]
+etymology_hook: "itte kudasai: itte, from native iu 'say' + kudasai, request form of native kudasaru 'give (to me)'"
 duration:
   max_seconds: 180
 requires:
@@ -45,6 +45,11 @@ reviews_of: [JA-C10-yukkuri, JA-C09-onegaishimasu, JA-W01-i, JA-W09-ku, JA-W03-s
 The first part is the request-linking form of *iu*, “to say.” *Kudasai* makes
 the requested action polite. Learn the whole spoken frame now. Its small **っ**,
 **て**, and voiced **だ** receive separate writing steps later.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いってください** (*itte kudasai*) is two native verbs, inherited rather than borrowed. *Itte* is the linking form of *iu*, "to say". *Kudasai* is the request form of *kudasaru*, "to give (to me)", written with a character meaning "down; give", for a favour that comes down to the speaker (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ITTE-KUDASAI, JA-LEX-YUKKURI] -->

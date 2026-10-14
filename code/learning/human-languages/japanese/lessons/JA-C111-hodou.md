@@ -14,7 +14,8 @@ romanization: "hodou"
 concept_tag: JA-THINGS111-HODOU
 prerequisites: [JA-C111-shiro, JA-C111-douro]
 sounds: []
-roots: []
+roots: [middle-chinese-buh, middle-chinese-dawx]
+etymology_hook: "hodou: Sino-Japanese 歩 'step' + 道 'way', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C111-douro]
 <!-- hl-knowledge: introduces=[JA-LEX-C111-THINGS111-05]; assesses=[] -->
 
 **ほどう** — *hodou* — "a pavement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ほどう** (*hodou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ho*, "step, walk" (Middle Chinese *buH*) and *dō*, "way, path" (*dawX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

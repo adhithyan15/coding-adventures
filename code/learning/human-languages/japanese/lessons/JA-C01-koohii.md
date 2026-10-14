@@ -12,7 +12,7 @@ concept_tag: JA-WORD-KOOHII
 prerequisites: [JA-W06-hi-katakana]
 sounds: [mora, mora-length, chouon]
 roots: [dutch-koffie, arabic-qahwa]
-etymology_hook: コーヒー came from Dutch koffie, and Dutch got it from Arabic qahwa — the same source as English coffee.
+etymology_hook: "コーヒー came from Dutch koffie, which goes back through Turkish to Arabic qahwa, like English coffee"
 duration:
   max_seconds: 215
 requires:

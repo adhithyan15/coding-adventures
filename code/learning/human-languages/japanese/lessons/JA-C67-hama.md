@@ -14,7 +14,8 @@ romanization: "hama"
 concept_tag: JA-THINGS67-HAMA
 prerequisites: [JA-C67-sumi, JA-C67-ido]
 sounds: []
-roots: []
+roots: [japanese-hama]
+etymology_hook: "hama: native Japanese, inherited, not borrowed; kanji 浜 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C67-ido]
 <!-- hl-knowledge: introduces=[JA-LEX-C67-THINGS67-05]; assesses=[] -->
 
 **はま** — *hama* — "a beach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はま** (*hama*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

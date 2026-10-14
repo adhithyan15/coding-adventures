@@ -14,7 +14,8 @@ romanization: "tawashi"
 concept_tag: JA-THINGS99-TAWASHI
 prerequisites: [JA-C99-tsue, JA-C99-fukuro]
 sounds: []
-roots: []
+roots: [japanese-tawashi]
+etymology_hook: "tawashi: native; written 束子, read as a whole; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C99-fukuro]
 <!-- hl-knowledge: introduces=[JA-LEX-C99-THINGS99-04]; assesses=[] -->
 
 **たわし** — *tawashi* — "a scrubbing brush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たわし** (*tawashi*) is a native word, inherited rather than borrowed. JMdict writes it with characters for "bundle" and "child", read as a whole, and marks it as usually written in kana. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

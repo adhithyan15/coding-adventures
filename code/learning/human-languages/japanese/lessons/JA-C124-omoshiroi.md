@@ -14,7 +14,8 @@ romanization: "omoshiroi"
 concept_tag: JA-QUAL124-OMOSHIROI
 prerequisites: [JA-C124-mushiatsui, JA-C124-okashii]
 sounds: []
-roots: []
+roots: [japanese-omoshiroi]
+etymology_hook: "omoshiroi: native Japanese, inherited, not borrowed; kanji 面白い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C124-okashii]
 <!-- hl-knowledge: introduces=[JA-LEX-C124-QUAL124-05]; assesses=[] -->
 
 **おもしろい** — *omoshiroi* — "interesting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おもしろい** (*omoshiroi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). Its kanji, "face" and "white", match an old explanation that faces brighten, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

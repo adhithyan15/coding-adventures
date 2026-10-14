@@ -14,7 +14,8 @@ romanization: "asanebou"
 concept_tag: JA-TIME75-ASANEBOU
 prerequisites: [JA-C75-konshuu, JA-C75-ototoshi]
 sounds: []
-roots: []
+roots: [japanese-asa-morning, japanese-neru, middle-chinese-bjang-boy]
+etymology_hook: "asanebō: native asa 'morning' + ne 'sleep' + Sino-Japanese bō 坊 'boy, fellow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C75-ototoshi]
 <!-- hl-knowledge: introduces=[JA-LEX-C75-TIME75-05]; assesses=[] -->
 
 **あさねぼう** — *asanebou* — "oversleeping".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あさねぼう** (*asanebou*) mixes the two layers: native *asa*, "morning", and *ne*, "sleep", from *neru*, "to sleep", with *bō*, "monk's lodging; boy", the on'yomi of its last character, borrowed from Chinese (Middle Chinese *bjang*): a morning sleeper (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

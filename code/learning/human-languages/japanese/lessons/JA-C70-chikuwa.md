@@ -14,7 +14,8 @@ romanization: "chikuwa"
 concept_tag: JA-THINGS70-CHIKUWA
 prerequisites: [JA-C70-mochi, JA-C70-nattou]
 sounds: []
-roots: []
+roots: [middle-chinese-trjuwk, japanese-wa-ring]
+etymology_hook: "chikuwa: Sino-Japanese chiku 竹 'bamboo' + native wa 輪 'ring'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C70-nattou]
 <!-- hl-knowledge: introduces=[JA-LEX-C70-THINGS70-03]; assesses=[] -->
 
 **ちくわ** — *chikuwa* — "a fish-paste tube".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ちくわ** (*chikuwa*) mixes the two layers: *chiku*, "bamboo", the on'yomi of its first character, borrowed from Chinese (Middle Chinese *trjuwk*), and native *wa*, "ring", read as a kun'yomi: a bamboo ring, from its shape (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

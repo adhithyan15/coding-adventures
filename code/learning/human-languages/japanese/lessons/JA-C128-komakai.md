@@ -14,7 +14,8 @@ romanization: "komakai"
 concept_tag: JA-QUAL128-KOMAKAI
 prerequisites: [JA-C128-oroka, JA-C128-isamashii]
 sounds: []
-roots: []
+roots: [japanese-komakai]
+etymology_hook: "komakai: native Japanese, inherited, not borrowed; kanji 細かい attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C128-isamashii]
 <!-- hl-knowledge: introduces=[JA-LEX-C128-QUAL128-04]; assesses=[] -->
 
 **こまかい** — *komakai* — "fine, small and detailed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こまかい** (*komakai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

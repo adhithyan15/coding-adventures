@@ -14,7 +14,8 @@ romanization: "gobou"
 concept_tag: JA-FOOD265-GOBOU
 prerequisites: [JA-C65-tonbo, JA-C65-imo]
 sounds: []
-roots: []
+roots: [middle-chinese-ngjuw, middle-chinese-pangx]
+etymology_hook: "gobou: Sino-Japanese 牛 'ox' + 蒡 'burdock', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C65-imo]
 <!-- hl-knowledge: introduces=[JA-LEX-C65-FOOD265-05]; assesses=[] -->
 
 **ごぼう** — *gobou* — "burdock root".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ごぼう** (*gobou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *go*, "ox, cow" (Middle Chinese *ngjuw*) and *bō*, "burdock" (*pangX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

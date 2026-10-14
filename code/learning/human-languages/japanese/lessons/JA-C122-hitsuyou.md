@@ -14,7 +14,8 @@ romanization: "hitsuyou"
 concept_tag: JA-QUAL122-HITSUYOU
 prerequisites: [JA-C122-fukai, JA-C122-taisetsu]
 sounds: []
-roots: []
+roots: [middle-chinese-pjit, middle-chinese-jiewh]
+etymology_hook: "hitsuyou: Sino-Japanese 必 'surely' + 要 'necessary', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C122-taisetsu]
 <!-- hl-knowledge: introduces=[JA-LEX-C122-QUAL122-03]; assesses=[] -->
 
 **ひつよう** — *hitsuyou* — "necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひつよう** (*hitsuyou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *hitsu*, "surely, must" (Middle Chinese *pjit*) and *yō*, "necessary" (*'jiewH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

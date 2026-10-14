@@ -14,7 +14,8 @@ romanization: "taosu"
 concept_tag: JA-VERB-TAOSU
 prerequisites: [JA-C88-modosu, JA-C88-nokosu]
 sounds: []
-roots: []
+roots: [japanese-taosu]
+etymology_hook: "taosu: native Japanese, inherited, not borrowed; kanji 倒す attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C88-nokosu]
 <!-- hl-knowledge: introduces=[JA-LEX-C88-ACT88-05]; assesses=[] -->
 
 **たおす** — *taosu* — "to knock down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たおす** (*taosu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 109,
-  "sourceHash": "fnv1a64:3e363db1baec6b16",
+  "sourceHash": "fnv1a64:ade8492b348eda37",
   "lessonIds": [
     "JA-C109-kamo",
     "JA-C109-washi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch109.txt",
   "json": "japanese/narration/ch109.json",
-  "textHash": "fnv1a64:05c13ad43a945186",
-  "jsonHash": "fnv1a64:817aba923c45337d",
+  "textHash": "fnv1a64:cd7cdd9c9a30e26d",
+  "jsonHash": "fnv1a64:41e7457acbe40073",
   "findings": []
 }

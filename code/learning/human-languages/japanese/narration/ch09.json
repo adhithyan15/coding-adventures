@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "One More Time, Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:684919e7ea95e245",
+  "sourceHash": "fnv1a64:dfd920f81d86179a",
   "lessons": [
     {
       "id": "JA-C09-sumimasen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ec15c02506d98ed",
+      "sourceHash": "fnv1a64:3c1c18119124b8f4",
       "notice": null,
       "blocks": [
         {
@@ -82,6 +82,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すみません (sumimasen) is a native verb in its polite negative: sumi, from sumu, \"to come to an end, be settled\" (JMdict writes it with a character meaning \"finish\"), with -masen, \"does not\". It is inherited, not borrowed: \"it is not settled\", said of a debt of thanks or of trouble."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -124,7 +135,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -427,7 +438,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee5950b518060763",
+      "sourceHash": "fnv1a64:1ffbd704d6dddea7",
       "notice": null,
       "blocks": [
         {
@@ -477,6 +488,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よく (yoku) is the adverb form of native yoi, \"good\" (JMdict): the -i of the adjective becomes -ku. It is inherited rather than borrowed, and the older origin of yoi is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -515,7 +537,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -685,7 +707,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c1fea1d36fd94d2",
+      "sourceHash": "fnv1a64:2887d4d6bc932cfb",
       "notice": null,
       "blocks": [
         {
@@ -739,6 +761,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わかりません (wakarimasen) is native wakaru, \"to understand\", with the polite negative -masen. JMdict writes wakaru with a character meaning \"divide\", as if to understand were to sort things apart; the verb is inherited, and its older origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -772,7 +805,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -940,7 +973,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59f7c4ca07aa3652",
+      "sourceHash": "fnv1a64:e1eda659df1160d9",
       "notice": null,
       "blocks": [
         {
@@ -986,6 +1019,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もう (mō) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It has no kanji of its own and is written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1019,7 +1063,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1190,7 +1234,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26b2a1597681711a",
+      "sourceHash": "fnv1a64:39e69505fd361913",
       "notice": null,
       "blocks": [
         {
@@ -1253,6 +1297,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いちど (ichido) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, \"one\" (Middle Chinese 'jit) and do, \"degree, a time\" (duH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1281,7 +1336,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1329,7 +1384,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53e2562065e01380",
+      "sourceHash": "fnv1a64:44966b0faccc545f",
       "notice": null,
       "blocks": [
         {
@@ -1388,6 +1443,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おねがいします (onegai shimasu) is built from three native pieces: the polite prefix o-, negai, \"a wish, a request\", from the verb negau, \"to wish\", and shimasu, the polite form of suru, \"to do\". Word for word: \"I do the request\" (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1421,7 +1487,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1470,7 +1536,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14166d1a1caba301",
+      "sourceHash": "fnv1a64:6451327cfa8fbb40",
       "notice": null,
       "blocks": [
         {
@@ -1516,6 +1582,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もういちど、おねがいします (mō ichido, onegai shimasu) puts three words you own side by side. Mō, \"more\", is native; ichido, \"one time\", is built from two characters borrowed from Chinese, ichi, \"one\", and do, \"a time\"; onegai shimasu, \"I request it\", is native again (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1548,7 +1625,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -11,8 +11,8 @@ gloss: face
 concept_tag: JA-BODY-FACE
 prerequisites: [JA-C11-hana]
 sounds: [mora, vowel-hiatus]
-roots: []
-etymology_hook: Two open morae remain separate: ka-o, not one blended English-style vowel.
+roots: [japanese-kao]
+etymology_hook: "kao: native Japanese, inherited, not borrowed; kanji 顔 attached later as kun'yomi"
 duration:
   max_seconds: 150
 requires:
@@ -44,6 +44,11 @@ Retrieve **はな** — nose.
 > **かお** — *kao* — face
 
 Give **か** and **お** one mora each: *ka-o*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かお** (*kao*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KAO, JA-SCRIPT-KA-01, JA-SCRIPT-O-01] -->

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 86,
-  "sourceHash": "fnv1a64:c18a53cdfc6d988a",
+  "sourceHash": "fnv1a64:3e14b8db960dcb27",
   "lessonIds": [
     "JA-C86-saku",
     "JA-C86-toku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch86.txt",
   "json": "japanese/narration/ch86.json",
-  "textHash": "fnv1a64:17f8a7d98666a3fd",
-  "jsonHash": "fnv1a64:3e6b4a3784c8d1dd",
+  "textHash": "fnv1a64:615b7f60bc116e93",
+  "jsonHash": "fnv1a64:1a0e12edf3629c9c",
   "findings": []
 }

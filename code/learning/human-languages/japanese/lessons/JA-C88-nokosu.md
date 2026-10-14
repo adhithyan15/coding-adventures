@@ -14,7 +14,8 @@ romanization: "nokosu"
 concept_tag: JA-VERB-NOKOSU
 prerequisites: [JA-C88-tamesu, JA-C88-modosu]
 sounds: []
-roots: []
+roots: [japanese-nokosu]
+etymology_hook: "nokosu: native Japanese, inherited, not borrowed; kanji 残す attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C88-modosu]
 <!-- hl-knowledge: introduces=[JA-LEX-C88-ACT88-04]; assesses=[] -->
 
 **のこす** — *nokosu* — "to leave behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**のこす** (*nokosu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

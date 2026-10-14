@@ -14,7 +14,8 @@ romanization: "oka"
 concept_tag: JA-THINGS68-OKA
 prerequisites: [JA-C67-ido, JA-C67-hama]
 sounds: []
-roots: []
+roots: [japanese-oka]
+etymology_hook: "oka: native Japanese, inherited, not borrowed; kanji 丘 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C67-hama]
 <!-- hl-knowledge: introduces=[JA-LEX-C68-THINGS68-01]; assesses=[] -->
 
 **おか** — *oka* — "a hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おか** (*oka*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

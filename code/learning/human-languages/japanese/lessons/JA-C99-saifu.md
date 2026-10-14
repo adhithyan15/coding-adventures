@@ -14,7 +14,8 @@ romanization: "saifu"
 concept_tag: JA-THINGS99-SAIFU
 prerequisites: [JA-C98-sei, JA-C98-yue]
 sounds: []
-roots: []
+roots: [middle-chinese-dzoj-wealth, middle-chinese-puh]
+etymology_hook: "saifu: Sino-Japanese 財 'wealth' + 布 'cloth', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C98-yue]
 <!-- hl-knowledge: introduces=[JA-LEX-C99-THINGS99-01]; assesses=[] -->
 
 **さいふ** — *saifu* — "a wallet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**さいふ** (*saifu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sai*, "wealth" (Middle Chinese *dzoj*) and *fu*, "cloth" (*puH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

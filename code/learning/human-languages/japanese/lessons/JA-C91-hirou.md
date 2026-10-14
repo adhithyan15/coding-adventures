@@ -14,7 +14,8 @@ romanization: "hirou"
 concept_tag: JA-VERB-HIROU
 prerequisites: [JA-C91-yamu, JA-C91-shimau]
 sounds: []
-roots: []
+roots: [japanese-hirou]
+etymology_hook: "hirou: native Japanese, inherited, not borrowed; kanji 拾う attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C91-shimau]
 <!-- hl-knowledge: introduces=[JA-LEX-C91-ACT91-03]; assesses=[] -->
 
 **ひろう** — *hirou* — "to pick up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひろう** (*hirou*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

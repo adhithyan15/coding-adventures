@@ -14,8 +14,8 @@ romanization: "kippu"
 concept_tag: JA-ANCHOR-KIPPU
 prerequisites: [JA-C137-ippiki, JA-W133-ki, JA-W11-small-tsu, JA-W137-pa, JA-W135-ge, JA-C129-shitsukoi]
 sounds: [mora]
-roots: []
-etymology_hook: Kippu is the word for a ticket, above all a train ticket; its last sign is ふ with the small circle, a sign the book has not yet written.
+roots: [japanese-kiru, middle-chinese-bju]
+etymology_hook: "kippu: native kiri 'cutting' + Sino-Japanese fu 符 'tally', joined as kip-pu"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +52,11 @@ reviews_of: [JA-C137-ippiki, JA-W133-ki, JA-W11-small-tsu, JA-W137-pa, JA-W135-g
 Three beats: *ki–p–pu*. **き** and the small **っ** you already write. The
 last sign is **ふ** with the small circle, so *fu* becomes *pu*. The next
 lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**きっぷ** (*kippu*) mixes the two layers: native *kiri*, "cutting", from *kiru*, "to cut", and *fu*, "tally, token", the on'yomi of its second character, borrowed from Chinese (Middle Chinese *bju*); they join as *kippu* (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KIPPU, JA-SCRIPT-KI-01, JA-SCRIPT-SMALL-TSU-01] -->

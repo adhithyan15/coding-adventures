@@ -11,8 +11,8 @@ gloss: nose
 concept_tag: JA-BODY-NOSE
 prerequisites: [JA-C11-ashi]
 sounds: [mora]
-roots: []
-etymology_hook: Here は carries its ordinary ha sound; the special wa reading belongs to its grammar job as a topic marker.
+roots: [japanese-hana-nose]
+etymology_hook: "hana: native Japanese, inherited, not borrowed; kanji 鼻 attached later as kun'yomi"
 duration:
   max_seconds: 160
 requires:
@@ -45,6 +45,11 @@ Retrieve **あし**.
 
 Inside this word, **は** is *ha*. Its *wa* reading was tied to the topic marker
 job, not to every appearance of the sign.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はな** (*hana*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HANA-NOSE, JA-SCRIPT-HA-01, JA-SCRIPT-NA-01] -->

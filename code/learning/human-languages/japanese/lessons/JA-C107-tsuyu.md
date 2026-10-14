@@ -14,7 +14,8 @@ romanization: "tsuyu"
 concept_tag: JA-THINGS107-TSUYU
 prerequisites: [JA-C107-hokori, JA-C107-awa]
 sounds: []
-roots: []
+roots: [japanese-tsuyu]
+etymology_hook: "tsuyu: native 'dew'; the rainy season is written 梅雨 'plum rain', read as a whole"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C107-awa]
 <!-- hl-knowledge: introduces=[JA-LEX-C107-THINGS107-04]; assesses=[] -->
 
 **つゆ** — *tsuyu* — "dew; the rainy season".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**つゆ** (*tsuyu*) is native: *tsuyu*, "dew", is inherited rather than borrowed. For the rainy season JMdict writes characters for "plum" and "rain", read as a whole; whether the two senses are one word is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

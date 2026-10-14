@@ -14,7 +14,8 @@ romanization: "ippiki"
 concept_tag: JA-THING137-IPPIKI
 prerequisites: [JA-W137-pi, JA-W01-i, JA-W11-small-tsu, JA-W133-ki, JA-C137-ippai, JA-C135-getsuyoubi, JA-C129-kawaii]
 sounds: [mora]
-roots: []
+roots: [middle-chinese-jit, japanese-hiki]
+etymology_hook: "ippiki: Sino-Japanese ichi 一 'one' + the counter hiki, a kun'yomi, joined as ip-piki"
 duration:
   max_seconds: 200
 requires:
@@ -53,6 +54,11 @@ things with **いっぽん**.
 The new sign is spent at once. **い**, a small **っ**, **ぴ** and **き**: four
 beats, *i–p–pi–ki*. The small **っ** holds a beat before the *p*, as it does
 in **いっぱい**. You write every sign in it now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いっぴき** (*ippiki*) mixes the two layers: *ichi*, "one", borrowed from Chinese (Middle Chinese *'jit*), and *hiki*, a counter for animals that KANJIDIC2 lists as a kun'yomi; they join as *ippiki* (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C137-IPPIKI, JA-SCRIPT-PI-01, JA-LEX-ANCHOR-ENPITSU, JA-SCRIPT-I-01, JA-SCRIPT-SMALL-TSU-01, JA-SCRIPT-KI-01] -->

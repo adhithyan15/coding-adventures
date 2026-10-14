@@ -14,7 +14,8 @@ romanization: "ika"
 concept_tag: JA-ANIMALS47-IKA
 prerequisites: [JA-C47-kani, JA-C47-tako]
 sounds: []
-roots: []
+roots: [japanese-ika]
+etymology_hook: "ika: native; written 烏賊 'crow thief', read as a whole; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C47-tako]
 <!-- hl-knowledge: introduces=[JA-LEX-C47-ANIMALS47-03]; assesses=[] -->
 
 **いか** — *ika* — "a squid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いか** (*ika*) is a native word, inherited rather than borrowed. JMdict writes it with characters for "crow" and "thief", read as a whole, and marks it as usually written in kana. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 37,
-  "sourceHash": "fnv1a64:b20a705e50ea18c8",
+  "sourceHash": "fnv1a64:adb29fc51bb7cbfc",
   "lessonIds": [
     "JA-C37-uchi",
     "JA-C37-mado",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "japanese/narration/ch37.txt",
   "json": "japanese/narration/ch37.json",
-  "textHash": "fnv1a64:17b1aa42b471c03f",
-  "jsonHash": "fnv1a64:e6d42fc64508d698",
+  "textHash": "fnv1a64:8505737087a54809",
+  "jsonHash": "fnv1a64:f9ae2cfa017614e6",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "ichigo"
 concept_tag: JA-FOOD33-ICHIGO
 prerequisites: [JA-C33-ringo, JA-C33-mikan]
 sounds: []
-roots: []
+roots: [japanese-ichigo]
+etymology_hook: "ichigo: native Japanese, inherited, not borrowed; usually kana, kanji 苺 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C33-mikan]
 <!-- hl-knowledge: introduces=[JA-LEX-C33-FOOD33-03]; assesses=[] -->
 
 **いちご** — *ichigo* — "a strawberry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いちご** (*ichigo*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

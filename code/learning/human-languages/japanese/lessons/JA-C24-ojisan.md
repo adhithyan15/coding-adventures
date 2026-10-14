@@ -14,7 +14,8 @@ romanization: "ojisan"
 concept_tag: JA-HEALTH24-OJISAN
 prerequisites: [JA-C24-itami, JA-C24-ojiisan]
 sounds: []
-roots: []
+roots: [japanese-oji]
+etymology_hook: "ojisan: native o- + oji 'uncle' + -san; the kanji are read for their meaning"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C24-ojiisan]
 <!-- hl-knowledge: introduces=[JA-LEX-C24-HEALTH24-03]; assesses=[] -->
 
 **おじさん** — *ojisan* — "an uncle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おじさん** (*ojisan*) is native *oji*, "uncle", with the polite prefix *o-* and the ending *-san*. JMdict writes *oji* with two characters meaning "father's elder (or younger) brother", read as a whole for their meaning. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

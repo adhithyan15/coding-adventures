@@ -14,7 +14,8 @@ romanization: "hada"
 concept_tag: JA-BODY21-HADA
 prerequisites: [JA-C21-hoo, JA-C21-mayu]
 sounds: []
-roots: []
+roots: [japanese-hada]
+etymology_hook: "hada: native Japanese, inherited, not borrowed; kanji 肌 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C21-mayu]
 <!-- hl-knowledge: introduces=[JA-LEX-C21-BODY21-05]; assesses=[] -->
 
 **はだ** — *hada* — "skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はだ** (*hada*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

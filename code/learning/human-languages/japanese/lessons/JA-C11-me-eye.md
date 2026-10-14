@@ -11,8 +11,8 @@ gloss: eye; eyes
 concept_tag: JA-BODY-EYE
 prerequisites: [JA-C11-kao]
 sounds: [mora]
-roots: []
-etymology_hook: Another one-sign noun turns an earlier repair-writing sign into a concrete body label.
+roots: [japanese-me-eye]
+etymology_hook: "me: native Japanese, inherited, not borrowed; kanji 目 attached later as kun'yomi"
 duration:
   max_seconds: 145
 requires:
@@ -44,6 +44,11 @@ Retrieve **かお** and **みみ**.
 > **め** — *me* — eye; eyes
 
 One learned sign is the complete everyday word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**め** (*me*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ME-EYE, JA-SCRIPT-ME-01] -->

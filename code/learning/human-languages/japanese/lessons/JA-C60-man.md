@@ -14,7 +14,8 @@ romanization: "man"
 concept_tag: JA-NUMBERS60-MAN
 prerequisites: [JA-C59-sanjuu, JA-C59-sen]
 sounds: []
-roots: []
+roots: [middle-chinese-mjonh]
+etymology_hook: "man: Sino-Japanese, the on'yomi of 万 'ten thousand', from Middle Chinese mjonH"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C59-sen]
 <!-- hl-knowledge: introduces=[JA-LEX-C60-NUMBERS60-01]; assesses=[] -->
 
 **まん** — *man* — "ten thousand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まん** (*man*) is Sino-Japanese (kango): the on'yomi of a character meaning "ten thousand", a reading borrowed from Chinese (Middle Chinese *mjonH* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

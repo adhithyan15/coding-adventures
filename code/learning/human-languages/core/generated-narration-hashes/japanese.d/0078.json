@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 78,
-  "sourceHash": "fnv1a64:a2e8baa25e8b80fe",
+  "sourceHash": "fnv1a64:fc78bf20a14bfe6b",
   "lessonIds": [
     "JA-C78-doko",
     "JA-C78-chikaku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch78.txt",
   "json": "japanese/narration/ch78.json",
-  "textHash": "fnv1a64:14d733bee4f3b491",
-  "jsonHash": "fnv1a64:d07f38b5a2c7a448",
+  "textHash": "fnv1a64:6b51467f5d83ca24",
+  "jsonHash": "fnv1a64:8b42b2228d74268d",
   "findings": []
 }

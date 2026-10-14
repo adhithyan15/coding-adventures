@@ -14,7 +14,8 @@ romanization: "nani mo"
 concept_tag: JA-NEG139-NANIMO
 prerequisites: [JA-C139-janai, JA-C138-kaerimasu, JA-C137-ippai, JA-C131-chotto]
 sounds: []
-roots: []
+roots: [japanese-nani, japanese-mo]
+etymology_hook: "nani mo: native nani 'what' + mo 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -55,6 +56,11 @@ a negative verb: Japanese says "anything ... not", where English says
 **のむ**, *nomu*, "to drink", gives **のみます** *nomimasu* and then
 **のみません** *nomimasen*. With **ます** instead of **ません** the sentence
 does not work: **なにも** needs the *not*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**なにも** (*nani mo*) is native: *nani*, "what", with *mo*, "even, also" (JMdict). It is inherited rather than borrowed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C139-NANIMO, JA-LEX-C139-JANAI] -->

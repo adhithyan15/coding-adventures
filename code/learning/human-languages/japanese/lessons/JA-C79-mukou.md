@@ -14,7 +14,8 @@ romanization: "mukou"
 concept_tag: JA-LOC79-MUKOU
 prerequisites: [JA-C78-yoko, JA-C78-mannaka]
 sounds: []
-roots: []
+roots: [japanese-mukau]
+etymology_hook: "mukō: native, from mukau 'to face, head towards'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C78-mannaka]
 <!-- hl-knowledge: introduces=[JA-LEX-C79-LOC79-01]; assesses=[] -->
 
 **むこう** — *mukou* — "the other side".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**むこう** (*mukō*) is native, from *mukau*, "to face, to head towards" (JMdict writes both with the same character). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

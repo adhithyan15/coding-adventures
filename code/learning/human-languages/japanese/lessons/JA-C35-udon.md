@@ -14,7 +14,8 @@ romanization: "udon"
 concept_tag: JA-FOOD35-UDON
 prerequisites: [JA-C34-shio, JA-C35-satou]
 sounds: []
-roots: []
+roots: [japanese-udon]
+etymology_hook: "udon: usually traced to a Chinese dumpling name (饂飩); the route is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C35-satou]
 <!-- hl-knowledge: introduces=[JA-LEX-C35-FOOD35-02]; assesses=[] -->
 
 **うどん** — *udon* — "udon noodles".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**うどん** (*udon*) is usually traced to a Chinese name for a kind of dumpling, written with two characters that JMdict also gives; the route and the change of meaning are not settled. JMdict marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

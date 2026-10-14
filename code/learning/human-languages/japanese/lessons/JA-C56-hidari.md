@@ -14,7 +14,8 @@ romanization: "hidari"
 concept_tag: JA-TIME56-HIDARI
 prerequisites: [JA-C56-ue, JA-C56-naka]
 sounds: []
-roots: []
+roots: [japanese-hidari]
+etymology_hook: "hidari: native Japanese, inherited, not borrowed; kanji 左 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C56-naka]
 <!-- hl-knowledge: introduces=[JA-LEX-C56-TIME56-05]; assesses=[] -->
 
 **ひだり** — *hidari* — "left".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひだり** (*hidari*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

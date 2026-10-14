@@ -14,7 +14,8 @@ romanization: "yamu"
 concept_tag: JA-VERB-YAMU
 prerequisites: [JA-C90-kayou, JA-C90-tsutsumu]
 sounds: []
-roots: []
+roots: [japanese-yamu]
+etymology_hook: "yamu: native Japanese, inherited, not borrowed; kanji 止む attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C90-tsutsumu]
 <!-- hl-knowledge: introduces=[JA-LEX-C91-ACT91-01]; assesses=[] -->
 
 **やむ** — *yamu* — "to stop (rain)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**やむ** (*yamu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

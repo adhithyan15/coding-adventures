@@ -14,7 +14,8 @@ romanization: "dashi"
 concept_tag: JA-THINGS113-DASHI
 prerequisites: [JA-C113-hanko, JA-C113-dango]
 sounds: []
-roots: []
+roots: [japanese-dasu]
+etymology_hook: "dashi: native, the noun from dasu 'to draw out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C113-dango]
 <!-- hl-knowledge: introduces=[JA-LEX-C113-THINGS113-03]; assesses=[] -->
 
 **だし** — *dashi* — "soup stock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**だし** (*dashi*) is native: the noun made from *dasu*, "to put out, to draw out", by its stem: what is drawn out of the fish and kelp (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

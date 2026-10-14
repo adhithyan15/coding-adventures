@@ -14,7 +14,8 @@ romanization: "yane"
 concept_tag: JA-HOME37-YANE
 prerequisites: [JA-C37-isu, JA-C37-tsukue]
 sounds: []
-roots: []
+roots: [japanese-ya-house, japanese-ne-root]
+etymology_hook: "yane: native compound of ya 'house' + ne 'root' (屋根)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C37-tsukue]
 <!-- hl-knowledge: introduces=[JA-LEX-C37-HOME37-05]; assesses=[] -->
 
 **やね** — *yane* — "a roof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**やね** (*yane*) is a native compound, inherited rather than borrowed: *ya*, "house", and *ne*, "root", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

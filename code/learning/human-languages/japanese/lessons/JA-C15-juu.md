@@ -11,8 +11,8 @@ gloss: ten — the last number of the run, and the one that turns nine words int
 concept_tag: JA-NUMBER-TEN
 prerequisites: [JA-W15-small-yu, JA-C15-roku, JA-C13-tsuma, JA-C09-wakarimasen]
 sounds: [mora, mora-length, chouon]
-roots: []
-etymology_hook: Every number from eleven to ninety-nine is made out of the ten words this chapter and the last one taught, with nothing joining them.
+roots: [middle-chinese-dzyip]
+etymology_hook: "jū: Sino-Japanese, the on'yomi of 十 'ten', from Middle Chinese dzyip; native tō is the kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -66,6 +66,11 @@ it. Nothing is inserted between them.
 
 Ten words, and every number up to ninety-nine is one of their arrangements. That
 is what the last two chapters were for.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**じゅう** (*jū*) is Sino-Japanese: the on'yomi of the character for "ten", borrowed from Chinese (Middle Chinese *dzyip*). The native word is *tō* (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-JUU, JA-GRAMMAR-JUU-COMPOUND, JA-LEX-ROKU, JA-LEX-NANA, JA-LEX-HACHI, JA-LEX-KU] -->

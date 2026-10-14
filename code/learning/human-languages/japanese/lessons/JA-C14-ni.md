@@ -11,8 +11,8 @@ gloss: two — one mora, one sign, and the sign has been yours since chapter two
 concept_tag: JA-NUMBER-TWO
 prerequisites: [JA-C14-go, JA-W01-ni, JA-C12-body-map-two, JA-W08-yo]
 sounds: [mora]
-roots: []
-etymology_hook: The shortest number in the run, and the first place a Japanese number is a single mora rather than a word.
+roots: [middle-chinese-nyijh]
+etymology_hook: "ni: Sino-Japanese, the on'yomi of 二 'two', from Middle Chinese nyijH; native futa is the kun'yomi"
 duration:
   max_seconds: 160
 requires:
@@ -51,6 +51,11 @@ One mora, one sign, and you learned that sign in chapter two to build
 
 Do not let the shortness fool you into hurrying it. **に** is one full beat,
 exactly as long as either beat of **いち**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**に** (*ni*) is Sino-Japanese: the on'yomi of the character for "two", borrowed from Chinese (Middle Chinese *nyijH*). The native word for two is *futa*, as in *futatsu* (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NI, JA-LEX-ICHI, JA-LEX-GO, JA-SCRIPT-NI-01] -->

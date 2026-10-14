@@ -14,7 +14,8 @@ romanization: "semi"
 concept_tag: JA-FOOD265-SEMI
 prerequisites: [JA-C64-aji, JA-C65-koi]
 sounds: []
-roots: []
+roots: [japanese-semi]
+etymology_hook: "semi: the kun'yomi of 蝉 'cicada'; counted native, but its origin is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C65-koi]
 <!-- hl-knowledge: introduces=[JA-LEX-C65-FOOD265-02]; assesses=[] -->
 
 **せみ** — *semi* — "a cicada".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**せみ** (*semi*) is the kun'yomi of the character for the cicada and is counted a native word; a link with the Chinese word for the cicada has been suggested, and its origin is not settled (KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

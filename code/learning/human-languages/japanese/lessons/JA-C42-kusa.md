@@ -14,7 +14,8 @@ romanization: "kusa"
 concept_tag: JA-NATURE42-KUSA
 prerequisites: [JA-C42-kawa, JA-C42-umi]
 sounds: []
-roots: []
+roots: [japanese-kusa]
+etymology_hook: "kusa: native Japanese, inherited, not borrowed; kanji 草 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C42-umi]
 <!-- hl-knowledge: introduces=[JA-LEX-C42-NATURE42-03]; assesses=[] -->
 
 **くさ** — *kusa* — "grass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**くさ** (*kusa*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kutsu"
 concept_tag: JA-PLACE58-KUTSU
 prerequisites: [JA-C58-kuni, JA-C58-fuku]
 sounds: []
-roots: []
+roots: [japanese-kutsu]
+etymology_hook: "kutsu: usually counted native, but whether inherited or an early loan is not settled; 靴 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C58-fuku]
 <!-- hl-knowledge: introduces=[JA-LEX-C58-PLACE58-05]; assesses=[] -->
 
 **くつ** — *kutsu* — "shoes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**くつ** (*kutsu*) is usually counted a native Japanese word, but whether it is inherited or an early loan from the mainland is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

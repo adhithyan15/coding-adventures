@@ -14,7 +14,8 @@ romanization: "samui"
 concept_tag: JA-ADJ53-SAMUI
 prerequisites: [JA-C53-oishii, JA-C53-atsui]
 sounds: []
-roots: []
+roots: [japanese-samui]
+etymology_hook: "samui: native Japanese, inherited, not borrowed; kanji 寒い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C53-atsui]
 <!-- hl-knowledge: introduces=[JA-LEX-C53-ADJ53-04]; assesses=[] -->
 
 **さむい** — *samui* — "cold (weather)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**さむい** (*samui*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "isamashii"
 concept_tag: JA-QUAL128-ISAMASHII
 prerequisites: [JA-C128-kashikoi, JA-C128-oroka]
 sounds: []
-roots: []
+roots: [japanese-isamashii]
+etymology_hook: "isamashii: native Japanese, inherited, not borrowed; kanji 勇ましい attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C128-oroka]
 <!-- hl-knowledge: introduces=[JA-LEX-C128-QUAL128-03]; assesses=[] -->
 
 **いさましい** — *isamashii* — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いさましい** (*isamashii*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kinō"
 concept_tag: JA-THING133-KINOU
 prerequisites: [JA-W133-ki, JA-W17-no, JA-W03-u, JA-C133-eki, JA-C132-kuruma, JA-C131-ocha, JA-C119-nikuya]
 sounds: [mora]
-roots: []
+roots: [japanese-kinou]
+etymology_hook: "kinō: native; 昨日 read as a whole; sakujitsu is the Sino-Japanese reading"
 duration:
   max_seconds: 200
 requires:
@@ -51,6 +52,11 @@ Then say *a car* — **R2**, five lessons back.
 The new sign is spent at once. **き**, then **の** and **う**: three beats,
 *ki–no–o*. The **う** at the end stretches the *o*, as it does in **ありがとう**.
 You write every sign in it now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**きのう** (*kinō*) is a native word, inherited rather than borrowed. JMdict writes it with characters for "previous" and "day", read as a whole; read *sakujitsu*, the same characters are Sino-Japanese. Its older origin is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C133-KINOU, JA-LEX-ANCHOR-EKI, JA-SCRIPT-KI-01] -->

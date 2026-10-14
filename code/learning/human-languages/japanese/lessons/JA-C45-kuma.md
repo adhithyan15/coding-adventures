@@ -14,7 +14,8 @@ romanization: "kuma"
 concept_tag: JA-ANIMALS45-KUMA
 prerequisites: [JA-C45-ushi, JA-C45-tori]
 sounds: []
-roots: []
+roots: [japanese-kuma]
+etymology_hook: "kuma: counted native, but a link with the Korean word for bear has been suggested; not settled; 熊 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C45-tori]
 <!-- hl-knowledge: introduces=[JA-LEX-C45-ANIMALS45-05]; assesses=[] -->
 
 **くま** — *kuma* — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**くま** (*kuma*) is counted a native Japanese word, but its origin is not settled: a link with the Korean word for a bear has been suggested, and whether the two share an ancestor or one was borrowed from the other is open. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

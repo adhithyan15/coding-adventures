@@ -14,7 +14,8 @@ romanization: "tsukue"
 concept_tag: JA-HOME37-TSUKUE
 prerequisites: [JA-C37-mado, JA-C37-isu]
 sounds: []
-roots: []
+roots: [japanese-tsukue]
+etymology_hook: "tsukue: native Japanese, inherited, not borrowed; kanji 机 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C37-isu]
 <!-- hl-knowledge: introduces=[JA-LEX-C37-HOME37-04]; assesses=[] -->
 
 **つくえ** — *tsukue* — "a desk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**つくえ** (*tsukue*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

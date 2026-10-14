@@ -11,8 +11,8 @@ gloss: my father
 concept_tag: JA-FAMILY-FATHER
 prerequisites: [JA-R13-tsu-contrast]
 sounds: [mora]
-roots: []
-etymology_hook: One already-owned sign repeats to name your own father.
+roots: [japanese-chichi]
+etymology_hook: "chichi: native Japanese, inherited, not borrowed; kanji 父 attached later as kun'yomi"
 duration:
   max_seconds: 150
 requires:
@@ -42,6 +42,11 @@ Then say it on one even mora.
 <!-- hl-knowledge: introduces=[JA-LEX-CHICHI]; assesses=[] -->
 
 Hear *chi-chi*. Say “my father,” then say the two even morae once.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ちち** (*chichi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-CHICHI, JA-SCRIPT-CHI-01, JA-SCRIPT-TSU-01] -->

@@ -14,7 +14,8 @@ romanization: "tokoya"
 concept_tag: JA-THINGS119-TOKOYA
 prerequisites: [JA-C119-sakanaya, JA-C119-yaoya]
 sounds: []
-roots: []
+roots: [japanese-toko, japanese-ya-house]
+etymology_hook: "tokoya: native toko 'bed, floor' + ya 'shop' (床屋)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C119-yaoya]
 <!-- hl-knowledge: introduces=[JA-LEX-C119-THINGS119-04]; assesses=[] -->
 
 **とこや** — *tokoya* — "a barber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**とこや** (*tokoya*) is a native compound, inherited rather than borrowed: *toko*, "bed, floor", and *ya*, "house, shop". Why the barber's shop is named for *toko* is not settled (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

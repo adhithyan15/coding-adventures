@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a lamp, then the Japanese for light.
 You'll want to know: もん.
 もん — mon — "a gate".
 
+The word, taken apart.
+もん (mon) is Sino-Japanese (kango): the on'yomi of a character meaning "gate", a reading borrowed from Chinese (Middle Chinese mwon in Baxter's transcription; Unihan, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for light, then the Japanese for a gate.
 
 You'll want to know: はやし.
 はやし — hayashi — "a wood, a grove".
+
+The word, taken apart.
+はやし (hayashi) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a gate, then the Japanese for a wood.
 You'll want to know: つぼみ.
 つぼみ — tsubomi — "a bud".
 
+The word, taken apart.
+つぼみ (tsubomi) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a wood, then the Japanese for a bud.
 You'll want to know: いわ.
 いわ — iwa — "a rock".
 
+The word, taken apart.
+いわ (iwa) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a bud, then the Japanese for a rock.
 
 You'll want to know: こいし.
 こいし — koishi — "a pebble".
+
+The word, taken apart.
+こいし (koishi) is a native compound, inherited rather than borrowed: ko, "small", and ishi, "stone", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "tatami"
 concept_tag: JA-HOME39-TATAMI
 prerequisites: [JA-C39-niwa, JA-C39-ofuro]
 sounds: []
-roots: []
+roots: [japanese-tatamu]
+etymology_hook: "tatami: native, the noun from tatamu 'to fold, pile up'; both written 畳"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C39-ofuro]
 <!-- hl-knowledge: introduces=[JA-LEX-C39-HOME39-03]; assesses=[] -->
 
 **たたみ** — *tatami* — "a tatami mat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たたみ** (*tatami*) is native: the noun made from *tatamu*, "to fold, to pile up", by its stem; JMdict gives both under the same character. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

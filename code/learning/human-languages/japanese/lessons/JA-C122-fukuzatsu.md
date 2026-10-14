@@ -14,7 +14,8 @@ romanization: "fukuzatsu"
 concept_tag: JA-QUAL122-FUKUZATSU
 prerequisites: [JA-C122-hitsuyou, JA-C122-kantan]
 sounds: []
-roots: []
+roots: [middle-chinese-pjuwk, middle-chinese-dzop]
+etymology_hook: "fukuzatsu: Sino-Japanese 複 'double' + 雑 'mixed', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C122-kantan]
 <!-- hl-knowledge: introduces=[JA-LEX-C122-QUAL122-05]; assesses=[] -->
 
 **ふくざつ** — *fukuzatsu* — "complicated".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふくざつ** (*fukuzatsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *fuku*, "double, repeat" (Middle Chinese *pjuwk*) and *zatsu*, "mixed" (*dzop*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

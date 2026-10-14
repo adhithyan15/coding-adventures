@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a barber, then the Japanese for a butch
 You'll want to know: かたい.
 かたい — katai — "hard".
 
+The word, taken apart.
+かたい (katai) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a butcher, then the Japanese for hard.
 
 You'll want to know: ただしい.
 ただしい — tadashii — "correct".
+
+The word, taken apart.
+ただしい (tadashii) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for hard, then the Japanese for correct.
 You'll want to know: ひま.
 ひま — hima — "free time; not busy".
 
+The word, taken apart.
+ひま (hima) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for correct, then the Japanese for free tim
 You'll want to know: しんせつ.
 しんせつ — shinsetsu — "kind".
 
+The word, taken apart.
+しんせつ (shinsetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, "intimate, close" (Middle Chinese tshin) and setsu, "cut", and also "close, pressing" (tshet) (Unihan, KANJIDIC2, Guangyun; Middle Chinese in Baxter's transcription).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for free time; not busy, then the Japanese 
 
 You'll want to know: ていねい.
 ていねい — teinei — "polite, careful".
+
+The word, taken apart.
+ていねい (teinei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tei (Middle Chinese teng), whose own senses include "adult man" and "fourth in a series", and nei, "repose, peace" (neng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). "Careful" is the sense of the pair, not of tei alone.
 
 What you've built.
 One more word for this chapter.

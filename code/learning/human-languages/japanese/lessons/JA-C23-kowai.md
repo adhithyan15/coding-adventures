@@ -14,7 +14,8 @@ romanization: "kowai"
 concept_tag: JA-HEALTH23-KOWAI
 prerequisites: [JA-C23-kanashii, JA-C23-tanoshii]
 sounds: []
-roots: []
+roots: [japanese-kowai]
+etymology_hook: "kowai: native Japanese, inherited, not borrowed; kanji 怖い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C23-tanoshii]
 <!-- hl-knowledge: introduces=[JA-LEX-C23-HEALTH23-05]; assesses=[] -->
 
 **こわい** — *kowai* — "scary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こわい** (*kowai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

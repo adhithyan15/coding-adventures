@@ -14,7 +14,8 @@ romanization: "sasu"
 concept_tag: JA-VERB-SASU
 prerequisites: [JA-C87-susumu, JA-C87-hosu]
 sounds: []
-roots: []
+roots: [japanese-sasu]
+etymology_hook: "sasu: native verb; written 指す for pointing and 差す for an umbrella"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C87-hosu]
 <!-- hl-knowledge: introduces=[JA-LEX-C87-ACT87-05]; assesses=[] -->
 
 **さす** — *sasu* — "to point; to hold up (an umbrella)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**さす** (*sasu*) is a native verb, inherited rather than borrowed; JMdict writes it with one character for pointing and another for holding up an umbrella, both kun'yomi attached later. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

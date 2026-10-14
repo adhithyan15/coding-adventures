@@ -14,7 +14,8 @@ romanization: "shinsetsu"
 concept_tag: JA-QUAL120-SHINSETSU
 prerequisites: [JA-C120-tadashii, JA-C120-hima]
 sounds: []
-roots: []
+roots: [middle-chinese-tshin, middle-chinese-tshet]
+etymology_hook: "shinsetsu: Sino-Japanese 親 'intimate' + 切 'cut; close, pressing', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C120-hima]
 <!-- hl-knowledge: introduces=[JA-LEX-C120-QUAL120-04]; assesses=[] -->
 
 **しんせつ** — *shinsetsu* — "kind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しんせつ** (*shinsetsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shin*, "intimate, close" (Middle Chinese *tshin*) and *setsu*, "cut", and also "close, pressing" (*tshet*) (Unihan, KANJIDIC2, Guangyun; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

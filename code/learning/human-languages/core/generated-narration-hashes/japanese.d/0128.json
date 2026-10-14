@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 128,
-  "sourceHash": "fnv1a64:d3d247385ce6f045",
+  "sourceHash": "fnv1a64:4f458277e6661cfe",
   "lessonIds": [
     "JA-C128-kashikoi",
     "JA-C128-oroka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch128.txt",
   "json": "japanese/narration/ch128.json",
-  "textHash": "fnv1a64:60bad4d742eea24e",
-  "jsonHash": "fnv1a64:468658d8e0b8cb33",
+  "textHash": "fnv1a64:966c00f88323689a",
+  "jsonHash": "fnv1a64:a0f4f673db247c93",
   "findings": []
 }

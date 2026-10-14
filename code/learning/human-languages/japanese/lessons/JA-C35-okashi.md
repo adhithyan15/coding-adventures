@@ -14,7 +14,8 @@ romanization: "okashi"
 concept_tag: JA-FOOD35-OKASHI
 prerequisites: [JA-C35-sushi, JA-C35-asagohan]
 sounds: []
-roots: []
+roots: [middle-chinese-kwax, middle-chinese-tsix]
+etymology_hook: "okashi: polite o- + Sino-Japanese kashi 菓子, 'fruit, cake' + a noun ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C35-asagohan]
 <!-- hl-knowledge: introduces=[JA-LEX-C35-FOOD35-05]; assesses=[] -->
 
 **おかし** — *okashi* — "sweets, snacks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おかし** (*okashi*) is the native polite prefix *o-* with *kashi*, "sweets", Sino-Japanese: *ka*, "fruit; cake" (Middle Chinese *kwaX*), and *shi*, a noun ending written with the character for "child" (Middle Chinese *tsiX*), borrowed from Chinese (JMdict; Unihan).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

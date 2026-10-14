@@ -12,6 +12,9 @@ Before the new one: say the Japanese for vegetables, then the Japanese for fruit
 You'll want to know: りんご.
 りんご — ringo — "an apple".
 
+The word, taken apart.
+りんご (ringo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rin, "forest" (Middle Chinese lim) and go, "a small red apple" (gim) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict marks it as usually written in kana.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for fruit, then the Japanese for an apple.
 
 You'll want to know: みかん.
 みかん — mikan — "a mandarin orange".
+
+The word, taken apart.
+みかん (mikan) is Sino-Japanese: two characters borrowed from Chinese, mitsu, "honey" (Middle Chinese mjit), and kan, "tangerine, citrus" (Middle Chinese kam), with mitsu shortened to mi (JMdict; Unihan).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for an apple, then the Japanese for a manda
 You'll want to know: いちご.
 いちご — ichigo — "a strawberry".
 
+The word, taken apart.
+いちご (ichigo) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a mandarin orange, then the Japanese fo
 You'll want to know: もも.
 もも — momo — "a peach".
 
+The word, taken apart.
+もも (momo) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a strawberry, then the Japanese for a p
 
 You'll want to know: なし.
 なし — nashi — "a pear".
+
+The word, taken apart.
+なし (nashi) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

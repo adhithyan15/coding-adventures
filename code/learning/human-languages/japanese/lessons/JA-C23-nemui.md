@@ -14,7 +14,8 @@ romanization: "nemui"
 concept_tag: JA-HEALTH23-NEMUI
 prerequisites: [JA-C22-itai, JA-C23-kusuri]
 sounds: []
-roots: []
+roots: [japanese-nemui]
+etymology_hook: "nemui: native Japanese, inherited, not borrowed; kanji 眠い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C23-kusuri]
 <!-- hl-knowledge: introduces=[JA-LEX-C23-HEALTH23-02]; assesses=[] -->
 
 **ねむい** — *nemui* — "sleepy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ねむい** (*nemui*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tsubomi"
 concept_tag: JA-THINGS106-TSUBOMI
 prerequisites: [JA-C106-mon, JA-C106-hayashi]
 sounds: []
-roots: []
+roots: [japanese-tsubomi]
+etymology_hook: "tsubomi: native Japanese, inherited, not borrowed; kanji 蕾 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C106-hayashi]
 <!-- hl-knowledge: introduces=[JA-LEX-C106-THINGS106-03]; assesses=[] -->
 
 **つぼみ** — *tsubomi* — "a bud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**つぼみ** (*tsubomi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

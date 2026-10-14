@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 62,
-  "sourceHash": "fnv1a64:1c991f246f8c5233",
+  "sourceHash": "fnv1a64:6e6824e6d5c48842",
   "lessonIds": [
     "JA-C62-nimotsu",
     "JA-C62-fune",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch62.txt",
   "json": "japanese/narration/ch62.json",
-  "textHash": "fnv1a64:746881201c242e3d",
-  "jsonHash": "fnv1a64:96fc8a8d6f954a3a",
+  "textHash": "fnv1a64:c0748b3493f7b1da",
+  "jsonHash": "fnv1a64:d7813fce73cd69fa",
   "findings": []
 }

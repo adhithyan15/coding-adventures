@@ -14,7 +14,8 @@ romanization: "yuuhi"
 concept_tag: JA-THINGS68-YUUHI
 prerequisites: [JA-C68-inaka, JA-C68-minato]
 sounds: []
-roots: []
+roots: [japanese-yuu-evening, japanese-hi-sun]
+etymology_hook: "yūhi: native compound of yū 'evening' + hi 'sun' (夕日)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C68-minato]
 <!-- hl-knowledge: introduces=[JA-LEX-C68-THINGS68-05]; assesses=[] -->
 
 **ゆうひ** — *yuuhi* — "the setting sun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ゆうひ** (*yuuhi*) is a native compound, inherited rather than borrowed: *yū*, "evening", and *hi*, "sun", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

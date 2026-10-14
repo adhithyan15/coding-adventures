@@ -11,8 +11,8 @@ gloss: waist; lower back
 concept_tag: JA-BODY-WAIST
 prerequisites: [JA-R12-doorway]
 sounds: [mora]
-roots: []
-etymology_hook: Two familiar signs name the waist or lower-back area, with context choosing the English label.
+roots: [japanese-koshi]
+etymology_hook: "koshi: native Japanese, inherited, not borrowed; kanji 腰 attached later as kun'yomi"
 duration:
   max_seconds: 220
 requires:
@@ -47,6 +47,11 @@ Retrieve **かた**.
 > **こし** — *ko-shi* — waist; lower back
 
 Two signs, two morae.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こし** (*koshi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KOSHI] -->

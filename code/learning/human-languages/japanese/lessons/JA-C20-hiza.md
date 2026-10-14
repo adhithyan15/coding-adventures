@@ -14,7 +14,8 @@ romanization: "hiza"
 concept_tag: JA-BODY20-HIZA
 prerequisites: [JA-C20-tsume, JA-C20-hiji]
 sounds: []
-roots: []
+roots: [japanese-hiza]
+etymology_hook: "hiza: native Japanese, inherited, not borrowed; kanji 膝 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C20-hiji]
 <!-- hl-knowledge: introduces=[JA-LEX-C20-BODY20-03]; assesses=[] -->
 
 **ひざ** — *hiza* — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひざ** (*hiza*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

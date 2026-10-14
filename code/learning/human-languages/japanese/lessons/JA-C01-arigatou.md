@@ -69,6 +69,8 @@ So the memory hook is inside the word, not inside English: saying **ありがと
 is saying *this was not a thing that had to happen*. No English cousin exists,
 and inventing one would be worse than admitting that.
 
+It is a native word, inherited rather than borrowed: JMdict notes that *arigatō* comes from *arigataku*, the adverb form of *arigatai*. It does not come from Portuguese *obrigado*, a popular story: *arigatashi* was in Japanese long before Portuguese ships arrived.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ARIGATOU, JA-SCRIPT-DAKUTEN, JA-ETYMON-ARIGATASHI, JA-SCRIPT-ARIGATOU-READ-01, JA-SCRIPT-A-01, JA-SCRIPT-RI-01, JA-SCRIPT-KA-01, JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-TO-01, JA-SCRIPT-U-01] -->
 
