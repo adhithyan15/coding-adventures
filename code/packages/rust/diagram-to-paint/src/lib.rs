@@ -1453,6 +1453,19 @@ where
             let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
                 r: 13, g: 71, b: 161, a: 255,
             });
+            let mut label_font = options.label_font.clone();
+            if let Some(size) = node.style.font_size {
+                label_font.size = size;
+            }
+            if let Some(weight) = node.style.font_weight {
+                label_font.weight = weight;
+            }
+            if let Some(italic) = node.style.font_italic {
+                label_font.italic = italic;
+            }
+            if let Some(family) = &node.style.font_family {
+                label_font.family.clone_from(family);
+            }
             let (label_x, label_y, label_width, label_height) = match node.shape {
                 DiagramShape::CurlyBraceLeft => (node.x + 22.0, node.y + 10.0, node.width - 30.0, node.height - 16.0),
                 DiagramShape::CurlyBraceRight => (node.x + 8.0, node.y + 10.0, node.width - 30.0, node.height - 16.0),
@@ -1484,7 +1497,7 @@ where
                 label_y,
                 label_width,
                 label_height,
-                options.label_font.clone(),
+                label_font,
                 text_color,
             ));
         }
