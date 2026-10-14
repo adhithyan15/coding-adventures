@@ -1066,7 +1066,8 @@ actions, and legacy callback aliases survive as scene metadata. Flowchart edge i
 survive semantic IR, layout, and scene metadata; named classes and direct styles for identified
 edges resolve stroke color, width, dash patterns, and label color into backend-neutral paint.
 Positional `linkStyle` directives accept `default` or comma-separated edge indices and resolve
-into the same backend-neutral edge style fields.
+into the same backend-neutral edge style fields. Their `interpolate` form applies supported curve
+modes by position through semantic and layout IR to portable path instructions.
 Identified edge animation attributes preserve enabled state and slow/fast timing in scene metadata,
 with a deterministic static dash pattern for non-animated paint backends.
 Per-edge `linear` and `basis` curve attributes survive semantic and layout IR; basis routing lowers
@@ -1104,6 +1105,8 @@ handoffs, is rendered through Metal-to-PNG.
 Nested subgraphs remain ordinary child clusters inside their top-level ownership lane. Their lane and
 parent identities survive semantic IR, layout resolves bounds bottom-up around direct nodes and child
 clusters, and paint emits dashed labeled containers behind edge and node geometry.
+Nodes outside an explicit top-level subgraph are assigned to Mermaid's unlabeled
+`__swimlane_default__` ownership lane, which survives semantic IR, lane layout, and paint lowering.
 
 This is intentionally partial. The complete Flowchart shape
 and link catalog beyond the documented marker forms, and exact upstream routing or typography remain

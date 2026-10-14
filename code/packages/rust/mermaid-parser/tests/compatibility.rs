@@ -1464,6 +1464,20 @@ fn swimlane_dispatches_to_dedicated_ownership_ir() {
 }
 
 #[test]
+fn swimlane_loose_nodes_lower_into_the_default_lane() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph OwnedLane\n  owned[Owned node]\nend\nloose[Loose node] --> owned",
+    ).expect("loose nodes should parse into a default lane");
+
+    assert_eq!(diagram.lanes.len(), 2);
+    assert_eq!(diagram.lanes[1].id, "__swimlane_default__");
+    assert_eq!(diagram.lanes[1].label, "");
+    assert_eq!(diagram.lanes[1].node_ids, ["loose"]);
+    assert_eq!(diagram.nodes.iter().find(|node| node.id == "loose")
+        .and_then(|node| node.lane_id.as_deref()), Some("__swimlane_default__"));
+}
+
+#[test]
 fn pinned_swimlane_subset_corpus_parses_to_ownership_ir() {
     let corpus: Value = serde_json::from_str(SWIMLANE_CORPUS).expect("swimlane corpus must be JSON");
     for fixture in corpus["fixtures"].as_array().expect("fixtures must be an array") {
@@ -2308,6 +2322,21 @@ fn swimlane_positional_link_styles_lower_to_semantic_ir() {
     assert_eq!(diagram.edges[1].style.stroke_width, Some(2.0));
     assert_eq!(diagram.edges[2].style.stroke_dash.as_deref(), Some([7.0, 3.0].as_slice()));
     assert_eq!(diagram.edges[2].style.text_color.as_deref(), Some("#991b1b"));
+}
+
+#[test]
+fn swimlane_positional_link_curves_lower_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst --> fourth\nsecond --> third\nlinkStyle default interpolate basis\nlinkStyle 1 interpolate stepBefore;",
+    ).expect("positional link curves should parse");
+
+    assert_eq!(diagram.edges[0].curve, Some(SwimlaneEdgeCurve::Basis));
+    assert_eq!(diagram.edges[1].curve, Some(SwimlaneEdgeCurve::StepBefore));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph A\n  one[One]\n  two[Two]\nend\none --> two\nlinkStyle 0 interpolate imaginary"
+    ).is_err());
 }
 
 #[test]

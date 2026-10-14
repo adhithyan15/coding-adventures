@@ -3,6 +3,7 @@
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
   "fixtures": [
     "basic-handoff",
+    "default-lane-for-loose-nodes",
     "parallel-branch-and-join",
     "flowchart-style-edge-label",
     "multiline-edge-continuation",
@@ -64,6 +65,7 @@
     "edge-identifiers",
     "edge-class-styles",
     "positional-link-styles",
+    "positional-link-curves",
     "edge-animation-config",
     "edge-curve-config",
     "edge-step-curves",

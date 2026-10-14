@@ -4,6 +4,20 @@ All notable changes to the Go build tool will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `-prune-leaf-targets`. Once a package has built (pass or fail), the flag
+  deletes its own Cargo `target/` if no package depends on it. Main's full
+  build turns it on. Each Mosaic package and Rust program is a standalone
+  Cargo workspace that compiles its whole dependency tree into its own
+  `target/`. Kept until the end, those directories filled the runner disk,
+  so "No space left on device" and linker bus errors killed shards 5, 6 and
+  12 on every main run (X-7). Only `<package>/target` beside a `Cargo.toml`
+  is removed, so a shared workspace's output is never touched. A symlinked
+  `target/` is not followed, and a package with dependents keeps its output
+  (on a shard the graph is the whole repo's, so this holds across shards).
+  `TestPruneLeafCargoTarget` covers each case.
+
 ### Fixed
 
 - `-validate-build-files` on a CI shard (`-plan-file … -shard-index N`) now

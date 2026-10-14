@@ -3537,6 +3537,16 @@ line "Target" [35, 50, 68, 82]"##,
                 resolver: &resolver,
             });
             assert!(!scene.instructions.is_empty(), "{fixture_name} must lower to paint");
+            if fixture_name == "default-lane-for-loose-nodes" {
+                assert_eq!(layout.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
+                    vec!["OwnedLane", "__swimlane_default__"]);
+                assert_eq!(layout.lanes[1].label, "");
+                assert!(layout.nodes.iter().any(|node| node.id == "loose"));
+                assert_eq!(layout.edges.len(), 1);
+                assert!(scene.instructions.iter().filter(|instruction|
+                    matches!(instruction, PaintInstruction::Rect(_))
+                ).count() >= 4, "the default lane and both nodes must lower to paint rectangles");
+            }
             if fixture_name == "cloud-and-bang-attribute-shapes" {
                 assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
                     PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. }))
@@ -3899,6 +3909,21 @@ line "Target" [35, 50, 68, 82]"##,
                         && path.stroke_width == Some(5.0)
                         && path.stroke_dash.as_deref() == Some(&[7.0, 3.0])
                 )).count(), 2, "positional link styles must lower to backend-neutral path paint");
+            }
+            if fixture_name == "positional-link-curves" {
+                assert_eq!(layout.edges[0].curve, Some(diagram_ir::SwimlaneEdgeCurve::Basis));
+                assert_eq!(layout.edges[1].curve, Some(diagram_ir::SwimlaneEdgeCurve::StepBefore));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().any(|command|
+                        matches!(command, PathCommand::CubicTo { .. }))
+                )), "positional basis interpolation must lower to a backend-neutral cubic path");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 3
+                )), "positional step-before interpolation must lower to an orthogonal bend");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.curve")),
+                    Some(&"basis".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"stepBefore".to_string()));
             }
             if fixture_name == "edge-animation-config" {
                 assert!(layout.edges.iter().all(|edge| edge.animate));
