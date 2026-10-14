@@ -14,7 +14,8 @@ romanization: "grah"
 concept_tag: MR-VASTU246-GRAH
 prerequisites: [MR-C246-gara, MR-C246-vasant]
 sounds: []
-roots: []
+roots: [sanskrit-graha]
+etymology_hook: "grah ← Sanskrit graha 'seizing', a tatsama (CDIAL 4363)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C246-vasant]
 <!-- hl-knowledge: introduces=[MR-LEX-C246-VASTU246-04]; assesses=[] -->
 
 **ग्रह** — *grah* — "a planet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ग्रह** (*grah*) is Sanskrit *graha*, "seizing", taken over whole as a learned loan, a tatsama (CDIAL 4363). The "seizers" were the planets, thought to grip human fate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

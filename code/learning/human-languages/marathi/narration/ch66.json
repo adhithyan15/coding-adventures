@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "The Parts of the Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fd8b306e82091035",
+  "sourceHash": "fnv1a64:ccbe68ee276c985b",
   "lessons": [
     {
       "id": "MR-C66-sakal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49a1c28f58af325d",
+      "sourceHash": "fnv1a64:3c25a06f38c33bfe",
       "notice": null,
       "blocks": [
         {
@@ -63,7 +63,11 @@
             },
             {
               "kind": "speech",
-              "text": "The last letter is ळ, the retroflex l you first read in काळजी घ्या. Marathi keeps it where standard Hindi does not — so if you come to Marathi from Hindi, this letter is new, and it is worth slowing down on rather than reading as an ordinary ल."
+              "text": "The last letter is ळ, the retroflex l you first read in काळजी घ्या. Standard Hindi lacks it, so do not read it as an ordinary ल."
+            },
+            {
+              "kind": "speech",
+              "text": "Where सकाळ (sakāḷ) comes from is not settled. CDIAL has Sanskrit sakāla, \"early in the morning\" (13067), but lists no Marathi form there."
             }
           ]
         },
@@ -94,7 +98,7 @@
             },
             {
               "kind": "speech",
-              "text": "Notice where सकाळी sits: early, before the verb, in the same slot उद्या and कधी take. A Marathi time word fronts the verb, and this one is no exception."
+              "text": "Notice where सकाळी sits: early, before the verb, in the same slot उद्या and कधी take. A Marathi time word fronts the verb."
             },
             {
               "kind": "speech",
@@ -204,7 +208,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3f5ace2b11a8e9c",
+      "sourceHash": "fnv1a64:65040757ba55cc72",
       "notice": null,
       "blocks": [
         {
@@ -245,6 +249,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुपार (dupār) is usually explained as \"two watches\", du- and pahār, \"a watch of three hours\"; CDIAL asks whether Sanskrit prahara renders Persian pahra (CDIAL 8900)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the ending holds",
           "segments": [
@@ -272,7 +287,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -342,7 +357,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -373,7 +388,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c1d907654dec2592",
+      "sourceHash": "fnv1a64:6fcd671cd5cc5529",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -440,6 +455,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संध्याकाळ (sandhyākāḷ) is Sanskrit sandhyā, \"twilight\" (CDIAL 12918), and kāḷ, \"time\", from kāla (CDIAL 3084)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: third time, same ending",
           "segments": [
@@ -468,7 +494,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +563,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -568,7 +594,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:682d030f56db55b3",
+      "sourceHash": "fnv1a64:6bba60e622b81e4c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -616,6 +642,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रात्र (rātra) is Sanskrit rātri, \"night\", lightly reshaped; the inherited form is rāt (CDIAL 10702)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: four for four, and what English does instead",
           "segments": [
@@ -645,7 +682,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -724,7 +761,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -755,7 +792,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c00c872a6433aa38",
+      "sourceHash": "fnv1a64:ec8fd68bf45f8084",
       "notice": null,
       "blocks": [
         {
@@ -792,6 +829,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिवस (divas) is inherited, almost unchanged, from Sanskrit divasa, \"heaven\", later \"day\" (CDIAL 6333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the one that will not take -ी",
           "segments": [
@@ -827,7 +875,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -897,7 +945,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

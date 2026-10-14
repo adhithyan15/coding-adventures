@@ -11,10 +11,10 @@ gloss: "the second — the ordinal you have owned since chapter thirty-one, take
 concept_tag: MR-ORDINAL-SET
 prerequisites: [MR-R59-what-it-costs, MR-C59-rupaya, MR-C58-vis, MR-C55-saha, MR-C37-kiti, MR-C31-dusra]
 sounds: []
-roots: []
-etymology_hook: "Molesworth's 1857 dictionary gives दुसरा its own headword -- 'A second or another' -- which is the first sign that Marathi keeps a whole second set of number words"
+roots: [indo-aryan-dvihsara]
+etymology_hook: "dusrā ← *dviḥsara 'twofold', built on Sanskrit dviḥ 'twice' (CDIAL 6676)"
 duration:
-  max_seconds: 220
+  max_seconds: 291
 requires:
   knowledge: [MR-LEX-DUSRA, MR-JOIN-EK-DUSRA, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-GRAMMAR-ADJ-AGREEMENT, MR-LEX-RUPAYA, MR-LEX-VIS, MR-LEX-SAHA, MR-QUESTION-KITI]
 introduces:
@@ -51,8 +51,7 @@ at the four growing distances this book measures.
 > **दुसरा** — *dusrā* — **the second, the other**
 
 Chapter thirty-one gave you this word as the partner **एक** needed: **एक चहा
-आणि दुसरा पाणी**. Its gloss said *the other, **the second***, and its etymology
-said it is **दोन** wearing an ending.
+आणि दुसरा पाणी**. Its gloss said *the other, **the second***, and its etymology said it comes from *\*dviḥsara*, "twofold", built on Sanskrit *dviḥ*, "twice" (CDIAL 6676).
 
 Nothing about it changes today. What changes is that it stops being one word and
 becomes a member of a set.
@@ -73,9 +72,7 @@ because the set already has a member in your mouth, and noticing that is the
 honest first step.
 
 An ordinal is an ordinary adjective in **-आ**, so it takes the three endings
-chapter forty-nine taught on **मोठा**: **दुसरा**, **दुसरी**, **दुसरं**. Every
-word in this chapter and the next behaves this way, and it will not be repeated
-for each one.
+chapter forty-nine taught on **मोठा**: **दुसरा**, **दुसरी**, **दुसरं**. Every word in this chapter and the next behaves this way.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-ORDINAL-SET, MR-LEX-DUSRA, MR-GRAMMAR-ADJ-AGREEMENT] -->

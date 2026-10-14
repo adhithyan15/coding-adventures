@@ -14,7 +14,8 @@ romanization: "saikal"
 concept_tag: GU-THINGS127-SAIKAL
 prerequisites: [GU-C126-nakh, GU-C127-magaj]
 sounds: []
-roots: []
+roots: [english-cycle]
+etymology_hook: "saikal ← English cycle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C127-magaj]
 <!-- hl-knowledge: introduces=[GU-LEX-C127-THINGS127-02]; assesses=[] -->
 
 **સાઈકલ** (*saikal*) — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સાઈકલ** (*saikal*) is a loan from English *cycle*. It is short for *bicycle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

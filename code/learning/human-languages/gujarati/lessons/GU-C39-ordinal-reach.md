@@ -11,10 +11,10 @@ gloss: "where the ordinal rule starts and where it stops — both edges of one l
 concept_tag: GU-ORDINAL-MU-REACH
 prerequisites: [GU-C39-das, GU-C36-te-write, GU-C38-panchmu, GU-C25-mahino, GU-C02-chhe]
 sounds: [u-nasal]
-roots: []
-etymology_hook: "The suffix entry's exception list has a bottom and a top, and you now hold every number on both sides of it"
+roots: [sanskrit-saptama, sanskrit-ashtama, sanskrit-navama, sanskrit-dashama]
+etymology_hook: "sātmũ, āṭhmũ, navmũ, dasmũ ← Sanskrit saptama, aṣṭama, navama, daśama (CDIAL 13151, 937, 7006, 6233)"
 duration:
-  max_seconds: 240
+  max_seconds: 279
 requires:
   knowledge: [GU-LEX-DAS, GU-LEX-NAV, GU-LEX-AATH, GU-LEX-SAAT, GU-LEX-CHHA-SIX, GU-LEX-NUMBERS-ONE-TO-FIVE, GU-LEX-PANCHMU, GU-GRAMMAR-ORDINAL-MU, GU-SCRIPT-TE-01, GU-PRON-TE-01, GU-LEX-MAHINO-01, GU-SCRIPT-MAHINO-01, GU-CONCEPT-C02-CHHE-01, GU-SCRIPT-TTHA-01]
 introduces:
@@ -64,6 +64,11 @@ works at five, stops at six, starts again at seven. Wiktionary gives the sixth
 as **છઠ્ઠું**, on a doubled **ઠ**. This book does not ask you to use that word —
 only to see that the exception is real, and is not the number with **-મું**
 behind it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists all four as inherited: *saptama*, *aṣṭama*, *navama*, *daśama* (CDIAL 13151, 937, 7006, 6233).
 
 ## What you've built: four ordinals nobody taught you
 <!-- hl-knowledge: introduces=[]; assesses=[GU-GRAMMAR-ORDINAL-MU-REACH, GU-LEX-SAAT, GU-LEX-AATH, GU-LEX-NAV, GU-LEX-DAS, GU-SCRIPT-TTHA-01] -->

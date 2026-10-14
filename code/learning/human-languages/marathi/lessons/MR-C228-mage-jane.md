@@ -14,7 +14,8 @@ romanization: "māge jāṇe"
 concept_tag: MR-VERB-MAGE-JANE
 prerequisites: [MR-C228-kautuk-karne, MR-C228-pudhe-jane]
 sounds: []
-roots: []
+roots: [sanskrit-yati]
+etymology_hook: "māge: origin not settled; jāṇe ← yāti 'goes' (CDIAL 10452)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C228-pudhe-jane]
 <!-- hl-knowledge: introduces=[MR-LEX-C228-ACT228-03]; assesses=[] -->
 
 **मागे जाणे** — *māge jāṇe* — "to go back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **मागे**, "behind", is not settled: neither CDIAL nor DEDR has an entry for it. **जाणे** comes from Sanskrit *yāti*, "goes" (CDIAL 10452).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

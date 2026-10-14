@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 95,
-  "sourceHash": "fnv1a64:3903213924dc0516",
+  "sourceHash": "fnv1a64:ac2b896e0c942093",
   "lessonIds": [
     "GU-C95-haji",
     "GU-C95-tarat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch95.txt",
   "json": "gujarati/narration/ch95.json",
-  "textHash": "fnv1a64:045bccc6ace07aed",
-  "jsonHash": "fnv1a64:37609d837cef6e9c",
+  "textHash": "fnv1a64:2719a23ea99dbe64",
+  "jsonHash": "fnv1a64:92d3c852ba1e51be",
   "findings": []
 }

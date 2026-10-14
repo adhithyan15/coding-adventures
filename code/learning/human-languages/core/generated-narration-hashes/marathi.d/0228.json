@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 228,
-  "sourceHash": "fnv1a64:626597e418f7726d",
+  "sourceHash": "fnv1a64:62c7deba74020bfd",
   "lessonIds": [
     "MR-C228-kautuk-karne",
     "MR-C228-pudhe-jane",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch228.txt",
   "json": "marathi/narration/ch228.json",
-  "textHash": "fnv1a64:004be3c0e9156c4b",
-  "jsonHash": "fnv1a64:b30d1d3a4d0e07a5",
+  "textHash": "fnv1a64:dbd96fdd94e834c5",
+  "jsonHash": "fnv1a64:4e928680fd2af4f8",
   "findings": []
 }

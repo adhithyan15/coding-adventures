@@ -5226,7 +5226,11 @@ jobs:
           if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then
             job_flags=(-jobs 1)
           fi
-          $BT "${job_flags[@]}" -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -language all
+          # -prune-leaf-targets: each standalone Cargo package builds its whole
+          # dependency tree into its own target/, and keeping them all filled
+          # the runner disk part-way through a shard (X-7). A leaf's target/
+          # goes once its build has reported.
+          $BT "${job_flags[@]}" -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -prune-leaf-targets -language all
 
   # ── Job 16: CI gate ────────────────────────────────────────────
   #

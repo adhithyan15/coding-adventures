@@ -14,7 +14,8 @@ romanization: "desh"
 concept_tag: MR-WORLD120-DESH
 prerequisites: [MR-C120-sangit, MR-C120-batmi]
 sounds: []
-roots: []
+roots: [sanskrit-desha]
+etymology_hook: "deś: Sanskrit deśa 'region, country', a tatsama; the inherited Marathi form is des (CDIAL 6547)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C120-batmi]
 <!-- hl-knowledge: introduces=[MR-LEX-C120-WORLD120-04]; assesses=[] -->
 
 **देश** — *desh* — "a country".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**देश** (*desh*) is Sanskrit *deśa*, "region, country", taken over whole, a tatsama. CDIAL lists the inherited Marathi form as *des*, "country" (CDIAL 6547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

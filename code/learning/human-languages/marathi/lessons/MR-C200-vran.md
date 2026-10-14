@@ -14,7 +14,8 @@ romanization: "vraṇ"
 concept_tag: MR-AAROGYA200-VRAN
 prerequisites: [MR-C200-snayu, MR-C200-jakham]
 sounds: []
-roots: []
+roots: [sanskrit-vrana]
+etymology_hook: "vraṇ: Sanskrit vraṇa 'abscess, scar', a tatsama; the inherited Marathi form is vaṇ (CDIAL 12227)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C200-jakham]
 <!-- hl-knowledge: introduces=[MR-LEX-C200-AAROGYA200-03]; assesses=[] -->
 
 **व्रण** — *vraṇ* — "a scar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**व्रण** (*vraṇ*) is Sanskrit *vraṇa*, "abscess, boil, scar", a tatsama. CDIAL lists the inherited Marathi form as *vaṇ*, "scar" (CDIAL 12227).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

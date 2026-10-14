@@ -14,7 +14,8 @@ romanization: "savay hoṇe"
 concept_tag: MR-VERB-SAVAY-HONE
 prerequisites: [MR-C196-olakh-karun-dene, MR-C196-usne-dene]
 sounds: []
-roots: []
+roots: [sanskrit-bhavati]
+etymology_hook: "savay: origin not settled; hoṇe ← bhavati 'becomes, is' (CDIAL 9416)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C196-usne-dene]
 <!-- hl-knowledge: introduces=[MR-LEX-C197-ACT197-01]; assesses=[] -->
 
 **सवय होणे** — *savay hoṇe* — "to get used to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **सवय**, "habit", is not settled: neither CDIAL nor DEDR has an entry for it. **होणे** comes from Sanskrit *bhavati*, "becomes, is" (CDIAL 9416).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

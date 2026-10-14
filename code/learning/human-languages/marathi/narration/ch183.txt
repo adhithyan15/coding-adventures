@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a loan, then the Marathi for a tax.
 You'll want to know: बोगदा.
 बोगदा — bogdā — "a tunnel".
 
+The word, taken apart.
+The origin of बोगदा (bogdā) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a tax, then the Marathi for a tunnel.
 
 You'll want to know: किल्ला.
 किल्ला — killā — "a fort".
+
+The word, taken apart.
+किल्ला (killā) is a loan from Arabic qalʿa, "fortress", which reached Marathi through Persian. Its Arabic root is q-l-ʿ (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a tunnel, then the Marathi for a fort.
 You'll want to know: मनोरा.
 मनोरा — manorā — "a tower".
 
+The word, taken apart.
+मनोरा (manorā) is a loan, usually traced through Persian to Arabic manāra, "lighthouse, minaret", whose root is n-w-r, "light" (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a fort, then the Marathi for a tower.
 You'll want to know: स्मारक.
 स्मारक — smārak — "a monument".
 
+The word, taken apart.
+स्मारक (smārak) is Sanskrit smāraka, "reminding", a tatsama built on smṛ, "to remember". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a tower, then the Marathi for a monument
 
 You'll want to know: पुतळा.
 पुतळा — putaḷā — "a statue".
+
+The word, taken apart.
+पुतळा (putaḷā) is a tadbhava, a word inherited and reshaped by sound change. It comes from putrala, "puppet, pupil of the eye", a form CDIAL reconstructs from its descendants (CDIAL 8269). CDIAL compares Sanskrit putrī, "puppet". It glosses the Marathi word "doll".
 
 What you've built.
 One more word for this chapter.

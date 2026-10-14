@@ -14,7 +14,8 @@ romanization: "ṭīkā karṇe"
 concept_tag: MR-VERB-TIKA-KARNE
 prerequisites: [MR-C224-kantalne, MR-C225-patavne]
 sounds: []
-roots: []
+roots: [sanskrit-tika, sanskrit-karoti]
+etymology_hook: "ṭīkā: Sanskrit ṭīkā 'commentary', a tatsama; karṇe ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C225-patavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C225-ACT225-02]; assesses=[] -->
 
 **टीका करणे** — *ṭīkā karṇe* — "to criticise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टीका** is Sanskrit *ṭīkā*, "commentary", a tatsama. **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

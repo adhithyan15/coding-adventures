@@ -14,7 +14,8 @@ romanization: "guruvār"
 concept_tag: GU-WEEK1-THURSDAY
 prerequisites: [GU-C78-tuesday, GU-C78-wednesday]
 sounds: []
-roots: []
+roots: [sanskrit-guru, sanskrit-vara-day]
+etymology_hook: "guruvār: Sanskrit guru 'Jupiter' + vāra 'day of the week' (CDIAL 11547), a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C78-wednesday]
 <!-- hl-knowledge: introduces=[GU-LEX-C78-WEEK1-04]; assesses=[] -->
 
 **ગુરુવાર** (*guruvār*) — "Thursday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગુરુવાર** (*guruvār*) is a Sanskrit compound, a tatsama: *guru*, "the planet Jupiter", and *vāra*, "day of the week" (CDIAL 11547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

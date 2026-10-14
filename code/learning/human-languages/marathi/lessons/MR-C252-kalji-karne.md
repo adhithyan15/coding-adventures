@@ -14,7 +14,8 @@ romanization: "kāḷjī karṇe"
 concept_tag: MR-VERB-KALJI-KARNE
 prerequisites: [MR-C252-maja-karne, MR-C252-ragavne]
 sounds: []
-roots: []
+roots: [sanskrit-kaleyaka, sanskrit-karoti]
+etymology_hook: "kāḷjī: as Gujarati kāḷjī 'care', listed with kāḷīj 'liver' under kālēyaka (CDIAL 3103); karṇe ← karoti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C252-ragavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C252-ACT252-03]; assesses=[] -->
 
 **काळजी करणे** — *kāḷjī karṇe* — "to worry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काळजी** matches Gujarati *kāḷjī*, "care, anxiety", which CDIAL lists beside Marathi *kāḷīj*, "liver, heart", under Sanskrit *kālēyaka*, "liver" (CDIAL 3103). **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

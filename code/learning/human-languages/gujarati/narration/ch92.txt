@@ -14,6 +14,9 @@ Build the sentence "I live in Ahmedabad." (Hũ Amdāvādmā rahũ chhũ.)
 You'll want to know: મધરાત.
 મધરાત (madhrāt) — "midnight".
 
+The word, taken apart.
+મધરાત (madhrāt) is "mid-night". Its first part goes back to Sanskrit madhya, "middle" (CDIAL 9804), and rāt is a tadbhava of rātrī, "night" (CDIAL 10702).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Gujarati for okay, fine, then the Gujarati for midni
 
 You'll want to know: પરોઢ.
 પરોઢ (paroḍh) — "dawn, daybreak".
+
+The word, taken apart.
+CDIAL lists પરોઢ (paroḍh) under two Sanskrit words, prabhāta, "daybreak" (CDIAL 8707), and praroha, "sprout; ray" (CDIAL 8747). It thinks praroha explains the Gujarati vowel better.
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the Gujarati for midnight, then the Gujarati for dawn.
 You'll want to know: પરમદિવસ.
 પરમદિવસ (paramdivas) — "the day after tomorrow".
 
+The word, taken apart.
+પરમદિવસ (paramdivas) is param, "the day after tomorrow", with divas, "day" (CDIAL 6333). CDIAL has no entry for Gujarati param, so its origin is not settled; the Sanskrit word for that day was paraśvas (CDIAL 7799j).
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Gujarati for dawn, then the Gujarati for the day aft
 You'll want to know: વરસ.
 વરસ (varas) — "a year".
 
+The word, taken apart.
+વરસ (varas) is a tadbhava of Sanskrit varṣa, "rain", which also meant "year" (CDIAL 11392).
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Gujarati for the day after tomorrow, then the Gujara
 
 You'll want to know: પળ.
 પળ (paḷ) — "a moment".
+
+The word, taken apart.
+પળ (paḷ) is a tadbhava of Sanskrit pala, "a particular weight", which also named "a measure of time" (CDIAL 7952).
 
 What you've built.
 One more word for this chapter.

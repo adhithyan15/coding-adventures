@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 261,
-  "sourceHash": "fnv1a64:a808a64cadb0edb7",
+  "sourceHash": "fnv1a64:a157d72e1e400806",
   "lessonIds": [
     "MR-C261-kurup",
     "MR-C261-thaklela",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch261.txt",
   "json": "marathi/narration/ch261.json",
-  "textHash": "fnv1a64:c104ef281a86c8a4",
-  "jsonHash": "fnv1a64:09f153a58ebfbf30",
+  "textHash": "fnv1a64:7fc1dffcdec76bfb",
+  "jsonHash": "fnv1a64:8380d992c0b9ee0f",
   "findings": []
 }

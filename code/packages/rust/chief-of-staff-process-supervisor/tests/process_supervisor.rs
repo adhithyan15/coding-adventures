@@ -894,11 +894,15 @@ fn a_host_that_never_becomes_ready_is_ended() {
         }
     };
     assert_eq!(error, ProcessSupervisorError::BootstrapTimeout);
-    // Killed, so no exit code.
+    // Killed. On Unix a killed process has a signal, not an exit code; on
+    // Windows `Child::kill` is `TerminateProcess(handle, 1)`, so the code is
+    // the 1 it was ended with. A host cannot exit 1 by itself here: it never
+    // returns from waiting for a Ready it never sends.
+    let killed = if cfg!(windows) { Some(1) } else { None };
     let exited = await_phase(
         &mut supervisor,
         &registration,
-        SupervisorPhase::Exited { exit_code: None },
+        SupervisorPhase::Exited { exit_code: killed },
     );
     assert_eq!(exited.process_id(), None);
 }

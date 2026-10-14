@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 84,
-  "sourceHash": "fnv1a64:b95d0d60f4b71839",
+  "sourceHash": "fnv1a64:50f472ec7a0edd0d",
   "lessonIds": [
     "GU-C84-clinic",
     "GU-C84-bank",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch84.txt",
   "json": "gujarati/narration/ch84.json",
-  "textHash": "fnv1a64:b118e1c15eb60e2f",
-  "jsonHash": "fnv1a64:2c5cd93ba44ec278",
+  "textHash": "fnv1a64:412da639ecc44d8e",
+  "jsonHash": "fnv1a64:f7f641d97e052329",
   "findings": []
 }

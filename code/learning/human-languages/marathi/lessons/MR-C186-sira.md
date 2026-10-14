@@ -15,6 +15,7 @@ concept_tag: MR-VASTU186-SIRA
 prerequisites: [MR-C186-catni, MR-C186-kosimbir]
 sounds: []
 roots: []
+etymology_hook: "śirā 'semolina pudding': origin not settled; CDIAL has no entry for it in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C186-kosimbir]
 <!-- hl-knowledge: introduces=[MR-LEX-C186-VASTU186-04]; assesses=[] -->
 
 **शिरा** — *śirā* — "a semolina pudding".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **शिरा** (*śirā*) is not settled. CDIAL has no entry for it in this sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

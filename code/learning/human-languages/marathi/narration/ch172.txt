@@ -12,6 +12,9 @@ Before the new one: say the Marathi for still, then the Marathi for suddenly.
 You'll want to know: भोवती.
 भोवती — bhovtī — "around".
 
+The word, taken apart.
+भोवती (bhovtī) has no entry of its own in CDIAL, but it looks like a form of Marathi bhõvṇẽ, "to turn", which CDIAL lists under Sanskrit bhramati, "revolves" (CDIAL 9648), beside sabhõvtā, "all around", under saṁbhramati, "wanders all round" (CDIAL 12972).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for suddenly, then the Marathi for around.
 
 You'll want to know: सगळीकडे.
 सगळीकडे — sagḷīkaḍe — "everywhere".
+
+The word, taken apart.
+सगळीकडे (sagḷīkaḍe) is sagḷī, "all", with -कडे, "toward": "toward all sides". The origin of sagḷā is not settled; CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for around, then the Marathi for everywhere.
 You'll want to know: इतरत्र.
 इतरत्र — itaratra — "elsewhere".
 
+The word, taken apart.
+इतरत्र (itaratra) is Sanskrit itaratra, "elsewhere", a tatsama: itara, "other", with the place ending -tra. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for everywhere, then the Marathi for elsewhe
 You'll want to know: तिकडे.
 तिकडे — tikaḍe — "over there".
 
+The word, taken apart.
+तिकडे (tikaḍe) is ti-, the far-pointing stem of तिथे, with -कडे, "toward", which matches Marathi kaḍ, "side" (CDIAL 2639).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for elsewhere, then the Marathi for over the
 
 You'll want to know: मध्यभागी.
 मध्यभागी — madhyabhāgī — "in the middle".
+
+The word, taken apart.
+मध्यभागी (madhyabhāgī) is Sanskrit madhya, "middle" (CDIAL 9804), and bhāga, "part", with the ending -ī, "in": "in the middle part".
 
 What you've built.
 One more word for this chapter.

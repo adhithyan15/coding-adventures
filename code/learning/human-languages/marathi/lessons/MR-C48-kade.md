@@ -11,7 +11,8 @@ gloss: toward, at somebody's side — the postposition that turns two taught adj
 concept_tag: MR-POSTP-KADE
 prerequisites: [MR-R47-give-it-to, MR-C44-ujva, MR-C44-daava]
 sounds: [retroflex-da, matra-e]
-roots: []
+roots: [sanskrit-kati-hip]
+etymology_hook: "-kaḍe: as Marathi kaḍ 'side', listed under kaṭi 'hip', rather from Dravidian (CDIAL 2639; DEDR 1109)"
 duration:
   max_seconds: 220
 requires:
@@ -63,6 +64,11 @@ are; the side of a person and their house are the same idea.
 
 > **मी मित्राकडे जातो.**
 > — *mī mitrākaḍe jāto.* — **I go to my friend's.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**-कडे** (*-kaḍe*) matches Marathi *kaḍ*, "side, waist", which CDIAL lists under Sanskrit *kaṭi*, "hip". CDIAL takes that word as rather from Dravidian, comparing Kannada *kaḍe*, "side, end" (CDIAL 2639), and DEDR compares Old Marathi *kaḍe*, "edge, side" (DEDR 1109).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-POSTP-KADE, MR-LEX-UJVA, MR-LEX-DAAVA, MR-LEX-MITRA, MR-QUESTION-KUTHUN, MR-POSTP-HUUN, MR-GRAMMAR-OBJECT-LAA] -->

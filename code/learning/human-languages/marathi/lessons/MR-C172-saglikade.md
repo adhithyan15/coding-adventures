@@ -15,6 +15,7 @@ concept_tag: MR-JAGA172-SAGLIKADE
 prerequisites: [MR-C171-acanak, MR-C172-bhovti]
 sounds: []
 roots: []
+etymology_hook: "sagḷīkaḍe: sagḷī 'all' + -kaḍe 'toward'; the origin of sagḷā 'all' is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C172-bhovti]
 <!-- hl-knowledge: introduces=[MR-LEX-C172-JAGA172-02]; assesses=[] -->
 
 **सगळीकडे** — *sagḷīkaḍe* — "everywhere".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सगळीकडे** (*sagḷīkaḍe*) is *sagḷī*, "all", with **-कडे**, "toward": "toward all sides". The origin of *sagḷā* is not settled; CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

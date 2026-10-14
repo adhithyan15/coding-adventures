@@ -14,7 +14,8 @@ romanization: "raṅg"
 concept_tag: MR-NUMBERS119-RANG
 prerequisites: [MR-C119-hajar, MR-C119-jag]
 sounds: []
-roots: []
+roots: [sanskrit-ranga, persian-rang]
+etymology_hook: "raṅg: Sanskrit raṅga 'dye, colour' (CDIAL 10560) or Persian rang 'colour'; the two may have merged"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C119-jag]
 <!-- hl-knowledge: introduces=[MR-LEX-C119-NUMBERS119-04]; assesses=[] -->
 
 **रंग** — *raṅg* — "a colour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रंग** (*raṅg*) may come from Sanskrit *raṅga*, "dye, colour" (CDIAL 10560), or from Persian *rang*, "colour". The two words are alike in sound and sense and may have merged.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

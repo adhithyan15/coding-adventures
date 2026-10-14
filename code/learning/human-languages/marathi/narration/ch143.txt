@@ -12,6 +12,9 @@ Before the new one: say the Marathi for an owl, then the Marathi for a frog.
 You'll want to know: कासव.
 कासव — kāsav — "a tortoise".
 
+The word, taken apart.
+कासव (kāsav) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kacchapa, "turtle, tortoise" (CDIAL 2619). CDIAL notes the view that kacchapa is a folk reshaping of kaśyapa, "tortoise", through kaccha, "marsh".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a frog, then the Marathi for a tortoise.
 
 You'll want to know: मगर.
 मगर — magar — "a crocodile".
+
+The word, taken apart.
+मगर (magar) goes back to Sanskrit makara, "crocodile" (CDIAL 9692). CDIAL lists no Marathi form under it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a tortoise, then the Marathi for a croco
 You'll want to know: हरीण.
 हरीण — harīṇ — "a deer".
 
+The word, taken apart.
+हरीण (harīṇ) is a tadbhava of Sanskrit hariṇa, "deer", built on hari, "yellow" (CDIAL 13982). CDIAL rejects Przyluski's Austroasiatic source: the Munda words he quoted are themselves from Indo-Aryan.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a crocodile, then the Marathi for a deer
 You'll want to know: ससा.
 ससा — sasā — "a rabbit".
 
+The word, taken apart.
+ससा (sasā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śaśa, "hare" (CDIAL 12357).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a deer, then the Marathi for a rabbit.
 
 You'll want to know: लांडगा.
 लांडगा — lāṇḍgā — "a wolf".
+
+The word, taken apart.
+The origin of लांडगा (lāṇḍgā) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.

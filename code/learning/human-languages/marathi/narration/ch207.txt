@@ -12,6 +12,9 @@ Before the new one: say the Marathi for ordinary, then the Marathi for special.
 You'll want to know: धीट.
 धीट — dhīṭ — "bold, daring".
 
+The word, taken apart.
+धीट (dhīṭ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dhṛṣṭa, "bold, impudent" (CDIAL 6875).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for special, then the Marathi for bold.
 
 You'll want to know: सावध.
 सावध — sāvadh — "careful, alert".
+
+The word, taken apart.
+सावध (sāvadh) is Sanskrit sāvadhāna, "attentive": sa-, "with", and avadhāna, "attention", shortened.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for bold, then the Marathi for careful.
 You'll want to know: निष्काळजी.
 निष्काळजी — niṣkāḷjī — "careless".
 
+The word, taken apart.
+निष्काळजी (niṣkāḷjī) is Sanskrit niṣ-, "without", with काळजी, "care": "without care".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for careful, then the Marathi for careless.
 You'll want to know: व्यस्त.
 व्यस्त — vyasta — "busy".
 
+The word, taken apart.
+व्यस्त (vyasta) is Sanskrit vyasta, "scattered, distracted", a tatsama. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for careless, then the Marathi for busy.
 
 You'll want to know: मोकळा.
 मोकळा — mokḷā — "free, open".
+
+The word, taken apart.
+मोकळा (mokḷā) is a tadbhava, a word inherited and reshaped by sound change. It comes from mukna, "loosed", a form CDIAL reconstructs from its descendants (CDIAL 10157). CDIAL compares mukta, "loosed", and suggests the -o- may come from mokṣa, "release". It glosses the Marathi word "free".
 
 What you've built.
 One more word for this chapter.

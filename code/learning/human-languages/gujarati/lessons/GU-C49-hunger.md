@@ -14,7 +14,8 @@ romanization: "bhūkh"
 concept_tag: GU-CARE-HUNGER
 prerequisites: [GU-C49-medicine, GU-C49-rest]
 sounds: []
-roots: []
+roots: [sanskrit-bubhuksha]
+etymology_hook: "bhūkh ← Sanskrit bubhukṣā 'desire to eat, hunger', a tadbhava (CDIAL 9286)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C49-rest]
 <!-- hl-knowledge: introduces=[GU-LEX-C49-CARE-04]; assesses=[] -->
 
 **ભૂખ** (*bhūkh*) — "hunger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ભૂખ** (*bhūkh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bubhukṣā*, "desire to eat, hunger" (CDIAL 9286).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

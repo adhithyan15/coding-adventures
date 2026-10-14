@@ -14,7 +14,8 @@ romanization: "mahāg"
 concept_tag: MR-ADJ104-MAHAG
 prerequisites: [MR-C104-halu, MR-C104-jalad]
 sounds: []
-roots: []
+roots: [sanskrit-mahargha]
+etymology_hook: "mahāg ← Sanskrit mahārgha 'high-priced', a tadbhava (CDIAL 9954)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C104-jalad]
 <!-- hl-knowledge: introduces=[MR-LEX-C104-ADJ104-05]; assesses=[] -->
 
 **महाग** — *mahāg* — "expensive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**महाग** (*mahāg*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mahārgha*, "high-priced" (CDIAL 9954). It is *mahā*, "great", and *argha*, "price".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

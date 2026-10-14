@@ -12,6 +12,9 @@ Before the new one: say the Marathi for mud, then the Marathi for dust.
 You'll want to know: अवजार.
 अवजार — avjār — "a tool".
 
+The word, taken apart.
+अवजार (avjār) is a loan, usually traced through Persian to Arabic awzār, the plural of wizr, "a burden", which Lane gives also as "weapons, the gear of war" (root w-z-r). Persian and Hindustani use it for tools.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for dust, then the Marathi for a tool.
 
 You'll want to know: तबला.
 तबला — tablā — "a tabla".
+
+The word, taken apart.
+तबला (tablā) is a loan from Arabic ṭabl, "a drum", which reached Marathi through Persian. Its Arabic root is ṭ-b-l (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a tool, then the Marathi for a tabla.
 You'll want to know: बासरी.
 बासरी — bāsrī — "a flute".
 
+The word, taken apart.
+बासरी (bāsrī) matches Hindi bāṁsurī. CDIAL lists the Hindi bāṁsī, "flute", under Sanskrit vaṁśī, "flute, pipe" (CDIAL 11180), but has no entry for बासरी.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a tabla, then the Marathi for a flute.
 You'll want to know: सतार.
 सतार — satār — "a sitar".
 
+The word, taken apart.
+सतार (satār) is a loan, usually traced to Persian sitār: si, "three", and tār, "string".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a flute, then the Marathi for a sitar.
 
 You'll want to know: चेंडू.
 चेंडू — ceṇḍū — "a ball".
+
+The word, taken apart.
+चेंडू (ceṇḍū) matches Dravidian words for a ball, such as Kannada ceṇḍu (DEDR 2766). CDIAL lists it under Sanskrit kanduka, "ball", which it also takes from Dravidian (CDIAL 2727).
 
 What you've built.
 One more word for this chapter.

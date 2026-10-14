@@ -14,7 +14,8 @@ romanization: "vīṭ"
 concept_tag: MR-VASTU242-VIT
 prerequisites: [MR-C242-camde, MR-C242-dhatu]
 sounds: []
-roots: []
+roots: [sanskrit-ishtaka]
+etymology_hook: "vīṭ ← Sanskrit iṣṭakā 'brick', a tadbhava (CDIAL 1600)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C242-dhatu]
 <!-- hl-knowledge: introduces=[MR-LEX-C242-VASTU242-03]; assesses=[] -->
 
 **वीट** — *vīṭ* — "a brick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वीट** (*vīṭ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *iṣṭakā*, "brick" (CDIAL 1600). CDIAL lists Marathi *vīṭ* beside *īṭ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

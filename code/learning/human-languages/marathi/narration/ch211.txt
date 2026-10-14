@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a worker, then the Marathi for an employ
 You'll want to know: अपयश.
 अपयश — apayaś — "failure".
 
+The word, taken apart.
+अपयश (apayaś) is Sanskrit apayaśas, "ill fame", a tatsama: apa-, "away", and yaśas, "renown".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for an employee, then the Marathi for failur
 
 You'll want to know: अनुभव.
 अनुभव — anubhav — "experience".
+
+The word, taken apart.
+अनुभव (anubhav) is Sanskrit anubhava, "perception, experience", a tatsama: anu, "after", and bhū, "to be". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for failure, then the Marathi for experience
 You'll want to know: निवड.
 निवड — nivaḍ — "a choice".
 
+The word, taken apart.
+निवड (nivaḍ) comes from a reconstructed nirvṛta-, "chosen", which CDIAL lists under nirvarayati, "chooses" (CDIAL 7393). CDIAL glosses the Marathi word "choice, picked".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for experience, then the Marathi for a choic
 You'll want to know: निर्णय.
 निर्णय — nirṇay — "a decision".
 
+The word, taken apart.
+निर्णय (nirṇay) is Sanskrit nirṇaya, "settling, decision", a tatsama: nis, "out", and nī, "to lead". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a choice, then the Marathi for a decisio
 
 You'll want to know: शक्यता.
 शक्यता — śakyatā — "a possibility".
+
+The word, taken apart.
+शक्यता (śakyatā) is Sanskrit śakya, "possible" (CDIAL 12253), with the ending -tā, "-ness".
 
 What you've built.
 One more word for this chapter.

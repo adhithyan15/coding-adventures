@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a website, then the Marathi for a keyboa
 You'll want to know: वैमानिक.
 वैमानिक — vaimānik — "a pilot".
 
+The word, taken apart.
+वैमानिक (vaimānik) is Sanskrit vaimānika, "one who rides a celestial car", a tatsama built on vimāna, "car of the gods" (CDIAL 11823), now "aeroplane".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a keyboard, then the Marathi for a pilot
 
 You'll want to know: संशोधक.
 संशोधक — saṁśodhak — "a researcher".
+
+The word, taken apart.
+संशोधक (saṁśodhak) is Sanskrit saṁśodhaka, "one who purifies, corrects", a tatsama built on śudh, "to be pure". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a pilot, then the Marathi for a research
 You'll want to know: परदेशी.
 परदेशी — pardeśī — "a foreigner".
 
+The word, taken apart.
+परदेशी (pardeśī) is Sanskrit para, "other", and deśa, "country", with the ending -ī, "of": "one of another country".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a researcher, then the Marathi for a for
 You'll want to know: पर्यटक.
 पर्यटक — paryaṭak — "a tourist".
 
+The word, taken apart.
+पर्यटक (paryaṭak) is Sanskrit paryaṭaka, "one who wanders about", a tatsama: pari, "around", and aṭ, "to roam". CDIAL mentions it, as "tramp", under a reconstructed pariyaṭṭa, "wandering washerman" (CDIAL 7860).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a foreigner, then the Marathi for a tour
 
 You'll want to know: प्रौढ.
 प्रौढ — prauḍh — "an adult".
+
+The word, taken apart.
+प्रौढ (prauḍh) is Sanskrit prauḍha, "full of; strong, full-grown", taken over whole as a learned loan, a tatsama (CDIAL 9021). CDIAL thinks the Sanskrit form was shaped in part by a non-Aryan word.
 
 What you've built.
 One more word for this chapter.

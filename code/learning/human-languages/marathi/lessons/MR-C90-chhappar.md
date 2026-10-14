@@ -15,6 +15,7 @@ concept_tag: MR-HOME90-CHHAPPAR
 prerequisites: [MR-C89-tebal, MR-C90-bhint]
 sounds: []
 roots: []
+etymology_hook: "chappar: CDIAL lists Hindi and Punjabi chappar 'thatched roof' under Sanskrit chattvara 'house, bower' (CDIAL 4976)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C90-bhint]
 <!-- hl-knowledge: introduces=[MR-LEX-C90-HOME90-02]; assesses=[] -->
 
 **छप्पर** — *chhappar* — "a roof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL has no Marathi form of **छप्पर** (*chhappar*), but it lists Hindi and Punjabi *chappar*, "thatched roof", under Sanskrit *chattvara*, "house, bower" (CDIAL 4976).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

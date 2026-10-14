@@ -14,7 +14,8 @@ romanization: "navrā"
 concept_tag: MR-FAMILY76-NAVRA
 prerequisites: [MR-C75-mavshi, MR-C75-mama]
 sounds: []
-roots: []
+roots: [indo-aryan-navavaraka]
+etymology_hook: "navrā ← *navavaraka 'newly wed', a reconstructed form; a tadbhava (CDIAL 7013)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C75-mama]
 <!-- hl-knowledge: introduces=[MR-LEX-C76-FAMILY76-01]; assesses=[] -->
 
 **नवरा** — *navrā* — "a husband".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नवरा** (*navrā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*navavaraka*, "newly wed", a form CDIAL reconstructs from its descendants (CDIAL 7013). It is *nava*, "new", and *vara*, "bridegroom".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

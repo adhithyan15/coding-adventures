@@ -14,7 +14,8 @@ romanization: "dhairya"
 concept_tag: MR-AAROGYA257-DHAIRYA
 prerequisites: [MR-C257-maitri, MR-C257-visvas]
 sounds: []
-roots: []
+roots: [sanskrit-dhairya]
+etymology_hook: "dhairya: Sanskrit dhairya 'firmness, courage', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C257-visvas]
 <!-- hl-knowledge: introduces=[MR-LEX-C257-AAROGYA257-05]; assesses=[] -->
 
 **धैर्य** — *dhairya* — "courage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धैर्य** (*dhairya*) is Sanskrit *dhairya*, "firmness, courage", a tatsama built on *dhīra*, "steady". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

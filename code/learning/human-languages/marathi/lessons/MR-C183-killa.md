@@ -14,7 +14,8 @@ romanization: "killā"
 concept_tag: MR-VASTU183-KILLA
 prerequisites: [MR-C182-kar, MR-C183-bogda]
 sounds: []
-roots: []
+roots: [arabic-qala]
+etymology_hook: "killā ← Arabic qalʿa 'fortress', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C183-bogda]
 <!-- hl-knowledge: introduces=[MR-LEX-C183-VASTU183-02]; assesses=[] -->
 
 **किल्ला** — *killā* — "a fort".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**किल्ला** (*killā*) is a loan from Arabic *qalʿa*, "fortress", which reached Marathi through Persian. Its Arabic root is *q-l-ʿ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

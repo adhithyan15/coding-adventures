@@ -11,7 +11,8 @@ gloss: in front of, opposite, facing — and a word built out of a face you have
 concept_tag: MR-POSTP-SAMOR
 prerequisites: [MR-C43-javal, MR-C12-tond]
 sounds: [matra-o, inherent-a]
-roots: [sanskrit-mukha]
+roots: [sanskrit-mukha, sanskrit-sammukha]
+etymology_hook: "samor ← Sanskrit saṁmukha 'facing', from sam 'together' + mukha 'face'; a tadbhava (CDIAL 12982)"
 duration:
   max_seconds: 220
 requires:

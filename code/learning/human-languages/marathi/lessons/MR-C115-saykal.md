@@ -14,7 +14,8 @@ romanization: "sāykal"
 concept_tag: MR-TOWN115-SAYKAL
 prerequisites: [MR-C114-polis, MR-C115-hodi]
 sounds: []
-roots: []
+roots: [english-cycle]
+etymology_hook: "sāykal ← English cycle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C115-hodi]
 <!-- hl-knowledge: introduces=[MR-LEX-C115-TOWN115-02]; assesses=[] -->
 
 **सायकल** — *sāykal* — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सायकल** (*sāykal*) is a loan from English *cycle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

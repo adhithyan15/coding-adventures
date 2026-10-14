@@ -14,7 +14,8 @@ romanization: "kadācit"
 concept_tag: MR-KARAN231-KADACIT
 prerequisites: [MR-C230-kayam, MR-C231-ekatra]
 sounds: []
-roots: []
+roots: [sanskrit-kadacit]
+etymology_hook: "kadācit: Sanskrit kadācit 'at some time', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C231-ekatra]
 <!-- hl-knowledge: introduces=[MR-LEX-C231-KARAN231-02]; assesses=[] -->
 
 **कदाचित** — *kadācit* — "perhaps".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कदाचित** (*kadācit*) is Sanskrit *kadācit*, "at some time, perhaps", a tatsama: *kadā*, "when", with *-cit*, "some-". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

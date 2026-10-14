@@ -14,7 +14,8 @@ romanization: "harīṇ"
 concept_tag: MR-THINGS143-HARIN
 prerequisites: [MR-C143-kasav, MR-C143-magar]
 sounds: []
-roots: []
+roots: [sanskrit-harina]
+etymology_hook: "harīṇ ← Sanskrit hariṇa 'deer', built on hari 'yellow'; a tadbhava (CDIAL 13982)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C143-magar]
 <!-- hl-knowledge: introduces=[MR-LEX-C143-THINGS143-03]; assesses=[] -->
 
 **हरीण** — *harīṇ* — "a deer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हरीण** (*harīṇ*) is a tadbhava of Sanskrit *hariṇa*, "deer", built on *hari*, "yellow" (CDIAL 13982). CDIAL rejects Przyluski's Austroasiatic source: the Munda words he quoted are themselves from Indo-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

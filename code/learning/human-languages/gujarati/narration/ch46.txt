@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for nine, then the Gujarati for ten.
 You'll want to know: માથું.
 માથું (māthũ) — "the head". The top of the body.
 
+The word, taken apart.
+માથું (māthũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mastaka, "head, skull" (CDIAL 9926).
+
 What you've built.
 One more word for head to foot.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for ten, then the Gujarati for the head.
 
 You'll want to know: પગ.
 પગ (pag) — "a leg, a foot". One word for both.
+
+The word, taken apart.
+પગ (pag) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from padga, "afoot; footsoldier" (CDIAL 7766). It is pad, "foot", and ga, "going".
 
 What you've built.
 One more word for head to foot.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for the head, then the Gujarati for a leg.
 You'll want to know: પેટ.
 પેટ (peṭ) — "the belly".
 
+The word, taken apart.
+પેટ (peṭ) is a tadbhava. It comes from peṭṭa, "belly", a form CDIAL reconstructs from its descendants (CDIAL 8376). CDIAL notes that the words for "basket" show the same range of forms and may be the same word.
+
 What you've built.
 One more word for head to foot.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a leg, then the Gujarati for the belly.
 You'll want to know: દાંત.
 દાંત (dā̃t) — "a tooth, teeth".
 
+The word, taken apart.
+દાંત (dā̃t) (dāṁt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from danta, "tooth" (CDIAL 6152).
+
 What you've built.
 One more word for head to foot.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for the belly, then the Gujarati for a toot
 
 You'll want to know: વાળ.
 વાળ (vāḷ) — "hair". The hair on the માથું (māthũ).
+
+The word, taken apart.
+વાળ (vāḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāla, "hair of tail, tail, hair" (CDIAL 11572).
 
 What you've built.
 One more word for head to foot.

@@ -14,7 +14,8 @@ romanization: "comāsũ"
 concept_tag: GU-TIME93-COMASU
 prerequisites: [GU-C93-unalo, GU-C93-siyalo]
 sounds: []
-roots: []
+roots: [sanskrit-caturmasa]
+etymology_hook: "comāsũ ← Sanskrit caturmāsa 'period of four months', a tadbhava (CDIAL 4616)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C93-siyalo]
 <!-- hl-knowledge: introduces=[GU-LEX-C93-TIME93-04]; assesses=[] -->
 
 **ચોમાસું** (*comāsũ*) — "the monsoon, the rainy season".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચોમાસું** (*comāsũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *caturmāsa*, "period of four months" (CDIAL 4616). It is *catur*, "four", and *māsa*, "month".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: MR-VASTU219-DAR
 prerequisites: [MR-C218-dhuke, MR-C218-dav]
 sounds: []
 roots: []
+etymology_hook: "dar 'rate': origin not settled; CDIAL has no entry for it in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C218-dav]
 <!-- hl-knowledge: introduces=[MR-LEX-C219-VASTU219-01]; assesses=[] -->
 
 **दर** — *dar* — "a rate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **दर** (*dar*), "rate", is not settled. CDIAL has no entry for it in this sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "caḍhvũ"
 concept_tag: GU-VERB-CADHVU
 prerequisites: [GU-C138-kudvu, GU-C138-tarvu]
 sounds: []
-roots: []
+roots: [indo-aryan-cadhati]
+etymology_hook: "caḍhvũ ← *caḍhati 'rises', a reconstructed form; a tadbhava (CDIAL 4578)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C138-tarvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C138-ACT138-03]; assesses=[] -->
 
 **ચઢવું** (*caḍhvũ*) — "to climb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચઢવું** (*caḍhvũ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*caḍhati*, "rises", a form CDIAL reconstructs from its descendants (CDIAL 4578).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

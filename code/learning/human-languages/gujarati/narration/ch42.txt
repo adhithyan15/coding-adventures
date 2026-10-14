@@ -27,6 +27,9 @@ gender: feminine. fifth: પાંચમી — pā̃chmī.
 gender: neuter. fifth: પાંચમું — pā̃chmũ.
 મહિનો is masculine, so the fifth month is પાંચમો મહિનો.
 
+The word, taken apart.
+CDIAL lists the word, as pāṁcmo, under Sanskrit pañcama, "fifth" (CDIAL 7669), so it may also be inherited whole.
+
 What you've built: an ending that keeps working.
 -મું is not a one-off. Wiktionary's entry for the suffix builds the ordinal of every Gujarati number with it except five: એક, બે, ત્રણ, ચાર, and the word for six, which the next chapter reaches.
 That list lands well for you. Your count stops at પાંચ, so of the five ordinals you can reach at all, four stand on the exception list and one does not. This chapter is that exception list, plus the single word showing what the exceptions are exceptions to.
@@ -113,6 +116,9 @@ You'll want to know: બીજું.
 Say બે, then બીજું (bījũ). Almost nothing survives the crossing. One consonant does: the b that opens both.
 Chapter twelve spent a lesson on that b. Gujarati took the feminine-and-neuter dvé side of the Sanskrit paradigm, and dv went to bb and then to b, which is why બે does not begin like Hindi do. The ordinal begins the way the cardinal does.
 Endings as before: બીજો, બીજી, બીજું (bījũ). The everyday sense of other sits in the same word — the other cup, the other road — exactly as second and other share one word in English.
+
+The word, taken apart.
+બીજું (bījũ) is inherited from Sanskrit dvitīya, "second" (CDIAL 6680), and trījũ from tṛtīya (CDIAL 5912).
 
 What you've built: two words, one shape.
 Set the two received ordinals side by side and the tails match:

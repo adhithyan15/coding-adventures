@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 107,
-  "sourceHash": "fnv1a64:8a466b3cad902247",
+  "sourceHash": "fnv1a64:3ae85d6fe3cfcdcb",
   "lessonIds": [
     "GU-C107-gadlu",
     "GU-C107-cadar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch107.txt",
   "json": "gujarati/narration/ch107.json",
-  "textHash": "fnv1a64:4c60582d4947ec6e",
-  "jsonHash": "fnv1a64:beb9d055aabec2a9",
+  "textHash": "fnv1a64:4f2c51eae3865196",
+  "jsonHash": "fnv1a64:9842284bd5322f35",
   "findings": []
 }

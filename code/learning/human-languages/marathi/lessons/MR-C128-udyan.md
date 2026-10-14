@@ -14,7 +14,8 @@ romanization: "udyān"
 concept_tag: MR-LOC128-UDYAN
 prerequisites: [MR-C128-cauk, MR-C128-bag]
 sounds: []
-roots: []
+roots: [sanskrit-udyana]
+etymology_hook: "udyān ← Sanskrit udyāna 'going out; park, garden', a tatsama (CDIAL 2052)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C128-bag]
 <!-- hl-knowledge: introduces=[MR-LEX-C128-LOC128-03]; assesses=[] -->
 
 **उद्यान** — *udyān* — "a park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उद्यान** (*udyān*) is Sanskrit *udyāna*, "going out; park, garden", taken over whole as a learned loan, a tatsama (CDIAL 2052).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

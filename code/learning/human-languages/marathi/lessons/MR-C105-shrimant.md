@@ -14,7 +14,8 @@ romanization: "shrīmant"
 concept_tag: MR-ADJ105-SHRIMANT
 prerequisites: [MR-C105-svasta, MR-C105-rikama]
 sounds: []
-roots: []
+roots: [sanskrit-shrimat]
+etymology_hook: "śrīmant: Sanskrit śrīmant 'glorious, wealthy', built on śrī 'wealth, splendour'; a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C105-rikama]
 <!-- hl-knowledge: introduces=[MR-LEX-C105-ADJ105-03]; assesses=[] -->
 
 **श्रीमंत** — *shrīmant* — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**श्रीमंत** (*shrīmant*) is Sanskrit *śrīmant*, "glorious, wealthy", a tatsama built on *śrī*, "wealth, splendour". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

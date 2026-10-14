@@ -14,7 +14,8 @@ romanization: "ghaũ"
 concept_tag: GU-THINGS114-GHAU
 prerequisites: [GU-C113-mag, GU-C114-bajri]
 sounds: []
-roots: []
+roots: [sanskrit-godhuma]
+etymology_hook: "ghaũ ← Sanskrit godhūma 'wheat', a tadbhava (CDIAL 4287)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C114-bajri]
 <!-- hl-knowledge: introduces=[GU-LEX-C114-THINGS114-02]; assesses=[] -->
 
 **ઘઉં** (*ghaũ*) — "wheat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ઘઉં** (*ghaũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *godhūma*, "wheat" (CDIAL 4287).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

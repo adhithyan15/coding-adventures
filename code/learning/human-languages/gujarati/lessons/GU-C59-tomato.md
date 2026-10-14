@@ -14,7 +14,8 @@ romanization: "ṭāmeṭũ"
 concept_tag: GU-PRODUCE-TOMATO
 prerequisites: [GU-C59-apple, GU-C59-potatoes]
 sounds: []
-roots: []
+roots: [english-tomato]
+etymology_hook: "ṭāmeṭũ ← English tomato"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C59-potatoes]
 <!-- hl-knowledge: introduces=[GU-LEX-C59-PRODUCE-05]; assesses=[] -->
 
 **ટામેટું** (*ṭāmeṭũ*) — "a tomato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ટામેટું** (*ṭāmeṭũ*) is a loan from English *tomato*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

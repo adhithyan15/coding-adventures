@@ -14,7 +14,8 @@ romanization: "imārat"
 concept_tag: MR-LOC129-IMARAT
 prerequisites: [MR-C129-upahargrh, MR-C129-tapal]
 sounds: []
-roots: []
+roots: [arabic-imara]
+etymology_hook: "imārat ← Arabic ʿimāra 'building, construction', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C129-tapal]
 <!-- hl-knowledge: introduces=[MR-LEX-C129-LOC129-04]; assesses=[] -->
 
 **इमारत** — *imārat* — "a building".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इमारत** (*imārat*) is a loan from Arabic *ʿimāra*, "building, construction", which reached Marathi through Persian. Its Arabic root is *ʿ-m-r* (Lane). Persian and Hindustani say *ʿimārat*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

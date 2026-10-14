@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 188,
-  "sourceHash": "fnv1a64:257cdcabcd208aa8",
+  "sourceHash": "fnv1a64:debf17b360bed169",
   "lessonIds": [
     "MR-C188-dindarsika",
     "MR-C188-khekda",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch188.txt",
   "json": "marathi/narration/ch188.json",
-  "textHash": "fnv1a64:a152c5357a1f227e",
-  "jsonHash": "fnv1a64:2c47c3165fed588f",
+  "textHash": "fnv1a64:66430d9128d38cbe",
+  "jsonHash": "fnv1a64:31a7beaa60882fde",
   "findings": []
 }

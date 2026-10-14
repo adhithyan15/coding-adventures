@@ -14,7 +14,8 @@ romanization: "mālik"
 concept_tag: GU-CAN103-MALIK
 prerequisites: [GU-C103-milkat, GU-C103-sampatti]
 sounds: []
-roots: []
+roots: [arabic-malik]
+etymology_hook: "mālik ← Arabic mālik 'owner', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C103-sampatti]
 <!-- hl-knowledge: introduces=[GU-LEX-C103-CAN103-05]; assesses=[] -->
 
 **માલિક** (*mālik*) — "an owner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**માલિક** (*mālik*) is a loan from Arabic *mālik*, "owner", which reached Gujarati through Persian. Its Arabic root is *m-l-k* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

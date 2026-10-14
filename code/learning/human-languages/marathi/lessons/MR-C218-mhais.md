@@ -14,7 +14,8 @@ romanization: "mhais"
 concept_tag: MR-VASTU218-MHAIS
 prerequisites: [MR-C217-vihir, MR-C218-koli]
 sounds: []
-roots: []
+roots: [sanskrit-mahishi]
+etymology_hook: "mhais ← Sanskrit mahiṣa 'great, powerful; buffalo', a tadbhava (CDIAL 9964)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C218-koli]
 <!-- hl-knowledge: introduces=[MR-LEX-C218-VASTU218-02]; assesses=[] -->
 
 **म्हैस** — *mhais* — "a buffalo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**म्हैस** (*mhais*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mahiṣa*, "great, powerful; buffalo" (CDIAL 9964). CDIAL cites H. W. Bailey: the buffalo was "the great one of the beasts".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

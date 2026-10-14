@@ -14,7 +14,8 @@ romanization: "sarnāmũ"
 concept_tag: GU-HOUSE-ADDRESS
 prerequisites: [GU-C63-courtyard, GU-C63-garden]
 sounds: []
-roots: []
+roots: [persian-sarnama]
+etymology_hook: "sarnāmũ: usually traced to Persian sar-nāma 'heading of a letter', sar 'head' + nāma 'letter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C63-garden]
 <!-- hl-knowledge: introduces=[GU-LEX-C63-HOUSE-05]; assesses=[] -->
 
 **સરનામું** (*sarnāmũ*) — "an address".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સરનામું** (*sarnāmũ*) is a loan, usually traced to Persian *sar-nāma*, the heading of a letter: *sar*, "head", and *nāma*, "letter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

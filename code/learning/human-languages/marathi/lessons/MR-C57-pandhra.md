@@ -11,7 +11,8 @@ gloss: fifteen — five-and-ten, with the पाच you already own at the front
 concept_tag: MR-LEX-PANDHRA
 prerequisites: [MR-R56-ten-to-twelve, MR-C57-tera, MR-C57-chauda]
 sounds: [anusvara-nasal, matra-aa]
-roots: []
+roots: [sanskrit-panchadasha]
+etymology_hook: "pandhrā ← Sanskrit pañcadaśa 'fifteen': pañca 'five' + daśa 'ten'; a tadbhava (CDIAL 7662)"
 duration:
   max_seconds: 210
 requires:

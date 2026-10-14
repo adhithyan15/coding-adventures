@@ -15,6 +15,7 @@ concept_tag: MR-VERB-GHABARNE
 prerequisites: [MR-C166-vaya-ghalavne, MR-C166-gappa-basne]
 sounds: []
 roots: []
+etymology_hook: "ghābarṇe 'to be afraid': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C166-gappa-basne]
 <!-- hl-knowledge: introduces=[MR-LEX-C166-ACT166-03]; assesses=[] -->
 
 **घाबरणे** — *ghābarṇe* — "to be afraid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **घाबरणे** (*ghābarṇe*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

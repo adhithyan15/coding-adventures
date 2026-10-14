@@ -14,7 +14,8 @@ romanization: "bājār"
 concept_tag: MR-TOWN115-BAJAR
 prerequisites: [MR-C115-hodi, MR-C115-saykal]
 sounds: []
-roots: []
+roots: [persian-bazar]
+etymology_hook: "bājār: usually traced to Persian bāzār 'market'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C115-saykal]
 <!-- hl-knowledge: introduces=[MR-LEX-C115-TOWN115-03]; assesses=[] -->
 
 **बाजार** — *bājār* — "a market".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाजार** (*bājār*) is a loan, usually traced to Persian *bāzār*, "market". Marathi writes the *z* as **ज**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a cup, then the Gujarati for a cooking 
 You'll want to know: પલંગ.
 પલંગ (palaṅg) — "a bed".
 
+The word, taken apart.
+પલંગ (palaṅg) goes back to Sanskrit palyaṅka, "bed" (CDIAL 7964). CDIAL notes that the north-western form with -ṅg was borrowed into many languages, Gujarati among them.
+
 What you've built.
 One more word for bed, table, fan and lock.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a cooking pot, then the Gujarati for a 
 
 You'll want to know: ખાટલો.
 ખાટલો (khāṭlo) — "a cot, a string bed".
+
+The word, taken apart.
+ખાટલો (khāṭlo) is built on Gujarati khāṭ, "bedstead", which CDIAL lists under Sanskrit khaṭvā, "bedstead" (CDIAL 3781).
 
 What you've built.
 One more word for bed, table, fan and lock.
@@ -99,6 +105,9 @@ Before the new one: say the Gujarati for a cot, then the Gujarati for a table.
 You'll want to know: પંખો.
 પંખો (paṅkho) — "a fan".
 
+The word, taken apart.
+પંખો (paṅkho) is a tadbhava of Sanskrit pakṣa, "wing, feather", which also had a form pakṣaka, "fan" (CDIAL 7627). CDIAL suggests, with a query, that its nasal comes from puṅkha, "feathered shaft of an arrow".
+
 What you've built.
 One more word for bed, table, fan and lock.
 
@@ -127,6 +136,9 @@ Before the new one: say the Gujarati for a table, then the Gujarati for a fan.
 
 You'll want to know: તાળું.
 તાળું (tāḷũ) — "a lock". It takes a ચાવી.
+
+The word, taken apart.
+તાળું (tāḷũ) is a tadbhava of Sanskrit tāla, "latch, bolt" (CDIAL 5749). CDIAL compares Tamil and other Dravidian words for a bar, bolt or latch.
 
 What you've built.
 One more word for bed, table, fan and lock.

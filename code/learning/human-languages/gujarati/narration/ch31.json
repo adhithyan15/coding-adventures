@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "The Table Is Set",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:030954ae3449b666",
+  "sourceHash": "fnv1a64:94f78c7f5c4a955b",
   "lessons": [
     {
       "id": "GU-C27-hear-bhaat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:901fead84e68e4ab",
+      "sourceHash": "fnv1a64:e8866d5b9eb03534",
       "notice": null,
       "blocks": [
         {
@@ -41,6 +41,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભાત (bhāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhakta, \"meal, food; boiled rice\" (CDIAL 9331)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -71,7 +82,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -127,7 +138,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07cc156e0863a7b5",
+      "sourceHash": "fnv1a64:40130d2b5d518e13",
       "notice": null,
       "blocks": [
         {
@@ -149,6 +160,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દાળ (dāḷ) is a tadbhava of Sanskrit dāla, \"a kind of grain, split peas\" (CDIAL 6309). CDIAL asks whether this is the same word as its dāla, \"splitting\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -179,7 +201,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -236,7 +258,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6d08b1fd1977146",
+      "sourceHash": "fnv1a64:fc5bf5b6b6425568",
       "notice": null,
       "blocks": [
         {
@@ -258,6 +280,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શાક (shāk) is Sanskrit śāka, \"potherb, vegetable\", taken over whole as a learned loan, a tatsama (CDIAL 12370)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -288,7 +321,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -343,7 +376,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e89a2299be6171d9",
+      "sourceHash": "fnv1a64:f1100b104f558077",
       "notice": null,
       "blocks": [
         {
@@ -365,6 +398,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તેલ (tel) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from taila, \"sesamum oil, oil\" (CDIAL 5958). It is built on tila, \"sesame\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +439,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -450,7 +494,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67c2bb528bc4b11e",
+      "sourceHash": "fnv1a64:1037c78cb561b022",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +516,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of કેરી (kerī) is not settled. CDIAL, searched by form and by meaning, has no entry for it; the older word for the mango, āmra, gave Gujarati ām and āmbo instead (CDIAL 1268)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -502,7 +557,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

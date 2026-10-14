@@ -14,7 +14,8 @@ gloss: "the sky"
 concept_tag: MR-ANCHOR-AABHAAL
 prerequisites: [MR-C02-dukh]
 sounds: []
-roots: []
+roots: [indo-aryan-abhrakala]
+etymology_hook: "ābhāḷ ← *abhrakāla 'cloudy weather', a reconstructed form; a tadbhava (CDIAL 551)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **आभाळ** — *ābhāḷ* — "the sky".
 
 Say it: *ābhāḷ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **आ**, **भ** and **ळ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आभाळ** (*ābhāḷ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*abhrakāla*, "cloudy weather", a form CDIAL reconstructs from Sanskrit *abhra*, "cloud", and *kāla*, "time" (CDIAL 551). CDIAL glosses the Marathi word "cloudiness"; today it names the sky.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-AABHAAL] -->

@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a salary, then the Gujarati for a tailo
 You'll want to know: નીચું.
 નીચું (nīcũ) — "low".
 
+The word, taken apart.
+નીચું (nīcũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nīca, "low" (CDIAL 7540). CDIAL explains the Gujarati form as shaped by its opposite, ucca, "high".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a tailor, then the Gujarati for low.
 
 You'll want to know: પહોળું.
 પહોળું (pahoḷũ) — "wide".
+
+The word, taken apart.
+પહોળું (pahoḷũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pṛthula, "broad" (CDIAL 8361). It is built on pṛthu, "broad".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for low, then the Gujarati for wide.
 You'll want to know: પાતળું.
 પાતળું (pātḷũ) — "thin".
 
+The word, taken apart.
+પાતળું (pātḷũ) is a tadbhava of the lexical Sanskrit pattrala, "leafy", in a sense CDIAL reconstructs, "leaf-like, thin" (CDIAL 7736).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for wide, then the Gujarati for thin.
 You'll want to know: ભીનું.
 ભીનું (bhīnũ) — "wet".
 
+The word, taken apart.
+CDIAL lists ભીનું (bhīnũ) under a reconstructed bhiyagna, "smeared, wet", and explains its ending by the influence of bhinna, "split" (CDIAL 9500).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for thin, then the Gujarati for wet.
 
 You'll want to know: સૂકું.
 સૂકું (sūkũ) — "dry".
+
+The word, taken apart.
+સૂકું (sūkũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śuṣka, "dried" (CDIAL 12548).
 
 What you've built.
 One more word for this chapter.

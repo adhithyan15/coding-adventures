@@ -345,10 +345,15 @@ describe("the live corpus", () => {
     // ES-C507-habitante), merces (ES-C03-usted-origin) and sperare
     // (ES-C269-espero). Each pair was the same Latin word.
     //
+    // 78 -> 77: `ananda` against `ananda-sanskrit`. The bare slug's only user
+    // was MR-C02-anand, whose आनंद is Sanskrit *ānanda* exactly as in the five
+    // lessons tagging it `ananda-sanskrit`, so the Marathi etymology review
+    // moved it onto the tagged slug.
+    //
     // THIS NUMBER MAY ONLY FALL.
     const baselineFile = loadRootSlugBaseline(defaultCurriculumRoot());
-    expect(baselineFile.splits).toHaveLength(78);
-    expect(LIVE_ROOT_SLUG_SPLITS).toHaveLength(78);
+    expect(baselineFile.splits).toHaveLength(77);
+    expect(LIVE_ROOT_SLUG_SPLITS).toHaveLength(77);
     expect(LIVE_ROOT_SLUG_SPLITS.every((split) => split.kind === "bare-vs-tagged")).toBe(true);
   });
 });

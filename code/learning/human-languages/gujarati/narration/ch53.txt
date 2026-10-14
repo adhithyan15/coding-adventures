@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for aunt, then the Gujarati for a husband.
 You'll want to know: પત્ની.
 પત્ની (patnī) — "a wife". The pair of પતિ.
 
+The word, taken apart.
+પત્ની (patnī) is Sanskrit patnī, "mistress, wife", taken over whole as a learned loan, a tatsama (CDIAL 7742).
+
 What you've built.
 One more word for wife, son, daughter and guests.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a husband, then the Gujarati for a wife
 
 You'll want to know: દીકરો.
 દીકરો (dīkro) — "a son".
+
+The word, taken apart.
+CDIAL lists દીકરો (dīkro) under a reconstructed dikka, "lump", comparing the lexical word dikka, "young elephant" (CDIAL 6326).
 
 What you've built.
 One more word for wife, son, daughter and guests.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a wife, then the Gujarati for a son.
 You'll want to know: દીકરી.
 દીકરી (dīkrī) — "a daughter".
 
+The word, taken apart.
+CDIAL lists દીકરી (dīkrī), with dīkro, "son", under a reconstructed dikka, "lump", and queries how the sense developed (CDIAL 6326).
+
 What you've built.
 One more word for wife, son, daughter and guests.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a son, then the Gujarati for a daughter
 You'll want to know: સંબંધી.
 સંબંધી (sambandhī) — "a relative".
 
+The word, taken apart.
+સંબંધી (sambandhī) is Sanskrit saṁbandhin, "connected by marriage", taken over whole as a learned loan, a tatsama (CDIAL 12957). CDIAL lists the inherited Gujarati form as samaṁdhī, "kinsman".
+
 What you've built.
 One more word for wife, son, daughter and guests.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a daughter, then the Gujarati for a rel
 
 You'll want to know: મહેમાન.
 મહેમાન (mahemān) — "a guest". A guest is welcomed into the ઘર.
+
+The word, taken apart.
+મહેમાન (mahemān) is a loan, usually traced to Persian mihmān, "guest".
 
 What you've built.
 One more word for wife, son, daughter and guests.

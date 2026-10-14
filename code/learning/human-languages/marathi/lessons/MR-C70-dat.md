@@ -14,7 +14,8 @@ romanization: "dāt"
 concept_tag: MR-BODY70-DAT
 prerequisites: [MR-C70-pay, MR-C70-kes]
 sounds: []
-roots: []
+roots: [danta-sanskrit]
+etymology_hook: "dāt ← Sanskrit danta 'tooth', a tadbhava (CDIAL 6152)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C70-kes]
 <!-- hl-knowledge: introduces=[MR-LEX-C70-BODY70-04]; assesses=[] -->
 
 **दात** — *dāt* — "a tooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दात** (*dāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *danta*, "tooth" (CDIAL 6152). The same ancient word as Latin *dens* and English *tooth*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ghī"
 concept_tag: GU-PANTRY-GHEE
 prerequisites: [GU-C58-rice-grain, GU-C58-flour]
 sounds: []
-roots: []
+roots: [sanskrit-ghrta]
+etymology_hook: "ghī ← Sanskrit ghṛta 'fluid grease, clarified butter or ghee', a tadbhava (CDIAL 4501)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C58-flour]
 <!-- hl-knowledge: introduces=[GU-LEX-C58-PANTRY-03]; assesses=[] -->
 
 **ઘી** (*ghī*) — "ghee, clarified butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ઘી** (*ghī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghṛta*, "fluid grease, clarified butter or ghee" (CDIAL 4501).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -472,8 +472,10 @@
     },
     "build-windows-os-suites": {
       "scope": "step",
-      "description": "Native Windows suites, including Closure compiler publication/ACL regressions, independent of any toolchain flag.",
+      "description": "Native Windows suites, including Closure compiler publication/ACL regressions and the D18S Windows AppContainer applier, independent of any toolchain flag.",
       "packages": [
+        "rust/chief-of-staff-spawn-isolation",
+        "rust/chief-of-staff-windows-sandbox",
         "rust/programs/closurec",
         "typescript/forme-sandbox-core",
         "typescript/forme-sandbox-windows"

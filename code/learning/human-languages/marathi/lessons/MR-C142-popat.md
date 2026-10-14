@@ -15,6 +15,7 @@ concept_tag: MR-THINGS142-POPAT
 prerequisites: [MR-C141-kavla, MR-C142-cimni]
 sounds: []
 roots: []
+etymology_hook: "popaṭ 'parrot': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C142-cimni]
 <!-- hl-knowledge: introduces=[MR-LEX-C142-THINGS142-02]; assesses=[] -->
 
 **पोपट** — *popaṭ* — "a parrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **पोपट** (*popaṭ*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

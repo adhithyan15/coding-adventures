@@ -14,7 +14,8 @@ romanization: "sāmān"
 concept_tag: MR-VASTU240-SAMAN
 prerequisites: [MR-C240-praves, MR-C240-pravesdvar]
 sounds: []
-roots: []
+roots: [persian-saman]
+etymology_hook: "sāmān: usually traced to Persian sāmān 'goods, equipment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C240-pravesdvar]
 <!-- hl-knowledge: introduces=[MR-LEX-C240-VASTU240-03]; assesses=[] -->
 
 **सामान** — *sāmān* — "luggage, things".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सामान** (*sāmān*) is a loan, usually traced to Persian *sāmān*, "goods, equipment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

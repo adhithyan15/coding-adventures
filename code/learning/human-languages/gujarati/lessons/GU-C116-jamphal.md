@@ -14,7 +14,8 @@ romanization: "jāmphaḷ"
 concept_tag: GU-THINGS116-JAMPHAL
 prerequisites: [GU-C116-tarbuc, GU-C116-papaiyu]
 sounds: []
-roots: []
+roots: [sanskrit-jambu, sanskrit-phala]
+etymology_hook: "jāmphaḷ: jām, the rose-apple fruit ← Sanskrit jambu (CDIAL 5131), + phaḷ 'fruit' (CDIAL 9051)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C116-papaiyu]
 <!-- hl-knowledge: introduces=[GU-LEX-C116-THINGS116-03]; assesses=[] -->
 
 **જામફળ** (*jāmphaḷ*) — "a guava".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જામફળ** (*jāmphaḷ*) appears to be *jām*, which CDIAL lists as the fruit of the rose-apple tree under Sanskrit *jambu* (CDIAL 5131), with *phaḷ*, "fruit" (CDIAL 9051). CDIAL lists a different Gujarati word for the guava, *jamrukh* (CDIAL 5135).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

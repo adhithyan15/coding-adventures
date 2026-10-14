@@ -15,6 +15,7 @@ concept_tag: GU-THINGS124-KHISKOLI
 prerequisites: [GU-C123-madhmakhi, GU-C124-patangiyu]
 sounds: []
 roots: []
+etymology_hook: "khiskolī 'squirrel': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C124-patangiyu]
 <!-- hl-knowledge: introduces=[GU-LEX-C124-THINGS124-02]; assesses=[] -->
 
 **ખિસકોલી** (*khiskolī*) — "a squirrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ખિસકોલી** (*khiskolī*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

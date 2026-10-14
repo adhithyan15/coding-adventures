@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 127,
-  "sourceHash": "fnv1a64:6dff3695d4bfe7d7",
+  "sourceHash": "fnv1a64:7a5bbdba8376f829",
   "lessonIds": [
     "GU-C127-magaj",
     "GU-C127-saikal",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "gujarati/narration/ch127.txt",
   "json": "gujarati/narration/ch127.json",
-  "textHash": "fnv1a64:d5ff854863ca4c7f",
-  "jsonHash": "fnv1a64:c10c891ed5f12197",
+  "textHash": "fnv1a64:ed3e997baccc4a98",
+  "jsonHash": "fnv1a64:975345b66f986222",
   "findings": []
 }

@@ -15,6 +15,7 @@ concept_tag: GU-THINGS107-DHABALO
 prerequisites: [GU-C107-gadlu, GU-C107-cadar]
 sounds: []
 roots: []
+etymology_hook: "dhābaḷo 'blanket': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C107-cadar]
 <!-- hl-knowledge: introduces=[GU-LEX-C107-THINGS107-03]; assesses=[] -->
 
 **ધાબળો** (*dhābaḷo*) — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ધાબળો** (*dhābaḷo*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

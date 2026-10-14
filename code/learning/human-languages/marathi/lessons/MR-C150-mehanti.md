@@ -14,7 +14,8 @@ romanization: "mehantī"
 concept_tag: MR-QUAL150-MEHANTI
 prerequisites: [MR-C150-sant, MR-C150-alsi]
 sounds: []
-roots: []
+roots: [arabic-mihna]
+etymology_hook: "mehantī: mehnat 'toil', from Arabic miḥna 'trial, ordeal' through Persian, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C150-alsi]
 <!-- hl-knowledge: introduces=[MR-LEX-C150-QUAL150-05]; assesses=[] -->
 
 **मेहनती** — *mehantī* — "hard-working".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मेहनती** (*mehantī*) is *mehnat*, "toil", with the ending *-ī*. *Mehnat* is usually traced, through Persian, to Arabic *miḥna*, "trial, ordeal", whose root is *m-ḥ-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

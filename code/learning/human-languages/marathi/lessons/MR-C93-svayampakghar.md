@@ -14,7 +14,8 @@ romanization: "svayampākghar"
 concept_tag: MR-HOME93-SVAYAMPAKGHAR
 prerequisites: [MR-C92-batli, MR-C93-dar]
 sounds: []
-roots: []
+roots: [sanskrit-svayam, sanskrit-paka, grha-sanskrit]
+etymology_hook: "svayampākghar: Sanskrit svayampāka 'cooking for oneself' + ghar 'house'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C93-dar]
 <!-- hl-knowledge: introduces=[MR-LEX-C93-HOME93-02]; assesses=[] -->
 
 **स्वयंपाकघर** — *svayampākghar* — "a kitchen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्वयंपाकघर** (*svayampākghar*) is Sanskrit *svayampāka*, "cooking for oneself": *svayam*, "self", and *pāka*, "cooking", with **घर**, "house". **घर** is usually taken from Sanskrit *gṛha*, "house" (CDIAL 4428).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

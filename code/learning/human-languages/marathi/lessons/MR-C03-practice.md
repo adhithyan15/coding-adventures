@@ -51,7 +51,8 @@ variety: standard
 
 - **कसा / कशी / कसं** (*kasā/kaśī/kasaṁ*) — how; the *k-* question family,
   gender-agreeing.
-- **मी** (*mī*) — I; Sanskrit *aham* → Latin **ego**, English **I**.
+- **मी** (*mī*) — I; from Sanskrit *mayā*, "by me", which took the place
+  of *aham* (CDIAL 9691).
 - **बरा / बरी / बरं** (*barā/barī/baraṁ*) — well/fine, now gendered.
 - **काही हरकत नाही** (*kāhī harkat nāhī*) — no problem; *nāhī* ← PIE *\*ne*,
   *harkat* ← Arabic.

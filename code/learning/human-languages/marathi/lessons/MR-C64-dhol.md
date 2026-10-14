@@ -14,7 +14,8 @@ gloss: "a drum"
 concept_tag: MR-ANCHOR-DHOL
 prerequisites: [MR-C61-dahava]
 sounds: []
-roots: []
+roots: [sanskrit-dhola]
+etymology_hook: "ḍhol ← Sanskrit ḍhola 'large drum', almost unchanged (CDIAL 5608)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard
 
 Say it: *ḍhol*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ढ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ढोल** (*ḍhol*) is inherited from Sanskrit *ḍhola*, "large drum", and has come down with almost no change (CDIAL 5608).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-DHOL] -->

@@ -264,8 +264,9 @@ layouts cover structure.
 There are 186 files and about 6,300 declarations, so migration has to be
 mechanical where it can be, and gated where it can't.
 
-1. **Version the language.** A package opts in with `[style] version = 2`
-   in `mosaic-package.toml`.
+1. **Version the language.** A package opts in with `[styles] version = 2`
+   in `mosaic-package.toml` (the existing `[styles]` section, beside
+   `token_palette`).
    - A v1 package compiles as today, plus warnings for every v2 error.
    - A v2 package gets the errors.
    - MosaicBook and CI report each package's version and warning count.
@@ -377,6 +378,23 @@ and DN-2). This table is the contract it imports into.
    - `UnknownProperty` and `TypeMismatch`;
    - the colour syntax;
    - v1 warnings.
+
+   *Done (2026-10-14).*
+   - `mosstyle_compiler::v2::check` implements the §3.1 table and the §3.2
+     value types.
+   - `[styles] version` is parsed by `mosaic-package-manifest`.
+   - `build_package` fails a v2 package on any finding, and returns a v1
+     package's findings as `BuildResult::style_findings`.
+   - `mosaic-compile pkg` prints the count; `MOSAIC_STYLE_FINDINGS=1` lists
+     each finding.
+   - The toolkit has 108 findings today, 82 of them `border-radius`.
+
+   Not yet done:
+   - The part-kind rule of §3.5 (text properties on text parts). It needs
+     the layout's part kinds.
+   - Brand faces in `font`, which come with step 3.
+   - Checking a token's own value, rather than its value where it is used.
+   - MosaicBook and CI reporting each package's version and count.
 3. **Tokens:** system tokens in every emitter, then mode-aware tokens
    (with high contrast), then brand faces shipped as package assets.
 4. **`style migrate`**, run on the toolkit; then the toolkit flips to v2.

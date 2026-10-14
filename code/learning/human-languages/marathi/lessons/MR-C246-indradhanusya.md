@@ -14,7 +14,8 @@ romanization: "indradhanuṣya"
 concept_tag: MR-VASTU246-INDRADHANUSYA
 prerequisites: [MR-C245-mahavidyalay, MR-C245-sangrahalay]
 sounds: []
-roots: []
+roots: [sanskrit-indra, sanskrit-dhanus]
+etymology_hook: "indradhanuṣya: Sanskrit indradhanus 'Indra's bow', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C245-sangrahalay]
 <!-- hl-knowledge: introduces=[MR-LEX-C246-VASTU246-01]; assesses=[] -->
 
 **इंद्रधनुष्य** — *indradhanuṣya* — "a rainbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इंद्रधनुष्य** (*indradhanuṣya*) is Sanskrit *indradhanus*, "Indra's bow", a tatsama: *Indra*, the sky god, and *dhanus*, "bow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

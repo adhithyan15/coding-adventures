@@ -14,7 +14,8 @@ romanization: "jaḷṇe"
 concept_tag: MR-VERB-JALNE
 prerequisites: [MR-C195-savadh-karne, MR-C195-purne]
 sounds: []
-roots: []
+roots: [sanskrit-jvalati]
+etymology_hook: "jaḷṇe ← Sanskrit jvalati 'burns brightly', a tadbhava (CDIAL 5306)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C195-purne]
 <!-- hl-knowledge: introduces=[MR-LEX-C195-ACT195-03]; assesses=[] -->
 
 **जळणे** — *jaḷṇe* — "to burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जळणे** (*jaḷṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jvalati*, "burns brightly" (CDIAL 5306).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

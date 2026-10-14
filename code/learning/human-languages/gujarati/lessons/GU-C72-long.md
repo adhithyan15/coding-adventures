@@ -14,7 +14,8 @@ romanization: "lā̃bũ"
 concept_tag: GU-SIZE-LONG
 prerequisites: [GU-C72-big, GU-C72-small]
 sounds: []
-roots: []
+roots: [sanskrit-lamba]
+etymology_hook: "lāṁbũ ← Sanskrit lamba 'pendent', already 'long' in Sanskrit compounds (CDIAL 10951)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C72-small]
 <!-- hl-knowledge: introduces=[GU-LEX-C72-SIZE-03]; assesses=[] -->
 
 **લાંબું** (*lā̃bũ*) — "long, tall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**લાંબું** (*lāṁbũ*) is a tadbhava of Sanskrit *lamba*, "pendent", which already meant "long" in compounds (CDIAL 10951).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

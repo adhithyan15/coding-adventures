@@ -14,7 +14,8 @@ romanization: "havāmān"
 concept_tag: MR-VASTU184-HAVAMAN
 prerequisites: [MR-C184-dhur, MR-C184-jyot]
 sounds: []
-roots: []
+roots: [arabic-hawa, sanskrit-mana]
+etymology_hook: "havāmān: havā 'air' ← Arabic hawāʾ, through Persian + Sanskrit māna 'measure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C184-jyot]
 <!-- hl-knowledge: introduces=[MR-LEX-C184-VASTU184-03]; assesses=[] -->
 
 **हवामान** — *havāmān* — "the climate, the weather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हवामान** (*havāmān*) is a modern compound: *havā*, "air", a loan from Arabic *hawāʾ*, "air", through Persian, and Sanskrit *māna*, "measure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

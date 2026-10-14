@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 136,
-  "sourceHash": "fnv1a64:1ac58fd385092a50",
+  "sourceHash": "fnv1a64:c1eb3f500bdd733b",
   "lessonIds": [
     "GU-C136-khali",
     "GU-C136-bharelu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch136.txt",
   "json": "gujarati/narration/ch136.json",
-  "textHash": "fnv1a64:f835c6161172ef18",
-  "jsonHash": "fnv1a64:96c12e6c21522af5",
+  "textHash": "fnv1a64:47dd07bba0db182b",
+  "jsonHash": "fnv1a64:7bea279bac58f709",
   "findings": []
 }

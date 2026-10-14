@@ -14,7 +14,8 @@ romanization: "dukhāvo"
 concept_tag: GU-CARE-PAIN
 prerequisites: [GU-C48-fever, GU-C48-cough]
 sounds: []
-roots: []
+roots: [indo-aryan-duhkhabhava]
+etymology_hook: "dukhāvo ← *duḥkhabhāva 'state of misfortune', a reconstructed form (CDIAL 6376a)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C48-cough]
 <!-- hl-knowledge: introduces=[GU-LEX-C49-CARE-01]; assesses=[] -->
 
 **દુખાવો** (*dukhāvo*) — "pain, an ache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દુખાવો** (*dukhāvo*) is a tadbhava. It comes from *\*duḥkhabhāva*, "state of misfortune", a form CDIAL reconstructs from *duḥkha*, "pain, misfortune", and *bhāva*, "state" (CDIAL 6376a).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

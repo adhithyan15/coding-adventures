@@ -14,7 +14,8 @@ romanization: "prashna"
 concept_tag: MR-SCHOOL94-PRASHNA
 prerequisites: [MR-C94-nakasha, MR-C94-dhada]
 sounds: []
-roots: []
+roots: [sanskrit-prashna]
+etymology_hook: "prashna ← Sanskrit praśna 'question', a tatsama (CDIAL 8818)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C94-dhada]
 <!-- hl-knowledge: introduces=[MR-LEX-C94-SCHOOL94-04]; assesses=[] -->
 
 **प्रश्न** — *prashna* — "a question".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रश्न** (*prashna*) is Sanskrit *praśna*, "question", taken over whole as a learned loan, a tatsama (CDIAL 8818). It is built on *prach*, "to ask".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

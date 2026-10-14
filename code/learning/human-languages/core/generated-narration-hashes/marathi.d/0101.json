@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 101,
-  "sourceHash": "fnv1a64:6c2bd9deff4d0276",
+  "sourceHash": "fnv1a64:8ba7be28c93cc05b",
   "lessonIds": [
     "MR-C101-undir",
     "MR-C101-simha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch101.txt",
   "json": "marathi/narration/ch101.json",
-  "textHash": "fnv1a64:e88da7134f793cf8",
-  "jsonHash": "fnv1a64:bf1dc9420d2d0939",
+  "textHash": "fnv1a64:b9545a90690ca911",
+  "jsonHash": "fnv1a64:a23bc3a079df2e15",
   "findings": []
 }

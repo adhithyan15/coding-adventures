@@ -14,7 +14,8 @@ romanization: "pelũ"
 concept_tag: GU-DEF99-PELU
 prerequisites: [GU-C98-bhadarvo, GU-C98-aso]
 sounds: []
-roots: []
+roots: [indo-aryan-pratilla]
+etymology_hook: "pelũ 'that over there' ← *pratilla 'opposite', reconstructed (CDIAL 8594)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C98-aso]
 <!-- hl-knowledge: introduces=[GU-LEX-C99-DEF99-01]; assesses=[] -->
 
 **પેલું** (*pelũ*) — "that (over there)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પેલું** (*pelũ*) is a tadbhava. CDIAL lists it under a reconstructed *\*pratilla*, "opposite", built on Sanskrit *prati*, "against" (CDIAL 8594), and again under *pratikūla*, "contrary, opposite" (CDIAL 8545).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

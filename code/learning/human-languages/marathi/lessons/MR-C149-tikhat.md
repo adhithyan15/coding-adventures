@@ -14,7 +14,8 @@ romanization: "tikhaṭ"
 concept_tag: MR-QUAL149-TIKHAT
 prerequisites: [MR-C149-ambat, MR-C149-kadu]
 sounds: []
-roots: []
+roots: [sanskrit-tikshna]
+etymology_hook: "tikhaṭ: built on tīkh 'pungent', which CDIAL lists under Sanskrit tīkṣṇa 'sharp; hot, pungent' (CDIAL 5839)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C149-kadu]
 <!-- hl-knowledge: introduces=[MR-LEX-C149-QUAL149-04]; assesses=[] -->
 
 **तिखट** — *tikhaṭ* — "spicy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तिखट** (*tikhaṭ*) is built on Marathi *tīkh*, "pungent", which CDIAL lists under Sanskrit *tīkṣṇa*, "sharp; hot, pungent" (CDIAL 5839).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

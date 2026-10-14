@@ -14,7 +14,8 @@ romanization: "halvo"
 concept_tag: GU-THINGS117-HALVO
 prerequisites: [GU-C117-bhajiya, GU-C117-catni]
 sounds: []
-roots: []
+roots: [arabic-halwa]
+etymology_hook: "halvo ← Arabic ḥalwā 'a sweetmeat', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C117-catni]
 <!-- hl-knowledge: introduces=[GU-LEX-C117-THINGS117-04]; assesses=[] -->
 
 **હલવો** (*halvo*) — "halwa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હલવો** (*halvo*) is a loan from Arabic *ḥalwā*, "a sweetmeat", which reached Gujarati through Persian. Its Arabic root is *ḥ-l-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `SystemResolver` refuses an empty host name itself. Windows'
+  `getaddrinfo` answered one with the machine's own addresses where glibc
+  and macOS fail, so `the_system_resolver_answers_from_the_host_table`
+  failed the first time this crate's tests ran on windows-2025.
 - New `Fetcher` trait, an object-safe face over `NetFetch::execute`, with a
   blanket implementation for every `NetFetch<R, T>`. The daemon holds an
   `Arc<dyn Fetcher>`, so its composition does not inherit the resolver and

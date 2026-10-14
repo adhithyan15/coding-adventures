@@ -14,7 +14,8 @@ romanization: "nantar"
 concept_tag: MR-TIME111-NANTAR
 prerequisites: [MR-C111-ushir, MR-C111-adhi]
 sounds: []
-roots: []
+roots: [sanskrit-anantara]
+etymology_hook: "nantar ← Sanskrit anantaram 'immediately after'; CDIAL asks if Marathi took it from Sanskrit (CDIAL 287)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C111-adhi]
 <!-- hl-knowledge: introduces=[MR-LEX-C111-TIME111-04]; assesses=[] -->
 
 **नंतर** — *nantar* — "after, later".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नंतर** (*nantar*) comes from Sanskrit *anantaram*, "immediately after", built on *anantara*, "having no interval" (CDIAL 287). CDIAL asks whether Marathi took the word straight from Sanskrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

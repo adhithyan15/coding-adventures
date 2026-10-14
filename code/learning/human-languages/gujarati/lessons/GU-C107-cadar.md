@@ -14,7 +14,8 @@ romanization: "cādar"
 concept_tag: GU-THINGS107-CADAR
 prerequisites: [GU-C106-tuval, GU-C107-gadlu]
 sounds: []
-roots: []
+roots: [persian-chadar]
+etymology_hook: "cādar: usually traced to Persian chādar 'sheet, veil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C107-gadlu]
 <!-- hl-knowledge: introduces=[GU-LEX-C107-THINGS107-02]; assesses=[] -->
 
 **ચાદર** (*cādar*) — "a bedsheet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચાદર** (*cādar*) is a loan, usually traced to Persian *chādar*, "sheet, veil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

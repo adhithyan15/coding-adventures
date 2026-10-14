@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 246,
-  "sourceHash": "fnv1a64:692a9e19f0e1d0ad",
+  "sourceHash": "fnv1a64:349045c10f069a8f",
   "lessonIds": [
     "MR-C246-indradhanusya",
     "MR-C246-gara",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch246.txt",
   "json": "marathi/narration/ch246.json",
-  "textHash": "fnv1a64:db68f6f996f1366f",
-  "jsonHash": "fnv1a64:b25ddee88fb248b7",
+  "textHash": "fnv1a64:79827328affd01f9",
+  "jsonHash": "fnv1a64:d662329fa5b6ee0a",
   "findings": []
 }

@@ -15,6 +15,7 @@ concept_tag: GU-THINGS114-KOBI
 prerequisites: [GU-C114-makai, GU-C114-rigan]
 sounds: []
 roots: []
+etymology_hook: "kobī: not settled; it matches Hindi kobhī 'cabbage', listed under Sanskrit gojihvikā (CDIAL 4270)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C114-rigan]
 <!-- hl-knowledge: introduces=[GU-LEX-C114-THINGS114-05]; assesses=[] -->
 
 **કોબી** (*kobī*) — "cabbage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **કોબી** (*kobī*) is not fully settled. It matches Hindi *kobhī* and *gobhī*, "cabbage", which CDIAL lists under Sanskrit *gojihvikā*, "a particular kind of plant" (CDIAL 4270), but CDIAL lists no Gujarati form there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

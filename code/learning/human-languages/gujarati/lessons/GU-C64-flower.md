@@ -14,7 +14,8 @@ romanization: "phūl"
 concept_tag: GU-LAND-FLOWER
 prerequisites: [GU-C63-garden, GU-C63-address]
 sounds: []
-roots: []
+roots: [sanskrit-phulla]
+etymology_hook: "phūl ← Sanskrit phulla 'expanded, blown (of flowers)', a tadbhava (CDIAL 9092)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C63-address]
 <!-- hl-knowledge: introduces=[GU-LEX-C64-LAND-01]; assesses=[] -->
 
 **ફૂલ** (*phūl*) — "a flower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ફૂલ** (*phūl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *phulla*, "expanded, blown (of flowers)" (CDIAL 9092).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

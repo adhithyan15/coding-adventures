@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 121,
-  "sourceHash": "fnv1a64:3a9f3326e5c58124",
+  "sourceHash": "fnv1a64:abad0f572e1349e4",
   "lessonIds": [
     "GU-C121-andharu",
     "GU-C121-prakas",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch121.txt",
   "json": "gujarati/narration/ch121.json",
-  "textHash": "fnv1a64:10d463f49717e73d",
-  "jsonHash": "fnv1a64:64920d26b9469810",
+  "textHash": "fnv1a64:ac3c11771341d414",
+  "jsonHash": "fnv1a64:1ad32b114991f51d",
   "findings": []
 }

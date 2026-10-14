@@ -14,7 +14,8 @@ romanization: "taruṇ"
 concept_tag: MR-ADJ108-TARUN
 prerequisites: [MR-C108-tapkiri, MR-C108-gulabi]
 sounds: []
-roots: []
+roots: [sanskrit-taruna]
+etymology_hook: "taruṇ ← Sanskrit taruṇa 'young, tender', a tatsama (CDIAL 5712)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C108-gulabi]
 <!-- hl-knowledge: introduces=[MR-LEX-C108-ADJ108-05]; assesses=[] -->
 
 **तरुण** — *taruṇ* — "young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तरुण** (*taruṇ*) is Sanskrit *taruṇa*, "young, tender", taken over whole as a learned loan, a tatsama (CDIAL 5712).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

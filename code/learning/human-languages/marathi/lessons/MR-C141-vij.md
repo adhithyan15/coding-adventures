@@ -14,7 +14,8 @@ romanization: "vīj"
 concept_tag: MR-THINGS141-VIJ
 prerequisites: [MR-C141-kinara, MR-C141-bet]
 sounds: []
-roots: []
+roots: [sanskrit-vidyut]
+etymology_hook: "vīj ← Sanskrit vidyut 'flashing; lightning', a tadbhava (CDIAL 11742)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C141-bet]
 <!-- hl-knowledge: introduces=[MR-LEX-C141-THINGS141-03]; assesses=[] -->
 
 **वीज** — *vīj* — "lightning; electricity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वीज** (*vīj*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vidyut*, "flashing; lightning" (CDIAL 11742).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

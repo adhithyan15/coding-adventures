@@ -14,7 +14,8 @@ romanization: "śukravār"
 concept_tag: MR-TIME125-SUKRAVAR
 prerequisites: [MR-C125-budhvar, MR-C125-guruvar]
 sounds: []
-roots: []
+roots: [sanskrit-shukra, sanskrit-vara-day]
+etymology_hook: "śukravār: Sanskrit śukra 'Venus' + vāra 'day of the week' (CDIAL 11547), a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C125-guruvar]
 <!-- hl-knowledge: introduces=[MR-LEX-C125-TIME125-04]; assesses=[] -->
 
 **शुक्रवार** — *śukravār* — "Friday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शुक्रवार** (*śukravār*) is a Sanskrit compound, a tatsama: *śukra*, "bright", the name of the planet Venus, and *vāra*, "day of the week" (CDIAL 11547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

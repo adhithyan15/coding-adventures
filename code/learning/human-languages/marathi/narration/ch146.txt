@@ -12,6 +12,9 @@ Before the new one: say the Marathi for an elbow, then the Marathi for a wrist.
 You'll want to know: अंगठा.
 अंगठा — aṅgṭhā — "a thumb".
 
+The word, taken apart.
+अंगठा (aṅgṭhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṅguṣṭha, "thumb" (CDIAL 137).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a wrist, then the Marathi for a thumb.
 
 You'll want to know: नख.
 नख — nakh — "a fingernail".
+
+The word, taken apart.
+नख (nakh) is Sanskrit nakha, "nail of finger or toe, claw", taken over whole as a learned loan, a tatsama (CDIAL 6914).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a thumb, then the Marathi for a fingerna
 You'll want to know: पाठ.
 पाठ — pāṭh — "the back".
 
+The word, taken apart.
+पाठ (pāṭh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pṛṣṭi, "vertebrae; back" (CDIAL 8370).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a fingernail, then the Marathi for the b
 You'll want to know: कंबर.
 कंबर — kambar — "the waist".
 
+The word, taken apart.
+कंबर (kambar) is a loan, usually traced to Persian kamar, "waist".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for the back, then the Marathi for the waist
 
 You'll want to know: छाती.
 छाती — chātī — "the chest".
+
+The word, taken apart.
+छाती (chātī) matches Hindi chātī, which CDIAL traces to a reconstructed chātti, "chest, breast" (CDIAL 5014). CDIAL lists no Marathi form under it.
 
 What you've built.
 One more word for this chapter.

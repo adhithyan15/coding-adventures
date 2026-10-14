@@ -14,7 +14,8 @@ romanization: "bhādarvo"
 concept_tag: GU-TIME98-BHADARVO
 prerequisites: [GU-C98-jeth, GU-C98-sravan]
 sounds: []
-roots: []
+roots: [sanskrit-bhadrapada]
+etymology_hook: "bhādarvo ← Sanskrit bhādrapada 'the fifth month, August-September', a tadbhava (CDIAL 9447)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C98-sravan]
 <!-- hl-knowledge: introduces=[GU-LEX-C98-TIME98-04]; assesses=[] -->
 
 **ભાદરવો** (*bhādarvo*) — "Bhadarvo, a Gujarati month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ભાદરવો** (*bhādarvo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhādrapada*, "the fifth month, August-September" (CDIAL 9447).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

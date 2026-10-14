@@ -11,9 +11,10 @@ gloss: how big! — the same किती you have asked with since chapter 37, 
 concept_tag: MR-EXCLAM-KITI
 prerequisites: [MR-C54-barach, MR-C37-kiti, MR-C33-kaa-polar, MR-W33-question-mark]
 sounds: []
-roots: []
+roots: [indo-aryan-kiyatta]
+etymology_hook: "kitī ← *kiyatta 'how great?', a form CDIAL builds like Sanskrit kiyant 'how much' (CDIAL 3167)"
 duration:
-  max_seconds: 220
+  max_seconds: 262
 requires:
   knowledge: [MR-LEX-BARACH, MR-QUESTION-KITI, MR-LEX-MOTHA, MR-LEX-SUNDAR, MR-GRAMMAR-QUESTION-KAA, MR-SOUND-QUESTION-RISE, MR-LEX-KHUP, MR-SCRIPT-EXCLAMATION-MARK]
 introduces:
@@ -62,6 +63,11 @@ is a construction you can feel rather than one you have to install.
 
 The adjective still agrees, and there is nothing else to remember: **किती
 मोठं!** of a house, **किती मोठी!** of a room.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**किती** goes back to *\*kiyatta*, "how great" (CDIAL 3167). The origin of **मोठा** is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-EXCLAM-KITI, MR-QUESTION-KITI, MR-LEX-SUNDAR, MR-LEX-MOTHA, MR-GRAMMAR-QUESTION-KAA, MR-SOUND-QUESTION-RISE, MR-LEX-KHUP, MR-LEX-BARACH] -->

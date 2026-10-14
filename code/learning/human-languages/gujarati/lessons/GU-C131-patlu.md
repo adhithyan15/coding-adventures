@@ -14,7 +14,8 @@ romanization: "pātḷũ"
 concept_tag: GU-QUAL131-PATLU
 prerequisites: [GU-C131-nicu, GU-C131-paholu]
 sounds: []
-roots: []
+roots: [sanskrit-pattrala]
+etymology_hook: "pātḷũ ← Sanskrit pattrala 'leafy', and so 'leaf-like, thin' (CDIAL 7736)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C131-paholu]
 <!-- hl-knowledge: introduces=[GU-LEX-C131-QUAL131-03]; assesses=[] -->
 
 **પાતળું** (*pātḷũ*) — "thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પાતળું** (*pātḷũ*) is a tadbhava of the lexical Sanskrit *pattrala*, "leafy", in a sense CDIAL reconstructs, "leaf-like, thin" (CDIAL 7736).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

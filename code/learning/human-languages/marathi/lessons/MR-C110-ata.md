@@ -14,7 +14,8 @@ romanization: "ātā"
 concept_tag: MR-TIME110-ATA
 prerequisites: [MR-C110-minit, MR-C110-aj]
 sounds: []
-roots: []
+roots: [sanskrit-atra]
+etymology_hook: "ātā: CDIAL lists Marathi ātāṁ 'now' under Sanskrit atra 'here' (CDIAL 228)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C110-aj]
 <!-- hl-knowledge: introduces=[MR-LEX-C110-TIME110-03]; assesses=[] -->
 
 **आता** — *ātā* — "now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आता** (*ātā*) is inherited. CDIAL lists Marathi *ātāṁ*, "now", under Sanskrit *atra*, "here" (CDIAL 228).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

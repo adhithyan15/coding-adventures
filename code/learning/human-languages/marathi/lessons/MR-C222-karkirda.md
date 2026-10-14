@@ -14,7 +14,8 @@ romanization: "kārkīrda"
 concept_tag: MR-KAAM222-KARKIRDA
 prerequisites: [MR-C221-gun, MR-C221-palna]
 sounds: []
-roots: []
+roots: [persian-karkird]
+etymology_hook: "kārkīrd: usually traced to Persian kārkird 'action, performance'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C221-palna]
 <!-- hl-knowledge: introduces=[MR-LEX-C222-KAAM222-01]; assesses=[] -->
 
 **कारकीर्द** — *kārkīrda* — "a career".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कारकीर्द** (*kārkīrda*) is a loan, usually traced to Persian *kārkird*, "action, performance", built on *kār*, "work".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

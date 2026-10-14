@@ -14,7 +14,8 @@ romanization: "vāḷū"
 concept_tag: MR-NATURE97-VALU
 prerequisites: [MR-C97-talav, MR-C97-dagad]
 sounds: []
-roots: []
+roots: [sanskrit-valuka]
+etymology_hook: "vāḷū ← Sanskrit vālukā 'sand, gravel', a tadbhava (CDIAL 11580)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C97-dagad]
 <!-- hl-knowledge: introduces=[MR-LEX-C97-NATURE97-03]; assesses=[] -->
 
 **वाळू** — *vāḷū* — "sand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वाळू** (*vāḷū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vālukā*, "sand, gravel" (CDIAL 11580).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

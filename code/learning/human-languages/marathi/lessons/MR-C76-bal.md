@@ -14,7 +14,8 @@ romanization: "bāḷ"
 concept_tag: MR-FAMILY76-BAL
 prerequisites: [MR-C76-navra, MR-C76-bayko]
 sounds: []
-roots: []
+roots: [sanskrit-bala]
+etymology_hook: "bāḷ ← Sanskrit bāla 'young; boy', a tadbhava (CDIAL 9216)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C76-bayko]
 <!-- hl-knowledge: introduces=[MR-LEX-C76-FAMILY76-03]; assesses=[] -->
 
 **बाळ** — *bāḷ* — "a baby".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाळ** (*bāḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bāla*, "young; boy" (CDIAL 9216). CDIAL lists the Marathi form *bāḷ*, "young", and suggests the Sanskrit word perhaps belongs to a word group that gives several words for "child".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

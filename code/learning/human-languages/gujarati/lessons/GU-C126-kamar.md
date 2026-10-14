@@ -14,7 +14,8 @@ romanization: "kamar"
 concept_tag: GU-THINGS126-KAMAR
 prerequisites: [GU-C125-chati, GU-C126-pith]
 sounds: []
-roots: []
+roots: [persian-kamar]
+etymology_hook: "kamar: usually traced to Persian kamar 'waist'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C126-pith]
 <!-- hl-knowledge: introduces=[GU-LEX-C126-THINGS126-02]; assesses=[] -->
 
 **કમર** (*kamar*) — "a waist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કમર** (*kamar*) is a loan, usually traced to Persian *kamar*, "waist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

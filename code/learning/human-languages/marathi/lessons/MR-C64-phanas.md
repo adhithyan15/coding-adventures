@@ -14,7 +14,8 @@ gloss: "a jackfruit"
 concept_tag: MR-ANCHOR-PHANAS
 prerequisites: [MR-W64-ddha]
 sounds: []
-roots: []
+roots: [sanskrit-panasa]
+etymology_hook: "phaṇas ← *phanasa, a variant of Sanskrit panasa 'jackfruit tree', probably from Dravidian (CDIAL 7781)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard
 
 Say it: *phaṇas*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **फ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फणस** (*phaṇas*) comes from *\*phanasa*, a variant CDIAL sets beside Sanskrit *panasa*, "the breadfruit or jackfruit tree" (CDIAL 7781). CDIAL takes the word as probably from Dravidian.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-PHANAS] -->

@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 133,
-  "sourceHash": "fnv1a64:1a99a0c0c31d9514",
+  "sourceHash": "fnv1a64:8b85f705fc6677de",
   "lessonIds": [
     "GU-C133-kathan",
     "GU-C133-sahelu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch133.txt",
   "json": "gujarati/narration/ch133.json",
-  "textHash": "fnv1a64:81e4fb03aba9334e",
-  "jsonHash": "fnv1a64:3273d072fc1040ef",
+  "textHash": "fnv1a64:4f9367a6b889ee02",
+  "jsonHash": "fnv1a64:3013561bac1747db",
   "findings": []
 }

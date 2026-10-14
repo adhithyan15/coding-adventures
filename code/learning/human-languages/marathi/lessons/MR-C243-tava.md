@@ -14,7 +14,8 @@ romanization: "tavā"
 concept_tag: MR-VASTU243-TAVA
 prerequisites: [MR-C243-dekhava, MR-C243-sahal]
 sounds: []
-roots: []
+roots: [indo-aryan-tapaka]
+etymology_hook: "tavā ← *tapaka 'frying pan', a reconstructed form; a tadbhava (CDIAL 5670)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C243-sahal]
 <!-- hl-knowledge: introduces=[MR-LEX-C243-VASTU243-04]; assesses=[] -->
 
 **तवा** — *tavā* — "a griddle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तवा** (*tavā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*tapaka*, "frying pan", a form CDIAL reconstructs from its descendants (CDIAL 5670). It is built on *tap*, "to heat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

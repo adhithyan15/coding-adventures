@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 97,
-  "sourceHash": "fnv1a64:2147a88c69eda247",
+  "sourceHash": "fnv1a64:f7cf2262378d2133",
   "lessonIds": [
     "MR-C97-talav",
     "MR-C97-dagad",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch97.txt",
   "json": "marathi/narration/ch97.json",
-  "textHash": "fnv1a64:8c73743889166433",
-  "jsonHash": "fnv1a64:07863431dfb7ef42",
+  "textHash": "fnv1a64:7dc956916d45e980",
+  "jsonHash": "fnv1a64:eff6ad95327fa877",
   "findings": []
 }

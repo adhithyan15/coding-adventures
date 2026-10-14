@@ -14,7 +14,8 @@ romanization: "ravivār"
 concept_tag: MR-TIME126-RAVIVAR
 prerequisites: [MR-C125-sukravar, MR-C125-sanivar]
 sounds: []
-roots: []
+roots: [sanskrit-ravi, sanskrit-vara-day]
+etymology_hook: "ravivār: Sanskrit ravi 'the sun' + vāra 'day of the week' (CDIAL 11547), a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C125-sanivar]
 <!-- hl-knowledge: introduces=[MR-LEX-C126-TIME126-01]; assesses=[] -->
 
 **रविवार** — *ravivār* — "Sunday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रविवार** (*ravivār*) is a Sanskrit compound, a tatsama: *ravi*, "the sun", and *vāra*, "day of the week" (CDIAL 11547). Sunday is the sun's day, as in English.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

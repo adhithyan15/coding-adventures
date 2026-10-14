@@ -14,7 +14,8 @@ romanization: "cūk"
 concept_tag: MR-KAAM222-CUK
 prerequisites: [MR-C222-sabdakos, MR-C222-vidyapith]
 sounds: []
-roots: []
+roots: [indo-aryan-cukk]
+etymology_hook: "cūk: with cukṇe 'to blunder', under *cukk 'fall short of', beside Prakrit cukka 'mistaken' (CDIAL 4848)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C222-vidyapith]
 <!-- hl-knowledge: introduces=[MR-LEX-C222-KAAM222-05]; assesses=[] -->
 
 **चूक** — *cūk* — "a mistake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चूक** (*cūk*) goes with **चुकणे**, "to blunder", which CDIAL lists under a reconstructed *\*cukk-*, "fall short of", beside Prakrit *cukka*, "mistaken" (CDIAL 4848). CDIAL has no entry for the noun itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

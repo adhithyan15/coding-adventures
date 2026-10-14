@@ -14,7 +14,8 @@ romanization: "roj"
 concept_tag: GU-TIME94-ROJ
 prerequisites: [GU-C94-pankhar, GU-C94-vahelu]
 sounds: []
-roots: []
+roots: [persian-roz]
+etymology_hook: "roj: usually traced to Persian rōz 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C94-vahelu]
 <!-- hl-knowledge: introduces=[GU-LEX-C94-TIME94-03]; assesses=[] -->
 
 **રોજ** (*roj*) — "every day, daily".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**રોજ** (*roj*) is a loan, usually traced to Persian *rōz*, "day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for peanuts, then the Gujarati for dhokla.
 You'll want to know: કઢી.
 કઢી (kaḍhī) — "kadhi".
 
+The word, taken apart.
+કઢી (kaḍhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kvathita, "boiled" (CDIAL 3637).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for dhokla, then the Gujarati for kadhi.
 
 You'll want to know: ભજિયાં.
 ભજિયાં (bhajiyā̃) — "fritters".
+
+The word, taken apart.
+The origin of ભજિયાં (bhajiyā̃) (bhajiyāṁ) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for kadhi, then the Gujarati for fritters.
 You'll want to know: ચટણી.
 ચટણી (caṭṇī) — "chutney".
 
+The word, taken apart.
+CDIAL has no entry for ચટણી (caṭṇī). It is often tied to cāṭvũ, "to lick", which CDIAL lists under a reconstructed caṭṭ, "lick, taste", perhaps imitative (CDIAL 4573).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for fritters, then the Gujarati for chutney
 You'll want to know: હલવો.
 હલવો (halvo) — "halwa".
 
+The word, taken apart.
+હલવો (halvo) is a loan from Arabic ḥalwā, "a sweetmeat", which reached Gujarati through Persian. Its Arabic root is ḥ-l-w (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for chutney, then the Gujarati for halwa.
 
 You'll want to know: ખીર.
 ખીર (khīr) — "rice pudding".
+
+The word, taken apart.
+ખીર (khīr) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣīrī, "a dish prepared with milk" (CDIAL 3705). It is built on kṣīra, "milk".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "tayārī karṇe"
 concept_tag: MR-VERB-TAYARI-KARNE
 prerequisites: [MR-C196-phirayla-jane, MR-C196-ghadi-karne]
 sounds: []
-roots: []
+roots: [arabic-tayyar]
+etymology_hook: "tayārī: built on tayār 'ready', usually traced, through Persian, to Arabic ṭayyār; karṇe 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C196-ghadi-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C196-ACT196-03]; assesses=[] -->
 
 **तयारी करणे** — *tayārī karṇe* — "to prepare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तयारी** is built on *tayār*, "ready", a loan usually traced through Persian to Arabic *ṭayyār*, "flying, swift". **करणे** is "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

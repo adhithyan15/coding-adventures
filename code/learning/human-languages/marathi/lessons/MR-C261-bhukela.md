@@ -14,7 +14,8 @@ romanization: "bhukelā"
 concept_tag: MR-GUN261-BHUKELA
 prerequisites: [MR-C261-kurup, MR-C261-thaklela]
 sounds: []
-roots: []
+roots: [sanskrit-bubhuksha]
+etymology_hook: "bhukelā: built on bhūk 'hunger' ← Sanskrit bubhukṣā 'desire to eat' (CDIAL 9286)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C261-thaklela]
 <!-- hl-knowledge: introduces=[MR-LEX-C261-GUN261-03]; assesses=[] -->
 
 **भुकेला** — *bhukelā* — "hungry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भुकेला** (*bhukelā*) is built on *bhūk*, "hunger", which comes from Sanskrit *bubhukṣā*, "desire to eat, hunger" (CDIAL 9286).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

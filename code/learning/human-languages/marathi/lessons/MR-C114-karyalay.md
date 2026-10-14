@@ -14,7 +14,8 @@ romanization: "kāryālay"
 concept_tag: MR-TOWN114-KARYALAY
 prerequisites: [MR-C114-pul, MR-C114-mandir]
 sounds: []
-roots: []
+roots: [sanskrit-karya, sanskrit-alaya]
+etymology_hook: "kāryālay: Sanskrit kārya 'work' + ālaya 'abode', a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C114-mandir]
 <!-- hl-knowledge: introduces=[MR-LEX-C114-TOWN114-04]; assesses=[] -->
 
 **कार्यालय** — *kāryālay* — "an office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कार्यालय** (*kāryālay*) is a Sanskrit compound, a tatsama: *kārya*, "work, what is to be done", and *ālaya*, "abode".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

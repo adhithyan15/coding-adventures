@@ -14,7 +14,8 @@ romanization: "lāj"
 concept_tag: MR-AAROGYA170-LAJ
 prerequisites: [MR-C169-yakrt, MR-C169-mutrapind]
 sounds: []
-roots: []
+roots: [sanskrit-lajja]
+etymology_hook: "lāj ← Sanskrit lajjā 'shame, modesty', a tadbhava (CDIAL 10910)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C169-mutrapind]
 <!-- hl-knowledge: introduces=[MR-LEX-C170-AAROGYA170-01]; assesses=[] -->
 
 **लाज** — *lāj* — "shame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लाज** (*lāj*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lajjā*, "shame, modesty" (CDIAL 10910).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

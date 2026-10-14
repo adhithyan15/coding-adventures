@@ -14,7 +14,8 @@ romanization: "apayaś"
 concept_tag: MR-VASTU211-APAYAS
 prerequisites: [MR-C210-kamgar, MR-C210-karmacari]
 sounds: []
-roots: []
+roots: [sanskrit-yashas]
+etymology_hook: "apayaś: Sanskrit apa- 'away' + yaśas 'renown'; a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C210-karmacari]
 <!-- hl-knowledge: introduces=[MR-LEX-C211-VASTU211-01]; assesses=[] -->
 
 **अपयश** — *apayaś* — "failure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अपयश** (*apayaś*) is Sanskrit *apayaśas*, "ill fame", a tatsama: *apa-*, "away", and *yaśas*, "renown".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

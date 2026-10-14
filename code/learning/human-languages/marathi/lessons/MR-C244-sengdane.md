@@ -14,7 +14,8 @@ romanization: "śeṅgdāṇe"
 concept_tag: MR-VASTU244-SENGDANE
 prerequisites: [MR-C244-kothimbir, MR-C244-kadhipatta]
 sounds: []
-roots: []
+roots: [persian-dana]
+etymology_hook: "śeṅgdāṇe: śeṅg 'pod' + dāṇe 'grains', usually traced to Persian dāna; śeṅg is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C244-kadhipatta]
 <!-- hl-knowledge: introduces=[MR-LEX-C244-VASTU244-04]; assesses=[] -->
 
 **शेंगदाणे** — *śeṅgdāṇe* — "peanuts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शेंगदाणे** (*śeṅgdāṇe*) is "pod-grains": *śeṅg*, "pod", whose origin is not settled, and *dāṇe*, "grains", usually traced to Persian *dāna*, "grain, seed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

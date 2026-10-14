@@ -15,6 +15,7 @@ concept_tag: MR-TIME111-USHIR
 prerequisites: [MR-C110-kadhikadhi, MR-C111-lavkar]
 sounds: []
 roots: []
+etymology_hook: "uśīr 'late': origin not settled; CDIAL's uśīr is a different word, a fragrant grass (CDIAL 2384)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C111-lavkar]
 <!-- hl-knowledge: introduces=[MR-LEX-C111-TIME111-02]; assesses=[] -->
 
 **उशीर** — *ushīr* — "lateness; late".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **उशीर** (*ushīr*) is not settled. CDIAL has no entry for it in this sense; its Marathi *uśīr* is a different word, the root of a fragrant grass (CDIAL 2384).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 56,
-  "sourceHash": "fnv1a64:52d52073fa023fce",
+  "sourceHash": "fnv1a64:925e0969f28d4605",
   "lessonIds": [
     "MR-C56-daha",
     "MR-C56-akra",
@@ -14,7 +14,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch56.txt",
   "json": "marathi/narration/ch56.json",
-  "textHash": "fnv1a64:42d490c7e5593536",
-  "jsonHash": "fnv1a64:479ebfd108fc38b9",
+  "textHash": "fnv1a64:d1e6574b90d8c11c",
+  "jsonHash": "fnv1a64:49bf1cc85c29608c",
   "findings": []
 }

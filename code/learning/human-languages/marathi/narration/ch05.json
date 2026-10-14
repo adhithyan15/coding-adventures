@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Marks Above, Below, and Beside the Letter",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:eab8786ad015ff0e",
+  "sourceHash": "fnv1a64:2caf55855ad145b6",
   "lessons": [
     {
       "id": "MR-C05-amrut",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6de186b03a9bbc1e",
+      "sourceHash": "fnv1a64:73519aaf8018d41d",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अमृत (amṛt) is Sanskrit amṛta, \"immortal; nectar\", taken over whole as a learned loan, a tatsama (CDIAL 571). It is a-, \"not\", and mṛta, \"dead\": the drink of the gods that keeps death away."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -130,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79034f452f6eb7e2",
+      "sourceHash": "fnv1a64:da0719b004cad04e",
       "notice": null,
       "blocks": [
         {
@@ -180,6 +191,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किरण (kiraṇ) is Sanskrit kiraṇa, \"ray of light\", which has lost only its final vowel; CDIAL lists it among the inherited Marathi words (CDIAL 3171). In the Rigveda the same word meant \"dust\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -210,7 +232,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -241,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c913964d7a7f95f2",
+      "sourceHash": "fnv1a64:a8a8fe5715da6a73",
       "notice": null,
       "blocks": [
         {
@@ -291,6 +313,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तूप (tūp) goes back to Prakrit tuppa, \"ghee\", from a reconstructed tuppa, \"grease\" (CDIAL 5864). CDIAL thinks the word probably has a non-Aryan source and takes Kannada tuppa, \"ghee\", as borrowed from Middle Indo-Aryan; DEDR compares it with Kannada tuppa and Tamil tuppu, \"ghee\" (DEDR 3282)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -321,7 +354,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

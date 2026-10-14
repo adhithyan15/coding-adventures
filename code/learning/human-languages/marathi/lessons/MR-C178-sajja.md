@@ -14,7 +14,8 @@ romanization: "sajjā"
 concept_tag: MR-VASTU178-SAJJA
 prerequisites: [MR-C178-sadnika, MR-C178-jevanghar]
 sounds: []
-roots: []
+roots: [sanskrit-chadya]
+etymology_hook: "sajjā: as Hindi chajjā 'eaves, balcony', which CDIAL lists under chādya, from Punjabi (CDIAL 5023)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C178-jevanghar]
 <!-- hl-knowledge: introduces=[MR-LEX-C178-VASTU178-03]; assesses=[] -->
 
 **सज्जा** — *sajjā* — "a balcony".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सज्जा** (*sajjā*) matches Hindi *chajjā*, "eaves, balcony", which CDIAL lists under Sanskrit *chādya*, "to be sheltered", as taken from Punjabi (CDIAL 5023).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

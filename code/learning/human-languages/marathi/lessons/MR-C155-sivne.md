@@ -14,7 +14,8 @@ romanization: "śivṇe"
 concept_tag: MR-VERB-SIVNE
 prerequisites: [MR-C155-jodne, MR-C155-bandhne]
 sounds: []
-roots: []
+roots: [sanskrit-sivyati]
+etymology_hook: "śivṇe ← Sanskrit sīvyati 'sews', a tadbhava (CDIAL 13444)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C155-bandhne]
 <!-- hl-knowledge: introduces=[MR-LEX-C155-ACT155-03]; assesses=[] -->
 
 **शिवणे** — *śivṇe* — "to sew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शिवणे** (*śivṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sīvyati*, "sews" (CDIAL 13444). The same ancient root as English *sew*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

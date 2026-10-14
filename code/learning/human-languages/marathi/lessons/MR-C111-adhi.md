@@ -15,6 +15,7 @@ concept_tag: MR-TIME111-ADHI
 prerequisites: [MR-C111-lavkar, MR-C111-ushir]
 sounds: []
 roots: []
+etymology_hook: "ādhī 'before': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C111-ushir]
 <!-- hl-knowledge: introduces=[MR-LEX-C111-TIME111-03]; assesses=[] -->
 
 **आधी** — *ādhī* — "before".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **आधी** (*ādhī*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

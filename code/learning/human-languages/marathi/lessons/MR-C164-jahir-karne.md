@@ -14,7 +14,8 @@ romanization: "jāhīr karṇe"
 concept_tag: MR-VERB-JAHIR-KARNE
 prerequisites: [MR-C163-tapasne, MR-C163-sahi-karne]
 sounds: []
-roots: []
+roots: [arabic-zahir, sanskrit-karoti]
+etymology_hook: "jāhīr: usually traced, through Persian, to Arabic ẓāhir 'evident'; karṇe ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C163-sahi-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C164-ACT164-01]; assesses=[] -->
 
 **जाहीर करणे** — *jāhīr karṇe* — "to announce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जाहीर** is a loan, usually traced through Persian to Arabic *ẓāhir*, "evident, manifest", whose root is *ẓ-h-r* (Lane). **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

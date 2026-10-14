@@ -14,7 +14,8 @@ romanization: "veḷ"
 concept_tag: MR-TIME111-VEL
 prerequisites: [MR-C111-adhi, MR-C111-nantar]
 sounds: []
-roots: []
+roots: [sanskrit-vela]
+etymology_hook: "veḷ ← Sanskrit velā 'limit, boundary, time', which CDIAL takes as probably Dravidian (CDIAL 12115)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C111-nantar]
 <!-- hl-knowledge: introduces=[MR-LEX-C111-TIME111-05]; assesses=[] -->
 
 **वेळ** — *veḷ* — "time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वेळ** (*veḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *velā*, "limit, boundary, time" (CDIAL 12115). CDIAL takes the Sanskrit word as probably from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hirvaḷ"
 concept_tag: MR-VASTU241-HIRVAL
 prerequisites: [MR-C241-rop, MR-C241-khod]
 sounds: []
-roots: []
+roots: [indo-aryan-hiru]
+etymology_hook: "hirvaḷ: hirvā 'green' ← *hiru 'yellow, green' (CDIAL 14114) + -aḷ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C241-khod]
 <!-- hl-knowledge: introduces=[MR-LEX-C241-VASTU241-04]; assesses=[] -->
 
 **हिरवळ** — *hirvaḷ* — "a lawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हिरवळ** (*hirvaḷ*) is built on *hirvā*, "green", which comes from a reconstructed *\*hiru*, "yellow, green" (CDIAL 14114).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

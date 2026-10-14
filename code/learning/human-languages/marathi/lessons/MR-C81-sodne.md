@@ -14,7 +14,8 @@ romanization: "soḍṇe"
 concept_tag: MR-VERB-SODNE
 prerequisites: [MR-C81-haravne, MR-C81-ghalne]
 sounds: []
-roots: []
+roots: [sanskrit-kshotayati]
+etymology_hook: "soḍṇe ← Sanskrit kṣoṭayati 'throws', a tadbhava (CDIAL 3747)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C81-ghalne]
 <!-- hl-knowledge: introduces=[MR-LEX-C81-VERBS81-05]; assesses=[] -->
 
 **सोडणे** — *soḍṇe* — "to leave, to let go".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सोडणे** (*soḍṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣoṭayati*, "throws" (CDIAL 3747).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nāraḷ"
 concept_tag: MR-THINGS138-NARAL
 prerequisites: [MR-C138-dalimb, MR-C138-kalingad]
 sounds: []
-roots: []
+roots: [sanskrit-narikela]
+etymology_hook: "nāraḷ ← Sanskrit nārikela 'coconut', which Bloch traces to Dravidian (CDIAL 7075)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C138-kalingad]
 <!-- hl-knowledge: introduces=[MR-LEX-C138-THINGS138-04]; assesses=[] -->
 
 **नारळ** — *nāraḷ* — "a coconut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नारळ** (*nāraḷ*) is a tadbhava of Sanskrit *nārikela*, "coconut palm and fruit" (CDIAL 7075). CDIAL follows Bloch in taking the Sanskrit word from a Dravidian compound, comparing Tamil *nāri*, "fibre".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kākḍī"
 concept_tag: MR-THINGS137-KAKDI
 prerequisites: [MR-C137-pohe, MR-C137-ladu]
 sounds: []
-roots: []
+roots: [sanskrit-karkati]
+etymology_hook: "kākḍī ← Sanskrit karkaṭī 'Cucumis utilissimus, a cucumber', a tadbhava (CDIAL 2817)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C137-ladu]
 <!-- hl-knowledge: introduces=[MR-LEX-C137-THINGS137-03]; assesses=[] -->
 
 **काकडी** — *kākḍī* — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काकडी** (*kākḍī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karkaṭī*, "Cucumis utilissimus, a cucumber" (CDIAL 2817).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

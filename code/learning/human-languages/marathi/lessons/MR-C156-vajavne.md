@@ -14,7 +14,8 @@ romanization: "vājavṇe"
 concept_tag: MR-VERB-VAJAVNE
 prerequisites: [MR-C155-kadhne, MR-C156-dakhavne]
 sounds: []
-roots: []
+roots: [sanskrit-vadyate]
+etymology_hook: "vājavṇe: the 'make' form of vājṇe 'to sound', from Sanskrit vādyate 'is made to sound' (CDIAL 11513)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C156-dakhavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C156-ACT156-02]; assesses=[] -->
 
 **वाजवणे** — *vājavṇe* — "to play (an instrument)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वाजवणे** (*vājavṇe*) is the "make" form of **वाजणे**, "to sound", from Sanskrit *vādyate*, "is made to sound" (CDIAL 11513).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

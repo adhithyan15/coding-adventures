@@ -14,7 +14,8 @@ romanization: "vījḷī"
 concept_tag: GU-THINGS120-VIJLI
 prerequisites: [GU-C119-tekri, GU-C120-ran]
 sounds: []
-roots: []
+roots: [sanskrit-vidyullata]
+etymology_hook: "vījḷī ← Sanskrit vidyullatā 'forked lightning', a tadbhava (CDIAL 11745)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C120-ran]
 <!-- hl-knowledge: introduces=[GU-LEX-C120-THINGS120-02]; assesses=[] -->
 
 **વીજળી** (*vījḷī*) — "lightning, electricity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વીજળી** (*vījḷī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vidyullatā*, "forked lightning" (CDIAL 11745).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

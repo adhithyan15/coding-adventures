@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 51,
-  "sourceHash": "fnv1a64:33406bb90af94966",
+  "sourceHash": "fnv1a64:85ef8373bc2f3dc9",
   "lessonIds": [
     "MR-C51-changla",
     "MR-C51-kharaab",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch51.txt",
   "json": "marathi/narration/ch51.json",
-  "textHash": "fnv1a64:65338d83b572f766",
-  "jsonHash": "fnv1a64:d864c7cb0cc27709",
+  "textHash": "fnv1a64:d27c8b2b2ffcac66",
+  "jsonHash": "fnv1a64:b700450241c076b7",
   "findings": []
 }

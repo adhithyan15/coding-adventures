@@ -14,7 +14,8 @@ romanization: "goḍ"
 concept_tag: MR-ADJ106-GOD
 prerequisites: [MR-C105-ghan, MR-C106-svachchha]
 sounds: []
-roots: []
+roots: [sanskrit-gauda]
+etymology_hook: "goḍ ← Sanskrit gauḍa 'prepared from molasses', a tadbhava (CDIAL 4344)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C106-svachchha]
 <!-- hl-knowledge: introduces=[MR-LEX-C106-ADJ106-02]; assesses=[] -->
 
 **गोड** — *goḍ* — "sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गोड** (*goḍ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gauḍa*, "prepared from molasses" (CDIAL 4344). It is built on *guḍa*, "molasses".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

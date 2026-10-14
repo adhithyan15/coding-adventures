@@ -14,7 +14,8 @@ romanization: "bas"
 concept_tag: MR-TOWN114-BAS
 prerequisites: [MR-C113-steshan, MR-C113-gadi]
 sounds: []
-roots: []
+roots: [english-bus]
+etymology_hook: "bas ← English bus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C113-gadi]
 <!-- hl-knowledge: introduces=[MR-LEX-C114-TOWN114-01]; assesses=[] -->
 
 **बस** — *bas* — "a bus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बस** (*bas*) is a loan from English *bus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

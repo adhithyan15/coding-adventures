@@ -11,8 +11,8 @@ gloss: "therefore — the reason first, the result second"
 concept_tag: GU-JOIN-TETHI
 prerequisites: [GU-C34-kemke-write, GU-C34-maate]
 sounds: []
-roots: []
-etymology_hook: "તેથી is તે ('that') plus the -થી that also ends નથી — 'from that', which is exactly what a conclusion is."
+roots: [sanskrit-ta]
+etymology_hook: "tethī: te 'that', whose forms CDIAL lists under Sanskrit ta- (CDIAL 5612), + -thī 'from', which it does not list"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +55,8 @@ so **તેથી** is literally **from that**, which is what a conclusion is. Y
 seen that **-થી** before, on the end of **નથી**, where it was the worn-down *is*;
 here it is the separate postposition meaning *from*. Same two letters, two
 different histories, and it is worth knowing they are not the same thing.
+
+CDIAL lists the forms of *te* under the Sanskrit demonstrative stem *ta-* (CDIAL 5612); it has no entry for the ending *-thī*, "from".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-JOIN-TETHI-01, GU-JOIN-KEMKE-01] -->

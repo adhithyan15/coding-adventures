@@ -14,7 +14,8 @@ romanization: "chamchā"
 concept_tag: MR-HOME92-CHAMCHA
 prerequisites: [MR-C92-kap, MR-C92-tat]
 sounds: []
-roots: []
+roots: [persian-chamcha]
+etymology_hook: "chamchā: usually traced to Persian chamcha 'spoon, ladle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C92-tat]
 <!-- hl-knowledge: introduces=[MR-LEX-C92-HOME92-03]; assesses=[] -->
 
 **चमचा** — *chamchā* — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चमचा** (*chamchā*) is a loan, usually traced to Persian *chamcha*, "spoon, ladle". Persian took it from Turkic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

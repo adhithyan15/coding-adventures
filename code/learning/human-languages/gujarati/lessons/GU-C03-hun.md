@@ -12,6 +12,7 @@ concept_tag: PRONOUN-I
 prerequisites: [GU-C02-maarun, GU-W02-ya]
 sounds: [ha, u-nasal]
 roots: [aham-first-person]
+etymology_hook: "hũ ← Sanskrit aham 'I', a tadbhava (CDIAL 992), the same ancient word as Latin ego"
 duration:
   max_seconds: 180
 requires:

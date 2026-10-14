@@ -14,7 +14,8 @@ romanization: "ākhṇe"
 concept_tag: MR-VERB-AKHNE
 prerequisites: [MR-C160-pudhca, MR-C160-yanantar]
 sounds: []
-roots: []
+roots: [sanskrit-ankayati]
+etymology_hook: "ākhṇe ← Sanskrit aṅkayati 'marks, brands', a tadbhava (CDIAL 104)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C160-yanantar]
 <!-- hl-knowledge: introduces=[MR-LEX-C160-BHAV160-05]; assesses=[] -->
 
 **आखणे** — *ākhṇe* — "to plan, to draw up". Said of a plan or a line: **मी प्रवासाची योजना आखीन.** — *mī pravāsācī yojanā ākhīn* — "I will plan the trip."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आखणे** (*ākhṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṅkayati*, "marks, brands" (CDIAL 104). CDIAL glosses the Marathi verb "to mark, trace".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

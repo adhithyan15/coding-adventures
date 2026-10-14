@@ -14,7 +14,8 @@ romanization: "kharc karṇe"
 concept_tag: MR-VERB-KHARC-KARNE
 prerequisites: [MR-C192-karar, MR-C192-mulakhat]
 sounds: []
-roots: []
+roots: [persian-kharj]
+etymology_hook: "kharc: usually traced to Persian kharj, kharch 'expense'; karṇe 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C192-mulakhat]
 <!-- hl-knowledge: introduces=[MR-LEX-C193-ACT193-01]; assesses=[] -->
 
 **खर्च करणे** — *kharc karṇe* — "to spend (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खर्च** is a loan, usually traced to Persian *kharj*, *kharch*, "expense", which Persian took from Arabic. **करणे** is "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

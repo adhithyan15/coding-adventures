@@ -14,7 +14,8 @@ romanization: "bolāvvũ"
 concept_tag: GU-VERB-BOLAVVU
 prerequisites: [GU-C138-cadhvu, GU-C138-kholvu]
 sounds: []
-roots: []
+roots: [bol-speak]
+etymology_hook: "bolāvvũ: the causing form of bolvũ 'to speak' ← *boll 'speak' (CDIAL 9321)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C138-kholvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C138-ACT138-05]; assesses=[] -->
 
 **બોલાવવું** (*bolāvvũ*) — "to call".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બોલાવવું** (*bolāvvũ*) is the causing form of *bolvũ*, "to speak". CDIAL lists both under a reconstructed *\*boll-*, "speak" (CDIAL 9321).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

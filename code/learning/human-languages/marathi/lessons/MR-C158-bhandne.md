@@ -14,7 +14,8 @@ romanization: "bhāṇḍṇe"
 concept_tag: MR-VERB-BHANDNE
 prerequisites: [MR-C158-pusne, MR-C158-jhadne]
 sounds: []
-roots: []
+roots: [sanskrit-bhandate]
+etymology_hook: "bhāṇḍṇe ← Sanskrit bhaṇḍate 'reproves, mocks, jests', a tadbhava (CDIAL 9372)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C158-jhadne]
 <!-- hl-knowledge: introduces=[MR-LEX-C158-ACT158-03]; assesses=[] -->
 
 **भांडणे** — *bhāṇḍṇe* — "to quarrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भांडणे** (*bhāṇḍṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhaṇḍate*, "reproves, mocks, jests" (CDIAL 9372). CDIAL glosses the Marathi verb "to reproach, abuse".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

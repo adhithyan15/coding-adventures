@@ -4365,7 +4365,15 @@ hardware_key_timeout = 60
     #[test]
     fn channel_keys_become_the_broker_s_slots_with_home_resolved() {
         let directory = TestDir::new();
-        let config = broker_config(Path::new("/unused"), [0; 32]);
+        // The broker is never opened here; only the key table is read. Its
+        // path must still be absolute to parse, on Windows too, and is
+        // spelled with `/` so it sits in a TOML string as is.
+        let unused = if cfg!(windows) {
+            "C:/unused"
+        } else {
+            "/unused"
+        };
+        let config = broker_config(Path::new(unused), [0; 32]);
         let keys = broker_key_files(&config, &directory.0).unwrap();
         let pipeline_id = config.data_plane().channel_keys()[0].pipeline_id();
         let channel = |key: usize| config.data_plane().channel_keys()[key].channel_id();

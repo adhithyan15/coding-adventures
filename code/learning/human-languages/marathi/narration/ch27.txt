@@ -55,6 +55,9 @@ You'll want to know: वाटणे.
 वाटणे — vāṭṇe — to feel, to seem.
 मला बरं वाटतं. — malā baraṁ vāṭtaṁ. — I feel fine.
 
+The word, taken apart.
+The origin of वाटणे (vāṭṇe) is not settled. CDIAL has a Marathi vāṭṇẽ only in the sense "to grind finely", under vartayati, "turns" (CDIAL 11356), and no entry for the verb "to seem".
+
 Grammar Lens: the third verb that puts you in the dative.
 Word for word, मला बरं वाटतं is to-me fine seems. You are not the one doing the feeling; the feeling arrives at you, and मला malā is where it lands. Three sentences now stand on that one frame:
 मला माहीत आहे — to me it is known.

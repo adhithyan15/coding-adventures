@@ -14,7 +14,8 @@ romanization: "māphī"
 concept_tag: GU-COURTESY-APOLOGY
 prerequisites: [GU-C91-congratulations, GU-C91-goodwishes]
 sounds: []
-roots: []
+roots: [arabic-afw]
+etymology_hook: "māphī: māph, usually traced through Persian to Arabic muʿāf 'excused', root ʿ-f-w 'to pardon' (Lane), + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C91-goodwishes]
 <!-- hl-knowledge: introduces=[GU-LEX-C91-COURTESY-04]; assesses=[] -->
 
 **માફી** (*māphī*) — "an apology, pardon". The noun behind **માફ કરો**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**માફી** (*māphī*) is built on *māph*, "pardoned", usually traced through Persian to Arabic *muʿāf*, "excused", from the root *ʿ-f-w*, "to pardon" (Lane). Gujarati adds the ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

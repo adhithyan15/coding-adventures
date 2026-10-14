@@ -14,7 +14,8 @@ romanization: "kāyam"
 concept_tag: MR-VEL230-KAYAM
 prerequisites: [MR-C230-darroj, MR-C230-darmyan]
 sounds: []
-roots: []
+roots: [arabic-qaim]
+etymology_hook: "kāyam ← Arabic qāʾim 'standing, lasting', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C230-darmyan]
 <!-- hl-knowledge: introduces=[MR-LEX-C230-VEL230-05]; assesses=[] -->
 
 **कायम** — *kāyam* — "for good, permanently".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कायम** (*kāyam*) is a loan from Arabic *qāʾim*, "standing, lasting", which reached Marathi through Persian. Its Arabic root is *q-w-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

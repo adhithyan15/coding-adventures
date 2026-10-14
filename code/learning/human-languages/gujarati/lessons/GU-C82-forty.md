@@ -14,7 +14,8 @@ romanization: "cāḷīs"
 concept_tag: GU-NUM2-FORTY
 prerequisites: [GU-C82-twenty, GU-C82-thirty]
 sounds: []
-roots: []
+roots: [sanskrit-catvarimshat]
+etymology_hook: "cāḷīs ← Sanskrit catvāriṁśat 'forty', a tadbhava (CDIAL 4656)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C82-thirty]
 <!-- hl-knowledge: introduces=[GU-LEX-C82-NUM2-05]; assesses=[] -->
 
 **ચાળીસ** (*cāḷīs*) — "forty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચાળીસ** (*cāḷīs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *catvāriṁśat*, "forty" (CDIAL 4656).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

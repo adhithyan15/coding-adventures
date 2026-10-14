@@ -14,7 +14,8 @@ romanization: "nāṭak"
 concept_tag: MR-VASTU275-NATAK
 prerequisites: [MR-C274-adhikari, MR-C275-kode]
 sounds: []
-roots: []
+roots: [sanskrit-nataka]
+etymology_hook: "nāṭak ← Sanskrit nāṭaka 'dancer, actor', a tatsama (CDIAL 7045)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C275-kode]
 <!-- hl-knowledge: introduces=[MR-LEX-C275-VASTU275-02]; assesses=[] -->
 
 **नाटक** — *nāṭak* — "a play, a drama".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाटक** (*nāṭak*) is Sanskrit *nāṭaka*, "dancer, actor", taken over whole as a learned loan, a tatsama (CDIAL 7045). It is built on *naṭa*, "actor". The sense "a play" is the later Sanskrit one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

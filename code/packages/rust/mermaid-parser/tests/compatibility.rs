@@ -1464,6 +1464,20 @@ fn swimlane_dispatches_to_dedicated_ownership_ir() {
 }
 
 #[test]
+fn swimlane_loose_nodes_lower_into_the_default_lane() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph OwnedLane\n  owned[Owned node]\nend\nloose[Loose node] --> owned",
+    ).expect("loose nodes should parse into a default lane");
+
+    assert_eq!(diagram.lanes.len(), 2);
+    assert_eq!(diagram.lanes[1].id, "__swimlane_default__");
+    assert_eq!(diagram.lanes[1].label, "");
+    assert_eq!(diagram.lanes[1].node_ids, ["loose"]);
+    assert_eq!(diagram.nodes.iter().find(|node| node.id == "loose")
+        .and_then(|node| node.lane_id.as_deref()), Some("__swimlane_default__"));
+}
+
+#[test]
 fn pinned_swimlane_subset_corpus_parses_to_ownership_ir() {
     let corpus: Value = serde_json::from_str(SWIMLANE_CORPUS).expect("swimlane corpus must be JSON");
     for fixture in corpus["fixtures"].as_array().expect("fixtures must be an array") {
@@ -1999,6 +2013,22 @@ fn swimlane_metadata_entities_decode_into_semantic_ir() {
 }
 
 #[test]
+fn swimlane_theme_variables_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"mainBkg\": \"#ffe1ef\", \"nodeBorder\": \"#225577\", \"lineColor\": \"#118844\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  themed[Themed node]\n  next[Next node]\nend\nthemed --> next",
+    ).expect("Swimlane theme variables should parse");
+
+    assert_eq!(diagram.theme.main_background, "#ffe1ef");
+    assert_eq!(diagram.theme.node_border, "#225577");
+    assert_eq!(diagram.theme.line_color, "#118844");
+
+    let front_matter = parse_swimlane(
+        "---\nthemeVariables:\n  mainBkg: '#fef3c7'\n  nodeBorder: '#b45309'\n  lineColor: '#166534'\n---\nswimlane-beta\nsubgraph A\n  one[One]\nend",
+    ).expect("front-matter Swimlane theme variables should parse");
+    assert_eq!(front_matter.theme.main_background, "#fef3c7");
+}
+
+#[test]
 fn swimlane_inline_node_styles_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nrequest --> done",
@@ -2011,6 +2041,40 @@ fn swimlane_inline_node_styles_lower_to_semantic_ir() {
     assert_eq!(style.stroke_width, Some(4.0));
     assert_eq!(style.stroke_dash.as_deref(), Some([5.0, 3.0].as_slice()));
     assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one[One]\nend\nstyle missing fill:red").is_err());
+}
+
+#[test]
+fn swimlane_node_typography_lowers_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  emphasized[Typographic approval step]\n  direct[Typographic delivery step]\nend\nclassDef emphasis font-size:22px,font-weight:bold,font-style:italic,font-family:\"Helvetica Neue\",color:#7c2d12\nclass emphasized emphasis\nstyle direct font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d\nemphasized --> direct",
+    ).expect("Swimlane node typography should parse");
+
+    let emphasized = &diagram.nodes[0].style;
+    assert_eq!(emphasized.font_size, Some(22.0));
+    assert_eq!(emphasized.font_weight, Some(700));
+    assert_eq!(emphasized.font_italic, Some(true));
+    assert_eq!(emphasized.font_family.as_deref(), Some("Helvetica Neue"));
+    let direct = &diagram.nodes[1].style;
+    assert_eq!(direct.font_size, Some(18.0));
+    assert_eq!(direct.font_weight, Some(500));
+    assert_eq!(direct.font_italic, Some(false));
+    assert_eq!(direct.font_family.as_deref(), Some("Helvetica"));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph A\n  one[One]\nend\nstyle one font-weight:heavy"
+    ).is_err());
+}
+
+#[test]
+fn swimlane_node_corner_radii_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  rounded[Class rounded]\n  compact[Direct compact]\nend\nclassDef soft fill:#fef3c7,stroke:#b45309,rx:16px,ry:16px\nclass rounded soft\nstyle compact fill:#dcfce7,stroke:#166534,rx:4px,ry:4px\nrounded --> compact",
+    ).expect("Swimlane node corner radii should parse");
+
+    assert_eq!(diagram.nodes[0].style.corner_radius, Some(16.0));
+    assert_eq!(diagram.nodes[1].style.corner_radius, Some(4.0));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph A\n  one[One]\nend\nstyle one rx:4px,ry:8px"
+    ).is_err());
 }
 
 #[test]
@@ -2296,6 +2360,24 @@ fn swimlane_edge_classes_and_styles_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_edge_label_typography_lowers_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@-- submit --> review release@-- release --> done\nclassDef urgent font-size:22px,font-weight:bold,font-style:italic,font-family:\"Helvetica Neue\",color:#7c2d12\nclass submit urgent\nstyle release font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d",
+    ).expect("Flowchart edge label typography should parse");
+
+    let submit = &diagram.edges[0].style;
+    assert_eq!(submit.font_size, Some(22.0));
+    assert_eq!(submit.font_weight, Some(700));
+    assert_eq!(submit.font_italic, Some(true));
+    assert_eq!(submit.font_family.as_deref(), Some("Helvetica Neue"));
+    let release = &diagram.edges[1].style;
+    assert_eq!(release.font_size, Some(18.0));
+    assert_eq!(release.font_weight, Some(500));
+    assert_eq!(release.font_italic, Some(false));
+    assert_eq!(release.font_family.as_deref(), Some("Helvetica"));
+}
+
+#[test]
 fn swimlane_positional_link_styles_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\nend\na --> b\nb --> c\nc --> d\nlinkStyle default stroke:#64748b,stroke-width:2px\nlinkStyle 0, 2 stroke:#dc2626,stroke-width:5px,stroke-dasharray:7 3,color:#991b1b;",
@@ -2308,6 +2390,21 @@ fn swimlane_positional_link_styles_lower_to_semantic_ir() {
     assert_eq!(diagram.edges[1].style.stroke_width, Some(2.0));
     assert_eq!(diagram.edges[2].style.stroke_dash.as_deref(), Some([7.0, 3.0].as_slice()));
     assert_eq!(diagram.edges[2].style.text_color.as_deref(), Some("#991b1b"));
+}
+
+#[test]
+fn swimlane_positional_link_curves_lower_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst --> fourth\nsecond --> third\nlinkStyle default interpolate basis\nlinkStyle 1 interpolate stepBefore;",
+    ).expect("positional link curves should parse");
+
+    assert_eq!(diagram.edges[0].curve, Some(SwimlaneEdgeCurve::Basis));
+    assert_eq!(diagram.edges[1].curve, Some(SwimlaneEdgeCurve::StepBefore));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph A\n  one[One]\n  two[Two]\nend\none --> two\nlinkStyle 0 interpolate imaginary"
+    ).is_err());
 }
 
 #[test]
@@ -2479,6 +2576,34 @@ fn swimlane_nested_subgraphs_reach_semantic_ir() {
     assert_eq!(diagram.groups[0].node_ids, vec!["plan"]);
     assert_eq!(diagram.groups[1].parent_id.as_deref(), Some("Platform"));
     assert_eq!(diagram.groups[1].node_ids, vec!["build"]);
+}
+
+#[test]
+fn swimlane_subgraph_styles_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review[Review lane]\n  subgraph Approval[Approval phase]\n    request[Request]\n    approve[Approve]\n  end\nend\nclassDef phase fill:#fef3c7,stroke:#b45309,stroke-width:3px,stroke-dasharray:5 3,color:#7c2d12,font-size:17px,font-weight:bold,rx:12px,ry:12px\nclass Approval phase\nstyle Review fill:#ecfdf5,stroke:#047857,stroke-width:2px,color:#064e3b,font-size:20px,rx:14px,ry:14px\nrequest --> approve",
+    ).expect("Swimlane subgraph styles should parse");
+
+    assert_eq!(diagram.lanes[0].style.fill.as_deref(), Some("#ecfdf5"));
+    assert_eq!(diagram.lanes[0].style.corner_radius, Some(14.0));
+    assert_eq!(diagram.groups[0].classes, ["phase"]);
+    assert_eq!(diagram.groups[0].style.stroke_width, Some(3.0));
+    assert_eq!(diagram.groups[0].style.font_weight, Some(700));
+}
+
+#[test]
+fn swimlane_subgraph_class_decorators_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review[Review lane]:::laneStyle\n  subgraph Approval[Approval phase]:::phaseStyle\n    request[Request]\n    approve[Approve]\n  end\nend\nclassDef laneStyle fill:#eff6ff,stroke:#1d4ed8,stroke-width:2px,color:#172554,rx:14px,ry:14px\nclassDef phaseStyle fill:#fef3c7,stroke:#b45309,stroke-width:3px,stroke-dasharray:5 3,color:#7c2d12,font-size:17px,font-weight:bold,rx:12px,ry:12px\nrequest --> approve",
+    ).expect("Swimlane subgraph class decorators should parse");
+
+    assert_eq!(diagram.lanes[0].classes, ["laneStyle"]);
+    assert_eq!(diagram.lanes[0].style.stroke.as_deref(), Some("#1d4ed8"));
+    assert_eq!(diagram.groups[0].classes, ["phaseStyle"]);
+    assert_eq!(diagram.groups[0].style.corner_radius, Some(12.0));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph Review:::missing\n  request[Request]\nend"
+    ).is_err());
 }
 
 #[test]

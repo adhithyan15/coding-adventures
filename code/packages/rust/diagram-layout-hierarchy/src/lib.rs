@@ -278,7 +278,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     let cross_lane_ranks = swimlane_cross_lane_ranks(diagram);
     let max_rank = cross_lane_ranks.as_ref().and_then(|ranks| ranks.values().max().copied()).unwrap_or(0);
     let rank_slot_width = diagram.nodes.iter().map(|node|
-        swimlane_node_width(&node.shape, &node.label)
+        swimlane_node_width(&node.shape, &node.label, &node.style)
     ).fold(node_width, f64::max);
     let max_group_depth = diagram.groups.iter().map(|group| {
         let mut depth = 1usize;
@@ -299,7 +299,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         diagram.lanes.iter().map(|lane| {
             let widths = lane.node_ids.iter().filter_map(|node_id| {
                 diagram.nodes.iter().find(|node| &node.id == node_id)
-                    .map(|node| swimlane_node_width(&node.shape, &node.label))
+                    .map(|node| swimlane_node_width(&node.shape, &node.label, &node.style))
             }).collect::<Vec<_>>();
             let gap_units = lane.node_ids.windows(2).map(|pair|
                 swimlane_link_gap_units(diagram, &pair[0], &pair[1])
@@ -352,6 +352,8 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         lanes.push(LayoutedSwimlaneLane {
             id: lane.id.clone(),
             label: lane.label.clone(),
+            classes: lane.classes.clone(),
+            style: lane.style.clone(),
             x,
             y,
             width: lane_width,
@@ -377,7 +379,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 DiagramShape::ForkJoin if horizontal_flow => (10.0, 70.0),
                 DiagramShape::ForkJoin => (70.0, 10.0),
                 DiagramShape::LightningBolt => (35.0, 70.0),
-                _ if horizontal_flow => (swimlane_node_width(&node.shape, &node.label), node_height),
+                _ if horizontal_flow => (swimlane_node_width(&node.shape, &node.label, &node.style), node_height),
                 _ => (node_width, node_height),
             };
             let rank = cross_lane_ranks.as_ref().and_then(|ranks| ranks.get(node_id)).copied();
@@ -443,7 +445,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         bottom = (bottom + 12.0).min(lane.y + lane.height - 6.0);
         groups.push(LayoutedSwimlaneGroup {
             id: group.id.clone(), label: group.label.clone(), lane_id: group.lane_id.clone(),
-            parent_id: group.parent_id.clone(), x: left, y: top,
+            parent_id: group.parent_id.clone(), classes: group.classes.clone(), style: group.style.clone(), x: left, y: top,
             width: (right - left).max(40.0), height: (bottom - top).max(40.0),
         });
     }
@@ -500,6 +502,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         automatic_lane_ordering: diagram.automatic_lane_ordering,
         ignore_cross_lane_edges: diagram.ignore_cross_lane_edges,
         optimize_ranks_by_crossings: diagram.optimize_ranks_by_crossings,
+        theme: diagram.theme.clone(),
     }
 }
 
@@ -635,14 +638,19 @@ fn swimlane_edge_endpoints(
     )
 }
 
-fn swimlane_node_width(shape: &DiagramShape, label: &str) -> f64 {
+fn swimlane_node_width(shape: &DiagramShape, label: &str, style: &diagram_ir::DiagramStyle) -> f64 {
     match shape {
         DiagramShape::Anchor => 2.0,
         DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::FilledCircle => 14.0,
         DiagramShape::Summary => 60.0,
         DiagramShape::ForkJoin => 10.0,
         DiagramShape::LightningBolt => 35.0,
-        _ => (label.chars().count() as f64 * 7.2 + 28.0).clamp(132.0, 260.0),
+        _ => {
+            let font_scale = style.font_size.unwrap_or(13.0) / 13.0;
+            let weight_scale = if style.font_weight.unwrap_or(400) >= 600 { 1.06 } else { 1.0 };
+            (label.chars().count() as f64 * 7.2 * font_scale * weight_scale + 28.0)
+                .clamp(132.0, 360.0)
+        }
     }
 }
 /// Lay out a treemap using stable alternating slice-and-dice partitions.
@@ -1008,8 +1016,8 @@ mod tests {
             direction: DiagramDirection::Lr, title: Some("Handoff".into()), accessibility_title: None,
             accessibility_description: None,
             lanes: vec![
-                SwimlaneLane { id: "buyer".into(), label: "Buyer".into(), node_ids: vec!["choose".into()] },
-                SwimlaneLane { id: "store".into(), label: "Store".into(), node_ids: vec!["ship".into()] },
+                SwimlaneLane { id: "buyer".into(), label: "Buyer".into(), node_ids: vec!["choose".into()], classes: Vec::new(), style: Default::default() },
+                SwimlaneLane { id: "store".into(), label: "Store".into(), node_ids: vec!["ship".into()], classes: Vec::new(), style: Default::default() },
             ],
             groups: vec![], nodes: vec![
                 SwimlaneNode { id: "choose".into(), label: "Choose".into(), lane_id: Some("buyer".into()), shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() },
@@ -1027,6 +1035,7 @@ mod tests {
             links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: true,
+            theme: Default::default(),
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.lanes[1].y > layout.lanes[0].y);
@@ -1045,13 +1054,14 @@ mod tests {
         let diagram = SwimlaneDiagram {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
-            lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(), node_ids: vec!["long".into()] }],
+            lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(), node_ids: vec!["long".into()], classes: Vec::new(), style: Default::default() }],
             groups: vec![], nodes: vec![SwimlaneNode { id: "long".into(),
                 label: "A substantially longer process description".into(),
                 lane_id: Some("lane".into()), shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() }],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: true,
+            theme: Default::default(),
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.nodes[0].width > 132.0);
@@ -1065,7 +1075,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into(), "multi-document".into(), "multi-process".into(), "stored-data".into(), "summary".into(), "tagged-document".into(), "tagged-process".into(), "paper-tape".into(), "lined-document".into(), "data-store".into(), "titled".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into(), "multi-document".into(), "multi-process".into(), "stored-data".into(), "summary".into(), "tagged-document".into(), "tagged-process".into(), "paper-tape".into(), "lined-document".into(), "data-store".into(), "titled".into()], classes: Vec::new(), style: Default::default() }],
             groups: vec![], nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -1141,6 +1151,7 @@ mod tests {
             edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: true,
+            theme: Default::default(),
         };
         let layout = layout_swimlane(&diagram);
         assert_eq!(layout.nodes[0].shape, DiagramShape::Cloud);

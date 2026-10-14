@@ -14,7 +14,8 @@ romanization: "lāḍū"
 concept_tag: MR-THINGS137-LADU
 prerequisites: [MR-C136-varan, MR-C137-pohe]
 sounds: []
-roots: []
+roots: [sanskrit-laddu]
+etymology_hook: "lāḍū ← Sanskrit laḍḍu 'a kind of sweetmeat', probably the same as *laḍḍu 'lump' (CDIAL 10926)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C137-pohe]
 <!-- hl-knowledge: introduces=[MR-LEX-C137-THINGS137-02]; assesses=[] -->
 
 **लाडू** — *lāḍū* — "a ladoo, a sweet ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लाडू** (*lāḍū*) is a tadbhava of Sanskrit *laḍḍu*, "a kind of sweetmeat" (CDIAL 10926). CDIAL takes it as probably the same word as *\*laḍḍu*, "lump", and notes Kuiper's link with Munda words for "lump".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

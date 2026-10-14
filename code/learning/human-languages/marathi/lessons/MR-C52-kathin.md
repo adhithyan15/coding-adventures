@@ -12,6 +12,7 @@ concept_tag: MR-LEX-KATHIN
 prerequisites: [MR-C52-sopa, MR-C30-kinva]
 sounds: [retroflex-tha, matra-ii, retroflex-na]
 roots: [sanskrit-kathina]
+etymology_hook: "kaṭhīṇ ← Sanskrit kaṭhina 'hard, stiff'; CDIAL notes EWA's view that the group is from Dravidian (CDIAL 2650)"
 duration:
   max_seconds: 210
 requires:

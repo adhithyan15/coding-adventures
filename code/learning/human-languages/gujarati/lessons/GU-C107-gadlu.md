@@ -14,7 +14,8 @@ romanization: "gādlũ"
 concept_tag: GU-THINGS107-GADLU
 prerequisites: [GU-C106-sabu, GU-C106-tuval]
 sounds: []
-roots: []
+roots: [indo-aryan-garda]
+etymology_hook: "gādlũ: with gādī 'pad, raised seat' ← *garda 'seat', probably from Dravidian (CDIAL 4053); gādlũ not listed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C106-tuval]
 <!-- hl-knowledge: introduces=[GU-LEX-C107-THINGS107-01]; assesses=[] -->
 
 **ગાદલું** (*gādlũ*) — "a mattress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગાદલું** (*gādlũ*) belongs with *gādī*, "pad, raised seat", which CDIAL lists under a reconstructed *\*garda*, "seat" (CDIAL 4053). CDIAL thinks the word probably came from Dravidian, after T. Burrow, and does not list **ગાદલું** (*gādlũ*) itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

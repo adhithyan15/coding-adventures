@@ -14,7 +14,8 @@ romanization: "kātrī"
 concept_tag: MR-THINGS132-KATRI
 prerequisites: [MR-C131-khila, MR-C132-hatoda]
 sounds: []
-roots: []
+roots: [sanskrit-kartari]
+etymology_hook: "kātrī ← Sanskrit kartarī 'scissors, knife', a tadbhava (CDIAL 2858)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C132-hatoda]
 <!-- hl-knowledge: introduces=[MR-LEX-C132-THINGS132-02]; assesses=[] -->
 
 **कात्री** — *kātrī* — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कात्री** (*kātrī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kartarī*, "scissors, knife" (CDIAL 2858). It is built on *kṛt*, "to cut".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

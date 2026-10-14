@@ -11,8 +11,8 @@ gloss: "he, she, it — the pronoun for anyone who is not here"
 concept_tag: GU-PRON-TE
 prerequisites: [GU-C35-condition-checkpoint, GU-C03-hun]
 sounds: []
-roots: []
-etymology_hook: "One word covers he, she and it: Gujarati's third person does not choose a gender for you."
+roots: [sanskrit-ta]
+etymology_hook: "te: the old demonstrative stem ta-, whose Gujarati forms CDIAL lists under Sanskrit ta- (CDIAL 5612)"
 duration:
   max_seconds: 240
 requires:
@@ -58,6 +58,8 @@ ambiguity.
 **તે** also means *that*, pointing at something away from both speakers. The
 pronoun and the pointing word are the same word, which is where the **તો** of the
 last chapter came from as well.
+
+**તે** (*te*) continues the old Sanskrit demonstrative stem *ta-*; CDIAL lists its Gujarati instrumental *teṇe* under that stem (CDIAL 5612).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-PRON-TE-01, GU-CONCEPT-C03-HUN-01] -->

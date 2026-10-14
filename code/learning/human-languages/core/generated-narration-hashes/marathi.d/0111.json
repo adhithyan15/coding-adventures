@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 111,
-  "sourceHash": "fnv1a64:c929e82457439439",
+  "sourceHash": "fnv1a64:3beb57d23dfa5af4",
   "lessonIds": [
     "MR-C111-lavkar",
     "MR-C111-ushir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch111.txt",
   "json": "marathi/narration/ch111.json",
-  "textHash": "fnv1a64:1be118a2ab1ad0e9",
-  "jsonHash": "fnv1a64:0c203ab7a5caf181",
+  "textHash": "fnv1a64:481db8e3eb112942",
+  "jsonHash": "fnv1a64:d3ca0d8ee92164c6",
   "findings": []
 }

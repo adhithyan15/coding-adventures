@@ -14,7 +14,8 @@ romanization: "kaṅgvā"
 concept_tag: MR-THINGS132-KANGVA
 prerequisites: [MR-C132-sui, MR-C132-dora]
 sounds: []
-roots: []
+roots: [sanskrit-kankata]
+etymology_hook: "kaṅgvā ← Sanskrit kaṅkata 'comb'; CDIAL lists kaṅgvā among forms from Punjabi, kaṅkvā as inherited (CDIAL 2598)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C132-dora]
 <!-- hl-knowledge: introduces=[MR-LEX-C132-THINGS132-05]; assesses=[] -->
 
 **कंगवा** — *kaṅgvā* — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कंगवा** (*kaṅgvā*) goes back to Sanskrit *kaṅkata*, "comb" (CDIAL 2598). CDIAL lists Marathi *kaṅkvā* as the inherited form and *kaṅgvā* among the forms taken from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

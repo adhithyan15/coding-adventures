@@ -14,7 +14,8 @@ romanization: "bhayaṅkar"
 concept_tag: MR-GUN235-BHAYANKAR
 prerequisites: [MR-C234-mand, MR-C235-surekh]
 sounds: []
-roots: []
+roots: [sanskrit-bhaya]
+etymology_hook: "bhayaṅkar: Sanskrit bhayaṅkara 'causing fear', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C235-surekh]
 <!-- hl-knowledge: introduces=[MR-LEX-C235-GUN235-02]; assesses=[] -->
 
 **भयंकर** — *bhayaṅkar* — "terrible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भयंकर** (*bhayaṅkar*) is Sanskrit *bhayaṅkara*, "causing fear", a tatsama: *bhaya*, "fear", and *kara*, "making".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

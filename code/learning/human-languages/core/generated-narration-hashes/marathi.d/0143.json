@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 143,
-  "sourceHash": "fnv1a64:b7eb3f1969b7df4e",
+  "sourceHash": "fnv1a64:7e344bba3f685371",
   "lessonIds": [
     "MR-C143-kasav",
     "MR-C143-magar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch143.txt",
   "json": "marathi/narration/ch143.json",
-  "textHash": "fnv1a64:b24a895c8281275b",
-  "jsonHash": "fnv1a64:fdbeb1f30a07ac35",
+  "textHash": "fnv1a64:fe48296b6d43a4d6",
+  "jsonHash": "fnv1a64:9be44a73e331261b",
   "findings": []
 }

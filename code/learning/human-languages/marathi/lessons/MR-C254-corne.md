@@ -14,7 +14,8 @@ romanization: "corṇe"
 concept_tag: MR-VERB-CORNE
 prerequisites: [MR-C253-kalavne, MR-C253-takrar-karne]
 sounds: []
-roots: []
+roots: [sanskrit-corayati]
+etymology_hook: "corṇe ← Sanskrit corayati 'steals', a tadbhava (CDIAL 4933)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C253-takrar-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C254-ACT254-01]; assesses=[] -->
 
 **चोरणे** — *corṇe* — "to steal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चोरणे** (*corṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *corayati*, "steals" (CDIAL 4933). It is built on *cora*, "thief".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

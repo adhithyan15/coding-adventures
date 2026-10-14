@@ -14,7 +14,8 @@ romanization: "poṭ"
 concept_tag: MR-BODY71-POT
 prerequisites: [MR-C70-dat, MR-C70-gala]
 sounds: []
-roots: []
+roots: [indo-aryan-pottta]
+etymology_hook: "poṭ ← *pōṭṭa 'belly', a variant CDIAL lists under *pēṭṭa (CDIAL 8376)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C70-gala]
 <!-- hl-knowledge: introduces=[MR-LEX-C71-BODY71-01]; assesses=[] -->
 
 **पोट** — *poṭ* — "the stomach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पोट** (*poṭ*) goes back to *\*pōṭṭa*, "belly", one of the forms CDIAL reconstructs under *\*pēṭṭa*, "belly" (CDIAL 8376). CDIAL notes that these may be the same as its words for "basket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

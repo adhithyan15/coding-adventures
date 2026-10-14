@@ -11,7 +11,8 @@ gloss: the adjectives that never agree — the class a learner who has met only 
 concept_tag: MR-GRAMMAR-ADJ-INVARIABLE
 prerequisites: [MR-C50-lahaan, MR-C45-barobar, MR-C24-shikne]
 sounds: []
-roots: []
+roots: [sanskrit-shlakshna]
+etymology_hook: "lahān ← Sanskrit ślakṣṇa 'smooth, soft', in the word-lists 'thin, small'; a tadbhava (CDIAL 12732)"
 duration:
   max_seconds: 220
 requires:

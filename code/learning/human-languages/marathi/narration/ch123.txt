@@ -12,6 +12,9 @@ Before the new one: say the Marathi for wanted, then the Marathi for a wish.
 You'll want to know: गरज.
 गरज — garaj — "a need".
 
+The word, taken apart.
+गरज (garaj) is a loan from Arabic gharaḍ, "aim, purpose, need", which reached Marathi through Persian. Its Arabic root is gh-r-ḍ (Lane). Persian and Hindustani say gharaz.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a wish, then the Marathi for a need.
 
 You'll want to know: आशा.
 आशा — āśā — "hope".
+
+The word, taken apart.
+आशा (āśā) is Sanskrit āśā, "wish, expectation", taken over whole, a tatsama. CDIAL lists the inherited Marathi form as ās, "hope" (CDIAL 1456).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a need, then the Marathi for hope.
 You'll want to know: स्वप्न.
 स्वप्न — svapna — "a dream".
 
+The word, taken apart.
+स्वप्न (svapna) is Sanskrit svapna, "sleep, dream", taken over whole as a learned loan, a tatsama (CDIAL 13904). It is built on svap, "to sleep".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for hope, then the Marathi for a dream.
 You'll want to know: मागणे.
 मागणे — māgṇe — "to ask for".
 
+The word, taken apart.
+मागणे (māgṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mārgati, "seeks, requests" (CDIAL 10074). It is built on mārga, "track, path".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a dream, then the Marathi for to ask for
 
 You'll want to know: ठरवणे.
 ठरवणे — ṭharavṇe — "to decide".
+
+The word, taken apart.
+ठरवणे (ṭharavṇe) is the "make" form of Marathi ṭharṇẽ, "to be settled". CDIAL derives that verb from a reconstructed stabhira, "fixed, firm", rather than stharati, "is firm", and marks it as taken from Hindi (CDIAL 13680, 13742).
 
 What you've built.
 One more word for this chapter.

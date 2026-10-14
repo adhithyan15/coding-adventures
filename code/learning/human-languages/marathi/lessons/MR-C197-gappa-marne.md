@@ -14,7 +14,8 @@ romanization: "gappā mārṇe"
 concept_tag: MR-VERB-GAPPA-MARNE
 prerequisites: [MR-C197-ghai-karne, MR-C197-javal-yene]
 sounds: []
-roots: []
+roots: [indo-aryan-gappa, sanskrit-marayati]
+etymology_hook: "gappā ← *gappa 'talk', perhaps imitative (CDIAL 4022); mārṇe ← mārayati (CDIAL 10066)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C197-javal-yene]
 <!-- hl-knowledge: introduces=[MR-LEX-C197-ACT197-04]; assesses=[] -->
 
 **गप्पा मारणे** — *gappā mārṇe* — "to chat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गप्पा**, "chat", goes back to a reconstructed *\*gappa*, "talk", which CDIAL takes as imitative, comparing Sanskrit *jalpati*, "mutters" (CDIAL 4022). **मारणे** comes from Sanskrit *mārayati*, "kills", which in Marathi also means "to strike" (CDIAL 10066).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

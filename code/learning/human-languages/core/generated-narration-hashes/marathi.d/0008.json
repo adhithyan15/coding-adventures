@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 8,
-  "sourceHash": "fnv1a64:ea9b1c2deecb5f54",
+  "sourceHash": "fnv1a64:349952fd45ca821f",
   "lessonIds": [
     "MR-C08-ulat",
     "MR-C08-shesh",
@@ -19,7 +19,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch08.txt",
   "json": "marathi/narration/ch08.json",
-  "textHash": "fnv1a64:8d41c3b18ba71b8e",
-  "jsonHash": "fnv1a64:dff89484b6622c10",
+  "textHash": "fnv1a64:ed6b01efebbeab10",
+  "jsonHash": "fnv1a64:fd5587408bbac753",
   "findings": []
 }

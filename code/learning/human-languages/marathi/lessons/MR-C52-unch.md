@@ -12,6 +12,7 @@ concept_tag: MR-LEX-UNCH
 prerequisites: [MR-C52-kathin, MR-C30-pan, MR-C47-laa-object]
 sounds: [standalone-vowel-u, anusvara-nasal]
 roots: [sanskrit-ucca]
+etymology_hook: "uṁch ← Sanskrit ucca 'tall, lofty'; CDIAL doubts its nasal comes from udañc 'turned upwards' (CDIAL 1634)"
 duration:
   max_seconds: 220
 requires:

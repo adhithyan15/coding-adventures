@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Added — `pkg` reports mosstyle v2 warnings (UI90 §4 step 1)
+
+- After a v1 package builds, `pkg` prints one line with its v2 finding
+  count, for example: `mosstyle v1: 108 warning(s) against the v2 property
+  table`. Set `MOSAIC_STYLE_FINDINGS=1` to list each finding.
+- A package that declares `[styles] version = 2` fails instead, listing
+  every finding.
+
 ### Added — Compose `--emit-project` and `--fixtures` in pipeline mode (EM-6, #14704)
 
 - `--backend compose --emit-project` writes a runnable Compose Desktop

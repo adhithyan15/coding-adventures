@@ -12,6 +12,7 @@ concept_tag: MR-GRAMMAR-ADJ-AGREEMENT
 prerequisites: [MR-C49-motha, MR-C44-ujva, MR-C44-daava, MR-C02-majhe, MR-C23-chalne]
 sounds: [matra-aa, matra-ii, anusvara]
 roots: []
+etymology_hook: "moṭhā: origin not settled; CDIAL has a Marathi moṭā 'big, fat' only, with Hindi moṭā (CDIAL 10187)"
 duration:
   max_seconds: 230
 requires:
@@ -62,6 +63,11 @@ was permission to use it on a new word.
 Say those three aloud and hear that only the last syllable moves. That is what
 makes the rule cheap: learn one adjective and you have learned three forms,
 and every **-आ** adjective after this costs you nothing extra.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **मोठा** is not settled. CDIAL has no entry for it; it lists only a Marathi *moṭā*, "big, fat", beside Hindi *moṭā*, under *\*muṭṭa* (CDIAL 10187).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-ADJ-AGREEMENT, MR-LEX-MOTHA, MR-LEX-KHOLI, MR-LEX-GHAR, MR-LEX-CHALNE, MR-SENSE-CHALEL-OKAY, MR-ETYMON-CHALNE-CAL] -->

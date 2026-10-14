@@ -14,7 +14,8 @@ romanization: "sārkhā / sārkhī"
 concept_tag: MR-GUN175-SARKHA
 prerequisites: [MR-C175-vicitra, MR-C175-vegla]
 sounds: []
-roots: []
+roots: [sanskrit-sadrksha]
+etymology_hook: "sārkhā ← Sanskrit sadṛkṣa 'like', a tadbhava (CDIAL 13119)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C175-vegla]
 <!-- hl-knowledge: introduces=[MR-LEX-C175-GUN175-03]; assesses=[] -->
 
 **सारखा / सारखी** — *sārkhā / sārkhī* — "similar, alike".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सारखा** (*sārkhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sadṛkṣa*, "like" (CDIAL 13119). It is *sa-*, "same", and *dṛś*, "to see".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

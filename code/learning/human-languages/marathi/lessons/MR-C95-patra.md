@@ -14,7 +14,8 @@ romanization: "patra"
 concept_tag: MR-SCHOOL95-PATRA
 prerequisites: [MR-C95-shabda, MR-C95-khel]
 sounds: []
-roots: []
+roots: [sanskrit-patra]
+etymology_hook: "patra ← Sanskrit pattra 'wing-feather; leaf; leaf of a book', a tatsama (CDIAL 7733)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C95-khel]
 <!-- hl-knowledge: introduces=[MR-LEX-C95-SCHOOL95-03]; assesses=[] -->
 
 **पत्र** — *patra* — "a letter (post)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पत्र** (*patra*) is Sanskrit *pattra*, "wing-feather; leaf; leaf of a book", taken over whole as a learned loan, a tatsama (CDIAL 7733). A leaf to write on became a letter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

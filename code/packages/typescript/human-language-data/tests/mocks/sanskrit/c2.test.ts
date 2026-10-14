@@ -356,7 +356,7 @@ describe("Sanskrit C2 timed mock source pair", () => {
     expect(compact).toContain("standard setting");
     expect(compact).toContain("Book-only validation cannot establish");
     expect(compact).toContain("not an external CEFR qualification");
-    expect(compact).toContain("`assessment.json` remains absent");
-    expect(existsSync(join(root, "..", "..", "assessment.json"))).toBe(false);
+    expect(compact).toContain("`assessment.json` is active as a source-artifact contract");
+    expect(existsSync(join(root, "..", "..", "assessment.json"))).toBe(true);
   });
 });

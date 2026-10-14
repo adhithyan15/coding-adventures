@@ -14,7 +14,8 @@ romanization: "musāpharī"
 concept_tag: GU-JOURNEY-JOURNEY
 prerequisites: [GU-C85-plane, GU-C85-port]
 sounds: []
-roots: []
+roots: [arabic-musafir]
+etymology_hook: "musāpharī: from musāphar ← Arabic musāfir 'traveller', through Persian (Lane, root s-f-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C85-port]
 <!-- hl-knowledge: introduces=[GU-LEX-C86-JOURNEY-01]; assesses=[] -->
 
 **મુસાફરી** (*musāpharī*) — "a journey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મુસાફરી** (*musāpharī*) is built on *musāphar*, "traveller", with the ending *-ī*. *Musāphar* is a loan from Arabic *musāfir*, "traveller", which reached Gujarati through Persian; its Arabic root is *s-f-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -9,6 +9,9 @@ Warm-up.
 [pause 3 seconds]
 Say the Gujarati words for morning and for night. Now listen twice: sūraj. It means sun — the thing whose position decides whether it is savār, bapor, or sānj.
 
+The word, taken apart.
+સૂરજ (sūraj) is usually traced to Sanskrit sūrya, "sun". CDIAL's entry for the word lists no Gujarati form (CDIAL 13574).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "sūraj"]
@@ -30,6 +33,9 @@ Lesson 2 of 8.
 Warm-up.
 [pause 3 seconds]
 Say the word for sun. Now listen twice: chandra. It means moon — the one you see at rāt, and listen to the dr at its end pushed out as one sound.
+
+The word, taken apart.
+ચંદ્ર (chandra) is Sanskrit candra, "shining; moon", taken over whole as a learned loan, a tatsama (CDIAL 4661). CDIAL lists the inherited form as Gujarati cāṁd.
 
 Guided Practice.
 [pause 1 second]
@@ -53,6 +59,9 @@ Warm-up.
 [pause 3 seconds]
 Say the words for sun and for moon. Now listen twice: ākāsh. It means sky — the thing that holds both the sūraj and the chandra.
 
+The word, taken apart.
+આકાશ (ākāsh) is Sanskrit ākāśa, "sky", taken over whole as a learned loan, a tatsama (CDIAL 1008).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "ākāsh"]
@@ -75,6 +84,9 @@ Warm-up.
 [pause 3 seconds]
 Say the word for sky. Now listen twice: varsād. It means rain — the one thing in this chapter that the ākāsh does rather than holds.
 
+The word, taken apart.
+CDIAL lists વરસાદ (varsād) in the form barsād, "the rainy season", under Sanskrit varṣārātri, "the rainy season", or else a blend of it with varṣartu, "the season of rain" (CDIAL 11398). Its first part matches the Gujarati verb varasvũ, "to rain", which CDIAL lists under Sanskrit varṣati, "it rains" (CDIAL 11394).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "varsād"]
@@ -96,6 +108,9 @@ Lesson 5 of 8.
 Warm-up.
 [pause 3 seconds]
 Say the words for rain and for water. Now listen twice: nadī. It means river — where the varsād ends up, and it is made of pāṇī.
+
+The word, taken apart.
+નદી (nadī) is Sanskrit nadī, "river", taken over whole as a learned loan, a tatsama (CDIAL 6943).
 
 Guided Practice.
 [pause 1 second]

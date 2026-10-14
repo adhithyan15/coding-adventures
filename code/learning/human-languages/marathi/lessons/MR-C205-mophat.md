@@ -14,7 +14,8 @@ romanization: "mophat"
 concept_tag: MR-GUN205-MOPHAT
 prerequisites: [MR-C204-bhitra, MR-C204-utsuk]
 sounds: []
-roots: []
+roots: [persian-muft]
+etymology_hook: "mophat: usually traced to Persian muft 'free, gratis'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C204-utsuk]
 <!-- hl-knowledge: introduces=[MR-LEX-C205-GUN205-01]; assesses=[] -->
 
 **मोफत** — *mophat* — "free of charge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोफत** (*mophat*) is a loan, usually traced to Persian *muft*, "free, gratis".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

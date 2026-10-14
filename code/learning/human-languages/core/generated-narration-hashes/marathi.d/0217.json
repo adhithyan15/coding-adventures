@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 217,
-  "sourceHash": "fnv1a64:9fe795417a6d026e",
+  "sourceHash": "fnv1a64:f999764f4f9621d5",
   "lessonIds": [
     "MR-C217-har",
     "MR-C217-kanatle",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch217.txt",
   "json": "marathi/narration/ch217.json",
-  "textHash": "fnv1a64:f0a4fa2fe24bdaa0",
-  "jsonHash": "fnv1a64:ef6c7342a4278ab0",
+  "textHash": "fnv1a64:0ba3ac5dccb4a420",
+  "jsonHash": "fnv1a64:94ca6505c94e11e8",
   "findings": []
 }

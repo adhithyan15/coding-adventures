@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for an aeroplane, then the Gujarati for a p
 You'll want to know: મુસાફરી.
 મુસાફરી (musāpharī) — "a journey".
 
+The word, taken apart.
+મુસાફરી (musāpharī) is built on musāphar, "traveller", with the ending -ī. Musāphar is a loan from Arabic musāfir, "traveller", which reached Gujarati through Persian; its Arabic root is s-f-r (Lane).
+
 What you've built.
 One more word for on a journey.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a port, then the Gujarati for a journey
 
 You'll want to know: ટિકિટ.
 ટિકિટ (ṭikiṭ) — "a ticket". For the બસ or the ટ્રેન.
+
+The word, taken apart.
+ટિકિટ (ṭikiṭ) is a loan from English ticket.
 
 What you've built.
 One more word for on a journey.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a journey, then the Gujarati for a tick
 You'll want to know: નકશો.
 નકશો (nakśo) — "a map".
 
+The word, taken apart.
+નકશો (nakśo) is a loan from Arabic naqsh, "a painting, an engraving", which reached Gujarati through Persian. Its Arabic root is n-q-sh (Lane). Persian made naqsha, "map, plan", from it.
+
 What you've built.
 One more word for on a journey.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a ticket, then the Gujarati for a map.
 You'll want to know: ફોન.
 ફોન (phon) — "a phone".
 
+The word, taken apart.
+ફોન (phon) is a loan from English phone.
+
 What you've built.
 One more word for on a journey.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a map, then the Gujarati for a phone.
 
 You'll want to know: ટપાલ.
 ટપાલ (ṭapāl) — "the post, mail".
+
+The word, taken apart.
+The origin of ટપાલ (ṭapāl) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for on a journey.

@@ -14,7 +14,8 @@ romanization: "maū"
 concept_tag: MR-QUAL148-MAU
 prerequisites: [MR-C147-patal, MR-C148-jad]
 sounds: []
-roots: []
+roots: [sanskrit-mrdu]
+etymology_hook: "maū ← Sanskrit mṛdu 'soft', a tadbhava (CDIAL 10292)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C148-jad]
 <!-- hl-knowledge: introduces=[MR-LEX-C148-QUAL148-02]; assesses=[] -->
 
 **मऊ** — *maū* — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मऊ** (*maū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mṛdu*, "soft" (CDIAL 10292).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

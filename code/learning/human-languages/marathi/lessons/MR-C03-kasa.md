@@ -11,7 +11,8 @@ gloss: how (kasā m. / kaśī f. / kasaṁ n.)
 concept_tag: QUESTION-HOW
 prerequisites: [MR-C02-kaay]
 sounds: [inherent-a, anusvara]
-roots: [ka-interrogative]
+roots: [ka-interrogative, sanskrit-kidrsha]
+etymology_hook: "kasā ← Sanskrit kīdṛśa 'of what kind', CDIAL suggests through *kisā (CDIAL 3197)"
 reviews_of: [MR-C02-kaay]
 duration:
   max_seconds: 240

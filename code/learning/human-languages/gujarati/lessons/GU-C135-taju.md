@@ -14,7 +14,8 @@ romanization: "tājũ"
 concept_tag: GU-QUAL135-TAJU
 prerequisites: [GU-C135-tarasyu, GU-C135-bimar]
 sounds: []
-roots: []
+roots: [persian-taza]
+etymology_hook: "tājũ: usually traced to Persian tāza 'fresh'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C135-bimar]
 <!-- hl-knowledge: introduces=[GU-LEX-C135-QUAL135-03]; assesses=[] -->
 
 **તાજું** (*tājũ*) — "fresh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તાજું** (*tājũ*) is a loan, usually traced to Persian *tāza*, "fresh". Gujarati writes the *z* as *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

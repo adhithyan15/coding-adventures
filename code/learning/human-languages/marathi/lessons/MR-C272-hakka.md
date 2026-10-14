@@ -14,7 +14,8 @@ romanization: "hakka"
 concept_tag: MR-VASTU272-HAKKA
 prerequisites: [MR-C271-jhadu, MR-C272-nyay]
 sounds: []
-roots: []
+roots: [arabic-haqq]
+etymology_hook: "hakka ← Arabic ḥaqq 'truth, a right', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C272-nyay]
 <!-- hl-knowledge: introduces=[MR-LEX-C272-VASTU272-02]; assesses=[] -->
 
 **हक्क** — *hakka* — "an entitlement, a right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हक्क** (*hakka*) is a loan from Arabic *ḥaqq*, "truth, a right", which reached Marathi through Persian. Its Arabic root is *ḥ-q-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kheḷṇī"
 concept_tag: MR-VASTU249-KHELNI
 prerequisites: [MR-C248-bhetvastu, MR-C249-jhopala]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "kheḷṇī: kheḷ 'play' ← *khēl- (CDIAL 3918) + -ṇī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C249-jhopala]
 <!-- hl-knowledge: introduces=[MR-LEX-C249-VASTU249-02]; assesses=[] -->
 
 **खेळणी** — *kheḷṇī* — "toys".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खेळणी** (*kheḷṇī*) is built on **खेळ**, "play", which CDIAL lists under a reconstructed *\*khēl-*, "play" (CDIAL 3918).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

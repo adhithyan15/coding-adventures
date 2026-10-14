@@ -15,6 +15,7 @@ concept_tag: GU-DEF100-KASU
 prerequisites: [GU-C99-koi, GU-C100-kaik]
 sounds: []
 roots: []
+etymology_hook: "kaśũ 'anything': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C100-kaik]
 <!-- hl-knowledge: introduces=[GU-LEX-C100-DEF100-02]; assesses=[] -->
 
 **કશું** (*kaśũ*) — "anything".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **કશું** (*kaśũ*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

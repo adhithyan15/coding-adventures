@@ -14,7 +14,8 @@ romanization: "paḍṇe"
 concept_tag: MR-VERB-PADNE
 prerequisites: [MR-C84-badalne, MR-C84-dharne]
 sounds: []
-roots: []
+roots: [sanskrit-patati]
+etymology_hook: "paḍṇe ← Sanskrit patati 'flies; falls', a tadbhava (CDIAL 7722)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C84-dharne]
 <!-- hl-knowledge: introduces=[MR-LEX-C84-VERBS84-04]; assesses=[] -->
 
 **पडणे** — *paḍṇe* — "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पडणे** (*paḍṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *patati*, "flies; falls" (CDIAL 7722).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

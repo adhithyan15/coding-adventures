@@ -14,7 +14,8 @@ romanization: "trīs"
 concept_tag: GU-NUM2-THIRTY
 prerequisites: [GU-C82-eighteen, GU-C82-twenty]
 sounds: []
-roots: []
+roots: [sanskrit-trimshat]
+etymology_hook: "trīs ← Sanskrit triṁśat 'thirty', a tadbhava (CDIAL 6015)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C82-twenty]
 <!-- hl-knowledge: introduces=[GU-LEX-C82-NUM2-04]; assesses=[] -->
 
 **ત્રીસ** (*trīs*) — "thirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ત્રીસ** (*trīs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *triṁśat*, "thirty" (CDIAL 6015).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

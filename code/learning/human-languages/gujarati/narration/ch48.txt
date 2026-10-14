@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a lip, then the Gujarati for the tongue
 You'll want to know: ઘૂંટણ.
 ઘૂંટણ (ghū̃ṭaṇ) — "a knee". Halfway down the પગ.
 
+The word, taken apart.
+ઘૂંટણ (ghū̃ṭaṇ) (ghūṁṭaṇ) is a tadbhava. CDIAL lists it under ghuṇṭa, a variant of the lexical Sanskrit ghuṭa, "ankle" (CDIAL 4479). It takes the word from Dravidian, after T. Burrow.
+
 What you've built.
 One more word for knee, heart and a fever.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for the tongue, then the Gujarati for a kne
 
 You'll want to know: હૃદય.
 હૃદય (hṛday) — "the heart".
+
+The word, taken apart.
+હૃદય (hṛday) is Sanskrit hṛdaya, "heart", taken over whole as a learned loan, a tatsama (CDIAL 14152). CDIAL lists the inherited Gujarati form as haiyũ.
 
 What you've built.
 One more word for knee, heart and a fever.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a knee, then the Gujarati for the heart
 You'll want to know: લોહી.
 લોહી (lohī) — "blood".
 
+The word, taken apart.
+લોહી (lohī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lohita, "red; blood" (CDIAL 11165). It is a form of rohita, "red".
+
 What you've built.
 One more word for knee, heart and a fever.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for the heart, then the Gujarati for blood.
 You'll want to know: તાવ.
 તાવ (tāv) — "a fever".
 
+The word, taken apart.
+તાવ (tāv) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tāpa, "heat, glow; pain" (CDIAL 5767).
+
 What you've built.
 One more word for knee, heart and a fever.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for blood, then the Gujarati for a fever.
 
 You'll want to know: ખાંસી.
 ખાંસી (khā̃sī) — "a cough". Often comes with a તાવ (tāv).
+
+The word, taken apart.
+ખાંસી (khā̃sī) (khāṁsī) is a tadbhava of Sanskrit kāsa, "cough" (CDIAL 3138). CDIAL explains its kh- as imitative, the sound of the cough itself.
 
 What you've built.
 One more word for knee, heart and a fever.

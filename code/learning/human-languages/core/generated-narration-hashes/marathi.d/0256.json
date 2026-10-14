@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 256,
-  "sourceHash": "fnv1a64:dfb58495c4280f58",
+  "sourceHash": "fnv1a64:37a5de9e4f5722ad",
   "lessonIds": [
     "MR-C256-usne-ghene",
     "MR-C256-japne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch256.txt",
   "json": "marathi/narration/ch256.json",
-  "textHash": "fnv1a64:899fe6a86ea010a5",
-  "jsonHash": "fnv1a64:08fb2f6790d7ad44",
+  "textHash": "fnv1a64:8065a476ee2cc4f0",
+  "jsonHash": "fnv1a64:1ac71c1efdb07f2e",
   "findings": []
 }

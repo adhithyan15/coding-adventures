@@ -14,7 +14,8 @@ romanization: "kacro"
 concept_tag: GU-THINGS109-KACRO
 prerequisites: [GU-C109-baldi, GU-C109-savarni]
 sounds: []
-roots: []
+roots: [sanskrit-kaccara]
+etymology_hook: "kacro ← Sanskrit kaccara 'dirty, vile', a tadbhava (CDIAL 2615)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C109-savarni]
 <!-- hl-knowledge: introduces=[GU-LEX-C109-THINGS109-04]; assesses=[] -->
 
 **કચરો** (*kacro*) — "rubbish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કચરો** (*kacro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaccara*, "dirty, vile" (CDIAL 2615).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

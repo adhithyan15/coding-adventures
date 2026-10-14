@@ -14,7 +14,8 @@ romanization: "musāphar"
 concept_tag: GU-THINGS127-MUSAPHAR
 prerequisites: [GU-C127-saikal, GU-C127-vahan]
 sounds: []
-roots: []
+roots: [arabic-musafir]
+etymology_hook: "musāphar ← Arabic musāfir 'traveller', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C127-vahan]
 <!-- hl-knowledge: introduces=[GU-LEX-C127-THINGS127-04]; assesses=[] -->
 
 **મુસાફર** (*musāphar*) — "a traveller".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મુસાફર** (*musāphar*) is a loan from Arabic *musāfir*, "traveller", which reached Gujarati through Persian. Its Arabic root is *s-f-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

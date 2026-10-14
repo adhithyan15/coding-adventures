@@ -11,8 +11,8 @@ gloss: river, heard and said before it is ever shown
 concept_tag: GU-SKY-RIVER-HEARD
 prerequisites: [GU-C29-hear-varsaad]
 sounds: [short-a, voiced-d, long-ii]
-roots: []
-etymology_hook: The chapter ends on the ground: the river is where the rain goes, and it is the shortest of the five.
+roots: [sanskrit-nadi]
+etymology_hook: "nadī ← Sanskrit nadī 'river', a tatsama (CDIAL 6943)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C29-hear-varsaad, GU-C10-paani]
 
 [PAUSE 3s] Say the words for rain and for water. Now listen twice: **nadī**. It means
 **river** — where the *varsād* ends up, and it is made of *pāṇī*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**નદી** (*nadī*) is Sanskrit *nadī*, "river", taken over whole as a learned loan, a tatsama (CDIAL 6943).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-NADI-01, GU-LEX-VARSAAD-01, GU-LEX-PAANI] -->

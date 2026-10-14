@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a bedsheet, then the Marathi for a mattr
 You'll want to know: पडदा.
 पडदा — paḍdā — "a curtain".
 
+The word, taken apart.
+पडदा (paḍdā) is a loan, usually traced to Persian parda, "curtain, veil".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a mattress, then the Marathi for a curta
 
 You'll want to know: कुलूप.
 कुलूप — kulūp — "a lock".
+
+The word, taken apart.
+कुलूप (kulūp) is a loan, usually traced through Persian qulf to Arabic qufl, "lock", whose root is q-f-l (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a curtain, then the Marathi for a lock.
 You'll want to know: बादली.
 बादली — bādlī — "a bucket".
 
+The word, taken apart.
+बादली (bādlī) is a loan, usually traced to Portuguese balde, "bucket".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a lock, then the Marathi for a bucket.
 You'll want to know: दोरी.
 दोरी — dorī — "a rope".
 
+The word, taken apart.
+दोरी (dorī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from davara, "string" (CDIAL 6225).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a bucket, then the Marathi for a rope.
 
 You'll want to know: खिळा.
 खिळा — khiḷā — "a nail (to hammer)".
+
+The word, taken apart.
+खिळा (khiḷā) belongs with Marathi khīḷ, "bolt, peg", which CDIAL lists under Sanskrit khīla, "post", a variant of kīla, "stake, peg" (CDIAL 3202). CDIAL thinks the variant shapes support a non-Aryan origin.
 
 What you've built.
 One more word for this chapter.

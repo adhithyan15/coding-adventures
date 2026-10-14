@@ -14,7 +14,8 @@ romanization: "śiḷā"
 concept_tag: MR-QUAL150-SILA
 prerequisites: [MR-C149-tikhat, MR-C149-taja]
 sounds: []
-roots: []
+roots: [sanskrit-shitala]
+etymology_hook: "śiḷā ← Sanskrit śītala 'cold', a tadbhava (CDIAL 12487)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C149-taja]
 <!-- hl-knowledge: introduces=[MR-LEX-C150-QUAL150-01]; assesses=[] -->
 
 **शिळा** — *śiḷā* — "stale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शिळा** (*śiḷā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śītala*, "cold" (CDIAL 12487). CDIAL glosses the Marathi word "cold, sluggish, stale".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

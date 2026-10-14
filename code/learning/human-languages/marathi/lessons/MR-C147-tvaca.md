@@ -14,7 +14,8 @@ romanization: "tvacā"
 concept_tag: MR-THINGS147-TVACA
 prerequisites: [MR-C146-kambar, MR-C146-chati]
 sounds: []
-roots: []
+roots: [sanskrit-tvaca]
+etymology_hook: "tvacā ← Sanskrit tvacā 'skin', a tatsama (CDIAL 6087)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C146-chati]
 <!-- hl-knowledge: introduces=[MR-LEX-C147-THINGS147-01]; assesses=[] -->
 
 **त्वचा** — *tvacā* — "the skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**त्वचा** (*tvacā*) is Sanskrit *tvacā*, "skin", taken over whole as a learned loan, a tatsama (CDIAL 6087).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

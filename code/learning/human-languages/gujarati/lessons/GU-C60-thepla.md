@@ -15,6 +15,7 @@ concept_tag: GU-SNACKS-THEPLA
 prerequisites: [GU-C60-chilli, GU-C60-salt]
 sounds: []
 roots: []
+etymology_hook: "theplāṁ: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C60-salt]
 <!-- hl-knowledge: introduces=[GU-LEX-C60-SNACKS-03]; assesses=[] -->
 
 **થેપલાં** (*theplā̃*) — "thepla, spiced flatbread". A travelling snack.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **થેપલાં** (*theplāṁ*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

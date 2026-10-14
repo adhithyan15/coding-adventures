@@ -14,7 +14,8 @@ romanization: "pharī"
 concept_tag: GU-HOWMUCH-AGAIN
 prerequisites: [GU-C76-slowly, GU-C76-quickly]
 sounds: []
-roots: []
+roots: [indo-aryan-phirati]
+etymology_hook: "pharī ← *phirati 'turns': its absolutive 'having turned', used as an adverb (CDIAL 9078)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C76-quickly]
 <!-- hl-knowledge: introduces=[GU-LEX-C76-HOWMUCH-05]; assesses=[] -->
 
 **ફરી** (*pharī*) — "again".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ફરી** (*pharī*) comes from *\*phirati*, "moves, turns", a form CDIAL reconstructs (CDIAL 9078). It is the old absolutive, "having turned", used as an adverb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

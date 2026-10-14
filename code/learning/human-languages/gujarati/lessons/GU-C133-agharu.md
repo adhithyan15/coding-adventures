@@ -15,6 +15,7 @@ concept_tag: GU-QUAL133-AGHARU
 prerequisites: [GU-C133-kathan, GU-C133-sahelu]
 sounds: []
 roots: []
+etymology_hook: "agharũ 'difficult': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C133-sahelu]
 <!-- hl-knowledge: introduces=[GU-LEX-C133-QUAL133-03]; assesses=[] -->
 
 **અઘરું** (*agharũ*) — "difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **અઘરું** (*agharũ*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

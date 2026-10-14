@@ -12,6 +12,9 @@ Before the new one: say the Marathi for an army, then the Marathi for a soldier.
 You'll want to know: दंतवैद्य.
 दंतवैद्य — dantavaidya — "a dentist".
 
+The word, taken apart.
+दंतवैद्य (dantavaidya) is a modern compound of Sanskrit parts: danta, "tooth" (CDIAL 6152), and vaidya, "physician" (CDIAL 12140).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a soldier, then the Marathi for a dentis
 
 You'll want to know: खाटीक.
 खाटीक — khāṭīk — "a butcher".
+
+The word, taken apart.
+The origin of खाटीक (khāṭīk) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a dentist, then the Marathi for a butche
 You'll want to know: कारागीर.
 कारागीर — kārāgīr — "a craftsman".
 
+The word, taken apart.
+कारागीर (kārāgīr) is a loan, usually traced to Persian kārīgar, "workman, craftsman", built on kār, "work".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a butcher, then the Marathi for a crafts
 You'll want to know: कामगार.
 कामगार — kāmgār — "a worker".
 
+The word, taken apart.
+कामगार (kāmgār) is kām, "work", from Sanskrit karman, "act, work" (CDIAL 2892), with -gār, "one who does", an ending usually traced to Persian.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a craftsman, then the Marathi for a work
 
 You'll want to know: कर्मचारी.
 कर्मचारी — karmacārī — "an employee".
+
+The word, taken apart.
+कर्मचारी (karmacārī) is a modern compound built from Sanskrit karman, "work" (CDIAL 2892), and cārin, "moving, acting" (CDIAL 4765).
 
 What you've built.
 One more word for this chapter.

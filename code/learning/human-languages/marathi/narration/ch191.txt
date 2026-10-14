@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a queue, then the Marathi for a crowd.
 You'll want to know: व्यवस्थापक.
 व्यवस्थापक — vyavasthāpak — "a manager".
 
+The word, taken apart.
+व्यवस्थापक (vyavasthāpak) is Sanskrit vyavasthāpaka, "one who arranges, settles", a tatsama built on vyavasthā, "arrangement". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a crowd, then the Marathi for a manager.
 
 You'll want to know: सचिव.
 सचिव — saciv — "a secretary".
+
+The word, taken apart.
+सचिव (saciv) is Sanskrit saciva, "companion, counsellor, minister", taken over whole, a tatsama. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a manager, then the Marathi for a secret
 You'll want to know: हिशेब.
 हिशेब — hiśeb — "accounts, a reckoning".
 
+The word, taken apart.
+हिशेब (hiśeb) is a loan from Arabic ḥisāb, "reckoning, account", which reached Marathi through Persian. Its Arabic root is ḥ-s-b (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a secretary, then the Marathi for accoun
 You'll want to know: तपशील.
 तपशील — tapśīl — "details".
 
+The word, taken apart.
+तपशील (tapśīl) is a loan from Arabic tafṣīl, "a setting out in detail", which reached Marathi through Persian. Its Arabic root is f-ṣ-l (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for accounts, then the Marathi for details.
 
 You'll want to know: माहिती.
 माहिती — māhitī — "information".
+
+The word, taken apart.
+माहिती (māhitī) is built on Marathi māhīt, "known". Māhīt is often traced, through Persian, to Arabic māhiyya, "what a thing is, its nature", but no source here settles it.
 
 What you've built.
 One more word for this chapter.

@@ -11,9 +11,10 @@ gloss: the indirect object — the same -ला again, this time for the person 
 concept_tag: MR-GRAMMAR-INDIRECT-OBJECT
 prerequisites: [MR-C47-laa-object, MR-C22-dene, MR-C10-paani]
 sounds: [matra-aa, matra-e]
-roots: []
+roots: [sanskrit-mitra, sanskrit-dadati]
+etymology_hook: "mitra ← Sanskrit mitra 'friend' (CDIAL 10124); deto ← dadāti 'gives' (CDIAL 6141); -lā has no entry"
 duration:
-  max_seconds: 220
+  max_seconds: 227
 requires:
   knowledge: [MR-GRAMMAR-OBJECT-LAA, MR-LEX-DENE, MR-LEX-MITRA, MR-LEX-PAANI, MR-POSTP-VAR, MR-LEX-ANNE, MR-ETYMON-ANNE-AA-NI, MR-POSTP-HUUN, MR-GRAMMAR-OBLIQUE]
 introduces:
@@ -57,6 +58,11 @@ is which. That is the payoff of marking rather than positioning.
 **आणणे** works the same way: **मी मित्राला पाणी आणतो**, *I bring water to my
 friend*. Any verb of handing over takes this frame, and you already have three
 of them.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मित्र** is Sanskrit *mitra*, "friend" (CDIAL 10124); **देतो** comes from Sanskrit *dadāti*, "gives" (CDIAL 6141). The ending **-ला** has no CDIAL entry.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-INDIRECT-OBJECT, MR-GRAMMAR-OBJECT-LAA, MR-LEX-DENE, MR-LEX-PAANI, MR-POSTP-VAR, MR-POSTP-HUUN] -->

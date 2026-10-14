@@ -14,7 +14,8 @@ romanization: "gārā"
 concept_tag: MR-VASTU246-GARA
 prerequisites: [MR-C245-sangrahalay, MR-C246-indradhanusya]
 sounds: []
-roots: []
+roots: [sanskrit-karaka]
+etymology_hook: "gārā ← Sanskrit karaka 'hail', a tadbhava (CDIAL 2782)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C246-indradhanusya]
 <!-- hl-knowledge: introduces=[MR-LEX-C246-VASTU246-02]; assesses=[] -->
 
 **गारा** — *gārā* — "hail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गारा** (*gārā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karaka*, "hail" (CDIAL 2782). CDIAL lists the Marathi word here with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

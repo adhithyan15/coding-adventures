@@ -14,7 +14,8 @@ romanization: "gāyak / gāyikā"
 concept_tag: MR-VASTU263-GAYAK
 prerequisites: [MR-C262-sarkar, MR-C262-kayda]
 sounds: []
-roots: []
+roots: [sanskrit-gayaka]
+etymology_hook: "gāyak: Sanskrit gāyaka 'singer', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C262-kayda]
 <!-- hl-knowledge: introduces=[MR-LEX-C263-VASTU263-01]; assesses=[] -->
 
 **गायक / गायिका** — *gāyak / gāyikā* — "a singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गायक** (*gāyak*) is Sanskrit *gāyaka*, "singer", a tatsama built on *gai*, "to sing". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khāṭũ"
 concept_tag: GU-QUAL132-KHATU
 prerequisites: [GU-C132-cokhkhu, GU-C132-gandu, GU-C33-ke-checkpoint]
 sounds: []
-roots: []
+roots: [sanskrit-khatta]
+etymology_hook: "khāṭũ ← Sanskrit khaṭṭa 'sour', perhaps linked with kaṭu 'pungent' (CDIAL 3777)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [GU-C132-gandu]
 <!-- hl-knowledge: introduces=[GU-LEX-C132-QUAL132-03]; assesses=[] -->
 
 **ખાટું** (*khāṭũ*) — "sour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખાટું** (*khāṭũ*) is a tadbhava of the lexical Sanskrit *khaṭṭa*, "sour" (CDIAL 3777). CDIAL asks whether the word is connected with *kaṭu*, "pungent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

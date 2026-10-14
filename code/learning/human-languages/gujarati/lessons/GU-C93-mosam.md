@@ -14,7 +14,8 @@ romanization: "mosam"
 concept_tag: GU-TIME93-MOSAM
 prerequisites: [GU-C92-varas, GU-C92-pal]
 sounds: []
-roots: []
+roots: [arabic-mawsim-season]
+etymology_hook: "mosam ← Arabic mawsim 'a season, a time of assembly', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C92-pal]
 <!-- hl-knowledge: introduces=[GU-LEX-C93-TIME93-01]; assesses=[] -->
 
 **મોસમ** (*mosam*) — "a season, the weather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મોસમ** (*mosam*) is a loan from Arabic *mawsim*, "a season, a time of assembly", which reached Gujarati through Persian. Its Arabic root is *w-s-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

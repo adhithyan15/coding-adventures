@@ -14,7 +14,8 @@ romanization: "jalad"
 concept_tag: MR-ADJ104-JALAD
 prerequisites: [MR-C104-thand, MR-C104-halu]
 sounds: []
-roots: []
+roots: [persian-jald]
+etymology_hook: "jalad: usually traced to Persian jald 'quick, swift'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C104-halu]
 <!-- hl-knowledge: introduces=[MR-LEX-C104-ADJ104-04]; assesses=[] -->
 
 **जलद** — *jalad* — "fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जलद** (*jalad*) is a loan, usually traced to Persian *jald*, "quick, swift".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

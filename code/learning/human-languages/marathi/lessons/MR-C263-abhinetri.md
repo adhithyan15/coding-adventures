@@ -14,7 +14,8 @@ romanization: "abhinetrī"
 concept_tag: MR-VASTU263-ABHINETRI
 prerequisites: [MR-C263-karyakram, MR-C263-abhineta]
 sounds: []
-roots: []
+roots: [sanskrit-abhinaya]
+etymology_hook: "abhinetrī: the feminine of abhinetā, from Sanskrit abhinī 'to act out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C263-abhineta]
 <!-- hl-knowledge: introduces=[MR-LEX-C263-VASTU263-04]; assesses=[] -->
 
 **अभिनेत्री** — *abhinetrī* — "an actress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अभिनेत्री** (*abhinetrī*) is the feminine of **अभिनेता**, built on Sanskrit *abhi-nī*, "to act out", the verb behind *abhinaya*, "acting".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

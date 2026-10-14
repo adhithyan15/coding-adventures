@@ -14,7 +14,8 @@ romanization: "āsan"
 concept_tag: MR-VASTU240-ASAN
 prerequisites: [MR-C240-pravesdvar, MR-C240-saman]
 sounds: []
-roots: []
+roots: [sanskrit-asana]
+etymology_hook: "āsan ← Sanskrit āsana 'sitting; seat', a tatsama (CDIAL 1484)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C240-saman]
 <!-- hl-knowledge: introduces=[MR-LEX-C240-VASTU240-04]; assesses=[] -->
 
 **आसन** — *āsan* — "a seat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आसन** (*āsan*) is Sanskrit *āsana*, "sitting; seat", taken over whole as a learned loan, a tatsama (CDIAL 1484). It is built on *ās*, "to sit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

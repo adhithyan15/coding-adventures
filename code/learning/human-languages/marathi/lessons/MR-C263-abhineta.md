@@ -14,7 +14,8 @@ romanization: "abhinetā"
 concept_tag: MR-VASTU263-ABHINETA
 prerequisites: [MR-C263-gayak, MR-C263-karyakram]
 sounds: []
-roots: []
+roots: [sanskrit-abhinaya]
+etymology_hook: "abhinetā: Sanskrit abhinetṛ 'one who acts out', from abhinī 'to act out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C263-karyakram]
 <!-- hl-knowledge: introduces=[MR-LEX-C263-VASTU263-03]; assesses=[] -->
 
 **अभिनेता** — *abhinetā* — "an actor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अभिनेता** (*abhinetā*) is Sanskrit *abhinetṛ*, "one who acts out", built on *abhi-nī*, "to bring toward, act out", the verb behind *abhinaya*, "acting".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

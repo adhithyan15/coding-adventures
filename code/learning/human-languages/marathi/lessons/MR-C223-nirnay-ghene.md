@@ -14,7 +14,8 @@ romanization: "nirṇay gheṇe"
 concept_tag: MR-VERB-NIRNAY-GHENE
 prerequisites: [MR-C223-samjavne, MR-C223-bhasantar-karne]
 sounds: []
-roots: []
+roots: [sanskrit-nirnaya, sanskrit-grbhayati]
+etymology_hook: "nirṇay: Sanskrit nirṇaya 'decision', a tatsama; gheṇe ← gṛbhāyati 'takes' (CDIAL 4236)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C223-bhasantar-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C223-ACT223-05]; assesses=[] -->
 
 **निर्णय घेणे** — *nirṇay gheṇe* — "to make a decision".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**निर्णय** is Sanskrit *nirṇaya*, "settling, decision", a tatsama. **घेणे** comes from Sanskrit *gṛbhāyati*, "takes, seizes" (CDIAL 4236).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

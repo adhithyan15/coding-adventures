@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 146,
-  "sourceHash": "fnv1a64:b992f78e87118ea2",
+  "sourceHash": "fnv1a64:02082b00093e7dda",
   "lessonIds": [
     "MR-C146-angtha",
     "MR-C146-nakh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch146.txt",
   "json": "marathi/narration/ch146.json",
-  "textHash": "fnv1a64:23f194a0efeb5b1f",
-  "jsonHash": "fnv1a64:2ca5086db54dade3",
+  "textHash": "fnv1a64:ec9a25797793b0af",
+  "jsonHash": "fnv1a64:bf59c1e69f240e28",
   "findings": []
 }

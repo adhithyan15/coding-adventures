@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 242,
-  "sourceHash": "fnv1a64:a7507f71061df81e",
+  "sourceHash": "fnv1a64:8801f3e6c7fdbcfc",
   "lessonIds": [
     "MR-C242-camde",
     "MR-C242-dhatu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch242.txt",
   "json": "marathi/narration/ch242.json",
-  "textHash": "fnv1a64:d93bc537db83cf7f",
-  "jsonHash": "fnv1a64:dfec735a6de6b063",
+  "textHash": "fnv1a64:2e1a5a0c4ad7af58",
+  "jsonHash": "fnv1a64:7398c39b2bd3f61f",
   "findings": []
 }

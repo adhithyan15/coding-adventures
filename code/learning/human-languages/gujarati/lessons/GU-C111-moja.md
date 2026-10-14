@@ -14,7 +14,8 @@ romanization: "mojā̃"
 concept_tag: GU-THINGS111-MOJA
 prerequisites: [GU-C111-viti, GU-C111-butti]
 sounds: []
-roots: []
+roots: [persian-moza]
+etymology_hook: "mojāṁ: usually traced to Persian mōza 'sock, stocking'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C111-butti]
 <!-- hl-knowledge: introduces=[GU-LEX-C111-THINGS111-05]; assesses=[] -->
 
 **મોજાં** (*mojā̃*) — "socks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મોજાં** (*mojāṁ*) is a loan, usually traced to Persian *mōza*, "sock, stocking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

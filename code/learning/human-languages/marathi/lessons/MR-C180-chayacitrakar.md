@@ -14,7 +14,8 @@ romanization: "chāyācitrakār"
 concept_tag: MR-VASTU180-CHAYACITRAKAR
 prerequisites: [MR-C180-lekhak, MR-C180-citrakar]
 sounds: []
-roots: []
+roots: [sanskrit-chaya, sanskrit-citrakara]
+etymology_hook: "chāyācitrakār: Sanskrit chāyā 'shadow, image' + citrakāra 'painter'; a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C180-citrakar]
 <!-- hl-knowledge: introduces=[MR-LEX-C180-VASTU180-03]; assesses=[] -->
 
 **छायाचित्रकार** — *chāyācitrakār* — "a photographer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छायाचित्रकार** (*chāyācitrakār*) is a modern compound of Sanskrit parts: *chāyā*, "shadow, image", and *citrakāra*, "painter" (CDIAL 4807).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

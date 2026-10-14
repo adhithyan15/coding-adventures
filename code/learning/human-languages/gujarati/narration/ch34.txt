@@ -9,6 +9,9 @@ Warm-up.
 [pause 3 seconds]
 Say the Gujarati words for brother and for sister. Now listen twice: chhokro. It means boy — younger than the bhāī you already know, and ending in the masculine -o.
 
+The word, taken apart.
+છોકરો (chhokro) is a tadbhava. CDIAL reconstructs chokara, "boy", and lists the Gujarati word under its variant chokkara (CDIAL 5070).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "chhokro"]
@@ -30,6 +33,9 @@ Lesson 2 of 8.
 Warm-up.
 [pause 3 seconds]
 Say the word for boy. Now listen twice: chhokrī. It means girl — the pair of chhokro, and this time the -o and -ī endings really do mark gender.
+
+The word, taken apart.
+છોકરી (chhokrī) is the feminine of chhokro, "boy". CDIAL lists chhokro under a reconstructed chokkara, a variant of chokara, "boy" (CDIAL 5070).
 
 Guided Practice.
 [pause 1 second]
@@ -53,6 +59,9 @@ Warm-up.
 [pause 3 seconds]
 Say the words for boy and for girl. Now listen twice: māṇas. It means person — anybody at all, the word to use when boy or girl is not the question.
 
+The word, taken apart.
+માણસ (māṇas) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mānuṣa, "human; man" (CDIAL 10049).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "māṇas"]
@@ -75,6 +84,9 @@ Warm-up.
 [pause 3 seconds]
 Say the Gujarati verb for to read. Now listen twice: pustak. It means book — the thing a māṇas reads, and it carries the same st join as namaste.
 
+The word, taken apart.
+પુસ્તક (pustak) is Sanskrit pustaka, "book", taken over whole as a learned loan, a tatsama. CDIAL traces the Sanskrit word to Iranian, comparing Persian pōst, "skin", and lists the inherited Gujarati pothī, "book", from the same source (CDIAL 8413).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "pustak"]
@@ -96,6 +108,9 @@ Lesson 5 of 8.
 Warm-up.
 [pause 3 seconds]
 Say the words for book and for person. Now listen twice: kāgaḷ. It means paper — what a pustak is made of, ending on the curled-back ḷ you also hear in dāḷ.
+
+The word, taken apart.
+કાગળ (kāgaḷ) is a loan, usually traced to Persian kāghaz, "paper". Gujarati ends it in ḷ.
 
 Guided Practice.
 [pause 1 second]

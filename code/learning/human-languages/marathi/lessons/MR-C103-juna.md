@@ -14,7 +14,8 @@ romanization: "junā"
 concept_tag: MR-ANIMALS103-JUNA
 prerequisites: [MR-C103-badak, MR-C103-nava]
 sounds: []
-roots: []
+roots: [sanskrit-jurna]
+etymology_hook: "junā ← Sanskrit jūrṇa 'old, decayed', a tadbhava (CDIAL 5260)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C103-nava]
 <!-- hl-knowledge: introduces=[MR-LEX-C103-ANIMALS103-04]; assesses=[] -->
 
 **जुना** — *junā* — "old (things)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जुना** (*junā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jūrṇa*, "old, decayed" (CDIAL 5260).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

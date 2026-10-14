@@ -14,7 +14,8 @@ romanization: "kārkhānũ"
 concept_tag: GU-THINGS128-KARKHANU
 prerequisites: [GU-C127-hospital, GU-C128-kaceri]
 sounds: []
-roots: []
+roots: [persian-karkhana]
+etymology_hook: "kārkhānũ: usually traced to Persian kārkhāna 'workshop'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C128-kaceri]
 <!-- hl-knowledge: introduces=[GU-LEX-C128-THINGS128-02]; assesses=[] -->
 
 **કારખાનું** (*kārkhānũ*) — "a factory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કારખાનું** (*kārkhānũ*) is a loan, usually traced to Persian *kārkhāna*, "workshop". It is *kār*, "work", and *khāna*, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

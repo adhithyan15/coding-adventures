@@ -14,7 +14,8 @@ romanization: "charī"
 concept_tag: GU-THINGS108-CHARI
 prerequisites: [GU-C107-culo, GU-C108-vasan]
 sounds: []
-roots: []
+roots: [sanskrit-kshuri]
+etymology_hook: "charī ← Sanskrit kṣurī 'knife, dagger', a tadbhava (CDIAL 3727)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C108-vasan]
 <!-- hl-knowledge: introduces=[GU-LEX-C108-THINGS108-02]; assesses=[] -->
 
 **છરી** (*charī*) — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**છરી** (*charī*) is a tadbhava of Sanskrit *kṣurī*, "knife, dagger", the feminine of *kṣura*, "razor" (CDIAL 3727). CDIAL rejects J. Bloch's derivation from Sanskrit *tsaru*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sāmānya"
 concept_tag: MR-GUN206-SAMANYA
 prerequisites: [MR-C206-khajgi, MR-C206-vaiyaktik]
 sounds: []
-roots: []
+roots: [sanskrit-samanya]
+etymology_hook: "sāmānya ← Sanskrit sāmānya 'equal, alike', a tatsama (CDIAL 13351)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C206-vaiyaktik]
 <!-- hl-knowledge: introduces=[MR-LEX-C206-GUN206-04]; assesses=[] -->
 
 **सामान्य** — *sāmānya* — "ordinary, common".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सामान्य** (*sāmānya*) is Sanskrit *sāmānya*, "equal, alike", taken over whole as a learned loan, a tatsama (CDIAL 13351). It is built on *samāna*, "same".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

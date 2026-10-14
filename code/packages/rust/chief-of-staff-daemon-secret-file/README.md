@@ -16,6 +16,11 @@ the current token user.
 The package only reads existing operator-owned files. It never creates, repairs,
 rewrites, logs, or exposes secret content through its errors.
 
+The one exception is test-only: with the `test-support` feature,
+`write_test_secret` creates a file under exactly this policy, so other crates'
+tests can feed secrets to a loader built on this one (on Windows, `std` cannot
+set the DACL). Production builds never enable it.
+
 ## Development
 
 ```bash

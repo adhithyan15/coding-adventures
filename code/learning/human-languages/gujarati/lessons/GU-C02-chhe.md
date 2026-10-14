@@ -11,7 +11,8 @@ gloss: is (the copula)
 concept_tag: WORD-IS
 prerequisites: [GU-C02-naam]
 sounds: [chha, e-sign]
-roots: []
+roots: [sanskrit-akseti]
+etymology_hook: "chhe ← Old Gujarati achaï, which CDIAL lists under Sanskrit ākṣeti 'abides, dwells in' (CDIAL 1031)"
 duration:
   max_seconds: 180
 requires:
@@ -55,6 +56,8 @@ sentence as *Gujarati* rather than Hindi. Hear its forms first: *hũ chhũ* ("I
 am"), *tũ chhe* ("you are," familiar), **તે છે** (*te chhe*, "he/she/it is"),
 and *tame chho* ("you are," respectful). The later pronoun lessons will put the
 first, familiar-you, and respectful-you forms into Gujarati script gently.
+
+CDIAL lists it, beside Old Gujarati *achaï*, under Sanskrit *ākṣeti*, "abides, dwells in" (CDIAL 1031).
 
 ## Grammar Lens: the verb goes last
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-NAAM-01] -->

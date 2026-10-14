@@ -14,7 +14,8 @@ romanization: "bhūgol"
 concept_tag: MR-KAAM250-BHUGOL
 prerequisites: [MR-C249-bhovra, MR-C250-itihas]
 sounds: []
-roots: []
+roots: [sanskrit-bhu, sanskrit-gola]
+etymology_hook: "bhūgol: Sanskrit bhū 'earth' + gola 'ball' (CDIAL 4321)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C250-itihas]
 <!-- hl-knowledge: introduces=[MR-LEX-C250-KAAM250-02]; assesses=[] -->
 
 **भूगोल** — *bhūgol* — "geography".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भूगोल** (*bhūgol*) is a compound of Sanskrit parts: *bhū*, "earth", and *gola*, "ball" (CDIAL 4321).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

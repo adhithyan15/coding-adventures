@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:1c95c323c20aced4",
+  "sourceHash": "fnv1a64:ae8a6b972fbc93cd",
   "lessons": [
     {
       "id": "GU-C02-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:00f63cbe810c78c7",
+      "sourceHash": "fnv1a64:083b6510b56bc293",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:09de91219b62dc5c",
+      "sourceHash": "fnv1a64:ec66906798b3fb33",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -283,7 +283,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:62dc8a5f198045f4",
+      "sourceHash": "fnv1a64:0eaec137860cf68f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -331,6 +331,10 @@
             {
               "kind": "speech",
               "text": "છે (chhe, \"is\") is Gujarati's copula — and, unusually, it is not the hai of Hindi or the asti of Sanskrit. It grew from an Old Gujarati form (achhaï) along its own path, so it is one of the words that most quickly marks a sentence as Gujarati rather than Hindi. Hear its forms first: hũ chhũ (\"I am\"), tũ chhe (\"you are,\" familiar), તે છે (te chhe, \"he/she/it is\"), and tame chho (\"you are,\" respectful). The later pronoun lessons will put the first, familiar-you, and respectful-you forms into Gujarati script gently."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists it, beside Old Gujarati achaï, under Sanskrit ākṣeti, \"abides, dwells in\" (CDIAL 1031)."
             }
           ]
         },
@@ -417,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:117bb1a359167baf",
+      "sourceHash": "fnv1a64:d08d4b595e53e32a",
       "notice": null,
       "blocks": [
         {
@@ -450,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "All three words are inherited. CDIAL lists mārũ under the Sanskrit first-person base ma- (CDIAL 9691), nām under nāman, \"name\" (CDIAL 7067), and chhe under ākṣeti, \"abides, dwells in\" (CDIAL 1031)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the verb goes last",
           "segments": [
@@ -460,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -491,7 +506,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -522,7 +537,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:72a1c43b3764cd59",
+      "sourceHash": "fnv1a64:0bb1bb7a55825bcd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -645,7 +660,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:77d8affe1c822a64",
+      "sourceHash": "fnv1a64:7561f9221e213f4b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -694,6 +709,10 @@
             {
               "kind": "speech",
               "text": "તું (tũ, familiar \"you\") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu, and Hindi tū. તમે (tame, respectful \"you\") is grammatically plural — courtesy-by-plural, like French vous and Hindi āp. For a first meeting, use તમે; it takes the plural copula chho (tame … chho)."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists tũ under tvam, by way of Old Gujarati taüṁ, reshaped after haüṁ, \"I\" (CDIAL 5889), and tame under yuṣmad-, \"you (plural)\", with its t- taken from tvam (CDIAL 10511)."
             }
           ]
         },
@@ -798,7 +817,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:90efa518536acbe6",
+      "sourceHash": "fnv1a64:4f732acaf085061f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -847,6 +866,10 @@
             {
               "kind": "speech",
               "text": "શું (shũ, \"what\") descends, by a winding road, from the Sanskrit interrogative stem ક- (ka-, PIE kʷo-) — the root behind English what, Latin quis, and Hindi kyā. Most of Gujarati's questions still show that k- plainly — kem (how), કોણ (kōṇ, who), ક્યાં (kyā̃, where), ક્યારે (kyāre, when) — but \"what\" wore down into this sh- form. So shũ is the odd cousin in a k- family."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists it under Sanskrit kīdṛśa, \"of what kind\", through a form ksiũ that lost its first vowel (CDIAL 3197)."
             }
           ]
         },
@@ -951,7 +974,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0c361823529f151e",
+      "sourceHash": "fnv1a64:770b7f58df111dd7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -993,6 +1016,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "All four words are inherited, from yuṣmad-, nāman, kīdṛśa and ākṣeti (CDIAL 10511, 7067, 3197, 1031)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: answering, and the familiar form",
           "segments": [
@@ -1003,7 +1037,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1043,7 +1077,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "script",
           "title": "Script retrieval",
           "segments": [
@@ -1072,7 +1106,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

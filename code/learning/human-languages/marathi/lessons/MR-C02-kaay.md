@@ -11,7 +11,8 @@ gloss: what (kāy)
 concept_tag: QUESTION-WHAT
 prerequisites: [MR-C02-tu-tumhi]
 sounds: [matra-aa]
-roots: [ka-interrogative]
+roots: [ka-interrogative, sanskrit-kidrk]
+etymology_hook: "kāy ← *kādṛk, which CDIAL says replaced Sanskrit kīdṛk 'of what sort' after yādṛk, tādṛk (CDIAL 3196)"
 reviews_of: [MR-C02-naav]
 duration:
   max_seconds: 200

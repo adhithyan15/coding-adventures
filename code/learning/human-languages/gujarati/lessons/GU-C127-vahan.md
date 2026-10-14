@@ -14,7 +14,8 @@ romanization: "vahāṇ"
 concept_tag: GU-THINGS127-VAHAN
 prerequisites: [GU-C127-magaj, GU-C127-saikal]
 sounds: []
-roots: []
+roots: [sanskrit-vahana]
+etymology_hook: "vahāṇ ← Sanskrit vāhana 'any vehicle or draught animal', a tadbhava (CDIAL 11610)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C127-saikal]
 <!-- hl-knowledge: introduces=[GU-LEX-C127-THINGS127-03]; assesses=[] -->
 
 **વહાણ** (*vahāṇ*) — "a ship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વહાણ** (*vahāṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vāhana*, "any vehicle or draught animal" (CDIAL 11610).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

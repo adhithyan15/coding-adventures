@@ -11,8 +11,8 @@ gloss: oil, heard and said before it is ever shown
 concept_tag: GU-FOOD-OIL-HEARD
 prerequisites: [GU-C27-hear-shaak]
 sounds: [e-sign, la]
-roots: []
-etymology_hook: The shortest word of the chapter, and the one the other three are cooked in.
+roots: [sanskrit-taila]
+etymology_hook: "tel ← Sanskrit taila 'sesamum oil, oil', a tadbhava (CDIAL 5958)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C27-hear-shaak]
 
 [PAUSE 3s] Say the words for vegetable and for lentils. Now listen twice: **tel**. It means
 **oil** — cooking oil, the thing the shāk is cooked in.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તેલ** (*tel*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *taila*, "sesamum oil, oil" (CDIAL 5958). It is built on *tila*, "sesame".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-TEL-01, GU-LEX-SHAAK-01] -->

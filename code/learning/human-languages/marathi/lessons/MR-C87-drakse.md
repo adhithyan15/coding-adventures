@@ -14,7 +14,8 @@ romanization: "drākṣe"
 concept_tag: MR-FOOD87-DRAKSE
 prerequisites: [MR-C87-madh, MR-C87-tel]
 sounds: []
-roots: []
+roots: [sanskrit-draksha]
+etymology_hook: "drākṣe ← Sanskrit drākṣā 'vine, grape', a tatsama (CDIAL 6628)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C87-tel]
 <!-- hl-knowledge: introduces=[MR-LEX-C87-FOOD87-05]; assesses=[] -->
 
 **द्राक्षे** — *drākṣe* — "grapes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**द्राक्षे** (*drākṣe*) is Sanskrit *drākṣā*, "vine, grape", taken over whole as a learned loan, a tatsama (CDIAL 6628).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

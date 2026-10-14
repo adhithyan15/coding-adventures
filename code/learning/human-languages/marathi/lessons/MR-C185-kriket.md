@@ -14,7 +14,8 @@ romanization: "krikeṭ"
 concept_tag: MR-VASTU185-KRIKET
 prerequisites: [MR-C184-pradusan, MR-C185-vyayamsala]
 sounds: []
-roots: []
+roots: [english-cricket]
+etymology_hook: "krikeṭ ← English cricket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C185-vyayamsala]
 <!-- hl-knowledge: introduces=[MR-LEX-C185-VASTU185-02]; assesses=[] -->
 
 **क्रिकेट** — *krikeṭ* — "cricket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**क्रिकेट** (*krikeṭ*) is a loan from English *cricket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

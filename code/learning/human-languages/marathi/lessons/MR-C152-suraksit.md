@@ -14,7 +14,8 @@ romanization: "surakṣit"
 concept_tag: MR-QUAL152-SURAKSIT
 prerequisites: [MR-C151-murkh, MR-C151-prasiddh]
 sounds: []
-roots: []
+roots: [sanskrit-surakshita]
+etymology_hook: "surakṣit ← Sanskrit surakṣita 'well protected', a tatsama (CDIAL 13499)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C151-prasiddh]
 <!-- hl-knowledge: introduces=[MR-LEX-C152-QUAL152-01]; assesses=[] -->
 
 **सुरक्षित** — *surakṣit* — "safe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुरक्षित** (*surakṣit*) is Sanskrit *surakṣita*, "well protected", taken over whole as a learned loan, a tatsama (CDIAL 13499). It is *su-*, "well", and *rakṣita*, "guarded".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

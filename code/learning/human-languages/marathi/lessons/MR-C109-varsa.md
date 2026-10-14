@@ -14,7 +14,8 @@ romanization: "varṣa"
 concept_tag: MR-ADJ109-VARSA
 prerequisites: [MR-C109-athavda, MR-C109-mahina]
 sounds: []
-roots: []
+roots: [sanskrit-varsha]
+etymology_hook: "varṣa ← Sanskrit varṣa 'rain; year', a tatsama (CDIAL 11392)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C109-mahina]
 <!-- hl-knowledge: introduces=[MR-LEX-C109-ADJ109-04]; assesses=[] -->
 
 **वर्ष** — *varṣa* — "a year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वर्ष** (*varṣa*) is Sanskrit *varṣa*, "rain; year", taken over whole as a learned loan, a tatsama (CDIAL 11392). It meant "rain" in the Rigveda and "year" later.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nirṇay"
 concept_tag: MR-VASTU211-NIRNAY
 prerequisites: [MR-C211-anubhav, MR-C211-nivad]
 sounds: []
-roots: []
+roots: [sanskrit-nirnaya]
+etymology_hook: "nirṇay: Sanskrit nirṇaya 'settling, decision', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C211-nivad]
 <!-- hl-knowledge: introduces=[MR-LEX-C211-VASTU211-04]; assesses=[] -->
 
 **निर्णय** — *nirṇay* — "a decision".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**निर्णय** (*nirṇay*) is Sanskrit *nirṇaya*, "settling, decision", a tatsama: *nis*, "out", and *nī*, "to lead". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

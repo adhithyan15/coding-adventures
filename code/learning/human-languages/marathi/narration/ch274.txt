@@ -12,6 +12,9 @@ Before the new one: say the Marathi for respect, then the Marathi for pity.
 You'll want to know: शुभेच्छा.
 शुभेच्छा — śubhecchā — "good wishes".
 
+The word, taken apart.
+शुभेच्छा (śubhecchā) is a compound built from Sanskrit śubha, "good, auspicious" (CDIAL 12532), and icchā, "wish" (CDIAL 1557).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for pity, then the Marathi for good wishes.
 
 You'll want to know: आमंत्रण.
 आमंत्रण — āmantraṇ — "an invitation".
+
+The word, taken apart.
+आमंत्रण (āmantraṇ) is Sanskrit āmantraṇa, "calling to; invitation", taken over whole as a learned loan, a tatsama (CDIAL 1242). CDIAL lists the inherited Marathi verb as āvãtṇẽ, "invites".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for good wishes, then the Marathi for an inv
 You'll want to know: समारंभ.
 समारंभ — samārambh — "a ceremony".
 
+The word, taken apart.
+समारंभ (samārambh) is Sanskrit samārambha, "undertaking, beginning", a tatsama: sam, "together", and ārambha, "beginning".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for an invitation, then the Marathi for a ce
 You'll want to know: पूजा.
 पूजा — pūjā — "worship".
 
+The word, taken apart.
+पूजा (pūjā) is Sanskrit pūjā, "honour, worship", taken over whole as a learned loan, a tatsama (CDIAL 8317).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a ceremony, then the Marathi for worship
 
 You'll want to know: अधिकारी.
 अधिकारी — adhikārī — "an officer, an official".
+
+The word, taken apart.
+अधिकारी (adhikārī) is Sanskrit adhikārin, "entitled, having authority", a tatsama built on adhikāra, "authority". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

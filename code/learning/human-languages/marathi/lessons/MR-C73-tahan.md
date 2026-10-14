@@ -14,7 +14,8 @@ romanization: "tahān"
 concept_tag: MR-HEALTH73-TAHAN
 prerequisites: [MR-C73-ajari, MR-C73-vedana]
 sounds: []
-roots: []
+roots: [sanskrit-trshna]
+etymology_hook: "tahān ← Sanskrit tṛṣṇā 'thirst', a tadbhava (CDIAL 5941)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C73-vedana]
 <!-- hl-knowledge: introduces=[MR-LEX-C73-HEALTH73-03]; assesses=[] -->
 
 **तहान** — *tahān* — "thirst".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तहान** (*tahān*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tṛṣṇā*, "thirst" (CDIAL 5941). The same root gives English *thirst*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

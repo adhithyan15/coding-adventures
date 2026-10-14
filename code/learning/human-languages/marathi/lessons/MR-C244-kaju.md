@@ -14,7 +14,8 @@ romanization: "kājū"
 concept_tag: MR-VASTU244-KAJU
 prerequisites: [MR-C244-kadhipatta, MR-C244-sengdane]
 sounds: []
-roots: []
+roots: [portuguese-caju]
+etymology_hook: "kājū ← Portuguese caju 'cashew'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C244-sengdane]
 <!-- hl-knowledge: introduces=[MR-LEX-C244-VASTU244-05]; assesses=[] -->
 
 **काजू** — *kājū* — "cashews".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काजू** (*kājū*) is a loan from Portuguese *caju*, "cashew". Portuguese took it from Tupi, a language of Brazil.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

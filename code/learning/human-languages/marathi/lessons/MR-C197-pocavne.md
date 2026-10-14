@@ -14,7 +14,8 @@ romanization: "pocavṇe"
 concept_tag: MR-VERB-POCAVNE
 prerequisites: [MR-C197-javal-yene, MR-C197-gappa-marne]
 sounds: []
-roots: []
+roots: [sanskrit-prabhuta]
+etymology_hook: "pocavṇe: the 'make' form of poc-, pohocṇe 'to arrive', listed under prabhūta (CDIAL 8716)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C197-gappa-marne]
 <!-- hl-knowledge: introduces=[MR-LEX-C197-ACT197-05]; assesses=[] -->
 
 **पोचवणे** — *pocavṇe* — "to deliver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पोचवणे** (*pocavṇe*) is the "make" form of *poc-*, the stem of **पोहोचणे**, "to arrive", which CDIAL lists under Sanskrit *prabhūta*, "much, great" (CDIAL 8716).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

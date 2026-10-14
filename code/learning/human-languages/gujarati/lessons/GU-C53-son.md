@@ -14,7 +14,8 @@ romanization: "dīkro"
 concept_tag: GU-FAMILY3-SON
 prerequisites: [GU-C52-husband, GU-C53-wife]
 sounds: []
-roots: []
+roots: [indo-aryan-dikka]
+etymology_hook: "dīkro: listed by CDIAL under a reconstructed *dikka 'lump', comparing dikka 'young elephant' (CDIAL 6326)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C53-wife]
 <!-- hl-knowledge: introduces=[GU-LEX-C53-FAMILY3-02]; assesses=[] -->
 
 **દીકરો** (*dīkro*) — "a son".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **દીકરો** (*dīkro*) under a reconstructed *\*dikka*, "lump", comparing the lexical word *dikka*, "young elephant" (CDIAL 6326).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

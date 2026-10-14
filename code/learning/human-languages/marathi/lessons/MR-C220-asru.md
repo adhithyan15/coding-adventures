@@ -14,7 +14,8 @@ romanization: "aśrū"
 concept_tag: MR-VASTU220-ASRU
 prerequisites: [MR-C220-bhuvai, MR-C220-gham]
 sounds: []
-roots: []
+roots: [sanskrit-ashru]
+etymology_hook: "aśrū ← Sanskrit aśru 'tear', a tatsama (CDIAL 919)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C220-gham]
 <!-- hl-knowledge: introduces=[MR-LEX-C220-VASTU220-05]; assesses=[] -->
 
 **अश्रू** — *aśrū* — "a tear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अश्रू** (*aśrū*) is Sanskrit *aśru*, "tear", taken over whole as a learned loan, a tatsama (CDIAL 919). CDIAL lists the inherited Marathi form as *āsū*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "City, School, and Road",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:47aae12db7d1aaf7",
+  "sourceHash": "fnv1a64:9361ecff06eb1c85",
   "lessons": [
     {
       "id": "GU-C22-hear-shahar",
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f4424ede73a14c7",
+      "sourceHash": "fnv1a64:8a3c9a2050c86e70",
       "notice": null,
       "blocks": [
         {
@@ -187,6 +187,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શાળા (shāḷā) is a semi-tatsama: Sanskrit śālā, \"shed, stable, house\", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 12414). CDIAL lists no Gujarati form there; Marathi sāḷ, \"school\", shows the inherited shape."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -197,7 +208,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -342,7 +353,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6b92b6c56ffe59a",
+      "sourceHash": "fnv1a64:9162f71aa2504a63",
       "notice": null,
       "blocks": [
         {
@@ -358,6 +369,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રસ્તો (rasto) is a loan, usually traced to Persian rāsta, \"straight; a road\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -368,7 +390,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

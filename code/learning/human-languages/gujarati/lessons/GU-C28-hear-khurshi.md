@@ -11,8 +11,8 @@ gloss: chair, heard and said before it is ever shown
 concept_tag: GU-HOUSE-CHAIR-HEARD
 prerequisites: [GU-C28-hear-baari]
 sounds: [kha, short-u, voiceless-sh, long-ii]
-roots: []
-etymology_hook: The first thing inside the house rather than in its wall, and the first word in the book to open with the aspirated kh-.
+roots: [arabic-kursi]
+etymology_hook: "khurshī ← Arabic kursī 'chair, throne', through Persian"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C28-hear-baari]
 
 [PAUSE 3s] Say the words for door and for window. Now listen twice: **khurshī**. It means
 **chair** — the first thing in this chapter that stands inside the room rather than in its wall.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખુરશી** (*khurshī*) is a loan from Arabic *kursī*, "chair, throne", which reached Gujarati through Persian. Its Arabic root is *k-r-s* (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-KHURSHI-01, GU-LEX-BAARI-01] -->

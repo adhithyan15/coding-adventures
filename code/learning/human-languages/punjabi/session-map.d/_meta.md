@@ -1,4 +1,4 @@
-# Session Map — Punjabi Chapters 1–48
+# Session Map — Punjabi Chapters 1–175
 
 This is the authoritative book order. Every row is one session of at most five
 minutes. Sound and meaning come before load-bearing decoding; writing grows from

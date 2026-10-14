@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to defend, then the Marathi for to disap
 You'll want to know: गोळी.
 गोळी — goḷī — "a tablet, a pill".
 
+The word, taken apart.
+गोळी (goḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from golikā, "little ball", built on gola, "ball" (CDIAL 4321). CDIAL glosses the Marathi word "pill".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to disappear, then the Marathi for a tab
 
 You'll want to know: मलम.
 मलम — malam — "an ointment".
+
+The word, taken apart.
+मलम (malam) is a loan, usually traced through Persian to Arabic marham, "ointment", with ल for the r.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a tablet, then the Marathi for an ointme
 You'll want to know: पट्टी.
 पट्टी — paṭṭī — "a bandage; a strip".
 
+The word, taken apart.
+पट्टी (paṭṭī) matches Hindi paṭṭī, "strip of cloth", which CDIAL lists under Sanskrit paṭṭa, "cloth; bandage" (CDIAL 7700). CDIAL thinks the Sanskrit word probably comes from a non-Aryan source.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for an ointment, then the Marathi for a band
 You'll want to know: रुग्णवाहिका.
 रुग्णवाहिका — rugṇavāhikā — "an ambulance".
 
+The word, taken apart.
+रुग्णवाहिका (rugṇavāhikā) is a modern compound built from Sanskrit rugṇa, "broken, sick" (CDIAL 10760), and vāhikā, "one that carries".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a bandage; a strip, then the Marathi for
 
 You'll want to know: आहार.
 आहार — āhār — "a diet".
+
+The word, taken apart.
+आहार (āhār) is Sanskrit āhāra, "fetching; taking food, food", taken over whole as a learned loan, a tatsama (CDIAL 1544). CDIAL lists the Marathi āhār, "food".
 
 What you've built.
 One more word for this chapter.

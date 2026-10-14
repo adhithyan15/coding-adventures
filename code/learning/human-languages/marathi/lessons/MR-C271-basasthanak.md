@@ -14,7 +14,8 @@ romanization: "basasthānak"
 concept_tag: MR-VASTU271-BASASTHANAK
 prerequisites: [MR-C270-kurta, MR-C271-kaceri]
 sounds: []
-roots: []
+roots: [english-bus, sanskrit-sthana]
+etymology_hook: "basasthānak: English bus + Sanskrit sthānaka 'place' (CDIAL 13753); a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C271-kaceri]
 <!-- hl-knowledge: introduces=[MR-LEX-C271-VASTU271-02]; assesses=[] -->
 
 **बसस्थानक** — *basasthānak* — "a bus station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बसस्थानक** (*basasthānak*) is a modern compound: English *bus*, and Sanskrit *sthānaka*, "position, place" (CDIAL 13753).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

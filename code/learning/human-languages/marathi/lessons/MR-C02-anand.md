@@ -11,7 +11,8 @@ gloss: pleased to meet you (bheṭūn ānand jhālā)
 concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [MR-C02-tumche-naav-kaay-aahe]
 sounds: [anusvara]
-roots: [ananda]
+roots: [ananda-sanskrit]
+etymology_hook: "ānand ← Sanskrit ānanda 'happiness', a tatsama (CDIAL 1172); bheṭūn from bheṭṇe 'to meet' (CDIAL 9490)"
 reviews_of: [MR-C02-majhe-naav-aahe]
 duration:
   max_seconds: 240
@@ -48,10 +49,11 @@ does not say "I am pleased"; it says the joy itself *occurred*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[MR-LEX-ANAND]; assesses=[] -->
 
-The heart of it is **आनंद** (*ānand*, "joy, bliss"), pure **Sanskrit**: **आ-**
-(*ā-*, "fully") + **नन्द** (*nand*, "to rejoice"). It is the *ānanda* of the
-scriptural phrase *sat-cit-ānanda* ("being–consciousness–bliss") — and one of the
-most common given names across India. So a Marathi speaker meets you and names
+The heart of it is **आनंद** (*ānand*, "joy, bliss"), Sanskrit *ānanda*,
+"happiness", a tatsama (CDIAL 1172): **आ-** (*ā-*, "fully") + **नन्द** (*nand*,
+"to rejoice"). It is the *ānanda* of the scriptural phrase *sat-cit-ānanda*
+("being–consciousness–bliss") — and one of the most common given names across
+India. So a Marathi speaker meets you and names
 the feeling **joy**.
 
 ## Why it's said this way

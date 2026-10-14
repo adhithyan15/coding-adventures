@@ -14,7 +14,8 @@ romanization: "budhvār"
 concept_tag: GU-WEEK1-WEDNESDAY
 prerequisites: [GU-C78-monday, GU-C78-tuesday]
 sounds: []
-roots: []
+roots: [sanskrit-budha, sanskrit-vara-day]
+etymology_hook: "budhvār: Sanskrit budha 'Mercury' + vāra 'day of the week' (CDIAL 11547), a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C78-tuesday]
 <!-- hl-knowledge: introduces=[GU-LEX-C78-WEEK1-03]; assesses=[] -->
 
 **બુધવાર** (*budhvār*) — "Wednesday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બુધવાર** (*budhvār*) is a Sanskrit compound, a tatsama: *budha*, "the planet Mercury", and *vāra*, "day of the week" (CDIAL 11547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

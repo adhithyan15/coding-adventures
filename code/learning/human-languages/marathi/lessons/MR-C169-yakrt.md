@@ -14,7 +14,8 @@ romanization: "yakṛt"
 concept_tag: MR-AAROGYA169-YAKRT
 prerequisites: [MR-C169-mendu, MR-C169-phuphphus]
 sounds: []
-roots: []
+roots: [sanskrit-yakrt]
+etymology_hook: "yakṛt ← Sanskrit yakṛt 'liver', a tatsama (CDIAL 10394)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C169-phuphphus]
 <!-- hl-knowledge: introduces=[MR-LEX-C169-AAROGYA169-04]; assesses=[] -->
 
 **यकृत** — *yakṛt* — "the liver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**यकृत** (*yakṛt*) is Sanskrit *yakṛt*, "liver", taken over whole as a learned loan, a tatsama (CDIAL 10394). The same ancient word as Latin *iecur*, "liver".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

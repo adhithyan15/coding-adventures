@@ -1,0 +1,11 @@
+{
+  "id": "SA-W258-a2-connected-composition",
+  "pathSegment": "SA-PATH-258-A2WRITING",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-258-A2WRITING",
+      "order": 0
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "mojṇe"
 concept_tag: MR-VERB-MOJNE
 prerequisites: [MR-C80-visarne, MR-C80-pathavne]
 sounds: []
-roots: []
+roots: [sanskrit-meya]
+etymology_hook: "mojṇe: CDIAL lists it under Sanskrit meya 'to be measured', its -o- unexplained (CDIAL 10329)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C80-pathavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C80-VERBS80-03]; assesses=[] -->
 
 **मोजणे** — *mojṇe* — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोजणे** (*mojṇe*) is listed by CDIAL under Sanskrit *meya*, "to be measured", from *mā*, "to measure", beside Marathi *mejṇẽ*, "to measure". CDIAL leaves the *-o-* of **मोजणे** unexplained (CDIAL 10329).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

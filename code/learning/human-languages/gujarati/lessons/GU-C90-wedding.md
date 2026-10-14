@@ -14,7 +14,8 @@ romanization: "lagna"
 concept_tag: GU-LIFE-WEDDING
 prerequisites: [GU-C89-bhanvu, GU-C89-shikhavvu]
 sounds: []
-roots: []
+roots: [sanskrit-lagna]
+etymology_hook: "lagna: Sanskrit lagna 'sticking to, fixed on', a tatsama; 'wedding' via the fixed auspicious moment (CDIAL 10893)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C89-shikhavvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C90-LIFE-01]; assesses=[] -->
 
 **લગ્ન** (*lagna*) — "a wedding".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**લગ્ન** (*lagna*) is Sanskrit *lagna*, "sticking to, fixed on", taken over whole as a learned loan, a tatsama (CDIAL 10893). The sense "wedding" is usually explained through its later use for the auspicious moment fixed for the rite.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

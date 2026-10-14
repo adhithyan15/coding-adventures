@@ -14,7 +14,8 @@ romanization: "pagār"
 concept_tag: GU-THINGS130-PAGAR
 prerequisites: [GU-C130-guru, GU-C130-nokri]
 sounds: []
-roots: []
+roots: [portuguese-pagar]
+etymology_hook: "pagār: usually traced to Portuguese pagar 'to pay'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C130-nokri]
 <!-- hl-knowledge: introduces=[GU-LEX-C130-THINGS130-04]; assesses=[] -->
 
 **પગાર** (*pagār*) — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પગાર** (*pagār*) is a loan, usually traced to Portuguese *pagar*, "to pay".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

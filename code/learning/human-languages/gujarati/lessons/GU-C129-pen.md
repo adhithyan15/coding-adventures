@@ -14,7 +14,8 @@ romanization: "pen"
 concept_tag: GU-THINGS129-PEN
 prerequisites: [GU-C129-bag, GU-C129-darvajo]
 sounds: []
-roots: []
+roots: [english-pen]
+etymology_hook: "pen ← English pen"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C129-darvajo]
 <!-- hl-knowledge: introduces=[GU-LEX-C129-THINGS129-04]; assesses=[] -->
 
 **પેન** (*pen*) — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પેન** (*pen*) is a loan from English *pen*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for the truth, then the Marathi for a rule.
 You'll want to know: प्रवेश.
 प्रवेश — praveś — "entry, admission".
 
+The word, taken apart.
+प्रवेश (praveś) is Sanskrit praveśa, "entering", a tatsama built on praviśati, "enters" (CDIAL 8803).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a rule, then the Marathi for entry.
 
 You'll want to know: प्रवेशद्वार.
 प्रवेशद्वार — praveśdvār — "an entrance".
+
+The word, taken apart.
+प्रवेशद्वार (praveśdvār) is a compound of Sanskrit parts: praveśa, "entering", and dvāra, "door" (CDIAL 6663).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for entry, then the Marathi for an entrance.
 You'll want to know: सामान.
 सामान — sāmān — "luggage, things".
 
+The word, taken apart.
+सामान (sāmān) is a loan, usually traced to Persian sāmān, "goods, equipment".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for an entrance, then the Marathi for luggag
 You'll want to know: आसन.
 आसन — āsan — "a seat".
 
+The word, taken apart.
+आसन (āsan) is Sanskrit āsana, "sitting; seat", taken over whole as a learned loan, a tatsama (CDIAL 1484). It is built on ās, "to sit".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for luggage, then the Marathi for a seat.
 
 You'll want to know: चाक.
 चाक — cāk — "a wheel".
+
+The word, taken apart.
+चाक (cāk) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cakra, "wheel" (CDIAL 4538).
 
 What you've built.
 One more word for this chapter.

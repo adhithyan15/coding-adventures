@@ -15,6 +15,7 @@ concept_tag: GU-THINGS116-PAPAIYU
 prerequisites: [GU-C115-naliyer, GU-C116-tarbuc]
 sounds: []
 roots: []
+etymology_hook: "papaiyũ: usually linked with papaya, a Caribbean word spread by Spanish and Portuguese sailors; not in CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C116-tarbuc]
 <!-- hl-knowledge: introduces=[GU-LEX-C116-THINGS116-02]; assesses=[] -->
 
 **પપૈયું** (*papaiyũ*) — "a papaya".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પપૈયું** (*papaiyũ*) is usually linked with *papaya*, a Caribbean word that Spanish and Portuguese sailors carried round the world. CDIAL has no entry for it, so the road it took into Gujarati is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

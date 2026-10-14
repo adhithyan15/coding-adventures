@@ -14,7 +14,8 @@ romanization: "savlat"
 concept_tag: MR-VASTU182-SAVLAT
 prerequisites: [MR-C181-vidhva, MR-C181-yas]
 sounds: []
-roots: []
+roots: [arabic-suhula]
+etymology_hook: "savlat: usually traced, through Persian suhūlat, to Arabic suhūla 'ease, facility'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C181-yas]
 <!-- hl-knowledge: introduces=[MR-LEX-C182-VASTU182-01]; assesses=[] -->
 
 **सवलत** — *savlat* — "a discount, a concession".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सवलत** (*savlat*) is a loan, usually traced through Persian *suhūlat* to Arabic *suhūla*, "ease, facility", whose root is *s-h-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

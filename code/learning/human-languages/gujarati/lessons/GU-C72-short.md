@@ -14,7 +14,8 @@ romanization: "ṭū̃kũ"
 concept_tag: GU-SIZE-SHORT
 prerequisites: [GU-C72-small, GU-C72-long]
 sounds: []
-roots: []
+roots: [indo-aryan-tukka]
+etymology_hook: "ṭūṁkũ: listed under *ṭukka 'piece', from a reconstructed *ṭukk 'cut, break' (CDIAL 5466)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C72-long]
 <!-- hl-knowledge: introduces=[GU-LEX-C72-SIZE-04]; assesses=[] -->
 
 **ટૂંકું** (*ṭū̃kũ*) — "short".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ટૂંકું** (*ṭūṁkũ*) under *\*ṭukka*, "piece", a form it reconstructs beside *\*ṭukk*, "cut, break" (CDIAL 5466). It thinks a link with Sanskrit *truṭ*, "to break", very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

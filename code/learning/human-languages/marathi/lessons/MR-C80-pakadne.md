@@ -14,7 +14,8 @@ romanization: "pakaḍṇe"
 concept_tag: MR-VERB-PAKADNE
 prerequisites: [MR-C80-pathavne, MR-C80-mojne]
 sounds: []
-roots: []
+roots: [indo-aryan-pakkad]
+etymology_hook: "pakaḍṇe ← *pakkaḍ 'seize'; CDIAL calls a link with Sanskrit pragraha obscure and doubtful (CDIAL 7619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C80-mojne]
 <!-- hl-knowledge: introduces=[MR-LEX-C80-VERBS80-04]; assesses=[] -->
 
 **पकडणे** — *pakaḍṇe* — "to catch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पकडणे** (*pakaḍṇe*) comes from a reconstructed *\*pakkaḍ-*, "seize" (CDIAL 7619). CDIAL calls its link with Sanskrit *pragṛhṇāti*, "holds", obscure and doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

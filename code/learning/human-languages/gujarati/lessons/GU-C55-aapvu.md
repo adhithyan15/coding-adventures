@@ -14,7 +14,8 @@ romanization: "āpvũ"
 concept_tag: GU-VERB-AAPVU
 prerequisites: [GU-C55-randhvu, GU-C55-dhovu]
 sounds: []
-roots: []
+roots: [sanskrit-arpayati]
+etymology_hook: "āpvũ ← Sanskrit arpayati 'causes to move, puts in, delivers up', a tadbhava (CDIAL 684)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C55-dhovu]
 <!-- hl-knowledge: introduces=[GU-LEX-C55-HOUSEWORK-03]; assesses=[] -->
 
 **આપવું** (*āpvũ*) — "to give".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**આપવું** (*āpvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *arpayati*, "causes to move, puts in, delivers up" (CDIAL 684).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

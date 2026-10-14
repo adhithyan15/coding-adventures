@@ -14,7 +14,8 @@ romanization: "nokrī"
 concept_tag: GU-THINGS130-NOKRI
 prerequisites: [GU-C130-varg, GU-C130-guru]
 sounds: []
-roots: []
+roots: [persian-naukar]
+etymology_hook: "nokrī: nokar 'servant', usually traced to Persian naukar, from Mongolic nökör 'companion', + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C130-guru]
 <!-- hl-knowledge: introduces=[GU-LEX-C130-THINGS130-03]; assesses=[] -->
 
 **નોકરી** (*nokrī*) — "a job".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**નોકરી** (*nokrī*) is built on *nokar*, "servant", with the ending *-ī*. *Nokar* is usually traced to Persian *naukar*, a word Persian took from Mongolic *nökör*, "companion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

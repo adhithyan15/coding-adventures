@@ -14,7 +14,8 @@ romanization: "jaṅgal"
 concept_tag: GU-LAND-FOREST
 prerequisites: [GU-C64-leaf, GU-C64-mountain]
 sounds: []
-roots: []
+roots: [sanskrit-jangala]
+etymology_hook: "jaṅgal ← Sanskrit jāṅgala 'arid, sparingly grown with trees', perhaps non-Aryan (CDIAL 5177)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C64-mountain]
 <!-- hl-knowledge: introduces=[GU-LEX-C64-LAND-04]; assesses=[] -->
 
 **જંગલ** (*jaṅgal*) — "a forest, the jungle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જંગલ** (*jaṅgal*) goes back to Sanskrit *jāṅgala*, "arid, sparingly grown with trees" (CDIAL 5177). CDIAL notes that the noun spread across the modern languages in the form of the Hindi area, and that some forms support a non-Aryan origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

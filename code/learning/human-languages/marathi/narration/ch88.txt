@@ -12,6 +12,9 @@ Before the new one: say the Marathi for oil, then the Marathi for grapes.
 You'll want to know: संत्रे.
 संत्रे — santre — "an orange".
 
+The word, taken apart.
+The origin of संत्रे (santre) is uncertain. It is often linked with the town of Cintra (Sintra) in Portugal, but CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for grapes, then the Marathi for an orange.
 
 You'll want to know: लिंबू.
 लिंबू — limbū — "a lemon".
+
+The word, taken apart.
+लिंबू (limbū) goes back to Sanskrit nimbū, "lime", which CDIAL takes from Austroasiatic (CDIAL 7247). CDIAL lists Marathi nīṁbūṁ; the form with l- matches Gujarati lĩbu, "lime, lemon".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for an orange, then the Marathi for a lemon.
 You'll want to know: नाश्ता.
 नाश्ता — nāshtā — "breakfast".
 
+The word, taken apart.
+नाश्ता (nāshtā) is a loan, usually traced to Persian nāshtā, "not having eaten". The meal is named for the fast it ends.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a lemon, then the Marathi for breakfast.
 You'll want to know: अंडे.
 अंडे — aṇḍe — "an egg".
 
+The word, taken apart.
+अंडे (aṇḍe) is a tadbhava of Sanskrit āṇḍa, "egg" (CDIAL 1111). CDIAL reports Mayrhofer's view that the word is of Munda origin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for breakfast, then the Marathi for an egg.
 
 You'll want to know: दही.
 दही — dahī — "yoghurt".
+
+The word, taken apart.
+दही (dahī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dadhi, "thick sour milk" (CDIAL 6146).
 
 What you've built.
 One more word for this chapter.

@@ -12,7 +12,7 @@ concept_tag: MR-VERB-VATNE
 prerequisites: [MR-C23-basne, MR-C01-baram]
 sounds: [matra-aa, retroflex-ta, retroflex-na]
 roots: []
-etymology_hook: "वाटणे takes its subject in the dative like आवडणे and माहीत असणे, so malā baraṁ vāṭtaṁ is \"to me fine seems\"; the verb's own pre-Marathi ancestry is not securely established and this lesson does not invent one"
+etymology_hook: "vāṭṇe 'to seem': origin not settled; CDIAL has a vāṭṇe only as 'to grind' (CDIAL 11356)"
 duration:
   max_seconds: 250
 requires:
@@ -47,6 +47,11 @@ is the one you answer *how are you* with.
 > **वाटणे** — *vāṭṇe* — **to feel, to seem**
 
 > **मला बरं वाटतं.** — *malā baraṁ vāṭtaṁ.* — **I feel fine.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **वाटणे** (*vāṭṇe*) is not settled. CDIAL has a Marathi *vāṭṇẽ* only in the sense "to grind finely", under *vartayati*, "turns" (CDIAL 11356), and no entry for the verb "to seem".
 
 ## Grammar Lens: the third verb that puts you in the dative
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-DATIVE-FEELING]; assesses=[MR-GRAMMAR-DATIVE-LIKING, MR-GRAMMAR-DATIVE-KNOWLEDGE, MR-LEX-BARAM-01] -->

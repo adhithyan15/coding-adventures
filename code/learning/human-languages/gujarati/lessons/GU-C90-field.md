@@ -14,7 +14,8 @@ romanization: "khetar"
 concept_tag: GU-LIFE-FIELD
 prerequisites: [GU-C90-birthday, GU-C90-age]
 sounds: []
-roots: []
+roots: [sanskrit-kshetra]
+etymology_hook: "khetar ← Sanskrit kṣetra 'land', a tadbhava (CDIAL 3735)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C90-age]
 <!-- hl-knowledge: introduces=[GU-LEX-C90-LIFE-04]; assesses=[] -->
 
 **ખેતર** (*khetar*) — "a field (farmland)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખેતર** (*khetar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣetra*, "land" (CDIAL 3735).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

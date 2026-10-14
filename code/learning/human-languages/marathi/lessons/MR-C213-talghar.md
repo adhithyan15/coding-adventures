@@ -14,7 +14,8 @@ romanization: "taḷghar"
 concept_tag: MR-VASTU213-TALGHAR
 prerequisites: [MR-C213-phatak, MR-C213-kumpan]
 sounds: []
-roots: []
+roots: [sanskrit-tala, grha-sanskrit]
+etymology_hook: "taḷghar: taḷ 'bottom' ← Sanskrit tala (CDIAL 5731) + ghar 'house'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C213-kumpan]
 <!-- hl-knowledge: introduces=[MR-LEX-C213-VASTU213-04]; assesses=[] -->
 
 **तळघर** — *taḷghar* — "a cellar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तळघर** (*taḷghar*) is "bottom-house": *taḷ*, "bottom", from Sanskrit *tala*, "base, bottom" (CDIAL 5731), and **घर**, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: GU-TIME-HOUR
 prerequisites: [GU-C79-yesterday, GU-C79-time]
 sounds: []
 roots: []
+etymology_hook: "kalāk 'hour': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C79-time]
 <!-- hl-knowledge: introduces=[GU-LEX-C80-TIME-01]; assesses=[] -->
 
 **કલાક** (*kalāk*) — "an hour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **કલાક** (*kalāk*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for proper, then the Marathi for wrong.
 You'll want to know: ढगाळ.
 ढगाळ — ḍhagāḷ — "cloudy".
 
+The word, taken apart.
+ढगाळ (ḍhagāḷ) is ḍhag, "cloud", with the ending -āḷ, "full of". The origin of ḍhag is not settled: neither CDIAL nor DEDR has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for wrong, then the Marathi for cloudy.
 
 You'll want to know: पावसाळी.
 पावसाळी — pāvsāḷī — "rainy".
+
+The word, taken apart.
+पावसाळी (pāvsāḷī) is a tadbhava, a word inherited and reshaped by sound change. It comes from prāvṛṣakāla, "the rainy season", a form CDIAL reconstructs from its descendants (CDIAL 8965). It is prāvṛṣ, "the rains", and kāla, "time". CDIAL lists Marathi pāvsāḷī.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for cloudy, then the Marathi for rainy.
 You'll want to know: शक्य.
 शक्य — śakya — "possible".
 
+The word, taken apart.
+शक्य (śakya) is Sanskrit śakya, "possible", taken over whole as a learned loan, a tatsama (CDIAL 12253). It is built on śak, "to be able".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for rainy, then the Marathi for possible.
 You'll want to know: अशक्य.
 अशक्य — aśakya — "impossible".
 
+The word, taken apart.
+अशक्य (aśakya) is Sanskrit aśakya, "impossible", a tatsama: a-, "not", and śakya, "possible" (CDIAL 12253).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for possible, then the Marathi for impossibl
 
 You'll want to know: मुख्य.
 मुख्य — mukhya — "main, chief".
+
+The word, taken apart.
+मुख्य (mukhya) is Sanskrit mukhya, "pertaining to the face; chief", taken over whole as a learned loan, a tatsama (CDIAL 10174). It is built on mukha, "face".
 
 What you've built.
 One more word for this chapter.

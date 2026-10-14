@@ -12,6 +12,7 @@ concept_tag: INTRO-MY-NAME-IS
 prerequisites: [MR-C02-majhe, MR-C02-naav, MR-C02-aahe]
 sounds: []
 roots: [ma, naaman, asti]
+etymology_hook: "mājhaṁ ← the first-person base ma- (CDIAL 9691); nāv ← nāman 'name' (CDIAL 7067); āhe listed under asti"
 reviews_of: [MR-C02-majhe, MR-C02-naav, MR-C02-aahe]
 duration:
   max_seconds: 200
@@ -51,6 +52,11 @@ Notice the shape:
 
 A man or a woman says it the same way here; the gender lived in *mājhaṁ*
 (matching *nāv*), which is settled.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Each word is inherited. CDIAL lists **माझं** under the Sanskrit first-person base *ma-* (CDIAL 9691) and **नाव** under Sanskrit *nāman*, "name" (CDIAL 7067). **आहे** it lists under *asti*, "is", though Bloch gives it another origin (CDIAL 977).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

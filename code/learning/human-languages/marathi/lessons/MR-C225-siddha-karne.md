@@ -14,7 +14,8 @@ romanization: "siddha karṇe"
 concept_tag: MR-VERB-SIDDHA-KARNE
 prerequisites: [MR-C225-patavne, MR-C225-tika-karne]
 sounds: []
-roots: []
+roots: [sanskrit-siddha, sanskrit-karoti]
+etymology_hook: "siddha: Sanskrit siddha 'accomplished', a tatsama (CDIAL 13401); karṇe ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C225-tika-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C225-ACT225-03]; assesses=[] -->
 
 **सिद्ध करणे** — *siddha karṇe* — "to prove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सिद्ध**, "proven", is Sanskrit *siddha*, "accomplished, perfected", a tatsama (CDIAL 13401). **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

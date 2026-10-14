@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to dry, then the Marathi for to iron.
 You'll want to know: फोन करणे.
 फोन करणे — phon karṇe — "to phone".
 
+The word, taken apart.
+फोन is a loan from English phone, short for telephone. करणे is "to do".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to iron, then the Marathi for to phone.
 
 You'll want to know: चर्चा करणे.
 चर्चा करणे — carcā karṇe — "to discuss".
+
+The word, taken apart.
+चर्चा is Sanskrit carcā, "repetition, going over", a tatsama (CDIAL 4695). करणे is "to do".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to phone, then the Marathi for to discus
 You'll want to know: मनाई करणे.
 मनाई करणे — manāī karṇe — "to forbid".
 
+The word, taken apart.
+मनाई is a loan, usually traced through Persian to Arabic manāhī, "forbidden things", whose root is n-h-y, "to forbid" (Lane). करणे is "to do".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to discuss, then the Marathi for to forb
 You'll want to know: रक्षण करणे.
 रक्षण करणे — rakṣaṇ karṇe — "to protect".
 
+The word, taken apart.
+रक्षण is Sanskrit rakṣaṇa, "guarding, tending", a tatsama; CDIAL lists the inherited Marathi form as rākhaṇ, "preserving" (CDIAL 10546). करणे is "to do".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to forbid, then the Marathi for to prote
 
 You'll want to know: मरणे.
 मरणे — marṇe — "to die".
+
+The word, taken apart.
+मरणे (marṇe) comes from Sanskrit marate, "will die" (CDIAL 9871). CDIAL thinks it possible, even probable, that the later mar- verbs continue this Vedic mar- directly, helped by forms such as mariṣyati, "will die".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "nyāyādhīś"
 concept_tag: MR-VASTU179-NYAYADHIS
 prerequisites: [MR-C178-kappa, MR-C179-nyayalay]
 sounds: []
-roots: []
+roots: [sanskrit-nyaya, sanskrit-adhisha]
+etymology_hook: "nyāyādhīś: Sanskrit nyāya 'justice' + adhīśa 'lord, master'; a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C179-nyayalay]
 <!-- hl-knowledge: introduces=[MR-LEX-C179-VASTU179-02]; assesses=[] -->
 
 **न्यायाधीश** — *nyāyādhīś* — "a judge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**न्यायाधीश** (*nyāyādhīś*) is a compound of Sanskrit parts, a tatsama: *nyāya*, "justice", and *adhīśa*, "lord, master".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

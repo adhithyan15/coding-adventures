@@ -14,7 +14,8 @@ gloss: "nectar"
 concept_tag: MR-ANCHOR-AMRUT
 prerequisites: [MR-W03-dhanyavad-write]
 sounds: []
-roots: []
+roots: [sanskrit-amrta]
+etymology_hook: "amṛt ← Sanskrit amṛta 'immortal; nectar', a tatsama (CDIAL 571)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **अमृत** — *amṛt* — "nectar".
 
 Say it: *amṛt*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **अ** and **ृ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अमृत** (*amṛt*) is Sanskrit *amṛta*, "immortal; nectar", taken over whole as a learned loan, a tatsama (CDIAL 571). It is *a-*, "not", and *mṛta*, "dead": the drink of the gods that keeps death away.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-AMRUT] -->

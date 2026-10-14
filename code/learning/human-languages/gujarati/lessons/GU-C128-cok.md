@@ -14,7 +14,8 @@ romanization: "cok"
 concept_tag: GU-THINGS128-COK
 prerequisites: [GU-C128-hotel, GU-C128-pustakalay]
 sounds: []
-roots: []
+roots: [sanskrit-catushka]
+etymology_hook: "cok ← Sanskrit catuṣka 'set of four; quadrangular courtyard', a tadbhava (CDIAL 4629)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C128-pustakalay]
 <!-- hl-knowledge: introduces=[GU-LEX-C128-THINGS128-05]; assesses=[] -->
 
 **ચોક** (*cok*) — "a town square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચોક** (*cok*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *catuṣka*, "set of four; quadrangular courtyard" (CDIAL 4629).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

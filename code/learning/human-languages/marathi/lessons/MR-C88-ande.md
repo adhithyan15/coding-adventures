@@ -14,7 +14,8 @@ romanization: "aṇḍe"
 concept_tag: MR-FOOD88-ANDE
 prerequisites: [MR-C88-limbu, MR-C88-nashta]
 sounds: []
-roots: []
+roots: [sanskrit-anda]
+etymology_hook: "aṇḍe ← Sanskrit āṇḍa 'egg', which EWA traces to Munda; a tadbhava (CDIAL 1111)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C88-nashta]
 <!-- hl-knowledge: introduces=[MR-LEX-C88-FOOD88-04]; assesses=[] -->
 
 **अंडे** — *aṇḍe* — "an egg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अंडे** (*aṇḍe*) is a tadbhava of Sanskrit *āṇḍa*, "egg" (CDIAL 1111). CDIAL reports Mayrhofer's view that the word is of Munda origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

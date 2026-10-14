@@ -14,7 +14,8 @@ romanization: "putaḷā"
 concept_tag: MR-VASTU183-PUTALA
 prerequisites: [MR-C183-manora, MR-C183-smarak]
 sounds: []
-roots: []
+roots: [indo-aryan-putrala]
+etymology_hook: "putaḷā ← *putrala 'puppet, pupil of the eye', a reconstructed form; a tadbhava (CDIAL 8269)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C183-smarak]
 <!-- hl-knowledge: introduces=[MR-LEX-C183-VASTU183-05]; assesses=[] -->
 
 **पुतळा** — *putaḷā* — "a statue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पुतळा** (*putaḷā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*putrala*, "puppet, pupil of the eye", a form CDIAL reconstructs from its descendants (CDIAL 8269). CDIAL compares Sanskrit *putrī*, "puppet". It glosses the Marathi word "doll".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

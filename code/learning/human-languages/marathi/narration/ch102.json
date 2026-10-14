@@ -4,7 +4,7 @@
   "chapter": 102,
   "title": "Snake, Peacock, Bear, Camel, Butterfly",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:601ffb8315641b32",
+  "sourceHash": "fnv1a64:2745f52a67eb1445",
   "lessons": [
     {
       "id": "MR-C102-sap",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f310b2324a37aea",
+      "sourceHash": "fnv1a64:ffc51a502970b095",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साप (sāp) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sarpa, \"snake\" (CDIAL 13271). It is built on sṛp, \"to creep\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:021ec50965c6462d",
+      "sourceHash": "fnv1a64:6d2ef0bfe1b0728f",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोर (mor) comes from mōra, a form CDIAL sets beside Sanskrit mayūra, \"peacock\" (CDIAL 9865). The source of the Sanskrit word is debated: Bloch traced it to Dravidian, Przyluski to Austroasiatic, and Bailey to an old Indo-Iranian colour word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b88fdd11c848a1d9",
+      "sourceHash": "fnv1a64:6b26d0c426332505",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अस्वल (asval) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṛkṣabhalla, \"bear\", a form CDIAL reconstructs from its descendants (CDIAL 2446). It joins two words for \"bear\", ṛkṣa and bhalla."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05cab1f313fc7cba",
+      "sourceHash": "fnv1a64:250a53dd4f46087e",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उंट (uṇṭ) is usually traced to Sanskrit uṣṭra, \"buffalo\" in the Rigveda and \"camel\" later (CDIAL 2387). CDIAL lists no Marathi form under it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:deef20b0d9c02ca5",
+      "sourceHash": "fnv1a64:526ec80b3f63f312",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फुलपाखरू (phulpākhrū) is \"flower-bird\": फूल, \"flower\", from Sanskrit phulla (CDIAL 9092), and pākhrū, \"bird\", from a reconstructed pakṣirūpa, \"bird-shape\" (CDIAL 7637)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

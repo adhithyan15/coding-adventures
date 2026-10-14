@@ -14,7 +14,8 @@ romanization: "dav"
 concept_tag: MR-VASTU218-DAV
 prerequisites: [MR-C218-bakri, MR-C218-dhuke]
 sounds: []
-roots: []
+roots: [sanskrit-drava]
+etymology_hook: "dav ← Sanskrit drava 'running, flowing; fluidity', a tadbhava (CDIAL 6623)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C218-dhuke]
 <!-- hl-knowledge: introduces=[MR-LEX-C218-VASTU218-05]; assesses=[] -->
 
 **दव** — *dav* — "dew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दव** (*dav*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *drava*, "running, flowing; fluidity" (CDIAL 6623). CDIAL glosses the Marathi word "dew, dampness". Bloch derived it instead from *udaka*, "water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

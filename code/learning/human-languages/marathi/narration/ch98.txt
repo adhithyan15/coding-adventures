@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a field, then the Marathi for a star.
 You'll want to know: सूर्य.
 सूर्य — sūrya — "the sun".
 
+The word, taken apart.
+सूर्य (sūrya) is Sanskrit sūrya, "sun", taken over whole as a learned loan, a tatsama (CDIAL 13574).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a star, then the Marathi for the sun.
 
 You'll want to know: चंद्र.
 चंद्र — chandra — "the moon".
+
+The word, taken apart.
+चंद्र (chandra) is Sanskrit candra, "shining; moon", taken over whole as a learned loan, a tatsama (CDIAL 4661). CDIAL lists the inherited Marathi form cāṁd, "moon".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for the sun, then the Marathi for the moon.
 You'll want to know: समुद्र.
 समुद्र — samudra — "the sea".
 
+The word, taken apart.
+समुद्र (samudra) is Sanskrit samudra, "sea", taken over whole as a learned loan, a tatsama (CDIAL 13236). It is built on udan, "water".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for the moon, then the Marathi for the sea.
 You'll want to know: आग.
 आग — āg — "fire".
 
+The word, taken apart.
+आग (āg) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from agni, "fire" (CDIAL 55).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for the sea, then the Marathi for fire.
 
 You'll want to know: बर्फ.
 बर्फ — barpha — "snow; ice".
+
+The word, taken apart.
+बर्फ (barpha) is a loan, usually traced to Persian barf, "snow, ice".
 
 What you've built.
 One more word for this chapter.

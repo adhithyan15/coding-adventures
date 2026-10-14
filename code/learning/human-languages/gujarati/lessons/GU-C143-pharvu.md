@@ -14,7 +14,8 @@ romanization: "pharvũ"
 concept_tag: GU-VERB-PHARVU
 prerequisites: [GU-C142-vavvu, GU-C143-bhagvu]
 sounds: []
-roots: []
+roots: [indo-aryan-phirati]
+etymology_hook: "pharvũ ← *phirati 'moves, wanders, turns', a reconstructed form (CDIAL 9078)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C143-bhagvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C143-ACT143-02]; assesses=[] -->
 
 **ફરવું** (*pharvũ*) — "to go around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ફરવું** (*pharvũ*) comes from *\*phirati*, "moves, wanders, turns", a form CDIAL reconstructs (CDIAL 9078). CDIAL also lists it under *\*pharati*, "moves, turns", but thinks *\*phirati* the likelier source (CDIAL 9050).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

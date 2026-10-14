@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "The Day and Its Times",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6d6e77015f25009c",
+  "sourceHash": "fnv1a64:30b755fa0c2acafd",
   "lessons": [
     {
       "id": "GU-C24-hear-savaar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff5234ff9b3209bf",
+      "sourceHash": "fnv1a64:c85d4335e6dbcff6",
       "notice": null,
       "blocks": [
         {
@@ -41,6 +41,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સવાર (savār) is a tadbhava, a word inherited and reshaped by sound change. It comes from savāra, \"in good time\", a form CDIAL reconstructs from its descendants (CDIAL 13290). CDIAL builds it from sa-, \"with\", and vāra, \"time, turn\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -71,7 +82,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -125,7 +136,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c69ab5902038d54c",
+      "sourceHash": "fnv1a64:d810898e112a471b",
       "notice": null,
       "blocks": [
         {
@@ -147,6 +158,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બપોર (bapor) is usually explained as \"two watches\": a form of the word for two, and pahor, the old watch of about three hours. CDIAL lists Gujarati pahor under Sanskrit prahara, \"a watch\", and asks whether the Sanskrit word is itself a reshaping of Persian pahra, \"watch\" (CDIAL 8900)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -177,7 +199,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -234,7 +256,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34c63d1d92e8f48f",
+      "sourceHash": "fnv1a64:f61299eee237a54c",
       "notice": null,
       "blocks": [
         {
@@ -256,6 +278,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સાંજ (sānj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṁdhyā, \"twilight\" (CDIAL 12918)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -286,7 +319,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -343,7 +376,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5885fa98e1806e51",
+      "sourceHash": "fnv1a64:35033da7f4d75328",
       "notice": null,
       "blocks": [
         {
@@ -365,6 +398,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રાત (rāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rātrī, \"night\" (CDIAL 10702)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +439,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -692,7 +736,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87cad7c6258bdbb6",
+      "sourceHash": "fnv1a64:561d4cb81ba6b5b3",
       "notice": null,
       "blocks": [
         {
@@ -714,6 +758,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દિવસ (divas) goes back to Sanskrit divasa, \"day\" (CDIAL 6333). CDIAL lists it beside Gujarati dīs, the worn-down form that sound change produced; divas keeps the full Sanskrit shape."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -744,7 +799,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -799,7 +854,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5b1d47006cd2a97",
+      "sourceHash": "fnv1a64:2fcae0e1d9a584cd",
       "notice": null,
       "blocks": [
         {
@@ -821,6 +876,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મહિનો (mahino) is a loan, usually traced to Persian māhīna, \"monthly\". It is built on Persian māh, \"moon, month\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -851,7 +917,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -907,7 +973,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b827f9516edc55f9",
+      "sourceHash": "fnv1a64:f3a7518721892978",
       "notice": null,
       "blocks": [
         {
@@ -929,6 +995,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આજ (āj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from adya, \"today\" (CDIAL 242)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -959,7 +1036,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1143,7 +1220,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9db777d97ea7b3b1",
+      "sourceHash": "fnv1a64:a7e805de602d4fcc",
       "notice": null,
       "blocks": [
         {
@@ -1165,6 +1242,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of અત્યારે (atyāre) is not settled. CDIAL, searched by form and by meaning, has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1211,7 +1299,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

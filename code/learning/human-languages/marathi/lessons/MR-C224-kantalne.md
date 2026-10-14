@@ -15,6 +15,7 @@ concept_tag: MR-VERB-KANTALNE
 prerequisites: [MR-C224-ghar-badalne, MR-C224-aram-karne]
 sounds: []
 roots: []
+etymology_hook: "kaṇṭāḷṇe 'to get bored': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C224-aram-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C224-ACT224-05]; assesses=[] -->
 
 **कंटाळणे** — *kaṇṭāḷṇe* — "to get bored".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **कंटाळणे** (*kaṇṭāḷṇe*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

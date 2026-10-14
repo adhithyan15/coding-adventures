@@ -14,7 +14,8 @@ romanization: "phoṭo kāḍhṇe"
 concept_tag: MR-VERB-PHOTO-KADHNE
 prerequisites: [MR-C222-cuk, MR-C223-durust-karne]
 sounds: []
-roots: []
+roots: [english-photo, indo-aryan-kaddhati]
+etymology_hook: "phoṭo ← English photo; kāḍhṇe ← *kaḍḍhati 'pulls, draws' (CDIAL 2660)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C223-durust-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C223-ACT223-02]; assesses=[] -->
 
 **फोटो काढणे** — *phoṭo kāḍhṇe* — "to take a photo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फोटो** is English *photo*. **काढणे**, "to take out", comes from a reconstructed *\*kaḍḍhati*, "pulls, draws" (CDIAL 2660).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

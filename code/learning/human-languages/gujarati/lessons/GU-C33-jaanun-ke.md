@@ -11,8 +11,8 @@ gloss: "I know that… — and, negated, the other half of not knowing"
 concept_tag: GU-JOIN-JAANUN-KE
 prerequisites: [GU-C33-ke-write, GU-C07-jaanvun, GU-C31-nathi]
 sounds: []
-roots: []
-etymology_hook: "જાણવું and English know are the same ancient root; the sentence they can now carry is new, the kinship is not."
+roots: [sanskrit-janati]
+etymology_hook: "જાણવું and English know are the same ancient root: CDIAL lists jāṇvũ under Sanskrit jānāti 'knows' (CDIAL 5193)"
 duration:
   max_seconds: 250
 requires:
@@ -52,6 +52,8 @@ the point of **કે**: it does not care which verb precedes it.
 **જાણવું** and English **know** are the same ancient word — the *gnō-* that also
 gives *knowledge*, *diagnosis* and *ignore*. The kinship has been true since the
 verb chapter; what is new is that the verb finally has something to take.
+
+CDIAL lists *jāṇvũ* under Sanskrit *jānāti*, "knows" (CDIAL 5193).
 
 ## Grammar Lens: and the half you need more
 <!-- hl-knowledge: introduces=[]; assesses=[GU-NEG-NATHI-01, GU-JOIN-JAANUN-KE-01] -->

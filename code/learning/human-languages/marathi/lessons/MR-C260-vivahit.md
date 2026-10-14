@@ -14,7 +14,8 @@ romanization: "vivāhit"
 concept_tag: MR-GUN260-VIVAHIT
 prerequisites: [MR-C260-cintagrasta, MR-C260-avivahit]
 sounds: []
-roots: []
+roots: [sanskrit-vivaha]
+etymology_hook: "vivāhit: Sanskrit vivāhita 'married', from vivāha 'marriage' (CDIAL 11920)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C260-avivahit]
 <!-- hl-knowledge: introduces=[MR-LEX-C260-GUN260-05]; assesses=[] -->
 
 **विवाहित** — *vivāhit* — "married".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विवाहित** (*vivāhit*) is Sanskrit *vivāhita*, "married", a tatsama built on *vivāha*, "marriage" (CDIAL 11920).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

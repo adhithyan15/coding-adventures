@@ -14,7 +14,8 @@ romanization: "vasant"
 concept_tag: GU-TIME93-VASANT
 prerequisites: [GU-C93-siyalo, GU-C93-comasu]
 sounds: []
-roots: []
+roots: [sanskrit-vasanta]
+etymology_hook: "vasant ← Sanskrit vasanta 'spring season', a tatsama (CDIAL 11439)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C93-comasu]
 <!-- hl-knowledge: introduces=[GU-LEX-C93-TIME93-05]; assesses=[] -->
 
 **વસંત** (*vasant*) — "spring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વસંત** (*vasant*) is Sanskrit *vasanta*, "spring season", taken over whole as a learned loan, a tatsama (CDIAL 11439).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ghās"
 concept_tag: GU-THINGS118-GHAS
 prerequisites: [GU-C118-haldar, GU-C118-jiru]
 sounds: []
-roots: []
+roots: [sanskrit-ghasa]
+etymology_hook: "ghās ← Sanskrit ghāsa 'food, pasture grass', a tadbhava (CDIAL 4471)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C118-jiru]
 <!-- hl-knowledge: introduces=[GU-LEX-C118-THINGS118-04]; assesses=[] -->
 
 **ઘાસ** (*ghās*) — "grass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ઘાસ** (*ghās*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghāsa*, "food, pasture grass" (CDIAL 4471).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

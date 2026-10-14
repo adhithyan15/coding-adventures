@@ -14,7 +14,8 @@ romanization: "kokiḷā"
 concept_tag: MR-VASTU188-KOKILA
 prerequisites: [MR-C188-khekda, MR-C188-garud]
 sounds: []
-roots: []
+roots: [sanskrit-kokila]
+etymology_hook: "kokiḷā: Sanskrit kokilā 'the Indian cuckoo', with Marathi ḷ; the inherited form is koīḷ (CDIAL 3483)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C188-garud]
 <!-- hl-knowledge: introduces=[MR-LEX-C188-VASTU188-04]; assesses=[] -->
 
 **कोकिळा** — *kokiḷā* — "a cuckoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोकिळा** (*kokiḷā*) is Sanskrit *kokilā*, "the Indian cuckoo", with Marathi **ळ**. CDIAL lists the inherited Marathi forms as *koīḷ* and *koyāḷ* (CDIAL 3483).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

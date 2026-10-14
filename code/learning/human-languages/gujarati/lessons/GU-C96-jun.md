@@ -14,7 +14,8 @@ romanization: "jūn"
 concept_tag: GU-TIME96-JUN
 prerequisites: [GU-C96-epril, GU-C96-me]
 sounds: []
-roots: []
+roots: [english-june]
+etymology_hook: "jūn ← English June"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C96-me]
 <!-- hl-knowledge: introduces=[GU-LEX-C96-TIME96-03]; assesses=[] -->
 
 **જૂન** (*jūn*) — "June".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જૂન** (*jūn*) is a loan from English *June*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

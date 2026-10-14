@@ -14,7 +14,8 @@ romanization: "veḷāpatrak"
 concept_tag: MR-VACH161-VELAPATRAK
 prerequisites: [MR-C160-yanantar, MR-C160-akhne]
 sounds: []
-roots: []
+roots: [sanskrit-vela, sanskrit-patra]
+etymology_hook: "veḷāpatrak: veḷā 'time' ← velā (CDIAL 12115) + Sanskrit pattraka 'leaf, sheet' (CDIAL 7733)"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [MR-C160-akhne]
 
 The board says **बस: सकाळी आठ वाजता.** The bus leaves at eight in the morning,
 so be there before eight.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वेळापत्रक** (*veḷāpatrak*) is "time-sheet": *veḷā*, "time", from Sanskrit *velā*, "limit, time" (CDIAL 12115), and *patrak*, "sheet", from Sanskrit *pattraka*, "leaf" (CDIAL 7733).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

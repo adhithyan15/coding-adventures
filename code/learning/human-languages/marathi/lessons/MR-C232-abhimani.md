@@ -14,7 +14,8 @@ romanization: "abhimānī"
 concept_tag: MR-GUN232-ABHIMANI
 prerequisites: [MR-C231-mhanje, MR-C232-matsari]
 sounds: []
-roots: []
+roots: [sanskrit-abhimana]
+etymology_hook: "abhimānī: Sanskrit abhimānin 'proud', from abhimāna 'pride' (CDIAL 524); a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C232-matsari]
 <!-- hl-knowledge: introduces=[MR-LEX-C232-GUN232-02]; assesses=[] -->
 
 **अभिमानी** — *abhimānī* — "proud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अभिमानी** (*abhimānī*) is Sanskrit *abhimānin*, "proud", a tatsama built on *abhimāna*, "pride" (CDIAL 524).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

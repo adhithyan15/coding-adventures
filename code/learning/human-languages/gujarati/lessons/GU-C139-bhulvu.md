@@ -14,7 +14,8 @@ romanization: "bhūlvũ"
 concept_tag: GU-VERB-BHULVU
 prerequisites: [GU-C138-bolavvu, GU-C139-mokalvu]
 sounds: []
-roots: []
+roots: [indo-aryan-bhull]
+etymology_hook: "bhūlvũ ← *bhull 'err, forget', a reconstructed form; a tadbhava (CDIAL 9538)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C139-mokalvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C139-ACT139-02]; assesses=[] -->
 
 **ભૂલવું** (*bhūlvũ*) — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ભૂલવું** (*bhūlvũ*) comes from *\*bhull*, "err, forget", a form CDIAL reconstructs (CDIAL 9538). CDIAL calls one proposed older source doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

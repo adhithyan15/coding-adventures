@@ -14,7 +14,8 @@ gloss: "the other way round"
 concept_tag: MR-ANCHOR-ULAT
 prerequisites: [MR-W07-pa]
 sounds: []
-roots: []
+roots: [indo-aryan-ullatati]
+etymology_hook: "ulaṭ: with ulaṭṇe 'to turn over', from *ullaṭati 'turns over' (CDIAL 2368)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **उलट** — *ulaṭ* — "the other way round".
 
 Say it: *ulaṭ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ल** and **उ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उलट** (*ulaṭ*) belongs with the verb *ulaṭṇẽ*, "to turn over", which CDIAL lists under a reconstructed *\*ullaṭati*, "turns over" (CDIAL 2368).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-ULAT] -->

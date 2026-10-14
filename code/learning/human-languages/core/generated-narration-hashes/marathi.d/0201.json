@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 201,
-  "sourceHash": "fnv1a64:906c4b673feb594d",
+  "sourceHash": "fnv1a64:76906af07160e3ab",
   "lessonIds": [
     "MR-C201-paryant",
     "MR-C201-dasak",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch201.txt",
   "json": "marathi/narration/ch201.json",
-  "textHash": "fnv1a64:49eac4c7eb648695",
-  "jsonHash": "fnv1a64:4cdcf9c5bedaa8da",
+  "textHash": "fnv1a64:3b8cd4969cc3d821",
+  "jsonHash": "fnv1a64:04b6650efd01ae3e",
   "findings": []
 }

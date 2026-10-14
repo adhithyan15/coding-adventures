@@ -14,7 +14,8 @@ romanization: "prāmāṇik"
 concept_tag: MR-QUAL151-PRAMANIK
 prerequisites: [MR-C150-alsi, MR-C150-mehanti]
 sounds: []
-roots: []
+roots: [sanskrit-pramanika]
+etymology_hook: "prāmāṇik ← Sanskrit prāmāṇika 'founded on authority', a tatsama (CDIAL 8949)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C150-mehanti]
 <!-- hl-knowledge: introduces=[MR-LEX-C151-QUAL151-01]; assesses=[] -->
 
 **प्रामाणिक** — *prāmāṇik* — "honest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रामाणिक** (*prāmāṇik*) is Sanskrit *prāmāṇika*, "founded on authority", taken over whole as a learned loan, a tatsama (CDIAL 8949). It is built on *pramāṇa*, "measure, proof".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

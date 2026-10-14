@@ -1058,15 +1058,22 @@ endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline label
 thick, and dotted links, including labeled links with independently selected point, circle, cross,
 or absent markers at either endpoint, titles, and accessibility
 metadata with named and numeric entity
-decoding. Direct node
+decoding. Root `themeVariables` from init directives or front matter preserve `mainBkg`, `nodeBorder`,
+and `lineColor` through semantic and layout IR to default node and edge paint. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
-decorators cover fill, stroke, text color, stroke width, and dash patterns. URL
+decorators cover fill, stroke, text color, stroke width, dash patterns, font family, font size,
+weight, and italic/oblique style. Typography survives semantic IR, informs node width, and lowers
+to backend-neutral glyph runs. Matching SVG `rx` and `ry` node styles survive semantic and layout IR
+and lower to backend-neutral rectangle corner radii; unequal elliptical radii remain unsupported. URL
 clicks, tooltips, standard browser link targets, explicit `call` callback
 actions, and legacy callback aliases survive as scene metadata. Flowchart edge identifiers
 survive semantic IR, layout, and scene metadata; named classes and direct styles for identified
 edges resolve stroke color, width, dash patterns, and label color into backend-neutral paint.
+Edge label font family, size, weight, and italic or oblique style also survive semantic and layout IR
+and lower to backend-neutral glyph runs for both class-based and direct identified-edge styles.
 Positional `linkStyle` directives accept `default` or comma-separated edge indices and resolve
-into the same backend-neutral edge style fields.
+into the same backend-neutral edge style fields. Their `interpolate` form applies supported curve
+modes by position through semantic and layout IR to portable path instructions.
 Identified edge animation attributes preserve enabled state and slow/fast timing in scene metadata,
 with a deterministic static dash pattern for non-animated paint backends.
 Per-edge `linear` and `basis` curve attributes survive semantic and layout IR; basis routing lowers
@@ -1103,7 +1110,12 @@ visual subset, including parallel
 handoffs, is rendered through Metal-to-PNG.
 Nested subgraphs remain ordinary child clusters inside their top-level ownership lane. Their lane and
 parent identities survive semantic IR, layout resolves bounds bottom-up around direct nodes and child
-clusters, and paint emits dashed labeled containers behind edge and node geometry.
+clusters, and paint emits dashed labeled containers behind edge and node geometry. Direct styles and
+named classes on top-level lanes or nested groups preserve portable fill, stroke, dash, corner, label
+color, and typography fields through semantic and layout IR into backend-neutral paint. Flowchart-style
+`:::class` decorators on either subgraph form resolve through the same class pipeline.
+Nodes outside an explicit top-level subgraph are assigned to Mermaid's unlabeled
+`__swimlane_default__` ownership lane, which survives semantic IR, lane layout, and paint lowering.
 
 This is intentionally partial. The complete Flowchart shape
 and link catalog beyond the documented marker forms, and exact upstream routing or typography remain

@@ -11,7 +11,8 @@ gloss: how are you? (tumhī kase āhāt?)
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [MR-C03-kasa, MR-C02-tu-tumhi, MR-C02-aahe]
 sounds: []
-roots: [ka-interrogative, asti]
+roots: [ka-interrogative, asti, sanskrit-yushmad, sanskrit-kidrsha]
+etymology_hook: "tumhī ← yuṣmad- 'you' (CDIAL 10511); kase ← kīdṛśa 'of what kind' (CDIAL 3197); āhāt with āhe"
 reviews_of: [MR-C03-kasa, MR-C02-tu-tumhi, MR-C02-aahe]
 duration:
   max_seconds: 240
@@ -51,6 +52,11 @@ Two agreements are at work:
   the plural form of *kasā*), and the copula as **आहात** (*āhāt*).
 - To a single male friend: **तू कसा आहेस?** (*tū kasā āhes?*); to a female
   friend: **तू कशी आहेस?** (*tū kaśī āhes?*).
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Each word is inherited. CDIAL lists **तुम्ही** under Sanskrit *yuṣmad-*, "you" (plural), with its *t-* from *tvam*, "thou" (CDIAL 10511), and **कसे** under *kīdṛśa*, "of what kind" (CDIAL 3197). **आहात** is a form of **आहे**, which CDIAL lists under *asti*, "is", though Bloch gives it another origin (CDIAL 977).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-RESPECT-BY-PLURAL, MR-GRAMMAR-HOW-AGREES-WITH-ADDRESSEE] -->

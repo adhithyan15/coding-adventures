@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 151,
-  "sourceHash": "fnv1a64:d2d8caec851955be",
+  "sourceHash": "fnv1a64:72357b290392f6fc",
   "lessonIds": [
     "MR-C151-pramanik",
     "MR-C151-dhadsi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch151.txt",
   "json": "marathi/narration/ch151.json",
-  "textHash": "fnv1a64:20c3a48404254076",
-  "jsonHash": "fnv1a64:540d273a620bf8a1",
+  "textHash": "fnv1a64:7c803540b5fb849b",
+  "jsonHash": "fnv1a64:918a71c8155f8e83",
   "findings": []
 }

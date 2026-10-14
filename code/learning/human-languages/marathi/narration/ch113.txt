@@ -12,6 +12,9 @@ Before the new one: say the Marathi for behind, then the Marathi for ahead.
 You'll want to know: दुकान.
 दुकान — dukān — "a shop".
 
+The word, taken apart.
+दुकान (dukān) is a loan from Arabic dukkān, "shop", which reached Marathi through Persian. Its Arabic root is d-k-n (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for ahead, then the Marathi for a shop.
 
 You'll want to know: रस्ता.
 रस्ता — rastā — "a road".
+
+The word, taken apart.
+रस्ता (rastā) is a loan, usually traced to Persian rāsta, "straight; a road".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a shop, then the Marathi for a road.
 You'll want to know: गल्ली.
 गल्ली — gallī — "a lane".
 
+The word, taken apart.
+गल्ली (gallī) matches Hindi galī, "lane", which CDIAL traces to a reconstructed galī, "defile, lane" (CDIAL 4085). CDIAL lists no Marathi form.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a road, then the Marathi for a lane.
 You'll want to know: स्टेशन.
 स्टेशन — sṭeshan — "a station".
 
+The word, taken apart.
+स्टेशन (sṭeshan) is a loan from English station.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a lane, then the Marathi for a station.
 
 You'll want to know: गाडी.
 गाडी — gāḍī — "a car; a train".
+
+The word, taken apart.
+गाडी (gāḍī) comes from a reconstructed gāḍḍa, "cart" (CDIAL 4116). CDIAL suggests, despite the long vowel, that it may be the same word as its garda, "seat", comparing Sanskrit garta, "chariot seat".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "pahoḷũ"
 concept_tag: GU-QUAL131-PAHOLU
 prerequisites: [GU-C130-darji, GU-C131-nicu]
 sounds: []
-roots: []
+roots: [sanskrit-prthula]
+etymology_hook: "pahoḷũ ← Sanskrit pṛthula 'broad', a tadbhava (CDIAL 8361)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C131-nicu]
 <!-- hl-knowledge: introduces=[GU-LEX-C131-QUAL131-02]; assesses=[] -->
 
 **પહોળું** (*pahoḷũ*) — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પહોળું** (*pahoḷũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pṛthula*, "broad" (CDIAL 8361). It is built on *pṛthu*, "broad".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

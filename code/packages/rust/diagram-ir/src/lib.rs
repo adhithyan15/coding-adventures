@@ -1948,10 +1948,13 @@ pub struct SwimlaneNode {
     pub classes: Vec<String>, pub style: DiagramStyle,
 }
 #[derive(Clone, Debug, PartialEq)]
-pub struct SwimlaneLane { pub id: String, pub label: String, pub node_ids: Vec<String> }
+pub struct SwimlaneLane {
+    pub id: String, pub label: String, pub node_ids: Vec<String>, pub classes: Vec<String>, pub style: DiagramStyle,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneGroup {
     pub id: String, pub label: String, pub lane_id: String, pub parent_id: Option<String>, pub node_ids: Vec<String>,
+    pub classes: Vec<String>, pub style: DiagramStyle,
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SwimlaneEdgeKind { Directed, Undirected, Dotted, Thick, Invisible }
@@ -1973,18 +1976,36 @@ pub struct SwimlaneEdge {
     pub curve: Option<SwimlaneEdgeCurve>,
 }
 #[derive(Clone, Debug, PartialEq)]
+pub struct SwimlaneTheme {
+    pub main_background: String, pub node_border: String, pub line_color: String,
+}
+impl Default for SwimlaneTheme {
+    fn default() -> Self {
+        Self {
+            main_background: "#ffffff".into(),
+            node_border: "#1565c0".into(),
+            line_color: "#455a64".into(),
+        }
+    }
+}
+#[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneDiagram {
     pub direction: DiagramDirection, pub title: Option<String>, pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>, pub lanes: Vec<SwimlaneLane>, pub groups: Vec<SwimlaneGroup>, pub nodes: Vec<SwimlaneNode>,
     pub edges: Vec<SwimlaneEdge>, pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>,
     pub line_hops: Option<SwimlaneLineHops>, pub automatic_lane_ordering: bool,
     pub ignore_cross_lane_edges: bool, pub optimize_ranks_by_crossings: bool,
+    pub theme: SwimlaneTheme,
 }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedSwimlaneLane { pub id: String, pub label: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
+pub struct LayoutedSwimlaneLane {
+    pub id: String, pub label: String, pub classes: Vec<String>, pub style: DiagramStyle,
+    pub x: f64, pub y: f64, pub width: f64, pub height: f64,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneGroup {
     pub id: String, pub label: String, pub lane_id: String, pub parent_id: Option<String>,
+    pub classes: Vec<String>, pub style: DiagramStyle,
     pub x: f64, pub y: f64, pub width: f64, pub height: f64,
 }
 #[derive(Clone, Debug, PartialEq)]
@@ -2009,6 +2030,7 @@ pub struct LayoutedSwimlaneDiagram {
     pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>, pub line_hops: Option<SwimlaneLineHops>,
     pub automatic_lane_ordering: bool, pub ignore_cross_lane_edges: bool,
     pub optimize_ranks_by_crossings: bool,
+    pub theme: SwimlaneTheme,
 }
 
 // GRAMMAR VISUALIZATION FAMILY

@@ -11,8 +11,8 @@ gloss: road, heard before it is shown as a reading target
 concept_tag: GU-PLACE-ROAD-HEARD
 prerequisites: [GU-C22-shaalaa]
 sounds: [rolled-r, consonant-cluster, long-o]
-roots: []
-etymology_hook: The route between places begins as one sound-and-meaning unit.
+roots: [persian-rasta]
+etymology_hook: "rasto: usually traced to Persian rāsta 'straight; a road'"
 duration:
   max_seconds: 120
 requires:
@@ -38,6 +38,11 @@ reviews_of: []
 <!-- hl-knowledge: introduces=[GU-LEX-RASTO-01]; assesses=[] -->
 
 Listen twice: **rasto**. It means **road**. Keep the middle *st* together.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**રસ્તો** (*rasto*) is a loan, usually traced to Persian *rāsta*, "straight; a road".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-RASTO-01] -->

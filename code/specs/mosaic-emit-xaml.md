@@ -223,8 +223,19 @@ row unaffected), but the *attribute name* changes: `Grid` has no
 `Grid` in Windows App SDK 1.3+, safely inside this spec's pinned 1.5
 floor (§10).
 
-**Out of scope**, tracked separately: `flex-wrap` (no WinUI 3
-`WrapPanel` — 8 uses repo-wide, its own follow-up), weighted
+**Bounded percentages and wrapping repeaters.** A `Row` whose direct children
+all carry positive width percentages totaling 100%
+lowers those values to proportional star definitions (`40%`/`60%` →
+`40*`/`60*`). Mixed, partial, conditional, or invalid percentage groups
+remain `Auto` and reported. A horizontal `Row` with `flex-wrap: wrap`, one
+direct `For`, and one repeated child whose positive width is an integral
+fraction of 100 lowers the repeater to `UniformGridLayout` with the derived
+column count and `ItemsStretch="Fill"`. The repeater's parent slot is star
+sized so the layout receives the Row's available width. This is the exact
+shape used by TaskApp's seven-column calendar.
+
+**Out of scope**, tracked separately: general `flex-wrap` shapes outside the
+bounded repeated equal-fraction case above, weighted
 `flex-grow` values other than `1`, `align-items: flex-end`/`baseline`,
 and `justify-content` values other than `space-between`.
 
@@ -236,9 +247,11 @@ at two points: the property name has no XAML setter at all
 translated into a form the markup compiler accepts
 (`translate_xaml_value` returns `None` — a non-100% percentage length,
 an unsupported CSS unit, `currentColor`, …). Neither point used to
-leave a trace; `pub fn dropped_style_properties(style: &StyleDef) ->
-Vec<DroppedStyleProperty>` (`mosaic-emit-xaml::pipeline`) makes both
-visible, one entry per dropped `(part, property, value, reason)`.
+leave a trace; `dropped_style_properties_in_layout(style, root)`
+(`mosaic-emit-xaml::pipeline`) makes both visible, one entry per dropped
+`(part, property, value, reason)`. The style-only
+`dropped_style_properties(style)` remains available for callers that do not
+have layout context.
 
 This is a *reporting* function, not a lowering change — nothing about
 emitted XAML output is affected. `mosaic-package-artifact-builder`'s
@@ -247,6 +260,11 @@ already uses for `host_table_has_native_semantics` and friends) and
 surfaces the results as `styleDegradations` in `mosaic-degradations.json`
 — see that crate's docs for why this list is deliberately kept separate
 from `degradations` (non-gating) rather than folded in.
+
+The layout-aware form also excludes percentage widths and
+`flex-wrap` only when §3.1's complete proportional group or bounded repeated
+equal-fraction shape is present. The same values remain reported in all other
+layout positions.
 
 **Exclusions**, so the report doesn't false-positive on properties §3.1
 already handles through a side channel: `align-items`/`align`/

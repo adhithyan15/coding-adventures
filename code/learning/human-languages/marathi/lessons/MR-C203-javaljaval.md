@@ -15,6 +15,7 @@ concept_tag: MR-KARAN203-JAVALJAVAL
 prerequisites: [MR-C203-nakki, MR-C203-kharokhar]
 sounds: []
 roots: []
+etymology_hook: "javaḷjavaḷ: javaḷ 'near', doubled; the origin of javaḷ is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C203-kharokhar]
 <!-- hl-knowledge: introduces=[MR-LEX-C203-KARAN203-03]; assesses=[] -->
 
 **जवळजवळ** — *javaḷjavaḷ* — "almost".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जवळजवळ** (*javaḷjavaḷ*) is **जवळ**, "near", said twice: "near-near". The origin of **जवळ** is not settled; CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

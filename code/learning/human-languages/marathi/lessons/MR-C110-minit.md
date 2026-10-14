@@ -14,7 +14,8 @@ romanization: "miniṭ"
 concept_tag: MR-TIME110-MINIT
 prerequisites: [MR-C109-varsa, MR-C109-tas]
 sounds: []
-roots: []
+roots: [english-minute]
+etymology_hook: "miniṭ ← English minute"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C109-tas]
 <!-- hl-knowledge: introduces=[MR-LEX-C110-TIME110-01]; assesses=[] -->
 
 **मिनिट** — *miniṭ* — "a minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मिनिट** (*miniṭ*) is a loan from English *minute*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

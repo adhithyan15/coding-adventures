@@ -14,7 +14,8 @@ romanization: "hattī"
 concept_tag: MR-ANIMALS101-HATTI
 prerequisites: [MR-C101-simha, MR-C101-vagh]
 sounds: []
-roots: []
+roots: [sanskrit-hastin]
+etymology_hook: "hattī ← Sanskrit hastin 'having hands; elephant', a tadbhava (CDIAL 14039)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C101-vagh]
 <!-- hl-knowledge: introduces=[MR-LEX-C101-ANIMALS101-04]; assesses=[] -->
 
 **हत्ती** — *hattī* — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हत्ती** (*hattī*) is a tadbhava of Sanskrit *hastin*, "having hands", which meant "elephant" from the Rigveda on (CDIAL 14039). CDIAL suggests it renders *karin*, "elephant", a word perhaps of non-Aryan origin, linked by folk etymology with *kara*, "hand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sūn"
 concept_tag: MR-VASTU181-SUN
 prerequisites: [MR-C180-patrakar, MR-C180-vastuvisarad]
 sounds: []
-roots: []
+roots: [sanskrit-snusha]
+etymology_hook: "sūn ← Sanskrit snuṣā 'son's wife', a tadbhava (CDIAL 13801)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C180-vastuvisarad]
 <!-- hl-knowledge: introduces=[MR-LEX-C181-VASTU181-01]; assesses=[] -->
 
 **सून** — *sūn* — "a daughter-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सून** (*sūn*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *snuṣā*, "son's wife" (CDIAL 13801). The same ancient word as Latin *nurus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

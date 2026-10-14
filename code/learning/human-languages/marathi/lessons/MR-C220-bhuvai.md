@@ -14,7 +14,8 @@ romanization: "bhuvaī"
 concept_tag: MR-VASTU220-BHUVAI
 prerequisites: [MR-C220-tac, MR-C220-papni]
 sounds: []
-roots: []
+roots: [sanskrit-bhru]
+etymology_hook: "bhuvaī ← Sanskrit bhrū 'eyebrow', a tadbhava (CDIAL 9688)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C220-papni]
 <!-- hl-knowledge: introduces=[MR-LEX-C220-VASTU220-03]; assesses=[] -->
 
 **भुवई** — *bhuvaī* — "an eyebrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भुवई** (*bhuvaī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhrū*, "eyebrow" (CDIAL 9688). CDIAL lists the Marathi forms as *bhãvaī* and *bhõvaī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

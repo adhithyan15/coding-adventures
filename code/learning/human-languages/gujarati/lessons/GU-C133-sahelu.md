@@ -14,7 +14,8 @@ romanization: "sahelũ"
 concept_tag: GU-QUAL133-SAHELU
 prerequisites: [GU-C132-naram, GU-C133-kathan]
 sounds: []
-roots: []
+roots: [sukha-sanskrit]
+etymology_hook: "sahelũ 'easy' ← Sanskrit sukha 'easy, pleasant', with the suffix -illa (CDIAL 13451)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C133-kathan]
 <!-- hl-knowledge: introduces=[GU-LEX-C133-QUAL133-02]; assesses=[] -->
 
 **સહેલું** (*sahelũ*) — "easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સહેલું** (*sahelũ*) is a tadbhava. CDIAL lists it under Sanskrit *sukha*, "pleasant, easy", among forms built with an *-illa* suffix (CDIAL 13451).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

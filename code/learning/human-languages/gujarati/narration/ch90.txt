@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for to study, then the Gujarati for to teac
 You'll want to know: લગ્ન.
 લગ્ન (lagna) — "a wedding".
 
+The word, taken apart.
+લગ્ન (lagna) is Sanskrit lagna, "sticking to, fixed on", taken over whole as a learned loan, a tatsama (CDIAL 10893). The sense "wedding" is usually explained through its later use for the auspicious moment fixed for the rite.
+
 What you've built.
 One more word for weddings, birthdays and work.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for to teach, then the Gujarati for a weddi
 
 You'll want to know: જન્મદિવસ.
 જન્મદિવસ (janmadivas) — "a birthday". Birth plus દિવસ, day.
+
+The word, taken apart.
+જન્મદિવસ (janmadivas) is a Sanskrit compound, a tatsama: janman, "birth" (CDIAL 5113), and divasa, "day" (CDIAL 6333).
 
 What you've built.
 One more word for weddings, birthdays and work.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a wedding, then the Gujarati for a birt
 You'll want to know: ઉંમર.
 ઉંમર (ummar) — "age".
 
+The word, taken apart.
+ઉંમર (ummar) is a loan from Arabic ʿumr, "life, lifetime", which reached Gujarati through Persian. Its Arabic root is ʿ-m-r (Lane).
+
 What you've built.
 One more word for weddings, birthdays and work.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a birthday, then the Gujarati for age.
 You'll want to know: ખેતર.
 ખેતર (khetar) — "a field (farmland)".
 
+The word, taken apart.
+ખેતર (khetar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣetra, "land" (CDIAL 3735).
+
 What you've built.
 One more word for weddings, birthdays and work.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for age, then the Gujarati for a field.
 
 You'll want to know: વેપારી.
 વેપારી (vepārī) — "a merchant, a trader".
+
+The word, taken apart.
+વેપારી (vepārī) is built on vepār, "trade", which goes back to Sanskrit vyāpāra, "occupation, business" (CDIAL 12205). CDIAL lists no Gujarati form there.
 
 What you've built.
 One more word for weddings, birthdays and work.

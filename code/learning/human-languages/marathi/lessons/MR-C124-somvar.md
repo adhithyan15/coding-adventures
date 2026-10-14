@@ -14,7 +14,8 @@ romanization: "somvār"
 concept_tag: MR-WANT124-SOMVAR
 prerequisites: [MR-C124-madhyaratra, MR-C124-parva]
 sounds: []
-roots: []
+roots: [sanskrit-soma, sanskrit-vara-day]
+etymology_hook: "somvār: Sanskrit soma 'the moon' + vāra 'day of the week' (CDIAL 11547), a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C124-parva]
 <!-- hl-knowledge: introduces=[MR-LEX-C124-WANT124-05]; assesses=[] -->
 
 **सोमवार** — *somvār* — "Monday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सोमवार** (*somvār*) is a Sanskrit compound, a tatsama: *soma*, "the moon", and *vāra*, "day of the week" (CDIAL 11547). Monday is the moon's day, as in English.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

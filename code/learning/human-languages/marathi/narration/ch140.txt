@@ -12,6 +12,9 @@ Before the new one: say the Marathi for grass, then the Marathi for a branch.
 You'll want to know: मूळ.
 मूळ — mūḷ — "a root".
 
+The word, taken apart.
+मूळ (mūḷ) is a tadbhava of Sanskrit mūla, "root" (CDIAL 10250). CDIAL thinks the variation in its forms supports a non-Aryan, perhaps Dravidian, origin.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a branch, then the Marathi for a root.
 
 You'll want to know: बी.
 बी — bī — "a seed".
+
+The word, taken apart.
+बी (bī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bīja, "seed, semen" (CDIAL 9250).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a root, then the Marathi for a seed.
 You'll want to know: माती.
 माती — mātī — "soil, earth".
 
+The word, taken apart.
+माती (mātī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mṛttikā, "earth, clay" (CDIAL 10286).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a seed, then the Marathi for soil.
 You'll want to know: खडक.
 खडक — khaḍak — "a rock".
 
+The word, taken apart.
+The origin of खडक (khaḍak) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for soil, then the Marathi for a rock.
 
 You'll want to know: लाट.
 लाट — lāṭ — "a wave".
+
+The word, taken apart.
+The origin of लाट (lāṭ) is not settled. CDIAL has no entry for it in this sense; its Marathi lāṭ is a different word, "large beam" (CDIAL 10991).
 
 What you've built.
 One more word for this chapter.

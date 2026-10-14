@@ -14,7 +14,8 @@ romanization: "satār"
 concept_tag: MR-VASTU268-SATAR
 prerequisites: [MR-C268-tabla, MR-C268-basri]
 sounds: []
-roots: []
+roots: [persian-sitar]
+etymology_hook: "satār: usually traced to Persian sitār 'three-stringed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C268-basri]
 <!-- hl-knowledge: introduces=[MR-LEX-C268-VASTU268-04]; assesses=[] -->
 
 **सतार** — *satār* — "a sitar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सतार** (*satār*) is a loan, usually traced to Persian *sitār*: *si*, "three", and *tār*, "string".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

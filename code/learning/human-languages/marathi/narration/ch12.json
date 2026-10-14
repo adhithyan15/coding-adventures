@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "The First Verbs",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:091b09c08ff26764",
+  "sourceHash": "fnv1a64:34b762db5ce60f78",
   "lessons": [
     {
       "id": "MR-C05-bolne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dba5cff1731ae803",
+      "sourceHash": "fnv1a64:ef002711b63f8783",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "बोलणे (bolṇe, \"to speak\") is a native Indo-Aryan verb on the stem bol- — the same bol- as Hindi bolnā and Punjabi bolṇā. Its ending -णे (-ṇe) is the Marathi infinitive (\"to ___\"): bol-ṇe \"to speak,\" bheṭ-ṇe \"to meet,\" ye-ṇe \"to come.\" Strip -ṇe and you have the stem to build on: bol-."
+              "text": "बोलणे (bolṇe, \"to speak\") is a native Indo-Aryan verb, from a reconstructed bōll-, \"speak\" (CDIAL 9321), on the stem bol- — the same bol- as Hindi bolnā and Punjabi bolṇā. Its ending -णे (-ṇe) is the Marathi infinitive (\"to ___\"): bol-ṇe \"to speak,\" bheṭ-ṇe \"to meet,\" ye-ṇe \"to come.\" Strip -ṇe and you have the stem to build on: bol-."
             }
           ]
         },
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bd5845df73c069a",
+      "sourceHash": "fnv1a64:8b42c18a5b68aeee",
       "notice": null,
       "blocks": [
         {
@@ -281,7 +281,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:7125127827a3402f",
+      "sourceHash": "fnv1a64:b7c3987200093d50",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -329,7 +329,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "राहणे (rāhṇe, \"to live, remain, stay\") is from Sanskrit रह् (rah-, \"to remain\") — the same root behind Hindi rahnā. Present tense, gendered as always: मी पुण्यात राहतो (mī puṇyāt rāhto, a man) / राहते (rāhte, a woman) — \"I live in Pune.\""
+              "text": "राहणे (rāhṇe, \"to live, remain, stay\") goes back to rahati, \"remains\", a form CDIAL reconstructs (CDIAL 10666) — the same verb as Hindi rahnā. Present tense, gendered as always: मी पुण्यात राहतो (mī puṇyāt rāhto, a man) / राहते (rāhte, a woman) — \"I live in Pune.\""
             }
           ]
         },
@@ -407,7 +407,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5286bafd49c3c004",
+      "sourceHash": "fnv1a64:1815b97e6e0d81ca",
       "notice": {
         "modality": "sight",
         "needs": [

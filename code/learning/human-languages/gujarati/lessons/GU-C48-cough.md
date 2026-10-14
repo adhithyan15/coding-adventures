@@ -14,7 +14,8 @@ romanization: "khā̃sī"
 concept_tag: GU-BODY3-COUGH
 prerequisites: [GU-C48-blood, GU-C48-fever]
 sounds: []
-roots: []
+roots: [sanskrit-kasa]
+etymology_hook: "khāṁsī ← Sanskrit kāsa 'cough', with an imitative kh- (CDIAL 3138)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C48-fever]
 <!-- hl-knowledge: introduces=[GU-LEX-C48-BODY3-05]; assesses=[] -->
 
 **ખાંસી** (*khā̃sī*) — "a cough". Often comes with a **તાવ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખાંસી** (*khāṁsī*) is a tadbhava of Sanskrit *kāsa*, "cough" (CDIAL 3138). CDIAL explains its *kh-* as imitative, the sound of the cough itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

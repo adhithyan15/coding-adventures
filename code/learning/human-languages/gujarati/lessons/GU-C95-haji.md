@@ -15,6 +15,7 @@ concept_tag: GU-TIME95-HAJI
 prerequisites: [GU-C94-tarikh, GU-C94-hamna]
 sounds: []
 roots: []
+etymology_hook: "hajī 'still, yet': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C94-hamna]
 <!-- hl-knowledge: introduces=[GU-LEX-C95-TIME95-01]; assesses=[] -->
 
 **હજી** (*hajī*) — "still, yet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **હજી** (*hajī*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gaṇit"
 concept_tag: MR-KAAM250-GANIT
 prerequisites: [MR-C250-itihas, MR-C250-bhugol]
 sounds: []
-roots: []
+roots: [sanskrit-ganita]
+etymology_hook: "gaṇit ← Sanskrit gaṇita 'counted', a tatsama (CDIAL 3996)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C250-bhugol]
 <!-- hl-knowledge: introduces=[MR-LEX-C250-KAAM250-03]; assesses=[] -->
 
 **गणित** — *gaṇit* — "mathematics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गणित** (*gaṇit*) is Sanskrit *gaṇita*, "counted", taken over whole as a learned loan, a tatsama (CDIAL 3996).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

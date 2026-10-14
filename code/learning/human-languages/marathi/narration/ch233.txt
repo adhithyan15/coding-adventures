@@ -12,6 +12,9 @@ Before the new one: say the Marathi for smooth, then the Marathi for rough.
 You'll want to know: गडद.
 गडद — gaḍad — "dark (of a colour)".
 
+The word, taken apart.
+The origin of गडद (gaḍad) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for rough, then the Marathi for dark.
 
 You'll want to know: फिकट.
 फिकट — phikaṭ — "pale, light (of a colour)".
+
+The word, taken apart.
+फिकट (phikaṭ) goes with Marathi phikā, "pale, tasteless", which CDIAL lists under a reconstructed phikka-, "defective" (CDIAL 9037).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for dark, then the Marathi for pale.
 You'll want to know: दूरचा.
 दूरचा — dūrcā — "distant".
 
+The word, taken apart.
+दूरचा (dūrcā) is dūr, "far", from Sanskrit dūra, "distant" (CDIAL 6495), with -चा, "of".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for pale, then the Marathi for distant.
 You'll want to know: वक्तशीर.
 वक्तशीर — vaktaśīr — "punctual".
 
+The word, taken apart.
+वक्तशीर (vaktaśīr) is built on vakta, "time", usually traced through Persian to Arabic waqt, "time". The source of the ending is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for distant, then the Marathi for punctual.
 
 You'll want to know: सहनशील.
 सहनशील — sahanśīl — "patient, tolerant".
+
+The word, taken apart.
+सहनशील (sahanśīl) is a compound of Sanskrit parts: sahana, "endurance, patience" (CDIAL 13305), and śīla, "habit, nature" (CDIAL 12501).
 
 What you've built.
 One more word for this chapter.

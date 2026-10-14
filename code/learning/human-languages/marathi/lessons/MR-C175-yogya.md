@@ -14,7 +14,8 @@ romanization: "yogya"
 concept_tag: MR-GUN175-YOGYA
 prerequisites: [MR-C175-vegla, MR-C175-sarkha]
 sounds: []
-roots: []
+roots: [sanskrit-yogya]
+etymology_hook: "yogya ← Sanskrit yogya 'fit for yoking; fit, proper', a tatsama (CDIAL 10528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C175-sarkha]
 <!-- hl-knowledge: introduces=[MR-LEX-C175-GUN175-04]; assesses=[] -->
 
 **योग्य** — *yogya* — "proper, right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**योग्य** (*yogya*) is Sanskrit *yogya*, "fit for yoking; fit, proper", taken over whole as a learned loan, a tatsama (CDIAL 10528). It is built on *yoga*, "yoking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 198,
-  "sourceHash": "fnv1a64:dae4a42848975869",
+  "sourceHash": "fnv1a64:8783ba43cccccdd8",
   "lessonIds": [
     "MR-C198-dabne",
     "MR-C198-khokne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch198.txt",
   "json": "marathi/narration/ch198.json",
-  "textHash": "fnv1a64:a611adeb4a64796a",
-  "jsonHash": "fnv1a64:8e781424a0a6df2c",
+  "textHash": "fnv1a64:0c646177eb1ec726",
+  "jsonHash": "fnv1a64:d793bc3b0f0c1e3c",
   "findings": []
 }

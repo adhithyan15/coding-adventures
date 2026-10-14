@@ -14,7 +14,8 @@ romanization: "sattar"
 concept_tag: GU-NUM2-SEVENTEEN
 prerequisites: [GU-C81-fifteen, GU-C81-sixteen]
 sounds: []
-roots: []
+roots: [sanskrit-saptadasha]
+etymology_hook: "sattar ← Sanskrit saptadaśa 'seventeen', a tadbhava (CDIAL 13146)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C81-sixteen]
 <!-- hl-knowledge: introduces=[GU-LEX-C82-NUM2-01]; assesses=[] -->
 
 **સત્તર** (*sattar*) — "seventeen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સત્તર** (*sattar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *saptadaśa*, "seventeen" (CDIAL 13146). It is *sapta*, "seven", and *daśa*, "ten".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

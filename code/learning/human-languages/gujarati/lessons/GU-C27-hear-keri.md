@@ -12,7 +12,7 @@ concept_tag: GU-FOOD-MANGO-HEARD
 prerequisites: [GU-C27-hear-tel]
 sounds: [ka, e-sign, long-ii]
 roots: []
-etymology_hook: The chapter's one sweet word ends in the same -ī as roṭlī: the second time that ending has failed to predict gender.
+etymology_hook: "kerī 'mango': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C27-hear-tel, GU-C10-rotli]
 
 [PAUSE 3s] Say the word for oil, then the word for flatbread. Now listen twice: **kerī**. It means
 **mango** — the fruit of the hot months, and note it ends in *-ī*, exactly like *roṭlī*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **કેરી** (*kerī*) is not settled. CDIAL, searched by form and by meaning, has no entry for it; the older word for the mango, *āmra*, gave Gujarati *ām* and *āmbo* instead (CDIAL 1268).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-KERI-01, GU-LEX-TEL-01, GU-GRAMMAR-GENDER-NOT-BY-ENDING] -->

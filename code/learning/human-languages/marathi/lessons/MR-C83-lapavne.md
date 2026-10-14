@@ -15,6 +15,7 @@ concept_tag: MR-VERB-LAPAVNE
 prerequisites: [MR-C83-odhne, MR-C83-dhakalne]
 sounds: []
 roots: []
+etymology_hook: "lapavṇe 'to hide': origin not settled; neither CDIAL nor DEDR has an entry for lapṇe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C83-dhakalne]
 <!-- hl-knowledge: introduces=[MR-LEX-C83-VERBS83-04]; assesses=[] -->
 
 **लपवणे** — *lapavṇe* — "to hide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **लपवणे** (*lapavṇe*) is not settled. Neither CDIAL nor DEDR has an entry for it or for *lapṇẽ*, "to hide".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

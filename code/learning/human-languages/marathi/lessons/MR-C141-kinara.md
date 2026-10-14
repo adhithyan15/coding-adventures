@@ -14,7 +14,8 @@ romanization: "kinārā"
 concept_tag: MR-THINGS141-KINARA
 prerequisites: [MR-C140-khadak, MR-C140-lat]
 sounds: []
-roots: []
+roots: [persian-kinar]
+etymology_hook: "kinārā: usually traced to Persian kinār 'edge, shore'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C140-lat]
 <!-- hl-knowledge: introduces=[MR-LEX-C141-THINGS141-01]; assesses=[] -->
 
 **किनारा** — *kinārā* — "a shore, a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**किनारा** (*kinārā*) is a loan, usually traced to Persian *kinār*, "edge, shore".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

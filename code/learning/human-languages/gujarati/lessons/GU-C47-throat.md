@@ -14,7 +14,8 @@ romanization: "gaḷũ"
 concept_tag: GU-BODY2-THROAT
 prerequisites: [GU-C46-hair, GU-C47-finger]
 sounds: []
-roots: []
+roots: [sanskrit-gala]
+etymology_hook: "gaḷũ ← Sanskrit gala 'throat, neck', a tadbhava (CDIAL 4070)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C47-finger]
 <!-- hl-knowledge: introduces=[GU-LEX-C47-BODY2-02]; assesses=[] -->
 
 **ગળું** (*gaḷũ*) — "the throat, the neck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગળું** (*gaḷũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gala*, "throat, neck" (CDIAL 4070).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

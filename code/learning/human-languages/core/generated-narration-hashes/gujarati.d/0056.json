@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 56,
-  "sourceHash": "fnv1a64:7b23a30152fce87a",
+  "sourceHash": "fnv1a64:60559452b9bf361c",
   "lessonIds": [
     "GU-C56-gaavu",
     "GU-C56-naachvu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch56.txt",
   "json": "gujarati/narration/ch56.json",
-  "textHash": "fnv1a64:31520d5940c31105",
-  "jsonHash": "fnv1a64:123c2a34ff3253c6",
+  "textHash": "fnv1a64:5e661cf1ed5a4a31",
+  "jsonHash": "fnv1a64:76f2c30441de774f",
   "findings": []
 }

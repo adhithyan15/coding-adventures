@@ -14,7 +14,8 @@ romanization: "svapna"
 concept_tag: MR-WANT123-SVAPNA
 prerequisites: [MR-C123-garaj, MR-C123-asa]
 sounds: []
-roots: []
+roots: [sanskrit-svapna]
+etymology_hook: "svapna ← Sanskrit svapna 'sleep, dream', a tatsama (CDIAL 13904)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C123-asa]
 <!-- hl-knowledge: introduces=[MR-LEX-C123-WANT123-03]; assesses=[] -->
 
 **स्वप्न** — *svapna* — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्वप्न** (*svapna*) is Sanskrit *svapna*, "sleep, dream", taken over whole as a learned loan, a tatsama (CDIAL 13904). It is built on *svap*, "to sleep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

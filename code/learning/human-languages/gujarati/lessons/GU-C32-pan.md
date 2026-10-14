@@ -11,8 +11,8 @@ gloss: "but — and, in a different position, also"
 concept_tag: GU-JOIN-PAN
 prerequisites: [GU-C32-athava, GU-C31-nathi]
 sounds: []
-roots: []
-etymology_hook: "One small word does two jobs, and position alone decides which: પણ between clauses is 'but', પણ after a noun is 'also'."
+roots: [punar]
+etymology_hook: "paṇ ← Sanskrit punar 'back, again, moreover, however', a tadbhava (CDIAL 8273)"
 duration:
   max_seconds: 250
 requires:
@@ -53,6 +53,8 @@ and it warns that the second will pull against the first:
 It works especially well with what you learned last chapter, because the
 sharpest contrast a beginner can draw is between something that is and something
 that **નથી**.
+
+CDIAL lists **પણ** (*paṇ*) under Sanskrit *punar*, "back, again, moreover, however" (CDIAL 8273): the "moreover" and the "however" are the two jobs it still does.
 
 ## Grammar Lens: the same word, moved, means "also"
 <!-- hl-knowledge: introduces=[GU-JOIN-PAN-ALSO-01]; assesses=[GU-JOIN-PAN-01] -->

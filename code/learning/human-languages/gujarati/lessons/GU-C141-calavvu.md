@@ -14,7 +14,8 @@ romanization: "calāvvũ"
 concept_tag: GU-VERB-CALAVVU
 prerequisites: [GU-C141-nahvu, GU-C141-pahervu]
 sounds: []
-roots: []
+roots: [indo-aryan-calyati]
+etymology_hook: "calāvvũ: the causing form of cālvũ 'to move, walk' ← *calyati 'goes' (CDIAL 4721)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C141-pahervu]
 <!-- hl-knowledge: introduces=[GU-LEX-C141-ACT141-04]; assesses=[] -->
 
 **ચલાવવું** (*calāvvũ*) — "to drive, to run (a machine)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચલાવવું** (*calāvvũ*) is the causing form of *cālvũ*, "to move, walk", which CDIAL lists under *\*calyati*, "goes", built on Sanskrit *calati*, "goes away" (CDIAL 4721).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

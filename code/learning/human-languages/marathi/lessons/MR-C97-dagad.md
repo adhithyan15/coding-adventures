@@ -15,6 +15,7 @@ concept_tag: MR-NATURE97-DAGAD
 prerequisites: [MR-C96-nadi, MR-C97-talav]
 sounds: []
 roots: []
+etymology_hook: "dagaḍ 'stone': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C97-talav]
 <!-- hl-knowledge: introduces=[MR-LEX-C97-NATURE97-02]; assesses=[] -->
 
 **दगड** — *dagaḍ* — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **दगड** (*dagaḍ*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

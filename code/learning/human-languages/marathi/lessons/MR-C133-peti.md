@@ -14,7 +14,8 @@ romanization: "peṭī"
 concept_tag: MR-THINGS133-PETI
 prerequisites: [MR-C132-kangva, MR-C133-saban]
 sounds: []
-roots: []
+roots: [sanskrit-pitaka]
+etymology_hook: "peṭī ← *pēṭṭa, a form beside Sanskrit piṭaka 'basket, box', which CDIAL calls non-Aryan (CDIAL 8164)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C133-saban]
 <!-- hl-knowledge: introduces=[MR-LEX-C133-THINGS133-02]; assesses=[] -->
 
 **पेटी** — *peṭī* — "a box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पेटी** (*peṭī*) comes from *\*pēṭṭa*, one of the forms CDIAL reconstructs beside Sanskrit *piṭaka*, "basket, box" (CDIAL 8164). CDIAL calls the word non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

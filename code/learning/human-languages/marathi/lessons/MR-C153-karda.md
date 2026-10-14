@@ -15,6 +15,7 @@ concept_tag: MR-QUAL153-KARDA
 prerequisites: [MR-C152-jambhala, MR-C152-naringi]
 sounds: []
 roots: []
+etymology_hook: "karḍā 'grey': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C152-naringi]
 <!-- hl-knowledge: introduces=[MR-LEX-C153-QUAL153-01]; assesses=[] -->
 
 **करडा** — *karḍā* — "grey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **करडा** (*karḍā*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

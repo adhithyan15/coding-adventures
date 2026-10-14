@@ -14,7 +14,8 @@ romanization: "rabar"
 concept_tag: MR-THINGS134-RABAR
 prerequisites: [MR-C134-phala, MR-C134-pensil]
 sounds: []
-roots: []
+roots: [english-rubber]
+etymology_hook: "rabar ← English rubber"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C134-pensil]
 <!-- hl-knowledge: introduces=[MR-LEX-C134-THINGS134-05]; assesses=[] -->
 
 **रबर** — *rabar* — "an eraser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रबर** (*rabar*) is a loan from English *rubber*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

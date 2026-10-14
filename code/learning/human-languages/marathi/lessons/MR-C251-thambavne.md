@@ -14,7 +14,8 @@ romanization: "thāmbavṇe"
 concept_tag: MR-VERB-THAMBAVNE
 prerequisites: [MR-C251-prayatna-karne, MR-C251-calu-thevne]
 sounds: []
-roots: []
+roots: [sanskrit-stambhate]
+etymology_hook: "thāmbavṇe: the 'make' form of thāmbṇe 'to stop' ← stambhate (CDIAL 13683)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C251-calu-thevne]
 <!-- hl-knowledge: introduces=[MR-LEX-C251-ACT251-03]; assesses=[] -->
 
 **थांबवणे** — *thāmbavṇe* — "to bring to a stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थांबवणे** (*thāmbavṇe*) is the "make" form of *thāṁbṇẽ*, "to stop", which comes from Sanskrit *stambhate*, "supports, arrests" (CDIAL 13683).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

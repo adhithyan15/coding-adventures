@@ -14,7 +14,8 @@ romanization: "kurūp"
 concept_tag: MR-GUN261-KURUP
 prerequisites: [MR-C260-avivahit, MR-C260-vivahit]
 sounds: []
-roots: []
+roots: [sanskrit-rupa]
+etymology_hook: "kurūp: Sanskrit kurūpa 'ill-formed': ku- 'bad' + rūpa 'form' (CDIAL 10803)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C260-vivahit]
 <!-- hl-knowledge: introduces=[MR-LEX-C261-GUN261-01]; assesses=[] -->
 
 **कुरूप** — *kurūp* — "ugly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुरूप** (*kurūp*) is Sanskrit *kurūpa*, "ill-formed, ugly", a tatsama: *ku-*, "bad", and *rūpa*, "form, beauty" (CDIAL 10803).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

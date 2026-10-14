@@ -14,7 +14,8 @@ romanization: "pagthiyũ"
 concept_tag: GU-THINGS107-PAGTHIYU
 prerequisites: [GU-C107-cadar, GU-C107-dhabalo]
 sounds: []
-roots: []
+roots: [sanskrit-padga]
+etymology_hook: "pagthiyũ: on pag 'foot' ← padga (CDIAL 7766); CDIAL has no entry for the whole word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C107-dhabalo]
 <!-- hl-knowledge: introduces=[GU-LEX-C107-THINGS107-04]; assesses=[] -->
 
 **પગથિયું** (*pagthiyũ*) — "a step, a stair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પગથિયું** (*pagthiyũ*) begins with *pag*, "foot", which CDIAL lists under Sanskrit *padga*, "afoot" (CDIAL 7766). CDIAL has no entry for the whole word, so the rest of its history is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

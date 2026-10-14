@@ -15,6 +15,7 @@ concept_tag: MR-THINGS139-PHANDI
 prerequisites: [MR-C139-dhabdhaba, MR-C139-gavat]
 sounds: []
 roots: []
+etymology_hook: "phāndī 'branch': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C139-gavat]
 <!-- hl-knowledge: introduces=[MR-LEX-C139-THINGS139-05]; assesses=[] -->
 
 **फांदी** — *phāndī* — "a branch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **फांदी** (*phāndī*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

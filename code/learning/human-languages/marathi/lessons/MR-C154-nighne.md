@@ -15,6 +15,7 @@ concept_tag: MR-VERB-NIGHNE
 prerequisites: [MR-C153-pohocne, MR-C154-paratne]
 sounds: []
 roots: []
+etymology_hook: "nighṇe 'to set out': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C154-paratne]
 <!-- hl-knowledge: introduces=[MR-LEX-C154-ACT154-02]; assesses=[] -->
 
 **निघणे** — *nighṇe* — "to set out, to leave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **निघणे** (*nighṇe*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

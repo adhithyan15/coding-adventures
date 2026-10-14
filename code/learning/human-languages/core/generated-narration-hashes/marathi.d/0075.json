@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 75,
-  "sourceHash": "fnv1a64:3f3abdfa0c68befc",
+  "sourceHash": "fnv1a64:224135d6a31ef28a",
   "lessonIds": [
     "MR-C75-ajoba",
     "MR-C75-aji",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch75.txt",
   "json": "marathi/narration/ch75.json",
-  "textHash": "fnv1a64:6453932ac7881ec4",
-  "jsonHash": "fnv1a64:a691e1020845b717",
+  "textHash": "fnv1a64:a7206d8cd10a2347",
+  "jsonHash": "fnv1a64:0d585e8ffc3bc6c4",
   "findings": []
 }

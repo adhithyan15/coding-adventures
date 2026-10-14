@@ -14,7 +14,8 @@ romanization: "saṁśodhak"
 concept_tag: MR-VASTU238-SAMSODHAK
 prerequisites: [MR-C237-kalphalak, MR-C238-vaimanik]
 sounds: []
-roots: []
+roots: [sanskrit-samshodhaka]
+etymology_hook: "saṁśodhak: Sanskrit saṁśodhaka 'one who purifies, corrects', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C238-vaimanik]
 <!-- hl-knowledge: introduces=[MR-LEX-C238-VASTU238-02]; assesses=[] -->
 
 **संशोधक** — *saṁśodhak* — "a researcher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संशोधक** (*saṁśodhak*) is Sanskrit *saṁśodhaka*, "one who purifies, corrects", a tatsama built on *śudh*, "to be pure". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

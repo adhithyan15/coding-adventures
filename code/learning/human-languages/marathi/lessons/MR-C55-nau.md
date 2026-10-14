@@ -11,7 +11,8 @@ gloss: nine — the same word as new, in Sanskrit and in English both
 concept_tag: MR-LEX-NAU
 prerequisites: [MR-C55-saha, MR-C55-saat, MR-C55-aath]
 sounds: [standalone-vowel-u]
-roots: []
+roots: [sanskrit-nava-nine]
+etymology_hook: "naū ← Sanskrit nava 'nine', a tadbhava; the same ancient word as English nine (CDIAL 6984)"
 duration:
   max_seconds: 210
 requires:

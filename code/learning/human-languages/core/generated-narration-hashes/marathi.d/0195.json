@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 195,
-  "sourceHash": "fnv1a64:dfeea0bb956bdb52",
+  "sourceHash": "fnv1a64:eb9365988c83cace",
   "lessonIds": [
     "MR-C195-savadh-karne",
     "MR-C195-purne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch195.txt",
   "json": "marathi/narration/ch195.json",
-  "textHash": "fnv1a64:4c8bc2189f2a54a1",
-  "jsonHash": "fnv1a64:930f3d8a3a5e8e95",
+  "textHash": "fnv1a64:882c04873b094eba",
+  "jsonHash": "fnv1a64:33a864e138eb4924",
   "findings": []
 }

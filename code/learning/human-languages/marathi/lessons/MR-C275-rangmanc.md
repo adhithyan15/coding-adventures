@@ -14,7 +14,8 @@ romanization: "raṅgmañc"
 concept_tag: MR-VASTU275-RANGMANC
 prerequisites: [MR-C275-citrapat, MR-C275-nrtya]
 sounds: []
-roots: []
+roots: [sanskrit-ranga, sanskrit-manca]
+etymology_hook: "raṅgmañc: Sanskrit raṅga 'colour; stage' + mañca 'stage, platform' (CDIAL 9715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C275-nrtya]
 <!-- hl-knowledge: introduces=[MR-LEX-C275-VASTU275-05]; assesses=[] -->
 
 **रंगमंच** — *raṅgmañc* — "a stage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रंगमंच** (*raṅgmañc*) is a compound of Sanskrit parts: *raṅga*, "colour; place of performance", and *mañca*, "stage, platform" (CDIAL 9715).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

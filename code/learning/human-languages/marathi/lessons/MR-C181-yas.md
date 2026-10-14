@@ -14,7 +14,8 @@ romanization: "yaś"
 concept_tag: MR-VASTU181-YAS
 prerequisites: [MR-C181-navri, MR-C181-vidhva]
 sounds: []
-roots: []
+roots: [sanskrit-yashas]
+etymology_hook: "yaś: Sanskrit yaśas 'splendour, renown', a tatsama; CDIAL lists the inherited Marathi jas 'success' (CDIAL 10443)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C181-vidhva]
 <!-- hl-knowledge: introduces=[MR-LEX-C181-VASTU181-05]; assesses=[] -->
 
 **यश** — *yaś* — "success".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**यश** (*yaś*) is Sanskrit *yaśas*, "splendour, renown", a tatsama. CDIAL lists the inherited Marathi form as *jas*, "success" (CDIAL 10443).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

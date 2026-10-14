@@ -14,7 +14,8 @@ romanization: "vecvũ"
 concept_tag: GU-VERB-VECHVU
 prerequisites: [GU-C56-shikhvu, GU-C57-kharidvu]
 sounds: []
-roots: []
+roots: [indo-aryan-vetyayati]
+etymology_hook: "vecvũ ← *vetyayati 'makes a price', a reconstructed form; a tadbhava (CDIAL 12100)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C57-kharidvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C57-MARKET-02]; assesses=[] -->
 
 **વેચવું** (*vecvũ*) — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વેચવું** (*vecvũ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vetyayati*, "makes a price", a form CDIAL reconstructs from its descendants (CDIAL 12100).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

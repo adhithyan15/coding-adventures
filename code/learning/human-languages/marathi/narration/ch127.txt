@@ -12,6 +12,9 @@ Before the new one: say the Marathi for every day, then the Marathi for summer.
 You'll want to know: हिवाळा.
 हिवाळा — hivāḷā — "winter".
 
+The word, taken apart.
+हिवाळा (hivāḷā) is a tadbhava, a word inherited and reshaped by sound change. It comes from himakāla, "winter-time", a form CDIAL reconstructs from its descendants (CDIAL 14098). It is hima, "cold, snow", and kāla, "time".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for summer, then the Marathi for winter.
 
 You'll want to know: पावसाळा.
 पावसाळा — pāvsāḷā — "the monsoon".
+
+The word, taken apart.
+पावसाळा (pāvsāḷā) is a tadbhava, a word inherited and reshaped by sound change. It comes from prāvṛṣakāla, "the rainy season", a form CDIAL reconstructs from its descendants (CDIAL 8965). It is prāvṛṣ, "the rains", and kāla, "time".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for winter, then the Marathi for the monsoon
 You'll want to know: सरळ.
 सरळ — saraḷ — "straight".
 
+The word, taken apart.
+सरळ (saraḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sarala, "straight" (CDIAL 13252).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for the monsoon, then the Marathi for straig
 You'll want to know: वळण.
 वळण — vaḷaṇ — "a turn, a bend".
 
+The word, taken apart.
+वळण (vaḷaṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from valana, "moving in a circle, turning" (CDIAL 11406). It is built on val, "to turn".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for straight, then the Marathi for a turn.
 
 You'll want to know: कोपरा.
 कोपरा — koprā — "a corner".
+
+The word, taken apart.
+कोपरा (koprā), "corner", is inherited. CDIAL lists it beside Marathi kopar, "elbow", under Sanskrit kūrpara, "elbow" (CDIAL 3413).
 
 What you've built.
 One more word for this chapter.
