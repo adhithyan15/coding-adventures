@@ -1261,6 +1261,7 @@ fn layout_siblings(
 
 #[cfg(test)]
 mod tests {
+    mod railroad_spacing;
     use super::*;
     use diagram_ir::TreemapNode;
     mod subgraph_margin;
