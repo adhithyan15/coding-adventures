@@ -1105,6 +1105,8 @@ handoffs, is rendered through Metal-to-PNG.
 Nested subgraphs remain ordinary child clusters inside their top-level ownership lane. Their lane and
 parent identities survive semantic IR, layout resolves bounds bottom-up around direct nodes and child
 clusters, and paint emits dashed labeled containers behind edge and node geometry.
+Nodes outside an explicit top-level subgraph are assigned to Mermaid's unlabeled
+`__swimlane_default__` ownership lane, which survives semantic IR, lane layout, and paint lowering.
 
 This is intentionally partial. The complete Flowchart shape
 and link catalog beyond the documented marker forms, and exact upstream routing or typography remain

@@ -7,6 +7,10 @@
       "source": "swimlane-beta LR\nsubgraph Customer\n  request[Request service]\n  receive[Receive update]\nend\nsubgraph Support\n  triage[Triage request]\n  answer[Send answer]\nend\nrequest --> triage --> answer --> receive"
     },
     {
+      "name": "default-lane-for-loose-nodes",
+      "source": "swimlane-beta LR\nsubgraph OwnedLane\n  owned[Owned node]\nend\nloose[Loose node] --> owned"
+    },
+    {
       "name": "shapes-labels-and-accessibility",
       "source": "swimlane-beta TB\ntitle Approval flow\naccTitle: Accessible approval flow\naccDescr: A request crosses two teams.\nsubgraph intake [Intake team]\n  start([Start])\n  review{Ready?}\nend\nsubgraph done [Completion]\n  finish((Done))\nend\nstart --> review\nreview -->|Yes| finish"
     },

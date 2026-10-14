@@ -6370,6 +6370,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             "unterminated Swimlane subgraph",
         ));
     }
+    assign_swimlane_default_lane(&mut diagram);
     if diagram.lanes.is_empty() || diagram.nodes.is_empty() {
         return Err(swimlane_error(
             1,
@@ -7426,6 +7427,35 @@ fn upsert_swimlane_node(
     if let Some(group) = group {
         if !diagram.groups[group].node_ids.contains(&node.id) {
             diagram.groups[group].node_ids.push(node.id);
+        }
+    }
+}
+
+fn assign_swimlane_default_lane(diagram: &mut SwimlaneDiagram) {
+    const DEFAULT_LANE_ID: &str = "__swimlane_default__";
+
+    let loose_node_ids = diagram.nodes.iter()
+        .filter(|node| node.lane_id.is_none())
+        .map(|node| node.id.clone())
+        .collect::<Vec<_>>();
+    if loose_node_ids.is_empty() {
+        return;
+    }
+    let lane_index = diagram.lanes.iter().position(|lane| lane.id == DEFAULT_LANE_ID)
+        .unwrap_or_else(|| {
+            diagram.lanes.push(SwimlaneLane {
+                id: DEFAULT_LANE_ID.into(),
+                label: String::new(),
+                node_ids: Vec::new(),
+            });
+            diagram.lanes.len() - 1
+        });
+    for node_id in loose_node_ids {
+        if !diagram.lanes[lane_index].node_ids.contains(&node_id) {
+            diagram.lanes[lane_index].node_ids.push(node_id.clone());
+        }
+        if let Some(node) = diagram.nodes.iter_mut().find(|node| node.id == node_id) {
+            node.lane_id = Some(DEFAULT_LANE_ID.into());
         }
     }
 }
