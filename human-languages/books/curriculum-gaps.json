@@ -31,9 +31,9 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
     "wordLessons": 25693,
-    "wordLessonsWithoutEtymologyHook": 4810,
-    "wordLessonsWithoutVisibleEtymology": 4804,
-    "wordLessonsWithEmptyEtymologyBlock": 370,
+    "wordLessonsWithoutEtymologyHook": 3510,
+    "wordLessonsWithoutVisibleEtymology": 3493,
+    "wordLessonsWithEmptyEtymologyBlock": 368,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
@@ -341808,10 +341808,10 @@
       {
         "language": "persian",
         "wordLessons": 1373,
-        "wordLessonsWithoutEtymologyHook": 1300,
-        "wordLessonsWithoutVisibleEtymology": 1311,
-        "wordLessonsWithoutAnyEtymology": 1300,
-        "wordLessonsWithEmptyEtymologyBlock": 2
+        "wordLessonsWithoutEtymologyHook": 0,
+        "wordLessonsWithoutVisibleEtymology": 0,
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "portuguese",
@@ -341880,12 +341880,12 @@
     ],
     "summary": {
       "wordLessons": 25693,
-      "wordLessonsWithoutEtymologyHook": 4810,
-      "wordLessonsWithoutVisibleEtymology": 4804,
-      "wordLessonsWithoutAnyEtymology": 4693,
-      "wordLessonsWithEmptyEtymologyBlock": 370,
-      "hookPercent": 81,
-      "visiblePercent": 81
+      "wordLessonsWithoutEtymologyHook": 3510,
+      "wordLessonsWithoutVisibleEtymology": 3493,
+      "wordLessonsWithoutAnyEtymology": 3393,
+      "wordLessonsWithEmptyEtymologyBlock": 368,
+      "hookPercent": 86,
+      "visiblePercent": 86
     }
   },
   "writingStages": {
@@ -454527,23 +454527,23 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 17810,
-    "underspent": 16850,
-    "neverSpent": 13293,
+    "roots": 18732,
+    "underspent": 17728,
+    "neverSpent": 14040,
     "payoffDistribution": {
-      "0": 13293,
-      "1": 2563,
-      "2": 994,
-      "3": 467,
-      "4": 226,
-      "5": 112,
-      "6": 53,
-      "7": 37,
-      "8": 12,
-      "9": 11,
-      "10": 8,
+      "0": 14040,
+      "1": 2659,
+      "2": 1029,
+      "3": 478,
+      "4": 237,
+      "5": 118,
+      "6": 57,
+      "7": 38,
+      "8": 13,
+      "9": 14,
+      "10": 12,
       "11": 3,
-      "12": 6,
+      "12": 8,
       "13": 4,
       "15": 3,
       "16": 3,
@@ -454559,7 +454559,8 @@
       "33": 1,
       "35": 1,
       "39": 1,
-      "43": 1
+      "43": 1,
+      "62": 1
     },
     "underspentPercent": 95
   },
@@ -454586,17 +454587,17 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 29122,
-    "usesBeforeIntroduction": 53371,
-    "technicalUsesBeforeIntroduction": 8563,
-    "technicalLessons": 5503,
+    "usesBeforeIntroduction": 53780,
+    "technicalUsesBeforeIntroduction": 8801,
+    "technicalLessons": 5733,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 3181
+        "lessons": 3401
       },
       {
         "term": "noun",
-        "lessons": 1756
+        "lessons": 1767
       },
       {
         "term": "adjective",
@@ -454604,11 +454605,11 @@
       },
       {
         "term": "participle",
-        "lessons": 370
+        "lessons": 373
       },
       {
         "term": "case",
-        "lessons": 307
+        "lessons": 308
       },
       {
         "term": "pronoun",
@@ -454623,7 +454624,7 @@
   },
   "glyphCoverage": {
     "filesScanned": 5925,
-    "mainCharacters": 153,
+    "mainCharacters": 154,
     "scriptCharacters": 829,
     "gaps": 0
   }

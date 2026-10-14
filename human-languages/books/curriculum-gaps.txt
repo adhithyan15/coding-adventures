@@ -15,7 +15,7 @@ exposure: 3 native-script headwords carry no romanization, so they are load-bear
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 1 of 29980 atoms never revisited (0%); missed windows R1 1554, R2 19846, R3 16003, R4 24374
 forward references: 788 uses of material a later lesson teaches
-etymology: 4810 of 25693 word-introducing lessons carry no etymology_hook; 4804 show the reader no origin in the body, and 370 more only an empty etymology block (per track below)
+etymology: 3510 of 25693 word-introducing lessons carry no etymology_hook; 3493 show the reader no origin in the body, and 368 more only an empty etymology block (per track below)
 writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 926 evidence blocks, 0 invalid; 134 missing (track, level, stage) pairs
 super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 71 named track/debt items
 writing ramp: 0 track(s) never practise writing; 0 start after lesson one
@@ -106,9 +106,9 @@ Chapters that cannot be started by ear (drivable prefix 0): 189
 Modality findings (report-only): 0
 
 Etymology coverage (HL24 §9) — every lesson that introduces a word says where it comes from:
-  25693 word-introducing lessons; 4810 carry no etymology_hook (81% covered), 4804 show the reader no origin in the body (81% covered), 4693 have neither
+  25693 word-introducing lessons; 3510 carry no etymology_hook (86% covered), 3493 show the reader no origin in the body (86% covered), 3393 have neither
   the hook is read by the app only; the book and narration print the body, so both are counted
-  370 more count as visible only because a "taken apart" block or origin heading is there, and never say where the word came from
+  368 more count as visible only because a "taken apart" block or origin heading is there, and never say where the word came from
   arabic: 1262 word lessons; 1187 no hook, 1195 no visible etymology, 1174 neither, 19 empty etymology block
   bengali: 1219 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
   chinese: 108 word lessons; 0 no hook, 62 no visible etymology, 0 neither, 43 empty etymology block
@@ -123,7 +123,7 @@ Etymology coverage (HL24 §9) — every lesson that introduces a word says where
   malayalam: 1445 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 6 empty etymology block
   marathi: 1217 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
   marwadi: 718 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
-  persian: 1373 word lessons; 1300 no hook, 1311 no visible etymology, 1300 neither, 2 empty etymology block
+  persian: 1373 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
   portuguese: 1236 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 5 empty etymology block
   punjabi: 623 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
   russian: 1224 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 52 empty etymology block
@@ -148,9 +148,9 @@ grammar cells (spanish): 18 of 231 regular cells taught (8%), against 231 univer
   ES-C07-vivir: teaches ES-CELL-IND-PRES-3SG-CONJ3 before ES-CELL-IND-PRES-2SG-CONJ3
   ES-C07-hablan: teaches ES-CELL-IND-PRES-3PL-CONJ1 before ES-CELL-IND-PRES-2PL-CONJ1
 
-root ledger: 17810 roots, 16850 spent fewer than 3 times (95%), 13293 never spent at all
+root ledger: 18732 roots, 17728 spent fewer than 3 times (95%), 14040 never spent at all
   taught once and never returned to: a-dios-latin (ES-C05-adios), a-k-l (AR-C30-akala), a-kh-dh (AR-C32-akhadha)
-  best-spent root: aaka-dravidian with 43 payoffs
+  best-spent root: pie-kwer with 62 payoffs
 
 info dump (report-only): 120 of 29597 lessons -- 32 rule statements, 91 paradigm tables (20 full grids)
   complete paradigms presented at once: FR-C05-parler (7-row table with 6 person rows), PT-C16-ser-roots (6-row table with 5 person rows), ES-C07-repaso-presente-completo (7-row table with 6 person rows)
@@ -158,7 +158,7 @@ info dump (report-only): 120 of 29597 lessons -- 32 rule statements, 91 paradigm
 lesson content budgets (report-only): 25205 of 29597 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
   annotation coverage: idioms 25205, senses 25206, culture claims 25205
 
-metalanguage: 54 of 54 grammar terms appear in 29122 lessons; 53371 uses come before introduction, of which 8563 are technical terms across 5503 lessons
-  most-used-before-introduction: verb (3181 lessons), noun (1756 lessons), adjective (426 lessons), participle (370 lessons), case (307 lessons), pronoun (294 lessons)
+metalanguage: 54 of 54 grammar terms appear in 29122 lessons; 53780 uses come before introduction, of which 8801 are technical terms across 5733 lessons
+  most-used-before-introduction: verb (3401 lessons), noun (1767 lessons), adjective (426 lessons), participle (373 lessons), case (308 lessons), pronoun (294 lessons)
 literal markup: none in 29597 lessons or any generated book
-glyph coverage: every character renders -- 153 main-font and 829 script characters across 5925 generated files
+glyph coverage: every character renders -- 154 main-font and 829 script characters across 5925 generated files
