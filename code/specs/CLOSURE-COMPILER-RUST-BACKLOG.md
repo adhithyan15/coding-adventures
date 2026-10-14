@@ -3,43 +3,41 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a current-main reconciliation -->
-October14 candidate `4238d43a5f50c21ccb9ee85ebbe75cf11450ad2a` / integrated main5526 completes
-actual native session41459 EXIT0: full compiler856/5 plus two exact LANG backend
-matrices (24 programs) pass **858 tests/docs across7 targets**, zero failures/
-ignores. Strict all-target lint for ALGOL/LANG, doc shards, lessons1192 and
-whitespace pass. The extra focused work test is excluded from those totals.
-All eight original imported name-actual failures are repaired. Both consumers
-retain pre-proof AND post-proof; only a fresh same-Real conditional result proven
-for both arms after condition effects may carry materialized proof. All prior
-alias/shared-root/finite/production-limit tests remain unchanged.
+October14 scoped source `f64d21883cc58f9c92e1ff715c3ae76672a83f9c` integrates audited main
+`fdf1a247b9c1b6b5abdcdcc67bafdf9f2e7926d0`. Actual native validator39928
+EXIT0: full ALGOL compiler/parser/layout/paint1465/15 plus four exact backend
+controls pass **1469 tests/docs across19 targets**, zero failures/ignores;
+the three repeated focused tests are excluded. Eight new quadruple computed-name
+value programs produce exact9/1, all24 prior paired programs and the upstream
+quadruple control pass on every available standard backend. Sixteen paired new
+compiler cells retain specific name refusal and one value-result formatter.
+The canonical upstream depth4/fifth-layer refusal and all six production MAX
+constants, owned alias/shared-root/finite tests and8192 work bound are retained.
 
-Counted refusal work first fails at8193 against8192. Existing transparent-wrapper
-fallbacks now run first; eight actual programs observe535/496/535/496/609/570/
-609/570 classifier entries and retain the specific formatter refusal. Typed
-call/variable shapes, operator tokens and standard-call depth keep their guards.
-Stopped candidate-only red10295 preserves actualEXIT1/child0xffffffff and an
-observed positive failure; its unfinished negative matrix is never called PASS.
-Original full compiler18101 EXIT1/845PASS/8FAIL and all earlier red logs persist.
+Platform-neutral authored typography compares the entire ordered FontQuery trace
+(family/weight/style/stretch), every glyph-run text/size/fill/ref and both exact
+styled widths. Strict all-target lint for five affected packages, doc shards,
+lessons1192 and whitespace pass. This does not certify OS font/device behavior.
+Independent exact-source security **PASS for these scoped components only**:
+CV04a-quadruple-typography-security-f64d2188.md, SHA256 014901147b8627cbe2bfd5b0aebf48731e44b54b924328abc1b973fed80ca195.
+Whole-PR final security remains PENDING.
 
-Independent exact-source review **PASS for the selector component only**, report
-CV04a-selector-security-4238d43a.md SHA256 8ff8b286bae6780119c13ef4623cfe108070d2067c69f70f177a4f58a5d5f6cc.
-Whole-PR final security remains PENDING. Earlier four-consumer658/14 and strict
-6489 remain attributed to bd361/main5526; earlier3347/211 remain282/main160.
-Cargo plan38seeds/453affected including dev dependencies is not cone acceptance.
+Closed49-path import proof records38 exact pure imports,11 owned overlaps and134
+unchanged owned paths. Earlier4238 selector858/7, bd361 four-consumer658/14 and
+282/main160 native3347/211 retain their original source attribution. All original
+failed/partial logs and pre-merge stage snapshots persist; none are relabeled.
+The refreshed metadata plan38seeds/453affected including dev dependencies is
+not full-cone acceptance. Current-source LANG production11/native48, changed
+downstream domains, ordering/unique-oblique work and repaired hosted Linux
+remain PENDING.
 
-Fresh full-file PR/backlog/epic audit10058 sees main `fdf1a247b9c1b6b5abdcdcc67bafdf9f2e7926d0`:
-new quadruple standard name actuals and Swimlane typography need import and
-bounded validation. Current-source LANG production11/native48, complete changed
-downstream cones, ordering/unique-oblique work and repaired hosted Linux remain
-pending. Sole Closure/shared PR17288 remains published at822, DIRTY, terminal
-Linux/CI-gate failures, auto-mergeOFF. Expired build-plan artifact is UNAVAILABLE;
-verified preserved hashes are historical evidence. No publication/merge/cleanup/
-CV04b selection occurred.
-
-Full final-source Miri **DEFERRED/PENDING**, never passed. Frozen497inputs/run/
-checkout/receipts/target stay untouched and unpolled. Base ESTree/own types/no
-new crates.io dependencies remain binding. Full parity, source/output joins,
-all transformation lineage and the objective remain OPEN; heartbeat ACTIVE.
+Sole Closure/shared PR17288 stays published at822, with terminal Linux/CI-gate
+failures and auto-mergeOFF; fresh build-plan artifact UNAVAILABLE (preserved
+archive hashes are historical). No push/merge/cleanup/CV04b selection occurred.
+Full final-source Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/
+checkout/receipts/target untouched and unpolled. Base ESTree, own types and no
+new crates.io dependencies remain binding. Full parity/output source joins/all
+transformation lineage and objective OPEN; heartbeat ACTIVE.
 <!-- /CV04a current-main reconciliation -->
 
 <!-- CV04a BEAM heap native continuation -->

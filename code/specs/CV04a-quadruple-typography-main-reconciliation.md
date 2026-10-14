@@ -61,3 +61,18 @@ Full final-source Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/
 checkout/receipts/target stay untouched and unpolled. Implementation/delivery
 precedes genuine final-source Miri. Full parity/output joins/all transformation
 lineage and the completion objective remain OPEN; heartbeat ACTIVE.
+
+
+## Exact component acceptance, October14
+
+Source `f64d21883cc58f9c92e1ff715c3ae76672a83f9c`, actual validator39928 EXIT0, completes1469/19
+nonduplicated tests/docs with zero failures/ignores,32 complete paired native
+programs plus the original upstream control, strict5 and docs. The three focus
+tests repeat full-suite assertions and are excluded. Both exact styled widths,
+full ordered font queries and all glyph text/size/fill/ref pass on the existing
+deterministic backend. Independent security passes only these scoped components,
+report SHA256 014901147b8627cbe2bfd5b0aebf48731e44b54b924328abc1b973fed80ca195; whole-PR final review remains PENDING.
+Regenerated metadata38/453 includes dev dependencies and is planning evidence.
+Current-source LANG11production/48native, complete downstream domains, ordering/
+unique-oblique work and exact-head hosted acceptance remain PENDING.
+Full final-source Miri DEFERRED/PENDING; original frozen run untouched/unpolled.
