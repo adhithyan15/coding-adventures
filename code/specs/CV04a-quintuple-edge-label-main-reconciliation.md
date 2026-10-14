@@ -60,3 +60,20 @@ Full final-source Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/
 checkout/receipts/target remain untouched and unpolled. Implementation delivery
 first, genuine final-source Miri later. Full parity/output-byte source joins/all
 transformation lineage and objective OPEN; heartbeat ACTIVE.
+
+## Fixture and setup refusals
+
+Candidate83e8954b full runner returns actualEXIT1/Cargo101 before any tests:
+no-deps metadata had not resolved the complete feature graph for --locked.
+Offline full metadata writes the full lock, then returns101 for an uncached
+existing android_system_properties0.1.6. That metadata command is not called
+successful; all376 registry identities/checksums remain exactly the baseline.
+
+The subsequent locked native probe85273 compiles and returns actualEXIT1/Cargo101,
+0PASS/2FAIL: both fifth-layer powered fixtures hit the unchanged parser depth135
+before formatter policy. The intended alias/value boundary is not tested yet.
+Preserve those original receipts; do not raise the production parser cap.
+Replace only the oversized fixture arithmetic: five standard layers wrap
+entier(sign(left))+82.0 (sqrt(abs(...)) gives9 at left=-2.25), while the right
+arm wraps entier(sign(right)) (gives1 at right=3.5). Retain both root dependencies,
+the complete eight-cell consumer/selector matrix and exact9/1 native expectations.
