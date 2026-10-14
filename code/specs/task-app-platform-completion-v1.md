@@ -156,6 +156,10 @@ preserve state precedence, and report malformed, non-finite, multi-transform,
 and other-unit forms. Verify authored output before retiring the two transform
 allowances. Translation, scaling, and transform-origin remain outside scope.
 
+Fresh package-expanded source generation measures 57 SwiftUI style drops and
+zero transform drops, down from 59. Both authored themes emit two centered
+45-degree rotations. Runtime generation and Swift compilation require macOS CI.
+
 10. **P1 [#16182](https://github.com/adhithyan15/coding-adventures/issues/16182)
     — ratchet TaskApp's native style degradations.** All five native reporters
     are now wired. The initial `native-complete` generation recorded 77 XAML,
