@@ -9245,6 +9245,58 @@ mod tests {
         }
     }
 
+    #[test]
+    fn authored_swimlane_typography_preserves_complete_query_and_glyph_trace() {
+        struct RecordingResolver(std::cell::RefCell<Vec<FontQuery>>);
+        impl FontResolver for RecordingResolver {
+            type Handle = FakeHandle;
+            fn resolve(&self, query: &FontQuery) -> Result<FakeHandle, FontResolutionError> {
+                self.0.borrow_mut().push(query.clone());
+                Ok(FakeHandle)
+            }
+        }
+        let source = r#"swimlane-beta LR
+subgraph Review
+  emphasized[Typographic approval step]
+  direct[Typographic delivery step]
+end
+classDef emphasis font-size:22px,font-weight:bold,font-style:italic,font-family:"Helvetica Neue",color:#7c2d12
+class emphasized emphasis
+style direct font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d
+emphasized --> direct
+"#;
+        let diagram = mermaid_parser::parse_swimlane(source).expect("authored typography parses");
+        let layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+        assert_eq!(layout.nodes.len(), 2);
+        assert_eq!(layout.nodes[0].width, 350.89230769230767);
+        assert_eq!(layout.nodes[1].width, 277.2307692307692);
+        let resolver = RecordingResolver(std::cell::RefCell::new(Vec::new()));
+        let defaults = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
+        let options = DiagramToPaintOptions {
+            background: defaults.background, device_pixel_ratio: defaults.device_pixel_ratio,
+            label_font: defaults.label_font, title_font: defaults.title_font,
+            shaper: &FakeShaper, metrics: &FakeMetrics, resolver: &resolver,
+        };
+        let scene = diagram_to_paint_swimlane(&layout, &options);
+        use text_interfaces::{FontStyle, FontWeight};
+        assert_eq!(*resolver.0.borrow(), vec![
+            FontQuery::named("Helvetica").with_weight(FontWeight(700)),
+            FontQuery::named("Helvetica Neue").with_weight(FontWeight(700)).with_style(FontStyle::Italic),
+            FontQuery::named("Helvetica").with_weight(FontWeight(500)),
+        ]);
+        let runs: Vec<_> = scene.instructions.iter().filter_map(|instruction| {
+            if let PaintInstruction::GlyphRun(run) = instruction {
+                let text: String = run.glyphs.iter().map(|glyph| char::from_u32(glyph.glyph_id).expect("fake glyph is a character")).collect();
+                Some((text, run.font_size, run.fill.as_deref(), run.font_ref.as_str()))
+            } else { None }
+        }).collect();
+        assert_eq!(runs, vec![
+            ("Review".to_owned(), 18.0, Some("rgb(38, 50, 56)"), "fake:test"),
+            ("Typographic approval step".to_owned(), 22.0, Some("rgb(124, 45, 18)"), "fake:test"),
+            ("Typographic delivery step".to_owned(), 18.0, Some("rgb(20, 83, 45)"), "fake:test"),
+        ]);
+    }
+
     // These are authored diagrams, so a valid parser/layout path must reach
     // the marker check even when a curve's adjacent control equals its tip.
     fn assert_aligned_swimlane_markers(direction: &str, curve: &str) {
