@@ -6,6 +6,12 @@ All notable changes to this package will be documented in this file.
 
 ### Fixed
 
+- A fan-out worker (`accept_connections: false`) now switches its listener's
+  accept interest *off* and ignores accept readiness from it. Leaving interest
+  alone was not enough: the kqueue and IOCP providers arm a listener at bind
+  (IOCP even posts AcceptEx), so a local process could connect straight to a
+  worker's throwaway loopback port and be served, bypassing the acceptor.
+  New `a_worker_reactor_never_serves_its_own_listener` test on every backend.
 - Retry an interrupted platform poll so native process signals can reach the
   cooperative stop flag instead of being reported as listener failures.
 

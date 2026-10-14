@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `sharded_http_server_serves_concurrent_clients_across_shards` runs on Windows
+  again. It was excluded because `bind_windows_sharded` failed for more than
+  one worker; `tcp-runtime` now serves that case through an accept fan-out.
+
 - **WEB01b-1b: pipelined-response ordering for `MailboxHttpServer`.** The server
   now enables the mailbox's `ordered_responses`, so a single connection's replies
   are written back in **request order** even when the worker pool finishes them
