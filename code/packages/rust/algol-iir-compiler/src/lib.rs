@@ -16278,6 +16278,43 @@ mod tests {
         }
     }
 
+    #[test]
+    fn al4_sign_wrapped_computed_name_alias_roots_refuse_at_both_consumers() {
+        struct BudgetGuard;
+        impl Drop for BudgetGuard { fn drop(&mut self) { SELECTOR_CLASSIFIER_BUDGET.with(|counter| counter.set(None)); } }
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right))))");
+                    let sink = if assigned { format!("saved := {conditional}; output(saved)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); {sink} end");
+                    SELECTOR_CLASSIFIER_BUDGET.with(|counter| counter.set(Some((0, 8192)))); let _guard = BudgetGuard;
+                    let error = compile_source(&source, "sign-alias").expect_err("sign-wrapped computed actual cannot recover a root promoted by the selector");
+                    assert!(matches!(error, CompileError::Type(ref message) if message.contains("cannot print a real value")), "root={root}, condition={condition}, assigned={assigned}: {error:?}");
+                    let (visits, limit) = SELECTOR_CLASSIFIER_BUDGET.with(Cell::get).expect("budget active");
+                    assert!(visits > 0 && visits <= limit);
+                    eprintln!("sign alias root={root} condition={condition} assigned={assigned}: {visits} classifier visits");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_sign_wrapped_computed_name_value_roots_retain_one_formatter_at_both_consumers() {
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right))))");
+                    let sink = if assigned { format!("saved := {conditional}; output(saved)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let module = compile_source(&source, "sign-value").unwrap_or_else(|error| panic!("root={root}, condition={condition}, assigned={assigned}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "one formatter for the materialized sign conditional");
+                }
+            }
+        }
+    }
+
     fn sextuple_computed_name_source(root: &str, condition: &str, assigned: bool, value: bool, depth: usize) -> String {
         let arm = |name: &str| {
             let exact = if name == "left" { "entier(sign(left)) + 82.0" } else { "entier(sign(right))" };

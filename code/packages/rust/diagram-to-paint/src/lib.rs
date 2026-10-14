@@ -9618,6 +9618,84 @@ mod tests {
     }
 
     #[test]
+    fn authored_swimlane_edge_label_theme_preserves_complete_scene_queries_and_rectangles() {
+        struct RecordingResolver(std::cell::RefCell<Vec<FontQuery>>);
+        impl FontResolver for RecordingResolver {
+            type Handle = FakeHandle;
+            fn resolve(&self, query: &FontQuery) -> Result<FakeHandle, FontResolutionError> {
+                self.0.borrow_mut().push(query.clone()); Ok(FakeHandle)
+            }
+        }
+        let body = "swimlane-beta LR\nsubgraph L[Lane]\na[Source]\nb[Target]\nc[Other]\nend\na themed@-- themed --> b\nb styled@-- overridden --> c\nclassDef custom font-size:20px,font-weight:bold,font-style:italic,font-family:\"Edge Font\",color:#654321\nclass styled custom\n";
+        let prefix = "---\nconfig:\n  themeVariables:\n    textColor: '#123456'\n    fontFamily: 'Theme Font'\n    fontSize: 16px\n";
+        let baseline_source = format!("{prefix}---\n{body}");
+        let authored_source = format!("{prefix}    edgeLabelBackground: '#fedcba'\n---\n{body}");
+        let authored = mermaid_parser::parse_swimlane(&authored_source).expect("authored label theme parses");
+        let layout = diagram_layout_hierarchy::layout_swimlane(&authored);
+        assert_eq!(layout.edges.len(), 2);
+        assert_eq!(layout.theme.text_color, "#123456");
+        assert_eq!(layout.theme.edge_label_background.as_deref(), Some("#fedcba"));
+        let resolver = RecordingResolver(std::cell::RefCell::new(Vec::new()));
+        let defaults = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
+        let options = DiagramToPaintOptions { background: defaults.background, device_pixel_ratio: defaults.device_pixel_ratio,
+            label_font: defaults.label_font, title_font: defaults.title_font, shaper: &FakeShaper, metrics: &FakeMetrics, resolver: &resolver };
+        let mut scene = diagram_to_paint_swimlane(&layout, &options);
+        use text_interfaces::{FontStyle, FontWeight};
+        assert_eq!(*resolver.0.borrow(), vec![
+            FontQuery::named("Theme Font").with_weight(FontWeight(700)),
+            FontQuery::named("Theme Font"),
+            FontQuery::named("Edge Font").with_weight(FontWeight(700)).with_style(FontStyle::Italic),
+        ]);
+        let runs = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => Some((run.glyphs.iter().map(|glyph| char::from_u32(glyph.glyph_id).unwrap()).collect::<String>(), run.font_size, run.fill.as_deref(), run.font_ref.as_str())), _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(runs, vec![
+            ("Lane".into(), 16.0, Some("rgb(38, 50, 56)"), "fake:test"),
+            ("themed".into(), 16.0, Some("rgb(18, 52, 86)"), "fake:test"),
+            ("overridden".into(), 20.0, Some("rgb(101, 67, 33)"), "fake:test"),
+            ("Source".into(), 16.0, Some("rgb(13, 71, 161)"), "fake:test"),
+            ("Target".into(), 16.0, Some("rgb(13, 71, 161)"), "fake:test"),
+            ("Other".into(), 16.0, Some("rgb(13, 71, 161)"), "fake:test"),
+        ]);
+        let backgrounds = scene.instructions.iter().enumerate().filter_map(|(index, instruction)| match instruction {
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fedcba") => Some((index, rect.clone())), _ => None,
+        }).collect::<Vec<_>>();
+        let expected = layout.edges.iter().enumerate().map(|(index, edge)| (3 + index * 3, PaintRect {
+            base: PaintBase::default(), x: (edge.from.x + edge.to.x) / 2.0 - 52.0, y: (edge.from.y + edge.to.y) / 2.0 - 25.0,
+            width: 104.0, height: 22.0, fill: Some("#fedcba".into()), stroke: None, stroke_width: None,
+            corner_radius: Some(2.0), stroke_dash: None, stroke_dash_offset: None,
+        })).collect::<Vec<_>>();
+        assert_eq!(backgrounds, expected, "every background field and instruction position is exact");
+        for (index, _) in backgrounds.iter().rev() { scene.instructions.remove(*index); }
+        let metadata = scene.metadata.as_mut().expect("theme metadata");
+        assert_eq!(metadata.remove("swimlane.theme.edgeLabelBackground").as_deref(), Some("#fedcba"));
+        assert_eq!(metadata.get("swimlane.theme.textColor").map(String::as_str), Some("#123456"));
+        assert_eq!(metadata.get("swimlane.theme.fontFamily").map(String::as_str), Some("Theme Font"));
+        assert_eq!(metadata.get("swimlane.theme.fontSize").map(String::as_str), Some("16"));
+        let baseline = mermaid_parser::parse_swimlane(&baseline_source).expect("same font/color without background parses");
+        let baseline_layout = diagram_layout_hierarchy::layout_swimlane(&baseline);
+        assert!(baseline_layout.theme.edge_label_background.is_none());
+        let baseline_scene = diagram_to_paint_swimlane(&baseline_layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        assert_eq!(scene, baseline_scene, "all remaining glyph positions/styles/routes/markers/nodes/metadata match the complete authored baseline");
+        let default = mermaid_parser::parse_swimlane(body).expect("default label theme parses");
+        let default_layout = diagram_layout_hierarchy::layout_swimlane(&default);
+        assert_eq!(default_layout.theme.text_color, "#37474f"); assert!(default_layout.theme.edge_label_background.is_none());
+        let default_scene = diagram_to_paint_swimlane(&default_layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        assert!(!default_scene.metadata.as_ref().unwrap().contains_key("swimlane.theme.edgeLabelBackground"));
+        let default_runs = default_scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => Some((run.glyphs.iter().map(|glyph| char::from_u32(glyph.glyph_id).unwrap()).collect::<String>(), run.font_size, run.fill.as_deref(), run.font_ref.as_str())), _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(default_runs, vec![
+            ("Lane".into(), 18.0, Some("rgb(38, 50, 56)"), "fake:test"),
+            ("themed".into(), 14.0, Some("rgb(55, 71, 79)"), "fake:test"),
+            ("overridden".into(), 20.0, Some("rgb(101, 67, 33)"), "fake:test"),
+            ("Source".into(), 14.0, Some("rgb(13, 71, 161)"), "fake:test"),
+            ("Target".into(), 14.0, Some("rgb(13, 71, 161)"), "fake:test"),
+            ("Other".into(), 14.0, Some("rgb(13, 71, 161)"), "fake:test"),
+        ]);
+    }
+
+    #[test]
     fn authored_swimlane_edge_typography_preserves_complete_query_and_glyph_trace() {
         struct RecordingResolver(std::cell::RefCell<Vec<FontQuery>>);
         impl FontResolver for RecordingResolver {
@@ -10168,6 +10246,7 @@ emphasized --> direct
                     ("swimlane.theme.nodeBorder".into(), "#1565c0".into()),
                     ("swimlane.theme.lineColor".into(), "#455a64".into()),
                     ("swimlane.theme.primaryTextColor".into(), "#0d47a1".into()),
+                    ("swimlane.theme.textColor".into(), "#37474f".into()),
                 ]);
                 assert_eq!(enabled.metadata.as_ref(), Some(&theme_metadata), "retain every default theme field after removing only the hop flag");
                 layout.line_hops = None;
