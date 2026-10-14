@@ -33,6 +33,7 @@
     "wordLessons": 25682,
     "wordLessonsWithoutEtymologyHook": 9340,
     "wordLessonsWithoutVisibleEtymology": 9535,
+    "wordLessonsWithEmptyEtymologyBlock": 435,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
@@ -341443,161 +341444,184 @@
         "wordLessons": 1262,
         "wordLessonsWithoutEtymologyHook": 1187,
         "wordLessonsWithoutVisibleEtymology": 1195,
-        "wordLessonsWithoutAnyEtymology": 1174
+        "wordLessonsWithoutAnyEtymology": 1174,
+        "wordLessonsWithEmptyEtymologyBlock": 19
       },
       {
         "language": "bengali",
         "wordLessons": 1219,
         "wordLessonsWithoutEtymologyHook": 1136,
         "wordLessonsWithoutVisibleEtymology": 1144,
-        "wordLessonsWithoutAnyEtymology": 1113
+        "wordLessonsWithoutAnyEtymology": 1113,
+        "wordLessonsWithEmptyEtymologyBlock": 3
       },
       {
         "language": "chinese",
         "wordLessons": 108,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 62,
-        "wordLessonsWithoutAnyEtymology": 0
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 43
       },
       {
         "language": "french",
         "wordLessons": 1230,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
-        "wordLessonsWithoutAnyEtymology": 0
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 66
       },
       {
         "language": "german",
         "wordLessons": 1227,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
-        "wordLessonsWithoutAnyEtymology": 0
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 43
       },
       {
         "language": "gujarati",
         "wordLessons": 630,
         "wordLessonsWithoutEtymologyHook": 529,
         "wordLessonsWithoutVisibleEtymology": 543,
-        "wordLessonsWithoutAnyEtymology": 503
+        "wordLessonsWithoutAnyEtymology": 503,
+        "wordLessonsWithEmptyEtymologyBlock": 24
       },
       {
         "language": "hindi",
         "wordLessons": 1200,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
-        "wordLessonsWithoutAnyEtymology": 0
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 7
       },
       {
         "language": "italian",
         "wordLessons": 1247,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
-        "wordLessonsWithoutAnyEtymology": 0
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 7
       },
       {
         "language": "japanese",
         "wordLessons": 695,
         "wordLessonsWithoutEtymologyHook": 601,
         "wordLessonsWithoutVisibleEtymology": 688,
-        "wordLessonsWithoutAnyEtymology": 600
+        "wordLessonsWithoutAnyEtymology": 600,
+        "wordLessonsWithEmptyEtymologyBlock": 2
       },
       {
         "language": "kannada",
         "wordLessons": 1396,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
-        "wordLessonsWithoutAnyEtymology": 0
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 8
       },
       {
         "language": "latin",
         "wordLessons": 1238,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
-        "wordLessonsWithoutAnyEtymology": 0
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 31
       },
       {
         "language": "malayalam",
         "wordLessons": 1445,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
-        "wordLessonsWithoutAnyEtymology": 0
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 6
       },
       {
         "language": "marathi",
         "wordLessons": 1217,
         "wordLessonsWithoutEtymologyHook": 1163,
         "wordLessonsWithoutVisibleEtymology": 1116,
-        "wordLessonsWithoutAnyEtymology": 1105
+        "wordLessonsWithoutAnyEtymology": 1105,
+        "wordLessonsWithEmptyEtymologyBlock": 5
       },
       {
         "language": "marwadi",
         "wordLessons": 718,
         "wordLessonsWithoutEtymologyHook": 552,
         "wordLessonsWithoutVisibleEtymology": 716,
-        "wordLessonsWithoutAnyEtymology": 550
+        "wordLessonsWithoutAnyEtymology": 550,
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "persian",
         "wordLessons": 1373,
         "wordLessonsWithoutEtymologyHook": 1300,
         "wordLessonsWithoutVisibleEtymology": 1311,
-        "wordLessonsWithoutAnyEtymology": 1300
+        "wordLessonsWithoutAnyEtymology": 1300,
+        "wordLessonsWithEmptyEtymologyBlock": 2
       },
       {
         "language": "portuguese",
         "wordLessons": 1236,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
-        "wordLessonsWithoutAnyEtymology": 0
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 5
       },
       {
         "language": "punjabi",
         "wordLessons": 623,
         "wordLessonsWithoutEtymologyHook": 549,
         "wordLessonsWithoutVisibleEtymology": 524,
-        "wordLessonsWithoutAnyEtymology": 523
+        "wordLessonsWithoutAnyEtymology": 523,
+        "wordLessonsWithEmptyEtymologyBlock": 31
       },
       {
         "language": "russian",
         "wordLessons": 1224,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
-        "wordLessonsWithoutAnyEtymology": 0
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 52
       },
       {
         "language": "sanskrit",
         "wordLessons": 1227,
         "wordLessonsWithoutEtymologyHook": 1200,
         "wordLessonsWithoutVisibleEtymology": 1099,
-        "wordLessonsWithoutAnyEtymology": 1098
+        "wordLessonsWithoutAnyEtymology": 1098,
+        "wordLessonsWithEmptyEtymologyBlock": 12
       },
       {
         "language": "spanish",
         "wordLessons": 1267,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
-        "wordLessonsWithoutAnyEtymology": 0
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 48
       },
       {
         "language": "tamil",
         "wordLessons": 1247,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
-        "wordLessonsWithoutAnyEtymology": 0
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 12
       },
       {
         "language": "telugu",
         "wordLessons": 1435,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
-        "wordLessonsWithoutAnyEtymology": 0
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 8
       },
       {
         "language": "urdu",
         "wordLessons": 1218,
         "wordLessonsWithoutEtymologyHook": 1123,
         "wordLessonsWithoutVisibleEtymology": 1137,
-        "wordLessonsWithoutAnyEtymology": 1121
+        "wordLessonsWithoutAnyEtymology": 1121,
+        "wordLessonsWithEmptyEtymologyBlock": 1
       }
     ],
     "summary": {
@@ -341605,6 +341629,7 @@
       "wordLessonsWithoutEtymologyHook": 9340,
       "wordLessonsWithoutVisibleEtymology": 9535,
       "wordLessonsWithoutAnyEtymology": 9087,
+      "wordLessonsWithEmptyEtymologyBlock": 435,
       "hookPercent": 63,
       "visiblePercent": 62
     }

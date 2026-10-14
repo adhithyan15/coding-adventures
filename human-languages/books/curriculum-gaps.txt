@@ -15,7 +15,7 @@ exposure: 3 native-script headwords carry no romanization, so they are load-bear
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 1 of 29963 atoms never revisited (0%); missed windows R1 1553, R2 19839, R3 15983, R4 24355
 forward references: 788 uses of material a later lesson teaches
-etymology: 9340 of 25682 word-introducing lessons carry no etymology_hook; 9535 show the reader no origin in the body (per track below)
+etymology: 9340 of 25682 word-introducing lessons carry no etymology_hook; 9535 show the reader no origin in the body, and 435 more only an empty etymology block (per track below)
 writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 921 evidence blocks, 0 invalid; 139 missing (track, level, stage) pairs
 super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 71 named track/debt items
 writing ramp: 0 track(s) never practise writing; 0 start after lesson one
@@ -108,29 +108,30 @@ Modality findings (report-only): 0
 Etymology coverage (HL24 §9) — every lesson that introduces a word says where it comes from:
   25682 word-introducing lessons; 9340 carry no etymology_hook (63% covered), 9535 show the reader no origin in the body (62% covered), 9087 have neither
   the hook is read by the app only; the book and narration print the body, so both are counted
-  arabic: 1262 word lessons; 1187 no hook, 1195 no visible etymology, 1174 neither
-  bengali: 1219 word lessons; 1136 no hook, 1144 no visible etymology, 1113 neither
-  chinese: 108 word lessons; 0 no hook, 62 no visible etymology, 0 neither
-  french: 1230 word lessons; 0 no hook, 0 no visible etymology, 0 neither
-  german: 1227 word lessons; 0 no hook, 0 no visible etymology, 0 neither
-  gujarati: 630 word lessons; 529 no hook, 543 no visible etymology, 503 neither
-  hindi: 1200 word lessons; 0 no hook, 0 no visible etymology, 0 neither
-  italian: 1247 word lessons; 0 no hook, 0 no visible etymology, 0 neither
-  japanese: 695 word lessons; 601 no hook, 688 no visible etymology, 600 neither
-  kannada: 1396 word lessons; 0 no hook, 0 no visible etymology, 0 neither
-  latin: 1238 word lessons; 0 no hook, 0 no visible etymology, 0 neither
-  malayalam: 1445 word lessons; 0 no hook, 0 no visible etymology, 0 neither
-  marathi: 1217 word lessons; 1163 no hook, 1116 no visible etymology, 1105 neither
-  marwadi: 718 word lessons; 552 no hook, 716 no visible etymology, 550 neither
-  persian: 1373 word lessons; 1300 no hook, 1311 no visible etymology, 1300 neither
-  portuguese: 1236 word lessons; 0 no hook, 0 no visible etymology, 0 neither
-  punjabi: 623 word lessons; 549 no hook, 524 no visible etymology, 523 neither
-  russian: 1224 word lessons; 0 no hook, 0 no visible etymology, 0 neither
-  sanskrit: 1227 word lessons; 1200 no hook, 1099 no visible etymology, 1098 neither
-  spanish: 1267 word lessons; 0 no hook, 0 no visible etymology, 0 neither
-  tamil: 1247 word lessons; 0 no hook, 0 no visible etymology, 0 neither
-  telugu: 1435 word lessons; 0 no hook, 0 no visible etymology, 0 neither
-  urdu: 1218 word lessons; 1123 no hook, 1137 no visible etymology, 1121 neither
+  435 more count as visible only because a "taken apart" block or origin heading is there, and never say where the word came from
+  arabic: 1262 word lessons; 1187 no hook, 1195 no visible etymology, 1174 neither, 19 empty etymology block
+  bengali: 1219 word lessons; 1136 no hook, 1144 no visible etymology, 1113 neither, 3 empty etymology block
+  chinese: 108 word lessons; 0 no hook, 62 no visible etymology, 0 neither, 43 empty etymology block
+  french: 1230 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 66 empty etymology block
+  german: 1227 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 43 empty etymology block
+  gujarati: 630 word lessons; 529 no hook, 543 no visible etymology, 503 neither, 24 empty etymology block
+  hindi: 1200 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 7 empty etymology block
+  italian: 1247 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 7 empty etymology block
+  japanese: 695 word lessons; 601 no hook, 688 no visible etymology, 600 neither, 2 empty etymology block
+  kannada: 1396 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 8 empty etymology block
+  latin: 1238 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 31 empty etymology block
+  malayalam: 1445 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 6 empty etymology block
+  marathi: 1217 word lessons; 1163 no hook, 1116 no visible etymology, 1105 neither, 5 empty etymology block
+  marwadi: 718 word lessons; 552 no hook, 716 no visible etymology, 550 neither, 0 empty etymology block
+  persian: 1373 word lessons; 1300 no hook, 1311 no visible etymology, 1300 neither, 2 empty etymology block
+  portuguese: 1236 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 5 empty etymology block
+  punjabi: 623 word lessons; 549 no hook, 524 no visible etymology, 523 neither, 31 empty etymology block
+  russian: 1224 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 52 empty etymology block
+  sanskrit: 1227 word lessons; 1200 no hook, 1099 no visible etymology, 1098 neither, 12 empty etymology block
+  spanish: 1267 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 48 empty etymology block
+  tamil: 1247 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 12 empty etymology block
+  telugu: 1435 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 8 empty etymology block
+  urdu: 1218 word lessons; 1123 no hook, 1137 no visible etymology, 1121 neither, 1 empty etymology block
 
 
 strands: 41 nodes across 8 strands -- FUNCTION 17, GRAMMAR 7, LEXICON 5, SOUND 0, ETYMOLOGY 0, CULTURE 3, IDIOM 0, TEXT 9
