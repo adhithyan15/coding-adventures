@@ -12,7 +12,7 @@ concept_tag: UR-EYE
 prerequisites: [UR-C10-naak, UR-C08-lena]
 sounds: [rtl, alif-madd, do-chashmi-he, nasal-vowel]
 roots: [sanskrit-akshi, pie-hekw]
-etymology_hook: āṅkh continues Sanskrit akṣi, from Proto-Indo-European *h₃ekʷ- "eye, to see" — the same root behind English eye, so this is the third settled Indo-European cousin this chapter has found, after nāk and before dil.
+etymology_hook: "āṅkh ← Sanskrit akṣi 'eye' (CDIAL 43), from PIE *h₃ekʷ-, the root of English eye"
 duration:
   max_seconds: 270
 requires:
@@ -66,7 +66,7 @@ clean *n*.
 ## The word, taken apart — a third real cousin
 <!-- hl-knowledge: introduces=[UR-ETYMON-AANKH-EYE]; assesses=[UR-LEX-AANKH] -->
 
-**āṅkh** continues Sanskrit *ákṣi*, from Proto-Indo-European
+**āṅkh** continues Sanskrit *ákṣi*, "eye" (CDIAL 43), from Proto-Indo-European
 **\*h₃ekʷ-**, "eye, to see." English **eye** descends from that same root.
 This chapter has now found two settled Indo-European cousins in a row —
 **ناک**/*nose*, **آنکھ**/*eye* — after **کان**'s honest dead end.

@@ -14,7 +14,8 @@ romanization: "sūjnā"
 concept_tag: UR-VERB-SUJNA
 prerequisites: [UR-C183-barhana, UR-C184-bimar-parna]
 sounds: []
-roots: []
+roots: [sanskrit-shuyate]
+etymology_hook: "sūjnā ← Sanskrit śūyate 'is swollen', a tadbhava (CDIAL 12568)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C184-bimar-parna]
 <!-- hl-knowledge: introduces=[UR-LEX-C184-ACT184-02]; assesses=[] -->
 
 **سوجنا** — *sūjnā* — "to swell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سوجنا** (*sūjnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śūyate*, "is swollen" (CDIAL 12568).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

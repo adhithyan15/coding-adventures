@@ -14,7 +14,8 @@ romanization: "pīchhā karnā"
 concept_tag: UR-VERB-PICHHA-KARNA
 prerequisites: [UR-C214-sambhalna, UR-C215-kam-karna]
 sounds: []
-roots: []
+roots: [indo-aryan-pashca, kr-do]
+etymology_hook: "pīchhā 'the rear' ← *paśca 'hinder part' (CDIAL 7990); karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C215-kam-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C215-ACT215-02]; assesses=[] -->
 
 **پیچھا کرنا** — *pīchhā karnā* — "to chase".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیچھا کرنا** (*pīchhā karnā*) is "to do the rear", to follow behind. CDIAL lists *pīchā*, "rear", under a reconstructed *\*paśca*, "hinder part", taken from Sanskrit *paścāt*, "behind" (CDIAL 7990). *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

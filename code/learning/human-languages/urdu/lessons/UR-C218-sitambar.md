@@ -14,7 +14,8 @@ romanization: "sitambar"
 concept_tag: UR-VAQT218-SITAMBAR
 prerequisites: [UR-C217-dant-dard, UR-C217-khujli]
 sounds: []
-roots: []
+roots: [english-september]
+etymology_hook: "sitambar ← English September"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C217-khujli]
 <!-- hl-knowledge: introduces=[UR-LEX-C218-VAQT218-01]; assesses=[] -->
 
 **ستمبر** — *sitambar* — "September".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ستمبر** (*sitambar*) is a loan from English *September*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

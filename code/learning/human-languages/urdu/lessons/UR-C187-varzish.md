@@ -14,7 +14,8 @@ romanization: "varzish"
 concept_tag: UR-SEHAT187-VARZISH
 prerequisites: [UR-C187-khurak, UR-C187-parhez]
 sounds: []
-roots: []
+roots: [persian-varzish]
+etymology_hook: "varzish: usually traced to Persian varzish 'exercise, practice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C187-parhez]
 <!-- hl-knowledge: introduces=[UR-LEX-C187-SEHAT187-04]; assesses=[] -->
 
 **ورزش** — *varzish* — "exercise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ورزش** (*varzish*) is a loan, usually traced to Persian *varzish*, "exercise, practice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

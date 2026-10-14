@@ -14,7 +14,8 @@ romanization: "tamīzdār"
 concept_tag: UR-SIFAT223-TAMIZDAR
 prerequisites: [UR-C223-sharif, UR-C223-badtamiz]
 sounds: []
-roots: []
+roots: [arabic-tamyiz, persian-dar-holder]
+etymology_hook: "tamīzdār: Arabic tamyīz 'discernment' (Lane, root m-y-z) + Persian -dār 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C223-badtamiz]
 <!-- hl-knowledge: introduces=[UR-LEX-C223-SIFAT223-04]; assesses=[] -->
 
 **تمیزدار** — *tamīzdār* — "polite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تمیزدار** (*tamīzdār*) is "holding manners". *tamīz*, "manners", is Arabic *tamyīz*, "discernment, telling apart" (Lane, root *m-y-z*), and *-dār*, "holder", is Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

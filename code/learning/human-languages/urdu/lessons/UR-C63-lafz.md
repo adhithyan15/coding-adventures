@@ -14,7 +14,8 @@ romanization: "lafz"
 concept_tag: UR-SCHOOL63-LAFZ
 prerequisites: [UR-C62-saval, UR-C63-javab]
 sounds: []
-roots: []
+roots: [arabic-lafz]
+etymology_hook: "lafz ← Arabic lafẓ 'utterance, word', through Persian (Lane, root l-f-ẓ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C63-javab]
 <!-- hl-knowledge: introduces=[UR-LEX-C63-SCHOOL63-02]; assesses=[] -->
 
 **لفظ** — *lafz* — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لفظ** (*lafz*) is a loan from Arabic *lafẓ*, "utterance, word", which reached Urdu through Persian. Its Arabic root is *l-f-ẓ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

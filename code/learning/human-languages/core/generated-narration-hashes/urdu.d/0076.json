@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 76,
-  "sourceHash": "fnv1a64:6e3b29df6489fbfe",
+  "sourceHash": "fnv1a64:88648a633b316e2d",
   "lessonIds": [
     "UR-C76-minat",
     "UR-C76-aj",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch76.txt",
   "json": "urdu/narration/ch76.json",
-  "textHash": "fnv1a64:76c77319d70bf38d",
-  "jsonHash": "fnv1a64:43c4ed4a6a5de409",
+  "textHash": "fnv1a64:bc2970bd947ddcc9",
+  "jsonHash": "fnv1a64:000580c37d43630e",
   "findings": []
 }

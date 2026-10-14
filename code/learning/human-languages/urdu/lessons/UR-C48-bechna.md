@@ -14,7 +14,8 @@ romanization: "bechnā"
 concept_tag: UR-VERB-BECHNA
 prerequisites: [UR-C48-khelna, UR-C48-kharidna]
 sounds: []
-roots: []
+roots: [indo-aryan-vetyayati]
+etymology_hook: "bechnā ← *vetyayati 'makes a price', a reconstructed form; a tadbhava (CDIAL 12100)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C48-kharidna]
 <!-- hl-knowledge: introduces=[UR-LEX-C48-VERBS48-03]; assesses=[] -->
 
 **بیچنا** — *bechnā* — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بیچنا** (*bechnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vetyayati*, "makes a price", a form CDIAL reconstructs from its descendants (CDIAL 12100). CDIAL builds it on a word for "hire, price", akin to *vetana*, "wages", and calls other proposals less probable.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

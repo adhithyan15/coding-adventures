@@ -14,7 +14,8 @@ romanization: "sar dard"
 concept_tag: UR-SEHAT152-SAR-DARD
 prerequisites: [UR-C152-zukam, UR-C152-khansi]
 sounds: []
-roots: []
+roots: [persian-sar, persian-dard]
+etymology_hook: "sar 'head' and dard 'pain' are both usually traced to Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C152-khansi]
 <!-- hl-knowledge: introduces=[UR-LEX-C152-SEHAT152-04]; assesses=[] -->
 
 **سر درد** — *sar dard* — "a headache".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سر درد** (*sar dard*) joins *sar*, "head", and *dard*, "pain", both usually traced to Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

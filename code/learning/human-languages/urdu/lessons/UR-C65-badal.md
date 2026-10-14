@@ -14,7 +14,8 @@ romanization: "bādal"
 concept_tag: UR-NATURE65-BADAL
 prerequisites: [UR-C65-khet, UR-C65-sitara]
 sounds: []
-roots: []
+roots: [sanskrit-vardala]
+etymology_hook: "bādal ← Sanskrit vārdala 'rainy day, bad weather', a tadbhava (CDIAL 11567)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C65-sitara]
 <!-- hl-knowledge: introduces=[UR-LEX-C65-NATURE65-05]; assesses=[] -->
 
 **بادل** — *bādal* — "a cloud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بادل** (*bādal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vārdala*, "rainy day, bad weather" (CDIAL 11567).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

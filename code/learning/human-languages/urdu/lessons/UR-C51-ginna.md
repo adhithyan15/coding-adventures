@@ -14,7 +14,8 @@ romanization: "ginnā"
 concept_tag: UR-VERB-GINNA
 prerequisites: [UR-C51-lana, UR-C51-bhejna]
 sounds: []
-roots: []
+roots: [sanskrit-ganayati]
+etymology_hook: "ginnā ← Sanskrit gaṇayati 'counts', a tadbhava (CDIAL 3993)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C51-bhejna]
 <!-- hl-knowledge: introduces=[UR-LEX-C51-VERBS51-05]; assesses=[] -->
 
 **گننا** — *ginnā* — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گننا** (*ginnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gaṇayati*, "counts" (CDIAL 3993).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

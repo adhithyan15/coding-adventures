@@ -14,7 +14,8 @@ romanization: "jang"
 concept_tag: UR-CHIZ172-JANG
 prerequisites: [UR-C172-sukun, UR-C172-aman]
 sounds: []
-roots: []
+roots: [persian-jang]
+etymology_hook: "jang: usually traced to Persian jang 'war, battle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C172-aman]
 <!-- hl-knowledge: introduces=[UR-LEX-C172-CHIZ172-04]; assesses=[] -->
 
 **جنگ** — *jang* — "a war".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جنگ** (*jang*) is a loan, usually traced to Persian *jang*, "war, battle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: What is your name? (respectful)
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [UR-C03-kya]
 sounds: [rtl, long-vowels, hai-diphthong, urdu-question-mark]
-roots: [sanskrit-kim, indo-european-name]
-etymology_hook: The question keeps Urdu's inherited verb-last order and reuses the ancient nām-name and kyā-what families inside one respectful frame.
+roots: [sanskrit-kim, indo-european-name, sanskrit-atman]
+etymology_hook: "āp ← ātman 'self' (CDIAL 1135); nām ← nāman 'name'; kyā ← kim 'what' (CDIAL 3164); hai usually traced to asti"
 duration:
   max_seconds: 230
 requires:
@@ -52,6 +52,11 @@ Build it in spoken order:
 **Āp kā** means “your” in this frame. The possessive form agrees with the thing
 owned: **nām** is masculine singular, so use **kā**. Keep that one pairing; the
 full *kā/kī/ke* system can wait. As in your answer, **hai** stays at the end.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آپ کا نام کیا ہے** (*āp kā nām kyā hai*) is built from inherited words. *āp* comes from Sanskrit *ātman*, "self" (CDIAL 1135); *nām* goes back to Sanskrit *nāman*, "name"; *kyā* comes from Sanskrit *kim*, "what" (CDIAL 3164); and *hai* is usually traced to Sanskrit *asti*, "is".
 
 ## Script: the question mark
 <!-- hl-knowledge: introduces=[UR-SCRIPT-URDU-QUESTION-MARK]; assesses=[] -->

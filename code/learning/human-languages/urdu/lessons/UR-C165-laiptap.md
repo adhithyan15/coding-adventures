@@ -14,7 +14,8 @@ romanization: "laipṭāp"
 concept_tag: UR-CHIZ165-LAIPTAP
 prerequisites: [UR-C165-balb, UR-C165-rimot]
 sounds: []
-roots: []
+roots: [english-laptop]
+etymology_hook: "laipṭāp ← English laptop"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C165-rimot]
 <!-- hl-knowledge: introduces=[UR-LEX-C165-CHIZ165-03]; assesses=[] -->
 
 **لیپ ٹاپ** — *laipṭāp* — "a laptop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لیپ ٹاپ** (*laipṭāp*) is a loan from English *laptop*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

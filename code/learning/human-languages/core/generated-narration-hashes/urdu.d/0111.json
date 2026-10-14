@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 111,
-  "sourceHash": "fnv1a64:2fe8bf7c2e433828",
+  "sourceHash": "fnv1a64:8c66d5d2fd6dec66",
   "lessonIds": [
     "UR-C111-batua",
     "UR-C111-chhatri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch111.txt",
   "json": "urdu/narration/ch111.json",
-  "textHash": "fnv1a64:7a127fed2d9000ae",
-  "jsonHash": "fnv1a64:ea1a20ef0249a5ee",
+  "textHash": "fnv1a64:8483e5e8c1c3ad6c",
+  "jsonHash": "fnv1a64:0acde06e2cad2499",
   "findings": []
 }

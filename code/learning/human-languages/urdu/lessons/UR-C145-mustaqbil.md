@@ -14,7 +14,8 @@ romanization: "mustaqbil"
 concept_tag: UR-MUST145-MUSTAQBIL
 prerequisites: [UR-C144-guzashta, UR-C144-pesh-ana]
 sounds: []
-roots: []
+roots: [arabic-mustaqbil]
+etymology_hook: "mustaqbil ← Arabic mustaqbil 'coming to meet; the future', through Persian (Lane, root q-b-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C144-pesh-ana]
 <!-- hl-knowledge: introduces=[UR-LEX-C145-MUST145-01]; assesses=[] -->
 
 **مستقبل** — *mustaqbil* — "the future". Urdu's future adds **گا**, **گی** or **گے** to the verb's *-ūṅ* form: **میں پڑھوں گا۔** — *maiṅ paṛhūṅgā* — "I will read." A woman says **پڑھوں گی**, *paṛhūṅgī*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مستقبل** (*mustaqbil*) is a loan from Arabic *mustaqbil*, "coming to meet; the future", which reached Urdu through Persian. Its Arabic root is *q-b-l* (Lane). It is built on the same root as *qabūl*, "acceptance".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

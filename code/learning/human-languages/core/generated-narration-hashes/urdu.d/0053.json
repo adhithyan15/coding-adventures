@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 53,
-  "sourceHash": "fnv1a64:321e31dcdfac390d",
+  "sourceHash": "fnv1a64:c2c26d14e93e58c8",
   "lessonIds": [
     "UR-C53-pahanna",
     "UR-C53-nahana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch53.txt",
   "json": "urdu/narration/ch53.json",
-  "textHash": "fnv1a64:007d1f5e763e3427",
-  "jsonHash": "fnv1a64:46b2bcfd2537a294",
+  "textHash": "fnv1a64:6e8fd5dc6cfcdc43",
+  "jsonHash": "fnv1a64:7e4a155d75e16573",
   "findings": []
 }

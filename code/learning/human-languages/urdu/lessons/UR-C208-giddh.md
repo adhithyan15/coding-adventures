@@ -14,7 +14,8 @@ romanization: "giddh"
 concept_tag: UR-CHIZ208-GIDDH
 prerequisites: [UR-C208-bulbul, UR-C208-saras]
 sounds: []
-roots: []
+roots: [sanskrit-grdhra]
+etymology_hook: "giddh ← Sanskrit gṛdhra 'greedy; a vulture', a tadbhava (CDIAL 4233)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C208-saras]
 <!-- hl-knowledge: introduces=[UR-LEX-C208-CHIZ208-03]; assesses=[] -->
 
 **گدھ** — *giddh* — "a vulture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گدھ** (*giddh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gṛdhra*, "greedy; a vulture" (CDIAL 4233).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

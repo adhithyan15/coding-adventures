@@ -14,7 +14,8 @@ romanization: "maī"
 concept_tag: UR-VAQT188-MAI
 prerequisites: [UR-C187-jism, UR-C188-aprail]
 sounds: []
-roots: []
+roots: [english-may]
+etymology_hook: "maī ← English May"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C188-aprail]
 <!-- hl-knowledge: introduces=[UR-LEX-C188-VAQT188-02]; assesses=[] -->
 
 **مئی** — *maī* — "May".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مئی** (*maī*) is a loan from English *May*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

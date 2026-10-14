@@ -14,7 +14,8 @@ romanization: "zīnā"
 concept_tag: UR-JAGAH219-ZINA
 prerequisites: [UR-C219-flait, UR-C219-manzil]
 sounds: []
-roots: []
+roots: [persian-zina]
+etymology_hook: "zīnā: usually traced to Persian zīna 'a ladder, a staircase'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C219-manzil]
 <!-- hl-knowledge: introduces=[UR-LEX-C219-JAGAH219-03]; assesses=[] -->
 
 **زینہ** — *zīnā* — "a staircase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زینہ** (*zīnā*) is a loan, usually traced to Persian *zīna*, "a ladder, a staircase".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

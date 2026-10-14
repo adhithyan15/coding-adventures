@@ -14,7 +14,8 @@ romanization: "barf"
 concept_tag: UR-NATURE66-BARF
 prerequisites: [UR-C66-samandar, UR-C66-ag]
 sounds: []
-roots: []
+roots: [persian-barf]
+etymology_hook: "barf: usually traced to Persian barf 'snow, ice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C66-ag]
 <!-- hl-knowledge: introduces=[UR-LEX-C66-NATURE66-05]; assesses=[] -->
 
 **برف** — *barf* — "snow; ice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**برف** (*barf*) is a loan, usually traced to Persian *barf*, "snow, ice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

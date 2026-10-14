@@ -14,7 +14,8 @@ romanization: "bāzār"
 concept_tag: UR-LOC100-BAZAR
 prerequisites: [UR-C100-aspas, UR-C100-sath, UR-C27-lahori]
 sounds: []
-roots: []
+roots: [persian-bazar]
+etymology_hook: "bāzār: usually traced to Persian bāzār 'market'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [UR-C100-sath]
 <!-- hl-knowledge: introduces=[UR-LEX-C100-LOC100-04]; assesses=[] -->
 
 **بازار** — *bāzār* — "a market".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بازار** (*bāzār*) is a loan, usually traced to Persian *bāzār*, "market".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

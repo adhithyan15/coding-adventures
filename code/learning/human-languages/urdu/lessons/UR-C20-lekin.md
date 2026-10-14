@@ -11,8 +11,8 @@ gloss: but — the first word in this book that can set one clause against anoth
 concept_tag: UR-JOIN-LEKIN
 prerequisites: [UR-C20-ya, UR-C04-thik, UR-C12-pani]
 sounds: []
-roots: []
-etymology_hook: "لیکن is Arabic lākin, which is itself lā ('not') plus an old particle — so Urdu's word for 'but' has a negator buried inside it, exactly as English 'but' descends from be-utan, 'be out, except'"
+roots: [arabic-lakin]
+etymology_hook: "lekin ← Arabic lākin 'but', through Persian (Lane, root l-k-n)"
 duration:
   max_seconds: 240
 requires:
@@ -58,10 +58,7 @@ Four letters, and every one of them is already yours: **ل**، **ی**، **ک**،
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-LEKIN, UR-LEX-AUR] -->
 
-**لیکن** is Arabic *lākin*, and there is a negator inside it: Arabic *lā*,
-"not," plus an old particle. English did the same thing by a different road —
-**but** is Old English *be-ūtan*, "be **out**, except." Two unrelated languages
-built their adversative out of a word for leaving something aside.
+**لیکن** is Arabic *lākin*, "but", which reached Urdu through Persian; Lane lists it under the letters *l-k-n*. Some grammarians take it apart as *lā*, "not", plus an old particle, a reading that is not settled. If it is right, English did the same by a different road: **but** is Old English *be-ūtan*, "be **out**, except", and two unrelated languages built their adversative out of a word for leaving something aside.
 
 Urdu has a second word for *but*, *magar*, which is Persian and slightly more
 literary. Its middle letter has no lesson in the script ladder yet, so it is

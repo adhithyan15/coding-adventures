@@ -14,7 +14,8 @@ romanization: "zabān"
 concept_tag: UR-THINGS114-ZABAN
 prerequisites: [UR-C113-kapi, UR-C114-imtihan]
 sounds: []
-roots: []
+roots: [persian-zaban]
+etymology_hook: "zabān: usually traced to Persian zabān 'tongue; language'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C114-imtihan]
 <!-- hl-knowledge: introduces=[UR-LEX-C114-THINGS114-02]; assesses=[] -->
 
 **زبان** — *zabān* — "a language; the tongue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زبان** (*zabān*) is a loan, usually traced to Persian *zabān*, "tongue; language".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

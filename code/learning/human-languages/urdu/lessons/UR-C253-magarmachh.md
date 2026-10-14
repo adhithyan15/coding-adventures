@@ -14,7 +14,8 @@ romanization: "magarmachh"
 concept_tag: UR-CHIZ253-MAGARMACHH
 prerequisites: [UR-C253-chhipkali, UR-C253-kachhua]
 sounds: []
-roots: []
+roots: [sanskrit-makara, sanskrit-matsya]
+etymology_hook: "magarmachh: magar ← Sanskrit makara 'crocodile' (CDIAL 9692) + machh 'fish' ← matsya (CDIAL 9758)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C253-kachhua]
 <!-- hl-knowledge: introduces=[UR-LEX-C253-CHIZ253-03]; assesses=[] -->
 
 **مگرمچھ** — *magarmachh* — "a crocodile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مگرمچھ** (*magarmachh*) is "crocodile-fish". *magar* goes back to Sanskrit *makara*, "crocodile", a word CDIAL records without a Hindi form (CDIAL 9692), and *machh*, "fish", to Sanskrit *matsya* (CDIAL 9758).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

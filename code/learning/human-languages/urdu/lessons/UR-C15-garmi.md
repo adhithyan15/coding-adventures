@@ -12,7 +12,7 @@ concept_tag: UR-HEAT
 prerequisites: [UR-C15-hawa]
 sounds: [rtl, long-i, gaf-stroke]
 roots: [middle-persian-garmih, proto-indo-iranian-gharmah, pie-gwher]
-etymology_hook: garmī continues Middle Persian garmīh, from Proto-Iranian *garmáh, from Proto-Indo-Iranian *gʰarmás, from Proto-Indo-European *gʷʰer- "warm." That root securely gives Greek thermós, behind English thermal and thermometer. English warm is only a proposed, less certain relative of the same root -- dictionaries call it a "distant doublet," not a settled cousin, and list a separate, more likely Germanic root for warm instead.
+etymology_hook: "garmī: usually traced to Persian garmī 'heat', from Middle Persian garmīh; Greek thermós shares the root"
 duration:
   max_seconds: 290
 requires:

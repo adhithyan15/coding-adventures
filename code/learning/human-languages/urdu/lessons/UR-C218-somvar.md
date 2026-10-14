@@ -14,7 +14,8 @@ romanization: "somvār"
 concept_tag: UR-VAQT218-SOMVAR
 prerequisites: [UR-C218-navambar, UR-C218-disambar]
 sounds: []
-roots: []
+roots: [sanskrit-soma, sanskrit-vara-day]
+etymology_hook: "somvār: Sanskrit soma 'the moon' + vāra 'day of the week'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C218-disambar]
 <!-- hl-knowledge: introduces=[UR-LEX-C218-VAQT218-05]; assesses=[] -->
 
 **سوموار** — *somvār* — "Monday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سوموار** (*somvār*) is "the moon's day": Sanskrit *soma*, "the moon", with *vāra*, "day of the week".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

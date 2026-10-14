@@ -14,7 +14,8 @@ romanization: "naqshā"
 concept_tag: UR-SCHOOL62-NAQSHA
 prerequisites: [UR-C62-basta, UR-C62-paisa]
 sounds: []
-roots: []
+roots: [arabic-naqsh]
+etymology_hook: "naqshā ← Arabic naqsh 'a painting, an engraving', through Persian (Lane, root n-q-sh)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C62-paisa]
 <!-- hl-knowledge: introduces=[UR-LEX-C62-SCHOOL62-03]; assesses=[] -->
 
 **نقشہ** — *naqshā* — "a map".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نقشہ** (*naqshā*) is a loan from Arabic *naqsh*, "a painting, an engraving", which reached Urdu through Persian. Its Arabic root is *n-q-sh* (Lane). Urdu *naqshā* came through Persian *naqsha*, "a drawing, a plan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

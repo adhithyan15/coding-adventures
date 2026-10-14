@@ -14,7 +14,8 @@ romanization: "sīdhā"
 concept_tag: UR-LOC97-SIDHA
 prerequisites: [UR-C96-daen, UR-C96-baen]
 sounds: []
-roots: []
+roots: [sanskrit-siddha]
+etymology_hook: "sīdhā ← Sanskrit siddha 'accomplished, perfected', a tadbhava (CDIAL 13401)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C96-baen]
 <!-- hl-knowledge: introduces=[UR-LEX-C97-LOC97-01]; assesses=[] -->
 
 **سیدھا** — *sīdhā* — "straight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سیدھا** (*sīdhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *siddha*, "accomplished, perfected" (CDIAL 13401). CDIAL glosses the Hindi word "straight, honest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

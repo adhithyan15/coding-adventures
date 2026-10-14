@@ -14,7 +14,8 @@ romanization: "hāl hī meṅ"
 concept_tag: UR-MAZI144-HAL-HI-MEIN
 prerequisites: [UR-C142-bachna, UR-C142-barhna]
 sounds: []
-roots: []
+roots: [arabic-hal, sanskrit-madhya]
+etymology_hook: "hāl ← Arabic ḥāl 'state, condition' (Lane, root ḥ-w-l); meṅ 'in' ← Sanskrit madhye 'in the middle' (CDIAL 9804)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C142-barhna]
 <!-- hl-knowledge: introduces=[UR-LEX-C144-MAZI144-01]; assesses=[] -->
 
 **حال ہی میں** — *hāl hī meṅ* — "recently". With a verb like **پڑھنا**, Urdu's past puts **نے** after the doer: **میں نے حال ہی میں ایک کتاب پڑھی۔** — *maiṅ ne hāl hī meṅ ek kitāb paṛhī* — "I read a book recently." **پڑھی** agrees with **کتاب**.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حال ہی میں** (*hāl hī meṅ*) is "in the very present state". *hāl* is a loan from Arabic *ḥāl*, "state, condition", through Persian (Lane, root *ḥ-w-l*); *hī* is the emphatic "very"; and *meṅ*, "in", comes from Sanskrit *madhye*, "in the middle" (CDIAL 9804).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

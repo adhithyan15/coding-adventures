@@ -14,7 +14,8 @@ romanization: "ambulans"
 concept_tag: UR-SEHAT153-AMBULANS
 prerequisites: [UR-C153-nars, UR-C153-mariz]
 sounds: []
-roots: []
+roots: [english-ambulance]
+etymology_hook: "ambulans ← English ambulance"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C153-mariz]
 <!-- hl-knowledge: introduces=[UR-LEX-C153-SEHAT153-03]; assesses=[] -->
 
 **ایمبولینس** — *ambulans* — "an ambulance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ایمبولینس** (*ambulans*) is a loan from English *ambulance*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shādī"
 concept_tag: UR-CHIZ256-SHADI
 prerequisites: [UR-C255-laisans, UR-C255-parking]
 sounds: []
-roots: []
+roots: [persian-shadi]
+etymology_hook: "shādī: usually traced to Persian shādī 'joy, festivity'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C255-parking]
 <!-- hl-knowledge: introduces=[UR-LEX-C256-CHIZ256-01]; assesses=[] -->
 
 **شادی** — *shādī* — "a wedding, a marriage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شادی** (*shādī*) is a loan, usually traced to Persian *shādī*, "joy, festivity". Urdu narrowed it to the happiest festivity: a wedding.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

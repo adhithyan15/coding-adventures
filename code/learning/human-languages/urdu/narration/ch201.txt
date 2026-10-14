@@ -12,6 +12,9 @@ Before the new one: say the Urdu for raita, then the Urdu for a salad.
 You'll want to know: ہاکی.
 ہاکی — hākī — "hockey".
 
+The word, taken apart.
+ہاکی (hākī) is a loan from English hockey.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a salad, then the Urdu for hockey.
 
 You'll want to know: ٹینس.
 ٹینس — ṭenis — "tennis".
+
+The word, taken apart.
+ٹینس (ṭenis) is a loan from English tennis.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for hockey, then the Urdu for tennis.
 You'll want to know: شطرنج.
 شطرنج — shatranj — "chess".
 
+The word, taken apart.
+شطرنج (shatranj) came through Persian from Arabic shaṭranj. Arabic took it from Middle Persian chatrang, which goes back to Sanskrit caturaṅga, "having four limbs": an army of foot, horse, elephant and chariot.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for tennis, then the Urdu for chess.
 You'll want to know: تاش.
 تاش — tāsh — "playing cards".
 
+The word, taken apart.
+The origin of تاش (tāsh) is not settled. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for chess, then the Urdu for playing cards.
 
 You'll want to know: دوڑ.
 دوڑ — dauṛ — "a race".
+
+The word, taken apart.
+دوڑ (dauṛ) is the noun of dauṛnā, "to run", which CDIAL lists under Sanskrit dravati, "runs" (CDIAL 6624).
 
 What you've built.
 One more word for this chapter.

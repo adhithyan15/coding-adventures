@@ -14,7 +14,8 @@ romanization: "shak karnā"
 concept_tag: UR-VERB-SHAK-KARNA
 prerequisites: [UR-C215-pichha-karna, UR-C215-bharosa-karna]
 sounds: []
-roots: []
+roots: [arabic-shakk, kr-do]
+etymology_hook: "shak ← Arabic shakk 'doubt', through Persian (Lane, root sh-k-k); karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C215-bharosa-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C215-ACT215-04]; assesses=[] -->
 
 **شک کرنا** — *shak karnā* — "to doubt".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شک کرنا** (*shak karnā*) joins *shak*, "doubt", and *karnā*, "to do". *shak* is Arabic *shakk*, "doubt", which reached Urdu through Persian (Lane, root *sh-k-k*); *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

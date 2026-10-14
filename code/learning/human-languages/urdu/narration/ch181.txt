@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to mix; to introduce, then the Urdu for to 
 You'll want to know: خرچ کرنا.
 خرچ کرنا — kharch karnā — "to spend".
 
+The phrase, taken apart.
+خرچ کرنا (kharch karnā) joins kharch, "spending", and karnā, "to do". kharch is Arabic kharj, "a going out; expenditure", which reached Urdu through Persian (Lane, root kh-r-j); karnā comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to join, then the Urdu for to spend.
 
 You'll want to know: چکانا.
 چکانا — chukānā — "to pay off, to settle (a bill)".
+
+The word, taken apart.
+چکانا (chukānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from cukk, "fall short of, stop", a form CDIAL reconstructs from its descendants (CDIAL 4848). It is the causing form of chuknā, "to be finished". CDIAL takes cukk from Prakrit cukka, "fallen, mistaken", which replaced Sanskrit cyuta, "fallen".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to spend, then the Urdu for to pay off.
 You'll want to know: ناپنا.
 ناپنا — nāpnā — "to measure".
 
+The word, taken apart.
+ناپنا (nāpnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jñāpyate, "is made known" (CDIAL 5283). The sense moved from "making known" to "measuring".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to pay off, then the Urdu for to measure.
 You'll want to know: تولنا.
 تولنا — tolnā — "to weigh".
 
+The word, taken apart.
+تولنا (tolnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tolayati, "lifts, weighs, considers" (CDIAL 5979).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to measure, then the Urdu for to weigh.
 
 You'll want to know: جانچنا.
 جانچنا — jāṅchnā — "to check, to test".
+
+The word, taken apart.
+جانچنا (jāṅchnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from yācyate, "is asked" (CDIAL 10449). The sense moved from "begging" to "testing".
 
 What you've built.
 One more word for this chapter.

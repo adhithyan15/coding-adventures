@@ -14,7 +14,8 @@ romanization: "parhez"
 concept_tag: UR-SEHAT187-PARHEZ
 prerequisites: [UR-C187-sujan, UR-C187-khurak]
 sounds: []
-roots: []
+roots: [persian-parhez]
+etymology_hook: "parhez: usually traced to Persian parhez 'abstinence, keeping away'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C187-khurak]
 <!-- hl-knowledge: introduces=[UR-LEX-C187-SEHAT187-03]; assesses=[] -->
 
 **پرہیز** — *parhez* — "a diet (what you avoid)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پرہیز** (*parhez*) is a loan, usually traced to Persian *parhez*, "abstinence, keeping away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

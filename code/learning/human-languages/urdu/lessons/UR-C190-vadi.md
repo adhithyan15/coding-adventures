@@ -14,7 +14,8 @@ romanization: "vādī"
 concept_tag: UR-JAGAH190-VADI
 prerequisites: [UR-C189-isi-vaqt, UR-C189-der-se]
 sounds: []
-roots: []
+roots: [arabic-wadi]
+etymology_hook: "vādī ← Arabic wādī 'a valley, a river bed', through Persian (Lane, root w-d-y)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C189-der-se]
 <!-- hl-knowledge: introduces=[UR-LEX-C190-JAGAH190-01]; assesses=[] -->
 
 **وادی** — *vādī* — "a valley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وادی** (*vādī*) is a loan from Arabic *wādī*, "a valley, a river bed", which reached Urdu through Persian. Its Arabic root is *w-d-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

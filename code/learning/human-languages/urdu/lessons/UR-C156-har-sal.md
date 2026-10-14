@@ -14,7 +14,8 @@ romanization: "har sāl"
 concept_tag: UR-VAQT156-HAR-SAL
 prerequisites: [UR-C156-zamana, UR-C156-har-hafte]
 sounds: []
-roots: []
+roots: [persian-har, persian-sal]
+etymology_hook: "har 'every' and sāl 'year' are both usually traced to Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C156-har-hafte]
 <!-- hl-knowledge: introduces=[UR-LEX-C156-VAQT156-05]; assesses=[] -->
 
 **ہر سال** — *har sāl* — "every year".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہر سال** (*har sāl*) joins *har*, "every", and *sāl*, "year", both usually traced to Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

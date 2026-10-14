@@ -14,7 +14,8 @@ romanization: "mahfūz"
 concept_tag: UR-SIFAT161-MAHFUZ
 prerequisites: [UR-C160-sust, UR-C160-mehnati]
 sounds: []
-roots: []
+roots: [arabic-mahfuz]
+etymology_hook: "mahfūz ← Arabic maḥfūẓ 'guarded, kept', through Persian (Lane, root ḥ-f-ẓ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C160-mehnati]
 <!-- hl-knowledge: introduces=[UR-LEX-C161-SIFAT161-01]; assesses=[] -->
 
 **محفوظ** — *mahfūz* — "safe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**محفوظ** (*mahfūz*) is a loan from Arabic *maḥfūẓ*, "guarded, kept", which reached Urdu through Persian. Its Arabic root is *ḥ-f-ẓ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

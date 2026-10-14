@@ -14,7 +14,8 @@ romanization: "nars"
 concept_tag: UR-SEHAT153-NARS
 prerequisites: [UR-C152-sar-dard, UR-C152-pet-dard]
 sounds: []
-roots: []
+roots: [english-nurse]
+etymology_hook: "nars ← English nurse"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C152-pet-dard]
 <!-- hl-knowledge: introduces=[UR-LEX-C153-SEHAT153-01]; assesses=[] -->
 
 **نرس** — *nars* — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نرس** (*nars*) is a loan from English *nurse*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

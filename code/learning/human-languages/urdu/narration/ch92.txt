@@ -12,6 +12,9 @@ Before the new one: say the Urdu for the day after tomorrow; the day before yest
 You'll want to know: منگل.
 منگل — mangal — "Tuesday".
 
+The word, taken apart.
+منگل (mangal) is short for mangalvār, "Mars's day": Sanskrit maṅgala, "the planet Mars", a word that also means "auspicious" (CDIAL 9706), with vāra, "day of the week".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for Sunday, then the Urdu for Tuesday.
 
 You'll want to know: بدھ.
 بدھ — budh — "Wednesday".
+
+The word, taken apart.
+بدھ (budh) is short for budhvār, "Mercury's day": Sanskrit budha, "the planet Mercury", with vāra, "day of the week", both taken over as tatsamas.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for Tuesday, then the Urdu for Wednesday.
 You'll want to know: بجے.
 بجے — baje — "o'clock".
 
+The word, taken apart.
+بجے (baje) is a form of bajnā, "to sound, to strike", which CDIAL lists under Sanskrit vādyate, "is made to sound" (CDIAL 11513): the hours were once struck on a bell.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for Wednesday, then the Urdu for o'clock.
 You'll want to know: ساڑھے.
 ساڑھے — sāṛhe — "half past (plus a half)".
 
+The word, taken apart.
+ساڑھے (sāṛhe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sārdha, "plus a half" (CDIAL 13369). It is built from sa-, "with", and ardha, "half".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for o'clock, then the Urdu for half past.
 
 You'll want to know: سوا.
 سوا — savā — "a quarter past (plus a quarter)".
+
+The word, taken apart.
+سوا (savā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sapāda, "increased by a fourth" (CDIAL 13134). It is built from sa-, "with", and pāda, "a quarter".
 
 What you've built.
 One more word for this chapter.

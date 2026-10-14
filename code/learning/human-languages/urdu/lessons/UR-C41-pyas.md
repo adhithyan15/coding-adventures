@@ -14,7 +14,8 @@ romanization: "pyās"
 concept_tag: UR-HEALTH41-PYAS
 prerequisites: [UR-C41-dard, UR-C41-dava]
 sounds: []
-roots: []
+roots: [sanskrit-pipasa]
+etymology_hook: "pyās ← Sanskrit pipāsā 'thirst', a tadbhava (CDIAL 8199)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C41-dava]
 <!-- hl-knowledge: introduces=[UR-LEX-C41-HEALTH41-05]; assesses=[] -->
 
 **پیاس** — *pyās* — "thirst".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیاس** (*pyās*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pipāsā*, "thirst" (CDIAL 8199).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

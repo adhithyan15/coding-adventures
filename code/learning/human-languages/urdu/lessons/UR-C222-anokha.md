@@ -14,7 +14,8 @@ romanization: "anokhā"
 concept_tag: UR-SIFAT222-ANOKHA
 prerequisites: [UR-C222-mazedar, UR-C222-bekar]
 sounds: []
-roots: []
+roots: [sanskrit-anapeksha]
+etymology_hook: "anokhā ← Sanskrit anapekṣa 'careless', a tadbhava (CDIAL 289)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C222-bekar]
 <!-- hl-knowledge: introduces=[UR-LEX-C222-SIFAT222-03]; assesses=[] -->
 
 **انوکھا** — *anokhā* — "unusual".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انوکھا** (*anokhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *anapekṣa*, "careless" (CDIAL 289). It is built on *apekṣā*, "consideration, expectation": what is strange is what nobody expected.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bandargāh"
 concept_tag: UR-JAGAH158-BANDARGAH
 prerequisites: [UR-C158-qaum, UR-C158-basti]
 sounds: []
-roots: []
+roots: [persian-bandar]
+etymology_hook: "bandargāh: usually traced to Persian bandar 'port' + gāh 'place'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C158-basti]
 <!-- hl-knowledge: introduces=[UR-LEX-C158-JAGAH158-03]; assesses=[] -->
 
 **بندرگاہ** — *bandargāh* — "a port".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بندرگاہ** (*bandargāh*) is usually traced to Persian *bandar*, "port, harbour", with *gāh*, "place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

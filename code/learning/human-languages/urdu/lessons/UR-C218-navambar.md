@@ -14,7 +14,8 @@ romanization: "navambar"
 concept_tag: UR-VAQT218-NAVAMBAR
 prerequisites: [UR-C218-sitambar, UR-C218-aktubar]
 sounds: []
-roots: []
+roots: [english-november]
+etymology_hook: "navambar ← English November"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C218-aktubar]
 <!-- hl-knowledge: introduces=[UR-LEX-C218-VAQT218-03]; assesses=[] -->
 
 **نومبر** — *navambar* — "November".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نومبر** (*navambar*) is a loan from English *November*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

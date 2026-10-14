@@ -14,7 +14,8 @@ romanization: "jaikeṭ"
 concept_tag: UR-THINGS121-JAIKET
 prerequisites: [UR-C121-dupatta, UR-C121-svetar]
 sounds: []
-roots: []
+roots: [english-jacket]
+etymology_hook: "jaikeṭ ← English jacket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C121-svetar]
 <!-- hl-knowledge: introduces=[UR-LEX-C121-THINGS121-04]; assesses=[] -->
 
 **جیکٹ** — *jaikeṭ* — "a jacket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جیکٹ** (*jaikeṭ*) is a loan from English *jacket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

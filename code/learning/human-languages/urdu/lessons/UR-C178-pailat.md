@@ -14,7 +14,8 @@ romanization: "pāilaṭ"
 concept_tag: UR-KAM178-PAILAT
 prerequisites: [UR-C177-darzi, UR-C178-gulukar]
 sounds: []
-roots: []
+roots: [english-pilot]
+etymology_hook: "pāilaṭ ← English pilot"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C178-gulukar]
 <!-- hl-knowledge: introduces=[UR-LEX-C178-KAM178-02]; assesses=[] -->
 
 **پائلٹ** — *pāilaṭ* — "a pilot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پائلٹ** (*pāilaṭ*) is a loan from English *pilot*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

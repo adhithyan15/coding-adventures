@@ -14,7 +14,8 @@ romanization: "hãsī"
 concept_tag: UR-CHIZ231-HASI
 prerequisites: [UR-C231-raz, UR-C231-latifa]
 sounds: []
-roots: []
+roots: [sanskrit-hasita]
+etymology_hook: "hãsī ← Sanskrit hasita 'laughter', a tadbhava (CDIAL 14023)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C231-latifa]
 <!-- hl-knowledge: introduces=[UR-LEX-C231-CHIZ231-05]; assesses=[] -->
 
 **ہنسی** — *hãsī* — "laughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہنسی** (*hãsī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hasita*, "laughter" (CDIAL 14023).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

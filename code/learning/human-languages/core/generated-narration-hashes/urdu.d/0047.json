@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 47,
-  "sourceHash": "fnv1a64:376492f623b05563",
+  "sourceHash": "fnv1a64:651069728d6b07a2",
   "lessonIds": [
     "UR-C47-baithna",
     "UR-C47-sona",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch47.txt",
   "json": "urdu/narration/ch47.json",
-  "textHash": "fnv1a64:20e2e552d98e07ed",
-  "jsonHash": "fnv1a64:02f916b5d4b7ecf4",
+  "textHash": "fnv1a64:adf76b20e20bf3e0",
+  "jsonHash": "fnv1a64:dec81981c65a953e",
   "findings": []
 }

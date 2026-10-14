@@ -15,6 +15,7 @@ concept_tag: UR-ADJ71-SASTA
 prerequisites: [UR-C71-mushkil, UR-C71-mahaga]
 sounds: []
 roots: []
+etymology_hook: "sastā: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C71-mahaga]
 <!-- hl-knowledge: introduces=[UR-LEX-C71-ADJ71-05]; assesses=[] -->
 
 **سستا** — *sastā* — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **سستا** (*sastā*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

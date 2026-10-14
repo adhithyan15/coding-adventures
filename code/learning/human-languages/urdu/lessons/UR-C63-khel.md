@@ -14,7 +14,8 @@ romanization: "khel"
 concept_tag: UR-SCHOOL63-KHEL
 prerequisites: [UR-C63-javab, UR-C63-lafz]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "khel ← *khel- 'play', a reconstructed form; CDIAL links it, hesitantly, with Sanskrit krīḍati (CDIAL 3918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C63-lafz]
 <!-- hl-knowledge: introduces=[UR-LEX-C63-SCHOOL63-03]; assesses=[] -->
 
 **کھیل** — *khel* — "a game".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھیل** (*khel*) is inherited from a reconstructed *\*khel-*, "play" (CDIAL 3918). CDIAL links it with Sanskrit *krīḍati*, "plays": if that verb has a non-Aryan source, these forms may share it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

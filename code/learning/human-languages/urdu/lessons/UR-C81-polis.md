@@ -14,7 +14,8 @@ romanization: "polīs"
 concept_tag: UR-TOWN81-POLIS
 prerequisites: [UR-C81-mandir, UR-C81-hotal]
 sounds: []
-roots: []
+roots: [english-police]
+etymology_hook: "polīs ← English police"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C81-hotal]
 <!-- hl-knowledge: introduces=[UR-LEX-C81-TOWN81-03]; assesses=[] -->
 
 **پولیس** — *polīs* — "the police".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پولیس** (*polīs*) is a loan from English *police*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

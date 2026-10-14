@@ -14,7 +14,8 @@ romanization: "sair karnā"
 concept_tag: UR-VERB-SAIR-KARNA
 prerequisites: [UR-C149-par-karna, UR-C149-ghumna]
 sounds: []
-roots: []
+roots: [arabic-sayr, kr-do]
+etymology_hook: "sair ← Arabic sayr 'a going, a journey', through Persian (Lane, root s-y-r); karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C149-ghumna]
 <!-- hl-knowledge: introduces=[UR-LEX-C149-ACT149-03]; assesses=[] -->
 
 **سیر کرنا** — *sair karnā* — "to go for a stroll".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سیر کرنا** (*sair karnā*) joins *sair*, "an outing", and *karnā*, "to do". *sair* is Arabic *sayr*, "a going, a journey", which reached Urdu through Persian (Lane, root *s-y-r*); *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

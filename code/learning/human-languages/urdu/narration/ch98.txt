@@ -12,6 +12,9 @@ Before the new one: say the Urdu for the middle, then the Urdu for an edge.
 You'll want to know: کونا.
 کونا — konā — "a corner".
 
+The word, taken apart.
+کونا (konā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from koṇa, "corner, angle" (CDIAL 3504). CDIAL, after Burrow, takes the Sanskrit word from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for an edge, then the Urdu for a corner.
 
 You'll want to know: طرف.
 طرف — taraf — "a side, a direction".
+
+The word, taken apart.
+طرف (taraf) is a loan from Arabic ṭaraf, "edge, side", which reached Urdu through Persian. Its Arabic root is ṭ-r-f (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a corner, then the Urdu for a side.
 You'll want to know: راستہ.
 راستہ — rāstā — "a way, a route".
 
+The word, taken apart.
+راستہ (rāstā) is a loan, usually traced to Persian rāsta, "straight; a road".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a side, then the Urdu for a way.
 You'll want to know: گلی.
 گلی — galī — "a lane, a narrow street".
 
+The word, taken apart.
+گلی (galī) is a tadbhava, a word inherited and reshaped by sound change. It comes from galī, "defile, lane", a form CDIAL reconstructs from its descendants (CDIAL 4085).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a way, then the Urdu for a lane.
 
 You'll want to know: موڑ.
 موڑ — moṛ — "a turn, a bend".
+
+The word, taken apart.
+موڑ (moṛ), "a turn", is the noun of moṛnā, "to twist, to bend". CDIAL lists moṛnā under mōṭati, a form it gives beside Sanskrit muṭati, "twists" (CDIAL 10186).
 
 What you've built.
 One more word for this chapter.

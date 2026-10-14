@@ -14,7 +14,8 @@ romanization: "dūr"
 concept_tag: UR-TIME78-DUR
 prerequisites: [UR-C77-pehle, UR-C78-vaqt]
 sounds: []
-roots: []
+roots: [sanskrit-dura]
+etymology_hook: "dūr ← Sanskrit dūra 'distant', a tadbhava (CDIAL 6495)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C78-vaqt]
 <!-- hl-knowledge: introduces=[UR-LEX-C78-TIME78-02]; assesses=[] -->
 
 **دور** — *dūr* — "far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دور** (*dūr*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dūra*, "distant" (CDIAL 6495).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "navve"
 concept_tag: UR-NUMBERS86-NAVVE
 prerequisites: [UR-C86-sattar, UR-C86-assi]
 sounds: []
-roots: []
+roots: [sanskrit-navati]
+etymology_hook: "navve ← Sanskrit navati 'ninety', a tadbhava (CDIAL 6995)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C86-assi]
 <!-- hl-knowledge: introduces=[UR-LEX-C86-NUMBERS86-03]; assesses=[] -->
 
 **نوے** — *navve* — "ninety".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نوے** (*navve*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *navati*, "ninety" (CDIAL 6995).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

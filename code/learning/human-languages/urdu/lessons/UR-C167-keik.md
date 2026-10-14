@@ -14,7 +14,8 @@ romanization: "keik"
 concept_tag: UR-CHIZ167-KEIK
 prerequisites: [UR-C167-kishmish, UR-C167-murabba]
 sounds: []
-roots: []
+roots: [english-cake]
+etymology_hook: "keik ← English cake"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C167-murabba]
 <!-- hl-knowledge: introduces=[UR-LEX-C167-CHIZ167-04]; assesses=[] -->
 
 **کیک** — *keik* — "a cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کیک** (*keik*) is a loan from English *cake*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

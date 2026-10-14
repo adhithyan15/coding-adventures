@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Twenty, a Hundred, and the Nine Words That Are Not Here",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:4ea81ea4443cdb09",
+  "sourceHash": "fnv1a64:74ecbfbcd3181d29",
   "lessons": [
     {
       "id": "UR-C30-bees",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7052a53d3500a93b",
+      "sourceHash": "fnv1a64:17bd6b305f9768c7",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "بیس (bīs) goes back through Sanskrit vimshati to the Indo-European word for twenty, the same word behind Latin vīgintī and, through it, English vigesimal."
+              "text": "بیس (bīs) goes back through Sanskrit viṃśati, \"twenty\" (CDIAL 11616), to the Indo-European word for twenty, the same word behind Latin vīgintī and, through it, English vigesimal."
             }
           ]
         },
@@ -158,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da628e6d0b00ad29",
+      "sourceHash": "fnv1a64:2ba07a0590e3718e",
       "notice": null,
       "blocks": [
         {
@@ -204,7 +204,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سو (sau) continues Sanskrit śata, from Indo-European kmtom, \"hundred.\" Latin centum, Greek hekatón and English hundred are the same word. Anybody who has read a per cent has met its cousin."
+              "text": "سو (sau) continues Sanskrit śata (CDIAL 12278), from Indo-European kmtom, \"hundred.\" Latin centum, Greek hekatón and English hundred are the same word. Anybody who has read a per cent has met its cousin."
             }
           ]
         },

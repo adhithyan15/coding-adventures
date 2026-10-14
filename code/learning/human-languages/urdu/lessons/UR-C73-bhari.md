@@ -14,7 +14,8 @@ romanization: "bhārī"
 concept_tag: UR-ADJ73-BHARI
 prerequisites: [UR-C73-patla, UR-C73-halka]
 sounds: []
-roots: []
+roots: [sanskrit-bharika]
+etymology_hook: "bhārī ← Sanskrit bhārika 'forming a load, heavy', a tadbhava (CDIAL 9465)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C73-halka]
 <!-- hl-knowledge: introduces=[UR-LEX-C73-ADJ73-04]; assesses=[] -->
 
 **بھاری** — *bhārī* — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھاری** (*bhārī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhārika*, "forming a load, heavy" (CDIAL 9465). It is built on *bhāra*, "load".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

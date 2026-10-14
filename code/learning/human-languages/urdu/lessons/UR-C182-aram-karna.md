@@ -14,7 +14,8 @@ romanization: "ārām karnā"
 concept_tag: UR-VERB-ARAM-KARNA
 prerequisites: [UR-C181-janchna, UR-C182-thakna]
 sounds: []
-roots: []
+roots: [persian-aram, kr-do]
+etymology_hook: "ārām 'rest' usually traced to Persian ārām; karnā 'to do' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C182-thakna]
 <!-- hl-knowledge: introduces=[UR-LEX-C182-ACT182-02]; assesses=[] -->
 
 **آرام کرنا** — *ārām karnā* — "to rest".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آرام کرنا** (*ārām karnā*) joins *ārām*, "rest", usually traced to Persian *ārām*, and *karnā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

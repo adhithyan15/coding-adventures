@@ -11,8 +11,8 @@ gloss: who — a word this book has shown twice, glossed in passing, and never t
 concept_tag: UR-QUESTION-WHO
 prerequisites: [UR-C21-kyun, UR-C17-maan, UR-C09-bhai, UR-W08-vao]
 sounds: [long-o]
-roots: []
-etymology_hook: "کون is Sanskrit kaḥ punaḥ worn to one syllable — the same k- stem as کیا and کیوں, and the direct cousin of English who, which lost the k and kept the sound"
+roots: [sanskrit-kah-punar]
+etymology_hook: "kaun ← Sanskrit kaḥ punar 'who, then', a tadbhava (CDIAL 2575)"
 duration:
   max_seconds: 235
 requires:
@@ -56,8 +56,7 @@ without being told what the word meant.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAUN, UR-ETYMON-K-QUESTION-FAMILY, UR-LEX-BHAI] -->
 
-**کون** is the fourth of the **k-** family, from Sanskrit *kaḥ punaḥ*, "who
-then," worn to a syllable. It is the direct cousin of English **who** — the
+**کون** is the fourth of the **k-** family, from Sanskrit *kaḥ punar*, "who then" (CDIAL 2575), worn to a syllable. It is the direct cousin of English **who** — the
 ancient word began with a *k*-sound, and English wrote it *hw-* and then *wh-*
 while keeping the sound, which is why *who* still starts with the breath the
 letter *w* does not say.

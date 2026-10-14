@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 43,
-  "sourceHash": "fnv1a64:b09e9154da5217cb",
+  "sourceHash": "fnv1a64:e1e72f5a501585c7",
   "lessonIds": [
     "UR-C43-ammi",
     "UR-C43-beta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch43.txt",
   "json": "urdu/narration/ch43.json",
-  "textHash": "fnv1a64:7886ed25d3834519",
-  "jsonHash": "fnv1a64:9c89180535fcd9f4",
+  "textHash": "fnv1a64:5a398d67dd6b6df2",
+  "jsonHash": "fnv1a64:a7fc1e0d0a4aa624",
   "findings": []
 }

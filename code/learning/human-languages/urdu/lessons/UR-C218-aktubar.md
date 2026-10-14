@@ -14,7 +14,8 @@ romanization: "aktūbar"
 concept_tag: UR-VAQT218-AKTUBAR
 prerequisites: [UR-C217-khujli, UR-C218-sitambar]
 sounds: []
-roots: []
+roots: [english-october]
+etymology_hook: "aktūbar ← English October"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C218-sitambar]
 <!-- hl-knowledge: introduces=[UR-LEX-C218-VAQT218-02]; assesses=[] -->
 
 **اکتوبر** — *aktūbar* — "October".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اکتوبر** (*aktūbar*) is a loan from English *October*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

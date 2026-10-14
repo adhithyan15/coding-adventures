@@ -14,7 +14,8 @@ romanization: "davā khānā"
 concept_tag: UR-SEHAT244-DAVA-KHANA
 prerequisites: [UR-C244-patti, UR-C244-marham]
 sounds: []
-roots: []
+roots: [arabic-dawa, persian-khana]
+etymology_hook: "davākhānā: davā 'medicine', from Arabic dawāʾ (Lane), + Persian khāna 'house'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C244-marham]
 <!-- hl-knowledge: introduces=[UR-LEX-C244-SEHAT244-05]; assesses=[] -->
 
 **دوا خانہ** — *davā khānā* — "a pharmacy".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دوا خانہ** (*davā khānā*) is "medicine house": *davā*, "medicine", from Arabic *dawāʾ*, "remedy", which reached Urdu through Persian (Lane, root *d-w-y*), and Persian *khāna*, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

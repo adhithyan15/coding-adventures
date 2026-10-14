@@ -14,7 +14,8 @@ romanization: "khazānchī"
 concept_tag: UR-KAM179-KHAZANCHI
 prerequisites: [UR-C178-mali, UR-C179-dai]
 sounds: []
-roots: []
+roots: [arabic-khizana]
+etymology_hook: "khazānchī: khazāna 'treasury' ← Arabic khizāna (Lane, root kh-z-n) + Turkic -chī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C179-dai]
 <!-- hl-knowledge: introduces=[UR-LEX-C179-KAM179-02]; assesses=[] -->
 
 **خزانچی** — *khazānchī* — "a treasurer, a cashier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خزانچی** (*khazānchī*) is *khazāna*, "treasury", with the Turkic ending *-chī*, "one who deals with". *khazāna* is Arabic *khizāna*, "a store-room", which reached Urdu through Persian (Lane, root *kh-z-n*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sāth"
 concept_tag: UR-LOC100-SATH
 prerequisites: [UR-C100-chauraha, UR-C100-aspas]
 sounds: []
-roots: []
+roots: [sanskrit-sartha]
+etymology_hook: "sāth ← Sanskrit sārthena 'in company with', a form of sārtha 'caravan, company' (CDIAL 13364)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C100-aspas]
 <!-- hl-knowledge: introduces=[UR-LEX-C100-LOC100-03]; assesses=[] -->
 
 **ساتھ** — *sāth* — "with, together".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ساتھ** (*sāth*) is inherited. It comes from Sanskrit *sārthena*, "in company with", a form of *sārtha*, "caravan, company" (CDIAL 13364).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṭraifik"
 concept_tag: UR-CHIZ255-TRAIFIK
 prerequisites: [UR-C254-tabla, UR-C255-pletfarm]
 sounds: []
-roots: []
+roots: [english-traffic]
+etymology_hook: "ṭraifik ← English traffic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C255-pletfarm]
 <!-- hl-knowledge: introduces=[UR-LEX-C255-CHIZ255-02]; assesses=[] -->
 
 **ٹریفک** — *ṭraifik* — "traffic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹریفک** (*ṭraifik*) is a loan from English *traffic*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

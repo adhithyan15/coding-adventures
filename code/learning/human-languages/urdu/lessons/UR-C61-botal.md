@@ -14,7 +14,8 @@ romanization: "botal"
 concept_tag: UR-HOME61-BOTAL
 prerequisites: [UR-C60-chhuri, UR-C60-kata]
 sounds: []
-roots: []
+roots: [english-bottle]
+etymology_hook: "botal: usually traced to English bottle, or to Portuguese botelha; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C60-kata]
 <!-- hl-knowledge: introduces=[UR-LEX-C61-HOME61-01]; assesses=[] -->
 
 **بوتل** — *botal* — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بوتل** (*botal*) is usually traced to English *bottle*; some trace it to Portuguese *botelha*, "bottle", which reached India first. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

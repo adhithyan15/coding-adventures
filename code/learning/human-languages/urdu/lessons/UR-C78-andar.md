@@ -14,7 +14,8 @@ romanization: "andar"
 concept_tag: UR-TIME78-ANDAR
 prerequisites: [UR-C78-dur, UR-C78-qarib]
 sounds: []
-roots: []
+roots: [persian-andar]
+etymology_hook: "andar: usually traced to Persian andar 'inside'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C78-qarib]
 <!-- hl-knowledge: introduces=[UR-LEX-C78-TIME78-04]; assesses=[] -->
 
 **اندر** — *andar* — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اندر** (*andar*) is a loan, usually traced to Persian *andar*, "inside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

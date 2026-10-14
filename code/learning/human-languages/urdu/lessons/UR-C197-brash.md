@@ -14,7 +14,8 @@ romanization: "brash"
 concept_tag: UR-CHIZ197-BRASH
 prerequisites: [UR-C197-shaimpu, UR-C197-tuthpest]
 sounds: []
-roots: []
+roots: [english-brush]
+etymology_hook: "brash ← English brush"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C197-tuthpest]
 <!-- hl-knowledge: introduces=[UR-LEX-C197-CHIZ197-04]; assesses=[] -->
 
 **برش** — *brash* — "a brush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**برش** (*brash*) is a loan from English *brush*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

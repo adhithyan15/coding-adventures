@@ -14,7 +14,8 @@ romanization: "mausam"
 concept_tag: UR-TIME94-MAUSAM
 prerequisites: [UR-C93-kab, UR-C94-roz]
 sounds: []
-roots: []
+roots: [arabic-mawsim-season]
+etymology_hook: "mausam ← Arabic mawsim 'a season, a time of assembly', through Persian (Lane, root w-s-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C94-roz]
 <!-- hl-knowledge: introduces=[UR-LEX-C94-TIME94-02]; assesses=[] -->
 
 **موسم** — *mausam* — "the weather, a season".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موسم** (*mausam*) is a loan from Arabic *mawsim*, "a season, a time of assembly", which reached Urdu through Persian. Its Arabic root is *w-s-m* (Lane). English *monsoon* comes from the same Arabic word, through Portuguese.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 233,
-  "sourceHash": "fnv1a64:108697d836c4d16f",
+  "sourceHash": "fnv1a64:e4c573444f1ca0d2",
   "lessonIds": [
     "UR-C233-kohra",
     "UR-C233-os",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch233.txt",
   "json": "urdu/narration/ch233.json",
-  "textHash": "fnv1a64:5fa069055f372427",
-  "jsonHash": "fnv1a64:d262526dd6ea8ffa",
+  "textHash": "fnv1a64:045c1b7fde178a41",
+  "jsonHash": "fnv1a64:db9f688be763cdfe",
   "findings": []
 }

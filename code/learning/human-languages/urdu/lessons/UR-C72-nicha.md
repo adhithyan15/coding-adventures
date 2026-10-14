@@ -14,7 +14,8 @@ romanization: "nīchā"
 concept_tag: UR-ADJ72-NICHA
 prerequisites: [UR-C71-sasta, UR-C72-ucha]
 sounds: []
-roots: []
+roots: [sanskrit-nica]
+etymology_hook: "nīchā ← Sanskrit nīca 'low', a tadbhava (CDIAL 7540)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C72-ucha]
 <!-- hl-knowledge: introduces=[UR-LEX-C72-ADJ72-02]; assesses=[] -->
 
 **نیچا** — *nīchā* — "low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نیچا** (*nīchā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nīca*, "low" (CDIAL 7540). CDIAL explains its *-c-* as shaped after its opposite, *ucca*, "high".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

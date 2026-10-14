@@ -14,7 +14,8 @@ romanization: "chālīs"
 concept_tag: UR-NUMBERS85-CHALIS
 prerequisites: [UR-C85-unnis, UR-C85-tis]
 sounds: []
-roots: []
+roots: [sanskrit-catvarimshat]
+etymology_hook: "chālīs ← Sanskrit catvāriṃśat 'forty', a tadbhava (CDIAL 4656)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C85-tis]
 <!-- hl-knowledge: introduces=[UR-LEX-C85-NUMBERS85-03]; assesses=[] -->
 
 **چالیس** — *chālīs* — "forty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چالیس** (*chālīs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *catvāriṃśat*, "forty" (CDIAL 4656).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

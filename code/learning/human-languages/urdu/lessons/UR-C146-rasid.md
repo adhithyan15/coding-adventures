@@ -14,7 +14,8 @@ romanization: "rasīd"
 concept_tag: UR-PARH146-RASID
 prerequisites: [UR-C146-kiraya, UR-C146-ishtihar]
 sounds: []
-roots: []
+roots: [persian-rasid]
+etymology_hook: "rasīd: usually traced to Persian rasīd 'arrived; a receipt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C146-ishtihar]
 <!-- hl-knowledge: introduces=[UR-LEX-C146-PARH146-05]; assesses=[] -->
 
 **رسید** — *rasīd* — "a receipt". Ask for it when you pay: **رسید دیجیے۔** — *rasīd dījiye* — "A receipt, please."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رسید** (*rasīd*) is a loan, usually traced to Persian *rasīd*, "arrived; a receipt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nākāmī"
 concept_tag: UR-CHIZ232-NAKAMI
 prerequisites: [UR-C231-latifa, UR-C231-hasi]
 sounds: []
-roots: []
+roots: [persian-nakam]
+etymology_hook: "nākāmī: nākām 'unsuccessful', usually traced to Persian, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C231-hasi]
 <!-- hl-knowledge: introduces=[UR-LEX-C232-CHIZ232-01]; assesses=[] -->
 
 **ناکامی** — *nākāmī* — "failure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناکامی** (*nākāmī*) is *nākām*, "unsuccessful", usually traced to Persian *nākām*, with the ending *-ī* that makes a noun. *nākām* is built from *nā-*, "not", and *kām*, "desire".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

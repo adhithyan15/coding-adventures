@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 42,
-  "sourceHash": "fnv1a64:7326de678dac00f9",
+  "sourceHash": "fnv1a64:8cf0b36c5087f764",
   "lessonIds": [
     "UR-C42-bhuk",
     "UR-C42-khush",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch42.txt",
   "json": "urdu/narration/ch42.json",
-  "textHash": "fnv1a64:3652404d354e9aad",
-  "jsonHash": "fnv1a64:38ad9c61c04aee9c",
+  "textHash": "fnv1a64:ae84952f192bc79f",
+  "jsonHash": "fnv1a64:b9b76969533a89f1",
   "findings": []
 }

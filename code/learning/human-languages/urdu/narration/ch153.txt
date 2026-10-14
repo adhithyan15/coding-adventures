@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a headache, then the Urdu for a stomach ach
 You'll want to know: نرس.
 نرس — nars — "a nurse".
 
+The word, taken apart.
+نرس (nars) is a loan from English nurse.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a stomach ache, then the Urdu for a nurse.
 
 You'll want to know: مریض.
 مریض — marīz — "a patient".
+
+The word, taken apart.
+مریض (marīz) is a loan from Arabic marīḍ, "sick", which reached Urdu through Persian. Its Arabic root is m-r-ḍ (Lane). Urdu uses it for a patient.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a nurse, then the Urdu for a patient.
 You'll want to know: ایمبولینس.
 ایمبولینس — ambulans — "an ambulance".
 
+The word, taken apart.
+ایمبولینس (ambulans) is a loan from English ambulance.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a patient, then the Urdu for an ambulance.
 You'll want to know: پلک.
 پلک — palak — "an eyelid".
 
+The word, taken apart.
+The origin of پلک (palak) is not settled. Neither CDIAL nor DEDR has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for an ambulance, then the Urdu for an eyelid.
 
 You'll want to know: بھوں.
 بھوں — bhaũ — "an eyebrow".
+
+The word, taken apart.
+بھوں (bhaũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhrū, "eyebrow" (CDIAL 9688).
 
 What you've built.
 One more word for this chapter.

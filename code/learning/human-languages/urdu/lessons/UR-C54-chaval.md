@@ -14,7 +14,8 @@ romanization: "chāval"
 concept_tag: UR-FOOD54-CHAVAL
 prerequisites: [UR-C53-gosht, UR-C53-machhli]
 sounds: []
-roots: []
+roots: [indo-aryan-cavala]
+etymology_hook: "chāval ← *cāvala 'husked rice', a reconstructed form; a tadbhava (CDIAL 4749)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C53-machhli]
 <!-- hl-knowledge: introduces=[UR-LEX-C54-FOOD54-01]; assesses=[] -->
 
 **چاول** — *chāval* — "rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چاول** (*chāval*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cāvala*, "husked rice", a form CDIAL reconstructs from its descendants (CDIAL 4749). CDIAL suggests, with a "possibly", that it shares a non-Aryan origin with Sanskrit *taṇḍula*, "rice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

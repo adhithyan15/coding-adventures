@@ -14,7 +14,8 @@ romanization: "khatarnāk"
 concept_tag: UR-SIFAT247-KHATARNAK
 prerequisites: [UR-C247-namumkin, UR-C247-mufid]
 sounds: []
-roots: []
+roots: [arabic-khatar]
+etymology_hook: "khatarnāk: Arabic khaṭar 'danger' (Lane) + Persian -nāk 'full of'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C247-mufid]
 <!-- hl-knowledge: introduces=[UR-LEX-C247-SIFAT247-05]; assesses=[] -->
 
 **خطرناک** — *khatarnāk* — "dangerous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خطرناک** (*khatarnāk*) is "full of danger". It joins Arabic *khaṭar*, "danger", which reached Urdu through Persian (Lane, root *kh-ṭ-r*), and the Persian ending *-nāk*, "full of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

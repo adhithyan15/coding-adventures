@@ -14,7 +14,8 @@ romanization: "dhakelnā"
 concept_tag: UR-VERB-DHAKELNA
 prerequisites: [UR-C239-ghurna, UR-C239-talash-karna]
 sounds: []
-roots: []
+roots: [indo-aryan-dhakk-push]
+etymology_hook: "dhakelnā ← *dhakk 'push, strike', a reconstructed form; a tadbhava (CDIAL 6701)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C239-talash-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C240-ACT240-01]; assesses=[] -->
 
 **دھکیلنا** — *dhakelnā* — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دھکیلنا** (*dhakelnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhakk*, "push, strike", a form CDIAL reconstructs from its descendants (CDIAL 6701).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

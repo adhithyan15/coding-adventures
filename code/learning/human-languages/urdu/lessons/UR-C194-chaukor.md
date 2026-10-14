@@ -14,7 +14,8 @@ romanization: "chaukor"
 concept_tag: UR-SIFAT194-CHAUKOR
 prerequisites: [UR-C193-lalchi, UR-C193-pareshan]
 sounds: []
-roots: []
+roots: [indo-aryan-kora]
+etymology_hook: "chaukor: chau 'four' + kor 'edge', which CDIAL lists under *korā 'edge' (CDIAL 3531)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C193-pareshan]
 <!-- hl-knowledge: introduces=[UR-LEX-C194-SIFAT194-01]; assesses=[] -->
 
 **چوکور** — *chaukor* — "square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چوکور** (*chaukor*) is "four-edged": *chau-*, "four", with *kor*, "edge", which CDIAL lists under a reconstructed *\*korā*, "edge" (CDIAL 3531).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

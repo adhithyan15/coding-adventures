@@ -14,7 +14,8 @@ romanization: "galā"
 concept_tag: UR-BODY38-GALA
 prerequisites: [UR-C38-bal, UR-C38-dant]
 sounds: []
-roots: []
+roots: [sanskrit-gala]
+etymology_hook: "galā ← Sanskrit gala 'throat, neck', a tadbhava (CDIAL 4070)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C38-dant]
 <!-- hl-knowledge: introduces=[UR-LEX-C38-BODY38-05]; assesses=[] -->
 
 **گلا** — *galā* — "the throat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گلا** (*galā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gala*, "throat, neck" (CDIAL 4070).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

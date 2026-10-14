@@ -14,7 +14,8 @@ romanization: "flaiṭ"
 concept_tag: UR-JAGAH219-FLAIT
 prerequisites: [UR-C218-disambar, UR-C218-somvar]
 sounds: []
-roots: []
+roots: [english-flat]
+etymology_hook: "flaiṭ ← English flat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C218-somvar]
 <!-- hl-knowledge: introduces=[UR-LEX-C219-JAGAH219-01]; assesses=[] -->
 
 **فلیٹ** — *flaiṭ* — "a flat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فلیٹ** (*flaiṭ*) is a loan from English *flat*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

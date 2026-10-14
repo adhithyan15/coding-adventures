@@ -14,7 +14,8 @@ romanization: "registān"
 concept_tag: UR-NATURE67-REGISTAN
 prerequisites: [UR-C66-ag, UR-C66-barf]
 sounds: []
-roots: []
+roots: [persian-registan]
+etymology_hook: "registān: usually traced to Persian rēgistān 'desert'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C66-barf]
 <!-- hl-knowledge: introduces=[UR-LEX-C67-NATURE67-01]; assesses=[] -->
 
 **ریگستان** — *registān* — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ریگستان** (*registān*) is a loan, usually traced to Persian *rēgistān*, "desert". It is built from *rēg*, "sand", and *-stān*, "place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -16,6 +16,9 @@ Urdu: تم. read: tum. use: familiar: friends and peers.
 Urdu: (next lesson). read: tū. use: intimate, or downward; unsafe as a beginner default.
 آپ begins with آ, an alif carrying the long ā mark, then پ p. تم is ت t plus the م (mīm) that ends salām. The third form, tū, shares that ت; its written form, with one new shape for the long ū, waits for the next lesson.
 
+The phrase, taken apart.
+All three forms are inherited. آپ (āp) comes from Sanskrit ātman, "self", and became a respectful "you" (CDIAL 1135). tū comes from Sanskrit tvam, "thou", the same ancient word as English thou (CDIAL 5889). CDIAL lists تم (tum) under yuṣmad, the Sanskrit base of the plural "you", with its t- taken from tvam (CDIAL 10511).
+
 Grammar Lens: choose the relationship first.
 English flattened these choices into one you. Urdu keeps three. Use āp in a first meeting. Move to tum when the relationship supports familiarity. Save tū for relationships where you already know it is welcome; used badly, it can sound belittling.
 
@@ -71,7 +74,7 @@ Right to left: ک k, ی supplying the y glide here, then ا long ā.
 The same ی carried long ī in jī and nahī̃ — words you say but cannot spell yet. Its job depends on the word; here the learned shape is kyā.
 
 The word, taken apart.
-Urdu kyā and Hindi kyā are the same inherited Indo-Aryan word in different scripts. Their history reaches Sanskrit kim and the old Indo-European k/kw- question family behind English wh- words such as what, who, and which. The bridge helps memory; Urdu کیا remains the form you must read here.
+Urdu kyā and Hindi kyā are the same inherited Indo-Aryan word in different scripts. Their history reaches Sanskrit kim, “what” (CDIAL 3164), and the old Indo-European k/kw- question family behind English wh- words such as what, who, and which. The bridge helps memory; Urdu کیا remains the form you must read here.
 
 Guided Practice.
 [your turn — say: kyā — what]
@@ -132,6 +135,9 @@ Build it in spoken order:
 you + kā + name + what + is?
 Āp kā means “your” in this frame. The possessive form agrees with the thing owned: nām is masculine singular, so use kā. Keep that one pairing; the full kā/kī/ke system can wait. As in your answer, hai stays at the end.
 
+The phrase, taken apart.
+آپ کا نام کیا ہے (āp kā nām kyā hai) is built from inherited words. āp comes from Sanskrit ātman, "self" (CDIAL 1135); nām goes back to Sanskrit nāman, "name"; kyā comes from Sanskrit kim, "what" (CDIAL 3164); and hai is usually traced to Sanskrit asti, "is".
+
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script: the question mark.
 Urdu ends the question with ؟, curved for a right-to-left line. Begin at آپ on the right and reach the punctuation at the far left.
@@ -169,7 +175,7 @@ khushī huī — happiness happened.
 That yields the memorable literal picture: “Having met you, happiness happened.” The phrase is one social move; later lessons can generalize se, -kar, and past agreement one at a time.
 
 The word, taken apart.
-Khushī “happiness” comes from Persian khosh/khush “pleasant, happy.” Mil “meet” and huī “happened” belong to Urdu's inherited Indo-Aryan grammar. The sentence therefore joins Urdu's two major historical layers without becoming any less ordinary Urdu.
+Khushī “happiness” comes from Persian khosh/khush “pleasant, happy.” Mil “meet” and huī “happened” belong to Urdu's inherited Indo-Aryan grammar: CDIAL lists milnā under Sanskrit milati, “meets” (CDIAL 10133), and huā, of which huī is the feminine, under bhūta, “become” (CDIAL 9552). The sentence therefore joins Urdu's two major historical layers without becoming any less ordinary Urdu.
 
 Guided Practice.
 [your turn — say: āp se | mil kar | khushī huī in three beats]

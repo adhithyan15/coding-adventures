@@ -14,7 +14,8 @@ romanization: "āīnā"
 concept_tag: UR-HOME59-AINA
 prerequisites: [UR-C59-farsh, UR-C59-sirhi]
 sounds: []
-roots: []
+roots: [persian-aina]
+etymology_hook: "āīnā: usually traced to Persian āīna 'mirror'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C59-sirhi]
 <!-- hl-knowledge: introduces=[UR-LEX-C59-HOME59-04]; assesses=[] -->
 
 **آئینہ** — *āīnā* — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آئینہ** (*āīnā*) is a loan, usually traced to Persian *āīna*, "mirror".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bevaqūf"
 concept_tag: UR-SIFAT160-BEVAQUF
 prerequisites: [UR-C160-mehrban, UR-C160-samajhdar]
 sounds: []
-roots: []
+roots: [persian-be, arabic-wuquf]
+etymology_hook: "bevaqūf: Persian be- 'without' + Arabic wuqūf 'knowledge' (Lane, root w-q-f)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C160-samajhdar]
 <!-- hl-knowledge: introduces=[UR-LEX-C160-SIFAT160-03]; assesses=[] -->
 
 **بیوقوف** — *bevaqūf* — "foolish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بیوقوف** (*bevaqūf*) is "without understanding". It joins the Persian *be-*, "without", and Arabic *wuqūf*, "standing; acquaintance with a matter" (Lane, root *w-q-f*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

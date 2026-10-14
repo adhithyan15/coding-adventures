@@ -14,7 +14,8 @@ romanization: "khvāb"
 concept_tag: UR-SEHAT216-KHVAB
 prerequisites: [UR-C216-sans, UR-C216-nind]
 sounds: []
-roots: []
+roots: [persian-khwab]
+etymology_hook: "khvāb: usually traced to Persian khwāb 'sleep, a dream'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C216-nind]
 <!-- hl-knowledge: introduces=[UR-LEX-C216-SEHAT216-04]; assesses=[] -->
 
 **خواب** — *khvāb* — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خواب** (*khvāb*) is a loan, usually traced to Persian *khwāb*, "sleep, a dream".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

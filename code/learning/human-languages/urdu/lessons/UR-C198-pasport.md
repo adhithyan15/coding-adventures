@@ -14,7 +14,8 @@ romanization: "pāsporṭ"
 concept_tag: UR-CHIZ198-PASPORT
 prerequisites: [UR-C198-skrin, UR-C198-kaimra]
 sounds: []
-roots: []
+roots: [english-passport]
+etymology_hook: "pāsporṭ ← English passport"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C198-kaimra]
 <!-- hl-knowledge: introduces=[UR-LEX-C198-CHIZ198-04]; assesses=[] -->
 
 **پاسپورٹ** — *pāsporṭ* — "a passport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پاسپورٹ** (*pāsporṭ*) is a loan from English *passport*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

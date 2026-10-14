@@ -14,7 +14,8 @@ romanization: "dāī"
 concept_tag: UR-KAM179-DAI
 prerequisites: [UR-C178-machhera, UR-C178-mali]
 sounds: []
-roots: []
+roots: [sanskrit-dhatri]
+etymology_hook: "dāī: usually linked with Sanskrit dhātrī 'nurse', under which CDIAL lists Hindi dhāī 'wet-nurse' (CDIAL 6774)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C178-mali]
 <!-- hl-knowledge: introduces=[UR-LEX-C179-KAM179-01]; assesses=[] -->
 
 **دائی** — *dāī* — "a midwife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دائی** (*dāī*) is usually linked with Sanskrit *dhātrī*, "nurse". CDIAL lists Hindi *dhāī*, "wet-nurse", under that word (CDIAL 6774), but not *dāī* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: UR-THINGS122-CHAPPAL
 prerequisites: [UR-C121-jaiket, UR-C121-pajama]
 sounds: []
 roots: []
+etymology_hook: "chappal: not in CDIAL; DEDR 1963 compares it, with a Cf., to Dravidian 'sandal' words such as Telugu ceppu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C121-pajama]
 <!-- hl-knowledge: introduces=[UR-LEX-C122-THINGS122-01]; assesses=[] -->
 
 **چپل** — *chappal* — "a sandal, a slipper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **چپل** (*chappal*) is uncertain, and CDIAL has no entry for it. DEDR, under Dravidian words for "sandal" such as Telugu *ceppu*, adds "Cf. H. cappal" (DEDR 1963): a comparison, not a settled source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

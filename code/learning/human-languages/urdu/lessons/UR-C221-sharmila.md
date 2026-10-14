@@ -14,7 +14,8 @@ romanization: "sharmīlā"
 concept_tag: UR-SIFAT221-SHARMILA
 prerequisites: [UR-C221-naraz, UR-C221-hairan]
 sounds: []
-roots: []
+roots: [persian-sharm]
+etymology_hook: "sharmīlā: sharm 'shame', usually traced to Persian sharm, + the ending -īlā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C221-hairan]
 <!-- hl-knowledge: introduces=[UR-LEX-C221-SIFAT221-03]; assesses=[] -->
 
 **شرمیلا** — *sharmīlā* — "shy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شرمیلا** (*sharmīlā*) is *sharm*, "shame", usually traced to Persian *sharm*, with the ending *-īlā*, "full of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

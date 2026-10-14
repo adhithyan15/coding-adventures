@@ -14,7 +14,8 @@ romanization: "pīsnā"
 concept_tag: UR-VERB-PISNA
 prerequisites: [UR-C211-rahgir, UR-C212-istri-karna]
 sounds: []
-roots: []
+roots: [sanskrit-pimshati]
+etymology_hook: "pīsnā ← Sanskrit piṃṣati 'grinds', a tadbhava (CDIAL 8142)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C212-istri-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C212-ACT212-02]; assesses=[] -->
 
 **پیسنا** — *pīsnā* — "to grind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیسنا** (*pīsnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *piṃṣati*, "grinds" (CDIAL 8142).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

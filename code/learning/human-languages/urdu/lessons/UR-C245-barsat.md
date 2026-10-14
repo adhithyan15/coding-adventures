@@ -14,7 +14,8 @@ romanization: "barsāt"
 concept_tag: UR-VAQT245-BARSAT
 prerequisites: [UR-C244-marham, UR-C244-dava-khana]
 sounds: []
-roots: []
+roots: [sanskrit-varsharatri]
+etymology_hook: "barsāt ← Sanskrit varṣārātri 'the rainy season', a tadbhava (CDIAL 11398)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C244-dava-khana]
 <!-- hl-knowledge: introduces=[UR-LEX-C245-VAQT245-01]; assesses=[] -->
 
 **برسات** — *barsāt* — "the rainy season".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**برسات** (*barsāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *varṣārātri*, "the rainy season" (CDIAL 11398). It is built from *varṣā*, "rains", and *rātri*, "night".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

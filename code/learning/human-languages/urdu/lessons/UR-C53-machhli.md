@@ -14,7 +14,8 @@ romanization: "machhlī"
 concept_tag: UR-VERBS53-MACHHLI
 prerequisites: [UR-C53-chhorna, UR-C53-gosht]
 sounds: []
-roots: []
+roots: [sanskrit-matsya]
+etymology_hook: "machhlī ← Sanskrit matsya 'fish', with an added -l-; a tadbhava (CDIAL 9758)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C53-gosht]
 <!-- hl-knowledge: introduces=[UR-LEX-C53-VERBS53-05]; assesses=[] -->
 
 **مچھلی** — *machhlī* — "a fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مچھلی** (*machhlī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *matsya*, "fish" (CDIAL 9758). CDIAL lists Hindi *machlī* as the form with an added *-l-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

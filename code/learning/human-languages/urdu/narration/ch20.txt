@@ -18,7 +18,7 @@ Chapter fifteen already asked you to say this. Its practice line reads bārish, 
 Three letters, all of them yours: ا, و, ر. The middle one is the vāʾo of chapter eight, doing its vowel job.
 
 The word, taken apart.
-اور (aur) is inherited, not borrowed — Sanskrit aparam, "the other one, the further one," worn through Prakrit into one syllable. The counting sense is still there when the word stands alone in front of a noun: اور (aur) پانی means more water, not and water. Bengali's ār is the same word by the same road, which is the sort of relative Urdu's Persian layer usually hides.
+اور (aur) is inherited, not borrowed — Sanskrit aparam, "again, moreover", the adverb of apara, "other" (CDIAL 434), worn through Prakrit into one syllable. The counting sense is still there when the word stands alone in front of a noun: اور (aur) پانی means more water, not and water. Bengali's ār is the same word by the same road, which is the sort of relative Urdu's Persian layer usually hides.
 
 Guided Practice.
 [pause 1 second]
@@ -88,7 +88,7 @@ And with the two clauses chapters four and nineteen taught, whose verbs carry le
 Four letters, and every one of them is already yours: ل، ی، ک، ن.
 
 The word, taken apart.
-لیکن (lekin) is Arabic lākin, and there is a negator inside it: Arabic lā, "not," plus an old particle. English did the same thing by a different road — but is Old English be-ūtan, "be out, except." Two unrelated languages built their adversative out of a word for leaving something aside.
+لیکن (lekin) is Arabic lākin, "but", which reached Urdu through Persian; Lane lists it under the letters l-k-n. Some grammarians take it apart as lā, "not", plus an old particle, a reading that is not settled. If it is right, English did the same by a different road: but is Old English be-ūtan, "be out, except", and two unrelated languages built their adversative out of a word for leaving something aside.
 Urdu has a second word for but, magar, which is Persian and slightly more literary. Its middle letter has no lesson in the script ladder yet, so it is named here and left in romanization; لیکن (lekin) is the one to reach for anyway.
 
 Guided Practice.
@@ -121,6 +121,9 @@ You'll want to know: ٹھیک ہے.
 ٹھیک ہے — ṭhīk hai — all right; that's right; agreed.
 ٹھیک ہے، لیکن … — ṭhīk hai, lekin … — all right, but …
 The copula of chapter two, ہے, does all the work. ṭhīk hai is what a speaker says to accept a plan, to agree with a claim, and to end a phone call — one phrase covering everything English spreads across okay, fine, right and deal.
+
+The phrase, taken apart.
+ٹھیک ہے (ṭhīk hai) is "it is right". ṭhīk comes from a reconstructed ṭhīkka, "firm, right", which CDIAL derives, probably, from Sanskrit sthita, "standing" (CDIAL 5503); hai, "is", is usually traced to Sanskrit asti, "is".
 
 Grammar Lens: agreeing, and taking it back.
 [a table of 3 rows, read aloud]

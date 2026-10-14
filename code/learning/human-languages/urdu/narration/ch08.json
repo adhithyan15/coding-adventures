@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Four Verbs Between People",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:336bfa0938cf4689",
+  "sourceHash": "fnv1a64:379742815c18ba5b",
   "lessons": [
     {
       "id": "UR-C08-lena",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2deec300588e5663",
+      "sourceHash": "fnv1a64:f39e8943345bb46b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -104,7 +104,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "lenā goes back to Sanskrit labh-, “to gain, to obtain.” Prakrit softened it to lahaï, then the -h- went too and the vowels fused into a single le. A three-consonant root worn down to one syllable — the erosion that makes a language's commonest words its shortest."
+              "text": "lenā goes back to Sanskrit labh-, “to gain, to obtain”: CDIAL lists it under labhate, “catches, takes” (CDIAL 10948). Prakrit softened it to lahaï, then the -h- went too and the vowels fused into a single le. A three-consonant root worn down to one syllable — the erosion that makes a language's commonest words its shortest."
             },
             {
               "kind": "speech",
@@ -418,7 +418,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e4b3d5c6542416d5",
+      "sourceHash": "fnv1a64:40698f4b57f533f1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -499,7 +499,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pūchhnā is Sanskrit pṛcchati, “asks,” on the Indo-European root prek-, “to ask.” Latin took it as precārī, “to beg, to pray” — hence English pray, prayer, and precarious, a thing held only as long as someone is willing to be asked. German still asks with it: fragen. English's own inherited cousin, Old English friġnan, died out, so English prays with the related word and asks with an unrelated one."
+              "text": "pūchhnā is Sanskrit pṛcchati, “asks” (CDIAL 8352), on the Indo-European root prek-, “to ask.” Latin took it as precārī, “to beg, to pray” — hence English pray, prayer, and precarious, a thing held only as long as someone is willing to be asked. German still asks with it: fragen. English's own inherited cousin, Old English friġnan, died out, so English prays with the related word and asks with an unrelated one."
             },
             {
               "kind": "speech",
@@ -599,7 +599,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8718ddc12f1c6d3b",
+      "sourceHash": "fnv1a64:5625f74f626b376b",
       "notice": null,
       "blocks": [
         {
@@ -660,7 +660,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مدد is Arabic, on the three-consonant root م-د-د (m-d-d), whose verb madda means “to stretch out, to extend.” Help, in Arabic, is something extended toward you — the picture English reaches for when it extends a hand, though English inherited nothing from m-d-d and its own help is unrelated Germanic. Better said plainly than dressed up as a cousin."
+              "text": "مدد is Arabic, on the three-consonant root م-د-د (m-d-d, Lane), whose verb madda means “to stretch out, to extend.” Help, in Arabic, is something extended toward you — the picture English reaches for when it extends a hand, though English inherited nothing from m-d-d and its own help is unrelated Germanic. Better said plainly than dressed up as a cousin."
             },
             {
               "kind": "speech",
@@ -751,7 +751,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e3a9194eed7e600e",
+      "sourceHash": "fnv1a64:269a303b2d7e0873",
       "notice": {
         "modality": "sight",
         "needs": [

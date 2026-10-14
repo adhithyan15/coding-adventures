@@ -14,7 +14,8 @@ romanization: "qarīb"
 concept_tag: UR-TIME78-QARIB
 prerequisites: [UR-C78-vaqt, UR-C78-dur]
 sounds: []
-roots: []
+roots: [arabic-qarib]
+etymology_hook: "qarīb ← Arabic qarīb 'near', through Persian (Lane, root q-r-b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C78-dur]
 <!-- hl-knowledge: introduces=[UR-LEX-C78-TIME78-03]; assesses=[] -->
 
 **قریب** — *qarīb* — "near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قریب** (*qarīb*) is a loan from Arabic *qarīb*, "near", which reached Urdu through Persian. Its Arabic root is *q-r-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "savere"
 concept_tag: UR-VAQT155-SAVERE
 prerequisites: [UR-C154-ulti, UR-C154-chakkar]
 sounds: []
-roots: []
+roots: [indo-aryan-savela]
+etymology_hook: "savere ← *savela 'in time, early', a reconstructed form; a tadbhava (CDIAL 13291)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C154-chakkar]
 <!-- hl-knowledge: introduces=[UR-LEX-C155-VAQT155-01]; assesses=[] -->
 
 **سویرے** — *savere* — "early in the morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سویرے** (*savere*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*savela*, "in time, early", a form CDIAL reconstructs from its descendants (CDIAL 13291). *savere* is the form of *saverā*, "early morning", used as an adverb. It is built from *sa-*, "with", and *velā*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

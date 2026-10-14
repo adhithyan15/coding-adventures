@@ -14,7 +14,8 @@ romanization: "kidhar"
 concept_tag: UR-TIME96-KIDHAR
 prerequisites: [UR-C96-lamha, UR-C96-jab]
 sounds: []
-roots: []
+roots: [ka-interrogative]
+etymology_hook: "kidhar: the question stem k- with the ending of idhar 'here'; CDIAL has no entry, so its history is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C96-jab]
 <!-- hl-knowledge: introduces=[UR-LEX-C96-TIME96-03]; assesses=[] -->
 
 **کدھر** — *kidhar* — "where, which way?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کدھر** (*kidhar*) is inherited, but its history is not settled. It puts the question stem *k-* of *kyā* and *kaun* in front of the ending of *idhar*, "here", and CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

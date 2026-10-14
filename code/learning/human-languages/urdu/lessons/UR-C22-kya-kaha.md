@@ -11,7 +11,8 @@ gloss: what did you say? — the repair sentence a beginner reaches for second, 
 concept_tag: UR-FUNC-REPEAT-REQUEST
 prerequisites: [UR-C22-kahna, UR-C03-kya, UR-C19-nahin-verb]
 sounds: []
-roots: []
+roots: [kim, sanskrit-kathayati]
+etymology_hook: "kyā ← kim 'what' (CDIAL 3164); kahā ← kahnā, from Sanskrit kathayati 'describes' (CDIAL 2703)"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,11 @@ form you use for something that has already been said.
 Say it with the voice rising and it is a request to repeat. Said flatly, with a
 frown, it is a challenge — so the tune matters more here than in any sentence
 this book has taught.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کیا کہا** (*kyā kahā*): *kyā*, "what", comes from Sanskrit *kim* (CDIAL 3164); *kahā*, "said", from *kathayati*, "describes" (CDIAL 2703).
 
 ## Grammar Lens: the repair kit, in three sentences
 <!-- hl-knowledge: introduces=[]; assesses=[UR-FUNC-KYA-KAHA, UR-GRAMMAR-NAHIN-VERB, UR-LEX-SAMAJHNA, UR-GRAMMAR-KYA-POLAR] -->

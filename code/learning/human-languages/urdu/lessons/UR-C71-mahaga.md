@@ -14,7 +14,8 @@ romanization: "mahãgā"
 concept_tag: UR-ADJ71-MAHAGA
 prerequisites: [UR-C71-ahista, UR-C71-mushkil]
 sounds: []
-roots: []
+roots: [sanskrit-mahargha]
+etymology_hook: "mahãgā ← Sanskrit mahārgha 'high-priced', a tadbhava (CDIAL 9954)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C71-mushkil]
 <!-- hl-knowledge: introduces=[UR-LEX-C71-ADJ71-04]; assesses=[] -->
 
 **مہنگا** — *mahãgā* — "expensive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مہنگا** (*mahãgā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mahārgha*, "high-priced" (CDIAL 9954). It is built from *mahā*, "great", and *argha*, "price".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

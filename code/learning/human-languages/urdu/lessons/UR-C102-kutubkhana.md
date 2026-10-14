@@ -14,7 +14,8 @@ romanization: "kutubkhānā"
 concept_tag: UR-LOC102-KUTUBKHANA
 prerequisites: [UR-C102-tikat, UR-C102-daftar]
 sounds: []
-roots: []
+roots: [arabic-ktb, persian-khana]
+etymology_hook: "kutubkhānā: Arabic kutub 'books', plural of kitāb (Lane, root k-t-b), + Persian khāna 'house'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C102-daftar]
 <!-- hl-knowledge: introduces=[UR-LEX-C102-LOC102-05]; assesses=[] -->
 
 **کتب خانہ** — *kutubkhānā* — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کتب خانہ** (*kutubkhānā*) is "house of books": *kutub*, "books", the Arabic plural of *kitāb*, "book" (Lane, root *k-t-b*), with Persian *khāna*, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

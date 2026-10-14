@@ -14,7 +14,8 @@ romanization: "āṅgan"
 concept_tag: UR-JAGAH219-ANGAN
 prerequisites: [UR-C219-manzil, UR-C219-zina]
 sounds: []
-roots: []
+roots: [sanskrit-angana]
+etymology_hook: "āṅgan ← Sanskrit aṅgaṇa 'courtyard', a tadbhava (CDIAL 118)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C219-zina]
 <!-- hl-knowledge: introduces=[UR-LEX-C219-JAGAH219-04]; assesses=[] -->
 
 **آنگن** — *āṅgan* — "a courtyard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آنگن** (*āṅgan*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṅgaṇa*, "courtyard" (CDIAL 118).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

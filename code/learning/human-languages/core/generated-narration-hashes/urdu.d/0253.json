@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 253,
-  "sourceHash": "fnv1a64:8e5ded424a7b003f",
+  "sourceHash": "fnv1a64:a7c4ba5e3d5cfac6",
   "lessonIds": [
     "UR-C253-chhipkali",
     "UR-C253-kachhua",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch253.txt",
   "json": "urdu/narration/ch253.json",
-  "textHash": "fnv1a64:327a7c7e4bf4dea9",
-  "jsonHash": "fnv1a64:ae8ddfc9472a51b2",
+  "textHash": "fnv1a64:1925921a2030d0f4",
+  "jsonHash": "fnv1a64:0365bc0bf10b9650",
   "findings": []
 }

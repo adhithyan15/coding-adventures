@@ -12,6 +12,9 @@ Before the new one: say the Urdu for last, then the Urdu for next.
 You'll want to know: لمحہ.
 لمحہ — lamhā — "a moment".
 
+The word, taken apart.
+لمحہ (lamhā) is a loan from Arabic lamḥa, "a glance, a moment", which reached Urdu through Persian. Its Arabic root is l-m-ḥ (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for next, then the Urdu for a moment.
 
 You'll want to know: جب.
 جب — jab — "when (not a question)".
+
+The word, taken apart.
+جب (jab) is inherited. CDIAL lists it beside ab, "now", under Sanskrit evam eva, "exactly so", crossed with the relative stem ya-, "which" (CDIAL 2528).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a moment, then the Urdu for when.
 You'll want to know: کدھر.
 کدھر — kidhar — "where, which way?".
 
+The word, taken apart.
+کدھر (kidhar) is inherited, but its history is not settled. It puts the question stem k- of kyā and kaun in front of the ending of idhar, "here", and CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for when, then the Urdu for where.
 You'll want to know: دائیں.
 دائیں — dāeṅ — "to the right".
 
+The word, taken apart.
+دائیں (dāeṅ) is a form of dāyāṅ, "right", which comes from Sanskrit dākṣiṇa, "relating to the right; southern". CDIAL notes that its form was crossed with vāma, "left" (CDIAL 6251).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for where, then the Urdu for to the right.
 
 You'll want to know: بائیں.
 بائیں — bāeṅ — "to the left".
+
+The word, taken apart.
+بائیں (bāeṅ) is a form of bāyāṅ, "left", which comes from Sanskrit vāma, "lefthand" (CDIAL 11533).
 
 What you've built.
 One more word for this chapter.

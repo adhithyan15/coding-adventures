@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 178,
-  "sourceHash": "fnv1a64:5469929c3a98cf08",
+  "sourceHash": "fnv1a64:4a64567bcccc135e",
   "lessonIds": [
     "UR-C178-gulukar",
     "UR-C178-pailat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch178.txt",
   "json": "urdu/narration/ch178.json",
-  "textHash": "fnv1a64:cb925ef515e49282",
-  "jsonHash": "fnv1a64:0ddb657fa15a7fb0",
+  "textHash": "fnv1a64:77ccd200afac92f7",
+  "jsonHash": "fnv1a64:d4296a490f398950",
   "findings": []
 }

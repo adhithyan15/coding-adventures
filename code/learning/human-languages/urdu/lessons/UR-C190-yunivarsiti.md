@@ -14,7 +14,8 @@ romanization: "yūnīvarsiṭī"
 concept_tag: UR-JAGAH190-YUNIVARSITI
 prerequisites: [UR-C190-vadi, UR-C190-chirya-ghar]
 sounds: []
-roots: []
+roots: [english-university]
+etymology_hook: "yūnīvarsiṭī ← English university"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C190-chirya-ghar]
 <!-- hl-knowledge: introduces=[UR-LEX-C190-JAGAH190-03]; assesses=[] -->
 
 **یونیورسٹی** — *yūnīvarsiṭī* — "a university".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**یونیورسٹی** (*yūnīvarsiṭī*) is a loan from English *university*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

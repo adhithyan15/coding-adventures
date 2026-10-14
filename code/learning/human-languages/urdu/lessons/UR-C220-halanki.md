@@ -14,7 +14,8 @@ romanization: "hālāṅki"
 concept_tag: UR-VAJAH220-HALANKI
 prerequisites: [UR-C220-vajah, UR-C220-natija]
 sounds: []
-roots: []
+roots: [arabic-hal]
+etymology_hook: "hālāṅki: Arabic ḥāl 'state' (Lane, root ḥ-w-l) + Persian ān 'that' + ki"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C220-natija]
 <!-- hl-knowledge: introduces=[UR-LEX-C220-VAJAH220-05]; assesses=[] -->
 
 **حالانکہ** — *hālāṅki* — "although".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حالانکہ** (*hālāṅki*) is "the state being that". It joins Arabic *ḥāl*, "state, condition" (Lane, root *ḥ-w-l*), with Persian *ān*, "that", and *ki*, "that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

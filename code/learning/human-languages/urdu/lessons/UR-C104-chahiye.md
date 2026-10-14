@@ -14,7 +14,8 @@ romanization: "chāhiye"
 concept_tag: UR-CAN104-CHAHIYE
 prerequisites: [UR-C104-hunar, UR-C104-qabil]
 sounds: []
-roots: []
+roots: [indo-aryan-cah]
+etymology_hook: "chāhiye ← *cāh 'see, look for, desire', a root CDIAL reconstructs; its source is uncertain (CDIAL 4775)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C104-qabil]
 <!-- hl-knowledge: introduces=[UR-LEX-C104-CAN104-03]; assesses=[] -->
 
 **چاہیے** — *chāhiye* — "is needed, should".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چاہیے** (*chāhiye*) is a form of *chāhnā*, "to want". CDIAL lists *cāhiye*, "it is necessary", under a reconstructed *\*cāh*, "see, look for, desire", whose deeper source it calls uncertain (CDIAL 4775).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

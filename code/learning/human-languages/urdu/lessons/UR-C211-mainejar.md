@@ -14,7 +14,8 @@ romanization: "mainejar"
 concept_tag: UR-KAM211-MAINEJAR
 prerequisites: [UR-C210-barhai, UR-C211-sekretari]
 sounds: []
-roots: []
+roots: [english-manager]
+etymology_hook: "mainejar ← English manager"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C211-sekretari]
 <!-- hl-knowledge: introduces=[UR-LEX-C211-KAM211-02]; assesses=[] -->
 
 **مینیجر** — *mainejar* — "a manager".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مینیجر** (*mainejar*) is a loan from English *manager*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

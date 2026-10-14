@@ -14,7 +14,8 @@ romanization: "lomṛī"
 concept_tag: UR-THINGS127-LOMRI
 prerequisites: [UR-C126-gadha, UR-C127-unt]
 sounds: []
-roots: []
+roots: [sanskrit-lomataka]
+etymology_hook: "lomṛī ← *lompaṭa, CDIAL's variant beside Sanskrit lomaṭaka 'fox' (CDIAL 11153)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C127-unt]
 <!-- hl-knowledge: introduces=[UR-LEX-C127-THINGS127-02]; assesses=[] -->
 
 **لومڑی** — *lomṛī* — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لومڑی** (*lomṛī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*lompaṭa*, "fox", a form CDIAL reconstructs from its descendants (CDIAL 11153). It is a variant CDIAL reconstructs beside Sanskrit *lomaṭaka*, "fox"; CDIAL suggests these forms may blend a word for "fox" with words for "hair" and "tail".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

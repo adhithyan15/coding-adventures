@@ -14,7 +14,8 @@ romanization: "dīvār ghaṛī"
 concept_tag: UR-CHIZ173-DIVAR-GHARI
 prerequisites: [UR-C172-jang, UR-C172-azadi]
 sounds: []
-roots: []
+roots: [persian-divar, sanskrit-ghati]
+etymology_hook: "dīvār 'wall' usually traced to Persian; ghaṛī ← Sanskrit ghaṭī 'pot, water-clock' (CDIAL 4406)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C172-azadi]
 <!-- hl-knowledge: introduces=[UR-LEX-C173-CHIZ173-01]; assesses=[] -->
 
 **دیوار گھڑی** — *dīvār ghaṛī* — "a wall clock".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دیوار گھڑی** (*dīvār ghaṛī*) joins *dīvār*, "wall", usually traced to Persian *dīvār*, and *ghaṛī*, "clock", from Sanskrit *ghaṭī*, "pot, water-clock" (CDIAL 4406). A *ghaṭī* was a small pot that sank as it filled, timing a short period.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

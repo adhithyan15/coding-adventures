@@ -14,7 +14,8 @@ romanization: "guzashtā"
 concept_tag: UR-MAZI144-GUZASHTA
 prerequisites: [UR-C144-pehle-se, UR-C144-mazi]
 sounds: []
-roots: []
+roots: [persian-guzashta]
+etymology_hook: "guzashtā: usually traced to Persian guzashta 'passed, gone by'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C144-mazi]
 <!-- hl-knowledge: introduces=[UR-LEX-C144-MAZI144-04]; assesses=[] -->
 
 **گزشتہ** — *guzashtā* — "last, previous". **گزشتہ سال** — *guzashtā sāl* — "last year". It is the formal word; everyday speech also says **پچھلا**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گزشتہ** (*guzashtā*) is a loan, usually traced to Persian *guzashta*, "passed, gone by". It is the past participle of *guzashtan*, "to pass".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

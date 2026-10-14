@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 261,
-  "sourceHash": "fnv1a64:03fe938292e82ac9",
+  "sourceHash": "fnv1a64:91e71c0cebf3d143",
   "lessonIds": [
     "UR-C261-kampani",
     "UR-C261-karkhana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch261.txt",
   "json": "urdu/narration/ch261.json",
-  "textHash": "fnv1a64:9688a6483f7d62bd",
-  "jsonHash": "fnv1a64:b997fab4ca4d291d",
+  "textHash": "fnv1a64:e289f691d9dbdce6",
+  "jsonHash": "fnv1a64:b15549fc051347b9",
   "findings": []
 }

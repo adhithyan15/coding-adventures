@@ -14,7 +14,8 @@ romanization: "mez"
 concept_tag: UR-WANT105-MEZ
 prerequisites: [UR-C105-shauq, UR-C105-irada]
 sounds: []
-roots: []
+roots: [persian-mez]
+etymology_hook: "mez: usually traced to Persian mēz, which many take from Portuguese mesa 'table'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C105-irada]
 <!-- hl-knowledge: introduces=[UR-LEX-C105-WANT105-03]; assesses=[] -->
 
 **میز** — *mez* — "a table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**میز** (*mez*) is usually traced to Persian *mēz*, "table", which many take from Portuguese *mesa*, "table"; that last step is contested.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "garm"
 concept_tag: UR-ADJ71-GARM
 prerequisites: [UR-C70-bura, UR-C70-lamba]
 sounds: []
-roots: []
+roots: [persian-garm]
+etymology_hook: "garm: usually traced to Persian garm 'warm, hot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C70-lamba]
 <!-- hl-knowledge: introduces=[UR-LEX-C71-ADJ71-01]; assesses=[] -->
 
 **گرم** — *garm* — "hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گرم** (*garm*) is a loan, usually traced to Persian *garm*, "warm, hot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

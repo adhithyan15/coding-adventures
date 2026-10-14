@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 202,
-  "sourceHash": "fnv1a64:df8a1024420164e8",
+  "sourceHash": "fnv1a64:3c54a146486e4755",
   "lessonIds": [
     "UR-C202-parti",
     "UR-C202-tohfa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch202.txt",
   "json": "urdu/narration/ch202.json",
-  "textHash": "fnv1a64:2cf63690bd5d3a4d",
-  "jsonHash": "fnv1a64:941d32198fbbd4a7",
+  "textHash": "fnv1a64:556098a7be732086",
+  "jsonHash": "fnv1a64:36e3ae9a54ac4013",
   "findings": []
 }

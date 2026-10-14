@@ -14,7 +14,8 @@ romanization: "akhbār"
 concept_tag: UR-HOME61-AKHBAR
 prerequisites: [UR-C61-kitab, UR-C61-qalam]
 sounds: []
-roots: []
+roots: [arabic-akhbar]
+etymology_hook: "akhbār ← Arabic akhbār 'reports, news', through Persian (Lane, root kh-b-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C61-qalam]
 <!-- hl-knowledge: introduces=[UR-LEX-C61-HOME61-04]; assesses=[] -->
 
 **اخبار** — *akhbār* — "a newspaper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اخبار** (*akhbār*) is a loan from Arabic *akhbār*, "reports, news", which reached Urdu through Persian. Its Arabic root is *kh-b-r* (Lane). It is the plural of *khabar*, "news"; Urdu uses it for the paper that carries them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

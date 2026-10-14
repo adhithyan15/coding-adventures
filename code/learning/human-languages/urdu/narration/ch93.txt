@@ -12,6 +12,9 @@ Before the new one: say the Urdu for half past, then the Urdu for a quarter past
 You'll want to know: پونے.
 پونے — paune — "a quarter to (less a quarter)".
 
+The word, taken apart.
+پونے (paune) is a tadbhava, a word inherited and reshaped by sound change. It comes from padūna, "less by a quarter", a form CDIAL reconstructs from its descendants (CDIAL 7765).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a quarter past, then the Urdu for a quarter
 
 You'll want to know: آدھا.
 آدھا — ādhā — "half".
+
+The word, taken apart.
+آدھا (ādhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ardha, "half" (CDIAL 644).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a quarter to, then the Urdu for half.
 You'll want to know: اب.
 اب — ab — "now".
 
+The word, taken apart.
+اب (ab) is inherited. CDIAL lists it under Sanskrit evam eva, "exactly so", crossed with the pronoun stem a-, "this", and lists kab, "when", tab, "then", and jab, "when", beside it (CDIAL 2528).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for half, then the Urdu for now.
 You'll want to know: تب.
 تب — tab — "then".
 
+The word, taken apart.
+تب (tab) is inherited. CDIAL lists it beside ab, "now", under Sanskrit evam eva, "exactly so", crossed with the pointing stem ta-, "that" (CDIAL 2528).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for now, then the Urdu for then.
 
 You'll want to know: کب.
 کب — kab — "when?".
+
+The word, taken apart.
+کب (kab) is inherited. CDIAL lists it beside ab, "now", under Sanskrit evam eva, "exactly so", crossed with the question stem ka- of kyā and kaun (CDIAL 2528).
 
 What you've built.
 One more word for this chapter.

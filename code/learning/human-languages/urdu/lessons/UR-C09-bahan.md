@@ -12,7 +12,7 @@ concept_tag: UR-SISTER
 prerequisites: [UR-C09-bhai, UR-C06-janna]
 sounds: [rtl, short-vowels-unwritten]
 roots: [sanskrit-bhagini, sanskrit-bhaj]
-etymology_hook: bahan continues Sanskrit bhaginī, traditionally tied to bhaj- "to share, to portion out" — a sister as a co-heir sharing the family's portion — though specialists flag the sound-history as genuinely debated, so this one is held loosely, unlike bhāī's settled cousin brother.
+etymology_hook: "bahan ← Sanskrit bhaginī 'sister' (CDIAL 9349); where bhaginī itself comes from is debated"
 duration:
   max_seconds: 270
 requires:
@@ -68,11 +68,7 @@ a feminine noun finally showed up.
 ## The word, taken apart — held loosely
 <!-- hl-knowledge: introduces=[UR-ETYMON-BAHAN-SHARE]; assesses=[UR-LEX-BAHAN] -->
 
-**bahan** continues Sanskrit *bhaginī*, traditionally connected
-to **bhaj-**, "to share, to portion out" — a sister pictured as a co-heir,
-sharing the family's portion. Specialists flag a real problem with the sound
-history, though: the aspiration in *bhaginī* does not shift the way this
-derivation needs it to. Hold this one loosely, the way *pasand*'s *candēre*
+**bahan** continues Sanskrit *bhaginī*, "sister" (CDIAL 9349). Where *bhaginī* comes from is debated. One view, which CDIAL reports as the more probable, takes it from *bhagin*, "fortunate", on **bhaj-**, "to share, to portion out", as a good wish for an unmarried sister; other derivations have been proposed. CDIAL also flags a problem with the sound history: the breathy *h* that *bhaginī* has at its start sits in the middle of **bahan**, a shift that is hard to explain. Hold this one loosely, the way *pasand*'s *candēre*
 link was held loosely — a plausible story, not a settled one like *bhāī*'s.
 
 ## Guided Practice

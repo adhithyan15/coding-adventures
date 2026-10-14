@@ -14,7 +14,8 @@ romanization: "khurāk"
 concept_tag: UR-SEHAT187-KHURAK
 prerequisites: [UR-C186-phephra, UR-C187-sujan]
 sounds: []
-roots: []
+roots: [persian-khurak]
+etymology_hook: "khurāk: usually traced to Persian khurāk 'food'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C187-sujan]
 <!-- hl-knowledge: introduces=[UR-LEX-C187-SEHAT187-02]; assesses=[] -->
 
 **خوراک** — *khurāk* — "a dose; food, diet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خوراک** (*khurāk*) is a loan, usually traced to Persian *khurāk*, "food". It is built on *khurdan*, "to eat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

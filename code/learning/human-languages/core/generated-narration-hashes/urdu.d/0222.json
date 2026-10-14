@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 222,
-  "sourceHash": "fnv1a64:a5bd911e976410c7",
+  "sourceHash": "fnv1a64:4d61e92362c50708",
   "lessonIds": [
     "UR-C222-mazedar",
     "UR-C222-bekar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch222.txt",
   "json": "urdu/narration/ch222.json",
-  "textHash": "fnv1a64:c1a1a96bc9147bec",
-  "jsonHash": "fnv1a64:453e324fef98d861",
+  "textHash": "fnv1a64:787488b6590f07e0",
+  "jsonHash": "fnv1a64:8612e97308d1337d",
   "findings": []
 }

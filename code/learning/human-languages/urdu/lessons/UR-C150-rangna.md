@@ -14,7 +14,8 @@ romanization: "rangnā"
 concept_tag: UR-VERB-RANGNA
 prerequisites: [UR-C149-kudna, UR-C149-phisalna]
 sounds: []
-roots: []
+roots: [sanskrit-ranga, persian-rang]
+etymology_hook: "rangnā: the verb of rang 'colour', from Sanskrit raṅga (CDIAL 10560) or Persian rang"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C149-phisalna]
 <!-- hl-knowledge: introduces=[UR-LEX-C150-ACT150-01]; assesses=[] -->
 
 **رنگنا** — *rangnā* — "to dye, to colour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رنگنا** (*rangnā*) is the verb of *rang*, "colour". *rang* has two possible sources, Sanskrit *raṅga*, "dye, colour" (CDIAL 10560), and Persian *rang*, "colour", and the two may have merged. CDIAL lists a Hindi *rãgānā*, "to be coloured", under *\*raṅgayati*, "dyes" (CDIAL 10570).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

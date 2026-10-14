@@ -14,7 +14,8 @@ romanization: "kājū"
 concept_tag: UR-CHIZ252-KAJU
 prerequisites: [UR-C252-anannas, UR-C252-nariyal]
 sounds: []
-roots: []
+roots: [portuguese-caju]
+etymology_hook: "kājū: usually traced to Portuguese caju 'cashew', from a South American (Tupi) word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C252-nariyal]
 <!-- hl-knowledge: introduces=[UR-LEX-C252-CHIZ252-05]; assesses=[] -->
 
 **کاجو** — *kājū* — "a cashew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کاجو** (*kājū*) is usually traced to Portuguese *caju*, "cashew", which the Portuguese took from a South American (Tupi) word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

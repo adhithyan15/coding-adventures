@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 44,
-  "sourceHash": "fnv1a64:b4c46f445d517c92",
+  "sourceHash": "fnv1a64:dcdd6edce0796f64",
   "lessonIds": [
     "UR-C44-nana",
     "UR-C44-nani",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch44.txt",
   "json": "urdu/narration/ch44.json",
-  "textHash": "fnv1a64:6fd91c763112d881",
-  "jsonHash": "fnv1a64:132aa656720a9a58",
+  "textHash": "fnv1a64:b8c5afd36732e77d",
+  "jsonHash": "fnv1a64:07d8810b81651018",
   "findings": []
 }

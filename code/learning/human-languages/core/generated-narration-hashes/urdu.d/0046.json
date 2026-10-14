@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 46,
-  "sourceHash": "fnv1a64:8e876baaf6170d1f",
+  "sourceHash": "fnv1a64:fdb4493cb6d69090",
   "lessonIds": [
     "UR-C46-ustad",
     "UR-C46-khana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch46.txt",
   "json": "urdu/narration/ch46.json",
-  "textHash": "fnv1a64:a8613a68b4bf0593",
-  "jsonHash": "fnv1a64:99dd8255590b7802",
+  "textHash": "fnv1a64:7bbaa261805fef21",
+  "jsonHash": "fnv1a64:2b8fa25ef7577e4a",
   "findings": []
 }

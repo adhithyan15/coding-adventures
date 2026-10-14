@@ -14,7 +14,8 @@ romanization: "mulāqāt karnā"
 concept_tag: UR-VERB-MULAQAT-KARNA
 prerequisites: [UR-C182-khara-hona, UR-C182-intizar-karna]
 sounds: []
-roots: []
+roots: [arabic-mulaqat, kr-do]
+etymology_hook: "mulāqāt ← Arabic mulāqāt 'meeting', through Persian (Lane, root l-q-y); karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C182-intizar-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C183-ACT183-01]; assesses=[] -->
 
 **ملاقات کرنا** — *mulāqāt karnā* — "to pay a visit, to meet (formally)".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ملاقات کرنا** (*mulāqāt karnā*) joins *mulāqāt*, "a meeting", and *karnā*, "to do". *mulāqāt* is Arabic, "a meeting face to face", and reached Urdu through Persian (Lane, root *l-q-y*); *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

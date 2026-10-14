@@ -11,8 +11,8 @@ gloss: "second and third — where the numbers come back and the ending appears"
 concept_tag: UR-ORDINAL-SUFFIX
 prerequisites: [UR-C32-pehla]
 sounds: [rtl, long-a]
-roots: [sanskrit-dvitiya, sanskrit-tritiya]
-etymology_hook: "duusra and tiisra put a -ra ending on do and teen, so the series that broke at first comes back into line at second, exactly as English does at third."
+roots: [sanskrit-dvitiya, sanskrit-tritiya, indo-aryan-dvihsara, indo-aryan-trihsara]
+etymology_hook: "dūsrā ← *dviḥsara 'twofold' (CDIAL 6676); tīsrā ← *triḥsara 'triple' (CDIAL 6018)"
 duration:
   max_seconds: 275
 requires:
@@ -52,6 +52,11 @@ The number returns, and an ending *-rā* is added to it.
 So the series breaks at *first* and mends at *second* — one word out of line,
 then a pattern. English breaks one word later and mends at *third*; the shape is
 the same and only the seam moved.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دوسرا تیسرا** (*dūsrā tīsrā*) are inherited. CDIAL lists *dūsrā*, "second", under a reconstructed *\*dviḥsara*, "twofold", and *tīsrā*, "third", under *\*triḥsara*, "triple", forms built on Sanskrit *dvis*, "twice", and *tris*, "thrice" (CDIAL 6676, 6018).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-DUSRA, UR-LEX-TISRA, UR-MORPH-ORDINAL-RA, UR-LEX-CHAR, UR-ETYMON-DO-TWO-PIE] -->

@@ -14,7 +14,8 @@ romanization: "nāī"
 concept_tag: UR-KAM210-NAI
 prerequisites: [UR-C209-bil, UR-C209-kharch]
 sounds: []
-roots: []
+roots: [sanskrit-napita]
+etymology_hook: "nāī ← Sanskrit nāpita 'barber' (CDIAL 13792); CDIAL lists nāū 'barber' under snāpaka beside it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C209-kharch]
 <!-- hl-knowledge: introduces=[UR-LEX-C210-KAM210-01]; assesses=[] -->
 
 **نائی** — *nāī* — "a barber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نائی** (*nāī*) is a tadbhava, inherited and reshaped by sound change. CDIAL lists it under Sanskrit *nāpita*, "barber", and lists *nāū*, "barber", beside it under *snāpaka*, "bath attendant" (CDIAL 13792).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

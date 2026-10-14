@@ -12,7 +12,7 @@ concept_tag: UR-NUMBER-FOUR
 prerequisites: [UR-C28-teen]
 sounds: [rtl, long-a]
 roots: [sanskrit-catvaras, pie-kwetwores]
-etymology_hook: "chaar continues Sanskrit catvaras from Proto-Indo-European *kwetwores: Latin quattuor kept the kw whole, English four lost it, and Indo-Aryan pushed it forward to ch."
+etymology_hook: "chār ← Sanskrit catvāraḥ 'four' (CDIAL 4655), from PIE *kʷetwóres, like Latin quattuor"
 duration:
   max_seconds: 265
 requires:
@@ -47,7 +47,7 @@ reviews_of: [UR-C28-teen, UR-C28-do]
 ## The word, taken apart — quattuor, four, chār
 <!-- hl-knowledge: introduces=[UR-ETYMON-CHAR-FOUR-PIE]; assesses=[UR-LEX-CHAR] -->
 
-**چار** continues Sanskrit *catvāraḥ*, from Indo-European
+**چار** continues Sanskrit *catvāraḥ* (CDIAL 4655), from Indo-European
 \**kʷetwóres*, "four."
 
 The opening \**kʷ* is where this gets interesting, because three branches did

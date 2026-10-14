@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 81,
-  "sourceHash": "fnv1a64:112d476290bf8423",
+  "sourceHash": "fnv1a64:46b95ab66318788e",
   "lessonIds": [
     "UR-C81-mandir",
     "UR-C81-hotal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch81.txt",
   "json": "urdu/narration/ch81.json",
-  "textHash": "fnv1a64:de8d0bb50865f477",
-  "jsonHash": "fnv1a64:1dcbc68f46e8f549",
+  "textHash": "fnv1a64:870453bd33cbd985",
+  "jsonHash": "fnv1a64:28086fecaccf2ebd",
   "findings": []
 }

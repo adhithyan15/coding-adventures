@@ -14,7 +14,8 @@ romanization: "kurtā"
 concept_tag: UR-CLOTHES82-KURTA
 prerequisites: [UR-C81-saikil, UR-C82-kapre]
 sounds: []
-roots: []
+roots: [persian-kurta]
+etymology_hook: "kurtā: usually traced to Persian kurta 'a long shirt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C82-kapre]
 <!-- hl-knowledge: introduces=[UR-LEX-C82-CLOTHES82-02]; assesses=[] -->
 
 **کرتا** — *kurtā* — "a kurta, a long shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کرتا** (*kurtā*) is a loan, usually traced to Persian *kurta*, "a long shirt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "baṛā"
 concept_tag: UR-ANIMALS69-BARA
 prerequisites: [UR-C69-sap, UR-C69-richh]
 sounds: []
-roots: []
+roots: [sanskrit-vadra]
+etymology_hook: "baṛā ← Sanskrit vaḍra 'big', a tadbhava (CDIAL 11225)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C69-richh]
 <!-- hl-knowledge: introduces=[UR-LEX-C69-ANIMALS69-05]; assesses=[] -->
 
 **بڑا** — *baṛā* — "big".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بڑا** (*baṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vaḍra*, "big" (CDIAL 11225). CDIAL notes that the Sanskrit word is known only from the old word-lists, and doubts a link with *vṛddha*, "grown".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "isī vaqt"
 concept_tag: UR-VAQT189-ISI-VAQT
 prerequisites: [UR-C189-tab-tak, UR-C189-abhi-tak]
 sounds: []
-roots: []
+roots: [sanskrit-esha, arabic-waqt]
+etymology_hook: "isī: is 'this' (CDIAL 2530) + emphatic -ī; vaqt ← Arabic waqt 'time' (Lane, root w-q-t)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C189-abhi-tak]
 <!-- hl-knowledge: introduces=[UR-LEX-C189-VAQT189-04]; assesses=[] -->
 
 **اسی وقت** — *isī vaqt* — "right away, immediately".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اسی وقت** (*isī vaqt*) is "at this very time". *isī* is *is*, "this", with the emphatic *-ī*; CDIAL lists *is* under Sanskrit *eṣa*, "this" (CDIAL 2530). *vaqt* is Arabic *waqt*, "a time", which reached Urdu through Persian (Lane, root *w-q-t*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

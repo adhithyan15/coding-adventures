@@ -14,7 +14,8 @@ romanization: "ullū"
 concept_tag: UR-CHIZ168-ULLU
 prerequisites: [UR-C167-mithai, UR-C168-batakh]
 sounds: []
-roots: []
+roots: [sanskrit-uluka]
+etymology_hook: "ullū ← Sanskrit ulūka 'owl', a tadbhava (CDIAL 2359)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C168-batakh]
 <!-- hl-knowledge: introduces=[UR-LEX-C168-CHIZ168-02]; assesses=[] -->
 
 **الو** — *ullū* — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**الو** (*ullū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ulūka*, "owl" (CDIAL 2359).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

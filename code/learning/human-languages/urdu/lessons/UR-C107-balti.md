@@ -14,7 +14,8 @@ romanization: "baltī"
 concept_tag: UR-THINGS107-BALTI
 prerequisites: [UR-C107-parda, UR-C107-chadar]
 sounds: []
-roots: []
+roots: [portuguese-balde]
+etymology_hook: "baltī: usually traced to Portuguese balde 'bucket'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C107-chadar]
 <!-- hl-knowledge: introduces=[UR-LEX-C107-THINGS107-04]; assesses=[] -->
 
 **بالٹی** — *baltī* — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بالٹی** (*baltī*) is usually traced to Portuguese *balde*, "bucket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

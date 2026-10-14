@@ -12,7 +12,7 @@ concept_tag: UR-SHIRT
 prerequisites: [UR-C13-nila]
 sounds: [rtl, short-vowels-unwritten, qaf-uvular]
 roots: [arabic-qamis, latin-camisia, pie-kam]
-etymology_hook: qamīz is borrowed from Classical Persian qamīs, from Arabic qamīṣ, probably from Latin camisia, from Proto-West Germanic *hamiþi, from Proto-Indo-European *ḱam- "cover, clothes." That same Latin camisia gives French chemise and English chemise -- so قمیض and chemise are very likely the same word, one arriving through Arabic and Persian, the other through French, both eventually landing in the same wardrobe.
+etymology_hook: "qamīz ← Arabic qamīṣ 'shirt', through Persian; probably from Late Latin camisia, like English chemise"
 duration:
   max_seconds: 290
 requires:

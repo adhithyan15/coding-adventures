@@ -14,7 +14,8 @@ romanization: "tālā"
 concept_tag: UR-THINGS108-TALA
 prerequisites: [UR-C108-kil, UR-C108-hathaura]
 sounds: []
-roots: []
+roots: [sanskrit-tala-latch]
+etymology_hook: "tālā ← Sanskrit tāla 'latch, bolt', a tadbhava (CDIAL 5749)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C108-hathaura]
 <!-- hl-knowledge: introduces=[UR-LEX-C108-THINGS108-03]; assesses=[] -->
 
 **تالا** — *tālā* — "a lock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تالا** (*tālā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tāla*, "latch, bolt" (CDIAL 5749). CDIAL compares a Tamil word for "bar, bolt, latch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

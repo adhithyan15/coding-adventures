@@ -14,7 +14,8 @@ romanization: "sāhil"
 concept_tag: UR-THINGS125-SAHIL
 prerequisites: [UR-C125-andhi, UR-C125-zamin]
 sounds: []
-roots: []
+roots: [arabic-sahil]
+etymology_hook: "sāhil ← Arabic sāḥil 'shore, coast', through Persian (Lane, root s-ḥ-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C125-zamin]
 <!-- hl-knowledge: introduces=[UR-LEX-C125-THINGS125-03]; assesses=[] -->
 
 **ساحل** — *sāhil* — "a coast, a beach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ساحل** (*sāhil*) is a loan from Arabic *sāḥil*, "shore, coast", which reached Urdu through Persian. Its Arabic root is *s-ḥ-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "peṭrol pamp"
 concept_tag: UR-CHIZ229-PETROL-PAMP
 prerequisites: [UR-C229-trak, UR-C229-petrol]
 sounds: []
-roots: []
+roots: [english-petrol, english-pump]
+etymology_hook: "peṭrol pamp ← English petrol + pump"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C229-petrol]
 <!-- hl-knowledge: introduces=[UR-LEX-C229-CHIZ229-04]; assesses=[] -->
 
 **پیٹرول پمپ** — *peṭrol pamp* — "a petrol station".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیٹرول پمپ** (*peṭrol pamp*) is borrowed from English: *petrol* and *pump*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

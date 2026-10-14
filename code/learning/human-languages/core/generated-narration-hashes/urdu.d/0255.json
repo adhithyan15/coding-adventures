@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 255,
-  "sourceHash": "fnv1a64:e1c0606602528149",
+  "sourceHash": "fnv1a64:ec98f45756208901",
   "lessonIds": [
     "UR-C255-pletfarm",
     "UR-C255-traifik",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch255.txt",
   "json": "urdu/narration/ch255.json",
-  "textHash": "fnv1a64:5ecf56579e4fcd43",
-  "jsonHash": "fnv1a64:275894318138a7a2",
+  "textHash": "fnv1a64:97487667fda57d20",
+  "jsonHash": "fnv1a64:9e09563f1829cf5e",
   "findings": []
 }

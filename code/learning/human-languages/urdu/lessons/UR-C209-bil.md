@@ -14,7 +14,8 @@ romanization: "bil"
 concept_tag: UR-KAM209-BIL
 prerequisites: [UR-C209-qarz, UR-C209-taiks]
 sounds: []
-roots: []
+roots: [english-bill]
+etymology_hook: "bil ← English bill"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C209-taiks]
 <!-- hl-knowledge: introduces=[UR-LEX-C209-KAM209-04]; assesses=[] -->
 
 **بل** — *bil* — "a bill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بل** (*bil*) is a loan from English *bill*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

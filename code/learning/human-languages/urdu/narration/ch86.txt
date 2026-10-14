@@ -12,6 +12,9 @@ Before the new one: say the Urdu for fifty, then the Urdu for sixty.
 You'll want to know: ستر.
 ستر — sattar — "seventy".
 
+The word, taken apart.
+ستر (sattar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saptati, "seventy" (CDIAL 13143).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for sixty, then the Urdu for seventy.
 
 You'll want to know: اسی.
 اسی — assī — "eighty".
+
+The word, taken apart.
+اسی (assī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aśīti, "eighty" (CDIAL 911).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for seventy, then the Urdu for eighty.
 You'll want to know: نوے.
 نوے — navve — "ninety".
 
+The word, taken apart.
+نوے (navve) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from navati, "ninety" (CDIAL 6995).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for eighty, then the Urdu for ninety.
 You'll want to know: دنیا.
 دنیا — dunyā — "the world".
 
+The word, taken apart.
+دنیا (dunyā) is a loan from Arabic dunyā, "the world, this nearer life", which reached Urdu through Persian. Its Arabic root is d-n-w (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for ninety, then the Urdu for the world.
 
 You'll want to know: رنگ.
 رنگ — rang — "a colour".
+
+The word, taken apart.
+رنگ (rang) has two possible sources: Sanskrit raṅga, "dye, colour", whose inherited Hindi form CDIAL gives as rā̃g (CDIAL 10560), and Persian rang, "colour". The two may have merged.
 
 What you've built.
 One more word for this chapter.

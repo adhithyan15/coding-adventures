@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a bear, then the Urdu for big.
 You'll want to know: چھوٹا.
 چھوٹا — chhoṭā — "small".
 
+The word, taken apart.
+چھوٹا (chhoṭā) is a tadbhava, a word inherited and reshaped by sound change. It comes from choṭṭa, "small", a form CDIAL reconstructs from its descendants (CDIAL 5071).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for big, then the Urdu for small.
 
 You'll want to know: نیا.
 نیا — nayā — "new".
+
+The word, taken apart.
+نیا (nayā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from naviya, "new" (CDIAL 7025). It is a variant of Sanskrit navya, "new".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for small, then the Urdu for new.
 You'll want to know: اچھا.
 اچھا — achchhā — "good".
 
+The word, taken apart.
+اچھا (achchhā) goes back to Sanskrit accha, "clear, transparent" (CDIAL 142). CDIAL lists Hindi āchā, "good", and marks acchā itself as taken over from Punjabi. It adds that the Sanskrit word may once have meant "shadowless".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for new, then the Urdu for good.
 You'll want to know: برا.
 برا — burā — "bad".
 
+The word, taken apart.
+برا (burā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bura, "defective", a form CDIAL reconstructs from its descendants (CDIAL 9289).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for good, then the Urdu for bad.
 
 You'll want to know: لمبا.
 لمبا — lambā — "long, tall".
+
+The word, taken apart.
+لمبا (lambā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lamba, "pendent" (CDIAL 10951). Sanskrit already used it for "long" in compounds.
 
 What you've built.
 One more word for this chapter.

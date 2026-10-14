@@ -14,7 +14,8 @@ romanization: "mezbān"
 concept_tag: UR-CHIZ256-MEZBAN
 prerequisites: [UR-C256-rishtedar, UR-C256-saheli]
 sounds: []
-roots: []
+roots: [persian-mezban]
+etymology_hook: "mezbān: usually traced to Persian mēzbān 'host'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C256-saheli]
 <!-- hl-knowledge: introduces=[UR-LEX-C256-CHIZ256-04]; assesses=[] -->
 
 **میزبان** — *mezbān* — "a host".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**میزبان** (*mezbān*) is a loan, usually traced to Persian *mēzbān*, "host". It ends in the Persian *-bān*, "keeper".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

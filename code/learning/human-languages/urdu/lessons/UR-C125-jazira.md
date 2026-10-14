@@ -14,7 +14,8 @@ romanization: "jazīrā"
 concept_tag: UR-THINGS125-JAZIRA
 prerequisites: [UR-C125-zamin, UR-C125-sahil]
 sounds: []
-roots: []
+roots: [arabic-jazira]
+etymology_hook: "jazīrā ← Arabic jazīra 'island', through Persian (Lane, root j-z-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C125-sahil]
 <!-- hl-knowledge: introduces=[UR-LEX-C125-THINGS125-04]; assesses=[] -->
 
 **جزیرہ** — *jazīrā* — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جزیرہ** (*jazīrā*) is a loan from Arabic *jazīra*, "island", which reached Urdu through Persian. Its Arabic root is *j-z-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

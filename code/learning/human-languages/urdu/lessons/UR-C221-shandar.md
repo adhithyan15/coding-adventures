@@ -14,7 +14,8 @@ romanization: "shāndār"
 concept_tag: UR-SIFAT221-SHANDAR
 prerequisites: [UR-C221-sharmila, UR-C221-khamosh]
 sounds: []
-roots: []
+roots: [arabic-shan, persian-dar-holder]
+etymology_hook: "shāndār: shān 'dignity, splendour' ← Arabic shaʾn (Lane, root sh-ʾ-n) + Persian -dār 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C221-khamosh]
 <!-- hl-knowledge: introduces=[UR-LEX-C221-SIFAT221-05]; assesses=[] -->
 
 **شاندار** — *shāndār* — "splendid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شاندار** (*shāndār*) is "holding splendour". *shān*, "dignity, splendour", is Arabic *shaʾn*, "state, affair, rank", which reached Urdu through Persian (Lane, root *sh-ʾ-n*), and *-dār*, "holder", is Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

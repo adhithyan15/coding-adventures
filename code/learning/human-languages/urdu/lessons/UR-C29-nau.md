@@ -11,8 +11,8 @@ gloss: "nine — two letters, and a spelling that also says new"
 concept_tag: UR-NUMBER-NINE
 prerequisites: [UR-C29-aath]
 sounds: [rtl, hai-diphthong]
-roots: [sanskrit-nava, proto-indo-european-hnewn]
-etymology_hook: "nau continues Sanskrit nava from Proto-Indo-European *h1newn, nine -- Latin novem, English nine -- and the identical spelling also carries the Persian word nau, new, which is a different root that happens to land on the same two letters."
+roots: [proto-indo-european-hnewn, sanskrit-nava-nine]
+etymology_hook: "nau ← Sanskrit nava 'nine' (CDIAL 6984), like English nine; Persian nau 'new' is a different word"
 duration:
   max_seconds: 275
 requires:
@@ -49,7 +49,7 @@ Two letters, like the word for two. The second is the same **و** that closes it
 ## The word, taken apart — novem, nine, nau
 <!-- hl-knowledge: introduces=[UR-ETYMON-NAU-NINE-PIE]; assesses=[UR-LEX-NAU, UR-REGISTER-TWO-ROADS-ONE-ROOT] -->
 
-**نو** continues Sanskrit *nava*, from Indo-European \**h1newn*,
+**نو** continues Sanskrit *nava*, "nine" (CDIAL 6984), from Indo-European \**h1newn*,
 "nine." Latin **novem**, English **nine** and Greek **ennéa** are the same word.
 
 There is a trap here worth meeting once. The same two letters, **نو**, also

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a seed, then the Urdu for a root.
 You'll want to know: شاخ.
 شاخ — shākh — "a branch".
 
+The word, taken apart.
+شاخ (shākh) is a loan, usually traced to Persian shākh, "branch, bough".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a root, then the Urdu for a branch.
 
 You'll want to know: چٹان.
 چٹان — chaṭṭān — "a rock".
+
+The word, taken apart.
+The origin of چٹان (chaṭṭān) is not settled. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a branch, then the Urdu for a rock.
 You'll want to know: جھرنا.
 جھرنا — jharnā — "a waterfall".
 
+The word, taken apart.
+جھرنا (jharnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from jharati, "flowing down", a form CDIAL reconstructs from its descendants (CDIAL 5346).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a rock, then the Urdu for a waterfall.
 You'll want to know: تالاب.
 تالاب — tālāb — "a pond, a pool".
 
+The word, taken apart.
+تالاب (tālāb) is usually explained as tāl, "pond", which CDIAL lists under Sanskrit talla, "pond", a village word that may come from Munda (CDIAL 5742), with Persian āb, "water".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a waterfall, then the Urdu for a pond.
 
 You'll want to know: کنواں.
 کنواں — kuāṅ — "a well".
+
+The word, taken apart.
+کنواں (kuāṅ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kūpa, "hole, pit, well" (CDIAL 3400).
 
 What you've built.
 One more word for this chapter.

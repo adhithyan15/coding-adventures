@@ -15,6 +15,7 @@ concept_tag: UR-THINGS122-DASTANE
 prerequisites: [UR-C122-batan, UR-C122-tai]
 sounds: []
 roots: []
+etymology_hook: "dastāne: plural of dastānā 'glove', usually traced to Persian dastāna, built on dast 'hand'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C122-tai]
 <!-- hl-knowledge: introduces=[UR-LEX-C122-THINGS122-04]; assesses=[] -->
 
 **دستانے** — *dastāne* — "gloves".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دستانے** (*dastāne*) is the plural of *dastānā*, "a glove", which is usually traced to Persian *dastāna*, built on *dast*, "hand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

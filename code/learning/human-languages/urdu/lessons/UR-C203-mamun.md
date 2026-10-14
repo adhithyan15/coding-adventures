@@ -14,7 +14,8 @@ romanization: "māmūṅ"
 concept_tag: UR-CHIZ203-MAMUN
 prerequisites: [UR-C202-taiksi, UR-C202-riksha]
 sounds: []
-roots: []
+roots: [sanskrit-mama]
+etymology_hook: "māmūṅ: a form of māmā, which CDIAL lists under Sanskrit māma 'uncle', a nursery word (CDIAL 10055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C202-riksha]
 <!-- hl-knowledge: introduces=[UR-LEX-C203-CHIZ203-01]; assesses=[] -->
 
 **ماموں** — *māmūṅ* — "a maternal uncle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ماموں** (*māmūṅ*) is a form of *māmā*, "mother's brother", which CDIAL lists under Sanskrit *māma*, "uncle", and calls a nursery word, with similar words in Dravidian (CDIAL 10055).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

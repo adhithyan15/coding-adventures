@@ -14,7 +14,8 @@ romanization: "mārch"
 concept_tag: UR-VAQT155-MARCH
 prerequisites: [UR-C155-janvari, UR-C155-farvari]
 sounds: []
-roots: []
+roots: [english-march]
+etymology_hook: "mārch ← English March"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C155-farvari]
 <!-- hl-knowledge: introduces=[UR-LEX-C155-VAQT155-05]; assesses=[] -->
 
 **مارچ** — *mārch* — "March".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مارچ** (*mārch*) is a loan from English *March*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "naukrī"
 concept_tag: UR-KAM176-NAUKRI
 prerequisites: [UR-C175-bater, UR-C175-fakhta]
 sounds: []
-roots: []
+roots: [persian-naukar]
+etymology_hook: "naukrī: naukar 'servant', usually traced to Persian naukar, from Mongolic nökör 'companion', + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C175-fakhta]
 <!-- hl-knowledge: introduces=[UR-LEX-C176-KAM176-01]; assesses=[] -->
 
 **نوکری** — *naukrī* — "a job".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نوکری** (*naukrī*) is *naukar*, "servant", with the ending *-ī* that makes a noun. *naukar* is usually traced to Persian *naukar*, which Persian took from Mongolic *nökör*, "companion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

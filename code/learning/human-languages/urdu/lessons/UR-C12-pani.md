@@ -12,7 +12,7 @@ concept_tag: UR-WATER
 prerequisites: [UR-C11-dil, UR-C08-madad]
 sounds: [rtl, long-a, long-i]
 roots: [sanskrit-paniya, pie-peh3]
-etymology_hook: pani continues Sanskrit pānīya, "water, drink," from the root pā-, "to drink," ultimately Proto-Indo-European *peh₃-; English water is unrelated, from a different PIE root entirely, but *peh₃- itself surfaces in English potion and poison, by way of Latin potare, "to drink."
+etymology_hook: "pānī ← Sanskrit pānīya 'water, drink' (CDIAL 8082), on pā- 'to drink'"
 duration:
   max_seconds: 270
 requires:
@@ -65,7 +65,7 @@ first noun you have had to put in front of it.
 ## The word, taken apart — a drink-word, not a water-word
 <!-- hl-knowledge: introduces=[UR-ETYMON-PANI-DRINK]; assesses=[UR-LEX-PANI] -->
 
-**pānī** continues Sanskrit *pānīya*, "water, drink," built on
+**pānī** continues Sanskrit *pānīya*, "water, drink" (CDIAL 8082), built on
 **pā-**, "to drink," from Proto-Indo-European **\*peh₃-**. English
 **water** is unrelated — it comes from an entirely different PIE root.
 But *\*peh₃-* itself did reach English, by a different door: Latin

@@ -11,8 +11,8 @@ gloss: to help — an Arabic noun plus a native verb, which is the machine Urdu 
 concept_tag: VERB-HELP
 prerequisites: [UR-C08-puchhna]
 sounds: [rtl, short-vowels-unwritten, long-a]
-roots: [arabic-mdd, persian-transmission]
-etymology_hook: madad is Arabic on the root م-د-د, whose verb madda means "to stretch out, to extend" — help as a hand held toward you — and it reached Urdu through Persian, the same road as khudā; bolted to native karnā it becomes a verb without ever being conjugated, which is exactly how Urdu absorbed centuries of Persian and Arabic without disturbing its own verb system.
+roots: [arabic-mdd, persian-transmission, arabic-madad]
+etymology_hook: "madad ← Arabic madad 'help', root m-d-d 'stretch out', through Persian (Lane); karnā is inherited"
 duration:
   max_seconds: 297
 requires:
@@ -68,7 +68,7 @@ machinery.
 ## The word, taken apart — a hand held out
 <!-- hl-knowledge: introduces=[UR-ETYMON-MADAD-EXTEND]; assesses=[UR-LEX-MADAD-KARNA, UR-LEX-HAFIZ, UR-ETYMON-HAFIZ-ARABIC, UR-LEX-KHUDA, UR-ETYMON-KHUDA-PERSIAN] -->
 
-**مدد** is Arabic, on the three-consonant root **م-د-د** (*m-d-d*), whose verb
+**مدد** is Arabic, on the three-consonant root **م-د-د** (*m-d-d*, Lane), whose verb
 *madda* means “**to stretch out, to extend**.” Help, in Arabic, is something
 **extended** toward you — the picture English reaches for when it *extends* a
 hand, though English inherited nothing from *m-d-d* and its own **help** is

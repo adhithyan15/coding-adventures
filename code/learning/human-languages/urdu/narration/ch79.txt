@@ -12,6 +12,9 @@ Before the new one: say the Urdu for inside, then the Urdu for outside.
 You'll want to know: اوپر.
 اوپر — ūpar — "above, up".
 
+The word, taken apart.
+اوپر (ūpar) is a tadbhava, a word inherited and reshaped by sound change. It comes from uppari, "above", a form CDIAL reconstructs from its descendants (CDIAL 2333). It is Sanskrit upari, "above", with its consonant doubled for emphasis.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for outside, then the Urdu for above.
 
 You'll want to know: نیچے.
 نیچے — nīche — "below, down".
+
+The word, taken apart.
+نیچے (nīche) is the adverb form of nīchā, "low", which comes from Sanskrit nīca, "low" (CDIAL 7540).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for above, then the Urdu for below.
 You'll want to know: دکان.
 دکان — dukān — "a shop".
 
+The word, taken apart.
+دکان (dukān) is a loan from Arabic dukkān, "shop", which reached Urdu through Persian. Its Arabic root is d-k-n (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for below, then the Urdu for a shop.
 You'll want to know: سڑک.
 سڑک — saṛak — "a road".
 
+The word, taken apart.
+سڑک (saṛak) is inherited, but CDIAL gives two sources. It first lists the word under Sanskrit sṛti, "road, path" (CDIAL 13577), and in its addenda under śaṭati, "goes" (CDIAL 12269).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a shop, then the Urdu for a road.
 
 You'll want to know: بینک.
 بینک — baink — "a bank".
+
+The word, taken apart.
+بینک (baink) is a loan from English bank.
 
 What you've built.
 One more word for this chapter.

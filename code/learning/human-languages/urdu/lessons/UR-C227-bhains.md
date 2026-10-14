@@ -14,7 +14,8 @@ romanization: "bhaiṅs"
 concept_tag: UR-CHIZ227-BHAINS
 prerequisites: [UR-C226-palak2, UR-C227-janvar]
 sounds: []
-roots: []
+roots: [sanskrit-mahishi]
+etymology_hook: "bhaiṅs ← Sanskrit mahiṣī 'buffalo cow', a tadbhava (CDIAL 9964)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C227-janvar]
 <!-- hl-knowledge: introduces=[UR-LEX-C227-CHIZ227-02]; assesses=[] -->
 
 **بھینس** — *bhaiṅs* — "a buffalo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھینس** (*bhaiṅs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mahiṣī*, "buffalo cow" (CDIAL 9964). It is the feminine of *mahiṣa*, "great; buffalo".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

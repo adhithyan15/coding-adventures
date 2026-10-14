@@ -14,7 +14,8 @@ romanization: "chachī"
 concept_tag: UR-CHIZ170-CHACHI
 prerequisites: [UR-C170-validain, UR-C170-chacha]
 sounds: []
-roots: []
+roots: [indo-aryan-cacca]
+etymology_hook: "chachī ← *cācca 'uncle', a reconstructed form; a tadbhava (CDIAL 4734)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C170-chacha]
 <!-- hl-knowledge: introduces=[UR-LEX-C170-CHIZ170-05]; assesses=[] -->
 
 **چچی** — *chachī* — "an aunt (father's brother's wife)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چچی** (*chachī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cācca*, "uncle", a form CDIAL reconstructs from its descendants (CDIAL 4734). *chachī* is its feminine. CDIAL suggests, with a query, a nursery word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

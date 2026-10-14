@@ -14,7 +14,8 @@ romanization: "saṛak"
 concept_tag: UR-PLACE79-SARAK
 prerequisites: [UR-C79-niche, UR-C79-dukan]
 sounds: []
-roots: []
+roots: [sanskrit-srti]
+etymology_hook: "saṛak: CDIAL first gives Sanskrit sṛti 'road, path' (13577), then in its addenda śaṭati 'goes' (12269)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C79-dukan]
 <!-- hl-knowledge: introduces=[UR-LEX-C79-PLACE79-04]; assesses=[] -->
 
 **سڑک** — *saṛak* — "a road".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سڑک** (*saṛak*) is inherited, but CDIAL gives two sources. It first lists the word under Sanskrit *sṛti*, "road, path" (CDIAL 13577), and in its addenda under *śaṭati*, "goes" (CDIAL 12269).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

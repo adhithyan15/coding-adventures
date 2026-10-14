@@ -14,7 +14,8 @@ romanization: "bachchā"
 concept_tag: UR-FAMILY44-BACHCHA
 prerequisites: [UR-C44-shauhar, UR-C44-bivi]
 sounds: []
-roots: []
+roots: [persian-bacca, sanskrit-apatya]
+etymology_hook: "bachchā: usually traced to Persian bachcha 'child'; CDIAL also lists Punjabi baccā under apatya 'offspring' (CDIAL 424)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C44-bivi]
 <!-- hl-knowledge: introduces=[UR-LEX-C44-FAMILY44-05]; assesses=[] -->
 
 **بچہ** — *bachchā* — "a child".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بچہ** (*bachchā*) is usually traced to Persian *bachcha*, "child". CDIAL lists close Punjabi and Sindhi words, such as Punjabi *baccā*, "child", under Sanskrit *apatya*, "offspring", and its addenda set them beside Persian *bača* (CDIAL 424, 14226); it gives no Hindi or Urdu form there, so which road the Urdu word took is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

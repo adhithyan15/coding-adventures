@@ -14,7 +14,8 @@ romanization: "qainchī"
 concept_tag: UR-WANT105-QAINCHI
 prerequisites: [UR-C105-irada, UR-C105-mez]
 sounds: []
-roots: []
+roots: [turkish-qaychi]
+etymology_hook: "qainchī: usually traced, through Persian qaichī, to Turkish"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C105-mez]
 <!-- hl-knowledge: introduces=[UR-LEX-C105-WANT105-04]; assesses=[] -->
 
 **قینچی** — *qainchī* — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قینچی** (*qainchī*) is usually traced, through Persian *qaichī*, "scissors", to Turkish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

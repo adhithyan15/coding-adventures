@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 7,
-  "sourceHash": "fnv1a64:41a55c6b04fa9568",
+  "sourceHash": "fnv1a64:58f6021de1d5e6c0",
   "lessonIds": [
     "UR-C07-sochna",
     "UR-W07-alif-madda",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "urdu/narration/ch07.txt",
   "json": "urdu/narration/ch07.json",
-  "textHash": "fnv1a64:1c80c672226b66a9",
-  "jsonHash": "fnv1a64:7b9c8ecf7c050023",
+  "textHash": "fnv1a64:909459548c6dda8e",
+  "jsonHash": "fnv1a64:25a27a8a9d07ee75",
   "findings": []
 }

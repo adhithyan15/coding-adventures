@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 190,
-  "sourceHash": "fnv1a64:dd12ec54286d6b61",
+  "sourceHash": "fnv1a64:402c0af2877b34ea",
   "lessonIds": [
     "UR-C190-vadi",
     "UR-C190-chirya-ghar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch190.txt",
   "json": "urdu/narration/ch190.json",
-  "textHash": "fnv1a64:c0078fd5e7202436",
-  "jsonHash": "fnv1a64:d8a18f136315afed",
+  "textHash": "fnv1a64:e501673b255c6804",
+  "jsonHash": "fnv1a64:8339f88065c35387",
   "findings": []
 }

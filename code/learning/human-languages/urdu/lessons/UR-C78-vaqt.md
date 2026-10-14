@@ -14,7 +14,8 @@ romanization: "vaqt"
 concept_tag: UR-TIME78-VAQT
 prerequisites: [UR-C77-der, UR-C77-pehle]
 sounds: []
-roots: []
+roots: [arabic-waqt]
+etymology_hook: "vaqt ← Arabic waqt 'time, an appointed time', through Persian (Lane, root w-q-t)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C77-pehle]
 <!-- hl-knowledge: introduces=[UR-LEX-C78-TIME78-01]; assesses=[] -->
 
 **وقت** — *vaqt* — "time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وقت** (*vaqt*) is a loan from Arabic *waqt*, "time, an appointed time", which reached Urdu through Persian. Its Arabic root is *w-q-t* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

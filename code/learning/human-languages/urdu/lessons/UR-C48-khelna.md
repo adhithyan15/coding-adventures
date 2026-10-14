@@ -14,7 +14,8 @@ romanization: "khelnā"
 concept_tag: UR-VERB-KHELNA
 prerequisites: [UR-C47-chalna, UR-C47-daurna]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "khelnā ← *khel- 'play', a reconstructed form; CDIAL links it, hesitantly, with Sanskrit krīḍati (CDIAL 3918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C47-daurna]
 <!-- hl-knowledge: introduces=[UR-LEX-C48-VERBS48-01]; assesses=[] -->
 
 **کھیلنا** — *khelnā* — "to play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھیلنا** (*khelnā*) is inherited from a reconstructed *\*khel-*, "play" (CDIAL 3918), the verb behind *khel*, "a game". CDIAL links it with Sanskrit *krīḍati*, "plays": if that verb has a non-Aryan source, these forms may share it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

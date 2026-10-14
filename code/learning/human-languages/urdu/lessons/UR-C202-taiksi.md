@@ -14,7 +14,8 @@ romanization: "ṭaiksī"
 concept_tag: UR-CHIZ202-TAIKSI
 prerequisites: [UR-C202-tohfa, UR-C202-musafir]
 sounds: []
-roots: []
+roots: [english-taxi]
+etymology_hook: "ṭaiksī ← English taxi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C202-musafir]
 <!-- hl-knowledge: introduces=[UR-LEX-C202-CHIZ202-04]; assesses=[] -->
 
 **ٹیکسی** — *ṭaiksī* — "a taxi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹیکسی** (*ṭaiksī*) is a loan from English *taxi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
