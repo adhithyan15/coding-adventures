@@ -3121,11 +3121,11 @@ mod tests {
     }
 
     #[test]
-    fn fn_call_too_many_args_msx64() {
-        // 5 args > 4 GPR slots on MS x64.
+    fn fn_call_nine_args_refused_msx64() {
+        // The bounded integer-word ABI supports at most8 total arguments.
         let ctx = fn_ctx("caller", &[], "u64");
         let mut srcs = vec![Op::Var("external".into())];
-        for i in 0..5 { srcs.push(Op::Int(i)); }
+        for i in 0..9 { srcs.push(Op::Int(i)); }
         let ir = vec![
             instr("call", Some("r"), srcs),
             instr("ret_u64", None, vec![Op::Var("r".into())]),
