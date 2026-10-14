@@ -351,6 +351,8 @@ const ARRAYLENGTH: u8 = 0xBE; // arrayref → length (int)
 /// Used in `__callClosure` to dispatch on the function index:
 ///   `lload fn_idx_slot; ldc2_w target_idx; lcmp; ifeq case_N`
 const LCMP: u8 = 0x94;
+const FCMPL: u8 = 0x95; // compare two floats → int -1/0/1 (NaN → -1)
+const FCMPG: u8 = 0x96; // compare two floats → int -1/0/1 (NaN → +1)
 const DCMPL: u8 = 0x97; // compare two doubles → int -1/0/1 (NaN → -1)
 const DCMPG: u8 = 0x98; // compare two doubles → int -1/0/1 (NaN → +1)
 
@@ -2849,25 +2851,31 @@ fn lower_function(
             "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
                 let (src0, src1) = two_srcs(func, instr, &slots)?;
 
-                if src0.1 == JvmType::Double {
-                    // Double comparison (LANG-FULL E3): dload both, `dcmpl`/`dcmpg`
-                    // to an int -1/0/1, then the same unary `ifXX` branch the long
-                    // path uses. Without this branch a `real` comparison fell into
-                    // the `else` int path, which `iload`ed a two-slot double as a
-                    // single int and used `if_icmpne` — the verifier rejected the
-                    // class (empty output). `dcmpg` is chosen for `>`/`>=` so a
-                    // NaN operand makes them false (NaN → +1); `dcmpl` for the
-                    // rest (NaN → -1) — matching javac's convention.
-                    emit_typed_load(&mut code, src0.0, JvmType::Double);
-                    emit_typed_load(&mut code, src1.0, JvmType::Double);
+                if matches!(src0.1, JvmType::Float | JvmType::Double)
+                    || matches!(src1.1, JvmType::Float | JvmType::Double) {
+                    if src0.1 != src1.1 {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("mixed floating comparison {:?} and {:?}", src0.1, src1.1),
+                        });
+                    }
+                    // fload/dload must agree with both operand slots. Integer
+                    // loads cannot read a float, even though each occupies one
+                    // slot. Both compare families produce the same int -1/0/1.
+                    let (cmpl, cmpg) = if src0.1 == JvmType::Float { (FCMPL, FCMPG) } else { (DCMPL, DCMPG) };
+                    emit_typed_load(&mut code, src0.0, src0.1);
+                    emit_typed_load(&mut code, src1.0, src1.1);
+                    // For lt/le, unordered must compare HIGH so >=/> skips
+                    // true. For gt/ge it must compare LOW so <=/< skips true.
+                    // Equality is false and inequality true for either NaN sign.
                     let (dcmp, branch) = match instr.op.as_str() {
-                        "cmp_eq" => (DCMPL, IFNE), // skip true when result ≠ 0
-                        "cmp_ne" => (DCMPL, IFEQ), // skip true when result = 0
-                        "cmp_lt" => (DCMPL, IFGE), // skip true when result ≥ 0
-                        "cmp_le" => (DCMPL, IFGT), // skip true when result > 0
-                        "cmp_gt" => (DCMPG, IFLE), // skip true when result ≤ 0
-                        "cmp_ge" => (DCMPG, IFLT), // skip true when result < 0
-                        _ => (DCMPL, IFNE),
+                        "cmp_eq" => (cmpl, IFNE), // skip true when result ≠ 0
+                        "cmp_ne" => (cmpl, IFEQ), // skip true when result = 0
+                        "cmp_lt" => (cmpg, IFGE), // skip true when result ≥ 0
+                        "cmp_le" => (cmpg, IFGT), // skip true when result > 0
+                        "cmp_gt" => (cmpl, IFLE), // skip true when result ≤ 0
+                        "cmp_ge" => (cmpl, IFLT), // skip true when result < 0
+                        _ => (cmpl, IFNE),
                     };
                     emit_double_compare(&mut code, dcmp, branch);
                 } else if src0.1 == JvmType::Long {
