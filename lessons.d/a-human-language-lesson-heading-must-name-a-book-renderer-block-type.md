@@ -1,5 +1,5 @@
 ---
-category: Human-language lesson authoring
+category: Testing & coverage
 ---
 
 # A human-language lesson heading must name a book-renderer block type

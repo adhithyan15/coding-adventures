@@ -1,5 +1,5 @@
 ---
-category: Book build and publication
+category: CI & GitHub Actions
 ---
 
 # Check-book-compile needs a Bash-version gate before using mapfile

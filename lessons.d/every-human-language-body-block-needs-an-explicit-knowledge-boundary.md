@@ -1,5 +1,5 @@
 ---
-category: Human-language lesson authoring
+category: Testing & coverage
 ---
 
 # Every human-language body block needs an explicit knowledge boundary
