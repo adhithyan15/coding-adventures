@@ -1982,6 +1982,8 @@ pub struct SwimlaneTheme {
     pub text_color: String, pub edge_label_background: Option<String>,
     pub cluster_background: Option<String>, pub cluster_border: Option<String>,
     pub title_color: Option<String>,
+    pub node_text_color: Option<String>, pub arrowhead_color: Option<String>,
+    pub stroke_width: Option<f64>,
 }
 impl Default for SwimlaneTheme {
     fn default() -> Self {
@@ -1997,6 +1999,9 @@ impl Default for SwimlaneTheme {
             cluster_background: None,
             cluster_border: None,
             title_color: None,
+            node_text_color: None,
+            arrowhead_color: None,
+            stroke_width: None,
         }
     }
 }

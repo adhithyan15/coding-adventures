@@ -2063,6 +2063,17 @@ fn swimlane_cluster_theme_reaches_semantic_ir() {
 }
 
 #[test]
+fn swimlane_node_and_edge_theme_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"nodeTextColor\": \"#14532d\", \"arrowheadColor\": \"#dc2626\", \"strokeWidth\": \"4px\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  request[Request]\n  done[Done]\nend\nrequest --> done",
+    ).expect("Swimlane node and edge theme should parse");
+
+    assert_eq!(diagram.theme.node_text_color.as_deref(), Some("#14532d"));
+    assert_eq!(diagram.theme.arrowhead_color.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.theme.stroke_width, Some(4.0));
+}
+
+#[test]
 fn swimlane_inline_node_styles_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nrequest --> done",
