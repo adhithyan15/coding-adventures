@@ -1067,6 +1067,8 @@ clicks, tooltips, standard browser link targets, explicit `call` callback
 actions, and legacy callback aliases survive as scene metadata. Flowchart edge identifiers
 survive semantic IR, layout, and scene metadata; named classes and direct styles for identified
 edges resolve stroke color, width, dash patterns, and label color into backend-neutral paint.
+Edge label font family, size, weight, and italic or oblique style also survive semantic and layout IR
+and lower to backend-neutral glyph runs for both class-based and direct identified-edge styles.
 Positional `linkStyle` directives accept `default` or comma-separated edge indices and resolve
 into the same backend-neutral edge style fields. Their `interpolate` form applies supported curve
 modes by position through semantic and layout IR to portable path instructions.

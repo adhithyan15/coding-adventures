@@ -3912,6 +3912,18 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.classes")),
                     Some(&"urgent".to_string()));
             }
+            if fixture_name == "edge-label-typography-styles" {
+                assert_eq!(layout.edges[0].style.font_family.as_deref(), Some("Helvetica Neue"));
+                assert_eq!(layout.edges[1].style.font_weight, Some(500));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 22.0
+                        && run.fill.as_deref() == Some("rgb(124, 45, 18)")
+                )), "class edge typography must lower to styled glyph runs");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 18.0
+                        && run.fill.as_deref() == Some("rgb(20, 83, 45)")
+                )), "direct edge typography must lower to styled glyph runs");
+            }
             if fixture_name == "positional-link-styles" {
                 assert_eq!(layout.edges[0].style.stroke.as_deref(), Some("#dc2626"));
                 assert_eq!(layout.edges[1].style.stroke.as_deref(), Some("#64748b"));
