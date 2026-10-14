@@ -1291,6 +1291,72 @@ mod tests {
     }
 
     #[test]
+    fn imported_title_margin_has_exact_checked_admission() {
+        let mut failures = Vec::new();
+        for direction in [DiagramDirection::Lr,DiagramDirection::Rl,DiagramDirection::Tb,DiagramDirection::Bt] {
+            for titled in [false,true] {
+                for margin in [f64::NAN,f64::INFINITY,f64::NEG_INFINITY,-1.0,65_536.000_001] {
+                    let mut diagram = ordering_diagram(2,&[(0,1,1)]);
+                    diagram.direction = direction.clone();
+                    diagram.title = titled.then(|| "Owned title".to_owned());
+                    diagram.flowchart_config.title_top_margin = Some(margin);
+                    let before = diagram.clone();
+                    match std::panic::catch_unwind(|| try_layout_swimlane(&diagram)) {
+                        Ok(Err(SwimlaneLayoutError::UnsupportedSpacing { field: "titleTopMargin" })) => {}
+                        Ok(Err(other)) => failures.push((direction.clone(),titled,margin.to_bits(),format!("wrong typed error: {other}"))),
+                        Ok(Ok(_)) => failures.push((direction.clone(),titled,margin.to_bits(),"unexpectedly accepted".to_owned())),
+                        Err(_) => failures.push((direction.clone(),titled,margin.to_bits(),"panicked".to_owned())),
+                    }
+                    assert_eq!(diagram.flowchart_config.title_top_margin.map(f64::to_bits),before.flowchart_config.title_top_margin.map(f64::to_bits));
+                    let mut normalized_before=before;
+                    let mut normalized_after=diagram;
+                    normalized_before.flowchart_config.title_top_margin=None;
+                    normalized_after.flowchart_config.title_top_margin=None;
+                    assert_eq!(normalized_after,normalized_before);
+                }
+            }
+        }
+        assert!(failures.is_empty(),"title-margin admission failures {}/40: {failures:?}",failures.len());
+    }
+
+    #[test]
+    fn imported_title_margin_preserves_complete_translated_layouts() {
+        for direction in [DiagramDirection::Lr,DiagramDirection::Rl,DiagramDirection::Tb,DiagramDirection::Bt] {
+            for titled in [false,true] {
+                for grouped in [false,true] {
+                    let mut baseline=ordering_diagram(2,&[(0,1,1)]);
+                    baseline.direction=direction.clone();
+                    baseline.title=titled.then(|| "Owned title".to_owned());
+                    if grouped {
+                        baseline.groups.push(diagram_ir::SwimlaneGroup {
+                            id:"owned-group".into(),label:"Owned group".into(),lane_id:"lane0".into(),
+                            parent_id:None,node_ids:vec!["node0".into()],classes:vec!["owned".into()],style:Default::default(),
+                        });
+                    }
+                    let golden=try_layout_swimlane(&baseline).unwrap();
+                    for margin in [None,Some(-0.0),Some(0.0),Some(14.0),Some(65_536.0)] {
+                        let mut input=baseline.clone();
+                        input.flowchart_config.title_top_margin=margin;
+                        let before=input.clone();
+                        let actual=try_layout_swimlane(&input).unwrap();
+                        let offset=if titled {margin.unwrap_or(0.0)} else {0.0};
+                        let mut expected=golden.clone();
+                        expected.flowchart_config.title_top_margin=margin;
+                        expected.height+=offset;
+                        for lane in &mut expected.lanes {lane.y+=offset;}
+                        for node in &mut expected.nodes {node.y+=offset;}
+                        for group in &mut expected.groups {group.y+=offset;}
+                        for edge in &mut expected.edges {edge.from.y+=offset;edge.to.y+=offset;}
+                        assert_eq!(actual,expected,"{direction:?} title={titled} group={grouped} margin={margin:?}");
+                        assert_eq!(input,before);
+                        assert_eq!(input.flowchart_config.title_top_margin.map(f64::to_bits),margin.map(f64::to_bits));
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
     fn imported_padding_checked_admission_never_panics() {
         let mut failures = Vec::new();
         for direction in [DiagramDirection::Lr, DiagramDirection::Rl, DiagramDirection::Tb, DiagramDirection::Bt] {
