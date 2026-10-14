@@ -1,5 +1,10 @@
 # diagram-ir
 
+`RailroadConfig` carries padding and vertical/horizontal separation unchanged.
+Each setting has a supported finite inclusive0..65536 range, exported as
+`MAX_RAILROAD_SPACING` and enforced by parsers and checked hierarchy layout.
+Defaults remain the producer's10/8/10 values; no silent clamping is used.
+
 Semantic diagram intermediate representation (IR) shared across all diagram
 pipelines in the coding-adventures monorepo (DG00).
 

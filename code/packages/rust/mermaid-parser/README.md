@@ -1,5 +1,11 @@
 # mermaid-parser
 
+All four Railroad dialects preserve padding and vertical/horizontal separation
+from init directives or YAML front matter. Every setting must be finite and in
+inclusive0..65536; unsupported values return an exact field-specific parse
+error. Accepted values, including zero and the cap, are retained without
+clamping before checked layout and PaintScene lowering.
+
 Versioned Mermaid compatibility dispatcher and grammar-driven Rust parsers.
 
 Swimlane curve-only configurations share the bounded authored edge-ID index

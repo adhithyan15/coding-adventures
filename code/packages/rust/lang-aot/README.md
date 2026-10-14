@@ -1,5 +1,12 @@
 # lang-aot
 
+Owned conditional-unit programs now verify exact stdout and normal exit,
+including ordered markers proving the condition and chosen branch execute
+once. Six locally available backends actually executed all16 owned sources
+(96 cells); CLR execution is not inferred from those receipts. Full affected
+native/compiler suites passed separately. Final-source Miri remains
+**DEFERRED/PENDING**, never passed, under the delivery-first sequencing decision.
+
 ALGOL runtime real output now includes values migrated through provenance-tracked
 scalar slots: a real procedure result with zero parameters, value-mode scalar
 parameters, value/name array descriptor formals, a direct procedure formal, or

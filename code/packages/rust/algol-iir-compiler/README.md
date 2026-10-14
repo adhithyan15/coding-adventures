@@ -1,5 +1,13 @@
 # algol-iir-compiler
 
+The bounded outer-`entier` proof admits one conditional front when both flat
+branches carry the supported single unit offset. An exact Real procedure with
+one name formal and only `relay := x` can read that actual once in its caller,
+preserving the condition's alias effects without unnecessary capture. Name
+writes to either branch root still invalidate admission. The shared `exp`/`ln`
+range classifier remains narrower; arbitrary recursive conditional/wrapper and
+generic formatter proof composition remain open.
+
 Rust frontend for compiling a conservative ALGOL 60 scalar subset into the
 shared LANG VM `interpreter_ir::IIRModule`.
 

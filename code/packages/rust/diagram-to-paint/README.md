@@ -1,5 +1,12 @@
 # diagram-to-paint
 
+Railroad leaves with zero/small padding keep their declared text box inside the
+leaf before glyph shaping. Complete ordered default-font glyph traces and
+actual metric bounds are checked through all four source dialects, along with
+exact spacing metadata. Custom-font/long-label sizing and arbitrary forged
+layout IR remain separate limitations; the checked semantic-layout boundary
+is `diagram_layout_hierarchy::try_layout_railroad`.
+
 DG03 — Converts layouted graph, chart, structural, temporal, sequence, packet,
 and geometric diagrams into a `PaintScene` for rendering by `paint-metal` and other
 backends. Text rendering is **delegated to `layout-to-paint`**

@@ -1,5 +1,12 @@
 # diagram-layout-hierarchy
 
+`try_layout_railroad` checks each finite0..65536 spacing setting before
+arithmetic and returns a typed field error or derived-geometry refusal.
+`layout_railroad` retains its infallible signature as a compatibility wrapper
+that panics on unsupported IR. Sequence extents sum item widths and exactly
+n-1 gaps; ordered flat/nested connectors and two-rule vertical gaps have
+independent geometry goldens. Arbitrary recursive IR resource bounds remain open.
+
 Deterministic backend-neutral layout for hierarchical diagrams. The initial
 implementation partitions Mermaid treemap values into stable nested rectangles.
 

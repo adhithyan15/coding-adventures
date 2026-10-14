@@ -3,31 +3,54 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a pathwise pending checkpoint -->
-October14 current integration is PENDING at implementationc39c51de; published
-4c remains the solePR17288 head, autoOFF, exact-head CI still running.
-Actualnewmain593 nested-unit-cap +530Urdu import33c closed3713paths:
-3708pure incoming/5exactthreewayoverlaps/221434retained. Imported library
-actually848PASS1FAIL: new conditional-front ownerpositive Type-refused.
+October14 local source9aa50e7d: required current-main integration and bounded
+repairs PASS locally; final documentation/carrier review and publication remain
+PENDING. SolePR17288 remains published4c with auto-merge OFF. Its macOS CI
+actually failed TaskApp iOS UI first-row assertion; no code cause established.
+Retry request403 because workflow was still running, no accepted rerun.
 
-Spec-first owned controls and preserved failures:365red3PASS2FAIL exposed
-positive refusal plus an invalid universal-variable-refusal test assumption;
-corrected boundary controls e885/c39 remain4PASS2FAIL. All original standalone
-variable, shifted-range, non-unit, root/alias/work controls retained unchanged.
-Sharedsignhelper exactly4c and dedicatedflat helper byte-exact exceptname.
-Singleconditional wrapper and consumer-matched predicates alone do not solve
-post-call capture: roots validate prelower, then bynamepromotion invalidates
-postproof. New effect controls require name-write refusal/value-write admission.
-No fresh native/full-suite acceptance claimed; every failed receipt preserved.
+Native/compiler source63b8647b: complete affected6-package unfiltered suites
+ACTUALLY EXIT0,1769PASS/0FAIL/1existingignore across78targets; ALGOL854 and full
+LANG480 included, strictalltargets0. Tests SHA
+acec2ec5b6f8b81afafbe614496673d0920bb3e744b4e1961c5c8b15545c75ad.
+Exact4c shared sign helper remains narrow; dedicated flat-unit proof admits
+one conditional front with BOTH strict roots. An exact read-once NameReal
+identity evaluates its actual before general call invalidation, preserving
+actual alias effects without cached/fresh proof forwarding. Malformed wrappers,
+signatures, nonidentity bodies and name-writing conditions retain refusal.
+Owned16runtime sources96actual cells on6availablebackends verify exact stdout,
+Exit0 and orderedCL0/CR2 evaluation; CLR execution is not inferred. Source63b
+independent scoped review PASSc415e4e99bb5d5ee58e56c65640db0b3e06db89d3bd8f39977f5d2f5931442e7.
 
-Next independently review fresh-scalar/byname proof flow before further repair,
-then exactfocused/full compiler+unfilteredLANG/strict, immutable diagram source
-carry, docs/registry/currentplan/finalsecurity andsamePRpush. Do not enableauto
-on old4c even if checks turngreen while this requiredreconciliation is unfinished.
-Broader recursiveconditional/wrapper paths and genericrange composition OPEN.
-Full Closure parity/fullbyte-source/alltransformationlineage/CV04b OPEN.
-MiriDEFERRED/PENDING neverpassed, frozen497 source/inputs/target/receipts
-unpolled/untouched. Accepted4c/3d/5c source-specific receipts below remain valid
-for their exact sources; they do not accept the current593 integration.
+Separate successor checkout/target preserves that native source and frozen Miri.
+Spec910652 precedes actualmain3a Railroad+Sanskrit merge2f744c8d: closed51paths,
+44pure incoming/7independent exact threeway overlaps/225137retained ownedobjects.
+Incoming finite overflow, gap cancellation and zero-padding glyph findings had
+actual168parser admission/18glyph-box failures; compile-only harness/API reds
+remain distinct. Final9aa: complete14-package diagram/parser/paint/downstream
+suites ACTUALLY EXIT0,865PASS/0FAIL/0ignore across33targets, strictalltargets0.
+Tests SHA8c8881bfdbadcd664d18c04a7473c822080382e4ad816d55f51ca16fe570f6a4.
+
+All3Railroad settings have finite inclusive0..65536 parser+typed checked
+admission; independent sequence extents use n-1gaps; small leaf label boxes
+stay enclosed. Controls cover168exact parser refusals/120retained configs,
+84typed refusals/96geometry/40empty-singleton cells, ordered distinct-leaf flat/
+nested connectors+two-rule gaps, and18typed+66source complete ordered glyph
+traces/actualmetricbounds/exact3metadata keys. Producer defaultintent retained;
+all oldhop32/16,8192,geometry16128 and production-limit controls preserved.
+Complete forward native166packages/2800objects exact63b to9aa; registry376
+identities/checksums exact. Source attribution is not additive test execution.
+
+Final independent9aa source review, docs/checker/lessons/current productionplan
+and exact-head carrier review gate samePR push. Exact published-head terminal
+acceptable required checks, review-clean/conflict-free state and actual fetched
+main merge reachability still gate merge/cleanup. BaseESTree/ownedtypes/no new
+crates.io retained. Full Closure parity/fullbyte-source/alltransformationlineage/
+CV04b, generic recursive conditional/range composition, arbitrary Railroad
+font/forged-layout/depth/remeasure and general floating-hop resource debt OPEN.
+Miri DEFERRED/PENDING, neverpassed; frozen497 checkout/inputs/target/run/receipts
+untouched and unpolled. Implementation/delivery precedes genuine final-source
+Miri; full objective remains OPEN and heartbeat ACTIVE.
 <!-- /CV04a pathwise pending checkpoint -->
 
 <!-- CV04a active delivery checkpoint -->
