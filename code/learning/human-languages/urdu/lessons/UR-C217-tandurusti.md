@@ -14,7 +14,8 @@ romanization: "tandurustī"
 concept_tag: UR-SEHAT217-TANDURUSTI
 prerequisites: [UR-C217-darhi, UR-C217-munchh]
 sounds: []
-roots: []
+roots: [persian-tandurust]
+etymology_hook: "tandurustī: tandurust 'healthy', usually traced to Persian, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C217-munchh]
 <!-- hl-knowledge: introduces=[UR-LEX-C217-SEHAT217-03]; assesses=[] -->
 
 **تندرستی** — *tandurustī* — "good health".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تندرستی** (*tandurustī*) is *tandurust*, "healthy", usually traced to Persian *tandurust*, "sound of body", with the ending *-ī* that makes a noun.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 199,
-  "sourceHash": "fnv1a64:8c8a731ed9a5b0d7",
+  "sourceHash": "fnv1a64:f89a4f2a6d48b120",
   "lessonIds": [
     "UR-C199-chapati",
     "UR-C199-ghi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch199.txt",
   "json": "urdu/narration/ch199.json",
-  "textHash": "fnv1a64:48714b6858c5c2fa",
-  "jsonHash": "fnv1a64:35bb44a0c25b4bb1",
+  "textHash": "fnv1a64:000682e6e43e6cf5",
+  "jsonHash": "fnv1a64:48df577737d59dc2",
   "findings": []
 }

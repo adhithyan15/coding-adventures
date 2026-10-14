@@ -14,7 +14,8 @@ romanization: "chhāpnā"
 concept_tag: UR-VERB-CHHAPNA
 prerequisites: [UR-C150-rangna, UR-C150-mitana]
 sounds: []
-roots: []
+roots: [indo-aryan-chapp]
+etymology_hook: "chhāpnā ← *chapp 'press, cover, hide', a reconstructed form; a tadbhava (CDIAL 4994)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C150-mitana]
 <!-- hl-knowledge: introduces=[UR-LEX-C150-ACT150-03]; assesses=[] -->
 
 **چھاپنا** — *chhāpnā* — "to print".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چھاپنا** (*chhāpnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*chapp*, "press, cover, hide", a form CDIAL reconstructs from its descendants (CDIAL 4994). CDIAL notes that Punjabi and Sindhi took their verbs from this one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

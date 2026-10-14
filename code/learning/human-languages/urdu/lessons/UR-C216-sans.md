@@ -14,7 +14,8 @@ romanization: "sāṅs"
 concept_tag: UR-SEHAT216-SANS
 prerequisites: [UR-C215-nafrat-karna, UR-C216-nabz]
 sounds: []
-roots: []
+roots: [sanskrit-shvasa]
+etymology_hook: "sāṅs ← Sanskrit śvāsa 'breath, breathing', a tadbhava (CDIAL 12769)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C216-nabz]
 <!-- hl-knowledge: introduces=[UR-LEX-C216-SEHAT216-02]; assesses=[] -->
 
 **سانس** — *sāṅs* — "breath".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سانس** (*sāṅs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śvāsa*, "breath, breathing" (CDIAL 12769).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

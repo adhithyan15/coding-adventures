@@ -14,7 +14,8 @@ romanization: "būṛhā"
 concept_tag: UR-QUAL133-BURHA
 prerequisites: [UR-C132-kamzor, UR-C133-javan]
 sounds: []
-roots: []
+roots: [indo-aryan-buddha]
+etymology_hook: "būṛhā ← *buḍḍha 'old', a reconstructed form; a tadbhava (CDIAL 9271)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C133-javan]
 <!-- hl-knowledge: introduces=[UR-LEX-C133-QUAL133-02]; assesses=[] -->
 
 **بوڑھا** — *būṛhā* — "old (of people)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بوڑھا** (*būṛhā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*buḍḍha*, "old", a form CDIAL reconstructs from its descendants (CDIAL 9271). CDIAL notes that the initial *b-* rules out direct descent from Sanskrit *vṛddha*, "grown old", though that word may have influenced it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

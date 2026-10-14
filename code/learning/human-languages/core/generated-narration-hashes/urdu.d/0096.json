@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 96,
-  "sourceHash": "fnv1a64:12509a83679b1dc5",
+  "sourceHash": "fnv1a64:735ea33ecbb86b38",
   "lessonIds": [
     "UR-C96-lamha",
     "UR-C96-jab",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch96.txt",
   "json": "urdu/narration/ch96.json",
-  "textHash": "fnv1a64:4fb3a2532ec0f388",
-  "jsonHash": "fnv1a64:9db5880a33992b24",
+  "textHash": "fnv1a64:3d57d58444d55444",
+  "jsonHash": "fnv1a64:39ea152415f95860",
   "findings": []
 }

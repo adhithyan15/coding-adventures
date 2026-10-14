@@ -14,7 +14,8 @@ romanization: "jism"
 concept_tag: UR-SEHAT187-JISM
 prerequisites: [UR-C187-parhez, UR-C187-varzish]
 sounds: []
-roots: []
+roots: [arabic-jism]
+etymology_hook: "jism ← Arabic jism 'body', through Persian (Lane, root j-s-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C187-varzish]
 <!-- hl-knowledge: introduces=[UR-LEX-C187-SEHAT187-05]; assesses=[] -->
 
 **جسم** — *jism* — "the body".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جسم** (*jism*) is a loan from Arabic *jism*, "body", which reached Urdu through Persian. Its Arabic root is *j-s-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "adākār"
 concept_tag: UR-KAM262-ADAKAR
 prerequisites: [UR-C262-injiniyar, UR-C262-sainsdan]
 sounds: []
-roots: []
+roots: [arabic-ada, persian-kar]
+etymology_hook: "adākār: Arabic adāʾ 'performance' (Lane, root ʾ-d-y) + Persian -kār 'one who works'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C262-sainsdan]
 <!-- hl-knowledge: introduces=[UR-LEX-C262-KAM262-05]; assesses=[] -->
 
 **اداکار** — *adākār* — "an actor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اداکار** (*adākār*) is "one who performs". It joins Arabic *adāʾ*, "a carrying out, a performance", which reached Urdu through Persian (Lane, root *ʾ-d-y*), and the Persian *-kār*, "one who works".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

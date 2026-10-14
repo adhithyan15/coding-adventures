@@ -14,7 +14,8 @@ romanization: "vaisā"
 concept_tag: UR-DEF88-VAISA
 prerequisites: [UR-C88-vahi, UR-C88-aisa]
 sounds: []
-roots: []
+roots: [sanskrit-idrsha]
+etymology_hook: "vaisā: the far partner of aisā 'such' (CDIAL 1611); CDIAL has no entry for vaisā itself"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C88-aisa]
 <!-- hl-knowledge: introduces=[UR-LEX-C88-DEF88-04]; assesses=[] -->
 
 **ویسا** — *vaisā* — "like that".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ویسا** (*vaisā*) is the far partner of *aisā*, "such, like this", which comes from Sanskrit *īdṛśa*, "such" (CDIAL 1611). CDIAL has no entry for *vaisā* itself, so how it took its *v-* is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

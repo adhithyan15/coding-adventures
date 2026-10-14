@@ -14,7 +14,8 @@ romanization: "pīnā"
 concept_tag: UR-VERB-PINA
 prerequisites: [UR-C46-ustad, UR-C46-khana]
 sounds: []
-roots: []
+roots: [sanskrit-pibati]
+etymology_hook: "pīnā ← Sanskrit pibati 'drinks', a tadbhava (CDIAL 8209)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C46-khana]
 <!-- hl-knowledge: introduces=[UR-LEX-C46-FAMILY46-03]; assesses=[] -->
 
 **پینا** — *pīnā* — "to drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پینا** (*pīnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pibati*, "drinks" (CDIAL 8209).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

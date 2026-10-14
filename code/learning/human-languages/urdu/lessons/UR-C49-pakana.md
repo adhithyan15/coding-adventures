@@ -14,7 +14,8 @@ romanization: "pakānā"
 concept_tag: UR-VERB-PAKANA
 prerequisites: [UR-C48-rakhna, UR-C49-kholna]
 sounds: []
-roots: []
+roots: [sanskrit-pakva]
+etymology_hook: "pakānā: the causing form of paknā 'to be cooked', listed under Sanskrit pakva 'cooked, ripe' (CDIAL 7621)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C49-kholna]
 <!-- hl-knowledge: introduces=[UR-LEX-C49-VERBS49-02]; assesses=[] -->
 
 **پکانا** — *pakānā* — "to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پکانا** (*pakānā*) is the causing form of *paknā*, "to be cooked, to ripen", which CDIAL lists under Sanskrit *pakva*, "cooked, ripe" (CDIAL 7621).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

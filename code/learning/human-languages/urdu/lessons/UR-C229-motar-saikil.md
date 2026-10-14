@@ -14,7 +14,8 @@ romanization: "moṭar sāikil"
 concept_tag: UR-CHIZ229-MOTAR-SAIKIL
 prerequisites: [UR-C228-film, UR-C228-natak]
 sounds: []
-roots: []
+roots: [english-motorcycle]
+etymology_hook: "moṭar sāikil ← English motorcycle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C228-natak]
 <!-- hl-knowledge: introduces=[UR-LEX-C229-CHIZ229-01]; assesses=[] -->
 
 **موٹر سائیکل** — *moṭar sāikil* — "a motorbike".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موٹر سائیکل** (*moṭar sāikil*) is a loan from English *motorcycle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

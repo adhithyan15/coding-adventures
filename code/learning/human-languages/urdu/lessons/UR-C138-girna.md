@@ -14,7 +14,8 @@ romanization: "girnā"
 concept_tag: UR-VERB-GIRNA
 prerequisites: [UR-C137-khula, UR-C137-jagna]
 sounds: []
-roots: []
+roots: [indo-aryan-girati]
+etymology_hook: "girnā ← *girati 'drips, falls', a reconstructed form; a tadbhava (CDIAL 4159)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C137-jagna]
 <!-- hl-knowledge: introduces=[UR-LEX-C138-ACT138-01]; assesses=[] -->
 
 **گرنا** — *girnā* — "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گرنا** (*girnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*girati*, "drips, falls", a form CDIAL reconstructs from its descendants (CDIAL 4159).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

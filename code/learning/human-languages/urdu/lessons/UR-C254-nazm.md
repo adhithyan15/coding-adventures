@@ -14,7 +14,8 @@ romanization: "nazm"
 concept_tag: UR-CHIZ254-NAZM
 prerequisites: [UR-C253-makri, UR-C254-navil]
 sounds: []
-roots: []
+roots: [arabic-nazm]
+etymology_hook: "nazm ← Arabic naẓm 'an arranging; verse', through Persian (Lane, root n-ẓ-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C254-navil]
 <!-- hl-knowledge: introduces=[UR-LEX-C254-CHIZ254-02]; assesses=[] -->
 
 **نظم** — *nazm* — "a poem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نظم** (*nazm*) is a loan from Arabic *naẓm*, "an arranging; verse", which reached Urdu through Persian. Its Arabic root is *n-ẓ-m* (Lane). Its older senses are stringing beads and pearls, and so arranging words in verse.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

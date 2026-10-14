@@ -12,7 +12,7 @@ concept_tag: UR-BLACK
 prerequisites: [UR-C13-safed, UR-C05-khuda-hafiz-more]
 sounds: [rtl, long-a]
 roots: [sanskrit-kala, proto-dravidian-kar]
-etymology_hook: kālā is inherited from Sanskrit kāla ("black, dark"), which is usually traced to Proto-Dravidian *kār- rather than to Proto-Indo-European -- Indo-Aryan borrowing a color word from its Dravidian neighbours, not descending it from a shared ancestor. Unlike bhāī or āṅkh, this inherited word's own root sits outside the Indo-European family altogether.
+etymology_hook: "kālā ← Sanskrit kāla 'black, dark' (CDIAL 3083), which CDIAL takes from Dravidian"
 duration:
   max_seconds: 280
 requires:
@@ -65,9 +65,7 @@ ends in **ا**. Watch for it again on the last color of this chapter.
 
 **کالا** is inherited from Sanskrit *kāla*, "black, dark" — so far,
 the same kind of story as *bhāī* or *āṅkh*. But **کالا**'s root does
-not continue into Proto-Indo-European at all. It is usually traced instead
-to Proto-Dravidian **\*kār-**, "black, to be burnt": Sanskrit itself
-borrowed this color word from its Dravidian neighbours, long before any of
+not continue into Proto-Indo-European at all. CDIAL takes it instead, through a form *\*kāḍa-*, from Dravidian (CDIAL 3083), where Tamil has *karu*, "black" (DEDR 1278): Sanskrit itself borrowed this color word from its Dravidian neighbours, long before any of
 it reached Urdu. Inherited from Sanskrit, yes — but Sanskrit's own source
 sits outside the Indo-European family this book has been tracing.
 

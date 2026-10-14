@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a restaurant, then the Urdu for a café.
 You'll want to know: اس لیے.
 اس لیے — is liye — "so, therefore".
 
+The phrase, taken apart.
+اس لیے (is liye) is is, "this", with liye, "for", which is usually explained as a form of lenā, "to take". CDIAL lists lenā under Sanskrit labhate, "catches, takes" (CDIAL 10948).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a café, then the Urdu for so.
 
 You'll want to know: چونکہ.
 چونکہ — chūṅki — "since, because".
+
+The word, taken apart.
+چونکہ (chūṅki) is usually traced to Persian chūnki, "since", built from chūn, "as", and ki, "that".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for so, then the Urdu for since.
 You'll want to know: اگر.
 اگر — agar — "if".
 
+The word, taken apart.
+اگر (agar) is a loan, usually traced to Persian agar, "if".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for since, then the Urdu for if.
 You'll want to know: پھر بھی.
 پھر بھی — phir bhī — "even so, still".
 
+The phrase, taken apart.
+پھر بھی (phir bhī) is "again also". phir, "again", comes from a reconstructed phirati, "turns" (CDIAL 9078), and bhī, "also, even", from Sanskrit api, "also, even" (CDIAL 485).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for if, then the Urdu for even so.
 
 You'll want to know: ورنہ.
 ورنہ — varnā — "otherwise".
+
+The word, taken apart.
+ورنہ (varnā) is usually traced to Persian varna, "otherwise", a running together of va, "and", agar, "if", and na, "not".
 
 What you've built.
 One more word for this chapter.

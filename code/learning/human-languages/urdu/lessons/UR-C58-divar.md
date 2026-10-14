@@ -14,7 +14,8 @@ romanization: "dīvār"
 concept_tag: UR-HOME58-DIVAR
 prerequisites: [UR-C58-khirki, UR-C58-kursi]
 sounds: []
-roots: []
+roots: [persian-divar]
+etymology_hook: "dīvār: usually traced to Persian dīvār 'wall'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C58-kursi]
 <!-- hl-knowledge: introduces=[UR-LEX-C58-HOME58-03]; assesses=[] -->
 
 **دیوار** — *dīvār* — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دیوار** (*dīvār*) is a loan, usually traced to Persian *dīvār*, "wall".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

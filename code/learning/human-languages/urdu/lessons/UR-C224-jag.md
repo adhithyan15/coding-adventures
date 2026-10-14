@@ -14,7 +14,8 @@ romanization: "jag"
 concept_tag: UR-CHIZ224-JAG
 prerequisites: [UR-C224-istri, UR-C224-jharu]
 sounds: []
-roots: []
+roots: [english-jug]
+etymology_hook: "jag ← English jug"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C224-jharu]
 <!-- hl-knowledge: introduces=[UR-LEX-C224-CHIZ224-03]; assesses=[] -->
 
 **جگ** — *jag* — "a jug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جگ** (*jag*) is a loan from English *jug*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

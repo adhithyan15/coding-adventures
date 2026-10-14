@@ -14,7 +14,8 @@ romanization: "vajah"
 concept_tag: UR-VAJAH220-VAJAH
 prerequisites: [UR-C220-khush-qismati-se, UR-C220-bad-qismati-se]
 sounds: []
-roots: []
+roots: [arabic-wajh]
+etymology_hook: "vajah ← Arabic wajh 'face; a way, an aspect', through Persian (Lane, root w-j-h)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C220-bad-qismati-se]
 <!-- hl-knowledge: introduces=[UR-LEX-C220-VAJAH220-03]; assesses=[] -->
 
 **وجہ** — *vajah* — "a reason".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وجہ** (*vajah*) is a loan from Arabic *wajh*, "face; a way, an aspect", which reached Urdu through Persian. Its Arabic root is *w-j-h* (Lane). Urdu uses it for a reason.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

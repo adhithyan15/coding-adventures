@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Five Verbs at the Core",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e4ce90a919334c0a",
+  "sourceHash": "fnv1a64:8f2ea34173797438",
   "lessons": [
     {
       "id": "UR-C06-hona",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0d2a9932fe87148",
+      "sourceHash": "fnv1a64:196ca373b25146b7",
       "notice": null,
       "blocks": [
         {
@@ -89,7 +89,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "honā comes from Sanskrit bhavati, “becomes,” built on the root bhū-. The middle stage of Indo-Aryan softened that bh- to h-, so bhavati thinned to hoi and then to honā."
+              "text": "honā comes from Sanskrit bhavati, “becomes” (CDIAL 9416), built on the root bhū-. The middle stage of Indo-Aryan softened that bh- to h-, so bhavati thinned to hoi and then to honā."
             },
             {
               "kind": "speech",
@@ -386,7 +386,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e6c772349ea8893",
+      "sourceHash": "fnv1a64:e4f4f15e852f3a90",
       "notice": null,
       "blocks": [
         {
@@ -455,7 +455,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "jānā continues Sanskrit yāti, “goes,” from the root yā-, “travel.” The change from y- to j- is not a quirk of this word: initial y- regularly hardened to j- on the road from Sanskrit into the middle stage of Indo-Aryan that Urdu descends from. Meet the law once and it decodes other words later."
+              "text": "jānā continues Sanskrit yāti, “goes” (CDIAL 10452), from the root yā-, “travel.” The change from y- to j- is not a quirk of this word: initial y- regularly hardened to j- on the road from Sanskrit into the middle stage of Indo-Aryan that Urdu descends from. Meet the law once and it decodes other words later."
             },
             {
               "kind": "speech",
@@ -535,14 +535,14 @@
       "title": "آنا (ānā) — “to come,” which is “go” pointed back at you",
       "headword": "آنا",
       "romanization": "ānā",
-      "gloss": "to come — literally “go toward,” built from a prefix and the verb for going",
+      "gloss": "to come — the partner of jānā, inherited from a Sanskrit verb of reaching",
       "script": "urdu-nastaliq",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d2f16aa47c74222",
+      "sourceHash": "fnv1a64:2f800f183fb18359",
       "notice": null,
       "blocks": [
         {
@@ -558,7 +558,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say jānā, then its stem jā-. The opposite direction is the same verb wearing a prefix."
+              "text": "Say jānā, then its stem jā-. The opposite direction is a different verb."
             }
           ]
         },
@@ -580,19 +580,19 @@
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart — a prefix welded to a verb you know",
+          "title": "The word, taken apart — a verb of reaching",
           "segments": [
             {
               "kind": "speech",
-              "text": "ānā continues Sanskrit āyāti, and that word is two pieces: ā-, “toward,” plus yā-, “go.” So the Urdu verb for coming is, underneath, the verb for going aimed back at the speaker. “Go toward me” is “come.”"
+              "text": "ānā is inherited. CDIAL lists it under Sanskrit āpayati, “causes to reach”, beside the older āpa, “came towards”, through Prakrit āvaï, “comes” (CDIAL 1200). So the Urdu verb for coming is, underneath, a verb of reaching: to come is to arrive where the speaker is."
             },
             {
               "kind": "speech",
-              "text": "You already have the second piece: yā- is the same root that hardened into the j- of jānā. One Sanskrit verb, two Urdu words, and the difference between them is a direction marker."
+              "text": "It is tempting to take ānā from āyāti, “comes near”, ā- “toward” plus yā- “go”, which would make it a twin of jānā. CDIAL lists no Hindi or Urdu word under āyāti (CDIAL 1288), though, and puts jānā under yāti, “goes” (CDIAL 10452): two verbs, not one."
             },
             {
               "kind": "speech",
-              "text": "English does the identical trick with a Latin verb: venīre “to come” plus a prefix gives advent, convene, intervene, prevent, and revenue. Urdu welds its prefix on the front and lets the seam disappear; English keeps the seam visible."
+              "text": "The root āp-, “reach, obtain”, is usually compared with Latin apīscī, “to reach”, whose participle aptus, “fitted”, gave English apt and adapt."
             }
           ]
         },
@@ -621,12 +621,12 @@
             },
             {
               "kind": "prompt",
-              "action": "SPLIT",
-              "instruction": "ā- “toward” + yā- “go”",
+              "action": "CONNECT",
+              "instruction": "ānā from āpayati, “causes to reach”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SPLIT: *ā-* “toward” + *yā-* “go”]"
+              "source": "[YOU CONNECT: **ānā** ← *āpayati*, “causes to reach”]"
             },
             {
               "kind": "prompt",
@@ -661,7 +661,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which two pieces are hiding inside ānā? (Ā- “toward” and yā- “go.”) Which Urdu verb shares the second piece? (Jānā.) And what does the stem become once -nā comes off? (Ā-.)"
+              "text": "Which Sanskrit verb of reaching stands behind ānā? (Āpayati, “causes to reach.”) Does jānā come from the same verb? (No: jānā comes from yāti, “goes.”) And what does the stem become once -nā comes off? (Ā-.)"
             },
             {
               "kind": "speech",
@@ -909,7 +909,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fce7c5345ca43fda",
+      "sourceHash": "fnv1a64:358a6678c22c8241",
       "notice": null,
       "blocks": [
         {
@@ -974,7 +974,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bolnā goes back to Prakrit bollaï, “speaks” — and then the trail stops. A link onward to Sanskrit brūte “speaks” has been proposed, but it is not settled, so treat it as a maybe rather than a fact."
+              "text": "bolnā goes back to Prakrit bollaï, “speaks” — and then the trail stops. CDIAL reconstructs it as boll-, “speak” (CDIAL 9321), and reports proposals that tie it to Sanskrit vadati or bravīti, both “speaks”; none is settled, so treat them as maybes rather than facts."
             },
             {
               "kind": "speech",
@@ -1061,7 +1061,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9abb1c27cc5c973c",
+      "sourceHash": "fnv1a64:b632561cf89888d4",
       "notice": null,
       "blocks": [
         {
@@ -1107,7 +1107,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "jānnā continues Sanskrit jānāti, from the root jñā-, “know.” That root is Indo-European ǵneh₃-, and English is stuffed with it."
+              "text": "jānnā continues Sanskrit jānāti, “knows” (CDIAL 5193), from the root jñā-, “know.” That root is Indo-European ǵneh₃-, and English is stuffed with it."
             },
             {
               "kind": "speech",

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 224,
-  "sourceHash": "fnv1a64:50e22dd203986133",
+  "sourceHash": "fnv1a64:d7ce656827421071",
   "lessonIds": [
     "UR-C224-istri",
     "UR-C224-jharu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch224.txt",
   "json": "urdu/narration/ch224.json",
-  "textHash": "fnv1a64:b46662d520059282",
-  "jsonHash": "fnv1a64:69ca9af47bb4ba11",
+  "textHash": "fnv1a64:9f4f616067f82fb9",
+  "jsonHash": "fnv1a64:3c83b4d239ef242c",
   "findings": []
 }

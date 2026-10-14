@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Sentence Learns to End",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:1604ec5a19d2d2fe",
+  "sourceHash": "fnv1a64:3e2c67b364047d09",
   "lessons": [
     {
       "id": "UR-C17-yih",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:145aa5879a73742a",
+      "sourceHash": "fnv1a64:da1c3026ae08bc63",
       "notice": null,
       "blocks": [
         {
@@ -82,7 +82,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "یہ (yih) points at what is near you. Urdu keeps a second word for what is far, and the two arrived together: both descend from the Old Indo-Aryan demonstratives that Sanskrit wrote as iyam and asau. English lost most of that system and kept a thinner this/that; Urdu kept the pair intact."
+              "text": "یہ (yih) points at what is near you. Urdu keeps a second word for what is far, and the two arrived together: both descend from Old Indo-Aryan demonstratives. CDIAL lists Hindi yah, \"this\", under Sanskrit eṣa, \"this\" (CDIAL 2530), and vah, \"that\", under asau, \"that\" (CDIAL 972). English lost most of that system and kept a thinner this/that; Urdu kept the pair intact."
             },
             {
               "kind": "speech",
@@ -222,7 +222,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe6b7c88e3348a0c",
+      "sourceHash": "fnv1a64:dfb20d23e8580512",
       "notice": null,
       "blocks": [
         {
@@ -285,7 +285,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "کام is inherited, not borrowed: Sanskrit karman \"act, deed, work\" became Prakrit kamma and then Urdu kām, losing a syllable to a few thousand years of being said out loud."
+              "text": "کام is inherited, not borrowed: Sanskrit karman \"act, deed, work\" (CDIAL 2892) became Prakrit kamma and then Urdu kām, losing a syllable to a few thousand years of being said out loud."
             },
             {
               "kind": "speech",
@@ -420,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f87ae6e06d0c3454",
+      "sourceHash": "fnv1a64:c00be216ee83424b",
       "notice": null,
       "blocks": [
         {
@@ -508,7 +508,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every one of them opens with ک. That shared consonant is not a coincidence and not a tidy invention: it is inherited. All five come from the Old Indo-Aryan interrogative stem ka-, and کہاں (kahāṅ) in particular runs back through Prakrit kahiṅ to Sanskrit kasmin, \"in what.\""
+              "text": "Every one of them opens with ک. That shared consonant is not a coincidence and not a tidy invention: it is inherited. All five come from the Old Indo-Aryan interrogative stem ka-, and کہاں (kahāṅ) in particular is often traced through Prakrit kahiṅ to Sanskrit kasmin, \"in what.\" CDIAL has no entry for it, though, so that last step is not settled."
             },
             {
               "kind": "speech",
@@ -835,7 +835,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8959b585b31161e5",
+      "sourceHash": "fnv1a64:11b0210eb3e6d54e",
       "notice": null,
       "blocks": [
         {
@@ -908,7 +908,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ماں (māṅ) is inherited. It comes down through Prakrit from Sanskrit mātā, stem mātṛ, and behind that stands Proto-Indo-European méh₂tēr. The same root gives English mother, Latin mater (behind maternal, matrix), Greek mētēr, and Persian mādar."
+              "text": "ماں (māṅ) is inherited. It comes down through Prakrit from Sanskrit mātā, stem mātṛ, under which CDIAL lists Hindi mā and māī, \"mother\" (CDIAL 10016), and behind that stands Proto-Indo-European méh₂tēr. The same root gives English mother, Latin mater (behind maternal, matrix), Greek mētēr, and Persian mādar."
             },
             {
               "kind": "speech",

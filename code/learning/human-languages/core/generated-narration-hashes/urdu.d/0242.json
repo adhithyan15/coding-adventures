@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 242,
-  "sourceHash": "fnv1a64:3666178e0cca8dfe",
+  "sourceHash": "fnv1a64:dc5243553924c3c7",
   "lessonIds": [
     "UR-C242-shikayat-karna",
     "UR-C242-muqabala-karna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch242.txt",
   "json": "urdu/narration/ch242.json",
-  "textHash": "fnv1a64:60bd91cd988e6eda",
-  "jsonHash": "fnv1a64:fe21b2d181efec4c",
+  "textHash": "fnv1a64:e9f07e1987e877a1",
+  "jsonHash": "fnv1a64:0f5afcf3096ba74a",
   "findings": []
 }

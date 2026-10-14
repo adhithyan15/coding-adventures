@@ -14,7 +14,8 @@ romanization: "khāṅsī"
 concept_tag: UR-SEHAT152-KHANSI
 prerequisites: [UR-C152-bimari, UR-C152-zukam]
 sounds: []
-roots: []
+roots: [sanskrit-kasa]
+etymology_hook: "khāṅsī ← Sanskrit kāsa 'cough', a tadbhava (CDIAL 3138)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C152-zukam]
 <!-- hl-knowledge: introduces=[UR-LEX-C152-SEHAT152-03]; assesses=[] -->
 
 **کھانسی** — *khāṅsī* — "a cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھانسی** (*khāṅsī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kāsa*, "cough" (CDIAL 3138). CDIAL notes the *kh-* as imitating the sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

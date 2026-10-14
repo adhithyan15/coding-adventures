@@ -14,7 +14,8 @@ romanization: "jab"
 concept_tag: UR-TIME96-JAB
 prerequisites: [UR-C95-agla, UR-C96-lamha]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva, sanskrit-ya-relative]
+etymology_hook: "jab: CDIAL lists it under Sanskrit evam eva 'exactly so', crossed with the relative stem ya- (CDIAL 2528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C96-lamha]
 <!-- hl-knowledge: introduces=[UR-LEX-C96-TIME96-02]; assesses=[] -->
 
 **جب** — *jab* — "when (not a question)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جب** (*jab*) is inherited. CDIAL lists it beside *ab*, "now", under Sanskrit *evam eva*, "exactly so", crossed with the relative stem *ya-*, "which" (CDIAL 2528).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

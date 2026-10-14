@@ -15,6 +15,7 @@ concept_tag: UR-DEF90-IDHAR
 prerequisites: [UR-C90-kaunsa, UR-C90-vala]
 sounds: []
 roots: []
+etymology_hook: "idhar: the near stem i- of is 'this' + -dhar; CDIAL has no entry, so its history is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C90-vala]
 <!-- hl-knowledge: introduces=[UR-LEX-C90-DEF90-05]; assesses=[] -->
 
 **ادھر** — *idhar* — "here, this way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ادھر** (*idhar*) is inherited, but its history is not settled. It is built on the near stem *i-* that is also in *is*, "this", and CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

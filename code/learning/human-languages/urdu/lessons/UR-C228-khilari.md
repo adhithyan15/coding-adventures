@@ -14,7 +14,8 @@ romanization: "khilāṛī"
 concept_tag: UR-CHIZ228-KHILARI
 prerequisites: [UR-C228-tairaki, UR-C228-tim]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "khilāṛī: khel- 'play' (CDIAL 3918) with -āṛī 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C228-tim]
 <!-- hl-knowledge: introduces=[UR-LEX-C228-CHIZ228-03]; assesses=[] -->
 
 **کھلاڑی** — *khilāṛī* — "a player".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھلاڑی** (*khilāṛī*) is built on *khel-*, "play", with the ending *-āṛī*, "one who does it". CDIAL lists the verb under a reconstructed *\*khel-*, "play" (CDIAL 3918).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

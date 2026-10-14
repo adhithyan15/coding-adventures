@@ -14,7 +14,8 @@ romanization: "tikkā"
 concept_tag: UR-CHIZ260-TIKKA
 prerequisites: [UR-C259-suji, UR-C260-kofta]
 sounds: []
-roots: []
+roots: [persian-tikka]
+etymology_hook: "tikkā: usually traced to Persian tikka 'a piece, a morsel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C260-kofta]
 <!-- hl-knowledge: introduces=[UR-LEX-C260-CHIZ260-02]; assesses=[] -->
 
 **تکہ** — *tikkā* — "a tikka".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تکہ** (*tikkā*) is a loan, usually traced to Persian *tikka*, "a piece, a morsel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

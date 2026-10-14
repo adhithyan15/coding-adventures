@@ -14,7 +14,8 @@ romanization: "sunahrā"
 concept_tag: UR-QUAL137-SUNAHRA
 prerequisites: [UR-C136-gulabi, UR-C137-jamni]
 sounds: []
-roots: []
+roots: [indo-aryan-suvarnadhara]
+etymology_hook: "sunahrā ← *suvarṇadhara 'containing gold', a reconstructed form; a tadbhava (CDIAL 13522)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C137-jamni]
 <!-- hl-knowledge: introduces=[UR-LEX-C137-QUAL137-02]; assesses=[] -->
 
 **سنہرا** — *sunahrā* — "golden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سنہرا** (*sunahrā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*suvarṇadhara*, "containing gold", a form CDIAL reconstructs from its descendants (CDIAL 13522). It is built from *suvarṇa*, "gold", and *dhara*, "holding".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

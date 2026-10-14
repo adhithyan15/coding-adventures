@@ -14,7 +14,8 @@ romanization: "uṛnā"
 concept_tag: UR-VERB-URNA
 prerequisites: [UR-C137-jagna, UR-C138-girna]
 sounds: []
-roots: []
+roots: [sanskrit-uddiyate]
+etymology_hook: "uṛnā ← Sanskrit uḍḍayate 'flies up', a tadbhava (CDIAL 1697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C138-girna]
 <!-- hl-knowledge: introduces=[UR-LEX-C138-ACT138-02]; assesses=[] -->
 
 **اڑنا** — *uṛnā* — "to fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اڑنا** (*uṛnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *uḍḍayate*, "flies up" (CDIAL 1697). It is the form CDIAL gives beside *uḍḍīyate*, "flies up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

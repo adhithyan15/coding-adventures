@@ -11,8 +11,8 @@ gloss: slowly, gently, take it easy — the third piece of a beginner's repair k
 concept_tag: UR-LEX-SLOWLY
 prerequisites: [UR-C22-kya-kaha, UR-C22-kahna, UR-W07-alif-madda]
 sounds: [alif-madd]
-roots: []
-etymology_hook: "آرام is Persian ārām, 'rest, ease, repose', on an Indo-Iranian root for stillness — so the Urdu way of asking somebody to slow down asks them to be at ease rather than to be slow, which is a gentler request than the English one"
+roots: [persian-aram, sanskrit-sahita, sanskrit-sama]
+etymology_hook: "ārām usually traced to Persian ārām 'rest'; se inherited (CDIAL 13310)"
 duration:
   max_seconds: 240
 requires:
@@ -57,8 +57,7 @@ mil kar*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-ARAM-SE, UR-LEX-KAHNA] -->
 
-**آرام** is Persian *ārām*, "rest, ease, repose," on an old Indo-Iranian root for
-standing still. So Urdu's way of asking somebody to slow down does not ask them
+**آرام** is usually traced to Persian *ārām*, "rest, ease, repose", and **سے**, "with", is inherited: CDIAL lists it under Sanskrit *sahita*, "together with" (CDIAL 13310), and *sama*, "equal", has also been suggested (CDIAL 13173). So Urdu's way of asking somebody to slow down does not ask them
 to be **slow**; it asks them to be **at ease**. That is a gentler thing to say to
 a stranger than the English request, and it is why *ārām se* also means *take it
 easy*, *carefully*, and *no rush* depending on where it lands.

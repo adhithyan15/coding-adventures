@@ -14,7 +14,8 @@ romanization: "jaj"
 concept_tag: UR-KAM262-JAJ
 prerequisites: [UR-C261-afsar, UR-C261-malik]
 sounds: []
-roots: []
+roots: [english-judge]
+etymology_hook: "jaj ← English judge"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C261-malik]
 <!-- hl-knowledge: introduces=[UR-LEX-C262-KAM262-01]; assesses=[] -->
 
 **جج** — *jaj* — "a judge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جج** (*jaj*) is a loan from English *judge*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

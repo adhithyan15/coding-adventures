@@ -14,7 +14,8 @@ romanization: "kandhā"
 concept_tag: UR-BODY39-KANDHA
 prerequisites: [UR-C38-gala, UR-C39-pet]
 sounds: []
-roots: []
+roots: [sanskrit-skandha]
+etymology_hook: "kandhā ← Sanskrit skandha 'shoulder', a tadbhava (CDIAL 13627)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C39-pet]
 <!-- hl-knowledge: introduces=[UR-LEX-C39-BODY39-02]; assesses=[] -->
 
 **کندھا** — *kandhā* — "a shoulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کندھا** (*kandhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *skandha*, "shoulder" (CDIAL 13627). CDIAL allows that a form without the *s-*, *\*kandha*, existed beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: nose — the same three letters as کان, read in reverse, and a real co
 concept_tag: UR-NOSE
 prerequisites: [UR-C10-kaan, UR-C07-likhna, UR-C08-puchhna]
 sounds: [rtl, long-a]
-roots: [sanskrit-nas, pie-nehs]
-etymology_hook: nāk continues Sauraseni Prakrit ṇakka, from Proto-Indo-Iranian *náHs, from Proto-Indo-European *néh₂s "nose" — the same root English nose comes from, so unlike kān's dead end, nāk and nose are real cousins.
+roots: [sanskrit-nas, pie-nehs, indo-aryan-nakka]
+etymology_hook: "nāk ← Prakrit ṇakka, possibly *nas-ka- on nas- 'nose' (CDIAL 6909), the root of English nose"
 duration:
   max_seconds: 260
 requires:
@@ -61,7 +61,7 @@ history; the two words are not related.
 ## The word, taken apart — a real cousin, and English agrees
 <!-- hl-knowledge: introduces=[UR-ETYMON-NAAK-NOSE]; assesses=[UR-LEX-NAAK, UR-ETYMON-KAAN-UNCERTAIN] -->
 
-**nāk** continues Sauraseni Prakrit *ṇakka*, from Proto-Indo-Iranian
+**nāk** continues Sauraseni Prakrit *ṇakka*, which CDIAL derives, possibly, from *\*nas-ka-*, built on Sanskrit *nas-*, "nose" (CDIAL 6909); *nas-* comes from Proto-Indo-Iranian
 **\*náHs**, from Proto-Indo-European **\*néh₂s**, "nose." English **nose**
 comes from that very root. Where **کان**'s ancestry ran out unanswered —
 recall *karṇa*'s own origin was left unsettled last lesson — **ناک**'s does

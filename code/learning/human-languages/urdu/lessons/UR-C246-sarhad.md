@@ -14,7 +14,8 @@ romanization: "sarhad"
 concept_tag: UR-JAGAH246-SARHAD
 prerequisites: [UR-C246-har-jagah, UR-C246-age]
 sounds: []
-roots: []
+roots: [persian-sar, arabic-hadd]
+etymology_hook: "sarhad: Persian sar 'head, end' + Arabic ḥadd 'limit' (Lane, root ḥ-d-d)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C246-age]
 <!-- hl-knowledge: introduces=[UR-LEX-C246-JAGAH246-04]; assesses=[] -->
 
 **سرحد** — *sarhad* — "a border".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سرحد** (*sarhad*) is "the head of the limit". It joins Persian *sar*, "head, end", and Arabic *ḥadd*, "a limit, a boundary" (Lane, root *ḥ-d-d*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 193,
-  "sourceHash": "fnv1a64:cece066e7df4ab28",
+  "sourceHash": "fnv1a64:ad995e6c56d5d3fd",
   "lessonIds": [
     "UR-C193-imandar",
     "UR-C193-buzdil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch193.txt",
   "json": "urdu/narration/ch193.json",
-  "textHash": "fnv1a64:45a0008d07b4fa6a",
-  "jsonHash": "fnv1a64:efc12d88953a33be",
+  "textHash": "fnv1a64:d28e149d7b240c4b",
+  "jsonHash": "fnv1a64:fbf1f8ab5ef99179",
   "findings": []
 }

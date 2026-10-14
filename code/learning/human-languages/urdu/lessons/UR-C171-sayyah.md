@@ -14,7 +14,8 @@ romanization: "sayyāh"
 concept_tag: UR-CHIZ171-SAYYAH
 prerequisites: [UR-C170-chachi, UR-C171-shahri]
 sounds: []
-roots: []
+roots: [arabic-sayyah]
+etymology_hook: "sayyāh ← Arabic sayyāḥ 'one who travels much', through Persian (Lane, root s-y-ḥ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C171-shahri]
 <!-- hl-knowledge: introduces=[UR-LEX-C171-CHIZ171-02]; assesses=[] -->
 
 **سیاح** — *sayyāh* — "a tourist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سیاح** (*sayyāh*) is a loan from Arabic *sayyāḥ*, "one who travels much", which reached Urdu through Persian. Its Arabic root is *s-y-ḥ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

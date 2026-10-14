@@ -12,7 +12,7 @@ concept_tag: UR-OLD
 prerequisites: [UR-C18-aasmaan, UR-W07-alif-madda]
 sounds: [rtl, short-vowels-unwritten]
 roots: [sanskrit-purana, pie-per]
-etymology_hook: purānā descends from Sanskrit purāṇa "ancient, belonging to former times", built on purā "formerly", from Proto-Indo-European *per- / *pr̥H- "forward, before" -- the root behind Greek pró, Latin pro and prior, and English fore, former, first and before; the Sanskrit texts called the Purāṇas carry the same word, so the name of that literature means, quite literally, "the old ones".
+etymology_hook: "purānā ← Sanskrit purāṇa 'ancient' (CDIAL 8283), built on purā 'formerly'"
 duration:
   max_seconds: 280
 requires:
@@ -64,8 +64,7 @@ already.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[UR-ETYMON-PURANA-FORE]; assesses=[UR-LEX-PURANA, UR-LEX-AAM] -->
 
-**پرانا** is **inherited**: Sanskrit *purāṇa*, "ancient, belonging to former
-times," built on *purā*, "formerly." Behind that stands Proto-Indo-European
+**پرانا** is **inherited**: Sanskrit *purāṇa*, "ancient, belonging to former times" (CDIAL 8283), built on *purā*, "formerly." Behind that stands Proto-Indo-European
 **\*per-**, in the sense "forward, before."
 
 That root went everywhere. Greek *pró*, Latin *pro* and *prior*, and in English

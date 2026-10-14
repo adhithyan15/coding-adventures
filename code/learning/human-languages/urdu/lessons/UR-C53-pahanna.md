@@ -14,7 +14,8 @@ romanization: "pahannā"
 concept_tag: UR-VERB-PAHANNA
 prerequisites: [UR-C52-batana, UR-C52-khona]
 sounds: []
-roots: []
+roots: [indo-aryan-pinahati]
+etymology_hook: "pahannā ← *pinahati 'ties on', a reconstructed form; a tadbhava (CDIAL 8198)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C52-khona]
 <!-- hl-knowledge: introduces=[UR-LEX-C53-VERBS53-01]; assesses=[] -->
 
 **پہننا** — *pahannā* — "to wear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پہننا** (*pahannā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*pinahati*, "ties on", a form CDIAL reconstructs from its descendants (CDIAL 8198).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

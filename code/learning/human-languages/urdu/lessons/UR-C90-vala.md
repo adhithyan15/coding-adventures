@@ -15,6 +15,7 @@ concept_tag: UR-DEF90-VALA
 prerequisites: [UR-C90-khud, UR-C90-kaunsa]
 sounds: []
 roots: []
+etymology_hook: "vālā: origin not settled; CDIAL lists compounds such as gharwālā 'householder' but no entry for -vālā itself"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C90-kaunsa]
 <!-- hl-knowledge: introduces=[UR-LEX-C90-DEF90-04]; assesses=[] -->
 
 **والا** — *vālā* — "the one (that)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **والا** (*vālā*) is not settled. CDIAL lists compounds made with it, such as *gharwālā*, "householder", but has no entry for the word itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

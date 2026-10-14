@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 126,
-  "sourceHash": "fnv1a64:0ba9ba03089402fa",
+  "sourceHash": "fnv1a64:38a382ffc9dbc6ac",
   "lessonIds": [
     "UR-C126-kavva",
     "UR-C126-mor2",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch126.txt",
   "json": "urdu/narration/ch126.json",
-  "textHash": "fnv1a64:f2d5608f7fc88048",
-  "jsonHash": "fnv1a64:5edb51f641879bce",
+  "textHash": "fnv1a64:5794c87f95080934",
+  "jsonHash": "fnv1a64:37a79eb141365173",
   "findings": []
 }

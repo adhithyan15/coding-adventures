@@ -14,7 +14,8 @@ romanization: "qarz denā"
 concept_tag: UR-VERB-QARZ-DENA
 prerequisites: [UR-C148-badalna, UR-C148-udhar-lena]
 sounds: []
-roots: []
+roots: [arabic-qard, sanskrit-dadati]
+etymology_hook: "qarz ← Arabic qarḍ 'a loan', through Persian (Lane, root q-r-ḍ); denā ← dadāti (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C148-udhar-lena]
 <!-- hl-knowledge: introduces=[UR-LEX-C148-ACT148-04]; assesses=[] -->
 
 **قرض دینا** — *qarz denā* — "to lend (money)".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قرض دینا** (*qarz denā*) joins *qarz*, "a loan", and *denā*, "to give". *qarz* is Arabic *qarḍ*, "a loan", which reached Urdu through Persian (Lane, root *q-r-ḍ*); *denā* comes from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "lemū̃"
 concept_tag: UR-FOOD57-LEMU
 prerequisites: [UR-C56-angur, UR-C57-narangi]
 sounds: []
-roots: []
+roots: [sanskrit-nimbu]
+etymology_hook: "lemū̃: CDIAL lists lemū 'lemon' under Sanskrit nimbū 'lime', itself from Austroasiatic (CDIAL 7247)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C57-narangi]
 <!-- hl-knowledge: introduces=[UR-LEX-C57-FOOD57-02]; assesses=[] -->
 
 **لیموں** — *lemū̃* — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لیموں** (*lemū̃*) belongs with Hindi *nīmbū*, "lime", which CDIAL lists under Sanskrit *nimbū*, "the lime", a word it takes from an Austroasiatic language (CDIAL 7247). CDIAL lists *lemū*, "lemon", there too, and puts its *e* down to a different source of the loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

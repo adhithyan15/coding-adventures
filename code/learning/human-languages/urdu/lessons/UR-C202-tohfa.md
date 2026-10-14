@@ -14,7 +14,8 @@ romanization: "tohfā"
 concept_tag: UR-CHIZ202-TOHFA
 prerequisites: [UR-C201-daur, UR-C202-parti]
 sounds: []
-roots: []
+roots: [arabic-tuhfa]
+etymology_hook: "tohfā ← Arabic tuḥfa 'a gift, a rarity', through Persian (Lane, root t-ḥ-f)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C202-parti]
 <!-- hl-knowledge: introduces=[UR-LEX-C202-CHIZ202-02]; assesses=[] -->
 
 **تحفہ** — *tohfā* — "a gift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تحفہ** (*tohfā*) is a loan from Arabic *tuḥfa*, "a gift, a rarity", which reached Urdu through Persian. Its Arabic root is *t-ḥ-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

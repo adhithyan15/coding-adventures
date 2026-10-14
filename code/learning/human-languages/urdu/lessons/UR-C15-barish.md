@@ -12,7 +12,7 @@ concept_tag: UR-RAIN
 prerequisites: [UR-C14-koat, UR-C10-aankh]
 sounds: [rtl, long-a, sh]
 roots: [persian-baresh]
-etymology_hook: bārish is borrowed from Classical Persian bāriš, itself bār "load, downpour" plus the suffix -eš. No further Proto-Indo-European root is documented for that Persian base -- an honest dead end, the same shape as lāl.
+etymology_hook: "bārish: usually traced to Persian bārish 'rain', built on bār-, the stem of bāridan 'to rain'"
 duration:
   max_seconds: 270
 requires:
@@ -50,13 +50,10 @@ weather, the small talk that follows almost any "how are you."
 
 **بارش** is feminine.
 
-## The word, taken apart — a load, given an ending
+## The word, taken apart — a verb stem, given an ending
 <!-- hl-knowledge: introduces=[UR-ETYMON-BARISH-PERSIAN]; assesses=[UR-LEX-BARISH] -->
 
-**بارش** is borrowed from Classical Persian **bāriš**, itself built from
-**bār**, "load, downpour," plus the ending **-eš** that turns a verb or
-noun stem into an action noun. No further Proto-Indo-European root is
-documented behind that Persian base — an honest dead end, the same shape
+**بارش** is borrowed from Classical Persian **bāriš**, itself built from **bār-**, the stem of *bāridan*, "to rain," plus the ending **-eš** that turns a verb stem into an action noun. This book traces it no further back than Persian — an honest dead end, the same shape
 as **لال**'s.
 
 ## Guided Practice

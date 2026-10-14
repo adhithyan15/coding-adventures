@@ -14,7 +14,8 @@ romanization: "ammī"
 concept_tag: UR-FAMILY43-AMMI
 prerequisites: [UR-C42-bap, UR-C42-abbu]
 sounds: []
-roots: []
+roots: [sanskrit-amba]
+etymology_hook: "ammī: the fond form of ammā 'mother', which CDIAL lists under Sanskrit ambā 'mother' (CDIAL 574)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C42-abbu]
 <!-- hl-knowledge: introduces=[UR-LEX-C43-FAMILY43-01]; assesses=[] -->
 
 **امی** — *ammī* — "mum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**امی** (*ammī*) is the fond form of *ammā*, "mother", which CDIAL lists under Sanskrit *ambā*, "mother" (CDIAL 574). CDIAL lists *ammā*, not *ammī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

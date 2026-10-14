@@ -14,7 +14,8 @@ romanization: "bāṅsurī"
 concept_tag: UR-CHIZ169-BANSURI
 prerequisites: [UR-C168-kriket, UR-C168-futbal]
 sounds: []
-roots: []
+roots: [sanskrit-vamshi]
+etymology_hook: "bāṅsurī: CDIAL lists bãsī 'flute' under vaṃśī 'flute, pipe' (CDIAL 11180), not bāṅsurī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C168-futbal]
 <!-- hl-knowledge: introduces=[UR-LEX-C169-CHIZ169-01]; assesses=[] -->
 
 **بانسری** — *bāṅsurī* — "a flute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بانسری** (*bāṅsurī*) belongs with Hindi *bãsī*, "flute", which CDIAL lists under Sanskrit *vaṃśī*, "flute, pipe", built on *vaṃśa*, "bamboo" (CDIAL 11180). CDIAL does not list *bāṅsurī* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

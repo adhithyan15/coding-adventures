@@ -14,7 +14,8 @@ romanization: "qabristān"
 concept_tag: UR-JAGAH191-QABRISTAN
 prerequisites: [UR-C191-girja-ghar, UR-C191-gurdvara]
 sounds: []
-roots: []
+roots: [arabic-qabr, persian-stan]
+etymology_hook: "qabristān: Arabic qabr 'grave' (Lane, root q-b-r) + Persian -istān 'place'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C191-gurdvara]
 <!-- hl-knowledge: introduces=[UR-LEX-C191-JAGAH191-04]; assesses=[] -->
 
 **قبرستان** — *qabristān* — "a graveyard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قبرستان** (*qabristān*) is "place of graves". It joins Arabic *qabr*, "a grave" (Lane, root *q-b-r*), and the Persian ending *-istān*, "place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

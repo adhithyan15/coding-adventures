@@ -14,7 +14,8 @@ romanization: "darvāzā"
 concept_tag: UR-LOC101-DARVAZA
 prerequisites: [UR-C101-sinema, UR-C101-maidan]
 sounds: []
-roots: []
+roots: [persian-darvaza]
+etymology_hook: "darvāzā: usually traced to Persian darvāza 'gate, door'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C101-maidan]
 <!-- hl-knowledge: introduces=[UR-LEX-C101-LOC101-05]; assesses=[] -->
 
 **دروازہ** — *darvāzā* — "a door".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دروازہ** (*darvāzā*) is a loan, usually traced to Persian *darvāza*, "gate, door". Its first part, Persian *dar*, "door", goes back to the same ancient root as English *door* and Sanskrit *dvāra*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

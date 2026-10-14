@@ -14,7 +14,8 @@ romanization: "jārī rakhnā"
 concept_tag: UR-VERB-JARI-RAKHNA
 prerequisites: [UR-C242-koshish-karna, UR-C242-khatm-karna]
 sounds: []
-roots: []
+roots: [arabic-jari, sanskrit-rakshati]
+etymology_hook: "jārī ← Arabic jārī 'running, flowing' (Lane, root j-r-y); rakhnā ← Sanskrit rakṣati 'guards' (CDIAL 10547)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C242-khatm-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C242-ACT242-05]; assesses=[] -->
 
 **جاری رکھنا** — *jārī rakhnā* — "to continue".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جاری رکھنا** (*jārī rakhnā*) is "to keep running". *jārī* is Arabic *jārī*, "running, flowing", which reached Urdu through Persian (Lane, root *j-r-y*); *rakhnā*, "to keep", comes from Sanskrit *rakṣati*, "guards" (CDIAL 10547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

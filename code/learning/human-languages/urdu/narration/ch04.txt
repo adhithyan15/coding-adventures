@@ -16,6 +16,9 @@ Urdu: کیسی. read: kaisī. use in the respectful question: addressing a woman
 Both begin ک (kāf) k + ی carrying the ai sound. At the left edge, کیسے ends in broad ے e, while کیسی ends in ی long ī.
 [once you have stopped driving — read: the whole word before isolating the final shape]
 
+The phrase, taken apart.
+کیسے / کیسی (kaise / kaisī) are forms of kaisā, "of what kind", which CDIAL lists under Sanskrit kīdṛśa, "of what kind", with the question stem ka- in place of kī-, after jaisā, "such as" (CDIAL 3197).
+
 Grammar Lens: one agreement contrast.
 English keeps how unchanged. Urdu makes this describing form agree with the person addressed: kaise for a man, kaisī for a woman. Learn only this pair today—not a table of adjective endings. Respectful āp itself remains the same for everyone.
 
@@ -87,6 +90,9 @@ The exchange.
 to a man: آپ کیسے ہیں؟ — āp kaise haiṅ? to a woman: آپ کیسی ہیں؟ — āp kaisī haiṅ?
 The order is you + how + are? Keep ہیں haiṅ final, exactly as ہے hai stayed final in the name question. Respectful āp takes this plural-shaped copula even when speaking to one person.
 
+The phrase, taken apart.
+The two questions آپ کیسے ہیں and آپ کیسی ہیں (āp kaise haiṅ, āp kaisī haiṅ) are built from inherited words. āp comes from Sanskrit ātman, "self" (CDIAL 1135); kaise and kaisī are forms of kaisā, which CDIAL lists under Sanskrit kīdṛśa, "of what kind" (CDIAL 3197); and haiṅ, "are", is the plural partner of hai, usually traced to Sanskrit asti, "is".
+
 Grammar Lens: respect does not erase agreement.
 Both lines are respectful. The choice between kaise and kaisī tracks the person addressed, not greater or lesser politeness. If you do not know how a person wishes to be addressed, listen for their usage or ask rather than guess; the grammar lesson does not replace social judgment.
 
@@ -115,6 +121,9 @@ Ask āp kaise haiṅ? You know the respectful “you are” ending haiṅ. Your 
 You'll want to know first — the frame.
 میں... ہوں — maiṅ... hūṅ — I am...
 میں maiṅ means “I.” Final ں marks a nasal ending. ہوں hūṅ means “am” and carries long ū with و, followed again by nasal ں. Leave a space for the state word that comes next.
+
+The phrase, taken apart.
+میں... ہوں (maiṅ... hūṅ) is inherited. CDIAL lists maiṅ, "I", under the Sanskrit first-person base ma-, whose form mayā meant "by me" (CDIAL 9691); it is the same m- as English me. hūṅ, "am", is the first-person form of the inherited verb "to be".
 
 Guided Practice.
 [your turn — say: maiṅ — I]
@@ -200,6 +209,7 @@ The first sound is retroflex and aspirated: curl the tongue slightly back for ٹ
 
 The word, taken apart — one word, two scripts.
 Urdu ٹھیک and Hindi ṭhīk are the same everyday Hindustani word. Their grammar is closely shared; their scripts make different literary histories visible. This Urdu lesson leaves the Hindi side romanized: mixed-language practice may show both scripts only after each form has been learned in its own right.
+Its history is inherited: CDIAL lists ṭhīk, “firm, correct”, under a reconstructed ṭhīkka, “firm, right”, which it derives, probably, from Sanskrit sthita, “standing” (CDIAL 5503).
 
 Guided Practice.
 [your turn — say: ṭhīk — fine, well]
@@ -227,6 +237,9 @@ Fill the frame maiṅ... hūṅ with ṭhīk, then recall Chapter 1's shukriyā.
 The exchange.
 میں ٹھیک ہوں، شکریہ (maiṅ ṭhīk hūṅ, shukriyā)۔ Maiṅ ṭhīk hūṅ, shukriyā. I am fine, thank you.
 No word is new. The step is assembling the words quickly enough to answer a real person.
+
+The phrase, taken apart.
+میں ٹھیک ہوں، شکریہ (maiṅ ṭhīk hūṅ, shukriyā) mixes Urdu's two layers. maiṅ, "I" (CDIAL 9691), ṭhīk, "fine", from a reconstructed ṭhīkka, "firm, right" (CDIAL 5503), and hūṅ, "am", are inherited; shukriyā is built on Arabic shukr, "thanks", which reached Urdu through Persian (Lane, root sh-k-r).
 
 Grammar Lens: keep the copula final.
 The core reply is:

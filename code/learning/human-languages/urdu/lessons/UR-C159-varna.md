@@ -14,7 +14,8 @@ romanization: "varnā"
 concept_tag: UR-VAJAH159-VARNA
 prerequisites: [UR-C159-agar, UR-C159-phir-bhi]
 sounds: []
-roots: []
+roots: [persian-varna]
+etymology_hook: "varnā: usually traced to Persian varna 'otherwise', from va 'and' + agar 'if' + na 'not'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C159-phir-bhi]
 <!-- hl-knowledge: introduces=[UR-LEX-C159-VAJAH159-05]; assesses=[] -->
 
 **ورنہ** — *varnā* — "otherwise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ورنہ** (*varnā*) is usually traced to Persian *varna*, "otherwise", a running together of *va*, "and", *agar*, "if", and *na*, "not".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

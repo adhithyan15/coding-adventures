@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 100,
-  "sourceHash": "fnv1a64:df9d984a399fa19d",
+  "sourceHash": "fnv1a64:95d577a20c9bb711",
   "lessonIds": [
     "UR-C100-chauraha",
     "UR-C100-aspas",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch100.txt",
   "json": "urdu/narration/ch100.json",
-  "textHash": "fnv1a64:ac28089b0c5a008e",
-  "jsonHash": "fnv1a64:5aa8324bd1776012",
+  "textHash": "fnv1a64:b77f6f63923d03c8",
+  "jsonHash": "fnv1a64:ec158f148a2c0303",
   "findings": []
 }

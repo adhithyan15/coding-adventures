@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 136,
-  "sourceHash": "fnv1a64:8bc80e50b0ad6470",
+  "sourceHash": "fnv1a64:57e8e9f29a3a147c",
   "lessonIds": [
     "UR-C136-pyasa",
     "UR-C136-taza",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch136.txt",
   "json": "urdu/narration/ch136.json",
-  "textHash": "fnv1a64:1bfbe361465d289d",
-  "jsonHash": "fnv1a64:00e4499431d5e629",
+  "textHash": "fnv1a64:2e7725ff8652989b",
+  "jsonHash": "fnv1a64:f6b7ceaf2cfd2391",
   "findings": []
 }

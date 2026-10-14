@@ -14,7 +14,8 @@ romanization: "phuphī"
 concept_tag: UR-CHIZ203-PHUPHI
 prerequisites: [UR-C203-mamun, UR-C203-khala]
 sounds: []
-roots: []
+roots: [indo-aryan-phupphu]
+etymology_hook: "phuphī ← *phupphī 'father's sister', a reconstructed form; a tadbhava (CDIAL 9089)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C203-khala]
 <!-- hl-knowledge: introduces=[UR-LEX-C203-CHIZ203-03]; assesses=[] -->
 
 **پھوپھی** — *phuphī* — "a paternal aunt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پھوپھی** (*phuphī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*phupphī*, "father's sister", a form CDIAL reconstructs from its descendants (CDIAL 9089). It is one of the forms CDIAL reconstructs as *\*phupphu-*, *\*phupphī-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

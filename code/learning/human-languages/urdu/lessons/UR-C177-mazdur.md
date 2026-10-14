@@ -14,7 +14,8 @@ romanization: "mazdūr"
 concept_tag: UR-KAM177-MAZDUR
 prerequisites: [UR-C177-mulazim, UR-C177-sathi]
 sounds: []
-roots: []
+roots: [persian-muzdur]
+etymology_hook: "mazdūr: usually traced to Persian muzdūr 'a hired labourer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C177-sathi]
 <!-- hl-knowledge: introduces=[UR-LEX-C177-KAM177-03]; assesses=[] -->
 
 **مزدور** — *mazdūr* — "a labourer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مزدور** (*mazdūr*) is a loan, usually traced to Persian *muzdūr*, "a hired labourer". It is built on *muzd*, "wages".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

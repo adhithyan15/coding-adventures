@@ -14,7 +14,8 @@ romanization: "samajhdār"
 concept_tag: UR-SIFAT160-SAMAJHDAR
 prerequisites: [UR-C159-varna, UR-C160-mehrban]
 sounds: []
-roots: []
+roots: [sanskrit-sambudhyate, persian-dar-holder]
+etymology_hook: "samajh ← Sanskrit saṃbudhyate (CDIAL 12959) + Persian -dār 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C160-mehrban]
 <!-- hl-knowledge: introduces=[UR-LEX-C160-SIFAT160-02]; assesses=[] -->
 
 **سمجھدار** — *samajhdār* — "sensible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سمجھدار** (*samajhdār*) is "holding understanding". *samajh* belongs with *samajhnā*, "to understand", which CDIAL lists under Sanskrit *saṃbudhyate*, "wakes up, understands" (CDIAL 12959), and *-dār*, "holder", is Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

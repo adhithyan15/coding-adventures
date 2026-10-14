@@ -14,7 +14,8 @@ romanization: "chashmā"
 concept_tag: UR-THINGS110-CHASHMA
 prerequisites: [UR-C110-mobail, UR-C110-fon]
 sounds: []
-roots: []
+roots: [persian-chashma]
+etymology_hook: "chashmā: usually traced to Persian chashma 'spring', built on chashm 'eye'; 'spectacles' is the Indian sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C110-fon]
 <!-- hl-knowledge: introduces=[UR-LEX-C110-THINGS110-05]; assesses=[] -->
 
 **چشمہ** — *chashmā* — "glasses, spectacles".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چشمہ** (*chashmā*) is a loan, usually traced to Persian *chashma*, "spring, fountain", built on *chashm*, "eye". The sense "spectacles" grew up in India.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pāpaṛ"
 concept_tag: UR-CHIZ234-PAPAR
 prerequisites: [UR-C233-zalzala, UR-C233-sailab]
 sounds: []
-roots: []
+roots: [sanskrit-parpata]
+etymology_hook: "pāpaṛ ← Sanskrit parpaṭa 'thin cake of rice or pease-meal', a tadbhava (CDIAL 7934)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C233-sailab]
 <!-- hl-knowledge: introduces=[UR-LEX-C234-CHIZ234-01]; assesses=[] -->
 
 **پاپڑ** — *pāpaṛ* — "a poppadom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پاپڑ** (*pāpaṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *parpaṭa*, "thin cake of rice or pease-meal" (CDIAL 7934).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 160,
-  "sourceHash": "fnv1a64:d83b763c63cade12",
+  "sourceHash": "fnv1a64:923ec982f0b94cb1",
   "lessonIds": [
     "UR-C160-mehrban",
     "UR-C160-samajhdar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch160.txt",
   "json": "urdu/narration/ch160.json",
-  "textHash": "fnv1a64:24a14e591a3c3d38",
-  "jsonHash": "fnv1a64:d9e0268d98a69855",
+  "textHash": "fnv1a64:266b162baf06957d",
+  "jsonHash": "fnv1a64:d9b10724825f7911",
   "findings": []
 }

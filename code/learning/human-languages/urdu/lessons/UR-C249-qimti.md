@@ -14,7 +14,8 @@ romanization: "qīmtī"
 concept_tag: UR-SIFAT249-QIMTI
 prerequisites: [UR-C249-pursukun, UR-C249-aramdeh]
 sounds: []
-roots: []
+roots: [arabic-qima]
+etymology_hook: "qīmtī: qīmat 'price', from Arabic qīma 'value' (Lane), + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C249-aramdeh]
 <!-- hl-knowledge: introduces=[UR-LEX-C249-SIFAT249-05]; assesses=[] -->
 
 **قیمتی** — *qīmtī* — "precious, valuable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قیمتی** (*qīmtī*) is *qīmat*, "price", with the ending *-ī*. *qīmat* is Arabic *qīma*, "value", which reached Urdu through Persian (Lane, root *q-w-m*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

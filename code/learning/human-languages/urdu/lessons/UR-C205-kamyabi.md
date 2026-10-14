@@ -14,7 +14,8 @@ romanization: "kāmyābī"
 concept_tag: UR-CHIZ205-KAMYABI
 prerequisites: [UR-C205-farz, UR-C205-taraqqi]
 sounds: []
-roots: []
+roots: [persian-kamyab]
+etymology_hook: "kāmyābī: kāmyāb 'successful', usually traced to Persian, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C205-taraqqi]
 <!-- hl-knowledge: introduces=[UR-LEX-C205-CHIZ205-05]; assesses=[] -->
 
 **کامیابی** — *kāmyābī* — "success".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کامیابی** (*kāmyābī*) is *kāmyāb*, "successful", usually traced to Persian *kāmyāb*, with the ending *-ī* that makes a noun. *kāmyāb* is built from *kām*, "desire", and *yāb*, "finding".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

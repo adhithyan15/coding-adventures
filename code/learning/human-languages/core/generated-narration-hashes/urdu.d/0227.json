@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 227,
-  "sourceHash": "fnv1a64:0463a4fd0d523e76",
+  "sourceHash": "fnv1a64:e3c193f05322e68a",
   "lessonIds": [
     "UR-C227-janvar",
     "UR-C227-bhains",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch227.txt",
   "json": "urdu/narration/ch227.json",
-  "textHash": "fnv1a64:a8466fbd1d51b15f",
-  "jsonHash": "fnv1a64:01e5eb82afed4505",
+  "textHash": "fnv1a64:16bd48b377cd1966",
+  "jsonHash": "fnv1a64:7381737315975c33",
   "findings": []
 }

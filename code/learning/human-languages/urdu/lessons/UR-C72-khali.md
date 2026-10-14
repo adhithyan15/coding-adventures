@@ -14,7 +14,8 @@ romanization: "khālī"
 concept_tag: UR-ADJ72-KHALI
 prerequisites: [UR-C72-nicha, UR-C72-bhara]
 sounds: []
-roots: []
+roots: [persian-khali]
+etymology_hook: "khālī ← Arabic khālī 'empty', through Persian (Lane, root kh-l-w)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C72-bhara]
 <!-- hl-knowledge: introduces=[UR-LEX-C72-ADJ72-04]; assesses=[] -->
 
 **خالی** — *khālī* — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خالی** (*khālī*) is a loan from Arabic *khālī*, "empty", which reached Urdu through Persian. Its Arabic root is *kh-l-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

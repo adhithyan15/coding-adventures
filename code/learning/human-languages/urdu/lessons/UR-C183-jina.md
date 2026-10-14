@@ -14,7 +14,8 @@ romanization: "jīnā"
 concept_tag: UR-VERB-JINA
 prerequisites: [UR-C183-mulaqat-karna, UR-C183-shadi-karna]
 sounds: []
-roots: []
+roots: [sanskrit-jivati]
+etymology_hook: "jīnā ← Sanskrit jīvati 'is alive', a tadbhava (CDIAL 5241)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C183-shadi-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C183-ACT183-03]; assesses=[] -->
 
 **جینا** — *jīnā* — "to be alive, to live (a life)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جینا** (*jīnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jīvati*, "is alive" (CDIAL 5241).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

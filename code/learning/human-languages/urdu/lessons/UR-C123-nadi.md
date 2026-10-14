@@ -14,7 +14,8 @@ romanization: "nadī"
 concept_tag: UR-THINGS123-NADI
 prerequisites: [UR-C122-dastane, UR-C122-pahari]
 sounds: []
-roots: []
+roots: [sanskrit-nadi]
+etymology_hook: "nadī ← Sanskrit nadī 'river', a tatsama (CDIAL 6943)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C122-pahari]
 <!-- hl-knowledge: introduces=[UR-LEX-C123-THINGS123-01]; assesses=[] -->
 
 **ندی** — *nadī* — "a stream, a small river".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ندی** (*nadī*) is Sanskrit *nadī*, "river", taken over whole as a learned loan, a tatsama (CDIAL 6943). CDIAL lists the inherited form as *naī*, "small river".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

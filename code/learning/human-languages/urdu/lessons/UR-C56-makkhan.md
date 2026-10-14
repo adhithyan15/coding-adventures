@@ -14,7 +14,8 @@ romanization: "makkhan"
 concept_tag: UR-FOOD56-MAKKHAN
 prerequisites: [UR-C55-namak, UR-C56-mirch]
 sounds: []
-roots: []
+roots: [sanskrit-mrakshana]
+etymology_hook: "makkhan ← Sanskrit mrakṣaṇa 'rubbing in; ointment, oil', a tadbhava (CDIAL 10378)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C56-mirch]
 <!-- hl-knowledge: introduces=[UR-LEX-C56-FOOD56-02]; assesses=[] -->
 
 **مکھن** — *makkhan* — "butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مکھن** (*makkhan*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mrakṣaṇa*, "rubbing in; ointment, oil" (CDIAL 10378). Butter was first "the thing rubbed in".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

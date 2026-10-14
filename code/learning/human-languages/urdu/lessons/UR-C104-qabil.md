@@ -14,7 +14,8 @@ romanization: "qābil"
 concept_tag: UR-CAN104-QABIL
 prerequisites: [UR-C103-pana, UR-C104-hunar]
 sounds: []
-roots: []
+roots: [arabic-qabil]
+etymology_hook: "qābil ← Arabic qābil 'receiving; capable', through Persian (Lane, root q-b-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C104-hunar]
 <!-- hl-knowledge: introduces=[UR-LEX-C104-CAN104-02]; assesses=[] -->
 
 **قابل** — *qābil* — "able, capable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قابل** (*qābil*) is a loan from Arabic *qābil*, "receiving; capable", which reached Urdu through Persian. Its Arabic root is *q-b-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

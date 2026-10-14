@@ -14,7 +14,8 @@ romanization: "pīlā"
 concept_tag: UR-ADJ74-PILA
 prerequisites: [UR-C73-zaruri, UR-C74-hara]
 sounds: []
-roots: []
+roots: [sanskrit-pitala]
+etymology_hook: "pīlā ← Sanskrit pītala 'yellow', a tadbhava (CDIAL 8233)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C74-hara]
 <!-- hl-knowledge: introduces=[UR-LEX-C74-ADJ74-02]; assesses=[] -->
 
 **پیلا** — *pīlā* — "yellow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیلا** (*pīlā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pītala*, "yellow" (CDIAL 8233). It is built on *pīta*, "yellow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

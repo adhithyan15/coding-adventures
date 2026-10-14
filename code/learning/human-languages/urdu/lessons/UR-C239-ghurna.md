@@ -14,7 +14,8 @@ romanization: "ghūrnā"
 concept_tag: UR-VERB-GHURNA
 prerequisites: [UR-C239-chabana, UR-C239-sunghna]
 sounds: []
-roots: []
+roots: [indo-aryan-ghurati]
+etymology_hook: "ghūrnā: CDIAL lists ghūrnā 'to roll round' under *ghurati 'revolves' (4488); its use for staring is not explained"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C239-sunghna]
 <!-- hl-knowledge: introduces=[UR-LEX-C239-ACT239-04]; assesses=[] -->
 
 **گھورنا** — *ghūrnā* — "to stare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists a Hindi *ghūrnā*, "to roll round", under a reconstructed *\*ghurati*, "revolves" (CDIAL 4488). Whether "to stare" grew out of rolling the eyes is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

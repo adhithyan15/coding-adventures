@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 244,
-  "sourceHash": "fnv1a64:6725bf2897b163d0",
+  "sourceHash": "fnv1a64:c18fe3d5e6e23c40",
   "lessonIds": [
     "UR-C244-chhala",
     "UR-C244-nishan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch244.txt",
   "json": "urdu/narration/ch244.json",
-  "textHash": "fnv1a64:75497bb50b57343d",
-  "jsonHash": "fnv1a64:69201a3f15f1d891",
+  "textHash": "fnv1a64:229b8b82a3fb30ba",
+  "jsonHash": "fnv1a64:d82ebdbe6de1ce18",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a passport, then the Urdu for a visa.
 You'll want to know: چپاتی.
 چپاتی — chapātī — "a chapati".
 
+The word, taken apart.
+The origin of چپاتی (chapātī) is not settled. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a visa, then the Urdu for a chapati.
 
 You'll want to know: گھی.
 گھی — ghī — "ghee".
+
+The word, taken apart.
+گھی (ghī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghṛta, "clarified butter, ghee" (CDIAL 4501).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a chapati, then the Urdu for ghee.
 You'll want to know: مسالہ.
 مسالہ — masālā — "spice".
 
+The word, taken apart.
+مسالہ (masālā) is a loan from Arabic maṣāliḥ, "things that are needful", which reached Urdu through Persian. Its Arabic root is ṣ-l-ḥ (Lane). Urdu took the plural through Persian and narrowed it to cooking.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for ghee, then the Urdu for spice.
 You'll want to know: ہلدی.
 ہلدی — haldī — "turmeric".
 
+The word, taken apart.
+ہلدی (haldī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from haridrā, "turmeric" (CDIAL 13992). It is built on haridra, "yellow".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for spice, then the Urdu for turmeric.
 
 You'll want to know: زیرہ.
 زیرہ — zīrā — "cumin".
+
+The word, taken apart.
+زیرہ (zīrā) is spelt as Persian zīra, "cumin". CDIAL lists the Hindi form jīrā under Sanskrit jīraka, "cumin seed" (CDIAL 5234).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "ṭaiks"
 concept_tag: UR-KAM209-TAIKS
 prerequisites: [UR-C209-not, UR-C209-qarz]
 sounds: []
-roots: []
+roots: [english-tax]
+etymology_hook: "ṭaiks ← English tax"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C209-qarz]
 <!-- hl-knowledge: introduces=[UR-LEX-C209-KAM209-03]; assesses=[] -->
 
 **ٹیکس** — *ṭaiks* — "a tax".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹیکس** (*ṭaiks*) is a loan from English *tax*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

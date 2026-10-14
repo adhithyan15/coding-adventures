@@ -12,6 +12,9 @@ Before the new one: say the Urdu for an ant, then the Urdu for a donkey.
 You'll want to know: اونٹ.
 اونٹ — ūṅṭ — "a camel".
 
+The word, taken apart.
+اونٹ (ūṅṭ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uṣṭra, "buffalo; camel" (CDIAL 2387).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a donkey, then the Urdu for a camel.
 
 You'll want to know: لومڑی.
 لومڑی — lomṛī — "a fox".
+
+The word, taken apart.
+لومڑی (lomṛī) is a tadbhava, a word inherited and reshaped by sound change. It comes from lompaṭa, "fox", a form CDIAL reconstructs from its descendants (CDIAL 11153). It is a variant CDIAL reconstructs beside Sanskrit lomaṭaka, "fox"; CDIAL suggests these forms may blend a word for "fox" with words for "hair" and "tail".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a camel, then the Urdu for a fox.
 You'll want to know: مچھر.
 مچھر — machchhar — "a mosquito".
 
+The word, taken apart.
+مچھر (machchhar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from matsara, "mosquito, fly" (CDIAL 9757). The Sanskrit word is known only from the old word-lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a fox, then the Urdu for a mosquito.
 You'll want to know: مکھی.
 مکھی — makkhī — "a fly".
 
+The word, taken apart.
+مکھی (makkhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from makṣikā, "fly, bee" (CDIAL 9696).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a mosquito, then the Urdu for a fly.
 
 You'll want to know: خرگوش.
 خرگوش — khargosh — "a rabbit".
+
+The word, taken apart.
+خرگوش (khargosh) is a loan, usually traced to Persian khargōsh, "hare". It is built from khar, "donkey", and gōsh, "ear".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "chane"
 concept_tag: UR-CHIZ174-CHANE
 prerequisites: [UR-C174-makai, UR-C174-gandum]
 sounds: []
-roots: []
+roots: [sanskrit-cana]
+etymology_hook: "chane ← Sanskrit caṇa 'chickpea', a tadbhava (CDIAL 4579)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C174-gandum]
 <!-- hl-knowledge: introduces=[UR-LEX-C174-CHIZ174-03]; assesses=[] -->
 
 **چنے** — *chane* — "chickpeas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چنے** (*chane*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *caṇa*, "chickpea" (CDIAL 4579). *chane* is the plural of *chanā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

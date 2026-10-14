@@ -14,7 +14,8 @@ romanization: "pleṭfārm"
 concept_tag: UR-CHIZ255-PLETFARM
 prerequisites: [UR-C254-gitar, UR-C254-tabla]
 sounds: []
-roots: []
+roots: [english-platform]
+etymology_hook: "pleṭfārm ← English platform"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C254-tabla]
 <!-- hl-knowledge: introduces=[UR-LEX-C255-CHIZ255-01]; assesses=[] -->
 
 **پلیٹ فارم** — *pleṭfārm* — "a platform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پلیٹ فارم** (*pleṭfārm*) is a loan from English *platform*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

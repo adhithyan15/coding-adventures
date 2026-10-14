@@ -14,7 +14,8 @@ romanization: "bārah"
 concept_tag: UR-CLOTHES83-BARAH
 prerequisites: [UR-C83-ghari, UR-C83-gyarah]
 sounds: []
-roots: []
+roots: [sanskrit-dvadasha]
+etymology_hook: "bārah ← Sanskrit dvādaśa 'twelve', a tadbhava (CDIAL 6658)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C83-gyarah]
 <!-- hl-knowledge: introduces=[UR-LEX-C83-CLOTHES83-04]; assesses=[] -->
 
 **بارہ** — *bārah* — "twelve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بارہ** (*bārah*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dvādaśa*, "twelve" (CDIAL 6658).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

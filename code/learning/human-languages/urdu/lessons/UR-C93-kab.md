@@ -14,7 +14,8 @@ romanization: "kab"
 concept_tag: UR-TIME93-KAB
 prerequisites: [UR-C93-ab, UR-C93-tab]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva, ka-interrogative]
+etymology_hook: "kab: CDIAL lists it under Sanskrit evam eva 'exactly so', crossed with the question stem ka- (CDIAL 2528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C93-tab]
 <!-- hl-knowledge: introduces=[UR-LEX-C93-TIME93-05]; assesses=[] -->
 
 **کب** — *kab* — "when?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کب** (*kab*) is inherited. CDIAL lists it beside *ab*, "now", under Sanskrit *evam eva*, "exactly so", crossed with the question stem *ka-* of *kyā* and *kaun* (CDIAL 2528).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

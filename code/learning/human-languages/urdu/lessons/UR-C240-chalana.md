@@ -14,7 +14,8 @@ romanization: "chalānā"
 concept_tag: UR-VERB-CHALANA
 prerequisites: [UR-C240-dhakelna, UR-C240-bujhana]
 sounds: []
-roots: []
+roots: [sanskrit-calati]
+etymology_hook: "chalānā: the causing form of chalnā 'to move', from Sanskrit calati (CDIAL 4715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C240-bujhana]
 <!-- hl-knowledge: introduces=[UR-LEX-C240-ACT240-03]; assesses=[] -->
 
 **چلانا** — *chalānā* — "to drive, to operate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چلانا** (*chalānā*) is the causing form of *chalnā*, "to move, to go": to drive is to make something go. CDIAL lists *chalnā* under Sanskrit *calati*, "moves" (CDIAL 4715).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

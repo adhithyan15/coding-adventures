@@ -14,7 +14,8 @@ romanization: "makān"
 concept_tag: UR-JAGAH190-MAKAN
 prerequisites: [UR-C190-yunivarsiti, UR-C190-kalij]
 sounds: []
-roots: []
+roots: [arabic-makan]
+etymology_hook: "makān ← Arabic makān 'a place', through Persian (Lane, root k-w-n)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C190-kalij]
 <!-- hl-knowledge: introduces=[UR-LEX-C190-JAGAH190-05]; assesses=[] -->
 
 **مکان** — *makān* — "a dwelling, a house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مکان** (*makān*) is a loan from Arabic *makān*, "a place", which reached Urdu through Persian. Its Arabic root is *k-w-n* (Lane). Urdu uses it for a house.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

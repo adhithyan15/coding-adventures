@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 69,
-  "sourceHash": "fnv1a64:8fde317ba6eed9ab",
+  "sourceHash": "fnv1a64:500ec97451d480ca",
   "lessonIds": [
     "UR-C69-hathi",
     "UR-C69-bandar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch69.txt",
   "json": "urdu/narration/ch69.json",
-  "textHash": "fnv1a64:2f98358e21a82228",
-  "jsonHash": "fnv1a64:8dbcc9a160e00bc5",
+  "textHash": "fnv1a64:0931ca1ecf4b163f",
+  "jsonHash": "fnv1a64:357369ff2aed65e4",
   "findings": []
 }

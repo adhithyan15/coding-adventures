@@ -14,7 +14,8 @@ romanization: "sirkā"
 concept_tag: UR-CHIZ207-SIRKA
 prerequisites: [UR-C207-darchini, UR-C207-kali-mirch]
 sounds: []
-roots: []
+roots: [persian-sirka]
+etymology_hook: "sirkā: usually traced to Persian sirka 'vinegar'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C207-kali-mirch]
 <!-- hl-knowledge: introduces=[UR-LEX-C207-CHIZ207-05]; assesses=[] -->
 
 **سرکہ** — *sirkā* — "vinegar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سرکہ** (*sirkā*) is a loan, usually traced to Persian *sirka*, "vinegar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

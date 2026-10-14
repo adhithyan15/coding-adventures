@@ -14,7 +14,8 @@ romanization: "har hafte"
 concept_tag: UR-VAQT156-HAR-HAFTE
 prerequisites: [UR-C156-naya-sal, UR-C156-zamana]
 sounds: []
-roots: []
+roots: [persian-har, persian-hafta]
+etymology_hook: "har 'every' and hafta 'week' are both usually traced to Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C156-zamana]
 <!-- hl-knowledge: introduces=[UR-LEX-C156-VAQT156-04]; assesses=[] -->
 
 **ہر ہفتے** — *har hafte* — "every week".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہر ہفتے** (*har hafte*) joins *har*, "every", and *hafte*, a form of *haftā*, "week", both usually traced to Persian. Persian *hafta* is built on *haft*, "seven".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

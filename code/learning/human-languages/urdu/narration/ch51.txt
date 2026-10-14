@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to live, then the Urdu for to learn.
 You'll want to know: بھولنا.
 بھولنا — bhūlnā — "to forget".
 
+The word, taken apart.
+بھولنا (bhūlnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhull, "err, forget", a form CDIAL reconstructs from its descendants (CDIAL 9538).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to learn, then the Urdu for to forget.
 
 You'll want to know: چاہنا.
 چاہنا — chāhnā — "to want".
+
+The word, taken apart.
+چاہنا (chāhnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from cāh, "see, look for, desire", a form CDIAL reconstructs from its descendants (CDIAL 4775). CDIAL calls its deeper source uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to forget, then the Urdu for to want.
 You'll want to know: لانا.
 لانا — lānā — "to bring".
 
+The word, taken apart.
+لانا (lānā) is inherited. CDIAL lists it under Sanskrit labhate, "catches, takes", crossed with forms of dadāti, "gives" (CDIAL 10948): to bring is to take and give.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to want, then the Urdu for to bring.
 You'll want to know: بھیجنا.
 بھیجنا — bhejnā — "to send".
 
+The word, taken apart.
+بھیجنا (bhejnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhejj, "send", a form CDIAL reconstructs from its descendants (CDIAL 9603). CDIAL rejects a derivation from visarjayati, "sends off", and offers two possible sources, neither certain.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to bring, then the Urdu for to send.
 
 You'll want to know: گننا.
 گننا — ginnā — "to count".
+
+The word, taken apart.
+گننا (ginnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gaṇayati, "counts" (CDIAL 3993).
 
 What you've built.
 One more word for this chapter.

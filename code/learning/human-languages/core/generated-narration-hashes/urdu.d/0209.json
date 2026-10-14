@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 209,
-  "sourceHash": "fnv1a64:14e55ee753dd586f",
+  "sourceHash": "fnv1a64:99ec1f085ce9ce2e",
   "lessonIds": [
     "UR-C209-not",
     "UR-C209-qarz",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch209.txt",
   "json": "urdu/narration/ch209.json",
-  "textHash": "fnv1a64:41389299ec3350b3",
-  "jsonHash": "fnv1a64:30314dd3b9d61e0a",
+  "textHash": "fnv1a64:e56124b8f968ad21",
+  "jsonHash": "fnv1a64:431091e368d1987e",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to send, then the Urdu for to count.
 You'll want to know: پکڑنا.
 پکڑنا — pakaṛnā — "to catch, to hold".
 
+The word, taken apart.
+پکڑنا (pakaṛnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from pakkaḍ, "seize", a form CDIAL reconstructs from its descendants (CDIAL 7619). CDIAL calls a link with Sanskrit pragṛhṇāti, "holds", obscure and doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to count, then the Urdu for to catch.
 
 You'll want to know: کاٹنا.
 کاٹنا — kāṭnā — "to cut".
+
+The word, taken apart.
+کاٹنا (kāṭnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kartati, "cuts" (CDIAL 2854).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to catch, then the Urdu for to cut.
 You'll want to know: روکنا.
 روکنا — roknā — "to stop".
 
+The word, taken apart.
+روکنا (roknā) is a tadbhava, a word inherited and reshaped by sound change. It comes from rokk, "stop", a form CDIAL reconstructs from its descendants (CDIAL 10827). CDIAL calls its link with Sanskrit rudh-, "to obstruct", not clear.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to cut, then the Urdu for to stop.
 You'll want to know: بتانا.
 بتانا — batānā — "to tell".
 
+The word, taken apart.
+The origin of بتانا (batānā) is not settled. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to stop, then the Urdu for to tell.
 
 You'll want to know: کھونا.
 کھونا — khonā — "to lose".
+
+The word, taken apart.
+کھونا (khonā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣapayati, "destroys; throws" (CDIAL 3651).
 
 What you've built.
 One more word for this chapter.

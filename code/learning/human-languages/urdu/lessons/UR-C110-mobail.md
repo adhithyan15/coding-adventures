@@ -14,7 +14,8 @@ romanization: "mobāil"
 concept_tag: UR-THINGS110-MOBAIL
 prerequisites: [UR-C110-tivi, UR-C110-kampyutar]
 sounds: []
-roots: []
+roots: [english-mobile]
+etymology_hook: "mobāil ← English mobile"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C110-kampyutar]
 <!-- hl-knowledge: introduces=[UR-LEX-C110-THINGS110-03]; assesses=[] -->
 
 **موبائل** — *mobāil* — "a mobile phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موبائل** (*mobāil*) is a loan from English *mobile*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,7 +12,7 @@ concept_tag: UR-MOUTH
 prerequisites: [UR-C10-aankh]
 sounds: [rtl, nasal-vowel, short-vowels-unwritten]
 roots: [sanskrit-mukha, pie-mu]
-etymology_hook: muṅh continues Sanskrit mukha, "mouth, face" -- Mayrhofer's proposed Proto-Indo-European *mu-, "a vocal gesture for pressed lips," would connect it distantly to Greek mȳthos (behind English myth) and German Maul, though he flags borrowing from a non-Indo-European source as less likely but not impossible, so this stays held loosely like bahan's link to bhaj-.
+etymology_hook: "muṅh ← Sanskrit mukha 'mouth, face' (CDIAL 10158); a link with Greek mŷthos is a proposal"
 duration:
   max_seconds: 280
 requires:
@@ -71,7 +71,7 @@ depending on which word you are in.
 ## The word, taken apart — a word possibly behind myth
 <!-- hl-knowledge: introduces=[UR-ETYMON-MUNH-MYTH]; assesses=[UR-LEX-MUNH] -->
 
-**muṅh** continues Sanskrit *múkha*, "mouth, face." One proposal,
+**muṅh** continues Sanskrit *múkha*, "mouth, face" (CDIAL 10158). One proposal,
 from the Sanskrit etymologist Manfred Mayrhofer, ties it to a
 Proto-Indo-European gesture-root **\*mu-**, "pressed lips" — the same root
 that would sit behind Greek *mŷthos* ("word," behind English

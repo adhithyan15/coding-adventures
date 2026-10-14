@@ -14,7 +14,8 @@ romanization: "banānā"
 concept_tag: UR-VERB-BANANA
 prerequisites: [UR-C138-bajana, UR-C138-chhuna]
 sounds: []
-roots: []
+roots: [sanskrit-vanati]
+etymology_hook: "banānā: the causing form of bannā 'to be made', listed under Sanskrit vanati 'desires, makes ready' (CDIAL 11260)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C138-chhuna]
 <!-- hl-knowledge: introduces=[UR-LEX-C139-ACT139-01]; assesses=[] -->
 
 **بنانا** — *banānā* — "to make".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بنانا** (*banānā*) is the causing form of *bannā*, "to be made", which CDIAL lists under Sanskrit *vanati*, "desires, gains, makes ready" (CDIAL 11260).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

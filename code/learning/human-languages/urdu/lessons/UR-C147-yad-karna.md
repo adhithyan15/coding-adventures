@@ -14,7 +14,8 @@ romanization: "yād karnā"
 concept_tag: UR-VERB-YAD-KARNA
 prerequisites: [UR-C146-rasid, UR-C147-parhana]
 sounds: []
-roots: []
+roots: [persian-yad, kr-do]
+etymology_hook: "yād 'memory' is usually traced to Persian yād; karnā 'to do' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C147-parhana]
 <!-- hl-knowledge: introduces=[UR-LEX-C147-ACT147-02]; assesses=[] -->
 
 **یاد کرنا** — *yād karnā* — "to memorise; to remember".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**یاد کرنا** (*yād karnā*) joins *yād*, "memory", usually traced to Persian *yād*, and *karnā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

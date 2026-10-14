@@ -14,7 +14,8 @@ romanization: "maqāmī"
 concept_tag: UR-SIFAT162-MAQAMI
 prerequisites: [UR-C161-khurdura, UR-C161-gol]
 sounds: []
-roots: []
+roots: [arabic-maqam]
+etymology_hook: "maqāmī: Arabic maqām 'place, standing' (Lane, root q-w-m) + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C161-gol]
 <!-- hl-knowledge: introduces=[UR-LEX-C162-SIFAT162-01]; assesses=[] -->
 
 **مقامی** — *maqāmī* — "local".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مقامی** (*maqāmī*) is *maqām*, "place", with the ending *-ī*, "of". *maqām* is Arabic, "a place of standing", and reached Urdu through Persian (Lane, root *q-w-m*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

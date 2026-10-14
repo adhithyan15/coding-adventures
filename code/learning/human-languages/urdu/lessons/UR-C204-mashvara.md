@@ -14,7 +14,8 @@ romanization: "mashvarā"
 concept_tag: UR-CHIZ204-MASHVARA
 prerequisites: [UR-C204-bat, UR-C204-batchit]
 sounds: []
-roots: []
+roots: [arabic-mashwara]
+etymology_hook: "mashvarā ← Arabic mashwara 'consultation', through Persian (Lane, root sh-w-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C204-batchit]
 <!-- hl-knowledge: introduces=[UR-LEX-C204-CHIZ204-05]; assesses=[] -->
 
 **مشورہ** — *mashvarā* — "advice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مشورہ** (*mashvarā*) is a loan from Arabic *mashwara*, "consultation", which reached Urdu through Persian. Its Arabic root is *sh-w-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

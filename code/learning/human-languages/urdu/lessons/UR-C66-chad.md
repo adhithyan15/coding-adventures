@@ -14,7 +14,8 @@ romanization: "chā̃d"
 concept_tag: UR-NATURE66-CHAD
 prerequisites: [UR-C65-badal, UR-C66-suraj]
 sounds: []
-roots: []
+roots: [sanskrit-candra]
+etymology_hook: "chā̃d ← Sanskrit candra 'moon', a tadbhava (CDIAL 4661)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C66-suraj]
 <!-- hl-knowledge: introduces=[UR-LEX-C66-NATURE66-02]; assesses=[] -->
 
 **چاند** — *chā̃d* — "the moon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چاند** (*chā̃d*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *candra*, "moon" (CDIAL 4661). CDIAL lists it under the noun *candra*, "moon", built on the adjective *candra*, "shining".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

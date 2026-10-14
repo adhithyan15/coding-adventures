@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 212,
-  "sourceHash": "fnv1a64:02b681a04196380d",
+  "sourceHash": "fnv1a64:79df0965e00d9ae6",
   "lessonIds": [
     "UR-C212-istri-karna",
     "UR-C212-pisna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch212.txt",
   "json": "urdu/narration/ch212.json",
-  "textHash": "fnv1a64:ac399a088edccb64",
-  "jsonHash": "fnv1a64:fe430a13295d24a9",
+  "textHash": "fnv1a64:0170c057ac387347",
+  "jsonHash": "fnv1a64:29b25462168ff777",
   "findings": []
 }

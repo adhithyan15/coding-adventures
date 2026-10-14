@@ -14,7 +14,8 @@ romanization: "zalzalā"
 concept_tag: UR-CHIZ233-ZALZALA
 prerequisites: [UR-C233-os, UR-C233-ole]
 sounds: []
-roots: []
+roots: [arabic-zalzala]
+etymology_hook: "zalzalā ← Arabic zalzala 'a shaking, an earthquake', through Persian (Lane, root z-l-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C233-ole]
 <!-- hl-knowledge: introduces=[UR-LEX-C233-CHIZ233-04]; assesses=[] -->
 
 **زلزلہ** — *zalzalā* — "an earthquake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زلزلہ** (*zalzalā*) is a loan from Arabic *zalzala*, "a shaking, an earthquake", which reached Urdu through Persian. Its Arabic root is *z-l-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

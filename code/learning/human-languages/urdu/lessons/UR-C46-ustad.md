@@ -14,7 +14,8 @@ romanization: "ustād"
 concept_tag: UR-FAMILY46-USTAD
 prerequisites: [UR-C45-parosi, UR-C45-mehman]
 sounds: []
-roots: []
+roots: [persian-ustad]
+etymology_hook: "ustād: usually traced to Persian ustād 'master, teacher'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C45-mehman]
 <!-- hl-knowledge: introduces=[UR-LEX-C46-FAMILY46-01]; assesses=[] -->
 
 **استاد** — *ustād* — "a teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**استاد** (*ustād*) is a loan, usually traced to Persian *ustād*, "master, teacher".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

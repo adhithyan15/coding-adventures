@@ -14,7 +14,8 @@ romanization: "āj kal"
 concept_tag: UR-VAQT245-AJ-KAL
 prerequisites: [UR-C245-barsat, UR-C245-rozana]
 sounds: []
-roots: []
+roots: [sanskrit-adya, kalya-time]
+etymology_hook: "ājkal: āj 'today' ← adya (CDIAL 242) + kal ← kalya 'dawn, tomorrow' (CDIAL 3104)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C245-rozana]
 <!-- hl-knowledge: introduces=[UR-LEX-C245-VAQT245-03]; assesses=[] -->
 
 **آج کل** — *āj kal* — "nowadays".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آج کل** (*āj kal*) is "today-tomorrow": *āj*, "today", from Sanskrit *adya* (CDIAL 242), and *kal*, from *kalya*, "dawn, tomorrow" (CDIAL 3104).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 113,
-  "sourceHash": "fnv1a64:fd3ca9c7d57c6648",
+  "sourceHash": "fnv1a64:9d82dbd726eb6d41",
   "lessonIds": [
     "UR-C113-daraz",
     "UR-C113-chitthi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch113.txt",
   "json": "urdu/narration/ch113.json",
-  "textHash": "fnv1a64:06f84a750996ae90",
-  "jsonHash": "fnv1a64:af6840f6905ebe3c",
+  "textHash": "fnv1a64:5c6a3f3d281d6686",
+  "jsonHash": "fnv1a64:d2584926556c3ea1",
   "findings": []
 }

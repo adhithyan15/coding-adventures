@@ -14,7 +14,8 @@ romanization: "harf"
 concept_tag: UR-CHIZ171-HARF
 prerequisites: [UR-C171-sayyah, UR-C171-jumla]
 sounds: []
-roots: []
+roots: [arabic-harf]
+etymology_hook: "harf ← Arabic ḥarf 'an edge; a letter', through Persian (Lane, root ḥ-r-f)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C171-jumla]
 <!-- hl-knowledge: introduces=[UR-LEX-C171-CHIZ171-04]; assesses=[] -->
 
 **حرف** — *harf* — "a character (of the alphabet)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حرف** (*harf*) is a loan from Arabic *ḥarf*, "an edge; a letter", which reached Urdu through Persian. Its Arabic root is *ḥ-r-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

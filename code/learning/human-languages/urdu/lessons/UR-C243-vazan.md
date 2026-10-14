@@ -14,7 +14,8 @@ romanization: "vazan"
 concept_tag: UR-SEHAT243-VAZAN
 prerequisites: [UR-C243-thakan, UR-C243-taqat]
 sounds: []
-roots: []
+roots: [arabic-wazn]
+etymology_hook: "vazan ← Arabic wazn 'weighing, weight', through Persian (Lane, root w-z-n)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C243-taqat]
 <!-- hl-knowledge: introduces=[UR-LEX-C243-SEHAT243-03]; assesses=[] -->
 
 **وزن** — *vazan* — "weight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وزن** (*vazan*) is a loan from Arabic *wazn*, "weighing, weight", which reached Urdu through Persian. Its Arabic root is *w-z-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

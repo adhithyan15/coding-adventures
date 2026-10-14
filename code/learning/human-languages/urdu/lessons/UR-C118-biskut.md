@@ -14,7 +14,8 @@ romanization: "biskuṭ"
 concept_tag: UR-THINGS118-BISKUT
 prerequisites: [UR-C117-tel, UR-C117-ata]
 sounds: []
-roots: []
+roots: [english-biscuit]
+etymology_hook: "biskuṭ ← English biscuit"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C117-ata]
 <!-- hl-knowledge: introduces=[UR-LEX-C118-THINGS118-01]; assesses=[] -->
 
 **بسکٹ** — *biskuṭ* — "a biscuit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بسکٹ** (*biskuṭ*) is a loan from English *biscuit*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

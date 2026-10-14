@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 210,
-  "sourceHash": "fnv1a64:30954a66de7e85e2",
+  "sourceHash": "fnv1a64:848bd439241eb5d3",
   "lessonIds": [
     "UR-C210-nai",
     "UR-C210-dhobi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch210.txt",
   "json": "urdu/narration/ch210.json",
-  "textHash": "fnv1a64:a67270881269ee67",
-  "jsonHash": "fnv1a64:6b892860a37c3710",
+  "textHash": "fnv1a64:4fcdbd596de7b705",
+  "jsonHash": "fnv1a64:9c1f790b8b360ac5",
   "findings": []
 }

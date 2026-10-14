@@ -264,7 +264,7 @@ const EMPTY_ETYMOLOGY_BLOCK_PINS: Readonly<Record<string, number>> = {
   spanish: 48,
   tamil: 12,
   telugu: 8,
-  urdu: 1,
+  urdu: 0,
 };
 
 /**

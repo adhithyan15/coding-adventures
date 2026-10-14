@@ -11,8 +11,8 @@ gloss: sunshine — inherited, and another honest dead end, like کان and رو
 concept_tag: UR-SUNSHINE
 prerequisites: [UR-C15-barish, UR-C10-munh]
 sounds: [rtl, do-chashmi-he, long-u]
-roots: [ashokan-prakrit-dhuppa]
-etymology_hook: dhūp is inherited from Ashokan Prakrit *dhuppā, "sunshine," and no further root is documented behind that -- an honest dead end on the inherited side, matching کان and روٹی rather than کالا, whose own root at least led somewhere else.
+roots: [ashokan-prakrit-dhuppa, indo-aryan-dhuppa]
+etymology_hook: "dhūp ← *dhuppā 'sunshine', a form CDIAL reconstructs (CDIAL 6825); no older root is traced"
 duration:
   max_seconds: 270
 requires:
@@ -53,8 +53,7 @@ side of the book's two layers.
 ## The word, taken apart — an inherited dead end
 <!-- hl-knowledge: introduces=[UR-ETYMON-DHOOP-PRAKRIT]; assesses=[UR-LEX-DHOOP] -->
 
-**دھوپ** is inherited from Ashokan Prakrit **\*dhuppā**, "sunshine." No
-further root is documented behind that. *bārish* hit its dead end on the
+**دھوپ** is inherited from a form CDIAL reconstructs as **\*dhuppā**, "sunshine" (CDIAL 6825). No further root is traced behind that. *bārish* hit its dead end on the
 Persian side; **دھوپ** hits the same kind of honest wall on the inherited
 side — the same shape **کان** and *roṭī* already showed, not every
 inherited word traces back to a tidy Indo-European root.

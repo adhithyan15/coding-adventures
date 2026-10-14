@@ -14,7 +14,8 @@ romanization: "qalam"
 concept_tag: UR-HOME61-QALAM
 prerequisites: [UR-C61-botal, UR-C61-kitab]
 sounds: []
-roots: []
+roots: [arabic-qalam]
+etymology_hook: "qalam ← Arabic qalam 'reed pen', through Persian (Lane, root q-l-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C61-kitab]
 <!-- hl-knowledge: introduces=[UR-LEX-C61-HOME61-03]; assesses=[] -->
 
 **قلم** — *qalam* — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قلم** (*qalam*) is a loan from Arabic *qalam*, "reed pen", which reached Urdu through Persian. Its Arabic root is *q-l-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

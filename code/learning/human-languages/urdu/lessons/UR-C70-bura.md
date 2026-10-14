@@ -14,7 +14,8 @@ romanization: "burā"
 concept_tag: UR-ADJ70-BURA
 prerequisites: [UR-C70-naya, UR-C70-achchha]
 sounds: []
-roots: []
+roots: [indo-aryan-bura]
+etymology_hook: "burā ← *bura 'defective', a reconstructed form; a tadbhava (CDIAL 9289)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C70-achchha]
 <!-- hl-knowledge: introduces=[UR-LEX-C70-ADJ70-04]; assesses=[] -->
 
 **برا** — *burā* — "bad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**برا** (*burā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bura*, "defective", a form CDIAL reconstructs from its descendants (CDIAL 9289).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

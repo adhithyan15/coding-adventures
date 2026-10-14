@@ -14,7 +14,8 @@ romanization: "chhūnā"
 concept_tag: UR-VERB-CHHUNA
 prerequisites: [UR-C138-tairna, UR-C138-bajana]
 sounds: []
-roots: []
+roots: [sanskrit-chupati]
+etymology_hook: "chhūnā ← Sanskrit chupati 'touches', a tadbhava (CDIAL 5055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C138-bajana]
 <!-- hl-knowledge: introduces=[UR-LEX-C138-ACT138-05]; assesses=[] -->
 
 **چھونا** — *chhūnā* — "to touch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چھونا** (*chhūnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *chupati*, "touches" (CDIAL 5055). The Sanskrit verb is known only from a list of verb roots.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

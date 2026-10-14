@@ -12,6 +12,9 @@ Before the new one: say the Urdu for oil, then the Urdu for flour.
 You'll want to know: بسکٹ.
 بسکٹ — biskuṭ — "a biscuit".
 
+The word, taken apart.
+بسکٹ (biskuṭ) is a loan from English biscuit.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for flour, then the Urdu for a biscuit.
 
 You'll want to know: چاکلیٹ.
 چاکلیٹ — chāklet — "chocolate".
+
+The word, taken apart.
+چاکلیٹ (chāklet) is a loan from English chocolate.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a biscuit, then the Urdu for chocolate.
 You'll want to know: قہوہ.
 قہوہ — qahvā — "green tea, coffee".
 
+The word, taken apart.
+قہوہ (qahvā) is a loan from Arabic qahwa, "coffee", which reached Urdu through Persian. English coffee comes from the same Arabic word, through Turkish.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for chocolate, then the Urdu for green tea.
 You'll want to know: شربت.
 شربت — sharbat — "a sweet drink".
 
+The word, taken apart.
+شربت (sharbat) is a loan from Arabic sharba, "a drink", which reached Urdu through Persian. Its Arabic root is sh-r-b (Lane). The root means "to drink".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for green tea, then the Urdu for a sweet drink.
 
 You'll want to know: لسی.
 لسی — lassī — "lassi, a yoghurt drink".
+
+The word, taken apart.
+لسی (lassī) goes back to a reconstructed lassī, "buttermilk", which CDIAL builds from Punjabi and Lahnda lassī and Sindhi lasī (CDIAL 10998). It lists no Hindi or Urdu form, and it gives no older source.
 
 What you've built.
 One more word for this chapter.

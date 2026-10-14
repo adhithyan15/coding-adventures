@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 21,
-  "sourceHash": "fnv1a64:c02822f6c74084e0",
+  "sourceHash": "fnv1a64:3433b71bb607d6c6",
   "lessonIds": [
     "UR-C21-kyun",
     "UR-C21-kaun",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "urdu/narration/ch21.txt",
   "json": "urdu/narration/ch21.json",
-  "textHash": "fnv1a64:d3f6a563ac6fa469",
-  "jsonHash": "fnv1a64:da66ccfc8f1e3347",
+  "textHash": "fnv1a64:f66c4bd72bab1c5f",
+  "jsonHash": "fnv1a64:4eb7352813a99b07",
   "findings": []
 }

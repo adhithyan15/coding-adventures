@@ -14,7 +14,8 @@ romanization: "chaṭnī"
 concept_tag: UR-THINGS120-CHATNI
 prerequisites: [UR-C120-halva, UR-C120-khir]
 sounds: []
-roots: []
+roots: [indo-aryan-catt]
+etymology_hook: "chaṭnī: not in CDIAL; often tied to chāṭnā 'to lick', which CDIAL lists under *caṭṭ 'lick, taste' (4573)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C120-khir]
 <!-- hl-knowledge: introduces=[UR-LEX-C120-THINGS120-03]; assesses=[] -->
 
 **چٹنی** — *chaṭnī* — "a chutney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **چٹنی** (*chaṭnī*) is not settled. It is often tied to *chāṭnā*, "to lick", which CDIAL lists under a reconstructed *\*caṭṭ*, "lick, taste" (CDIAL 4573), but CDIAL does not list *chaṭnī* itself. English took the word as *chutney*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

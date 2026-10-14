@@ -14,7 +14,8 @@ romanization: "jadīd"
 concept_tag: UR-SIFAT196-JADID
 prerequisites: [UR-C196-nek, UR-C196-naujavan]
 sounds: []
-roots: []
+roots: [arabic-jadid]
+etymology_hook: "jadīd ← Arabic jadīd 'new', through Persian (Lane, root j-d-d)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C196-naujavan]
 <!-- hl-knowledge: introduces=[UR-LEX-C196-SIFAT196-05]; assesses=[] -->
 
 **جدید** — *jadīd* — "modern".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جدید** (*jadīd*) is a loan from Arabic *jadīd*, "new", which reached Urdu through Persian. Its Arabic root is *j-d-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

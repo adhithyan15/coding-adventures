@@ -14,7 +14,8 @@ romanization: "fon"
 concept_tag: UR-THINGS110-FON
 prerequisites: [UR-C110-kampyutar, UR-C110-mobail]
 sounds: []
-roots: []
+roots: [english-phone]
+etymology_hook: "fon ← English phone"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C110-mobail]
 <!-- hl-knowledge: introduces=[UR-LEX-C110-THINGS110-04]; assesses=[] -->
 
 **فون** — *fon* — "a phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فون** (*fon*) is a loan from English *phone*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gurdvārā"
 concept_tag: UR-JAGAH191-GURDVARA
 prerequisites: [UR-C191-chae-khana, UR-C191-girja-ghar]
 sounds: []
-roots: []
+roots: [sanskrit-guru, indo-aryan-duvara]
+etymology_hook: "gurdvārā: guru 'teacher' + dvārā 'door, gateway', beside Sanskrit dvāra 'door' (CDIAL 6459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C191-girja-ghar]
 <!-- hl-knowledge: introduces=[UR-LEX-C191-JAGAH191-03]; assesses=[] -->
 
 **گوردوارہ** — *gurdvārā* — "a gurdwara".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گوردوارہ** (*gurdvārā*) is "the guru's gateway", the Sikh place of worship. It joins Sanskrit *guru*, "teacher", and *dvārā*, "door, gateway", from Sanskrit *dvāra*, "door"; CDIAL lists the inherited Hindi *duār* under a form *\*duvāra* (CDIAL 6459).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

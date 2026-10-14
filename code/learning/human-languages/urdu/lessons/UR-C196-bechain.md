@@ -14,7 +14,8 @@ romanization: "bechain"
 concept_tag: UR-SIFAT196-BECHAIN
 prerequisites: [UR-C195-bilkul, UR-C195-laparvah]
 sounds: []
-roots: []
+roots: [persian-be]
+etymology_hook: "bechain: Persian be- 'without' + chain 'ease'; CDIAL has no entry for chain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C195-laparvah]
 <!-- hl-knowledge: introduces=[UR-LEX-C196-SIFAT196-01]; assesses=[] -->
 
 **بے چین** — *bechain* — "restless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بے چین** (*bechain*) is "without ease". It joins the Persian *be-*, "without", and *chain*, "ease, comfort", whose own origin is not settled; CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

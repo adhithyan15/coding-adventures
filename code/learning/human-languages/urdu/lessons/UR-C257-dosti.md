@@ -14,7 +14,8 @@ romanization: "dostī"
 concept_tag: UR-CHIZ257-DOSTI
 prerequisites: [UR-C257-muskurahat, UR-C257-mohabbat]
 sounds: []
-roots: []
+roots: [persian-dost]
+etymology_hook: "dostī: dost 'friend', usually traced to Persian dōst, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C257-mohabbat]
 <!-- hl-knowledge: introduces=[UR-LEX-C257-CHIZ257-04]; assesses=[] -->
 
 **دوستی** — *dostī* — "friendship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دوستی** (*dostī*) is *dost*, "friend", usually traced to Persian *dōst*, with the ending *-ī* that makes a noun.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

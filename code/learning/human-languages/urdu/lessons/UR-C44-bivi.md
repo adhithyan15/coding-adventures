@@ -14,7 +14,8 @@ romanization: "bīvī"
 concept_tag: UR-FAMILY44-BIVI
 prerequisites: [UR-C44-nani, UR-C44-shauhar]
 sounds: []
-roots: []
+roots: [persian-bibi]
+etymology_hook: "bīvī: usually traced to Persian bībī 'lady, wife'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C44-shauhar]
 <!-- hl-knowledge: introduces=[UR-LEX-C44-FAMILY44-04]; assesses=[] -->
 
 **بیوی** — *bīvī* — "a wife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بیوی** (*bīvī*) is a loan, usually traced to Persian *bībī*, "lady, wife".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bheṛiyā"
 concept_tag: UR-CHIZ227-BHERIYA
 prerequisites: [UR-C227-bhains, UR-C227-chita]
 sounds: []
-roots: []
+roots: [indo-aryan-bhedriya]
+etymology_hook: "bheṛiyā ← *bheḍriya 'sheep-killer', a reconstructed form; a tadbhava (CDIAL 9608b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C227-chita]
 <!-- hl-knowledge: introduces=[UR-LEX-C227-CHIZ227-04]; assesses=[] -->
 
 **بھیڑیا** — *bheṛiyā* — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھیڑیا** (*bheṛiyā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bheḍriya*, "sheep-killer", a form CDIAL reconstructs from its descendants (CDIAL 9608b). It is built on *bheḍra*, "ram".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

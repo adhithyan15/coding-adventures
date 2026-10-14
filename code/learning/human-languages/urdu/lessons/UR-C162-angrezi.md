@@ -14,7 +14,8 @@ romanization: "angrezī"
 concept_tag: UR-SIFAT162-ANGREZI
 prerequisites: [UR-C161-gol, UR-C162-maqami]
 sounds: []
-roots: []
+roots: [portuguese-ingles, persian-angrez]
+etymology_hook: "angrezī: usually traced, through Persian angrez 'Englishman', to Portuguese inglês 'English'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C162-maqami]
 <!-- hl-knowledge: introduces=[UR-LEX-C162-SIFAT162-02]; assesses=[] -->
 
 **انگریزی** — *angrezī* — "English".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انگریزی** (*angrezī*) is *angrez*, "an Englishman", with the ending *-ī*. *angrez* is usually traced, through Persian, to Portuguese *inglês*, "English".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

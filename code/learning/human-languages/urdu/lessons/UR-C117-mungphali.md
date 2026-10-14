@@ -14,7 +14,8 @@ romanization: "mūṅgphalī"
 concept_tag: UR-THINGS117-MUNGPHALI
 prerequisites: [UR-C116-khajur, UR-C117-badam]
 sounds: []
-roots: []
+roots: [sanskrit-mudga, sanskrit-phala]
+etymology_hook: "mūṅgphalī: mūṅg 'mung bean' (CDIAL 10198) + phalī 'pod', from phala (CDIAL 9051)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C117-badam]
 <!-- hl-knowledge: introduces=[UR-LEX-C117-THINGS117-02]; assesses=[] -->
 
 **مونگ پھلی** — *mūṅgphalī* — "a peanut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مونگ پھلی** (*mūṅgphalī*) is "mung-pod": *mūṅg*, "the mung bean", from Sanskrit *mudga* (CDIAL 10198), and *phalī*, "pod", from *phala*, "fruit" (CDIAL 9051).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

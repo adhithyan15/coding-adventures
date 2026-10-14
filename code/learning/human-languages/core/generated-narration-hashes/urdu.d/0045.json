@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 45,
-  "sourceHash": "fnv1a64:b54fa8242afd0c65",
+  "sourceHash": "fnv1a64:47338e166626171a",
   "lessonIds": [
     "UR-C45-larka",
     "UR-C45-larki",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch45.txt",
   "json": "urdu/narration/ch45.json",
-  "textHash": "fnv1a64:8e83ca9539e40e45",
-  "jsonHash": "fnv1a64:430f74f76eebdb7d",
+  "textHash": "fnv1a64:423ad91f6361d0aa",
+  "jsonHash": "fnv1a64:12d8e70d79e77030",
   "findings": []
 }

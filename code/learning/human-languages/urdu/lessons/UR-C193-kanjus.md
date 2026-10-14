@@ -15,6 +15,7 @@ concept_tag: UR-SIFAT193-KANJUS
 prerequisites: [UR-C193-imandar, UR-C193-buzdil]
 sounds: []
 roots: []
+etymology_hook: "kanjūs 'stingy': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C193-buzdil]
 <!-- hl-knowledge: introduces=[UR-LEX-C193-SIFAT193-03]; assesses=[] -->
 
 **کنجوس** — *kanjūs* — "stingy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **کنجوس** (*kanjūs*) is not settled. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

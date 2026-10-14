@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 104,
-  "sourceHash": "fnv1a64:43d0ab2a1bac4978",
+  "sourceHash": "fnv1a64:4a25205001b6145f",
   "lessonIds": [
     "UR-C104-hunar",
     "UR-C104-qabil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch104.txt",
   "json": "urdu/narration/ch104.json",
-  "textHash": "fnv1a64:b8dd2c404ca17ae8",
-  "jsonHash": "fnv1a64:5d442250871a6f68",
+  "textHash": "fnv1a64:28886cf930302568",
+  "jsonHash": "fnv1a64:df801a4e557fb3e2",
   "findings": []
 }

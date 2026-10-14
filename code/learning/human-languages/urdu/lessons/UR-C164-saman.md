@@ -14,7 +14,8 @@ romanization: "sāmān"
 concept_tag: UR-CHIZ164-SAMAN
 prerequisites: [UR-C163-pak, UR-C163-sharminda]
 sounds: []
-roots: []
+roots: [persian-saman]
+etymology_hook: "sāmān: usually traced to Persian sāmān 'goods, equipment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C163-sharminda]
 <!-- hl-knowledge: introduces=[UR-LEX-C164-CHIZ164-01]; assesses=[] -->
 
 **سامان** — *sāmān* — "luggage, stuff".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سامان** (*sāmān*) is a loan, usually traced to Persian *sāmān*, "goods, equipment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

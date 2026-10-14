@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a taxi, then the Urdu for a rickshaw.
 You'll want to know: ماموں.
 ماموں — māmūṅ — "a maternal uncle".
 
+The word, taken apart.
+ماموں (māmūṅ) is a form of māmā, "mother's brother", which CDIAL lists under Sanskrit māma, "uncle", and calls a nursery word, with similar words in Dravidian (CDIAL 10055).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a rickshaw, then the Urdu for a maternal un
 
 You'll want to know: خالہ.
 خالہ — khālā — "a maternal aunt".
+
+The word, taken apart.
+خالہ (khālā) is a loan from Arabic khāla, "a mother's sister", which reached Urdu through Persian. Its Arabic root is kh-w-l (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a maternal uncle, then the Urdu for a mater
 You'll want to know: پھوپھی.
 پھوپھی — phuphī — "a paternal aunt".
 
+The word, taken apart.
+پھوپھی (phuphī) is a tadbhava, a word inherited and reshaped by sound change. It comes from phupphī, "father's sister", a form CDIAL reconstructs from its descendants (CDIAL 9089). It is one of the forms CDIAL reconstructs as phupphu-, phupphī-.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a maternal aunt, then the Urdu for a patern
 You'll want to know: بھتیجا.
 بھتیجا — bhatījā — "a nephew (brother's son)".
 
+The word, taken apart.
+بھتیجا (bhatījā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhrātrīya, "brother's son" (CDIAL 9672). It is built on bhrātṛ, "brother".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a paternal aunt, then the Urdu for a nephew
 
 You'll want to know: پوتا.
 پوتا — potā — "a grandson (son's son)".
+
+The word, taken apart.
+پوتا (potā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pautra, "son's son" (CDIAL 8416). It is built on putra, "son".
 
 What you've built.
 One more word for this chapter.

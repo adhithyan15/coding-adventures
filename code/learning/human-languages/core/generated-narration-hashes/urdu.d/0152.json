@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 152,
-  "sourceHash": "fnv1a64:82a099857525f36a",
+  "sourceHash": "fnv1a64:5dbd17560113f37e",
   "lessonIds": [
     "UR-C152-bimari",
     "UR-C152-zukam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch152.txt",
   "json": "urdu/narration/ch152.json",
-  "textHash": "fnv1a64:754c66013c48e33d",
-  "jsonHash": "fnv1a64:63c4ffc39277e8c0",
+  "textHash": "fnv1a64:e1ebd3e955d8e33a",
+  "jsonHash": "fnv1a64:370c4f4c78b79eb1",
   "findings": []
 }

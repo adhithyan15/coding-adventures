@@ -14,7 +14,8 @@ romanization: "bhūkā"
 concept_tag: UR-QUAL135-BHUKA
 prerequisites: [UR-C135-hoshiyar, UR-C135-thaka]
 sounds: []
-roots: []
+roots: [indo-aryan-bubhukshaka]
+etymology_hook: "bhūkā ← *bubhukṣaka 'hungry', a reconstructed form; a tadbhava (CDIAL 9284)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C135-thaka]
 <!-- hl-knowledge: introduces=[UR-LEX-C135-QUAL135-05]; assesses=[] -->
 
 **بھوکا** — *bhūkā* — "hungry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھوکا** (*bhūkā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bubhukṣaka*, "hungry", a form CDIAL reconstructs from its descendants (CDIAL 9284). It is built on the Sanskrit "wish to eat", *bubhukṣā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

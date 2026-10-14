@@ -14,7 +14,8 @@ romanization: "gamlā"
 concept_tag: UR-CHIZ173-GAMLA
 prerequisites: [UR-C172-azadi, UR-C173-divar-ghari]
 sounds: []
-roots: []
+roots: [portuguese-gamela]
+etymology_hook: "gamlā: usually traced to Portuguese gamela 'wooden bowl, trough'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C173-divar-ghari]
 <!-- hl-knowledge: introduces=[UR-LEX-C173-CHIZ173-02]; assesses=[] -->
 
 **گملا** — *gamlā* — "a flowerpot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گملا** (*gamlā*) is usually traced to Portuguese *gamela*, "a wooden bowl, a trough". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

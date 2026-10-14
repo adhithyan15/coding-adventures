@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 120,
-  "sourceHash": "fnv1a64:62b16eaf9ba4dd62",
+  "sourceHash": "fnv1a64:71df96a09879ca0a",
   "lessonIds": [
     "UR-C120-halva",
     "UR-C120-khir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch120.txt",
   "json": "urdu/narration/ch120.json",
-  "textHash": "fnv1a64:14b313212f847c34",
-  "jsonHash": "fnv1a64:21b74f2395fd0b2d",
+  "textHash": "fnv1a64:5b3f2ecb7a2cd39d",
+  "jsonHash": "fnv1a64:9e3423902effbc9c",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "shīshā"
 concept_tag: UR-THINGS106-SHISHA
 prerequisites: [UR-C106-tauliya, UR-C106-kanghi]
 sounds: []
-roots: []
+roots: [persian-shisha]
+etymology_hook: "shīshā: usually traced to Persian shīsha 'glass'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C106-kanghi]
 <!-- hl-knowledge: introduces=[UR-LEX-C106-THINGS106-04]; assesses=[] -->
 
 **شیشہ** — *shīshā* — "glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شیشہ** (*shīshā*) is a loan, usually traced to Persian *shīsha*, "glass". It is a different word from *sīsā*, "lead", which comes from Sanskrit *sīsa* (CDIAL 13445).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

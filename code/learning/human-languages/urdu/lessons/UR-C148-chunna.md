@@ -14,7 +14,8 @@ romanization: "chunnā"
 concept_tag: UR-VERB-CHUNNA
 prerequisites: [UR-C147-muskurana, UR-C147-ghabrana]
 sounds: []
-roots: []
+roots: [sanskrit-cinoti]
+etymology_hook: "chunnā ← Sanskrit cinoti 'heaps up, collects', a tadbhava (CDIAL 4814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C147-ghabrana]
 <!-- hl-knowledge: introduces=[UR-LEX-C148-ACT148-01]; assesses=[] -->
 
 **چننا** — *chunnā* — "to choose, to pick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چننا** (*chunnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cinoti*, "heaps up, collects" (CDIAL 4814). CDIAL explains the *u* as taken from other verbs.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

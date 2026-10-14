@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 167,
-  "sourceHash": "fnv1a64:f9b5b805a80b8f7b",
+  "sourceHash": "fnv1a64:3779acfcfa8a0550",
   "lessonIds": [
     "UR-C167-pista",
     "UR-C167-kishmish",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch167.txt",
   "json": "urdu/narration/ch167.json",
-  "textHash": "fnv1a64:4331423b315ce5e9",
-  "jsonHash": "fnv1a64:a67196217826e994",
+  "textHash": "fnv1a64:fb8e31eb4ea3b2bf",
+  "jsonHash": "fnv1a64:1a4bdb12d0190efe",
   "findings": []
 }

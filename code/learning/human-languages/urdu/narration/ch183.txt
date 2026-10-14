@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to stand up, then the Urdu for to wait.
 You'll want to know: ملاقات کرنا.
 ملاقات کرنا — mulāqāt karnā — "to pay a visit, to meet (formally)".
 
+The phrase, taken apart.
+ملاقات کرنا (mulāqāt karnā) joins mulāqāt, "a meeting", and karnā, "to do". mulāqāt is Arabic, "a meeting face to face", and reached Urdu through Persian (Lane, root l-q-y); karnā comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to wait, then the Urdu for to pay a visit.
 
 You'll want to know: شادی کرنا.
 شادی کرنا — shādī karnā — "to marry".
+
+The phrase, taken apart.
+شادی کرنا (shādī karnā) joins shādī, "a wedding", and karnā, "to do". shādī is usually traced to Persian shādī, "joy"; karnā comes from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to pay a visit, then the Urdu for to marry.
 You'll want to know: جینا.
 جینا — jīnā — "to be alive, to live (a life)".
 
+The word, taken apart.
+جینا (jīnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jīvati, "is alive" (CDIAL 5241).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to marry, then the Urdu for to be alive.
 You'll want to know: مرنا.
 مرنا — marnā — "to die".
 
+The word, taken apart.
+مرنا (marnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from marate, "will die" (CDIAL 9871). CDIAL calls direct descent from this old form possible, even probable.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to be alive, then the Urdu for to die.
 
 You'll want to know: بڑھانا.
 بڑھانا — baṛhānā — "to increase, to raise".
+
+The word, taken apart.
+بڑھانا (baṛhānā) is the causing form of baṛhnā, "to increase, to grow", which CDIAL lists under Sanskrit vardhate, "grows, increases" (CDIAL 11376).
 
 What you've built.
 One more word for this chapter.

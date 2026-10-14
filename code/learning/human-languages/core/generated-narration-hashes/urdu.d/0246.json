@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 246,
-  "sourceHash": "fnv1a64:a48e409c76663a3f",
+  "sourceHash": "fnv1a64:373dca1a12cd1de9",
   "lessonIds": [
     "UR-C246-garaj",
     "UR-C246-har-jagah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch246.txt",
   "json": "urdu/narration/ch246.json",
-  "textHash": "fnv1a64:3d36cfd2a73b0204",
-  "jsonHash": "fnv1a64:c358038e0e6f1526",
+  "textHash": "fnv1a64:102e444abeec04c3",
+  "jsonHash": "fnv1a64:860db3c3e7049c86",
   "findings": []
 }

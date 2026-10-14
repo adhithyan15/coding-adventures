@@ -14,7 +14,8 @@ romanization: "dekhnā"
 concept_tag: UR-VERB-DEKHNA
 prerequisites: [UR-C46-khana, UR-C46-pina]
 sounds: []
-roots: []
+roots: [indo-aryan-drkshati]
+etymology_hook: "dekhnā ← *dekṣati 'sees', a variant CDIAL reconstructs beside *dṛkṣati; a tadbhava (CDIAL 6507)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C46-pina]
 <!-- hl-knowledge: introduces=[UR-LEX-C46-FAMILY46-04]; assesses=[] -->
 
 **دیکھنا** — *dekhnā* — "to see, to look".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دیکھنا** (*dekhnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dekṣati*, "sees", a form CDIAL reconstructs from its descendants (CDIAL 6507). It is a variant CDIAL reconstructs beside *\*dṛkṣati*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

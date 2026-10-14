@@ -14,7 +14,8 @@ romanization: "aman"
 concept_tag: UR-CHIZ172-AMAN
 prerequisites: [UR-C172-hairat, UR-C172-sukun]
 sounds: []
-roots: []
+roots: [arabic-amn]
+etymology_hook: "aman ← Arabic amn 'safety, security', through Persian (Lane, root ʾ-m-n)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C172-sukun]
 <!-- hl-knowledge: introduces=[UR-LEX-C172-CHIZ172-03]; assesses=[] -->
 
 **امن** — *aman* — "peace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**امن** (*aman*) is a loan from Arabic *amn*, "safety, security", which reached Urdu through Persian. Its Arabic root is *ʾ-m-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

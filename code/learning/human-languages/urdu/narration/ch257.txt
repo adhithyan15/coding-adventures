@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a host, then the Urdu for people.
 You'll want to know: آنسو.
 آنسو — ā̃sū — "tears".
 
+The word, taken apart.
+آنسو (ā̃sū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aśru, "tear" (CDIAL 919). CDIAL notes that the word took a nasal vowel early, as the word for "eye" did.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for people, then the Urdu for tears.
 
 You'll want to know: مسکراہٹ.
 مسکراہٹ — muskurāhaṭ — "a smile".
+
+The word, taken apart.
+مسکراہٹ (muskurāhaṭ) is the noun of muskurānā, "to smile", which CDIAL lists under a reconstructed muss, "smile, sob" (CDIAL 10227).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for tears, then the Urdu for a smile.
 You'll want to know: محبت.
 محبت — mohabbat — "affection, love".
 
+The word, taken apart.
+محبت (mohabbat) is a loan from Arabic maḥabba, "love, affection", which reached Urdu through Persian. Its Arabic root is ḥ-b-b (Lane). It is built on the same root as ḥubb, "love".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a smile, then the Urdu for affection.
 You'll want to know: دوستی.
 دوستی — dostī — "friendship".
 
+The word, taken apart.
+دوستی (dostī) is dost, "friend", usually traced to Persian dōst, with the ending -ī that makes a noun.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for affection, then the Urdu for friendship.
 
 You'll want to know: شرم.
 شرم — sharm — "shame".
+
+The word, taken apart.
+شرم (sharm) is a loan, usually traced to Persian sharm, "shame".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "hākī"
 concept_tag: UR-CHIZ201-HAKI
 prerequisites: [UR-C200-rayta, UR-C200-salad]
 sounds: []
-roots: []
+roots: [english-hockey]
+etymology_hook: "hākī ← English hockey"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C200-salad]
 <!-- hl-knowledge: introduces=[UR-LEX-C201-CHIZ201-01]; assesses=[] -->
 
 **ہاکی** — *hākī* — "hockey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہاکی** (*hākī*) is a loan from English *hockey*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

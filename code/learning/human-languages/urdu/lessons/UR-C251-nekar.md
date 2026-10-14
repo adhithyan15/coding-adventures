@@ -14,7 +14,8 @@ romanization: "nekar"
 concept_tag: UR-CHIZ251-NEKAR
 prerequisites: [UR-C251-phuldan, UR-C251-jinz]
 sounds: []
-roots: []
+roots: [english-knickers]
+etymology_hook: "nekar ← English knickers"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C251-jinz]
 <!-- hl-knowledge: introduces=[UR-LEX-C251-CHIZ251-04]; assesses=[] -->
 
 **نیکر** — *nekar* — "shorts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نیکر** (*nekar*) is a loan from English *knickers*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

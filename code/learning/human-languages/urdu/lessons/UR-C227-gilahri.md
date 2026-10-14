@@ -15,6 +15,7 @@ concept_tag: UR-CHIZ227-GILAHRI
 prerequisites: [UR-C227-chita, UR-C227-bheriya]
 sounds: []
 roots: []
+etymology_hook: "gilahrī 'squirrel': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C227-bheriya]
 <!-- hl-knowledge: introduces=[UR-LEX-C227-CHIZ227-05]; assesses=[] -->
 
 **گلہری** — *gilahrī* — "a squirrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **گلہری** (*gilahrī*) is not settled. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

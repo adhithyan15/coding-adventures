@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Four Words on the Face",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:0d38898305516864",
+  "sourceHash": "fnv1a64:23c1ec34b8b339ee",
   "lessons": [
     {
       "id": "UR-C10-kaan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3722bf98268c6f80",
+      "sourceHash": "fnv1a64:b36cd675061179e0",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "kān continues Sanskrit karṇa by way of Prakrit and Apabhramsa kaṇṇa. That much is solid. Where karṇa itself comes from is not: the trail runs out inside Indo-Aryan, with only a loose, unconfirmed suggestion linking it to Persian کر (kar), \"deaf.\" No English cousin, no settled Indo-European root — the same honest dead end paṛhnā's paṭh- hit two chapters ago."
+              "text": "kān continues Sanskrit karṇa, \"ear\", by way of Prakrit and Apabhramsa kaṇṇa (CDIAL 2830). That much is solid. Where karṇa itself comes from is not: the trail runs out inside Indo-Aryan, with only a loose, unconfirmed suggestion linking it to Persian کر (kar), \"deaf.\" No English cousin, no settled Indo-European root — the same honest dead end paṛhnā's paṭh- hit two chapters ago."
             },
             {
               "kind": "speech",
@@ -152,7 +152,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:29994a2156ae6462",
+      "sourceHash": "fnv1a64:c8294a0d41bc9cdd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -219,7 +219,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nāk continues Sauraseni Prakrit ṇakka, from Proto-Indo-Iranian náHs, from Proto-Indo-European néh₂s, \"nose.\" English nose comes from that very root. Where کان (kān)'s ancestry ran out unanswered — recall karṇa's own origin was left unsettled last lesson — ناک's does not: nāk and nose are genuine cousins, joining bhāī and brother as this book's settled Indo-European matches."
+              "text": "nāk continues Sauraseni Prakrit ṇakka, which CDIAL derives, possibly, from nas-ka-, built on Sanskrit nas-, \"nose\" (CDIAL 6909); nas- comes from Proto-Indo-Iranian náHs, from Proto-Indo-European néh₂s, \"nose.\" English nose comes from that very root. Where کان (kān)'s ancestry ran out unanswered — recall karṇa's own origin was left unsettled last lesson — ناک's does not: nāk and nose are genuine cousins, joining bhāī and brother as this book's settled Indo-European matches."
             }
           ]
         },
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:26660bf76704fea0",
+      "sourceHash": "fnv1a64:2b0bf1f4d2833f4d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -401,7 +401,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "āṅkh continues Sanskrit ákṣi, from Proto-Indo-European h₃ekʷ-, \"eye, to see.\" English eye descends from that same root. This chapter has now found two settled Indo-European cousins in a row — ناک (nāk)/nose, آنکھ/eye — after کان (kān)'s honest dead end."
+              "text": "āṅkh continues Sanskrit ákṣi, \"eye\" (CDIAL 43), from Proto-Indo-European h₃ekʷ-, \"eye, to see.\" English eye descends from that same root. This chapter has now found two settled Indo-European cousins in a row — ناک (nāk)/nose, آنکھ/eye — after کان (kān)'s honest dead end."
             }
           ]
         },
@@ -493,7 +493,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9cf162d33c9c328c",
+      "sourceHash": "fnv1a64:8426ddcb141b8574",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -567,7 +567,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "muṅh continues Sanskrit múkha, \"mouth, face.\" One proposal, from the Sanskrit etymologist Manfred Mayrhofer, ties it to a Proto-Indo-European gesture-root mu-, \"pressed lips\" — the same root that would sit behind Greek mŷthos (\"word,\" behind English myth) and German Maul, \"mouth.\" Mayrhofer himself calls a non-Indo-European origin less likely but does not rule it out. Hold this one the way you held bahan's link to bhaj- — a real proposal, not a verdict."
+              "text": "muṅh continues Sanskrit múkha, \"mouth, face\" (CDIAL 10158). One proposal, from the Sanskrit etymologist Manfred Mayrhofer, ties it to a Proto-Indo-European gesture-root mu-, \"pressed lips\" — the same root that would sit behind Greek mŷthos (\"word,\" behind English myth) and German Maul, \"mouth.\" Mayrhofer himself calls a non-Indo-European origin less likely but does not rule it out. Hold this one the way you held bahan's link to bhaj- — a real proposal, not a verdict."
             }
           ]
         },

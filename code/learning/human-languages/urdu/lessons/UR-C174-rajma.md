@@ -14,7 +14,8 @@ romanization: "rājmā"
 concept_tag: UR-CHIZ174-RAJMA
 prerequisites: [UR-C174-gandum, UR-C174-chane]
 sounds: []
-roots: []
+roots: [sanskrit-rajamasha]
+etymology_hook: "rājmā: often linked with Sanskrit rājamāṣa 'a kind of bean' (CDIAL 10684), which CDIAL records without a Hindi form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C174-chane]
 <!-- hl-knowledge: introduces=[UR-LEX-C174-CHIZ174-04]; assesses=[] -->
 
 **راجما** — *rājmā* — "kidney beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**راجما** (*rājmā*) is often linked with Sanskrit *rājamāṣa*, "a kind of bean", built from *rājan*, "king", and *māṣa*, "bean". CDIAL records that word, but lists no Hindi form under it (CDIAL 10684).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

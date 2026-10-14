@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 213,
-  "sourceHash": "fnv1a64:3ae0ed9f5b8d96c5",
+  "sourceHash": "fnv1a64:a4c9afed503d08d2",
   "lessonIds": [
     "UR-C213-pahunchana",
     "UR-C213-uthana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch213.txt",
   "json": "urdu/narration/ch213.json",
-  "textHash": "fnv1a64:d5e5ac966bd2757f",
-  "jsonHash": "fnv1a64:7617797587e216a0",
+  "textHash": "fnv1a64:fac7073d8de950cd",
+  "jsonHash": "fnv1a64:03f8fc26abcb70e4",
   "findings": []
 }

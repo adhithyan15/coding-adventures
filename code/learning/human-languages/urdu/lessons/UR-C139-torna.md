@@ -14,7 +14,8 @@ romanization: "toṛnā"
 concept_tag: UR-VERB-TORNA
 prerequisites: [UR-C138-chhuna, UR-C139-banana]
 sounds: []
-roots: []
+roots: [sanskrit-trotayati]
+etymology_hook: "toṛnā ← Sanskrit troṭayati 'breaks, tears', a tadbhava (CDIAL 6079)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C139-banana]
 <!-- hl-knowledge: introduces=[UR-LEX-C139-ACT139-02]; assesses=[] -->
 
 **توڑنا** — *toṛnā* — "to break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**توڑنا** (*toṛnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *troṭayati*, "breaks, tears" (CDIAL 6079).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

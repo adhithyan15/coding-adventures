@@ -14,7 +14,8 @@ romanization: "ṭokrī"
 concept_tag: UR-THINGS111-TOKRI
 prerequisites: [UR-C111-chhatri, UR-C111-thaila]
 sounds: []
-roots: []
+roots: [indo-aryan-tokka]
+etymology_hook: "ṭokrī ← *ṭokka 'basket', a reconstructed form; a tadbhava (CDIAL 5477)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C111-thaila]
 <!-- hl-knowledge: introduces=[UR-LEX-C111-THINGS111-04]; assesses=[] -->
 
 **ٹوکری** — *ṭokrī* — "a basket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹوکری** (*ṭokrī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭokka*, "basket", a form CDIAL reconstructs from its descendants (CDIAL 5477). The *-r-* is an added suffix.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

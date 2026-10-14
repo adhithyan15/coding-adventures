@@ -14,7 +14,8 @@ romanization: "mīṭing"
 concept_tag: UR-KAM261-MITING
 prerequisites: [UR-C261-kampani, UR-C261-karkhana]
 sounds: []
-roots: []
+roots: [english-meeting]
+etymology_hook: "mīṭing ← English meeting"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C261-karkhana]
 <!-- hl-knowledge: introduces=[UR-LEX-C261-KAM261-03]; assesses=[] -->
 
 **میٹنگ** — *mīṭing* — "a meeting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**میٹنگ** (*mīṭing*) is a loan from English *meeting*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shāgird"
 concept_tag: UR-KAM262-SHAGIRD
 prerequisites: [UR-C261-malik, UR-C262-jaj]
 sounds: []
-roots: []
+roots: [persian-shagird]
+etymology_hook: "shāgird: usually traced to Persian shāgird 'pupil, apprentice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C262-jaj]
 <!-- hl-knowledge: introduces=[UR-LEX-C262-KAM262-02]; assesses=[] -->
 
 **شاگرد** — *shāgird* — "a pupil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شاگرد** (*shāgird*) is a loan, usually traced to Persian *shāgird*, "pupil, apprentice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

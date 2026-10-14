@@ -14,7 +14,8 @@ romanization: "kāṅpnā"
 concept_tag: UR-VERB-KANPNA
 prerequisites: [UR-C184-bimar-parna, UR-C184-sujna]
 sounds: []
-roots: []
+roots: [sanskrit-kampate]
+etymology_hook: "kāṅpnā ← Sanskrit kampate 'trembles, shivers', a tadbhava (CDIAL 2767)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C184-sujna]
 <!-- hl-knowledge: introduces=[UR-LEX-C184-ACT184-03]; assesses=[] -->
 
 **کانپنا** — *kāṅpnā* — "to shiver, to tremble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کانپنا** (*kāṅpnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kampate*, "trembles, shivers" (CDIAL 2767).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

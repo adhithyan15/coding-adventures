@@ -14,7 +14,8 @@ romanization: "jaldī karnā"
 concept_tag: UR-VERB-JALDI-KARNA
 prerequisites: [UR-C213-phenkna, UR-C213-khinchna]
 sounds: []
-roots: []
+roots: [persian-jald, kr-do]
+etymology_hook: "jaldī: Persian jald 'quick', of Arabic origin, + -ī; karnā 'to do' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C213-khinchna]
 <!-- hl-knowledge: introduces=[UR-LEX-C214-ACT214-01]; assesses=[] -->
 
 **جلدی کرنا** — *jaldī karnā* — "to hurry".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جلدی کرنا** (*jaldī karnā*) is "to do quickness". *jaldī* is *jald*, "quick", usually traced to Persian *jald*, a word of Arabic origin, with the ending *-ī*; *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

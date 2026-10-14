@@ -14,7 +14,8 @@ romanization: "ṭāim ṭebal"
 concept_tag: UR-PARH146-TAIM-TEBAL
 prerequisites: [UR-C145-program, UR-C145-tai-karna]
 sounds: []
-roots: []
+roots: [english-timetable]
+etymology_hook: "ṭāim ṭebal ← English time-table"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [UR-C145-tai-karna]
 
 The board says **بس: آٹھ بجے** — *bas: āṭh baje* — "Bus: eight o'clock." The bus
 leaves at eight, so be there before eight.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹائم ٹیبل** (*ṭāim ṭebal*) is a loan from English *time-table*. It is built from *time* and *table*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

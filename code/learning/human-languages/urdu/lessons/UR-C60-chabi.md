@@ -14,7 +14,8 @@ romanization: "chābī"
 concept_tag: UR-HOME60-CHABI
 prerequisites: [UR-C59-aina, UR-C59-batti]
 sounds: []
-roots: []
+roots: [portuguese-chave]
+etymology_hook: "chābī: usually traced to Portuguese chave 'key'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C59-batti]
 <!-- hl-knowledge: introduces=[UR-LEX-C60-HOME60-01]; assesses=[] -->
 
 **چابی** — *chābī* — "a key".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چابی** (*chābī*) is usually traced to Portuguese *chave*, "key".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

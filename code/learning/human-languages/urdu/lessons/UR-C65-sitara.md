@@ -14,7 +14,8 @@ romanization: "sitārā"
 concept_tag: UR-NATURE65-SITARA
 prerequisites: [UR-C65-ret, UR-C65-khet]
 sounds: []
-roots: []
+roots: [persian-sitara]
+etymology_hook: "sitārā: usually traced to Persian sitāra 'star'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C65-khet]
 <!-- hl-knowledge: introduces=[UR-LEX-C65-NATURE65-04]; assesses=[] -->
 
 **ستارہ** — *sitārā* — "a star".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ستارہ** (*sitārā*) is a loan, usually traced to Persian *sitāra*, "star". It is usually taken as a distant cousin of English *star*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

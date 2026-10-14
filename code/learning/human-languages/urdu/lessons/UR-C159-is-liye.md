@@ -14,7 +14,8 @@ romanization: "is liye"
 concept_tag: UR-VAJAH159-IS-LIYE
 prerequisites: [UR-C158-restorent, UR-C158-kaife]
 sounds: []
-roots: []
+roots: [sanskrit-labhate]
+etymology_hook: "is 'this' + liye 'for', usually explained as a form of lenā 'to take' (CDIAL 10948)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C158-kaife]
 <!-- hl-knowledge: introduces=[UR-LEX-C159-VAJAH159-01]; assesses=[] -->
 
 **اس لیے** — *is liye* — "so, therefore".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اس لیے** (*is liye*) is *is*, "this", with *liye*, "for", which is usually explained as a form of *lenā*, "to take". CDIAL lists *lenā* under Sanskrit *labhate*, "catches, takes" (CDIAL 10948).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

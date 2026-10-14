@@ -14,7 +14,8 @@ romanization: "majbūr"
 concept_tag: UR-SIFAT163-MAJBUR
 prerequisites: [UR-C162-surmai, UR-C163-fuzul]
 sounds: []
-roots: []
+roots: [arabic-majbur]
+etymology_hook: "majbūr ← Arabic majbūr 'compelled', through Persian (Lane, root j-b-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C163-fuzul]
 <!-- hl-knowledge: introduces=[UR-LEX-C163-SIFAT163-02]; assesses=[] -->
 
 **مجبور** — *majbūr* — "forced, helpless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مجبور** (*majbūr*) is a loan from Arabic *majbūr*, "compelled", which reached Urdu through Persian. Its Arabic root is *j-b-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: country — the other half of the geography an A1 candidate is asked for 
 concept_tag: UR-LEX-MULK
 prerequisites: [UR-C27-shahr, UR-C23-mein, UR-C05-khuda, UR-C24-vahan]
 sounds: []
-roots: []
-etymology_hook: "ملک is Arabic, from the root m-l-k, 'to own, to rule' -- the same three consonants behind malik ('king') and the Malik that is a surname across half the Muslim world. A country is what a king holds; a city, in Persian, is what he rules from."
+roots: [arabic-mulk]
+etymology_hook: "mulk ← Arabic mulk 'dominion, kingdom', through Persian (Lane, root m-l-k)"
 duration:
   max_seconds: 240
 requires:

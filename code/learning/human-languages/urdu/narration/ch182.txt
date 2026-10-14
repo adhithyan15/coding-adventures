@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to weigh, then the Urdu for to check.
 You'll want to know: تھکنا.
 تھکنا — thaknā — "to get tired".
 
+The word, taken apart.
+تھکنا (thaknā) is a tadbhava, a word inherited and reshaped by sound change. It comes from sthakk, "stop, halt", a form CDIAL reconstructs from its descendants (CDIAL 13737). CDIAL calls a link with sthā-, "to stand", probable but not clear.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to check, then the Urdu for to get tired.
 
 You'll want to know: آرام کرنا.
 آرام کرنا — ārām karnā — "to rest".
+
+The phrase, taken apart.
+آرام کرنا (ārām karnā) joins ārām, "rest", usually traced to Persian ārām, and karnā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to get tired, then the Urdu for to rest.
 You'll want to know: لیٹنا.
 لیٹنا — leṭnā — "to lie down".
 
+The word, taken apart.
+لیٹنا (leṭnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from leṭyati, "sleeps" (CDIAL 11109). The Sanskrit verb is known only from a grammarians' list, and CDIAL thinks it probably of non-Aryan origin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to rest, then the Urdu for to lie down.
 You'll want to know: کھڑا ہونا.
 کھڑا ہونا — khaṛā honā — "to stand up".
 
+The phrase, taken apart.
+کھڑا ہونا (khaṛā honā) is "to become standing". CDIAL lists khaṛā, "standing erect", under Sanskrit khaḍaka, "a bolt, a post", for which it supposes an older sense "erect" (CDIAL 3784). honā, "to be", comes from Sanskrit bhavati, "becomes, is" (CDIAL 9416).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to lie down, then the Urdu for to stand up.
 
 You'll want to know: انتظار کرنا.
 انتظار کرنا — intizār karnā — "to wait".
+
+The phrase, taken apart.
+انتظار کرنا (intizār karnā) joins intizār, "waiting", and karnā, "to do". intizār is Arabic intiẓār, "waiting, looking out for", which reached Urdu through Persian (Lane, root n-ẓ-r); karnā comes from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

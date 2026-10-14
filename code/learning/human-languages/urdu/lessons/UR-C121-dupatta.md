@@ -14,7 +14,8 @@ romanization: "dupaṭṭā"
 concept_tag: UR-THINGS121-DUPATTA
 prerequisites: [UR-C120-biryani, UR-C121-shalvar]
 sounds: []
-roots: []
+roots: [sanskrit-patta]
+etymology_hook: "dupaṭṭā: du- 'two' + paṭṭā 'strip of cloth'; CDIAL 6413 has *dupaṭṭikā 'two cloths', with no Hindi or Urdu form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C121-shalvar]
 <!-- hl-knowledge: introduces=[UR-LEX-C121-THINGS121-02]; assesses=[] -->
 
 **دوپٹہ** — *dupaṭṭā* — "a scarf, a dupatta".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دوپٹہ** (*dupaṭṭā*) is built from *du-*, "two", and *paṭṭā*, "a strip of cloth": a cloth of two breadths. CDIAL lists Hindi *paṭṭī*, "strip of cloth", under Sanskrit *paṭṭa*, "cloth", probably of non-Aryan source (CDIAL 7700). It also reconstructs *\*dupaṭṭikā*, "two cloths" (CDIAL 6413), but lists no Hindi or Urdu form under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

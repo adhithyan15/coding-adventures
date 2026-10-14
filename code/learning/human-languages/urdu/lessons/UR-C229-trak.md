@@ -14,7 +14,8 @@ romanization: "ṭrak"
 concept_tag: UR-CHIZ229-TRAK
 prerequisites: [UR-C228-natak, UR-C229-motar-saikil]
 sounds: []
-roots: []
+roots: [english-truck]
+etymology_hook: "ṭrak ← English truck"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C229-motar-saikil]
 <!-- hl-knowledge: introduces=[UR-LEX-C229-CHIZ229-02]; assesses=[] -->
 
 **ٹرک** — *ṭrak* — "a lorry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹرک** (*ṭrak*) is a loan from English *truck*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

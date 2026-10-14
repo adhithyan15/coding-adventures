@@ -14,7 +14,8 @@ romanization: "kam karnā"
 concept_tag: UR-VERB-KAM-KARNA
 prerequisites: [UR-C214-kamana, UR-C214-sambhalna]
 sounds: []
-roots: []
+roots: [persian-kam, kr-do]
+etymology_hook: "kam 'less' usually traced to Persian kam; karnā 'to do' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C214-sambhalna]
 <!-- hl-knowledge: introduces=[UR-LEX-C215-ACT215-01]; assesses=[] -->
 
 **کم کرنا** — *kam karnā* — "to reduce".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کم کرنا** (*kam karnā*) is "to make less". *kam*, "little, less", is usually traced to Persian *kam*; *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

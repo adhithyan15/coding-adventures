@@ -14,7 +14,8 @@ romanization: "matlab"
 concept_tag: UR-CHIZ171-MATLAB
 prerequisites: [UR-C171-jumla, UR-C171-harf]
 sounds: []
-roots: []
+roots: [arabic-matlab]
+etymology_hook: "matlab ← Arabic maṭlab 'something sought, an aim', through Persian (Lane, root ṭ-l-b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C171-harf]
 <!-- hl-knowledge: introduces=[UR-LEX-C171-CHIZ171-05]; assesses=[] -->
 
 **مطلب** — *matlab* — "a meaning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مطلب** (*matlab*) is a loan from Arabic *maṭlab*, "something sought, an aim", which reached Urdu through Persian. Its Arabic root is *ṭ-l-b* (Lane). Urdu uses it for what a word aims at: its meaning.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

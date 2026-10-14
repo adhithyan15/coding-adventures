@@ -14,7 +14,8 @@ romanization: "rāe"
 concept_tag: UR-CHIZ231-RAE
 prerequisites: [UR-C230-dulha, UR-C230-dulhan]
 sounds: []
-roots: []
+roots: [arabic-ray]
+etymology_hook: "rāe ← Arabic raʾy 'opinion, view', through Persian (Lane, root r-ʾ-y)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C230-dulhan]
 <!-- hl-knowledge: introduces=[UR-LEX-C231-CHIZ231-01]; assesses=[] -->
 
 **رائے** — *rāe* — "an opinion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رائے** (*rāe*) is a loan from Arabic *raʾy*, "opinion, view", which reached Urdu through Persian. Its Arabic root is *r-ʾ-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,7 +12,7 @@ concept_tag: UR-FAMILY
 prerequisites: [UR-C09-dost]
 sounds: [rtl, long-a, alif-madd]
 roots: [persian-khandan]
-etymology_hook: khāndān is Classical Persian, borrowed whole with no internal breakdown Wiktionary is willing to commit to — a plain loan, unlike khudā and hāfiz, whose separate Persian and Arabic pieces this book could trace; it is the third Persian noun in this chapter, after dost and alongside khudā and hāfiz from Chapter 5, all social vocabulary Urdu reached outside itself for.
+etymology_hook: "khāndān: usually traced to Persian khāndān 'family, household', a loan left here unanalysed"
 duration:
   max_seconds: 280
 requires:

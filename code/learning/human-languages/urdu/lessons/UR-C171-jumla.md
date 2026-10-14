@@ -14,7 +14,8 @@ romanization: "jumlā"
 concept_tag: UR-CHIZ171-JUMLA
 prerequisites: [UR-C171-shahri, UR-C171-sayyah]
 sounds: []
-roots: []
+roots: [arabic-jumla]
+etymology_hook: "jumlā ← Arabic jumla 'a sum, a whole', through Persian (Lane, root j-m-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C171-sayyah]
 <!-- hl-knowledge: introduces=[UR-LEX-C171-CHIZ171-03]; assesses=[] -->
 
 **جملہ** — *jumlā* — "a sentence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جملہ** (*jumlā*) is a loan from Arabic *jumla*, "a sum, a whole", which reached Urdu through Persian. Its Arabic root is *j-m-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṭhaharnā"
 concept_tag: UR-VERB-THAHARNA
 prerequisites: [UR-C140-samjhana, UR-C140-mangna]
 sounds: []
-roots: []
+roots: [indo-aryan-stabhira]
+etymology_hook: "ṭhaharnā ← *stabhira 'fixed, firm', a reconstructed form; a tadbhava (CDIAL 13680)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C140-mangna]
 <!-- hl-knowledge: introduces=[UR-LEX-C141-ACT141-01]; assesses=[] -->
 
 **ٹھہرنا** — *ṭhaharnā* — "to stay, to wait".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹھہرنا** (*ṭhaharnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*stabhira*, "fixed, firm", a form CDIAL reconstructs from its descendants (CDIAL 13680). It is built on *stambh-*, "to make firm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

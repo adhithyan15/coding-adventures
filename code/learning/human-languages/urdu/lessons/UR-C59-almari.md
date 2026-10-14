@@ -14,7 +14,8 @@ romanization: "almārī"
 concept_tag: UR-HOME59-ALMARI
 prerequisites: [UR-C58-chhat, UR-C58-bistar]
 sounds: []
-roots: []
+roots: [portuguese-armario]
+etymology_hook: "almārī: usually traced to Portuguese armário 'cupboard'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C58-bistar]
 <!-- hl-knowledge: introduces=[UR-LEX-C59-HOME59-01]; assesses=[] -->
 
 **الماری** — *almārī* — "a cupboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**الماری** (*almārī*) is usually traced to Portuguese *armário*, "cupboard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

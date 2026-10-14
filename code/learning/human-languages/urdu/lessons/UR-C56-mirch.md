@@ -14,7 +14,8 @@ romanization: "mirch"
 concept_tag: UR-FOOD56-MIRCH
 prerequisites: [UR-C55-chini, UR-C55-namak]
 sounds: []
-roots: []
+roots: [sanskrit-marica]
+etymology_hook: "mirch ← *maricca, a variant of Sanskrit marīca 'peppercorn', itself from Austroasiatic (CDIAL 9875)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C55-namak]
 <!-- hl-knowledge: introduces=[UR-LEX-C56-FOOD56-01]; assesses=[] -->
 
 **مرچ** — *mirch* — "chilli, pepper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مرچ** (*mirch*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*maricca*, "peppercorn", a form CDIAL reconstructs from its descendants (CDIAL 9875). It is a variant CDIAL reconstructs beside Sanskrit *marīca*, "peppercorn", which it takes from an Austroasiatic language. When the chilli came to India, it took the name of black pepper.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

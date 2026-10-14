@@ -1,0 +1,6 @@
+### Changed — Urdu's etymology gap pins fall to 0 and 0
+
+The Urdu etymology gap pin, in `tests/etymology-gap-pin-owners/urdu.owner.ts`, drops from `{ withoutHook: 1123, withoutVisible: 1137 }` to `{ withoutHook: 0, withoutVisible: 0 }`, and `EMPTY_ETYMOLOGY_BLOCK_PINS.urdu` in `tests/root-ledger.test.ts` drops from 1 to 0. Every Urdu word lesson now has an `etymology_hook` and states its word's origin in its body.
+
+- **What the lessons gained.** 1,139 new "taken apart" blocks, 58 corrected or extended origin sections (UR-C04-thik's empty one among them) and 77 shorter origin hooks on the hand-written lessons. Sources are Turner's CDIAL for inherited words and Sanskrit loans (695 citations to 534 entries, each checked by script against the entry), DEDR for three Dravidian comparisons, Lane's Lexicon for Arabic roots, and named donors for Persian, English, Portuguese and Turkic loans. Where the Hindi track teaches the same word the origin, entry, hedges and slug match it, except where CDIAL files the word under another form. 47 words say the origin is not settled. The Urdu track changelog has the detail, including the corrected UR-C06-ana etymology; no `max_seconds` value was raised.
+- **No code changed.** Only the pins and the owner's rationale moved.

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 187,
-  "sourceHash": "fnv1a64:f7c4f4a2222b436b",
+  "sourceHash": "fnv1a64:70b060d84b36316c",
   "lessonIds": [
     "UR-C187-sujan",
     "UR-C187-khurak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch187.txt",
   "json": "urdu/narration/ch187.json",
-  "textHash": "fnv1a64:e27713b8d8bbfe8d",
-  "jsonHash": "fnv1a64:b81e5f67b2f3f587",
+  "textHash": "fnv1a64:123c002a5b2b6726",
+  "jsonHash": "fnv1a64:7d4db708c0eedc75",
   "findings": []
 }

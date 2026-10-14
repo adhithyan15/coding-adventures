@@ -14,7 +14,8 @@ romanization: "khonā"
 concept_tag: UR-VERB-KHONA
 prerequisites: [UR-C52-rokna, UR-C52-batana]
 sounds: []
-roots: []
+roots: [sanskrit-kshapayati]
+etymology_hook: "khonā ← Sanskrit kṣapayati 'destroys; throws', a tadbhava (CDIAL 3651)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C52-batana]
 <!-- hl-knowledge: introduces=[UR-LEX-C52-VERBS52-05]; assesses=[] -->
 
 **کھونا** — *khonā* — "to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھونا** (*khonā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣapayati*, "destroys; throws" (CDIAL 3651).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

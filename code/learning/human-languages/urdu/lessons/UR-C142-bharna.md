@@ -14,7 +14,8 @@ romanization: "bharnā"
 concept_tag: UR-VERB-BHARNA
 prerequisites: [UR-C141-charhna, UR-C142-utarna]
 sounds: []
-roots: []
+roots: [sanskrit-bharati]
+etymology_hook: "bharnā ← Sanskrit bharati 'bears, brings; fills', a tadbhava (CDIAL 9397)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C142-utarna]
 <!-- hl-knowledge: introduces=[UR-LEX-C142-ACT142-02]; assesses=[] -->
 
 **بھرنا** — *bharnā* — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھرنا** (*bharnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bharati*, "bears, brings; fills" (CDIAL 9397).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

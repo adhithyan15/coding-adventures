@@ -14,7 +14,8 @@ romanization: "chukānā"
 concept_tag: UR-VERB-CHUKANA
 prerequisites: [UR-C180-jorna, UR-C181-kharch-karna]
 sounds: []
-roots: []
+roots: [indo-aryan-cukk]
+etymology_hook: "chukānā ← *cukk 'fall short of, stop', a reconstructed form; a tadbhava (CDIAL 4848)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C181-kharch-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C181-ACT181-02]; assesses=[] -->
 
 **چکانا** — *chukānā* — "to pay off, to settle (a bill)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چکانا** (*chukānā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cukk*, "fall short of, stop", a form CDIAL reconstructs from its descendants (CDIAL 4848). It is the causing form of *chuknā*, "to be finished". CDIAL takes *\*cukk* from Prakrit *cukka*, "fallen, mistaken", which replaced Sanskrit *cyuta*, "fallen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

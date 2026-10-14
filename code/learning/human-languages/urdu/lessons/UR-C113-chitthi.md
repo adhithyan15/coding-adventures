@@ -14,7 +14,8 @@ romanization: "chiṭṭhī"
 concept_tag: UR-THINGS113-CHITTHI
 prerequisites: [UR-C112-palang, UR-C113-daraz]
 sounds: []
-roots: []
+roots: [indo-aryan-cishta]
+etymology_hook: "chiṭṭhī ← *ciṣṭa 'message', a reconstructed form; a tadbhava (CDIAL 4832)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C113-daraz]
 <!-- hl-knowledge: introduces=[UR-LEX-C113-THINGS113-02]; assesses=[] -->
 
 **چٹھی** — *chiṭṭhī* — "a letter (that you post)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چٹھی** (*chiṭṭhī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ciṣṭa*, "message", a form CDIAL reconstructs from its descendants (CDIAL 4832). CDIAL compares Avestan *činasti*, "makes known".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

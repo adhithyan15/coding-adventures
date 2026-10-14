@@ -14,7 +14,8 @@ romanization: "rangīn"
 concept_tag: UR-SIFAT249-RANGIN
 prerequisites: [UR-C248-maujud, UR-C249-dubla]
 sounds: []
-roots: []
+roots: [persian-rang]
+etymology_hook: "rangīn: rang 'colour' + -īn; usually traced to Persian rangīn 'coloured'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C249-dubla]
 <!-- hl-knowledge: introduces=[UR-LEX-C249-SIFAT249-02]; assesses=[] -->
 
 **رنگین** — *rangīn* — "colourful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رنگین** (*rangīn*) is usually traced to Persian *rangīn*, "coloured", built on *rang*, "colour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

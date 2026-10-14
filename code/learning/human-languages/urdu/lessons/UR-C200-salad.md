@@ -14,7 +14,8 @@ romanization: "salād"
 concept_tag: UR-CHIZ200-SALAD
 prerequisites: [UR-C200-achar, UR-C200-rayta]
 sounds: []
-roots: []
+roots: [english-salad]
+etymology_hook: "salād ← English salad"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C200-rayta]
 <!-- hl-knowledge: introduces=[UR-LEX-C200-CHIZ200-05]; assesses=[] -->
 
 **سلاد** — *salād* — "a salad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سلاد** (*salād*) is a loan from English *salad*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

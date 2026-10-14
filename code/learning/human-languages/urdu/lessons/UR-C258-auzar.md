@@ -15,6 +15,7 @@ concept_tag: UR-CHIZ258-AUZAR
 prerequisites: [UR-C257-sharm, UR-C258-pechkas]
 sounds: []
 roots: []
+etymology_hook: "auzār 'tool': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C258-pechkas]
 <!-- hl-knowledge: introduces=[UR-LEX-C258-CHIZ258-02]; assesses=[] -->
 
 **اوزار** — *auzār* — "a tool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **اوزار** (*auzār*) is not settled. It is close to Persian *afzār*, "tool", but the route is not clear, and CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

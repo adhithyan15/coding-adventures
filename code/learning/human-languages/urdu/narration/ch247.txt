@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a border, then the Urdu for a government.
 You'll want to know: ناٹا.
 ناٹا — nāṭā — "short (of a person)".
 
+The word, taken apart.
+ناٹا (nāṭā) is a tadbhava, a word inherited and reshaped by sound change. It comes from naṭṭa, "defective", a form CDIAL reconstructs from its descendants (CDIAL 6935). CDIAL glosses the Hindi word "short, dwarfish".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a government, then the Urdu for short.
 
 You'll want to know: ممکن.
 ممکن — mumkin — "possible".
+
+The word, taken apart.
+ممکن (mumkin) is a loan from Arabic mumkin, "possible", which reached Urdu through Persian. Its Arabic root is m-k-n (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for short, then the Urdu for possible.
 You'll want to know: ناممکن.
 ناممکن — nāmumkin — "impossible".
 
+The word, taken apart.
+ناممکن (nāmumkin) joins the Persian nā-, "not", and Arabic mumkin, "possible", which reached Urdu through Persian (Lane, root m-k-n).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for possible, then the Urdu for impossible.
 You'll want to know: مفید.
 مفید — mufīd — "useful".
 
+The word, taken apart.
+مفید (mufīd) is a loan from Arabic mufīd, "giving benefit", which reached Urdu through Persian. Its Arabic root is f-y-d (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for impossible, then the Urdu for useful.
 
 You'll want to know: خطرناک.
 خطرناک — khatarnāk — "dangerous".
+
+The word, taken apart.
+خطرناک (khatarnāk) is "full of danger". It joins Arabic khaṭar, "danger", which reached Urdu through Persian (Lane, root kh-ṭ-r), and the Persian ending -nāk, "full of".
 
 What you've built.
 One more word for this chapter.

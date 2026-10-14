@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a fly, then the Urdu for a rabbit.
 You'll want to know: ہرن.
 ہرن — hiran — "a deer".
 
+The word, taken apart.
+ہرن (hiran) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hariṇa, "deer" (CDIAL 13982). It is built on hari, "yellow".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a rabbit, then the Urdu for a deer.
 
 You'll want to know: کبوتر.
 کبوتر — kabūtar — "a pigeon".
+
+The word, taken apart.
+کبوتر (kabūtar) is a loan, usually traced to Persian kabūtar, "pigeon".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a deer, then the Urdu for a pigeon.
 You'll want to know: طوطا.
 طوطا — totā — "a parrot".
 
+The word, taken apart.
+طوطا (totā) is a loan, usually traced to Persian ṭūṭī, "parrot".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a pigeon, then the Urdu for a parrot.
 You'll want to know: بھالو.
 بھالو — bhālū — "a bear".
 
+The word, taken apart.
+بھالو (bhālū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhallūka, "bear" (CDIAL 9415). CDIAL gives an Indo-European source as possible and mentions a proposed Austroasiatic one.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a parrot, then the Urdu for a bear.
 
 You'll want to know: کمر.
 کمر — kamar — "the waist, the lower back".
+
+The word, taken apart.
+کمر (kamar) is a loan, usually traced to Persian kamar, "waist".
 
 What you've built.
 One more word for this chapter.

@@ -12,7 +12,7 @@ concept_tag: UR-NUMBER-EIGHT
 prerequisites: [UR-C29-saat]
 sounds: [rtl, long-a, retroflex-t]
 roots: [sanskrit-ashta, proto-indo-european-oktow]
-etymology_hook: "aath continues Sanskrit ashta from Proto-Indo-European *oktow -- Latin octo, English eight -- and its retroflex tth is a sound the European cousins never had, made with the tongue curled back."
+etymology_hook: "āṭh ← Sanskrit aṣṭā 'eight' (CDIAL 941), from PIE *oḱtṓw, the same word as English eight"
 duration:
   max_seconds: 270
 requires:
@@ -50,7 +50,7 @@ of the mouth, not against the teeth.
 ## The word, taken apart — octo, eight, āṭh
 <!-- hl-knowledge: introduces=[UR-ETYMON-AATH-EIGHT-PIE]; assesses=[UR-LEX-AATH] -->
 
-**آٹھ** continues Sanskrit *aṣṭa*, from Indo-European \**oktow*,
+**آٹھ** continues Sanskrit *aṣṭā* (CDIAL 941), from Indo-European \**oktow*,
 "eight." Latin **octō**, Greek **oktṓ** and English **eight** are the same word.
 
 The retroflex is where the family resemblance stops. Latin and English both have

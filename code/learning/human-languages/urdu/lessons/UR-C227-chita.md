@@ -14,7 +14,8 @@ romanization: "chītā"
 concept_tag: UR-CHIZ227-CHITA
 prerequisites: [UR-C227-janvar, UR-C227-bhains]
 sounds: []
-roots: []
+roots: [sanskrit-citraka]
+etymology_hook: "chītā ← Sanskrit citraka 'leopard', a tadbhava (CDIAL 4804)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C227-bhains]
 <!-- hl-knowledge: introduces=[UR-LEX-C227-CHIZ227-03]; assesses=[] -->
 
 **چیتا** — *chītā* — "a leopard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چیتا** (*chītā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *citraka*, "leopard" (CDIAL 4804). It is built on *citra*, "spotted, bright".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

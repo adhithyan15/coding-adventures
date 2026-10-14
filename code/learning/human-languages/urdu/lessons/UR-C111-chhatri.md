@@ -14,7 +14,8 @@ romanization: "chhatrī"
 concept_tag: UR-THINGS111-CHHATRI
 prerequisites: [UR-C110-chashma, UR-C111-batua]
 sounds: []
-roots: []
+roots: [sanskrit-chattra]
+etymology_hook: "chhatrī: CDIAL lists chātā, chātī 'umbrella' under Sanskrit chattra 'parasol', feminine chattrikā (CDIAL 4972)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C111-batua]
 <!-- hl-knowledge: introduces=[UR-LEX-C111-THINGS111-02]; assesses=[] -->
 
 **چھتری** — *chhatrī* — "an umbrella".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چھتری** (*chhatrī*) belongs with Sanskrit *chattra*, "parasol", and its feminine *chattrikā*. CDIAL lists the inherited Hindi forms *chātā* and *chātī*, "umbrella" (CDIAL 4972); *chhatrī* keeps more of the Sanskrit shape and is not listed itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

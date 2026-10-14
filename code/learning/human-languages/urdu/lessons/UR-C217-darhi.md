@@ -14,7 +14,8 @@ romanization: "dāṛhī"
 concept_tag: UR-SEHAT217-DARHI
 prerequisites: [UR-C216-khvab, UR-C216-kamzori]
 sounds: []
-roots: []
+roots: [indo-aryan-damshtra]
+etymology_hook: "dāṛhī ← *dāṃṣṭra 'fang, tusk, beard', a reconstructed form; a tadbhava (CDIAL 6250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C216-kamzori]
 <!-- hl-knowledge: introduces=[UR-LEX-C217-SEHAT217-01]; assesses=[] -->
 
 **داڑھی** — *dāṛhī* — "a beard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**داڑھی** (*dāṛhī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dāṃṣṭra*, "fang, tusk, beard", a form CDIAL reconstructs from its descendants (CDIAL 6250). It is built on Sanskrit *daṃṣṭrā*, "tusk, fang"; CDIAL finds a change of sense from "fang" through "tusk" to "beard" possible.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

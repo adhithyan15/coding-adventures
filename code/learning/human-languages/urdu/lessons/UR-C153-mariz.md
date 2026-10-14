@@ -14,7 +14,8 @@ romanization: "marīz"
 concept_tag: UR-SEHAT153-MARIZ
 prerequisites: [UR-C152-pet-dard, UR-C153-nars]
 sounds: []
-roots: []
+roots: [arabic-marid]
+etymology_hook: "marīz ← Arabic marīḍ 'sick', through Persian (Lane, root m-r-ḍ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C153-nars]
 <!-- hl-knowledge: introduces=[UR-LEX-C153-SEHAT153-02]; assesses=[] -->
 
 **مریض** — *marīz* — "a patient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مریض** (*marīz*) is a loan from Arabic *marīḍ*, "sick", which reached Urdu through Persian. Its Arabic root is *m-r-ḍ* (Lane). Urdu uses it for a patient.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

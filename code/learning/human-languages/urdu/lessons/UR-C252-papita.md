@@ -15,6 +15,7 @@ concept_tag: UR-CHIZ252-PAPITA
 prerequisites: [UR-C251-nekar, UR-C251-barsati]
 sounds: []
 roots: []
+etymology_hook: "papītā: origin uncertain, usually linked with papaya, a Caribbean word spread by Iberian sailors; not in CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C251-barsati]
 <!-- hl-knowledge: introduces=[UR-LEX-C252-CHIZ252-01]; assesses=[] -->
 
 **پپیتا** — *papītā* — "a papaya".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **پپیتا** (*papītā*) is uncertain. It is usually linked with *papaya*, a Caribbean word that Spanish and Portuguese sailors carried round the world; CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

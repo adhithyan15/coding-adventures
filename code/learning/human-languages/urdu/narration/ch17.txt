@@ -18,7 +18,7 @@ Picture something within reach and name it:
 Two letters, and you can read the first of them: ی, the S-curve with no dots. The second is new to your eye, and it will stay new for two more lessons. Say the word now; you will write it shortly.
 
 The word, taken apart.
-یہ (yih) points at what is near you. Urdu keeps a second word for what is far, and the two arrived together: both descend from the Old Indo-Aryan demonstratives that Sanskrit wrote as iyam and asau. English lost most of that system and kept a thinner this/that; Urdu kept the pair intact.
+یہ (yih) points at what is near you. Urdu keeps a second word for what is far, and the two arrived together: both descend from Old Indo-Aryan demonstratives. CDIAL lists Hindi yah, "this", under Sanskrit eṣa, "this" (CDIAL 2530), and vah, "that", under asau, "that" (CDIAL 972). English lost most of that system and kept a thinner this/that; Urdu kept the pair intact.
 There is a gap in what you can do with یہ so far, and it is worth naming. yih kān is "this ear" — a label, not yet a sentence. To say "this is an ear" you need the small word hai at the end, which you have been saying since you gave your name. You cannot write hai yet, because both of its letters are still missing from your hand.
 That is what this chapter buys back.
 
@@ -60,7 +60,7 @@ From the right: ک, ا, م. Every letter in it is already yours, so this word ar
 yih kām — "this work" — the near-pointing word is still an ear-word; its second letter reaches your hand next lesson.
 
 The word, taken apart.
-کام is inherited, not borrowed: Sanskrit karman "act, deed, work" became Prakrit kamma and then Urdu kām, losing a syllable to a few thousand years of being said out loud.
+کام is inherited, not borrowed: Sanskrit karman "act, deed, work" (CDIAL 2892) became Prakrit kamma and then Urdu kām, losing a syllable to a few thousand years of being said out loud.
 Then look at what English did with the same word. English did not inherit it — English borrowed it, late, out of books, and borrowed it whole: karma.
 So one Sanskrit word reached two languages by two roads. The road through ordinary Indian speech wore it down to a plain word for the work you have to get done today. The road through scholarship carried it into English untouched and left it meaning cosmic consequence. Same word. The difference in weight is the difference between being inherited and being borrowed, and you have watched that same fork before, when pūchhnā met pursish.
 A caution worth keeping: Urdu has a second kām, from Sanskrit kāma "desire," and it is a different word wearing the same clothes. This chapter means the working one.
@@ -104,7 +104,7 @@ Put the question words you have met beside the new one.
 kaun — who.
 kab — when.
 kaise — how.
-Every one of them opens with ک. That shared consonant is not a coincidence and not a tidy invention: it is inherited. All five come from the Old Indo-Aryan interrogative stem ka-, and کہاں (kahāṅ) in particular runs back through Prakrit kahiṅ to Sanskrit kasmin, "in what."
+Every one of them opens with ک. That shared consonant is not a coincidence and not a tidy invention: it is inherited. All five come from the Old Indo-Aryan interrogative stem ka-, and کہاں (kahāṅ) in particular is often traced through Prakrit kahiṅ to Sanskrit kasmin, "in what." CDIAL has no entry for it, though, so that last step is not settled.
 Now say the English list out loud — who, what, when, where, how — and listen for its own shared opening. English marks its questions with wh, Latin marks them with qu in quis and quid, and Urdu marks them with ک. Three marks, one inherited consonant: Proto-Indo-European kʷis, split three ways by three sound histories.
 So a learner meeting کہاں (kahāṅ) is not memorising an arbitrary shape. They are meeting a relative of the word they already use for the same job.
 
@@ -185,7 +185,7 @@ You'll want to know first — one word.
 Every letter in it is one you can form except the last of ماں (māṅ), which arrives shortly — and you can hear exactly where it goes, because it is the nasal hum you have been putting on the end of maiṅ and hūṅ all along.
 
 The word, taken apart.
-ماں (māṅ) is inherited. It comes down through Prakrit from Sanskrit mātā, stem mātṛ, and behind that stands Proto-Indo-European méh₂tēr. The same root gives English mother, Latin mater (behind maternal, matrix), Greek mētēr, and Persian mādar.
+ماں (māṅ) is inherited. It comes down through Prakrit from Sanskrit mātā, stem mātṛ, under which CDIAL lists Hindi mā and māī, "mother" (CDIAL 10016), and behind that stands Proto-Indo-European méh₂tēr. The same root gives English mother, Latin mater (behind maternal, matrix), Greek mētēr, and Persian mādar.
 Then notice what Urdu did with the Persian one. It took it. mādar lives in Urdu too, alongside māṅ — the borrowed word kept for formal, poetic and respectful use, the inherited word used at home. This is the pairing you already saw when inherited bhāī sat beside borrowed khāndān: Urdu rarely replaces a native word with a Persian one. It keeps both and gives them different rooms to stand in.
 méh₂tēr also earns a caution. Words for mother across the world's languages tend to start with m, because ma is close to the first sound a baby makes, and that resemblance can arise anywhere without any shared ancestor. The Urdu-to-English link here is not that kind of accident — it is traceable step by step through Sanskrit and Proto-Indo-European. But a resemblance to a mama in an unrelated family would be.
 

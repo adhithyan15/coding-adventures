@@ -14,7 +14,8 @@ romanization: "dublā"
 concept_tag: UR-SIFAT249-DUBLA
 prerequisites: [UR-C248-tandurust, UR-C248-maujud]
 sounds: []
-roots: []
+roots: [sanskrit-durbala]
+etymology_hook: "dublā ← Sanskrit durbala 'weak; slender', a tadbhava (CDIAL 6438)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C248-maujud]
 <!-- hl-knowledge: introduces=[UR-LEX-C249-SIFAT249-01]; assesses=[] -->
 
 **دبلا** — *dublā* — "slim, thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دبلا** (*dublā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *durbala*, "weak; slender" (CDIAL 6438). It is built from *dus-*, "badly", and *bala*, "strength".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

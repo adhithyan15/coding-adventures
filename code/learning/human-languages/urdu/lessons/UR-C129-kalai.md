@@ -14,7 +14,8 @@ romanization: "kalāī"
 concept_tag: UR-THINGS129-KALAI
 prerequisites: [UR-C129-gal, UR-C129-thori]
 sounds: []
-roots: []
+roots: [sanskrit-kalaci]
+etymology_hook: "kalāī ← Sanskrit kalācī 'forearm', a tadbhava (CDIAL 2930)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C129-thori]
 <!-- hl-knowledge: introduces=[UR-LEX-C129-THINGS129-05]; assesses=[] -->
 
 **کلائی** — *kalāī* — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کلائی** (*kalāī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kalācī*, "forearm" (CDIAL 2930). The Sanskrit word is known only from the old word-lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

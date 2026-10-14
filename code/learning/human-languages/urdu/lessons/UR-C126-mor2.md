@@ -14,7 +14,8 @@ romanization: "mor"
 concept_tag: UR-THINGS126-MOR2
 prerequisites: [UR-C125-chirya, UR-C126-kavva]
 sounds: []
-roots: []
+roots: [sanskrit-mayura]
+etymology_hook: "mor ← Sanskrit mayūra 'peacock' (CDIAL 9865), traced by some to Dravidian or Austroasiatic, by Bailey to Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C126-kavva]
 <!-- hl-knowledge: introduces=[UR-LEX-C126-THINGS126-02]; assesses=[] -->
 
 **مور** — *mor* — "a peacock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مور** (*mor*) is inherited. CDIAL lists it under *\*mora*, a form beside Sanskrit *mayūra*, "peacock" (CDIAL 9865). Some trace the Sanskrit word to Dravidian or to Austroasiatic; Bailey connects it with an Iranian colour word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

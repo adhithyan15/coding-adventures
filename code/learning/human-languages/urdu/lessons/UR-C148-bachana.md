@@ -14,7 +14,8 @@ romanization: "bachānā"
 concept_tag: UR-VERB-BACHANA
 prerequisites: [UR-C148-udhar-lena, UR-C148-qarz-dena]
 sounds: []
-roots: []
+roots: [sanskrit-vancati]
+etymology_hook: "bachānā: the causing form of bachnā 'to escape' ← Sanskrit vañcati (CDIAL 11208)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C148-qarz-dena]
 <!-- hl-knowledge: introduces=[UR-LEX-C148-ACT148-05]; assesses=[] -->
 
 **بچانا** — *bachānā* — "to save, to rescue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بچانا** (*bachānā*) is the causing form of *bachnā*, "to escape": to save is to make someone escape. CDIAL lists *bachnā* under Sanskrit *vañcati*, "moves; escapes from" (CDIAL 11208).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

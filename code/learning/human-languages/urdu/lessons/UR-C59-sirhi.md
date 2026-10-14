@@ -14,7 +14,8 @@ romanization: "sīṛhī"
 concept_tag: UR-HOME59-SIRHI
 prerequisites: [UR-C59-almari, UR-C59-farsh]
 sounds: []
-roots: []
+roots: [indo-aryan-shridhi]
+etymology_hook: "sīṛhī ← *śrīḍhi 'resting-place, ladder', a reconstructed form; a tadbhava (CDIAL 12709)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C59-farsh]
 <!-- hl-knowledge: introduces=[UR-LEX-C59-HOME59-03]; assesses=[] -->
 
 **سیڑھی** — *sīṛhī* — "stairs, a ladder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سیڑھی** (*sīṛhī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*śrīḍhi*, "resting-place, ladder", a form CDIAL reconstructs from its descendants (CDIAL 12709).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

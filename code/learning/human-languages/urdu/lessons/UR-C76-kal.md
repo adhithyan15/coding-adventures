@@ -14,7 +14,8 @@ romanization: "kal"
 concept_tag: UR-TIME76-KAL
 prerequisites: [UR-C76-minat, UR-C76-aj]
 sounds: []
-roots: []
+roots: [kalya-time]
+etymology_hook: "kal ← Sanskrit kalya 'dawn, tomorrow', built on kāla 'time' (CDIAL 3104)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C76-aj]
 <!-- hl-knowledge: introduces=[UR-LEX-C76-TIME76-03]; assesses=[] -->
 
 **کل** — *kal* — "yesterday; tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کل** (*kal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kalya*, "dawn; at dawn, tomorrow" (CDIAL 3104). It is built on *kāla*, "time"; one word serves for both "yesterday" and "tomorrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bad qismatī se"
 concept_tag: UR-VAJAH220-BAD-QISMATI-SE
 prerequisites: [UR-C219-balkani, UR-C220-khush-qismati-se]
 sounds: []
-roots: []
+roots: [persian-bad, arabic-qisma, sanskrit-sahita]
+etymology_hook: "bad 'bad' (Persian) + qismat 'fate' ← Arabic qisma (Lane, root q-s-m) + -ī + se (CDIAL 13310)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C220-khush-qismati-se]
 <!-- hl-knowledge: introduces=[UR-LEX-C220-VAJAH220-02]; assesses=[] -->
 
 **بد قسمتی سے** — *bad qismatī se* — "unfortunately".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بد قسمتی سے** (*bad qismatī se*) is "with bad fortune". *bad*, "bad", is usually traced to Persian *bad*; *qismat*, "fate", is Arabic *qisma*, "a share, a lot", which reached Urdu through Persian (Lane, root *q-s-m*); *-ī* makes a noun, and *se*, "with", is the inherited postposition CDIAL lists under Sanskrit *sahita*, "together with" (CDIAL 13310).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to boil, then the Urdu for to taste.
 You'll want to know: پہنچانا.
 پہنچانا — pahuṅchānā — "to deliver, to take (somewhere)".
 
+The word, taken apart.
+پہنچانا (pahuṅchānā) is the causing form of pahuṅchnā, "to arrive": to deliver is to make something arrive. CDIAL lists pahuṅchnā under Sanskrit prabhūta, "much, great", which Prakrit made into a verb, "is strong, reaches" (CDIAL 8716).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to taste, then the Urdu for to deliver.
 
 You'll want to know: اٹھانا.
 اٹھانا — uṭhānā — "to lift, to pick up".
+
+The word, taken apart.
+اٹھانا (uṭhānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ut-sthāpayati, "raises", a form CDIAL reconstructs from its descendants (CDIAL 1903). It is built on sthā-, "to stand": to lift is to make something stand up.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to deliver, then the Urdu for to lift.
 You'll want to know: گرانا.
 گرانا — girānā — "to drop".
 
+The word, taken apart.
+گرانا (girānā) is the causing form of girnā, "to fall": to drop is to make something fall. CDIAL lists girnā under a reconstructed girati, "drips, falls" (CDIAL 4159).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to lift, then the Urdu for to drop.
 You'll want to know: پھینکنا.
 پھینکنا — pheṅknā — "to throw".
 
+The word, taken apart.
+پھینکنا (pheṅknā) is a tadbhava, a word inherited and reshaped by sound change. It comes from pheṅk, "throw", a form CDIAL reconstructs from its descendants (CDIAL 9106). It is a form CDIAL gives beside a reconstructed phekk, "throw".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to drop, then the Urdu for to throw.
 
 You'll want to know: کھینچنا.
 کھینچنا — khīṅchnā — "to pull".
+
+The word, taken apart.
+کھینچنا (khīṅchnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from khiñc, "drag, pull", a form CDIAL reconstructs from its descendants (CDIAL 3881).
 
 What you've built.
 One more word for this chapter.

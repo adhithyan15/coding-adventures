@@ -14,7 +14,8 @@ romanization: "giṭār"
 concept_tag: UR-CHIZ254-GITAR
 prerequisites: [UR-C254-nazm, UR-C254-sitar]
 sounds: []
-roots: []
+roots: [english-guitar]
+etymology_hook: "giṭār ← English guitar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C254-sitar]
 <!-- hl-knowledge: introduces=[UR-LEX-C254-CHIZ254-04]; assesses=[] -->
 
 **گٹار** — *giṭār* — "a guitar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گٹار** (*giṭār*) is a loan from English *guitar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

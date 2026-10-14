@@ -14,7 +14,8 @@ romanization: "bachnā"
 concept_tag: UR-VERB-BACHNA
 prerequisites: [UR-C142-bharna, UR-C142-chhupna]
 sounds: []
-roots: []
+roots: [sanskrit-vancati]
+etymology_hook: "bachnā ← Sanskrit vañcati 'moves; escapes from', a tadbhava (CDIAL 11208)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C142-chhupna]
 <!-- hl-knowledge: introduces=[UR-LEX-C142-ACT142-04]; assesses=[] -->
 
 **بچنا** — *bachnā* — "to be saved, to avoid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بچنا** (*bachnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vañcati*, "moves; escapes from" (CDIAL 11208).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

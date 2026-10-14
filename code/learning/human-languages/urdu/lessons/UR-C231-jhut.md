@@ -14,7 +14,8 @@ romanization: "jhūṭ"
 concept_tag: UR-CHIZ231-JHUT
 prerequisites: [UR-C230-dulhan, UR-C231-rae]
 sounds: []
-roots: []
+roots: [indo-aryan-jhuttha]
+etymology_hook: "jhūṭ: listed with jhūṭhā 'false' under *jhūṭṭha 'false' (CDIAL 5407)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C231-rae]
 <!-- hl-knowledge: introduces=[UR-LEX-C231-CHIZ231-02]; assesses=[] -->
 
 **جھوٹ** — *jhūṭ* — "a lie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جھوٹ** (*jhūṭ*) belongs with *jhūṭhā*, "false", which CDIAL lists under a reconstructed *\*jhūṭṭha*, "false" (CDIAL 5407).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "baiṭrī"
 concept_tag: UR-CHIZ232-BAITRI
 prerequisites: [UR-C232-nakami, UR-C232-tarch]
 sounds: []
-roots: []
+roots: [english-battery]
+etymology_hook: "baiṭrī ← English battery"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C232-tarch]
 <!-- hl-knowledge: introduces=[UR-LEX-C232-CHIZ232-03]; assesses=[] -->
 
 **بیٹری** — *baiṭrī* — "a battery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بیٹری** (*baiṭrī*) is a loan from English *battery*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

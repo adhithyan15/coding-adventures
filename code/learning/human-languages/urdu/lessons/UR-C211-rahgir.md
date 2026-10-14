@@ -14,7 +14,8 @@ romanization: "rāhgīr"
 concept_tag: UR-KAM211-RAHGIR
 prerequisites: [UR-C211-klas, UR-C211-naukar]
 sounds: []
-roots: []
+roots: [persian-rah]
+etymology_hook: "rāhgīr: Persian rāh 'road' + gīr 'taking'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C211-naukar]
 <!-- hl-knowledge: introduces=[UR-LEX-C211-KAM211-05]; assesses=[] -->
 
 **راہگیر** — *rāhgīr* — "a passer-by".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**راہگیر** (*rāhgīr*) is "one who takes the road". It joins Persian *rāh*, "road, way", and *-gīr*, "taking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

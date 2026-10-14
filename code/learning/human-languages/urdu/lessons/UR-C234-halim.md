@@ -14,7 +14,8 @@ romanization: "halīm"
 concept_tag: UR-CHIZ234-HALIM
 prerequisites: [UR-C234-papar, UR-C234-puri]
 sounds: []
-roots: []
+roots: [arabic-halim]
+etymology_hook: "halīm: the dish's name is often linked with Arabic ḥalīm 'gentle, patient' (Lane, root ḥ-l-m), a link not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C234-puri]
 <!-- hl-knowledge: introduces=[UR-LEX-C234-CHIZ234-03]; assesses=[] -->
 
 **حلیم** — *halīm* — "haleem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The name **حلیم** (*halīm*) is often linked with Arabic *ḥalīm*, "gentle, patient" (Lane, root *ḥ-l-m*), but how the dish came by it is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

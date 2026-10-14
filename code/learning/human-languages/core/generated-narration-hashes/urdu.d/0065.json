@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 65,
-  "sourceHash": "fnv1a64:82aa6491ab5ebf76",
+  "sourceHash": "fnv1a64:217fd1d6a25b94ac",
   "lessonIds": [
     "UR-C65-patthar",
     "UR-C65-ret",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch65.txt",
   "json": "urdu/narration/ch65.json",
-  "textHash": "fnv1a64:e8df06bd1bcc2b3b",
-  "jsonHash": "fnv1a64:c925cdb67c2d3975",
+  "textHash": "fnv1a64:b81e2c26025828a9",
+  "jsonHash": "fnv1a64:f097cb9f71e40a2e",
   "findings": []
 }

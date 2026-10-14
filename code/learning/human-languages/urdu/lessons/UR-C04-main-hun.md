@@ -12,7 +12,7 @@ concept_tag: UR-C04-MAIN-HUN
 prerequisites: [UR-C04-aap-kaise-hain]
 sounds: [rtl, nasal-vowel, long-u, short-vowels-unwritten]
 roots: [indo-aryan-main, indo-aryan-copula]
-etymology_hook: Urdu maiṅ belongs to the old Indo-European me-family, while hūṅ is the first-person present form that closes the Urdu clause.
+etymology_hook: "maiṅ ← Sanskrit mayā 'by me', from the first-person base ma- (CDIAL 9691); hūṅ 'am' is inherited"
 duration:
   max_seconds: 230
 requires:
@@ -48,6 +48,11 @@ reviews_of: [UR-C04-aap-kaise-hain, UR-C02-mera-naam]
 **میں** *maiṅ* means “I.” Final **ں** marks a nasal ending. **ہوں** *hūṅ* means
 “am” and carries long *ū* with **و**, followed again by nasal **ں**. Leave a
 space for the state word that comes next.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**میں ... ہوں** (*maiṅ ... hūṅ*) is inherited. CDIAL lists *maiṅ*, "I", under the Sanskrit first-person base *ma-*, whose form *mayā* meant "by me" (CDIAL 9691); it is the same *m-* as English *me*. *hūṅ*, "am", is the first-person form of the inherited verb "to be".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-MAIN, UR-LEX-HUN, UR-SCRIPT-MAIN-HUN] -->

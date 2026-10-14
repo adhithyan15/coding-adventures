@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a dream, then the Urdu for weakness.
 You'll want to know: داڑھی.
 داڑھی — dāṛhī — "a beard".
 
+The word, taken apart.
+داڑھی (dāṛhī) is a tadbhava, a word inherited and reshaped by sound change. It comes from dāṃṣṭra, "fang, tusk, beard", a form CDIAL reconstructs from its descendants (CDIAL 6250). It is built on Sanskrit daṃṣṭrā, "tusk, fang"; CDIAL finds a change of sense from "fang" through "tusk" to "beard" possible.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for weakness, then the Urdu for a beard.
 
 You'll want to know: مونچھ.
 مونچھ — mūṅchh — "a moustache".
+
+The word, taken apart.
+مونچھ (mūṅchh) is a tadbhava, a word inherited and reshaped by sound change. It comes from mucchā, "moustache", a form CDIAL reconstructs from its descendants (CDIAL 10180).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a beard, then the Urdu for a moustache.
 You'll want to know: تندرستی.
 تندرستی — tandurustī — "good health".
 
+The word, taken apart.
+تندرستی (tandurustī) is tandurust, "healthy", usually traced to Persian tandurust, "sound of body", with the ending -ī that makes a noun.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a moustache, then the Urdu for good health.
 You'll want to know: دانت درد.
 دانت درد — dāṅt dard — "a toothache".
 
+The phrase, taken apart.
+دانت درد (dāṅt dard) joins dāṅt, "tooth", from Sanskrit danta, "tooth" (CDIAL 6152), and dard, "pain", usually traced to Persian dard.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for good health, then the Urdu for a toothache.
 
 You'll want to know: کھجلی.
 کھجلی — khujlī — "an itch".
+
+The word, taken apart.
+کھجلی (khujlī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kharju, "itching, scab" (CDIAL 3827). CDIAL takes the word from Dravidian. The Sanskrit word is known only from the old word-lists.
 
 What you've built.
 One more word for this chapter.

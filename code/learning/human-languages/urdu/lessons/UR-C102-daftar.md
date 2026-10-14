@@ -14,7 +14,8 @@ romanization: "daftar"
 concept_tag: UR-LOC102-DAFTAR
 prerequisites: [UR-C102-bathrum, UR-C102-tikat]
 sounds: []
-roots: []
+roots: [persian-daftar]
+etymology_hook: "daftar: usually traced, through Persian, to Arabic daftar 'register' (Lane), itself taken from Greek"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C102-tikat]
 <!-- hl-knowledge: introduces=[UR-LEX-C102-LOC102-04]; assesses=[] -->
 
 **دفتر** — *daftar* — "an office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دفتر** (*daftar*) is usually traced, through Persian, to Arabic *daftar*, "register, account book" (Lane), a word Arabic itself took from Greek. In Urdu it came to mean "an office".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

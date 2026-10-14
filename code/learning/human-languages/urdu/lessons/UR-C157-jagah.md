@@ -14,7 +14,8 @@ romanization: "jagah"
 concept_tag: UR-JAGAH157-JAGAH
 prerequisites: [UR-C156-har-hafte, UR-C156-har-sal]
 sounds: []
-roots: []
+roots: [persian-jaygah]
+etymology_hook: "jagah: usually traced to Persian jāygāh 'place'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C156-har-sal]
 <!-- hl-knowledge: introduces=[UR-LEX-C157-JAGAH157-01]; assesses=[] -->
 
 **جگہ** — *jagah* — "a place".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جگہ** (*jagah*) is a loan, usually traced to Persian *jāygāh*, "place". It is built from *jāy*, "place", and *gāh*, "place, time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

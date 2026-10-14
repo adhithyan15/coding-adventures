@@ -14,7 +14,8 @@ romanization: "gulūkār"
 concept_tag: UR-KAM178-GULUKAR
 prerequisites: [UR-C177-kisan, UR-C177-darzi]
 sounds: []
-roots: []
+roots: [persian-gulu, persian-kar]
+etymology_hook: "gulūkār: Persian gulū 'throat' + -kār 'one who works'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C177-darzi]
 <!-- hl-knowledge: introduces=[UR-LEX-C178-KAM178-01]; assesses=[] -->
 
 **گلوکار** — *gulūkār* — "a singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گلوکار** (*gulūkār*) joins Persian *gulū*, "throat", and *-kār*, "one who works": a singer works with the throat.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

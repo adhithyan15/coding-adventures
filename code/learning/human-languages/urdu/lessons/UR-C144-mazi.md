@@ -14,7 +14,8 @@ romanization: "māzī"
 concept_tag: UR-MAZI144-MAZI
 prerequisites: [UR-C144-hal-hi-mein, UR-C144-pehle-se]
 sounds: []
-roots: []
+roots: [arabic-madi]
+etymology_hook: "māzī ← Arabic māḍī 'past, gone by', through Persian (Lane, root m-ḍ-y)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C144-pehle-se]
 <!-- hl-knowledge: introduces=[UR-LEX-C144-MAZI144-03]; assesses=[] -->
 
 **ماضی** — *māzī* — "the past". Grammar books use it for the past tense too. It came into Urdu from Arabic.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ماضی** (*māzī*) is a loan from Arabic *māḍī*, "past, gone by", which reached Urdu through Persian. Its Arabic root is *m-ḍ-y* (Lane). Grammar books use it for the past tense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

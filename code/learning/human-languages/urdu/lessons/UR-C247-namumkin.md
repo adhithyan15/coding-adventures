@@ -14,7 +14,8 @@ romanization: "nāmumkin"
 concept_tag: UR-SIFAT247-NAMUMKIN
 prerequisites: [UR-C247-nata, UR-C247-mumkin]
 sounds: []
-roots: []
+roots: [persian-na, arabic-mumkin]
+etymology_hook: "nāmumkin: Persian nā- 'not' + Arabic mumkin 'possible' (Lane, root m-k-n)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C247-mumkin]
 <!-- hl-knowledge: introduces=[UR-LEX-C247-SIFAT247-03]; assesses=[] -->
 
 **ناممکن** — *nāmumkin* — "impossible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناممکن** (*nāmumkin*) joins the Persian *nā-*, "not", and Arabic *mumkin*, "possible", which reached Urdu through Persian (Lane, root *m-k-n*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

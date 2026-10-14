@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 142,
-  "sourceHash": "fnv1a64:7c1ce7416dfd36a2",
+  "sourceHash": "fnv1a64:9a8908e320d5a3a3",
   "lessonIds": [
     "UR-C142-utarna",
     "UR-C142-bharna",
@@ -16,7 +16,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch142.txt",
   "json": "urdu/narration/ch142.json",
-  "textHash": "fnv1a64:30e3290aa660ed96",
-  "jsonHash": "fnv1a64:2ca5a1982d72def5",
+  "textHash": "fnv1a64:bf0d64f4e9b87f90",
+  "jsonHash": "fnv1a64:45ec0abc9b641296",
   "findings": []
 }

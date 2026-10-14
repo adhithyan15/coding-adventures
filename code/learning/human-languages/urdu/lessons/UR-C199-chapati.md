@@ -15,6 +15,7 @@ concept_tag: UR-CHIZ199-CHAPATI
 prerequisites: [UR-C198-pasport, UR-C198-viza]
 sounds: []
 roots: []
+etymology_hook: "chapātī: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C198-viza]
 <!-- hl-knowledge: introduces=[UR-LEX-C199-CHIZ199-01]; assesses=[] -->
 
 **چپاتی** — *chapātī* — "a chapati".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **چپاتی** (*chapātī*) is not settled. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

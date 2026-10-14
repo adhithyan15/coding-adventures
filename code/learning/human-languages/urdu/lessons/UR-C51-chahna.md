@@ -14,7 +14,8 @@ romanization: "chāhnā"
 concept_tag: UR-VERB-CHAHNA
 prerequisites: [UR-C50-sikhna, UR-C51-bhulna]
 sounds: []
-roots: []
+roots: [indo-aryan-cah]
+etymology_hook: "chāhnā ← *cāh 'see, look for, desire', a reconstructed form; a tadbhava (CDIAL 4775)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C51-bhulna]
 <!-- hl-knowledge: introduces=[UR-LEX-C51-VERBS51-02]; assesses=[] -->
 
 **چاہنا** — *chāhnā* — "to want".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چاہنا** (*chāhnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cāh*, "see, look for, desire", a form CDIAL reconstructs from its descendants (CDIAL 4775). CDIAL calls its deeper source uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to cough, then the Urdu for to breathe.
 You'll want to know: بیماری.
 بیماری — bīmārī — "an illness".
 
+The word, taken apart.
+بیماری (bīmārī) is bīmār, "ill, sick", usually traced to Persian bīmār, with the ending -ī that makes a noun.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to breathe, then the Urdu for an illness.
 
 You'll want to know: زکام.
 زکام — zukām — "a head cold".
+
+The word, taken apart.
+زکام (zukām) is a loan from Arabic zukām, "a cold, catarrh", which reached Urdu through Persian. Its Arabic root is z-k-m (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for an illness, then the Urdu for a head cold.
 You'll want to know: کھانسی.
 کھانسی — khāṅsī — "a cough".
 
+The word, taken apart.
+کھانسی (khāṅsī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kāsa, "cough" (CDIAL 3138). CDIAL notes the kh- as imitating the sound.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a head cold, then the Urdu for a cough.
 You'll want to know: سر درد.
 سر درد — sar dard — "a headache".
 
+The phrase, taken apart.
+سر درد (sar dard) joins sar, "head", and dard, "pain", both usually traced to Persian.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a cough, then the Urdu for a headache.
 
 You'll want to know: پیٹ درد.
 پیٹ درد — peṭ dard — "a stomach ache".
+
+The phrase, taken apart.
+پیٹ درد (peṭ dard) joins peṭ, "belly", and dard, "pain". CDIAL lists peṭ under a reconstructed peṭṭa, "belly" (CDIAL 8376), and its deeper origin is debated; dard is usually traced to Persian.
 
 What you've built.
 One more word for this chapter.

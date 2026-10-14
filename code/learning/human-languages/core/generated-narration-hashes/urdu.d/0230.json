@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 230,
-  "sourceHash": "fnv1a64:22f12ad8a22ffe47",
+  "sourceHash": "fnv1a64:1128cec3913ef91b",
   "lessonIds": [
     "UR-C230-poti",
     "UR-C230-sasur",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch230.txt",
   "json": "urdu/narration/ch230.json",
-  "textHash": "fnv1a64:a5187eb19a858186",
-  "jsonHash": "fnv1a64:ea61a34aaf145eb8",
+  "textHash": "fnv1a64:9cd87af9ec247866",
+  "jsonHash": "fnv1a64:d2254769a6d2f570",
   "findings": []
 }

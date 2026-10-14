@@ -14,7 +14,8 @@ romanization: "iskūl"
 concept_tag: UR-HOME61-ISKUL
 prerequisites: [UR-C61-qalam, UR-C61-akhbar]
 sounds: []
-roots: []
+roots: [english-school]
+etymology_hook: "iskūl ← English school, from Greek skholē 'leisure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C61-akhbar]
 <!-- hl-knowledge: introduces=[UR-LEX-C61-HOME61-05]; assesses=[] -->
 
 **اسکول** — *iskūl* — "a school".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اسکول** (*iskūl*) is a loan from English *school*. English had it from Latin *schola*, and Latin from Greek *skholē*, "leisure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

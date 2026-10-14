@@ -14,7 +14,8 @@ romanization: "fauj"
 concept_tag: UR-KAM237-FAUJ
 prerequisites: [UR-C237-chaukidar, UR-C237-sipahi]
 sounds: []
-roots: []
+roots: [arabic-fawj]
+etymology_hook: "fauj ← Arabic fawj 'a troop, a company', through Persian (Lane, root f-w-j)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C237-sipahi]
 <!-- hl-knowledge: introduces=[UR-LEX-C237-KAM237-05]; assesses=[] -->
 
 **فوج** — *fauj* — "an army".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فوج** (*fauj*) is a loan from Arabic *fawj*, "a troop, a company", which reached Urdu through Persian. Its Arabic root is *f-w-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

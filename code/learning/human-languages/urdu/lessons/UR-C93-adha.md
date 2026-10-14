@@ -14,7 +14,8 @@ romanization: "ādhā"
 concept_tag: UR-TIME93-ADHA
 prerequisites: [UR-C92-sava, UR-C93-paune]
 sounds: []
-roots: []
+roots: [sanskrit-ardha]
+etymology_hook: "ādhā ← Sanskrit ardha 'half', a tadbhava (CDIAL 644)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C93-paune]
 <!-- hl-knowledge: introduces=[UR-LEX-C93-TIME93-02]; assesses=[] -->
 
 **آدھا** — *ādhā* — "half".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آدھا** (*ādhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ardha*, "half" (CDIAL 644).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

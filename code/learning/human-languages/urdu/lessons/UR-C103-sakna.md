@@ -14,7 +14,8 @@ romanization: "saknā"
 concept_tag: UR-VERB-SAKNA
 prerequisites: [UR-C103-relgari, UR-C103-pas]
 sounds: []
-roots: []
+roots: [sanskrit-shak-be-able]
+etymology_hook: "saknā ← Sanskrit śaknoti 'is able', a tadbhava (CDIAL 12252)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C103-pas]
 <!-- hl-knowledge: introduces=[UR-LEX-C103-LOC103-04]; assesses=[] -->
 
 **سکنا** — *saknā* — "to be able to, can".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سکنا** (*saknā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śaknoti*, "is able" (CDIAL 12252).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

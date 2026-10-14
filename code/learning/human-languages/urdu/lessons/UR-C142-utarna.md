@@ -14,7 +14,8 @@ romanization: "utarnā"
 concept_tag: UR-VERB-UTARNA
 prerequisites: [UR-C141-nikalna, UR-C141-charhna]
 sounds: []
-roots: []
+roots: [sanskrit-uttarati]
+etymology_hook: "utarnā ← Sanskrit uttarati 'passes over; descends', a tadbhava (CDIAL 1770)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C141-charhna]
 <!-- hl-knowledge: introduces=[UR-LEX-C142-ACT142-01]; assesses=[] -->
 
 **اترنا** — *utarnā* — "to get off, to go down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اترنا** (*utarnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *uttarati*, "passes over; descends" (CDIAL 1770). CDIAL traces the sense from "crosses over" through "lands" to "gets down".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

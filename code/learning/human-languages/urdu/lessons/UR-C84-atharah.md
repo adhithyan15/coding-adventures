@@ -14,7 +14,8 @@ romanization: "aṭhārah"
 concept_tag: UR-NUMBERS84-ATHARAH
 prerequisites: [UR-C84-solah, UR-C84-satrah]
 sounds: []
-roots: []
+roots: [sanskrit-ashtadasha]
+etymology_hook: "aṭhārah ← Sanskrit aṣṭādaśa 'eighteen', a tadbhava (CDIAL 946)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C84-satrah]
 <!-- hl-knowledge: introduces=[UR-LEX-C84-NUMBERS84-05]; assesses=[] -->
 
 **اٹھارہ** — *aṭhārah* — "eighteen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اٹھارہ** (*aṭhārah*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṣṭādaśa*, "eighteen" (CDIAL 946).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

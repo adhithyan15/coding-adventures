@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Why, and What For",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c02822f6c74084e0",
+  "sourceHash": "fnv1a64:3433b71bb607d6c6",
   "lessons": [
     {
       "id": "UR-C21-kyun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b600e75c87390f17",
+      "sourceHash": "fnv1a64:360fa9a3a0cba64a",
       "notice": null,
       "blocks": [
         {
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68e7ffd8f1430c25",
+      "sourceHash": "fnv1a64:7ca27c12ee9b4ea1",
       "notice": null,
       "blocks": [
         {
@@ -227,7 +227,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "کون is the fourth of the k- family, from Sanskrit kaḥ punaḥ, \"who then,\" worn to a syllable. It is the direct cousin of English who — the ancient word began with a k-sound, and English wrote it hw- and then wh- while keeping the sound, which is why who still starts with the breath the letter w does not say."
+              "text": "کون is the fourth of the k- family, from Sanskrit kaḥ punar, \"who then\" (CDIAL 2575), worn to a syllable. It is the direct cousin of English who — the ancient word began with a k-sound, and English wrote it hw- and then wh- while keeping the sound, which is why who still starts with the breath the letter w does not say."
             },
             {
               "kind": "speech",
@@ -320,7 +320,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ec5bbfa5c859ca5c",
+      "sourceHash": "fnv1a64:7e34f0882ca5dceb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -381,6 +381,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کیونکہ (kyūṅki) joins kyūṅ, \"why\", built on the inherited question stem ka- that also gives kyā, \"what\" (CDIAL 3164), and ki, \"that\", usually traced to Persian ki."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: claim first, reason after",
           "segments": [
@@ -404,7 +415,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -444,7 +455,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

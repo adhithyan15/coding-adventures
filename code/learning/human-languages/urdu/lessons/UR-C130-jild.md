@@ -14,7 +14,8 @@ romanization: "jild"
 concept_tag: UR-THINGS130-JILD
 prerequisites: [UR-C130-angutha, UR-C130-nakhun]
 sounds: []
-roots: []
+roots: [arabic-jild]
+etymology_hook: "jild ← Arabic jild 'skin, hide', through Persian (Lane, root j-l-d)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C130-nakhun]
 <!-- hl-knowledge: introduces=[UR-LEX-C130-THINGS130-04]; assesses=[] -->
 
 **جلد** — *jild* — "the skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جلد** (*jild*) is a loan from Arabic *jild*, "skin, hide", which reached Urdu through Persian. Its Arabic root is *j-l-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "resṭorenṭ"
 concept_tag: UR-JAGAH158-RESTORENT
 prerequisites: [UR-C158-basti, UR-C158-bandargah]
 sounds: []
-roots: []
+roots: [english-restaurant]
+etymology_hook: "resṭorenṭ ← English restaurant"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C158-bandargah]
 <!-- hl-knowledge: introduces=[UR-LEX-C158-JAGAH158-04]; assesses=[] -->
 
 **ریسٹورنٹ** — *resṭorenṭ* — "a restaurant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ریسٹورنٹ** (*resṭorenṭ*) is a loan from English *restaurant*. English took it from French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

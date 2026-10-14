@@ -14,7 +14,8 @@ romanization: "istrī karnā"
 concept_tag: UR-VERB-ISTRI-KARNA
 prerequisites: [UR-C211-naukar, UR-C211-rahgir]
 sounds: []
-roots: []
+roots: [portuguese-estirar, kr-do]
+etymology_hook: "istrī: usually traced to Portuguese estirar 'to stretch out'; karnā 'to do' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C211-rahgir]
 <!-- hl-knowledge: introduces=[UR-LEX-C212-ACT212-01]; assesses=[] -->
 
 **استری کرنا** — *istrī karnā* — "to iron".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**استری کرنا** (*istrī karnā*) joins *istrī*, "an iron", usually traced to Portuguese *estirar*, "to stretch out", and *karnā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

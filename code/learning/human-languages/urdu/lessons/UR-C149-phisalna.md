@@ -14,7 +14,8 @@ romanization: "phisalnā"
 concept_tag: UR-VERB-PHISALNA
 prerequisites: [UR-C149-sair-karna, UR-C149-kudna]
 sounds: []
-roots: []
+roots: [indo-aryan-phiss, sanskrit-picchala]
+etymology_hook: "phisalnā ← *phiss 'slip' (CDIAL 9080); CDIAL also lists it under picchala 'slippery' (8152)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C149-kudna]
 <!-- hl-knowledge: introduces=[UR-LEX-C149-ACT149-05]; assesses=[] -->
 
 **پھسلنا** — *phisalnā* — "to slip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پھسلنا** (*phisalnā*) comes from a reconstructed *\*phiss*, "slip" (CDIAL 9080). CDIAL also lists it under Sanskrit *picchala*, "slimy, slippery" (CDIAL 8152).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

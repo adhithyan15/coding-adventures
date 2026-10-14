@@ -14,7 +14,8 @@ romanization: "bīmārī"
 concept_tag: UR-SEHAT152-BIMARI
 prerequisites: [UR-C151-khansna, UR-C151-sans-lena]
 sounds: []
-roots: []
+roots: [persian-bimar]
+etymology_hook: "bīmārī: bīmār 'sick', usually traced to Persian bīmār, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C151-sans-lena]
 <!-- hl-knowledge: introduces=[UR-LEX-C152-SEHAT152-01]; assesses=[] -->
 
 **بیماری** — *bīmārī* — "an illness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بیماری** (*bīmārī*) is *bīmār*, "ill, sick", usually traced to Persian *bīmār*, with the ending *-ī* that makes a noun.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

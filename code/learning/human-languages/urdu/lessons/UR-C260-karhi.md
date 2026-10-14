@@ -15,6 +15,7 @@ concept_tag: UR-CHIZ260-KARHI
 prerequisites: [UR-C260-kofta, UR-C260-tikka]
 sounds: []
 roots: []
+etymology_hook: "kaṛhī: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C260-tikka]
 <!-- hl-knowledge: introduces=[UR-LEX-C260-CHIZ260-03]; assesses=[] -->
 
 **کڑھی** — *kaṛhī* — "kadhi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **کڑھی** (*kaṛhī*) is not settled. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

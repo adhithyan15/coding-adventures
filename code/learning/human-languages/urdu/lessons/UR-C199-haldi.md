@@ -14,7 +14,8 @@ romanization: "haldī"
 concept_tag: UR-CHIZ199-HALDI
 prerequisites: [UR-C199-ghi, UR-C199-masala]
 sounds: []
-roots: []
+roots: [sanskrit-haridra]
+etymology_hook: "haldī ← Sanskrit haridrā 'turmeric', a tadbhava (CDIAL 13992)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C199-masala]
 <!-- hl-knowledge: introduces=[UR-LEX-C199-CHIZ199-04]; assesses=[] -->
 
 **ہلدی** — *haldī* — "turmeric".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہلدی** (*haldī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *haridrā*, "turmeric" (CDIAL 13992). It is built on *haridra*, "yellow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
