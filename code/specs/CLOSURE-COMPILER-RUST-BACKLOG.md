@@ -16,8 +16,10 @@ and exact original-predicate IDs/t/point bits pass. General arbitrary-support/
 floating work P2 remains WITHHELD/OPEN; no global resource acceptance.
 
 Current isolated delivery source `4a4eb9c07ec053cd78a3b504dba3210c1106ac96` integrates main563ea13d.
-Closed1901-path frame:1888 pure exact imports,13 overlaps,146 unchanged owned
-objects; four actual conflict stages archived. No new registry identity:376
+Closed1901-path frame:1888 pure exact imports,13 overlaps. Initial178 retains
+146 unchanged owned objects; final4a retains144/146 exact, with only the
+reconciliation spec and strengthened target-refusal oracle intentionally changed.
+Four actual conflict stages archived. No new registry identity:376
 tuples retained after full Windows graph resolution. Actual81156 EXIT0:
 full compiler/IR/paint/hierarchy/parser1501PASS/17targets/0FAIL/0ignore,
 strict5/lessons/whitespace pass;5 repeated focus tests excluded. Six-layer
