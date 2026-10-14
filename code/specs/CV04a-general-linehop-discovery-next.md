@@ -22,6 +22,15 @@ including cancellation/overflow/nonfinite/epsilon behavior. Prove comparator
 consistency and event/tie order independently; an exact geometric sweep alone
 does not prove equivalence to rounded f64 predicate behavior.
 
+Independent read-only design assessment adds nonparallel empty
+S_i=(0,i)→(A+i,A+3i), A=4N. For i<j, D=A(j-i), t=-(A+j)/A and
+u=-(A+i)/A: all intersections lie behind both segments. At32/64 these integer
+products are exactly representable; axis exchange and reversing directions keep
+the segments disjoint. Count both varied-support families. Expected fallback
+N(N-1)/2 predicates remains a static expectation until native red execution.
+Pin the original lower-inclusive and upper-exclusive parameter interval,
+1e-6..1-1e-6, in golden boundary evidence; do not substitute a different interval.
+
 Count all discovery initialization/insertion/query/event/eligibility work,
 candidate inversions and emitted occurrence hops separately. Full output bounds
 must include rejected six-unit overlaps and collector costs, not only final hop

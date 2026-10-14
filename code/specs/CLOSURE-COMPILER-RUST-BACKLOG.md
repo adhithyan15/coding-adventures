@@ -32,7 +32,13 @@ Originalcf1156, scoped647 and all failures/reviews remain immutable.
 Independent bounded source review PASSe2 SHA
 b9ab9884e3ec611459240cb2fa0b061f2f4920180f24fb541266a665340c669b.
 Prior lifetime/admission/shutdown/spacing source-attributed reviews retained.
-Final documentation retention review pending. No unrestricted caller-IR,
+Documentation-only6fc review PASS:425-to-428 completefourpackage objects,
+only8README/changelog changes; code/tests/Cargo/BUILD exacte2. Actual docs
+shards/lessons1216/whitespace pass, SHA
+0e68342e151e0f32444563244bdbd8b42a787c2b5817be1534c99b958045deec.
+Next spec5a commits varied-support parallel/nonparallel empty-work evidence
+with independent read-only design assessment; native red/production design
+not executed/selected yet. No unrestricted caller-IR,
 general floating/arbitrary-support P2, whole456 or nativeMac/device claim.
 Next blocking scope is general line-hop discovery work; contract/proof still OPEN.
 
