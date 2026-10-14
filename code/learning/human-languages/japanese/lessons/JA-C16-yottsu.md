@@ -11,8 +11,8 @@ gloss: four things — and the seam the last chapter promised would come back
 concept_tag: JA-NATIVE-FOUR
 prerequisites: [JA-C16-mittsu, JA-W08-yo, JA-C14-yon, JA-C13-family-check]
 sounds: [mora]
-roots: []
-etymology_hook: Chapter fourteen said the native word standing inside the borrowed count was a seam that would open again. This is where it opens.
+roots: [japanese-yo-four, japanese-tsu-counter]
+etymology_hook: "yottsu: native yo 'four' + native counter -tsu"
 duration:
   max_seconds: 195
 requires:
@@ -68,6 +68,11 @@ Every other line of the borrowed column is genuinely borrowed. At four, the
 native word came across into the borrowed count and stayed — which is why the
 number you actually say for four is **よん** and not *shi*. That is what chapter
 fourteen was pointing at, and you can now see both halves of it at once.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**よっつ** (*yottsu*) is native: *yo*, the inherited word for "four", with the counter *-tsu*; *yon* is built on the same *yo* (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-YOTTSU, JA-LEX-YON, JA-GRAMMAR-KUN-IN-THE-COUNT] -->

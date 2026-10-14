@@ -14,7 +14,8 @@ romanization: "itai"
 concept_tag: JA-BODY22-ITAI
 prerequisites: [JA-C22-koe, JA-C22-netsu]
 sounds: []
-roots: []
+roots: [japanese-itai]
+etymology_hook: "itai: native Japanese, inherited, not borrowed; kanji 痛い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C22-netsu]
 <!-- hl-knowledge: introduces=[JA-LEX-C22-BODY22-05]; assesses=[] -->
 
 **いたい** — *itai* — "painful, it hurts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いたい** (*itai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

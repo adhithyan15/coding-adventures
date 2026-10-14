@@ -14,7 +14,8 @@ romanization: "kagami"
 concept_tag: JA-HOME38-KAGAMI
 prerequisites: [JA-C37-yane, JA-C38-yuka]
 sounds: []
-roots: []
+roots: [japanese-kagami]
+etymology_hook: "kagami: native Japanese, inherited, not borrowed; kanji 鏡 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C38-yuka]
 <!-- hl-knowledge: introduces=[JA-LEX-C38-HOME38-02]; assesses=[] -->
 
 **かがみ** — *kagami* — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かがみ** (*kagami*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

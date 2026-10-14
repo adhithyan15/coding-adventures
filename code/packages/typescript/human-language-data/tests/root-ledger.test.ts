@@ -250,7 +250,7 @@ const EMPTY_ETYMOLOGY_BLOCK_PINS: Readonly<Record<string, number>> = {
   gujarati: 0,
   hindi: 7,
   italian: 7,
-  japanese: 2,
+  japanese: 0,
   kannada: 8,
   latin: 31,
   malayalam: 6,

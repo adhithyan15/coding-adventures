@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 47,
-  "sourceHash": "fnv1a64:ea30e4295a526210",
+  "sourceHash": "fnv1a64:37fa04b6babc759d",
   "lessonIds": [
     "JA-C47-kani",
     "JA-C47-tako",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch47.txt",
   "json": "japanese/narration/ch47.json",
-  "textHash": "fnv1a64:352cd2b5f603c7ec",
-  "jsonHash": "fnv1a64:aed93fadbb6b6563",
+  "textHash": "fnv1a64:f9acf8ea2dafbe32",
+  "jsonHash": "fnv1a64:32541e7352d2ba3c",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "sentakumono"
 concept_tag: JA-THINGS102-SENTAKUMONO
 prerequisites: [JA-C101-kotatsu, JA-C101-danbou]
 sounds: []
-roots: []
+roots: [middle-chinese-draewk, japanese-mono]
+etymology_hook: "sentakumono: Sino-Japanese sentaku 洗濯 'washing' + native mono 'thing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C101-danbou]
 <!-- hl-knowledge: introduces=[JA-LEX-C102-THINGS102-01]; assesses=[] -->
 
 **せんたくもの** — *sentakumono* — "the laundry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**せんたくもの** (*sentakumono*) mixes the two layers: *sentaku*, "washing", Sino-Japanese *sen*, "wash", and *taku*, "rinse" (Middle Chinese *draewk*), borrowed from Chinese, with native *mono*, "thing" (JMdict; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

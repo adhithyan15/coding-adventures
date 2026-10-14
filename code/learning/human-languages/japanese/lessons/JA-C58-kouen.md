@@ -14,7 +14,8 @@ romanization: "kouen"
 concept_tag: JA-PLACE58-KOUEN
 prerequisites: [JA-C57-mise, JA-C58-chika]
 sounds: []
-roots: []
+roots: [middle-chinese-kuwng-public, middle-chinese-hjwon]
+etymology_hook: "kouen: Sino-Japanese 公 'public' + 園 'garden', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C58-chika]
 <!-- hl-knowledge: introduces=[JA-LEX-C58-PLACE58-02]; assesses=[] -->
 
 **こうえん** — *kouen* — "a park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こうえん** (*kouen*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kō*, "public" (Middle Chinese *kuwng*) and *en*, "garden" (*hjwon*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

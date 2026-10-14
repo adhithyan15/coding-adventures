@@ -14,7 +14,8 @@ romanization: "kame"
 concept_tag: JA-ANIMALS47-KAME
 prerequisites: [JA-C47-tako, JA-C47-ika]
 sounds: []
-roots: []
+roots: [japanese-kame]
+etymology_hook: "kame: native Japanese, inherited, not borrowed; kanji 亀 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C47-ika]
 <!-- hl-knowledge: introduces=[JA-LEX-C47-ANIMALS47-04]; assesses=[] -->
 
 **かめ** — *kame* — "a turtle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かめ** (*kame*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

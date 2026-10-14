@@ -14,7 +14,8 @@ romanization: "futsuka"
 concept_tag: JA-TIME77-FUTSUKA
 prerequisites: [JA-C76-hannichi, JA-C76-tsuitachi]
 sounds: []
-roots: []
+roots: [japanese-futa-two, japanese-ka-day]
+etymology_hook: "futsuka: native futa 'two' (as futsu) + ka 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C76-tsuitachi]
 <!-- hl-knowledge: introduces=[JA-LEX-C77-TIME77-01]; assesses=[] -->
 
 **ふつか** — *futsuka* — "the second of the month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふつか** (*futsuka*) is native: *futsu*, a form of *futa*, "two", with *ka*, "day", an old native word that KANJIDIC2 lists as a reading of the character for day. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

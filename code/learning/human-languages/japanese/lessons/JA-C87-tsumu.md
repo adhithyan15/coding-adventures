@@ -14,7 +14,8 @@ romanization: "tsumu"
 concept_tag: JA-VERB-TSUMU
 prerequisites: [JA-C86-fumu, JA-C86-kamu]
 sounds: []
-roots: []
+roots: [japanese-tsumu]
+etymology_hook: "tsumu: native Japanese, inherited, not borrowed; kanji 積む attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C86-kamu]
 <!-- hl-knowledge: introduces=[JA-LEX-C87-ACT87-01]; assesses=[] -->
 
 **つむ** — *tsumu* — "to pile up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**つむ** (*tsumu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

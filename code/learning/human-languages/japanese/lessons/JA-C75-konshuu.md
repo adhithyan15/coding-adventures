@@ -14,7 +14,8 @@ romanization: "konshuu"
 concept_tag: JA-TIME75-KONSHUU
 prerequisites: [JA-C75-maitoshi, JA-C75-kotoshi]
 sounds: []
-roots: []
+roots: [middle-chinese-kim-now]
+etymology_hook: "konshuu: Sino-Japanese 今 'now' + 週 'week', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C75-kotoshi]
 <!-- hl-knowledge: introduces=[JA-LEX-C75-TIME75-03]; assesses=[] -->
 
 **こんしゅう** — *konshuu* — "this week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こんしゅう** (*konshuu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kon*, "now, this" (Middle Chinese *kim*) and *shū*, "week" (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

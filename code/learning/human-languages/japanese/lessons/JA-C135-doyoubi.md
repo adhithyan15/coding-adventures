@@ -14,7 +14,8 @@ romanization: "doyōbi"
 concept_tag: JA-THING135-DOYOUBI
 prerequisites: [JA-W135-bi, JA-W09-do, JA-W08-yo, JA-W03-u, JA-C134-shinbun, JA-C133-inu, JA-C124-kusai]
 sounds: [mora]
-roots: []
+roots: [middle-chinese-thux, middle-chinese-yewh, japanese-hi-sun]
+etymology_hook: "doyōbi: Sino-Japanese do 土 'earth' + yō 曜 'planet' + native hi 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +53,11 @@ The new sign is spent at once. **ど**, **よ** and **う**, then **び**: four
 beats, *do–yo–o–bi*. The **う** stretches the *o*, as it does in **きのう**. The
 last part, *yōbi*, means a day of the week, and the name of every day ends in
 it. You write every sign in it now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**どようび** (*doyōbi*) mixes the two layers: *do*, "earth" (Middle Chinese *thuX*), and *yō*, one of the seven "planets" of old astronomy, sun and moon among them, that name the days (Middle Chinese *yewH*), both borrowed from Chinese, with native *hi*, "day", voiced to *bi* (JMdict; Unihan).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C135-DOYOUBI, JA-SCRIPT-BI-01, JA-LEX-ANCHOR-BYOUIN, JA-SCRIPT-DO-01, JA-SCRIPT-YO-01, JA-SCRIPT-U-01] -->

@@ -14,7 +14,8 @@ romanization: "kuri"
 concept_tag: JA-FOOD36-KURI
 prerequisites: [JA-C36-nori, JA-C36-ume]
 sounds: []
-roots: []
+roots: [japanese-kuri]
+etymology_hook: "kuri: native Japanese, inherited, not borrowed; usually kana, kanji 栗 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C36-ume]
 <!-- hl-knowledge: introduces=[JA-LEX-C36-FOOD36-03]; assesses=[] -->
 
 **くり** — *kuri* — "a chestnut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**くり** (*kuri*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

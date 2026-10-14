@@ -14,7 +14,8 @@ romanization: "tsugou"
 concept_tag: JA-CAN96-TSUGOU
 prerequisites: [JA-C96-waza, JA-C96-yoyuu]
 sounds: []
-roots: []
+roots: [middle-chinese-tu-capital, middle-chinese-hop]
+etymology_hook: "tsugou: Sino-Japanese 都 'all' + 合 'combine', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C96-yoyuu]
 <!-- hl-knowledge: introduces=[JA-LEX-C96-CAN96-05]; assesses=[] -->
 
 **つごう** — *tsugou* — "convenience, availability".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**つごう** (*tsugou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tsu*, "all, the whole" (Middle Chinese *tu*) and *gō*, "combine, fit" (*hop*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

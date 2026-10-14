@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 63,
-  "sourceHash": "fnv1a64:cb5b3372e576d50b",
+  "sourceHash": "fnv1a64:63e4cc31b738c5c4",
   "lessonIds": [
     "JA-C63-yume",
     "JA-C63-matsuri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch63.txt",
   "json": "japanese/narration/ch63.json",
-  "textHash": "fnv1a64:ce4ea9719bae8646",
-  "jsonHash": "fnv1a64:f01b0235e52f6493",
+  "textHash": "fnv1a64:7cdef5f51a2cb348",
+  "jsonHash": "fnv1a64:c61f1fc75bdbc9bf",
   "findings": []
 }

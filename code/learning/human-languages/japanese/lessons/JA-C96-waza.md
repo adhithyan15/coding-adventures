@@ -14,7 +14,8 @@ romanization: "waza"
 concept_tag: JA-CAN96-WAZA
 prerequisites: [JA-C96-shikaku, JA-C96-sainou]
 sounds: []
-roots: []
+roots: [japanese-waza]
+etymology_hook: "waza: native Japanese, inherited, not borrowed; kanji 技 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C96-sainou]
 <!-- hl-knowledge: introduces=[JA-LEX-C96-CAN96-03]; assesses=[] -->
 
 **わざ** — *waza* — "a technique".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**わざ** (*waza*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

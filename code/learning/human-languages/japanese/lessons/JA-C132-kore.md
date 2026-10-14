@@ -14,8 +14,8 @@ romanization: "kore"
 concept_tag: JA-ANCHOR-KORE
 prerequisites: [JA-C132-soto, JA-W01-ko, JA-C10-koko, JA-W131-wo, JA-C118-hashigo, JA-C129-tanomoshii]
 sounds: [mora]
-roots: []
-etymology_hook: Kore is to koko what a thing is to a place; both begin with the ko that points near the speaker.
+roots: [japanese-ko-this, japanese-re]
+etymology_hook: "kore: native ko- 'near me' + -re, the ending of kore, sore, are"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +52,11 @@ reviews_of: [JA-C132-soto, JA-W01-ko, JA-C10-koko, JA-W131-wo, JA-C118-hashigo, 
 under your finger. It begins with the same **こ**. The second sign is one you do
 not write yet. It turns the pointing word into a thing, and the next lesson
 writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**これ** (*kore*) is native: *ko-*, the root that points near the speaker, with *-re*, the ending of the thing words *kore*, *sore*, *are* (JMdict). It is inherited rather than borrowed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KORE, JA-LEX-KOKO, JA-SCRIPT-KO-01] -->

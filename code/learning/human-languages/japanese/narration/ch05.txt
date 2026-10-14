@@ -232,7 +232,7 @@ Now the fact that makes kanji unlike any letter you have learned. A kanji does n
 Two families of readings explain the spread. The on reading is Japan's version of the Chinese pronunciation, imported with the character. The kun reading is a native Japanese word written with a borrowed character that already meant the same thing. 日本語 (nihongo) uses the imported reading family throughout. The older spelling behind the greeting is irregular even by those standards, so it remains postponed rather than becoming an unexplained decoding test.
 
 The word, taken apart — the real family.
-Here the cousin web finally works — just not toward English. The on-readings nichi, hon, go are borrowings of Middle Chinese, so 日本語 (nihongo) has genuine relatives: Mandarin writes the same three characters and says Rìběnyǔ; Korean borrowed the same compound as ilbon-eo. Same characters, related imported sounds, one meaning, three languages.
+Here the cousin web finally works — though not toward English. The on-readings nichi, hon, go are borrowings of Middle Chinese, so 日本語 (nihongo) has genuine relatives: Mandarin writes the same three characters and says Rìběnyǔ; Korean borrowed the same compound as ilbon-eo. Same characters, related imported sounds, one meaning, three languages.
 That is a real, checkable connection, and it is the honest replacement for the Latin roots that anchor a European language. English has no share in it.
 
 Guided Practice.

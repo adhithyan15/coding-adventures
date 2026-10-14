@@ -14,7 +14,8 @@ romanization: "zasshi"
 concept_tag: JA-THINGS100-ZASSHI
 prerequisites: [JA-C100-ita, JA-C100-hasami]
 sounds: []
-roots: []
+roots: [middle-chinese-dzop, middle-chinese-tsyih]
+etymology_hook: "zasshi: Sino-Japanese 雑 'mixed' + 誌 'record', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C100-hasami]
 <!-- hl-knowledge: introduces=[JA-LEX-C100-THINGS100-05]; assesses=[] -->
 
 **ざっし** — *zasshi* — "a magazine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ざっし** (*zasshi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *zatsu*, "mixed" (Middle Chinese *dzop*) and *shi*, "record" (*tsyiH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). *Zatsu* is shortened to *zas* before *shi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

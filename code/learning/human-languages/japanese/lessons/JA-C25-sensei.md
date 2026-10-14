@@ -14,7 +14,8 @@ romanization: "sensei"
 concept_tag: JA-FAMILY25-SENSEI
 prerequisites: [JA-C25-otoko, JA-C25-onna]
 sounds: []
-roots: []
+roots: [middle-chinese-sen, middle-chinese-srjaeng]
+etymology_hook: "sensei: Sino-Japanese 先 'first' + 生 'life', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C25-onna]
 <!-- hl-knowledge: introduces=[JA-LEX-C25-FAMILY25-05]; assesses=[] -->
 
 **せんせい** — *sensei* — "a teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**せんせい** (*sensei*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sen*, "first, before" (Middle Chinese *sen*) and *sei*, "life, birth" (*srjaeng*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Read literally, it is "born before".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

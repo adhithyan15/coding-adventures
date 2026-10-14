@@ -14,7 +14,8 @@ romanization: "oroka"
 concept_tag: JA-QUAL128-OROKA
 prerequisites: [JA-C127-sunao, JA-C128-kashikoi]
 sounds: []
-roots: []
+roots: [japanese-oroka]
+etymology_hook: "oroka: native Japanese, inherited, not borrowed; kanji 愚か attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C128-kashikoi]
 <!-- hl-knowledge: introduces=[JA-LEX-C128-QUAL128-02]; assesses=[] -->
 
 **おろか** — *oroka* — "foolish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おろか** (*oroka*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

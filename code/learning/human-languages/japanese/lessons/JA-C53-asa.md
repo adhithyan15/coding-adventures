@@ -14,7 +14,8 @@ romanization: "asa"
 concept_tag: JA-ADJ53-ASA
 prerequisites: [JA-C53-atsui, JA-C53-samui]
 sounds: []
-roots: []
+roots: [japanese-asa-morning]
+etymology_hook: "asa: native Japanese, inherited, not borrowed; kanji 朝 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C53-samui]
 <!-- hl-knowledge: introduces=[JA-LEX-C53-ADJ53-05]; assesses=[] -->
 
 **あさ** — *asa* — "morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あさ** (*asa*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

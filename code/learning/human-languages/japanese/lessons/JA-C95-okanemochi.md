@@ -14,7 +14,8 @@ romanization: "okanemochi"
 concept_tag: JA-CAN95-OKANEMOCHI
 prerequisites: [JA-C95-nigate, JA-C95-mochimono]
 sounds: []
-roots: []
+roots: [japanese-kane-metal, japanese-motsu]
+etymology_hook: "okanemochi: native o- + kane 'money' + mochi 'holder' (motsu)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C95-mochimono]
 <!-- hl-knowledge: introduces=[JA-LEX-C95-CAN95-05]; assesses=[] -->
 
 **おかねもち** — *okanemochi* — "a rich person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おかねもち** (*okanemochi*) is native: the polite *o-*, *kane*, "money", and *mochi*, "holder", from *motsu*, "to hold" (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

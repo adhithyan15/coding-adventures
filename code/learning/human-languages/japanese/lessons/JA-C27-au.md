@@ -14,7 +14,8 @@ romanization: "au"
 concept_tag: JA-VERB-AU
 prerequisites: [JA-C27-hanasu, JA-C27-matsu]
 sounds: []
-roots: []
+roots: [japanese-au]
+etymology_hook: "au: native Japanese, inherited, not borrowed; kanji 会う attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C27-matsu]
 <!-- hl-knowledge: introduces=[JA-LEX-C27-VERBS27-05]; assesses=[] -->
 
 **あう** — *au* — "to meet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あう** (*au*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

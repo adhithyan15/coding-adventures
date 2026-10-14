@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Family and Water: Zo, Zu and Ze",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b5bf5525efde7c4a",
+  "sourceHash": "fnv1a64:36c3fea49b3506a4",
   "lessons": [
     {
       "id": "JA-C136-kazoku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:921d576acf1b1474",
+      "sourceHash": "fnv1a64:ed17f54a780b4fdc",
       "notice": null,
       "blocks": [
         {
@@ -83,6 +83,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かぞく (kazoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ka, \"house, family\" (Middle Chinese kae) and zoku, \"family clan\" (dzuwk) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -122,7 +133,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -332,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30774e1d3a82192f",
+      "sourceHash": "fnv1a64:92693f025e763eea",
       "notice": null,
       "blocks": [
         {
@@ -405,6 +416,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かぞえる (kazoeru) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -444,7 +466,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -494,7 +516,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68fcc9ede270319e",
+      "sourceHash": "fnv1a64:7ca0354bdc3ca972",
       "notice": null,
       "blocks": [
         {
@@ -567,6 +589,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みず (mizu) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -606,7 +639,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -808,7 +841,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:2fb7304aef18fafc",
+      "sourceHash": "fnv1a64:b958bf79aee578a5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -892,6 +925,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すずしい (suzushii) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -931,7 +975,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -981,7 +1025,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ad1c428bd758d05",
+      "sourceHash": "fnv1a64:d943f27389c1d6c0",
       "notice": null,
       "blocks": [
         {
@@ -1054,6 +1098,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かぜ (kaze) is a native word, \"wind\", inherited rather than borrowed. For the cold you catch JMdict writes \"wind\" and \"evil\", read as a whole: the illness shares the word for wind."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1093,7 +1148,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "katai"
 concept_tag: JA-QUAL120-KATAI
 prerequisites: [JA-C119-tokoya, JA-C119-nikuya]
 sounds: []
-roots: []
+roots: [japanese-katai]
+etymology_hook: "katai: native Japanese, inherited, not borrowed; kanji 硬い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C119-nikuya]
 <!-- hl-knowledge: introduces=[JA-LEX-C120-QUAL120-01]; assesses=[] -->
 
 **かたい** — *katai* — "hard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かたい** (*katai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

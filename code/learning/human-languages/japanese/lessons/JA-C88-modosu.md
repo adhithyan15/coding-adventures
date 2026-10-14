@@ -14,7 +14,8 @@ romanization: "modosu"
 concept_tag: JA-VERB-MODOSU
 prerequisites: [JA-C88-utsusu, JA-C88-tamesu]
 sounds: []
-roots: []
+roots: [japanese-modosu]
+etymology_hook: "modosu: native Japanese, inherited, not borrowed; kanji 戻す attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C88-tamesu]
 <!-- hl-knowledge: introduces=[JA-LEX-C88-ACT88-03]; assesses=[] -->
 
 **もどす** — *modosu* — "to put back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**もどす** (*modosu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

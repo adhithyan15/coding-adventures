@@ -14,7 +14,8 @@ romanization: "niwa"
 concept_tag: JA-HOME39-NIWA
 prerequisites: [JA-C38-hashi, JA-C38-daidokoro]
 sounds: []
-roots: []
+roots: [japanese-niwa]
+etymology_hook: "niwa: native Japanese, inherited, not borrowed; kanji 庭 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C38-daidokoro]
 <!-- hl-knowledge: introduces=[JA-LEX-C39-HOME39-01]; assesses=[] -->
 
 **にわ** — *niwa* — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**にわ** (*niwa*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

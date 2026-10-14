@@ -14,7 +14,8 @@ romanization: "risu"
 concept_tag: JA-THINGS108-RISU
 prerequisites: [JA-C108-tai, JA-C108-same]
 sounds: []
-roots: []
+roots: [middle-chinese-lit, middle-chinese-syox]
+etymology_hook: "risu: usually explained as Sino-Japanese 栗鼠 'chestnut rat', worn down"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C108-same]
 <!-- hl-knowledge: introduces=[JA-LEX-C108-THINGS108-04]; assesses=[] -->
 
 **りす** — *risu* — "a squirrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**りす** (*risu*) is usually explained as Sino-Japanese: the on'yomi of two characters, "chestnut" (Middle Chinese *lit*) and "rat" (Middle Chinese *syoX*), borrowed from Chinese and worn down. JMdict marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

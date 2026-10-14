@@ -14,7 +14,8 @@ romanization: "yokka"
 concept_tag: JA-TIME77-YOKKA
 prerequisites: [JA-C77-futsuka, JA-C77-mikka]
 sounds: []
-roots: []
+roots: [japanese-yo-four, japanese-ka-day]
+etymology_hook: "yokka: native yo 'four' + ka 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C77-mikka]
 <!-- hl-knowledge: introduces=[JA-LEX-C77-TIME77-03]; assesses=[] -->
 
 **よっか** — *yokka* — "the fourth of the month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**よっか** (*yokka*) is native: *yo*, "four", with *ka*, "day", the consonant held before it (KANJIDIC2). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

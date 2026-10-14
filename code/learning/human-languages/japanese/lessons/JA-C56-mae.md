@@ -14,7 +14,8 @@ romanization: "mae"
 concept_tag: JA-TIME56-MAE
 prerequisites: [JA-C55-mada, JA-C56-ato]
 sounds: []
-roots: []
+roots: [japanese-mae]
+etymology_hook: "mae: native Japanese, inherited, not borrowed; kanji 前 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C56-ato]
 <!-- hl-knowledge: introduces=[JA-LEX-C56-TIME56-02]; assesses=[] -->
 
 **まえ** — *mae* — "before; in front".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まえ** (*mae*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

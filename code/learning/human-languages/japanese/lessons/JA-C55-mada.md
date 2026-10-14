@@ -14,7 +14,8 @@ romanization: "mada"
 concept_tag: JA-TIME55-MADA
 prerequisites: [JA-C55-fuyu, JA-C55-itsumo]
 sounds: []
-roots: []
+roots: [japanese-mada]
+etymology_hook: "mada: native Japanese, inherited, not borrowed; usually kana, kanji 未だ as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C55-itsumo]
 <!-- hl-knowledge: introduces=[JA-LEX-C55-TIME55-05]; assesses=[] -->
 
 **まだ** — *mada* — "still, not yet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まだ** (*mada*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

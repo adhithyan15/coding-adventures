@@ -14,7 +14,8 @@ romanization: "kudamono"
 concept_tag: JA-FOOD32-KUDAMONO
 prerequisites: [JA-C32-tamago, JA-C32-yasai]
 sounds: []
-roots: []
+roots: [japanese-ko-tree, japanese-mono]
+etymology_hook: "kudamono: native; usually 'tree things': old ku 'tree' + da + mono 'thing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C32-yasai]
 <!-- hl-knowledge: introduces=[JA-LEX-C32-FOOD32-05]; assesses=[] -->
 
 **くだもの** — *kudamono* — "fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**くだもの** (*kudamono*) is a native word, inherited rather than borrowed. The usual account takes it apart as *ku*, an old form of *ki*, "tree", an old linking *da*, and *mono*, "thing": "tree things". JMdict's kanji, "fruit" and "thing", are read for their meaning.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

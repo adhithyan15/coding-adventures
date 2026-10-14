@@ -4,7 +4,7 @@
   "chapter": 138,
   "title": "My Day: Get Up, Work, Walk, Go Home, Sleep",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9419e0bda36c0e4a",
+  "sourceHash": "fnv1a64:c153b1155c33e082",
   "lessons": [
     {
       "id": "JA-C138-okimasu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54ab6cc2de37612f",
+      "sourceHash": "fnv1a64:0ef9cd4eb7068416",
       "notice": null,
       "blocks": [
         {
@@ -87,6 +87,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おきます (okimasu) is native okiru, \"to get up\", with the polite ending -masu. The verb is inherited rather than borrowed; -masu is usually traced to an older humble verb, mairasu, \"to offer\", though that account is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -126,7 +137,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -176,7 +187,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e11aeefd9de72177",
+      "sourceHash": "fnv1a64:22262a7ade0105ac",
       "notice": null,
       "blocks": [
         {
@@ -253,6 +264,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はたらきます (hatarakimasu) is native hataraku, \"to work\", with the polite ending -masu. The verb is inherited rather than borrowed (JMdict); its kanji, \"person\" beside \"move\", was made in Japan (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -292,7 +314,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -342,7 +364,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4e06b42f3739eb1",
+      "sourceHash": "fnv1a64:ab389cb6f7545a9e",
       "notice": null,
       "blocks": [
         {
@@ -419,6 +441,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あるきます (arukimasu) is native aruku, \"to walk\", with the polite ending -masu. The verb is inherited rather than borrowed; its kanji is a kun'yomi attached later (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -458,7 +491,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -508,7 +541,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef0e86726fa252d9",
+      "sourceHash": "fnv1a64:b65d13ac372b6933",
       "notice": null,
       "blocks": [
         {
@@ -576,6 +609,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かえります (kaerimasu) is native kaeru, \"to go back\", with the polite ending -masu. The verb is inherited rather than borrowed; its kanji is a kun'yomi attached later (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -615,7 +659,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -665,7 +709,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:227e39af8611a939",
+      "sourceHash": "fnv1a64:f07bfeca187d398f",
       "notice": null,
       "blocks": [
         {
@@ -745,6 +789,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねます (nemasu) is native neru, \"to sleep, to lie down\", with the polite ending -masu. The verb is inherited rather than borrowed; its kanji is a kun'yomi attached later (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -784,7 +839,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

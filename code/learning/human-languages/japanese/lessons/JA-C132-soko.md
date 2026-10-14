@@ -14,8 +14,8 @@ romanization: "soko"
 concept_tag: JA-ANCHOR-SOKO
 prerequisites: [JA-R131-tea-please, JA-W01-ko, JA-C10-koko, JA-W131-small-yo, JA-C117-kamoshika, JA-C129-shitsukoi]
 sounds: [mora]
-roots: []
-etymology_hook: Koko opened a set of pointing words that share their endings and change only the first sign; ko points near the speaker, and so points near the listener.
+roots: [japanese-so-that, japanese-ko-place]
+etymology_hook: "soko: native so- 'near you' + -ko 'place'"
 duration:
   max_seconds: 200
 requires:
@@ -51,6 +51,11 @@ reviews_of: [JA-W01-ko, JA-C10-koko, JA-W131-small-yo, JA-C117-kamoshika, JA-C12
 You know **ここ**, *koko*, here, the place near you. Change the first sign and the
 place moves across to the listener: *soko*, there, by them. The second sign is the
 **こ** you already write. The first one is new, and the next lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**そこ** (*soko*) is native: *so-*, the root that points near the listener, with *-ko*, "place", as in *koko* (JMdict). It is inherited rather than borrowed, and is usually written in kana.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-SOKO, JA-LEX-KOKO, JA-SCRIPT-KO-01] -->

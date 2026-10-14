@@ -11,8 +11,8 @@ gloss: six — the hole the chapter left open, and the reason it was left
 concept_tag: JA-NUMBER-SIX
 prerequisites: [JA-W15-ro, JA-W09-ku, JA-C13-imouto, JA-C09-yoku]
 sounds: [mora, japanese-r]
-roots: []
-etymology_hook: The only number between one and ten whose everyday reading needed a sign this book had not taught.
+roots: [middle-chinese-ljuwk]
+etymology_hook: "roku: Sino-Japanese, the on'yomi of 六 'six', from Middle Chinese ljuwk; native mu is the kun'yomi"
 duration:
   max_seconds: 180
 requires:
@@ -50,6 +50,11 @@ became the number **nine**. So the sign **く** does two jobs in this run: it is
 *nine* on its own and the second beat of *six*.
 
 Six has one everyday reading. No native word stands beside it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ろく** (*roku*) is Sino-Japanese: the on'yomi of the character for "six", borrowed from Chinese (Middle Chinese *ljuwk*). The native word, *mu*, lives on in *muttsu* (KANJIDIC2).
 
 ## What you've built — why six waited
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ROKU, JA-LEX-NANA, JA-LEX-HACHI, JA-LEX-KU, JA-LEX-ICHI, JA-LEX-NI, JA-LEX-SAN, JA-LEX-YON, JA-LEX-GO] -->

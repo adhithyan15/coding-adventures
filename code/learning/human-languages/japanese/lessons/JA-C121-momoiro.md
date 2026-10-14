@@ -14,7 +14,8 @@ romanization: "momoiro"
 concept_tag: JA-QUAL121-MOMOIRO
 prerequisites: [JA-C120-teinei, JA-C121-shikakui]
 sounds: []
-roots: []
+roots: [japanese-momo, japanese-iro]
+etymology_hook: "momoiro: native momo 'peach' + iro 'colour' (桃色)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C121-shikakui]
 <!-- hl-knowledge: introduces=[JA-LEX-C121-QUAL121-02]; assesses=[] -->
 
 **ももいろ** — *momoiro* — "pink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ももいろ** (*momoiro*) is a native compound, inherited rather than borrowed: *momo*, "peach", and *iro*, "colour" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

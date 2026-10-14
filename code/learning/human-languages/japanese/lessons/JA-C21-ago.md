@@ -14,7 +14,8 @@ romanization: "ago"
 concept_tag: JA-BODY21-AGO
 prerequisites: [JA-C20-mune, JA-C21-hone]
 sounds: []
-roots: []
+roots: [japanese-ago-chin]
+etymology_hook: "ago: native Japanese, inherited, not borrowed; kanji 顎 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C21-hone]
 <!-- hl-knowledge: introduces=[JA-LEX-C21-BODY21-02]; assesses=[] -->
 
 **あご** — *ago* — "the chin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あご** (*ago*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

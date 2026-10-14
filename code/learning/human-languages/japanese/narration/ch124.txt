@@ -12,6 +12,9 @@ Before the new one: say the Japanese for suspicious, then the Japanese for detai
 You'll want to know: かゆい.
 かゆい — kayui — "itchy".
 
+The word, taken apart.
+かゆい (kayui) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for detailed, then the Japanese for itchy.
 
 You'll want to know: くさい.
 くさい — kusai — "smelly".
+
+The word, taken apart.
+くさい (kusai) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for itchy, then the Japanese for smelly.
 You'll want to know: むしあつい.
 むしあつい — mushiatsui — "humid".
 
+The word, taken apart.
+むしあつい (mushiatsui) is a native compound, inherited rather than borrowed: mushi, "steaming", from musu, "to steam", and atsui, "hot" (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for smelly, then the Japanese for humid.
 You'll want to know: おかしい.
 おかしい — okashii — "funny; strange".
 
+The word, taken apart.
+おかしい (okashii) is a native word, inherited rather than borrowed, usually written in kana; JMdict's kanji, "can" and "laugh", are chosen for their meaning. Its older origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for humid, then the Japanese for funny; str
 
 You'll want to know: おもしろい.
 おもしろい — omoshiroi — "interesting".
+
+The word, taken apart.
+おもしろい (omoshiroi) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). Its kanji, "face" and "white", match an old explanation that faces brighten, which is not settled.
 
 What you've built.
 One more word for this chapter.

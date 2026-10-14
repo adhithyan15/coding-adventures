@@ -14,7 +14,8 @@ romanization: "atsukamashii"
 concept_tag: JA-QUAL129-ATSUKAMASHII
 prerequisites: [JA-C129-shitsukoi, JA-C129-yakamashii]
 sounds: []
-roots: []
+roots: [japanese-atsukamashii]
+etymology_hook: "atsukamashii: native Japanese, inherited, not borrowed; kanji 厚かましい attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C129-yakamashii]
 <!-- hl-knowledge: introduces=[JA-LEX-C129-QUAL129-04]; assesses=[] -->
 
 **あつかましい** — *atsukamashii* — "shameless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あつかましい** (*atsukamashii*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

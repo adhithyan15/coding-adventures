@@ -11,8 +11,8 @@ gloss: again; one more, in a request
 concept_tag: JA-REPEAT-AGAIN
 prerequisites: [JA-W09-do]
 sounds: [mora, long-o]
-roots: []
-etymology_hook: The same adverb can point beyond the present boundary as already, more, or again; the repair request selects again.
+roots: [japanese-mou]
+etymology_hook: "mō: native Japanese, inherited, not borrowed; written in kana"
 duration:
   max_seconds: 165
 requires:
@@ -45,6 +45,11 @@ reviews_of: [JA-C09-wakarimasen, JA-C09-sumimasen, JA-W09-me]
 Two morae: *mo | o*. The macron in *mō* hides the second beat, but the Japanese
 spelling shows it with final **う**. In other settings this adverb can mean
 “already” or “more.” A request for repetition selects “again.”
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**もう** (*mō*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It has no kanji of its own and is written in kana (JMdict).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU] -->

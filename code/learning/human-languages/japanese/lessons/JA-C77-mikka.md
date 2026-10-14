@@ -14,7 +14,8 @@ romanization: "mikka"
 concept_tag: JA-TIME77-MIKKA
 prerequisites: [JA-C76-tsuitachi, JA-C77-futsuka]
 sounds: []
-roots: []
+roots: [japanese-mi-three, japanese-ka-day]
+etymology_hook: "mikka: native mi 'three' + ka 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C77-futsuka]
 <!-- hl-knowledge: introduces=[JA-LEX-C77-TIME77-02]; assesses=[] -->
 
 **みっか** — *mikka* — "the third of the month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**みっか** (*mikka*) is native: *mi*, "three", with *ka*, "day", the consonant held before it (KANJIDIC2). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

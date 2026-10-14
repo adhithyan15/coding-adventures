@@ -14,7 +14,8 @@ romanization: "sukunai"
 concept_tag: JA-QUAL127-SUKUNAI
 prerequisites: [JA-C126-umai, JA-C127-ooi]
 sounds: []
-roots: []
+roots: [japanese-sukunai]
+etymology_hook: "sukunai: native Japanese, inherited, not borrowed; kanji 少ない attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C127-ooi]
 <!-- hl-knowledge: introduces=[JA-LEX-C127-QUAL127-02]; assesses=[] -->
 
 **すくない** — *sukunai* — "few, little".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すくない** (*sukunai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

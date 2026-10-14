@@ -14,7 +14,8 @@ romanization: "nagai"
 concept_tag: JA-ANIMALS48-NAGAI
 prerequisites: [JA-C48-chiisai, JA-C48-ii]
 sounds: []
-roots: []
+roots: [japanese-nagai]
+etymology_hook: "nagai: native Japanese, inherited, not borrowed; kanji 長い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C48-ii]
 <!-- hl-knowledge: introduces=[JA-LEX-C48-ANIMALS48-04]; assesses=[] -->
 
 **ながい** — *nagai* — "long".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ながい** (*nagai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

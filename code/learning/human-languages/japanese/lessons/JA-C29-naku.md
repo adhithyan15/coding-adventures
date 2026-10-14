@@ -14,7 +14,8 @@ romanization: "naku"
 concept_tag: JA-VERB-NAKU
 prerequisites: [JA-C28-motsu, JA-C29-tatsu]
 sounds: []
-roots: []
+roots: [japanese-naku]
+etymology_hook: "naku: native Japanese, inherited, not borrowed; kanji 泣く attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C29-tatsu]
 <!-- hl-knowledge: introduces=[JA-LEX-C29-VERBS29-02]; assesses=[] -->
 
 **なく** — *naku* — "to cry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**なく** (*naku*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

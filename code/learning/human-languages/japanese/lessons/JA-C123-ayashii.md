@@ -14,7 +14,8 @@ romanization: "ayashii"
 concept_tag: JA-QUAL123-AYASHII
 prerequisites: [JA-C123-natsukashii, JA-C123-kuyashii]
 sounds: []
-roots: []
+roots: [japanese-ayashii]
+etymology_hook: "ayashii: native Japanese, inherited, not borrowed; kanji 怪しい attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C123-kuyashii]
 <!-- hl-knowledge: introduces=[JA-LEX-C123-QUAL123-04]; assesses=[] -->
 
 **あやしい** — *ayashii* — "suspicious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あやしい** (*ayashii*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

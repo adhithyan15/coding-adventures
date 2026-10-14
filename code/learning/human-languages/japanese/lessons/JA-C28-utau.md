@@ -14,7 +14,8 @@ romanization: "utau"
 concept_tag: JA-VERB-UTAU
 prerequisites: [JA-C27-au, JA-C28-tsukau]
 sounds: []
-roots: []
+roots: [japanese-utau]
+etymology_hook: "utau: native Japanese, inherited, not borrowed; kanji 歌う attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C28-tsukau]
 <!-- hl-knowledge: introduces=[JA-LEX-C28-VERBS28-02]; assesses=[] -->
 
 **うたう** — *utau* — "to sing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**うたう** (*utau*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

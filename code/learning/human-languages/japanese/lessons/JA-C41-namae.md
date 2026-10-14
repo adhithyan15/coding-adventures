@@ -14,7 +14,8 @@ romanization: "namae"
 concept_tag: JA-SCHOOL41-NAMAE
 prerequisites: [JA-C41-tegami, JA-C41-jikan]
 sounds: []
-roots: []
+roots: [japanese-na-name, japanese-mae]
+etymology_hook: "namae: native compound of na 'name' + mae 'front' (名前)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C41-jikan]
 <!-- hl-knowledge: introduces=[JA-LEX-C41-SCHOOL41-03]; assesses=[] -->
 
 **なまえ** — *namae* — "a name".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**なまえ** (*namae*) is a native compound, inherited rather than borrowed: *na*, "name", and *mae*, "front", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

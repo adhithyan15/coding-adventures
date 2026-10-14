@@ -14,7 +14,8 @@ romanization: "sumu"
 concept_tag: JA-VERB-SUMU
 prerequisites: [JA-C29-tatsu, JA-C29-naku]
 sounds: []
-roots: []
+roots: [japanese-sumu-live]
+etymology_hook: "sumu: native Japanese, inherited, not borrowed; kanji 住む attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C29-naku]
 <!-- hl-knowledge: introduces=[JA-LEX-C29-VERBS29-03]; assesses=[] -->
 
 **すむ** — *sumu* — "to live (somewhere)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すむ** (*sumu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

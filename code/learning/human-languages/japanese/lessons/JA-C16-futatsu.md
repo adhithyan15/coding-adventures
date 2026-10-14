@@ -11,8 +11,8 @@ gloss: two things — and the beat that ties this count to a word you already sa
 concept_tag: JA-NATIVE-TWO
 prerequisites: [JA-W16-fu, JA-W11-ta, JA-C15-juu, JA-C09-onegaishimasu]
 sounds: [mora]
-roots: []
-etymology_hook: The hito- of one thing and the futa- of two things are the same pair Japanese has always used, borrowed from nobody.
+roots: [japanese-futa-two, japanese-tsu-counter]
+etymology_hook: "futatsu: native futa 'two' + native counter -tsu"
 duration:
   max_seconds: 185
 requires:
@@ -54,6 +54,11 @@ carries it.
 
 **に** is *two*. **ふたつ** is *two things*. Same relation as **いち** and
 **ひとつ**, and again the two words share nothing at all.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふたつ** (*futatsu*) is native: *futa*, the inherited word for "two", with the counter *-tsu*. *Futa* also opens *futari*, "two people" (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-FUTATSU, JA-LEX-HITOTSU, JA-LEX-NI, JA-SCRIPT-FU-01] -->

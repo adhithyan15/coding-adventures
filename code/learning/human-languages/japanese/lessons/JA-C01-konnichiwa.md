@@ -11,7 +11,7 @@ gloss: hello (daytime greeting)
 concept_tag: GREETING-HELLO
 prerequisites: [JA-W01-konnichiwa-read]
 sounds: [mora, moraic-n, particle-wa]
-roots: [konnichi]
+roots: [konnichi, middle-chinese-kim-now, middle-chinese-nyit]
 etymology_hook: こんにちは is an abandoned sentence — “as for today …” — which is why it ends in a particle.
 duration:
   max_seconds: 210
@@ -65,6 +65,11 @@ when it is the particle.
 The older phrase is often written with two kanji for "this day." You do not need
 to decode those yet. This chapter keeps the whole greeting in the hiragana signs
 you have already learned.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こんにちは** (*konnichiwa*) is a sentence cut short. *Konnichi*, "today", is Sino-Japanese: *kon*, "now" (Middle Chinese *kim*), and *nichi*, "day" (*nyit*), on'yomi borrowed from Chinese; the native particle *wa*, "as for", stayed on the end (JMdict; Unihan; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA, JA-PARTICLE-WA-SPELLING, JA-SCRIPT-KONNICHIWA-READ-01, JA-SCRIPT-KO-01, JA-SCRIPT-N-01, JA-SCRIPT-NI-01, JA-SCRIPT-CHI-01, JA-SCRIPT-WA-01] -->

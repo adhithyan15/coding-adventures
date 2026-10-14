@@ -14,7 +14,8 @@ romanization: "tatamu"
 concept_tag: JA-VERB-TATAMU
 prerequisites: [JA-C89-mawasu, JA-C89-tsukamu]
 sounds: []
-roots: []
+roots: [japanese-tatamu]
+etymology_hook: "tatamu: native Japanese, inherited, not borrowed; usually kana, kanji 畳む as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C89-tsukamu]
 <!-- hl-knowledge: introduces=[JA-LEX-C89-ACT89-05]; assesses=[] -->
 
 **たたむ** — *tatamu* — "to fold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たたむ** (*tatamu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tsukaimichi"
 concept_tag: JA-CAN97-TSUKAIMICHI
 prerequisites: [JA-C96-tsugou, JA-C97-zaisan]
 sounds: []
-roots: []
+roots: [japanese-tsukau, japanese-michi]
+etymology_hook: "tsukaimichi: native tsukai 'using' (tsukau) + michi 'way'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C97-zaisan]
 <!-- hl-knowledge: introduces=[JA-LEX-C97-CAN97-02]; assesses=[] -->
 
 **つかいみち** — *tsukaimichi* — "a use, a purpose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**つかいみち** (*tsukaimichi*) is a native compound, inherited rather than borrowed: *tsukai*, "using", from *tsukau*, "to use", and *michi*, "road, way" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

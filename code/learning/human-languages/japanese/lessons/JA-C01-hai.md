@@ -12,7 +12,7 @@ concept_tag: RESPONSE-YES
 prerequisites: [JA-W01-e]
 sounds: [mora, pure-vowels]
 roots: []
-etymology_hook: Two hiragana signs, two equal beats — Japanese counts morae, not syllables.
+etymology_hook: "hai: origin not settled; one account ties it to hai 'a bow', another treats it as an old interjection"
 duration:
   max_seconds: 180
 requires:

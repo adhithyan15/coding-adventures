@@ -14,8 +14,8 @@ romanization: "taberu"
 concept_tag: JA-VERB-TABERU
 prerequisites: [JA-C134-basho, JA-W11-ta, JA-W132-ru, JA-W134-de, JA-C122-kantan]
 sounds: [mora]
-roots: []
-etymology_hook: Taberu is the everyday verb for eating; its middle sign is へ with the voicing mark, a sign the book has not yet written.
+roots: [japanese-taberu]
+etymology_hook: "taberu: native Japanese, inherited, not borrowed; kanji 食べる attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +52,11 @@ list gives. Said politely, it is *tabemasu*.
 
 Three beats: *ta–be–ru*. **た** and **る** you already write. The middle sign
 is **へ** with the voicing mark, so *he* becomes *be*. The next lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たべる** (*taberu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-TABERU, JA-SCRIPT-TA-01, JA-SCRIPT-RU-01] -->

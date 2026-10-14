@@ -14,7 +14,8 @@ romanization: "naosu"
 concept_tag: JA-VERB-NAOSU
 prerequisites: [JA-C31-dasu, JA-C31-otosu]
 sounds: []
-roots: []
+roots: [japanese-naosu]
+etymology_hook: "naosu: native Japanese, inherited, not borrowed; kanji 直す attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C31-otosu]
 <!-- hl-knowledge: introduces=[JA-LEX-C31-VERBS31-03]; assesses=[] -->
 
 **なおす** — *naosu* — "to fix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**なおす** (*naosu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

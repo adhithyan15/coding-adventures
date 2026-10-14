@@ -14,7 +14,8 @@ romanization: "nigai"
 concept_tag: JA-ADJ50-NIGAI
 prerequisites: [JA-C49-yasashii, JA-C50-amai]
 sounds: []
-roots: []
+roots: [japanese-nigai]
+etymology_hook: "nigai: native Japanese, inherited, not borrowed; kanji 苦い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C50-amai]
 <!-- hl-knowledge: introduces=[JA-LEX-C50-ADJ50-02]; assesses=[] -->
 
 **にがい** — *nigai* — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**にがい** (*nigai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

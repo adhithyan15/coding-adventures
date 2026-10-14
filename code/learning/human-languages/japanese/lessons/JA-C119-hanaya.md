@@ -14,7 +14,8 @@ romanization: "hanaya"
 concept_tag: JA-THINGS119-HANAYA
 prerequisites: [JA-C118-wata, JA-C118-honya]
 sounds: []
-roots: []
+roots: [japanese-hana-flower, japanese-ya-house]
+etymology_hook: "hanaya: native hana 'flower' + ya 'shop' (花屋)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C118-honya]
 <!-- hl-knowledge: introduces=[JA-LEX-C119-THINGS119-01]; assesses=[] -->
 
 **はなや** — *hanaya* — "a florist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はなや** (*hanaya*) is a native compound, inherited rather than borrowed: *hana*, "flower", and *ya*, "house, shop" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

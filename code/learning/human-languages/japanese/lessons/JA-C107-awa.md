@@ -14,7 +14,8 @@ romanization: "awa"
 concept_tag: JA-THINGS107-AWA
 prerequisites: [JA-C107-doro, JA-C107-hokori, JA-C19-words]
 sounds: []
-roots: []
+roots: [japanese-awa]
+etymology_hook: "awa: native Japanese, inherited, not borrowed; kanji 泡 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [JA-C107-hokori]
 <!-- hl-knowledge: introduces=[JA-LEX-C107-THINGS107-03]; assesses=[] -->
 
 **あわ** — *awa* — "foam, bubbles".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あわ** (*awa*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mushiatsui"
 concept_tag: JA-QUAL124-MUSHIATSUI
 prerequisites: [JA-C124-kayui, JA-C124-kusai]
 sounds: []
-roots: []
+roots: [japanese-musu, japanese-atsui]
+etymology_hook: "mushiatsui: native mushi 'steaming' (musu) + atsui 'hot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C124-kusai]
 <!-- hl-knowledge: introduces=[JA-LEX-C124-QUAL124-03]; assesses=[] -->
 
 **むしあつい** — *mushiatsui* — "humid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**むしあつい** (*mushiatsui*) is a native compound, inherited rather than borrowed: *mushi*, "steaming", from *musu*, "to steam", and *atsui*, "hot" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ja nai"
 concept_tag: JA-NEG139-JANAI
 prerequisites: [JA-C139-chigaimasu, JA-C138-arukimasu, JA-C131-isha]
 sounds: []
-roots: []
+roots: [japanese-nai]
+etymology_hook: "ja nai: native ja (from de wa, JMdict) + nai 'not'"
 duration:
   max_seconds: 200
 requires:
@@ -57,6 +58,11 @@ Verbs say *not* with their ending. In the polite form, **ます** becomes
 > **はたらきます** → **はたらきません** — *hatarakimasen* — "I don't work"
 >
 > **ねます** → **ねません** — *nemasen* — "I don't go to bed"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**じゃない** (*ja nai*) is native: *ja*, which JMdict explains as coming from *de wa*, and *nai*, "not". It is inherited rather than borrowed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C139-JANAI, JA-LEX-C139-CHIGAIMASU] -->

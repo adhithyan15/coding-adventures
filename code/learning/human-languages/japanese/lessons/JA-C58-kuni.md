@@ -14,7 +14,8 @@ romanization: "kuni"
 concept_tag: JA-PLACE58-KUNI
 prerequisites: [JA-C58-chika, JA-C58-kouen]
 sounds: []
-roots: []
+roots: [japanese-kuni]
+etymology_hook: "kuni: native Japanese, inherited, not borrowed; kanji 国 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C58-kouen]
 <!-- hl-knowledge: introduces=[JA-LEX-C58-PLACE58-03]; assesses=[] -->
 
 **くに** — *kuni* — "a country".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**くに** (*kuni*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "iwashi"
 concept_tag: JA-WORLD64-IWASHI
 prerequisites: [JA-C64-goma, JA-C64-uni]
 sounds: []
-roots: []
+roots: [japanese-iwashi]
+etymology_hook: "iwashi: native Japanese, inherited, not borrowed; usually kana, kanji 鰯 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C64-uni]
 <!-- hl-knowledge: introduces=[JA-LEX-C64-WORLD64-04]; assesses=[] -->
 
 **いわし** — *iwashi* — "a sardine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いわし** (*iwashi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: tooth; teeth
 concept_tag: JA-BODY-TOOTH
 prerequisites: [JA-R12-foundation-02]
 sounds: [mora]
-roots: []
-etymology_hook: The same sign read ha inside hana is also a complete one-mora noun.
+roots: [japanese-ha-tooth]
+etymology_hook: "ha: native Japanese, inherited, not borrowed; kanji 歯 attached later as kun'yomi"
 duration:
   max_seconds: 190
 requires:
@@ -51,6 +51,11 @@ Then hear and say the first seven body words.
 > **は** — *ha* — tooth; teeth
 
 One sign is the complete word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**は** (*ha*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HA-TOOTH] -->

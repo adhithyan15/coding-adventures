@@ -14,7 +14,8 @@ romanization: "sainou"
 concept_tag: JA-CAN96-SAINOU
 prerequisites: [JA-C95-okanemochi, JA-C96-shikaku]
 sounds: []
-roots: []
+roots: [middle-chinese-dzoj-talent, middle-chinese-nong]
+etymology_hook: "sainou: Sino-Japanese 才 'talent' + 能 'ability', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C96-shikaku]
 <!-- hl-knowledge: introduces=[JA-LEX-C96-CAN96-02]; assesses=[] -->
 
 **さいのう** — *sainou* — "talent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**さいのう** (*sainou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sai*, "talent" (Middle Chinese *dzoj*) and *nō*, "ability" (*nong*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

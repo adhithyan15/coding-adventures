@@ -14,7 +14,8 @@ romanization: "yuka"
 concept_tag: JA-HOME38-YUKA
 prerequisites: [JA-C37-tsukue, JA-C37-yane]
 sounds: []
-roots: []
+roots: [japanese-yuka]
+etymology_hook: "yuka: native Japanese, inherited, not borrowed; kanji 床 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C37-yane]
 <!-- hl-knowledge: introduces=[JA-LEX-C38-HOME38-01]; assesses=[] -->
 
 **ゆか** — *yuka* — "the floor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ゆか** (*yuka*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

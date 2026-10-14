@@ -14,7 +14,8 @@ romanization: "rouka"
 concept_tag: JA-LOC79-ROUKA
 prerequisites: [JA-C79-kado, JA-C79-kaidan]
 sounds: []
-roots: []
+roots: [middle-chinese-lang, middle-chinese-haex]
+etymology_hook: "rouka: Sino-Japanese 廊 'corridor' + 下 'below', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C79-kaidan]
 <!-- hl-knowledge: introduces=[JA-LEX-C79-LOC79-05]; assesses=[] -->
 
 **ろうか** — *rouka* — "a corridor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ろうか** (*rouka*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *rō*, "corridor" (Middle Chinese *lang*) and *ka*, "below" (*haeX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

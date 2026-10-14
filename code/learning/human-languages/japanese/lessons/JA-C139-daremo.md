@@ -14,7 +14,8 @@ romanization: "dare mo"
 concept_tag: JA-NEG139-DAREMO
 prerequisites: [JA-C139-nanimo, JA-C138-nemasu, JA-W137-pa, JA-W131-small-yo]
 sounds: []
-roots: []
+roots: [japanese-dare, japanese-mo]
+etymology_hook: "dare mo: native dare 'who' + mo 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -54,6 +55,11 @@ a negative verb.
 
 **いません**, *imasen*, is the negative of **います**, *imasu*, "someone is
 there", the verb Japanese uses for people and animals.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**だれも** (*dare mo*) is native: *dare*, "who", with *mo*, "even, also" (JMdict). It is inherited rather than borrowed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C139-DAREMO, JA-LEX-C139-NANIMO] -->

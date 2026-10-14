@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 115,
-  "sourceHash": "fnv1a64:9c8804f318c50e8d",
+  "sourceHash": "fnv1a64:6ece653e33df88d7",
   "lessonIds": [
     "JA-C115-futa",
     "JA-C115-mato",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch115.txt",
   "json": "japanese/narration/ch115.json",
-  "textHash": "fnv1a64:82d8f989e0812c9c",
-  "jsonHash": "fnv1a64:b76a951afa2303f6",
+  "textHash": "fnv1a64:9549ed82ada5a022",
+  "jsonHash": "fnv1a64:b9d4a19b00ec8cb9",
   "findings": []
 }

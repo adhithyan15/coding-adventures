@@ -14,7 +14,8 @@ romanization: "natsukashii"
 concept_tag: JA-QUAL123-NATSUKASHII
 prerequisites: [JA-C122-fukuzatsu, JA-C123-otonashii]
 sounds: []
-roots: []
+roots: [japanese-natsukashii]
+etymology_hook: "natsukashii: native Japanese, inherited, not borrowed; kanji 懐かしい attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C123-otonashii]
 <!-- hl-knowledge: introduces=[JA-LEX-C123-QUAL123-02]; assesses=[] -->
 
 **なつかしい** — *natsukashii* — "dear, missed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**なつかしい** (*natsukashii*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

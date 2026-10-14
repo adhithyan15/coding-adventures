@@ -14,7 +14,8 @@ romanization: "uma"
 concept_tag: JA-ANIMALS45-UMA
 prerequisites: [JA-C44-ame, JA-C45-neko]
 sounds: []
-roots: []
+roots: [middle-chinese-maex]
+etymology_hook: "uma: kun'yomi of 馬, usually explained as a very early loan from Chinese (MC maeX); not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C45-neko]
 <!-- hl-knowledge: introduces=[JA-LEX-C45-ANIMALS45-02]; assesses=[] -->
 
 **うま** — *uma* — "a horse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**うま** (*uma*) is the kun'yomi of the character for the horse, and is usually explained as a very early loan from Chinese (Middle Chinese *maeX*), separate from the later on'yomi *ba*. Whether it is a loan or native is not settled (KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

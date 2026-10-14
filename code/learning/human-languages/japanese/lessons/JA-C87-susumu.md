@@ -14,7 +14,8 @@ romanization: "susumu"
 concept_tag: JA-VERB-SUSUMU
 prerequisites: [JA-C87-tsumu, JA-C87-tanomu]
 sounds: []
-roots: []
+roots: [japanese-susumu]
+etymology_hook: "susumu: native Japanese, inherited, not borrowed; kanji 進む attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C87-tanomu]
 <!-- hl-knowledge: introduces=[JA-LEX-C87-ACT87-03]; assesses=[] -->
 
 **すすむ** — *susumu* — "to go forward".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すすむ** (*susumu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

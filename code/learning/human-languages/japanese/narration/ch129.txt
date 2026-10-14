@@ -12,6 +12,9 @@ Before the new one: say the Japanese for fine, then the Japanese for ugly.
 You'll want to know: かわいい.
 かわいい — kawaii — "cute".
 
+The word, taken apart.
+かわいい (kawaii) is a native word; JMdict lists kawayui as another reading of it, the older shape of the word. JMdict marks its kanji, "can" and "love", as ateji. It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for ugly, then the Japanese for cute.
 
 You'll want to know: しつこい.
 しつこい — shitsukoi — "persistent".
+
+The word, taken apart.
+しつこい (shitsukoi) is a native word, inherited rather than borrowed, and JMdict marks it as usually written in kana. Its older origin is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for cute, then the Japanese for persistent.
 You'll want to know: やかましい.
 やかましい — yakamashii — "noisy".
 
+The word, taken apart.
+やかましい (yakamashii) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for persistent, then the Japanese for noisy
 You'll want to know: あつかましい.
 あつかましい — atsukamashii — "shameless".
 
+The word, taken apart.
+あつかましい (atsukamashii) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for noisy, then the Japanese for shameless.
 
 You'll want to know: たのもしい.
 たのもしい — tanomoshii — "reliable".
+
+The word, taken apart.
+たのもしい (tanomoshii) is native, built on tanomu, "to rely on", with the adjective ending -shii: "to be relied on" (JMdict). It is inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.

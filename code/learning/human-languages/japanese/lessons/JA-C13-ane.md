@@ -11,8 +11,8 @@ gloss: my elder sister
 concept_tag: JA-FAMILY-ELDER-SISTER
 prerequisites: [JA-C13-ani]
 sounds: [mora]
-roots: []
-etymology_hook: Keep the shared opening and change only the final mora to switch sibling.
+roots: [japanese-ane]
+etymology_hook: "ane: native Japanese, inherited, not borrowed; kanji 姉 attached later as kun'yomi"
 duration:
   max_seconds: 150
 requires:
@@ -42,6 +42,11 @@ Retrieve **あに** once from its meaning.
 [YOU READ: the distant block **ございます** once]
 
 Hear *a-ne*, say it, then contrast *a-ni*, my elder brother.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あね** (*ane*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANE, JA-SCRIPT-A-01, JA-SCRIPT-NE-01] -->

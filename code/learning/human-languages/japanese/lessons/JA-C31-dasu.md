@@ -14,7 +14,8 @@ romanization: "dasu"
 concept_tag: JA-VERB-DASU
 prerequisites: [JA-C30-kasu, JA-C30-kaesu]
 sounds: []
-roots: []
+roots: [japanese-dasu]
+etymology_hook: "dasu: native Japanese, inherited, not borrowed; kanji 出す attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C30-kaesu]
 <!-- hl-knowledge: introduces=[JA-LEX-C31-VERBS31-01]; assesses=[] -->
 
 **だす** — *dasu* — "to take out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**だす** (*dasu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

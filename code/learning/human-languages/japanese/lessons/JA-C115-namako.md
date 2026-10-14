@@ -14,7 +14,8 @@ romanization: "namako"
 concept_tag: JA-THINGS115-NAMAKO
 prerequisites: [JA-C115-mato, JA-C115-hinata]
 sounds: []
-roots: []
+roots: [japanese-namako]
+etymology_hook: "namako: native nama 'raw' + ko, the old name for it (JMdict)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C115-hinata]
 <!-- hl-knowledge: introduces=[JA-LEX-C115-THINGS115-04]; assesses=[] -->
 
 **なまこ** — *namako* — "a sea cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**なまこ** (*namako*) is native: *nama*, "raw", and *ko*, an old name for the sea cucumber, which JMdict lists as an older reading of the same characters. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

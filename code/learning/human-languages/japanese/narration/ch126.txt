@@ -12,6 +12,9 @@ Before the new one: say the Japanese for very young, then the Japanese for plent
 You'll want to know: しあわせ.
 しあわせ — shiawase — "happy".
 
+The word, taken apart.
+しあわせ (shiawase) is native. JMdict's other spelling shows shi, from suru, "to do", and awase, "fitting together"; it is usually explained as first meaning how things fell out, good or bad. It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for plentiful, then the Japanese for happy.
 
 You'll want to know: ねむたい.
 ねむたい — nemutai — "drowsy".
+
+The word, taken apart.
+ねむたい (nemutai) is native, built on the same root as nemui, "sleepy", and nemuru, "to sleep" (JMdict). It is inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for happy, then the Japanese for drowsy.
 You'll want to know: あんしん.
 あんしん — anshin — "relieved".
 
+The word, taken apart.
+あんしん (anshin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are an, "peaceful" (Middle Chinese 'an) and shin, "heart, mind" (sim) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for drowsy, then the Japanese for relieved.
 You'll want to know: ふつう.
 ふつう — futsuu — "ordinary".
 
+The word, taken apart.
+ふつう (futsuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fu, "universal, general" (Middle Chinese phuX) and tsū, "pass through; common" (thuwng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for relieved, then the Japanese for ordinar
 
 You'll want to know: うまい.
 うまい — umai — "tasty; skilful".
+
+The word, taken apart.
+うまい (umai) is a native word, inherited rather than borrowed, usually written in kana; JMdict gives one kanji spelling for "skilful" and another for "tasty", both chosen for their meaning. Its older origin is not settled.
 
 What you've built.
 One more word for this chapter.

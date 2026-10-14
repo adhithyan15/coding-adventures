@@ -14,7 +14,8 @@ romanization: "mikan"
 concept_tag: JA-FOOD33-MIKAN
 prerequisites: [JA-C32-kudamono, JA-C33-ringo]
 sounds: []
-roots: []
+roots: [middle-chinese-mjit, middle-chinese-kam]
+etymology_hook: "mikan: Sino-Japanese 蜜 'honey' + 柑 'citrus', mitsu shortened to mi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C33-ringo]
 <!-- hl-knowledge: introduces=[JA-LEX-C33-FOOD33-02]; assesses=[] -->
 
 **みかん** — *mikan* — "a mandarin orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**みかん** (*mikan*) is Sino-Japanese: two characters borrowed from Chinese, *mitsu*, "honey" (Middle Chinese *mjit*), and *kan*, "tangerine, citrus" (Middle Chinese *kam*), with *mitsu* shortened to *mi* (JMdict; Unihan).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

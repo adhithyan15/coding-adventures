@@ -18,6 +18,9 @@ You'll want to know: びょういん.
 Four beats: byo–o–i–n. The first sign is ひ with the voicing mark, so hi becomes bi, and a small ょ joins it into one beat, byo. The rest, う, い and ん, you already write. The next lesson writes the first sign.
 Keep the ょ small. With a full-size よ the word would be biyōin, a hair salon.
 
+The word, taken apart.
+びょういん (byōin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are byō, "illness" (Middle Chinese bjaengH) and in, "courtyard; institution" (hjwenH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: byōin]
@@ -89,6 +92,9 @@ You'll want to know: どようび.
 どようび — doyōbi — "Saturday".
 The new sign is spent at once. ど, よ and う, then び: four beats, do–yo–o–bi. The う stretches the o, as it does in きのう. The last part, yōbi, means a day of the week, and the name of every day ends in it. You write every sign in it now.
 
+The word, taken apart.
+どようび (doyōbi) mixes the two layers: do, "earth" (Middle Chinese thuX), and yō, one of the seven "planets" of old astronomy, sun and moon among them, that name the days (Middle Chinese yewH), both borrowed from Chinese, with native hi, "day", voiced to bi (JMdict; Unihan).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: doyōbi]
@@ -121,6 +127,9 @@ You'll want to know: いりぐち.
 いりぐち — iriguchi — "an entrance, the way in". You see it on signs at stations and shops.
 Four beats: i–ri–gu–chi. い, り and ち you already write. The third sign is く with the voicing mark, so ku becomes gu. The next lesson writes it.
 The guchi is kuchi, "a mouth", voiced where it joins the word in front of it: an entrance is the mouth you go in by.
+
+The word, taken apart.
+いりぐち (iriguchi) is a native compound, inherited rather than borrowed: iri, "entering", from iru, "to enter", and kuchi, "mouth", voiced to guchi (JMdict, KANJIDIC2).
 
 Guided Practice.
 [pause 1 second]
@@ -191,6 +200,9 @@ You'll want to know: でぐち.
 でぐち — deguchi — "an exit, the way out".
 The new sign is spent at once, beside one from the last chapter: で, then ぐ and ち, three beats, de–gu–chi. The guchi is the same voiced "mouth" as in いりぐち (iriguchi). On a sign, the two words face each other: the way in, and the way out. You write every sign in both now.
 
+The word, taken apart.
+でぐち (deguchi) is a native compound, inherited rather than borrowed: de, "going out", from deru, "to go out", and kuchi, "mouth", voiced to guchi (JMdict, KANJIDIC2).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: deguchi]
@@ -222,6 +234,9 @@ Four recalls before the new word.
 You'll want to know: げつようび.
 げつようび — getsuyōbi — "Monday".
 Five beats: ge–tsu–yo–o–bi. It ends in yōbi, the day of the week, as どようび (doyōbi) does, and you write every sign from つ on. The first sign is け with the voicing mark, so ke becomes ge. The next lesson writes it.
+
+The word, taken apart.
+げつようび (getsuyōbi) mixes the two layers: getsu, "moon" (Middle Chinese ngjwot), and yō, one of the seven "planets" of old astronomy, sun and moon among them, that name the days (Middle Chinese yewH), both borrowed from Chinese, with native hi, "day", voiced to bi (JMdict; Unihan).
 
 Guided Practice.
 [pause 1 second]
@@ -292,6 +307,9 @@ You'll want to know: げんき.
 げんき — genki — "well, healthy; in good spirits".
 The new sign is spent at once. げ, ん and き: three beats, ge–n–ki. Asking after someone, you will hear o-genki desu ka?, "are you well?", and the answer genki desu, "I am well". You write every sign in it now.
 
+The word, taken apart.
+げんき (genki) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gen, "first, origin" (Middle Chinese ngjwon) and ki, "air, spirit" (khj+jH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: genki]
@@ -323,6 +341,9 @@ Four recalls before the new word.
 You'll want to know: ぎんこう.
 ぎんこう — ginkō — "a bank", where money is kept.
 Four beats: gi–n–ko–o. ん, こ and う you already write, and the う stretches the o. The first sign is き with the voicing mark, so ki becomes gi. The next lesson writes it.
+
+The word, taken apart.
+ぎんこう (ginkō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gin, "silver" (Middle Chinese ngin) and kō, in its sense "a row, a line; a trading firm" (hang) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 [pause 1 second]

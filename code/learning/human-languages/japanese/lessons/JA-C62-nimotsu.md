@@ -14,7 +14,8 @@ romanization: "nimotsu"
 concept_tag: JA-WORLD62-NIMOTSU
 prerequisites: [JA-C61-himo, JA-C61-tsuna]
 sounds: []
-roots: []
+roots: [japanese-ni-load, middle-chinese-mjut]
+etymology_hook: "nimotsu: native ni 'load' + Sino-Japanese motsu 物 'thing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C61-tsuna]
 <!-- hl-knowledge: introduces=[JA-LEX-C62-WORLD62-01]; assesses=[] -->
 
 **にもつ** — *nimotsu* — "luggage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**にもつ** (*nimotsu*) mixes the two layers: native *ni*, "a load", read as a kun'yomi, and *motsu*, "thing", the on'yomi of its second character, borrowed from Chinese (Middle Chinese *mjut*; JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

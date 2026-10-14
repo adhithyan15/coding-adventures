@@ -14,7 +14,8 @@ romanization: "haiiro"
 concept_tag: JA-QUAL121-HAIIRO
 prerequisites: [JA-C121-shikakui, JA-C121-momoiro]
 sounds: []
-roots: []
+roots: [japanese-hai-ash, japanese-iro]
+etymology_hook: "haiiro: native hai 'ash' + iro 'colour' (灰色)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C121-momoiro]
 <!-- hl-knowledge: introduces=[JA-LEX-C121-QUAL121-03]; assesses=[] -->
 
 **はいいろ** — *haiiro* — "grey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はいいろ** (*haiiro*) is a native compound, inherited rather than borrowed: *hai*, "ash", and *iro*, "colour" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "maku"
 concept_tag: JA-VERB-MAKU
 prerequisites: [JA-C85-utsu, JA-C85-suu]
 sounds: []
-roots: []
+roots: [japanese-maku-wind, japanese-maku-sow]
+etymology_hook: "maku: two native verbs, 'to wind' (巻く) and 'to sow' (蒔く), with their own kanji"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C85-suu]
 <!-- hl-knowledge: introduces=[JA-LEX-C85-ACT85-03]; assesses=[] -->
 
 **まく** — *maku* — "to sow; to wind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まく** (*maku*) is two native verbs that sound alike: *maku*, "to wind", and *maku*, "to sow", each with its own kanji (JMdict). Both are inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

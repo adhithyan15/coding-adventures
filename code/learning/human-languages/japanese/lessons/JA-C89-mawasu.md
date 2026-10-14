@@ -14,7 +14,8 @@ romanization: "mawasu"
 concept_tag: JA-VERB-MAWASU
 prerequisites: [JA-C89-kowasu, JA-C89-wakasu]
 sounds: []
-roots: []
+roots: [japanese-mawasu]
+etymology_hook: "mawasu: native Japanese, inherited, not borrowed; kanji 回す attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C89-wakasu]
 <!-- hl-knowledge: introduces=[JA-LEX-C89-ACT89-03]; assesses=[] -->
 
 **まわす** — *mawasu* — "to turn round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まわす** (*mawasu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

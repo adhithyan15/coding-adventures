@@ -14,7 +14,8 @@ romanization: "kamoshika"
 concept_tag: JA-THINGS117-KAMOSHIKA
 prerequisites: [JA-C117-nomi, JA-C117-koumori]
 sounds: []
-roots: []
+roots: [japanese-shika]
+etymology_hook: "kamoshika: native, ending in shika 'deer'; written 氈鹿; first part not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C117-koumori]
 <!-- hl-knowledge: introduces=[JA-LEX-C117-THINGS117-04]; assesses=[] -->
 
 **かもしか** — *kamoshika* — "a Japanese serow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かもしか** (*kamoshika*) is native and ends in *shika*, "deer". JMdict writes it with characters for "felt" and "deer", read as a whole. Where the first part comes from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "uketsuke"
 concept_tag: JA-READ142-UKETSUKE
 prerequisites: [JA-C142-kinen, JA-C141-rainen, JA-C138-kaerimasu, JA-C133-eki]
 sounds: []
-roots: []
+roots: [japanese-ukeru, japanese-tsukeru]
+etymology_hook: "uketsuke: native uke 'receiving' (ukeru) + tsuke 'noting' (tsukeru)"
 duration:
   max_seconds: 200
 requires:
@@ -56,6 +57,11 @@ not reached yet; the reading is the same.
 
 **かく**, *kaku*, "to write", becomes **かいて** before **ください**.
 The notice tells you what to do: go to the desk, and write your name.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**うけつけ** (*uketsuke*) is a native compound, inherited rather than borrowed: *uke*, "receiving", from *ukeru*, and *tsuke*, "attaching, noting", from *tsukeru* (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C142-UKETSUKE, JA-LEX-C142-KINEN] -->

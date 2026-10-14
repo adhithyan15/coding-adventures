@@ -14,7 +14,8 @@ romanization: "itadaku"
 concept_tag: JA-VERB-ITADAKU
 prerequisites: [JA-C90-odoroku, JA-C90-todoku]
 sounds: []
-roots: []
+roots: [japanese-itadaku]
+etymology_hook: "itadaku: native Japanese, inherited, not borrowed; usually kana, kanji 頂く as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C90-todoku]
 <!-- hl-knowledge: introduces=[JA-LEX-C90-ACT90-03]; assesses=[] -->
 
 **いただく** — *itadaku* — "to receive (politely)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いただく** (*itadaku*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2). JMdict marks wearing or carrying something on top of the head as its original sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

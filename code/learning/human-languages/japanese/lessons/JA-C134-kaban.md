@@ -14,8 +14,8 @@ romanization: "kaban"
 concept_tag: JA-ANCHOR-KABAN
 prerequisites: [JA-C134-densha, JA-W03-ka, JA-W01-n, JA-W133-he, JA-W132-re, JA-C122-fukai]
 sounds: [mora]
-roots: []
-etymology_hook: Kaban is the bag you carry to school or to work; its middle sign is は with the voicing mark, a sign the book has not yet written.
+roots: [japanese-kaban]
+etymology_hook: "kaban: origin not settled; sometimes called a loanword, but JMdict names no source language"
 duration:
   max_seconds: 200
 requires:
@@ -53,6 +53,11 @@ handbag.
 Three beats: *ka–ba–n*. **か** and **ん** you already write. The middle sign
 is **は** with the voicing mark, and on an *h* sign the mark makes a *b*:
 *ha* becomes *ba*. The next lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かばん** (*kaban*) has an origin that is not settled: it is sometimes said to be a loanword, but no account is proven, and JMdict names no source language. JMdict marks it as usually written in kana.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KABAN, JA-SCRIPT-KA-01, JA-SCRIPT-N-01] -->

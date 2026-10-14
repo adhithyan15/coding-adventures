@@ -14,7 +14,8 @@ romanization: "semai"
 concept_tag: JA-ADJ50-SEMAI
 prerequisites: [JA-C50-nigai, JA-C50-hiroi]
 sounds: []
-roots: []
+roots: [japanese-semai]
+etymology_hook: "semai: native Japanese, inherited, not borrowed; kanji 狭い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C50-hiroi]
 <!-- hl-knowledge: introduces=[JA-LEX-C50-ADJ50-04]; assesses=[] -->
 
 **せまい** — *semai* — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**せまい** (*semai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "temae"
 concept_tag: JA-LOC79-TEMAE
 prerequisites: [JA-C78-mannaka, JA-C79-mukou]
 sounds: []
-roots: []
+roots: [japanese-te-hand, japanese-mae]
+etymology_hook: "temae: native compound of te 'hand' + mae 'front' (手前)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C79-mukou]
 <!-- hl-knowledge: introduces=[JA-LEX-C79-LOC79-02]; assesses=[] -->
 
 **てまえ** — *temae* — "this side of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**てまえ** (*temae*) is a native compound, inherited rather than borrowed: *te*, "hand", and *mae*, "front": what is in front of your hand (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

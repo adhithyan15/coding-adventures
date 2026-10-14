@@ -14,7 +14,8 @@ romanization: "chikaku"
 concept_tag: JA-LOC78-CHIKAKU
 prerequisites: [JA-C77-muika, JA-C78-doko]
 sounds: []
-roots: []
+roots: [japanese-chikai]
+etymology_hook: "chikaku: native, the -ku form of chikai 'near'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C78-doko]
 <!-- hl-knowledge: introduces=[JA-LEX-C78-LOC78-02]; assesses=[] -->
 
 **ちかく** — *chikaku* — "nearby".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ちかく** (*chikaku*) is native: the adverb and noun form of *chikai*, "near" (JMdict). It is inherited rather than borrowed; its kanji is a kun'yomi attached later.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

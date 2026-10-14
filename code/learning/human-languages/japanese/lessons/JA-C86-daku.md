@@ -14,7 +14,8 @@ romanization: "daku"
 concept_tag: JA-VERB-DAKU
 prerequisites: [JA-C86-saku, JA-C86-toku]
 sounds: []
-roots: []
+roots: [japanese-daku]
+etymology_hook: "daku: native Japanese, inherited, not borrowed; kanji 抱く attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C86-toku]
 <!-- hl-knowledge: introduces=[JA-LEX-C86-ACT86-03]; assesses=[] -->
 
 **だく** — *daku* — "to hold in one's arms".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**だく** (*daku*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

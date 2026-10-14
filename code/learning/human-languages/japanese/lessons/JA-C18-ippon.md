@@ -11,8 +11,8 @@ gloss: one long thin thing — and the four numbers that bend the counter furthe
 concept_tag: JA-COUNTER-SOUND-CHANGE
 prerequisites: [JA-W18-handakuten, JA-C11-kuchi, JA-C12-kami, JA-W11-small-tsu]
 sounds: [mora]
-roots: []
-etymology_hook: Wikipedia records the sound changes on this counter, and every one this book can spell is built from marks the reader now holds.
+roots: [middle-chinese-jit, middle-chinese-pwonx]
+etymology_hook: "ippon: Sino-Japanese ichi 一 'one' + hon 本, joined as ip-pon"
 duration:
   max_seconds: 215
 requires:
@@ -71,6 +71,11 @@ else is plain. The counter is not being irregular — it is being pushed by the
 sound in front of it.
 
 **かみ いっぽん** — one hair.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いっぽん** (*ippon*) is Sino-Japanese: *ichi*, "one" (Middle Chinese *'jit*), and *hon* (Middle Chinese *pwonX*), both borrowed from Chinese; *ichi* loses its last beat and *h* becomes *p* where they meet.
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-GRAMMAR-COUNTER-SOUND-CHANGE-01, JA-LEX-KAMI-HAIR, JA-LEX-HON] -->

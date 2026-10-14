@@ -14,7 +14,8 @@ romanization: "ita"
 concept_tag: JA-THINGS100-ITA
 prerequisites: [JA-C100-gomi, JA-C100-bou]
 sounds: []
-roots: []
+roots: [japanese-ita-board]
+etymology_hook: "ita: native Japanese, inherited, not borrowed; kanji 板 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C100-bou]
 <!-- hl-knowledge: introduces=[JA-LEX-C100-THINGS100-03]; assesses=[] -->
 
 **いた** — *ita* — "a board".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いた** (*ita*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

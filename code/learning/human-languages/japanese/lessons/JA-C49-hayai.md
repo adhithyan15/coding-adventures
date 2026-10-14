@@ -14,7 +14,8 @@ romanization: "hayai"
 concept_tag: JA-ADJ49-HAYAI
 prerequisites: [JA-C49-hikui, JA-C49-yasui]
 sounds: []
-roots: []
+roots: [japanese-hayai]
+etymology_hook: "hayai: native Japanese, inherited, not borrowed; kanji 早い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C49-yasui]
 <!-- hl-knowledge: introduces=[JA-LEX-C49-ADJ49-04]; assesses=[] -->
 
 **はやい** — *hayai* — "fast; early".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はやい** (*hayai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

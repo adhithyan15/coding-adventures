@@ -12,6 +12,9 @@ Before the new one: say the Japanese for this kind of, then the Japanese for tha
 You'll want to know: どんな.
 どんな — donna — "what kind of".
 
+The word, taken apart.
+どんな (donna) is native, built on do-, the root of "which"; it is usually explained as a shortening of dono yō na, "of which kind". It is inherited rather than borrowed and has no kanji (JMdict).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for that kind of, then the Japanese for wha
 
 You'll want to know: ほか.
 ほか — hoka — "other, another".
+
+The word, taken apart.
+ほか (hoka) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for what kind of, then the Japanese for oth
 You'll want to know: みんな.
 みんな — minna — "everybody".
 
+The word, taken apart.
+みんな (minna) is native: a spoken form of mina, "all", with a nasal beat added; both are written with the same character (JMdict). It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for other, then the Japanese for everybody.
 You'll want to know: こういう.
 こういう — kouiu — "this sort of".
 
+The word, taken apart.
+こういう (kouiu) (kōiu) is native: kō, "like this", built on ko-, with iu, "to say", so "that one would call like this" (JMdict). It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for everybody, then the Japanese for this s
 
 You'll want to know: ああいう.
 ああいう — aaiu — "that sort of".
+
+The word, taken apart.
+ああいう (aaiu) (āiu) is native: ā, "like that", built on a-, with iu, "to say" (JMdict). It is inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.

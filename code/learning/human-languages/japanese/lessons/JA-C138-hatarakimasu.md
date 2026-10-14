@@ -14,7 +14,8 @@ romanization: "hatarakimasu"
 concept_tag: JA-VERB-HATARAKU
 prerequisites: [JA-C138-okimasu, JA-C137-tenpura, JA-C136-kazoeru, JA-C130-aimai]
 sounds: []
-roots: []
+roots: [japanese-hataraku, japanese-masu-polite]
+etymology_hook: "hatarakimasu: native hataraku 'work' + polite -masu; the kanji 働 was made in Japan"
 duration:
   max_seconds: 200
 requires:
@@ -56,6 +57,11 @@ becomes *hatarak-i-masu*. So **く** turns into **き**.
 
 > **ぎんこうで はたらきます。** — *ginkō de hatarakimasu* — "I work at a
 > bank." The particle **で** marks the place where something is done.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はたらきます** (*hatarakimasu*) is native *hataraku*, "to work", with the polite ending *-masu*. The verb is inherited rather than borrowed (JMdict); its kanji, "person" beside "move", was made in Japan (KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C138-HATARAKIMASU, JA-LEX-C138-OKIMASU] -->

@@ -14,7 +14,8 @@ romanization: "kakato"
 concept_tag: JA-THINGS110-KAKATO
 prerequisites: [JA-C110-katatsumuri, JA-C110-shippo]
 sounds: []
-roots: []
+roots: [japanese-kakato]
+etymology_hook: "kakato: native Japanese, inherited, not borrowed; usually kana, kanji 踵 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C110-shippo]
 <!-- hl-knowledge: introduces=[JA-LEX-C110-THINGS110-04]; assesses=[] -->
 
 **かかと** — *kakato* — "a heel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かかと** (*kakato*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
