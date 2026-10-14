@@ -11,8 +11,8 @@ gloss: one to five — meeting the panj of Punjabi as an actual number
 concept_tag: PA-NUMBERS-1-5
 prerequisites: [PA-C01-sat-sri-akal, PA-C05-main-punjabi-bolda-han, PA-S04-phappha-gagga, PA-S05-babba-lalla-hora, PA-S06-kakka-aira-aara]
 sounds: [sihari-i, tippi-nasal, kanna-aa]
-roots: [sanskrit-panca, persian-panj]
-etymology_hook: "Chapter 5 introduced panj inside panjabi; learn it as the ordinary number five here, then trace Punjabi and Persian panj as convergence in the next short lesson"
+roots: [sanskrit-panca, persian-panj, sanskrit-eka, sanskrit-dvi, sanskrit-tri, sanskrit-catvarah]
+etymology_hook: "ikk ← *ekka, do ← dva, tinn ← trīṇi, chār ← catvāraḥ, panj ← pañca: all inherited (CDIAL 2462, 6648, 5994, 4655, 7655)"
 duration:
   max_seconds: 240
 requires:
@@ -53,6 +53,11 @@ you just didn't know it was a number.
 
 This is **Gurmukhi**, not Devanagari — a related but distinct script. It does
 have a top line like Devanagari's, so words hang from a bar in the same way.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+All five are inherited from Sanskrit. *ikk* comes from *\*ekka*, which replaced *eka*, "one" (CDIAL 2462); *do* from *dva*, "two" (CDIAL 6648); *tinn* from *trīṇi*, "three" (CDIAL 5994); *chār* from *catvāraḥ*, "four" (CDIAL 4655); and *panj* from *pañca*, "five" (CDIAL 7655).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE] -->

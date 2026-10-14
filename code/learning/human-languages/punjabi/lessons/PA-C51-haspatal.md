@@ -14,7 +14,8 @@ romanization: "haspatāl"
 concept_tag: PA-BODY51-HASPATAL
 prerequisites: [PA-C51-goda, PA-C51-bukhar]
 sounds: []
-roots: []
+roots: [english-hospital]
+etymology_hook: "haspatāl ← English hospital"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C51-bukhar]
 <!-- hl-knowledge: introduces=[PA-LEX-C51-BODY51-04]; assesses=[] -->
 
 **ਹਸਪਤਾਲ** — *haspatāl* — "a hospital".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹਸਪਤਾਲ** (*haspatāl*) is a loan from English *hospital*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

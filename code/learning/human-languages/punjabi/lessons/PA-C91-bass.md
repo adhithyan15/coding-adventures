@@ -14,7 +14,8 @@ romanization: "bass"
 concept_tag: PA-TOWN91-BASS
 prerequisites: [PA-C90-sateshan, PA-C90-gaddi]
 sounds: []
-roots: []
+roots: [english-bus]
+etymology_hook: "bass ← English bus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C90-gaddi]
 <!-- hl-knowledge: introduces=[PA-LEX-C91-TOWN91-01]; assesses=[] -->
 
 **ਬੱਸ** — *bass* — "a bus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬੱਸ** (*bass*) is a loan from English *bus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

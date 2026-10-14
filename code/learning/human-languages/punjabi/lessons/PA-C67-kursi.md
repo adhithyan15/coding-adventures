@@ -14,7 +14,8 @@ romanization: "kursī"
 concept_tag: PA-FOOD67-KURSI
 prerequisites: [PA-C67-ghar, PA-C67-khirki]
 sounds: []
-roots: []
+roots: [arabic-kursi]
+etymology_hook: "kursī ← Arabic kursī 'chair, throne', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C67-khirki]
 <!-- hl-knowledge: introduces=[PA-LEX-C67-FOOD67-05]; assesses=[] -->
 
 **ਕੁਰਸੀ** — *kursī* — "a chair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੁਰਸੀ** (*kursī*) is a loan from Arabic *kursī*, "chair, throne", which reached Punjabi through Persian. Its Arabic root is *k-r-s* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

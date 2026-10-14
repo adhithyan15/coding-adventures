@@ -14,7 +14,8 @@ romanization: "pakāuṇā"
 concept_tag: PA-VERB-PAKAUNA
 prerequisites: [PA-C58-rakkhna, PA-C58-kholhna]
 sounds: []
-roots: []
+roots: [sanskrit-pakva]
+etymology_hook: "pakāuṇā: the causing form of pakkṇā 'to ripen', listed under Sanskrit pakva 'cooked, ripe' (CDIAL 7621)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C58-kholhna]
 <!-- hl-knowledge: introduces=[PA-LEX-C58-VERBS58-05]; assesses=[] -->
 
 **ਪਕਾਉਣਾ** — *pakāuṇā* — "to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਕਾਉਣਾ** (*pakāuṇā*) is the causing form of *pakkṇā*, "to ripen". CDIAL lists both under Sanskrit *pakva*, "cooked, ripe" (CDIAL 7621).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

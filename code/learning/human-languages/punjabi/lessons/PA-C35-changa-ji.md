@@ -12,9 +12,9 @@ concept_tag: FAREWELL-CASUAL
 prerequisites: [PA-W09-dulavan]
 sounds: [tippi-nasal, kanna-aa, bihari-ii]
 roots: [middle-indo-aryan-canga, sanskrit-jiva]
-etymology_hook: ਚੰਗਾ ਜੀ introduces no new word at all — it is ਚੰਗਾ, "good", with ਜੀ, the respect particle, and it works as a parting the way English "right then" or "all right" can end a conversation without naming the parting. Punjabi's formal farewells, phir milāṁge and rabb rākhā, both promise something; this one closes the exchange by agreeing with it.
+etymology_hook: "changā ← Sanskrit caṅga 'of good understanding' (CDIAL 4564), with jī, the respect particle"
 duration:
-  max_seconds: 270
+  max_seconds: 275
 requires:
   knowledge: [PA-LEX-CHANGA, PA-LEX-JI, PA-LEX-MAINU, PA-SCRIPT-CHANGA-01, PA-SCRIPT-JA-01, PA-ETYMON-CHANGA-UNSETTLED, PA-SCRIPT-INDEPENDENT-AA-01, PA-SCRIPT-DULAINKAR-01, PA-SCRIPT-SIHARI-01, PA-SCRIPT-NA-01, PA-SCRIPT-TIPPI-WRITING-01, PA-LEX-JI-AAIAN-NU, PA-SCRIPT-SALAAM-01, PA-SCRIPT-THIK-THAK-01]
 introduces:
@@ -68,6 +68,8 @@ phone call, and why it is the parting a learner will hear most.
 
 English does the same with *all right then* and *right you are*. A word for
 agreement, spoken at the end, becomes a way out.
+
+CDIAL lists *caṅgā* under Sanskrit *caṅga*, "of good understanding" (CDIAL 4564).
 
 ## Writing: assemble ਜੀ ਆਇਆਂ ਨੂੰ
 <!-- hl-knowledge: introduces=[PA-SCRIPT-JI-AAIAN-NU-01]; assesses=[PA-SCRIPT-INDEPENDENT-AA-01, PA-SCRIPT-DULAINKAR-01, PA-SCRIPT-SIHARI-01, PA-SCRIPT-NA-01, PA-SCRIPT-TIPPI-WRITING-01, PA-LEX-JI-AAIAN-NU, PA-SCRIPT-SALAAM-01, PA-SCRIPT-THIK-THAK-01] -->

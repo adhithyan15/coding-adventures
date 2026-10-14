@@ -14,7 +14,8 @@ romanization: "kaccā"
 concept_tag: PA-QUAL146-KACCA
 prerequisites: [PA-C146-beha, PA-C146-pakka]
 sounds: []
-roots: []
+roots: [indo-aryan-kacca]
+etymology_hook: "kaccā ← *kacca 'raw, unripe', a reconstructed form; a tadbhava (CDIAL 2613)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C146-pakka]
 <!-- hl-knowledge: introduces=[PA-LEX-C146-QUAL146-03]; assesses=[] -->
 
 **ਕੱਚਾ** — *kaccā* — "raw, unripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੱਚਾ** (*kaccā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kacca*, "raw, unripe", a form CDIAL reconstructs from its descendants (CDIAL 2613). CDIAL says Hindi and Marathi *kaccā* were taken from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

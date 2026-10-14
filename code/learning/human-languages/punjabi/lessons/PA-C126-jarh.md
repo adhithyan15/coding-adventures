@@ -14,7 +14,8 @@ romanization: "jaṛh"
 concept_tag: PA-THINGS126-JARH
 prerequisites: [PA-C126-ghah, PA-C126-bij]
 sounds: []
-roots: []
+roots: [sanskrit-jata]
+etymology_hook: "jaṛh ← Sanskrit jaṭā 'hair twisted together; fibrous root', perhaps Dravidian or Munda (CDIAL 5086)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C126-bij]
 <!-- hl-knowledge: introduces=[PA-LEX-C126-THINGS126-03]; assesses=[] -->
 
 **ਜੜ੍ਹ** — *jaṛh* — "a root".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜੜ੍ਹ** (*jaṛh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jaṭā*, "hair twisted together; fibrous root" (CDIAL 5086). CDIAL reports views that the Sanskrit word is from Dravidian, or ultimately from Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bahādar"
 concept_tag: PA-QUAL145-BAHADAR
 prerequisites: [PA-C144-hushiar, PA-C144-alsi]
 sounds: []
-roots: []
+roots: [persian-bahadur]
+etymology_hook: "bahādar: usually traced to Persian bahādur 'brave, a hero'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C144-alsi]
 <!-- hl-knowledge: introduces=[PA-LEX-C145-QUAL145-01]; assesses=[] -->
 
 **ਬਹਾਦਰ** — *bahādar* — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬਹਾਦਰ** (*bahādar*) is a loan, usually traced to Persian *bahādur*, "brave, a hero". Persian itself took the word from a Turkic or Mongol word for "hero".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

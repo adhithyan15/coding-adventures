@@ -14,7 +14,8 @@ romanization: "pair"
 concept_tag: PA-BODY49-PAIR
 prerequisites: [PA-C44-chautha, PA-C49-hatth]
 sounds: []
-roots: []
+roots: [indo-aryan-padara]
+etymology_hook: "pair ← *padara 'foot', a reconstructed form; a tadbhava (CDIAL 7756)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C49-hatth]
 <!-- hl-knowledge: introduces=[PA-LEX-C49-BODY49-02]; assesses=[] -->
 
 **ਪੈਰ** — *pair* — "a foot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੈਰ** (*pair*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*padara*, "foot", a form CDIAL reconstructs from its descendants (CDIAL 7756). CDIAL builds it on Sanskrit *pada*, "foot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

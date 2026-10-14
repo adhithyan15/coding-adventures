@@ -14,7 +14,8 @@ romanization: "harek"
 concept_tag: PA-DEF106-HAREK
 prerequisites: [PA-C106-kite, PA-C106-kade]
 sounds: []
-roots: []
+roots: [persian-har, sanskrit-eka]
+etymology_hook: "harek: har 'every', usually traced to Persian har, + ek 'one', inherited from Sanskrit eka (CDIAL 2462)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C106-kade]
 <!-- hl-knowledge: introduces=[PA-LEX-C106-DEF106-03]; assesses=[] -->
 
 **ਹਰੇਕ** — *harek* — "each".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹਰੇਕ** (*harek*) joins words from two sources: *har*, "every", usually traced to Persian *har*, and *ek*, "one", from Sanskrit *eka* (CDIAL 2462).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

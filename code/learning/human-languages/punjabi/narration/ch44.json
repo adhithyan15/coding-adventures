@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Which One in the Line",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:01e3c5f6e672161a",
+  "sourceHash": "fnv1a64:da2ed0a45e8f5393",
   "lessons": [
     {
       "id": "PA-C44-duja",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:34bf84877149dcbc",
+      "sourceHash": "fnv1a64:87f843fdbe725ad4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -96,6 +96,10 @@
             {
               "kind": "speech",
               "text": "Say ਦੋ (do), then ਦੂਜਾ (dūjā). The number has not gone anywhere: the ਦ is still at the front and the vowel has only lengthened."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists it under dutīya, beside Sanskrit dvitīya, \"second\" (CDIAL 6402)."
             }
           ]
         },

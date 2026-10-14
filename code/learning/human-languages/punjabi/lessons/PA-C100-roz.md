@@ -14,7 +14,8 @@ romanization: "roz"
 concept_tag: PA-TIME100-ROZ
 prerequisites: [PA-C100-basant, PA-C100-patjhar]
 sounds: []
-roots: []
+roots: [persian-roz]
+etymology_hook: "roz: usually traced to Persian rōz 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C100-patjhar]
 <!-- hl-knowledge: introduces=[PA-LEX-C100-TIME100-04]; assesses=[] -->
 
 **ਰੋਜ਼** — *roz* — "every day, daily".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਰੋਜ਼** (*roz*) is a loan, usually traced to Persian *rōz*, "day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

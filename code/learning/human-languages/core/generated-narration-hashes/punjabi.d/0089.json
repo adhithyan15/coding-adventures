@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 89,
-  "sourceHash": "fnv1a64:13928078e676dda0",
+  "sourceHash": "fnv1a64:12d8e7685ade3c7b",
   "lessonIds": [
     "PA-C89-sahmane",
     "PA-C89-pichchhe",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch89.txt",
   "json": "punjabi/narration/ch89.json",
-  "textHash": "fnv1a64:933e216adea2b6c1",
-  "jsonHash": "fnv1a64:17788f9dda07b9b3",
+  "textHash": "fnv1a64:8163b75d253ed2e2",
+  "jsonHash": "fnv1a64:5fc96ca912b5d50a",
   "findings": []
 }

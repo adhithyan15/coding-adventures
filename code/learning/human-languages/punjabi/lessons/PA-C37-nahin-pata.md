@@ -12,7 +12,7 @@ concept_tag: PA-NEG-NOT-KNOWN
 prerequisites: [PA-C37-nahin-write, PA-C35-mainu]
 sounds: [dental-ta, kanna-aa]
 roots: []
-etymology_hook: ਪਤਾ is a noun, not a verb — it is the knowledge itself, so the sentence says "the knowing is not to me" rather than "I do not know".
+etymology_hook: "patā: its origin is not settled; CDIAL lists Punjabi patījṇā 'to trust' under pratyaya 'belief' (CDIAL 8640)"
 duration:
   max_seconds: 250
 requires:
@@ -56,6 +56,8 @@ Punjabi keeps these two admissions apart, and so should you:
 
 - **ਮੈਨੂੰ ਸਮਝ ਨਹੀਂ ਆਈ** — I did not **follow** you
 - **ਮੈਨੂੰ ਨਹੀਂ ਪਤਾ** — I do not **have the fact**
+
+Where *patā* comes from is not settled. CDIAL has no entry for it, though it lists Punjabi *patījṇā*, "to trust", under Sanskrit *pratyaya*, "belief" (CDIAL 8640).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-PATA-01, PA-NEG-NOT-UNDERSTOOD-01] -->

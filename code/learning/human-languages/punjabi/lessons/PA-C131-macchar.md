@@ -14,7 +14,8 @@ romanization: "macchar"
 concept_tag: PA-THINGS131-MACCHAR
 prerequisites: [PA-C131-kacchu, PA-C131-magarmacch]
 sounds: []
-roots: []
+roots: [sanskrit-matsara-mosquito]
+etymology_hook: "macchar ← Sanskrit matsara 'mosquito, fly', a tadbhava (CDIAL 9757)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C131-magarmacch]
 <!-- hl-knowledge: introduces=[PA-LEX-C131-THINGS131-05]; assesses=[] -->
 
 **ਮੱਛਰ** — *macchar* — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੱਛਰ** (*macchar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *matsara*, "mosquito, fly" (CDIAL 9757). CDIAL calls a Prakrit source for the Sanskrit word possible, though unsupported.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

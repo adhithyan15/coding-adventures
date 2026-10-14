@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 108,
-  "sourceHash": "fnv1a64:1bc051fe1fdb38cc",
+  "sourceHash": "fnv1a64:895d894dc1cac6d1",
   "lessonIds": [
     "PA-C108-inna",
     "PA-C108-unna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch108.txt",
   "json": "punjabi/narration/ch108.json",
-  "textHash": "fnv1a64:93a7831db8916a05",
-  "jsonHash": "fnv1a64:3029129f7789b759",
+  "textHash": "fnv1a64:3ea85dc996a9c878",
+  "jsonHash": "fnv1a64:36c208c8cd824a94",
   "findings": []
 }

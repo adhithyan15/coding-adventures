@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 56,
-  "sourceHash": "fnv1a64:5ef2da1d0bf8bc72",
+  "sourceHash": "fnv1a64:02ade87f510c4a55",
   "lessonIds": [
     "PA-C56-mahiman",
     "PA-C56-pina",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch56.txt",
   "json": "punjabi/narration/ch56.json",
-  "textHash": "fnv1a64:f042b90ad3681c84",
-  "jsonHash": "fnv1a64:7da7a7af2585c19e",
+  "textHash": "fnv1a64:723a0c659cc49abd",
+  "jsonHash": "fnv1a64:65996bb5c41fd206",
   "findings": []
 }

@@ -82,6 +82,7 @@ Three words you already own — "I," the language, the verb. Here they become yo
 The sentence, taken apart.
 ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ (maiṁ panjābī boldā hāṁ) = ਮੈਂ (maiṁ, "I") + ਪੰਜਾਬੀ (panjābī, the object) + ਬੋਲਦਾ (boldā, "speak," m.) + ਹਾਂ (hāṁ, "am") — literally "I Punjabi speaking am," with the verb-frame last, exactly as hai first showed you.
 ਬੋਲਦਾ (boldā) is the stem bol- plus -ਦਾ (-dā). Nothing new has been added to the verb but an ending.
+Its pieces come from two sources: maiṁ goes back to the Sanskrit first-person base ma- (CDIAL 9691) and bol- to a reconstructed bōll, "speak" (CDIAL 9321), while panjābī is built on Persian panj āb, "five waters".
 
 Grammar Lens: the present habitual, gendered.
 To say "I do X," Punjabi uses stem + -dā/-dī + the copula, and the participle agrees with the speaker's gender:
@@ -181,6 +182,7 @@ The letters in this word.
 
 The word, taken apart.
 ਕੰਮ (kamm) is the noun "work" — the thing done, from the same √kṛ family as karnā. Said on its own it means a job, a task, a piece of business: bahut kamm hai ("there is a lot of work").
+Both words are inherited: kamm from Sanskrit karman, "act, work" (CDIAL 2892), and karnā from karoti, "does" (CDIAL 2814).
 
 Grammar Lens: noun + ਕਰਨਾ.
 Like Hindi, Punjabi builds countless verbs as noun + ਕਰਨਾ (karnā):

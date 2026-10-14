@@ -14,7 +14,8 @@ romanization: "bhīṛā"
 concept_tag: PA-QUAL142-BHIRA
 prerequisites: [PA-C142-camkila, PA-C142-caura]
 sounds: []
-roots: []
+roots: [indo-aryan-bhit]
+etymology_hook: "bhīṛā: goes with bhīṛ 'crowd' and bhīṛnā 'to close', listed under *bhīṭ, beside *bhiṭ 'meet, throng' (CDIAL 9490)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C142-caura]
 <!-- hl-knowledge: introduces=[PA-LEX-C142-QUAL142-04]; assesses=[] -->
 
 **ਭੀੜਾ** — *bhīṛā* — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਭੀੜਾ** (*bhīṛā*) goes with *bhīṛ*, "crowd", and *bhīṛnā*, "to close", which CDIAL lists under *\*bhīṭ*, a variant of a reconstructed *\*bhiṭ*, "meet, throng" (CDIAL 9490). CDIAL does not list *bhīṛā* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [PA-C02-mera-naam-hai, PA-C01-shukriya]
 sounds: [pair-bindi-kh, pair-bindi-sh]
 roots: [khush-persian]
+etymology_hook: "khushī: Persian khush 'happy, pleasant' + -ī; hoī, from hoṇā ← Sanskrit bhavati 'becomes, is' (CDIAL 9416)"
 duration:
   max_seconds: 220
 requires:

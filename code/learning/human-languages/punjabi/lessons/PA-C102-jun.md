@@ -14,7 +14,8 @@ romanization: "jūn"
 concept_tag: PA-TIME102-JUN
 prerequisites: [PA-C101-aprail, PA-C102-mai]
 sounds: []
-roots: []
+roots: [english-june]
+etymology_hook: "jūn ← English June"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C102-mai]
 <!-- hl-knowledge: introduces=[PA-LEX-C102-TIME102-02]; assesses=[] -->
 
 **ਜੂਨ** — *jūn* — "June".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜੂਨ** (*jūn*) is a loan from English *June*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sāg"
 concept_tag: PA-THINGS124-SAG
 prerequisites: [PA-C124-amrud, PA-C124-mugphali]
 sounds: []
-roots: []
+roots: [sanskrit-shaka]
+etymology_hook: "sāg ← Sanskrit śāka 'potherb, vegetable', through Prakrit sāga; no Punjabi form in CDIAL (12370)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C124-mugphali]
 <!-- hl-knowledge: introduces=[PA-LEX-C124-THINGS124-03]; assesses=[] -->
 
 **ਸਾਗ** — *sāg* — "cooked greens, saag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਾਗ** (*sāg*) goes back to Sanskrit *śāka*, "potherb, vegetable". CDIAL lists the Prakrit form *sāga*, but no Punjabi one (CDIAL 12370).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

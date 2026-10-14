@@ -14,7 +14,8 @@ romanization: "gol"
 concept_tag: PA-QUAL141-GOL
 prerequisites: [PA-C141-siana, PA-C141-bhola]
 sounds: []
-roots: []
+roots: [sanskrit-gola]
+etymology_hook: "gol ← Sanskrit gola 'ball', a tadbhava (CDIAL 4321)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C141-bhola]
 <!-- hl-knowledge: introduces=[PA-LEX-C141-QUAL141-04]; assesses=[] -->
 
 **ਗੋਲ** — *gol* — "round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗੋਲ** (*gol*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gola*, "ball" (CDIAL 4321).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

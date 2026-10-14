@@ -12,6 +12,7 @@ concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [PA-C01-han-nahin, PA-C01-dhanvaad, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava]
 sounds: [double-ll, bindi-nasal]
 roots: [na-negative, gall-word]
+etymology_hook: "koī ← kaścid 'someone' (CDIAL 2967); gall ← *galhā, beside garhā 'blame' (CDIAL 4068); nahīṁ ← nahi"
 duration:
   max_seconds: 220
 requires:

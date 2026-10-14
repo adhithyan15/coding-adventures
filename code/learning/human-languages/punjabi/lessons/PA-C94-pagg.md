@@ -14,7 +14,8 @@ romanization: "pagg"
 concept_tag: PA-CLOTHES94-PAGG
 prerequisites: [PA-C93-mundri, PA-C93-ghari]
 sounds: []
-roots: []
+roots: [indo-aryan-pagga]
+etymology_hook: "pagg ← *paggā 'headdress', a reconstructed form; a tadbhava (CDIAL 7644)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C93-ghari]
 <!-- hl-knowledge: introduces=[PA-LEX-C94-CLOTHES94-01]; assesses=[] -->
 
 **ਪੱਗ** — *pagg* — "a turban".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੱਗ** (*pagg*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*paggā*, "headdress", a form CDIAL reconstructs from its descendants (CDIAL 7644). CDIAL doubts a link with Sanskrit *pragraha*, "rein, bridle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: WORD-IS
 prerequisites: [PA-C02-naam, PA-C02-mera]
 sounds: [dulavan-ai]
 roots: [sanskrit-asti]
+etymology_hook: "hai: usually traced to Sanskrit asti 'is', the same verb as English is"
 duration:
   max_seconds: 180
 requires:

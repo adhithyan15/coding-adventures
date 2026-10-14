@@ -14,7 +14,8 @@ romanization: "dand"
 concept_tag: PA-BODY49-DAND
 prerequisites: [PA-C49-pair, PA-C49-val]
 sounds: []
-roots: []
+roots: [danta-sanskrit]
+etymology_hook: "dand ← Sanskrit danta 'tooth', a tadbhava (CDIAL 6152)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C49-val]
 <!-- hl-knowledge: introduces=[PA-LEX-C49-BODY49-04]; assesses=[] -->
 
 **ਦੰਦ** — *dand* — "a tooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦੰਦ** (*dand*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *danta*, "tooth" (CDIAL 6152).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

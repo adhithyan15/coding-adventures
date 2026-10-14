@@ -112,6 +112,9 @@ Three atoms you now own, assembled into a first sentence.
 The exchange — assembled.
 ਮੇਰਾ (my) + ਨਾਂ (name) + your name + ਹੈ (is) = merā nāṁ … hai, "my name is…" Merā nāṁ Arun hai. becomes "My name is Arun."
 
+The phrase, taken apart.
+ਮੇਰਾ ਨਾਂ... ਹੈ (merā nāṁ... hai) is built from inherited words: merā, "my", which CDIAL lists under the Sanskrit first-person base ma- (CDIAL 9691); nāṁ, "name", from Sanskrit nāman (CDIAL 7067); and hai, "is", usually traced to Sanskrit asti, "is".
+
 Grammar Lens: the verb goes last.
 Punjabi is a subject–object–verb language — literally "my name Arun is." The hai sits at the end, where English puts "is" in the middle. Bank this shape: in Punjabi, the verb waits until the end of the sentence.
 
@@ -249,6 +252,9 @@ Turn the introduction around — ask, instead of tell.
 
 The exchange — assembled.
 ਤੁਹਾਡਾ (tuhāḍā, "your," the respectful possessive from tusī̃) + ਨਾਂ (nāṁ) (name) + ਕੀ (what) + ਹੈ (hai) (is) becomes literally "your name what is?" Punjabi keeps the verb last again, and simply drops the question-word kī into the object slot.
+
+The phrase, taken apart.
+Every word is inherited: tuhāḍā goes with tusīṁ, listed under Sanskrit yuṣmad- (CDIAL 10511); nāṁ is from nāman (CDIAL 7067), kī from kim (CDIAL 3164), and hai usually from asti.
 
 Grammar Lens: answering.
 Answer it with the sentence you built: Merā nāṁ Arun hai. The familiar version swaps tuhāḍā for ਤੇਰਾ (terā, "your," from tū̃): terā nāṁ kī hai?

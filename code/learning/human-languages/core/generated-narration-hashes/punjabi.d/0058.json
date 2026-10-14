@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 58,
-  "sourceHash": "fnv1a64:ef7de6df40242e20",
+  "sourceHash": "fnv1a64:75020d0e2bbbe7f2",
   "lessonIds": [
     "PA-C58-vechna",
     "PA-C58-dena",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch58.txt",
   "json": "punjabi/narration/ch58.json",
-  "textHash": "fnv1a64:3dcc7a19024ae581",
-  "jsonHash": "fnv1a64:627852c759f31076",
+  "textHash": "fnv1a64:9362d4f9a6a998cf",
+  "jsonHash": "fnv1a64:9ebaacd69ba0ab0a",
   "findings": []
 }

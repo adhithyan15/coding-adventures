@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "To count, To catch, To cut, To stop, To tell",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:119548560361d52e",
+  "sourceHash": "fnv1a64:30e4753564154346",
   "lessons": [
     {
       "id": "PA-C61-ginna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d43e8b1bf54cc34",
+      "sourceHash": "fnv1a64:9aa6581fb069c490",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗਿਣਨਾ (giṇnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gaṇayati, \"counts\" (CDIAL 3993)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ea2afb57ea7d696",
+      "sourceHash": "fnv1a64:ce76aaa3d59ecd01",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where ਫੜਨਾ (phaṛnā) comes from is not settled. CDIAL does not list it, though it gives the close Punjabi forms phakaṛṇā and pakaṛṇā, \"to seize\", under a reconstructed pakkaḍ, \"seize\" (CDIAL 7619)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a1a24b54fe74236",
+      "sourceHash": "fnv1a64:9a1a1149c305632b",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੱਟਣਾ (kaṭṭṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kartati, \"cuts\" (CDIAL 2854)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b574070bfd95b47",
+      "sourceHash": "fnv1a64:5f4b6ae61cb3868d",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰੋਕਣਾ (rokṇā) is a tadbhava, a word inherited and reshaped by sound change. It comes from rokk, \"stop\", a form CDIAL reconstructs from its descendants (CDIAL 10827). CDIAL leaves its link with the Sanskrit root rudh, \"obstruct\", unclear."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5d0d26a2c5e0376",
+      "sourceHash": "fnv1a64:f5612b87b5838291",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦੱਸਣਾ (dassṇā) is inherited. CDIAL lists the matching Lahnda dassaṇ, \"to show, tell\", and Punjabi dasāuṇā, \"makes show\", under Sanskrit darśayati, \"shows\" (CDIAL 6210)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

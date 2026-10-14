@@ -12,6 +12,7 @@ concept_tag: QUESTION-HOW
 prerequisites: [PA-C02-ki, PA-S02-mamma-rara-lava, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava]
 sounds: [sihari-i, laava-e, bindi-nasal]
 roots: [ka-interrogative]
+etymology_hook: "kivēṁ: on the old question stem ka-, like kī and kauṇ; CDIAL has no entry for kivēṁ itself"
 duration:
   max_seconds: 210
 requires:

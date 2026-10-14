@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 117,
-  "sourceHash": "fnv1a64:c198124e893ead1f",
+  "sourceHash": "fnv1a64:6a43395a95f65aec",
   "lessonIds": [
     "PA-C117-kura",
     "PA-C117-tokri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch117.txt",
   "json": "punjabi/narration/ch117.json",
-  "textHash": "fnv1a64:6d3c65feb844a50f",
-  "jsonHash": "fnv1a64:fcae2e2a3e3011cd",
+  "textHash": "fnv1a64:7c667a0e3ac53b29",
+  "jsonHash": "fnv1a64:bdb5b695066e29fb",
   "findings": []
 }

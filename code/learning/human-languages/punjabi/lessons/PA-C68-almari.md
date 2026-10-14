@@ -14,7 +14,8 @@ romanization: "almārī"
 concept_tag: PA-HOME68-ALMARI
 prerequisites: [PA-C68-kandh, PA-C68-chhatt]
 sounds: []
-roots: []
+roots: [portuguese-armario]
+etymology_hook: "almārī: usually traced to Portuguese armário 'cupboard'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C68-chhatt]
 <!-- hl-knowledge: introduces=[PA-LEX-C68-HOME68-04]; assesses=[] -->
 
 **ਅਲਮਾਰੀ** — *almārī* — "a cupboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਅਲਮਾਰੀ** (*almārī*) is a loan, usually traced to Portuguese *armário*, "cupboard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

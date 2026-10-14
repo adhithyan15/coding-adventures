@@ -14,7 +14,8 @@ romanization: "vīh"
 concept_tag: PA-NUMBERS96-VIH
 prerequisites: [PA-C95-giaram, PA-C96-baram]
 sounds: []
-roots: []
+roots: [sanskrit-vimshati]
+etymology_hook: "vīh ← Sanskrit viṁśati 'twenty', a tadbhava (CDIAL 11616)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C96-baram]
 <!-- hl-knowledge: introduces=[PA-LEX-C96-NUMBERS96-02]; assesses=[] -->
 
 **ਵੀਹ** — *vīh* — "twenty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਵੀਹ** (*vīh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *viṁśati*, "twenty" (CDIAL 11616).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

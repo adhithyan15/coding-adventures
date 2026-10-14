@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for new, then the Punjabi for old.
 You'll want to know: ਬੁਰਾ.
 ਬੁਰਾ — burā — "bad".
 
+The word, taken apart.
+ਬੁਰਾ (burā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bura, "defective", a form CDIAL reconstructs from its descendants (CDIAL 9289). CDIAL lists Punjabi burā, "wicked".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for old, then the Punjabi for bad.
 
 You'll want to know: ਲੰਮਾ.
 ਲੰਮਾ — lammā — "long, tall".
+
+The word, taken apart.
+ਲੰਮਾ (lammā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lamba, "pendent" (CDIAL 10951). The Sanskrit word already meant "long" in compounds.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for bad, then the Punjabi for long.
 You'll want to know: ਗਰਮ.
 ਗਰਮ — garam — "hot".
 
+The word, taken apart.
+ਗਰਮ (garam) is a loan, usually traced to Persian garm, "warm, hot". Punjabi breaks up the -rm with a vowel.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for long, then the Punjabi for hot.
 You'll want to know: ਹੌਲੀ.
 ਹੌਲੀ — haulī — "slowly".
 
+The word, taken apart.
+ਹੌਲੀ (haulī) goes with haulā, "light, gentle", which CDIAL lists under Sanskrit laghu, "light", with its sounds swapped (CDIAL 10896).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for hot, then the Punjabi for slowly.
 
 You'll want to know: ਤੇਜ਼.
 ਤੇਜ਼ — tez — "fast".
+
+The word, taken apart.
+ਤੇਜ਼ (tez) is a loan, usually traced to Persian tēz, "sharp, swift".
 
 What you've built.
 One more word for this chapter.

@@ -11,8 +11,8 @@ gloss: if ... then ... - both ends of the condition marked
 concept_tag: PA-JOIN-JE-TAN
 prerequisites: [PA-C41-je, PA-C37-nahin-vaak]
 sounds: [kanna-aa, bindi-nasal]
-roots: []
-etymology_hook: Punjabi marks both halves of a condition; English marks only the first.
+roots: [sanskrit-yadi, sanskrit-tatha]
+etymology_hook: "je ← yadi 'if' (CDIAL 10410); tāṁ: CDIAL lists Lahnda tāṁ 'so, then' under tathā 'so' (CDIAL 5646)"
 duration:
   max_seconds: 250
 requires:
@@ -57,6 +57,8 @@ you will hear.
 
 The result half is free to be negative, which is where this meets the chapter
 that opened this run.
+
+Both ends are old. *Je* comes from Sanskrit *yadi*, "if" (CDIAL 10410). For *tāṁ*, CDIAL gives no Punjabi form, but lists Lahnda *tāṁ*, "so, indeed, then", under Sanskrit *tathā*, "so, in that way" (CDIAL 5646).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-JOIN-JE-TAN-01, PA-NEG-CLAUSE-01] -->

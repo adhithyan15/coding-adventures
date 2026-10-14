@@ -14,7 +14,8 @@ romanization: "tūfān"
 concept_tag: PA-THINGS128-TUFAN
 prerequisites: [PA-C128-maruthal, PA-C128-bijli, PA-C05-main-punjabi-bolda-han]
 sounds: []
-roots: []
+roots: [arabic-tufan]
+etymology_hook: "tūfān ← Arabic ṭūfān 'a flood, a deluge', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [PA-C128-bijli]
 <!-- hl-knowledge: introduces=[PA-LEX-C128-THINGS128-03]; assesses=[] -->
 
 **ਤੂਫ਼ਾਨ** — *tūfān* — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤੂਫ਼ਾਨ** (*tūfān*) is a loan from Arabic *ṭūfān*, "a flood, a deluge", which reached Punjabi through Persian. Its Arabic root is *ṭ-w-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "desh"
 concept_tag: PA-WORLD98-DESH
 prerequisites: [PA-C98-sangit, PA-C98-rasta]
 sounds: []
-roots: []
+roots: [sanskrit-desha]
+etymology_hook: "desh ← Sanskrit deśa 'province, country', a tatsama (CDIAL 6547)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C98-rasta]
 <!-- hl-knowledge: introduces=[PA-LEX-C98-WORLD98-05]; assesses=[] -->
 
 **ਦੇਸ਼** — *desh* — "a country".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦੇਸ਼** (*desh*) is Sanskrit *deśa*, "province, country", taken over whole as a learned loan, a tatsama (CDIAL 6547). The inherited form, as in Hindi *des*, has a plain *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

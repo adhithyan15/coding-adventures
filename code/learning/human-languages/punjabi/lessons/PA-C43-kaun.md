@@ -11,8 +11,8 @@ gloss: who - the question this book named once, in Latin letters, and never taug
 concept_tag: PA-Q-KAUN
 prerequisites: [PA-C42-jo-oh, PA-C03-kivein]
 sounds: [dulankar-ai, retroflex-na]
-roots: []
-etymology_hook: ਕੌਣ was named once in a romanised mnemonic and never written in Gurmukhi, never given an atom, never practised.
+roots: [sanskrit-kah-punar]
+etymology_hook: "kauṇ ← Sanskrit kaḥ punar 'who, then?', a tadbhava (CDIAL 2575)"
 duration:
   max_seconds: 250
 requires:
@@ -59,6 +59,8 @@ existed and never handed it over.
 Now hold the two families side by side, because they answer each other:
 
 > **ਕ-** asks · **ਜ-** opens the clause that answers · **ਉ-** points at it
+
+*Kauṇ* is a tadbhava, inherited and worn down by sound change: CDIAL lists it under Sanskrit *kaḥ punar*, "who, then", glossed "who" (CDIAL 2575).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-Q-KAUN-01, PA-Q-KYON-01] -->

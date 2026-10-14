@@ -14,7 +14,8 @@ romanization: "bhādõ"
 concept_tag: PA-TIME104-BHADO
 prerequisites: [PA-C104-har, PA-C104-savan]
 sounds: []
-roots: []
+roots: [sanskrit-bhadrapada]
+etymology_hook: "bhādõ ← Sanskrit bhādrapada 'the month August-September', a tadbhava (CDIAL 9447)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C104-savan]
 <!-- hl-knowledge: introduces=[PA-LEX-C104-TIME104-04]; assesses=[] -->
 
 **ਭਾਦੋਂ** — *bhādõ* — "Bhadon, a Punjabi month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਭਾਦੋਂ** (*bhādõ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhādrapada*, "the month August-September" (CDIAL 9447).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

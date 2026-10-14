@@ -15,6 +15,7 @@ concept_tag: PA-THINGS130-BAGHIAR
 prerequisites: [PA-C130-ricch, PA-C130-giddar]
 sounds: []
 roots: []
+etymology_hook: "baghiāṛ 'wolf': its origin is not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C130-giddar]
 <!-- hl-knowledge: introduces=[PA-LEX-C130-THINGS130-04]; assesses=[] -->
 
 **ਬਘਿਆੜ** — *baghiāṛ* — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਬਘਿਆੜ** (*baghiāṛ*) comes from is not settled: CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 116,
-  "sourceHash": "fnv1a64:0493d4ecbc50f4d7",
+  "sourceHash": "fnv1a64:65cced4598059694",
   "lessonIds": [
     "PA-C116-dhaga",
     "PA-C116-batan",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "punjabi/narration/ch116.txt",
   "json": "punjabi/narration/ch116.json",
-  "textHash": "fnv1a64:eb734bf96ddb56e4",
-  "jsonHash": "fnv1a64:0ef1218deebf47f3",
+  "textHash": "fnv1a64:7411b26333c9e319",
+  "jsonHash": "fnv1a64:e3bb56a10d13e194",
   "findings": []
 }

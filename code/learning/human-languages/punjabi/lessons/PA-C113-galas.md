@@ -14,7 +14,8 @@ romanization: "galās"
 concept_tag: PA-THINGS113-GALAS
 prerequisites: [PA-C113-chatri, PA-C113-kauli]
 sounds: []
-roots: []
+roots: [english-glass]
+etymology_hook: "galās ← English glass"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C113-kauli]
 <!-- hl-knowledge: introduces=[PA-LEX-C113-THINGS113-03]; assesses=[] -->
 
 **ਗਲਾਸ** — *galās* — "a glass, a tumbler".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗਲਾਸ** (*galās*) is a loan from English *glass*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

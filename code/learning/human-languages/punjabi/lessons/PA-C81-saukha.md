@@ -15,6 +15,7 @@ concept_tag: PA-ADJ81-SAUKHA
 prerequisites: [PA-C80-hauli, PA-C80-tez]
 sounds: []
 roots: []
+etymology_hook: "saukhā: its origin is not settled; CDIAL lists Punjabi suhelā 'easy' under sukha 'easy' (13451), not saukhā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C80-tez]
 <!-- hl-knowledge: introduces=[PA-LEX-C81-ADJ81-01]; assesses=[] -->
 
 **ਸੌਖਾ** — *saukhā* — "easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਸੌਖਾ** (*saukhā*) comes from is not settled. CDIAL has no entry for it, though it lists Punjabi *suhelā*, "easy", under Sanskrit *sukha*, "easy, pleasant" (CDIAL 13451).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

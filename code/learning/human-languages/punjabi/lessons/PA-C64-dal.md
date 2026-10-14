@@ -14,7 +14,8 @@ romanization: "dāl"
 concept_tag: PA-FOOD64-DAL
 prerequisites: [PA-C63-machchhi, PA-C63-chaul]
 sounds: []
-roots: []
+roots: [sanskrit-dala]
+etymology_hook: "dāl ← Sanskrit dāla 'kind of grain, split peas', a tadbhava (CDIAL 6309)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C63-chaul]
 <!-- hl-knowledge: introduces=[PA-LEX-C64-FOOD64-01]; assesses=[] -->
 
 **ਦਾਲ** — *dāl* — "lentils".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦਾਲ** (*dāl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dāla*, "kind of grain, split peas" (CDIAL 6309). CDIAL asks whether it is the same word as *\*dāla*, "splitting".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

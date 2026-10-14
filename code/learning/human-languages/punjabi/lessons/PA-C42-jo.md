@@ -11,8 +11,8 @@ gloss: the one who, the thing that - the relative word
 concept_tag: PA-PRON-JO
 prerequisites: [PA-C42-oh-write, PA-C41-jadon]
 sounds: [hora-o]
-roots: []
-etymology_hook: ਜੋ is the third member of the ਜ family, standing where ਜੇ and ਜਦੋਂ stand.
+roots: [sanskrit-ya-relative]
+etymology_hook: "jo ← the Sanskrit relative pronoun ya-, under which CDIAL lists Punjabi jo (CDIAL 10391)"
 duration:
   max_seconds: 240
 requires:
@@ -57,6 +57,8 @@ describes — and all three open their clause with the same letter.
 Punjabi marks a describing clause at its front, the way it marked a condition
 with **ਜੇ**. Once you hear the **ਜ**, you know a clause is starting and that
 something will come back to be pointed at.
+
+*Jo* is inherited: CDIAL lists it under the Sanskrit relative pronoun *ya-* (CDIAL 10391).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-PRON-JO-01, PA-JOIN-JE-01] -->

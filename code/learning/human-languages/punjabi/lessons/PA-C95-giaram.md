@@ -14,7 +14,8 @@ romanization: "giārāṁ"
 concept_tag: PA-NUMBERS95-GIARAM
 prerequisites: [PA-C95-naum, PA-C95-das]
 sounds: []
-roots: []
+roots: [sanskrit-ekadasha]
+etymology_hook: "giārāṁ ← Sanskrit ekādaśa 'eleven', a tadbhava (CDIAL 2485)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C95-das]
 <!-- hl-knowledge: introduces=[PA-LEX-C95-NUMBERS95-05]; assesses=[] -->
 
 **ਗਿਆਰਾਂ** — *giārāṁ* — "eleven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗਿਆਰਾਂ** (*giārāṁ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ekādaśa*, "eleven" (CDIAL 2485).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

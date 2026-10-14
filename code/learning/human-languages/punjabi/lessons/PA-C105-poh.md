@@ -14,7 +14,8 @@ romanization: "poh"
 concept_tag: PA-TIME105-POH
 prerequisites: [PA-C105-kattak, PA-C105-magghar]
 sounds: []
-roots: []
+roots: [sanskrit-pausha]
+etymology_hook: "poh ← Sanskrit pauṣa 'the month December-January', a tadbhava (CDIAL 8424)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C105-magghar]
 <!-- hl-knowledge: introduces=[PA-LEX-C105-TIME105-03]; assesses=[] -->
 
 **ਪੋਹ** — *poh* — "Poh, a Punjabi month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੋਹ** (*poh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pauṣa*, "the month December-January" (CDIAL 8424).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

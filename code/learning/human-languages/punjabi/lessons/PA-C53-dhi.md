@@ -14,7 +14,8 @@ romanization: "dhī"
 concept_tag: PA-HEALTH53-DHI
 prerequisites: [PA-C53-mata, PA-C53-puttar]
 sounds: []
-roots: []
+roots: [sanskrit-duhitr]
+etymology_hook: "dhī ← Sanskrit duhitṛ 'daughter', a tadbhava (CDIAL 6481)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C53-puttar]
 <!-- hl-knowledge: introduces=[PA-LEX-C53-HEALTH53-05]; assesses=[] -->
 
 **ਧੀ** — *dhī* — "a daughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਧੀ** (*dhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *duhitṛ*, "daughter" (CDIAL 6481).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "uḍīkṇā"
 concept_tag: PA-VERB-UDIKNA
 prerequisites: [PA-C62-nahauna, PA-C62-chhaddna]
 sounds: []
-roots: []
+roots: [indo-aryan-uddekshati]
+etymology_hook: "uḍīkṇā ← *uddekṣati 'looks for, expects', a reconstructed form; a tadbhava (CDIAL 1997)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C62-chhaddna]
 <!-- hl-knowledge: introduces=[PA-LEX-C62-VERBS62-05]; assesses=[] -->
 
 **ਉਡੀਕਣਾ** — *uḍīkṇā* — "to wait for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਉਡੀਕਣਾ** (*uḍīkṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*uddekṣati*, "looks for, expects", a form CDIAL reconstructs from its descendants (CDIAL 1997).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

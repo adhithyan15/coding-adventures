@@ -12,6 +12,7 @@ concept_tag: PA-WORD-PUNJABI
 prerequisites: [PA-C05-bolna]
 sounds: [tippi-nasal, kanna-aa]
 roots: [persian-panj, aab-persian]
+etymology_hook: "panjābī: Persian panj 'five' + āb 'water', the five waters of the Punjab, + -ī"
 duration:
   max_seconds: 190
 requires:

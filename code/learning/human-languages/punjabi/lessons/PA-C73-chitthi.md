@@ -14,7 +14,8 @@ romanization: "chiṭṭhī"
 concept_tag: PA-SCHOOL73-CHITTHI
 prerequisites: [PA-C72-shabad, PA-C73-khed]
 sounds: []
-roots: []
+roots: [indo-aryan-cishta]
+etymology_hook: "chiṭṭhī ← *ciṣṭa 'message', a reconstructed form; a tadbhava (CDIAL 4832)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C73-khed]
 <!-- hl-knowledge: introduces=[PA-LEX-C73-SCHOOL73-02]; assesses=[] -->
 
 **ਚਿੱਠੀ** — *chiṭṭhī* — "a letter (post)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚਿੱਠੀ** (*chiṭṭhī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ciṣṭa*, "message", a form CDIAL reconstructs from its descendants (CDIAL 4832).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

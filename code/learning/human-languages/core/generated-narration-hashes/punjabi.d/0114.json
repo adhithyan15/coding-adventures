@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 114,
-  "sourceHash": "fnv1a64:8951fb2a552d3684",
+  "sourceHash": "fnv1a64:f2cd7c0f6776e5d6",
   "lessonIds": [
     "PA-C114-saban",
     "PA-C114-taulia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch114.txt",
   "json": "punjabi/narration/ch114.json",
-  "textHash": "fnv1a64:731593536aa359d0",
-  "jsonHash": "fnv1a64:b86b5027dcc93491",
+  "textHash": "fnv1a64:df5069c3a41f1e9d",
+  "jsonHash": "fnv1a64:a4de2cf1cb2bfbc1",
   "findings": []
 }

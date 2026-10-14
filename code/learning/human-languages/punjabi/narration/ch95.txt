@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a shirt, then the Punjabi for six.
 You'll want to know: ਸੱਤ.
 ਸੱਤ — satt — "seven".
 
+The word, taken apart.
+ਸੱਤ (satt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sapta, "seven" (CDIAL 13139).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for six, then the Punjabi for seven.
 
 You'll want to know: ਅੱਠ.
 ਅੱਠ — aṭṭh — "eight".
+
+The word, taken apart.
+ਅੱਠ (aṭṭh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṣṭā, "eight" (CDIAL 941).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for seven, then the Punjabi for eight.
 You'll want to know: ਨੌਂ.
 ਨੌਂ — nauṁ — "nine".
 
+The word, taken apart.
+ਨੌਂ (nauṁ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nava, "nine" (CDIAL 6984).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for eight, then the Punjabi for nine.
 You'll want to know: ਦਸ.
 ਦਸ — das — "ten".
 
+The word, taken apart.
+ਦਸ (das) goes back to Sanskrit daśa, "ten", but CDIAL marks the Punjabi word as taken from Hindi das (CDIAL 6227).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for nine, then the Punjabi for ten.
 
 You'll want to know: ਗਿਆਰਾਂ.
 ਗਿਆਰਾਂ — giārāṁ — "eleven".
+
+The word, taken apart.
+ਗਿਆਰਾਂ (giārāṁ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ekādaśa, "eleven" (CDIAL 2485).
 
 What you've built.
 One more word for this chapter.

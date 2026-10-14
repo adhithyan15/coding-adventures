@@ -14,7 +14,8 @@ romanization: "āṇḍā"
 concept_tag: PA-FOOD67-ANDA
 prerequisites: [PA-C66-nimbu, PA-C67-nashta]
 sounds: []
-roots: []
+roots: [sanskrit-anda]
+etymology_hook: "āṇḍā ← Sanskrit āṇḍa 'egg', perhaps of Munda origin (CDIAL 1111)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C67-nashta]
 <!-- hl-knowledge: introduces=[PA-LEX-C67-FOOD67-02]; assesses=[] -->
 
 **ਆਂਡਾ** — *āṇḍā* — "an egg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਆਂਡਾ** (*āṇḍā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *āṇḍa*, "egg" (CDIAL 1111). CDIAL reports Mayrhofer's view, after Kuiper, that the word is of Munda origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

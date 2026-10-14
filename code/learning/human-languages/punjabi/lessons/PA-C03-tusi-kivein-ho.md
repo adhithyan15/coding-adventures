@@ -11,7 +11,8 @@ gloss: "how are you? — respectful"
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [PA-C03-kivein, PA-C02-tu-tusi, PA-S02-mamma-rara-lava, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava]
 sounds: []
-roots: [sanskrit-asti]
+roots: [sanskrit-asti, sanskrit-yushmad, sanskrit-bhavati]
+etymology_hook: "tusīṁ ← yuṣmad- 'you' (CDIAL 10511); kivēṁ on the stem ka-; ho, from hoṇā ← bhavati 'is' (CDIAL 9416)"
 duration:
   max_seconds: 220
 requires:
@@ -47,6 +48,8 @@ hello.
 verb **last**, as in Chapter 2. The copula *ho* is the respectful "are" that goes
 with *tusī̃* — its whole set is *maiṁ hāṁ* (I am), *tū̃ haiṁ* (you are, familiar),
 *oh hai* (he is), *tusī̃ ho* (you are, respectful).
+
+The words are inherited: *tusīṁ* from Sanskrit *yuṣmad-*, "you (plural)" (CDIAL 10511); *kivēṁ* on the old question stem *ka-*; and *ho* from *hoṇā*, "to be", which CDIAL lists under *bhavati*, "becomes, is" (CDIAL 9416).
 
 ## Grammar Lens: match the "you" to the verb
 <!-- hl-knowledge: introduces=[]; assesses=[PA-PHRASE-HOW-ARE-YOU-03, PA-GRAMMAR-TUSI-HO-03] -->

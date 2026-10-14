@@ -15,6 +15,7 @@ concept_tag: PA-VERB-PHARNA
 prerequisites: [PA-C60-bhejna, PA-C61-ginna]
 sounds: []
 roots: []
+etymology_hook: "phaṛnā 'to catch': not settled; CDIAL lists the close Punjabi phakaṛṇā 'to seize' under *pakkaḍ 'seize' (7619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C61-ginna]
 <!-- hl-knowledge: introduces=[PA-LEX-C61-VERBS61-02]; assesses=[] -->
 
 **ਫੜਨਾ** — *phaṛnā* — "to catch, to hold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਫੜਨਾ** (*phaṛnā*) comes from is not settled. CDIAL does not list it, though it gives the close Punjabi forms *phakaṛṇā* and *pakaṛṇā*, "to seize", under a reconstructed *\*pakkaḍ*, "seize" (CDIAL 7619).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

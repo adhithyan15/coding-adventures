@@ -11,7 +11,8 @@ gloss: "we'll meet again (goodbye)"
 concept_tag: FAREWELL-LATER
 prerequisites: [PA-C01-sat-sri-akal, PA-C04-phir, PA-C04-milaange]
 sounds: []
-roots: [mil-meet]
+roots: [mil-meet, indo-aryan-phirati]
+etymology_hook: "phir ← *phirati 'turns' (CDIAL 9078); milāṁge, from milṇā ← Sanskrit milati 'meets' (CDIAL 10133)"
 duration:
   max_seconds: 190
 requires:
@@ -49,6 +50,8 @@ hopeful one — the same "promise of return" the whole subcontinent prefers to a
 blunt farewell (Hindi *phir milenge*, Bengali *āshi*, Tamil *pōy varugiṟēṉ*).
 Even more casual: *phir mildē hāṁ* ("(we) meet again," present for a near
 future).
+
+Both words are inherited. *phir* is the absolutive of *\*phirati*, "turns", used as an adverb (CDIAL 9078), and *milāṁge* is the future of *milṇā*, "to meet", from Sanskrit *milati*, "meets, encounters" (CDIAL 10133).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-PHRASE-SEE-YOU-AGAIN-04, PA-LEX-PHIR-04, PA-LEX-MILAANGE-04] -->

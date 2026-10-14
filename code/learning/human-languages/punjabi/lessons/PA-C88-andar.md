@@ -14,7 +14,8 @@ romanization: "andar"
 concept_tag: PA-PLACE88-ANDAR
 prerequisites: [PA-C87-dur, PA-C88-nere]
 sounds: []
-roots: []
+roots: [sanskrit-antara, persian-andar]
+etymology_hook: "andar: CDIAL lists it under Sanskrit antara 'interior' (357); Hindi andar is usually traced to Persian andar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C88-nere]
 <!-- hl-knowledge: introduces=[PA-LEX-C88-PLACE88-02]; assesses=[] -->
 
 **ਅੰਦਰ** — *andar* — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ਅੰਦਰ** (*andar*), "the inside", under Sanskrit *antara*, "interior" (CDIAL 357). Hindi *andar* is usually traced instead to Persian *andar*, "inside", a cousin of the Sanskrit word, so which one Punjabi has is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

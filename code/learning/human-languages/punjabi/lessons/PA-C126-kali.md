@@ -14,7 +14,8 @@ romanization: "kalī"
 concept_tag: PA-THINGS126-KALI
 prerequisites: [PA-C126-bij, PA-C126-jarh]
 sounds: []
-roots: []
+roots: [sanskrit-kali]
+etymology_hook: "kalī ← Sanskrit kali 'unblown bud', a tadbhava (CDIAL 2934)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C126-jarh]
 <!-- hl-knowledge: introduces=[PA-LEX-C126-THINGS126-04]; assesses=[] -->
 
 **ਕਲੀ** — *kalī* — "a bud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕਲੀ** (*kalī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kali*, "unblown bud" (CDIAL 2934).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

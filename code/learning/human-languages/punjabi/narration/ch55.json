@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "Wife, Child, Boy, Girl, Man",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:677be0d7ecabab30",
+  "sourceHash": "fnv1a64:54cca795b64d2de5",
   "lessons": [
     {
       "id": "PA-C55-patni",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:722b39316e2224de",
+      "sourceHash": "fnv1a64:3b2f5351b0040da0",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਤਨੀ (patnī) is Sanskrit patnī, \"mistress, wife\", taken over whole as a learned loan, a tatsama (CDIAL 7742)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abb574601bd52ca5",
+      "sourceHash": "fnv1a64:d98aa1a4913e20aa",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists ਬੱਚਾ (bachchā) under Sanskrit apatya, \"offspring\", through Prakrit avacca (CDIAL 424), and its addenda set the word beside Persian bachcha, \"young (of humans or animals)\" (CDIAL 14226). Many take it from Persian instead, so its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03cddccdbdee25e7",
+      "sourceHash": "fnv1a64:d557e345293eb8f0",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists ਮੁੰਡਾ (muṇḍā), \"boy\", under Sanskrit muṇḍa, \"shaved, bald\", which it takes, probably, from Dravidian; it calls a Munda source less likely (CDIAL 10191)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df794e0362b7e2f5",
+      "sourceHash": "fnv1a64:67a888edcd879d57",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists ਕੁੜੀ (kuṛī), \"girl, daughter\", under a reconstructed kuḍa, \"boy, son\", with kuḍī, \"girl, daughter\". It takes the word, probably, from Munda, comparing Santali kuṛi, \"girl\"; or else from Dravidian (CDIAL 3245)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bad4557e7e20d38",
+      "sourceHash": "fnv1a64:fe82cfb02fee5b6a",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਆਦਮੀ (ādmī) is a loan from Arabic ādamī, \"human, of Adam\", which reached Punjabi through Persian. Its Arabic root is ʾ-d-m (Lane). It is Ādam, \"Adam\", with the Arabic ending -ī, \"belonging to\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

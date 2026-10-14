@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for to leave, then the Punjabi for to wait f
 You'll want to know: ਲੱਭਣਾ.
 ਲੱਭਣਾ — labbhṇā — "to find, to look for".
 
+The word, taken apart.
+ਲੱਭਣਾ (labbhṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from labhyate, "is taken" (CDIAL 10950).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for to wait for, then the Punjabi for to fin
 
 You'll want to know: ਸੁੱਟਣਾ.
 ਸੁੱਟਣਾ — suṭṭṇā — "to throw".
+
+The word, taken apart.
+Where ਸੁੱਟਣਾ (suṭṭṇā) comes from is not settled. CDIAL does not list it, though it gives the close Punjabi forms siṭṭṇā and saṭṭṇā, "to throw", under Sanskrit sṛṣṭa, "released, thrown" (CDIAL 13578).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for to find, then the Punjabi for to throw.
 You'll want to know: ਮੀਟ.
 ਮੀਟ — mīṭ — "meat".
 
+The word, taken apart.
+ਮੀਟ (mīṭ) is a loan from English meat.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for to throw, then the Punjabi for meat.
 You'll want to know: ਮੱਛੀ.
 ਮੱਛੀ — machchhī — "a fish".
 
+The word, taken apart.
+ਮੱਛੀ (machchhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from matsya, "fish" (CDIAL 9758).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for meat, then the Punjabi for a fish.
 
 You'll want to know: ਚੌਲ.
 ਚੌਲ — chaul — "rice".
+
+The word, taken apart.
+ਚੌਲ (chaul) is a tadbhava, a word inherited and reshaped by sound change. It comes from cāvala, "husked rice", a form CDIAL reconstructs from its descendants (CDIAL 4749). CDIAL thinks it possibly shares a non-Aryan origin with Sanskrit taṇḍula, "rice".
 
 What you've built.
 One more word for this chapter.

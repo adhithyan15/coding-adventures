@@ -14,7 +14,8 @@ romanization: "pakkā"
 concept_tag: PA-QUAL146-PAKKA
 prerequisites: [PA-C145-taza, PA-C146-beha]
 sounds: []
-roots: []
+roots: [sanskrit-pakva]
+etymology_hook: "pakkā ← Sanskrit pakva 'cooked, ripe', a tadbhava (CDIAL 7621)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C146-beha]
 <!-- hl-knowledge: introduces=[PA-LEX-C146-QUAL146-02]; assesses=[] -->
 
 **ਪੱਕਾ** — *pakkā* — "ripe, firm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੱਕਾ** (*pakkā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pakva*, "cooked, ripe" (CDIAL 7621). CDIAL says Hindi *pakkā* was taken from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

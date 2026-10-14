@@ -14,7 +14,8 @@ romanization: "kacchū"
 concept_tag: PA-THINGS131-KACCHU
 prerequisites: [PA-C131-battakh, PA-C131-kirli]
 sounds: []
-roots: []
+roots: [sanskrit-kacchapa]
+etymology_hook: "kacchū ← Sanskrit kacchapa 'turtle, tortoise', a tadbhava (CDIAL 2619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C131-kirli]
 <!-- hl-knowledge: introduces=[PA-LEX-C131-THINGS131-03]; assesses=[] -->
 
 **ਕੱਛੂ** — *kacchū* — "a turtle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੱਛੂ** (*kacchū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kacchapa*, "turtle, tortoise" (CDIAL 2619).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

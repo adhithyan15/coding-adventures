@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a newspaper, then the Punjabi for a scho
 You'll want to know: ਬਸਤਾ.
 ਬਸਤਾ — bastā — "a school bag".
 
+The word, taken apart.
+ਬਸਤਾ (bastā) is a loan, usually traced to Persian basta, "tied up; a bundle".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a school, then the Punjabi for a school 
 
 You'll want to know: ਪੈਸਾ.
 ਪੈਸਾ — paisā — "money".
+
+The word, taken apart.
+ਪੈਸਾ (paisā) came into Punjabi from Hindi: CDIAL lists Hindi paisā under a reconstructed padāṁśa, "quarter part", and marks the Punjabi word as taken from it (CDIAL 7761).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a school bag, then the Punjabi for money
 You'll want to know: ਸਵਾਲ.
 ਸਵਾਲ — savāl — "a question".
 
+The word, taken apart.
+ਸਵਾਲ (savāl) is a loan from Arabic suʾāl, "a question", which reached Punjabi through Persian. Its Arabic root is s-ʾ-l (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for money, then the Punjabi for a question.
 You'll want to know: ਜਵਾਬ.
 ਜਵਾਬ — javāb — "an answer".
 
+The word, taken apart.
+ਜਵਾਬ (javāb) is a loan from Arabic jawāb, "an answer", which reached Punjabi through Persian. Its Arabic root is j-w-b (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a question, then the Punjabi for an answ
 
 You'll want to know: ਸ਼ਬਦ.
 ਸ਼ਬਦ — shabad — "a word".
+
+The word, taken apart.
+ਸ਼ਬਦ (shabad) is a semi-tatsama: Sanskrit śabda, "sound, word", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 12298). Punjabi puts a vowel between the b and the d. The inherited Punjabi form is sadd, "call, shout".
 
 What you've built.
 One more word for this chapter.

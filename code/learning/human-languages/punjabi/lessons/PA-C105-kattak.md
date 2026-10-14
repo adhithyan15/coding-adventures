@@ -14,7 +14,8 @@ romanization: "kattak"
 concept_tag: PA-TIME105-KATTAK
 prerequisites: [PA-C104-bhado, PA-C104-assu]
 sounds: []
-roots: []
+roots: [sanskrit-karttika]
+etymology_hook: "kattak: matches Lahnda kattẽ, which CDIAL lists under Sanskrit kārttika 'the month October-November' (3070)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C104-assu]
 <!-- hl-knowledge: introduces=[PA-LEX-C105-TIME105-01]; assesses=[] -->
 
 **ਕੱਤਕ** — *kattak* — "Kattak, a Punjabi month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੱਤਕ** (*kattak*) goes back to Sanskrit *kārttika*, "the month October-November". CDIAL gives no Punjabi form, but lists Lahnda *kattẽ* under it (CDIAL 3070).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

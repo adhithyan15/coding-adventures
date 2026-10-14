@@ -14,7 +14,8 @@ romanization: "adrak"
 concept_tag: PA-THINGS123-ADRAK
 prerequisites: [PA-C122-gobhi, PA-C123-lasan]
 sounds: []
-roots: []
+roots: [sanskrit-ardraka]
+etymology_hook: "adrak ← Sanskrit ārdraka 'fresh ginger', a semi-tatsama (CDIAL 1341)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C123-lasan]
 <!-- hl-knowledge: introduces=[PA-LEX-C123-THINGS123-02]; assesses=[] -->
 
 **ਅਦਰਕ** — *adrak* — "ginger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਅਦਰਕ** (*adrak*) is a semi-tatsama: Sanskrit *ārdraka*, "fresh ginger", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 1341). CDIAL lists the inherited Punjabi form as *addā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

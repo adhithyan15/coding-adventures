@@ -14,7 +14,8 @@ romanization: "kaṭṭṇā"
 concept_tag: PA-VERB-KATTNA
 prerequisites: [PA-C61-ginna, PA-C61-pharna]
 sounds: []
-roots: []
+roots: [sanskrit-kartati]
+etymology_hook: "kaṭṭṇā ← Sanskrit kartati 'cuts', a tadbhava (CDIAL 2854)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C61-pharna]
 <!-- hl-knowledge: introduces=[PA-LEX-C61-VERBS61-03]; assesses=[] -->
 
 **ਕੱਟਣਾ** — *kaṭṭṇā* — "to cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੱਟਣਾ** (*kaṭṭṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kartati*, "cuts" (CDIAL 2854).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

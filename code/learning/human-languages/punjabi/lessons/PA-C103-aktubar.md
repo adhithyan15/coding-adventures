@@ -14,7 +14,8 @@ romanization: "aktūbar"
 concept_tag: PA-TIME103-AKTUBAR
 prerequisites: [PA-C102-agast, PA-C102-satambar]
 sounds: []
-roots: []
+roots: [english-october]
+etymology_hook: "aktūbar ← English October"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C102-satambar]
 <!-- hl-knowledge: introduces=[PA-LEX-C103-TIME103-01]; assesses=[] -->
 
 **ਅਕਤੂਬਰ** — *aktūbar* — "October".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਅਕਤੂਬਰ** (*aktūbar*) is a loan from English *October*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

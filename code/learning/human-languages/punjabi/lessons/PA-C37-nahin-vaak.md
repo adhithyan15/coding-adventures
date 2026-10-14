@@ -11,8 +11,8 @@ gloss: not, inside a sentence — the pattern the book has never shown
 concept_tag: PA-NEG-CLAUSE
 prerequisites: [PA-C36-shubh-raat, PA-C01-han-nahin, PA-C03-main]
 sounds: [bindi-nasal, bihari-ii]
-roots: []
-etymology_hook: ਨਹੀਂ has been in this book since its first chapter, and only ever as a whole answer. It has never once stood inside a sentence, which is why nothing in the corpus can be contradicted.
+roots: [sanskrit-nahi]
+etymology_hook: "nahīṁ matches Hindi nahīṁ, which CDIAL lists under Sanskrit nahi 'surely not' (CDIAL 7035)"
 duration:
   max_seconds: 240
 requires:
@@ -58,6 +58,8 @@ That is the whole rule. Punjabi does not add a helper the way English adds
 
 Because the position is fixed, every sentence you already own has a negative
 twin, and you can make it without learning anything else.
+
+*Nahīṁ* is inherited: it matches Hindi *nahīṁ*, which CDIAL lists under Sanskrit *nahi*, "surely not" (CDIAL 7035).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-NEG-CLAUSE-01, PA-LEX-HAAN-NAHIN-01] -->

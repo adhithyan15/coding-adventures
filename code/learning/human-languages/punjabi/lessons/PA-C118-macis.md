@@ -14,7 +14,8 @@ romanization: "mācis"
 concept_tag: PA-THINGS118-MACIS
 prerequisites: [PA-C117-ghara, PA-C117-mombatti]
 sounds: []
-roots: []
+roots: [english-matches]
+etymology_hook: "mācis ← English matches"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C117-mombatti]
 <!-- hl-knowledge: introduces=[PA-LEX-C118-THINGS118-01]; assesses=[] -->
 
 **ਮਾਚਿਸ** — *mācis* — "matches".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਾਚਿਸ** (*mācis*) is a loan from English *matches*. It comes from the English plural.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

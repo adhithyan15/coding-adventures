@@ -14,7 +14,8 @@ romanization: "cādar"
 concept_tag: PA-THINGS114-CADAR
 prerequisites: [PA-C114-taulia, PA-C114-gadda]
 sounds: []
-roots: []
+roots: [persian-chadar]
+etymology_hook: "cādar: usually traced to Persian chādar 'sheet, veil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C114-gadda]
 <!-- hl-knowledge: introduces=[PA-LEX-C114-THINGS114-04]; assesses=[] -->
 
 **ਚਾਦਰ** — *cādar* — "a bedsheet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚਾਦਰ** (*cādar*) is a loan, usually traced to Persian *chādar*, "sheet, veil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

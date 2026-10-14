@@ -14,7 +14,8 @@ romanization: "mahimān"
 concept_tag: PA-FAMILY56-MAHIMAN
 prerequisites: [PA-C55-kuri, PA-C55-admi]
 sounds: []
-roots: []
+roots: [persian-mihman]
+etymology_hook: "mahimān: usually traced to Persian mihmān 'guest'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C55-admi]
 <!-- hl-knowledge: introduces=[PA-LEX-C56-FAMILY56-01]; assesses=[] -->
 
 **ਮਹਿਮਾਨ** — *mahimān* — "a guest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਹਿਮਾਨ** (*mahimān*) is a loan, usually traced to Persian *mihmān*, "guest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

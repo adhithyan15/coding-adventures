@@ -14,7 +14,8 @@ romanization: "luhār"
 concept_tag: PA-THINGS139-LUHAR
 prerequisites: [PA-C139-darzi, PA-C139-tarkhan]
 sounds: []
-roots: []
+roots: [sanskrit-lohakara]
+etymology_hook: "luhār ← Sanskrit lohakāra 'iron-worker', a tadbhava (CDIAL 11159)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C139-tarkhan]
 <!-- hl-knowledge: introduces=[PA-LEX-C139-THINGS139-04]; assesses=[] -->
 
 **ਲੁਹਾਰ** — *luhār* — "a blacksmith".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਲੁਹਾਰ** (*luhār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lohakāra*, "iron-worker" (CDIAL 11159).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

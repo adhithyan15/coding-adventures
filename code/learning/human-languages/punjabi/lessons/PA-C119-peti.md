@@ -14,7 +14,8 @@ romanization: "peṭī"
 concept_tag: PA-THINGS119-PETI
 prerequisites: [PA-C119-salvar, PA-C119-cunni]
 sounds: []
-roots: []
+roots: [prakrit-petta]
+etymology_hook: "peṭī ← *peṭṭa 'belly', a reconstructed form; a tadbhava (CDIAL 8376)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C119-cunni]
 <!-- hl-knowledge: introduces=[PA-LEX-C119-THINGS119-05]; assesses=[] -->
 
 **ਪੇਟੀ** — *peṭī* — "a belt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੇਟੀ** (*peṭī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*peṭṭa*, "belly", a form CDIAL reconstructs from its descendants (CDIAL 8376). CDIAL lists Punjabi *peṭī*, "girdle", beside *peṭ*, "belly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

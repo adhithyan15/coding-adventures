@@ -14,7 +14,8 @@ romanization: "hiran"
 concept_tag: PA-THINGS130-HIRAN
 prerequisites: [PA-C129-satrangipingh, PA-C129-khargosh]
 sounds: []
-roots: []
+roots: [sanskrit-harina]
+etymology_hook: "hiran ← Sanskrit hariṇa 'deer', under which CDIAL lists Punjabi harn and Hindi hiran (CDIAL 13982)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C129-khargosh]
 <!-- hl-knowledge: introduces=[PA-LEX-C130-THINGS130-01]; assesses=[] -->
 
 **ਹਿਰਨ** — *hiran* — "a deer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹਿਰਨ** (*hiran*) is inherited from Sanskrit *hariṇa*, "deer", built on *hari*, "yellow". CDIAL lists Punjabi *harn* and Hindi *hiran* under it (CDIAL 13982).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

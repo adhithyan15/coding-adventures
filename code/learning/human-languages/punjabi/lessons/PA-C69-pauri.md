@@ -14,7 +14,8 @@ romanization: "pauṛī"
 concept_tag: PA-HOME69-PAURI
 prerequisites: [PA-C68-almari, PA-C68-farsh]
 sounds: []
-roots: []
+roots: [pad-sanskrit]
+etymology_hook: "pauṛī: in CDIAL's entry for Sanskrit pādu 'foot', which doubts whether such words come from it or from pāda (8075)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C68-farsh]
 <!-- hl-knowledge: introduces=[PA-LEX-C69-HOME69-01]; assesses=[] -->
 
 **ਪੌੜੀ** — *pauṛī* — "stairs, a ladder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ਪੌੜੀ** (*pauṛī*), "step, rung", in its entry for Sanskrit *pādu*, "foot", while doubting whether such words come from *pādu* or from the commoner *pāda*, "foot" (CDIAL 8075).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

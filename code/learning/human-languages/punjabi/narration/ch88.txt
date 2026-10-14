@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for before, then the Punjabi for far.
 You'll want to know: ਨੇੜੇ.
 ਨੇੜੇ — neṛe — "near".
 
+The word, taken apart.
+ਨੇੜੇ (neṛe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nikaṭam, "near" (CDIAL 7136). CDIAL calls a Munda origin unlikely.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for far, then the Punjabi for near.
 
 You'll want to know: ਅੰਦਰ.
 ਅੰਦਰ — andar — "inside".
+
+The word, taken apart.
+CDIAL lists ਅੰਦਰ (andar), "the inside", under Sanskrit antara, "interior" (CDIAL 357). Hindi andar is usually traced instead to Persian andar, "inside", a cousin of the Sanskrit word, so which one Punjabi has is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for near, then the Punjabi for inside.
 You'll want to know: ਬਾਹਰ.
 ਬਾਹਰ — bāhar — "outside".
 
+The word, taken apart.
+ਬਾਹਰ (bāhar) is a tadbhava, a word inherited and reshaped by sound change. It comes from bāhira, "external", a form CDIAL reconstructs from its descendants (CDIAL 9226). It is built on Sanskrit bahis, "outside".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for inside, then the Punjabi for outside.
 You'll want to know: ਉੱਤੇ.
 ਉੱਤੇ — utte — "on, above".
 
+The word, taken apart.
+ਉੱਤੇ (utte) is inherited. CDIAL lists Old Punjabi utte, "on", as coming from uttame, the locative of Sanskrit uttama, "highest" (CDIAL 1765).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for outside, then the Punjabi for on.
 
 You'll want to know: ਹੇਠਾਂ.
 ਹੇਠਾਂ — heṭhāṁ — "below".
+
+The word, taken apart.
+ਹੇਠਾਂ (heṭhāṁ) goes with heṭh, "below", which CDIAL lists under adhiṣṭāt, a form it sets beside Sanskrit adhastāt, "underneath" (CDIAL 248).
 
 What you've built.
 One more word for this chapter.

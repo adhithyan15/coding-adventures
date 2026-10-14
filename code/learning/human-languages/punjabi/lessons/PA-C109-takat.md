@@ -14,7 +14,8 @@ romanization: "tākat"
 concept_tag: PA-CAN109-TAKAT
 prerequisites: [PA-C109-sakna, PA-C109-kol]
 sounds: []
-roots: []
+roots: [arabic-taqa]
+etymology_hook: "tākat ← Arabic ṭāqa 'power, ability', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C109-kol]
 <!-- hl-knowledge: introduces=[PA-LEX-C109-CAN109-05]; assesses=[] -->
 
 **ਤਾਕਤ** — *tākat* — "strength".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤਾਕਤ** (*tākat*) is a loan from Arabic *ṭāqa*, "power, ability", which reached Punjabi through Persian. Its Arabic root is *ṭ-w-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "badalṇā"
 concept_tag: PA-VERB-BADALNA
 prerequisites: [PA-C152-rukna, PA-C152-mannna]
 sounds: []
-roots: []
+roots: [arabic-badal]
+etymology_hook: "badalṇā: on badal 'a substitute, an exchange', from Arabic, through Persian (Lane, root b-d-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C152-mannna]
 <!-- hl-knowledge: introduces=[PA-LEX-C152-ACT152-05]; assesses=[] -->
 
 **ਬਦਲਣਾ** — *badalṇā* — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬਦਲਣਾ** (*badalṇā*) is built on *badal*, a loan from Arabic *badal*, "a substitute, an exchange", which reached Punjabi through Persian; its Arabic root is *b-d-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

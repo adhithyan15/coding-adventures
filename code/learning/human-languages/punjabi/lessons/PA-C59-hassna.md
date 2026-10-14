@@ -14,7 +14,8 @@ romanization: "hassṇā"
 concept_tag: PA-VERB-HASSNA
 prerequisites: [PA-C58-pakauna, PA-C59-dhona]
 sounds: []
-roots: []
+roots: [indo-aryan-hasyate]
+etymology_hook: "hassṇā ← *hasyate 'one laughs', a reconstructed form; a tadbhava (CDIAL 14048)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C59-dhona]
 <!-- hl-knowledge: introduces=[PA-LEX-C59-VERBS59-02]; assesses=[] -->
 
 **ਹੱਸਣਾ** — *hassṇā* — "to laugh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹੱਸਣਾ** (*hassṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*hasyate*, "one laughs", a form CDIAL reconstructs from its descendants (CDIAL 14048). It is built on the Sanskrit root *has*, "laugh".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

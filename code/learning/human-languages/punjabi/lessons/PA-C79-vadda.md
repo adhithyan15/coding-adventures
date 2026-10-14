@@ -14,7 +14,8 @@ romanization: "vaḍḍā"
 concept_tag: PA-ANIMALS79-VADDA
 prerequisites: [PA-C78-bandar, PA-C79-sapp]
 sounds: []
-roots: []
+roots: [sanskrit-vadra]
+etymology_hook: "vaḍḍā ← Sanskrit vaḍra 'big', doubting a link with vṛddha (CDIAL 11225)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C79-sapp]
 <!-- hl-knowledge: introduces=[PA-LEX-C79-ANIMALS79-02]; assesses=[] -->
 
 **ਵੱਡਾ** — *vaḍḍā* — "big".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਵੱਡਾ** (*vaḍḍā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vaḍra*, "big" (CDIAL 11225). CDIAL notes that the Sanskrit word is known only from the old word-lists, and doubts a link with *vṛddha*, "grown".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

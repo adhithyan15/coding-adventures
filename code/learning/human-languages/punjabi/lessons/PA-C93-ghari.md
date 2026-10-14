@@ -14,7 +14,8 @@ romanization: "ghaṛī"
 concept_tag: PA-CLOTHES93-GHARI
 prerequisites: [PA-C93-jeb, PA-C93-mundri]
 sounds: []
-roots: []
+roots: [sanskrit-ghati]
+etymology_hook: "ghaṛī ← Sanskrit ghaṭī 'pot, water-clock', a tadbhava (CDIAL 4406)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C93-mundri]
 <!-- hl-knowledge: introduces=[PA-LEX-C93-CLOTHES93-05]; assesses=[] -->
 
 **ਘੜੀ** — *ghaṛī* — "a watch, a clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਘੜੀ** (*ghaṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghaṭī*, "pot, water-clock" (CDIAL 4406). The water-clock gave its name to the clock and the watch.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 135,
-  "sourceHash": "fnv1a64:68d786028bd16012",
+  "sourceHash": "fnv1a64:cbb09cb7c7a5ce56",
   "lessonIds": [
     "PA-C135-gardan",
     "PA-C135-chati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch135.txt",
   "json": "punjabi/narration/ch135.json",
-  "textHash": "fnv1a64:c23ee9924eedf697",
-  "jsonHash": "fnv1a64:17c5f7dd1e503267",
+  "textHash": "fnv1a64:71315be67a2b19a9",
+  "jsonHash": "fnv1a64:d34060287a5ae130",
   "findings": []
 }

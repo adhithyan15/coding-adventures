@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 144,
-  "sourceHash": "fnv1a64:2c8a5b9617a50689",
+  "sourceHash": "fnv1a64:f9c0308cf4124f0a",
   "lessonIds": [
     "PA-C144-naram",
     "PA-C144-sakht",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch144.txt",
   "json": "punjabi/narration/ch144.json",
-  "textHash": "fnv1a64:a827f6786fc1cac7",
-  "jsonHash": "fnv1a64:42f16a89a345169d",
+  "textHash": "fnv1a64:325b83bfe4508a78",
+  "jsonHash": "fnv1a64:7c95b767dc80498b",
   "findings": []
 }

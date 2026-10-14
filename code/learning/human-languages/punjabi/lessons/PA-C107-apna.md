@@ -14,7 +14,8 @@ romanization: "āpṇā"
 concept_tag: PA-DEF107-APNA
 prerequisites: [PA-C107-kujh, PA-C107-ap]
 sounds: []
-roots: []
+roots: [indo-aryan-atmanaka]
+etymology_hook: "āpṇā ← *ātmanaka 'own', a reconstructed form; a tadbhava (CDIAL 1135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C107-ap]
 <!-- hl-knowledge: introduces=[PA-LEX-C107-DEF107-03]; assesses=[] -->
 
 **ਆਪਣਾ** — *āpṇā* — "one's own".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਆਪਣਾ** (*āpṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ātmanaka*, "own", a form CDIAL reconstructs from its descendants (CDIAL 1135). CDIAL builds it on Sanskrit *ātman*, "self".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

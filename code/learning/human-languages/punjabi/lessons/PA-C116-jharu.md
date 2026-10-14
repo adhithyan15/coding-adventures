@@ -14,7 +14,8 @@ romanization: "jhāṛū"
 concept_tag: PA-THINGS116-JHARU
 prerequisites: [PA-C116-kill, PA-C116-balti]
 sounds: []
-roots: []
+roots: [indo-aryan-jhatati]
+etymology_hook: "jhāṛū: from jhāṛnā 'to shake off, sweep', listed under *jhāṭayati 'shakes down' (CDIAL 5328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C116-balti]
 <!-- hl-knowledge: introduces=[PA-LEX-C116-THINGS116-05]; assesses=[] -->
 
 **ਝਾੜੂ** — *jhāṛū* — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਝਾੜੂ** (*jhāṛū*) is built on *jhāṛnā*, "to shake off, thresh, sweep", which CDIAL lists under a reconstructed *\*jhāṭayati*, "shakes down" (CDIAL 5328).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

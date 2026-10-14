@@ -14,7 +14,8 @@ romanization: "khālī"
 concept_tag: PA-ADJ82-KHALI
 prerequisites: [PA-C81-nivam, PA-C82-bharia]
 sounds: []
-roots: []
+roots: [persian-khali]
+etymology_hook: "khālī ← Arabic khālī 'empty', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C82-bharia]
 <!-- hl-knowledge: introduces=[PA-LEX-C82-ADJ82-02]; assesses=[] -->
 
 **ਖ਼ਾਲੀ** — *khālī* — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਖ਼ਾਲੀ** (*khālī*) is a loan from Arabic *khālī*, "empty", which reached Punjabi through Persian. Its Arabic root is *kh-l-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

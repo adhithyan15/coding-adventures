@@ -14,7 +14,8 @@ romanization: "chāhuṇā"
 concept_tag: PA-VERB-CHAHUNA
 prerequisites: [PA-C60-sikkhna, PA-C60-bhullna]
 sounds: []
-roots: []
+roots: [indo-aryan-cah]
+etymology_hook: "chāhuṇā ← *cāh 'see, look for, desire', a reconstructed form whose source CDIAL calls uncertain (CDIAL 4775)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C60-bhullna]
 <!-- hl-knowledge: introduces=[PA-LEX-C60-VERBS60-03]; assesses=[] -->
 
 **ਚਾਹੁਣਾ** — *chāhuṇā* — "to want".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚਾਹੁਣਾ** (*chāhuṇā*) is inherited. CDIAL lists Punjabi *cāhṇā*, "to wish for", under a reconstructed *\*cāh*, "see, look for, desire", and calls its deeper source uncertain (CDIAL 4775).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "makkhī"
 concept_tag: PA-THINGS132-MAKKHI
 prerequisites: [PA-C131-magarmacch, PA-C131-macchar]
 sounds: []
-roots: []
+roots: [sanskrit-makshika]
+etymology_hook: "makkhī ← Sanskrit makṣikā 'fly, bee', a tadbhava (CDIAL 9696)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C131-macchar]
 <!-- hl-knowledge: introduces=[PA-LEX-C132-THINGS132-01]; assesses=[] -->
 
 **ਮੱਖੀ** — *makkhī* — "a fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੱਖੀ** (*makkhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *makṣikā*, "fly, bee" (CDIAL 9696).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "latt"
 concept_tag: PA-BODY51-LATT
 prerequisites: [PA-C50-chihra, PA-C50-khun]
 sounds: []
-roots: []
+roots: [indo-aryan-latta]
+etymology_hook: "latt ← *lattā 'foot, kick', a reconstructed form; a tadbhava (CDIAL 10931)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C50-khun]
 <!-- hl-knowledge: introduces=[PA-LEX-C51-BODY51-01]; assesses=[] -->
 
 **ਲੱਤ** — *latt* — "a leg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਲੱਤ** (*latt*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*lattā*, "foot, kick", a form CDIAL reconstructs from its descendants (CDIAL 10931).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

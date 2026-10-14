@@ -12,6 +12,7 @@ concept_tag: FAREWELL
 prerequisites: [PA-C04-phir-milaange]
 sounds: [double-bb, kanna-aa]
 roots: [rab-god, rakh-keep]
+etymology_hook: "rabb ← Arabic rabb 'lord', through Persian; rākhā, from rakkhṇā ← Sanskrit rakṣati 'guards' (CDIAL 10547)"
 duration:
   max_seconds: 210
 requires:

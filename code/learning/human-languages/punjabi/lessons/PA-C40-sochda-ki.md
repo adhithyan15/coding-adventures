@@ -11,8 +11,8 @@ gloss: I think that... - the frame an opinion travels in
 concept_tag: PA-JOIN-SOCHDA-KI
 prerequisites: [PA-C40-ki, PA-C03-main]
 sounds: [hora-o, kanna-aa]
-roots: []
-etymology_hook: The verb to think has been taught for many chapters and has never once been given anything to think.
+roots: [shoc-grieve, persian-ki]
+etymology_hook: "soch-, from socṇā 'to think' ← śocyate 'is made to feel pain' (CDIAL 12621); ki ← Persian ki 'that'"
 duration:
   max_seconds: 260
 requires:
@@ -59,6 +59,8 @@ matches you.
 Everything you can already say can now be said **as an opinion** rather than as
 a fact. That is a large change for one small word, and it is the difference
 between reporting the world and having a view about it.
+
+The frame mixes two sources: *soch-* comes from *socṇā*, "to think", which CDIAL lists under Sanskrit *śocyate*, "is made to feel pain" (CDIAL 12621), while *ki* is usually traced to Persian *ki*, "that".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-JOIN-SOCHDA-KI-01, PA-JOIN-KI-01] -->

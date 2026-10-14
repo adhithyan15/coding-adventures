@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:54bed29450a56075",
+  "sourceHash": "fnv1a64:a2f596f2111b6bcf",
   "lessons": [
     {
       "id": "PA-C01-sat-sri-akal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:eedef1d7c7146f1e",
+      "sourceHash": "fnv1a64:15b39e0c56eebe64",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1edf54ba434f16f",
+      "sourceHash": "fnv1a64:eca94ceeb27458c9",
       "notice": null,
       "blocks": [
         {
@@ -268,7 +268,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:100343f90371008a",
+      "sourceHash": "fnv1a64:a545edd90fca0f0e",
       "notice": null,
       "blocks": [
         {
@@ -1140,7 +1140,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dd684244e1af3ce",
+      "sourceHash": "fnv1a64:373c611cf5179c47",
       "notice": null,
       "blocks": [
         {
@@ -1248,7 +1248,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b0f205bbc8eee92",
+      "sourceHash": "fnv1a64:ff21046662026f57",
       "notice": null,
       "blocks": [
         {

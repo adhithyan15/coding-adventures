@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 137,
-  "sourceHash": "fnv1a64:81f9556ee18687f0",
+  "sourceHash": "fnv1a64:3b54d2fd7d9f46f9",
   "lessonIds": [
     "PA-C137-jahaz",
     "PA-C137-musafar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch137.txt",
   "json": "punjabi/narration/ch137.json",
-  "textHash": "fnv1a64:674fd965b2dad850",
-  "jsonHash": "fnv1a64:5e4d7ef6a8e330b8",
+  "textHash": "fnv1a64:87b6a25fbf1b391b",
+  "jsonHash": "fnv1a64:a613452d4557a94e",
   "findings": []
 }

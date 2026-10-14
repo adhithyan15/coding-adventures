@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "The Sentence That Says No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fa9134b124439629",
+  "sourceHash": "fnv1a64:9d71922d16425273",
   "lessons": [
     {
       "id": "PA-C37-nahin-vaak",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d70058635a40d339",
+      "sourceHash": "fnv1a64:ccf9446fe92fb0ae",
       "notice": null,
       "blocks": [
         {
@@ -72,6 +72,10 @@
             {
               "kind": "speech",
               "text": "Because the position is fixed, every sentence you already own has a negative twin, and you can make it without learning anything else."
+            },
+            {
+              "kind": "speech",
+              "text": "Nahīṁ is inherited: it matches Hindi nahīṁ, which CDIAL lists under Sanskrit nahi, \"surely not\" (CDIAL 7035)."
             }
           ]
         },
@@ -147,7 +151,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3468093871d0273",
+      "sourceHash": "fnv1a64:b83b2ae99df047c9",
       "notice": null,
       "blocks": [
         {
@@ -192,6 +196,10 @@
             {
               "kind": "speech",
               "text": "So this is not a new grammar. It is the dative frame you own, with a different noun in it and ਨਹੀਂ (nahī̃) in the slot the last lesson gave you."
+            },
+            {
+              "kind": "speech",
+              "text": "Samajh is the stem of samajhṇā, \"to understand\", which CDIAL lists under Sanskrit saṁbudhyate, \"wakes up, understands\" (CDIAL 12959), and āī is a form of āuṇā, \"to come\", from āpayati (CDIAL 1200)."
             }
           ]
         },
@@ -379,7 +387,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f43eec53cc34b336",
+      "sourceHash": "fnv1a64:c84305fccb915bb5",
       "notice": null,
       "blocks": [
         {
@@ -432,6 +440,10 @@
             {
               "kind": "speech",
               "text": "ਮੈਨੂੰ ਨਹੀਂ ਪਤਾ (mainū̃ nahī̃ patā) — I do not have the fact."
+            },
+            {
+              "kind": "speech",
+              "text": "Where patā comes from is not settled. CDIAL has no entry for it, though it lists Punjabi patījṇā, \"to trust\", under Sanskrit pratyaya, \"belief\" (CDIAL 8640)."
             }
           ]
         },

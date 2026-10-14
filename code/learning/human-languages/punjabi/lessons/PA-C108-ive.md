@@ -14,7 +14,8 @@ romanization: "ivẽ"
 concept_tag: PA-DEF108-IVE
 prerequisites: [PA-C108-inna, PA-C108-unna]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva]
+etymology_hook: "ivẽ ← Sanskrit evam eva 'exactly so', a tadbhava (CDIAL 2528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C108-unna]
 <!-- hl-knowledge: introduces=[PA-LEX-C108-DEF108-03]; assesses=[] -->
 
 **ਇਵੇਂ** — *ivẽ* — "like this".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਇਵੇਂ** (*ivẽ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *evam eva*, "exactly so" (CDIAL 2528). CDIAL lists Punjabi *ivẽ*, "in this way".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
