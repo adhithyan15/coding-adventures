@@ -20,10 +20,10 @@ fn railroad_small_padding_keeps_exact_leaf_glyphs_inside_emitted_boxes() {
                 element.width-2.0*padding,height,options.label_font.clone(),Color{r:15,g:23,b:42,a:255});
             let expected=layout_to_paint(&text,&LayoutToPaintOptions{width:layout.width,height:layout.height,
                 background:Color{r:0,g:0,b:0,a:0},device_pixel_ratio:1.0,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&FakeResolver});
-            let leaf=|instructions:Vec<PaintInstruction>|instructions.into_iter().filter_map(|p|match p {
-                PaintInstruction::GlyphRun(run) if run.glyphs.len()==1&&[65,66,67].contains(&run.glyphs[0].glyph_id)=>Some(run),_=>None,
+            let leaf=|instructions:&[PaintInstruction]|instructions.iter().filter_map(|p|match p {
+                PaintInstruction::GlyphRun(run) if run.glyphs.len()==1&&[65,66,67].contains(&run.glyphs[0].glyph_id)=>Some(run.clone()),_=>None,
             }).collect::<Vec<_>>();
-            let actual=leaf(scene.instructions);let expected=leaf(expected.instructions);
+            let actual=leaf(&scene.instructions);let expected=leaf(&expected.instructions);
             if actual!=expected {failures.push(format!("padding={padding} completeglyph mismatch: {actual:?} expected{expected:?}"));}
             assert_eq!(actual.len(),1);
             let run=&actual[0];let glyph=&run.glyphs[0];
