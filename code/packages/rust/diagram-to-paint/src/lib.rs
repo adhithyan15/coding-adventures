@@ -10089,6 +10089,40 @@ emphasized --> direct
     }
 
     #[test]
+    fn line_hop_integer_two_support_authored_parallel_work_preserves_complete_scene() {
+        for count in [32usize, 64, 256] {
+            for mode in ["arc", "gap"] {
+                let mut source = format!("---\nconfig:\n  swimlane:\n    lineHops: {mode}\n    automaticLaneOrdering: false\n    ignoreCrossLaneEdges: true\n    optimizeRanksByCrossings: false\n---\nswimlane-beta LR\nsubgraph A\n");
+                for index in 0..count { source.push_str(&format!("a{index}[A]\n")); }
+                source.push_str("end\nsubgraph B\npad[P]\n");
+                for index in 0..count { source.push_str(&format!("b{index}[B]\n")); }
+                source.push_str("end\n");
+                for index in 0..count { source.push_str(&format!("a{index} --> b{index}\n")); }
+                let diagram = mermaid_parser::parse_swimlane(&source).expect("flat authored oblique family parses");
+                let mut layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+                assert_eq!(layout.edges.len(), count);
+                for (index, edge) in layout.edges.iter().enumerate() {
+                    assert_eq!(edge.from, Point { x: 165.0 + 174.0 * index as f64, y: 118.0 });
+                    assert_eq!(edge.to, Point { x: 281.0 + 174.0 * index as f64, y: 226.0 });
+                }
+                SWIMLANE_LINE_CROSSING_VISITS.with(|value| value.set(0));
+                SWIMLANE_HOP_INDEX_WORK.with(|value| value.set(0));
+                let mut enabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                let predicates = SWIMLANE_LINE_CROSSING_VISITS.with(std::cell::Cell::get);
+                let work = SWIMLANE_HOP_INDEX_WORK.with(std::cell::Cell::get);
+                assert_eq!(enabled.metadata.as_mut().unwrap().remove("swimlane.lineHops").as_deref(), Some(mode));
+                layout.line_hops = None;
+                let disabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                assert_eq!(enabled, disabled, "all authored nodes, labels, paths, markers and metadata survive");
+                assert!(predicates <= 1, "authored count={count}, predicates={predicates}");
+                let budget = 64 * count * ((usize::BITS - count.leading_zeros()) as usize + 1);
+                assert!(work > 0 && work <= budget, "authored count={count}, work={work}, bound={budget}");
+                eprintln!("authored two-support: count={count} mode={mode} predicates={predicates} index_work={work} bound={budget}");
+            }
+        }
+    }
+
+    #[test]
     fn line_hop_integer_two_support_tree_and_original_predicate_agree() {
         type EndpointEntry = ((i64, usize), i64);
         fn validate(node: &SwimlaneHopEndpointNode) -> (usize, Vec<EndpointEntry>) {
