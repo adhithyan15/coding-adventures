@@ -274,7 +274,9 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         diagram.direction,
         DiagramDirection::Lr | DiagramDirection::Rl
     );
-    let lane_header = 38.0;
+    let subgraph_title_margin_top = diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0);
+    let subgraph_title_margin_bottom = diagram.flowchart_config.subgraph_title_margin_bottom.unwrap_or(0.0);
+    let lane_header = 38.0 + subgraph_title_margin_top + subgraph_title_margin_bottom;
     let outer_padding = diagram.flowchart_config.diagram_padding.unwrap_or(12.0);
     let lane_gap = diagram.flowchart_config.node_spacing.unwrap_or(12.0);
     let node_width = 132.0;
@@ -454,7 +456,8 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
             left = left.min(x1); top = top.min(y1); right = right.max(x2); bottom = bottom.max(y2);
         }
         left = (left - 12.0).max(lane.x + 6.0);
-        top = (top - 30.0).max(lane.y + 32.0);
+        top = (top - 30.0 - subgraph_title_margin_top - subgraph_title_margin_bottom)
+            .max(lane.y + lane_header - 6.0);
         right = (right + 12.0).min(lane.x + lane.width - 6.0);
         bottom = (bottom + 12.0).min(lane.y + lane.height - 6.0);
         groups.push(LayoutedSwimlaneGroup {

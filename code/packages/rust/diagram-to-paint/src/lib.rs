@@ -867,7 +867,7 @@ where
         text_children.push(text_node(
             &lane.label,
             lane.x + 8.0,
-            lane.y + 7.0,
+            lane.y + 7.0 + diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0),
             lane.width - 16.0,
             26.0,
             title_font,
@@ -898,7 +898,11 @@ where
         if let Some(italic) = group.style.font_italic { label_font.italic = italic; }
         if let Some(family) = &group.style.font_family { label_font.family.clone_from(family); }
         text_children.push(text_node(
-            &group.label, group.x + 8.0, group.y + 4.0, group.width - 16.0, 22.0,
+            &group.label,
+            group.x + 8.0,
+            group.y + 4.0 + diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0),
+            group.width - 16.0,
+            22.0,
             label_font, group.style.text_color.as_deref().or(diagram.theme.title_color.as_deref())
                 .and_then(parse_css_color)
                 .unwrap_or(Color { r: 69, g: 90, b: 100, a: 255 }),
@@ -1693,6 +1697,12 @@ where
     }
     if let Some(margin) = diagram.flowchart_config.title_top_margin {
         metadata.insert("swimlane.flowchart.titleTopMargin".into(), margin.to_string());
+    }
+    if let Some(margin) = diagram.flowchart_config.subgraph_title_margin_top {
+        metadata.insert("swimlane.flowchart.subGraphTitleMargin.top".into(), margin.to_string());
+    }
+    if let Some(margin) = diagram.flowchart_config.subgraph_title_margin_bottom {
+        metadata.insert("swimlane.flowchart.subGraphTitleMargin.bottom".into(), margin.to_string());
     }
     for (index, group) in diagram.groups.iter().enumerate() {
         metadata.insert(format!("swimlane.group.{index}.id"), group.id.clone());

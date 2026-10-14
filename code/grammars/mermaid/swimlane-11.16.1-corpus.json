@@ -415,6 +415,10 @@
       "source": "---\nconfig:\n  flowchart:\n    titleTopMargin: 26\n---\nswimlane-beta LR\ntitle Approval flow\nsubgraph Review\n  request[Review]\n  done[Done]\nend\nrequest --> done"
     },
     {
+      "name": "flowchart-subgraph-title-margins",
+      "source": "---\nconfig:\n  flowchart:\n    subGraphTitleMargin:\n      top: 12\n      bottom: 18\n---\nswimlane-beta LR\nsubgraph Review\n  request[Review]\n  done[Done]\nend\nrequest --> done"
+    },
+    {
       "name": "cross-lane-rank-constraints",
       "source": "---\nconfig:\n  swimlane:\n    ignoreCrossLaneEdges: false\n---\nswimlane-beta LR\nsubgraph Intake\n  receive[Receive]\n  validate[Validate]\nend\nsubgraph Delivery\n  build[Build]\n  ship[Ship]\nend\nreceive --> validate\nbuild --> ship\nvalidate --> build"
     },
