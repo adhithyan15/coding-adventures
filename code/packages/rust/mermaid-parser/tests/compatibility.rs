@@ -1464,6 +1464,20 @@ fn swimlane_dispatches_to_dedicated_ownership_ir() {
 }
 
 #[test]
+fn swimlane_loose_nodes_lower_into_the_default_lane() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph OwnedLane\n  owned[Owned node]\nend\nloose[Loose node] --> owned",
+    ).expect("loose nodes should parse into a default lane");
+
+    assert_eq!(diagram.lanes.len(), 2);
+    assert_eq!(diagram.lanes[1].id, "__swimlane_default__");
+    assert_eq!(diagram.lanes[1].label, "");
+    assert_eq!(diagram.lanes[1].node_ids, ["loose"]);
+    assert_eq!(diagram.nodes.iter().find(|node| node.id == "loose")
+        .and_then(|node| node.lane_id.as_deref()), Some("__swimlane_default__"));
+}
+
+#[test]
 fn pinned_swimlane_subset_corpus_parses_to_ownership_ir() {
     let corpus: Value = serde_json::from_str(SWIMLANE_CORPUS).expect("swimlane corpus must be JSON");
     for fixture in corpus["fixtures"].as_array().expect("fixtures must be an array") {
@@ -2011,6 +2025,27 @@ fn swimlane_inline_node_styles_lower_to_semantic_ir() {
     assert_eq!(style.stroke_width, Some(4.0));
     assert_eq!(style.stroke_dash.as_deref(), Some([5.0, 3.0].as_slice()));
     assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one[One]\nend\nstyle missing fill:red").is_err());
+}
+
+#[test]
+fn swimlane_node_typography_lowers_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  emphasized[Typographic approval step]\n  direct[Typographic delivery step]\nend\nclassDef emphasis font-size:22px,font-weight:bold,font-style:italic,font-family:\"Helvetica Neue\",color:#7c2d12\nclass emphasized emphasis\nstyle direct font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d\nemphasized --> direct",
+    ).expect("Swimlane node typography should parse");
+
+    let emphasized = &diagram.nodes[0].style;
+    assert_eq!(emphasized.font_size, Some(22.0));
+    assert_eq!(emphasized.font_weight, Some(700));
+    assert_eq!(emphasized.font_italic, Some(true));
+    assert_eq!(emphasized.font_family.as_deref(), Some("Helvetica Neue"));
+    let direct = &diagram.nodes[1].style;
+    assert_eq!(direct.font_size, Some(18.0));
+    assert_eq!(direct.font_weight, Some(500));
+    assert_eq!(direct.font_italic, Some(false));
+    assert_eq!(direct.font_family.as_deref(), Some("Helvetica"));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph A\n  one[One]\nend\nstyle one font-weight:heavy"
+    ).is_err());
 }
 
 #[test]

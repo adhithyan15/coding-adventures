@@ -195,6 +195,10 @@ rather than letting them read as silent gaps.
     modifiers and reconciles only their ten non-inset CSS companions, reducing
     its fresh inventory from 83 to 63. Standalone, inset, and unsupported
     shadows or elevation values remain reported drawing-effect debt.
+    #17394 lowers TaskApp's complete seven-way XAML
+    weekday percentages to proportional Grid stars and its wrapping repeated
+    day cells to `UniformGridLayout`, reducing XAML from 38 to 29. Partial,
+    mixed, invalid, and unsupported wrapping shapes remain explicit debt.
     #17224 then preserves all 15 supported fixed Flutter `border-radius`
     declarations and paints eight coupled rounded-text backgrounds, reducing
     Flutter's fresh inventory from 144 to 121. Relative and otherwise unsafe
@@ -252,6 +256,14 @@ rather than letting them read as silent gaps.
     Keep the verified downloadable artifact matrix unchanged: Static HTML, Web
     Components, and Paint remain CI-only, while signing, notarization, and
     installers remain tracked by #13977.
+
+**Next release checkpoint — P1 [#17469](https://github.com/adhithyan15/coding-adventures/issues/17469):
+publish `task-app-v0.5.5`.** The native lifecycle gates are complete; this
+compatible patch rolls forward the Qt shadow reporting fix (#17386) and XAML
+seven-column calendar lowering (#17394). Validate the preparation PR through
+the existing release payload matrix, then publish from main and audit the
+immutable tag, source manifest, checksums, and coverage notes. Static HTML,
+Web Components, and Paint remain CI-only; signing and installers remain #13977.
 
 ### Tier C — reach, stated honestly
 

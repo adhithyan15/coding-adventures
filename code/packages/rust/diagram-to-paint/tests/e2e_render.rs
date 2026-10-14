@@ -3537,6 +3537,28 @@ line "Target" [35, 50, 68, 82]"##,
                 resolver: &resolver,
             });
             assert!(!scene.instructions.is_empty(), "{fixture_name} must lower to paint");
+            if fixture_name == "default-lane-for-loose-nodes" {
+                assert_eq!(layout.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
+                    vec!["OwnedLane", "__swimlane_default__"]);
+                assert_eq!(layout.lanes[1].label, "");
+                assert!(layout.nodes.iter().any(|node| node.id == "loose"));
+                assert_eq!(layout.edges.len(), 1);
+                assert!(scene.instructions.iter().filter(|instruction|
+                    matches!(instruction, PaintInstruction::Rect(_))
+                ).count() >= 4, "the default lane and both nodes must lower to paint rectangles");
+            }
+            if fixture_name == "node-typography-styles" {
+                assert!(layout.nodes[0].width > layout.nodes[1].width,
+                    "larger bold text must reserve more backend-neutral node width");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 22.0
+                        && run.fill.as_deref() == Some("rgb(124, 45, 18)")
+                )), "class typography must lower to styled glyph runs");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 18.0
+                        && run.fill.as_deref() == Some("rgb(20, 83, 45)")
+                )), "direct typography must lower to styled glyph runs");
+            }
             if fixture_name == "cloud-and-bang-attribute-shapes" {
                 assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
                     PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. }))

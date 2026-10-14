@@ -3,6 +3,7 @@
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
   "fixtures": [
     "basic-handoff",
+    "default-lane-for-loose-nodes",
     "parallel-branch-and-join",
     "flowchart-style-edge-label",
     "multiline-edge-continuation",
@@ -49,6 +50,7 @@
     "html-entity-labels",
     "metadata-entities",
     "inline-node-styles",
+    "node-typography-styles",
     "named-node-classes",
     "semicolon-class-statements",
     "node-class-decorators",

@@ -7,6 +7,10 @@
       "source": "swimlane-beta LR\nsubgraph Customer\n  request[Request service]\n  receive[Receive update]\nend\nsubgraph Support\n  triage[Triage request]\n  answer[Send answer]\nend\nrequest --> triage --> answer --> receive"
     },
     {
+      "name": "default-lane-for-loose-nodes",
+      "source": "swimlane-beta LR\nsubgraph OwnedLane\n  owned[Owned node]\nend\nloose[Loose node] --> owned"
+    },
+    {
       "name": "shapes-labels-and-accessibility",
       "source": "swimlane-beta TB\ntitle Approval flow\naccTitle: Accessible approval flow\naccDescr: A request crosses two teams.\nsubgraph intake [Intake team]\n  start([Start])\n  review{Ready?}\nend\nsubgraph done [Completion]\n  finish((Done))\nend\nstart --> review\nreview -->|Yes| finish"
     },
@@ -193,6 +197,10 @@
     {
       "name": "inline-node-styles",
       "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nstyle done fill:#dcfce7,stroke:#166534,color:#14532d\nrequest --> done"
+    },
+    {
+      "name": "node-typography-styles",
+      "source": "swimlane-beta LR\nsubgraph Review\n  emphasized[Typographic approval step]\n  direct[Typographic delivery step]\nend\nclassDef emphasis font-size:22px,font-weight:bold,font-style:italic,font-family:\"Helvetica Neue\",color:#7c2d12\nclass emphasized emphasis\nstyle direct font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d\nemphasized --> direct"
     },
     {
       "name": "named-node-classes",

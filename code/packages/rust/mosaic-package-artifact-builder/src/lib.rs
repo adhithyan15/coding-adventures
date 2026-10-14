@@ -2764,7 +2764,10 @@ fn analyze_package_degradations_with_runtime_and_tokens(
             };
             match opts.backend {
                 Backend::Xaml => {
-                    for d in mosaic_emit_xaml::pipeline::dropped_style_properties(&composed.style) {
+                    for d in mosaic_emit_xaml::pipeline::dropped_style_properties_in_layout(
+                        &composed.style,
+                        &composed.layout.def.root,
+                    ) {
                         push_drop(d.part, d.name, d.value, d.reason);
                     }
                 }
