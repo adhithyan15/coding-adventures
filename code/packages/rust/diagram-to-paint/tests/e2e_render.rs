@@ -3600,6 +3600,28 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata|
                     metadata.get("swimlane.theme.titleColor")), Some(&"#7c2d12".to_string()));
             }
+            if fixture_name == "theme-node-edge-variables" {
+                assert_eq!(layout.theme.stroke_width, Some(4.0));
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.stroke_width == Some(4.0)
+                )).count() >= 2, "strokeWidth must lower to default node rectangle paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#455a64")
+                        && path.stroke_width == Some(4.0)
+                )), "strokeWidth must lower to default edge path paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.fill.as_deref() == Some("#dc2626")
+                )), "arrowheadColor must lower to endpoint marker paint");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(20, 83, 45)")
+                )).count() >= 2, "nodeTextColor must lower to default node glyph paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.nodeTextColor")), Some(&"#14532d".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.arrowheadColor")), Some(&"#dc2626".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.strokeWidth")), Some(&"4".to_string()));
+            }
             if fixture_name == "flowchart-spacing-config" {
                 assert_eq!(layout.flowchart_config.node_spacing, Some(96.0));
                 assert_eq!(layout.flowchart_config.rank_spacing, Some(28.0));
