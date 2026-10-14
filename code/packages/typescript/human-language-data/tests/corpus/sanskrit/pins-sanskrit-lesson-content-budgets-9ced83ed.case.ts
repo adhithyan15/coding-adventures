@@ -130,7 +130,10 @@ it("pins Sanskrit lesson-content budgets", () =>
     // 1397 -> 1407: chapters 260-262 add six independent first-/second-person
     // accusatives, two number-local contrasts, one cumulative choice lesson,
     // and a terminal retrieval. They add no idiom, sense, or culture claim.
-    lessons: 1407,
+    // 1407 -> 1416: chapters 263-264 bridge the known third-person future to
+    // three first-person singular plan forms, with four no-new-atom retrieval
+    // lessons. They add no idiom, sense, or culture claim.
+    lessons: 1416,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

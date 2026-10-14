@@ -53,6 +53,11 @@ chapter-264 atoms are retrieved by both of the final two lessons. The last two
 lessons introduce nothing, so the reinforcement proof is learner work rather
 than frontmatter accounting.
 
+The first chapter-263 warm-up also retrieves the preceding chapter's
+person-and-number object choice once. Appending this slice otherwise moves
+that newly introduced grammar atom beyond its second reinforcement window;
+the short handoff keeps the existing A1 gate honest before the topic changes.
+
 `SA-A1-F-10` may map only after all five atoms exist, are uniquely owned, and
 the final lesson requires a learner to choose the time word and future form
 without a copyable model.

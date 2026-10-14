@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C264-near-term-plan",
+    "language": "sanskrit",
+    "chapter": 264,
+    "sequence": 15670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73d8c56515838b2f"
+  },
+  "findings": []
+}

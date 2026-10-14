@@ -42,8 +42,11 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // retrieves the one-versus-several possessor contrast in known noun frames.
   // 144 -> 145: chapters 260-262 teach the independent first- and second-person
   // accusatives one number at a time, then retrieve the six-way choice.
-  expect(coverage.covered).toBe(145);
-  expect(coverage.unmapped).toBe(19);
+  // 145 -> 146: chapters 263-264 bridge from known third-person future
+  // recognition to three first-person singular plans, then require two rounds
+  // of model-free near-term retrieval before SA-A1-F-10 closes.
+  expect(coverage.covered).toBe(146);
+  expect(coverage.unmapped).toBe(18);
   expect(coverage.partial).toBe(0);
   // The highest percentage in the corpus, and the reason is worth stating so it
   // is not read as the track being furthest along: this inventory is DERIVED
@@ -51,7 +54,7 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // denominator is the smallest of the twenty-five. 86% of 164 is not
   // comparable with 84% of 273.
   expect(formatExamCoverage(coverage)).toContain(
-    "sanskrit A1 (partial inventory): 145/164 points covered (88%)",
+    "sanskrit A1 (partial inventory): 146/164 points covered (89%)",
   );
   // Where the 19 gaps actually are, named rather than counted. Two columns hold
   // 13 of them, and they are the two an editorially derived A1 inventory is
@@ -75,6 +78,10 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   expect(coverage.byCategory["Sarvanāma — the pronoun"]!).toEqual({
     enumerated: 8,
     covered: 7,
+  });
+  expect(coverage.byCategory["Likes, wishes and feelings"]!).toEqual({
+    enumerated: 2,
+    covered: 2,
   });
   // And the column the ordinal tranche finished: number and quantity, 4/5 -> 5/5.
   expect(coverage.byCategory["Saṅkhyā — number and quantity"]!).toEqual({ enumerated: 5, covered: 5 });
