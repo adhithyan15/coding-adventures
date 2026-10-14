@@ -50,3 +50,37 @@ fn variable_terms_and_overridden_sign_keep_exact_typed_refusals() {
         assert!(matches!(compile_source(source,"unit_offset_identity"),Err(CompileError::Type(message)) if message.contains("cannot print a real value")), "{source}");
     }
 }
+
+#[test]
+fn conditional_unit_fronts_preserve_both_branches_with_bounded_discovery() {
+    struct Guard;
+    impl Drop for Guard {fn drop(&mut self) {SELECTOR_CLASSIFIER_BUDGET.with(|c|c.set(None));}}
+    for condition in ["true","false"] {
+        for wrappers in 0..=2 {
+            let expression=format!("{}if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1){}","(".repeat(wrappers),")".repeat(wrappers));
+            let source=format!("begin boolean procedure choose; choose := {condition}; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := relay(entier({expression})); output(saved) end");
+            SELECTOR_CLASSIFIER_BUDGET.with(|c|c.set(Some((0,8192))));let _guard=Guard;
+            let module=compile_source(&source,"conditional_unit_front").unwrap_or_else(|e|panic!("condition={condition} wrappers={wrappers}: {e}"));
+            let main=module.get_function("main").unwrap();
+            assert_eq!(main.instructions.iter().filter(|i|i.op=="call" && i.srcs.first().and_then(Operand::as_var)==Some("__basic_print_real")).count(),1);
+            let (visits,limit)=SELECTOR_CLASSIFIER_BUDGET.with(Cell::get).unwrap();
+            assert!(visits>0 && visits<=limit);
+            eprintln!("conditional unit condition={condition} wrappers={wrappers} visits={visits} limit={limit}");
+        }
+    }
+}
+
+#[test]
+fn conditional_front_second_units_and_unsafe_roots_keep_typed_refusals() {
+    for condition in ["true","false"] {
+        for expression in [
+            "entier((if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1)) + 1)",
+            "entier(if choose() then (entier(sign(left)) + 2) else (entier(sign(right)) + 1))",
+            "entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 2))",
+            "entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + unit))",
+        ] {
+            let source=format!("begin boolean procedure choose; choose := {condition}; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := relay({expression}); output(saved) end");
+            assert!(matches!(compile_source(&source,"conditional_unit_refusal"),Err(CompileError::Type(message)) if message.contains("cannot print a real value")),"condition={condition}: {source}");
+        }
+    }
+}
