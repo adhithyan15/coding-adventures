@@ -163,6 +163,9 @@ use Backend::{Beam, Clr, Jit, Jvm, Llvm, NativeAot, Vm, Wasm};
 /// called from here (the module's own runner is McCarthy-specific dead code).
 #[path = "clr_support/mod.rs"]
 mod clr_support;
+
+#[path = "unit_offset_runtime/mod.rs"]
+mod unit_offset_runtime;
 mod common;
 
 /// The cross-language battery. Each program is deliberately tiny but exercises real
