@@ -14,7 +14,7 @@ romanization: "khoshbu"
 concept_tag: FA-SEFAT201-KHOSHBU
 prerequisites: [FA-C200-khodkhah, FA-C201-shabih]
 sounds: []
-roots: [khush-persian, persian-bu]
+roots: [khush-persian, persian-bu, persian-khushbu]
 etymology_hook: "khoshbu: Persian khosh 'pleasant' + bu 'smell'; native"
 duration:
   max_seconds: 200

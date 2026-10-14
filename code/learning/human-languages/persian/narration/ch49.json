@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Pencil, Pen, School, Bag, Money",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cb538e1949e5020f",
+  "sourceHash": "fnv1a64:dbe91afc0ce9b323",
   "lessons": [
     {
       "id": "FA-C49-medad",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bb53889ce426c3a",
+      "sourceHash": "fnv1a64:b9c2a58cf5273b1f",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pul first named a small copper coin. It is usually traced to the Byzantine coin follis, from Latin follis, \"bag\", but the route is not settled."
+              "text": "pul first named a small copper coin. It is usually traced to a Greek coin name, though accounts differ on which: some give the old obolos, others the Byzantine follis, from Latin follis, \"bag\"."
             }
           ]
         },

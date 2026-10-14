@@ -14,7 +14,7 @@ romanization: "shart"
 concept_tag: FA-CHERA197-SHART
 prerequisites: [FA-C196-labe, FA-C196-hamkaf]
 sounds: []
-roots: [arabic-sart]
+roots: [arabic-shart]
 etymology_hook: "shart ← Arabic šarṭ 'condition, stipulation', root š-r-ṭ (Lane)"
 duration:
   max_seconds: 200

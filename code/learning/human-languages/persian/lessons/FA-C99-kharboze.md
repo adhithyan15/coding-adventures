@@ -15,7 +15,7 @@ concept_tag: FA-THINGS99-KHARBOZE
 prerequisites: [FA-C99-ash, FA-C99-hendevane]
 sounds: []
 roots: []
-etymology_hook: "kharboze: usually traced to Middle Persian xarbūzag; not settled"
+etymology_hook: "kharboze: an old Persian word for melon; Turkish karpuz 'watermelon' comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C99-hendevane]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*kharboze* is usually traced to Middle Persian *xarbūzag*, "melon"; how that word was built is not settled.
+*kharboze* is an old Persian word for melon. Ottoman Turkish *karpuz*, "watermelon", and Ukrainian *harbuz* come from it (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,7 @@ romanization: "dâne"
 concept_tag: FA-THINGS104-DANE
 prerequisites: [FA-C103-mowj, FA-C103-rishe]
 sounds: []
-roots: [persian-dane]
+roots: [persian-dana]
 etymology_hook: "dâne: inherited, usually traced to Middle Persian dānag"
 duration:
   max_seconds: 200

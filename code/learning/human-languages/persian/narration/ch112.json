@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Ladder, Chest, Suitcase, Backpack, Battery",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d385caa7393ed871",
+  "sourceHash": "fnv1a64:b579097d89a48187",
   "lessons": [
     {
       "id": "FA-C112-nardeban",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57efc6f8b0018ce3",
+      "sourceHash": "fnv1a64:83c3b41f7b322730",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "chamedân is usually explained as the Persian jâmedân, \"clothes-holder\" (jâme, \"garment\", with -dân, \"container\"), which went into Russian as chemodan and came back in that shape. The details are not settled."
+              "text": "chamedân is usually explained as the Persian jâmedân, \"clothes-holder\" (jâme, \"garment\", with -dân, \"container\"), which went into Russian as chemodan and was borrowed back in that shape."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c2ed1038098d3cc",
+      "sourceHash": "fnv1a64:741a959b4c449306",
       "notice": null,
       "blocks": [
         {
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2548c1112dbc2634",
+      "sourceHash": "fnv1a64:518e600c40999792",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bâtri is a loan, usually traced to English battery, \"battery\"."
+              "text": "bâtri is a loan, usually traced to French batterie, \"battery\"; English battery is the same word."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 122,
   "title": "Whale, Dolphin, Shark, Squirrel, Bat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a209b3b847075bae",
+  "sourceHash": "fnv1a64:95fa9752c369816e",
   "lessons": [
     {
       "id": "FA-C122-nahang",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47ea0d32376cde8e",
+      "sourceHash": "fnv1a64:59e4e347f6afc29f",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sanjâb is the word for a squirrel, but no source used here gives its origin, which is not settled."
+              "text": "sanjâb is the word for a squirrel. Lane notes that Arabic sinjāb, \"squirrel\", was taken from Persian, but where the Persian word itself comes from is not settled."
             }
           ]
         },

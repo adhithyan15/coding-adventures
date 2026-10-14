@@ -14,7 +14,7 @@ romanization: "kise"
 concept_tag: FA-CHIZ212-KISE
 prerequisites: [FA-C212-darpush, FA-C212-karton]
 sounds: []
-roots: [persian-kise]
+roots: [persian-kisa]
 etymology_hook: "kise ← Middle Persian kīsag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200

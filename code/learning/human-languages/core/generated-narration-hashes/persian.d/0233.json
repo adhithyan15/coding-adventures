@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 233,
-  "sourceHash": "fnv1a64:af01fc3528c7461e",
+  "sourceHash": "fnv1a64:c2f1ba1f53a0a3a6",
   "lessonIds": [
     "FA-C233-shayad",
     "FA-C233-hatman",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch233.txt",
   "json": "persian/narration/ch233.json",
-  "textHash": "fnv1a64:e30432b7606ddfd4",
-  "jsonHash": "fnv1a64:fbb66cd375c899e7",
+  "textHash": "fnv1a64:f82f5d71c20851af",
+  "jsonHash": "fnv1a64:29793e9403afa2a9",
   "findings": []
 }

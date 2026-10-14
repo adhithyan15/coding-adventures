@@ -14,7 +14,7 @@ romanization: "shak kardan"
 concept_tag: FA-VERB-SHAK-KARDAN
 prerequisites: [FA-C222-pars-kardan, FA-C222-khab-didan]
 sounds: []
-roots: [arabic-sakk]
+roots: [arabic-shakk]
 etymology_hook: "shak ← Arabic šakk 'doubt', root š-k-k (Lane), + Persian kardan"
 duration:
   max_seconds: 200

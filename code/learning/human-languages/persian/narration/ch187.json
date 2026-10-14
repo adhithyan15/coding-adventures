@@ -4,7 +4,7 @@
   "chapter": 187,
   "title": "To slip, To accelerate, To harvest, To save, To deposit",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8495458b3da2e9b5",
+  "sourceHash": "fnv1a64:c7b5994503c817b4",
   "lessons": [
     {
       "id": "FA-C187-liz-khordan",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75c2a13c5e6ee4d6",
+      "sourceHash": "fnv1a64:ecf0da6d7ef82991",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "derow kardan pairs derow, \"harvest\", with kardan, \"to do\". derow is native, usually traced to Middle Persian drōd. kardan, \"to do\", is an inherited verb, from Middle Persian kardan (EtymDB)."
+              "text": "derow kardan pairs derow, \"harvest\", with kardan, \"to do\". derow is native, the present stem of the older verb derudan, \"to reap\". kardan, \"to do\", is an inherited verb, from Middle Persian kardan (EtymDB)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad207795d450c6c5",
+      "sourceHash": "fnv1a64:340271e1a9ce5e62",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vâriz kardan pairs vâriz, \"deposit\", with kardan, \"to do\". Where vâriz comes from is not settled. kardan, \"to do\", is an inherited verb, from Middle Persian kardan (EtymDB)."
+              "text": "vâriz kardan pairs vâriz, \"deposit\", with kardan, \"to do\". vâriz is usually analysed as vâ-, \"back, again\", with riz-, the present stem of rikhtan, \"to pour\". kardan, \"to do\", is an inherited verb, from Middle Persian kardan (EtymDB)."
             }
           ]
         },

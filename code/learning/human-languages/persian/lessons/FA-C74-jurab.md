@@ -14,8 +14,8 @@ romanization: "jurâb"
 concept_tag: FA-CLOTHES74-JURAB
 prerequisites: [FA-C73-pirahan, FA-C73-shalvar]
 sounds: []
-roots: []
-etymology_hook: "jurâb: usually linked with older Persian gōrab; not settled"
+roots: [persian-jurab]
+etymology_hook: "jurâb: Arabic jawrab 'sock', which Lane records as taken from a Persian gōrab"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C73-shalvar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*jurâb* is usually linked with an older Persian *gōrab*, and Arabic *jawrab*, "sock", is the same word, but the details are not settled.
+*jurâb* has the shape of Arabic *jawrab*, "sock". Lane records the Arabic word as taken from an older Persian *gōrab*, so the word went into Arabic and came back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

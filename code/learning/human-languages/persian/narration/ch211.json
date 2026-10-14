@@ -4,7 +4,7 @@
   "chapter": 211,
   "title": "Cotton, Wool, Silk, Brick, Metal",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:35268ba5d062a51d",
+  "sourceHash": "fnv1a64:54740a993704f138",
   "lessons": [
     {
       "id": "FA-C211-panbe",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ccbe64cd8ca16785",
+      "sourceHash": "fnv1a64:6d48deb51944cad9",
       "notice": null,
       "blocks": [
         {
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b8532b7f112359a",
+      "sourceHash": "fnv1a64:80fdbc42e74bd543",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "âjor is usually traced to Akkadian agurru, \"baked brick\", but the route into Persian is not settled."
+              "text": "âjor is usually traced to Akkadian agurru, \"baked brick\"."
             }
           ]
         },

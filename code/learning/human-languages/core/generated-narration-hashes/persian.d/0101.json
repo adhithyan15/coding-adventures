@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 101,
-  "sourceHash": "fnv1a64:d6f9a2c615bec572",
+  "sourceHash": "fnv1a64:c48a5405835acdd4",
   "lessonIds": [
     "FA-C101-badam",
     "FA-C101-peste",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch101.txt",
   "json": "persian/narration/ch101.json",
-  "textHash": "fnv1a64:1a966d9094f949b3",
-  "jsonHash": "fnv1a64:349b8ec2ed29a5ed",
+  "textHash": "fnv1a64:2b84c8f0cdfe3369",
+  "jsonHash": "fnv1a64:9016dfaed03895e6",
   "findings": []
 }

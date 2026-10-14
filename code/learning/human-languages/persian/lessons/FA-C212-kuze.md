@@ -14,7 +14,7 @@ romanization: "kuze"
 concept_tag: FA-CHIZ212-KUZE
 prerequisites: [FA-C212-karton, FA-C212-kise]
 sounds: []
-roots: [persian-kuze]
+roots: [persian-kuza]
 etymology_hook: "kuze: inherited, usually traced to Middle Persian kōzag"
 duration:
   max_seconds: 200

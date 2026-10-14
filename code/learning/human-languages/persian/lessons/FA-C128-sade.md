@@ -14,7 +14,7 @@ romanization: "sâde"
 concept_tag: FA-QUAL128-SADE
 prerequisites: [FA-C128-gerd, FA-C128-mehraban]
 sounds: []
-roots: [persian-sade]
+roots: [persian-sada]
 etymology_hook: "sâde: inherited, usually traced to Middle Persian sādag"
 duration:
   max_seconds: 200

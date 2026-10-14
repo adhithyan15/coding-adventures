@@ -4,7 +4,7 @@
   "chapter": 105,
   "title": "Leopard, Rabbit, Deer, Fox, Pig",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:57c1b383246a25de",
+  "sourceHash": "fnv1a64:7e612d973cb9f753",
   "lessons": [
     {
       "id": "FA-C105-palang",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b92aa4c37a237e5d",
+      "sourceHash": "fnv1a64:a6dc7518093400f9",
       "notice": null,
       "blocks": [
         {

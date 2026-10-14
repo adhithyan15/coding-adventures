@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "House, Room, Window, Chair, Table",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:18bb4839e4d220cf",
+  "sourceHash": "fnv1a64:5a6d4b8e848bdc81",
   "lessons": [
     {
       "id": "FA-C45-khane",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b938cc2da837a18",
+      "sourceHash": "fnv1a64:593e1692e435bbdc",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "panjere is often linked to panje, \"paw, hand\", from panj, \"five\", but that account is not proven, and the origin of the word is not settled."
+              "text": "panjere has two accounts. It is often linked with panje, \"paw, hand\", from panj, \"five\"; EtymDB instead sets it beside Sanskrit piñjara, \"cage\". Which is right is not settled."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34e0093290e136f3",
+      "sourceHash": "fnv1a64:cc41fc861bdca3e5",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sandali is usually traced to sandal, \"sandalwood\", a word that came into Persian through Arabic ṣandal; the chair is said to be named after the wood. EtymDB gives this account, but it is not settled."
+              "text": "sandali is usually traced to sandal, \"sandalwood\", with the ending -i; sandal came into Persian through Arabic ṣandal, the fragrant wood (Lane). The chair is said to be named after the wood, the account EtymDB gives."
             }
           ]
         },

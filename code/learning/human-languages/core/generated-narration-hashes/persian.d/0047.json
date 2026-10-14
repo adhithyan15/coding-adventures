@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 47,
-  "sourceHash": "fnv1a64:3cf7979c988cc538",
+  "sourceHash": "fnv1a64:288fdd591a7b2aec",
   "lessonIds": [
     "FA-C47-ghofl",
     "FA-C47-boshghab",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch47.txt",
   "json": "persian/narration/ch47.json",
-  "textHash": "fnv1a64:25efd927ba2a21dc",
-  "jsonHash": "fnv1a64:3b9aa701bfd9c2c6",
+  "textHash": "fnv1a64:8abe58f53a50d66d",
+  "jsonHash": "fnv1a64:f436830796d2246d",
   "findings": []
 }

@@ -14,7 +14,7 @@ romanization: "gush dâdan"
 concept_tag: FA-VERB-GUSH-DADAN
 prerequisites: [FA-C179-tamasha-kardan, FA-C179-negah-kardan]
 sounds: []
-roots: [persian-gosh, pie-deh3]
+roots: [persian-gush, pie-deh3]
 etymology_hook: "gush dâdan: Persian gush 'ear' (EtymDB) + dâdan 'to give': give ear"
 duration:
   max_seconds: 200

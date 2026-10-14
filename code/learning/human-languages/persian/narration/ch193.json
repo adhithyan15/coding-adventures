@@ -4,7 +4,7 @@
   "chapter": 193,
   "title": "Clinic, Gym, Yard, Place, Distance",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e60b6b7caa9d9ba4",
+  "sourceHash": "fnv1a64:3e6d95a6bbd39db1",
   "lessons": [
     {
       "id": "FA-C193-darmangah",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19007e7a0f5de35d",
+      "sourceHash": "fnv1a64:b5025db409238b1d",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "hayât is usually traced to Arabic, to the root ḥ-w-ṭ, \"to surround\" (Lane): the walled yard. The exact Arabic source is not settled; it is spelled differently from hayât, \"life\"."
+              "text": "hayât is usually traced to Arabic, to the root ḥ-w-ṭ, \"to guard, to surround\" (Lane), the root of ḥāʾiṭ, \"wall\": the walled yard. It is spelled differently from hayât, \"life\"."
             }
           ]
         },

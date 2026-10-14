@@ -4,7 +4,7 @@
   "chapter": 197,
   "title": "Condition, Law, Nevertheless, Although, Or",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d6c68148b8dd0f91",
+  "sourceHash": "fnv1a64:d2919e39e3e88974",
   "lessons": [
     {
       "id": "FA-C197-shart",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a98e0684c3d36a72",
+      "sourceHash": "fnv1a64:ba16bd1127c9b4b6",
       "notice": null,
       "blocks": [
         {
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8c6db9213bfd5aa",
+      "sourceHash": "fnv1a64:9ee98b852cc5b098",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "Full, Empty, Rich, Poor, Clean",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ca9b2960bce16f82",
+  "sourceHash": "fnv1a64:dcd9d9f7f29d7073",
   "lessons": [
     {
       "id": "FA-C61-por",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:020428b5fffa1b50",
+      "sourceHash": "fnv1a64:6fb1297707f8ba14",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "puldâr is built from pul, \"money\", and -dâr, \"holding\" (from dâshtan, \"to have\"): \"money-holder\". -dâr is inherited, usually traced to Middle Persian dār; pul first named a small coin, and its origin is not settled."
+              "text": "puldâr is built from pul, \"money\", and -dâr, \"holding\" (from dâshtan, \"to have\"): \"money-holder\". -dâr is inherited, usually traced to Middle Persian dār; pul first named a small coin and is usually traced to a Greek coin name."
             }
           ]
         },

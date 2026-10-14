@@ -4,7 +4,7 @@
   "chapter": 239,
   "title": "Kettle, Teapot, Handkerchief, Basket, Rubbish",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:68f1fdd1d541d708",
+  "sourceHash": "fnv1a64:9f0e0879eb1c98c5",
   "lessons": [
     {
       "id": "FA-C239-ketri",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f79d3915fd5305c0",
+      "sourceHash": "fnv1a64:155d88eff30a256f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ketri is usually linked with English kettle, but its origin is not settled."
+              "text": "ketri is a loan, usually traced to English kettle, with an r where English has l."
             }
           ]
         },

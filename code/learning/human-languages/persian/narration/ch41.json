@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Fruit, Apple, Banana, Tomato, Carrot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b2254f0dba87db29",
+  "sourceHash": "fnv1a64:041ec81bf3593594",
   "lessons": [
     {
       "id": "FA-C41-miveh",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d91ff6780b90dfd7",
+      "sourceHash": "fnv1a64:d063d23503c46ab4",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "moz continues Middle Persian mōz, \"banana\" (EtymDB). Arabic mawz is the same word, and which language had it first is not settled."
+              "text": "moz continues Middle Persian mōz, \"banana\" (EtymDB). It is usually linked with Sanskrit mōca, the plantain and its fruit (CDIAL 10348; EtymDB lists the related mauca). Arabic mawz is the same word."
             }
           ]
         },

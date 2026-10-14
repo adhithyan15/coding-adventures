@@ -14,7 +14,7 @@ romanization: "moshkel"
 concept_tag: FA-CHERA158-MOSHKEL
 prerequisites: [FA-C158-be-khater-e, FA-C158-natije]
 sounds: []
-roots: [arabic-muskil]
+roots: [arabic-mushkil]
 etymology_hook: "moshkel ← Arabic muškil 'difficult, problematic', root š-k-l (Lane)"
 duration:
   max_seconds: 200

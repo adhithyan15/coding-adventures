@@ -4,7 +4,7 @@
   "chapter": 120,
   "title": "Jacket, Slippers, Pond, Spring, Salt desert",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a591888927286063",
+  "sourceHash": "fnv1a64:d4d71009f838e6ea",
   "lessons": [
     {
       "id": "FA-C120-kapshan",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:980aac6dd58e379b",
+      "sourceHash": "fnv1a64:7bc40048f46d9fba",
       "notice": null,
       "blocks": [
         {

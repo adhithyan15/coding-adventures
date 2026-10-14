@@ -14,7 +14,7 @@ romanization: "kuleposhti"
 concept_tag: FA-THINGS112-KULEPOSHTI
 prerequisites: [FA-C112-sanduq, FA-C112-chamedan]
 sounds: []
-roots: [persian-pusht]
+roots: [persian-posht]
 etymology_hook: "kuleposhti: Persian kule 'load' + posht 'back' + -i; native"
 duration:
   max_seconds: 200

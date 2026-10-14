@@ -14,7 +14,7 @@ romanization: "mehrabân"
 concept_tag: FA-QUAL128-MEHRABAN
 prerequisites: [FA-C128-talayi, FA-C128-gerd]
 sounds: []
-roots: [persian-mihr]
+roots: [persian-mihr, persian-mihrban]
 etymology_hook: "mehrabân ← Middle Persian mihrbān (EtymDB): mehr 'kindness' + -bân 'keeper'"
 duration:
   max_seconds: 200

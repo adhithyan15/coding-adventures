@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 197,
-  "sourceHash": "fnv1a64:d6c68148b8dd0f91",
+  "sourceHash": "fnv1a64:d2919e39e3e88974",
   "lessonIds": [
     "FA-C197-shart",
     "FA-C197-qanun",
@@ -14,6 +14,6 @@
   "text": "persian/narration/ch197.txt",
   "json": "persian/narration/ch197.json",
   "textHash": "fnv1a64:c37b58438fcbf8b6",
-  "jsonHash": "fnv1a64:71f0aef9eaf32d66",
+  "jsonHash": "fnv1a64:0287e49fee265e08",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 112,
-  "sourceHash": "fnv1a64:d385caa7393ed871",
+  "sourceHash": "fnv1a64:b579097d89a48187",
   "lessonIds": [
     "FA-C112-nardeban",
     "FA-C112-sanduq",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch112.txt",
   "json": "persian/narration/ch112.json",
-  "textHash": "fnv1a64:02acbc880ba68e58",
-  "jsonHash": "fnv1a64:cdef08efda41ae34",
+  "textHash": "fnv1a64:a8f626c90ab56d2a",
+  "jsonHash": "fnv1a64:0e78b79cd6c9bfcd",
   "findings": []
 }

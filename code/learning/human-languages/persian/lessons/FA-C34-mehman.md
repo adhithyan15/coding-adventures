@@ -14,7 +14,7 @@ romanization: "mehmân"
 concept_tag: FA-FAMILY34-MEHMAN
 prerequisites: [FA-C33-khanevade, FA-C34-hamsaye]
 sounds: []
-roots: [persian-mehman]
+roots: [persian-mihman]
 etymology_hook: "mehmân ← Middle Persian mehmān (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 179,
-  "sourceHash": "fnv1a64:ff4425e5eadc6596",
+  "sourceHash": "fnv1a64:4973f433a52a3d61",
   "lessonIds": [
     "FA-C179-dush-gereftan",
     "FA-C179-bardashtan",
@@ -14,6 +14,6 @@
   "text": "persian/narration/ch179.txt",
   "json": "persian/narration/ch179.json",
   "textHash": "fnv1a64:598b36402007f053",
-  "jsonHash": "fnv1a64:507c86290a26dbcc",
+  "jsonHash": "fnv1a64:44b46e92f365067f",
   "findings": []
 }

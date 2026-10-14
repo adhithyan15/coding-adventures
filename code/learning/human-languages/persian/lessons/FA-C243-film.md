@@ -15,7 +15,7 @@ concept_tag: FA-CHIZ243-FILM
 prerequisites: [FA-C243-marasem, FA-C243-mosabeqe]
 sounds: []
 roots: [english-film]
-etymology_hook: "film: a loan, usually traced to English film 'film'"
+etymology_hook: "film: a loan, usually traced to French film, itself from English film"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C243-mosabeqe]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*film* is a loan, usually traced to English *film*, "film".
+*film* is a loan, usually traced to French *film*, which French took from English *film*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

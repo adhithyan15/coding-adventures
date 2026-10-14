@@ -4,7 +4,7 @@
   "chapter": 126,
   "title": "Clever, Timid, Famous, Dangerous, Safe",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4a569d8f96601060",
+  "sourceHash": "fnv1a64:1850e42721f23fe7",
   "lessons": [
     {
       "id": "FA-C126-zerang",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebfc2a0df9a8f4a9",
+      "sourceHash": "fnv1a64:054cfda12499fc7b",
       "notice": null,
       "blocks": [
         {

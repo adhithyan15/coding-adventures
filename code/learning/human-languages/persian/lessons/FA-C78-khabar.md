@@ -14,7 +14,7 @@ romanization: "khabar"
 concept_tag: FA-WORLD78-KHABAR
 prerequisites: [FA-C78-safar, FA-C78-musighi]
 sounds: []
-roots: [arabic-habar]
+roots: [arabic-khabar]
 etymology_hook: "khabar ← Arabic ḫabar 'news, report', root ḫ-b-r (Lane)"
 duration:
   max_seconds: 200

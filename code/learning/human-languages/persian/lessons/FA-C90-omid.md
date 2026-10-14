@@ -14,7 +14,7 @@ romanization: "omid"
 concept_tag: FA-CAN90-OMID
 prerequisites: [FA-C90-ghodrat, FA-C90-arezu]
 sounds: []
-roots: [persian-omid]
+roots: [persian-ummed]
 etymology_hook: "omid: inherited, usually traced to Middle Persian ummēd"
 duration:
   max_seconds: 200

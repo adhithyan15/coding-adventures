@@ -14,7 +14,7 @@ romanization: "cheshme"
 concept_tag: FA-THINGS120-CHESHME
 prerequisites: [FA-C120-dampayi, FA-C120-barke]
 sounds: []
-roots: [persian-chashm]
+roots: [persian-chashma]
 etymology_hook: "cheshme ← Middle Persian čašmag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200

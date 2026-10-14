@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Name a Verb, Find Its Stem",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0d1ef5df0ee41716",
+  "sourceHash": "fnv1a64:e50d7399e32b733d",
   "lessons": [
     {
       "id": "FA-C06-budan",
@@ -200,7 +200,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2b6abffae560fe4",
+      "sourceHash": "fnv1a64:6cf1743727505fbe",
       "notice": null,
       "blocks": [
         {

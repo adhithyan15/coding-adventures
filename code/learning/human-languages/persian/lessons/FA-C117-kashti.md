@@ -14,7 +14,7 @@ romanization: "kashti"
 concept_tag: FA-THINGS117-KASHTI
 prerequisites: [FA-C117-taksi, FA-C117-metro]
 sounds: []
-roots: [persian-kashti]
+roots: [persian-kishti]
 etymology_hook: "kashti ← Middle Persian kaštīg (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200

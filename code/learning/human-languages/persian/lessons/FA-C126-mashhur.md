@@ -14,7 +14,7 @@ romanization: "mashhur"
 concept_tag: FA-QUAL126-MASHHUR
 prerequisites: [FA-C126-zerang, FA-C126-tarsu]
 sounds: []
-roots: [arabic-mashur]
+roots: [arabic-mashhur]
 etymology_hook: "mashhur ← Arabic mašhūr 'well known, famous', root š-h-r (Lane)"
 duration:
   max_seconds: 200

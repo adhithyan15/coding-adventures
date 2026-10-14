@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 231,
-  "sourceHash": "fnv1a64:4fff857f56380e07",
+  "sourceHash": "fnv1a64:e2305ee7d2b27805",
   "lessonIds": [
     "FA-C231-aramgah",
     "FA-C231-talar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch231.txt",
   "json": "persian/narration/ch231.json",
-  "textHash": "fnv1a64:14c1b6d5102bc1d6",
-  "jsonHash": "fnv1a64:406ba83e09a8495c",
+  "textHash": "fnv1a64:7d4790e715ad7828",
+  "jsonHash": "fnv1a64:1ab37f988a60dc42",
   "findings": []
 }

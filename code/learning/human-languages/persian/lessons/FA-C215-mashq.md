@@ -15,7 +15,7 @@ concept_tag: FA-KAR215-MASHQ
 prerequisites: [FA-C214-modir, FA-C215-nomre]
 sounds: []
 roots: [arabic-masq]
-etymology_hook: "mashq ← Arabic mašq 'writing practice', root m-š-q (Lane)"
+etymology_hook: "mashq ← Arabic mašq 'quick or stretched-out writing', root m-š-q (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C215-nomre]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*mashq* is borrowed from Arabic *mašq*, "writing practice". Its Arabic root is *m-š-q* (Lane).
+*mashq* is borrowed from Arabic *mašq*, "quick or stretched-out writing". Its Arabic root is *m-š-q* (Lane). Persian uses it for practice and homework.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

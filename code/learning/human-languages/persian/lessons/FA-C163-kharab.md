@@ -14,7 +14,7 @@ romanization: "kharâb"
 concept_tag: FA-SEFAT163-KHARAB
 prerequisites: [FA-C163-nazok, FA-C163-saf]
 sounds: []
-roots: [arabic-harab]
+roots: [arabic-kharab]
 etymology_hook: "kharâb ← Arabic ḫarāb 'ruin, ruined', root ḫ-r-b (Lane)"
 duration:
   max_seconds: 200

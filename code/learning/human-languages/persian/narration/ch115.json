@@ -4,7 +4,7 @@
   "chapter": 115,
   "title": "Pupil, Doctor, Nurse, Cook, Worker",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b938727217f96cb1",
+  "sourceHash": "fnv1a64:4f2a6b39b81129e3",
   "lessons": [
     {
       "id": "FA-C115-shagerd",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70d37144107b9032",
+      "sourceHash": "fnv1a64:c36a848da04dd4ac",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "shâgerd is a native Persian word for a pupil or apprentice, but no source used here gives its older form, and its origin is not settled."
+              "text": "shâgerd is a native Iranian word for a pupil or apprentice. Armenian ašakert, \"disciple\", is usually traced to an older Iranian form of the same word."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:247322ebd0b4fd3e",
+      "sourceHash": "fnv1a64:f693702054c7a118",
       "notice": null,
       "blocks": [
         {

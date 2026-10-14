@@ -12,7 +12,7 @@ concept_tag: VERB-GO
 prerequisites: [FA-C06-budan]
 sounds: [rtl, short-vowels-unwritten]
 roots: [middle-persian-raftan, persian-present-stem-rav]
-etymology_hook: "raftan: inherited, usually traced to Middle Persian raftan; its deeper origin is not settled"
+etymology_hook: "raftan: inherited, usually traced to Middle Persian raftan"
 duration:
   max_seconds: 290
 requires:

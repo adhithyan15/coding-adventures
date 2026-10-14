@@ -14,7 +14,7 @@ romanization: "gushvâre"
 concept_tag: FA-THINGS97-GUSHVARE
 prerequisites: [FA-C97-shal, FA-C97-dastkesh]
 sounds: []
-roots: [persian-gosh]
+roots: [persian-gush]
 etymology_hook: "gushvâre: Persian gush 'ear' (Middle Persian gōš, EtymDB) + -vâre"
 duration:
   max_seconds: 200

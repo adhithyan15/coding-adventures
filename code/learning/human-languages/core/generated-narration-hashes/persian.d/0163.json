@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 163,
-  "sourceHash": "fnv1a64:4cc8c2cdc5127dd2",
+  "sourceHash": "fnv1a64:f1091365139a855e",
   "lessonIds": [
     "FA-C163-rangarang",
     "FA-C163-nazok",
@@ -14,6 +14,6 @@
   "text": "persian/narration/ch163.txt",
   "json": "persian/narration/ch163.json",
   "textHash": "fnv1a64:f81dfeaa7ac2b852",
-  "jsonHash": "fnv1a64:3d9f91591fc4a2b0",
+  "jsonHash": "fnv1a64:edb1be120455fe6e",
   "findings": []
 }

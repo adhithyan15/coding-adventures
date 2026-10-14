@@ -15,7 +15,7 @@ concept_tag: FA-THINGS100-GERDU
 prerequisites: [FA-C100-khorma, FA-C100-anar]
 sounds: []
 roots: []
-etymology_hook: "gerdu: usually explained as built on Persian gerd 'round'; not settled"
+etymology_hook: "gerdu: usually explained as built on Persian gerd 'round': the round nut"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C100-anar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*gerdu* is usually explained as built on *gerd*, "round", a native word; that account is the usual one, but it is not settled.
+*gerdu* is usually explained as built on *gerd*, "round", a native word: the round nut.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

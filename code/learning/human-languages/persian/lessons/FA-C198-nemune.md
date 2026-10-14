@@ -14,7 +14,7 @@ romanization: "nemune"
 concept_tag: FA-CHERA198-NEMUNE
 prerequisites: [FA-C198-ide, FA-C198-farq]
 sounds: []
-roots: [persian-namudan]
+roots: [persian-namudan, persian-namuna]
 etymology_hook: "nemune: built on Persian nemudan 'to show' (Middle Persian nimūnag)"
 duration:
   max_seconds: 200

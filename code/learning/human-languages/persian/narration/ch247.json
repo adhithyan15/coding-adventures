@@ -4,7 +4,7 @@
   "chapter": 247,
   "title": "Tin, Spices, Scales, Samovar, Wire",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:be159d878d66b3bd",
+  "sourceHash": "fnv1a64:2e6c2eca1ab8d688",
   "lessons": [
     {
       "id": "FA-C247-quti",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7013137c8adb54a",
+      "sourceHash": "fnv1a64:ea424c1adcbf9d7c",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sim is usually traced to Middle Persian asēm, \"silver\"; how it came to mean \"wire\" is not settled."
+              "text": "sim is the old Persian word for silver, usually traced to Middle Persian asēm, \"silver\". Modern Persian uses it for wire."
             }
           ]
         },

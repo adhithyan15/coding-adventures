@@ -4,7 +4,7 @@
   "chapter": 166,
   "title": "Toman, Customer, Size, Cash, Blouse",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:eb26ca1df669a8f7",
+  "sourceHash": "fnv1a64:48519e65fdba7c36",
   "lessons": [
     {
       "id": "FA-C166-tuman",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb678a0a8064f0de",
+      "sourceHash": "fnv1a64:87a960799e034f02",
       "notice": null,
       "blocks": [
         {

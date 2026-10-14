@@ -15,7 +15,7 @@ concept_tag: FA-MAKAN193-HAYAT
 prerequisites: [FA-C193-darmangah, FA-C193-bashgah]
 sounds: []
 roots: []
-etymology_hook: "hayât: usually traced to Arabic root ḥ-w-ṭ 'to surround' (Lane); not settled"
+etymology_hook: "hayât: usually traced to the Arabic root ḥ-w-ṭ 'to guard, to surround' (Lane): the walled yard"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C193-bashgah]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*hayât* is usually traced to Arabic, to the root *ḥ-w-ṭ*, "to surround" (Lane): the walled yard. The exact Arabic source is not settled; it is spelled differently from *hayât*, "life".
+*hayât* is usually traced to Arabic, to the root *ḥ-w-ṭ*, "to guard, to surround" (Lane), the root of *ḥāʾiṭ*, "wall": the walled yard. It is spelled differently from *hayât*, "life".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

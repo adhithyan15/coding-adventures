@@ -15,7 +15,7 @@ concept_tag: FA-CHIZ246-KESHOW
 prerequisites: [FA-C246-safhe, FA-C246-payam]
 sounds: []
 roots: [persian-kashidan]
-etymology_hook: "keshow: usually explained as built on Persian kesh- 'pull'; not settled"
+etymology_hook: "keshow: usually explained as built on Persian kesh- 'pull' (keshidan)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C246-payam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*keshow* is usually explained as built on *kesh-*, "pull" (from *keshidan*): the thing you pull out. That account is the usual one, but it is not settled.
+*keshow* is usually explained as built on *kesh-*, "pull" (from *keshidan*): the thing you pull out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

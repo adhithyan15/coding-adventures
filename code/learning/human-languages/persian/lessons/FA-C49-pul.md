@@ -15,7 +15,7 @@ concept_tag: FA-SCHOOL49-PUL
 prerequisites: [FA-C49-madrese, FA-C49-kif]
 sounds: []
 roots: [persian-pul-money]
-etymology_hook: "pul: first a copper coin; usually traced to Byzantine follis; not settled"
+etymology_hook: "pul: first a small coin; usually traced to a Greek coin name, obolos or Byzantine follis"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C49-kif]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*pul* first named a small copper coin. It is usually traced to the Byzantine coin *follis*, from Latin *follis*, "bag", but the route is not settled.
+*pul* first named a small copper coin. It is usually traced to a Greek coin name, though accounts differ on which: some give the old *obolos*, others the Byzantine *follis*, from Latin *follis*, "bag".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

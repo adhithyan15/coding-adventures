@@ -4,7 +4,7 @@
   "chapter": 169,
   "title": "Adult, Classmate, Host, Enemy, People",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b8f616462a6d1331",
+  "sourceHash": "fnv1a64:a9110c3d61bf00c5",
   "lessons": [
     {
       "id": "FA-C169-bozorgsal",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:048f8850e10c2c1b",
+      "sourceHash": "fnv1a64:87a9c5113708a9b5",
       "notice": null,
       "blocks": [
         {

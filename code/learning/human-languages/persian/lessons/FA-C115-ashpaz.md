@@ -14,7 +14,7 @@ romanization: "âshpaz"
 concept_tag: FA-THINGS115-ASHPAZ
 prerequisites: [FA-C115-doktor, FA-C115-parastar]
 sounds: []
-roots: [persian-pukhtan]
+roots: [persian-pokhtan]
 etymology_hook: "âshpaz: Persian âsh 'soup' + paz 'cooking' (pokhtan, inherited)"
 duration:
   max_seconds: 200

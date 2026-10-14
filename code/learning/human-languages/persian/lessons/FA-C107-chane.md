@@ -47,7 +47,7 @@ reviews_of: [FA-C107-magas]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*châne* is a native Persian word, but no source used here gives its older form, and its origin is not settled.
+*châne* is a native Persian word, but its origin is not settled. EtymDB sets it beside English *chin* and Latin *gena*, "cheek", but no source used here shows how the sounds match, so that link is doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

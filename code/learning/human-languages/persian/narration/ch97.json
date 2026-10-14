@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Shawl, Gloves, Earring, Necklace, Boots",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cd2be3da56163b0a",
+  "sourceHash": "fnv1a64:59221ce49a48bd68",
   "lessons": [
     {
       "id": "FA-C97-shal",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fcbeaea4330dba6d",
+      "sourceHash": "fnv1a64:927c607975fa9317",
       "notice": null,
       "blocks": [
         {

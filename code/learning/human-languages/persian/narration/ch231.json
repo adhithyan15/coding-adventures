@@ -4,7 +4,7 @@
   "chapter": 231,
   "title": "Tomb, Hall, Swimming pool, Homeland, Birthplace",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4fff857f56380e07",
+  "sourceHash": "fnv1a64:e2305ee7d2b27805",
   "lessons": [
     {
       "id": "FA-C231-aramgah",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c26ff850b96898e9",
+      "sourceHash": "fnv1a64:abd71ad6979be7c6",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "tâlâr is the word for a hall, but no source used here gives its origin, which is not settled."
+              "text": "tâlâr is usually traced to Middle Persian tālār, \"hall\"; EtymDB lists the form from Manichaean Middle Persian texts."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 227,
   "title": "Bandage, Painkiller, Insurance, Accident, Dentist",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3db801c4c650df2d",
+  "sourceHash": "fnv1a64:1ecbc82d5917ac6c",
   "lessons": [
     {
       "id": "FA-C227-band",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd8a3c8fd8d26dc4",
+      "sourceHash": "fnv1a64:e716711bfc94a6fd",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bime is often linked with bim, \"fear, risk\", but its origin is not settled."
+              "text": "bime is usually explained as built on bim, \"fear, risk\", with the ending -e: cover against a risk. Hindi bīmā, \"insurance\", comes from this Persian word (EtymDB)."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 126,
-  "sourceHash": "fnv1a64:4a569d8f96601060",
+  "sourceHash": "fnv1a64:1850e42721f23fe7",
   "lessonIds": [
     "FA-C126-zerang",
     "FA-C126-tarsu",
@@ -14,6 +14,6 @@
   "text": "persian/narration/ch126.txt",
   "json": "persian/narration/ch126.json",
   "textHash": "fnv1a64:686408a43f51e851",
-  "jsonHash": "fnv1a64:0d31050ad21e77b4",
+  "jsonHash": "fnv1a64:e5308e4e9e9787e8",
   "findings": []
 }

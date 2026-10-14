@@ -4,7 +4,7 @@
   "chapter": 128,
   "title": "Golden, Round, Kind, Simple, Calm",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e489ffd9a7a39ac7",
+  "sourceHash": "fnv1a64:a85876ea442eaa14",
   "lessons": [
     {
       "id": "FA-C128-talayi",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7275c631c8bd07d4",
+      "sourceHash": "fnv1a64:bb71a2f889de3b10",
       "notice": null,
       "blocks": [
         {
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:375ed7061361156c",
+      "sourceHash": "fnv1a64:2ca1855d4b506a20",
       "notice": null,
       "blocks": [
         {

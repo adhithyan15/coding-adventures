@@ -4,7 +4,7 @@
   "chapter": 118,
   "title": "Road, Car park, Raisins, Plum, Squash",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:19654683e1f1284e",
+  "sourceHash": "fnv1a64:c049e5191eaaa656",
   "lessons": [
     {
       "id": "FA-C118-jadde",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69fbfcf9798418fb",
+      "sourceHash": "fnv1a64:5461935411c11f90",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "kishmish is a native Persian word for raisins, but no source used here gives its older form, and its origin is not settled."
+              "text": "kishmish is a Persian word for small raisins that other languages took over, Bengali kishmish among them. No source used here gives its older form, and its origin is not settled."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e944b39032e867d",
+      "sourceHash": "fnv1a64:043c457e86e8ac7c",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "âlu is a native Persian word whose origin is not settled; EtymDB links it to Sanskrit ālu, \"edible root\", but that link is not secure."
+              "text": "âlu is usually traced to Middle Persian ālūd, \"plum\", as Turner's CDIAL (1103) notes; Hindi ālū, \"plum\", was taken from it. EtymDB links it to Sanskrit ālu, \"edible root\", but that is a different word that looks alike."
             }
           ]
         },

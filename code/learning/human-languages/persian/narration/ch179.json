@@ -4,7 +4,7 @@
   "chapter": 179,
   "title": "To take a shower, To pick up, To watch, To look at, To listen",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ff4425e5eadc6596",
+  "sourceHash": "fnv1a64:4973f433a52a3d61",
   "lessons": [
     {
       "id": "FA-C179-dush-gereftan",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:498b17aaf8cd20f3",
+      "sourceHash": "fnv1a64:fd029a97cef21be1",
       "notice": null,
       "blocks": [
         {
@@ -562,7 +562,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:5ac278b623b479d9",
+      "sourceHash": "fnv1a64:ed1c3dc864ff7863",
       "notice": {
         "modality": "sight",
         "needs": [

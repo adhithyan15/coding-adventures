@@ -4,7 +4,7 @@
   "chapter": 107,
   "title": "Mosquito, Fly, Chin, Cheek, Elbow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a2154a2a8e1c5ecf",
+  "sourceHash": "fnv1a64:5f17893885baa3dd",
   "lessons": [
     {
       "id": "FA-C107-pashe",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e97b41c8cb866576",
+      "sourceHash": "fnv1a64:eaeeccebd4f6dd9a",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "magas is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian makas, \"fly\". It is usually set beside Sanskrit makṣikā, \"fly\", as one Indo-Iranian word."
+              "text": "magas is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian magas, \"fly\". It is usually set beside Sanskrit makṣikā, \"fly\", as one Indo-Iranian word."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ddfda104ea9d557",
+      "sourceHash": "fnv1a64:0468390ecbe4b82d",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "châne is a native Persian word, but no source used here gives its older form, and its origin is not settled."
+              "text": "châne is a native Persian word, but its origin is not settled. EtymDB sets it beside English chin and Latin gena, \"cheek\", but no source used here shows how the sounds match, so that link is doubtful."
             }
           ]
         },

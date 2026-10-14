@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 170,
-  "sourceHash": "fnv1a64:f8ff7ba586f14b4e",
+  "sourceHash": "fnv1a64:7d57d74e8467410d",
   "lessonIds": [
     "FA-C170-mohabbat",
     "FA-C170-khashm",
@@ -14,6 +14,6 @@
   "text": "persian/narration/ch170.txt",
   "json": "persian/narration/ch170.json",
   "textHash": "fnv1a64:a53cb02adab3712d",
-  "jsonHash": "fnv1a64:548a83471275cce3",
+  "jsonHash": "fnv1a64:8eecf542246bd80a",
   "findings": []
 }

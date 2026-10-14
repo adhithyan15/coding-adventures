@@ -15,7 +15,7 @@ concept_tag: FA-MAKAN231-TALAR
 prerequisites: [FA-C230-rubaru, FA-C231-aramgah]
 sounds: []
 roots: []
-etymology_hook: "tâlâr: origin not settled"
+etymology_hook: "tâlâr: usually traced to Middle Persian tālār 'hall' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C231-aramgah]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*tâlâr* is the word for a hall, but no source used here gives its origin, which is not settled.
+*tâlâr* is usually traced to Middle Persian *tālār*, "hall"; EtymDB lists the form from Manichaean Middle Persian texts.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

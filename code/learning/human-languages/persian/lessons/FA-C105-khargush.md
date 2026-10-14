@@ -14,7 +14,7 @@ romanization: "khargush"
 concept_tag: FA-THINGS105-KHARGUSH
 prerequisites: [FA-C104-shabnam, FA-C105-palang]
 sounds: []
-roots: [persian-gosh]
+roots: [persian-khargosh, persian-gush]
 etymology_hook: "khargush ← Middle Persian xargōš (EtymDB): khar 'donkey' + gush 'ear'"
 duration:
   max_seconds: 200

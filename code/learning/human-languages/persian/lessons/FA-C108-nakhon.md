@@ -14,7 +14,7 @@ romanization: "nâkhon"
 concept_tag: FA-THINGS108-NAKHON
 prerequisites: [FA-C108-moch, FA-C108-shast]
 sounds: []
-roots: [persian-nakhon]
+roots: [persian-nakhun]
 etymology_hook: "nâkhon: inherited, usually traced to Middle Persian nāxun"
 duration:
   max_seconds: 200

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 285,
-  "sourceHash": "fnv1a64:188baf3664772832",
+  "sourceHash": "fnv1a64:53a915f3089490ff",
   "lessonIds": [
     "FA-C285-fizik",
     "FA-C285-shimi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch285.txt",
   "json": "persian/narration/ch285.json",
-  "textHash": "fnv1a64:bc83a7ecd1051244",
-  "jsonHash": "fnv1a64:21d729fbd2deaaaa",
+  "textHash": "fnv1a64:9368f3fe263f9362",
+  "jsonHash": "fnv1a64:9a2e4f3d34e1a69e",
   "findings": []
 }

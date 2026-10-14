@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "A Timetable, a Sign, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f80cd1e687c94edd",
+  "sourceHash": "fnv1a64:a5121001844b0441",
   "lessons": [
     {
       "id": "FA-C139-jadval-e-zamani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85a9ff0e2448b212",
+      "sourceHash": "fnv1a64:062605f5e45befb8",
       "notice": null,
       "blocks": [
         {
@@ -70,7 +70,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "jadval-e zamâni is \"a table of time\". jadval, \"table, grid\", is borrowed from Arabic jadwal, \"stream, channel; table\" (root j-d-l, Lane); zamâni is zamân, \"time\", with the ending -i."
+              "text": "jadval-e zamâni is \"a table of time\". jadval, \"table, grid\", is borrowed from Arabic jadwal, \"stream, channel; table\" (root j-d-l, Lane); zamâni is zamân, \"time\", with the ending -i; zamân is usually treated as a loan from Arabic zamān, but Middle Persian also had zamān, so which way it moved is not settled."
             }
           ]
         },

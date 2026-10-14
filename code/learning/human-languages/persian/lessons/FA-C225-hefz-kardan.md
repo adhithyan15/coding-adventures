@@ -14,7 +14,7 @@ romanization: "hefz kardan"
 concept_tag: FA-VERB-HEFZ-KARDAN
 prerequisites: [FA-C224-joda-kardan, FA-C224-pust-kandan]
 sounds: []
-roots: [arabic-hifz]
+roots: [arabic-h-f-z]
 etymology_hook: "hefz ← Arabic ḥifẓ 'guarding, keeping in memory', root ḥ-f-ẓ (Lane), + Persian kardan"
 duration:
   max_seconds: 200

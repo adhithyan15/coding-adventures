@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 120,
-  "sourceHash": "fnv1a64:a591888927286063",
+  "sourceHash": "fnv1a64:d4d71009f838e6ea",
   "lessonIds": [
     "FA-C120-kapshan",
     "FA-C120-dampayi",
@@ -14,6 +14,6 @@
   "text": "persian/narration/ch120.txt",
   "json": "persian/narration/ch120.json",
   "textHash": "fnv1a64:3a789aa065533ade",
-  "jsonHash": "fnv1a64:d0f1a88abcf3c596",
+  "jsonHash": "fnv1a64:df37ec422105e913",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 212,
-  "sourceHash": "fnv1a64:1ea88ed4003ab164",
+  "sourceHash": "fnv1a64:a569f62f39a07e6a",
   "lessonIds": [
     "FA-C212-darpush",
     "FA-C212-karton",
@@ -14,6 +14,6 @@
   "text": "persian/narration/ch212.txt",
   "json": "persian/narration/ch212.json",
   "textHash": "fnv1a64:0babbc4b823247d8",
-  "jsonHash": "fnv1a64:fce3674fdb09b1d4",
+  "jsonHash": "fnv1a64:8b0790e332dd7afe",
   "findings": []
 }

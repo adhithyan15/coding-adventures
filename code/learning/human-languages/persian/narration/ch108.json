@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "Wrist, Thumb, Fingernail, Chest, Waist",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:78895df9a8944dd1",
+  "sourceHash": "fnv1a64:bc9ea9295b5e09e0",
   "lessons": [
     {
       "id": "FA-C108-moch",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd19598f0463accd",
+      "sourceHash": "fnv1a64:1fce5c982bb55f5f",
       "notice": null,
       "blocks": [
         {

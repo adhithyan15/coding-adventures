@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "Mouse, Tiger, Elephant, Monkey, Snake",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8b8696519949db34",
+  "sourceHash": "fnv1a64:4e097b4273656033",
   "lessons": [
     {
       "id": "FA-C56-mush",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7763a2324a7bc060",
+      "sourceHash": "fnv1a64:01cef456a7053d1f",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "meymun is borrowed from Arabic maymūn, \"blessed, fortunate\" (root y-m-n, Lane). How the word for \"fortunate\" came to name the monkey is not settled."
+              "text": "meymun is borrowed from Arabic maymūn, \"blessed, fortunate\" (root y-m-n; EtymDB). The monkey sense is usually explained as a euphemism: an animal thought ill-omened was given a lucky name."
             }
           ]
         },

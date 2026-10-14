@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Lock, Plate, Knife, Fork, Spoon",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3cf7979c988cc538",
+  "sourceHash": "fnv1a64:288fdd591a7b2aec",
   "lessons": [
     {
       "id": "FA-C47-ghofl",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66e96b3597af52ca",
+      "sourceHash": "fnv1a64:6745703cef3703b7",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "chângâl is usually explained as built on chang, \"claw, hook\", a native word: the fork named after a claw. That account is the usual one, but it is not settled."
+              "text": "chângâl is usually explained as built on chang, \"claw, hook\", a native word: the fork named after a claw. EtymDB links the two words."
             }
           ]
         },

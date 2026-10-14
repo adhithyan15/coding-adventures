@@ -4,7 +4,7 @@
   "chapter": 212,
   "title": "Lid, Cardboard box, Bag, Clay jar, Small tea glass",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1ea88ed4003ab164",
+  "sourceHash": "fnv1a64:a569f62f39a07e6a",
   "lessons": [
     {
       "id": "FA-C212-darpush",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:201b7d06ae3aa7e7",
+      "sourceHash": "fnv1a64:3474c7ddd1a62653",
       "notice": null,
       "blocks": [
         {
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce2f4b98330e0f5e",
+      "sourceHash": "fnv1a64:94594a1affd5d692",
       "notice": null,
       "blocks": [
         {

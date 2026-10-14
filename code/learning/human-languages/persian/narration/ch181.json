@@ -4,7 +4,7 @@
   "chapter": 181,
   "title": "To breathe, To tidy, To shake, To cross, To stroll",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:28c47bced2f5dd9b",
+  "sourceHash": "fnv1a64:34c309648406544e",
   "lessons": [
     {
       "id": "FA-C181-nafas-keshidan",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:761dfea873d53125",
+      "sourceHash": "fnv1a64:7084577b5f1bc725",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "rad shodan pairs rad, borrowed from Arabic radd, \"turning back, passing\" (root r-d-d, Lane), with the Persian verb shodan, \"to become\". shodan, \"to become\", is an inherited verb; it is usually traced to Middle Persian šudan, \"to go\"."
+              "text": "rad shodan pairs rad, borrowed from Arabic radd, \"turning back\" (root r-d-d, Lane), with the Persian verb shodan, \"to become\"; the sense \"go past\" is Persian's own. shodan, \"to become\", is an inherited verb; it is usually traced to Middle Persian šudan, \"to go\"."
             }
           ]
         },

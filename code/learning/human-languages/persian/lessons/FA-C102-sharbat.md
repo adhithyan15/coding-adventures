@@ -14,7 +14,7 @@ romanization: "sharbat"
 concept_tag: FA-THINGS102-SHARBAT
 prerequisites: [FA-C102-felfel, FA-C102-ghahve]
 sounds: []
-roots: [arabic-sarba]
+roots: [arabic-sharbat]
 etymology_hook: "sharbat ← Arabic šarba 'a drink, a draught', root š-r-b (Lane)"
 duration:
   max_seconds: 200

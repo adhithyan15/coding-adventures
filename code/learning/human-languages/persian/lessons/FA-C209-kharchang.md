@@ -15,7 +15,7 @@ concept_tag: FA-CHIZ209-KHARCHANG
 prerequisites: [FA-C209-gurekhar, FA-C209-bare]
 sounds: []
 roots: []
-etymology_hook: "kharchang: usually explained as khar 'big' + chang 'claw'; not settled"
+etymology_hook: "kharchang: usually explained as khar 'big, coarse' + chang 'claw'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C209-bare]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*kharchang* is usually explained as *khar*, "big, coarse", with *chang*, "claw", but that account is not settled.
+*kharchang* is usually explained as built from *khar*, "big, coarse", and *chang*, "claw": the big-clawed creature.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

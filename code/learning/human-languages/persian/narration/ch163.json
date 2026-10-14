@@ -4,7 +4,7 @@
   "chapter": 163,
   "title": "Colourful, Thin, Smooth, Broken, Different",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4cc8c2cdc5127dd2",
+  "sourceHash": "fnv1a64:f1091365139a855e",
   "lessons": [
     {
       "id": "FA-C163-rangarang",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:497e81e95990e300",
+      "sourceHash": "fnv1a64:3b35d91e1412540f",
       "notice": null,
       "blocks": [
         {

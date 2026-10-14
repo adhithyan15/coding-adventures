@@ -14,7 +14,7 @@ romanization: "andâze"
 concept_tag: FA-CHIZ166-ANDAZE
 prerequisites: [FA-C166-tuman, FA-C166-moshtari]
 sounds: []
-roots: [persian-andaze]
+roots: [persian-andaza]
 etymology_hook: "andâze: inherited, usually traced to Middle Persian handāzag"
 duration:
   max_seconds: 200

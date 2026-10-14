@@ -4,7 +4,7 @@
   "chapter": 194,
   "title": "Coach terminal, Post, Counter window, Valley, Peak",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b6454424dd610448",
+  "sourceHash": "fnv1a64:3174a3ed7503813f",
   "lessons": [
     {
       "id": "FA-C194-terminal",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52c177570883d057",
+      "sourceHash": "fnv1a64:3449dcde4558fa17",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bâje is the word for a counter window, but no source used here gives its origin, which is not settled."
+              "text": "bâje is the word for a counter window. It is sometimes linked with bâj, \"toll, tribute\", as the window where dues were paid, but no source used here confirms that, and its origin is not settled."
             }
           ]
         },

@@ -15,7 +15,7 @@ concept_tag: FA-THINGS122-SANJAB
 prerequisites: [FA-C122-delfin, FA-C122-kuse]
 sounds: []
 roots: []
-etymology_hook: "sanjâb: origin not settled"
+etymology_hook: "sanjâb: Arabic sinjāb was taken from it (Lane); where the Persian word comes from is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C122-kuse]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*sanjâb* is the word for a squirrel, but no source used here gives its origin, which is not settled.
+*sanjâb* is the word for a squirrel. Lane notes that Arabic *sinjāb*, "squirrel", was taken from Persian, but where the Persian word itself comes from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "Hammer, Scissors, Needle, Thread, Soap",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:027e4c5ae5dc4fb8",
+  "sourceHash": "fnv1a64:b94e2aac79960f65",
   "lessons": [
     {
       "id": "FA-C94-chakosh",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f5bae1525388fe8",
+      "sourceHash": "fnv1a64:2e2a57236738e606",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sâbun goes back, through Middle Persian sābōn (EtymDB), to Latin sāpō, \"soap\", which the Romans took from a Germanic word, the ancestor of English soap."
+              "text": "sâbun is usually traced to Arabic ṣābūn, \"soap\" (Lane), and Persian still spells it with the Arabic ṣ. The word goes back to Latin sāpō, which the Romans took from a Germanic word, the ancestor of English soap. EtymDB also lists a Middle Persian sābōn."
             }
           ]
         },

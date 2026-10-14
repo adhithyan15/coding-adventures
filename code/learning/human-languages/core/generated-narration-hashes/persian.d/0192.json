@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 192,
-  "sourceHash": "fnv1a64:fad248a58dc9f802",
+  "sourceHash": "fnv1a64:21503edde281981d",
   "lessonIds": [
     "FA-C192-salane",
     "FA-C192-kam-kam",
@@ -14,6 +14,6 @@
   "text": "persian/narration/ch192.txt",
   "json": "persian/narration/ch192.json",
   "textHash": "fnv1a64:c492cbc3b85c416c",
-  "jsonHash": "fnv1a64:3c33ad88400c51a4",
+  "jsonHash": "fnv1a64:82081b9a4ec0967a",
   "findings": []
 }

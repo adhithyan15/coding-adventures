@@ -4,7 +4,7 @@
   "chapter": 157,
   "title": "Dead end, Dormitory, Prison, Port, Chimney",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:d9697c7542b8e767",
+  "sourceHash": "fnv1a64:ad3590990e049597",
   "lessons": [
     {
       "id": "FA-C157-bonbast",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9289ee305c7fb3b2",
+      "sourceHash": "fnv1a64:77fe4883658ab0b2",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "zendân is a native Persian word for a prison, but no source used here gives its older form, and its origin is not settled."
+              "text": "zendân is a native Persian word for a prison, usually traced to Middle Persian zēndān. EtymDB sets Armenian zndan, \"prison\", beside it, a word Armenian took from Iranian."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa8862ed5868244c",
+      "sourceHash": "fnv1a64:7ddc45a0a8801815",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bandar is a native Persian word for a port; it is often explained as band, \"tie\", with dar, \"door\", but that account is not settled."
+              "text": "bandar is a native Persian word for a port, and Hindi, Bengali and Marathi took it from Persian. It is often explained as band, \"tie, enclosure\", with dar, \"door\"."
             }
           ]
         },

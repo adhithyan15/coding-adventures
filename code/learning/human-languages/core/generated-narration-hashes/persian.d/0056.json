@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 56,
-  "sourceHash": "fnv1a64:8b8696519949db34",
+  "sourceHash": "fnv1a64:4e097b4273656033",
   "lessonIds": [
     "FA-C56-mush",
     "FA-C56-bebar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch56.txt",
   "json": "persian/narration/ch56.json",
-  "textHash": "fnv1a64:1e4c634d3253f0c5",
-  "jsonHash": "fnv1a64:df581d1a62e176f1",
+  "textHash": "fnv1a64:2e02b4dd237126e8",
+  "jsonHash": "fnv1a64:345a52d75ecb0aa4",
   "findings": []
 }

@@ -15,7 +15,7 @@ concept_tag: FA-CHIZ172-MAJALLE
 prerequisites: [FA-C172-gitar, FA-C172-roman]
 sounds: []
 roots: [arabic-majalla]
-etymology_hook: "majalle ← Arabic majalla 'journal, book', root j-l-l (Lane)"
+etymology_hook: "majalle ← Arabic majalla 'book, volume', root j-l-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C172-roman]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*majalle* is borrowed from Arabic *majalla*, "journal, book". Its Arabic root is *j-l-l* (Lane).
+*majalle* is borrowed from Arabic *majalla*, "book, volume". Its Arabic root is *j-l-l* (Lane). Persian uses it for a magazine.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

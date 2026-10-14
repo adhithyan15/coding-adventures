@@ -4,7 +4,7 @@
   "chapter": 111,
   "title": "Tray, Bowl, Broom, Bucket, Rope",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:512cb447e9ca1f0a",
+  "sourceHash": "fnv1a64:0505238e3999f160",
   "lessons": [
     {
       "id": "FA-C111-sini",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82aa11bac02ee2a3",
+      "sourceHash": "fnv1a64:3b37b0cc7de1a7d2",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "tanâb is the word for a rope, but no source used here gives its origin, which is not settled."
+              "text": "tanâb is usually traced to Arabic ṭunub, \"a tent-rope\". Its Arabic root is ṭ-n-b (Lane)."
             }
           ]
         },

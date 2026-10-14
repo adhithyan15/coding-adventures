@@ -4,7 +4,7 @@
   "chapter": 222,
   "title": "To water, To bark, To dream, To doubt, To take",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aca587bc72117dba",
+  "sourceHash": "fnv1a64:73da739c38941c76",
   "lessons": [
     {
       "id": "FA-C222-ab-dadan",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06d8259ade7099d4",
+      "sourceHash": "fnv1a64:220accf8e7045f0e",
       "notice": null,
       "blocks": [
         {

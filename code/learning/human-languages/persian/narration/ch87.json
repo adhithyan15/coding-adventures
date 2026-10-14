@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "Lane, Square, Park, Coast, Church",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a23ceb08801a8956",
+  "sourceHash": "fnv1a64:ba4181ba29e2b426",
   "lessons": [
     {
       "id": "FA-C87-kuche",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ac3798c4af9a2f0",
+      "sourceHash": "fnv1a64:c8785de79c6ec281",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "kelisâ goes back to Greek ekklēsia, \"assembly, church\" (EtymDB), the word behind English ecclesiastical. The route it took into Persian is not settled."
+              "text": "kelisâ goes back to Greek ekklēsia, \"assembly, church\" (EtymDB), the word behind English ecclesiastical. It is usually said to have reached Persian through Syriac, the language of the early church in Iran."
             }
           ]
         },

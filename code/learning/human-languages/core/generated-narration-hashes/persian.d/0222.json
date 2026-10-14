@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 222,
-  "sourceHash": "fnv1a64:aca587bc72117dba",
+  "sourceHash": "fnv1a64:73da739c38941c76",
   "lessonIds": [
     "FA-C222-ab-dadan",
     "FA-C222-pars-kardan",
@@ -14,6 +14,6 @@
   "text": "persian/narration/ch222.txt",
   "json": "persian/narration/ch222.json",
   "textHash": "fnv1a64:338c7d22b4df635a",
-  "jsonHash": "fnv1a64:f4b63f69903ea256",
+  "jsonHash": "fnv1a64:91c8ac87dcbcaf03",
   "findings": []
 }

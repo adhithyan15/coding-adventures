@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 247,
-  "sourceHash": "fnv1a64:be159d878d66b3bd",
+  "sourceHash": "fnv1a64:2e6c2eca1ab8d688",
   "lessonIds": [
     "FA-C247-quti",
     "FA-C247-adviye",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch247.txt",
   "json": "persian/narration/ch247.json",
-  "textHash": "fnv1a64:47ec04b788bee43b",
-  "jsonHash": "fnv1a64:2a99b9525e25c54f",
+  "textHash": "fnv1a64:97961c6f562a55f4",
+  "jsonHash": "fnv1a64:0be7ac79312eafe2",
   "findings": []
 }

@@ -14,8 +14,8 @@ romanization: "fâktor"
 concept_tag: FA-KAR286-FAKTOR
 prerequisites: [FA-C286-pishkhan, FA-C286-sanduqdar]
 sounds: []
-roots: []
-etymology_hook: "fâktor: usually linked with European factura 'invoice'; route not settled"
+roots: [french-facture]
+etymology_hook: "fâktor: a loan, usually traced to French facture 'invoice'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C286-sanduqdar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*fâktor* is usually linked with the European word *factura*, "invoice", through French or Russian, but the route is not settled.
+*fâktor* is a loan, usually traced to French *facture*, "invoice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

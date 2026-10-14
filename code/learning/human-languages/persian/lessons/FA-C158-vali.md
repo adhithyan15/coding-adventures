@@ -14,8 +14,8 @@ romanization: "vali"
 concept_tag: FA-CHERA158-VALI
 prerequisites: [FA-C157-dudkesh, FA-C158-agar]
 sounds: []
-roots: []
-etymology_hook: "vali: origin not settled; not Arabic walī 'friend', which only looks alike"
+roots: [arabic-lakin]
+etymology_hook: "vali: usually explained as short for valikan, from Arabic wa-lākin 'but' (Lane); not walī 'friend'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C158-agar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*vali* is the everyday word for "but", and its origin is not settled. (EtymDB links it to Arabic *walī*, "friend, guardian", a different word that looks alike.)
+*vali*, "but", is usually explained as short for the older *valikan*, from Arabic *wa-lākin*, "but" (root *l-k-n*, Lane). EtymDB links it to Arabic *walī*, "friend, guardian", a different word that looks alike.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,7 @@ romanization: "doshman"
 concept_tag: FA-CHIZ169-DOSHMAN
 prerequisites: [FA-C169-hamkelasi, FA-C169-mizban]
 sounds: []
-roots: [persian-doshman]
+roots: [persian-dushman]
 etymology_hook: "doshman ← Middle Persian dušman (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200

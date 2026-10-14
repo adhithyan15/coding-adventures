@@ -14,7 +14,7 @@ romanization: "tamâshâ kardan"
 concept_tag: FA-VERB-TAMASHA-KARDAN
 prerequisites: [FA-C179-dush-gereftan, FA-C179-bardashtan]
 sounds: []
-roots: [arabic-tamasa]
+roots: [arabic-tamasha]
 etymology_hook: "tamâshâ ← Arabic tamāšā 'walking about together', root m-š-y (Lane), + Persian kardan"
 duration:
   max_seconds: 200

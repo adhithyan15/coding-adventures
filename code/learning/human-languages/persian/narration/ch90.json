@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Tool, Owner, Power, Wish, Hope",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d1bf5bc141ed5223",
+  "sourceHash": "fnv1a64:90f2d8318c7ad410",
   "lessons": [
     {
       "id": "FA-C90-abzar",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfa86e8189dd1f64",
+      "sourceHash": "fnv1a64:05e765173e33eb45",
       "notice": null,
       "blocks": [
         {

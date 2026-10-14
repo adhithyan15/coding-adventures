@@ -15,7 +15,7 @@ concept_tag: FA-CHIZ275-QARCH
 prerequisites: [FA-C275-kahu, FA-C275-kalam]
 sounds: []
 roots: []
-etymology_hook: "qârch: origin not settled"
+etymology_hook: "qârch: often said to be a Turkic loan; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C275-kalam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*qârch* is the word for a mushroom, but no source used here gives its origin, which is not settled.
+*qârch* is the word for a mushroom. It is often said to be a Turkic loan, but no source used here confirms it, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

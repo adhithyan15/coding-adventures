@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "Sock, Pocket, Ring, Hat, Shoe",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9a7120ac4ae6a260",
+  "sourceHash": "fnv1a64:fad8dcf27fb92df8",
   "lessons": [
     {
       "id": "FA-C74-jurab",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ed6c03e356902c5",
+      "sourceHash": "fnv1a64:f671a513c7a7d915",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "jurâb is usually linked with an older Persian gōrab, and Arabic jawrab, \"sock\", is the same word, but the details are not settled."
+              "text": "jurâb has the shape of Arabic jawrab, \"sock\". Lane records the Arabic word as taken from an older Persian gōrab, so the word went into Arabic and came back."
             }
           ]
         },

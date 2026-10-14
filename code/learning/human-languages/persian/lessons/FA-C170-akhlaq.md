@@ -14,7 +14,7 @@ romanization: "akhlâq"
 concept_tag: FA-CHIZ170-AKHLAQ
 prerequisites: [FA-C170-khashm, FA-C170-ashk]
 sounds: []
-roots: [arabic-ahlaq]
+roots: [arabic-akhlaq]
 etymology_hook: "akhlâq ← Arabic aḫlāq 'character, manners', root ḫ-l-q (Lane)"
 duration:
   max_seconds: 200

@@ -14,7 +14,7 @@ romanization: "mehmâni"
 concept_tag: FA-CHIZ207-MEHMANI
 prerequisites: [FA-C207-hediye, FA-C207-sonnat]
 sounds: []
-roots: [persian-mehman]
+roots: [persian-mihman]
 etymology_hook: "mehmâni: Persian mehmân 'guest' (EtymDB) + -i"
 duration:
   max_seconds: 200

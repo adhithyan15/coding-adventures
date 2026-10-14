@@ -14,7 +14,7 @@ romanization: "farsh"
 concept_tag: FA-THINGS109-FARSH
 prerequisites: [FA-C109-pust, FA-C109-ostokhan]
 sounds: []
-roots: [arabic-fars]
+roots: [arabic-farsh]
 etymology_hook: "farsh ← Arabic farš 'something spread out, carpet', root f-r-š (Lane)"
 duration:
   max_seconds: 200

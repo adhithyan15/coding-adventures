@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 243,
-  "sourceHash": "fnv1a64:d39f434f22ce954d",
+  "sourceHash": "fnv1a64:c3269fa882793719",
   "lessonIds": [
     "FA-C243-marasem",
     "FA-C243-mosabeqe",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch243.txt",
   "json": "persian/narration/ch243.json",
-  "textHash": "fnv1a64:58dca42cc5489411",
-  "jsonHash": "fnv1a64:291d279b7d37b545",
+  "textHash": "fnv1a64:478864d751f2daaf",
+  "jsonHash": "fnv1a64:377a446ad6c0c9c6",
   "findings": []
 }

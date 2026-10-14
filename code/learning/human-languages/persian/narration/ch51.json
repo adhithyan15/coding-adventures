@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Letter, Newspaper, Tree, Flower, Leaf",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:be6bb2e820f25dcf",
+  "sourceHash": "fnv1a64:2d90fae3e100cb67",
   "lessons": [
     {
       "id": "FA-C51-name",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a1f7fca1e56020f",
+      "sourceHash": "fnv1a64:2a2f9672d5403fe3",
       "notice": null,
       "blocks": [
         {

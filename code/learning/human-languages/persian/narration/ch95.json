@@ -4,7 +4,7 @@
   "chapter": 95,
   "title": "Towel, Cup, Pot, Frying pan, Stove",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:630055aea9cdb8b9",
+  "sourceHash": "fnv1a64:5f87b319987fe569",
   "lessons": [
     {
       "id": "FA-C95-hule",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fe27d803b557099",
+      "sourceHash": "fnv1a64:2be347ec49648763",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "fenjân is the Arabic form of the Persian pengân, \"cup, bowl\" (EtymDB): Arabic, with no p, took the word as finjān, and Persian took that form back. EtymDB traces pengân to Greek pinax, \"board, plate\"."
+              "text": "fenjân is usually explained as the Arabic form of the Persian pengân, \"cup, bowl\" (EtymDB): Arabic, with no p, took the word as finjān, and Persian took that form back. EtymDB traces pengân to Greek pinax, \"board, plate\"."
             }
           ]
         },

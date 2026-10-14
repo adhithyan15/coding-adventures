@@ -4,7 +4,7 @@
   "chapter": 124,
   "title": "Narrow, Deep, Wet, Dry, Soft",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7cd3bff57639d517",
+  "sourceHash": "fnv1a64:3fe4d916674e40fa",
   "lessons": [
     {
       "id": "FA-C124-barik",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a1071ed7deb80a6",
+      "sourceHash": "fnv1a64:b08b7d4423ae4774",
       "notice": null,
       "blocks": [
         {

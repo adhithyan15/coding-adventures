@@ -15,7 +15,7 @@ concept_tag: FA-VERB-RAD-SHODAN
 prerequisites: [FA-C181-morattab-kardan, FA-C181-tekan-dadan]
 sounds: []
 roots: [arabic-radd]
-etymology_hook: "rad ← Arabic radd 'turning back, passing', root r-d-d (Lane), + Persian shodan"
+etymology_hook: "rad ← Arabic radd 'turning back', root r-d-d (Lane), + Persian shodan; 'going past' is Persian's sense"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C181-tekan-dadan]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*rad shodan* pairs *rad*, borrowed from Arabic *radd*, "turning back, passing" (root *r-d-d*, Lane), with the Persian verb *shodan*, "to become". *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
+*rad shodan* pairs *rad*, borrowed from Arabic *radd*, "turning back" (root *r-d-d*, Lane), with the Persian verb *shodan*, "to become"; the sense "go past" is Persian's own. *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

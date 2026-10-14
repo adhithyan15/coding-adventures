@@ -15,7 +15,7 @@ concept_tag: FA-VERB-VARIZ-KARDAN
 prerequisites: [FA-C187-derow-kardan, FA-C187-pasandaz-kardan]
 sounds: []
 roots: [pie-kwer]
-etymology_hook: "vâriz kardan: vâriz (origin not settled) + Persian kardan"
+etymology_hook: "vâriz kardan: vâriz, usually analysed as vâ- 'back' + riz- 'pour' (rikhtan), + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C187-pasandaz-kardan]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*vâriz kardan* pairs *vâriz*, "deposit", with *kardan*, "to do". Where *vâriz* comes from is not settled. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
+*vâriz kardan* pairs *vâriz*, "deposit", with *kardan*, "to do". *vâriz* is usually analysed as *vâ-*, "back, again", with *riz-*, the present stem of *rikhtan*, "to pour". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

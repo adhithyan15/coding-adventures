@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 34,
-  "sourceHash": "fnv1a64:aad116a8964dae7f",
+  "sourceHash": "fnv1a64:4915b8cc165f7c20",
   "lessonIds": [
     "FA-C34-hamsaye",
     "FA-C34-mehman",
@@ -14,6 +14,6 @@
   "text": "persian/narration/ch34.txt",
   "json": "persian/narration/ch34.json",
   "textHash": "fnv1a64:35fcf5375f31c943",
-  "jsonHash": "fnv1a64:ee62fffe02800b85",
+  "jsonHash": "fnv1a64:043dbf49aaa654fa",
   "findings": []
 }

@@ -14,7 +14,7 @@ romanization: "qânun"
 concept_tag: FA-CHERA197-QANUN
 prerequisites: [FA-C196-hamkaf, FA-C197-shart]
 sounds: []
-roots: [greek-kanon]
+roots: [arabic-qanun, greek-kanon]
 etymology_hook: "qânun ← Arabic qānūn ← Greek kanōn 'rule' (EtymDB)"
 duration:
   max_seconds: 200

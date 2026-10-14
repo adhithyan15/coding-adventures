@@ -52,7 +52,7 @@ bus leaves at eight, so be there before eight.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*jadval-e zamâni* is "a table of time". *jadval*, "table, grid", is borrowed from Arabic *jadwal*, "stream, channel; table" (root *j-d-l*, Lane); *zamâni* is *zamân*, "time", with the ending *-i*.
+*jadval-e zamâni* is "a table of time". *jadval*, "table, grid", is borrowed from Arabic *jadwal*, "stream, channel; table" (root *j-d-l*, Lane); *zamâni* is *zamân*, "time", with the ending *-i*; *zamân* is usually treated as a loan from Arabic *zamān*, but Middle Persian also had *zamān*, so which way it moved is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

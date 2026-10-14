@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 118,
-  "sourceHash": "fnv1a64:19654683e1f1284e",
+  "sourceHash": "fnv1a64:c049e5191eaaa656",
   "lessonIds": [
     "FA-C118-jadde",
     "FA-C118-parking",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch118.txt",
   "json": "persian/narration/ch118.json",
-  "textHash": "fnv1a64:a27562389bc7cee6",
-  "jsonHash": "fnv1a64:09bc5fe756a7e95d",
+  "textHash": "fnv1a64:0fd9f885e7f082b8",
+  "jsonHash": "fnv1a64:4b47ee2a3cdfecd7",
   "findings": []
 }

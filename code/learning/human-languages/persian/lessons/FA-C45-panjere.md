@@ -15,7 +15,7 @@ concept_tag: FA-HOME45-PANJERE
 prerequisites: [FA-C45-khane, FA-C45-otagh]
 sounds: []
 roots: []
-etymology_hook: "panjere: often linked to panje 'hand' (from panj 'five'); origin not settled"
+etymology_hook: "panjere: linked with panje 'paw, hand' or with Sanskrit piñjara 'cage'; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C45-otagh]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*panjere* is often linked to *panje*, "paw, hand", from *panj*, "five", but that account is not proven, and the origin of the word is not settled.
+*panjere* has two accounts. It is often linked with *panje*, "paw, hand", from *panj*, "five"; EtymDB instead sets it beside Sanskrit *piñjara*, "cage". Which is right is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

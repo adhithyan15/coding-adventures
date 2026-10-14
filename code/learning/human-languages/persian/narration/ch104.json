@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "Seed, Grass, Storm, Fog, Dew",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:524ac0982f4cd3da",
+  "sourceHash": "fnv1a64:fa6a6db09ee1fd2b",
   "lessons": [
     {
       "id": "FA-C104-dane",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d92cded3feeb2a4",
+      "sourceHash": "fnv1a64:79fe7f7061f96048",
       "notice": null,
       "blocks": [
         {

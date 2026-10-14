@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "Apricot, Cherries, Date, Pomegranate, Walnut",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8ed88318d1adb823",
+  "sourceHash": "fnv1a64:cba24217b5e9db3b",
   "lessons": [
     {
       "id": "FA-C100-zardalu",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e993d79b0a18122e",
+      "sourceHash": "fnv1a64:a78dbc09cd55359d",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "gerdu is usually explained as built on gerd, \"round\", a native word; that account is the usual one, but it is not settled."
+              "text": "gerdu is usually explained as built on gerd, \"round\", a native word: the round nut."
             }
           ]
         },

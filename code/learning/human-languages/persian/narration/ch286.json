@@ -4,7 +4,7 @@
   "chapter": 286,
   "title": "Dry cleaner's, Counter, Cashier, Invoice, Cash machine",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:5295e58693984292",
+  "sourceHash": "fnv1a64:e1390f49d77daa0c",
   "lessons": [
     {
       "id": "FA-C286-khoshkshuyi",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad2e06d39b093a26",
+      "sourceHash": "fnv1a64:ec2616ed1a64653c",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "fâktor is usually linked with the European word factura, \"invoice\", through French or Russian, but the route is not settled."
+              "text": "fâktor is a loan, usually traced to French facture, \"invoice\"."
             }
           ]
         },

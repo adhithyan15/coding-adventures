@@ -14,8 +14,8 @@ romanization: "tuti"
 concept_tag: FA-THINGS106-TUTI
 prerequisites: [FA-C105-rubah, FA-C105-khuk]
 sounds: []
-roots: []
-etymology_hook: "tuti: sometimes linked with Hindi totā 'parrot'; origin not settled"
+roots: [persian-tuti]
+etymology_hook: "tuti: Hindi totā 'parrot' is usually traced to it; where Persian got the word is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C105-khuk]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*tuti* is the word for a parrot; it is sometimes linked with Hindi *totā*, "parrot", but its origin is not settled.
+*tuti* is the word for a parrot, and Hindi *totā*, "parrot", is usually traced to it. Where Persian itself got the word is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

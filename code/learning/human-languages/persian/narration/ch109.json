@@ -4,7 +4,7 @@
   "chapter": 109,
   "title": "Eyebrow, Skin, Bone, Carpet, Sofa",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2088f0d8519cc739",
+  "sourceHash": "fnv1a64:5d588da01c214e60",
   "lessons": [
     {
       "id": "FA-C109-abru",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c4f20152fd9fe7b",
+      "sourceHash": "fnv1a64:e6106626827408ff",
       "notice": null,
       "blocks": [
         {

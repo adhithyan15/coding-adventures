@@ -4,7 +4,7 @@
   "chapter": 172,
   "title": "Camera, Guitar, Novel, Magazine, TV series",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2be8c1c6e8884dcd",
+  "sourceHash": "fnv1a64:d85de5e4c688efa0",
   "lessons": [
     {
       "id": "FA-C172-durbin",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42aa1b025fd48372",
+      "sourceHash": "fnv1a64:68129a12cb793a75",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "majalle is borrowed from Arabic majalla, \"journal, book\". Its Arabic root is j-l-l (Lane)."
+              "text": "majalle is borrowed from Arabic majalla, \"book, volume\". Its Arabic root is j-l-l (Lane). Persian uses it for a magazine."
             }
           ]
         },

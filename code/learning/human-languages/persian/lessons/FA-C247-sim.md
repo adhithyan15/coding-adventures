@@ -15,7 +15,7 @@ concept_tag: FA-CHIZ247-SIM
 prerequisites: [FA-C247-tarazu, FA-C247-samavar]
 sounds: []
 roots: []
-etymology_hook: "sim: usually traced to Middle Persian asēm 'silver'; not settled"
+etymology_hook: "sim: the old word for silver (Middle Persian asēm); Persian now uses it for wire"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C247-samavar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*sim* is usually traced to Middle Persian *asēm*, "silver"; how it came to mean "wire" is not settled.
+*sim* is the old Persian word for silver, usually traced to Middle Persian *asēm*, "silver". Modern Persian uses it for wire.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

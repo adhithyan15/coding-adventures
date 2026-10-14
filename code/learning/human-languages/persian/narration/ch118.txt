@@ -77,7 +77,7 @@ You'll want to know: کشمش.
 کشمش — kishmish — "raisins".
 
 The word, taken apart.
-kishmish is a native Persian word for raisins, but no source used here gives its older form, and its origin is not settled.
+kishmish is a Persian word for small raisins that other languages took over, Bengali kishmish among them. No source used here gives its older form, and its origin is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -109,7 +109,7 @@ You'll want to know: آلو.
 آلو — âlu — "a plum".
 
 The word, taken apart.
-âlu is a native Persian word whose origin is not settled; EtymDB links it to Sanskrit ālu, "edible root", but that link is not secure.
+âlu is usually traced to Middle Persian ālūd, "plum", as Turner's CDIAL (1103) notes; Hindi ālū, "plum", was taken from it. EtymDB links it to Sanskrit ālu, "edible root", but that is a different word that looks alike.
 
 What you've built.
 One more word for this chapter.

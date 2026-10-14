@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 107,
-  "sourceHash": "fnv1a64:a2154a2a8e1c5ecf",
+  "sourceHash": "fnv1a64:5f17893885baa3dd",
   "lessonIds": [
     "FA-C107-pashe",
     "FA-C107-magas",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch107.txt",
   "json": "persian/narration/ch107.json",
-  "textHash": "fnv1a64:8f0f3e500ad045aa",
-  "jsonHash": "fnv1a64:106cbc8a53c55fc3",
+  "textHash": "fnv1a64:90a1909fd55f4631",
+  "jsonHash": "fnv1a64:12266e8a81740fb4",
   "findings": []
 }

@@ -14,8 +14,8 @@ romanization: "bâdemjân"
 concept_tag: FA-THINGS101-BADEMJAN
 prerequisites: [FA-C101-peste, FA-C101-khiyar]
 sounds: []
-roots: []
-etymology_hook: "bâdemjân: usually traced to an Indian word (Sanskrit vātiṅgaṇa); route not settled"
+roots: [sanskrit-vatingana]
+etymology_hook: "bâdemjân: usually traced to Sanskrit vātiṅgaṇa (CDIAL 11503); Arabic bāḏinjān came from Persian (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C101-khiyar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*bâdemjân* is usually traced through Middle Persian to an Indian word like Sanskrit *vātiṅgaṇa*; Arabic *bāḏinjān* is the same word. The route is not settled.
+*bâdemjân* is usually traced to an Indian word, Sanskrit *vātiṅgaṇa*, "aubergine": Turner's CDIAL (11503) notes that it passed into Persian. Arabic *bāḏinjān* is the same word, and Lane says Arabic took it from Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

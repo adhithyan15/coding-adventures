@@ -47,7 +47,7 @@ reviews_of: [FA-C95-hule]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*fenjân* is the Arabic form of the Persian *pengân*, "cup, bowl" (EtymDB): Arabic, with no *p*, took the word as *finjān*, and Persian took that form back. EtymDB traces *pengân* to Greek *pinax*, "board, plate".
+*fenjân* is usually explained as the Arabic form of the Persian *pengân*, "cup, bowl" (EtymDB): Arabic, with no *p*, took the word as *finjān*, and Persian took that form back. EtymDB traces *pengân* to Greek *pinax*, "board, plate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

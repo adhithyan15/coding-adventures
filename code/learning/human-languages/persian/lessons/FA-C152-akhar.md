@@ -14,7 +14,7 @@ romanization: "âkhar"
 concept_tag: FA-ZAMAN152-AKHAR
 prerequisites: [FA-C152-ruzane, FA-C152-mahane]
 sounds: []
-roots: [arabic-ahir]
+roots: [arabic-akhir]
 etymology_hook: "âkhar ← Arabic āḫir 'last, end', root ʾ-ḫ-r (Lane)"
 duration:
   max_seconds: 200

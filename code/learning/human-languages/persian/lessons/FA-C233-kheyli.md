@@ -15,7 +15,7 @@ concept_tag: FA-CHERA233-KHEYLI
 prerequisites: [FA-C233-albatte, FA-C233-ehtemalan]
 sounds: []
 roots: [arabic-khayl]
-etymology_hook: "kheyli: usually traced to Arabic ḫayl 'horses, a troop' (Lane); not settled"
+etymology_hook: "kheyli: usually traced to Arabic ḫayl 'horses, a troop' (Lane), with Persian -i"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C233-ehtemalan]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*kheyli* is usually traced to Arabic *ḫayl*, "horses, a troop" (root *ḫ-y-l*, Lane), with the ending *-i*: "a troop of", so "very many". That account is the usual one, but it is not settled.
+*kheyli* is usually traced to Arabic *ḫayl*, "horses, a troop" (root *ḫ-y-l*, Lane), with the ending *-i*: "a troop of", so "very many".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

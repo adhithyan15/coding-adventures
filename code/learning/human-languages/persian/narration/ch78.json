@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Journey, Music, News, Country, Story",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ab7675dc8910450f",
+  "sourceHash": "fnv1a64:9c0bc49ced9878d1",
   "lessons": [
     {
       "id": "FA-C78-safar",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1635b725d5e31a95",
+      "sourceHash": "fnv1a64:5804b4c1bdf3a254",
       "notice": null,
       "blocks": [
         {

@@ -47,7 +47,7 @@ reviews_of: [FA-C61-khali]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*puldâr* is built from *pul*, "money", and *-dâr*, "holding" (from *dâshtan*, "to have"): "money-holder". *-dâr* is inherited, usually traced to Middle Persian *dār*; *pul* first named a small coin, and its origin is not settled.
+*puldâr* is built from *pul*, "money", and *-dâr*, "holding" (from *dâshtan*, "to have"): "money-holder". *-dâr* is inherited, usually traced to Middle Persian *dār*; *pul* first named a small coin and is usually traced to a Greek coin name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 275,
   "title": "Lettuce, Cabbage, Mushroom, Cinnamon, Cream",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f048b430656bb91e",
+  "sourceHash": "fnv1a64:b8ea055a21b3ad03",
   "lessons": [
     {
       "id": "FA-C275-kahu",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a15f7537e6e0d9c1",
+      "sourceHash": "fnv1a64:1edd7fa39fb4ba02",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "qârch is the word for a mushroom, but no source used here gives its origin, which is not settled."
+              "text": "qârch is the word for a mushroom. It is often said to be a Turkic loan, but no source used here confirms it, and its origin is not settled."
             }
           ]
         },

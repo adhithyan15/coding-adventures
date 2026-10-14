@@ -15,7 +15,7 @@ concept_tag: FA-VERB-DEROW-KARDAN
 prerequisites: [FA-C187-liz-khordan, FA-C187-gaz-dadan]
 sounds: []
 roots: [pie-kwer]
-etymology_hook: "derow kardan: Persian derow 'harvest' (Middle Persian drōd) + kardan"
+etymology_hook: "derow kardan: Persian derow 'harvest' (stem of derudan 'to reap') + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C187-gaz-dadan]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*derow kardan* pairs *derow*, "harvest", with *kardan*, "to do". *derow* is native, usually traced to Middle Persian *drōd*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
+*derow kardan* pairs *derow*, "harvest", with *kardan*, "to do". *derow* is native, the present stem of the older verb *derudan*, "to reap". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

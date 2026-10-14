@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 225,
-  "sourceHash": "fnv1a64:6097911b37d7a5c9",
+  "sourceHash": "fnv1a64:722a32114dbde1d1",
   "lessonIds": [
     "FA-C225-hefz-kardan",
     "FA-C225-nale-kardan",
@@ -16,6 +16,6 @@
   "text": "persian/narration/ch225.txt",
   "json": "persian/narration/ch225.json",
   "textHash": "fnv1a64:4de353a5361c6b7e",
-  "jsonHash": "fnv1a64:6690d581f51ff45f",
+  "jsonHash": "fnv1a64:dcc9470b56236be5",
   "findings": []
 }

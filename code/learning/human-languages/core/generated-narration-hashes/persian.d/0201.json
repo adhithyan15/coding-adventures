@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 201,
-  "sourceHash": "fnv1a64:398e082497de9899",
+  "sourceHash": "fnv1a64:4676adf43a99036d",
   "lessonIds": [
     "FA-C201-shabih",
     "FA-C201-khoshbu",
@@ -14,6 +14,6 @@
   "text": "persian/narration/ch201.txt",
   "json": "persian/narration/ch201.json",
   "textHash": "fnv1a64:b969406f9592c1cb",
-  "jsonHash": "fnv1a64:249c46bce3193f56",
+  "jsonHash": "fnv1a64:5ef85c05af896a4a",
   "findings": []
 }

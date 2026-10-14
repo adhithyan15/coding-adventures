@@ -4,7 +4,7 @@
   "chapter": 102,
   "title": "Ginger, Pepper, Coffee, Sweet drink, Plain",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:905df4df81f02a1b",
+  "sourceHash": "fnv1a64:41ca3f8f5bdd4cc3",
   "lessons": [
     {
       "id": "FA-C102-zanjabil",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81a9b19f9ccc4495",
+      "sourceHash": "fnv1a64:51b11cdf122acb65",
       "notice": null,
       "blocks": [
         {

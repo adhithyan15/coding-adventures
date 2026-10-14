@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 102,
-  "sourceHash": "fnv1a64:905df4df81f02a1b",
+  "sourceHash": "fnv1a64:41ca3f8f5bdd4cc3",
   "lessonIds": [
     "FA-C102-zanjabil",
     "FA-C102-felfel",
@@ -14,6 +14,6 @@
   "text": "persian/narration/ch102.txt",
   "json": "persian/narration/ch102.json",
   "textHash": "fnv1a64:75bd5245fae61590",
-  "jsonHash": "fnv1a64:88620f430dc5dae8",
+  "jsonHash": "fnv1a64:f2f836fa3ebc1a67",
   "findings": []
 }

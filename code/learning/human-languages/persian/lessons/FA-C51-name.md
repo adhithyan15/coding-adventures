@@ -14,7 +14,7 @@ romanization: "nâme"
 concept_tag: FA-SCHOOL51-NAME
 prerequisites: [FA-C50-kalame, FA-C50-bazi]
 sounds: []
-roots: [persian-name]
+roots: [persian-nama]
 etymology_hook: "nâme: inherited, usually traced to Middle Persian nāmag"
 duration:
   max_seconds: 200

@@ -4,7 +4,7 @@
   "chapter": 233,
   "title": "Maybe, Definitely, Of course, Probably, Very",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:af01fc3528c7461e",
+  "sourceHash": "fnv1a64:c2f1ba1f53a0a3a6",
   "lessons": [
     {
       "id": "FA-C233-shayad",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3efd72bc6114d02",
+      "sourceHash": "fnv1a64:020df38c3b91dbfb",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "kheyli is usually traced to Arabic ḫayl, \"horses, a troop\" (root ḫ-y-l, Lane), with the ending -i: \"a troop of\", so \"very many\". That account is the usual one, but it is not settled."
+              "text": "kheyli is usually traced to Arabic ḫayl, \"horses, a troop\" (root ḫ-y-l, Lane), with the ending -i: \"a troop of\", so \"very many\"."
             }
           ]
         },

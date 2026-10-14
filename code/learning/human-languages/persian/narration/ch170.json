@@ -4,7 +4,7 @@
   "chapter": 170,
   "title": "Affection, Anger, Tears, Temper, Personality",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f8ff7ba586f14b4e",
+  "sourceHash": "fnv1a64:7d57d74e8467410d",
   "lessons": [
     {
       "id": "FA-C170-mohabbat",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00e0c971878301ea",
+      "sourceHash": "fnv1a64:03b7385e088823b1",
       "notice": null,
       "blocks": [
         {

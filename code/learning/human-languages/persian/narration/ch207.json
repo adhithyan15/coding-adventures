@@ -4,7 +4,7 @@
   "chapter": 207,
   "title": "Haft-sin, Present, Tradition, Party, Musical instrument",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:68eb91be8c2286ab",
+  "sourceHash": "fnv1a64:3790822403e2552b",
   "lessons": [
     {
       "id": "FA-C207-haft-sin",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e28fd4a7a022bd1",
+      "sourceHash": "fnv1a64:5f7fb775424a56e5",
       "notice": null,
       "blocks": [
         {

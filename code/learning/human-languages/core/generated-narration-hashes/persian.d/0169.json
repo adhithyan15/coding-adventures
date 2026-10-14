@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 169,
-  "sourceHash": "fnv1a64:b8f616462a6d1331",
+  "sourceHash": "fnv1a64:a9110c3d61bf00c5",
   "lessonIds": [
     "FA-C169-bozorgsal",
     "FA-C169-hamkelasi",
@@ -14,6 +14,6 @@
   "text": "persian/narration/ch169.txt",
   "json": "persian/narration/ch169.json",
   "textHash": "fnv1a64:57dbf809f1eac3b8",
-  "jsonHash": "fnv1a64:9da0e699bfced242",
+  "jsonHash": "fnv1a64:13d3c7bbd2edb727",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 268,
   "title": "Gate, Awning, Greenhouse, Street gutter, Pavement",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8b3cb5a661021707",
+  "sourceHash": "fnv1a64:36d5c27b9d404ecb",
   "lessons": [
     {
       "id": "FA-C268-darvaze",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6e38b7dc6a7fa2d",
+      "sourceHash": "fnv1a64:846bd52e61956cbb",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "darvâze is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian darwāzag, \"gate\". It is built on dar, \"door\"."
+              "text": "darvâze is a native Persian word, built on dar, \"door\"."
             }
           ]
         },

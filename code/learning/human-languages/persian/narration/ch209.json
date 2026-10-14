@@ -4,7 +4,7 @@
   "chapter": 209,
   "title": "Nightingale, Crocodile, Zebra, Lamb, Crab",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a2e0988bdf96ee6b",
+  "sourceHash": "fnv1a64:29ef44bd9d48cf8d",
   "lessons": [
     {
       "id": "FA-C209-bolbol",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14c3a6d98a434687",
+      "sourceHash": "fnv1a64:17ef8cedd73f9e29",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "kharchang is usually explained as khar, \"big, coarse\", with chang, \"claw\", but that account is not settled."
+              "text": "kharchang is usually explained as built from khar, \"big, coarse\", and chang, \"claw\": the big-clawed creature."
             }
           ]
         },

@@ -14,7 +14,7 @@ romanization: "khoshk"
 concept_tag: FA-QUAL124-KHOSHK
 prerequisites: [FA-C124-gowd, FA-C124-khis]
 sounds: []
-roots: [persian-khoshk]
+roots: [persian-khushk]
 etymology_hook: "khoshk: inherited, usually traced to Middle Persian xušk"
 duration:
   max_seconds: 200

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 111,
-  "sourceHash": "fnv1a64:512cb447e9ca1f0a",
+  "sourceHash": "fnv1a64:0505238e3999f160",
   "lessonIds": [
     "FA-C111-sini",
     "FA-C111-kase",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch111.txt",
   "json": "persian/narration/ch111.json",
-  "textHash": "fnv1a64:ef9c28dd16fd072b",
-  "jsonHash": "fnv1a64:6aeb9ca60199a272",
+  "textHash": "fnv1a64:4f7ef4948823638c",
+  "jsonHash": "fnv1a64:7fd30a2db96d5610",
   "findings": []
 }

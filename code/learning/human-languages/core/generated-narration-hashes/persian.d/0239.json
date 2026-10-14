@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 239,
-  "sourceHash": "fnv1a64:68f1fdd1d541d708",
+  "sourceHash": "fnv1a64:9f0e0879eb1c98c5",
   "lessonIds": [
     "FA-C239-ketri",
     "FA-C239-quri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch239.txt",
   "json": "persian/narration/ch239.json",
-  "textHash": "fnv1a64:36057a47badd2f3c",
-  "jsonHash": "fnv1a64:15f4d11d45bc59ff",
+  "textHash": "fnv1a64:a484a3dcf2ff837f",
+  "jsonHash": "fnv1a64:984707598ef56cd6",
   "findings": []
 }

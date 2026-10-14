@@ -109,7 +109,7 @@ You'll want to know: رد شدن.
 رد شدن — rad shodan — "to cross, to go past".
 
 The word, taken apart.
-rad shodan pairs rad, borrowed from Arabic radd, "turning back, passing" (root r-d-d, Lane), with the Persian verb shodan, "to become". shodan, "to become", is an inherited verb; it is usually traced to Middle Persian šudan, "to go".
+rad shodan pairs rad, borrowed from Arabic radd, "turning back" (root r-d-d, Lane), with the Persian verb shodan, "to become"; the sense "go past" is Persian's own. shodan, "to become", is an inherited verb; it is usually traced to Middle Persian šudan, "to go".
 
 What you've built.
 One more word for this chapter.

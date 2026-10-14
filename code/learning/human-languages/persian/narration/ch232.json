@@ -4,7 +4,7 @@
   "chapter": 232,
   "title": "Tile, Basement, Stairwell, Landing, Railing",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a7b24c5a566f99d5",
+  "sourceHash": "fnv1a64:7b0a99da91aac735",
   "lessons": [
     {
       "id": "FA-C232-kashi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2be1cfc4449530c",
+      "sourceHash": "fnv1a64:31888021da39c42a",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "kâshi is usually said to be named after the city of Kâshân, long famous for its glazed tiles; that account is the usual one, but it is not settled."
+              "text": "kâshi is usually said to be named after the city of Kâshân, long famous for its glazed tiles. EtymDB gives a second account, linking it with an old Persian word for glass, kâsh."
             }
           ]
         },

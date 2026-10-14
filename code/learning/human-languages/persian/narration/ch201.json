@@ -4,7 +4,7 @@
   "chapter": 201,
   "title": "Similar, Fragrant, Sunny, Cloudy, Rainy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:398e082497de9899",
+  "sourceHash": "fnv1a64:4676adf43a99036d",
   "lessons": [
     {
       "id": "FA-C201-shabih",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6f968fb89c223b9",
+      "sourceHash": "fnv1a64:710ef6999a5560ca",
       "notice": null,
       "blocks": [
         {

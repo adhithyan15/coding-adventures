@@ -15,7 +15,7 @@ concept_tag: FA-LOC87-KELISA
 prerequisites: [FA-C87-park, FA-C87-sahel]
 sounds: []
 roots: [ekklesia-greek]
-etymology_hook: "kelisâ: goes back to Greek ekklēsia 'assembly, church' (EtymDB); route not settled"
+etymology_hook: "kelisâ: goes back to Greek ekklēsia 'assembly, church' (EtymDB), usually said to be via Syriac"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C87-sahel]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*kelisâ* goes back to Greek *ekklēsia*, "assembly, church" (EtymDB), the word behind English *ecclesiastical*. The route it took into Persian is not settled.
+*kelisâ* goes back to Greek *ekklēsia*, "assembly, church" (EtymDB), the word behind English *ecclesiastical*. It is usually said to have reached Persian through Syriac, the language of the early church in Iran.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

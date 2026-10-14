@@ -14,8 +14,8 @@ romanization: "ketri"
 concept_tag: FA-CHIZ239-KETRI
 prerequisites: [FA-C238-sakhtgir, FA-C238-zahmatkesh]
 sounds: []
-roots: []
-etymology_hook: "ketri: usually linked with English kettle; not settled"
+roots: [english-kettle]
+etymology_hook: "ketri: a loan, usually traced to English kettle"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C238-zahmatkesh]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*ketri* is usually linked with English *kettle*, but its origin is not settled.
+*ketri* is a loan, usually traced to English *kettle*, with an *r* where English has *l*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

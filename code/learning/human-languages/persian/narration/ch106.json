@@ -4,7 +4,7 @@
   "chapter": 106,
   "title": "Parrot, Pigeon, Peacock, Duck, Bee",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f82117982aecf929",
+  "sourceHash": "fnv1a64:7d3ddf8cc33d5790",
   "lessons": [
     {
       "id": "FA-C106-tuti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c78eb058c6cae2e",
+      "sourceHash": "fnv1a64:4f3b69735b06ec7c",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "tuti is the word for a parrot; it is sometimes linked with Hindi totā, \"parrot\", but its origin is not settled."
+              "text": "tuti is the word for a parrot, and Hindi totā, \"parrot\", is usually traced to it. Where Persian itself got the word is not settled."
             }
           ]
         },

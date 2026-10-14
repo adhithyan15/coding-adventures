@@ -14,7 +14,7 @@ romanization: "abrisham"
 concept_tag: FA-CHIZ211-ABRISHAM
 prerequisites: [FA-C211-panbe, FA-C211-pashm]
 sounds: []
-roots: [persian-abrisham]
+roots: [persian-abresham]
 etymology_hook: "abrisham ← Middle Persian abrēšom (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200

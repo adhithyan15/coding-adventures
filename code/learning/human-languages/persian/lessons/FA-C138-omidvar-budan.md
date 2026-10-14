@@ -14,7 +14,7 @@ romanization: "omidvâr budan"
 concept_tag: FA-VERB-OMIDVAR-BUDAN
 prerequisites: [FA-C138-tarh, FA-C138-tasmim-gereftan]
 sounds: []
-roots: [persian-umed]
+roots: [persian-ummed]
 etymology_hook: "omidvâr budan: Persian omid 'hope' + -vâr 'having' + budan 'to be'; native"
 duration:
   max_seconds: 200

@@ -14,7 +14,7 @@ romanization: "dobâre"
 concept_tag: FA-ZAMAN192-DOBARE
 prerequisites: [FA-C192-salane, FA-C192-kam-kam]
 sounds: []
-roots: [pie-dwoh]
+roots: [pie-dwoh, persian-dobara]
 etymology_hook: "dobâre: Persian do 'two' (EtymDB) + bâre 'time'; native"
 duration:
   max_seconds: 200

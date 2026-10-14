@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "Now, Never, This, That, These",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:93662a8215d2d1e8",
+  "sourceHash": "fnv1a64:03174c5fabd49d7d",
   "lessons": [
     {
       "id": "FA-C82-aknun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b993e50952f9093",
+      "sourceHash": "fnv1a64:ff0cc85a3cf07b82",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "aknun is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian aknūn, \"now\". EtymDB links it to the Indo-European nu, \"now\", the word behind English now."
+              "text": "aknun is a native Persian word, inherited rather than borrowed; it is built on the old word nūn, \"now\", which Middle Persian used. EtymDB links it to the Indo-European nu, \"now\", the word behind English now."
             }
           ]
         },

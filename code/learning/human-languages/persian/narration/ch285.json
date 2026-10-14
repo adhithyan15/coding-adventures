@@ -4,7 +4,7 @@
   "chapter": 285,
   "title": "Physics, Chemistry, Literature, English, Geometry",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:188baf3664772832",
+  "sourceHash": "fnv1a64:53a915f3089490ff",
   "lessons": [
     {
       "id": "FA-C285-fizik",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13149474cccb2025",
+      "sourceHash": "fnv1a64:f4cf309fed218dab",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "engelisi is built on Engelis, a form of the name of the English, with the ending -i. The route by which the name reached Persian is not settled."
+              "text": "engelisi is Engelis, \"England, the English\", with the ending -i. Engelis is a loan from European languages, whose name for the English appears as French anglais and Italian inglese; which one passed it to Persian is not certain."
             }
           ]
         },

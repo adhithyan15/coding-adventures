@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 6,
-  "sourceHash": "fnv1a64:0d1ef5df0ee41716",
+  "sourceHash": "fnv1a64:e50d7399e32b733d",
   "lessonIds": [
     "FA-C06-budan",
     "FA-C06-raftan",
@@ -14,6 +14,6 @@
   "text": "persian/narration/ch06.txt",
   "json": "persian/narration/ch06.json",
   "textHash": "fnv1a64:083234033ff51422",
-  "jsonHash": "fnv1a64:c5439405ee36a874",
+  "jsonHash": "fnv1a64:f390fe771b4538d8",
   "findings": []
 }

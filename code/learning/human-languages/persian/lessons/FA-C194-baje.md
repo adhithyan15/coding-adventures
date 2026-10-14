@@ -15,7 +15,7 @@ concept_tag: FA-MAKAN194-BAJE
 prerequisites: [FA-C194-terminal, FA-C194-post]
 sounds: []
 roots: []
-etymology_hook: "bâje: origin not settled"
+etymology_hook: "bâje: origin not settled; it is sometimes linked with bâj 'toll, tribute'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [FA-C194-post]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*bâje* is the word for a counter window, but no source used here gives its origin, which is not settled.
+*bâje* is the word for a counter window. It is sometimes linked with *bâj*, "toll, tribute", as the window where dues were paid, but no source used here confirms that, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

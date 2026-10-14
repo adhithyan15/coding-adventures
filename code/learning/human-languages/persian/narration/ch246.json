@@ -4,7 +4,7 @@
   "chapter": 246,
   "title": "Page, Message, Drawer, Electric fan, Electricity",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f0d8cf209728d382",
+  "sourceHash": "fnv1a64:7d9ec310e0033333",
   "lessons": [
     {
       "id": "FA-C246-safhe",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd0e837354ff8c49",
+      "sourceHash": "fnv1a64:f0637acde75864ba",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "keshow is usually explained as built on kesh-, \"pull\" (from keshidan): the thing you pull out. That account is the usual one, but it is not settled."
+              "text": "keshow is usually explained as built on kesh-, \"pull\" (from keshidan): the thing you pull out."
             }
           ]
         },
