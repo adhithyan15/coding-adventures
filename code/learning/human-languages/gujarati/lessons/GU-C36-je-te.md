@@ -11,7 +11,7 @@ gloss: "the one who … that one … — the relative pair, both ends marked"
 concept_tag: GU-JOIN-JE-TE
 prerequisites: [GU-C36-je, GU-C35-jo-to]
 sounds: []
-roots: [sanskrit-ya, sanskrit-ta]
+roots: [sanskrit-ya-relative, sanskrit-ta]
 etymology_hook: "je ← the Sanskrit relative ya- (CDIAL 10391); te ← the demonstrative ta- (CDIAL 5612)"
 duration:
   max_seconds: 250

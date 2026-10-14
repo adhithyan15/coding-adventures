@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:2224f5c776c857d3",
+  "sourceHash": "fnv1a64:ae8a6b972fbc93cd",
   "lessons": [
     {
       "id": "GU-C02-naam",
@@ -660,7 +660,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0251290e0825de82",
+      "sourceHash": "fnv1a64:7561f9221e213f4b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -709,6 +709,10 @@
             {
               "kind": "speech",
               "text": "તું (tũ, familiar \"you\") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu, and Hindi tū. તમે (tame, respectful \"you\") is grammatically plural — courtesy-by-plural, like French vous and Hindi āp. For a first meeting, use તમે; it takes the plural copula chho (tame … chho)."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists tũ under tvam, by way of Old Gujarati taüṁ, reshaped after haüṁ, \"I\" (CDIAL 5889), and tame under yuṣmad-, \"you (plural)\", with its t- taken from tvam (CDIAL 10511)."
             }
           ]
         },

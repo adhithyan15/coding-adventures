@@ -4,7 +4,7 @@
   "chapter": 110,
   "title": "Box, Jar, Candle, Pillow, Doll",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:98095e01d2201fa7",
+  "sourceHash": "fnv1a64:510381641295f0ef",
   "lessons": [
     {
       "id": "GU-C110-peti",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bf7435f2ebdcf44",
+      "sourceHash": "fnv1a64:0f24485b1001d038",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of બરણી (barṇī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it."
+              "text": "The origin of બરણી (barṇī) is not settled. CDIAL has no entry for it. DEDR lists Dravidian words for a jar or casket, such as Kannada and Tulu baraṇi, \"china jar\", and Tamil paraṇi, but no Gujarati word, so whether બરણી (barṇī) belongs with them is not known (DEDR 3954)."
             }
           ]
         },

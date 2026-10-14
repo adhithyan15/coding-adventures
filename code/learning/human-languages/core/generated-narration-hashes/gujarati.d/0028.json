@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 28,
-  "sourceHash": "fnv1a64:fa14f8e74830030f",
+  "sourceHash": "fnv1a64:30b755fa0c2acafd",
   "lessonIds": [
     "GU-C24-hear-savaar",
     "GU-C24-hear-bapor",
@@ -22,7 +22,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch28.txt",
   "json": "gujarati/narration/ch28.json",
-  "textHash": "fnv1a64:e1ac028b29691f9a",
-  "jsonHash": "fnv1a64:313e1f8e2e68a0bd",
+  "textHash": "fnv1a64:01cbb9c394f804d2",
+  "jsonHash": "fnv1a64:21c75f6bcd53db86",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 120,
   "title": "Desert, Lightning, Storm, Earth, Moonlight",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f140b482b204d779",
+  "sourceHash": "fnv1a64:2dfcfcfe35f53b4d",
   "lessons": [
     {
       "id": "GU-C120-ran",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e02f585f356a84d",
+      "sourceHash": "fnv1a64:b270e05eb6abf209",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of રણ (raṇ) is not settled. It matches Sindhi riñu, \"wilderness, desert\", which CDIAL lists under Sanskrit iriṇya, \"relating to desert\" (CDIAL 600), but CDIAL lists no Gujarati form there."
+              "text": "The origin of રણ (raṇ) is not settled. It matches Sindhi riñu, \"wilderness, desert\", which CDIAL lists under Sanskrit iriṇya, \"relating to desert\" (CDIAL 600). CDIAL lists Gujarati rān, \"wild; forest, desert\", under the first word of that entry, araṇya, but not રણ (raṇ) itself."
             }
           ]
         },

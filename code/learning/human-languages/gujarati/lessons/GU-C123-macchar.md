@@ -47,7 +47,7 @@ reviews_of: [GU-C123-magar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**મચ્છર** (*macchar*) is a tadbhava of the lexical Sanskrit *matsara*, "mosquito, fly" (CDIAL 9757). CDIAL lists Gujarati *machrũ*, "gnat", there, and finds no support for the idea that the Sanskrit word was made up from Prakrit.
+**મચ્છર** (*macchar*) is a tadbhava of the lexical Sanskrit *matsara*, "mosquito, fly" (CDIAL 9757). CDIAL lists Gujarati *machrũ*, "gnat", there, and calls it possible, though unsupported, that the Sanskrit word was remade from Prakrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

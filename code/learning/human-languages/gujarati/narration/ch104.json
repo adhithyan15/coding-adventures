@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "Experience, Habit, Habit, Qualification, Art",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:61b0ed370f2868c0",
+  "sourceHash": "fnv1a64:5ad15a92257eb0c2",
   "lessons": [
     {
       "id": "GU-C104-anubhav",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fd417349d87b274",
+      "sourceHash": "fnv1a64:e7fc9177869ef0a4",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "કળા (kaḷā) is Sanskrit kalā, \"any practical art\", lightly reshaped with Gujarati ḷ (CDIAL 2927). CDIAL takes the Sanskrit word from Dravidian."
+              "text": "કળા (kaḷā) is Sanskrit kalā, \"any practical art\", lightly reshaped with Gujarati ḷ, a semi-tatsama. CDIAL takes the Sanskrit word from Dravidian. The only Gujarati word it lists there is kaḷ, \"door-handle, gadget, scheme\" (CDIAL 2927)."
             }
           ]
         },

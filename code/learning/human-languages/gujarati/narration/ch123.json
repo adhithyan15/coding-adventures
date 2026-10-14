@@ -4,7 +4,7 @@
   "chapter": 123,
   "title": "Turtle, Crocodile, Mosquito, Fly, Bee",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:44233dd95bc2834a",
+  "sourceHash": "fnv1a64:1f1d90e1dcf31646",
   "lessons": [
     {
       "id": "GU-C123-kacbo",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:749bd253cc29116d",
+      "sourceHash": "fnv1a64:18ffc65c52ad4275",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "મગર (magar) is a semi-tatsama: Sanskrit makara, \"crocodile\", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9692)."
+              "text": "મગર (magar) goes back to Sanskrit makara, \"crocodile\". CDIAL lists Prakrit magara, with the same g, beside mayara, but no Gujarati form (CDIAL 9692)."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36aee70ac464e7b6",
+      "sourceHash": "fnv1a64:f21bd7b087a533a6",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "મચ્છર (macchar) is a tadbhava of the lexical Sanskrit matsara, \"mosquito, fly\" (CDIAL 9757). CDIAL lists Gujarati machrũ, \"gnat\", there, and finds no support for the idea that the Sanskrit word was made up from Prakrit."
+              "text": "મચ્છર (macchar) is a tadbhava of the lexical Sanskrit matsara, \"mosquito, fly\" (CDIAL 9757). CDIAL lists Gujarati machrũ, \"gnat\", there, and calls it possible, though unsupported, that the Sanskrit word was remade from Prakrit."
             }
           ]
         },

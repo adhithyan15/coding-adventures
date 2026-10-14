@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "City, School, and Road",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c0341ac638b3d29e",
+  "sourceHash": "fnv1a64:9361ecff06eb1c85",
   "lessons": [
     {
       "id": "GU-C22-hear-shahar",
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f990fc83f42c03c",
+      "sourceHash": "fnv1a64:8a3c9a2050c86e70",
       "notice": null,
       "blocks": [
         {
@@ -192,7 +192,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "શાળા (shāḷā) is a semi-tatsama: Sanskrit śālā, \"shed, stable, house\", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 12414)."
+              "text": "શાળા (shāḷā) is a semi-tatsama: Sanskrit śālā, \"shed, stable, house\", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 12414). CDIAL lists no Gujarati form there; Marathi sāḷ, \"school\", shows the inherited shape."
             }
           ]
         },

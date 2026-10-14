@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "If, and When",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0ddf39f4cf4ee660",
+  "sourceHash": "fnv1a64:5e8d404045165998",
   "lessons": [
     {
       "id": "GU-C35-jo",
@@ -368,7 +368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:957728e074ddeb9a",
+      "sourceHash": "fnv1a64:36ac15011dfd9b7b",
       "notice": null,
       "blocks": [
         {

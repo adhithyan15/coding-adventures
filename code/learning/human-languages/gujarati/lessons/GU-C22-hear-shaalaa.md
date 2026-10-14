@@ -43,7 +43,7 @@ the meaning together; ignore the printed form for now.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**શાળા** (*shāḷā*) is a semi-tatsama: Sanskrit *śālā*, "shed, stable, house", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 12414).
+**શાળા** (*shāḷā*) is a semi-tatsama: Sanskrit *śālā*, "shed, stable, house", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 12414). CDIAL lists no Gujarati form there; Marathi *sāḷ*, "school", shows the inherited shape.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-SHAALAA-01] -->

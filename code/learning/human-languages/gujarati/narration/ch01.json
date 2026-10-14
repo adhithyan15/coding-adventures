@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Namaste, Piece by Piece",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:34284eaf735e95d9",
+  "sourceHash": "fnv1a64:3d001938dfb0f517",
   "lessons": [
     {
       "id": "GU-C01-namaste",
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c1a5e901b526c725",
+      "sourceHash": "fnv1a64:31a19c3c179df84d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -208,7 +208,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Āhār is inherited from Sanskrit āhāra, \"taking food, food\", and has come down with almost no change (CDIAL 1544)."
+              "text": "Āhār goes back to Sanskrit āhāra, \"taking food, food\" (CDIAL 1544). CDIAL lists it beside hār and ār, the worn-down forms that sound change produced; āhār keeps the full Sanskrit shape."
             }
           ]
         },

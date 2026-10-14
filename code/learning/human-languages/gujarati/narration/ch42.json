@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Which One in the Line",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ed989e4fa9dda612",
+  "sourceHash": "fnv1a64:5b24da4018ced427",
   "lessons": [
     {
       "id": "GU-C38-panchmu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31bdd992a512c3d8",
+      "sourceHash": "fnv1a64:d0755a65a58bf225",
       "notice": null,
       "blocks": [
         {

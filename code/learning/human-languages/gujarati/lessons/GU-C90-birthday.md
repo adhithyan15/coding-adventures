@@ -14,7 +14,7 @@ romanization: "janmadivas"
 concept_tag: GU-LIFE-BIRTHDAY
 prerequisites: [GU-C89-shikhavvu, GU-C90-wedding]
 sounds: []
-roots: [sanskrit-janman, sanskrit-divasa]
+roots: [sanskrit-janman, sanskrit-divasa-day]
 etymology_hook: "janmadivas: Sanskrit janman 'birth' (CDIAL 5113) + divasa 'day' (CDIAL 6333), a tatsama compound"
 duration:
   max_seconds: 200

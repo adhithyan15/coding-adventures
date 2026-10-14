@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The First Verbs",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e1ecee8ed8d7646d",
+  "sourceHash": "fnv1a64:418278c348d3f9e0",
   "lessons": [
     {
       "id": "GU-C05-bolvun",
@@ -454,7 +454,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f53d59d954f844b2",
+      "sourceHash": "fnv1a64:d29bd621daa91cb2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -501,7 +501,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "રહેવું (rahevũ, \"to live, to remain, to stay\") goes back to rahati, \"remains\", a form CDIAL reconstructs from its descendants (CDIAL 10666), — the same root as Hindi rahnā and Punjabi rahiṇā. \"I live in Ahmedabad\" is હું અમદાવાદમાં રહું છું (hũ Amdāvādmā rahũ chhũ) — stem rah- + person + copula, exactly like bolvũ."
+              "text": "રહેવું (rahevũ, \"to live, to remain, to stay\") goes back to rahati, \"remains\", a form CDIAL reconstructs from its descendants (CDIAL 10666): the same root as Hindi rahnā and Punjabi rahiṇā. \"I live in Ahmedabad\" is હું અમદાવાદમાં રહું છું (hũ Amdāvādmā rahũ chhũ) — stem rah- + person + copula, exactly like bolvũ."
             }
           ]
         },

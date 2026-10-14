@@ -13,7 +13,7 @@ You'll want to know: ગલી.
 ગલી (galī) — "a lane".
 
 The word, taken apart.
-ગલી (galī) matches Hindi galī, "lane", which CDIAL lists under a reconstructed galī, "defile, lane" (CDIAL 4085). The Gujarati word CDIAL lists there is gālī, "valley".
+CDIAL lists ગલી (galī), "lane", under a reconstructed galī, "defile, lane", as a word Gujarati took from Sindhi galī, "lane" (CDIAL 4085). The inherited Gujarati word in that entry is gālī, "valley".
 
 What you've built.
 One more word for this chapter.

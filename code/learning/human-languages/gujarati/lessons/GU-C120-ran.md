@@ -47,7 +47,7 @@ reviews_of: [GU-C119-tekri]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **રણ** (*raṇ*) is not settled. It matches Sindhi *riñu*, "wilderness, desert", which CDIAL lists under Sanskrit *iriṇya*, "relating to desert" (CDIAL 600), but CDIAL lists no Gujarati form there.
+The origin of **રણ** (*raṇ*) is not settled. It matches Sindhi *riñu*, "wilderness, desert", which CDIAL lists under Sanskrit *iriṇya*, "relating to desert" (CDIAL 600). CDIAL lists Gujarati *rān*, "wild; forest, desert", under the first word of that entry, *araṇya*, but not **રણ** (*raṇ*) itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

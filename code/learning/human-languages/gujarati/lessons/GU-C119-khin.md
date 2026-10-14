@@ -15,7 +15,7 @@ concept_tag: GU-THINGS119-KHIN
 prerequisites: [GU-C119-dhodh, GU-C119-gupha]
 sounds: []
 roots: []
-etymology_hook: "khīṇ 'valley': origin not settled; CDIAL's Gujarati khīṇa means 'exhausted', a different word"
+etymology_hook: "khīṇ 'valley': origin not settled; CDIAL's Old Gujarati khīṇa means 'exhausted', a different word"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [GU-C119-gupha]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **ખીણ** (*khīṇ*) is not settled. CDIAL, searched by form and by meaning, has no entry for it; the Gujarati *khīṇa* it lists means "exhausted" and is a different word (CDIAL 3690).
+The origin of **ખીણ** (*khīṇ*) is not settled. CDIAL, searched by form and by meaning, has no entry for it; the Old Gujarati *khīṇa* it lists means "exhausted" and is a different word (CDIAL 3690).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

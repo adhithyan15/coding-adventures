@@ -15,7 +15,7 @@ concept_tag: GU-THINGS123-MAGAR
 prerequisites: [GU-C122-batak, GU-C123-kacbo]
 sounds: []
 roots: [sanskrit-makara]
-etymology_hook: "magar ← Sanskrit makara 'crocodile', a semi-tatsama (CDIAL 9692)"
+etymology_hook: "magar ← Sanskrit makara 'crocodile'; its g matches Prakrit magara (CDIAL 9692)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [GU-C123-kacbo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**મગર** (*magar*) is a semi-tatsama: Sanskrit *makara*, "crocodile", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9692).
+**મગર** (*magar*) goes back to Sanskrit *makara*, "crocodile". CDIAL lists Prakrit *magara*, with the same *g*, beside *mayara*, but no Gujarati form (CDIAL 9692).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

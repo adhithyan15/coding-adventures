@@ -4,7 +4,7 @@
   "chapter": 106,
   "title": "Cupboard, Mirror, Comb, Soap, Towel",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b9532b2527156dfe",
+  "sourceHash": "fnv1a64:a2834adc5b91076a",
   "lessons": [
     {
       "id": "GU-C106-kabat",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df47272755b6df8c",
+      "sourceHash": "fnv1a64:ad405e1fa12e8bd9",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "કાંસકો (kā̃sko) (kāṁsko) is a tadbhava. CDIAL lists it under Sanskrit kaṅkata, \"comb\", and doubts that the Sanskrit word is of Indo-European origin (CDIAL 2598)."
+              "text": "કાંસકો (kā̃sko) (kāṁsko) is a tadbhava. CDIAL lists it under kaṅkaśa, a variant it reconstructs beside Sanskrit kaṅkata, \"comb\", and doubts that the Sanskrit word is of Indo-European origin (CDIAL 2598)."
             }
           ]
         },

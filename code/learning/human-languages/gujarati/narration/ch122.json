@@ -4,7 +4,7 @@
   "chapter": 122,
   "title": "Bear, Jackal, Wolf, Pigeon, Duck",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:58db95748a08cfa4",
+  "sourceHash": "fnv1a64:6b7e59276d2c6395",
   "lessons": [
     {
       "id": "GU-C122-rich",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17be8ea70587df18",
+      "sourceHash": "fnv1a64:e1ece180a18bb598",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "બતક (batak) is a loan, usually traced through Persian baṭ, \"duck\", to Arabic baṭṭ, a kind of water-fowl (Lane, root b-ṭ-ṭ)."
+              "text": "બતક (batak) is a loan, usually traced to Persian baṭ, \"duck\". Arabic has baṭṭ, a kind of water-fowl, but Lane, under the root b-ṭ-ṭ, calls it a Persian word taken into Arabic, or else an imitation of the bird's cry."
             }
           ]
         },

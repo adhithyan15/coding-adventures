@@ -4,7 +4,7 @@
   "chapter": 113,
   "title": "Pocket, Jaggery, Honey, Chickpeas, Mung beans",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e68bb7249d04c2b4",
+  "sourceHash": "fnv1a64:550c698665038961",
   "lessons": [
     {
       "id": "GU-C113-khissu",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:569a2c77feced727",
+      "sourceHash": "fnv1a64:2f87abcc0ee39761",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "મધ (madh) is a semi-tatsama: Sanskrit madhu, \"honey, mead\", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9784)."
+              "text": "મધ (madh) is a semi-tatsama: Sanskrit madhu, \"honey, mead\", borrowed after the old sound changes had run their course and then lightly reshaped. CDIAL lists no Gujarati form under madhu; the inherited line shows in Prakrit mahu, where the dh had worn to h (CDIAL 9784)."
             }
           ]
         },

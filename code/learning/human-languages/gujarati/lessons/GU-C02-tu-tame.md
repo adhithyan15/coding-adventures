@@ -12,7 +12,7 @@ concept_tag: PRONOUN-YOU
 prerequisites: [GU-C02-naam, GU-W02-ra]
 sounds: [u-nasal, e-sign]
 roots: [tu-second-person, tvam, sanskrit-yushmad]
-etymology_hook: "tũ ← Sanskrit tvam 'thou' (CDIAL 5889); tame ← yuṣmad- 'you (plural)', with t- from tvam (CDIAL 10511)"
+etymology_hook: "tũ: under tvam 'thou', via Old Gujarati taüṁ, reshaped after haüṁ 'I' (CDIAL 5889); tame ← yuṣmad- (CDIAL 10511)"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +54,8 @@ root as English archaic **thou**, Latin *tū*, French *tu*, and Hindi *tū*. **�
 (*tame*, respectful "you") is grammatically plural — courtesy-by-plural, like
 French *vous* and Hindi *āp*. For a first meeting, use **તમે**; it takes the
 plural copula *chho* (*tame … chho*).
+
+CDIAL lists *tũ* under *tvam*, by way of Old Gujarati *taüṁ*, reshaped after *haüṁ*, "I" (CDIAL 5889), and *tame* under *yuṣmad-*, "you (plural)", with its *t-* taken from *tvam* (CDIAL 10511).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-NAAM-01, GU-CONCEPT-C02-TUTAME-01] -->

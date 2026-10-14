@@ -4,7 +4,7 @@
   "chapter": 129,
   "title": "Lane, Park, Gate, Pen, Pencil",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7836e5cefa53acbb",
+  "sourceHash": "fnv1a64:7a7c97237d09504a",
   "lessons": [
     {
       "id": "GU-C129-gali",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a7db0baf8790ffc",
+      "sourceHash": "fnv1a64:177d3ca9486abdc6",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ગલી (galī) matches Hindi galī, \"lane\", which CDIAL lists under a reconstructed galī, \"defile, lane\" (CDIAL 4085). The Gujarati word CDIAL lists there is gālī, \"valley\"."
+              "text": "CDIAL lists ગલી (galī), \"lane\", under a reconstructed galī, \"defile, lane\", as a word Gujarati took from Sindhi galī, \"lane\" (CDIAL 4085). The inherited Gujarati word in that entry is gālī, \"valley\"."
             }
           ]
         },

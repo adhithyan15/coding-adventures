@@ -12,7 +12,7 @@ concept_tag: GU-SKY-RAIN-HEARD
 prerequisites: [GU-C29-hear-aakaash]
 sounds: [rolled-r, sa, long-aa, voiced-d]
 roots: []
-etymology_hook: "varsād: origin not settled; CDIAL lists only the verb varasvũ 'to rain', under varṣati (CDIAL 11394)"
+etymology_hook: "varsād: CDIAL lists barsād 'rainy season' under varṣārātri, or a blend with varṣartu (CDIAL 11398)"
 duration:
   max_seconds: 120
 requires:
@@ -43,7 +43,7 @@ reviews_of: [GU-C29-hear-aakaash]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **વરસાદ** (*varsād*) is not fully settled. CDIAL has no entry for it, so its ending is unexplained; its first part matches the Gujarati verb *varasvũ*, "to rain", which CDIAL lists under Sanskrit *varṣati*, "it rains" (CDIAL 11394).
+CDIAL lists **વરસાદ** (*varsād*) in the form *barsād*, "the rainy season", under Sanskrit *varṣārātri*, "the rainy season", or else a blend of it with *varṣartu*, "the season of rain" (CDIAL 11398). Its first part matches the Gujarati verb *varasvũ*, "to rain", which CDIAL lists under Sanskrit *varṣati*, "it rains" (CDIAL 11394).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-VARSAAD-01, GU-LEX-AAKAASH-01] -->

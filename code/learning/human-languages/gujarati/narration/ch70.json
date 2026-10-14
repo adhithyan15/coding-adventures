@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Red, Yellow, Green",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:504c4ae2ff265b74",
+  "sourceHash": "fnv1a64:0a22622c99899521",
   "lessons": [
     {
       "id": "GU-C70-red",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6deb0316f2a7518",
+      "sourceHash": "fnv1a64:c8d75e3bc1bd9bba",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "વાદળી (vādaḷī) is the same word as vādḷī, \"small cloud\", which CDIAL lists with vādaḷ, \"cloud\", under Sanskrit vārdala, \"rainy day, bad weather\" (CDIAL 11567)."
+              "text": "વાદળી (vādaḷī) is built on vādaḷ, \"cloud\", which CDIAL lists, with vādḷī, \"small cloud\", under Sanskrit vārdala, \"rainy day, bad weather\" (CDIAL 11567)."
             }
           ]
         },

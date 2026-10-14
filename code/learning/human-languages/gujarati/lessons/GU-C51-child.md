@@ -14,7 +14,7 @@ romanization: "bāḷak"
 concept_tag: GU-FAMILY1-CHILD
 prerequisites: [GU-C51-grandfather, GU-C51-grandmother]
 sounds: []
-roots: [sanskrit-bala]
+roots: [sanskrit-bala-child]
 etymology_hook: "bāḷak ← Sanskrit bālaka 'young; a boy', a semi-tatsama (CDIAL 9216)"
 duration:
   max_seconds: 200

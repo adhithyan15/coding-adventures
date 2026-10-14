@@ -11,7 +11,7 @@ gloss: "the one who, the thing that — the relative word"
 concept_tag: GU-PRON-JE
 prerequisites: [GU-C36-te-write, GU-C35-jyaare]
 sounds: []
-roots: [sanskrit-ya]
+roots: [sanskrit-ya-relative]
 etymology_hook: "je ← the Sanskrit relative ya-; CDIAL notes its -e came after te 'that' (CDIAL 10391)"
 duration:
   max_seconds: 240

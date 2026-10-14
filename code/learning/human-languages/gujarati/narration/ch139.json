@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "To send, To forget, To look for, To use, To make",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e9ddc4683d2672ab",
+  "sourceHash": "fnv1a64:998ab78b7a3718bf",
   "lessons": [
     {
       "id": "GU-C139-mokalvu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:127ab9a398a0b003",
+      "sourceHash": "fnv1a64:9e4b7ef671064e48",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of મોકલવું (mokalvũ) is not settled; CDIAL has no entry for the verb. It may belong with mokḷũ, \"loose, free\", which CDIAL lists under a reconstructed mukna, \"loosed\" (CDIAL 10157)."
+              "text": "The origin of મોકલવું (mokalvũ) is not settled; CDIAL has no entry for the verb. It may belong with mokḷũ, \"loose, free\", which CDIAL lists under a reconstructed mukna, \"loosed\" (CDIAL 10157). Sindhi mokilaṇu, \"to send\", stands in the same group there."
             }
           ]
         },

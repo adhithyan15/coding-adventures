@@ -14,7 +14,7 @@ romanization: "vī̃ṭī"
 concept_tag: GU-THINGS111-VITI
 prerequisites: [GU-C111-kurto, GU-C111-payjamo]
 sounds: []
-roots: [vita]
+roots: [sanskrit-vita-roll]
 etymology_hook: "vīṁṭī 'ring': listed by CDIAL in a loose group of like words under Sanskrit vīṭā (CDIAL 12045)"
 duration:
   max_seconds: 200

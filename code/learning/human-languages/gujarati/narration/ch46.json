@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Head to Foot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4a3e79c8e51cb90b",
+  "sourceHash": "fnv1a64:24309750edad9c26",
   "lessons": [
     {
       "id": "GU-C46-head",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07f4e9ad2fe4ecb6",
+      "sourceHash": "fnv1a64:dc3f122ea49f6bc9",
       "notice": null,
       "blocks": [
         {

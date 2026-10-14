@@ -15,7 +15,7 @@ concept_tag: GU-THINGS113-MADH
 prerequisites: [GU-C113-khissu, GU-C113-gol]
 sounds: []
 roots: [sanskrit-madhu]
-etymology_hook: "madh ← Sanskrit madhu 'honey, mead', a semi-tatsama (CDIAL 9784)"
+etymology_hook: "madh ← Sanskrit madhu 'honey, mead', a semi-tatsama; CDIAL gives Prakrit mahu, no Gujarati form (CDIAL 9784)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [GU-C113-gol]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**મધ** (*madh*) is a semi-tatsama: Sanskrit *madhu*, "honey, mead", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9784).
+**મધ** (*madh*) is a semi-tatsama: Sanskrit *madhu*, "honey, mead", borrowed after the old sound changes had run their course and then lightly reshaped. CDIAL lists no Gujarati form under *madhu*; the inherited line shows in Prakrit *mahu*, where the *dh* had worn to *h* (CDIAL 9784).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 111,
-  "sourceHash": "fnv1a64:fc246a5a766eee00",
+  "sourceHash": "fnv1a64:331296f4ed8d1795",
   "lessonIds": [
     "GU-C111-kurto",
     "GU-C111-payjamo",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch111.txt",
   "json": "gujarati/narration/ch111.json",
   "textHash": "fnv1a64:eb56d47c0879a142",
-  "jsonHash": "fnv1a64:ee212e3f802e0ccb",
+  "jsonHash": "fnv1a64:900c66332f8ffb37",
   "findings": []
 }

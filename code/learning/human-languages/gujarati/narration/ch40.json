@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "He, She, We, and the One Who",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a0967403e38fa18e",
+  "sourceHash": "fnv1a64:61727d3659086a67",
   "lessons": [
     {
       "id": "GU-C36-te",
@@ -373,7 +373,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc43eb08a8cb89c9",
+      "sourceHash": "fnv1a64:f5b21838170ec406",
       "notice": null,
       "blocks": [
         {
@@ -501,7 +501,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:de7e3ccd1df262b2",
+      "sourceHash": "fnv1a64:01e13532487badab",
       "notice": {
         "modality": "sight",
         "needs": [

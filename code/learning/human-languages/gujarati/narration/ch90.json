@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Weddings, Birthdays and Work",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cdc3ebc670b32804",
+  "sourceHash": "fnv1a64:661fabbf4aa67c13",
   "lessons": [
     {
       "id": "GU-C90-wedding",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:823235b422bd88ff",
+      "sourceHash": "fnv1a64:e887856ff8c24b82",
       "notice": null,
       "blocks": [
         {

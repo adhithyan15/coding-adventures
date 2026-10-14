@@ -4,7 +4,7 @@
   "chapter": 143,
   "title": "To run away, To go around, To stop, To believe, To change, A1 timed writing",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:4216a84bd8c1e37c",
+  "sourceHash": "fnv1a64:ef2c4006a53bdfe5",
   "lessons": [
     {
       "id": "GU-C143-bhagvu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8101996c7aa84075",
+      "sourceHash": "fnv1a64:e11f1f591afcb7d7",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ભાગવું (bhāgvũ) is a tadbhava. CDIAL lists it under Sanskrit bhagna, \"broken, defeated\", beside bhajyate, \"is broken\" (CDIAL 9361). It reports that J. Bloch separated the words meaning \"flee\" from this root."
+              "text": "ભાગવું (bhāgvũ) is a tadbhava. CDIAL lists it under Sanskrit bhagna, \"broken, defeated\", beside bhajyate, \"is broken\" (CDIAL 9361). It reports that J. Bloch separated the words meaning \"flee\" from this root, and finds no need for that: \"broken, defeated\" can turn into \"flee\"."
             }
           ]
         },

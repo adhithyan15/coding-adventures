@@ -123,7 +123,7 @@ The letters in this word.
 ર (ra) + હે (he) + વું (vũ) becomes રહેવું (rahevũ). The familiar -vũ infinitive.
 
 The word, taken apart.
-રહેવું (rahevũ, "to live, to remain, to stay") goes back to rahati, "remains", a form CDIAL reconstructs from its descendants (CDIAL 10666), — the same root as Hindi rahnā and Punjabi rahiṇā. "I live in Ahmedabad" is હું અમદાવાદમાં રહું છું (hũ Amdāvādmā rahũ chhũ) — stem rah- + person + copula, exactly like bolvũ.
+રહેવું (rahevũ, "to live, to remain, to stay") goes back to rahati, "remains", a form CDIAL reconstructs from its descendants (CDIAL 10666): the same root as Hindi rahnā and Punjabi rahiṇā. "I live in Ahmedabad" is હું અમદાવાદમાં રહું છું (hũ Amdāvādmā rahũ chhũ) — stem rah- + person + copula, exactly like bolvũ.
 
 Grammar Lens: "in" comes after the noun.
 અમદાવાદમાં (Amdāvādmā) = Ahmedabad + -માં (-mā, "in"), glued to the end of the noun. Gujarati, like Hindi, uses postpositions where English uses prepositions: "Ahmedabad-in I live," the verb last.

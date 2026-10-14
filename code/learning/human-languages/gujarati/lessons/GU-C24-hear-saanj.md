@@ -11,7 +11,7 @@ gloss: evening, heard third in the day sequence
 concept_tag: GU-TIME-EVENING-HEARD
 prerequisites: [GU-C24-hear-bapor]
 sounds: [sa, nasal-aa, voiced-j]
-roots: [sanskrit-sandhya]
+roots: [sanskrit-sandhya-junction]
 etymology_hook: "sānj ← Sanskrit saṁdhyā 'twilight', a tadbhava (CDIAL 12918)"
 duration:
   max_seconds: 120

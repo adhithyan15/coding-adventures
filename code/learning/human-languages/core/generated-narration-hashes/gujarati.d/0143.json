@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 143,
-  "sourceHash": "fnv1a64:4216a84bd8c1e37c",
+  "sourceHash": "fnv1a64:ef2c4006a53bdfe5",
   "lessonIds": [
     "GU-C143-bhagvu",
     "GU-C143-pharvu",
@@ -16,7 +16,7 @@
   "drivablePrefix": 7,
   "text": "gujarati/narration/ch143.txt",
   "json": "gujarati/narration/ch143.json",
-  "textHash": "fnv1a64:d8879b6d2739b8ad",
-  "jsonHash": "fnv1a64:e0d9be17d39cf571",
+  "textHash": "fnv1a64:3dcf792da4c97123",
+  "jsonHash": "fnv1a64:5b497de329b63c9d",
   "findings": []
 }

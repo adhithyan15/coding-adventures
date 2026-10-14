@@ -47,7 +47,7 @@ reviews_of: [GU-C70-green]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**વાદળી** (*vādaḷī*) is the same word as *vādḷī*, "small cloud", which CDIAL lists with *vādaḷ*, "cloud", under Sanskrit *vārdala*, "rainy day, bad weather" (CDIAL 11567).
+**વાદળી** (*vādaḷī*) is built on *vādaḷ*, "cloud", which CDIAL lists, with *vādḷī*, "small cloud", under Sanskrit *vārdala*, "rainy day, bad weather" (CDIAL 11567).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

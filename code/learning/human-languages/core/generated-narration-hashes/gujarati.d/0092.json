@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 92,
-  "sourceHash": "fnv1a64:c3c478b2e3badee4",
+  "sourceHash": "fnv1a64:ea759e25598c3927",
   "lessonIds": [
     "GU-C92-madhrat",
     "GU-C92-parodh",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch92.txt",
   "json": "gujarati/narration/ch92.json",
   "textHash": "fnv1a64:bcbb2d230eb7e69f",
-  "jsonHash": "fnv1a64:fa4a873515156d1b",
+  "jsonHash": "fnv1a64:9a8f0ec4ee7a0f42",
   "findings": []
 }

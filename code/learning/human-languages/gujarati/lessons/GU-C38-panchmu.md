@@ -12,7 +12,7 @@ concept_tag: GU-ORDINAL-MU
 prerequisites: [GU-C37-ketla, GU-C37-kon, GU-C34-kemke, GU-C25-mahino, GU-C06-numbers-1-5, GU-C02-maarun]
 sounds: [nasal-aa, long-aa]
 roots: [sanskrit-pancama]
-etymology_hook: "pāṁchmũ: pāṁch + -mũ, and CDIAL also lists pāṁcmo under Sanskrit pañcama 'fifth' (CDIAL 7669)"
+etymology_hook: "pāṁchmũ: Wiktionary takes it as pāṁch + -mũ; CDIAL lists pāṁcmo under Sanskrit pañcama 'fifth' (CDIAL 7669)"
 duration:
   max_seconds: 281
 requires:

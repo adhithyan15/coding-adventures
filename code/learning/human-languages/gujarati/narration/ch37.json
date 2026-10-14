@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "The Word That Carries a Thought",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fc6daf3d5a0d52ff",
+  "sourceHash": "fnv1a64:22797e389faea4a5",
   "lessons": [
     {
       "id": "GU-C33-ke",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:120ea33608f07352",
+      "sourceHash": "fnv1a64:1d2ac2b4837fb91a",
       "notice": null,
       "blocks": [
         {

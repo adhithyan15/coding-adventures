@@ -14,7 +14,7 @@ romanization: "paramdivas"
 concept_tag: GU-TIME92-PARAMDIVAS
 prerequisites: [GU-C92-madhrat, GU-C92-parodh]
 sounds: []
-roots: [sanskrit-divasa]
+roots: [sanskrit-divasa-day]
 etymology_hook: "paramdivas: param 'day after tomorrow' + divas 'day' (CDIAL 6333); CDIAL has no entry for param"
 duration:
   max_seconds: 200

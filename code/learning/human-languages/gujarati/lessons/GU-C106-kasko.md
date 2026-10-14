@@ -15,7 +15,7 @@ concept_tag: GU-THINGS106-KASKO
 prerequisites: [GU-C106-kabat, GU-C106-ariso, GU-C32-ane-clauses]
 sounds: []
 roots: [sanskrit-kankata]
-etymology_hook: "kāṁsko: listed by CDIAL under Sanskrit kaṅkata 'comb', of doubtful Indo-European origin (CDIAL 2598)"
+etymology_hook: "kāṁsko: listed under *kaṅkaśa, a variant of Sanskrit kaṅkata 'comb', of doubtful IE origin (CDIAL 2598)"
 duration:
   max_seconds: 200
 requires:
@@ -49,7 +49,7 @@ reviews_of: [GU-C106-ariso]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**કાંસકો** (*kāṁsko*) is a tadbhava. CDIAL lists it under Sanskrit *kaṅkata*, "comb", and doubts that the Sanskrit word is of Indo-European origin (CDIAL 2598).
+**કાંસકો** (*kāṁsko*) is a tadbhava. CDIAL lists it under *\*kaṅkaśa*, a variant it reconstructs beside Sanskrit *kaṅkata*, "comb", and doubts that the Sanskrit word is of Indo-European origin (CDIAL 2598).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

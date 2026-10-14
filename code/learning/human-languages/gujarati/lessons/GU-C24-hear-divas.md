@@ -11,8 +11,8 @@ gloss: day, the whole span the four parts divide
 concept_tag: GU-TIME-DAY-HEARD
 prerequisites: [GU-C24-raat]
 sounds: [voiced-d, short-i, sa]
-roots: [sanskrit-divasa]
-etymology_hook: "divas ← Sanskrit divasa 'day', almost unchanged; CDIAL lists it beside the more worn dīs (CDIAL 6333)"
+roots: [sanskrit-divasa-day]
+etymology_hook: "divas ← Sanskrit divasa 'day'; CDIAL lists it beside dīs, the worn-down form (CDIAL 6333)"
 duration:
   max_seconds: 120
 requires:
@@ -44,7 +44,7 @@ Now listen twice: **divas**. It means **day** — the whole span that *savār*,
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**દિવસ** (*divas*) is inherited from Sanskrit *divasa*, "day", and has come down with almost no change. CDIAL lists it beside the more worn Gujarati *dīs* (CDIAL 6333).
+**દિવસ** (*divas*) goes back to Sanskrit *divasa*, "day" (CDIAL 6333). CDIAL lists it beside Gujarati *dīs*, the worn-down form that sound change produced; *divas* keeps the full Sanskrit shape.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-DIVAS-01, GU-LEX-SAVAAR-01] -->

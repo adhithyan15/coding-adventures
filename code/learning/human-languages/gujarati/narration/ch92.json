@@ -4,7 +4,7 @@
   "chapter": 92,
   "title": "Midnight, Dawn, Day after tomorrow, Year, Moment",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c3c478b2e3badee4",
+  "sourceHash": "fnv1a64:ea759e25598c3927",
   "lessons": [
     {
       "id": "GU-C92-madhrat",
@@ -297,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bcec9c03488b8e13",
+      "sourceHash": "fnv1a64:bf414162210e9494",
       "notice": null,
       "blocks": [
         {

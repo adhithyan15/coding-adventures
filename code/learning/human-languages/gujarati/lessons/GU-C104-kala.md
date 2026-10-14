@@ -15,7 +15,7 @@ concept_tag: GU-CAN104-KALA
 prerequisites: [GU-C104-adat, GU-C104-layakat]
 sounds: []
 roots: [sanskrit-kala-art]
-etymology_hook: "kaḷā: Sanskrit kalā 'any practical art', which CDIAL takes from Dravidian (CDIAL 2927)"
+etymology_hook: "kaḷā: Sanskrit kalā 'any practical art', a semi-tatsama; CDIAL takes kalā from Dravidian (CDIAL 2927)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [GU-C104-layakat]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**કળા** (*kaḷā*) is Sanskrit *kalā*, "any practical art", lightly reshaped with Gujarati *ḷ* (CDIAL 2927). CDIAL takes the Sanskrit word from Dravidian.
+**કળા** (*kaḷā*) is Sanskrit *kalā*, "any practical art", lightly reshaped with Gujarati *ḷ*, a semi-tatsama. CDIAL takes the Sanskrit word from Dravidian. The only Gujarati word it lists there is *kaḷ*, "door-handle, gadget, scheme" (CDIAL 2927).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

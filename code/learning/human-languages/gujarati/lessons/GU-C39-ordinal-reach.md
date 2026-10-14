@@ -68,7 +68,7 @@ behind it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-All four are inherited Sanskrit ordinals: *saptama*, *aṣṭama*, *navama*, *daśama* (CDIAL 13151, 937, 7006, 6233).
+CDIAL lists all four as inherited: *saptama*, *aṣṭama*, *navama*, *daśama* (CDIAL 13151, 937, 7006, 6233).
 
 ## What you've built: four ordinals nobody taught you
 <!-- hl-knowledge: introduces=[]; assesses=[GU-GRAMMAR-ORDINAL-MU-REACH, GU-LEX-SAAT, GU-LEX-AATH, GU-LEX-NAV, GU-LEX-DAS, GU-SCRIPT-TTHA-01] -->

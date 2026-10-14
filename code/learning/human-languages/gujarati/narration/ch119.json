@@ -4,7 +4,7 @@
   "chapter": 119,
   "title": "Shore, Waterfall, Cave, Valley, Hill",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7b3da54ac14086ce",
+  "sourceHash": "fnv1a64:ea65a36a75019e17",
   "lessons": [
     {
       "id": "GU-C119-kinaro",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1a2059515f08ce9",
+      "sourceHash": "fnv1a64:980e88210d642cd8",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of ખીણ (khīṇ) is not settled. CDIAL, searched by form and by meaning, has no entry for it; the Gujarati khīṇa it lists means \"exhausted\" and is a different word (CDIAL 3690)."
+              "text": "The origin of ખીણ (khīṇ) is not settled. CDIAL, searched by form and by meaning, has no entry for it; the Old Gujarati khīṇa it lists means \"exhausted\" and is a different word (CDIAL 3690)."
             }
           ]
         },

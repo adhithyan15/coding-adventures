@@ -11,7 +11,7 @@ gloss: "when — locating one event against another"
 concept_tag: GU-JOIN-JYAARE
 prerequisites: [GU-C35-jo-write, GU-C34-kemke]
 sounds: []
-roots: [sanskrit-ya]
+roots: [sanskrit-ya-relative]
 etymology_hook: "jyāre 'when': on the relative stem ja-, Sanskrit ya- (CDIAL 10391); CDIAL has no entry for jyāre itself"
 duration:
   max_seconds: 240

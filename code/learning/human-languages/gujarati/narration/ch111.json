@@ -4,7 +4,7 @@
   "chapter": 111,
   "title": "Kurta, Pyjamas, Ring, Earring, Socks",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fc246a5a766eee00",
+  "sourceHash": "fnv1a64:331296f4ed8d1795",
   "lessons": [
     {
       "id": "GU-C111-kurto",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9f1e45a3dde03bc",
+      "sourceHash": "fnv1a64:fc380791a2fd271a",
       "notice": null,
       "blocks": [
         {

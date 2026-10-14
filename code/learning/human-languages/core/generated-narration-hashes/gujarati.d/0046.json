@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 46,
-  "sourceHash": "fnv1a64:4a3e79c8e51cb90b",
+  "sourceHash": "fnv1a64:24309750edad9c26",
   "lessonIds": [
     "GU-C46-head",
     "GU-C46-leg",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch46.txt",
   "json": "gujarati/narration/ch46.json",
   "textHash": "fnv1a64:8dbce59ed20dbab5",
-  "jsonHash": "fnv1a64:b35d984c00a2fa78",
+  "jsonHash": "fnv1a64:f2ce94439e3f4076",
   "findings": []
 }

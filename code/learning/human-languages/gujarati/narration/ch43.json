@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Past Five, and the Balance Turns Over",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:32bcb2ea8bf0df41",
+  "sourceHash": "fnv1a64:fd1770b5413c24cd",
   "lessons": [
     {
       "id": "GU-C39-chha",
@@ -1171,7 +1171,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be21f7825ea1d8e0",
+      "sourceHash": "fnv1a64:aa0814d831e196cc",
       "notice": null,
       "blocks": [
         {
@@ -1243,7 +1243,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "All four are inherited Sanskrit ordinals: saptama, aṣṭama, navama, daśama (CDIAL 13151, 937, 7006, 6233)."
+              "text": "CDIAL lists all four as inherited: saptama, aṣṭama, navama, daśama (CDIAL 13151, 937, 7006, 6233)."
             }
           ]
         },

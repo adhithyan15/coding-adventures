@@ -15,7 +15,7 @@ concept_tag: GU-THINGS122-BATAK
 prerequisites: [GU-C122-varu, GU-C122-kabutar]
 sounds: []
 roots: [arabic-batt]
-etymology_hook: "batak: usually traced, through Persian baṭ, to Arabic baṭṭ, a water-fowl (Lane, root b-ṭ-ṭ)"
+etymology_hook: "batak: usually traced to Persian baṭ 'duck'; Lane calls Arabic baṭṭ a Persian word, or imitative"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [GU-C122-kabutar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**બતક** (*batak*) is a loan, usually traced through Persian *baṭ*, "duck", to Arabic *baṭṭ*, a kind of water-fowl (Lane, root *b-ṭ-ṭ*).
+**બતક** (*batak*) is a loan, usually traced to Persian *baṭ*, "duck". Arabic has *baṭṭ*, a kind of water-fowl, but Lane, under the root *b-ṭ-ṭ*, calls it a Persian word taken into Arabic, or else an imitation of the bird's cry.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

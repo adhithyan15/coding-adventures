@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "The Day and Its Times",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fa14f8e74830030f",
+  "sourceHash": "fnv1a64:30b755fa0c2acafd",
   "lessons": [
     {
       "id": "GU-C24-hear-savaar",
@@ -256,7 +256,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b968006d79e03e89",
+      "sourceHash": "fnv1a64:f61299eee237a54c",
       "notice": null,
       "blocks": [
         {
@@ -736,7 +736,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d47376444020d877",
+      "sourceHash": "fnv1a64:561d4cb81ba6b5b3",
       "notice": null,
       "blocks": [
         {
@@ -763,7 +763,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "દિવસ (divas) is inherited from Sanskrit divasa, \"day\", and has come down with almost no change. CDIAL lists it beside the more worn Gujarati dīs (CDIAL 6333)."
+              "text": "દિવસ (divas) goes back to Sanskrit divasa, \"day\" (CDIAL 6333). CDIAL lists it beside Gujarati dīs, the worn-down form that sound change produced; divas keeps the full Sanskrit shape."
             }
           ]
         },

@@ -12,7 +12,7 @@ concept_tag: GU-JOIN-KE
 prerequisites: [GU-C32-pan, GU-C31-nathi]
 sounds: []
 roots: []
-etymology_hook: "ke 'that': origin not settled; CDIAL has no entry for it, and Hindi ki 'that' is usually traced to Persian ki"
+etymology_hook: "ke 'that': not settled; CDIAL has no entry for it in this sense, and Hindi ki is usually traced to Persian ki"
 duration:
   max_seconds: 240
 requires:

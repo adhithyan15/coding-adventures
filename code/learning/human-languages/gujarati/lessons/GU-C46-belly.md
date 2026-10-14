@@ -14,7 +14,7 @@ romanization: "peṭ"
 concept_tag: GU-BODY1-BELLY
 prerequisites: [GU-C46-head, GU-C46-leg]
 sounds: []
-roots: [indo-aryan-petta]
+roots: [prakrit-petta]
 etymology_hook: "peṭ ← *peṭṭa 'belly', a reconstructed form; a tadbhava (CDIAL 8376)"
 duration:
   max_seconds: 200

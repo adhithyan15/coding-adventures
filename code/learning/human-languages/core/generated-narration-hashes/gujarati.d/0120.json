@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 120,
-  "sourceHash": "fnv1a64:f140b482b204d779",
+  "sourceHash": "fnv1a64:2dfcfcfe35f53b4d",
   "lessonIds": [
     "GU-C120-ran",
     "GU-C120-vijli",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch120.txt",
   "json": "gujarati/narration/ch120.json",
-  "textHash": "fnv1a64:6b224a744637266a",
-  "jsonHash": "fnv1a64:0a17f62b368d21d5",
+  "textHash": "fnv1a64:f481866b768b77d5",
+  "jsonHash": "fnv1a64:1f8346a2347d70a9",
   "findings": []
 }
