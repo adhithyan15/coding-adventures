@@ -144,6 +144,25 @@ full red baseline. All new negative cells must complete on the repaired source.
 Probe parsing and lowering separately before attributing the long run to either;
 do not change a classifier or parser based solely on elapsed time.
 
+### Bounded refusal-path classifier work
+
+The repaired f54b6549 diagnostic reuses exact Cargo library artifacts, adds no
+dependencies, and parses the actual computed-name program in7.0559ms/lower4ms.
+It establishes one formatter in that positive program, not whole native acceptance.
+Count entries into the existing selector/runtime-real classifiers during actual
+compilation of the paired negative programs. A test-only per-thread budget of
+8192 classifier visits must reject excess work immediately, while the semantic
+assertion still requires the specific real formatter refusal. Preserve the full
+negative matrix and every prior production limit; no timeout is called PASS.
+
+If this counted control is red, eliminate repeated proof alternatives on grammar
+nodes with zero direct tokens and exactly one direct child. Those classifiers
+already end by calling the same classifier on that child; perform that identical
+fallback first. Do not unwrap operator/parenthesis tokens or change standard-call
+depth. Compare all existing semantic acceptance/refusal tests and exact native
+outputs after the repair. This is a bounded refusal-family work guarantee, not a
+claim that the complete parser/compiler or arbitrary user ASTs are linear.
+
 Preserve the upstream bounded provenance rule and every existing alias/capture,
 name/value, branch-intersection and formatter refusal. Both `^` and `**` require
 controls. A by-name selector may promote either local actual to shared storage;
