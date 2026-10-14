@@ -425,19 +425,6 @@ func RewriteInlineEnvPrefixForWindows(command string) string {
 	return rewriteInlineEnvPrefixForWindows(command)
 }
 
-// ExecuteBuilds runs BUILD commands for packages respecting dependency order.
-//
-// This is the main orchestrator. It:
-//  1. Gets independent_groups from the dependency graph
-//  2. For each level, determines which packages need building
-//  3. Skips packages whose deps failed ("dep-skipped")
-//  4. Skips packages whose hashes haven't changed ("skipped")
-//  5. In dry-run mode, marks packages as "would-build"
-//  6. Otherwise, launches goroutines with semaphore-limited concurrency
-//  7. Updates the cache after each build
-//  8. Sends progress events to the tracker (if non-nil)
-//
-// The function returns a map from package name to BuildResult.
 // PruneLeafCargoTargets makes ExecuteBuilds delete a package's own Cargo
 // `target/` directory once the package has finished building (pass or fail),
 // when nothing in the graph depends on it.
@@ -457,6 +444,8 @@ func RewriteInlineEnvPrefixForWindows(command string) string {
 // it on with -prune-leaf-targets.
 var PruneLeafCargoTargets bool
 
+// pruneLeafCargoTarget applies the rule PruneLeafCargoTargets describes to
+// one package that has just finished building.
 func pruneLeafCargoTarget(pkg discovery.Package, graph *directedgraph.Graph) {
 	if successors, err := graph.Successors(pkg.Name); err != nil || len(successors) > 0 {
 		return
@@ -473,6 +462,19 @@ func pruneLeafCargoTarget(pkg discovery.Package, graph *directedgraph.Graph) {
 	}
 }
 
+// ExecuteBuilds runs BUILD commands for packages respecting dependency order.
+//
+// This is the main orchestrator. It:
+//  1. Gets independent_groups from the dependency graph
+//  2. For each level, determines which packages need building
+//  3. Skips packages whose deps failed ("dep-skipped")
+//  4. Skips packages whose hashes haven't changed ("skipped")
+//  5. In dry-run mode, marks packages as "would-build"
+//  6. Otherwise, launches goroutines with semaphore-limited concurrency
+//  7. Updates the cache after each build
+//  8. Sends progress events to the tracker (if non-nil)
+//
+// The function returns a map from package name to BuildResult.
 func ExecuteBuilds(
 	packages []discovery.Package,
 	graph *directedgraph.Graph,
