@@ -9,6 +9,11 @@ this file.
   close errors with `contextlib.suppress` instead of a bare `try/except/pass`.
   ruff 0.17.0 (unpinned in `BUILD`) started reporting `PYI034`, `UP037`,
   `S110` and `BLE001` on the old spelling, which turned main's shard 3 red.
+- `BUILD_windows` now calls `scripts/check_staged_extension.py`, which stages
+  the extension in a private temp package, runs ruff and pytest against it,
+  and cleans up, all in one process. The old file used batch-file `%%i` and
+  relied on `set` surviving between lines, neither of which works when the
+  build tool runs each line as its own `cmd /C`; it had never passed.
 
 ## 0.1.0
 
