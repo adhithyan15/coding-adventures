@@ -14,7 +14,8 @@ romanization: "chābī"
 concept_tag: PA-HOME69-CHABI
 prerequisites: [PA-C69-shisha, PA-C69-batti]
 sounds: []
-roots: []
+roots: [portuguese-chave]
+etymology_hook: "chābī: usually traced to Portuguese chave 'key'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C69-batti]
 <!-- hl-knowledge: introduces=[PA-LEX-C69-HOME69-04]; assesses=[] -->
 
 **ਚਾਬੀ** — *chābī* — "a key".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚਾਬੀ** (*chābī*) is a loan, usually traced to Portuguese *chave*, "key".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

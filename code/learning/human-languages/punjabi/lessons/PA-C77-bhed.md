@@ -14,7 +14,8 @@ romanization: "bheḍ"
 concept_tag: PA-ANIMALS77-BHED
 prerequisites: [PA-C77-gam, PA-C77-bakkri]
 sounds: []
-roots: []
+roots: [sanskrit-bhedra]
+etymology_hook: "bheḍ ← Sanskrit bheḍra 'ram', itself from Austroasiatic (CDIAL 9606)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C77-bakkri]
 <!-- hl-knowledge: introduces=[PA-LEX-C77-ANIMALS77-05]; assesses=[] -->
 
 **ਭੇਡ** — *bheḍ* — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਭੇਡ** (*bheḍ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bheḍra*, "ram" (CDIAL 9606). CDIAL takes the Sanskrit word itself from Austroasiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

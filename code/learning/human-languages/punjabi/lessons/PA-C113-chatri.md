@@ -14,7 +14,8 @@ romanization: "chatrī"
 concept_tag: PA-THINGS113-CHATRI
 prerequisites: [PA-C112-jittna, PA-C112-harna]
 sounds: []
-roots: []
+roots: [sanskrit-chattra]
+etymology_hook: "chatrī ← Sanskrit chattra 'parasol', a tadbhava (CDIAL 4972)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C112-harna]
 <!-- hl-knowledge: introduces=[PA-LEX-C113-THINGS113-01]; assesses=[] -->
 
 **ਛਤਰੀ** — *chatrī* — "an umbrella".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਛਤਰੀ** (*chatrī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *chattra*, "parasol" (CDIAL 4972).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gāṁ"
 concept_tag: PA-ANIMALS77-GAM
 prerequisites: [PA-C77-kutta, PA-C77-billi]
 sounds: []
-roots: []
+roots: [sanskrit-gavi]
+etymology_hook: "gāṁ: CDIAL lists Punjabi gāṁ under *gāva 'ox', a form of Sanskrit go 'cow, ox' (CDIAL 4147)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C77-billi]
 <!-- hl-knowledge: introduces=[PA-LEX-C77-ANIMALS77-03]; assesses=[] -->
 
 **ਗਾਂ** — *gāṁ* — "a cow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗਾਂ** (*gāṁ*) is inherited. CDIAL lists it under *\*gāva*, "ox", one of the forms built on Sanskrit *go*, "cow, ox" (CDIAL 4147).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bharnā"
 concept_tag: PA-VERB-BHARNA
 prerequisites: [PA-C149-banauna, PA-C150-siuna]
 sounds: []
-roots: []
+roots: [sanskrit-bharati]
+etymology_hook: "bharnā ← Sanskrit bharati 'bears, brings; fills' (CDIAL 9397, which lists Lahnda bharaṇ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C150-siuna]
 <!-- hl-knowledge: introduces=[PA-LEX-C150-ACT150-02]; assesses=[] -->
 
 **ਭਰਨਾ** — *bharnā* — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਭਰਨਾ** (*bharnā*) is inherited from Sanskrit *bharati*, "bears, brings; fills". CDIAL gives no Punjabi form, but lists the matching Lahnda *bharaṇ*, "to fill" (CDIAL 9397).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

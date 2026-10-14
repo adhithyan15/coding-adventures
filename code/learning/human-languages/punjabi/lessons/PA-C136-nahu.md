@@ -14,7 +14,8 @@ romanization: "nahũ"
 concept_tag: PA-THINGS136-NAHU
 prerequisites: [PA-C135-kuhni, PA-C136-tali]
 sounds: []
-roots: []
+roots: [sanskrit-nakha]
+etymology_hook: "nahũ ← Sanskrit nakha 'nail (of finger or toe), claw', a tadbhava (CDIAL 6914)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C136-tali]
 <!-- hl-knowledge: introduces=[PA-LEX-C136-THINGS136-02]; assesses=[] -->
 
 **ਨਹੁੰ** — *nahũ* — "a fingernail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਨਹੁੰ** (*nahũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nakha*, "nail (of finger or toe), claw" (CDIAL 6914).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "navambar"
 concept_tag: PA-TIME103-NAVAMBAR
 prerequisites: [PA-C102-satambar, PA-C103-aktubar]
 sounds: []
-roots: []
+roots: [english-november]
+etymology_hook: "navambar ← English November"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C103-aktubar]
 <!-- hl-knowledge: introduces=[PA-LEX-C103-TIME103-02]; assesses=[] -->
 
 **ਨਵੰਬਰ** — *navambar* — "November".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਨਵੰਬਰ** (*navambar*) is a loan from English *November*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

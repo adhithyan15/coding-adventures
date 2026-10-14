@@ -14,7 +14,8 @@ romanization: "phaggaṇ"
 concept_tag: PA-TIME105-PHAGGAN
 prerequisites: [PA-C105-poh, PA-C105-magh]
 sounds: []
-roots: []
+roots: [sanskrit-phalguna]
+etymology_hook: "phaggaṇ ← Sanskrit phalguna 'reddish; the month February-March', a tadbhava (CDIAL 9065)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C105-magh]
 <!-- hl-knowledge: introduces=[PA-LEX-C105-TIME105-05]; assesses=[] -->
 
 **ਫੱਗਣ** — *phaggaṇ* — "Phaggan, a Punjabi month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਫੱਗਣ** (*phaggaṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *phalguna*, "reddish; the month February-March" (CDIAL 9065).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

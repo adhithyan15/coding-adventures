@@ -4,7 +4,7 @@
   "chapter": 129,
   "title": "Darkness, Light, Shade, Rainbow, Rabbit",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:eb5254cbbe88dcc1",
+  "sourceHash": "fnv1a64:24943c550ed480d8",
   "lessons": [
     {
       "id": "PA-C129-hanera",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41ba78a6904b98fc",
+      "sourceHash": "fnv1a64:799e3ae7c47b46f9",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹਨੇਰਾ (hanerā) is inherited. CDIAL lists the Punjabi forms anherā and nherā, \"dark; darkness\", under andhīkāra, a form beside Sanskrit andhakāra, \"darkness\" (CDIAL 386)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0cee50ff115f5a26",
+      "sourceHash": "fnv1a64:747fa13f068a9bda",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਾਨਣ (cānaṇ) is a tadbhava, a word inherited and reshaped by sound change. It comes from cāndraṇa, \"moonlight\", a form CDIAL reconstructs from its descendants (CDIAL 4745). CDIAL lists Punjabi cānaṇ, \"light\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47de47388fc8b262",
+      "sourceHash": "fnv1a64:ac9cb6c35a60bfac",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਛਾਂ (chā̃) (chāṁ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from chāyā, \"shade, shadow, reflection\" (CDIAL 5027)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f532e1934016ead",
+      "sourceHash": "fnv1a64:51d04a604889a68e",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਤਰੰਗੀ ਪੀਂਘ (satrangī pīṅgh) is \"the seven-coloured swing\". Sat, \"seven\", comes from Sanskrit sapta (CDIAL 13139); raṅgī is built on raṅg, \"colour\"; and pīṁgh, \"swing\", comes from Sanskrit preṅkha, \"swing\" (CDIAL 8996)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df022d3cc55cc5e3",
+      "sourceHash": "fnv1a64:c9b157cd00a939b1",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖ਼ਰਗੋਸ਼ (khargosh) is a loan, usually traced to Persian khargōsh, \"hare\". It is built from khar, \"donkey\", and gōsh, \"ear\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

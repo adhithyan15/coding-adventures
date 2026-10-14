@@ -11,8 +11,8 @@ gloss: how many, how much - the last of the question family
 concept_tag: PA-Q-KINNE
 prerequisites: [PA-C43-kitthe, PA-C43-kadon]
 sounds: [tippi-nasal, laava-e]
-roots: []
-etymology_hook: The same ਕ one last time, now asking about quantity - and the family is complete.
+roots: [indo-aryan-kiyatta]
+etymology_hook: "kinne: CDIAL lists Punjabi kitnā 'how great' under *kiyatta 'how great' (CDIAL 3167), but not kinnā"
 duration:
   max_seconds: 260
 requires:
@@ -57,6 +57,8 @@ book named when it taught *kivēṁ* is finally complete on the page:
 
 Two of those you had before this run. Five arrived in the last four chapters,
 and only one of the five cost a new letter.
+
+CDIAL lists the fuller Punjabi *kitnā*, "how great", under a reconstructed *\*kiyatta*, "how great" (CDIAL 3167); it does not list *kinnā*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-Q-KINNE-01, PA-Q-KITTHE-01, PA-Q-KADON-01, PA-Q-KAUN-01] -->

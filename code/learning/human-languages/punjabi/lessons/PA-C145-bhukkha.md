@@ -14,7 +14,8 @@ romanization: "bhukkhā"
 concept_tag: PA-QUAL145-BHUKKHA
 prerequisites: [PA-C145-bahadar, PA-C145-shat]
 sounds: []
-roots: []
+roots: [indo-aryan-bubhukshaka]
+etymology_hook: "bhukkhā ← *bubhukṣaka 'hungry', a reconstructed form; a tadbhava (CDIAL 9284)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C145-shat]
 <!-- hl-knowledge: introduces=[PA-LEX-C145-QUAL145-03]; assesses=[] -->
 
 **ਭੁੱਖਾ** — *bhukkhā* — "hungry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਭੁੱਖਾ** (*bhukkhā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bubhukṣaka*, "hungry", a form CDIAL reconstructs from its descendants (CDIAL 9284). It is built on Sanskrit *bubhukṣā*, "hunger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

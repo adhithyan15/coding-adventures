@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for to sing, then the Punjabi for to dance.
 You'll want to know: ਸਿੱਖਣਾ.
 ਸਿੱਖਣਾ — sikkhṇā — "to learn".
 
+The word, taken apart.
+ਸਿੱਖਣਾ (sikkhṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śikṣate, "learns" (CDIAL 12430).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for to dance, then the Punjabi for to learn.
 
 You'll want to know: ਭੁੱਲਣਾ.
 ਭੁੱਲਣਾ — bhullṇā — "to forget".
+
+The word, taken apart.
+ਭੁੱਲਣਾ (bhullṇā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhull, "err, forget", a form CDIAL reconstructs from its descendants (CDIAL 9538).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for to learn, then the Punjabi for to forget
 You'll want to know: ਚਾਹੁਣਾ.
 ਚਾਹੁਣਾ — chāhuṇā — "to want".
 
+The word, taken apart.
+ਚਾਹੁਣਾ (chāhuṇā) is inherited. CDIAL lists Punjabi cāhṇā, "to wish for", under a reconstructed cāh, "see, look for, desire", and calls its deeper source uncertain (CDIAL 4775).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for to forget, then the Punjabi for to want.
 You'll want to know: ਲਿਆਉਣਾ.
 ਲਿਆਉਣਾ — liāuṇā — "to bring".
 
+The word, taken apart.
+Where ਲਿਆਉਣਾ (liāuṇā) comes from is not settled: CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for to want, then the Punjabi for to bring.
 
 You'll want to know: ਭੇਜਣਾ.
 ਭੇਜਣਾ — bhejṇā — "to send".
+
+The word, taken apart.
+ਭੇਜਣਾ (bhejṇā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhejj, "send", a form CDIAL reconstructs from its descendants (CDIAL 9603). Its deeper source is uncertain: CDIAL suggests, with a "possibly", a Sanskrit verb meaning "is led to".
 
 What you've built.
 One more word for this chapter.

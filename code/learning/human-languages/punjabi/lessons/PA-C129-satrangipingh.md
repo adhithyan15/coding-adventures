@@ -14,7 +14,8 @@ romanization: "satrangī pīṅgh"
 concept_tag: PA-THINGS129-SATRANGIPINGH
 prerequisites: [PA-C129-canan, PA-C129-cha]
 sounds: []
-roots: []
+roots: [sanskrit-sapta, sanskrit-ranga, sanskrit-prenkha]
+etymology_hook: "sat 'seven' (CDIAL 13139) + raṅgī 'coloured' + pīṁgh 'swing' ← preṅkha 'swing' (CDIAL 8996)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C129-cha]
 <!-- hl-knowledge: introduces=[PA-LEX-C129-THINGS129-04]; assesses=[] -->
 
 **ਸਤਰੰਗੀ ਪੀਂਘ** — *satrangī pīṅgh* — "a rainbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਤਰੰਗੀ ਪੀਂਘ** (*satrangī pīṅgh*) is "the seven-coloured swing". *Sat*, "seven", comes from Sanskrit *sapta* (CDIAL 13139); *raṅgī* is built on *raṅg*, "colour"; and *pīṁgh*, "swing", comes from Sanskrit *preṅkha*, "swing" (CDIAL 8996).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

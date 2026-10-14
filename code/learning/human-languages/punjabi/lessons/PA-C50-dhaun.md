@@ -14,7 +14,8 @@ romanization: "dhauṇ"
 concept_tag: PA-BODY50-DHAUN
 prerequisites: [PA-C50-ungal, PA-C50-bullh]
 sounds: []
-roots: []
+roots: [sanskrit-dhamani]
+etymology_hook: "dhauṇ ← Sanskrit dhamani 'vein; throat, neck', a tadbhava (CDIAL 6733)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C50-bullh]
 <!-- hl-knowledge: introduces=[PA-LEX-C50-BODY50-03]; assesses=[] -->
 
 **ਧੌਣ** — *dhauṇ* — "the neck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਧੌਣ** (*dhauṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dhamani*, "vein; throat, neck" (CDIAL 6733). The Sanskrit word meant "vein" in its texts; the old word-lists also give it as "throat, neck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

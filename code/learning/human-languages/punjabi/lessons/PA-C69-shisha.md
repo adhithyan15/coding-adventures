@@ -14,7 +14,8 @@ romanization: "shīshā"
 concept_tag: PA-HOME69-SHISHA
 prerequisites: [PA-C68-farsh, PA-C69-pauri]
 sounds: []
-roots: []
+roots: [persian-shisha]
+etymology_hook: "shīshā: usually traced to Persian shīsha 'glass'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C69-pauri]
 <!-- hl-knowledge: introduces=[PA-LEX-C69-HOME69-02]; assesses=[] -->
 
 **ਸ਼ੀਸ਼ਾ** — *shīshā* — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸ਼ੀਸ਼ਾ** (*shīshā*) is a loan, usually traced to Persian *shīsha*, "glass". Punjabi uses it for a mirror.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

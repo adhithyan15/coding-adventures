@@ -14,7 +14,8 @@ romanization: "ālsī"
 concept_tag: PA-QUAL144-ALSI
 prerequisites: [PA-C144-mushkal, PA-C144-hushiar]
 sounds: []
-roots: []
+roots: [sanskrit-alasya]
+etymology_hook: "ālsī ← Sanskrit ālasya 'sloth', a tadbhava (CDIAL 1371)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C144-hushiar]
 <!-- hl-knowledge: introduces=[PA-LEX-C144-QUAL144-05]; assesses=[] -->
 
 **ਆਲਸੀ** — *ālsī* — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਆਲਸੀ** (*ālsī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ālasya*, "sloth" (CDIAL 1371).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

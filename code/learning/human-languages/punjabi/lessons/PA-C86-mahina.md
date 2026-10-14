@@ -14,7 +14,8 @@ romanization: "mahīnā"
 concept_tag: PA-TIME86-MAHINA
 prerequisites: [PA-C85-saver, PA-C85-hafta]
 sounds: []
-roots: []
+roots: [persian-mahina]
+etymology_hook: "mahīnā: usually traced to Persian māhīna 'monthly'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C85-hafta]
 <!-- hl-knowledge: introduces=[PA-LEX-C86-TIME86-01]; assesses=[] -->
 
 **ਮਹੀਨਾ** — *mahīnā* — "a month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਹੀਨਾ** (*mahīnā*) is a loan, usually traced to Persian *māhīna*, "monthly". It is built on Persian *māh*, "moon, month".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

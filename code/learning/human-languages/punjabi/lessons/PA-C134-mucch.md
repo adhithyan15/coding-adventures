@@ -14,7 +14,8 @@ romanization: "mucch"
 concept_tag: PA-THINGS134-MUCCH
 prerequisites: [PA-C134-bharavatta, PA-C134-darhi]
 sounds: []
-roots: []
+roots: [indo-aryan-muccha]
+etymology_hook: "mucch ← *mucchā 'moustache', of uncertain source (CDIAL 10180)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C134-darhi]
 <!-- hl-knowledge: introduces=[PA-LEX-C134-THINGS134-05]; assesses=[] -->
 
 **ਮੁੱਛ** — *mucch* — "a moustache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੁੱਛ** (*mucch*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*mucchā*, "moustache", a form CDIAL reconstructs from its descendants (CDIAL 10180). Its deeper source is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

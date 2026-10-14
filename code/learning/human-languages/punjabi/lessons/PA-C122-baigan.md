@@ -14,7 +14,8 @@ romanization: "baĩgaṇ"
 concept_tag: PA-THINGS122-BAIGAN
 prerequisites: [PA-C122-kanak, PA-C122-makki]
 sounds: []
-roots: []
+roots: [sanskrit-vatingana]
+etymology_hook: "baĩgaṇ ← Sanskrit vātiṅgaṇa 'the egg-plant', perhaps of Dravidian source (CDIAL 11503)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C122-makki]
 <!-- hl-knowledge: introduces=[PA-LEX-C122-THINGS122-04]; assesses=[] -->
 
 **ਬੈਂਗਣ** — *baĩgaṇ* — "an aubergine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬੈਂਗਣ** (*baĩgaṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vātiṅgaṇa*, "the egg-plant" (CDIAL 11503). CDIAL reports a view that the name is of Dravidian origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

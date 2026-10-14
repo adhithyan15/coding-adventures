@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:b83cf4961f40703d",
+  "sourceHash": "fnv1a64:6cc765f922a45162",
   "lessons": [
     {
       "id": "PA-C05-bolna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:845ab4fc996b84c7",
+      "sourceHash": "fnv1a64:a5f224fdd13c9ef2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -178,7 +178,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:71df67ab89361024",
+      "sourceHash": "fnv1a64:47c2e6636e51d636",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdf303bd8d8d62e0",
+      "sourceHash": "fnv1a64:28ba7d3e955784c7",
       "notice": null,
       "blocks": [
         {
@@ -363,6 +363,10 @@
             {
               "kind": "speech",
               "text": "ਬੋਲਦਾ (boldā) is the stem bol- plus -ਦਾ (-dā). Nothing new has been added to the verb but an ending."
+            },
+            {
+              "kind": "speech",
+              "text": "Its pieces come from two sources: maiṁ goes back to the Sanskrit first-person base ma- (CDIAL 9691) and bol- to a reconstructed bōll, \"speak\" (CDIAL 9321), while panjābī is built on Persian panj āb, \"five waters\"."
             }
           ]
         },
@@ -473,7 +477,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8f756da0d48d6867",
+      "sourceHash": "fnv1a64:3191790c2f9b25c0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -619,7 +623,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2b8a8539d7507d95",
+      "sourceHash": "fnv1a64:59a998c5722f33ce",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -754,7 +758,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3a4c2e62755fd66a",
+      "sourceHash": "fnv1a64:7ccf413afc61ae86",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -802,6 +806,10 @@
             {
               "kind": "speech",
               "text": "ਕੰਮ (kamm) is the noun \"work\" — the thing done, from the same √kṛ family as karnā. Said on its own it means a job, a task, a piece of business: bahut kamm hai (\"there is a lot of work\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Both words are inherited: kamm from Sanskrit karman, \"act, work\" (CDIAL 2892), and karnā from karoti, \"does\" (CDIAL 2814)."
             }
           ]
         },

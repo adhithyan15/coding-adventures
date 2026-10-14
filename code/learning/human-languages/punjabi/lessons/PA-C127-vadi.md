@@ -14,7 +14,8 @@ romanization: "vādī"
 concept_tag: PA-THINGS127-VADI
 prerequisites: [PA-C127-jharna, PA-C127-gufa]
 sounds: []
-roots: []
+roots: [arabic-wadi]
+etymology_hook: "vādī ← Arabic wādī 'valley, river bed', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C127-gufa]
 <!-- hl-knowledge: introduces=[PA-LEX-C127-THINGS127-04]; assesses=[] -->
 
 **ਵਾਦੀ** — *vādī* — "a valley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਵਾਦੀ** (*vādī*) is a loan from Arabic *wādī*, "valley, river bed", which reached Punjabi through Persian. Its Arabic root is *w-d-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

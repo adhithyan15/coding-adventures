@@ -15,6 +15,7 @@ concept_tag: PA-THINGS123-PAPITA
 prerequisites: [PA-C123-narial, PA-C123-tarbuz]
 sounds: []
 roots: []
+etymology_hook: "papītā: origin uncertain, usually linked with papaya, a Caribbean word spread by Iberian sailors; not in CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C123-tarbuz]
 <!-- hl-knowledge: introduces=[PA-LEX-C123-THINGS123-05]; assesses=[] -->
 
 **ਪਪੀਤਾ** — *papītā* — "a papaya".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਪਪੀਤਾ** (*papītā*) comes from is uncertain. It is usually linked with *papaya*, a Caribbean word spread by Spanish and Portuguese sailors, and CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

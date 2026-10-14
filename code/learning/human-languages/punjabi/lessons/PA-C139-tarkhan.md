@@ -14,7 +14,8 @@ romanization: "tarkhāṇ"
 concept_tag: PA-THINGS139-TARKHAN
 prerequisites: [PA-C139-tankhah, PA-C139-darzi]
 sounds: []
-roots: []
+roots: [sanskrit-takshan]
+etymology_hook: "tarkhāṇ ← Sanskrit takṣan 'carpenter', a tadbhava (CDIAL 5621)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C139-darzi]
 <!-- hl-knowledge: introduces=[PA-LEX-C139-THINGS139-03]; assesses=[] -->
 
 **ਤਰਖਾਣ** — *tarkhāṇ* — "a carpenter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤਰਖਾਣ** (*tarkhāṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *takṣan*, "carpenter" (CDIAL 5621). CDIAL notes its intrusive *r*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

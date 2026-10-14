@@ -83,6 +83,7 @@ Three words you own, assembled into the first thing you ask after hello.
 
 The phrase, taken apart.
 ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? (tusī̃ kivēṁ ho?) = ਤੁਸੀਂ (tusī̃, respectful "you") + ਕਿਵੇਂ (kivēṁ, "how") + ਹੋ (ho, "are") — literally "you how are?" Punjabi keeps the verb last, as in Chapter 2. The copula ho is the respectful "are" that goes with tusī̃ — its whole set is maiṁ hāṁ (I am), tū̃ haiṁ (you are, familiar), oh hai (he is), tusī̃ ho (you are, respectful).
+The words are inherited: tusīṁ from Sanskrit yuṣmad-, "you (plural)" (CDIAL 10511); kivēṁ on the old question stem ka-; and ho from hoṇā, "to be", which CDIAL lists under bhavati, "becomes, is" (CDIAL 9416).
 
 Grammar Lens: match the "you" to the verb.
 To an elder or stranger: tusī̃ kivēṁ ho? To a friend: tū̃ kivēṁ haiṁ? Respect takes the plural-shaped tusī̃ … ho.
@@ -218,6 +219,7 @@ The letters in this word.
 
 The word, taken apart.
 ਠੀਕ (ṭhīk) means "correct, right, fine, OK" — a native Indian word (shared with Hindi and Urdu), one of the most useful in the language: ṭhīk hai ("OK / agreed"), sab ṭhīk? ("all well?"). Not every word has a far-flung cognate, and that is worth seeing too: ṭhīk is Indian to the core.
+CDIAL lists it under a reconstructed ṭhīkka, "firm, right", which it derives, probably, from Sanskrit sthita, "standing" (CDIAL 5503).
 
 Grammar Lens: the reply.
 Put it together: ਮੈਂ ਠੀਕ ਹਾਂ (maiṁ ṭhīk hāṁ) — "I am fine" (literally "I fine am," verb last). Add thanks: maiṁ ṭhīk hāṁ, dhannavād. The whole exchange:

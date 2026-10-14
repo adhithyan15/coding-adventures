@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 76,
-  "sourceHash": "fnv1a64:2aec972530c8c091",
+  "sourceHash": "fnv1a64:9123f5760bf25d4a",
   "lessonIds": [
     "PA-C76-samundar",
     "PA-C76-agg",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch76.txt",
   "json": "punjabi/narration/ch76.json",
-  "textHash": "fnv1a64:73cd2fa90ef0d0db",
-  "jsonHash": "fnv1a64:d2f9dc0057701bbf",
+  "textHash": "fnv1a64:c0b9b208bc8c4a9d",
+  "jsonHash": "fnv1a64:1a198bf9f16a2211",
   "findings": []
 }

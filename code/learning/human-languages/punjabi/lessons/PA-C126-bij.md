@@ -14,7 +14,8 @@ romanization: "bīj"
 concept_tag: PA-THINGS126-BIJ
 prerequisites: [PA-C125-pakaura, PA-C126-ghah]
 sounds: []
-roots: []
+roots: [sanskrit-bija]
+etymology_hook: "bīj ← Sanskrit bīja 'seed, semen', a semi-tatsama (CDIAL 9250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C126-ghah]
 <!-- hl-knowledge: introduces=[PA-LEX-C126-THINGS126-02]; assesses=[] -->
 
 **ਬੀਜ** — *bīj* — "a seed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬੀਜ** (*bīj*) is a semi-tatsama: Sanskrit *bīja*, "seed, semen", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9250). CDIAL lists the inherited Punjabi form as *bī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

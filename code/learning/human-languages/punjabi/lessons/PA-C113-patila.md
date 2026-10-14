@@ -14,7 +14,8 @@ romanization: "patīlā"
 concept_tag: PA-THINGS113-PATILA
 prerequisites: [PA-C113-kauli, PA-C113-galas, PA-C05-kamm-karna, PA-C05-kamm-karna]
 sounds: []
-roots: []
+roots: [sanskrit-patra-vessel]
+etymology_hook: "patīlā: matches Hindi patīlā 'copper pot', which CDIAL lists under Sanskrit pātra 'drinking vessel, dish' (CDIAL 8055)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [PA-C113-galas]
 <!-- hl-knowledge: introduces=[PA-LEX-C113-THINGS113-04]; assesses=[] -->
 
 **ਪਤੀਲਾ** — *patīlā* — "a cooking pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਤੀਲਾ** (*patīlā*) matches Hindi *patīlā*, "copper pot", which CDIAL lists under Sanskrit *pātra*, "drinking vessel, dish" (CDIAL 8055). CDIAL gives no Punjabi *patīlā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

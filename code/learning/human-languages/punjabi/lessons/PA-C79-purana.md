@@ -14,7 +14,8 @@ romanization: "purāṇā"
 concept_tag: PA-ANIMALS79-PURANA
 prerequisites: [PA-C79-chhota, PA-C79-navam]
 sounds: []
-roots: []
+roots: [sanskrit-purana]
+etymology_hook: "purāṇā ← Sanskrit purāṇa 'ancient', inherited; CDIAL lists Lahnda purāṇā (CDIAL 8283)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C79-navam]
 <!-- hl-knowledge: introduces=[PA-LEX-C79-ANIMALS79-05]; assesses=[] -->
 
 **ਪੁਰਾਣਾ** — *purāṇā* — "old".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੁਰਾਣਾ** (*purāṇā*) is inherited from Sanskrit *purāṇa*, "ancient". CDIAL lists the matching Lahnda *purāṇā* under it (CDIAL 8283).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

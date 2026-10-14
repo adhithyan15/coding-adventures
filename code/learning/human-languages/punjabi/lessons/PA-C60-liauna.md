@@ -15,6 +15,7 @@ concept_tag: PA-VERB-LIAUNA
 prerequisites: [PA-C60-bhullna, PA-C60-chahuna]
 sounds: []
 roots: []
+etymology_hook: "liāuṇā 'to bring': its origin is not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C60-chahuna]
 <!-- hl-knowledge: introduces=[PA-LEX-C60-VERBS60-04]; assesses=[] -->
 
 **ਲਿਆਉਣਾ** — *liāuṇā* — "to bring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਲਿਆਉਣਾ** (*liāuṇā*) comes from is not settled: CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

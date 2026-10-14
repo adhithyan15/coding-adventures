@@ -21,6 +21,7 @@ The word, taken apart.
 One word, three English ones. Punjabi's third person does not make you choose a gender before you speak.
 ਉਹ (oh) also means that, pointing at something away from both of you. The pronoun and the pointing word are one word — which is the same doubling you have already seen, where ਤਾਂ at the head of a result was a demonstrative doing a joining job.
 With this the pronoun set is complete: ਮੈਂ, ਤੂੰ / ਤੁਸੀਂ, ਉਹ (oh).
+Oh is inherited. CDIAL lists Punjabi o, "that", under Sanskrit asau, "that", whose other forms, on a stem amu-, gave the later words for "that" (CDIAL 972).
 
 Guided Practice.
 [pause 1 second]
@@ -54,6 +55,7 @@ The word, taken apart.
 Here is the odd thing, and it is worth stopping on. You have been saying we for chapters. The -ਾਂਗੇ ending on milāṁge is the first-person plural future — we will meet — and this book has taught it four separate times.
 The ending was there. The pronoun was not. So a reader has been saying we will meet over and over without ever owning the word for we.
 Punjabi often leaves the pronoun out when the ending already carries it, which is why nothing sounded wrong. But you cannot say we on its own, or put it in front of anything else, until you have the word.
+Asīṁ is inherited. CDIAL lists it under asmad, the base of the Sanskrit plural forms of "we, us" (CDIAL 986).
 
 Guided Practice.
 [pause 1 second]
@@ -115,6 +117,7 @@ The word, taken apart.
 The third member of the family. ਜੇ supposes, ਜਦੋਂ times, and ਜੋ (jo) describes — and all three open their clause with the same letter.
 ਜੋ (jo) (what they do) … — "the one who …"
 Punjabi marks a describing clause at its front, the way it marked a condition with ਜੇ. Once you hear the ਜ, you know a clause is starting and that something will come back to be pointed at.
+Jo is inherited: CDIAL lists it under the Sanskrit relative pronoun ya- (CDIAL 10391).
 
 Guided Practice.
 [pause 1 second]
@@ -149,6 +152,7 @@ This is the same shape as ਜੇ … ਤਾਂ …, and seeing that is most of t
 Now the whole system is visible:
 ਜ- opens the clause, ਉ- / ਤ- points at what it refers to.
 ਜੇ … ਤਾਂ, ਜੋ (jo) … ਉਹ (oh). One habit, and you have met it twice.
+Both halves are inherited: jo from the Sanskrit relative ya- (CDIAL 10391), and oh from asau, "that" (CDIAL 972).
 
 Guided Practice.
 [pause 1 second]

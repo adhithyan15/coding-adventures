@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for third, then the Punjabi for fourth.
 You'll want to know: ਹੱਥ.
 ਹੱਥ — hatth — "a hand".
 
+The word, taken apart.
+ਹੱਥ (hatth) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hasta, "hand" (CDIAL 14024).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for fourth, then the Punjabi for a hand.
 
 You'll want to know: ਪੈਰ.
 ਪੈਰ — pair — "a foot".
+
+The word, taken apart.
+ਪੈਰ (pair) is a tadbhava, a word inherited and reshaped by sound change. It comes from padara, "foot", a form CDIAL reconstructs from its descendants (CDIAL 7756). CDIAL builds it on Sanskrit pada, "foot".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a hand, then the Punjabi for a foot.
 You'll want to know: ਵਾਲ.
 ਵਾਲ — vāl — "hair".
 
+The word, taken apart.
+ਵਾਲ (vāl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāla, "hair of the tail, hair" (CDIAL 11572).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a foot, then the Punjabi for hair.
 You'll want to know: ਦੰਦ.
 ਦੰਦ — dand — "a tooth".
 
+The word, taken apart.
+ਦੰਦ (dand) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from danta, "tooth" (CDIAL 6152).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for hair, then the Punjabi for a tooth.
 
 You'll want to know: ਗਲਾ.
 ਗਲਾ — galā — "the throat".
+
+The word, taken apart.
+ਗਲਾ (galā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gala, "throat, neck" (CDIAL 4070).
 
 What you've built.
 One more word for this chapter.

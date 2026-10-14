@@ -14,7 +14,8 @@ romanization: "harā"
 concept_tag: PA-ADJ83-HARA
 prerequisites: [PA-C83-bhari, PA-C83-zaruri]
 sounds: []
-roots: []
+roots: [sanskrit-harita]
+etymology_hook: "harā ← Sanskrit harita 'yellow; green', a tadbhava (CDIAL 13985)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C83-zaruri]
 <!-- hl-knowledge: introduces=[PA-LEX-C83-ADJ83-05]; assesses=[] -->
 
 **ਹਰਾ** — *harā* — "green".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹਰਾ** (*harā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *harita*, "yellow; green" (CDIAL 13985).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

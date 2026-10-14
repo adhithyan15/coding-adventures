@@ -12,6 +12,7 @@ concept_tag: GREETING-HELLO
 prerequisites: [PA-C01-sat-sri-akal]
 sounds: []
 roots: [namas, te]
+etymology_hook: "namaste: Sanskrit namas 'a bow' + te 'to you', taken over whole as a greeting"
 duration:
   max_seconds: 150
 requires:

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 52,
-  "sourceHash": "fnv1a64:d80a9cf6d676262b",
+  "sourceHash": "fnv1a64:aa692053b00239ed",
   "lessonIds": [
     "PA-C52-darad",
     "PA-C52-davai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch52.txt",
   "json": "punjabi/narration/ch52.json",
-  "textHash": "fnv1a64:2082b1185b3a8491",
-  "jsonHash": "fnv1a64:79984f4baf68c219",
+  "textHash": "fnv1a64:4810f9e61b001c1c",
+  "jsonHash": "fnv1a64:ada873e04108d82f",
   "findings": []
 }

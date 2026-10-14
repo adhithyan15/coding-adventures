@@ -14,7 +14,8 @@ romanization: "bārāṁ"
 concept_tag: PA-NUMBERS96-BARAM
 prerequisites: [PA-C95-das, PA-C95-giaram]
 sounds: []
-roots: []
+roots: [sanskrit-dvadasha]
+etymology_hook: "bārāṁ ← Sanskrit dvādaśa 'twelve', a tadbhava (CDIAL 6658)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C95-giaram]
 <!-- hl-knowledge: introduces=[PA-LEX-C96-NUMBERS96-01]; assesses=[] -->
 
 **ਬਾਰਾਂ** — *bārāṁ* — "twelve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬਾਰਾਂ** (*bārāṁ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dvādaśa*, "twelve" (CDIAL 6658).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5cff8a3bb06bfd2f",
+  "sourceHash": "fnv1a64:31e785e908e9287c",
   "lessons": [
     {
       "id": "PA-S06-kakka-aira-aara",
@@ -191,7 +191,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be8c770259183dde",
+      "sourceHash": "fnv1a64:748718c4ac523dd6",
       "notice": null,
       "blocks": [
         {
@@ -241,6 +241,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "All five are inherited from Sanskrit. ikk comes from ekka, which replaced eka, \"one\" (CDIAL 2462); do from dva, \"two\" (CDIAL 6648); tinn from trīṇi, \"three\" (CDIAL 5994); chār from catvāraḥ, \"four\" (CDIAL 4655); and panj from pañca, \"five\" (CDIAL 7655)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -262,7 +273,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

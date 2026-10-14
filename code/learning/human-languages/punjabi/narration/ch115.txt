@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a bedsheet, then the Punjabi for a blank
 You'll want to know: ਰਜਾਈ.
 ਰਜਾਈ — rajāī — "a quilt".
 
+The word, taken apart.
+Where ਰਜਾਈ (rajāī) comes from is not settled: CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a blanket, then the Punjabi for a quilt.
 
 You'll want to know: ਚੁੱਲ੍ਹਾ.
 ਚੁੱਲ੍ਹਾ — cullhā — "a stove".
+
+The word, taken apart.
+ਚੁੱਲ੍ਹਾ (cullhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cullī, "fireplace" (CDIAL 4879). CDIAL takes the Sanskrit word itself from Dravidian.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a quilt, then the Punjabi for a stove.
 You'll want to know: ਭਾਂਡਾ.
 ਭਾਂਡਾ — bhā̃ḍā — "a vessel, a utensil".
 
+The word, taken apart.
+ਭਾਂਡਾ (bhā̃ḍā) (bhāṁḍā) came into Punjabi from Hindi: CDIAL lists Hindi bhāṁḍā, "earthen pot", under Sanskrit bhāṇḍa, "pot, dish, vessel", and marks the Punjabi word as taken from it (CDIAL 9440).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a stove, then the Punjabi for a vessel.
 You'll want to know: ਕੈਂਚੀ.
 ਕੈਂਚੀ — kaĩcī — "scissors".
 
+The word, taken apart.
+ਕੈਂਚੀ (kaĩcī) is a loan, usually traced to Persian qaichī, "scissors". Persian itself took the word from Turkic.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a vessel, then the Punjabi for scissors.
 
 You'll want to know: ਸੂਈ.
 ਸੂਈ — sūī — "a needle".
+
+The word, taken apart.
+ਸੂਈ (sūī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sūcī, "needle" (CDIAL 13551).
 
 What you've built.
 One more word for this chapter.

@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a bucket, then the Punjabi for a broom.
 You'll want to know: ਕੂੜਾ.
 ਕੂੜਾ — kūṛā — "rubbish".
 
+The word, taken apart.
+ਕੂੜਾ (kūṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kūṭa, "heap, multitude" (CDIAL 3392). CDIAL takes the Sanskrit word, probably, from Dravidian; Punjabi kūṛā is "sweepings, dirt".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a broom, then the Punjabi for rubbish.
 
 You'll want to know: ਟੋਕਰੀ.
 ਟੋਕਰੀ — ṭokrī — "a basket".
+
+The word, taken apart.
+ਟੋਕਰੀ (ṭokrī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭokka, "basket", a form CDIAL reconstructs from its descendants (CDIAL 5477). CDIAL lists Punjabi ṭokrā, with an added -r-.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for rubbish, then the Punjabi for a basket.
 You'll want to know: ਡੱਬਾ.
 ਡੱਬਾ — ḍabbā — "a box".
 
+The word, taken apart.
+ਡੱਬਾ (ḍabbā) matches Hindi ḍabbā, "box", which CDIAL lists under a reconstructed ḍabba, "box", a word it calls non-Aryan, perhaps Dravidian (CDIAL 5528). Its Punjabi forms there are ḍabb and ḍibbā.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a basket, then the Punjabi for a box.
 You'll want to know: ਘੜਾ.
 ਘੜਾ — ghaṛā — "a clay water pot".
 
+The word, taken apart.
+ਘੜਾ (ghaṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghaṭa, "pot" (CDIAL 4406).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a box, then the Punjabi for a clay water
 
 You'll want to know: ਮੋਮਬੱਤੀ.
 ਮੋਮਬੱਤੀ — mombattī — "a candle".
+
+The word, taken apart.
+ਮੋਮਬੱਤੀ (mombattī) joins words from two sources: mom, "wax", usually traced to Persian mom, and battī, "wick, lamp", from Sanskrit varti (CDIAL 11359). A candle is a "wax lamp".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "chiṭṭā"
 concept_tag: PA-ADJ84-CHITTA
 prerequisites: [PA-C84-nila, PA-C84-kala]
 sounds: []
-roots: []
+roots: [sanskrit-shvitra]
+etymology_hook: "chiṭṭā ← Sanskrit śvitra 'white', a tadbhava (CDIAL 12772)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C84-kala]
 <!-- hl-knowledge: introduces=[PA-LEX-C84-ADJ84-05]; assesses=[] -->
 
 **ਚਿੱਟਾ** — *chiṭṭā* — "white".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚਿੱਟਾ** (*chiṭṭā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śvitra*, "white" (CDIAL 12772).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

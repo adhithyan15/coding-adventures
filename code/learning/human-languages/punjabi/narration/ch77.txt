@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for rain, then the Punjabi for wind.
 You'll want to know: ਕੁੱਤਾ.
 ਕੁੱਤਾ — kuttā — "a dog".
 
+The word, taken apart.
+ਕੁੱਤਾ (kuttā) is a tadbhava, a word inherited and reshaped by sound change. It comes from kutta, "dog", a form CDIAL reconstructs from its descendants (CDIAL 3275). CDIAL calls it imitative, comparing Santali kutu kutu, the call to a puppy.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for wind, then the Punjabi for a dog.
 
 You'll want to know: ਬਿੱਲੀ.
 ਬਿੱਲੀ — billī — "a cat".
+
+The word, taken apart.
+ਬਿੱਲੀ (billī) is inherited. CDIAL lists it under billa, a form it sets beside Sanskrit biḍāla, "cat" (CDIAL 9237).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a dog, then the Punjabi for a cat.
 You'll want to know: ਗਾਂ.
 ਗਾਂ — gāṁ — "a cow".
 
+The word, taken apart.
+ਗਾਂ (gāṁ) is inherited. CDIAL lists it under gāva, "ox", one of the forms built on Sanskrit go, "cow, ox" (CDIAL 4147).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a cat, then the Punjabi for a cow.
 You'll want to know: ਬੱਕਰੀ.
 ਬੱਕਰੀ — bakkrī — "a goat".
 
+The word, taken apart.
+ਬੱਕਰੀ (bakkrī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from barkara, "kid, lamb; goat" (CDIAL 9153).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a cow, then the Punjabi for a goat.
 
 You'll want to know: ਭੇਡ.
 ਭੇਡ — bheḍ — "a sheep".
+
+The word, taken apart.
+ਭੇਡ (bheḍ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bheḍra, "ram" (CDIAL 9606). CDIAL takes the Sanskrit word itself from Austroasiatic.
 
 What you've built.
 One more word for this chapter.

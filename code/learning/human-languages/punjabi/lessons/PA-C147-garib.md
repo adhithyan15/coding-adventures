@@ -14,7 +14,8 @@ romanization: "garīb"
 concept_tag: PA-QUAL147-GARIB
 prerequisites: [PA-C146-jhutha, PA-C147-amir]
 sounds: []
-roots: []
+roots: [arabic-gharib]
+etymology_hook: "garīb ← Arabic gharīb 'a stranger', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C147-amir]
 <!-- hl-knowledge: introduces=[PA-LEX-C147-QUAL147-02]; assesses=[] -->
 
 **ਗ਼ਰੀਬ** — *garīb* — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗ਼ਰੀਬ** (*garīb*) is a loan from Arabic *gharīb*, "a stranger", which reached Punjabi through Persian. Its Arabic root is *gh-r-b* (Lane). Punjabi uses it for "poor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

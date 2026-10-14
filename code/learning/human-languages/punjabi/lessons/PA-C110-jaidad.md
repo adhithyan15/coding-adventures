@@ -14,7 +14,8 @@ romanization: "jāidād"
 concept_tag: PA-CAN110-JAIDAD
 prerequisites: [PA-C110-adhikar, PA-C110-mauka]
 sounds: []
-roots: []
+roots: [persian-jaydad]
+etymology_hook: "jāidād: usually traced to Persian jāydād 'estate, property'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C110-mauka]
 <!-- hl-knowledge: introduces=[PA-LEX-C110-CAN110-05]; assesses=[] -->
 
 **ਜਾਇਦਾਦ** — *jāidād* — "property".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜਾਇਦਾਦ** (*jāidād*) is a loan, usually traced to Persian *jāydād*, "estate, property".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

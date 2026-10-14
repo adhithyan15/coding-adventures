@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for round, then the Punjabi for straight.
 You'll want to know: ਵਿੰਗਾ.
 ਵਿੰਗਾ — vingā — "crooked".
 
+The word, taken apart.
+ਵਿੰਗਾ (vingā) is a tadbhava, a word inherited and reshaped by sound change. It comes from vivaṅka, "very bent", a form CDIAL reconstructs from its descendants (CDIAL 11914). It is built on Sanskrit vaṅka, "bent".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for straight, then the Punjabi for crooked.
 
 You'll want to know: ਚਮਕੀਲਾ.
 ਚਮਕੀਲਾ — camkīlā — "shiny".
+
+The word, taken apart.
+ਚਮਕੀਲਾ (camkīlā) is built on camak, "shine", from camakṇā, "to shine", which CDIAL lists under a reconstructed camakka, "sudden movement" (CDIAL 4676), with the ending -īlā, "full of".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for crooked, then the Punjabi for shiny.
 You'll want to know: ਚੌੜਾ.
 ਚੌੜਾ — cauṛā — "wide".
 
+The word, taken apart.
+ਚੌੜਾ (cauṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ca-uḍa, "wide, open", a form CDIAL reconstructs from its descendants (CDIAL 4534). CDIAL thinks it possibly built on caü-, drawn from compounds of Sanskrit catur, "four".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for shiny, then the Punjabi for wide.
 You'll want to know: ਭੀੜਾ.
 ਭੀੜਾ — bhīṛā — "narrow".
 
+The word, taken apart.
+ਭੀੜਾ (bhīṛā) goes with bhīṛ, "crowd", and bhīṛnā, "to close", which CDIAL lists under bhīṭ, a variant of a reconstructed bhiṭ, "meet, throng" (CDIAL 9490). CDIAL does not list bhīṛā itself.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for wide, then the Punjabi for narrow.
 
 You'll want to know: ਗਿੱਲਾ.
 ਗਿੱਲਾ — gillā — "wet".
+
+The word, taken apart.
+ਗਿੱਲਾ (gillā) is a tadbhava, a word inherited and reshaped by sound change. It comes from grilla, "wet, damp", a form CDIAL reconstructs from its descendants (CDIAL 4386). CDIAL calls a deeper source very doubtful.
 
 What you've built.
 One more word for this chapter.

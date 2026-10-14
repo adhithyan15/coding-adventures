@@ -14,7 +14,8 @@ romanization: "lāl"
 concept_tag: PA-ADJ84-LAL
 prerequisites: [PA-C83-hara, PA-C84-pila]
 sounds: []
-roots: []
+roots: [persian-lal]
+etymology_hook: "lāl: usually traced to Persian lāl 'red'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C84-pila]
 <!-- hl-knowledge: introduces=[PA-LEX-C84-ADJ84-02]; assesses=[] -->
 
 **ਲਾਲ** — *lāl* — "red".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਲਾਲ** (*lāl*) is a loan, usually traced to Persian *lāl*, "red".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

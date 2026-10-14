@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 149,
-  "sourceHash": "fnv1a64:79c216afd3a9c669",
+  "sourceHash": "fnv1a64:6774b15eb2b34fa4",
   "lessonIds": [
     "PA-C149-tarna",
     "PA-C149-carhna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch149.txt",
   "json": "punjabi/narration/ch149.json",
-  "textHash": "fnv1a64:af71564b4413b5b6",
-  "jsonHash": "fnv1a64:8078c67d0a4d3538",
+  "textHash": "fnv1a64:ff9739d98222aaf0",
+  "jsonHash": "fnv1a64:e3d3fdd1dbc41f85",
   "findings": []
 }

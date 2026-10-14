@@ -14,7 +14,8 @@ romanization: "gobhī"
 concept_tag: PA-THINGS122-GOBHI
 prerequisites: [PA-C122-makki, PA-C122-baigan]
 sounds: []
-roots: []
+roots: [sanskrit-gojihvika]
+etymology_hook: "gobhī ← Sanskrit gojihvikā 'a particular kind of plant', a tadbhava (CDIAL 4270)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C122-baigan]
 <!-- hl-knowledge: introduces=[PA-LEX-C122-THINGS122-05]; assesses=[] -->
 
 **ਗੋਭੀ** — *gobhī* — "a cauliflower, a cabbage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗੋਭੀ** (*gobhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gojihvikā*, "a particular kind of plant" (CDIAL 4270). CDIAL lists Punjabi *gobhī*, "cabbage".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

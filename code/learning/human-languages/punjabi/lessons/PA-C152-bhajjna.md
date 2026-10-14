@@ -14,7 +14,8 @@ romanization: "bhajjṇā"
 concept_tag: PA-VERB-BHAJJNA
 prerequisites: [PA-C151-bacauna, PA-C151-bijna]
 sounds: []
-roots: []
+roots: [sanskrit-bhajyate]
+etymology_hook: "bhajjṇā ← Sanskrit bhajyate 'is broken', a tadbhava (CDIAL 9361)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C151-bijna]
 <!-- hl-knowledge: introduces=[PA-LEX-C152-ACT152-01]; assesses=[] -->
 
 **ਭੱਜਣਾ** — *bhajjṇā* — "to run".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਭੱਜਣਾ** (*bhajjṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhajyate*, "is broken" (CDIAL 9361). CDIAL lists Punjabi *bhajjṇā*, "to flee", and rejects Bloch's separate root for "flee".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

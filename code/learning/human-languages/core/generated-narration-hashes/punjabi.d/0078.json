@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 78,
-  "sourceHash": "fnv1a64:bf5e5bad9fe9c9a4",
+  "sourceHash": "fnv1a64:c9964663631c1db5",
   "lessonIds": [
     "PA-C78-panchhi",
     "PA-C78-chuha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch78.txt",
   "json": "punjabi/narration/ch78.json",
-  "textHash": "fnv1a64:0823e4b20bf4f42f",
-  "jsonHash": "fnv1a64:9cf05176e3a56478",
+  "textHash": "fnv1a64:8e79fdb08f0f01c0",
+  "jsonHash": "fnv1a64:44afd3ea80e73ca8",
   "findings": []
 }

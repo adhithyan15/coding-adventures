@@ -16,6 +16,9 @@ What does this person do? (A job, naukarī.)
 You'll want to know: ਲੁਕਣਾ.
 ਲੁਕਣਾ — lukṇā — "to hide".
 
+The word, taken apart.
+CDIAL lists ਲੁਕਣਾ (lukṇā), "to hide", in its entry for Sanskrit lupyate, "is lost, is removed" (CDIAL 11083).
+
 What you've built.
 One more word for this chapter.
 
@@ -44,6 +47,9 @@ Before the new one: say the Punjabi for weak, then the Punjabi for to hide.
 
 You'll want to know: ਡਿੱਗਣਾ.
 ਡਿੱਗਣਾ — ḍiggṇā — "to fall".
+
+The word, taken apart.
+ਡਿੱਗਣਾ (ḍiggṇā) is a tadbhava, a word inherited and reshaped by sound change. It comes from giḍḍ, "fall", a form CDIAL reconstructs from its descendants (CDIAL 4157). Punjabi has swapped the first and last sounds.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Punjabi for to hide, then the Punjabi for to fall.
 You'll want to know: ਸਿਖਾਉਣਾ.
 ਸਿਖਾਉਣਾ — sikhāuṇā — "to teach".
 
+The word, taken apart.
+ਸਿਖਾਉਣਾ (sikhāuṇā) is the causing form of sikkhṇā, "to learn": teaching is "making learn". CDIAL lists both, the second as sakhāuṇā, under Sanskrit śikṣate, "learns" (CDIAL 12430).
+
 What you've built.
 One more word for this chapter.
 
@@ -103,6 +112,9 @@ Before the new one: say the Punjabi for to fall, then the Punjabi for to teach.
 You'll want to know: ਚੁੱਕਣਾ.
 ਚੁੱਕਣਾ — cukkṇā — "to lift".
 
+The word, taken apart.
+Where ਚੁੱਕਣਾ (cukkṇā) comes from is not settled. CDIAL does not list it, though it gives the close Punjabi cakkṇā, "to lift, take up, carry", in its entry for Sanskrit ucca, "tall, lofty" (CDIAL 1634).
+
 What you've built.
 One more word for this chapter.
 
@@ -131,6 +143,9 @@ Before the new one: say the Punjabi for to teach, then the Punjabi for to lift.
 
 You'll want to know: ਟੱਪਣਾ.
 ਟੱਪਣਾ — ṭappṇā — "to jump".
+
+The word, taken apart.
+ਟੱਪਣਾ (ṭappṇā) is a tadbhava, a word inherited and reshaped by sound change. It comes from tarpati, "jumps", a form CDIAL reconstructs from its descendants (CDIAL 5727).
 
 What you've built.
 One more word for this chapter.

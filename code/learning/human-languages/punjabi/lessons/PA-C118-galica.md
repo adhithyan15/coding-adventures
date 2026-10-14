@@ -14,7 +14,8 @@ romanization: "galīcā"
 concept_tag: PA-THINGS118-GALICA
 prerequisites: [PA-C117-mombatti, PA-C118-macis]
 sounds: []
-roots: []
+roots: [persian-qalicha]
+etymology_hook: "galīcā: usually traced to Persian qālīcha 'a small carpet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C118-macis]
 <!-- hl-knowledge: introduces=[PA-LEX-C118-THINGS118-02]; assesses=[] -->
 
 **ਗਲੀਚਾ** — *galīcā* — "a carpet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗਲੀਚਾ** (*galīcā*) is a loan, usually traced to Persian *qālīcha*, "a small carpet". It is a small form of Persian *qālī*, "carpet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jittṇā"
 concept_tag: PA-VERB-JITTNA
 prerequisites: [PA-C112-sand, PA-C112-liakat]
 sounds: []
-roots: []
+roots: [sanskrit-jita]
+etymology_hook: "jittṇā ← Sanskrit jita 'won, conquered', a tadbhava (CDIAL 5224)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C112-liakat]
 <!-- hl-knowledge: introduces=[PA-LEX-C112-CAN112-04]; assesses=[] -->
 
 **ਜਿੱਤਣਾ** — *jittṇā* — "to win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜਿੱਤਣਾ** (*jittṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jita*, "won, conquered" (CDIAL 5224).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

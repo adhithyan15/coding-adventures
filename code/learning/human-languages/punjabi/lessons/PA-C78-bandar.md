@@ -14,7 +14,8 @@ romanization: "bāndar"
 concept_tag: PA-ANIMALS78-BANDAR
 prerequisites: [PA-C78-sher, PA-C78-hathi]
 sounds: []
-roots: []
+roots: [sanskrit-vanara]
+etymology_hook: "bāndar: matches Hindi bāṁdar, which CDIAL lists under Sanskrit vānara 'monkey', from vana 'forest' (CDIAL 11515)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C78-hathi]
 <!-- hl-knowledge: introduces=[PA-LEX-C78-ANIMALS78-05]; assesses=[] -->
 
 **ਬਾਂਦਰ** — *bāndar* — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬਾਂਦਰ** (*bāndar*) matches Hindi *bāṁdar*, which CDIAL lists under Sanskrit *vānara*, "monkey", a word it derives from *vana*, "forest" (CDIAL 11515).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

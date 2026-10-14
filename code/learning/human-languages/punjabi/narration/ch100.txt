@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for summer, then the Punjabi for winter.
 You'll want to know: ਬਰਸਾਤ.
 ਬਰਸਾਤ — barsāt — "the rainy season".
 
+The word, taken apart.
+ਬਰਸਾਤ (barsāt) matches Hindi barsāt, which CDIAL lists under Sanskrit varṣārātri, "the rainy season", or else as a blend with varṣartu, "rainy season" (CDIAL 11398). It gives no Punjabi form.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for winter, then the Punjabi for the rainy s
 
 You'll want to know: ਬਸੰਤ.
 ਬਸੰਤ — basant — "spring".
+
+The word, taken apart.
+ਬਸੰਤ (basant) is a semi-tatsama: Sanskrit vasanta, "spring season", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 11439). Punjabi has b- for the v-; CDIAL lists no Punjabi form.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for the rainy season, then the Punjabi for s
 You'll want to know: ਪਤਝੜ.
 ਪਤਝੜ — patjhaṛ — "autumn".
 
+The word, taken apart.
+ਪਤਝੜ (patjhaṛ) is built from two inherited words: pat, "leaf", as in Punjabi patt, from Sanskrit pattra (CDIAL 7733), and jhaṛ, from jhaṛṇā, "to fall off", which CDIAL lists under a reconstructed jhaṭati, "falls" (CDIAL 5328). Autumn is "leaf-fall".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for spring, then the Punjabi for autumn.
 You'll want to know: ਰੋਜ਼.
 ਰੋਜ਼ — roz — "every day, daily".
 
+The word, taken apart.
+ਰੋਜ਼ (roz) is a loan, usually traced to Persian rōz, "day".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for autumn, then the Punjabi for every day.
 
 You'll want to know: ਤਾਰੀਖ਼.
 ਤਾਰੀਖ਼ — tārīkh — "a date".
+
+The word, taken apart.
+ਤਾਰੀਖ਼ (tārīkh) is a loan from Arabic tārīkh, "a dating, a date", which reached Punjabi through Persian. Its Arabic root is ʾ-r-kh (Lane).
 
 What you've built.
 One more word for this chapter.

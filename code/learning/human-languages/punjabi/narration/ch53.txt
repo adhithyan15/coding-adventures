@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for hunger, then the Punjabi for happy.
 You'll want to know: ਉਦਾਸ.
 ਉਦਾਸ — udās — "sad".
 
+The word, taken apart.
+ਉਦਾਸ (udās) is usually traced to Sanskrit udāsa, "indifference". CDIAL does not list it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for happy, then the Punjabi for sad.
 
 You'll want to know: ਪਿਤਾ.
 ਪਿਤਾ — pitā — "a father".
+
+The word, taken apart.
+ਪਿਤਾ (pitā) is Sanskrit pitā, the nominative of pitṛ, "father", taken over whole, a tatsama. The inherited line survives in Punjabi piu, "mother and father", which CDIAL lists under pitṛ (CDIAL 8179).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for sad, then the Punjabi for a father.
 You'll want to know: ਮਾਤਾ.
 ਮਾਤਾ — mātā — "a mother".
 
+The word, taken apart.
+ਮਾਤਾ (mātā) is Sanskrit mātā, the nominative of mātṛ, "mother", taken over whole, a tatsama. The inherited form is māṁ, which CDIAL lists under mātṛ (CDIAL 10016).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a father, then the Punjabi for a mother.
 You'll want to know: ਪੁੱਤਰ.
 ਪੁੱਤਰ — puttar — "a son".
 
+The word, taken apart.
+ਪੁੱਤਰ (puttar) is a semi-tatsama: Sanskrit putra, "son", kept with its r. CDIAL lists the inherited Punjabi form as putt, beside Lahnda puttar (CDIAL 8265).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a mother, then the Punjabi for a son.
 
 You'll want to know: ਧੀ.
 ਧੀ — dhī — "a daughter".
+
+The word, taken apart.
+ਧੀ (dhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from duhitṛ, "daughter" (CDIAL 6481).
 
 What you've built.
 One more word for this chapter.

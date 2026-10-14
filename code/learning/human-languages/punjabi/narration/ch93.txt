@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a market, then the Punjabi for clothes.
 You'll want to know: ਕੁੜਤਾ.
 ਕੁੜਤਾ — kuṛtā — "a kurta, a long shirt".
 
+The word, taken apart.
+ਕੁੜਤਾ (kuṛtā) is a loan, usually traced to Persian kurta, "a long shirt".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for clothes, then the Punjabi for a kurta.
 
 You'll want to know: ਜੁਰਾਬ.
 ਜੁਰਾਬ — jurāb — "a sock".
+
+The word, taken apart.
+ਜੁਰਾਬ (jurāb) is a loan, usually traced to Persian jurāb, "stocking, sock".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a kurta, then the Punjabi for a sock.
 You'll want to know: ਜੇਬ.
 ਜੇਬ — jeb — "a pocket".
 
+The word, taken apart.
+ਜੇਬ (jeb) is a loan, usually traced to Persian jēb, "pocket". Persian itself took it from Arabic jayb, "pocket, opening of a garment".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a sock, then the Punjabi for a pocket.
 You'll want to know: ਮੁੰਦਰੀ.
 ਮੁੰਦਰੀ — mundrī — "a ring".
 
+The word, taken apart.
+ਮੁੰਦਰੀ (mundrī) is inherited. CDIAL lists the matching Lahnda mundrī, "ring", and Punjabi mundī, "ring", under Sanskrit mudrā, "seal, signet-ring", a word it takes, probably, from Iranian (CDIAL 10203).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a pocket, then the Punjabi for a ring.
 
 You'll want to know: ਘੜੀ.
 ਘੜੀ — ghaṛī — "a watch, a clock".
+
+The word, taken apart.
+ਘੜੀ (ghaṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghaṭī, "pot, water-clock" (CDIAL 4406). The water-clock gave its name to the clock and the watch.
 
 What you've built.
 One more word for this chapter.

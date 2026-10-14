@@ -14,7 +14,8 @@ romanization: "pul"
 concept_tag: PA-TOWN91-PUL
 prerequisites: [PA-C90-gaddi, PA-C91-bass]
 sounds: []
-roots: []
+roots: [persian-pul]
+etymology_hook: "pul: usually traced to Persian pul 'bridge'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C91-bass]
 <!-- hl-knowledge: introduces=[PA-LEX-C91-TOWN91-02]; assesses=[] -->
 
 **ਪੁਲ** — *pul* — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੁਲ** (*pul*) is a loan, usually traced to Persian *pul*, "bridge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

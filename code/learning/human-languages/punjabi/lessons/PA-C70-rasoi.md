@@ -14,7 +14,8 @@ romanization: "rasoī"
 concept_tag: PA-HOME70-RASOI
 prerequisites: [PA-C70-botal, PA-C70-darvaza]
 sounds: []
-roots: []
+roots: [sanskrit-rasavati]
+etymology_hook: "rasoī: CDIAL marks it as taken from Hindi rasoī, which goes back to Sanskrit rasavatī 'kitchen' (CDIAL 10656)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C70-darvaza]
 <!-- hl-knowledge: introduces=[PA-LEX-C70-HOME70-05]; assesses=[] -->
 
 **ਰਸੋਈ** — *rasoī* — "a kitchen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਰਸੋਈ** (*rasoī*) came into Punjabi from Hindi: CDIAL lists Hindi *rasoī* under Sanskrit *rasavatī*, "kitchen", and marks the Punjabi word as taken from it (CDIAL 10656).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

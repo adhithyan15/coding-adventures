@@ -14,7 +14,8 @@ romanization: "nārīal"
 concept_tag: PA-THINGS123-NARIAL
 prerequisites: [PA-C123-lasan, PA-C123-adrak, PA-C42-jo, PA-C42-jo-oh]
 sounds: []
-roots: []
+roots: [sanskrit-narikela]
+etymology_hook: "nārīal ← Sanskrit nārikela 'coconut palm and fruit', which CDIAL takes from Dravidian (CDIAL 7075)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [PA-C123-adrak]
 <!-- hl-knowledge: introduces=[PA-LEX-C123-THINGS123-03]; assesses=[] -->
 
 **ਨਾਰੀਅਲ** — *nārīal* — "a coconut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਨਾਰੀਅਲ** (*nārīal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nārikela*, "coconut palm and fruit" (CDIAL 7075). CDIAL, following Bloch, takes the Sanskrit word from a Dravidian compound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

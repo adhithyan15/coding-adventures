@@ -14,7 +14,8 @@ romanization: "navāṁ"
 concept_tag: PA-ANIMALS79-NAVAM
 prerequisites: [PA-C79-vadda, PA-C79-chhota]
 sounds: []
-roots: []
+roots: [sanskrit-nava-new]
+etymology_hook: "navāṁ ← Sanskrit nava 'new, young', a tadbhava (CDIAL 6983)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C79-chhota]
 <!-- hl-knowledge: introduces=[PA-LEX-C79-ANIMALS79-04]; assesses=[] -->
 
 **ਨਵਾਂ** — *navāṁ* — "new".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਨਵਾਂ** (*navāṁ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nava*, "new, young" (CDIAL 6983).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

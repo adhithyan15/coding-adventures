@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:64332c95475816d7",
+  "sourceHash": "fnv1a64:4108b3c07c0714fc",
   "lessons": [
     {
       "id": "PA-S03-nanna-bihari-dulava",
@@ -199,7 +199,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:06ada0710b8400a4",
+      "sourceHash": "fnv1a64:57273fc1528bb321",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -334,7 +334,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8bc1779f82634f4f",
+      "sourceHash": "fnv1a64:e39c7dfc86c23762",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +362,10 @@
             {
               "kind": "speech",
               "text": "ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? (tusī̃ kivēṁ ho?) = ਤੁਸੀਂ (tusī̃, respectful \"you\") + ਕਿਵੇਂ (kivēṁ, \"how\") + ਹੋ (ho, \"are\") — literally \"you how are?\" Punjabi keeps the verb last, as in Chapter 2. The copula ho is the respectful \"are\" that goes with tusī̃ — its whole set is maiṁ hāṁ (I am), tū̃ haiṁ (you are, familiar), oh hai (he is), tusī̃ ho (you are, respectful)."
+            },
+            {
+              "kind": "speech",
+              "text": "The words are inherited: tusīṁ from Sanskrit yuṣmad-, \"you (plural)\" (CDIAL 10511); kivēṁ on the old question stem ka-; and ho from hoṇā, \"to be\", which CDIAL lists under bhavati, \"becomes, is\" (CDIAL 9416)."
             }
           ]
         },
@@ -587,7 +591,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:20f5e660f14e8cfb",
+      "sourceHash": "fnv1a64:bc506ac7ab7dc586",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -923,7 +927,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5f358e9168b6d2fe",
+      "sourceHash": "fnv1a64:4c0fbc5edad57b19",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -971,6 +975,10 @@
             {
               "kind": "speech",
               "text": "ਠੀਕ (ṭhīk) means \"correct, right, fine, OK\" — a native Indian word (shared with Hindi and Urdu), one of the most useful in the language: ṭhīk hai (\"OK / agreed\"), sab ṭhīk? (\"all well?\"). Not every word has a far-flung cognate, and that is worth seeing too: ṭhīk is Indian to the core."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists it under a reconstructed ṭhīkka, \"firm, right\", which it derives, probably, from Sanskrit sthita, \"standing\" (CDIAL 5503)."
             }
           ]
         },
@@ -1082,7 +1090,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:df7c0c7261bf2653",
+      "sourceHash": "fnv1a64:63b5a56d953a8627",
       "notice": {
         "modality": "sight",
         "needs": [

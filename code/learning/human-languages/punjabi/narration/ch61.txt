@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for to bring, then the Punjabi for to send.
 You'll want to know: ਗਿਣਨਾ.
 ਗਿਣਨਾ — giṇnā — "to count".
 
+The word, taken apart.
+ਗਿਣਨਾ (giṇnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gaṇayati, "counts" (CDIAL 3993).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for to send, then the Punjabi for to count.
 
 You'll want to know: ਫੜਨਾ.
 ਫੜਨਾ — phaṛnā — "to catch, to hold".
+
+The word, taken apart.
+Where ਫੜਨਾ (phaṛnā) comes from is not settled. CDIAL does not list it, though it gives the close Punjabi forms phakaṛṇā and pakaṛṇā, "to seize", under a reconstructed pakkaḍ, "seize" (CDIAL 7619).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for to count, then the Punjabi for to catch.
 You'll want to know: ਕੱਟਣਾ.
 ਕੱਟਣਾ — kaṭṭṇā — "to cut".
 
+The word, taken apart.
+ਕੱਟਣਾ (kaṭṭṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kartati, "cuts" (CDIAL 2854).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for to catch, then the Punjabi for to cut.
 You'll want to know: ਰੋਕਣਾ.
 ਰੋਕਣਾ — rokṇā — "to stop".
 
+The word, taken apart.
+ਰੋਕਣਾ (rokṇā) is a tadbhava, a word inherited and reshaped by sound change. It comes from rokk, "stop", a form CDIAL reconstructs from its descendants (CDIAL 10827). CDIAL leaves its link with the Sanskrit root rudh, "obstruct", unclear.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for to cut, then the Punjabi for to stop.
 
 You'll want to know: ਦੱਸਣਾ.
 ਦੱਸਣਾ — dassṇā — "to tell".
+
+The word, taken apart.
+ਦੱਸਣਾ (dassṇā) is inherited. CDIAL lists the matching Lahnda dassaṇ, "to show, tell", and Punjabi dasāuṇā, "makes show", under Sanskrit darśayati, "shows" (CDIAL 6210).
 
 What you've built.
 One more word for this chapter.

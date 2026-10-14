@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a factory, then the Punjabi for a librar
 You'll want to know: ਚੌਂਕ.
 ਚੌਂਕ — cauṅk — "a town square".
 
+The word, taken apart.
+ਚੌਂਕ (cauṅk) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from catuṣka, "set of four; quadrangular courtyard" (CDIAL 4629). CDIAL lists Punjabi cauk, "open square where four roads meet".
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Before the new one: say the Punjabi for a library, then the Punjabi for a town s
 You'll want to know: ਬਾਗ਼.
 ਬਾਗ਼ — bāg — "a garden, a park".
 
+The word, taken apart.
+ਬਾਗ਼ (bāg) is a loan, usually traced to Persian bāgh, "garden".
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Punjabi for a town square, then the Punjabi for a ga
 
 You'll want to know: ਪੈਨਸਿਲ.
 ਪੈਨਸਿਲ — painsil — "a pencil".
+
+The word, taken apart.
+ਪੈਨਸਿਲ (painsil) is a loan from English pencil.
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Before the new one: say the Punjabi for a garden, then the Punjabi for a pencil.
 You'll want to know: ਜਮਾਤ.
 ਜਮਾਤ — jamāt — "a class".
 
+The word, taken apart.
+ਜਮਾਤ (jamāt) is a loan from Arabic jamāʿa, "a group, an assembly", which reached Punjabi through Persian. Its Arabic root is j-m-ʿ (Lane). Punjabi uses it for a school class.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Punjabi for a pencil, then the Punjabi for a class.
 
 You'll want to know: ਅਧਿਆਪਕ.
 ਅਧਿਆਪਕ — adhiāpak — "a teacher".
+
+The word, taken apart.
+ਅਧਿਆਪਕ (adhiāpak) is Sanskrit adhyāpaka, "teacher", taken over whole as a learned loan, a tatsama (CDIAL 278).
 
 What you've built.
 One more word for this chapter.

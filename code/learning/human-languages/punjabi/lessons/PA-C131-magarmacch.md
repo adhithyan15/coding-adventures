@@ -14,7 +14,8 @@ romanization: "magarmacch"
 concept_tag: PA-THINGS131-MAGARMACCH
 prerequisites: [PA-C131-kirli, PA-C131-kacchu]
 sounds: []
-roots: []
+roots: [sanskrit-makara, sanskrit-matsya]
+etymology_hook: "magar ← Sanskrit makara 'crocodile' (Prakrit magara, CDIAL 9692) + macch 'fish' ← matsya (CDIAL 9758)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C131-kacchu]
 <!-- hl-knowledge: introduces=[PA-LEX-C131-THINGS131-04]; assesses=[] -->
 
 **ਮਗਰਮੱਛ** — *magarmacch* — "a crocodile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਗਰਮੱਛ** (*magarmacch*) is "crocodile-fish": *magar* from Sanskrit *makara*, "crocodile", through Prakrit *magara* (CDIAL 9692), and *macch*, "fish", from *matsya* (CDIAL 9758).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

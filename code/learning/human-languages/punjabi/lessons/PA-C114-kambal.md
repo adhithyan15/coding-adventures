@@ -14,7 +14,8 @@ romanization: "kambal"
 concept_tag: PA-THINGS114-KAMBAL
 prerequisites: [PA-C114-gadda, PA-C114-cadar]
 sounds: []
-roots: []
+roots: [sanskrit-kambala]
+etymology_hook: "kambal ← Sanskrit kambala 'woollen blanket', perhaps Austroasiatic (CDIAL 2771)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C114-cadar]
 <!-- hl-knowledge: introduces=[PA-LEX-C114-THINGS114-05]; assesses=[] -->
 
 **ਕੰਬਲ** — *kambal* — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੰਬਲ** (*kambal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kambala*, "woollen blanket" (CDIAL 2771). CDIAL notes a possible Austroasiatic origin, and says Hindi *kambal* was taken from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

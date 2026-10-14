@@ -14,7 +14,8 @@ romanization: "ghāh"
 concept_tag: PA-THINGS126-GHAH
 prerequisites: [PA-C125-jira, PA-C125-pakaura]
 sounds: []
-roots: []
+roots: [sanskrit-ghasa]
+etymology_hook: "ghāh ← Sanskrit ghāsa 'food, pasture grass', a tadbhava (CDIAL 4471)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C125-pakaura]
 <!-- hl-knowledge: introduces=[PA-LEX-C126-THINGS126-01]; assesses=[] -->
 
 **ਘਾਹ** — *ghāh* — "grass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਘਾਹ** (*ghāh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghāsa*, "food, pasture grass" (CDIAL 4471).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

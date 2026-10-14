@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for true, then the Punjabi for false.
 You'll want to know: ਅਮੀਰ.
 ਅਮੀਰ — amīr — "rich".
 
+The word, taken apart.
+ਅਮੀਰ (amīr) is a loan from Arabic amīr, "commander, prince", which reached Punjabi through Persian. Its Arabic root is ʾ-m-r (Lane). Punjabi uses it for "rich".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for false, then the Punjabi for rich.
 
 You'll want to know: ਗ਼ਰੀਬ.
 ਗ਼ਰੀਬ — garīb — "poor".
+
+The word, taken apart.
+ਗ਼ਰੀਬ (garīb) is a loan from Arabic gharīb, "a stranger", which reached Punjabi through Persian. Its Arabic root is gh-r-b (Lane). Punjabi uses it for "poor".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for rich, then the Punjabi for poor.
 You'll want to know: ਜਵਾਨ.
 ਜਵਾਨ — javān — "young".
 
+The word, taken apart.
+CDIAL lists Punjabi javāṇ, "a youth", under yuvāna, "young", built on Sanskrit yuvan (CDIAL 10510). Hindi javān is usually traced instead to Persian javān, "young", a cousin of the Sanskrit word, so which one Punjabi has is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for poor, then the Punjabi for young.
 You'll want to know: ਤਕੜਾ.
 ਤਕੜਾ — takṛā — "strong".
 
+The word, taken apart.
+ਤਕੜਾ (takṛā) matches Lahnda takṛā, "strong, diligent", which CDIAL lists under a reconstructed targa, "terrible, strong", noting that its k is unexplained (CDIAL 5718).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for young, then the Punjabi for strong.
 
 You'll want to know: ਕਮਜ਼ੋਰ.
 ਕਮਜ਼ੋਰ — kamzor — "weak".
+
+The word, taken apart.
+ਕਮਜ਼ੋਰ (kamzor) is a loan, usually traced to Persian kamzōr, "weak". It is built from kam, "little", and zōr, "strength".
 
 What you've built.
 One more word for this chapter.

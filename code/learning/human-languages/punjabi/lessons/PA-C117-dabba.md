@@ -14,7 +14,8 @@ romanization: "ḍabbā"
 concept_tag: PA-THINGS117-DABBA
 prerequisites: [PA-C117-kura, PA-C117-tokri]
 sounds: []
-roots: []
+roots: [indo-aryan-dabba]
+etymology_hook: "ḍabbā: matches Hindi ḍabbā, listed under *ḍabba 'box', of non-Aryan, perhaps Dravidian, origin (CDIAL 5528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C117-tokri]
 <!-- hl-knowledge: introduces=[PA-LEX-C117-THINGS117-03]; assesses=[] -->
 
 **ਡੱਬਾ** — *ḍabbā* — "a box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਡੱਬਾ** (*ḍabbā*) matches Hindi *ḍabbā*, "box", which CDIAL lists under a reconstructed *\*ḍabba*, "box", a word it calls non-Aryan, perhaps Dravidian (CDIAL 5528). Its Punjabi forms there are *ḍabb* and *ḍibbā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

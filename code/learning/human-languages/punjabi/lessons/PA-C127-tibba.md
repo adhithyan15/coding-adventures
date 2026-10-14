@@ -14,7 +14,8 @@ romanization: "ṭibbā"
 concept_tag: PA-THINGS127-TIBBA
 prerequisites: [PA-C127-gufa, PA-C127-vadi]
 sounds: []
-roots: []
+roots: [indo-aryan-tappa-hill]
+etymology_hook: "ṭibbā ← *ṭibba, one of the variants in CDIAL's entry *ṭappa 'hill' (CDIAL 5446)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C127-vadi]
 <!-- hl-knowledge: introduces=[PA-LEX-C127-THINGS127-05]; assesses=[] -->
 
 **ਟਿੱਬਾ** — *ṭibbā* — "a sand hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਟਿੱਬਾ** (*ṭibbā*) is inherited. CDIAL lists it, "mound, sandbank, hill", under *\*ṭibba*, one of the variant forms it groups under *\*ṭappa*, "hill" (CDIAL 5446).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "agast"
 concept_tag: PA-TIME102-AGAST
 prerequisites: [PA-C102-jun, PA-C102-julai]
 sounds: []
-roots: []
+roots: [english-august]
+etymology_hook: "agast ← English August"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C102-julai]
 <!-- hl-knowledge: introduces=[PA-LEX-C102-TIME102-04]; assesses=[] -->
 
 **ਅਗਸਤ** — *agast* — "August".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਅਗਸਤ** (*agast*) is a loan from English *August*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

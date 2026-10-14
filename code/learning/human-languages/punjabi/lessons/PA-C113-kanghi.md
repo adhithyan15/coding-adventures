@@ -14,7 +14,8 @@ romanization: "kanghī"
 concept_tag: PA-THINGS113-KANGHI
 prerequisites: [PA-C113-galas, PA-C113-patila]
 sounds: []
-roots: []
+roots: [sanskrit-kankata]
+etymology_hook: "kaṅghī ← *kaṅkaśa, a variant of Sanskrit kaṅkata 'comb', of doubtful IE origin; Hindi took it from Punjabi (CDIAL 2598)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C113-patila]
 <!-- hl-knowledge: introduces=[PA-LEX-C113-THINGS113-05]; assesses=[] -->
 
 **ਕੰਘੀ** — *kanghī* — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੰਘੀ** (*kanghī*) is inherited. CDIAL lists it under *\*kaṅkaśa*, a variant of Sanskrit *kaṅkata*, "comb", a word of doubtful Indo-European origin, and says Hindi *kaṅghī* was taken from Punjabi (CDIAL 2598).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

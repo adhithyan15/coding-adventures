@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for high, then the Punjabi for low.
 You'll want to know: ਭਰਿਆ.
 ਭਰਿਆ — bhariā — "full".
 
+The word, taken apart.
+ਭਰਿਆ (bhariā) is the past participle of bharnā, "to fill", inherited from Sanskrit bharati, "bears, brings; fills". CDIAL gives no Punjabi form, but lists the matching Lahnda bharaṇ, "to fill" (CDIAL 9397).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for low, then the Punjabi for full.
 
 You'll want to know: ਖ਼ਾਲੀ.
 ਖ਼ਾਲੀ — khālī — "empty".
+
+The word, taken apart.
+ਖ਼ਾਲੀ (khālī) is a loan from Arabic khālī, "empty", which reached Punjabi through Persian. Its Arabic root is kh-l-w (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for full, then the Punjabi for empty.
 You'll want to know: ਸਾਫ਼.
 ਸਾਫ਼ — sāf — "clean".
 
+The word, taken apart.
+ਸਾਫ਼ (sāf) is a loan from Arabic ṣāfī, "pure, clear", which reached Punjabi through Persian. Its Arabic root is ṣ-f-w (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for empty, then the Punjabi for clean.
 You'll want to know: ਮਿੱਠਾ.
 ਮਿੱਠਾ — miṭṭhā — "sweet".
 
+The word, taken apart.
+ਮਿੱਠਾ (miṭṭhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from miṣṭa, "dainty, sweet" (CDIAL 10299).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for clean, then the Punjabi for sweet.
 
 You'll want to know: ਮੋਟਾ.
 ਮੋਟਾ — moṭā — "fat, thick".
+
+The word, taken apart.
+CDIAL lists ਮੋਟਾ (moṭā), as moṭṭā, "fat", under a reconstructed mōṭṭa, in a large group of words it heads muṭṭa, "defective" (CDIAL 10187).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "safar"
 concept_tag: PA-NUMBERS97-SAFAR
 prerequisites: [PA-C97-rang, PA-C97-git]
 sounds: []
-roots: []
+roots: [arabic-safar]
+etymology_hook: "safar ← Arabic safar 'travel, a journey', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C97-git]
 <!-- hl-knowledge: introduces=[PA-LEX-C97-NUMBERS97-05]; assesses=[] -->
 
 **ਸਫ਼ਰ** — *safar* — "a journey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਫ਼ਰ** (*safar*) is a loan from Arabic *safar*, "travel, a journey", which reached Punjabi through Persian. Its Arabic root is *s-f-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

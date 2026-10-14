@@ -14,7 +14,8 @@ romanization: "kūṛā"
 concept_tag: PA-THINGS117-KURA
 prerequisites: [PA-C116-balti, PA-C116-jharu]
 sounds: []
-roots: []
+roots: [sanskrit-kuta]
+etymology_hook: "kūṛā ← Sanskrit kūṭa 'heap, multitude', probably from Dravidian (CDIAL 3392)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C116-jharu]
 <!-- hl-knowledge: introduces=[PA-LEX-C117-THINGS117-01]; assesses=[] -->
 
 **ਕੂੜਾ** — *kūṛā* — "rubbish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੂੜਾ** (*kūṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kūṭa*, "heap, multitude" (CDIAL 3392). CDIAL takes the Sanskrit word, probably, from Dravidian; Punjabi *kūṛā* is "sweepings, dirt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

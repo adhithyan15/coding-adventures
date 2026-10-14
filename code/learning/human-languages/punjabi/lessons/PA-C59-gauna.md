@@ -14,7 +14,8 @@ romanization: "gāuṇā"
 concept_tag: PA-VERB-GAUNA
 prerequisites: [PA-C59-hassna, PA-C59-rona]
 sounds: []
-roots: []
+roots: [sanskrit-gayati]
+etymology_hook: "gāuṇā: listed under gāpayati, the second form beside Sanskrit gāyati 'sings' (CDIAL 4135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C59-rona]
 <!-- hl-knowledge: introduces=[PA-LEX-C59-VERBS59-04]; assesses=[] -->
 
 **ਗਾਉਣਾ** — *gāuṇā* — "to sing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗਾਉਣਾ** (*gāuṇā*) is inherited. CDIAL lists it under *gāpayati*, the second form it gives beside Sanskrit *gāyati*, "sings" (CDIAL 4135).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

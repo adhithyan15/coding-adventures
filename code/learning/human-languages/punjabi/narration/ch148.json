@@ -4,7 +4,7 @@
   "chapter": 148,
   "title": "To hide, To fall, To teach, To lift, To jump",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:90df72e28cba5d30",
+  "sourceHash": "fnv1a64:1c6a837d2b53d903",
   "lessons": [
     {
       "id": "PA-C148-lukna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a60c052864100403",
+      "sourceHash": "fnv1a64:0b464fb0052b8286",
       "notice": null,
       "blocks": [
         {
@@ -75,6 +75,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists ਲੁਕਣਾ (lukṇā), \"to hide\", in its entry for Sanskrit lupyate, \"is lost, is removed\" (CDIAL 11083)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -85,7 +96,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -134,7 +145,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -165,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e4cd4c827151dfa",
+      "sourceHash": "fnv1a64:0d122aff2a2a7a11",
       "notice": null,
       "blocks": [
         {
@@ -198,6 +209,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਡਿੱਗਣਾ (ḍiggṇā) is a tadbhava, a word inherited and reshaped by sound change. It comes from giḍḍ, \"fall\", a form CDIAL reconstructs from its descendants (CDIAL 4157). Punjabi has swapped the first and last sounds."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -208,7 +230,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -257,7 +279,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -288,7 +310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67165ceeb6a2e946",
+      "sourceHash": "fnv1a64:2646aa6ba81f9f03",
       "notice": null,
       "blocks": [
         {
@@ -321,6 +343,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਿਖਾਉਣਾ (sikhāuṇā) is the causing form of sikkhṇā, \"to learn\": teaching is \"making learn\". CDIAL lists both, the second as sakhāuṇā, under Sanskrit śikṣate, \"learns\" (CDIAL 12430)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -331,7 +364,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -380,7 +413,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -411,7 +444,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b7b7bf361b33b20",
+      "sourceHash": "fnv1a64:0fe6d9aabfa3d0b4",
       "notice": null,
       "blocks": [
         {
@@ -444,6 +477,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where ਚੁੱਕਣਾ (cukkṇā) comes from is not settled. CDIAL does not list it, though it gives the close Punjabi cakkṇā, \"to lift, take up, carry\", in its entry for Sanskrit ucca, \"tall, lofty\" (CDIAL 1634)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -454,7 +498,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -503,7 +547,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -534,7 +578,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:080c8d8306b496b8",
+      "sourceHash": "fnv1a64:6d049d553962f130",
       "notice": null,
       "blocks": [
         {
@@ -567,6 +611,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਟੱਪਣਾ (ṭappṇā) is a tadbhava, a word inherited and reshaped by sound change. It comes from tarpati, \"jumps\", a form CDIAL reconstructs from its descendants (CDIAL 5727)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -577,7 +632,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -626,7 +681,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

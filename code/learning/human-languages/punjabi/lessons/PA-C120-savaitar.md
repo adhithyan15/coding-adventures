@@ -14,7 +14,8 @@ romanization: "savaiṭar"
 concept_tag: PA-THINGS120-SAVAITAR
 prerequisites: [PA-C119-peti, PA-C120-rumal]
 sounds: []
-roots: []
+roots: [english-sweater]
+etymology_hook: "savaiṭar ← English sweater"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C120-rumal]
 <!-- hl-knowledge: introduces=[PA-LEX-C120-THINGS120-02]; assesses=[] -->
 
 **ਸਵੈਟਰ** — *savaiṭar* — "a sweater".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਵੈਟਰ** (*savaiṭar*) is a loan from English *sweater*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

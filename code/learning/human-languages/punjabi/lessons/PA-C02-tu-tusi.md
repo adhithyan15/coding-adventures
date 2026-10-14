@@ -12,6 +12,7 @@ concept_tag: PRONOUN-YOU
 prerequisites: [PA-C02-mera-naam-hai]
 sounds: [aunkar-u, bindi-nasal]
 roots: [tu-second-person]
+etymology_hook: "tūṁ ← Sanskrit tvam 'thou' (CDIAL 5889); tusīṁ ← yuṣmad- 'you (plural)', with t- from tvam (CDIAL 10511)"
 duration:
   max_seconds: 220
 requires:

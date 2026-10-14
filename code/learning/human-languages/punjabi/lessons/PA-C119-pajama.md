@@ -14,7 +14,8 @@ romanization: "pajāmā"
 concept_tag: PA-THINGS119-PAJAMA
 prerequisites: [PA-C118-khidauna, PA-C119-manja]
 sounds: []
-roots: []
+roots: [persian-pay-jama]
+etymology_hook: "pajāmā: usually traced to Persian pāy-jāma 'leg garment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C119-manja]
 <!-- hl-knowledge: introduces=[PA-LEX-C119-THINGS119-02]; assesses=[] -->
 
 **ਪਜਾਮਾ** — *pajāmā* — "pyjamas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਜਾਮਾ** (*pajāmā*) is a loan, usually traced to Persian *pāy-jāma*, "leg garment". It is built from *pāy*, "leg", and *jāma*, "garment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pichchhe"
 concept_tag: PA-PLACE89-PICHCHHE
 prerequisites: [PA-C88-hetham, PA-C89-sahmane]
 sounds: []
-roots: []
+roots: [indo-aryan-pashca]
+etymology_hook: "pichchhe ← *paśca 'hinder part', a reconstructed form; a tadbhava (CDIAL 7990)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C89-sahmane]
 <!-- hl-knowledge: introduces=[PA-LEX-C89-PLACE89-02]; assesses=[] -->
 
 **ਪਿੱਛੇ** — *pichchhe* — "behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਿੱਛੇ** (*pichchhe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*paśca*, "hinder part", a form CDIAL reconstructs from its descendants (CDIAL 7990). CDIAL says the form was drawn from Sanskrit *paścāt*, "behind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shabad"
 concept_tag: PA-SCHOOL72-SHABAD
 prerequisites: [PA-C72-saval, PA-C72-javab]
 sounds: []
-roots: []
+roots: [sanskrit-shabda]
+etymology_hook: "shabad ← Sanskrit śabda 'sound, word', a semi-tatsama (CDIAL 12298)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C72-javab]
 <!-- hl-knowledge: introduces=[PA-LEX-C72-SCHOOL72-05]; assesses=[] -->
 
 **ਸ਼ਬਦ** — *shabad* — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸ਼ਬਦ** (*shabad*) is a semi-tatsama: Sanskrit *śabda*, "sound, word", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 12298). Punjabi puts a vowel between the *b* and the *d*. The inherited Punjabi form is *sadd*, "call, shout".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

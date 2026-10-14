@@ -15,6 +15,7 @@ concept_tag: PA-ADJ81-SASTA
 prerequisites: [PA-C81-saukha, PA-C81-mahinga]
 sounds: []
 roots: []
+etymology_hook: "sastā: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C81-mahinga]
 <!-- hl-knowledge: introduces=[PA-LEX-C81-ADJ81-03]; assesses=[] -->
 
 **ਸਸਤਾ** — *sastā* — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਸਸਤਾ** (*sastā*) comes from is not settled: CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

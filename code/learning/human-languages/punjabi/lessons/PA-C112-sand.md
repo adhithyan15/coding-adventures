@@ -15,6 +15,7 @@ concept_tag: PA-CAN112-SAND
 prerequisites: [PA-C111-hunar, PA-C112-kala]
 sounds: []
 roots: []
+etymology_hook: "sand 'tool': its origin is not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C112-kala]
 <!-- hl-knowledge: introduces=[PA-LEX-C112-CAN112-02]; assesses=[] -->
 
 **ਸੰਦ** — *sand* — "a tool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਸੰਦ** (*sand*) comes from is not settled: CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

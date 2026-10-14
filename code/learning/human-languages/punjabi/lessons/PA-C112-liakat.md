@@ -14,7 +14,8 @@ romanization: "liākat"
 concept_tag: PA-CAN112-LIAKAT
 prerequisites: [PA-C112-kala, PA-C112-sand]
 sounds: []
-roots: []
+roots: [arabic-liyaqa]
+etymology_hook: "liākat ← Arabic liyāqa 'fitness, merit', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C112-sand]
 <!-- hl-knowledge: introduces=[PA-LEX-C112-CAN112-03]; assesses=[] -->
 
 **ਲਿਆਕਤ** — *liākat* — "ability, merit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਲਿਆਕਤ** (*liākat*) is a loan from Arabic *liyāqa*, "fitness, merit", which reached Punjabi through Persian. Its Arabic root is *l-y-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

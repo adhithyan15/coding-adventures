@@ -14,7 +14,8 @@ romanization: "hakk"
 concept_tag: PA-CAN110-HAKK
 prerequisites: [PA-C109-takat, PA-C110-shakti]
 sounds: []
-roots: []
+roots: [arabic-haqq]
+etymology_hook: "hakk ← Arabic ḥaqq 'truth, a right', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C110-shakti]
 <!-- hl-knowledge: introduces=[PA-LEX-C110-CAN110-02]; assesses=[] -->
 
 **ਹੱਕ** — *hakk* — "a right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹੱਕ** (*hakk*) is a loan from Arabic *ḥaqq*, "truth, a right", which reached Punjabi through Persian. Its Arabic root is *ḥ-q-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

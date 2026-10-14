@@ -14,7 +14,8 @@ romanization: "saṛak"
 concept_tag: PA-TOWN90-SARAK
 prerequisites: [PA-C89-utthe, PA-C89-dukan]
 sounds: []
-roots: []
+roots: [sanskrit-srti]
+etymology_hook: "saṛak: CDIAL gives Sanskrit sṛti 'road, path' (13577), then in its addenda śaṭati 'goes' (12269); no Punjabi form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C89-dukan]
 <!-- hl-knowledge: introduces=[PA-LEX-C90-TOWN90-01]; assesses=[] -->
 
 **ਸੜਕ** — *saṛak* — "a road".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸੜਕ** (*saṛak*) matches Hindi and Lahnda *saṛak*. CDIAL lists the word first under Sanskrit *sṛti*, "road, path" (CDIAL 13577), and then in its addenda under *śaṭati*, "goes" (CDIAL 12269). It gives no Punjabi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gufā"
 concept_tag: PA-THINGS127-GUFA
 prerequisites: [PA-C127-kinara, PA-C127-jharna]
 sounds: []
-roots: []
+roots: [indo-aryan-guppha]
+etymology_hook: "gufā: matches Lahnda guphā 'hermit's cave', listed under *gupphā 'cave'; a further link is very doubtful (CDIAL 4204)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C127-jharna]
 <!-- hl-knowledge: introduces=[PA-LEX-C127-THINGS127-03]; assesses=[] -->
 
 **ਗੁਫ਼ਾ** — *gufā* — "a cave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗੁਫ਼ਾ** (*gufā*) matches Lahnda *guphā*, "hermit's cave", which CDIAL lists under a reconstructed *\*gupphā*, "cave" (CDIAL 4204). CDIAL calls its own further link with Sanskrit *guhā*, "cave", very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

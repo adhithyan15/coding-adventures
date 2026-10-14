@@ -15,6 +15,7 @@ concept_tag: PA-THINGS134-BHARAVATTA
 prerequisites: [PA-C134-gallh, PA-C134-mattha]
 sounds: []
 roots: []
+etymology_hook: "bharavaṭṭā: its origin is not settled; CDIAL lists Punjabi bhaũh 'eyebrow' under bhrū (9688), not bharavaṭṭā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C134-mattha]
 <!-- hl-knowledge: introduces=[PA-LEX-C134-THINGS134-03]; assesses=[] -->
 
 **ਭਰਵੱਟਾ** — *bharavaṭṭā* — "an eyebrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਭਰਵੱਟਾ** (*bharavaṭṭā*) comes from is not settled. CDIAL has no entry for it, though it lists the shorter Punjabi *bhaũh*, "eyebrow", under Sanskrit *bhrū*, "eyebrow" (CDIAL 9688).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

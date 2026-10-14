@@ -14,7 +14,8 @@ romanization: "battakh"
 concept_tag: PA-THINGS131-BATTAKH
 prerequisites: [PA-C130-baghiar, PA-C130-kabutar]
 sounds: []
-roots: []
+roots: [persian-bat]
+etymology_hook: "battakh: usually traced to Persian baṭ 'duck'; Lane calls Arabic baṭṭ a Persian word, or imitative"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C130-kabutar]
 <!-- hl-knowledge: introduces=[PA-LEX-C131-THINGS131-01]; assesses=[] -->
 
 **ਬੱਤਖ਼** — *battakh* — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬੱਤਖ਼** (*battakh*) is usually traced to Persian *baṭ*, "duck". Lane calls the matching Arabic *baṭṭ* a Persian word, or an imitation of the bird's cry.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

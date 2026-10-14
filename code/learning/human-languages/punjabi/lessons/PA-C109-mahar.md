@@ -14,7 +14,8 @@ romanization: "māhar"
 concept_tag: PA-CAN109-MAHAR
 prerequisites: [PA-C108-uve, PA-C108-hor]
 sounds: []
-roots: []
+roots: [arabic-mahir]
+etymology_hook: "māhar ← Arabic māhir 'skilled', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C108-hor]
 <!-- hl-knowledge: introduces=[PA-LEX-C109-CAN109-01]; assesses=[] -->
 
 **ਮਾਹਰ** — *māhar* — "an expert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਾਹਰ** (*māhar*) is a loan from Arabic *māhir*, "skilled", which reached Punjabi through Persian. Its Arabic root is *m-h-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

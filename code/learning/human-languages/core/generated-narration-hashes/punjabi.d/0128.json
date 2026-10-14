@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 128,
-  "sourceHash": "fnv1a64:4d17ffeb51058b8d",
+  "sourceHash": "fnv1a64:16b6d73bc5afc584",
   "lessonIds": [
     "PA-C128-maruthal",
     "PA-C128-bijli",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch128.txt",
   "json": "punjabi/narration/ch128.json",
-  "textHash": "fnv1a64:fc43f399de60f3bf",
-  "jsonHash": "fnv1a64:cdf9d7c4e907ab4b",
+  "textHash": "fnv1a64:f19fc4c9bce947cf",
+  "jsonHash": "fnv1a64:78c37d2f4fc9ec17",
   "findings": []
 }

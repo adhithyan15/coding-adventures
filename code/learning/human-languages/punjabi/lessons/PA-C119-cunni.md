@@ -15,6 +15,7 @@ concept_tag: PA-THINGS119-CUNNI
 prerequisites: [PA-C119-pajama, PA-C119-salvar]
 sounds: []
 roots: []
+etymology_hook: "cunnī: its origin is not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C119-salvar]
 <!-- hl-knowledge: introduces=[PA-LEX-C119-THINGS119-04]; assesses=[] -->
 
 **ਚੁੰਨੀ** — *cunnī* — "a scarf, a chunni".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਚੁੰਨੀ** (*cunnī*) comes from is not settled: CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

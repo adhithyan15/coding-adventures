@@ -14,7 +14,8 @@ romanization: "chihrā"
 concept_tag: PA-BODY50-CHIHRA
 prerequisites: [PA-C50-bullh, PA-C50-dhaun]
 sounds: []
-roots: []
+roots: [persian-chihra]
+etymology_hook: "chihrā: usually traced to Persian chihra 'face, countenance'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C50-dhaun]
 <!-- hl-knowledge: introduces=[PA-LEX-C50-BODY50-04]; assesses=[] -->
 
 **ਚਿਹਰਾ** — *chihrā* — "the face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚਿਹਰਾ** (*chihrā*) is a loan, usually traced to Persian *chihra*, "face, countenance".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

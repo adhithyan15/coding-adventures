@@ -14,7 +14,8 @@ romanization: "satt"
 concept_tag: PA-NUMBERS95-SATT
 prerequisites: [PA-C94-kamiz, PA-C94-chhe]
 sounds: []
-roots: []
+roots: [sanskrit-sapta]
+etymology_hook: "satt ← Sanskrit sapta 'seven', a tadbhava (CDIAL 13139)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C94-chhe]
 <!-- hl-knowledge: introduces=[PA-LEX-C95-NUMBERS95-01]; assesses=[] -->
 
 **ਸੱਤ** — *satt* — "seven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸੱਤ** (*satt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sapta*, "seven" (CDIAL 13139).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 105,
-  "sourceHash": "fnv1a64:7a2e405ba7368b82",
+  "sourceHash": "fnv1a64:9723a2ca6aca77fd",
   "lessonIds": [
     "PA-C105-kattak",
     "PA-C105-magghar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch105.txt",
   "json": "punjabi/narration/ch105.json",
-  "textHash": "fnv1a64:fa02d6fddc3c18d8",
-  "jsonHash": "fnv1a64:df5f9cdeb5e5e1c8",
+  "textHash": "fnv1a64:997fb38660edcdc6",
+  "jsonHash": "fnv1a64:5eb924071584eac8",
   "findings": []
 }

@@ -14,7 +14,8 @@ gloss: "the weather"
 concept_tag: PA-ANCHOR-MAUSAM
 prerequisites: [PA-W05-farming]
 sounds: []
-roots: []
+roots: [arabic-mawsim-season]
+etymology_hook: "mausam ← Arabic mawsim 'a season, a time of assembly', through Persian"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard-punjabi
 **ਮੌਸਮ** — *mausam* — "the weather".
 
 Say it: *mausam*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ੌ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੌਸਮ** (*mausam*) is a loan from Arabic *mawsim*, "a season, a time of assembly", which reached Punjabi through Persian. Its Arabic root is *w-s-m* (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-ANCHOR-MAUSAM] -->

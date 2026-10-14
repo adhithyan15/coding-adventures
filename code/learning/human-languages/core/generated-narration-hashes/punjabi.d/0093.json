@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 93,
-  "sourceHash": "fnv1a64:c6fd59c006246efe",
+  "sourceHash": "fnv1a64:1e4b823455abf4d2",
   "lessonIds": [
     "PA-C93-kurta",
     "PA-C93-jurab",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch93.txt",
   "json": "punjabi/narration/ch93.json",
-  "textHash": "fnv1a64:94c3cc3602d1c963",
-  "jsonHash": "fnv1a64:e17712e872a53597",
+  "textHash": "fnv1a64:a4d6d89ee0443ecf",
+  "jsonHash": "fnv1a64:97e4383a9c240eda",
   "findings": []
 }

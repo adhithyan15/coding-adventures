@@ -14,7 +14,8 @@ romanization: "maī"
 concept_tag: PA-TIME102-MAI
 prerequisites: [PA-C101-marc, PA-C101-aprail]
 sounds: []
-roots: []
+roots: [english-may]
+etymology_hook: "maī ← English May"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C101-aprail]
 <!-- hl-knowledge: introduces=[PA-LEX-C102-TIME102-01]; assesses=[] -->
 
 **ਮਈ** — *maī* — "May".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਈ** (*maī*) is a loan from English *May*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

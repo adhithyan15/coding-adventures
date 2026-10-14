@@ -14,7 +14,8 @@ romanization: "behā"
 concept_tag: PA-QUAL146-BEHA
 prerequisites: [PA-C145-piasa, PA-C145-taza]
 sounds: []
-roots: []
+roots: [sanskrit-vasita]
+etymology_hook: "behā ← Sanskrit vāsita 'infused, scented', a tadbhava (CDIAL 11604)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C145-taza]
 <!-- hl-knowledge: introduces=[PA-LEX-C146-QUAL146-01]; assesses=[] -->
 
 **ਬੇਹਾ** — *behā* — "stale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬੇਹਾ** (*behā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vāsita*, "infused, scented" (CDIAL 11604). CDIAL lists Punjabi *behā*, "stale".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

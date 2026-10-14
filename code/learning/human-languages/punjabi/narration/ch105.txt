@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for Bhadon, then the Punjabi for Assu.
 You'll want to know: ਕੱਤਕ.
 ਕੱਤਕ — kattak — "Kattak, a Punjabi month".
 
+The word, taken apart.
+ਕੱਤਕ (kattak) goes back to Sanskrit kārttika, "the month October-November". CDIAL gives no Punjabi form, but lists Lahnda kattẽ under it (CDIAL 3070).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for Assu, then the Punjabi for Kattak.
 
 You'll want to know: ਮੱਘਰ.
 ਮੱਘਰ — magghar — "Magghar, a Punjabi month".
+
+The word, taken apart.
+ਮੱਘਰ (magghar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mārgaśiras, "the month November-December" (CDIAL 10076).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for Kattak, then the Punjabi for Magghar.
 You'll want to know: ਪੋਹ.
 ਪੋਹ — poh — "Poh, a Punjabi month".
 
+The word, taken apart.
+ਪੋਹ (poh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pauṣa, "the month December-January" (CDIAL 8424).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for Magghar, then the Punjabi for Poh.
 You'll want to know: ਮਾਘ.
 ਮਾਘ — māgh — "Magh, a Punjabi month".
 
+The word, taken apart.
+ਮਾਘ (māgh) is a semi-tatsama: Sanskrit māgha, "the month January-February", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9993). CDIAL lists the inherited Punjabi form as māh.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for Poh, then the Punjabi for Magh.
 
 You'll want to know: ਫੱਗਣ.
 ਫੱਗਣ — phaggaṇ — "Phaggan, a Punjabi month".
+
+The word, taken apart.
+ਫੱਗਣ (phaggaṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from phalguna, "reddish; the month February-March" (CDIAL 9065).
 
 What you've built.
 One more word for this chapter.

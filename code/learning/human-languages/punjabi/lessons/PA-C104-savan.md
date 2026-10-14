@@ -14,7 +14,8 @@ romanization: "sāvaṇ"
 concept_tag: PA-TIME104-SAVAN
 prerequisites: [PA-C104-jeth, PA-C104-har]
 sounds: []
-roots: []
+roots: [sanskrit-shravana]
+etymology_hook: "sāvaṇ ← Sanskrit śrāvaṇa 'an asterism; the month July-August', a tadbhava (CDIAL 12699)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C104-har]
 <!-- hl-knowledge: introduces=[PA-LEX-C104-TIME104-03]; assesses=[] -->
 
 **ਸਾਵਣ** — *sāvaṇ* — "Savan, the monsoon month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਾਵਣ** (*sāvaṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śrāvaṇa*, "an asterism; the month July-August" (CDIAL 12699).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "calāuṇā"
 concept_tag: PA-VERB-CALAUNA
 prerequisites: [PA-C150-khiccna, PA-C150-jagna]
 sounds: []
-roots: []
+roots: [sanskrit-calati]
+etymology_hook: "calāuṇā: the causing form of calṇā 'to go', from Sanskrit calati 'goes away; shakes' (CDIAL 4715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C150-jagna]
 <!-- hl-knowledge: introduces=[PA-LEX-C150-ACT150-05]; assesses=[] -->
 
 **ਚਲਾਉਣਾ** — *calāuṇā* — "to drive, to run (a machine)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚਲਾਉਣਾ** (*calāuṇā*) is the causing form of *calṇā*, "to move, to go": to drive is "to make go". CDIAL lists the verb under Sanskrit *calati*, "goes away; shakes, trembles" (CDIAL 4715).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

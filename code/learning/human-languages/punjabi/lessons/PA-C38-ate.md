@@ -11,8 +11,8 @@ gloss: and — the word that lets two things be named at once
 concept_tag: PA-JOIN-ATE
 prerequisites: [PA-C37-nahin-checkpoint, PA-C10-dudh]
 sounds: [laava-e]
-roots: []
-etymology_hook: ਅਤੇ has a shorter twin, ਤੇ, which is what Punjabi actually says most of the time — and which is why a search for the word kept returning the script drill.
+roots: [sanskrit-tathapi]
+etymology_hook: "ate: CDIAL lists its short twin te 'and' under Sanskrit tathāpi 'even so, nevertheless' (CDIAL 5647)"
 duration:
   max_seconds: 240
 requires:
@@ -57,6 +57,8 @@ and the two are the same word — **ਅਤੇ** is the fuller, more written form
 matters here for an odd reason: the short **ਤੇ** is also a syllable this book
 drills in its script lessons, so a search of the corpus for *and* kept finding
 the drill and never the conjunction. The word looked present and was absent.
+
+CDIAL lists the short *te*, "and", under Sanskrit *tathāpi*, "even so, nevertheless" (CDIAL 5647); it has no entry for the fuller *ate*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-JOIN-ATE-01, PA-LEX-DUDH] -->

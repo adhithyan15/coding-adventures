@@ -15,6 +15,7 @@ concept_tag: PA-DEF106-AJIHA
 prerequisites: [PA-C106-kade, PA-C106-harek]
 sounds: []
 roots: []
+etymology_hook: "ajihā 'such': not settled; CDIAL lists the close Punjabi ihā, ehā 'such' under Sanskrit īdṛśa 'such' (1611)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C106-harek]
 <!-- hl-knowledge: introduces=[PA-LEX-C106-DEF106-04]; assesses=[] -->
 
 **ਅਜਿਹਾ** — *ajihā* — "such".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਅਜਿਹਾ** (*ajihā*) comes from is not settled. CDIAL has no entry for it, though it lists the close Punjabi *ihā* and *ehā*, "such, like this", under Sanskrit *īdṛśa*, "such, like this" (CDIAL 1611).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
