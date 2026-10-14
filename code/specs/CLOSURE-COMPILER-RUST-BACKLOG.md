@@ -41,9 +41,19 @@ positive/descriptor-negative +realIEEE84 and strict3 remain accepted with
 immutable receipts/security reports. Historical da unfilteredLANG463PASS9FAIL
 and current5ba build failure are preserved, never latest-source acceptance.
 General-hop varied-support32/32 resource failures remain OPEN; no capacity,
-safety or ownership tests weakened. Pending Japanese main32d producer delta
-2094paths/zeroowned overlap/complete17470Rust+instruction objects exact99f58
-must be reconciled before publication; no producer-content acceptance inferred.
+safety or ownership tests weakened. Actual mainf211 importb83 has2097pure
+zero-overlap paths, every retainedowned object exact, complete17530Rust/program/
+instruction objects exact before/after and registry376 exactbaseline. Actual
+parent526+f211 verified. Fresh imported-source doc checker460files was built
+after archiving old388 reusedruntime; npmoffline/build/docCLI/lessons/diff all0.
+The two npm PATH failures remain failed; boundedchild188 PATH fixes inherited
+11821-character cmd environment without touching host/Miri environment.
+No curriculum execution acceptance inferred. Native source712, docs73 and
+integration4f independent source/carrier/terminal reviews PASS; final integration
+reportSHA 1f47734f0ff79c89367f95c348faa31afc8b2705f2d6713d601276d0be2404a1. All native/doc runs terminal.
+Next bounded implementation: repair demonstrated varied-support general-hop
+work debt, preserving rounded predicate/output/collector/limits and full cost
+accounting. Full arbitrary-floating/general resource acceptance remains open.
 
 SolePR17288 remains prior published82209953a0909dfaa66c8065ee6f163d7478c2d1/conflicting/failedCI/autoOFF.
 No new push/merge/cleanup; re-audit live main/openPR/backlog/epic each resume.
