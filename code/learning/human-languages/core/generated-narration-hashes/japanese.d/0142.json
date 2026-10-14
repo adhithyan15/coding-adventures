@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 142,
-  "sourceHash": "fnv1a64:dcfe77c9f392c985",
+  "sourceHash": "fnv1a64:530894434169f7af",
   "lessonIds": [
     "JA-C142-chuui",
     "JA-C142-kinen",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "japanese/narration/ch142.txt",
   "json": "japanese/narration/ch142.json",
-  "textHash": "fnv1a64:58c3714c98cdfa08",
-  "jsonHash": "fnv1a64:1acdfc28cb3f2cd3",
+  "textHash": "fnv1a64:0f41ae8c2dcdbed0",
+  "jsonHash": "fnv1a64:de329189216910b4",
   "findings": []
 }

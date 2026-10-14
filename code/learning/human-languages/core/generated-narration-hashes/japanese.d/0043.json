@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 43,
-  "sourceHash": "fnv1a64:eb256a21b590b02c",
+  "sourceHash": "fnv1a64:7b2d637562fd2a3e",
   "lessonIds": [
     "JA-C43-suna",
     "JA-C43-tanbo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch43.txt",
   "json": "japanese/narration/ch43.json",
-  "textHash": "fnv1a64:144ae3cc7f247884",
-  "jsonHash": "fnv1a64:ce1bb77715423701",
+  "textHash": "fnv1a64:933abe4e2e17bdd2",
+  "jsonHash": "fnv1a64:7a1b14f9e65e1fb7",
   "findings": []
 }

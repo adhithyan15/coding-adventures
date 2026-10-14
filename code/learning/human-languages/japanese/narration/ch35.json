@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Sugar, Udon noodles, Sushi, Breakfast, Sweets",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2329efe5525406b1",
+  "sourceHash": "fnv1a64:eacbb29e03fa2182",
   "lessons": [
     {
       "id": "JA-C35-satou",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da62c632919e9c43",
+      "sourceHash": "fnv1a64:2d1dc765b2b1cbb7",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "さとう (satou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sa, \"sand\" (Middle Chinese srae) and tō, \"sugar\" (dang) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "さとう (satou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sa, \"sand\" (Middle Chinese srae) and tō, \"sugar\" (dang) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd6c27521c363a46",
+      "sourceHash": "fnv1a64:ba366427766d6b96",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "あさごはん (asagohan) mixes the two layers: native asa, \"morning\", read as a kun'yomi, and gohan, \"rice; a meal\", Sino-Japanese go, \"honourable\", and han, \"cooked rice\" (Middle Chinese bjonX), borrowed from Chinese (JMdict, KANJIDIC2)."
+              "text": "あさごはん (asagohan) mixes the two layers: native asa, \"morning\", read as a kun'yomi, and gohan, \"rice; a meal\", Sino-Japanese go, \"honourable\", and han, \"cooked rice\" (Middle Chinese bjonH), borrowed from Chinese (JMdict, KANJIDIC2)."
             }
           ]
         },

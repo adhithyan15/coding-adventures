@@ -50,7 +50,7 @@ morae.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**口** (*kuchi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). The kanji **口** you have written is the same character; its borrowed reading, *kō*, comes from Chinese ({MC:口}).
+**口** (*kuchi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). The kanji **口** you have written is the same character; its borrowed reading, *kō*, comes from Chinese (Middle Chinese *khuwX*).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KUCHI, JA-SCRIPT-KU-01, JA-SCRIPT-CHI-01, JA-SCRIPT-KANJI-MOUTH-COMPONENT-01] -->

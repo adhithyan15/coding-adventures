@@ -47,7 +47,7 @@ reviews_of: [JA-C94-ai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**かのう** (*kanou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ka*, "may, can" (Middle Chinese *khaX*) and *nō*, "to be able" (*nong*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**かのう** (*kanou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ka*, "may, can" (Middle Chinese *khaX*) and *nō*, "to be able" (*nong*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

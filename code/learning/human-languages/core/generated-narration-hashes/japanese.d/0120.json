@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 120,
-  "sourceHash": "fnv1a64:15fe8741826871c1",
+  "sourceHash": "fnv1a64:f18c93b75b1db3b7",
   "lessonIds": [
     "JA-C120-katai",
     "JA-C120-tadashii",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "japanese/narration/ch120.txt",
   "json": "japanese/narration/ch120.json",
-  "textHash": "fnv1a64:f31f62676c4aa16e",
-  "jsonHash": "fnv1a64:8782ff3e9fb0c5d2",
+  "textHash": "fnv1a64:60df1213f983479f",
+  "jsonHash": "fnv1a64:126af4160ca5ab93",
   "findings": []
 }

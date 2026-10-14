@@ -4,7 +4,7 @@
   "chapter": 95,
   "title": "Possible, Good at, Poor at, Belongings, Rich person",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a4003bb120da894a",
+  "sourceHash": "fnv1a64:6a0d228705db4442",
   "lessons": [
     {
       "id": "JA-C95-kanou",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfc36e01f16ad243",
+      "sourceHash": "fnv1a64:100419d9df08c7e3",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "かのう (kanou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ka, \"may, can\" (Middle Chinese khaX) and nō, \"to be able\" (nong) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "かのう (kanou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ka, \"may, can\" (Middle Chinese khaX) and nō, \"to be able\" (nong) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9950780389548fb9",
+      "sourceHash": "fnv1a64:8ed465e6e1526d29",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "とくい (tokui) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are toku, \"obtain, gain\" (Middle Chinese tok) and i, \"thought, mind\" ('iH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "とくい (tokui) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are toku, \"obtain, gain\" (Middle Chinese tok) and i, \"thought, mind\" ('iH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

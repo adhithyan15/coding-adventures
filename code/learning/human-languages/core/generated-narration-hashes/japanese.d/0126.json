@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 126,
-  "sourceHash": "fnv1a64:b3982e7f03f4c6e6",
+  "sourceHash": "fnv1a64:ca156ba9784556b9",
   "lessonIds": [
     "JA-C126-shiawase",
     "JA-C126-nemutai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch126.txt",
   "json": "japanese/narration/ch126.json",
-  "textHash": "fnv1a64:5e021385da6e5b8f",
-  "jsonHash": "fnv1a64:d281dd00d2f82cd4",
+  "textHash": "fnv1a64:5e28ad9539efcc6f",
+  "jsonHash": "fnv1a64:980345726c5fcbcc",
   "findings": []
 }

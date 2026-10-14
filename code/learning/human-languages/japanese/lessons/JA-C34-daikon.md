@@ -47,7 +47,7 @@ reviews_of: [JA-C34-suika]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**だいこん** (*daikon*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *dai*, "big" (Middle Chinese *dajH*) and *kon*, "root" (*kon*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**だいこん** (*daikon*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *dai*, "big" (Middle Chinese *dajH*) and *kon*, "root" (*kon*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [JA-C80-shingou]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ほうがく** (*hougaku*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *hō*, "region, direction" (Middle Chinese *pjang*) and *kaku*, "horn, angle" (*kaewk*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ほうがく** (*hougaku*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *hō*, "region, direction" (Middle Chinese *pjang*) and *kaku*, "horn, angle" (*kaewk*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

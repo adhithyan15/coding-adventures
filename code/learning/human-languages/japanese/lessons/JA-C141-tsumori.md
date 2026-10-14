@@ -15,7 +15,7 @@ concept_tag: JA-FUT141-TSUMORI
 prerequisites: [JA-C141-rainen, JA-C140-sakki, JA-C132-sore]
 sounds: []
 roots: [japanese-tsumori]
-etymology_hook: "tsumori: native Japanese, inherited, not borrowed; usually kana, kanji 積もり as kun'yomi"
+etymology_hook: "tsumori: native, the noun from tsumoru 'to pile up, to estimate'; usually written in kana"
 duration:
   max_seconds: 200
 requires:
@@ -59,7 +59,7 @@ Here the dictionary form matters: *iku*, not *ikimasu*, comes before
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**つもり** (*tsumori*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2). JMdict writes it with the kanji of *tsumoru*, "to pile up, to estimate".
+**つもり** (*tsumori*) is native: the noun made from *tsumoru*, "to pile up, to estimate", by its stem, and JMdict writes both with the same kanji. It is inherited rather than borrowed, and usually written in kana (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C141-TSUMORI, JA-LEX-C141-RAINEN] -->

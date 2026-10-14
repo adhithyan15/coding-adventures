@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 44,
-  "sourceHash": "fnv1a64:c94e3be8235f9146",
+  "sourceHash": "fnv1a64:175169726db10497",
   "lessonIds": [
     "JA-C44-shima",
     "JA-C44-nami",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch44.txt",
   "json": "japanese/narration/ch44.json",
-  "textHash": "fnv1a64:7a71661a7096cd94",
-  "jsonHash": "fnv1a64:e4a7e140c37f1abb",
+  "textHash": "fnv1a64:45b32790761a65db",
+  "jsonHash": "fnv1a64:b4edc430daeeae83",
   "findings": []
 }

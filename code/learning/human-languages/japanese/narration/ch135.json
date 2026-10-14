@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "Hospital and Bank: Bi, Gu, Ge and Gi",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4166c7de2b069b4f",
+  "sourceHash": "fnv1a64:912abf9ec6598f7c",
   "lessons": [
     {
       "id": "JA-C135-byouin",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4db6791237d9ded5",
+      "sourceHash": "fnv1a64:278ab5293ce59085",
       "notice": null,
       "blocks": [
         {
@@ -92,7 +92,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "びょういん (byōin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are byō, \"illness\" (Middle Chinese bjaengH) and in, \"courtyard; institution\" (hjwenH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "びょういん (byōin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are byō, \"illness\" (Middle Chinese bjaengH) and in, \"courtyard; institution\" (hjwenH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -1350,7 +1350,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:215f80e5e3cdbee6",
+      "sourceHash": "fnv1a64:7d557a8ff119b542",
       "notice": null,
       "blocks": [
         {
@@ -1428,7 +1428,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "げんき (genki) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gen, \"first, origin\" (Middle Chinese ngjwon) and ki, \"air, spirit\" (khj+jH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "げんき (genki) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gen, \"first, origin\" (Middle Chinese ngjwon) and ki, \"air, spirit\" (khj+jH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -1523,7 +1523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b1abaca51210023",
+      "sourceHash": "fnv1a64:bc11399bd33d8e64",
       "notice": null,
       "blocks": [
         {
@@ -1601,7 +1601,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ぎんこう (ginkō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gin, \"silver\" (Middle Chinese ngin) and kō, \"go; a row, a line\" (hang) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "ぎんこう (ginkō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gin, \"silver\" (Middle Chinese ngin) and kō, in its sense \"a row, a line; a trading firm\" (hang) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

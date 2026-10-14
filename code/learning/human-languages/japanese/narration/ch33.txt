@@ -13,7 +13,7 @@ You'll want to know: りんご.
 りんご — ringo — "an apple".
 
 The word, taken apart.
-りんご (ringo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rin, "forest" (Middle Chinese lim) and go, "a small red apple" (gim) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict marks it as usually written in kana.
+りんご (ringo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rin, "forest" (Middle Chinese lim) and go, "a small red apple" (gim) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict marks it as usually written in kana.
 
 What you've built.
 One more word for this chapter.

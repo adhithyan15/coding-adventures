@@ -11,7 +11,7 @@ gloss: four — the first place in the count where a native Japanese word is sta
 concept_tag: NUMBER-ONE-TO-FIVE
 prerequisites: [JA-C14-san, JA-W08-yo, JA-W01-n, JA-W10-shi, JA-C13-chichi, JA-W08-ra]
 sounds: [mora, moraic-n]
-roots: []
+roots: [japanese-yo-four]
 etymology_hook: "yon: native Japanese, the kun'yomi of 四; shi, its on'yomi, was borrowed from Middle Chinese sijH"
 duration:
   max_seconds: 190

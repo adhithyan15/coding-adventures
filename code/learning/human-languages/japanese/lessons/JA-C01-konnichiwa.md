@@ -69,7 +69,7 @@ you have already learned.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**こんにちは** (*konnichiwa*) is a sentence cut short. *Konnichi*, "today, this day", is Sino-Japanese: *kon*, "now" (Middle Chinese *kim*), and *nichi*, "day" (Middle Chinese *nyit*), on'yomi borrowed from Chinese; the native particle *wa*, "as for", stayed on the end (JMdict; Unihan, Baxter–Sagart).
+**こんにちは** (*konnichiwa*) is a sentence cut short. *Konnichi*, "today", is Sino-Japanese: *kon*, "now" (Middle Chinese *kim*), and *nichi*, "day" (*nyit*), on'yomi borrowed from Chinese; the native particle *wa*, "as for", stayed on the end (JMdict; Unihan; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA, JA-PARTICLE-WA-SPELLING, JA-SCRIPT-KONNICHIWA-READ-01, JA-SCRIPT-KO-01, JA-SCRIPT-N-01, JA-SCRIPT-NI-01, JA-SCRIPT-CHI-01, JA-SCRIPT-WA-01] -->

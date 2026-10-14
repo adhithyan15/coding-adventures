@@ -13,7 +13,7 @@ You'll want to know: さとう.
 さとう — satou — "sugar".
 
 The word, taken apart.
-さとう (satou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sa, "sand" (Middle Chinese srae) and tō, "sugar" (dang) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+さとう (satou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sa, "sand" (Middle Chinese srae) and tō, "sugar" (dang) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -115,7 +115,7 @@ You'll want to know: あさごはん.
 あさごはん — asagohan — "breakfast".
 
 The word, taken apart.
-あさごはん (asagohan) mixes the two layers: native asa, "morning", read as a kun'yomi, and gohan, "rice; a meal", Sino-Japanese go, "honourable", and han, "cooked rice" (Middle Chinese bjonX), borrowed from Chinese (JMdict, KANJIDIC2).
+あさごはん (asagohan) mixes the two layers: native asa, "morning", read as a kun'yomi, and gohan, "rice; a meal", Sino-Japanese go, "honourable", and han, "cooked rice" (Middle Chinese bjonH), borrowed from Chinese (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

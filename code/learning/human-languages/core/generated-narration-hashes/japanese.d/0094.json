@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 94,
-  "sourceHash": "fnv1a64:15df0e2d9cc59a43",
+  "sourceHash": "fnv1a64:d325c8a93db4f6f1",
   "lessonIds": [
     "JA-C94-konomu",
     "JA-C94-konomi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch94.txt",
   "json": "japanese/narration/ch94.json",
-  "textHash": "fnv1a64:ab08c78babb0332d",
-  "jsonHash": "fnv1a64:e5cae77bfec23355",
+  "textHash": "fnv1a64:13a27a66b4c80339",
+  "jsonHash": "fnv1a64:55dbaec6455e571e",
   "findings": []
 }

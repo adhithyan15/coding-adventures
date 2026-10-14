@@ -4,7 +4,7 @@
   "chapter": 131,
   "title": "Tea, Please: Small Ya, Small Yo and Wo",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4d9ad463504c8a28",
+  "sourceHash": "fnv1a64:93c29f1934086a7b",
   "lessons": [
     {
       "id": "JA-C131-ocha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8fe230461fd04e1",
+      "sourceHash": "fnv1a64:01084c9c283ff636",
       "notice": null,
       "blocks": [
         {
@@ -369,7 +369,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1a20f627a956578",
+      "sourceHash": "fnv1a64:aad8ef2eb1faa224",
       "notice": null,
       "blocks": [
         {
@@ -447,7 +447,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "いしゃ (isha) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are i, \"heal, medical\" (Middle Chinese 'i) and sha, \"person, he who\" (tsyaeX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "いしゃ (isha) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are i, \"heal, medical\" (Middle Chinese 'i) and sha, \"person, he who\" (tsyaeX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -909,7 +909,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d36df0c9ed74f5f2",
+      "sourceHash": "fnv1a64:533022c30682794a",
       "notice": null,
       "blocks": [
         {
@@ -978,7 +978,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "としょかん (toshokan) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are to, \"chart, map\" (Middle Chinese du), sho, \"book\" (syo) and kan, \"public building\" (kwanH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "としょかん (toshokan) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are to, \"chart, map\" (Middle Chinese du), sho, \"book\" (syo) and kan, \"public building\" (kwanH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

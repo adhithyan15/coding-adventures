@@ -4,7 +4,7 @@
   "chapter": 138,
   "title": "My Day: Get Up, Work, Walk, Go Home, Sleep",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b6585e4506889906",
+  "sourceHash": "fnv1a64:c153b1155c33e082",
   "lessons": [
     {
       "id": "JA-C138-okimasu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:251c939e054d5748",
+      "sourceHash": "fnv1a64:0ef9cd4eb7068416",
       "notice": null,
       "blocks": [
         {
@@ -92,7 +92,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "おきます (okimasu) is native okiru, \"to get up\", with the polite ending -masu. The verb is inherited rather than borrowed; -masu is usually traced to an older humble verb, mairasu, \"to offer\" (JMdict)."
+              "text": "おきます (okimasu) is native okiru, \"to get up\", with the polite ending -masu. The verb is inherited rather than borrowed; -masu is usually traced to an older humble verb, mairasu, \"to offer\", though that account is not settled."
             }
           ]
         },

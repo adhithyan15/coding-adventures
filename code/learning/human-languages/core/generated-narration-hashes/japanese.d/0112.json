@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 112,
-  "sourceHash": "fnv1a64:9660083bf0fe58f0",
+  "sourceHash": "fnv1a64:308f39d973576239",
   "lessonIds": [
     "JA-C112-nouka",
     "JA-C112-daiku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch112.txt",
   "json": "japanese/narration/ch112.json",
-  "textHash": "fnv1a64:0958d646596a5417",
-  "jsonHash": "fnv1a64:bd7f70d80c6091cf",
+  "textHash": "fnv1a64:c77dc753f712ec07",
+  "jsonHash": "fnv1a64:3adaaef5cf82c484",
   "findings": []
 }

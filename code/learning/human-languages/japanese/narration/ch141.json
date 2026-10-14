@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "Next Week, Next Year: Plans and the Future",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3d34f4cf7b46c7bb",
+  "sourceHash": "fnv1a64:2b05f66afca47079",
   "lessons": [
     {
       "id": "JA-C141-raishuu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd601b2dafbc58fa",
+      "sourceHash": "fnv1a64:3ba26eaabc5f8cba",
       "notice": null,
       "blocks": [
         {
@@ -101,7 +101,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "らいしゅう (raishū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, \"come, coming\" (Middle Chinese loj) and shū, \"week\" (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "らいしゅう (raishū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, \"come, coming\" (Middle Chinese loj) and shū, \"week\" (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3300ef3f79fc3e94",
+      "sourceHash": "fnv1a64:f29f68c90177e534",
       "notice": null,
       "blocks": [
         {
@@ -276,7 +276,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "らいげつ (raigetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, \"come, coming\" (Middle Chinese loj) and getsu, \"moon, month\" (ngjwot) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "らいげつ (raigetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, \"come, coming\" (Middle Chinese loj) and getsu, \"moon, month\" (ngjwot) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -371,7 +371,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ff801136b188b93",
+      "sourceHash": "fnv1a64:8670bdc5e2c6cbff",
       "notice": null,
       "blocks": [
         {
@@ -449,7 +449,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "らいねん (rainen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, \"come, coming\" (Middle Chinese loj) and nen, \"year\" (nen) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "らいねん (rainen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, \"come, coming\" (Middle Chinese loj) and nen, \"year\" (nen) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -544,7 +544,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0e7d5e409919f8a",
+      "sourceHash": "fnv1a64:52c6dac58b2ccf10",
       "notice": null,
       "blocks": [
         {
@@ -617,7 +617,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "つもり (tsumori) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2). JMdict writes it with the kanji of tsumoru, \"to pile up, to estimate\"."
+              "text": "つもり (tsumori) is native: the noun made from tsumoru, \"to pile up, to estimate\", by its stem, and JMdict writes both with the same kanji. It is inherited rather than borrowed, and usually written in kana (JMdict, KANJIDIC2)."
             }
           ]
         },
@@ -712,7 +712,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11347bfc0eb7d703",
+      "sourceHash": "fnv1a64:dd118f9517114519",
       "notice": null,
       "blocks": [
         {
@@ -794,7 +794,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "でしょう (deshō) is desu, the polite \"is\", in the form for what is likely (JMdict). Where desu comes from is disputed; it is usually traced to a shortening of de arimasu or de gozarimasu."
+              "text": "でしょう (deshō) is desu, the polite \"is\", in the form for what is likely (JMdict). Where desu comes from is disputed: shortenings of de arimasu, de gozaimasu and de sōrō are all proposed."
             }
           ]
         },

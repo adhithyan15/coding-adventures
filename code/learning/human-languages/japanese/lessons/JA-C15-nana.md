@@ -55,7 +55,7 @@ All three signs are yours: **な**, **し**, **ち**.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**なな** (*nana*) is native: the kun'yomi of the character for "seven", a word inherited rather than borrowed. The borrowed reading is *shichi*, from Chinese (Middle Chinese *tshit*; KANJIDIC2, Baxter–Sagart).
+**なな** (*nana*) is native: the kun'yomi of the character for "seven", a word inherited, not borrowed. The borrowed reading is *shichi*, from Chinese (Middle Chinese *tshit* in Baxter's transcription; KANJIDIC2).
 
 ## What you've built — the same seam, a second time
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NANA, JA-GRAMMAR-KUN-IN-THE-COUNT, JA-LEX-YON] -->

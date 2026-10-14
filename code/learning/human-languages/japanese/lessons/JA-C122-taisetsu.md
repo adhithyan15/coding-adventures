@@ -15,7 +15,7 @@ concept_tag: JA-QUAL122-TAISETSU
 prerequisites: [JA-C121-asai, JA-C122-fukai]
 sounds: []
 roots: [middle-chinese-dajh, middle-chinese-tshet]
-etymology_hook: "taisetsu: Sino-Japanese 大 'big' + 切 'cut', on'yomi borrowed from Chinese"
+etymology_hook: "taisetsu: Sino-Japanese 大 'big' + 切 'cut; close, pressing', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [JA-C122-fukai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**たいせつ** (*taisetsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tai*, "big, great" (Middle Chinese *dajH*) and *setsu*, "cut, sharp" (*tshet*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**たいせつ** (*taisetsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tai*, "big, great" (Middle Chinese *dajH*) and *setsu*, "cut", and also "close, pressing" (*tshet*) (Unihan, KANJIDIC2, Guangyun; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

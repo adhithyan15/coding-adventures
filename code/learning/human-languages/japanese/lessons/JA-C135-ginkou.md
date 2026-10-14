@@ -15,7 +15,7 @@ concept_tag: JA-ANCHOR-GINKOU
 prerequisites: [JA-C135-genki, JA-W01-n, JA-W01-ko, JA-W03-u, JA-W135-gu, JA-W134-de, JA-C125-osanai]
 sounds: [mora]
 roots: [middle-chinese-ngin, middle-chinese-hang]
-etymology_hook: "ginkō: Sino-Japanese 銀 'silver' + 行 'go', on'yomi borrowed from Chinese"
+etymology_hook: "ginkō: Sino-Japanese 銀 'silver' + 行 'row; firm', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -56,7 +56,7 @@ becomes *gi*. The next lesson writes it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ぎんこう** (*ginkō*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *gin*, "silver" (Middle Chinese *ngin*) and *kō*, "go; a row, a line" (*hang*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ぎんこう** (*ginkō*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *gin*, "silver" (Middle Chinese *ngin*) and *kō*, in its sense "a row, a line; a trading firm" (*hang*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-GINKOU, JA-SCRIPT-N-01, JA-SCRIPT-KO-01, JA-SCRIPT-U-01] -->

@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Tall, Low, Cheap, Fast, Easy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:29a3c7b00b26832e",
+  "sourceHash": "fnv1a64:2690d021afa4e079",
   "lessons": [
     {
       "id": "JA-C49-takai",
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cea84e1329c1fec",
+      "sourceHash": "fnv1a64:dc82bc7caa91b64c",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "やさしい (yasashii) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2)."
+              "text": "やさしい (yasashii) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. JMdict writes it with one character for \"easy\", usually left in kana, and another for \"kind\"; both are kun'yomi attached later (JMdict, KANJIDIC2)."
             }
           ]
         },

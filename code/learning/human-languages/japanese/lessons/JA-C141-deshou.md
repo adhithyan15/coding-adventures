@@ -61,7 +61,7 @@ happen (**でしょう**).
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**でしょう** (*deshō*) is *desu*, the polite "is", in the form for what is likely (JMdict). Where *desu* comes from is disputed; it is usually traced to a shortening of *de arimasu* or *de gozarimasu*.
+**でしょう** (*deshō*) is *desu*, the polite "is", in the form for what is likely (JMdict). Where *desu* comes from is disputed: shortenings of *de arimasu*, *de gozaimasu* and *de sōrō* are all proposed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C141-DESHOU, JA-LEX-C141-RAISHUU, JA-LEX-C141-RAIGETSU, JA-LEX-C141-RAINEN, JA-LEX-C141-TSUMORI] -->

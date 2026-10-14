@@ -47,7 +47,7 @@ reviews_of: [JA-C32-sakana]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**にく** (*niku*) is Sino-Japanese (kango): the on'yomi of a character meaning "flesh, meat", a reading borrowed from Chinese (Middle Chinese *nyuwk*; Unihan, KANJIDIC2, Baxter–Sagart).
+**にく** (*niku*) is Sino-Japanese (kango): the on'yomi of a character meaning "flesh, meat", a reading borrowed from Chinese (Middle Chinese *nyuwk* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

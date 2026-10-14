@@ -54,7 +54,7 @@ Both signs are yours: **い + ち**.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**いち** (*ichi*) is Sino-Japanese: the on'yomi of the character for "one", a reading borrowed from Chinese (Middle Chinese *'jit*; Unihan, Baxter–Sagart).
+**いち** (*ichi*) is Sino-Japanese: the on'yomi of the character for "one", a reading borrowed from Chinese (Middle Chinese *'jit* in Baxter's transcription; Unihan).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ICHI, JA-LEX-ICHIDO, JA-SCRIPT-I-01, JA-SCRIPT-CHI-01] -->

@@ -4,7 +4,7 @@
   "chapter": 132,
   "title": "This and That: So, Re and Ru",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:71e63a191ecb2dca",
+  "sourceHash": "fnv1a64:27ddb2859c04adfb",
   "lessons": [
     {
       "id": "JA-C132-soko",
@@ -1055,7 +1055,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70a517055e19a23d",
+      "sourceHash": "fnv1a64:3ff61d9c0a364609",
       "notice": null,
       "blocks": [
         {
@@ -1124,7 +1124,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "くるま (kuruma) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). JMdict still lists \"wheel\" among its senses: the wheel came first, then the cart, then the car."
+              "text": "くるま (kuruma) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). JMdict still lists \"wheel\" among its senses, and the word named wheeled carts long before cars."
             }
           ]
         },

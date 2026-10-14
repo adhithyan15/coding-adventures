@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 130,
-  "sourceHash": "fnv1a64:9c31394c1b4b49d9",
+  "sourceHash": "fnv1a64:8baef8cee2a91bed",
   "lessonIds": [
     "JA-C130-masshiro",
     "JA-C130-makkuro",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "japanese/narration/ch130.txt",
   "json": "japanese/narration/ch130.json",
-  "textHash": "fnv1a64:b56af0cfe78da838",
-  "jsonHash": "fnv1a64:c6d1a3b63e3afb1d",
+  "textHash": "fnv1a64:0ce327400c99720c",
+  "jsonHash": "fnv1a64:cead7452f856d08a",
   "findings": []
 }

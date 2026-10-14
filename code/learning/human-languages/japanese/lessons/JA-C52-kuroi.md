@@ -15,7 +15,7 @@ concept_tag: JA-ADJ52-KUROI
 prerequisites: [JA-C51-akai, JA-C52-shiroi]
 sounds: []
 roots: [japanese-kuroi]
-etymology_hook: "kuroi: native Japanese, inherited, not borrowed; kanji 黒い attached later as kun'yomi"
+etymology_hook: "kuroi: native, the adjective from kuro 'black'; inherited, not borrowed; kanji 黒い as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [JA-C52-shiroi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**くろい** (*kuroi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+**くろい** (*kuroi*) is native: the adjective made from the colour word *kuro*, "black", with the ending *-i*; JMdict lists both. It is inherited rather than borrowed from Chinese, and the older origin of *kuro* is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

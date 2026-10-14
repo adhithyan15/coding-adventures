@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "Ladle, Water supply, Kettle, Tray, Can",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:15def37b61c5c547",
+  "sourceHash": "fnv1a64:ce895e3fabbf5b54",
   "lessons": [
     {
       "id": "JA-C103-otama",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63fb692c2e285739",
+      "sourceHash": "fnv1a64:7491a2c637403e91",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "すいどう (suidou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sui, \"water\" (Middle Chinese sywijX) and dō, \"way, path\" (dawX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "すいどう (suidou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sui, \"water\" (Middle Chinese sywijX) and dō, \"way, path\" (dawX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a29eb935ec8a2fc",
+      "sourceHash": "fnv1a64:88c0a2772660356c",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "やかん (yakan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yaku, \"medicine\" (Middle Chinese yak) and kan, \"jar\" (kwanH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). It was a pot for brewing medicine, and yaku shortened to ya; JMdict marks it as usually written in kana."
+              "text": "やかん (yakan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yaku, \"medicine\" (Middle Chinese yak) and kan, \"jar\" (kwanH, the reading of its fuller older form) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). It was a pot for brewing medicine, and yaku shortened to ya; JMdict marks it as usually written in kana."
             }
           ]
         },

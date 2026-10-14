@@ -47,7 +47,7 @@ reviews_of: [JA-C117-kamoshika]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**すいとう** (*suitou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sui*, "water" (Middle Chinese *sywijX*) and *tō*, "tube, pipe" (*duwng*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**すいとう** (*suitou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sui*, "water" (Middle Chinese *sywijX*) and *tō*, "tube, pipe" (*duwng*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

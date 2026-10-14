@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 73,
-  "sourceHash": "fnv1a64:f2bfdda0cc34452c",
+  "sourceHash": "fnv1a64:591ac4360b771649",
   "lessonIds": [
     "JA-C73-hinoiri",
     "JA-C73-konya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch73.txt",
   "json": "japanese/narration/ch73.json",
-  "textHash": "fnv1a64:b5b2a273b246fd42",
-  "jsonHash": "fnv1a64:d53c2095a4496970",
+  "textHash": "fnv1a64:81d1f278c8a93432",
+  "jsonHash": "fnv1a64:0c99cbf40862f933",
   "findings": []
 }

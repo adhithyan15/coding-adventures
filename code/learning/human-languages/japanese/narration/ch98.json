@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Why, Reason, For the sake of, Fault, Reason",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:717865279d4c2249",
+  "sourceHash": "fnv1a64:540c608b73f95019",
   "lessons": [
     {
       "id": "JA-C98-doushite",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d84b7f458052d3e",
+      "sourceHash": "fnv1a64:9ee4546141b54052",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "りゆう (riyuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ri, \"reason\" (Middle Chinese liX) and yū, \"cause\" (yuw) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "りゆう (riyuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ri, \"reason\" (Middle Chinese liX) and yū, \"cause\" (yuw) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

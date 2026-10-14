@@ -47,7 +47,7 @@ reviews_of: [JA-C40-kasa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**がっこう** (*gakkou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *gaku*, "learning" (Middle Chinese *haewk*) and *kō*, "school" (*haewH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**がっこう** (*gakkou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *gaku*, "learning" (Middle Chinese *haewk*) and *kō*, "school" (*haewH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

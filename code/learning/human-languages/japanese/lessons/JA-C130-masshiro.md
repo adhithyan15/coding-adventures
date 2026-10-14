@@ -47,7 +47,7 @@ reviews_of: [JA-C129-tanomoshii]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**まっしろ** (*masshiro*) is native: *ma*, "true, very", with *shiro*, "white", the consonant doubled where they meet (JMdict, KANJIDIC2). It is inherited rather than borrowed.
+**まっしろ** (*masshiro*) is native: *ma*, "true, very", with the colour word *shiro*, "white", the base of *shiroi*, the consonant doubled where they meet (JMdict, KANJIDIC2). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

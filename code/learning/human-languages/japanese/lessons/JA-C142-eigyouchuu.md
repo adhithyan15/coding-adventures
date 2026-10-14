@@ -62,7 +62,7 @@ The door says **えいぎょうちゅう**, so you can go in.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**えいぎょうちゅう** (*eigyōchū*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ei*, "manage" (Middle Chinese *yweng*), *gyō*, "business, trade" (*ngjaep*) and *chū*, "middle, during" (*trjuwng*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**えいぎょうちゅう** (*eigyōchū*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ei*, "manage" (Middle Chinese *yweng*), *gyō*, "business, trade" (*ngjaep*) and *chū*, "middle, during" (*trjuwng*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C142-EIGYOUCHUU, JA-LEX-C142-UKETSUKE] -->

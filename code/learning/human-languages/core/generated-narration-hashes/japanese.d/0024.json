@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 24,
-  "sourceHash": "fnv1a64:10d7efdf1160d73d",
+  "sourceHash": "fnv1a64:008a6118bc92f2f5",
   "lessonIds": [
     "JA-C24-itami",
     "JA-C24-ojiisan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch24.txt",
   "json": "japanese/narration/ch24.json",
-  "textHash": "fnv1a64:a78f956fa937db72",
-  "jsonHash": "fnv1a64:6e76a527cdf9ea6d",
+  "textHash": "fnv1a64:0c14c4f525207fb1",
+  "jsonHash": "fnv1a64:4bd0b69381b67c8f",
   "findings": []
 }

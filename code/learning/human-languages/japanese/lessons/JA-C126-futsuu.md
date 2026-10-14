@@ -47,7 +47,7 @@ reviews_of: [JA-C126-anshin]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ふつう** (*futsuu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *fu*, "universal, general" (Middle Chinese *phuX*) and *tsū*, "pass through; common" (*thuwng*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ふつう** (*futsuu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *fu*, "universal, general" (Middle Chinese *phuX*) and *tsū*, "pass through; common" (*thuwng*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

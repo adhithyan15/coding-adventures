@@ -47,7 +47,7 @@ reviews_of: [JA-C130-masshiro]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**まっくろ** (*makkuro*) is native: *ma*, "true, very", with *kuro*, "black", the consonant doubled where they meet (JMdict, KANJIDIC2). It is inherited rather than borrowed.
+**まっくろ** (*makkuro*) is native: *ma*, "true, very", with the colour word *kuro*, "black", the base of *kuroi*, the consonant doubled where they meet (JMdict, KANJIDIC2). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [JA-C76-ichinichi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**はんにち** (*hannichi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *han*, "half" (Middle Chinese *panH*) and *nichi*, "day" (*nyit*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**はんにち** (*hannichi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *han*, "half" (Middle Chinese *panH*) and *nichi*, "day" (*nyit*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

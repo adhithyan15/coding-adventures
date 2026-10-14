@@ -47,7 +47,7 @@ reviews_of: [JA-C77-yokka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**いつか** (*itsuka*) is two native phrases that sound alike. "The fifth" is *itsu*, "five", with *ka*, "day" (KANJIDIC2); "some day" is *itsu*, "when", with *ka*, "or so". Both are inherited rather than borrowed.
+**いつか** (*itsuka*) is two native phrases that sound alike. "The fifth" is *itsu*, "five", with *ka*, "day" (KANJIDIC2); "some day" is *itsu*, "when", with the question word *ka*: "some time or other". Both are inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

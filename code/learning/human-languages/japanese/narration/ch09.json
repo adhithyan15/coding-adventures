@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "One More Time, Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e6e5713fa5ff8531",
+  "sourceHash": "fnv1a64:dfd920f81d86179a",
   "lessons": [
     {
       "id": "JA-C09-sumimasen",
@@ -1234,7 +1234,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f26e0127620dfdf",
+      "sourceHash": "fnv1a64:39e69505fd361913",
       "notice": null,
       "blocks": [
         {
@@ -1302,7 +1302,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "いちど (ichido) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, \"one\" (Middle Chinese 'jit) and do, \"degree, a time\" (duH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "いちど (ichido) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, \"one\" (Middle Chinese 'jit) and do, \"degree, a time\" (duH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

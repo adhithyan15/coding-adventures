@@ -47,7 +47,7 @@ reviews_of: [JA-C73-maiasa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**まいしゅう** (*maishuu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *mai*, "every" (Middle Chinese *mwojX*) and *shū*, "week" (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**まいしゅう** (*maishuu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *mai*, "every" (Middle Chinese *mwojX*) and *shū*, "week" (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

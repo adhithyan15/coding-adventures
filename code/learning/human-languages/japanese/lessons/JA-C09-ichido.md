@@ -54,7 +54,7 @@ Now join it to the previous word:
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**いちど** (*ichido*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ichi*, "one" (Middle Chinese *'jit*) and *do*, "degree, a time" (*duH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**いちど** (*ichido*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ichi*, "one" (Middle Chinese *'jit*) and *do*, "degree, a time" (*duH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ICHIDO, JA-LEX-MOU] -->

@@ -47,7 +47,7 @@ reviews_of: [JA-C93-kouho]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**よてい** (*yotei*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *yo*, "beforehand" (Middle Chinese *yoH*) and *tei*, "decide, fix" (*dengH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**よてい** (*yotei*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *yo*, "beforehand" (Middle Chinese *yoH*) and *tei*, "decide, fix" (*dengH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

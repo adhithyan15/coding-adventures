@@ -57,7 +57,7 @@ now.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**げんき** (*genki*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *gen*, "first, origin" (Middle Chinese *ngjwon*) and *ki*, "air, spirit" (*khj+jH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**げんき** (*genki*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *gen*, "first, origin" (Middle Chinese *ngjwon*) and *ki*, "air, spirit" (*khj+jH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C135-GENKI, JA-SCRIPT-GE-01, JA-LEX-ANCHOR-GETSUYOUBI, JA-SCRIPT-N-01, JA-SCRIPT-KI-01] -->

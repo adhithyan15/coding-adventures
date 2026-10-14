@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "Evening, Tomorrow, Now, Every day, Year",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:d401ddbebf835502",
+  "sourceHash": "fnv1a64:0dbcd2c6f79ecc55",
   "lessons": [
     {
       "id": "JA-C54-yuugata",
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5a1c96bcdf506c4",
+      "sourceHash": "fnv1a64:097e01ce78b412f8",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "まいにち (mainichi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mai, \"every\" (Middle Chinese mwojX) and nichi, \"day\" (nyit) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "まいにち (mainichi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mai, \"every\" (Middle Chinese mwojX) and nichi, \"day\" (nyit) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

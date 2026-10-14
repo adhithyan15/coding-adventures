@@ -18,7 +18,7 @@ You'll want to know: いっぱい.
 Four beats: i–p–pa–i. い, the small っ that holds a beat, and the last い you already write. The third sign is は with the small circle at its upper right, and that circle makes a p: ha becomes pa. The next lesson writes it.
 
 The word, taken apart.
-いっぱい (ippai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, "one" (Middle Chinese 'jit) and hai, "cup" (pwoj) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). Ichi and hai join as ippai: one cupful.
+いっぱい (ippai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, "one" (Middle Chinese 'jit) and hai, "cup" (pwoj) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Ichi and hai join as ippai: one cupful.
 
 Guided Practice.
 [pause 1 second]
@@ -92,7 +92,7 @@ You'll want to know: しんぱい.
 The new sign is spent at once. し and ん, then ぱ and い: four beats, shi–n–pa–i. After ん the p comes out clearly, the lips closed first. You write every sign in it now.
 
 The word, taken apart.
-しんぱい (shinpai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, "heart, mind" (Middle Chinese sim) and hai, "distribute" (phwojH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+しんぱい (shinpai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, "heart, mind" (Middle Chinese sim) and hai, "distribute" (phwojH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 [pause 1 second]
@@ -127,7 +127,7 @@ You'll want to know: えんぴつ.
 Four beats: e–n–pi–tsu. え, ん and つ you already write. The third sign is ひ with the small circle, so hi becomes pi. The next lesson writes it.
 
 The word, taken apart.
-えんぴつ (enpitsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are en, "lead" (Middle Chinese ywen) and hitsu, "writing brush" (pit) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+えんぴつ (enpitsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are en, "lead" (Middle Chinese ywen) and hitsu, "writing brush" (pit) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 [pause 1 second]
@@ -199,7 +199,7 @@ You'll want to know: いっぴき.
 The new sign is spent at once. い, a small っ, ぴ and き: four beats, i–p–pi–ki. The small っ holds a beat before the p, as it does in いっぱい (ippai). You write every sign in it now.
 
 The word, taken apart.
-いっぴき (ippiki) mixes the two layers: ichi, "one", borrowed from Chinese (Middle Chinese 'jit), and hiki, a native counter for animals, read as a kun'yomi; they join as ippiki (JMdict, KANJIDIC2).
+いっぴき (ippiki) mixes the two layers: ichi, "one", borrowed from Chinese (Middle Chinese 'jit), and hiki, a counter for animals that KANJIDIC2 lists as a kun'yomi; they join as ippiki (JMdict, KANJIDIC2).
 
 Guided Practice.
 [pause 1 second]

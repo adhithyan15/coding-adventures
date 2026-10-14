@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "To take out, To drop, To fix, To move, Rice",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c72be795730b6876",
+  "sourceHash": "fnv1a64:18e5959ae2fb9c2c",
   "lessons": [
     {
       "id": "JA-C31-dasu",
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b801a107e21c8916",
+      "sourceHash": "fnv1a64:6dae7d1f4188ccd2",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ごはん (gohan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are go, \"honourable; a polite prefix\" (Middle Chinese ngjoH) and han, \"cooked rice\" (bjonX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). The polite go- is the on'yomi of the character whose native reading gives o-."
+              "text": "ごはん (gohan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are go, \"honourable; a polite prefix\" (Middle Chinese ngjoH) and han, \"cooked rice\" (bjonH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). The polite go- is the on'yomi of the character whose native reading gives o-."
             }
           ]
         },

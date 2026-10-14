@@ -47,7 +47,7 @@ reviews_of: [JA-C75-kotoshi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**こんしゅう** (*konshuu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kon*, "now, this" (Middle Chinese *kim*) and *shū*, "week" (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**こんしゅう** (*konshuu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kon*, "now, this" (Middle Chinese *kim*) and *shū*, "week" (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 122,
   "title": "Deep, Precious, Necessary, Simple, Complicated",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:06e043f5fd586938",
+  "sourceHash": "fnv1a64:b9da76190d1db060",
   "lessons": [
     {
       "id": "JA-C122-fukai",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:163d52116075fd05",
+      "sourceHash": "fnv1a64:bbc9bc257a2ee5c9",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "たいせつ (taisetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"big, great\" (Middle Chinese dajH) and setsu, \"cut, sharp\" (tshet) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "たいせつ (taisetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"big, great\" (Middle Chinese dajH) and setsu, \"cut\", and also \"close, pressing\" (tshet) (Unihan, KANJIDIC2, Guangyun; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a92b1a2756e2c4b",
+      "sourceHash": "fnv1a64:a4397dded64a45fb",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ひつよう (hitsuyou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hitsu, \"surely, must\" (Middle Chinese pjit) and yō, \"necessary\" ('jiewH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "ひつよう (hitsuyou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hitsu, \"surely, must\" (Middle Chinese pjit) and yō, \"necessary\" ('jiewH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0f04a89125e18c6",
+      "sourceHash": "fnv1a64:578a685848ffa3ee",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "かんたん (kantan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, \"simple, terse\" (Middle Chinese keanX) and tan, \"single\" (tan) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "かんたん (kantan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, \"simple, terse\" (Middle Chinese keanX) and tan, \"single\" (tan) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca62002a8a6c9821",
+      "sourceHash": "fnv1a64:65296bb4d8d2d49d",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ふくざつ (fukuzatsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fuku, \"double, repeat\" (Middle Chinese pjuwk) and zatsu, \"mixed\" (dzop) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "ふくざつ (fukuzatsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fuku, \"double, repeat\" (Middle Chinese pjuwk) and zatsu, \"mixed\" (dzop) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

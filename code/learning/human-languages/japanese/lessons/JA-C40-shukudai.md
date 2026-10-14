@@ -47,7 +47,7 @@ reviews_of: [JA-C40-gakkou]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**しゅくだい** (*shukudai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shuku*, "lodge; long held" (Middle Chinese *sjuwk*) and *dai*, "title, theme" (*dej*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). Read literally, it is a theme kept overnight.
+**しゅくだい** (*shukudai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shuku*, "lodge, stay overnight" (Middle Chinese *sjuwk*) and *dai*, "title, theme" (*dej*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Read literally, it is a theme kept overnight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

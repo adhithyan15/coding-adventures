@@ -47,7 +47,7 @@ You'll want to know: しまう.
 しまう — shimau — "to put away".
 
 The word, taken apart.
-しまう (shimau) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+しまう (shimau) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its common kanji spelling sets a character read for its sound, shi, before the one for mau, "to dance", and JMdict also gives spellings with one character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

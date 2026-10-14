@@ -47,7 +47,7 @@ You'll want to know: ぼう.
 ぼう — bou — "a stick, a pole".
 
 The word, taken apart.
-ぼう (bou) is Sino-Japanese (kango): the on'yomi of a character meaning "stick", a reading borrowed from Chinese (Middle Chinese baewngX; Unihan, KANJIDIC2, Baxter–Sagart).
+ぼう (bou) is Sino-Japanese (kango): the on'yomi of a character meaning "stick", a reading borrowed from Chinese (Middle Chinese baewngX in Baxter's transcription; Unihan, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -115,7 +115,7 @@ You'll want to know: はさみ.
 はさみ — hasami — "scissors".
 
 The word, taken apart.
-はさみ (hasami) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+はさみ (hasami) is a native Japanese word, inherited rather than borrowed from Chinese, usually taken as the noun of hasamu, "to hold between", a verb JMdict lists. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -149,7 +149,7 @@ You'll want to know: ざっし.
 ざっし — zasshi — "a magazine".
 
 The word, taken apart.
-ざっし (zasshi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are zatsu, "mixed" (Middle Chinese dzop) and shi, "record" (tsyiH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). Zatsu is shortened to zas before shi.
+ざっし (zasshi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are zatsu, "mixed" (Middle Chinese dzop) and shi, "record" (tsyiH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Zatsu is shortened to zas before shi.
 
 What you've built.
 One more word for this chapter.

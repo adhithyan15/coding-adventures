@@ -47,7 +47,7 @@ reviews_of: [JA-C98-yue]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**さいふ** (*saifu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sai*, "wealth" (Middle Chinese *dzoj*) and *fu*, "cloth" (*puH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**さいふ** (*saifu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sai*, "wealth" (Middle Chinese *dzoj*) and *fu*, "cloth" (*puH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

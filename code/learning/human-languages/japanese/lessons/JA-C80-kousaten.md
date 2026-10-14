@@ -47,7 +47,7 @@ reviews_of: [JA-C79-rouka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**こうさてん** (*kousaten*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kō*, "mix, cross" (Middle Chinese *kaew*), *sa*, "differ" (*tsrhae*) and *ten*, "dot, point" (*temX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict also gives an older spelling with a character for "fork" in place of the second.
+**こうさてん** (*kousaten*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kō*, "mix, cross" (Middle Chinese *kaew*), *sa*, "differ" (*tsrhae*) and *ten*, "dot, point" (*temX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict also gives an older spelling with a character for "fork" in place of the second.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

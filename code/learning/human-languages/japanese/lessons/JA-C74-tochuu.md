@@ -47,7 +47,7 @@ reviews_of: [JA-C74-owari]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**とちゅう** (*tochuu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *to*, "road, way" (Middle Chinese *du*) and *chū*, "middle" (*trjuwng*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**とちゅう** (*tochuu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *to*, "road, way" (Middle Chinese *du*) and *chū*, "middle" (*trjuwng*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 90,
-  "sourceHash": "fnv1a64:c31c13cab462505d",
+  "sourceHash": "fnv1a64:4e895ce588a711f6",
   "lessonIds": [
     "JA-C90-odoroku",
     "JA-C90-todoku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch90.txt",
   "json": "japanese/narration/ch90.json",
-  "textHash": "fnv1a64:387e01036e2847c1",
-  "jsonHash": "fnv1a64:e9ee34193ac9c175",
+  "textHash": "fnv1a64:6c10a083cfb152cc",
+  "jsonHash": "fnv1a64:7816bd658aad4553",
   "findings": []
 }

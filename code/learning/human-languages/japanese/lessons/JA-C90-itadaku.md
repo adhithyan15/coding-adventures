@@ -47,7 +47,7 @@ reviews_of: [JA-C90-todoku]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**いただく** (*itadaku*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+**いただく** (*itadaku*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2). JMdict marks wearing or carrying something on top of the head as its original sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

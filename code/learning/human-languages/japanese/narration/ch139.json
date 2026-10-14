@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "Is It? No: Nothing, Nobody, Nowhere",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:705cf29c8f9bd006",
+  "sourceHash": "fnv1a64:4a0876a1e53b912e",
   "lessons": [
     {
       "id": "JA-C139-desuka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:895a36ffafbbf207",
+      "sourceHash": "fnv1a64:a6a79464e3c953d2",
       "notice": null,
       "blocks": [
         {
@@ -105,7 +105,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ですか (desu ka) is desu, the polite \"is\" (JMdict), with ka, the native question particle. Where desu comes from is disputed; it is usually traced to a shortening of de arimasu or de gozarimasu."
+              "text": "ですか (desu ka) is desu, the polite \"is\" (JMdict), with ka, the native question particle. Where desu comes from is disputed: shortenings of de arimasu, de gozaimasu and de sōrō are all proposed."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [JA-C79-kaidan]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ろうか** (*rouka*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *rō*, "corridor" (Middle Chinese *lang*) and *ka*, "below" (*haeX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ろうか** (*rouka*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *rō*, "corridor" (Middle Chinese *lang*) and *ka*, "below" (*haeX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

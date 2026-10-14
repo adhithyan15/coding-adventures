@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 75,
-  "sourceHash": "fnv1a64:ea821b8f7c8eb7f1",
+  "sourceHash": "fnv1a64:6a21789686df2f6b",
   "lessonIds": [
     "JA-C75-maitoshi",
     "JA-C75-kotoshi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch75.txt",
   "json": "japanese/narration/ch75.json",
-  "textHash": "fnv1a64:6479862fed694489",
-  "jsonHash": "fnv1a64:f1a26e2ed16e7032",
+  "textHash": "fnv1a64:ea0f5e412934850d",
+  "jsonHash": "fnv1a64:1a9c60c8d7c370a6",
   "findings": []
 }

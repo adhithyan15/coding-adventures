@@ -47,7 +47,7 @@ You'll want to know: がっこう.
 がっこう — gakkou — "a school".
 
 The word, taken apart.
-がっこう (gakkou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gaku, "learning" (Middle Chinese haewk) and kō, "school" (haewH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+がっこう (gakkou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gaku, "learning" (Middle Chinese haewk) and kō, "school" (haewH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -81,7 +81,7 @@ You'll want to know: しゅくだい.
 しゅくだい — shukudai — "homework".
 
 The word, taken apart.
-しゅくだい (shukudai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shuku, "lodge; long held" (Middle Chinese sjuwk) and dai, "title, theme" (dej) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). Read literally, it is a theme kept overnight.
+しゅくだい (shukudai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shuku, "lodge, stay overnight" (Middle Chinese sjuwk) and dai, "title, theme" (dej) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Read literally, it is a theme kept overnight.
 
 What you've built.
 One more word for this chapter.
@@ -115,7 +115,7 @@ You'll want to know: もんだい.
 もんだい — mondai — "a problem, a question".
 
 The word, taken apart.
-もんだい (mondai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mon, "ask" (Middle Chinese mjunH) and dai, "title, theme" (dej) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+もんだい (mondai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mon, "ask" (Middle Chinese mjunH) and dai, "title, theme" (dej) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.

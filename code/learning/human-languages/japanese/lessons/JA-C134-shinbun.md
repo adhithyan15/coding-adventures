@@ -56,7 +56,7 @@ writes it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**しんぶん** (*shinbun*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shin*, "new" (Middle Chinese *sin*) and *bun*, "hear; news" (*mjun*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**しんぶん** (*shinbun*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shin*, "new" (Middle Chinese *sin*) and *bun*, "hear; news" (*mjun*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-SHINBUN, JA-SCRIPT-SHI-01, JA-SCRIPT-N-01] -->

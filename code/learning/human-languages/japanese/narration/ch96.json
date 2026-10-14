@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "Qualification, Talent, Technique, Room to spare, Convenience",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:08b3df644870cce1",
+  "sourceHash": "fnv1a64:5bbff10f2349d577",
   "lessons": [
     {
       "id": "JA-C96-shikaku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdf408ffbed1c242",
+      "sourceHash": "fnv1a64:f658cdcc84894d52",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "しかく (shikaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shi, \"property, capital\" (Middle Chinese tsij) and kaku, \"pattern, standard\" (kaek) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "しかく (shikaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shi, \"property, capital\" (Middle Chinese tsij) and kaku, \"pattern, standard\" (kaek) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf5175a063bfbe59",
+      "sourceHash": "fnv1a64:8d12e9734fa687e5",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "さいのう (sainou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sai, \"talent\" (Middle Chinese dzoj) and nō, \"ability\" (nong) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "さいのう (sainou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sai, \"talent\" (Middle Chinese dzoj) and nō, \"ability\" (nong) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7119c496d79408e0",
+      "sourceHash": "fnv1a64:f72b472a95f80d9c",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "よゆう (yoyuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yo, \"surplus\" (Middle Chinese yo) and yū, \"abundant\" (yuH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "よゆう (yoyuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yo, \"surplus\" (Middle Chinese yo) and yū, \"abundant\" (yuH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5adfb0aa2bf0f2c",
+      "sourceHash": "fnv1a64:41f089b4d50a53f8",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "つごう (tsugou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tsu, \"all, the whole\" (Middle Chinese tu) and gō, \"combine, fit\" (hop) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "つごう (tsugou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tsu, \"all, the whole\" (Middle Chinese tu) and gō, \"combine, fit\" (hop) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

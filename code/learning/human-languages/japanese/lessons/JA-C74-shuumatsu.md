@@ -47,7 +47,7 @@ reviews_of: [JA-C74-maishuu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**しゅうまつ** (*shuumatsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shū*, "week" and *matsu*, "end" (Middle Chinese *mat*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**しゅうまつ** (*shuumatsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shū*, "week" and *matsu*, "end" (Middle Chinese *mat*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

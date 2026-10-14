@@ -47,7 +47,7 @@ reviews_of: [JA-C74-tochuu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**はん** (*han*) is Sino-Japanese (kango): the on'yomi of a character meaning "half", a reading borrowed from Chinese (Middle Chinese *panH*; Unihan, KANJIDIC2, Baxter–Sagart).
+**はん** (*han*) is Sino-Japanese (kango): the on'yomi of a character meaning "half", a reading borrowed from Chinese (Middle Chinese *panH* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

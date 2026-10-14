@@ -47,7 +47,7 @@ reviews_of: [JA-C102-kama]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**まないた** (*manaita*) is a native compound, inherited rather than borrowed: *ita*, "board", with *mana*, usually explained as an old word for fish or food (JMdict, KANJIDIC2).
+**まないた** (*manaita*) is a native compound, inherited rather than borrowed: *ita*, "board", with *mana*, usually explained as an old word for fish as food; one JMdict spelling writes it with "true" and "fish" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

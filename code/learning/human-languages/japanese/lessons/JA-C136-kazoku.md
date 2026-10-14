@@ -56,7 +56,7 @@ so *so* becomes *zo*. The next lesson writes it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**かぞく** (*kazoku*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ka*, "house, family" (Middle Chinese *kae*) and *zoku*, "family clan" (*dzuwk*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**かぞく** (*kazoku*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ka*, "house, family" (Middle Chinese *kae*) and *zoku*, "family clan" (*dzuwk*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KAZOKU, JA-SCRIPT-KA-01, JA-SCRIPT-KU-01] -->

@@ -15,7 +15,7 @@ concept_tag: JA-ANCHOR-OCHA
 prerequisites: [JA-R130-second-pass-describing-people-and-colours, JA-W10-o, JA-W01-chi, JA-C115-ayu, JA-C127-sawayaka]
 sounds: [mora]
 roots: [chinese-cha]
-etymology_hook: The cha is the word for tea that Japanese took from Chinese, and the o in front is the polite prefix Japanese puts on many everyday things.
+etymology_hook: "ocha: polite o- + cha 茶 'tea', a reading borrowed from Chinese (Middle Chinese drae)"
 duration:
   max_seconds: 200
 requires:

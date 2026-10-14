@@ -115,7 +115,7 @@ You'll want to know: あおい.
 あおい — aoi — "blue".
 
 The word, taken apart.
-あおい (aoi) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+あおい (aoi) is native: the adjective made from the colour word ao, "blue, green", with the ending -i; JMdict lists both. It is inherited rather than borrowed from Chinese, and the older origin of ao is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -149,7 +149,7 @@ You'll want to know: あかい.
 あかい — akai — "red".
 
 The word, taken apart.
-あかい (akai) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+あかい (akai) is native: the adjective made from the colour word aka, "red", with the ending -i; JMdict lists both. It is inherited rather than borrowed from Chinese, and the older origin of aka is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

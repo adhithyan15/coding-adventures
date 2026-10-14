@@ -64,7 +64,7 @@ later.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**じゅんびちゅう** (*junbichū*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *jun*, "standard" (Middle Chinese *tsywinX*), *bi*, "prepare" (*bijH*) and *chū*, "middle, during" (*trjuwng*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**じゅんびちゅう** (*junbichū*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *jun*, "standard" (Middle Chinese *tsywinX*), *bi*, "prepare" (*bijH*) and *chū*, "middle, during" (*trjuwng*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C142-JUNBICHUU, JA-LEX-C142-EIGYOUCHUU] -->

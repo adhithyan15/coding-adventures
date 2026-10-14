@@ -47,7 +47,7 @@ reviews_of: [JA-C95-kanou]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**とくい** (*tokui*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *toku*, "obtain, gain" (Middle Chinese *tok*) and *i*, "thought, mind" (*'iH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**とくい** (*tokui*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *toku*, "obtain, gain" (Middle Chinese *tok*) and *i*, "thought, mind" (*'iH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

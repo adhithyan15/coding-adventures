@@ -4,7 +4,7 @@
   "chapter": 120,
   "title": "Hard, Correct, Free time, Kind, Polite",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:15fe8741826871c1",
+  "sourceHash": "fnv1a64:f18c93b75b1db3b7",
   "lessons": [
     {
       "id": "JA-C120-katai",
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28acf0c848f00b6d",
+      "sourceHash": "fnv1a64:0b7f3155b501c38b",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "しんせつ (shinsetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, \"intimate, close\" (Middle Chinese tshin) and setsu, \"cut, sharp\" (tshet) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "しんせつ (shinsetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, \"intimate, close\" (Middle Chinese tshin) and setsu, \"cut\", and also \"close, pressing\" (tshet) (Unihan, KANJIDIC2, Guangyun; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44323ca024c595fc",
+      "sourceHash": "fnv1a64:c68821bec83bcd76",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ていねい (teinei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tei, \"robust, vigorous\" (Middle Chinese teng) and nei, \"repose, peace\" (neng) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "ていねい (teinei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tei (Middle Chinese teng), whose own senses include \"adult man\" and \"fourth in a series\", and nei, \"repose, peace\" (neng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). \"Careful\" is the sense of the pair, not of tei alone."
             }
           ]
         },

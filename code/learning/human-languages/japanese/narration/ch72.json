@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "Afternoon, Middle of the night, Early morning, Evening meal, Morning sun",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3c48da181ee7a3f8",
+  "sourceHash": "fnv1a64:6e312548a6cd0ffb",
   "lessons": [
     {
       "id": "JA-C72-gogo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7124bbb3bd8f72b3",
+      "sourceHash": "fnv1a64:e39f49583861cfeb",
       "notice": null,
       "blocks": [
         {
@@ -72,7 +72,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ごご (gogo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are go, \"noon\" (Middle Chinese nguX) and go, \"after\" (huwX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "ごご (gogo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are go, \"noon\" (Middle Chinese nguX) and go, \"after\" (huwX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -493,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da1cfbe9e096f6f1",
+      "sourceHash": "fnv1a64:54caf3f6a24a2201",
       "notice": null,
       "blocks": [
         {
@@ -531,7 +531,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ゆうはん (yuuhan) mixes the two layers: native yū, \"evening\", read as a kun'yomi, and han, \"cooked rice; a meal\", the on'yomi of its second character, borrowed from Chinese (Middle Chinese bjonX; JMdict, KANJIDIC2)."
+              "text": "ゆうはん (yuuhan) mixes the two layers: native yū, \"evening\", read as a kun'yomi, and han, \"cooked rice; a meal\", the on'yomi of its second character, borrowed from Chinese (Middle Chinese bjonH; JMdict, KANJIDIC2)."
             }
           ]
         },

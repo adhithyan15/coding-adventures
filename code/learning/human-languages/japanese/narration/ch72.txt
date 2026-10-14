@@ -15,7 +15,7 @@ You'll want to know: ごご.
 ごご — gogo — "the afternoon, p.m.".
 
 The word, taken apart.
-ごご (gogo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are go, "noon" (Middle Chinese nguX) and go, "after" (huwX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+ごご (gogo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are go, "noon" (Middle Chinese nguX) and go, "after" (huwX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -117,7 +117,7 @@ You'll want to know: ゆうはん.
 ゆうはん — yuuhan — "the evening meal".
 
 The word, taken apart.
-ゆうはん (yuuhan) mixes the two layers: native yū, "evening", read as a kun'yomi, and han, "cooked rice; a meal", the on'yomi of its second character, borrowed from Chinese (Middle Chinese bjonX; JMdict, KANJIDIC2).
+ゆうはん (yuuhan) mixes the two layers: native yū, "evening", read as a kun'yomi, and han, "cooked rice; a meal", the on'yomi of its second character, borrowed from Chinese (Middle Chinese bjonH; JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

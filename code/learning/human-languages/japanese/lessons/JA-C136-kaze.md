@@ -57,7 +57,7 @@ the voicing mark, so *se* becomes *ze*. The next lesson writes it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**かぜ** (*kaze*) is a native word, "wind", inherited rather than borrowed. For the cold you catch JMdict writes "wind" and "evil", read as a whole, so the illness was named after the wind.
+**かぜ** (*kaze*) is a native word, "wind", inherited rather than borrowed. For the cold you catch JMdict writes "wind" and "evil", read as a whole: the illness shares the word for wind.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KAZE, JA-SCRIPT-KA-01] -->

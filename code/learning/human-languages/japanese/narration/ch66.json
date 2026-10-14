@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Basket, Spinning top, Raft, Flute, Drum",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b8faa0582234e3eb",
+  "sourceHash": "fnv1a64:365a9e5426a250f7",
   "lessons": [
     {
       "id": "JA-C66-kago",
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c33d9ecf445a9cc8",
+      "sourceHash": "fnv1a64:69c2ba3e603dd6e8",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "たいこ (taiko) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"big, great\" (Middle Chinese thajH) and ko, \"drum\" (kuX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "たいこ (taiko) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"big, great\" (Middle Chinese thajH) and ko, \"drum\" (kuX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

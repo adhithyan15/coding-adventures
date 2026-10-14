@@ -57,7 +57,7 @@ first. You write every sign in it now.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**しんぱい** (*shinpai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shin*, "heart, mind" (Middle Chinese *sim*) and *hai*, "distribute" (*phwojH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**しんぱい** (*shinpai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shin*, "heart, mind" (Middle Chinese *sim*) and *hai*, "distribute" (*phwojH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C137-SHINPAI, JA-SCRIPT-PA-01, JA-LEX-ANCHOR-IPPAI, JA-SCRIPT-SHI-01, JA-SCRIPT-N-01, JA-SCRIPT-I-01] -->

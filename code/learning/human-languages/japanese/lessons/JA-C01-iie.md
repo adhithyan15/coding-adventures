@@ -54,7 +54,7 @@ for two beats and the word lands; clip it and you have said "house."
 ## The word, taken apart — いいえ
 <!-- hl-knowledge: introduces=[JA-LEX-IIE]; assesses=[] -->
 
-**いいえ** is the plain **no** — and, just as often, a modest **"not at all"**
+**いいえ** is the plain **no** — and, as often, a modest **"not at all"**
 used to wave away thanks or a compliment. That second use is the common one in
 daily speech, which is worth knowing before you meet it as an answer to
 **thank you** at the end of this chapter.

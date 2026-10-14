@@ -60,7 +60,7 @@ Read a notice like this and act on it: stop, look, and cross with care.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ちゅうい** (*chūi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *chū*, "pour; direct" (Middle Chinese *tsyuH*) and *i*, "thought, mind" (*'iH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ちゅうい** (*chūi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *chū*, "pour; direct" (Middle Chinese *tsyuH*) and *i*, "thought, mind" (*'iH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C142-CHUUI] -->

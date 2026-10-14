@@ -47,7 +47,7 @@ reviews_of: [JA-C22-koe]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ねつ** (*netsu*) is Sino-Japanese (kango): the on'yomi of a character meaning "heat", a reading borrowed from Chinese (Middle Chinese *nyet*; Unihan, KANJIDIC2, Baxter–Sagart).
+**ねつ** (*netsu*) is Sino-Japanese (kango): the on'yomi of a character meaning "heat", a reading borrowed from Chinese (Middle Chinese *nyet* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

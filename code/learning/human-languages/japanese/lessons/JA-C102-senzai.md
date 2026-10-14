@@ -47,7 +47,7 @@ reviews_of: [JA-C102-sentakumono]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**せんざい** (*senzai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sen*, "wash" and *zai*, "medicinal preparation" (Middle Chinese *dzejH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**せんざい** (*senzai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sen*, "wash" and *zai*, "medicinal preparation" (Middle Chinese *dzejH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

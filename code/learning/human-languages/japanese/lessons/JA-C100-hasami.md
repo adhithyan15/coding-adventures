@@ -47,7 +47,7 @@ reviews_of: [JA-C100-ita]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**はさみ** (*hasami*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+**はさみ** (*hasami*) is a native Japanese word, inherited rather than borrowed from Chinese, usually taken as the noun of *hasamu*, "to hold between", a verb JMdict lists. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

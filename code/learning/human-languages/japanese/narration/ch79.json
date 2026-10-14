@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "Other side, This side of, Corner, Stairs, Corridor",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:681d56d40ddaef55",
+  "sourceHash": "fnv1a64:5c1dff563cf76bd0",
   "lessons": [
     {
       "id": "JA-C79-mukou",
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e05cbadba8eef251",
+      "sourceHash": "fnv1a64:af904eae8daebacd",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "かいだん (kaidan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kai, \"stairs, storey\" (Middle Chinese keaj) and dan, \"step, section\" (dwanH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "かいだん (kaidan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kai, \"stairs, storey\" (Middle Chinese keaj) and dan, \"step, section\" (dwanH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d03a028eecc9fbf9",
+      "sourceHash": "fnv1a64:857b6c93225890bd",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ろうか (rouka) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rō, \"corridor\" (Middle Chinese lang) and ka, \"below\" (haeX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "ろうか (rouka) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rō, \"corridor\" (Middle Chinese lang) and ka, \"below\" (haeX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

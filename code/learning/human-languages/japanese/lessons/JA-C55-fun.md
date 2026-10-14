@@ -47,7 +47,7 @@ reviews_of: [JA-C54-toshi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ふん** (*fun*) is Sino-Japanese (kango): the on'yomi of a character meaning "divide; a minute", a reading borrowed from Chinese (Middle Chinese *pjun*; Unihan, KANJIDIC2, Baxter–Sagart).
+**ふん** (*fun*) is Sino-Japanese (kango): the on'yomi of a character meaning "divide; a minute", a reading borrowed from Chinese (Middle Chinese *pjun* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

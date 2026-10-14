@@ -47,7 +47,7 @@ reviews_of: [JA-C43-kumo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**たいよう** (*taiyou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tai*, "big, great" (Middle Chinese *thajH*) and *yō*, "sun; the bright principle" (*yang*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**たいよう** (*taiyou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tai*, "big, great" (Middle Chinese *thajH*) and *yō*, "sun; the bright principle" (*yang*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

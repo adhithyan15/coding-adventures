@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 80,
-  "sourceHash": "fnv1a64:cb727da0cb2761c4",
+  "sourceHash": "fnv1a64:83f70f48fd31dd92",
   "lessonIds": [
     "JA-C80-kousaten",
     "JA-C80-shingou",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch80.txt",
   "json": "japanese/narration/ch80.json",
-  "textHash": "fnv1a64:5287ba0f06356f15",
-  "jsonHash": "fnv1a64:bcf3ef44319eaf7c",
+  "textHash": "fnv1a64:71a8688262454431",
+  "jsonHash": "fnv1a64:9bad093dcb044b77",
   "findings": []
 }

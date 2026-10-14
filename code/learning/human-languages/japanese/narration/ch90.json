@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "To be surprised, To arrive, To receive, To go regularly, To wrap",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c31c13cab462505d",
+  "sourceHash": "fnv1a64:4e895ce588a711f6",
   "lessons": [
     {
       "id": "JA-C90-odoroku",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10f8cda8ff653565",
+      "sourceHash": "fnv1a64:34fbf7bd39d8b33d",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "いただく (itadaku) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2)."
+              "text": "いただく (itadaku) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2). JMdict marks wearing or carrying something on top of the head as its original sense."
             }
           ]
         },

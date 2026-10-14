@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Watermelon, White radish, Carrot, Tofu, Salt",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a622331125ba84c1",
+  "sourceHash": "fnv1a64:248848af9b3bb2c1",
   "lessons": [
     {
       "id": "JA-C34-suika",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e8e4abf40859bb8",
+      "sourceHash": "fnv1a64:31752fbf2101c104",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "だいこん (daikon) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dai, \"big\" (Middle Chinese dajH) and kon, \"root\" (kon) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "だいこん (daikon) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dai, \"big\" (Middle Chinese dajH) and kon, \"root\" (kon) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47347bd61f5a7cd8",
+      "sourceHash": "fnv1a64:acf657558f164718",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "にんじん (ninjin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nin, \"person\" (Middle Chinese nyin) and jin, \"ginseng\" (srim) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict lists ginseng as a second sense: the name first belonged to that root and later passed to the carrot."
+              "text": "にんじん (ninjin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nin, \"person\" (Middle Chinese nyin) and jin, \"ginseng\" (srim) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict lists ginseng as a second sense: the name first belonged to that root and later passed to the carrot."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd18169ba4c39149",
+      "sourceHash": "fnv1a64:6c42f3a8c6edf68f",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "とうふ (toufu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tō, \"bean\" (Middle Chinese duwH) and fu, \"rot, curdle\" (bjuX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "とうふ (toufu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tō, \"bean\" (Middle Chinese duwH) and fu, \"rot, decay\" (bjuX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

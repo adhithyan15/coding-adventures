@@ -47,7 +47,7 @@ reviews_of: [JA-C92-tanomi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**よくぼう** (*yokubou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *yoku*, "desire" (Middle Chinese *yowk*) and *bō*, "hope; gaze" (*mjangH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**よくぼう** (*yokubou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *yoku*, "desire" (Middle Chinese *yowk*) and *bō*, "hope; gaze" (*mjangH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

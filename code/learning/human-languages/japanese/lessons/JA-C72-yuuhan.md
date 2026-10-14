@@ -14,7 +14,7 @@ romanization: "yuuhan"
 concept_tag: JA-TIME72-YUUHAN
 prerequisites: [JA-C72-yonaka, JA-C72-asagata]
 sounds: []
-roots: [japanese-yuu-evening, middle-chinese-bjonx]
+roots: [japanese-yuu-evening, middle-chinese-bjonh]
 etymology_hook: "yūhan: native yū 'evening' + Sino-Japanese han 飯 'cooked rice, meal'"
 duration:
   max_seconds: 200
@@ -47,7 +47,7 @@ reviews_of: [JA-C72-asagata]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ゆうはん** (*yuuhan*) mixes the two layers: native *yū*, "evening", read as a kun'yomi, and *han*, "cooked rice; a meal", the on'yomi of its second character, borrowed from Chinese (Middle Chinese *bjonX*; JMdict, KANJIDIC2).
+**ゆうはん** (*yuuhan*) mixes the two layers: native *yū*, "evening", read as a kun'yomi, and *han*, "cooked rice; a meal", the on'yomi of its second character, borrowed from Chinese (Middle Chinese *bjonH*; JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

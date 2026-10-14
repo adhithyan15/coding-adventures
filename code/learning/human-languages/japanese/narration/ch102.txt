@@ -47,7 +47,7 @@ You'll want to know: せんざい.
 せんざい — senzai — "detergent".
 
 The word, taken apart.
-せんざい (senzai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, "wash" and zai, "medicinal preparation" (Middle Chinese dzejH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+せんざい (senzai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, "wash" and zai, "medicinal preparation" (Middle Chinese dzejH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -115,7 +115,7 @@ You'll want to know: かま.
 かま — kama — "a rice pot".
 
 The word, taken apart.
-かま (kama) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+かま (kama) is counted a native Japanese word, but its origin is not settled: a link with the Korean word for a pot has been suggested, and whether the two share an ancestor or one was borrowed from the other is open. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -149,7 +149,7 @@ You'll want to know: まないた.
 まないた — manaita — "a chopping board".
 
 The word, taken apart.
-まないた (manaita) is a native compound, inherited rather than borrowed: ita, "board", with mana, usually explained as an old word for fish or food (JMdict, KANJIDIC2).
+まないた (manaita) is a native compound, inherited rather than borrowed: ita, "board", with mana, usually explained as an old word for fish as food; one JMdict spelling writes it with "true" and "fish" (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

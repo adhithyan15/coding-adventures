@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Family and Water: Zo, Zu and Ze",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a91ad9bcadf41e12",
+  "sourceHash": "fnv1a64:36c3fea49b3506a4",
   "lessons": [
     {
       "id": "JA-C136-kazoku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e28f0748000f45c",
+      "sourceHash": "fnv1a64:ed17f54a780b4fdc",
       "notice": null,
       "blocks": [
         {
@@ -88,7 +88,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "かぞく (kazoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ka, \"house, family\" (Middle Chinese kae) and zoku, \"family clan\" (dzuwk) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "かぞく (kazoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ka, \"house, family\" (Middle Chinese kae) and zoku, \"family clan\" (dzuwk) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -1025,7 +1025,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3016905946a8c27a",
+      "sourceHash": "fnv1a64:d943f27389c1d6c0",
       "notice": null,
       "blocks": [
         {
@@ -1103,7 +1103,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "かぜ (kaze) is a native word, \"wind\", inherited rather than borrowed. For the cold you catch JMdict writes \"wind\" and \"evil\", read as a whole, so the illness was named after the wind."
+              "text": "かぜ (kaze) is a native word, \"wind\", inherited rather than borrowed. For the cold you catch JMdict writes \"wind\" and \"evil\", read as a whole: the illness shares the word for wind."
             }
           ]
         },

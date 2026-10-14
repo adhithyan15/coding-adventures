@@ -47,7 +47,7 @@ reviews_of: [JA-C70-mochi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**なっとう** (*nattou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *nō*, "receive, store" (Middle Chinese *nop*) and *tō*, "bean" (*duwH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). *Nō* is shortened to *nat* before *tō*.
+**なっとう** (*nattou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *nō*, "receive, store" (Middle Chinese *nop*) and *tō*, "bean" (*duwH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). *Nō* is shortened to *nat* before *tō*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

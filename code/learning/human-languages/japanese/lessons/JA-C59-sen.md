@@ -47,7 +47,7 @@ reviews_of: [JA-C59-sanjuu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**せん** (*sen*) is Sino-Japanese (kango): the on'yomi of a character meaning "thousand", a reading borrowed from Chinese (Middle Chinese *tshen*; Unihan, KANJIDIC2, Baxter–Sagart).
+**せん** (*sen*) is Sino-Japanese (kango): the on'yomi of a character meaning "thousand", a reading borrowed from Chinese (Middle Chinese *tshen* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

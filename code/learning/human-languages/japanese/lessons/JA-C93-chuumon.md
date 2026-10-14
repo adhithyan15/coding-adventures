@@ -47,7 +47,7 @@ reviews_of: [JA-C93-inori]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ちゅうもん** (*chuumon*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *chū*, "pour; note" (Middle Chinese *tsyuH*) and *mon*, "writing" (*mjun*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ちゅうもん** (*chuumon*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *chū*, "pour; note" (Middle Chinese *tsyuH*) and *mon*, "writing" (*mjun*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

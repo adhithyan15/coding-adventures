@@ -15,7 +15,7 @@ concept_tag: JA-THINGS102-KAMA
 prerequisites: [JA-C102-senzai, JA-C102-yunomi]
 sounds: []
 roots: [japanese-kama]
-etymology_hook: "kama: native Japanese, inherited, not borrowed; kanji 釜 attached later as kun'yomi"
+etymology_hook: "kama: counted native, but a link with the Korean word for a pot has been suggested; not settled; 釜 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [JA-C102-yunomi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**かま** (*kama*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+**かま** (*kama*) is counted a native Japanese word, but its origin is not settled: a link with the Korean word for a pot has been suggested, and whether the two share an ancestor or one was borrowed from the other is open. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

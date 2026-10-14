@@ -14,7 +14,7 @@ romanization: "heya"
 concept_tag: JA-ANCHOR-HEYA
 prerequisites: [JA-C133-nuno, JA-W17-ya, JA-W18-ho, JA-W133-ke, JA-W131-wo]
 sounds: [mora]
-roots: [japanese-heya]
+roots: [japanese-heya, japanese-ya-house]
 etymology_hook: "heya: native, ending in ya 'house'; 部屋 read as a whole; first part not settled"
 duration:
   max_seconds: 200

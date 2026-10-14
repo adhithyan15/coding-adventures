@@ -47,7 +47,7 @@ reviews_of: [JA-C113-katsuo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**わかめ** (*wakame*) is native: *waka*, "young", and *me*, an old word for edible seaweed. JMdict writes it with characters for "young" and "cloth", read for their meaning. It is inherited rather than borrowed.
+**わかめ** (*wakame*) is native, usually explained as *waka*, "young", and *me*, an old word for edible seaweed. JMdict writes it with characters for "young" and "cloth", read for their meaning. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

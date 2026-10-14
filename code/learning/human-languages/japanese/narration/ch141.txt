@@ -23,7 +23,7 @@ Japanese has no separate future tense. The polite present ます says what will 
 らいしゅう はたらきます。 — raishū hatarakimasu — "I will work next week."
 
 The word, taken apart.
-らいしゅう (raishū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, "come, coming" (Middle Chinese loj) and shū, "week" (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+らいしゅう (raishū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, "come, coming" (Middle Chinese loj) and shū, "week" (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 [pause 1 second]
@@ -61,7 +61,7 @@ You'll want to know: らいげつ.
 らいげつ うみに いきます。 — raigetsu umi ni ikimasu — "I will go to the sea next month."
 
 The word, taken apart.
-らいげつ (raigetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, "come, coming" (Middle Chinese loj) and getsu, "moon, month" (ngjwot) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+らいげつ (raigetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, "come, coming" (Middle Chinese loj) and getsu, "moon, month" (ngjwot) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 [pause 1 second]
@@ -97,7 +97,7 @@ You'll want to know: らいねん.
 らいねん ともだちと やまに いきます。 — rainen tomodachi to yama ni ikimasu — "Next year I will go to the mountains with a friend." The particle と means "with".
 
 The word, taken apart.
-らいねん (rainen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, "come, coming" (Middle Chinese loj) and nen, "year" (nen) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+らいねん (rainen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, "come, coming" (Middle Chinese loj) and nen, "year" (nen) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 [pause 1 second]
@@ -134,7 +134,7 @@ You'll want to know: つもり.
 Here the dictionary form matters: iku, not ikimasu, comes before つもり (tsumori). ます goes at the very end of a polite sentence, and です does that job here.
 
 The word, taken apart.
-つもり (tsumori) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2). JMdict writes it with the kanji of tsumoru, "to pile up, to estimate".
+つもり (tsumori) is native: the noun made from tsumoru, "to pile up, to estimate", by its stem, and JMdict writes both with the same kanji. It is inherited rather than borrowed, and usually written in kana (JMdict, KANJIDIC2).
 
 Guided Practice.
 [pause 1 second]
@@ -173,7 +173,7 @@ You'll want to know: でしょう.
 Now you can talk about what comes next: what will happen (ます with a time word), what you mean to do (つもり (tsumori)), and what will probably happen (でしょう (deshō)).
 
 The word, taken apart.
-でしょう (deshō) is desu, the polite "is", in the form for what is likely (JMdict). Where desu comes from is disputed; it is usually traced to a shortening of de arimasu or de gozarimasu.
+でしょう (deshō) is desu, the polite "is", in the form for what is likely (JMdict). Where desu comes from is disputed: shortenings of de arimasu, de gozaimasu and de sōrō are all proposed.
 
 Guided Practice.
 [pause 1 second]

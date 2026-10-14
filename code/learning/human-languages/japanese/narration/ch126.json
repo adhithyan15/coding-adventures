@@ -4,7 +4,7 @@
   "chapter": 126,
   "title": "Happy, Drowsy, Relieved, Ordinary, Tasty",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b3982e7f03f4c6e6",
+  "sourceHash": "fnv1a64:ca156ba9784556b9",
   "lessons": [
     {
       "id": "JA-C126-shiawase",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cbd984843fe3de4",
+      "sourceHash": "fnv1a64:f2913514e67b4de4",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "しあわせ (shiawase) is native. JMdict's older spelling shows shi, from suru, \"to do\", and awase, \"fitting together\"; it is usually explained as first meaning how things fell out, good or bad. It is inherited rather than borrowed."
+              "text": "しあわせ (shiawase) is native. JMdict's other spelling shows shi, from suru, \"to do\", and awase, \"fitting together\"; it is usually explained as first meaning how things fell out, good or bad. It is inherited rather than borrowed."
             }
           ]
         },
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3fcb33af90afba92",
+      "sourceHash": "fnv1a64:171def3515c45292",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "あんしん (anshin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are an, \"peaceful\" (Middle Chinese 'an) and shin, \"heart, mind\" (sim) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "あんしん (anshin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are an, \"peaceful\" (Middle Chinese 'an) and shin, \"heart, mind\" (sim) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8237e7abec97f80e",
+      "sourceHash": "fnv1a64:8bccb0b4308212c6",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ふつう (futsuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fu, \"universal, general\" (Middle Chinese phuX) and tsū, \"pass through; common\" (thuwng) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "ふつう (futsuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fu, \"universal, general\" (Middle Chinese phuX) and tsū, \"pass through; common\" (thuwng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [JA-C96-yoyuu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**つごう** (*tsugou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tsu*, "all, the whole" (Middle Chinese *tu*) and *gō*, "combine, fit" (*hop*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**つごう** (*tsugou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tsu*, "all, the whole" (Middle Chinese *tu*) and *gō*, "combine, fit" (*hop*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

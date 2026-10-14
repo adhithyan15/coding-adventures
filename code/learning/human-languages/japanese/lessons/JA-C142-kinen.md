@@ -14,7 +14,7 @@ romanization: "kin'en"
 concept_tag: JA-READ142-KINEN
 prerequisites: [JA-C142-chuui, JA-C141-raigetsu, JA-C138-arukimasu]
 sounds: []
-roots: [middle-chinese-kim-forbid, middle-chinese-en]
+roots: [middle-chinese-kimh, middle-chinese-en]
 etymology_hook: "kin'en: Sino-Japanese 禁 'forbid' + 煙 'smoke', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
@@ -63,7 +63,7 @@ do it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**きんえん** (*kin'en*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kin*, "forbid" (Middle Chinese *kim*) and *en*, "smoke" (*'en*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**きんえん** (*kin'en*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kin*, "forbid" (Middle Chinese *kimH*) and *en*, "smoke" (*'en*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C142-KINEN, JA-LEX-C142-CHUUI] -->

@@ -63,7 +63,7 @@ To say what did NOT happen, the polite negative **ません** adds
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**きょねん** (*kyonen*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kyo*, "go away, past" (Middle Chinese *khjoH*) and *nen*, "year" (*nen*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**きょねん** (*kyonen*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kyo*, "go away, past" (Middle Chinese *khjoH*) and *nen*, "year" (*nen*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C140-KYONEN, JA-LEX-C140-SENGETSU] -->

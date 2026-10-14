@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "To stop, To put away, To pick up, To help, To get lost",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:3bf5ebb728ff4935",
+  "sourceHash": "fnv1a64:c1ee7a633be32744",
   "lessons": [
     {
       "id": "JA-C91-yamu",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5b8f752c501e9be",
+      "sourceHash": "fnv1a64:64b8edf719198725",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "しまう (shimau) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2)."
+              "text": "しまう (shimau) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its common kanji spelling sets a character read for its sound, shi, before the one for mau, \"to dance\", and JMdict also gives spellings with one character (JMdict, KANJIDIC2)."
             }
           ]
         },

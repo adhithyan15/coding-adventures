@@ -115,7 +115,7 @@ You'll want to know: まいにち.
 まいにち — mainichi — "every day".
 
 The word, taken apart.
-まいにち (mainichi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mai, "every" (Middle Chinese mwojX) and nichi, "day" (nyit) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+まいにち (mainichi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mai, "every" (Middle Chinese mwojX) and nichi, "day" (nyit) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.

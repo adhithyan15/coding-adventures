@@ -47,7 +47,7 @@ reviews_of: [JA-C122-taisetsu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ひつよう** (*hitsuyou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *hitsu*, "surely, must" (Middle Chinese *pjit*) and *yō*, "necessary" (*'jiewH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ひつよう** (*hitsuyou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *hitsu*, "surely, must" (Middle Chinese *pjit*) and *yō*, "necessary" (*'jiewH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

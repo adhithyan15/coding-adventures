@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "Hand fan, Folding fan, Charcoal, Well, Beach",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2ac19a2148ae8a2f",
+  "sourceHash": "fnv1a64:57767146aea961ec",
   "lessons": [
     {
       "id": "JA-C67-uchiwa",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8cc5afc9c090b397",
+      "sourceHash": "fnv1a64:8c3d17f75a7836cd",
       "notice": null,
       "blocks": [
         {

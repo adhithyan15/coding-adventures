@@ -57,7 +57,7 @@ The next lesson writes it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**いっぱい** (*ippai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ichi*, "one" (Middle Chinese *'jit*) and *hai*, "cup" (*pwoj*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). *Ichi* and *hai* join as *ippai*: one cupful.
+**いっぱい** (*ippai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ichi*, "one" (Middle Chinese *'jit*) and *hai*, "cup" (*pwoj*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). *Ichi* and *hai* join as *ippai*: one cupful.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-IPPAI, JA-SCRIPT-I-01, JA-SCRIPT-SMALL-TSU-01] -->

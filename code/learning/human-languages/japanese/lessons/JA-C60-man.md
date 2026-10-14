@@ -47,7 +47,7 @@ reviews_of: [JA-C59-sen]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**まん** (*man*) is Sino-Japanese (kango): the on'yomi of a character meaning "ten thousand", a reading borrowed from Chinese (Middle Chinese *mjonH*; Unihan, KANJIDIC2, Baxter–Sagart).
+**まん** (*man*) is Sino-Japanese (kango): the on'yomi of a character meaning "ten thousand", a reading borrowed from Chinese (Middle Chinese *mjonH* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

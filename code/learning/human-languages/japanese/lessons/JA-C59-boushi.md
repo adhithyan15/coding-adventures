@@ -47,7 +47,7 @@ reviews_of: [JA-C58-kutsu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ぼうし** (*boushi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *bō*, "hat" (Middle Chinese *mawH*) and *shi*, "child; a noun ending" (*tsiX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ぼうし** (*boushi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *bō*, "hat" (Middle Chinese *mawH*) and *shi*, "child; a noun ending" (*tsiX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

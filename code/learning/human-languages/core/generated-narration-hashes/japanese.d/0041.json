@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 41,
-  "sourceHash": "fnv1a64:a4934f4adff50eb0",
+  "sourceHash": "fnv1a64:bd8667bbb7a42433",
   "lessonIds": [
     "JA-C41-tegami",
     "JA-C41-jikan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch41.txt",
   "json": "japanese/narration/ch41.json",
-  "textHash": "fnv1a64:6237c35f035b5fb1",
-  "jsonHash": "fnv1a64:d0a98536d9fe365a",
+  "textHash": "fnv1a64:e6999e7fc0b080fa",
+  "jsonHash": "fnv1a64:20058766df4c260d",
   "findings": []
 }

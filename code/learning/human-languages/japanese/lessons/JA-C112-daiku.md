@@ -47,7 +47,7 @@ reviews_of: [JA-C112-nouka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**だいく** (*daiku*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *dai*, "big, great" (Middle Chinese *dajH*) and *ku*, "labor, work" (*kuwng*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**だいく** (*daiku*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *dai*, "big, great" (Middle Chinese *dajH*) and *ku*, "labor, work" (*kuwng*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

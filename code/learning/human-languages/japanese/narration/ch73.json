@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "Sunset, Tonight, Day after tomorrow, Day before yesterday, Every morning",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f2bfdda0cc34452c",
+  "sourceHash": "fnv1a64:591ac4360b771649",
   "lessons": [
     {
       "id": "JA-C73-hinoiri",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97cfa53b62e65ecf",
+      "sourceHash": "fnv1a64:3ef0eded7786dce3",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "こんや (konya) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kon, \"now, this\" (Middle Chinese kim) and ya, \"night\" (yaeH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "こんや (konya) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kon, \"now, this\" (Middle Chinese kim) and ya, \"night\" (yaeH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

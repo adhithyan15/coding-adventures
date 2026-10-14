@@ -47,7 +47,7 @@ reviews_of: [JA-C58-kuni]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ふく** (*fuku*) is Sino-Japanese (kango): the on'yomi of a character meaning "clothes", a reading borrowed from Chinese (Middle Chinese *bjuwk*; Unihan, KANJIDIC2, Baxter–Sagart).
+**ふく** (*fuku*) is Sino-Japanese (kango): the on'yomi of a character meaning "clothes", a reading borrowed from Chinese (Middle Chinese *bjuwk* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

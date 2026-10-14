@@ -47,7 +47,7 @@ reviews_of: [JA-C80-kousaten]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**しんごう** (*shingou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shin*, "trust; message" (Middle Chinese *sinH*) and *gō*, "mark, sign" (*hawH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**しんごう** (*shingou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shin*, "trust; message" (Middle Chinese *sinH*) and *gō*, "mark, sign" (*hawH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

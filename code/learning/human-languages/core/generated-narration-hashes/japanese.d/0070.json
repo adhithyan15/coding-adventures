@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 70,
-  "sourceHash": "fnv1a64:8d98f589b559aade",
+  "sourceHash": "fnv1a64:ca7fbc7b70322309",
   "lessonIds": [
     "JA-C70-mochi",
     "JA-C70-nattou",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch70.txt",
   "json": "japanese/narration/ch70.json",
-  "textHash": "fnv1a64:e58c775ea8547f90",
-  "jsonHash": "fnv1a64:8e0b45a21a9b8b5f",
+  "textHash": "fnv1a64:bb2498453676ae5c",
+  "jsonHash": "fnv1a64:8ff1371ff4c64de2",
   "findings": []
 }

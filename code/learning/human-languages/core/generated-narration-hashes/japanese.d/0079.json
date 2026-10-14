@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 79,
-  "sourceHash": "fnv1a64:681d56d40ddaef55",
+  "sourceHash": "fnv1a64:5c1dff563cf76bd0",
   "lessonIds": [
     "JA-C79-mukou",
     "JA-C79-temae",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch79.txt",
   "json": "japanese/narration/ch79.json",
-  "textHash": "fnv1a64:2af1410fee509c9e",
-  "jsonHash": "fnv1a64:950905e984b55dc1",
+  "textHash": "fnv1a64:d025f4c355253afa",
+  "jsonHash": "fnv1a64:a6d4391dd3f292a1",
   "findings": []
 }

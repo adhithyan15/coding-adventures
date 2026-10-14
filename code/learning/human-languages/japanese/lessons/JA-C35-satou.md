@@ -47,7 +47,7 @@ reviews_of: [JA-C34-shio]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**さとう** (*satou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sa*, "sand" (Middle Chinese *srae*) and *tō*, "sugar" (*dang*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**さとう** (*satou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sa*, "sand" (Middle Chinese *srae*) and *tō*, "sugar" (*dang*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [JA-C94-konomi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**しゅみ** (*shumi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shu*, "interest, what attracts one" (Middle Chinese *tshjuH*) and *mi*, "taste" (*mj+jH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**しゅみ** (*shumi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shu*, "interest, what attracts one" (Middle Chinese *tshjuH*) and *mi*, "taste" (*mj+jH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

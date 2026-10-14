@@ -47,7 +47,7 @@ reviews_of: [JA-C125-yutaka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**しあわせ** (*shiawase*) is native. JMdict's older spelling shows *shi*, from *suru*, "to do", and *awase*, "fitting together"; it is usually explained as first meaning how things fell out, good or bad. It is inherited rather than borrowed.
+**しあわせ** (*shiawase*) is native. JMdict's other spelling shows *shi*, from *suru*, "to do", and *awase*, "fitting together"; it is usually explained as first meaning how things fell out, good or bad. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

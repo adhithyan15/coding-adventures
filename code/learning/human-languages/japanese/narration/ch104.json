@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "Parcel, Envelope, Gift, Ball, Bell",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2b82198af0eb306d",
+  "sourceHash": "fnv1a64:dd913b0409353c9e",
   "lessons": [
     {
       "id": "JA-C104-tsutsumi",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02e520ab3fa0e268",
+      "sourceHash": "fnv1a64:d647fbbd3c82397c",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ふうとう (fuutou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fū, \"envelope, seal\" (Middle Chinese pjowng) and tō, \"tube, pipe\" (duwng) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "ふうとう (fuutou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fū, \"envelope, seal\" (Middle Chinese pjowng) and tō, \"tube, pipe\" (duwng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

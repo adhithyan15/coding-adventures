@@ -14,7 +14,7 @@ romanization: "sensu"
 concept_tag: JA-THINGS67-SENSU
 prerequisites: [JA-C66-taiko, JA-C67-uchiwa]
 sounds: []
-roots: [middle-chinese-syenh]
+roots: [middle-chinese-syenh, middle-chinese-tsix]
 etymology_hook: "sensu: Sino-Japanese 扇 'fan' + su, a later Chinese reading of the noun ending 子"
 duration:
   max_seconds: 200

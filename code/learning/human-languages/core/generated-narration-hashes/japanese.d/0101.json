@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 101,
-  "sourceHash": "fnv1a64:9a38f3c55900e6fc",
+  "sourceHash": "fnv1a64:0b410d54d257d663",
   "lessonIds": [
     "JA-C101-hata",
     "JA-C101-tansu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "japanese/narration/ch101.txt",
   "json": "japanese/narration/ch101.json",
-  "textHash": "fnv1a64:e26285c237c37834",
-  "jsonHash": "fnv1a64:e3c31c2d9f68e694",
+  "textHash": "fnv1a64:a1f1e098682a5f14",
+  "jsonHash": "fnv1a64:75b80b6e8ba3ff48",
   "findings": []
 }

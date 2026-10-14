@@ -62,7 +62,7 @@ polite verb makes its past this way.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**せんしゅう** (*senshū*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sen*, "before, previous" (Middle Chinese *sen*) and *shū*, "week" (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**せんしゅう** (*senshū*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sen*, "before, previous" (Middle Chinese *sen*) and *shū*, "week" (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C140-SENSHUU] -->

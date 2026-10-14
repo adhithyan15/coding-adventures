@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 103,
-  "sourceHash": "fnv1a64:15def37b61c5c547",
+  "sourceHash": "fnv1a64:ce895e3fabbf5b54",
   "lessonIds": [
     "JA-C103-otama",
     "JA-C103-suidou",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch103.txt",
   "json": "japanese/narration/ch103.json",
-  "textHash": "fnv1a64:2eb43d0b89dd0d3d",
-  "jsonHash": "fnv1a64:0f6c3f08e9fba522",
+  "textHash": "fnv1a64:5c3f95e928ebf471",
+  "jsonHash": "fnv1a64:ff747556e77eadd9",
   "findings": []
 }

@@ -15,7 +15,7 @@ concept_tag: JA-NEG139-DESUKA
 prerequisites: [JA-C138-nemasu, JA-C138-okimasu, JA-C136-kaze, JA-C131-ocha]
 sounds: []
 roots: [japanese-desu, japanese-ka]
-etymology_hook: "desu ka: polite desu (origin disputed; usually from de arimasu) + native question ka"
+etymology_hook: "desu ka: polite desu (origin disputed: de arimasu, de gozaimasu, de sōrō proposed) + native ka"
 duration:
   max_seconds: 200
 requires:
@@ -63,7 +63,7 @@ A verb takes **か** the same way: **ます** becomes **ますか**.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ですか** (*desu ka*) is *desu*, the polite "is" (JMdict), with *ka*, the native question particle. Where *desu* comes from is disputed; it is usually traced to a shortening of *de arimasu* or *de gozarimasu*.
+**ですか** (*desu ka*) is *desu*, the polite "is" (JMdict), with *ka*, the native question particle. Where *desu* comes from is disputed: shortenings of *de arimasu*, *de gozaimasu* and *de sōrō* are all proposed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C139-DESUKA] -->

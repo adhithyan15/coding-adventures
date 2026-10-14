@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Pencil and Ticket: Pa, Pi, Pu and Pe",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0ef57ab78753896d",
+  "sourceHash": "fnv1a64:1fefa132150b3b63",
   "lessons": [
     {
       "id": "JA-C137-ippai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:537a86629f35c608",
+      "sourceHash": "fnv1a64:6de2010e0f62bc24",
       "notice": null,
       "blocks": [
         {
@@ -88,7 +88,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "いっぱい (ippai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, \"one\" (Middle Chinese 'jit) and hai, \"cup\" (pwoj) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). Ichi and hai join as ippai: one cupful."
+              "text": "いっぱい (ippai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, \"one\" (Middle Chinese 'jit) and hai, \"cup\" (pwoj) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Ichi and hai join as ippai: one cupful."
             }
           ]
         },
@@ -343,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:132b67fa0ea73bd6",
+      "sourceHash": "fnv1a64:fea2f322666546e6",
       "notice": null,
       "blocks": [
         {
@@ -421,7 +421,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "しんぱい (shinpai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, \"heart, mind\" (Middle Chinese sim) and hai, \"distribute\" (phwojH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "しんぱい (shinpai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, \"heart, mind\" (Middle Chinese sim) and hai, \"distribute\" (phwojH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -516,7 +516,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c69792615f295715",
+      "sourceHash": "fnv1a64:d0b01ee6832de099",
       "notice": null,
       "blocks": [
         {
@@ -594,7 +594,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "えんぴつ (enpitsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are en, \"lead\" (Middle Chinese ywen) and hitsu, \"writing brush\" (pit) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "えんぴつ (enpitsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are en, \"lead\" (Middle Chinese ywen) and hitsu, \"writing brush\" (pit) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -840,7 +840,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:329dc57f74c114d8",
+      "sourceHash": "fnv1a64:351f361fe71d31aa",
       "notice": null,
       "blocks": [
         {
@@ -918,7 +918,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "いっぴき (ippiki) mixes the two layers: ichi, \"one\", borrowed from Chinese (Middle Chinese 'jit), and hiki, a native counter for animals, read as a kun'yomi; they join as ippiki (JMdict, KANJIDIC2)."
+              "text": "いっぴき (ippiki) mixes the two layers: ichi, \"one\", borrowed from Chinese (Middle Chinese 'jit), and hiki, a counter for animals that KANJIDIC2 lists as a kun'yomi; they join as ippiki (JMdict, KANJIDIC2)."
             }
           ]
         },

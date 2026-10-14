@@ -47,7 +47,7 @@ reviews_of: [JA-C82-shinai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**こうがい** (*kougai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kō*, "suburbs" (Middle Chinese *kaew*) and *gai*, "outside" (*ngwajH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**こうがい** (*kougai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kō*, "suburbs" (Middle Chinese *kaew*) and *gai*, "outside" (*ngwajH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

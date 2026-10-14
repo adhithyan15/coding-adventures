@@ -24,7 +24,7 @@ A verb takes か the same way: ます becomes ますか.
 あした はたらきますか。 — ashita hatarakimasu ka — "Are you working tomorrow?"
 
 The word, taken apart.
-ですか (desu ka) is desu, the polite "is" (JMdict), with ka, the native question particle. Where desu comes from is disputed; it is usually traced to a shortening of de arimasu or de gozarimasu.
+ですか (desu ka) is desu, the polite "is" (JMdict), with ka, the native question particle. Where desu comes from is disputed: shortenings of de arimasu, de gozaimasu and de sōrō are all proposed.
 
 Guided Practice.
 [pause 1 second]

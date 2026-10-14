@@ -47,7 +47,7 @@ reviews_of: [JA-C32-kudamono]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**りんご** (*ringo*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *rin*, "forest" (Middle Chinese *lim*) and *go*, "a small red apple" (*gim*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict marks it as usually written in kana.
+**りんご** (*ringo*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *rin*, "forest" (Middle Chinese *lim*) and *go*, "a small red apple" (*gim*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

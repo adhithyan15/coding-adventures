@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "Street corner, Within the city, Suburbs, Opposite side, Upstream",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:19b25d3c76a305a8",
+  "sourceHash": "fnv1a64:149dee889cda7317",
   "lessons": [
     {
       "id": "JA-C82-machikado",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ecbecaabedd19bd3",
+      "sourceHash": "fnv1a64:df890af52589798f",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "しない (shinai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shi, \"market, city\" (Middle Chinese dzyiX) and nai, \"inside\" (nwojH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "しない (shinai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shi, \"market, city\" (Middle Chinese dzyiX) and nai, \"inside\" (nwojH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6ab7ff54ba8ab8e",
+      "sourceHash": "fnv1a64:d233e87a1a0accce",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "こうがい (kougai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, \"suburbs\" (Middle Chinese kaew) and gai, \"outside\" (ngwajH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "こうがい (kougai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, \"suburbs\" (Middle Chinese kaew) and gai, \"outside\" (ngwajH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

@@ -56,7 +56,7 @@ the word is two beats: *i–sha*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**いしゃ** (*isha*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *i*, "heal, medical" (Middle Chinese *'i*) and *sha*, "person, he who" (*tsyaeX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**いしゃ** (*isha*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *i*, "heal, medical" (Middle Chinese *'i*) and *sha*, "person, he who" (*tsyaeX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C131-ISHA, JA-SCRIPT-SMALL-YA-01, JA-SCRIPT-SHI-01] -->

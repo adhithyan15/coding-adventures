@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 96,
-  "sourceHash": "fnv1a64:08b3df644870cce1",
+  "sourceHash": "fnv1a64:5bbff10f2349d577",
   "lessonIds": [
     "JA-C96-shikaku",
     "JA-C96-sainou",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch96.txt",
   "json": "japanese/narration/ch96.json",
-  "textHash": "fnv1a64:570111bbbd686d80",
-  "jsonHash": "fnv1a64:8f58a84e6e3a24b8",
+  "textHash": "fnv1a64:8c2b3827d52d6748",
+  "jsonHash": "fnv1a64:1ccc76e970b1bb05",
   "findings": []
 }

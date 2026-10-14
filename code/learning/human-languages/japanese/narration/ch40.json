@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Umbrella, School, Homework, Problem, Answer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c572f7de49f0c496",
+  "sourceHash": "fnv1a64:ee68581950a3a341",
   "lessons": [
     {
       "id": "JA-C40-kasa",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3af2f9dfaa20014",
+      "sourceHash": "fnv1a64:f2bb85c1cc78c308",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "がっこう (gakkou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gaku, \"learning\" (Middle Chinese haewk) and kō, \"school\" (haewH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "がっこう (gakkou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gaku, \"learning\" (Middle Chinese haewk) and kō, \"school\" (haewH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d436633782f6371",
+      "sourceHash": "fnv1a64:1846559af016f4e9",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "しゅくだい (shukudai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shuku, \"lodge; long held\" (Middle Chinese sjuwk) and dai, \"title, theme\" (dej) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). Read literally, it is a theme kept overnight."
+              "text": "しゅくだい (shukudai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shuku, \"lodge, stay overnight\" (Middle Chinese sjuwk) and dai, \"title, theme\" (dej) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Read literally, it is a theme kept overnight."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da3ddad0d793c4f5",
+      "sourceHash": "fnv1a64:bed6408e88839b71",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "もんだい (mondai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mon, \"ask\" (Middle Chinese mjunH) and dai, \"title, theme\" (dej) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "もんだい (mondai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mon, \"ask\" (Middle Chinese mjunH) and dai, \"title, theme\" (dej) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

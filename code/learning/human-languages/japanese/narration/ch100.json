@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "Rubbish, Stick, Board, Scissors, Magazine",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4c8f7caae29c6c06",
+  "sourceHash": "fnv1a64:101e81c746d9413b",
   "lessons": [
     {
       "id": "JA-C100-gomi",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3d32c3d2e0f8134",
+      "sourceHash": "fnv1a64:64bbbf56ed3d2d5c",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ぼう (bou) is Sino-Japanese (kango): the on'yomi of a character meaning \"stick\", a reading borrowed from Chinese (Middle Chinese baewngX; Unihan, KANJIDIC2, Baxter–Sagart)."
+              "text": "ぼう (bou) is Sino-Japanese (kango): the on'yomi of a character meaning \"stick\", a reading borrowed from Chinese (Middle Chinese baewngX in Baxter's transcription; Unihan, KANJIDIC2)."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:461d976320e48836",
+      "sourceHash": "fnv1a64:9b20cd9673533d86",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "はさみ (hasami) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2)."
+              "text": "はさみ (hasami) is a native Japanese word, inherited rather than borrowed from Chinese, usually taken as the noun of hasamu, \"to hold between\", a verb JMdict lists. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2)."
             }
           ]
         },
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86942928ad3b2cc6",
+      "sourceHash": "fnv1a64:392550a3b4186842",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ざっし (zasshi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are zatsu, \"mixed\" (Middle Chinese dzop) and shi, \"record\" (tsyiH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). Zatsu is shortened to zas before shi."
+              "text": "ざっし (zasshi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are zatsu, \"mixed\" (Middle Chinese dzop) and shi, \"record\" (tsyiH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Zatsu is shortened to zas before shi."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [JA-C111-shiro]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**どうろ** (*douro*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *dō*, "way, path" (Middle Chinese *dawX*) and *ro*, "road" (*luH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**どうろ** (*douro*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *dō*, "way, path" (Middle Chinese *dawX*) and *ro*, "road" (*luH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [JA-C112-daiku]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**かしゅ** (*kashu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ka*, "song" (Middle Chinese *ka*) and *shu*, "hand; person" (*syuwX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**かしゅ** (*kashu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ka*, "song" (Middle Chinese *ka*) and *shu*, "hand; person" (*syuwX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

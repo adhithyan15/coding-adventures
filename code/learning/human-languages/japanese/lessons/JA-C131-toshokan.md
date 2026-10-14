@@ -55,7 +55,7 @@ Five signs, four beats: *to–sho–ka–n*. **し** with **ょ** after it is on
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**としょかん** (*toshokan*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *to*, "chart, map" (Middle Chinese *du*), *sho*, "book" (*syo*) and *kan*, "public building" (*kwanH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**としょかん** (*toshokan*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *to*, "chart, map" (Middle Chinese *du*), *sho*, "book" (*syo*) and *kan*, "public building" (*kwanH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C131-TOSHOKAN, JA-SCRIPT-SMALL-YO-01] -->

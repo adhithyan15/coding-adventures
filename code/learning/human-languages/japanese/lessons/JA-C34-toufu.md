@@ -47,7 +47,7 @@ reviews_of: [JA-C34-ninjin]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**とうふ** (*toufu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tō*, "bean" (Middle Chinese *duwH*) and *fu*, "rot, curdle" (*bjuX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**とうふ** (*toufu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tō*, "bean" (Middle Chinese *duwH*) and *fu*, "rot, decay" (*bjuX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

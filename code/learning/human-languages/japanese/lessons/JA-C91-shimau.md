@@ -15,7 +15,7 @@ concept_tag: JA-VERB-SHIMAU
 prerequisites: [JA-C90-tsutsumu, JA-C91-yamu]
 sounds: []
 roots: [japanese-shimau]
-etymology_hook: "shimau: native Japanese, inherited, not borrowed; usually kana, kanji 仕舞う as kun'yomi"
+etymology_hook: "shimau: native Japanese, inherited, not borrowed; usually kana; 仕舞う uses 仕 for its sound"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [JA-C91-yamu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**しまう** (*shimau*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+**しまう** (*shimau*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its common kanji spelling sets a character read for its sound, *shi*, before the one for *mau*, "to dance", and JMdict also gives spellings with one character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

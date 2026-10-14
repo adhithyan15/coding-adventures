@@ -47,7 +47,7 @@ reviews_of: [JA-C43-suna]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**たんぼ** (*tanbo*) is native *ta*, "rice field", with an ending whose origin is not settled. JMdict marks the older spelling with "garden" as ateji. It is inherited rather than borrowed.
+**たんぼ** (*tanbo*) is native *ta*, "rice field", with an ending whose origin is not settled. JMdict marks the spelling with "garden" as ateji. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

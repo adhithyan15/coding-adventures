@@ -15,7 +15,7 @@ concept_tag: JA-LOC81-ATARI
 prerequisites: [JA-C80-chikamichi, JA-C80-mawari]
 sounds: []
 roots: [japanese-ataru]
-etymology_hook: "atari: native, the noun from ataru 'to touch, be near'"
+etymology_hook: "atari: native, usually taken as the noun from ataru 'to touch, to face'; written 辺り"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [JA-C80-mawari]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**あたり** (*atari*) is native: the noun made from *ataru*, "to touch, to be near", by its stem; JMdict marks it as usually written in kana in this sense. It is inherited rather than borrowed.
+**あたり** (*atari*) is native, usually taken as the noun made from *ataru*, "to touch, to face", by its stem; JMdict writes it with a character for "side, vicinity", read as a kun'yomi. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Two Answers, Sign by Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cf0f174c02e2f0ed",
+  "sourceHash": "fnv1a64:eaee4ce4470da4cd",
   "lessons": [
     {
       "id": "JA-W01-i",
@@ -803,7 +803,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5044dd4bf7aa6fd3",
+      "sourceHash": "fnv1a64:915eb0df0c1f4191",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -859,7 +859,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "いいえ (iie) is the plain no — and, just as often, a modest \"not at all\" used to wave away thanks or a compliment. That second use is the common one in daily speech, which is worth knowing before you meet it as an answer to thank you at the end of this chapter."
+              "text": "いいえ (iie) is the plain no — and, as often, a modest \"not at all\" used to wave away thanks or a compliment. That second use is the common one in daily speech, which is worth knowing before you meet it as an answer to thank you at the end of this chapter."
             },
             {
               "kind": "speech",

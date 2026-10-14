@@ -54,7 +54,7 @@ the next lesson writes it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**えき** (*eki*) is Sino-Japanese (kango): the on'yomi of a character meaning "relay station", a reading borrowed from Chinese (Middle Chinese *yek*; Unihan, KANJIDIC2, Baxter–Sagart).
+**えき** (*eki*) is Sino-Japanese (kango): the on'yomi of a character meaning "relay station", a reading borrowed from Chinese (Middle Chinese *yek* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-EKI, JA-SCRIPT-E-01] -->

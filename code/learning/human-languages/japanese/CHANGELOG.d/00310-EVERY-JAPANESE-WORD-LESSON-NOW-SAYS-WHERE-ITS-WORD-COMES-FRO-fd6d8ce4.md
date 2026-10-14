@@ -24,7 +24,7 @@ did not state an origin, and 2 had an empty "taken apart" section.
   settled.
 - **Sino-Japanese words (136).** Each character is named by its meaning,
   checked against Unihan (or KANJIDIC2 where Unihan's short definition lacks
-  the sense), and by its Middle Chinese reading in Baxter–Sagart's notation,
+  the sense), and by its Middle Chinese reading in Baxter's transcription, read from the Qieyun / Guangyun categories,
   derived from the Qieyun categories. A few later Chinese readings (*su* in
   *isu* and *sensu*, *sui* in *suika*, *ton* in *futon*) are named as later
   readings. No word is called a Japanese coinage, because no source at hand
@@ -49,3 +49,19 @@ did not state an origin, and 2 had an empty "taken apart" section.
 - **Book contents.** The book now runs past page 999, so the preamble widens
   the contents page-number box to 2.4em and its title clearance to 3.4em, and
   gives wrapped chapter titles a ragged right edge, as the Punjabi book does.
+- **Review.** Two independent reviewers read all 695 changed lessons against
+  JMdict, KANJIDIC2, Unihan and the Guangyun readings. 34 lessons (4.9%) had a
+  content error; all are fixed. Two Middle Chinese readings chose the wrong
+  Guangyun entry for the sense (飯 is *bjonH*, the noun "cooked grain"; 禁
+  "prohibit" is *kimH*), and 蒡 in *gobō* now has the reading Guangyun glosses
+  as burdock (*pangX*). Words with a suggested Korean or Chinese link (*kuma*,
+  *shima*, *kama*, *kutsu*, *kami* in *tegami*) are hedged instead of called
+  plainly native. Two citations of JMdict for claims JMdict does not make
+  (*-masu* from *mairasu*, *mana* "fish") are removed or hedged, *desu* names
+  the competing accounts (*de arimasu*, *de gozaimasu*, *de sōrō*), and loose
+  character glosses are corrected (丁 in *teinei*, 切 in *shinsetsu* and
+  *taisetsu*, 行 in *ginkō*, 宿 in *shukudai*). Words with a transparent
+  analysis are taken apart rather than left on the native template (*akai*,
+  *aoi*, *shiroi*, *kuroi*, *mise*, *itadaku*, *tsumori*, *hasami*). Every
+  Middle Chinese citation now says the readings are in Baxter's transcription
+  of the Qieyun / Guangyun categories.

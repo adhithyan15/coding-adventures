@@ -61,7 +61,7 @@ last **る** and add **ます**: *oki-ru* becomes *oki-masu*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**おきます** (*okimasu*) is native *okiru*, "to get up", with the polite ending *-masu*. The verb is inherited rather than borrowed; *-masu* is usually traced to an older humble verb, *mairasu*, "to offer" (JMdict).
+**おきます** (*okimasu*) is native *okiru*, "to get up", with the polite ending *-masu*. The verb is inherited rather than borrowed; *-masu* is usually traced to an older humble verb, *mairasu*, "to offer", though that account is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C138-OKIMASU] -->

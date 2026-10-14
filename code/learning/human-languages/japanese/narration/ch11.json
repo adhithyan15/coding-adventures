@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Seven Body Words, No New Guessing",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6a1aba4b190aec8e",
+  "sourceHash": "fnv1a64:0fa284840b82167b",
   "lessons": [
     {
       "id": "JA-W11-small-tsu",
@@ -760,7 +760,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de94b5cf8736c371",
+      "sourceHash": "fnv1a64:d2626da06aca2ff1",
       "notice": null,
       "blocks": [
         {
@@ -811,7 +811,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "口 (kuchi) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). The kanji 口 you have written is the same character; its borrowed reading, kō, comes from Chinese ({MC:口})."
+              "text": "口 (kuchi) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). The kanji 口 you have written is the same character; its borrowed reading, kō, comes from Chinese (Middle Chinese khuwX)."
             }
           ]
         },

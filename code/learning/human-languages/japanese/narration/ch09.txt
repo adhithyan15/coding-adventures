@@ -286,7 +286,7 @@ Now join it to the previous word:
 もういちど — mō ichido — one more time.
 
 The word, taken apart.
-いちど (ichido) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, "one" (Middle Chinese 'jit) and do, "degree, a time" (duH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+いちど (ichido) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, "one" (Middle Chinese 'jit) and do, "degree, a time" (duH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 Hear i | chi | do without looking.

@@ -47,7 +47,7 @@ reviews_of: [JA-C96-tsugou]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ざいさん** (*zaisan*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *zai*, "wealth" (Middle Chinese *dzoj*) and *san*, "produce; property" (*sreanX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ざいさん** (*zaisan*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *zai*, "wealth" (Middle Chinese *dzoj*) and *san*, "produce; property" (*sreanX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

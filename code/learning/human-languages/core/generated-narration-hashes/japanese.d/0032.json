@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 32,
-  "sourceHash": "fnv1a64:d09592f46405d147",
+  "sourceHash": "fnv1a64:3631a76005fe749e",
   "lessonIds": [
     "JA-C32-sakana",
     "JA-C32-niku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch32.txt",
   "json": "japanese/narration/ch32.json",
-  "textHash": "fnv1a64:43f14eaff96c3976",
-  "jsonHash": "fnv1a64:bdcf0beae288e445",
+  "textHash": "fnv1a64:eb2235daf456cefa",
+  "jsonHash": "fnv1a64:668bd63e386837e6",
   "findings": []
 }

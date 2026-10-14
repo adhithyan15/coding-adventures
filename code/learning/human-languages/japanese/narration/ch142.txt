@@ -22,7 +22,7 @@ You'll want to know: ちゅうい.
 Read a notice like this and act on it: stop, look, and cross with care.
 
 The word, taken apart.
-ちゅうい (chūi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chū, "pour; direct" (Middle Chinese tsyuH) and i, "thought, mind" ('iH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+ちゅうい (chūi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chū, "pour; direct" (Middle Chinese tsyuH) and i, "thought, mind" ('iH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 [pause 1 second]
@@ -58,7 +58,7 @@ You'll want to know: きんえん.
 すう, suu, the verb you know for breathing in, also means to smoke. Its negative stem すわ with ないで ください asks you politely not to do it.
 
 The word, taken apart.
-きんえん (kin'en) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kin, "forbid" (Middle Chinese kim) and en, "smoke" ('en) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+きんえん (kin'en) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kin, "forbid" (Middle Chinese kimH) and en, "smoke" ('en) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 [pause 1 second]
@@ -133,7 +133,7 @@ You'll want to know: えいぎょうちゅう.
 The door says えいぎょうちゅう (eigyōchū), so you can go in.
 
 The word, taken apart.
-えいぎょうちゅう (eigyōchū) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ei, "manage" (Middle Chinese yweng), gyō, "business, trade" (ngjaep) and chū, "middle, during" (trjuwng) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+えいぎょうちゅう (eigyōchū) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ei, "manage" (Middle Chinese yweng), gyō, "business, trade" (ngjaep) and chū, "middle, during" (trjuwng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 [pause 1 second]
@@ -172,7 +172,7 @@ The door says じゅんびちゅう (junbichū), so the shop is not open yet. Wa
 いまは じゅんびちゅうです。 — ima wa junbichū desu — "We are getting ready now; not open yet."
 
 The word, taken apart.
-じゅんびちゅう (junbichū) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jun, "standard" (Middle Chinese tsywinX), bi, "prepare" (bijH) and chū, "middle, during" (trjuwng) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+じゅんびちゅう (junbichū) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jun, "standard" (Middle Chinese tsywinX), bi, "prepare" (bijH) and chū, "middle, during" (trjuwng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 [pause 1 second]

@@ -13,7 +13,7 @@ You'll want to know: てがみ.
 てがみ — tegami — "a letter (post)".
 
 The word, taken apart.
-てがみ (tegami) is a native compound: te, "hand", and kami, "paper", voiced to gami, both kun'yomi of its kanji (JMdict, KANJIDIC2). It is inherited rather than borrowed.
+てがみ (tegami) is a compound: native te, "hand", and kami, "paper", voiced to gami, both kun'yomi of its kanji (JMdict, KANJIDIC2). Kami is usually counted native, but an early loan from Chinese has also been suggested; its origin is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -47,7 +47,7 @@ You'll want to know: じかん.
 じかん — jikan — "time; an hour".
 
 The word, taken apart.
-じかん (jikan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ji, "time" (Middle Chinese dzyi) and kan, "interval" (kean) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+じかん (jikan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ji, "time" (Middle Chinese dzyi) and kan, "interval" (kean) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.

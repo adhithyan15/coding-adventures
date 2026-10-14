@@ -47,7 +47,7 @@ reviews_of: [JA-C25-onna]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**せんせい** (*sensei*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sen*, "first, before" (Middle Chinese *sen*) and *sei*, "life, birth" (*srjaeng*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). Read literally, it is "born before".
+**せんせい** (*sensei*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sen*, "first, before" (Middle Chinese *sen*) and *sei*, "life, birth" (*srjaeng*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Read literally, it is "born before".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

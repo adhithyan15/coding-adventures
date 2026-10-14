@@ -15,7 +15,7 @@ concept_tag: JA-PLACE58-KUTSU
 prerequisites: [JA-C58-kuni, JA-C58-fuku]
 sounds: []
 roots: [japanese-kutsu]
-etymology_hook: "kutsu: native Japanese, inherited, not borrowed; kanji 靴 attached later as kun'yomi"
+etymology_hook: "kutsu: usually counted native, but whether inherited or an early loan is not settled; 靴 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [JA-C58-fuku]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**くつ** (*kutsu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+**くつ** (*kutsu*) is usually counted a native Japanese word, but whether it is inherited or an early loan from the mainland is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

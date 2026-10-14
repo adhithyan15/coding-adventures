@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 1,
-  "sourceHash": "fnv1a64:cf0f174c02e2f0ed",
+  "sourceHash": "fnv1a64:eaee4ce4470da4cd",
   "lessonIds": [
     "JA-W01-i",
     "JA-W01-ha",
@@ -14,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "japanese/narration/ch01.txt",
   "json": "japanese/narration/ch01.json",
-  "textHash": "fnv1a64:d1be193a6610cb5b",
-  "jsonHash": "fnv1a64:b4407afa5dca908d",
+  "textHash": "fnv1a64:98cc81c9aa233b9f",
+  "jsonHash": "fnv1a64:22feef4ec1020376",
   "findings": []
 }

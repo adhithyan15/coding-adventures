@@ -47,7 +47,7 @@ reviews_of: [JA-C95-okanemochi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**しかく** (*shikaku*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shi*, "property, capital" (Middle Chinese *tsij*) and *kaku*, "pattern, standard" (*kaek*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**しかく** (*shikaku*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shi*, "property, capital" (Middle Chinese *tsij*) and *kaku*, "pattern, standard" (*kaek*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

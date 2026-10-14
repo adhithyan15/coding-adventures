@@ -13,7 +13,7 @@ You'll want to know: こうさてん.
 こうさてん — kousaten — "a crossroads".
 
 The word, taken apart.
-こうさてん (kousaten) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, "mix, cross" (Middle Chinese kaew), sa, "differ" (tsrhae) and ten, "dot, point" (temX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict also gives an older spelling with a character for "fork" in place of the second.
+こうさてん (kousaten) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, "mix, cross" (Middle Chinese kaew), sa, "differ" (tsrhae) and ten, "dot, point" (temX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict also gives an older spelling with a character for "fork" in place of the second.
 
 What you've built.
 One more word for this chapter.
@@ -47,7 +47,7 @@ You'll want to know: しんごう.
 しんごう — shingou — "a traffic light".
 
 The word, taken apart.
-しんごう (shingou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, "trust; message" (Middle Chinese sinH) and gō, "mark, sign" (hawH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+しんごう (shingou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, "trust; message" (Middle Chinese sinH) and gō, "mark, sign" (hawH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -81,7 +81,7 @@ You'll want to know: ほうがく.
 ほうがく — hougaku — "a direction".
 
 The word, taken apart.
-ほうがく (hougaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hō, "region, direction" (Middle Chinese pjang) and kaku, "horn, angle" (kaewk) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+ほうがく (hougaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hō, "region, direction" (Middle Chinese pjang) and kaku, "horn, angle" (kaewk) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.

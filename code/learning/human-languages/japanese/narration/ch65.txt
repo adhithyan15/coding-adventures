@@ -149,7 +149,7 @@ You'll want to know: ごぼう.
 ごぼう — gobou — "burdock root".
 
 The word, taken apart.
-ごぼう (gobou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are go, "ox, cow" (Middle Chinese ngjuw) and bō, "burdock" (baeng) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict marks it as usually written in kana.
+ごぼう (gobou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are go, "ox, cow" (Middle Chinese ngjuw) and bō, "burdock" (pangX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict marks it as usually written in kana.
 
 What you've built.
 One more word for this chapter.

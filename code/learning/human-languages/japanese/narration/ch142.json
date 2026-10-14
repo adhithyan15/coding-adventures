@@ -4,7 +4,7 @@
   "chapter": 142,
   "title": "Notices: Caution, No Smoking, Reception, Open",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:dcfe77c9f392c985",
+  "sourceHash": "fnv1a64:530894434169f7af",
   "lessons": [
     {
       "id": "JA-C142-chuui",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6186b946fbf42c90",
+      "sourceHash": "fnv1a64:e546553289004224",
       "notice": null,
       "blocks": [
         {
@@ -101,7 +101,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ちゅうい (chūi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chū, \"pour; direct\" (Middle Chinese tsyuH) and i, \"thought, mind\" ('iH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "ちゅうい (chūi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chū, \"pour; direct\" (Middle Chinese tsyuH) and i, \"thought, mind\" ('iH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4b1e90e125919d5",
+      "sourceHash": "fnv1a64:a28d77f32169a2de",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "きんえん (kin'en) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kin, \"forbid\" (Middle Chinese kim) and en, \"smoke\" ('en) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "きんえん (kin'en) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kin, \"forbid\" (Middle Chinese kimH) and en, \"smoke\" ('en) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -544,7 +544,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb3b316706893857",
+      "sourceHash": "fnv1a64:9ca7f70a7d325ccb",
       "notice": null,
       "blocks": [
         {
@@ -631,7 +631,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "えいぎょうちゅう (eigyōchū) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ei, \"manage\" (Middle Chinese yweng), gyō, \"business, trade\" (ngjaep) and chū, \"middle, during\" (trjuwng) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "えいぎょうちゅう (eigyōchū) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ei, \"manage\" (Middle Chinese yweng), gyō, \"business, trade\" (ngjaep) and chū, \"middle, during\" (trjuwng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -728,7 +728,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db82137501e93e02",
+      "sourceHash": "fnv1a64:36284ffcb68f8e22",
       "notice": null,
       "blocks": [
         {
@@ -819,7 +819,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "じゅんびちゅう (junbichū) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jun, \"standard\" (Middle Chinese tsywinX), bi, \"prepare\" (bijH) and chū, \"middle, during\" (trjuwng) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "じゅんびちゅう (junbichū) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jun, \"standard\" (Middle Chinese tsywinX), bi, \"prepare\" (bijH) and chū, \"middle, during\" (trjuwng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

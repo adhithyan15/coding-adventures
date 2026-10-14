@@ -4,7 +4,7 @@
   "chapter": 134,
   "title": "Phone and Train: De, Ba, Be and Bu",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:eb1ca724b9a4721c",
+  "sourceHash": "fnv1a64:e23a4779c8973e68",
   "lessons": [
     {
       "id": "JA-C134-denwa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:424ac5662e468bf3",
+      "sourceHash": "fnv1a64:6fdac321f7fedbb3",
       "notice": null,
       "blocks": [
         {
@@ -88,7 +88,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "でんわ (denwa) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are den, \"electricity, lightning\" (Middle Chinese denH) and wa, \"speech, talk\" (hwaejH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "でんわ (denwa) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are den, \"electricity, lightning\" (Middle Chinese denH) and wa, \"speech, talk\" (hwaejH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -343,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4890c5e8bb4e489a",
+      "sourceHash": "fnv1a64:4130f174869dc01a",
       "notice": null,
       "blocks": [
         {
@@ -421,7 +421,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "でんしゃ (densha) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are den, \"electricity, lightning\" (Middle Chinese denH) and sha, \"cart, vehicle\" (tsyhae) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "でんしゃ (densha) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are den, \"electricity, lightning\" (Middle Chinese denH) and sha, \"cart, vehicle\" (tsyhae) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -1337,7 +1337,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:562a77c75d06614f",
+      "sourceHash": "fnv1a64:a3888996248711a3",
       "notice": null,
       "blocks": [
         {
@@ -1415,7 +1415,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "べんきょう (benkyō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ben, \"endeavor, make effort\" (Middle Chinese mjenX) and kyō, \"strong\" (gjang) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "べんきょう (benkyō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ben, \"endeavor, make effort\" (Middle Chinese mjenX) and kyō, \"strong\" (gjang) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -1511,7 +1511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:061e8c11b0b53648",
+      "sourceHash": "fnv1a64:4864b9f513b2fab4",
       "notice": null,
       "blocks": [
         {
@@ -1589,7 +1589,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "しんぶん (shinbun) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, \"new\" (Middle Chinese sin) and bun, \"hear; news\" (mjun) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "しんぶん (shinbun) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, \"new\" (Middle Chinese sin) and bun, \"hear; news\" (mjun) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

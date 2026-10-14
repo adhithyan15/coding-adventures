@@ -4,7 +4,7 @@
   "chapter": 93,
   "title": "Long-awaited, Prayer, Order, Candidate, Plan",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d02beed56393000e",
+  "sourceHash": "fnv1a64:0647e61c45f2966a",
   "lessons": [
     {
       "id": "JA-C93-machidooshii",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cddfe9d9526e8086",
+      "sourceHash": "fnv1a64:3e28e4f7401557a6",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ちゅうもん (chuumon) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chū, \"pour; note\" (Middle Chinese tsyuH) and mon, \"writing\" (mjun) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "ちゅうもん (chuumon) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chū, \"pour; note\" (Middle Chinese tsyuH) and mon, \"writing\" (mjun) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cb3ab5a7261572f",
+      "sourceHash": "fnv1a64:03e3fcf92f7610cf",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "こうほ (kouho) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, \"wait\" (Middle Chinese huwH) and ho, \"mend, fill\" (puX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "こうほ (kouho) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, \"wait\" (Middle Chinese huwH) and ho, \"mend, fill\" (puX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93c35b8d06bdc327",
+      "sourceHash": "fnv1a64:d21ff6bcb6786ac7",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "よてい (yotei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yo, \"beforehand\" (Middle Chinese yoH) and tei, \"decide, fix\" (dengH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "よてい (yotei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yo, \"beforehand\" (Middle Chinese yoH) and tei, \"decide, fix\" (dengH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

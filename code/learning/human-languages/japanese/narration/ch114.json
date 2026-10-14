@@ -4,7 +4,7 @@
   "chapter": 114,
   "title": "Chinese cabbage, Garlic, Sweet bean paste, Honey, Net",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bdfea880229e6896",
+  "sourceHash": "fnv1a64:b23a95b4907bad2f",
   "lessons": [
     {
       "id": "JA-C114-hakusai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7eda1f2afcc613f3",
+      "sourceHash": "fnv1a64:afce9b075eb781a7",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "はくさい (hakusai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are haku, \"white\" (Middle Chinese baek) and sai, \"vegetables\" (tshojH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "はくさい (hakusai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are haku, \"white\" (Middle Chinese baek) and sai, \"vegetables\" (tshojH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [JA-C111-hodou]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**のうか** (*nouka*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *nō*, "agriculture" (Middle Chinese *nowng*) and *ka*, "house, family" (*kae*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**のうか** (*nouka*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *nō*, "agriculture" (Middle Chinese *nowng*) and *ka*, "house, family" (*kae*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

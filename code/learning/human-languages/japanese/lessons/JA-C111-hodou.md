@@ -47,7 +47,7 @@ reviews_of: [JA-C111-douro]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ほどう** (*hodou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ho*, "step, walk" (Middle Chinese *buH*) and *dō*, "way, path" (*dawX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ほどう** (*hodou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ho*, "step, walk" (Middle Chinese *buH*) and *dō*, "way, path" (*dawX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

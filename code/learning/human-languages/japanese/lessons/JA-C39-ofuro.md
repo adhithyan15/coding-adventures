@@ -47,7 +47,7 @@ reviews_of: [JA-C39-niwa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**おふろ** (*ofuro*) is the polite prefix *o-* with *furo*, "bath". JMdict writes *furo* with a character for "wind" and one used for its sound; where *furo* comes from is not settled.
+**おふろ** (*ofuro*) is the polite prefix *o-* with *furo*, "bath". JMdict writes *furo* with the characters for *fu*, "wind", and *ro*, both chosen for their sounds; where *furo* comes from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

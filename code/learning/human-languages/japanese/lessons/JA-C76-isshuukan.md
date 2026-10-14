@@ -47,7 +47,7 @@ reviews_of: [JA-C76-mayonaka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**いっしゅうかん** (*isshuukan*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ichi*, "one" (Middle Chinese *'jit*), *shū*, "week" and *kan*, "interval" (*kean*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). *Ichi* loses its last beat before *shū*.
+**いっしゅうかん** (*isshuukan*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ichi*, "one" (Middle Chinese *'jit*), *shū*, "week" and *kan*, "interval" (*kean*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). *Ichi* loses its last beat before *shū*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

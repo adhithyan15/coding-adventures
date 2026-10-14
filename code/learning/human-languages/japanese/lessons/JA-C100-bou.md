@@ -47,7 +47,7 @@ reviews_of: [JA-C100-gomi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ぼう** (*bou*) is Sino-Japanese (kango): the on'yomi of a character meaning "stick", a reading borrowed from Chinese (Middle Chinese *baewngX*; Unihan, KANJIDIC2, Baxter–Sagart).
+**ぼう** (*bou*) is Sino-Japanese (kango): the on'yomi of a character meaning "stick", a reading borrowed from Chinese (Middle Chinese *baewngX* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -18,7 +18,7 @@ You'll want to know: かぞく.
 Three beats: ka–zo–ku. か and く you already write. The middle sign is そ with the two short strokes of the voicing mark at its upper right, so so becomes zo. The next lesson writes it.
 
 The word, taken apart.
-かぞく (kazoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ka, "house, family" (Middle Chinese kae) and zoku, "family clan" (dzuwk) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+かぞく (kazoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ka, "house, family" (Middle Chinese kae) and zoku, "family clan" (dzuwk) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 [pause 1 second]
@@ -240,7 +240,7 @@ You'll want to know: かぜ.
 Two beats: ka–ze. か you already write. The second sign is せ with the voicing mark, so se becomes ze. The next lesson writes it.
 
 The word, taken apart.
-かぜ (kaze) is a native word, "wind", inherited rather than borrowed. For the cold you catch JMdict writes "wind" and "evil", read as a whole, so the illness was named after the wind.
+かぜ (kaze) is a native word, "wind", inherited rather than borrowed. For the cold you catch JMdict writes "wind" and "evil", read as a whole: the illness shares the word for wind.
 
 Guided Practice.
 [pause 1 second]

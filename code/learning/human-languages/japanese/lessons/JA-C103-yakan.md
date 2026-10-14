@@ -47,7 +47,7 @@ reviews_of: [JA-C103-suidou]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**やかん** (*yakan*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *yaku*, "medicine" (Middle Chinese *yak*) and *kan*, "jar" (*kwanH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). It was a pot for brewing medicine, and *yaku* shortened to *ya*; JMdict marks it as usually written in kana.
+**やかん** (*yakan*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *yaku*, "medicine" (Middle Chinese *yak*) and *kan*, "jar" (*kwanH*, the reading of its fuller older form) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). It was a pot for brewing medicine, and *yaku* shortened to *ya*; JMdict marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

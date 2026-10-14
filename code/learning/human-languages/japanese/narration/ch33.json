@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Apple, Mandarin orange, Strawberry, Peach, Pear",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7188da631accb87e",
+  "sourceHash": "fnv1a64:0be2adaec82594ab",
   "lessons": [
     {
       "id": "JA-C33-ringo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cdaf3d3f09a60cbf",
+      "sourceHash": "fnv1a64:64b906a3983ec023",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "りんご (ringo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rin, \"forest\" (Middle Chinese lim) and go, \"a small red apple\" (gim) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict marks it as usually written in kana."
+              "text": "りんご (ringo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rin, \"forest\" (Middle Chinese lim) and go, \"a small red apple\" (gim) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict marks it as usually written in kana."
             }
           ]
         },

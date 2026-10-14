@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Letter, Time, Name, Money, Mountain",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a4934f4adff50eb0",
+  "sourceHash": "fnv1a64:bd8667bbb7a42433",
   "lessons": [
     {
       "id": "JA-C41-tegami",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5a6e560e12d85f3",
+      "sourceHash": "fnv1a64:f79e4eccd7c50edb",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "てがみ (tegami) is a native compound: te, \"hand\", and kami, \"paper\", voiced to gami, both kun'yomi of its kanji (JMdict, KANJIDIC2). It is inherited rather than borrowed."
+              "text": "てがみ (tegami) is a compound: native te, \"hand\", and kami, \"paper\", voiced to gami, both kun'yomi of its kanji (JMdict, KANJIDIC2). Kami is usually counted native, but an early loan from Chinese has also been suggested; its origin is not settled."
             }
           ]
         },
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5883c832a0242379",
+      "sourceHash": "fnv1a64:051eb7c421efaaf9",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "じかん (jikan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ji, \"time\" (Middle Chinese dzyi) and kan, \"interval\" (kean) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "じかん (jikan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ji, \"time\" (Middle Chinese dzyi) and kan, \"interval\" (kean) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 102,
   "title": "Laundry, Detergent, Teacup, Rice pot, Chopping board",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b04d81c105f0f19e",
+  "sourceHash": "fnv1a64:326ec1fbae1a20bd",
   "lessons": [
     {
       "id": "JA-C102-sentakumono",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e45376a5ef1aad3f",
+      "sourceHash": "fnv1a64:26e50336d66a0e83",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "せんざい (senzai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, \"wash\" and zai, \"medicinal preparation\" (Middle Chinese dzejH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "せんざい (senzai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, \"wash\" and zai, \"medicinal preparation\" (Middle Chinese dzejH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:461f1215c39cb491",
+      "sourceHash": "fnv1a64:630e34c4d404ff44",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "かま (kama) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+              "text": "かま (kama) is counted a native Japanese word, but its origin is not settled: a link with the Korean word for a pot has been suggested, and whether the two share an ancestor or one was borrowed from the other is open. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
             }
           ]
         },
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c595f746bed59272",
+      "sourceHash": "fnv1a64:4da68bdbd688ce10",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "まないた (manaita) is a native compound, inherited rather than borrowed: ita, \"board\", with mana, usually explained as an old word for fish or food (JMdict, KANJIDIC2)."
+              "text": "まないた (manaita) is a native compound, inherited rather than borrowed: ita, \"board\", with mana, usually explained as an old word for fish as food; one JMdict spelling writes it with \"true\" and \"fish\" (JMdict, KANJIDIC2)."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 60,
-  "sourceHash": "fnv1a64:78f90ad229fee534",
+  "sourceHash": "fnv1a64:358e1ff6412bac1d",
   "lessonIds": [
     "JA-C60-man",
     "JA-C60-juuni",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch60.txt",
   "json": "japanese/narration/ch60.json",
-  "textHash": "fnv1a64:8f4aa7ed4dc08cca",
-  "jsonHash": "fnv1a64:d6d02e6fbafb4b1d",
+  "textHash": "fnv1a64:40682a17e38a1ba4",
+  "jsonHash": "fnv1a64:67b11904588f1cc8",
   "findings": []
 }

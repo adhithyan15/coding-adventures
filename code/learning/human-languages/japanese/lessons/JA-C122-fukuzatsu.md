@@ -47,7 +47,7 @@ reviews_of: [JA-C122-kantan]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ふくざつ** (*fukuzatsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *fuku*, "double, repeat" (Middle Chinese *pjuwk*) and *zatsu*, "mixed" (*dzop*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ふくざつ** (*fukuzatsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *fuku*, "double, repeat" (Middle Chinese *pjuwk*) and *zatsu*, "mixed" (*dzop*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

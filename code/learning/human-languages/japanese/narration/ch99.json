@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "Wallet, Walking stick, Bag, Scrubbing brush, Dustpan",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a38818207d5e906f",
+  "sourceHash": "fnv1a64:728855908a024270",
   "lessons": [
     {
       "id": "JA-C99-saifu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b6335075829579c",
+      "sourceHash": "fnv1a64:d166d3ad60eb4f00",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "さいふ (saifu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sai, \"wealth\" (Middle Chinese dzoj) and fu, \"cloth\" (puH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "さいふ (saifu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sai, \"wealth\" (Middle Chinese dzoj) and fu, \"cloth\" (puH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

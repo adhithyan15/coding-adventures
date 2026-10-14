@@ -47,7 +47,7 @@ reviews_of: [JA-C104-tsutsumi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ふうとう** (*fuutou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *fū*, "envelope, seal" (Middle Chinese *pjowng*) and *tō*, "tube, pipe" (*duwng*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ふうとう** (*fuutou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *fū*, "envelope, seal" (Middle Chinese *pjowng*) and *tō*, "tube, pipe" (*duwng*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

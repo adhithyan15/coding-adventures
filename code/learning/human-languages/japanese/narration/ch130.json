@@ -4,7 +4,7 @@
   "chapter": 130,
   "title": "Pure white, Pitch black, Bright red, Vague, Certain",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9c31394c1b4b49d9",
+  "sourceHash": "fnv1a64:8baef8cee2a91bed",
   "lessons": [
     {
       "id": "JA-C130-masshiro",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d735bb2d1b237971",
+      "sourceHash": "fnv1a64:33dfd18c59dbabcd",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "まっしろ (masshiro) is native: ma, \"true, very\", with shiro, \"white\", the consonant doubled where they meet (JMdict, KANJIDIC2). It is inherited rather than borrowed."
+              "text": "まっしろ (masshiro) is native: ma, \"true, very\", with the colour word shiro, \"white\", the base of shiroi, the consonant doubled where they meet (JMdict, KANJIDIC2). It is inherited rather than borrowed."
             }
           ]
         },
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3818a6b709cff34d",
+      "sourceHash": "fnv1a64:12cbe747c2e66b8d",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "まっくろ (makkuro) is native: ma, \"true, very\", with kuro, \"black\", the consonant doubled where they meet (JMdict, KANJIDIC2). It is inherited rather than borrowed."
+              "text": "まっくろ (makkuro) is native: ma, \"true, very\", with the colour word kuro, \"black\", the base of kuroi, the consonant doubled where they meet (JMdict, KANJIDIC2). It is inherited rather than borrowed."
             }
           ]
         },
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7942e33736a4e6b",
+      "sourceHash": "fnv1a64:93483ebdf4e81e77",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "まっか (makka) is native: ma, \"true, very\", with aka, \"red\", joined with a held k (JMdict, KANJIDIC2). It is inherited rather than borrowed."
+              "text": "まっか (makka) is native: ma, \"true, very\", with the colour word aka, \"red\", the base of akai, joined with a held k (JMdict, KANJIDIC2). It is inherited rather than borrowed."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0f25d4d0e1e729c",
+      "sourceHash": "fnv1a64:423f7b0798e4d15c",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "あいまい (aimai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ai, \"dim, obscure\" (Middle Chinese 'ojH) and mai, \"dark, obscure\" (mwojH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "あいまい (aimai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ai, \"dim, obscure\" (Middle Chinese 'ojH) and mai, \"dark, obscure\" (mwojH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

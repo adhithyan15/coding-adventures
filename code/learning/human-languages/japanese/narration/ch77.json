@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "Second of the month, Third of the month, Fourth of the month, Fifth of the month, Sixth of the month",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8c6ddf320c837fc2",
+  "sourceHash": "fnv1a64:af578c4659cf34bf",
   "lessons": [
     {
       "id": "JA-C77-futsuka",
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:266d65d3550f2b77",
+      "sourceHash": "fnv1a64:b602845321ad0e2d",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "いつか (itsuka) is two native phrases that sound alike. \"The fifth\" is itsu, \"five\", with ka, \"day\" (KANJIDIC2); \"some day\" is itsu, \"when\", with ka, \"or so\". Both are inherited rather than borrowed."
+              "text": "いつか (itsuka) is two native phrases that sound alike. \"The fifth\" is itsu, \"five\", with ka, \"day\" (KANJIDIC2); \"some day\" is itsu, \"when\", with the question word ka: \"some time or other\". Both are inherited rather than borrowed."
             }
           ]
         },

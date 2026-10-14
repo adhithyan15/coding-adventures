@@ -15,7 +15,7 @@ concept_tag: JA-QUAL120-TEINEI
 prerequisites: [JA-C120-hima, JA-C120-shinsetsu]
 sounds: []
 roots: [middle-chinese-teng, middle-chinese-neng]
-etymology_hook: "teinei: Sino-Japanese 丁 'robust' + 寧 'repose', on'yomi borrowed from Chinese"
+etymology_hook: "teinei: Sino-Japanese 丁 + 寧 'peace'; careful is the sense of the pair, not of 丁 alone"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [JA-C120-shinsetsu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ていねい** (*teinei*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tei*, "robust, vigorous" (Middle Chinese *teng*) and *nei*, "repose, peace" (*neng*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ていねい** (*teinei*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tei* (Middle Chinese *teng*), whose own senses include "adult man" and "fourth in a series", and *nei*, "repose, peace" (*neng*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). "Careful" is the sense of the pair, not of *tei* alone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

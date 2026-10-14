@@ -47,7 +47,7 @@ reviews_of: [JA-C34-daikon]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**にんじん** (*ninjin*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *nin*, "person" (Middle Chinese *nyin*) and *jin*, "ginseng" (*srim*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict lists ginseng as a second sense: the name first belonged to that root and later passed to the carrot.
+**にんじん** (*ninjin*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *nin*, "person" (Middle Chinese *nyin*) and *jin*, "ginseng" (*srim*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict lists ginseng as a second sense: the name first belonged to that root and later passed to the carrot.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

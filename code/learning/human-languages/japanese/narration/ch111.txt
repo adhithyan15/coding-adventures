@@ -47,7 +47,7 @@ You'll want to know: かんごし.
 かんごし — kangoshi — "a nurse".
 
 The word, taken apart.
-かんごし (kangoshi) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, "look, watch over" (Middle Chinese khan), go, "protect" (huH) and shi, "specialist, teacher" (srij) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+かんごし (kangoshi) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, "look, watch over" (Middle Chinese khan), go, "protect" (huH) and shi, "specialist, teacher" (srij) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -115,7 +115,7 @@ You'll want to know: どうろ.
 どうろ — douro — "a road, a highway".
 
 The word, taken apart.
-どうろ (douro) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dō, "way, path" (Middle Chinese dawX) and ro, "road" (luH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+どうろ (douro) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dō, "way, path" (Middle Chinese dawX) and ro, "road" (luH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -149,7 +149,7 @@ You'll want to know: ほどう.
 ほどう — hodou — "a pavement".
 
 The word, taken apart.
-ほどう (hodou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ho, "step, walk" (Middle Chinese buH) and dō, "way, path" (dawX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+ほどう (hodou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ho, "step, walk" (Middle Chinese buH) and dō, "way, path" (dawX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.

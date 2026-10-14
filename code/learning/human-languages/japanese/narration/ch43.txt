@@ -47,7 +47,7 @@ You'll want to know: たんぼ.
 たんぼ — tanbo — "a rice field".
 
 The word, taken apart.
-たんぼ (tanbo) is native ta, "rice field", with an ending whose origin is not settled. JMdict marks the older spelling with "garden" as ateji. It is inherited rather than borrowed.
+たんぼ (tanbo) is native ta, "rice field", with an ending whose origin is not settled. JMdict marks the spelling with "garden" as ateji. It is inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.
@@ -149,7 +149,7 @@ You'll want to know: たいよう.
 たいよう — taiyou — "the sun".
 
 The word, taken apart.
-たいよう (taiyou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, "big, great" (Middle Chinese thajH) and yō, "sun; the bright principle" (yang) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+たいよう (taiyou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, "big, great" (Middle Chinese thajH) and yō, "sun; the bright principle" (yang) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.

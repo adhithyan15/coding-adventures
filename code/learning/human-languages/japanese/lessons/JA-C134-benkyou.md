@@ -57,7 +57,7 @@ the *o*, as it does in **きのう**. You write every sign in it now.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**べんきょう** (*benkyō*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ben*, "endeavor, make effort" (Middle Chinese *mjenX*) and *kyō*, "strong" (*gjang*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**べんきょう** (*benkyō*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ben*, "endeavor, make effort" (Middle Chinese *mjenX*) and *kyō*, "strong" (*gjang*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C134-BENKYOU, JA-SCRIPT-BE-01, JA-LEX-ANCHOR-TABERU, JA-SCRIPT-N-01, JA-SCRIPT-KI-01, JA-SCRIPT-SMALL-YO-01, JA-SCRIPT-U-01] -->

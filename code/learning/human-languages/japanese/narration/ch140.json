@@ -4,7 +4,7 @@
   "chapter": 140,
   "title": "Last Week, Last Month, Last Year: the Past",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3e7f039f3043d032",
+  "sourceHash": "fnv1a64:40a17113f8050e38",
   "lessons": [
     {
       "id": "JA-C140-senshuu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff6a2385c33871e5",
+      "sourceHash": "fnv1a64:b8dc99b2524eb1b1",
       "notice": null,
       "blocks": [
         {
@@ -105,7 +105,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "せんしゅう (senshū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, \"before, previous\" (Middle Chinese sen) and shū, \"week\" (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "せんしゅう (senshū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, \"before, previous\" (Middle Chinese sen) and shū, \"week\" (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0dc52ac31e8a564b",
+      "sourceHash": "fnv1a64:a7d5aae7a54ac6cb",
       "notice": null,
       "blocks": [
         {
@@ -284,7 +284,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "せんげつ (sengetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, \"before, previous\" (Middle Chinese sen) and getsu, \"moon, month\" (ngjwot) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "せんげつ (sengetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, \"before, previous\" (Middle Chinese sen) and getsu, \"moon, month\" (ngjwot) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -379,7 +379,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3bef0bce0c0ace40",
+      "sourceHash": "fnv1a64:cb70fa0794ce85d4",
       "notice": null,
       "blocks": [
         {
@@ -466,7 +466,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "きょねん (kyonen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kyo, \"go away, past\" (Middle Chinese khjoH) and nen, \"year\" (nen) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "きょねん (kyonen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kyo, \"go away, past\" (Middle Chinese khjoH) and nen, \"year\" (nen) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

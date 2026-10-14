@@ -47,7 +47,7 @@ You'll want to know: たいせつ.
 たいせつ — taisetsu — "precious".
 
 The word, taken apart.
-たいせつ (taisetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, "big, great" (Middle Chinese dajH) and setsu, "cut, sharp" (tshet) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+たいせつ (taisetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, "big, great" (Middle Chinese dajH) and setsu, "cut", and also "close, pressing" (tshet) (Unihan, KANJIDIC2, Guangyun; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -81,7 +81,7 @@ You'll want to know: ひつよう.
 ひつよう — hitsuyou — "necessary".
 
 The word, taken apart.
-ひつよう (hitsuyou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hitsu, "surely, must" (Middle Chinese pjit) and yō, "necessary" ('jiewH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+ひつよう (hitsuyou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hitsu, "surely, must" (Middle Chinese pjit) and yō, "necessary" ('jiewH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -115,7 +115,7 @@ You'll want to know: かんたん.
 かんたん — kantan — "simple".
 
 The word, taken apart.
-かんたん (kantan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, "simple, terse" (Middle Chinese keanX) and tan, "single" (tan) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+かんたん (kantan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, "simple, terse" (Middle Chinese keanX) and tan, "single" (tan) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -149,7 +149,7 @@ You'll want to know: ふくざつ.
 ふくざつ — fukuzatsu — "complicated".
 
 The word, taken apart.
-ふくざつ (fukuzatsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fuku, "double, repeat" (Middle Chinese pjuwk) and zatsu, "mixed" (dzop) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+ふくざつ (fukuzatsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fuku, "double, repeat" (Middle Chinese pjuwk) and zatsu, "mixed" (dzop) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.

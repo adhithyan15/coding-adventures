@@ -59,7 +59,7 @@ hair salon.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**びょういん** (*byōin*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *byō*, "illness" (Middle Chinese *bjaengH*) and *in*, "courtyard; institution" (*hjwenH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**びょういん** (*byōin*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *byō*, "illness" (Middle Chinese *bjaengH*) and *in*, "courtyard; institution" (*hjwenH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-BYOUIN, JA-SCRIPT-SMALL-YO-01, JA-SCRIPT-U-01, JA-SCRIPT-I-01, JA-SCRIPT-N-01] -->

@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Pain, Grandfather, Uncle, Son, Daughter",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:10d7efdf1160d73d",
+  "sourceHash": "fnv1a64:008a6118bc92f2f5",
   "lessons": [
     {
       "id": "JA-C24-itami",
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:030baf7542e7348c",
+      "sourceHash": "fnv1a64:3506810b51fb1ee2",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "むすこ (musuko) is a native word, inherited rather than borrowed. It is usually explained as musu, \"to be born, to grow\", with ko, \"child\"; JMdict's kanji, \"breath\" and \"child\", are read as a whole for their meaning."
+              "text": "むすこ (musuko) is a native word, inherited rather than borrowed. It is usually explained as musu, \"to be born, to grow\", with ko, \"child\"; JMdict's kanji, \"breath; son\" and \"child\", are read as a whole for their meaning."
             }
           ]
         },

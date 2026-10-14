@@ -11,7 +11,7 @@ gloss: here; this place
 concept_tag: JA-PLACE-KOKO
 prerequisites: [JA-C10-wakarimashita]
 sounds: [mora]
-roots: [japanese-ko-this]
+roots: [japanese-ko-this, japanese-ko-place]
 etymology_hook: "koko: native ko- 'near me' + -ko 'place'; usually written in kana"
 duration:
   max_seconds: 155

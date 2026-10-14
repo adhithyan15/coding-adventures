@@ -47,7 +47,7 @@ reviews_of: [JA-C73-hinoiri]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**こんや** (*konya*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kon*, "now, this" (Middle Chinese *kim*) and *ya*, "night" (*yaeH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**こんや** (*konya*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kon*, "now, this" (Middle Chinese *kim*) and *ya*, "night" (*yaeH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [JA-C105-hikari]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**もん** (*mon*) is Sino-Japanese (kango): the on'yomi of a character meaning "gate", a reading borrowed from Chinese (Middle Chinese *mwon*; Unihan, KANJIDIC2, Baxter–Sagart).
+**もん** (*mon*) is Sino-Japanese (kango): the on'yomi of a character meaning "gate", a reading borrowed from Chinese (Middle Chinese *mwon* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 35,
-  "sourceHash": "fnv1a64:2329efe5525406b1",
+  "sourceHash": "fnv1a64:eacbb29e03fa2182",
   "lessonIds": [
     "JA-C35-satou",
     "JA-C35-udon",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch35.txt",
   "json": "japanese/narration/ch35.json",
-  "textHash": "fnv1a64:768c9ecdb2cc3052",
-  "jsonHash": "fnv1a64:3eb8cfad08f714ff",
+  "textHash": "fnv1a64:743dae29d7c316f2",
+  "jsonHash": "fnv1a64:211dd920fb316846",
   "findings": []
 }

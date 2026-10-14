@@ -15,7 +15,7 @@ concept_tag: JA-SCHOOL41-TEGAMI
 prerequisites: [JA-C40-mondai, JA-C40-kotae]
 sounds: []
 roots: [japanese-te-hand, japanese-kami-paper]
-etymology_hook: "tegami: native compound of te 'hand' + kami 'paper' (手紙)"
+etymology_hook: "tegami: native te 'hand' + kami 'paper' (手紙); whether kami is native or an early loan is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [JA-C40-kotae]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**てがみ** (*tegami*) is a native compound: *te*, "hand", and *kami*, "paper", voiced to *gami*, both kun'yomi of its kanji (JMdict, KANJIDIC2). It is inherited rather than borrowed.
+**てがみ** (*tegami*) is a compound: native *te*, "hand", and *kami*, "paper", voiced to *gami*, both kun'yomi of its kanji (JMdict, KANJIDIC2). *Kami* is usually counted native, but an early loan from Chinese has also been suggested; its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

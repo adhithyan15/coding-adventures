@@ -56,7 +56,7 @@ as it joins **ち** in **おちゃ**. You write every sign in it now.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**でんしゃ** (*densha*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *den*, "electricity, lightning" (Middle Chinese *denH*) and *sha*, "cart, vehicle" (*tsyhae*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**でんしゃ** (*densha*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *den*, "electricity, lightning" (Middle Chinese *denH*) and *sha*, "cart, vehicle" (*tsyhae*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C134-DENSHA, JA-SCRIPT-DE-01, JA-LEX-ANCHOR-DENWA, JA-SCRIPT-N-01, JA-SCRIPT-SHI-01, JA-SCRIPT-SMALL-YA-01] -->

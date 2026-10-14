@@ -50,7 +50,7 @@ reviews_of: [JA-C71-mei]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ごご** (*gogo*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *go*, "noon" (Middle Chinese *nguX*) and *go*, "after" (*huwX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ごご** (*gogo*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *go*, "noon" (Middle Chinese *nguX*) and *go*, "after" (*huwX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

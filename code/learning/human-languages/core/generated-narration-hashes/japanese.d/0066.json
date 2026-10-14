@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 66,
-  "sourceHash": "fnv1a64:b8faa0582234e3eb",
+  "sourceHash": "fnv1a64:365a9e5426a250f7",
   "lessonIds": [
     "JA-C66-kago",
     "JA-C66-koma",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch66.txt",
   "json": "japanese/narration/ch66.json",
-  "textHash": "fnv1a64:235aca8687ec613e",
-  "jsonHash": "fnv1a64:d79c7c43c2cf3a92",
+  "textHash": "fnv1a64:2dc7fa9d96ba4d2e",
+  "jsonHash": "fnv1a64:9a34e159a5709d78",
   "findings": []
 }

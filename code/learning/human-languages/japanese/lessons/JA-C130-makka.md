@@ -47,7 +47,7 @@ reviews_of: [JA-C130-makkuro]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**まっか** (*makka*) is native: *ma*, "true, very", with *aka*, "red", joined with a held *k* (JMdict, KANJIDIC2). It is inherited rather than borrowed.
+**まっか** (*makka*) is native: *ma*, "true, very", with the colour word *aka*, "red", the base of *akai*, joined with a held *k* (JMdict, KANJIDIC2). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

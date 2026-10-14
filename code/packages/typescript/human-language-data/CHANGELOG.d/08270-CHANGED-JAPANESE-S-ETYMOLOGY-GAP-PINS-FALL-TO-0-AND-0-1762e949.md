@@ -9,7 +9,8 @@
 - **Sources.**
   - JMdict (EDRDG) for kanji spellings, ateji and meaning spellings, and loanword donors.
   - KANJIDIC2 for on'yomi and kun'yomi, and Unihan for character meanings, both checked by script.
-  - Middle Chinese readings in Baxter–Sagart's notation.
+  - Middle Chinese readings in Baxter's transcription, read from the Qieyun / Guangyun categories.
 - **Uncertain origins.** 9 say the origin is not settled.
+- **Review.** Two independent reviewers read all 695 changed lessons; 34 (4.9%) had a content error, all fixed, among them three Middle Chinese readings and five debated native words now hedged.
 - **More detail.** The Japanese track changelog covers the counts by origin kind; no `max_seconds` value was raised.
 - **No code changed.** Only the pins and the owner's rationale moved.

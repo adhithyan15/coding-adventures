@@ -149,7 +149,7 @@ You'll want to know: やさしい.
 やさしい — yasashii — "easy; kind".
 
 The word, taken apart.
-やさしい (yasashii) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+やさしい (yasashii) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. JMdict writes it with one character for "easy", usually left in kana, and another for "kind"; both are kun'yomi attached later (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

@@ -4,7 +4,7 @@
   "chapter": 92,
   "title": "Wanted, Wish, To wish for, Request, Desire",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:07f14120ce26fcd2",
+  "sourceHash": "fnv1a64:41c73b10073e92d2",
   "lessons": [
     {
       "id": "JA-C92-hoshii",
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eec939cc2287c676",
+      "sourceHash": "fnv1a64:00d16166e96d6362",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "よくぼう (yokubou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yoku, \"desire\" (Middle Chinese yowk) and bō, \"hope; gaze\" (mjangH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "よくぼう (yokubou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yoku, \"desire\" (Middle Chinese yowk) and bō, \"hope; gaze\" (mjangH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

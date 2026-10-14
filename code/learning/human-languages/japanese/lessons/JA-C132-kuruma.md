@@ -55,7 +55,7 @@ the bottom, and the next lesson writes it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**くるま** (*kuruma*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). JMdict still lists "wheel" among its senses: the wheel came first, then the cart, then the car.
+**くるま** (*kuruma*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). JMdict still lists "wheel" among its senses, and the word named wheeled carts long before cars.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KURUMA, JA-SCRIPT-KU-01, JA-SCRIPT-MA-01] -->

@@ -47,7 +47,7 @@ reviews_of: [JA-C97-shudan]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ほうほう** (*houhou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *hō*, "way, direction" (Middle Chinese *pjang*) and *hō*, "law, method" (*pjop*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**ほうほう** (*houhou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *hō*, "way, direction" (Middle Chinese *pjang*) and *hō*, "law, method" (*pjop*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

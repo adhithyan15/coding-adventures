@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "A Daytime Greeting, One Sign at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:012eba1e2e0496a5",
+  "sourceHash": "fnv1a64:2a9758dd5b0af4b7",
   "lessons": [
     {
       "id": "JA-W01-ko",
@@ -1141,7 +1141,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:562799c22483db47",
+      "sourceHash": "fnv1a64:b3809b00e12c1461",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1223,7 +1223,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "こんにちは (konnichiwa) is a sentence cut short. Konnichi, \"today, this day\", is Sino-Japanese: kon, \"now\" (Middle Chinese kim), and nichi, \"day\" (Middle Chinese nyit), on'yomi borrowed from Chinese; the native particle wa, \"as for\", stayed on the end (JMdict; Unihan, Baxter–Sagart)."
+              "text": "こんにちは (konnichiwa) is a sentence cut short. Konnichi, \"today\", is Sino-Japanese: kon, \"now\" (Middle Chinese kim), and nichi, \"day\" (nyit), on'yomi borrowed from Chinese; the native particle wa, \"as for\", stayed on the end (JMdict; Unihan; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

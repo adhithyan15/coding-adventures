@@ -47,7 +47,7 @@ reviews_of: [JA-C100-hasami]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ざっし** (*zasshi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *zatsu*, "mixed" (Middle Chinese *dzop*) and *shi*, "record" (*tsyiH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). *Zatsu* is shortened to *zas* before *shi*.
+**ざっし** (*zasshi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *zatsu*, "mixed" (Middle Chinese *dzop*) and *shi*, "record" (*tsyiH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). *Zatsu* is shortened to *zas* before *shi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -64,7 +64,7 @@ so it remains postponed rather than becoming an unexplained decoding test.
 ## The word, taken apart — the real family
 <!-- hl-knowledge: introduces=[JA-LEX-NIHONGO, JA-BRIDGE-SINO-JAPANESE]; assesses=[] -->
 
-Here the cousin web finally works — just not toward English. The on-readings
+Here the cousin web finally works — though not toward English. The on-readings
 *nichi*, *hon*, *go* are borrowings of Middle Chinese, so 日本語 has genuine
 relatives: Mandarin writes the same three characters and says *Rìběnyǔ*; Korean
 borrowed the same compound as *ilbon-eo*. Same characters, related imported

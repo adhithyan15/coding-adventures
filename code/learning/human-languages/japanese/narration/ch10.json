@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "A Little More Slowly",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:eddfea6c0a82d763",
+  "sourceHash": "fnv1a64:ef3d6e416595a732",
   "lessons": [
     {
       "id": "JA-W10-se",
@@ -1355,7 +1355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe45122cddc07881",
+      "sourceHash": "fnv1a64:ce6b397068d143b7",
       "notice": null,
       "blocks": [
         {

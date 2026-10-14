@@ -4,7 +4,7 @@
   "chapter": 111,
   "title": "Forehead, Nurse, Castle, Road, Pavement",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:743b5aa9582c69ab",
+  "sourceHash": "fnv1a64:999060227dfd29ae",
   "lessons": [
     {
       "id": "JA-C111-hitai",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b961b654dd104b42",
+      "sourceHash": "fnv1a64:f8ee66d3710d4e72",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "かんごし (kangoshi) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, \"look, watch over\" (Middle Chinese khan), go, \"protect\" (huH) and shi, \"specialist, teacher\" (srij) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "かんごし (kangoshi) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, \"look, watch over\" (Middle Chinese khan), go, \"protect\" (huH) and shi, \"specialist, teacher\" (srij) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:793108bc3a736f9a",
+      "sourceHash": "fnv1a64:b59538eb2aa5ab2a",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "どうろ (douro) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dō, \"way, path\" (Middle Chinese dawX) and ro, \"road\" (luH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "どうろ (douro) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dō, \"way, path\" (Middle Chinese dawX) and ro, \"road\" (luH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:615041e7e00e6245",
+      "sourceHash": "fnv1a64:deaff00a40edd575",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ほどう (hodou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ho, \"step, walk\" (Middle Chinese buH) and dō, \"way, path\" (dawX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "ほどう (hodou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ho, \"step, walk\" (Middle Chinese buH) and dō, \"way, path\" (dawX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

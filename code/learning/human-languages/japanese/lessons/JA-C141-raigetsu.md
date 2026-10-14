@@ -56,7 +56,7 @@ same as in **らいしゅう**: "the one coming".
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**らいげつ** (*raigetsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *rai*, "come, coming" (Middle Chinese *loj*) and *getsu*, "moon, month" (*ngjwot*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**らいげつ** (*raigetsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *rai*, "come, coming" (Middle Chinese *loj*) and *getsu*, "moon, month" (*ngjwot*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C141-RAIGETSU, JA-LEX-C141-RAISHUU] -->

@@ -47,7 +47,7 @@ reviews_of: [JA-C94-tanoshimi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**あい** (*ai*) is Sino-Japanese (kango): the on'yomi of a character meaning "love", a reading borrowed from Chinese (Middle Chinese *'ojH*; Unihan, KANJIDIC2, Baxter–Sagart).
+**あい** (*ai*) is Sino-Japanese (kango): the on'yomi of a character meaning "love", a reading borrowed from Chinese (Middle Chinese *'ojH* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

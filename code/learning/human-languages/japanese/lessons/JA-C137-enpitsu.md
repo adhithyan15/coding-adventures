@@ -56,7 +56,7 @@ lesson writes it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**えんぴつ** (*enpitsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *en*, "lead" (Middle Chinese *ywen*) and *hitsu*, "writing brush" (*pit*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**えんぴつ** (*enpitsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *en*, "lead" (Middle Chinese *ywen*) and *hitsu*, "writing brush" (*pit*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-ENPITSU, JA-SCRIPT-E-01, JA-SCRIPT-N-01, JA-SCRIPT-TSU-01] -->

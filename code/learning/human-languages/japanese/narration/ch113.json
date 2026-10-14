@@ -4,7 +4,7 @@
   "chapter": 113,
   "title": "Personal seal, Dumpling, Soup stock, Bonito, Wakame seaweed",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:af83bdf541a57c9f",
+  "sourceHash": "fnv1a64:6e1d76579d43d86a",
   "lessons": [
     {
       "id": "JA-C113-hanko",
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f556e4444f1d05a",
+      "sourceHash": "fnv1a64:3e64be102177f062",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "わかめ (wakame) is native: waka, \"young\", and me, an old word for edible seaweed. JMdict writes it with characters for \"young\" and \"cloth\", read for their meaning. It is inherited rather than borrowed."
+              "text": "わかめ (wakame) is native, usually explained as waka, \"young\", and me, an old word for edible seaweed. JMdict writes it with characters for \"young\" and \"cloth\", read for their meaning. It is inherited rather than borrowed."
             }
           ]
         },

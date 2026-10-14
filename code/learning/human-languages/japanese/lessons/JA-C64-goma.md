@@ -47,7 +47,7 @@ reviews_of: [JA-C64-kona]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ごま** (*goma*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *go*, "foreign" (Middle Chinese *hu*) and *ma*, "hemp" (*mae*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict marks it as usually written in kana.
+**ごま** (*goma*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *go*, "foreign" (Middle Chinese *hu*) and *ma*, "hemp" (*mae*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

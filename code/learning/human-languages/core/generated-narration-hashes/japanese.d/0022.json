@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 22,
-  "sourceHash": "fnv1a64:c1c5ba97d4a77e46",
+  "sourceHash": "fnv1a64:5cb59639873ce0d3",
   "lessonIds": [
     "JA-C22-ase",
     "JA-C22-namida",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch22.txt",
   "json": "japanese/narration/ch22.json",
-  "textHash": "fnv1a64:e39b8c9a45682b79",
-  "jsonHash": "fnv1a64:4bc66f4421d752bd",
+  "textHash": "fnv1a64:91b6fd76f7898bcb",
+  "jsonHash": "fnv1a64:f171e299f096dfa2",
   "findings": []
 }

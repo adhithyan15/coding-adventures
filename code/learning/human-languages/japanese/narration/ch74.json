@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "Every week, Weekend, End, On the way, Half past",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4d288a458e29b254",
+  "sourceHash": "fnv1a64:e60ad5ba3b7858cc",
   "lessons": [
     {
       "id": "JA-C74-maishuu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35908b04310e1157",
+      "sourceHash": "fnv1a64:21f20e1d140f275f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "まいしゅう (maishuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mai, \"every\" (Middle Chinese mwojX) and shū, \"week\" (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "まいしゅう (maishuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mai, \"every\" (Middle Chinese mwojX) and shū, \"week\" (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:afc4033c1d3fdf10",
+      "sourceHash": "fnv1a64:cfc61fa43ecd679c",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "しゅうまつ (shuumatsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shū, \"week\" and matsu, \"end\" (Middle Chinese mat) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "しゅうまつ (shuumatsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shū, \"week\" and matsu, \"end\" (Middle Chinese mat) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bfbee4ab456fa0a",
+      "sourceHash": "fnv1a64:0e21093adcdb19ea",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "とちゅう (tochuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are to, \"road, way\" (Middle Chinese du) and chū, \"middle\" (trjuwng) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "とちゅう (tochuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are to, \"road, way\" (Middle Chinese du) and chū, \"middle\" (trjuwng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9058da5125e7b75a",
+      "sourceHash": "fnv1a64:4e5c14178a33562a",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "はん (han) is Sino-Japanese (kango): the on'yomi of a character meaning \"half\", a reading borrowed from Chinese (Middle Chinese panH; Unihan, KANJIDIC2, Baxter–Sagart)."
+              "text": "はん (han) is Sino-Japanese (kango): the on'yomi of a character meaning \"half\", a reading borrowed from Chinese (Middle Chinese panH in Baxter's transcription; Unihan, KANJIDIC2)."
             }
           ]
         },

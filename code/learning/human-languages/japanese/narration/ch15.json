@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Two Signs the Rest of the Run Cost",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:62e6ec093a320f1e",
+  "sourceHash": "fnv1a64:b1fb1addb44cb171",
   "lessons": [
     {
       "id": "JA-C15-nana",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4253f6b3b24bbdc",
+      "sourceHash": "fnv1a64:bc79f8116cab6624",
       "notice": null,
       "blocks": [
         {
@@ -96,7 +96,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "なな (nana) is native: the kun'yomi of the character for \"seven\", a word inherited rather than borrowed. The borrowed reading is shichi, from Chinese (Middle Chinese tshit; KANJIDIC2, Baxter–Sagart)."
+              "text": "なな (nana) is native: the kun'yomi of the character for \"seven\", a word inherited, not borrowed. The borrowed reading is shichi, from Chinese (Middle Chinese tshit in Baxter's transcription; KANJIDIC2)."
             }
           ]
         },

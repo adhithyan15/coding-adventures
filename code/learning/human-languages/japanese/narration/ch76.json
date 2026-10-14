@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "Midnight, Whole week, One whole day, Half a day, First of the month",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9d61c35112f23569",
+  "sourceHash": "fnv1a64:333ad1f609983d6b",
   "lessons": [
     {
       "id": "JA-C76-mayonaka",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24f2262db5b7c9b9",
+      "sourceHash": "fnv1a64:4755334ff9e41c59",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "いっしゅうかん (isshuukan) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, \"one\" (Middle Chinese 'jit), shū, \"week\" and kan, \"interval\" (kean) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). Ichi loses its last beat before shū."
+              "text": "いっしゅうかん (isshuukan) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, \"one\" (Middle Chinese 'jit), shū, \"week\" and kan, \"interval\" (kean) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Ichi loses its last beat before shū."
             }
           ]
         },
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:acd79fb4ec7ab0e2",
+      "sourceHash": "fnv1a64:9264f9aa78e6551e",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "いちにち (ichinichi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, \"one\" (Middle Chinese 'jit) and nichi, \"day\" (nyit) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "いちにち (ichinichi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, \"one\" (Middle Chinese 'jit) and nichi, \"day\" (nyit) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:767bfe5047f75e97",
+      "sourceHash": "fnv1a64:bba727b021ec07e7",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "はんにち (hannichi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are han, \"half\" (Middle Chinese panH) and nichi, \"day\" (nyit) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "はんにち (hannichi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are han, \"half\" (Middle Chinese panH) and nichi, \"day\" (nyit) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

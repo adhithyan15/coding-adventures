@@ -14,7 +14,7 @@ romanization: "gohan"
 concept_tag: JA-VERBS31-GOHAN
 prerequisites: [JA-C31-naosu, JA-C31-ugoku]
 sounds: []
-roots: [middle-chinese-ngjoh, middle-chinese-bjonx]
+roots: [middle-chinese-ngjoh, middle-chinese-bjonh]
 etymology_hook: "gohan: Sino-Japanese 御 'honourable' + 飯 'cooked rice', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
@@ -47,7 +47,7 @@ reviews_of: [JA-C31-ugoku]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ごはん** (*gohan*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *go*, "honourable; a polite prefix" (Middle Chinese *ngjoH*) and *han*, "cooked rice" (*bjonX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). The polite *go-* is the on'yomi of the character whose native reading gives *o-*.
+**ごはん** (*gohan*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *go*, "honourable; a polite prefix" (Middle Chinese *ngjoH*) and *han*, "cooked rice" (*bjonH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). The polite *go-* is the on'yomi of the character whose native reading gives *o-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

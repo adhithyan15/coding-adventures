@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 93,
-  "sourceHash": "fnv1a64:d02beed56393000e",
+  "sourceHash": "fnv1a64:0647e61c45f2966a",
   "lessonIds": [
     "JA-C93-machidooshii",
     "JA-C93-inori",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch93.txt",
   "json": "japanese/narration/ch93.json",
-  "textHash": "fnv1a64:775ea4369854b163",
-  "jsonHash": "fnv1a64:0b972999f771eacb",
+  "textHash": "fnv1a64:a5003a5a3616dc8b",
+  "jsonHash": "fnv1a64:93327c55273a2ccb",
   "findings": []
 }

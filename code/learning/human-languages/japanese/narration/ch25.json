@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Friend, Adult, Man, Woman, Teacher",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e7c8fa564b0b2b17",
+  "sourceHash": "fnv1a64:7deb3775b926d811",
   "lessons": [
     {
       "id": "JA-C25-tomodachi",
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7526bc1da09a1565",
+      "sourceHash": "fnv1a64:186e0afc33bbe809",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "せんせい (sensei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, \"first, before\" (Middle Chinese sen) and sei, \"life, birth\" (srjaeng) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). Read literally, it is \"born before\"."
+              "text": "せんせい (sensei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, \"first, before\" (Middle Chinese sen) and sei, \"life, birth\" (srjaeng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Read literally, it is \"born before\"."
             }
           ]
         },

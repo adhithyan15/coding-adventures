@@ -15,7 +15,7 @@ concept_tag: JA-PLACE57-MISE
 prerequisites: [JA-C57-machi, JA-C57-michi]
 sounds: []
 roots: [japanese-mise]
-etymology_hook: "mise: native Japanese, inherited, not borrowed; kanji 店 attached later as kun'yomi"
+etymology_hook: "mise: native; first short for misedana, a display shelf (JMdict); kanji 店 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [JA-C57-michi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**みせ** (*mise*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+**みせ** (*mise*) is a native Japanese word, inherited rather than borrowed from Chinese. JMdict notes that it began as a shortening of *misedana*, a shelf for showing goods. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

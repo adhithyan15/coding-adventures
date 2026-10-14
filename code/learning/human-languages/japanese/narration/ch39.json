@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Garden, Bath, Tatami mat, Shelf, Box",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b1c1bde018f44efe",
+  "sourceHash": "fnv1a64:d6cc7dff6f5394ff",
   "lessons": [
     {
       "id": "JA-C39-niwa",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89f0d5ec21adb8f1",
+      "sourceHash": "fnv1a64:7cb43bf10560db01",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "おふろ (ofuro) is the polite prefix o- with furo, \"bath\". JMdict writes furo with a character for \"wind\" and one used for its sound; where furo comes from is not settled."
+              "text": "おふろ (ofuro) is the polite prefix o- with furo, \"bath\". JMdict writes furo with the characters for fu, \"wind\", and ro, both chosen for their sounds; where furo comes from is not settled."
             }
           ]
         },

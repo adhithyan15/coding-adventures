@@ -13,7 +13,7 @@ You'll want to know: しあわせ.
 しあわせ — shiawase — "happy".
 
 The word, taken apart.
-しあわせ (shiawase) is native. JMdict's older spelling shows shi, from suru, "to do", and awase, "fitting together"; it is usually explained as first meaning how things fell out, good or bad. It is inherited rather than borrowed.
+しあわせ (shiawase) is native. JMdict's other spelling shows shi, from suru, "to do", and awase, "fitting together"; it is usually explained as first meaning how things fell out, good or bad. It is inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.
@@ -81,7 +81,7 @@ You'll want to know: あんしん.
 あんしん — anshin — "relieved".
 
 The word, taken apart.
-あんしん (anshin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are an, "peaceful" (Middle Chinese 'an) and shin, "heart, mind" (sim) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+あんしん (anshin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are an, "peaceful" (Middle Chinese 'an) and shin, "heart, mind" (sim) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -115,7 +115,7 @@ You'll want to know: ふつう.
 ふつう — futsuu — "ordinary".
 
 The word, taken apart.
-ふつう (futsuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fu, "universal, general" (Middle Chinese phuX) and tsū, "pass through; common" (thuwng) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+ふつう (futsuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fu, "universal, general" (Middle Chinese phuX) and tsū, "pass through; common" (thuwng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.

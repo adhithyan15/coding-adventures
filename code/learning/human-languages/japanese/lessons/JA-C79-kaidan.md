@@ -47,7 +47,7 @@ reviews_of: [JA-C79-kado]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**かいだん** (*kaidan*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kai*, "stairs, storey" (Middle Chinese *keaj*) and *dan*, "step, section" (*dwanH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**かいだん** (*kaidan*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kai*, "stairs, storey" (Middle Chinese *keaj*) and *dan*, "step, section" (*dwanH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

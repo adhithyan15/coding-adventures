@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Sand, Rice field, Star, Cloud, Sun",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:eb256a21b590b02c",
+  "sourceHash": "fnv1a64:7b2d637562fd2a3e",
   "lessons": [
     {
       "id": "JA-C43-suna",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:459903d3d60ebb4c",
+      "sourceHash": "fnv1a64:daadd5815ac51308",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "たんぼ (tanbo) is native ta, \"rice field\", with an ending whose origin is not settled. JMdict marks the older spelling with \"garden\" as ateji. It is inherited rather than borrowed."
+              "text": "たんぼ (tanbo) is native ta, \"rice field\", with an ending whose origin is not settled. JMdict marks the spelling with \"garden\" as ateji. It is inherited rather than borrowed."
             }
           ]
         },
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f40a07c89a1592d7",
+      "sourceHash": "fnv1a64:3e4f1780ddb9a387",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "たいよう (taiyou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"big, great\" (Middle Chinese thajH) and yō, \"sun; the bright principle\" (yang) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+              "text": "たいよう (taiyou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"big, great\" (Middle Chinese thajH) and yō, \"sun; the bright principle\" (yang) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
             }
           ]
         },

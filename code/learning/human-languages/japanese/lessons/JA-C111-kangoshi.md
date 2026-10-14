@@ -47,7 +47,7 @@ reviews_of: [JA-C111-hitai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**かんごし** (*kangoshi*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kan*, "look, watch over" (Middle Chinese *khan*), *go*, "protect" (*huH*) and *shi*, "specialist, teacher" (*srij*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**かんごし** (*kangoshi*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kan*, "look, watch over" (Middle Chinese *khan*), *go*, "protect" (*huH*) and *shi*, "specialist, teacher" (*srij*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

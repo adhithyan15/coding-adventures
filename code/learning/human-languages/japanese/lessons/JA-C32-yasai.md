@@ -47,7 +47,7 @@ reviews_of: [JA-C32-tamago]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**やさい** (*yasai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ya*, "field" (Middle Chinese *yaeX*) and *sai*, "vegetables" (*tshojH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**やさい** (*yasai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ya*, "field" (Middle Chinese *yaeX*) and *sai*, "vegetables" (*tshojH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

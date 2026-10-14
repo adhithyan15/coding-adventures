@@ -59,7 +59,7 @@ what will happen too, and a time word places it:
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**らいしゅう** (*raishū*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *rai*, "come, coming" (Middle Chinese *loj*) and *shū*, "week" (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**らいしゅう** (*raishū*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *rai*, "come, coming" (Middle Chinese *loj*) and *shū*, "week" (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C141-RAISHUU] -->

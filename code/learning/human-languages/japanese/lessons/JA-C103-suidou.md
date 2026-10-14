@@ -47,7 +47,7 @@ reviews_of: [JA-C103-otama]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**すいどう** (*suidou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sui*, "water" (Middle Chinese *sywijX*) and *dō*, "way, path" (*dawX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+**すいどう** (*suidou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sui*, "water" (Middle Chinese *sywijX*) and *dō*, "way, path" (*dawX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
