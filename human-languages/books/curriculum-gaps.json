@@ -31,9 +31,9 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
     "wordLessons": 25682,
-    "wordLessonsWithoutEtymologyHook": 7648,
-    "wordLessonsWithoutVisibleEtymology": 7876,
-    "wordLessonsWithEmptyEtymologyBlock": 406,
+    "wordLessonsWithoutEtymologyHook": 7099,
+    "wordLessonsWithoutVisibleEtymology": 7352,
+    "wordLessonsWithEmptyEtymologyBlock": 375,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
@@ -341584,10 +341584,10 @@
       {
         "language": "punjabi",
         "wordLessons": 623,
-        "wordLessonsWithoutEtymologyHook": 549,
-        "wordLessonsWithoutVisibleEtymology": 524,
-        "wordLessonsWithoutAnyEtymology": 523,
-        "wordLessonsWithEmptyEtymologyBlock": 31
+        "wordLessonsWithoutEtymologyHook": 0,
+        "wordLessonsWithoutVisibleEtymology": 0,
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "russian",
@@ -341640,12 +341640,12 @@
     ],
     "summary": {
       "wordLessons": 25682,
-      "wordLessonsWithoutEtymologyHook": 7648,
-      "wordLessonsWithoutVisibleEtymology": 7876,
-      "wordLessonsWithoutAnyEtymology": 7479,
-      "wordLessonsWithEmptyEtymologyBlock": 406,
-      "hookPercent": 70,
-      "visiblePercent": 69
+      "wordLessonsWithoutEtymologyHook": 7099,
+      "wordLessonsWithoutVisibleEtymology": 7352,
+      "wordLessonsWithoutAnyEtymology": 6956,
+      "wordLessonsWithEmptyEtymologyBlock": 375,
+      "hookPercent": 72,
+      "visiblePercent": 71
     }
   },
   "writingStages": {
@@ -454197,16 +454197,16 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 15056,
-    "underspent": 14156,
-    "neverSpent": 10961,
+    "roots": 15558,
+    "underspent": 14655,
+    "neverSpent": 11422,
     "payoffDistribution": {
-      "0": 10961,
-      "1": 2270,
-      "2": 925,
-      "3": 439,
-      "4": 215,
-      "5": 103,
+      "0": 11422,
+      "1": 2301,
+      "2": 932,
+      "3": 440,
+      "4": 216,
+      "5": 104,
       "6": 50,
       "7": 32,
       "8": 11,
@@ -454255,25 +454255,25 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 29058,
-    "usesBeforeIntroduction": 51708,
-    "technicalUsesBeforeIntroduction": 8382,
-    "technicalLessons": 5347,
+    "usesBeforeIntroduction": 51989,
+    "technicalUsesBeforeIntroduction": 8392,
+    "technicalLessons": 5356,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 3092
+        "lessons": 3097
       },
       {
         "term": "noun",
-        "lessons": 1712
+        "lessons": 1713
       },
       {
         "term": "adjective",
-        "lessons": 409
+        "lessons": 410
       },
       {
         "term": "participle",
-        "lessons": 367
+        "lessons": 368
       },
       {
         "term": "case",
