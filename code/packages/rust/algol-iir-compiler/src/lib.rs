@@ -16280,13 +16280,18 @@ mod tests {
                 let main = module.get_function("main").expect("has main");
                 assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
                 let six = standard_name_depth_boundary_source(condition, assigned, 6);
-                let error = compile_source(&six, "test").expect_err("six-layer source must be refused at its actual consumer boundary");
                 if assigned {
-                    assert!(matches!(error, CompileError::Type(ref message) if message.contains("cannot print a real value")), "condition={condition}, assigned={assigned}: {error:?}");
+                    let module = compile_source(&six, "test").expect("assigned six-layer source parses and compiles under the imported policy");
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
                 } else {
                     // Direct output adds grammar nesting before classification.
+                    let error = compile_source(&six, "test").expect_err("direct six-layer source retains the parser boundary");
                     assert!(matches!(error, CompileError::Parse(ref message) if message.contains("supported limit (135)")), "condition={condition}, assigned={assigned}: {error:?}");
                 }
+                let seven = standard_name_depth_boundary_source(condition, assigned, 7);
+                let error = compile_source(&seven, "test").expect_err("seven-layer source retains the parser boundary");
+                assert!(matches!(error, CompileError::Parse(ref message) if message.contains("supported limit (135)")), "condition={condition}, assigned={assigned}: {error:?}");
             }
         }
     }
@@ -16325,7 +16330,7 @@ mod tests {
                 _ => false,
             })
         }
-        fn deepen_relay_actuals(node: &mut GrammarASTNode) -> usize {
+        fn deepen_relay_actuals(node: &mut GrammarASTNode, depth: usize) -> usize {
             if call_name(node) == Some("relay") {
                 let parameters = node.children.iter_mut().find_map(|child| match child {
                     ASTNodeOrToken::Node(child) if child.rule_name == "actual_params" => Some(child),
@@ -16337,15 +16342,15 @@ mod tests {
                 }).collect();
                 assert_eq!(expressions.len(), 1);
                 let actual = expressions.into_iter().next().expect("one parsed relay expression");
-                verify_actual(actual, 5);
+                verify_actual(actual, depth);
                 let original = actual.clone();
                 assert!(wrap_outer_actual(actual, &original));
-                verify_actual(actual, 6);
+                verify_actual(actual, depth + 1);
                 // Stop here: revisiting the inserted tree would add layers.
                 return 1;
             }
             node.children.iter_mut().map(|child| match child {
-                ASTNodeOrToken::Node(child) => deepen_relay_actuals(child),
+                ASTNodeOrToken::Node(child) => deepen_relay_actuals(child, depth),
                 _ => 0,
             }).sum()
         }
@@ -16357,11 +16362,17 @@ mod tests {
                 let main = module.get_function("main").expect("has main");
                 assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
                 let mut six = five.clone();
-                assert_eq!(deepen_relay_actuals(&mut six), 2, "replace exactly both conditional relay actuals");
+                assert_eq!(deepen_relay_actuals(&mut six, 5), 2, "replace exactly both conditional relay actuals");
                 assert_eq!(five, parse_algol(&source), "retain the original parsed tree");
+                let module = compile_ast(&six, "test").expect("the same six-layer roots remain proven under the imported policy");
+                let main = module.get_function("main").expect("has main");
+                assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
+                let mut seven = six.clone();
+                assert_eq!(deepen_relay_actuals(&mut seven, 6), 2, "replace exactly both six-layer conditional relay actuals");
+                assert_eq!(six, { let mut same = five.clone(); assert_eq!(deepen_relay_actuals(&mut same, 5), 2); same }, "retain the proven sixth-layer input");
                 // Public AST evidence only. Cloned position metadata does not
                 // certify source parsing or a new source/provenance mapping.
-                let error = compile_ast(&six, "test").expect_err("a sixth layer over the same proven root exhausts the compiler's standard-call budget");
+                let error = compile_ast(&seven, "test").expect_err("a seventh layer over the same proven root exhausts the compiler's standard-call budget");
                 assert!(!matches!(error, CompileError::Parse(_)), "semantic refusal required: {error:?}");
                 assert!(format!("{error:?}").contains("cannot print a real value"), "condition={condition}, assigned={assigned}: {error:?}");
             }
