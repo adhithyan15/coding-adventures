@@ -86,9 +86,10 @@ pub struct StreamReactorOptions {
     pub shard_bits: u32,
     /// Whether this reactor accepts new connections on its own listener (`true`,
     /// the default).  A fan-out *worker* sets this `false`: it still binds a
-    /// listener (the constructor requires one) but never enables accept interest,
-    /// so it serves only connections handed to it by adoption — direct connects to
-    /// its throwaway port are never accepted, closing an otherwise-open ingress.
+    /// listener (the constructor requires one) but switches its accept interest
+    /// off and ignores its accept readiness, so it serves only connections
+    /// handed to it by adoption — direct connects to its throwaway port are
+    /// never served, closing an otherwise-open ingress.
     pub accept_connections: bool,
     pub read_buffer_size: usize,
     pub max_connections: usize,
@@ -284,6 +285,8 @@ pub struct StreamReactor<P, S = ()> {
     max_connections: usize,
     max_pending_write_bytes: usize,
     poll_timeout: Duration,
+    /// `false` for a fan-out worker: its own listener must never be served.
+    accept_connections: bool,
     stream_options: StreamOptions,
     state_init: StateInit<S>,
     handler: StatefulHandler<S>,
@@ -334,17 +337,18 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             PlatformError::ProviderFault(format!("read listener address: {error}"))
         })?;
         // A fan-out worker (`accept_connections == false`) binds a listener but
-        // never enables accept interest, so it never accepts on its own port — it
-        // serves only adopted connections.  A direct connect to that throwaway
-        // port is left unaccepted in the kernel backlog rather than served, which
-        // closes it as an ingress.
-        if options.accept_connections {
-            platform
-                .set_listener_interest(listener, true)
-                .map_err(|error| {
-                    PlatformError::ProviderFault(format!("enable listener interest: {error}"))
-                })?;
-        }
+        // must never accept on its own port — it serves only adopted
+        // connections.  "Never enable interest" is not enough on its own: the
+        // kqueue and IOCP providers arm a new listener at bind (IOCP even posts
+        // AcceptEx operations), so interest is switched *off* explicitly, and
+        // `serve` also ignores accept readiness from such a listener.  A direct
+        // connect to the throwaway port is therefore never served, which closes
+        // it as an ingress around the acceptor.
+        platform
+            .set_listener_interest(listener, options.accept_connections)
+            .map_err(|error| {
+                PlatformError::ProviderFault(format!("set listener interest: {error}"))
+            })?;
 
         // Register a wakeup and grab a cross-thread handle for the mailbox, so an
         // off-reactor write can interrupt `poll` and flush at once instead of
@@ -376,6 +380,7 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             max_connections: options.max_connections.max(1),
             max_pending_write_bytes: options.max_pending_write_bytes.max(1),
             poll_timeout: options.poll_timeout,
+            accept_connections: options.accept_connections,
             stream_options: options.stream,
             state_init: Arc::new(init),
             handler: Arc::new(handler),
@@ -422,7 +427,7 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             for event in &events {
                 match event {
                     PlatformEvent::ListenerAcceptReady { listener }
-                        if *listener == self.listener =>
+                        if *listener == self.listener && self.accept_connections =>
                     {
                         self.accept_ready()?;
                     }
@@ -1668,5 +1673,86 @@ mod tests {
 
         let result = server.join().expect("server thread");
         assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+}
+
+/// Tests that run on every backend with a real provider.
+#[cfg(all(
+    test,
+    any(
+        target_os = "linux",
+        target_os = "windows",
+        target_os = "macos",
+        target_os = "freebsd",
+        target_os = "openbsd",
+        target_os = "netbsd",
+        target_os = "dragonfly"
+    )
+))]
+mod worker_listener_tests {
+    use super::*;
+    use std::io::{Read, Write};
+    use std::net::TcpStream;
+    use std::sync::atomic::AtomicUsize;
+    use std::thread;
+
+    #[cfg(target_os = "linux")]
+    fn new_platform() -> transport_platform::linux::EpollTransportPlatform {
+        transport_platform::linux::EpollTransportPlatform::new().expect("create platform")
+    }
+
+    #[cfg(target_os = "windows")]
+    fn new_platform() -> transport_platform::windows::WindowsTransportPlatform {
+        transport_platform::windows::WindowsTransportPlatform::new().expect("create platform")
+    }
+
+    #[cfg(not(any(target_os = "linux", target_os = "windows")))]
+    fn new_platform() -> transport_platform::bsd::KqueueTransportPlatform {
+        transport_platform::bsd::KqueueTransportPlatform::new().expect("create platform")
+    }
+
+    /// A fan-out worker (`accept_connections: false`) must never serve a
+    /// connection made straight to its own throwaway listener: only the
+    /// acceptor decides what reaches a worker.  The kernel may still complete
+    /// the TCP handshake (the backlog, or an AcceptEx the IOCP provider posted
+    /// at bind), so the connect itself can succeed; what must not happen is
+    /// the handler running or an echo coming back.
+    #[test]
+    fn a_worker_reactor_never_serves_its_own_listener() {
+        let served = Arc::new(AtomicUsize::new(0));
+        let served_in_handler = Arc::clone(&served);
+        let options = StreamReactorOptions {
+            accept_connections: false,
+            ..StreamReactorOptions::default()
+        };
+        let mut reactor = StreamReactor::bind(
+            new_platform(),
+            BindAddress::Ip("127.0.0.1:0".parse().expect("loopback addr")),
+            options,
+            move |_, bytes| {
+                served_in_handler.fetch_add(1, Ordering::SeqCst);
+                StreamHandlerResult::write(bytes.to_vec())
+            },
+        )
+        .expect("bind worker reactor");
+        let addr = reactor.local_addr();
+        let stop = reactor.stop_handle();
+        let server = thread::spawn(move || reactor.serve());
+
+        if let Ok(mut client) = TcpStream::connect_timeout(&addr, Duration::from_millis(500)) {
+            client
+                .set_read_timeout(Some(Duration::from_millis(300)))
+                .expect("read timeout");
+            let _ = client.write_all(b"around the acceptor?");
+            let mut buffer = [0u8; 32];
+            if let Ok(n) = client.read(&mut buffer) {
+                assert_eq!(n, 0, "the worker served a direct connection");
+            }
+        }
+
+        stop.stop();
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+        assert_eq!(served.load(Ordering::SeqCst), 0, "the handler ran");
     }
 }
