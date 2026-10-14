@@ -910,8 +910,12 @@ where
         }
         let stroke = edge.style.stroke.as_deref().unwrap_or(&diagram.theme.line_color);
         let stroke_width = edge.style.stroke_width.unwrap_or_else(|| {
-            if edge.kind == SwimlaneEdgeKind::Thick { 3.5 } else { 1.8 }
+            if edge.kind == SwimlaneEdgeKind::Thick { 3.5 }
+            else { diagram.theme.stroke_width.unwrap_or(1.8) }
         });
+        let marker_stroke = if edge.style.stroke.is_some() { stroke } else {
+            diagram.theme.arrowhead_color.as_deref().unwrap_or(stroke)
+        };
         let mut path = line_path(
             &[edge.from.clone(), edge.to.clone()],
             stroke,
@@ -1037,10 +1041,10 @@ where
         }
         instructions.push(PaintInstruction::Path(path));
         instructions.extend(swimlane_endpoint_marker(
-            edge.start_marker, &start_previous, &edge.from, stroke, stroke_width,
+            edge.start_marker, &start_previous, &edge.from, marker_stroke, stroke_width,
         ));
         instructions.extend(swimlane_endpoint_marker(
-            edge.end_marker, &end_previous, &edge.to, stroke, stroke_width,
+            edge.end_marker, &end_previous, &edge.to, marker_stroke, stroke_width,
         ));
         if let Some(label) = &edge.label {
             let label_x = (edge.from.x + edge.to.x) / 2.0 - 52.0;
@@ -1089,7 +1093,7 @@ where
     for node in &diagram.nodes {
         let fill = node.style.fill.clone().unwrap_or_else(|| diagram.theme.main_background.clone());
         let stroke = node.style.stroke.clone().unwrap_or_else(|| diagram.theme.node_border.clone());
-        let stroke_width = node.style.stroke_width.unwrap_or(2.0);
+        let stroke_width = node.style.stroke_width.or(diagram.theme.stroke_width).unwrap_or(2.0);
         let stroke_dash = node.style.stroke_dash.clone();
         let shape = match node.shape {
             DiagramShape::TextBlock => PaintInstruction::Rect(PaintRect {
@@ -1506,6 +1510,7 @@ where
             | DiagramShape::Summary
         ) {
             let text_color = node.style.text_color.as_deref()
+                .or(diagram.theme.node_text_color.as_deref())
                 .unwrap_or(&diagram.theme.primary_text_color);
             let text_color = parse_css_color(text_color).unwrap_or(Color { r: 13, g: 71, b: 161, a: 255 });
             let mut label_font = options.label_font.clone();
@@ -1628,6 +1633,15 @@ where
     }
     if let Some(color) = &diagram.theme.title_color {
         metadata.insert("swimlane.theme.titleColor".into(), color.clone());
+    }
+    if let Some(color) = &diagram.theme.node_text_color {
+        metadata.insert("swimlane.theme.nodeTextColor".into(), color.clone());
+    }
+    if let Some(color) = &diagram.theme.arrowhead_color {
+        metadata.insert("swimlane.theme.arrowheadColor".into(), color.clone());
+    }
+    if let Some(width) = diagram.theme.stroke_width {
+        metadata.insert("swimlane.theme.strokeWidth".into(), width.to_string());
     }
     if let Some(family) = &diagram.theme.font_family {
         metadata.insert("swimlane.theme.fontFamily".into(), family.clone());
