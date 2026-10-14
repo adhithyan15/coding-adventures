@@ -52,3 +52,20 @@ BUILD list, as required for every new matrix test. The simulator's existing
 unfiltered cargo test command already executes the new integration target.
 Only after the complete formerly red LANG target actually passes may its stale
 exclusion notes and production test selection be reconciled.
+
+Actual isolated source316e7878 validation completed: nine affected packages
+1226PASS2FAIL1existingignore/81targets; only the obsolete five/seven-formal
+refusal oracles failed. Full unfiltered LANG476/0/0, strict nine-package
+alltargets, standalone Closure1093/0/0 across181targets and strict passed.
+Spec-first test-only correction7126217d retains those accepted counts and eight,
+adds exact ABI/got9/max8 plus public-refusal checks. New complete backend
+85/0/0 over2 targets and strict nine-package alltargets passed.
+Whole production prefix and every other Rust/instruction object remain exact;
+unchanged runtime evidence is explicitly attributed to316e. These counts are
+separate source receipts, not additive, and the original failed run stays failed.
+The prior5ba run exhausted disk before tests; its failed receipts are preserved.
+Retry disabled debug symbols/incremental compilation, preserving all inputs,
+assertions and limits. Registry376 tuples remain exact. Miri
+**DEFERRED/PENDING**, never passed; frozen run/input/target/receipts untouched.
+General-hop32 resource debt, hosted CI/conflict/review/merge, full Closure parity
+and output-source/full transformation lineage remain OPEN.

@@ -3,9 +3,8 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a current-main reconciliation -->
-October14 native8 checkpoint: functional6597951c, comment71d24b24, frozen
-validation head316e78781f32c57b6c65d9de14e7c148bfd1171a (subsequent BUILD/lessons
-only). Fixed aligned outgoing argument tail follows32-byte MsX64 shadow or
+October14 native8 checkpoint: functional6597951c, comment71d24b24, source-attributed
+validation316e7878 plus test-only correction7126217d. Fixed aligned outgoing argument tail follows32-byte MsX64 shadow or
 SysV0; callee extras spill from RBP+16+shadow+8index into stable negative slots.
 Checked frame/displacement arithmetic rejects overflow; ninth word/formal
 refuses. Builtin physical register ABI unchanged. No new crates.io dependencies.
@@ -18,25 +17,22 @@ captured/forwarded array rows execute Exit42. Independent scoped exact-source
 security PASS71d retained at5ba, reportSHA a47128791b7d619fff919da48021a3386201c26cc772455ea2ce37ab6964afba. No Linux/macOS hardware
 or forced-GC acceptance inferred from simulator/root metadata.
 
-Full nine-package platform Cargo reverse/dev validation316e actually completed
-session25345 EXIT1: affected suite1226PASS2FAIL1existingignore/81targets. Only
-backend old five/seven-parameter refusal oracles failed; full unfiltered LANG
-476/0/0 including original8array rows and proven-column guard PASS. Complete
-checked arithmetic/root/simulator controls passed. Strict nine-package
-alltargets0; standalone Closure1093/0/0 over181targets and strict0.
-Original failed receipt stays failed; no full acceptance yet. Spec-first
-reconcile only the two cfg(test) oracles: preserve old-count/eight-boundary
-success and exact ABI/got9/max8 plus public-refusal checks. Run complete backend,
-affected strict, prove full production/rest-test/config equality and independent
-source/carrier/terminal review. Do not change production to satisfy obsolete
-physical-register expectations, delete/ignore tests or repeat unaffected long
-LANG executions without a source change. No newregistry dependencies.
-
-Initial5ba all4stages101 from disk exhaustion executed zero tests; logs retained.
-After its actual terminal, verified OWN isolated target/debug and reclaimed
-10.35GB regenerable output only. Retry used jobs1/incremental0/dev+testdebug0,
-all assertions/inputs/limits preserved. Registry376 tuples exact baseline.
-FrozenMiri untouched. Full/hosted/merge acceptance remains withheld.
+Actual isolated source316e7878 validation completed: nine affected packages
+1226PASS2FAIL1existingignore/81targets; only the obsolete five/seven-formal
+refusal oracles failed. Full unfiltered LANG476/0/0, strict nine-package
+alltargets, standalone Closure1093/0/0 across181targets and strict passed.
+Spec-first test-only correction7126217d retains those accepted counts and eight,
+adds exact ABI/got9/max8 plus public-refusal checks. New complete backend
+85/0/0 over2 targets and strict nine-package alltargets passed.
+Whole production prefix and every other Rust/instruction object remain exact;
+unchanged runtime evidence is explicitly attributed to316e. These counts are
+separate source receipts, not additive, and the original failed run stays failed.
+The prior5ba run exhausted disk before tests; its failed receipts are preserved.
+Retry disabled debug symbols/incremental compilation, preserving all inputs,
+assertions and limits. Registry376 tuples remain exact. Miri
+DEFERRED/PENDING, never passed; frozen run/input/target/receipts untouched.
+General-hop32 resource debt, hosted CI/conflict/review/merge, full Closure parity
+and output-source/full transformation lineage remain OPEN.
 
 Prior scoped JVM sourcec5 full200 tests/docs +original8JVMarrays +floatarray
 positive/descriptor-negative +realIEEE84 and strict3 remain accepted with
