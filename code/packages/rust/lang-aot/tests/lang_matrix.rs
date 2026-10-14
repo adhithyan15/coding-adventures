@@ -23944,3 +23944,30 @@ fn algol_entier_nested_name_actual_both_branches_complete_normally() {
         assert!(completed > 0, "each entier source needs an actual normally completed backend: {source}");
     }
 }
+
+// Inspect the exact existing failed matrix rows, without changing their Exit42
+// expectation or backend roster. This diagnostic records emitted descriptors
+// and Code attributes; it does not claim runtime acceptance of these rows.
+#[test]
+fn captured_array_exact_iir_and_jvm_signature_diagnostic() {
+    let programs: Vec<_> = PROGRAMS.iter().filter(|p| {
+        (p.src.contains("procedure populate") || p.src.contains("procedure seed"))
+            && (p.src.contains("array flags[-1:0, 2:3, 5:6")
+                || p.src.contains("array values[-1:0, 2:3, 5:6")
+                || p.src.contains("array words[-1:0, 4:5, 7:8"))
+    }).collect();
+    assert_eq!(programs.len(), 8);
+    for (case, program) in programs.iter().enumerate() {
+        let module = lang_aot::compile_source_to_iir(program.lang, program.src, "Main").unwrap();
+        for function in &module.functions {
+            let calls: Vec<_> = function.instructions.iter().filter(|i| i.op == "call").map(|i| &i.srcs).collect();
+            eprintln!("case={case} IIR function={} params={:?} calls={calls:?}", function.name, function.params);
+        }
+        let class = lang_aot::compile_source_to_jvm_class(program.lang, program.src, "Main").unwrap();
+        for method in &class.methods {
+            if let Some(code) = method.code_attribute() {
+                eprintln!("case={case} JVM method={} descriptor={} max_stack={} max_locals={}", method.name, method.descriptor, code.max_stack, code.max_locals);
+            }
+        }
+    }
+}

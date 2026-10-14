@@ -5362,3 +5362,6 @@ mod tests {
         assert!(func.source_map.is_empty(), "no map in, no map out");
     }
 }
+
+#[cfg(test)]
+mod captured_array_diagnostic_tests;
