@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-R175-form-repair-again",
+    "language": "punjabi",
+    "chapter": 175,
+    "sequence": 9190,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:794f6e726e76e191",
+    "delivery": "script",
+    "authored": "pen",
+    "authoredReason": "The learner compares printed Gurmukhi form values and writes one corrected fictional value; this is not drivable."
+  },
+  "findings": []
+}
