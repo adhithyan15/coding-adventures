@@ -148,6 +148,14 @@ rather than letting them read as silent gaps.
 
 ### Product quality ratchet
 
+**Next bounded visual fix — #17502: SwiftUI milestone rotations.** TaskApp's
+timeline and calendar milestones both author a centered `rotate(45deg)` to
+make diamonds. Lower a single finite degree rotation after sizing and surface
+paint but before elevation shadows. Keep native layout footprint unchanged,
+preserve state precedence, and report malformed, non-finite, multi-transform,
+and other-unit forms. Verify authored output before retiring the two transform
+allowances. Translation, scaling, and transform-origin remain outside scope.
+
 10. **P1 [#16182](https://github.com/adhithyan15/coding-adventures/issues/16182)
     — ratchet TaskApp's native style degradations.** All five native reporters
     are now wired. The initial `native-complete` generation recorded 77 XAML,
