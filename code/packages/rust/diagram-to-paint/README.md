@@ -145,3 +145,14 @@ Authored global curve controls cover thirteen families, all seven aliases and ca
 Affected Windows suites/strict lint are source-attributed to e2fd7e9c;
 producer native macOS rendering, general floating work and whole-PR/hosted
 gates remain separate. Final-source Miri is **DEFERRED/PENDING**.
+
+
+## Native validation checkpoint
+
+Source baa06e72 has 192 complete node/edge theme IR/layout/scene controls, including exact directed marker fields, authored overrides, thick-edge defaults, zero/finite width behavior and invalid-width defaults. Existing cluster controls cover 128 cases. The varied-support hop control preserves complete scenes but FAILS its work bound in all 32 cases: 496/2016 predicate calls for N32/64 against 448/1024; existing index work132/260 is separately counted. The resource gate remains open and the failing test is neither ignored nor called passed.
+
+The 14-package safety run passed834 tests across32 targets, explicitly
+excluding only the new expected-red work test that was executed separately
+(Cargo101,1PASS/1FAIL). Strict15-package lint passed. This is scoped evidence;
+whole/downstream/hosted/merge acceptance remains withheld. Final-source Miri
+is **DEFERRED/PENDING**.

@@ -3,53 +3,54 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a current-main reconciliation -->
-October14: checked-rank/global-curve source `e2fd7e9ce7971993278e82dca18e6b5a072aa36e`
-integrates audited main `a9f35e5401e4eef1a3ee218d6079c67fcedb8752`.
-Closed3593-path frame:3586 pure imports/7 owned overlaps;193 pre-spec and194
-final retained owned objects (only later intentional rank-spec amendment differs).
-Actual40639 merge EXIT0/no conflict.24 complete transport and1276 ALGOL/LANG
-objects retained;376 registry identities unchanged, no new crates.io dependency.
-Producer Sanskrit/Bengali imports give no curriculum or TypeScript/device claim.
+October14: source baa06e72ad67e8b0f993b3be56b0ba6356152f99 in the isolated
+ordering sibling adds native evidence while original broad run28ac remains
+source-frozen. Both validators are now actually terminal:32295 EXIT1 and95720
+EXIT0 for its scoped evidence protocol, which explicitly contains a failing red.
+No all-tests-passed or whole acceptance. One active PR17288, no push/merge.
 
-Actual native red70c5924c EXIT1010PASS1FAIL:all16 direction/optimizer/count/
-accumulation cases panic, preserved verbatim. Spec300c precedes checked rank
-repair: propagation/optimizer/count checked additions, exact own typed
-RankArithmeticOverflow through tryAPI, legacy explicit refusal. All16 now
-checked-refuse, private MAX/MAX-1 controls pass. Original unranked maximum-length,
-all ordering/gap/scene/bit/resource/parser8192 assertions remain. Global curve
-controls cover13families/7aliases/casefold/all4directions, exact complete IR/
-layout/scene/metadata, source precedence, per-edge override and full old defaults.
+Fresh audits/main imports: ec1c21paths10pure11overlap196retained/24transport;
+f9a76bdc12paths6pure6overlap202merge-time retained/24transport/1278ALGOL-LANG.
+Finalbaa retains201/202 with the sole deliberate appended LANG native-test
+exception; owned paint overlaps contain new controls. All prior paint tests,
+hierarchy/transport/ALGOL production remain exact;376 registry tuples unchanged.
+Frame f9 was enumerated after actual74639 mergeEXIT0 from immutable parent refs,
+under precommitted speca847. No new crates.io dependency or unsafe added.
 
-Actual90242 focused647/12/0ignore and7028 full14 cone829/32/0ignore, strict14
-EXIT0. Focus is included, not added. Complete25 complementary Windows packages
-retain actualcf331/55/5existingignore, source/test/config/BUILD exact through
-reviewed docs and whole object proof; all87 old rows partitioned. Thus current
-Windows39 evidence is829new+331source-retained, no double counting. Standalone
-5/3+strict retains originalcf source via whole object proof. Unix-only tcp-reactor
-explicit Windows refusal/native Unix pending remains in complete40 cone.
-Originalcf1156, scoped647 and all failures/reviews remain immutable.
+Actual positive controls: cluster128cases; node/edge theme192cases complete
+IR/layout/PaintScene/defaults/overrides/exact marker fields; owned nested-entier
+8sources/48normal-exit native cells across6backends (Wasm unavailable). Keep
+producer test/shared helper unchanged. Actual scoped14 safety834PASS/32targets/
+0ignore excludes only the new expected-red test already executed separately;
+strict15 EXIT0. Subset/focused counts are not added to full-suite totals.
 
-Independent bounded source review PASSe2 SHA
-b9ab9884e3ec611459240cb2fa0b061f2f4920180f24fb541266a665340c669b.
-Prior lifetime/admission/shutdown/spacing source-attributed reviews retained.
-Documentation-only6fc review PASS:425-to-428 completefourpackage objects,
-only8README/changelog changes; code/tests/Cargo/BUILD exacte2. Actual docs
-shards/lessons1216/whitespace pass, SHA
-0e68342e151e0f32444563244bdbd8b42a787c2b5817be1534c99b958045deec.
-Next spec5a commits varied-support parallel/nonparallel empty-work evidence
-with independent read-only design assessment; native red/production design
-not executed/selected yet. No unrestricted caller-IR,
-general floating/arbitrary-support P2, whole456 or nativeMac/device claim.
-Next blocking scope is general line-hop discovery work; contract/proof still OPEN.
+Actual general-hop red: Cargo101,1PASS/1FAIL. All32 cases preserve complete
+scenes/endpoint bits/occurrences but exceed counted predicate bounds:
+N32:496 vs448; N64:2016 vs1024. Existing index work132/260 is not full candidate/
+event/key/collector accounting. General P2/production discovery design remain OPEN.
 
-Sole Closure/sharedPR17288 still published82209953/failed checks/autoOFF;
-no push/merge/cleanup here. Exact-head hosted native3OS/requiredCI/review/conflict
-and actual merge reachability remain required. Base ESTree/own types preserved.
-Full Closure parity/CV04b/output-byte source/all folding-renaming-inlining-motion-
-merging-deletion lineage/pass-sweep/stableidentity/span evidence remain OPEN.
-Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/checkout/target/
-receipts untouched/unpolled. Delivery first, genuine final-source Miri later.
-Full objective incomplete; heartbeat ACTIVE.
+Actual broad28ac downstream failure:1857PASS/10FAIL/1existingignore/59targets;
+18 requested packages were not all completed; strict was not reached. NativeAOT
+captured3D/4D array BackendRefused(main), JVM main()J VerifyError Stack size too
+large. Preserve failed log SHA5fd907b26eb268c9e7a1689f3dbf92295c0ac6bb91d17c7099f3740d24051f54.
+Spec CV04a-captured-array-backend-failures.md requires emitted-IIR/ABI/stack
+trace before repair; no row/expected-output/limit weakening or silent skip.
+No undefined-behavior failure inferred from a refusal/verifier error.
+
+Independent scoped source/control/terminal reviews PASS atbaa, hashes
+733ae67870ca00072737b5722840378e986f7ea6754b1bcfd05940b735740edf and
+d9ac355ac0f3142e2b7f5ff128e8ad71065f701897c5d65e0abcc432754eff0d.
+These preserve whole acceptance withheld for actual array/resource failures.
+Prior rank/global-curve/native receipts retain their original source attribution.
+Completed delivery incremental cache reclamation11,788,278,503bytes preserved
+active targets/binaries/inputs/receipts/worktrees/frozen Miri.
+
+Sole PR17288 still published82209953/old failedCI/autoOFF; current conflict/review/
+terminal required checks and actual merge reachability remain required. Full
+Closure parity/CV04b/output-byte source/all transformation lineage/pass-sweep/
+stable identities/spans remain OPEN. Base ESTree/own types preserved.
+Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/source/target/receipts
+untouched and unpolled. Full objective incomplete; heartbeat ACTIVE.
 <!-- /CV04a current-main reconciliation -->
 
 <!-- CV04a BEAM heap native continuation -->

@@ -1195,3 +1195,14 @@ actual execution, exact -1/1 and Some(0), retaining unavailable-backend and trap
 guards. Actual48 cells pass on NativeAot/LLVM/WASM/JVM/VM/JIT; CLR unavailable.
 The original intentional-return conformance helper remains unchanged.
 Final-source Miri is DEFERRED/PENDING; whole delivery gates remain open.
+
+
+## Native validation checkpoint
+
+Eight owned nested-entier name-actual sources prove true/false outcomes, either value-snapshot root and direct/saved output in 48 actual normally completed cells across six backends, with exact stdout and Some(0). The producer stdout-only test and shared helper remain intact. Broad source28ac validation separately failed ten captured-array NativeAOT/JVM cells; those are delivery blockers, not accepted skips.
+
+The 14-package safety run passed834 tests across32 targets, explicitly
+excluding only the new expected-red work test that was executed separately
+(Cargo101,1PASS/1FAIL). Strict15-package lint passed. This is scoped evidence;
+whole/downstream/hosted/merge acceptance remains withheld. Final-source Miri
+is **DEFERRED/PENDING**.

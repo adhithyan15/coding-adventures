@@ -70,3 +70,14 @@ Global Swimlane flowchart curve uses the existing own curve enum; absent configu
 Affected Windows suites/strict lint are source-attributed to e2fd7e9c;
 producer native macOS rendering, general floating work and whole-PR/hosted
 gates remain separate. Final-source Miri is **DEFERRED/PENDING**.
+
+
+## Native validation checkpoint
+
+Cluster background/border/title and node-text/arrowhead/stroke-width theme fields retain absent defaults. Own types and registry identities remain unchanged; this boundary expansion does not claim compiler transformation lineage.
+
+The 14-package safety run passed834 tests across32 targets, explicitly
+excluding only the new expected-red work test that was executed separately
+(Cargo101,1PASS/1FAIL). Strict15-package lint passed. This is scoped evidence;
+whole/downstream/hosted/merge acceptance remains withheld. Final-source Miri
+is **DEFERRED/PENDING**.

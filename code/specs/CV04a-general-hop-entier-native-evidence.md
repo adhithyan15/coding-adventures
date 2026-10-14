@@ -42,3 +42,11 @@ passed or ignored. Do not relabel the older broad suite as new-source execution.
 Independent exact-head security review precedes publication. Full Closure parity,
 output-byte source/all transformation lineage and whole/hosted/merge acceptance
 remain OPEN. Miri DEFERRED/PENDING; frozen497inputs/run/source/target untouched.
+
+
+Actual95720 helper EXIT0 atbaa records node192casesPASS,48 normally completed
+entier cells over8sources/6backends, explicit hop redCargo1011PASS1FAIL32/32
+work failures, scoped14safety834/32/0ignore (only that separately executed red
+excluded), andstrict15EXIT0. Whole acceptance stays withheld. The original
+broad32295 separately returnedEXIT1 with10actual array/backend failures;
+all failed/positive logs retain their exact source/hash. Both sessions terminal.

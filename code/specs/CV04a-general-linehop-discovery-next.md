@@ -43,3 +43,10 @@ acceptance. General P2/whole456/Unix/nativeMac/hosted required exact-head checks
 full Closure parity/CV04b/output source and full transformation lineage remain
 OPEN. Same sole PR17288, autoOFF. Miri DEFERRED/PENDING; frozen run/inputs/
 checkout/target/receipts untouched. Full objective incomplete; heartbeat ACTIVE.
+
+
+Actual baa native red now executes the32case selection: complete scenes PASS,
+work assertion FAILS all32. N32/64 predicate calls496/2016 against448/1024;
+existing index work132/260. Original predicate remains unchanged. This is
+confirmed quadratic empty-family debt; no production repair or general
+resource acceptance. See the isolated native-evidence spec and current backlog.
