@@ -1110,6 +1110,8 @@ consecutive-rank separation, and outer scene padding respectively, and remain vi
 scene metadata.
 Shared Flowchart `wrappingWidth` configuration caps measured horizontal process-node width and carries
 that bound into backend-neutral text wrapping and paint lowering.
+Shared Flowchart `padding` configuration expands ordinary process-node geometry and controls its
+backend-neutral label content box without introducing renderer-specific HTML measurement.
 Shared Flowchart `curve` configuration accepts the complete supported curve catalog and supplies the
 layout-time default for edges without a direct or class-resolved curve. Per-edge curves retain precedence,
 and the resolved modes lower to backend-neutral line, quadratic, or cubic paint paths.
