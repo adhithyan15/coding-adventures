@@ -34,6 +34,13 @@ geometry, duplicate/same-axis work counts and enabled-rank gap constraints.
 Default styles must preserve prior outputs. Do not infer renderer/device or
 general font-allocation acceptance from these bounded fixtures.
 
+Add a platform-neutral authored typography control using a recording resolver
+and the existing deterministic text backend. Compare the complete ordered font
+query trace (family, weight, style, stretch) and all resulting glyph-run text,
+sizes and fills, rather than searching for one matching glyph. Pin both styled
+node widths and preserve the normal lane label. This tests actual arguments
+crossing parser/layout/paint/text boundaries; it does not certify an OS font face.
+
 ## Validation and remaining gates
 
 After the import, record every exact imported object and retained owned overlap;
