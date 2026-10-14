@@ -1170,6 +1170,7 @@ mod tests {
             groups: Vec::new(),
             ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: false,
+            flowchart_config: Default::default(),
             theme: Default::default(),
         }
     }
@@ -1202,6 +1203,7 @@ mod tests {
             links: Vec::new(), callbacks: Vec::new(), line_hops: None,
             automatic_lane_ordering: true, ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: false,
+            flowchart_config: Default::default(),
             theme: Default::default(),
         }
     }
