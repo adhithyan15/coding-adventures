@@ -4,7 +4,7 @@ import type { FigureTargetPolicy } from "../figure-target-policy-types.js";
 export const malayalamFigureTargetPolicy: FigureTargetPolicy = {
   script: "malayalam",
   tracks: ["malayalam"],
-  separateLetters: true,
+  separateLetters: 70,
   writtenSignSides: {
     "\u0D02": "after",
     "\u0D3E": "after",

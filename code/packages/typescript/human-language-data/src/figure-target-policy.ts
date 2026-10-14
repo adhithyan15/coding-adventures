@@ -78,10 +78,22 @@ function assertSources(
 function validatedPolicies(input: readonly FigureTargetPolicy[]): readonly FigureTargetPolicy[] {
   assertUnique(input.map((policy) => policy.script), "script");
   assertUnique(input.flatMap((policy) => policy.tracks), "track");
+  assertUnique(
+    input
+      .filter((policy) => policy.separateLetters !== undefined)
+      .map((policy) => String(policy.separateLetters)),
+    "separate-letter rank",
+  );
   for (const policy of input) {
     if (!SAFE_ID.test(policy.script)) throw new Error(`unsafe figure-target script '${policy.script}'`);
     if (policy.tracks.length === 0 || policy.tracks.some((track) => !SAFE_ID.test(track))) {
       throw new Error(`${policy.script} must own at least one safe track`);
+    }
+    if (
+      policy.separateLetters !== undefined &&
+      (!Number.isSafeInteger(policy.separateLetters) || policy.separateLetters <= 0)
+    ) {
+      throw new Error(`${policy.script} separate-letter rank must be a positive safe integer`);
     }
     for (const sign of Object.keys(policy.writtenSignSides ?? {})) {
       if (sign.normalize("NFD") !== sign || !/^\p{M}+$/u.test(sign)) {
@@ -124,7 +136,10 @@ export const DERIVED_FILMSTRIP_SCRIPTS: Readonly<Record<string, string>> = Objec
 );
 
 export const SEPARATE_LETTER_SCRIPTS: ReadonlySet<string> = new Set(
-  validated.filter((policy) => policy.separateLetters).map((policy) => policy.script),
+  validated
+    .filter((policy) => policy.separateLetters !== undefined)
+    .sort((left, right) => left.separateLetters! - right.separateLetters!)
+    .map((policy) => policy.script),
 );
 
 export const WRITTEN_SIGN_SIDES: Readonly<

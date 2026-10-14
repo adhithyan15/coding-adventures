@@ -8,7 +8,7 @@ const FONT_URL = "https://github.com/notofonts/gujarati";
 export const gujaratiFigureTargetPolicy: FigureTargetPolicy = {
   script: "gujarati",
   tracks: ["gujarati"],
-  separateLetters: true,
+  separateLetters: 40,
   writtenSignSides: {
     "\u0ABE": "after",
     "\u0ABF": "after",

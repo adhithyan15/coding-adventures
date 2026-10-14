@@ -4,6 +4,7 @@ import { lstatSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import { SEPARATE_LETTER_SCRIPTS } from "../src/figure-targets.js";
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const sourceOwnerDirectory = resolve(packageRoot, "src/figure-target-policies");
@@ -71,6 +72,19 @@ describe("figure-target policy ownership", () => {
     expect(core).not.toMatch(/Noto Sans|LipiTk|Jayasree|KanoAI|Grundschrift/);
   });
 
+  it("preserves the public separate-letter Set iteration order", () => {
+    expect([...SEPARATE_LETTER_SCRIPTS]).toEqual([
+      "chinese",
+      "japanese",
+      "tamil",
+      "gujarati",
+      "kannada",
+      "telugu",
+      "malayalam",
+      "latin",
+    ]);
+  });
+
   it("uses one stable composition boundary rather than a second policy copy", () => {
     const composition = readFileSync(resolve(packageRoot, "src/figure-target-policy.ts"), "utf8");
     const owners = directOwners(sourceOwnerDirectory);
@@ -97,6 +111,8 @@ describe("figure-target policy ownership", () => {
         "real-corpus-tamil-figure-targets-1987c5d4.case.ts",
         "real-corpus-target-closure-d27405ec.case.ts",
         "real-corpus-target-printing-6d53c8a1.case.ts",
+        "real-corpus-urdu-nastaliq-figure-targets-a960eea6.case.ts",
+        "real-corpus-cyrillic-figure-targets-97bd9bcc.case.ts",
       ]),
     );
   });

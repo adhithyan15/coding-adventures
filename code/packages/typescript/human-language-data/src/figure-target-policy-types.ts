@@ -38,7 +38,8 @@ export interface HeadlineWordPolicy {
 export interface FigureTargetPolicy {
   readonly script: string;
   readonly tracks: readonly string[];
-  readonly separateLetters?: true;
+  /** Stable public iteration rank for scripts whose word letters stand apart. */
+  readonly separateLetters?: number;
   readonly writtenSignSides?: Readonly<Record<string, "before" | "after">>;
   readonly fusedSignPairSources?: readonly FusedSignPairSource[];
   readonly fusedLetterSequenceSources?: readonly FusedLetterSequenceSource[];

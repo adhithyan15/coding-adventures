@@ -4,7 +4,7 @@ import type { FigureTargetPolicy } from "../figure-target-policy-types.js";
 export const tamilFigureTargetPolicy: FigureTargetPolicy = {
   script: "tamil",
   tracks: ["tamil"],
-  separateLetters: true,
+  separateLetters: 30,
   writtenSignSides: {
     "\u0BC6": "before", // ெ e
     "\u0BC7": "before", // ே ē

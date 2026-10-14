@@ -4,5 +4,5 @@ import type { FigureTargetPolicy } from "../figure-target-policy-types.js";
 export const japaneseFigureTargetPolicy: FigureTargetPolicy = {
   script: "japanese",
   tracks: ["japanese"],
-  separateLetters: true,
+  separateLetters: 20,
 };

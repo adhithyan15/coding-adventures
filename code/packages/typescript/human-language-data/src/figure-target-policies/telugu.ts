@@ -4,5 +4,5 @@ import type { FigureTargetPolicy } from "../figure-target-policy-types.js";
 export const teluguFigureTargetPolicy: FigureTargetPolicy = {
   script: "telugu",
   tracks: ["telugu"],
-  separateLetters: true,
+  separateLetters: 60,
 };

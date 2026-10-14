@@ -4,5 +4,5 @@ import type { FigureTargetPolicy } from "../figure-target-policy-types.js";
 export const latinFigureTargetPolicy: FigureTargetPolicy = {
   script: "latin",
   tracks: ["spanish", "german", "french", "italian", "portuguese", "latin"],
-  separateLetters: true,
+  separateLetters: 80,
 };
