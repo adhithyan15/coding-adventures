@@ -83,6 +83,7 @@
     "line-hops-rounded",
     "nested-subgraphs",
     "styled-subgraphs",
+    "subgraph-class-decorators",
     "state-choice-note-shapes",
     "label-rect-shape",
     "anchor-shape",

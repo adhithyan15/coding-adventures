@@ -4108,6 +4108,20 @@ line "Target" [35, 50, 68, 82]"##,
                         && run.fill.as_deref() == Some("rgb(124, 45, 18)")
                 )), "group title typography must lower to backend-neutral glyph runs");
             }
+            if fixture_name == "subgraph-class-decorators" {
+                assert_eq!(layout.lanes[0].classes, ["laneStyle"]);
+                assert_eq!(layout.groups[0].classes, ["phaseStyle"]);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#eff6ff")
+                        && rect.stroke.as_deref() == Some("#1d4ed8")
+                        && rect.corner_radius == Some(14.0)
+                )), "lane decorators must lower through semantic and layout IR to paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
+                        && rect.stroke.as_deref() == Some("#b45309")
+                        && rect.stroke_dash.as_deref() == Some(&[5.0, 3.0])
+                )), "group decorators must lower through semantic and layout IR to paint");
+            }
             if fixture_name == "state-choice-note-shapes" {
                 assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
                     &diagram_ir::DiagramShape::RoundedRect,
