@@ -6861,6 +6861,24 @@ fn parse_swimlane_style_declarations(value: &str, line: usize) -> Result<Diagram
                 }
                 style.stroke_dash = Some(values);
             }
+            "font-size" => style.font_size = Some(parse_swimlane_style_number(value, line)?),
+            "font-weight" => style.font_weight = Some(match value.to_ascii_lowercase().as_str() {
+                "normal" => 400,
+                "bold" => 700,
+                _ => value.parse::<u16>().ok().filter(|weight| (100..=900).contains(weight))
+                    .ok_or_else(|| swimlane_error(line, "Swimlane font weight must be normal, bold, or 100 through 900"))?,
+            }),
+            "font-style" => style.font_italic = Some(match value.to_ascii_lowercase().as_str() {
+                "normal" => false,
+                "italic" | "oblique" => true,
+                _ => return Err(swimlane_error(line, "Swimlane font style must be normal, italic, or oblique")),
+            }),
+            "font-family" => {
+                if value.is_empty() {
+                    return Err(swimlane_error(line, "Swimlane font family must not be empty"));
+                }
+                style.font_family = Some(value.into());
+            }
             property => return Err(swimlane_error(line, format!("unsupported Swimlane style property {property:?}"))),
         }
     }

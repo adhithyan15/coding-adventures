@@ -50,6 +50,7 @@
     "html-entity-labels",
     "metadata-entities",
     "inline-node-styles",
+    "node-typography-styles",
     "named-node-classes",
     "semicolon-class-statements",
     "node-class-decorators",
