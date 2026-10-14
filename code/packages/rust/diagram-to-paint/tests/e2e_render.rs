@@ -4090,6 +4090,24 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.group.1.parent")),
                     Some(&"Platform".to_string()));
             }
+            if fixture_name == "styled-subgraphs" {
+                assert_eq!(layout.lanes[0].style.corner_radius, Some(14.0));
+                assert_eq!(layout.groups[0].style.font_size, Some(17.0));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#ecfdf5")
+                        && rect.stroke.as_deref() == Some("#047857")
+                        && rect.corner_radius == Some(14.0)
+                )), "direct lane styles must lower to backend-neutral rectangle paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
+                        && rect.stroke.as_deref() == Some("#b45309")
+                        && rect.stroke_dash.as_deref() == Some(&[5.0, 3.0])
+                )), "class group styles must lower to backend-neutral rectangle paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 17.0
+                        && run.fill.as_deref() == Some("rgb(124, 45, 18)")
+                )), "group title typography must lower to backend-neutral glyph runs");
+            }
             if fixture_name == "state-choice-note-shapes" {
                 assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
                     &diagram_ir::DiagramShape::RoundedRect,

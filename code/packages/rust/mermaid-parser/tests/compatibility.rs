@@ -2563,6 +2563,19 @@ fn swimlane_nested_subgraphs_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_subgraph_styles_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review[Review lane]\n  subgraph Approval[Approval phase]\n    request[Request]\n    approve[Approve]\n  end\nend\nclassDef phase fill:#fef3c7,stroke:#b45309,stroke-width:3px,stroke-dasharray:5 3,color:#7c2d12,font-size:17px,font-weight:bold,rx:12px,ry:12px\nclass Approval phase\nstyle Review fill:#ecfdf5,stroke:#047857,stroke-width:2px,color:#064e3b,font-size:20px,rx:14px,ry:14px\nrequest --> approve",
+    ).expect("Swimlane subgraph styles should parse");
+
+    assert_eq!(diagram.lanes[0].style.fill.as_deref(), Some("#ecfdf5"));
+    assert_eq!(diagram.lanes[0].style.corner_radius, Some(14.0));
+    assert_eq!(diagram.groups[0].classes, ["phase"]);
+    assert_eq!(diagram.groups[0].style.stroke_width, Some(3.0));
+    assert_eq!(diagram.groups[0].style.font_weight, Some(700));
+}
+
+#[test]
 fn swimlane_state_choice_and_note_attributes_reach_semantic_ir() {
     use diagram_ir::DiagramShape;
     let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Workflow\n  pending@{ shape: state, label: \"Pending\" }\n  branch@{ shape: choice, label: \"Choose\" }\n  memo@{ shape: note, label: \"Decision note\" }\nend\npending --> branch --> memo")

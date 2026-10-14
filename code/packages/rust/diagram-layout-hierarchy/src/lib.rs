@@ -352,6 +352,8 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         lanes.push(LayoutedSwimlaneLane {
             id: lane.id.clone(),
             label: lane.label.clone(),
+            classes: lane.classes.clone(),
+            style: lane.style.clone(),
             x,
             y,
             width: lane_width,
@@ -443,7 +445,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         bottom = (bottom + 12.0).min(lane.y + lane.height - 6.0);
         groups.push(LayoutedSwimlaneGroup {
             id: group.id.clone(), label: group.label.clone(), lane_id: group.lane_id.clone(),
-            parent_id: group.parent_id.clone(), x: left, y: top,
+            parent_id: group.parent_id.clone(), classes: group.classes.clone(), style: group.style.clone(), x: left, y: top,
             width: (right - left).max(40.0), height: (bottom - top).max(40.0),
         });
     }
@@ -1013,8 +1015,8 @@ mod tests {
             direction: DiagramDirection::Lr, title: Some("Handoff".into()), accessibility_title: None,
             accessibility_description: None,
             lanes: vec![
-                SwimlaneLane { id: "buyer".into(), label: "Buyer".into(), node_ids: vec!["choose".into()] },
-                SwimlaneLane { id: "store".into(), label: "Store".into(), node_ids: vec!["ship".into()] },
+                SwimlaneLane { id: "buyer".into(), label: "Buyer".into(), node_ids: vec!["choose".into()], classes: Vec::new(), style: Default::default() },
+                SwimlaneLane { id: "store".into(), label: "Store".into(), node_ids: vec!["ship".into()], classes: Vec::new(), style: Default::default() },
             ],
             groups: vec![], nodes: vec![
                 SwimlaneNode { id: "choose".into(), label: "Choose".into(), lane_id: Some("buyer".into()), shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() },
@@ -1050,7 +1052,7 @@ mod tests {
         let diagram = SwimlaneDiagram {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
-            lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(), node_ids: vec!["long".into()] }],
+            lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(), node_ids: vec!["long".into()], classes: Vec::new(), style: Default::default() }],
             groups: vec![], nodes: vec![SwimlaneNode { id: "long".into(),
                 label: "A substantially longer process description".into(),
                 lane_id: Some("lane".into()), shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() }],
@@ -1070,7 +1072,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into(), "multi-document".into(), "multi-process".into(), "stored-data".into(), "summary".into(), "tagged-document".into(), "tagged-process".into(), "paper-tape".into(), "lined-document".into(), "data-store".into(), "titled".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into(), "multi-document".into(), "multi-process".into(), "stored-data".into(), "summary".into(), "tagged-document".into(), "tagged-process".into(), "paper-tape".into(), "lined-document".into(), "data-store".into(), "titled".into()], classes: Vec::new(), style: Default::default() }],
             groups: vec![], nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
