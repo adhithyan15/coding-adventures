@@ -1969,6 +1969,13 @@ fn collect_closure_dispatch(module: &IIRModule) -> HashMap<String, ClosureDispat
 ///
 /// The returned `JvmMethodInfo` has `access_flags = ACC_PUBLIC | ACC_STATIC`,
 /// because IIR functions are plain procedures with no object receiver.
+// Conservatively cover the reference conversions this backend can prove from
+// its declared descriptors. Every reference widens to Object; other hierarchy
+// conversions need an assignability engine, not a one-slot width comparison.
+fn reference_descriptor_assignable(actual: &str, expected: &str) -> bool {
+    actual == expected || (expected == "Ljava/lang/Object;" && (actual.starts_with('L') || actual.starts_with('[')))
+}
+
 fn lower_function(
     func: &IIRFunction,
     class_name: &str,
@@ -1999,6 +2006,24 @@ fn lower_function(
     // ── Pass 1: build type map and allocate slots ────────────────────────────
     let type_map = build_type_map(func);
     let slots = allocate_slots(func, &type_map);
+    // Ref is a load/store category, not a Java class. Retain the declared
+    // descriptor separately, indexed once under the same first-definition
+    // policy as build_type_map, to distinguish [J, [D and String at calls.
+    let mut reference_descriptors: HashMap<&str, &str> = HashMap::new();
+    for (name, ty) in &func.params {
+        if iir_type_to_jvm(ty) == Some(JvmType::Ref) {
+            reference_descriptors.insert(name, type_to_jvm_descriptor(ty));
+        }
+    }
+    for instr in &func.instructions {
+        if let Some(dest) = instr.dest.as_deref() {
+            if type_map.get(dest) == Some(&JvmType::Ref) {
+                reference_descriptors.entry(dest).or_insert(if instr.op == "alloc_closure" {
+                    "[J"
+                } else { type_to_jvm_descriptor(&instr.type_hint) });
+            }
+        }
+    }
 
     // Compute max_locals: the maximum slot index + width across all variables.
     // Use u32 arithmetic to avoid u16 overflow before the final bounds check.
@@ -3743,6 +3768,19 @@ fn lower_function(
                             detail: format!("call to {callee_name:?} loads {argument_type:?} for parameter {parameter_type:?}"),
                         });
                     }
+                    if argument_type == JvmType::Ref {
+                        let actual = match arg {
+                            Operand::Var(n) => reference_descriptors.get(n.as_str()).copied(),
+                            _ => None,
+                        };
+                        let expected = type_to_jvm_descriptor(parameter_type);
+                        if !actual.is_some_and(|d| reference_descriptor_assignable(d, expected)) {
+                            return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: format!("call to {callee_name:?} reference descriptor {actual:?} is not assignable to {expected:?}"),
+                            });
+                        }
+                    }
                     argument_slots = argument_slots.checked_add(argument_type.slot_width())
                         .filter(|&n| n <= 255)
                         .ok_or_else(|| IIRJvmError::InvalidOperand {
@@ -3764,7 +3802,23 @@ fn lower_function(
                 max_stack = max_stack.max(ret_type.slot_width());
                 if ret_type != JvmType::Void {
                     if let Some(dest) = &instr.dest {
-                        let (dest_slot, _) = lookup_var(dest)?;
+                        let (dest_slot, dest_type) = lookup_var(dest)?;
+                        if dest_type != ret_type {
+                            return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: format!("call to {callee_name:?} return destination {dest:?} is {dest_type:?}, result is {ret_type:?}"),
+                            });
+                        }
+                        if ret_type == JvmType::Ref {
+                            let actual = type_to_jvm_descriptor(&callee_fn.return_type);
+                            let expected = reference_descriptors.get(dest.as_str()).copied();
+                            if !expected.is_some_and(|d| reference_descriptor_assignable(actual, d)) {
+                                return Err(IIRJvmError::InvalidOperand {
+                                    function: fname.clone(),
+                                    detail: format!("call to {callee_name:?} return destination reference descriptor {expected:?} cannot receive {actual:?}"),
+                                });
+                            }
+                        }
                         emit_typed_store(&mut code, dest_slot, ret_type);
                     } else {
                         code.push(if ret_type.slot_width() == 2 { 0x58 } else { 0x57 }); // pop2 / pop
