@@ -124,7 +124,7 @@ fn optimize_swimlane_ranks_by_crossings(
     }
 }
 
-fn swimlane_cross_lane_ranks(diagram: &SwimlaneDiagram) -> Option<HashMap<String, usize>> {
+fn swimlane_cross_lane_ranks(diagram: &SwimlaneDiagram, link_gaps: &SwimlaneLinkGaps<'_>) -> Option<HashMap<String, usize>> {
     if diagram.ignore_cross_lane_edges {
         return None;
     }
@@ -133,7 +133,7 @@ fn swimlane_cross_lane_ranks(diagram: &SwimlaneDiagram) -> Option<HashMap<String
         for pair in lane.node_ids.windows(2) {
             constraints.push((
                 pair[0].clone(), pair[1].clone(),
-                swimlane_link_gap_units(diagram, &pair[0], &pair[1]),
+                link_gaps.units(&pair[0], &pair[1]),
             ));
         }
     }
@@ -279,7 +279,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     let node_width = 132.0;
     let node_height = 54.0;
     let node_gap = 42.0;
-    let cross_lane_ranks = swimlane_cross_lane_ranks(diagram);
+    let cross_lane_ranks = swimlane_cross_lane_ranks(diagram, &link_gaps);
     let max_rank = cross_lane_ranks.as_ref().and_then(|ranks| ranks.values().max().copied()).unwrap_or(0);
     let rank_slot_width = diagram.nodes.iter().map(|node|
         swimlane_node_width(&node.shape, &node.label)
@@ -1000,6 +1000,26 @@ mod tests {
                 assert_eq!(after.end_marker, before.end_marker);
                 assert_eq!(after.min_length, before.min_length);
             }
+        }
+    }
+
+    #[test]
+    fn enabled_swimlane_ranks_reuse_one_gap_edge_index() {
+        let lengths = (0..512).map(|index| index % 3 + 1).collect::<Vec<_>>();
+        for direction in [DiagramDirection::Lr, DiagramDirection::Rl, DiagramDirection::Tb, DiagramDirection::Bt] {
+            let horizontal = matches!(direction, DiagramDirection::Lr | DiagramDirection::Rl);
+            let mut diagram = gap_work_diagram(direction, 8, &lengths);
+            diagram.ignore_cross_lane_edges = false;
+            diagram.optimize_ranks_by_crossings = false;
+            SWIMLANE_GAP_EDGE_VISITS.with(|count| count.set(0));
+            SWIMLANE_GAP_QUERIES.with(|count| count.set(0));
+            let layout = layout_swimlane(&diagram);
+            assert_eq!(SWIMLANE_GAP_EDGE_VISITS.with(std::cell::Cell::get), 512);
+            assert_eq!(SWIMLANE_GAP_QUERIES.with(std::cell::Cell::get), 14);
+            assert_eq!(layout_gap(&layout, "n0", "n1"), if horizontal { 390.0 } else { 234.0 });
+            assert_eq!(layout_gap(&layout, "n1", "n2"), 42.0);
+            assert_eq!(layout.edges.len(), lengths.len());
+            assert_eq!(layout.nodes.len(), 8);
         }
     }
 
