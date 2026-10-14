@@ -16229,6 +16229,39 @@ mod tests {
     }
 
     #[test]
+    fn al4_standard_name_actual_depth_boundary_requires_a_proven_root() {
+        // A bare local is already unsafe as a computed name actual. Pair the
+        // exact same proven entier/sign root at five and six standard layers
+        // so refusal cannot be explained by that unrelated root policy.
+        for condition in ["true", "false"] {
+            for assigned in [false, true] {
+                for depth in [5, 6] {
+                    let arm = |root: &str| {
+                        let mut expression = format!("entier(sign({root}))");
+                        for _ in 0..depth {
+                            expression = format!("abs({expression})");
+                        }
+                        format!("relay({expression})")
+                    };
+                    let conditional = format!("if choose() then {} else {}", arm("left"), arm("right"));
+                    let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose; choose := {condition}; real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); {sink} end");
+                    let outcome = compile_source(&source, "test");
+                    if depth == 5 {
+                        let module = outcome.unwrap_or_else(|error| panic!("depth={depth}, condition={condition}, assigned={assigned}: {error:?}"));
+                        let main = module.get_function("main").expect("has main");
+                        assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
+                    } else {
+                        let error = outcome.expect_err("the sixth layer exceeds the same-root selector proof budget");
+                        assert!(!matches!(error, CompileError::Parse(_)), "the refusal must reach semantic classification: {error:?}");
+                        assert!(format!("{error:?}").contains("cannot print a real value"), "depth={depth}, condition={condition}, assigned={assigned}: {error:?}");
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
     fn al4_powered_selector_roots_reject_alias_promotion_at_both_consumers() {
         // The selector mutates one formal before choosing an arm. A name formal
         // can alias either root; a value formal mutates only its private copy.

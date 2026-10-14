@@ -256,6 +256,9 @@ fn package_owned_xaml_project_builds_launches_and_interacts() {
     let log = File::create(&app_log).expect("create WinUI app log");
     let mut child = Command::new(&executable)
         .current_dir(executable.parent().expect("WinUI executable directory"))
+        // The acceptance starts with an empty durable catalog and must not
+        // read or modify the user's persistent browser profile across runs.
+        .env("VENTURE_BOOKMARKS_PATH", output.join("bookmarks.json"))
         .env("VENTURE_START_URL", &start_url)
         .env("VENTURE_BROWSER_ACCEPTANCE_PATH", &marker)
         .env("VENTURE_BROWSER_ACCEPTANCE_DIAGNOSTIC_PATH", &phase_log)
