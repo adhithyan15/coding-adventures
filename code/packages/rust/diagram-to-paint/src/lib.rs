@@ -9838,6 +9838,79 @@ mod tests {
     }
 
     #[test]
+    fn authored_cluster_theme_preserves_complete_ir_layout_scene_and_style_overrides() {
+        // The reference uses explicit existing styles and title options. Only
+        // the three independently pinned metadata keys are removed from output.
+        for direction in ["LR", "RL", "TB", "BT"] {
+            for mask in 0..8 {
+                for overrides in [false, true] {
+                    for themed_font in [false, true] {
+                        let mut body = format!("swimlane-beta {direction}\ntitle Headline\nsubgraph Review[Lane]\nsubgraph Approval[Group]\nrequest[Request]\ndone[Done]\nend\nend\nrequest --> done\n");
+                        if overrides {
+                            body.push_str("classDef phase fill:#ecfdf5,stroke:#047857,stroke-width:3px,color:#064e3b,font-size:17px,font-weight:bold,rx:12px,ry:12px\nclass Approval phase\nstyle Review fill:#dbeafe,stroke:#1d4ed8,stroke-width:2px,color:#1e3a8a,font-size:20px,rx:14px,ry:14px\n");
+                        }
+                        let source = |cluster: bool| {
+                            let mut fields = String::new();
+                            if themed_font { fields.push_str("    fontFamily: 'Theme Font'\n    fontSize: 16px\n"); }
+                            if cluster {
+                                for (bit, name, value) in [(1,"clusterBkg","#fef3c7"),(2,"clusterBorder","#b45309"),(4,"titleColor","#7c2d12")] {
+                                    if mask & bit != 0 { fields.push_str(&format!("    {name}: '{value}'\n")); }
+                                }
+                            }
+                            if fields.is_empty() { body.clone() } else { format!("---\nconfig:\n  themeVariables:\n{fields}---\n{body}") }
+                        };
+                        let bare = mermaid_parser::parse_swimlane(&source(false)).unwrap();
+                        let parsed = mermaid_parser::parse_swimlane(&source(true)).unwrap();
+                        assert_eq!(parsed.theme.cluster_background.as_deref(), (mask & 1 != 0).then_some("#fef3c7"));
+                        assert_eq!(parsed.theme.cluster_border.as_deref(), (mask & 2 != 0).then_some("#b45309"));
+                        assert_eq!(parsed.theme.title_color.as_deref(), (mask & 4 != 0).then_some("#7c2d12"));
+                        let mut normalized = parsed.clone();
+                        normalized.theme.cluster_background = None;
+                        normalized.theme.cluster_border = None;
+                        normalized.theme.title_color = None;
+                        assert_eq!(normalized, bare, "complete authored IR differs only in pinned theme fields");
+                        let layout = diagram_layout_hierarchy::try_layout_swimlane(&parsed).unwrap();
+                        assert_eq!((layout.lanes.len(), layout.groups.len()), (1,1));
+                        if overrides {
+                            assert_eq!(layout.lanes[0].style.fill.as_deref(), Some("#dbeafe"));
+                            assert_eq!(layout.groups[0].style.fill.as_deref(), Some("#ecfdf5"));
+                        }
+                        let mut normalized = layout.clone();
+                        normalized.theme.cluster_background = None;
+                        normalized.theme.cluster_border = None;
+                        normalized.theme.title_color = None;
+                        assert_eq!(normalized, diagram_layout_hierarchy::try_layout_swimlane(&bare).unwrap(), "all geometry, directed routes and source/style fields remain exact");
+                        let mut explicit = normalized;
+                        for style in explicit.lanes.iter_mut().map(|lane| &mut lane.style).chain(explicit.groups.iter_mut().map(|group| &mut group.style)) {
+                            if style.fill.is_none() && mask & 1 != 0 { style.fill = Some("#fef3c7".into()); }
+                            if style.stroke.is_none() && mask & 2 != 0 { style.stroke = Some("#b45309".into()); }
+                            if style.text_color.is_none() && mask & 4 != 0 { style.text_color = Some("#7c2d12".into()); }
+                        }
+                        let mut options = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
+                        if themed_font { options.title_font.size = 16.0; options.title_font.family = "Theme Font".into(); }
+                        let mut expected = diagram_to_paint_swimlane(&explicit, &options);
+                        let title_runs = expected.instructions.iter_mut().filter_map(|instruction| match instruction {
+                            PaintInstruction::GlyphRun(run) if run.glyphs.iter().map(|glyph| char::from_u32(glyph.glyph_id).unwrap()).collect::<String>() == "Headline" => Some(run),
+                            _ => None,
+                        }).collect::<Vec<_>>();
+                        assert_eq!(title_runs.len(), 1, "pin the exact unique title run before setting its independent color");
+                        for run in title_runs {
+                            assert_eq!(run.fill.as_deref(), Some("rgb(15, 23, 42)"));
+                            if mask & 4 != 0 { run.fill = Some("rgb(124, 45, 18)".into()); }
+                            if themed_font { assert_eq!(run.font_size, 16.0); }
+                        }
+                        let mut actual = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                        for (bit,key,value) in [(1,"swimlane.theme.clusterBkg","#fef3c7"),(2,"swimlane.theme.clusterBorder","#b45309"),(4,"swimlane.theme.titleColor","#7c2d12")] {
+                            assert_eq!(actual.metadata.as_mut().unwrap().remove(key).as_deref(), (mask & bit != 0).then_some(value));
+                        }
+                        assert_eq!(actual, expected, "complete paint oracle: direction={direction}, mask={mask}, overrides={overrides}, themed_font={themed_font}");
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
     fn authored_swimlane_edge_label_theme_preserves_complete_scene_queries_and_rectangles() {
         struct RecordingResolver(std::cell::RefCell<Vec<FontQuery>>);
         impl FontResolver for RecordingResolver {
