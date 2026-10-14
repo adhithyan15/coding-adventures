@@ -46,3 +46,9 @@ already uses native_linker_ok, including a genuine Windows linker probe.
 Align the shared availability helper with that real execution gate, retain the
 unavailable receipt as non-execution, and rerun the baseline hardware control.
 An installed Windows linker must not silently suppress these controls.
+
+Protect the two new LANG matrix controls with exact filters in its production
+BUILD list, as required for every new matrix test. The simulator's existing
+unfiltered cargo test command already executes the new integration target.
+Only after the complete formerly red LANG target actually passes may its stale
+exclusion notes and production test selection be reconciled.
