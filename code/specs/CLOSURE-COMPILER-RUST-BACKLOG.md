@@ -3,35 +3,33 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a active delivery checkpoint -->
-October14 active source21345e9d: bounded common-origin hop/padding repairs pass
-diagram848/strict at efd; original32/new16 work/scene cases pass unchanged
-budgets, all8192/curve/rank/node/cluster/limits retained. General arbitrary-F
-resource work remains OPEN. Newer main c25 is actually merged16c5b2d1; closed
-4014path proof verifies4007pure/7overlaps, retaining the checked wrapper and
-all constraint indexes while applying only the incoming title-height expression.
+October14 fixed5c71da1c final20-package unfiltered validation ACTUALLY PASS:
+2613/0/1existingignore across110targets; LANG478/0/0, ALGOL849/0/0.
+Strict alltargets EXIT0. Native receipt SHAed23184670868245eb67c1a0338c41f986f84a53a84856e6bde2ea1e493608ec.
+Independent scoped exact-head source/security/docscarrier PASS29ca653f;
+fresh Go12fixture tests/vet/build and unforced3-native Closure selection PASS.
+No hosted/native-hardware/merge acceptance inferred. Registry376 exact.
 
-Incoming unit-offset proof leaks are repaired7d8cec34. Actual red2PASS1FAIL
-exposes five wrong admissions; candidate3PASS and full compiler849/0/0 pass.
-Scoped exact-source security PASS5af59d6a. Owned eb50 runtime12sources/72actual
-backend runs pass exact stdout+Exit0; CLR unavailable. These are separate
-source-attributed receipts, not full final-source native acceptance. Cancelled
-diagnostic4a session79530 is actualEXIT1/incomplete, never passed; six owned
-processes stopped after identity proof, frozen Miri excluded. Old failed logs
-and reports remain immutable. Generic Boolean formatter/range tracking is OPEN.
+The dedicated unit-offset proof repairs five demonstrated over-admissions;
+owned12sources/72unique backend cells require exact stdout+normalExit0.
+TitleTopMargin40invalid red/80complete-layout positive/focused2PASS;
+original32/new16 hop cases and all8192/production-limit controls retained.
+Cancelled4a79530 remains actualEXIT1/incomplete, never accepted. All old
+failed logs/reviews preserved. Generic Boolean formatter range tracking and
+general arbitrary-F work remain OPEN.
 
-Title-margin spec7fd precedes controls790:40invalid cells fail exact admission,
-80complete layout/config/input translation cells pass. Production21345e9d adds
-only the new field to the finite0..=65536 guard; focused2PASS. Default config
-literal adapters preserve all fields/assertions. Combined affected20-package
-full unfiltered/compiler/native/downstream suites and strict lint are NEXT;
-fresh exact-head security/carrier/docs/build-plan/hosted gates remain required.
-No new crates.io deps; registry376 must remain exact. SolePR17288 remains old
-published822/conflicting/failedCI/autoOFF; no new push or merge accepted.
+New actual main925f9f4cd5a adds subGraphTitleMargin top/bottom in13paths after
+c25. Spec CV04a-subgraph-title-margin-main-reconciliation.md precedes import.
+Next closed producer reconciliation, exact scalar-admission red controls,
+affected diagram suites/strict and final security/carrier/docs/build-plan.
+Prove compiler/native inputs unchanged from5c rather than repeat its accepted
+long matrix for diagram-only changes. SolePR17288 still old822/failed/conflicting,
+autoOFF; publication and exact-head hosted CI/review/conflict/merge gates OPEN.
 
 Full Closure parity/output-byte source/full fold-rename-inline-motion-merge-
 delete lineage/pass-sweep/stableIDs/spans/CV04b/whole objective remain OPEN.
 Existing CLOC27 leaf-token bridge is real; stale epic allNone audit is not scope.
-Miri DEFERRED/PENDING, never passed; frozen497 run/source/inputs/target/receipts
+Miri DEFERRED/PENDING, never passed; frozen497 source/inputs/target/receipts
 unpolled/untouched, delivery first then genuine final-source acceptance.
 Heartbeat ACTIVE. Dated checkpoints below preserve source-specific history.
 <!-- /CV04a active delivery checkpoint -->
