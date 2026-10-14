@@ -6198,6 +6198,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     let automatic_lane_ordering = parse_swimlane_automatic_lane_ordering(source)?;
     let ignore_cross_lane_edges = parse_swimlane_ignore_cross_lane_edges(source)?;
     let optimize_ranks_by_crossings = parse_swimlane_optimize_ranks_by_crossings(source)?;
+    let theme = parse_swimlane_theme(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_swimlane(&prepared).map_err(|message| ParseError {
         message,
@@ -6230,6 +6231,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         automatic_lane_ordering,
         ignore_cross_lane_edges,
         optimize_ranks_by_crossings,
+        theme,
     };
     let mut current_lane: Option<usize> = None;
     let mut group_stack = Vec::<usize>::new();
@@ -6540,6 +6542,24 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         }
     }
     Ok(diagram)
+}
+
+fn parse_swimlane_theme(source: &str) -> diagram_ir::SwimlaneTheme {
+    let front_matter = mermaid_front_matter_section(source, &["themeVariables"]);
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(theme_source, name).or_else(|| theme_source.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        })).filter(|value| !value.is_empty())
+    };
+    let defaults = diagram_ir::SwimlaneTheme::default();
+    diagram_ir::SwimlaneTheme {
+        main_background: value("mainBkg").unwrap_or(defaults.main_background),
+        node_border: value("nodeBorder").unwrap_or(defaults.node_border),
+        line_color: value("lineColor").unwrap_or(defaults.line_color),
+    }
 }
 
 fn parse_swimlane_line_hops(source: &str) -> Result<Option<SwimlaneLineHops>, ParseError> {

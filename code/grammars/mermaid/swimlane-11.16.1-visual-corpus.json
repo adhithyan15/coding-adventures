@@ -49,6 +49,7 @@
     "quoted-unicode-lane-labels",
     "html-entity-labels",
     "metadata-entities",
+    "theme-variables",
     "inline-node-styles",
     "node-typography-styles",
     "node-corner-radius-styles",
