@@ -1676,6 +1676,22 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
                 "mosaic-compile pkg: built {} component(s)",
                 result.components_built.len()
             );
+            // UI90 §4 step 1: a v1 package compiles as before and is told,
+            // in one line, how far it is from v2. The full list is printed
+            // when MOSAIC_STYLE_FINDINGS=1, so CI logs stay readable.
+            if !result.style_findings.is_empty() {
+                eprintln!(
+                    "mosaic-compile pkg: mosstyle v{}: {} warning(s) against the v2 property \
+                     table (UI90 §3.1); set MOSAIC_STYLE_FINDINGS=1 to list them",
+                    result.style_version,
+                    result.style_findings.len()
+                );
+                if std::env::var_os("MOSAIC_STYLE_FINDINGS").is_some_and(|v| v == "1") {
+                    for finding in &result.style_findings {
+                        eprintln!("  {finding}");
+                    }
+                }
+            }
         }
         Err(e) => {
             eprintln!("mosaic-compile pkg: {e}");
