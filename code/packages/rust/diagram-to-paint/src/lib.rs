@@ -898,7 +898,7 @@ where
         if edge.kind == SwimlaneEdgeKind::Invisible {
             continue;
         }
-        let stroke = edge.style.stroke.as_deref().unwrap_or("#455a64");
+        let stroke = edge.style.stroke.as_deref().unwrap_or(&diagram.theme.line_color);
         let stroke_width = edge.style.stroke_width.unwrap_or_else(|| {
             if edge.kind == SwimlaneEdgeKind::Thick { 3.5 } else { 1.8 }
         });
@@ -1060,8 +1060,8 @@ where
         }
     }
     for node in &diagram.nodes {
-        let fill = node.style.fill.clone().unwrap_or_else(|| "#ffffff".into());
-        let stroke = node.style.stroke.clone().unwrap_or_else(|| "#1565c0".into());
+        let fill = node.style.fill.clone().unwrap_or_else(|| diagram.theme.main_background.clone());
+        let stroke = node.style.stroke.clone().unwrap_or_else(|| diagram.theme.node_border.clone());
         let stroke_width = node.style.stroke_width.unwrap_or(2.0);
         let stroke_dash = node.style.stroke_dash.clone();
         let shape = match node.shape {
@@ -1580,6 +1580,9 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
     }
+    metadata.insert("swimlane.theme.mainBkg".into(), diagram.theme.main_background.clone());
+    metadata.insert("swimlane.theme.nodeBorder".into(), diagram.theme.node_border.clone());
+    metadata.insert("swimlane.theme.lineColor".into(), diagram.theme.line_color.clone());
     if let Some(line_hops) = diagram.line_hops {
         metadata.insert("swimlane.lineHops".into(), match line_hops {
             SwimlaneLineHops::Arc => "arc",

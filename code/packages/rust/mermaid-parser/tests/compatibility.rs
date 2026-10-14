@@ -2013,6 +2013,22 @@ fn swimlane_metadata_entities_decode_into_semantic_ir() {
 }
 
 #[test]
+fn swimlane_theme_variables_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"mainBkg\": \"#ffe1ef\", \"nodeBorder\": \"#225577\", \"lineColor\": \"#118844\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  themed[Themed node]\n  next[Next node]\nend\nthemed --> next",
+    ).expect("Swimlane theme variables should parse");
+
+    assert_eq!(diagram.theme.main_background, "#ffe1ef");
+    assert_eq!(diagram.theme.node_border, "#225577");
+    assert_eq!(diagram.theme.line_color, "#118844");
+
+    let front_matter = parse_swimlane(
+        "---\nthemeVariables:\n  mainBkg: '#fef3c7'\n  nodeBorder: '#b45309'\n  lineColor: '#166534'\n---\nswimlane-beta\nsubgraph A\n  one[One]\nend",
+    ).expect("front-matter Swimlane theme variables should parse");
+    assert_eq!(front_matter.theme.main_background, "#fef3c7");
+}
+
+#[test]
 fn swimlane_inline_node_styles_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nrequest --> done",

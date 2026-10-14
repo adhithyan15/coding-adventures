@@ -502,6 +502,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         automatic_lane_ordering: diagram.automatic_lane_ordering,
         ignore_cross_lane_edges: diagram.ignore_cross_lane_edges,
         optimize_ranks_by_crossings: diagram.optimize_ranks_by_crossings,
+        theme: diagram.theme.clone(),
     }
 }
 
@@ -1034,6 +1035,7 @@ mod tests {
             links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: true,
+            theme: Default::default(),
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.lanes[1].y > layout.lanes[0].y);
@@ -1059,6 +1061,7 @@ mod tests {
             edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: true,
+            theme: Default::default(),
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.nodes[0].width > 132.0);
@@ -1148,6 +1151,7 @@ mod tests {
             edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: true,
+            theme: Default::default(),
         };
         let layout = layout_swimlane(&diagram);
         assert_eq!(layout.nodes[0].shape, DiagramShape::Cloud);

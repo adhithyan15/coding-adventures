@@ -1058,7 +1058,8 @@ endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline label
 thick, and dotted links, including labeled links with independently selected point, circle, cross,
 or absent markers at either endpoint, titles, and accessibility
 metadata with named and numeric entity
-decoding. Direct node
+decoding. Root `themeVariables` from init directives or front matter preserve `mainBkg`, `nodeBorder`,
+and `lineColor` through semantic and layout IR to default node and edge paint. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
 decorators cover fill, stroke, text color, stroke width, dash patterns, font family, font size,
 weight, and italic/oblique style. Typography survives semantic IR, informs node width, and lowers

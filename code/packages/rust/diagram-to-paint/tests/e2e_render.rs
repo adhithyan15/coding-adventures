@@ -3547,6 +3547,18 @@ line "Target" [35, 50, 68, 82]"##,
                     matches!(instruction, PaintInstruction::Rect(_))
                 ).count() >= 4, "the default lane and both nodes must lower to paint rectangles");
             }
+            if fixture_name == "theme-variables" {
+                assert_eq!(layout.theme.main_background, "#ffe1ef");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#ffe1ef")
+                        && rect.stroke.as_deref() == Some("#225577")
+                )).count() >= 2, "theme variables must style default Swimlane nodes");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#118844")
+                )), "theme lineColor must lower to backend-neutral edge paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.theme.nodeBorder")),
+                    Some(&"#225577".to_string()));
+            }
             if fixture_name == "node-typography-styles" {
                 assert!(layout.nodes[0].width > layout.nodes[1].width,
                     "larger bold text must reserve more backend-neutral node width");
