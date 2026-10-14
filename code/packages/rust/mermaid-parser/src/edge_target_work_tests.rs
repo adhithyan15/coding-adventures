@@ -74,7 +74,9 @@ fn duplicate_ids_node_collisions_and_precedence_preserve_exact_metadata() {
     assert!(diagram.edges[2].classes.is_empty());
     assert_eq!(diagram.edges[2].style, DiagramStyle::default());
     let unknown = source_with_edges(1) + "style missing stroke:#123456\n";
-    assert!(parse_swimlane(&unknown).expect_err("unknown target remains refused").message.contains("unknown node or edge"));
+    let error = parse_swimlane(&unknown).expect_err("unknown target remains refused");
+    assert_eq!(error.message, "Swimlane style references unknown node, edge, or subgraph \"missing\"");
+    assert_eq!((error.line, error.col), (7, 1));
 }
 
 

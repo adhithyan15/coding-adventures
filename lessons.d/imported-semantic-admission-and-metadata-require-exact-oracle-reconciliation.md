@@ -17,6 +17,11 @@ builders lacked imported lane classes/style and diagram theme fields. Supply
 the upstream neutral defaults; retain every ordering and large-gap assertion.
 Distinguish a compile failure with zero tests from a runtime test failure.
 
+The repaired full suite ran1500 passes and one failure: an owned unknown-target
+oracle retained old node-or-edge wording after upstream added subgraph targets.
+Require the entire new error and exact authored line/column; keep duplicate-ID,
+collision, precedence and resource assertions. Preserve the original failed run.
+
 Unfiltered offline metadata also requested an uncached existing Android package
 before native tests. Resolve the complete graph for the tested Windows platform,
 then verify the entire resulting registry identity set. That proves Windows
