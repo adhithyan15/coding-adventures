@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- The IPv6-only listener test now reserves `127.0.0.1:P` itself before
+  binding `[::]:P`, instead of hoping no other process listens on the IPv4
+  side of a random port. On main's busy sharded runner an unrelated IPv4
+  listener on the same port number made the old test fail although
+  `set_only_v6(true)` was in effect.
 - Keep the Windows backend clean under Rust 1.97 by documenting the
   platform-specific wake helper and using the standard backlog clamp.
 

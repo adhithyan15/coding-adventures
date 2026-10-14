@@ -3,6 +3,13 @@
 All notable changes to `coding-adventures-window-native` will be documented in
 this file.
 
+## Unreleased
+
+- `Window.__enter__` now returns `typing.Self`, and `Window.__del__` swallows
+  close errors with `contextlib.suppress` instead of a bare `try/except/pass`.
+  ruff 0.17.0 (unpinned in `BUILD`) started reporting `PYI034`, `UP037`,
+  `S110` and `BLE001` on the old spelling, which turned main's shard 3 red.
+
 ## 0.1.0
 
 - Added the first Python native window package built on `python-bridge`.

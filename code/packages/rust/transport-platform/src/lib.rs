@@ -3173,21 +3173,49 @@ mod tests {
 
     #[cfg(any(target_os = "linux", target_os = "windows"))]
     fn assert_ipv6_listener_stays_ipv6_only<P: TransportPlatform>(platform: &mut P) {
-        let listener = platform
-            .bind_listener(
-                BindAddress::Ip("[::]:0".parse().expect("ipv6 wildcard addr")),
-                ListenerOptions::default(),
-            )
-            .expect("bind ipv6 listener");
-        let addr = platform.local_addr(listener).expect("ipv6 listener addr");
-
-        let result = TcpStream::connect_timeout(
-            &SocketAddr::from(([127, 0, 0, 1], addr.port())),
-            Duration::from_millis(200),
-        );
-        assert!(
-            result.is_err(),
-            "ipv6 wildcard listener unexpectedly accepted an ipv4 connection",
+        // The old shape of this test bound `[::]:0` and then expected a
+        // connect to `127.0.0.1:<same port>` to fail. Port numbers are
+        // shared across address families, so on a busy CI runner any
+        // *other* process listening on that IPv4 port made the connect
+        // succeed and the test fail, although V6ONLY was set.
+        //
+        // So we claim the IPv4 side ourselves first:
+        //
+        //   1. bind a plain std listener on 127.0.0.1:0      -> port P
+        //   2. bind the platform listener on [::]:P
+        //
+        // Step 2 only succeeds if the platform socket is IPv6-only; a
+        // dual-stack socket would also want 0.0.0.0:P, which we hold.
+        // Then a connect to 127.0.0.1:P must land on *our* IPv4 listener.
+        //
+        // Another process may grab [::]:P between the two binds; that is
+        // an AddrInUse unrelated to V6ONLY, so we try a few fresh ports.
+        // A dual-stack implementation fails every attempt.
+        let mut last_error = None;
+        for _ in 0..5 {
+            let ipv4 = std::net::TcpListener::bind("127.0.0.1:0").expect("bind ipv4 listener");
+            let port = ipv4.local_addr().expect("ipv4 listener addr").port();
+            let bind_addr: SocketAddr = format!("[::]:{port}").parse().expect("ipv6 wildcard addr");
+            match platform.bind_listener(BindAddress::Ip(bind_addr), ListenerOptions::default()) {
+                Ok(listener) => {
+                    let addr = platform.local_addr(listener).expect("ipv6 listener addr");
+                    assert_eq!(addr.port(), port);
+                    let _client = TcpStream::connect_timeout(
+                        &SocketAddr::from(([127, 0, 0, 1], port)),
+                        Duration::from_secs(2),
+                    )
+                    .expect("connect to the ipv4 listener");
+                    ipv4.accept()
+                        .expect("ipv4 traffic must reach the ipv4 listener, not the ipv6 one");
+                    return;
+                }
+                Err(error) => last_error = Some(format!("{error:?}")),
+            }
+        }
+        panic!(
+            "could not bind [::]:P beside 127.0.0.1:P in 5 tries; a dual-stack \
+             (not V6ONLY) listener fails this way, and so does a host without \
+             IPv6 (last error: {last_error:?})",
         );
     }
 
