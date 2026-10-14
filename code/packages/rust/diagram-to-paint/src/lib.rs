@@ -9753,6 +9753,15 @@ mod tests {
     }
 
     #[test]
+    fn caller_swimlane_invalid_derived_geometry_has_distinct_error_and_wrapper_panic() {
+        let mut diagram = mermaid_parser::parse_swimlane(&spacing_control_source("LR")).unwrap();
+        diagram.theme.font_size = Some(f64::NAN);
+        assert_eq!(diagram_layout_hierarchy::try_layout_swimlane(&diagram),
+            Err(diagram_layout_hierarchy::SwimlaneLayoutError::InvalidDerivedGeometry));
+        assert!(std::panic::catch_unwind(|| diagram_layout_hierarchy::layout_swimlane(&diagram)).is_err());
+    }
+
+    #[test]
     fn authored_swimlane_edge_label_theme_preserves_complete_scene_queries_and_rectangles() {
         struct RecordingResolver(std::cell::RefCell<Vec<FontQuery>>);
         impl FontResolver for RecordingResolver {
