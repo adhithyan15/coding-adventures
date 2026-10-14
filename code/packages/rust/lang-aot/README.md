@@ -21,7 +21,9 @@ including integer-valued `sign`. It may also carry the same unaliased
 local-rooted proof through a selector, including unary signs around the exact
 bounded transform, additive composition with finite static terms, and
 multiplication or division of that additive form by finite static terms. A
-real name-formal result is also allowed when its actual has the same proof. Unary
+single additional built-in `entier` may directly wrap the exact bounded
+`entier(sign(...))` root. A real name-formal result is also allowed when its
+actual has the same proof. Unary
 signs, arithmetic composition with finite static operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`
