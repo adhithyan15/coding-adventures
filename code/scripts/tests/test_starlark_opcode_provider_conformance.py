@@ -190,7 +190,11 @@ class OpcodeProviderConformanceTests(unittest.TestCase):
         changed["operators"]["binary"][0] = None
         self.reject(changed)
         for index in range(8):
-            for field, value in (("group", "unary"), ("operator", "~"), ("symbol", "Not")):
+            for field, value in (
+                ("group", "unary"),
+                ("operator", "~"),
+                ("symbol", "Not"),
+            ):
                 changed = copy.deepcopy(self.document)
                 changed["unknown_lookups"][index][field] = value
                 # Some probes already use unary; replace it by another group.
@@ -200,20 +204,33 @@ class OpcodeProviderConformanceTests(unittest.TestCase):
 
     def test_parse_rejects_ambiguous_numbers_keys_and_trailing_content(self) -> None:
         for raw in (
-            b'{"a":1,"a":2}', b'{"a":1,"\\u0061":2}', b'NaN', b'Infinity',
-            b'-Infinity', b'1e309', b'1.0', b'1e0', b'99999999999', b'0 0', b'{',
-            b'"\\ud800"', b'{"\\udfff":0}', b'\xff', b'\xef\xbb\xbf{}',
+            b'{"a":1,"a":2}',
+            b'{"a":1,"\\u0061":2}',
+            b"NaN",
+            b"Infinity",
+            b"-Infinity",
+            b"1e309",
+            b"1.0",
+            b"1e0",
+            b"99999999999",
+            b"0 0",
+            b"{",
+            b'"\\ud800"',
+            b'{"\\udfff":0}',
+            b"\xff",
+            b"\xef\xbb\xbf{}",
         ):
-            with self.subTest(raw=raw):
-                with self.assertRaises(ValueError):
-                    MODULE.parse_json(raw)
+            with self.subTest(raw=raw), self.assertRaises(ValueError):
+                MODULE.parse_json(raw)
 
     def test_transport_size_depth_escapes_and_scalar_boundaries(self) -> None:
         self.assertEqual(MODULE.parse_json(b"0" + b" " * 131071), 0)
         for raw in (b"0" + b" " * 131072, b"[" * 9 + b"0" + b"]" * 9):
             with self.assertRaises(ValueError):
                 MODULE.parse_json(raw)
-        self.assertEqual(MODULE.parse_json(b"[" * 8 + b"0" + b"]" * 8), [[[[[[[[0]]]]]]]])
+        self.assertEqual(
+            MODULE.parse_json(b"[" * 8 + b"0" + b"]" * 8), [[[[[[[[0]]]]]]]]
+        )
         literal = '{[\\"}]😀'
         self.assertEqual(MODULE.parse_json(json.dumps(literal).encode()), literal)
         with self.assertRaises(ValueError):
@@ -227,12 +244,13 @@ class OpcodeProviderConformanceTests(unittest.TestCase):
 
     def test_loader_bounds_reads_and_reports_missing_files(self) -> None:
         fake = io.BytesIO(b"x" * 131073)
-        with mock.patch.object(pathlib.Path, "open", return_value=fake):
-            with self.assertRaises(ValueError):
-                MODULE.load_corpus(pathlib.Path("ignored"))
-        with tempfile.TemporaryDirectory() as directory:
-            with self.assertRaises(OSError):
-                MODULE.load_corpus(pathlib.Path(directory) / "absent.json")
+        with (
+            mock.patch.object(pathlib.Path, "open", return_value=fake),
+            self.assertRaises(ValueError),
+        ):
+            MODULE.load_corpus(pathlib.Path("ignored"))
+        with tempfile.TemporaryDirectory() as directory, self.assertRaises(OSError):
+            MODULE.load_corpus(pathlib.Path(directory) / "absent.json")
 
     def test_cli_default_custom_invalid_missing_and_entrypoint(self) -> None:
         for args in ([], ["--fixture", str(CORPUS)]):
@@ -249,10 +267,12 @@ class OpcodeProviderConformanceTests(unittest.TestCase):
                 with contextlib.redirect_stderr(stderr):
                     self.assertEqual(MODULE.main(["--fixture", str(candidate)]), 1)
                 self.assertIn("STP01 invalid corpus", stderr.getvalue())
-        with mock.patch.object(sys, "argv", [str(SCRIPT)]):
-            with contextlib.redirect_stdout(io.StringIO()):
-                with self.assertRaises(SystemExit) as result:
-                    runpy.run_path(str(SCRIPT), run_name="__main__")
+        with (
+            mock.patch.object(sys, "argv", [str(SCRIPT)]),
+            contextlib.redirect_stdout(io.StringIO()),
+            self.assertRaises(SystemExit) as result,
+        ):
+            runpy.run_path(str(SCRIPT), run_name="__main__")
         self.assertEqual(result.exception.code, 0)
 
 
