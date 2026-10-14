@@ -6563,6 +6563,8 @@ fn parse_swimlane_theme(source: &str) -> diagram_ir::SwimlaneTheme {
         font_family: value("fontFamily"),
         font_size: value("fontSize").and_then(parse_mermaid_font_size)
             .filter(|value| value.is_finite() && *value > 0.0),
+        text_color: value("textColor").unwrap_or(defaults.text_color),
+        edge_label_background: value("edgeLabelBackground"),
     }
 }
 
