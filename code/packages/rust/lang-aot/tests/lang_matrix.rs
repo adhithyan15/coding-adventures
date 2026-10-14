@@ -23971,3 +23971,23 @@ fn captured_array_exact_iir_and_jvm_signature_diagnostic() {
         }
     }
 }
+
+#[test]
+fn captured_array_jvm_direct_call_slot_runtime_regression() {
+    if !toolchain_available(Jvm) {
+        eprintln!("UNAVAILABLE: real JVM captured-array runtime control");
+        return;
+    }
+    let programs: Vec<_> = PROGRAMS.iter().filter(|p| {
+        (p.src.contains("procedure populate") || p.src.contains("procedure seed"))
+            && (p.src.contains("array flags[-1:0, 2:3, 5:6")
+                || p.src.contains("array values[-1:0, 2:3, 5:6")
+                || p.src.contains("array words[-1:0, 4:5, 7:8"))
+    }).collect();
+    assert_eq!(programs.len(), 8);
+    for (case, program) in programs.iter().enumerate() {
+        eprintln!("JVM exact original array row {case}: {}", program.src);
+        let result = run(Jvm, program).expect("installed JVM must execute every selected array row");
+        assert_cell(Jvm, program, result);
+    }
+}

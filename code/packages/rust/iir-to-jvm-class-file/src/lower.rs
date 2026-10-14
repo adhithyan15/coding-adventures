@@ -5379,6 +5379,59 @@ mod tests {
         )
     }
 
+    // Distinct widths expose a slot-count error that argument-count tests hide.
+    fn direct_call_slot_module(types: &[&str], ignored_returns: bool) -> IIRModule {
+        let params: Vec<_> = types.iter().enumerate().map(|(i, t)| (format!("p{i}"), (*t).to_string())).collect();
+        let mut args = vec![Operand::Var("callee".into())];
+        args.extend(params.iter().map(|(n, _)| Operand::Var(n.clone())));
+        let callee = if ignored_returns {
+            IIRFunction::new("callee", params.clone(), "i64", vec![
+                IIRInstr::new("const", Some("answer".into()), vec![Operand::Int(42)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("answer".into())], "i64"),
+            ])
+        } else { IIRFunction::new("callee", params.clone(), "void", vec![IIRInstr::new("ret_void", None, vec![], "void")]) };
+        let mut body = vec![IIRInstr::new("call", None, args.clone(), if ignored_returns { "i64" } else { "void" })];
+        if ignored_returns { body.push(IIRInstr::new("call", None, args, "i64")); }
+        body.push(IIRInstr::new("ret_void", None, vec![], "void"));
+        let mut module = make_module(IIRFunction::new("caller", params, "void", body));
+        module.functions.push(callee);
+        module
+    }
+
+    #[test]
+    fn captured_array_direct_call_slot_width_and_descriptor_boundaries() {
+        let mixed = ["array<f64>", "i64", "f64", "i32", "f32", "str", "i64", "i64"];
+        for (types, expected) in [(mixed.to_vec(), 12), (vec!["i32"; 8], 8), (vec!["i32"; 255], 255), (vec!["i64"; 127], 254)] {
+            let class = lower_iir_to_jvm(&direct_call_slot_module(&types, false), &make_cfg()).unwrap();
+            let caller = class.methods.iter().find(|m| m.name == "caller").unwrap();
+            assert_eq!(caller.code_attribute().unwrap().max_stack, expected, "types={types:?}");
+        }
+        for types in [vec!["i32"; 256], vec!["i64"; 128]] {
+            let err = lower_iir_to_jvm(&direct_call_slot_module(&types, false), &make_cfg()).unwrap_err();
+            assert!(format!("{err:?}").contains("255 parameter slots"), "{err:?}");
+        }
+    }
+
+    #[test]
+    fn captured_array_direct_call_discards_ignored_wide_returns() {
+        let class = lower_iir_to_jvm(&direct_call_slot_module(&["i64"; 6], true), &make_cfg()).unwrap();
+        let caller = class.methods.iter().find(|m| m.name == "caller").unwrap();
+        let code = caller.code_attribute().unwrap();
+        assert_eq!(code.max_stack, 12);
+        // Decode these controlled load/invoke/pop sequences exactly. Every call
+        // must consume its unused two-slot return before the next call begins.
+        let mut cursor = 0;
+        for _ in 0..2 {
+            for slot in [0_u8, 2, 4, 6, 8, 10] {
+                if slot <= 3 { assert_eq!(code.code[cursor], 0x1e + slot); cursor += 1; }
+                else { assert_eq!(&code.code[cursor..cursor+2], &[0x16, slot]); cursor += 2; }
+            }
+            assert_eq!(code.code[cursor], INVOKESTATIC); cursor += 3;
+            assert_eq!(code.code[cursor], 0x58); cursor += 1; // pop2
+        }
+        assert_eq!(&code.code[cursor..], &[RETURN]);
+    }
+
     fn make_cfg() -> IIRJvmConfig {
         IIRJvmConfig::new("TestClass")
     }
