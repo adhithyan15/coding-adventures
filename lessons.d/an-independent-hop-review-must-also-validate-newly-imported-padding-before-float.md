@@ -15,3 +15,14 @@ Strict Clippy also rejected the new legacy-oracle tuple annotation for type
 complexity. Use a named test-only group type; do not suppress the lint or change
 the exact directed occurrence/order assertions. Keep failed receipts distinct
 from successful native execution, then rerun affected suites and strict lint.
+
+The next review found that finite accepted padding can also make an ordinary
+node taller than the fixed horizontal lane. Check exact node/lane/canvas
+enclosure, not just finite dimensions, and size the cross extent from the
+resolved node height while preserving default geometry.
+
+A root-relative git add was accidentally issued from the Cargo package
+directory before the red run. The add/commit failed, while Cargo genuinely
+executed the working-tree tests. Commit from the repository root and record
+that exact source blob and pre-commit execution honestly; do not attribute the
+run to an earlier committed source that lacks those tests.

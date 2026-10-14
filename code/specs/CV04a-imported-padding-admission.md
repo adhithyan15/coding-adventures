@@ -32,3 +32,19 @@ strict failed on that annotation. This is scoped source evidence, not final
 security or whole-goal acceptance. Full Closure parity/provenance/general
 floating work/hosted merge remain OPEN. Miri DEFERRED/PENDING; frozen run,
 checkout, inputs, target and receipts remain untouched.
+
+Further independent review identifies a second incoming padding gap: LR/RL
+lanes retain a fixed150 cross extent while accepted node padding can make
+node height exceed it (padding100 gives226). Centering then places nodes above
+the lane/canvas and can clip output. This static counterexample also needs an
+executed red control. Resolve the horizontal cross extent symmetrically with
+the existing vertical width rule: max(150,nodeHeight+18), then add the existing
+60-per-group-depth margin. Default dimensions stay exact because54+18<150.
+No other cursor, ranking, node-size, spacing or rendering formula changes.
+
+Add complete independently computed two-lane golden layouts for all four
+directions at default, zero,14,100 and65536 padding, including exact canvas,
+lane/node positions/dimensions, preserved input/config/metadata and lane/canvas
+enclosure. Keep the native red receipt, then rerun the full affected suites,
+strict lint and independent review. Accepted padding is a bounded functional
+feature; finite dimensions alone do not establish that nodes fit the canvas.
