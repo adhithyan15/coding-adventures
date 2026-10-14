@@ -98,6 +98,7 @@
     "legacy-internal-shape-aliases",
     "flowchart-curve-config",
     "flowchart-spacing-config",
+    "flowchart-wrapping-width",
     "cross-lane-rank-constraints",
     "rank-crossing-optimization"
   ]
