@@ -52,3 +52,10 @@ No merge/auto-merge until exact published-head required CI is terminal
 acceptable, review-clean and conflict-free; verify actual merge reachability.
 Full Closure parity, byte/source joins, all transformation lineage/CV04b,
 generic range composition and general floating resources remain OPEN.
+
+Actual imported33c library red is848PASS1FAIL: the new producer positive is
+rejected. Owned365 red is3PASS2FAIL: positive conditional-front rejection plus
+an overbroad test assumption about a variable offset through generic relay
+formatting. Keep the variable-offset typed refusal at the direct consumer,
+while retaining every incoming relay/non-unit negative unchanged. Generic
+formatter proof composition remains OPEN and is not fixed by this slice.
