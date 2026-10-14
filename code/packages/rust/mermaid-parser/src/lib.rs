@@ -16,7 +16,7 @@ use diagram_ir::{
     DiagramShape, DiagramTextSpan, EdgeMarker,
     DiagramStyle, EdgeKind, GraphCallback, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
-    PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
+    PacketTheme, RailroadConfig, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneGroup, SwimlaneLane, SwimlaneLineHops, SwimlaneNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
@@ -7740,15 +7740,23 @@ fn swimlane_error(line: usize, message: impl Into<String>) -> ParseError {
 }
 /// Parse Mermaid's explicit Railroad IR constructor notation.
 pub fn parse_railroad(source: &str) -> Result<RailroadDiagram, ParseError> {
-    let family = detect_mermaid_type(source)?; let prepared = prepare_line_grammar_source(source)?;
+    let family = detect_mermaid_type(source)?;
+    let config = parse_railroad_config(source)?;
+    let prepared = prepare_line_grammar_source(source)?;
     if prepared.trim_start().starts_with("railroad-ebnf-beta") {
-        return parse_railroad_ebnf_prepared(&prepared);
+        let mut diagram = parse_railroad_ebnf_prepared(&prepared)?;
+        diagram.config = config;
+        return Ok(diagram);
     }
     if prepared.trim_start().starts_with("railroad-abnf-beta") {
-        return parse_railroad_abnf_prepared(&prepared);
+        let mut diagram = parse_railroad_abnf_prepared(&prepared)?;
+        diagram.config = config;
+        return Ok(diagram);
     }
     if prepared.trim_start().starts_with("railroad-peg-beta") {
-        return parse_railroad_peg_prepared(&prepared);
+        let mut diagram = parse_railroad_peg_prepared(&prepared)?;
+        diagram.config = config;
+        return Ok(diagram);
     }
     if !prepared.trim_start().starts_with("railroad-beta") {
         return Err(ParseError { message: format!("Mermaid {} Railroad {:?} notation is recognized but not implemented", MERMAID_COMPATIBILITY_BASELINE, family.canonical_id()), line: 1, col: 1 });
@@ -7759,7 +7767,7 @@ pub fn parse_railroad(source: &str) -> Result<RailroadDiagram, ParseError> {
     GrammarParser::new(tokens.clone(), grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
     let mut cursor = RailroadCursor { tokens: &tokens, index: 1 };
-    let mut diagram = RailroadDiagram { title: None, accessibility_title: None, accessibility_description: None, rules: Vec::new() };
+    let mut diagram = RailroadDiagram { title: None, accessibility_title: None, accessibility_description: None, config, rules: Vec::new() };
     while !cursor.at("EOF") {
         match cursor.name() {
             "TITLE" => diagram.title = Some(cursor.take_value()["title".len()..].trim().trim_matches('"').to_string()),
@@ -7776,6 +7784,37 @@ pub fn parse_railroad(source: &str) -> Result<RailroadDiagram, ParseError> {
     }
     if diagram.rules.is_empty() { return Err(ParseError { message: "Railroad diagrams require at least one rule".into(), line: 1, col: 1 }); }
     Ok(diagram)
+}
+
+fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
+    let front_matter = mermaid_front_matter_section(source, &["config", "railroad"]);
+    let config_source = mermaid_directive_object(source, "railroad")
+        .or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(config_source, name).or_else(|| {
+            config_source.lines().find_map(|line| {
+                let (key, value) = line.trim().split_once(':')?;
+                (key.trim() == name).then(|| value.trim().trim_matches(['\"', '\'']).to_string())
+            })
+        }).filter(|value| !value.is_empty())
+    };
+    let parse = |name: &str, default: f64| -> Result<f64, ParseError> {
+        let Some(value) = value(name) else { return Ok(default); };
+        let parsed = value.parse::<f64>().map_err(|_| ParseError {
+            message: format!("Mermaid Railroad {name} must be a non-negative number"), line: 1, col: 1,
+        })?;
+        if !parsed.is_finite() || parsed < 0.0 {
+            return Err(ParseError {
+                message: format!("Mermaid Railroad {name} must be a non-negative number"), line: 1, col: 1,
+            });
+        }
+        Ok(parsed)
+    };
+    Ok(RailroadConfig {
+        padding: parse("padding", 10.0)?,
+        vertical_separation: parse("verticalSeparation", 8.0)?,
+        horizontal_separation: parse("horizontalSeparation", 10.0)?,
+    })
 }
 
 fn parse_railroad_ebnf_prepared(source: &str) -> Result<RailroadDiagram, ParseError> {
@@ -7796,6 +7835,7 @@ fn parse_railroad_ebnf_prepared(source: &str) -> Result<RailroadDiagram, ParseEr
         title: None,
         accessibility_title: None,
         accessibility_description: None,
+        config: RailroadConfig::default(),
         rules: Vec::new(),
     };
     while !cursor.at("EOF") {
@@ -7966,6 +8006,7 @@ fn parse_railroad_abnf_prepared(source: &str) -> Result<RailroadDiagram, ParseEr
         title: None,
         accessibility_title: None,
         accessibility_description: None,
+        config: RailroadConfig::default(),
         rules: Vec::new(),
     };
     while !cursor.at("EOF") {
@@ -8128,6 +8169,7 @@ fn parse_railroad_peg_prepared(source: &str) -> Result<RailroadDiagram, ParseErr
         title: None,
         accessibility_title: None,
         accessibility_description: None,
+        config: RailroadConfig::default(),
         rules: Vec::new(),
     };
     while !cursor.at("EOF") {

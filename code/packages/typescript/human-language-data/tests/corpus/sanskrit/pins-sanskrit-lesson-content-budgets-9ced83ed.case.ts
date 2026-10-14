@@ -133,7 +133,10 @@ it("pins Sanskrit lesson-content budgets", () =>
     // 1407 -> 1416: chapters 263-264 bridge the known third-person future to
     // three first-person singular plan forms, with four no-new-atom retrieval
     // lessons. They add no idiom, sense, or culture claim.
-    lessons: 1416,
+    // 1416 -> 1422: chapter 265 retrieves already-owned meal language, adds
+    // one request form and one order frame, then closes with two model-free
+    // retrievals. It adds no idiom, sense, or culture claim.
+    lessons: 1422,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

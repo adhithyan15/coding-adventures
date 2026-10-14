@@ -2826,6 +2826,26 @@ fn railroad_dispatches_all_notations_to_recursive_ir() {
 }
 
 #[test]
+fn railroad_preserves_layout_spacing_config_for_every_notation() {
+    let constructor = parse_railroad(
+        "---\nconfig:\n  railroad:\n    padding: 24\n    verticalSeparation: 30\n    horizontalSeparation: 36\n---\nrailroad-beta\nvalue = terminal(\"x\");",
+    ).expect("Railroad front matter config should parse");
+    assert_eq!(constructor.config.padding, 24.0);
+    assert_eq!(constructor.config.vertical_separation, 30.0);
+    assert_eq!(constructor.config.horizontal_separation, 36.0);
+
+    let ebnf = parse_railroad(
+        "%%{init: {\"railroad\": {\"padding\": 18, \"verticalSeparation\": 20, \"horizontalSeparation\": 22}}}%%\nrailroad-ebnf-beta\nvalue = 'x';",
+    ).expect("Railroad init config should parse");
+    assert_eq!(ebnf.config.padding, 18.0);
+    assert_eq!(ebnf.config.vertical_separation, 20.0);
+    assert_eq!(ebnf.config.horizontal_separation, 22.0);
+    assert!(parse_railroad(
+        "---\nconfig:\n  railroad:\n    horizontalSeparation: -1\n---\nrailroad-beta\nvalue = terminal(\"x\");",
+    ).is_err());
+}
+
+#[test]
 fn info_dispatches_to_dedicated_version_ir() {
     match parse_any_mermaid("info showInfo").expect("info should parse") {
         mermaid_parser::MermaidDiagram::Info(diagram) => assert_eq!(diagram.version, "11.16.1"),

@@ -2075,7 +2075,16 @@ pub enum RailroadExpression {
 #[derive(Clone, Debug, PartialEq)]
 pub struct RailroadRule { pub name: String, pub definition: RailroadExpression }
 #[derive(Clone, Debug, PartialEq)]
-pub struct RailroadDiagram { pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub rules: Vec<RailroadRule> }
+pub struct RailroadConfig {
+    pub padding: f64, pub vertical_separation: f64, pub horizontal_separation: f64,
+}
+impl Default for RailroadConfig {
+    fn default() -> Self {
+        Self { padding: 10.0, vertical_separation: 8.0, horizontal_separation: 10.0 }
+    }
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct RailroadDiagram { pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub config: RailroadConfig, pub rules: Vec<RailroadRule> }
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum RailroadElementKind { Terminal, NonTerminal, Special }
 #[derive(Clone, Debug, PartialEq)]
@@ -2085,7 +2094,7 @@ pub struct LayoutedRailroadPath { pub points: Vec<Point>, pub loopback: bool }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedRailroadRule { pub name: String, pub y: f64, pub height: f64, pub elements: Vec<LayoutedRailroadElement>, pub paths: Vec<LayoutedRailroadPath> }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedRailroadDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub rules: Vec<LayoutedRailroadRule> }
+pub struct LayoutedRailroadDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub config: RailroadConfig, pub rules: Vec<LayoutedRailroadRule> }
 
 // BUILD INFORMATION FAMILY
 #[derive(Clone, Debug, Eq, PartialEq)]

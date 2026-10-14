@@ -172,45 +172,55 @@ fn swimlane_cross_lane_ranks(diagram: &SwimlaneDiagram, link_gaps: &SwimlaneLink
 
 /// Lay out explicit Railroad constructors into rule rows and branch paths.
 pub fn layout_railroad(diagram: &RailroadDiagram) -> LayoutedRailroadDiagram {
-    let title_height = if diagram.title.is_some() { 46.0 } else { 18.0 };
-    let mut rules = Vec::new(); let mut y = title_height; let mut width: f64 = 420.0;
+    let padding = diagram.config.padding;
+    let title_height = if diagram.title.is_some() { 36.0 + padding } else { 8.0 + padding };
+    let expression_x = padding + 130.0;
+    let marker_x = padding + 100.0;
+    let mut rules = Vec::new(); let mut y = title_height; let mut width: f64 = 400.0 + padding * 2.0;
     for rule in &diagram.rules {
         let mut elements = Vec::new(); let mut paths = Vec::new();
-        let (expr_width, expr_height) = layout_railroad_expression(&rule.definition, 140.0, y + 18.0, &mut elements, &mut paths);
-        let center = y + 18.0 + expr_height / 2.0;
-        paths.push(LayoutedRailroadPath { points: vec![Point { x: 116.0, y: center }, Point { x: 140.0, y: center }], loopback: false });
-        paths.push(LayoutedRailroadPath { points: vec![Point { x: 140.0 + expr_width, y: center }, Point { x: 164.0 + expr_width, y: center }], loopback: false });
-        let height = expr_height + 44.0; width = width.max(expr_width + 188.0);
-        rules.push(LayoutedRailroadRule { name: rule.name.clone(), y, height, elements, paths }); y += height + 14.0;
+        let content_y = y + padding + 8.0;
+        let (expr_width, expr_height) = layout_railroad_expression(
+            &rule.definition, expression_x, content_y, &diagram.config, &mut elements, &mut paths,
+        );
+        let center = content_y + expr_height / 2.0;
+        paths.push(LayoutedRailroadPath { points: vec![Point { x: marker_x + 6.0, y: center }, Point { x: expression_x, y: center }], loopback: false });
+        paths.push(LayoutedRailroadPath { points: vec![Point { x: expression_x + expr_width, y: center }, Point { x: expression_x + expr_width + 24.0, y: center }], loopback: false });
+        let height = expr_height + padding * 2.0 + 24.0; width = width.max(expr_width + 168.0 + padding * 2.0);
+        rules.push(LayoutedRailroadRule { name: rule.name.clone(), y, height, elements, paths });
+        y += height + diagram.config.vertical_separation;
     }
-    LayoutedRailroadDiagram { width, height: y + 12.0, title: diagram.title.clone(),
-        accessibility_title: diagram.accessibility_title.clone(), accessibility_description: diagram.accessibility_description.clone(), rules }
+    LayoutedRailroadDiagram { width, height: y + padding, title: diagram.title.clone(),
+        accessibility_title: diagram.accessibility_title.clone(), accessibility_description: diagram.accessibility_description.clone(),
+        config: diagram.config.clone(), rules }
 }
 
 fn layout_railroad_expression(expr: &RailroadExpression, x: f64, y: f64,
-    elements: &mut Vec<LayoutedRailroadElement>, paths: &mut Vec<LayoutedRailroadPath>) -> (f64, f64) {
+    config: &diagram_ir::RailroadConfig, elements: &mut Vec<LayoutedRailroadElement>,
+    paths: &mut Vec<LayoutedRailroadPath>) -> (f64, f64) {
     match expr {
         RailroadExpression::Terminal(label) | RailroadExpression::NonTerminal(label) | RailroadExpression::Special(label) => {
             let kind = match expr { RailroadExpression::Terminal(_) => RailroadElementKind::Terminal,
                 RailroadExpression::NonTerminal(_) => RailroadElementKind::NonTerminal, _ => RailroadElementKind::Special };
-            let width = (label.chars().count() as f64 * 8.5 + 28.0).clamp(64.0, 220.0);
-            elements.push(LayoutedRailroadElement { kind, label: label.clone(), x, y, width, height: 36.0 }); (width, 36.0)
+            let width = (label.chars().count() as f64 * 8.5).clamp(44.0, 192.0) + config.padding * 2.0;
+            let height = 16.0 + config.padding * 2.0;
+            elements.push(LayoutedRailroadElement { kind, label: label.clone(), x, y, width, height }); (width, height)
         }
         RailroadExpression::Sequence(items) => {
-            let sizes: Vec<_> = items.iter().map(measure_railroad_expression).collect();
+            let sizes: Vec<_> = items.iter().map(|item| measure_railroad_expression(item, config)).collect();
             let max_height = sizes.iter().map(|size| size.1).fold(36.0, f64::max);
             let center = y + max_height / 2.0;
             let mut cursor = x; let mut previous_end = None;
             for (item, (_, item_height)) in items.iter().zip(sizes) {
-                let (item_width, _) = layout_railroad_expression(item, cursor, y + (max_height - item_height) / 2.0, elements, paths);
+                let (item_width, _) = layout_railroad_expression(item, cursor, y + (max_height - item_height) / 2.0, config, elements, paths);
                 if let Some(end) = previous_end { paths.push(LayoutedRailroadPath { points: vec![Point { x: end, y: center }, Point { x: cursor, y: center }], loopback: false }); }
-                previous_end = Some(cursor + item_width); cursor += item_width + 24.0;
+                previous_end = Some(cursor + item_width); cursor += item_width + config.horizontal_separation;
             }
-            ((cursor - x - 24.0).max(0.0), max_height)
+            ((cursor - x - config.horizontal_separation).max(0.0), max_height)
         }
         RailroadExpression::Choice(alternatives) => {
-            let gap = 14.0; let mut cursor_y = y; let mut max_width: f64 = 0.0; let mut sizes = Vec::new();
-            for alternative in alternatives { let size = layout_railroad_expression(alternative, x + 28.0, cursor_y, elements, paths); sizes.push((cursor_y, size)); cursor_y += size.1 + gap; max_width = max_width.max(size.0); }
+            let gap = config.vertical_separation; let mut cursor_y = y; let mut max_width: f64 = 0.0; let mut sizes = Vec::new();
+            for alternative in alternatives { let size = layout_railroad_expression(alternative, x + 28.0, cursor_y, config, elements, paths); sizes.push((cursor_y, size)); cursor_y += size.1 + gap; max_width = max_width.max(size.0); }
             let height = (cursor_y - y - gap).max(36.0); let middle = y + height / 2.0;
             for (alt_y, (alt_width, alt_height)) in sizes { let alt_center = alt_y + alt_height / 2.0;
                 paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + 14.0, y: alt_center }, Point { x: x + 28.0, y: alt_center }], loopback: false });
@@ -219,7 +229,7 @@ fn layout_railroad_expression(expr: &RailroadExpression, x: f64, y: f64,
         }
         RailroadExpression::Optional(element) => {
             let inner_y = y + 14.0;
-            let (inner_width, inner_height) = layout_railroad_expression(element, x + 24.0, inner_y, elements, paths);
+            let (inner_width, inner_height) = layout_railroad_expression(element, x + 24.0, inner_y, config, elements, paths);
             let height = inner_height + 28.0; let middle = inner_y + inner_height / 2.0; let bypass_y = y + 4.0;
             let exit_x = x + inner_width + 48.0;
             paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + 24.0, y: middle }], loopback: false });
@@ -229,7 +239,7 @@ fn layout_railroad_expression(expr: &RailroadExpression, x: f64, y: f64,
         }
         RailroadExpression::Repetition { element, min, .. } => {
             let inner_y = y + 15.0;
-            let (inner_width, inner_height) = layout_railroad_expression(element, x, inner_y, elements, paths);
+            let (inner_width, inner_height) = layout_railroad_expression(element, x, inner_y, config, elements, paths);
             let height = inner_height + 30.0; let middle = inner_y + inner_height / 2.0; let loop_y = inner_y + inner_height + 9.0;
             paths.push(LayoutedRailroadPath { points: vec![Point { x: x + inner_width, y: middle }, Point { x: x + inner_width, y: loop_y }, Point { x, y: loop_y }, Point { x, y: middle }], loopback: true });
             if *min == 0 { paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + 12.0, y: y + 4.0 }, Point { x: x + inner_width - 12.0, y: y + 4.0 }, Point { x: x + inner_width, y: middle }], loopback: false }); }
@@ -238,30 +248,32 @@ fn layout_railroad_expression(expr: &RailroadExpression, x: f64, y: f64,
     }
 }
 
-fn measure_railroad_expression(expr: &RailroadExpression) -> (f64, f64) {
+fn measure_railroad_expression(expr: &RailroadExpression, config: &diagram_ir::RailroadConfig) -> (f64, f64) {
     match expr {
         RailroadExpression::Terminal(label) | RailroadExpression::NonTerminal(label) | RailroadExpression::Special(label) => {
-            ((label.chars().count() as f64 * 8.5 + 28.0).clamp(64.0, 220.0), 36.0)
+            ((label.chars().count() as f64 * 8.5).clamp(44.0, 192.0) + config.padding * 2.0,
+                16.0 + config.padding * 2.0)
         }
         RailroadExpression::Sequence(items) => {
-            let sizes: Vec<_> = items.iter().map(measure_railroad_expression).collect();
-            let width = sizes.iter().map(|size| size.0).sum::<f64>() + 24.0 * items.len().saturating_sub(1) as f64;
+            let sizes: Vec<_> = items.iter().map(|item| measure_railroad_expression(item, config)).collect();
+            let width = sizes.iter().map(|size| size.0).sum::<f64>()
+                + config.horizontal_separation * items.len().saturating_sub(1) as f64;
             let height = sizes.iter().map(|size| size.1).fold(36.0, f64::max);
             (width, height)
         }
         RailroadExpression::Choice(alternatives) => {
-            let sizes: Vec<_> = alternatives.iter().map(measure_railroad_expression).collect();
+            let sizes: Vec<_> = alternatives.iter().map(|item| measure_railroad_expression(item, config)).collect();
             let width = sizes.iter().map(|size| size.0).fold(0.0, f64::max) + 56.0;
             let height = sizes.iter().map(|size| size.1).sum::<f64>()
-                + 14.0 * alternatives.len().saturating_sub(1) as f64;
+                + config.vertical_separation * alternatives.len().saturating_sub(1) as f64;
             (width, height.max(36.0))
         }
         RailroadExpression::Optional(element) => {
-            let (width, height) = measure_railroad_expression(element);
+            let (width, height) = measure_railroad_expression(element, config);
             (width + 48.0, height + 28.0)
         }
         RailroadExpression::Repetition { element, .. } => {
-            let (width, height) = measure_railroad_expression(element);
+            let (width, height) = measure_railroad_expression(element, config);
             (width, height + 30.0)
         }
     }
@@ -2073,6 +2085,7 @@ mod tests {
         use diagram_ir::{RailroadDiagram, RailroadExpression, RailroadRule};
         let diagram = RailroadDiagram {
             title: Some("Number".into()), accessibility_title: None, accessibility_description: None,
+            config: Default::default(),
             rules: vec![RailroadRule { name: "number".into(), definition: RailroadExpression::Sequence(vec![
                 RailroadExpression::Choice(vec![RailroadExpression::Terminal("0".into()), RailroadExpression::Terminal("1".into())]),
                 RailroadExpression::Repetition { element: Box::new(RailroadExpression::NonTerminal("digit".into())), min: 1, max: None },
@@ -2091,6 +2104,7 @@ mod tests {
         use diagram_ir::{RailroadDiagram, RailroadExpression, RailroadRule};
         let diagram = RailroadDiagram {
             title: None, accessibility_title: None, accessibility_description: None,
+            config: Default::default(),
             rules: vec![RailroadRule { name: "value".into(), definition: RailroadExpression::Sequence(vec![
                 RailroadExpression::NonTerminal("prefix".into()),
                 RailroadExpression::Repetition {
@@ -2110,5 +2124,30 @@ mod tests {
         assert!(rule.elements.iter().all(|element| element.y + element.height <= rule_bottom));
         assert!(rule.paths.iter().flat_map(|path| &path.points).all(|point| point.y <= rule_bottom));
         assert!(rule.height > 150.0);
+    }
+
+    #[test]
+    fn railroad_layout_applies_configured_spacing() {
+        use diagram_ir::{RailroadConfig, RailroadDiagram, RailroadExpression, RailroadRule};
+        let expression = RailroadExpression::Sequence(vec![
+            RailroadExpression::Terminal("a".into()),
+            RailroadExpression::Choice(vec![
+                RailroadExpression::Terminal("b".into()),
+                RailroadExpression::Terminal("c".into()),
+            ]),
+        ]);
+        let compact = layout_railroad(&RailroadDiagram {
+            title: None, accessibility_title: None, accessibility_description: None,
+            config: RailroadConfig { padding: 4.0, vertical_separation: 2.0, horizontal_separation: 3.0 },
+            rules: vec![RailroadRule { name: "value".into(), definition: expression.clone() }],
+        });
+        let spacious = layout_railroad(&RailroadDiagram {
+            title: None, accessibility_title: None, accessibility_description: None,
+            config: RailroadConfig { padding: 30.0, vertical_separation: 40.0, horizontal_separation: 50.0 },
+            rules: vec![RailroadRule { name: "value".into(), definition: expression }],
+        });
+        assert!(spacious.width > compact.width);
+        assert!(spacious.height > compact.height);
+        assert!(spacious.rules[0].elements[1].x > compact.rules[0].elements[1].x);
     }
 }
