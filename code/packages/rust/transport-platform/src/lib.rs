@@ -3004,6 +3004,23 @@ pub mod windows {
         }
     }
 
+    fn raw_socket_handle(raw: std::os::windows::io::RawSocket) -> *mut c_void {
+        raw as usize as *mut c_void
+    }
+
+    fn raw_socket_value(raw: std::os::windows::io::RawSocket) -> RawSocketValue {
+        raw as usize
+    }
+
+    fn zeroed_overlapped() -> iocp::Overlapped {
+        iocp::Overlapped {
+            internal: 0,
+            internal_high: 0,
+            offset: 0,
+            offset_high: 0,
+            h_event: ptr::null_mut(),
+        }
+    }
     #[cfg(test)]
     mod lifetime_tests {
         use super::*;
@@ -3186,24 +3203,6 @@ pub mod windows {
                     ErrorKind::ConnectionReset | ErrorKind::ConnectionAborted
                 )),
             }
-        }
-    }
-
-    fn raw_socket_handle(raw: std::os::windows::io::RawSocket) -> *mut c_void {
-        raw as usize as *mut c_void
-    }
-
-    fn raw_socket_value(raw: std::os::windows::io::RawSocket) -> RawSocketValue {
-        raw as usize
-    }
-
-    fn zeroed_overlapped() -> iocp::Overlapped {
-        iocp::Overlapped {
-            internal: 0,
-            internal_high: 0,
-            offset: 0,
-            offset_high: 0,
-            h_event: ptr::null_mut(),
         }
     }
 }
