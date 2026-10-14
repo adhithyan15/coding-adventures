@@ -59,7 +59,9 @@ common-left rational inversion tree with conservative query/prior-right bounds.
 Independent initial sign proof PASS, but slope-only output-sensitive work was
 WITHHELD: the reviewed (0,i)->(4N+i,i+1) family has quadratic outside-right
 candidates and zero crossings. Preserve it as a new pre-production control;
-revised endpoint design review is pending. No new tests/production or actual32
+revised endpoint design independently PASS, reportSHA
+b95fd54420831a05b13b2d424def67fb7195de7ffd9d07c93a924825a0c8907b.
+No new tests/production or actual32
 PASS yet; C false positives are counted separately from final K. Original32red
 receipt/tests and all8192/limit/whole-scene controls remain unchanged.
 

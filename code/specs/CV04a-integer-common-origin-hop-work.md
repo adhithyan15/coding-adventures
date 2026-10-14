@@ -66,6 +66,8 @@ misleading public Ord/Eq contract.
 Before implementation, obtain an independent security design assessment.
 Then add independent tests, including existing32 whole-scene/work cases at32/64,
 new negative/opposite-slope/inside/outside/right-span/signed-zero/reversal cases,
+horizontal zero-query-slope against prior obliques (and axis-exchanged vertical
+queries), each endpoint prune with the other bound deliberately unhelpful,
 directed endpoint and occurrence identities, exact predicate signature/order
 equality against full legacy traversal, full AVL/subtree rational invariants,
 noninteger/different-left-support fallback and comparator boundary controls.
@@ -92,3 +94,9 @@ publication. Full Closure parity, output-byte/source/full transformation
 lineage/pass-sweep/stableIDs/spans/CV04b and hosted/merge acceptance remain OPEN.
 Miri DEFERRED/PENDING; frozen497run/checkout/inputs/target/receipts unpolled and
 untouched, separate delivery checkout/target only. No capacity/test weakening.
+
+Revised endpoint design independently PASS at46c674be; reportSHA
+b95fd54420831a05b13b2d424def67fb7195de7ffd9d07c93a924825a0c8907b.
+This is mathematical design acceptance only. Recompute every augmented extrema
+independently after rotations; original predicate/collector/real work and all
+production/suite/security acceptance still require executed tests and review.
