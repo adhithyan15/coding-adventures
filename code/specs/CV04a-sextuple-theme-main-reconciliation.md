@@ -84,3 +84,12 @@ in17targets, no ignores. The sole failure is an owned unknown-target oracle's
 old node-or-edge wording; upstream now includes subgraph targets. Require the
 entire new refusal message and exact source line7/column1 while retaining all
 duplicate-ID/collision/style/visit assertions. No parser implementation change.
+
+
+Actual81156 EXIT0 at4a4eb9c0:1501PASS/17targets/0FAIL/0ignore, strict5/docs
+pass, excluding5 repeated focus tests. This is five-package component evidence;
+the full24 downstream cone and sixth computed-name AST/native matrix remain
+pending. General floating/arbitrary supports and whole delivery/hosted/security
+gates remain WITHHELD. Final-source Miri DEFERRED/PENDING. Earlier actual failed
+receipts remain immutable. Completed incremental reclamation47013 EXIT0 only
+removed generated cache, preserving sources/receipts/binaries/frozen Miri.

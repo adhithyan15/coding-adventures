@@ -600,10 +600,11 @@ This bounds the tested refusal family without claiming whole-compiler linearity.
 
 Selector depth boundary controls distinguish source parsing from the public AST
 compiler contract. Five supported standard wrappers around the same proven
-entier/sign name actual compile through both consumers. At six layers, assigned
-source reaches the real formatter refusal; direct output reaches the existing
-parser nesting limit135. The separate paired parsed-AST control verifies the
-semantic depth refusal through both consumers, without claiming that cloned
-position metadata establishes a new source map. Computed-name selector tests
-also cover both roots/outcomes/consumers; value-copy selectors retain their
-private snapshots while by-name promotion remains refused.
+entier/sign name actual compile through both consumers. Under the imported
+six-layer policy, assigned sixth-layer source also compiles; direct sixth and
+seventh source retain the parser nesting limit135. Paired public AST controls
+verify sixth admission and seventh semantic refusal through both consumers,
+with exact wrapper/root counts and original inputs retained. Cloned positions
+do not establish a new source map. Existing computed-name controls cover both
+roots/outcomes/consumers; the new sixth computed-name AST/native matrix remains
+pending. Value-copy selectors retain snapshots; by-name promotion stays refused.
