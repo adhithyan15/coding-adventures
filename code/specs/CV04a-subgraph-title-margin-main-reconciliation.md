@@ -88,3 +88,13 @@ failures. Its unranked tail still omitted outer padding, so subtracting padding
 from the lane height consumes the new title reserve. Apply the same nonzero
 vertical tail bound20+padding+groupInset to this branch, preserving its existing
 gap term and larger tail, and keep the failed receipt unchanged.
+
+Independentc75 review identifies node-padding100 as a separate accepted-field
+interaction: a tall ordinary node leaves only9 units of horizontal centering
+inset, so an outer-group title can overlap it by19. Expand the1344 cells over
+node padding None/100/65536 and Rect/Summary/ForkJoin/LightningBolt (16128).
+On positive-margin horizontal paths, reserve additional fixed header slack
+against the conservative maximum resolved node height max(nodeHeight,70).
+The unexpanded cross extent max(nodeHeight+18,150) must leave a58-unit prefix
+before content; reserve any deficit once, in addition to the per-title bands.
+This covers every existing fixed-height shape and retains exact zero geometry.
