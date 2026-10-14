@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a banana, then the Bengali for a potato.
 You'll want to know: গাজর.
 গাজর — gājôr — "a carrot".
 
+The word, taken apart.
+গাজর (gājôr) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gārjara, "carrot" (CDIAL 4140).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a potato, then the Bengali for a carrot.
 
 You'll want to know: নুন.
 নুন — nun — "salt".
+
+The word, taken apart.
+নুন (nun) goes back to Sanskrit lavaṇa, "salt". CDIAL gives no Bengali form under that entry, but it lists Oriya nuṇa there (CDIAL 10978), and Bengali nuniyā, "salted", under the related lavaṇita, "salted" (CDIAL 10983).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a carrot, then the Bengali for salt.
 You'll want to know: মাখন.
 মাখন — mākhôn — "butter".
 
+The word, taken apart.
+মাখন (mākhôn) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mrakṣaṇa, "rubbing in; ointment, oil" (CDIAL 10378).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for salt, then the Bengali for butter.
 You'll want to know: মধু.
 মধু — môdhu — "honey".
 
+The word, taken apart.
+মধু (môdhu) is Sanskrit madhu, "honey, mead", taken over whole as a learned loan, a tatsama (CDIAL 9784). The word inherited from it is mau, which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for butter, then the Bengali for honey.
 
 You'll want to know: তেল.
 তেল — tel — "oil".
+
+The word, taken apart.
+তেল (tel) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from taila, "sesame oil, oil" (CDIAL 5958). It is built on tila, "sesame".
 
 What you've built.
 One more word for this chapter.

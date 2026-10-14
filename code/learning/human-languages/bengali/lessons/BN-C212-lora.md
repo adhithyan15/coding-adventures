@@ -14,7 +14,8 @@ romanization: "lôṛā"
 concept_tag: BN-VERB-LORA
 prerequisites: [BN-C212-bhara-neoya, BN-C212-paltano]
 sounds: []
-roots: []
+roots: [indo-aryan-lad]
+etymology_hook: "lôṛā ← *laḍ 'fight', a reconstructed form; a tadbhava (CDIAL 10920)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C212-paltano]
 <!-- hl-knowledge: introduces=[BN-LEX-C212-ACT212-04]; assesses=[] -->
 
 **লড়া** — *lôṛā* — "to fight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লড়া** (*lôṛā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*laḍ*, "fight", a form CDIAL reconstructs from its descendants (CDIAL 10920). CDIAL lists Bengali *laṛā*, "to fight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

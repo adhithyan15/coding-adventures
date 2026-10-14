@@ -14,7 +14,8 @@ romanization: "phiriye deoyā"
 concept_tag: BN-VERB-PHIRIYE-DEOYA
 prerequisites: [BN-C239-rong-kora, BN-C239-bajano]
 sounds: []
-roots: []
+roots: [indo-aryan-phirati, sanskrit-dadati]
+etymology_hook: "phiriye deoyā: phiriye 'turning back', of phirā 'to turn' ← *phirati (CDIAL 9078), + deoyā (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C239-bajano]
 <!-- hl-knowledge: introduces=[BN-LEX-C239-ACT239-04]; assesses=[] -->
 
 **ফিরিয়ে দেওয়া** — *phiriye deoyā* — "to give back".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফিরিয়ে দেওয়া** (*phiriye deoyā*) is *phiriye*, "turning back", a form of *phirā*, "to turn", from *\*phirati*, "turns", a form CDIAL reconstructs (CDIAL 9078), + *deoyā*, "to give", from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

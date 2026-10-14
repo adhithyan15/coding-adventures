@@ -14,7 +14,8 @@ romanization: "dôrjā"
 concept_tag: BN-HOME63-DORJA
 prerequisites: [BN-C63-chhuri, BN-C63-botol]
 sounds: []
-roots: []
+roots: [persian-darvaza]
+etymology_hook: "dôrjā: usually traced to Persian darvāza 'door, gate'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C63-botol]
 <!-- hl-knowledge: introduces=[BN-LEX-C63-HOME63-03]; assesses=[] -->
 
 **দরজা** — *dôrjā* — "a door".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দরজা** (*dôrjā*) is a loan, usually traced to Persian *darvāza*, "door, gate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

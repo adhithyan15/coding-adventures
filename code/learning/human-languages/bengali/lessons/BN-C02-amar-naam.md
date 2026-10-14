@@ -11,7 +11,8 @@ gloss: my name is… (with no "is")
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [BN-C02-amar, BN-C02-naam]
 sounds: []
-roots: []
+roots: [asmad-first-person, naaman-sanskrit]
+etymology_hook: "āmār, from āmi ← asmad, the stem of 'we' (CDIAL 986); nām ← Sanskrit nāman 'name' (CDIAL 7067)"
 duration:
   max_seconds: 180
 requires:
@@ -41,6 +42,11 @@ Bengali drops.
 
 **আমার** (my) + **নাম** (name) + your name → **আমার নাম …** = "my name …" → "**my
 name is…**" *Āmār nām Arun.* → "My name is Arun."
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Both words are inherited. **আমার** (*āmār*) is the possessive of *āmi*, "I", which CDIAL lists under Sanskrit *asmad*, the stem of "we" (CDIAL 986); **নাম** (*nām*) is Sanskrit *nāman*, "name" (CDIAL 7067).
 
 ## Grammar Lens: Bengali drops "is" in the present
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C02-AMARNAAM-01, BN-CONCEPT-C02-NAAM-01] -->

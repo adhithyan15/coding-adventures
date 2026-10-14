@@ -14,7 +14,8 @@ romanization: "peṭ"
 concept_tag: BN-BODY42-PET
 prerequisites: [BN-C42-dat, BN-C42-gola]
 sounds: []
-roots: []
+roots: [indo-aryan-petta]
+etymology_hook: "peṭ ← *pēṭṭa 'belly', a reconstructed form, perhaps one with a word for 'basket' (CDIAL 8376)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C42-gola]
 <!-- hl-knowledge: introduces=[BN-LEX-C42-BODY42-05]; assesses=[] -->
 
 **পেট** — *peṭ* — "the stomach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পেট** (*peṭ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*peṭṭa*, "belly", a form CDIAL reconstructs from its descendants (CDIAL 8376). CDIAL notes that it may be one word with a similar *\*pēṭṭa*, "basket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

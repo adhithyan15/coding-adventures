@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 131,
-  "sourceHash": "fnv1a64:37f7a223c9e53418",
+  "sourceHash": "fnv1a64:916955b9a401bc67",
   "lessonIds": [
     "BN-C131-bol",
     "BN-C131-bashi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch131.txt",
   "json": "bengali/narration/ch131.json",
-  "textHash": "fnv1a64:b26e6279d5b60824",
-  "jsonHash": "fnv1a64:c97508ab598690ea",
+  "textHash": "fnv1a64:d20f0afb1b177fb9",
+  "jsonHash": "fnv1a64:2eb53035d99ceddc",
   "findings": []
 }

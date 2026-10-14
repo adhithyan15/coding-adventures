@@ -14,7 +14,8 @@ romanization: "shikôl"
 concept_tag: BN-JINIS229-SHIKOL
 prerequisites: [BN-C228-siddhanto, BN-C229-torch]
 sounds: []
-roots: []
+roots: [sanskrit-shrnkhala]
+etymology_hook: "shikôl ← Sanskrit śṛṅkhala 'chain', a tadbhava (CDIAL 12580)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C229-torch]
 <!-- hl-knowledge: introduces=[BN-LEX-C229-JINIS229-02]; assesses=[] -->
 
 **শিকল** — *shikôl* — "a chain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শিকল** (*shikôl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śṛṅkhala*, "chain" (CDIAL 12580). CDIAL lists Bengali *sikal*, "chain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

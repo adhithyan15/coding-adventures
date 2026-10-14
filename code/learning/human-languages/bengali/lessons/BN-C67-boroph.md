@@ -14,7 +14,8 @@ romanization: "bôrôph"
 concept_tag: BN-NATURE67-BOROPH
 prerequisites: [BN-C67-somudro, BN-C67-agun]
 sounds: []
-roots: []
+roots: [persian-barf]
+etymology_hook: "bôrôph: usually traced to Persian barf 'snow, ice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C67-agun]
 <!-- hl-knowledge: introduces=[BN-LEX-C67-NATURE67-05]; assesses=[] -->
 
 **বরফ** — *bôrôph* — "ice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বরফ** (*bôrôph*) is a loan, usually traced to Persian *barf*, "snow, ice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

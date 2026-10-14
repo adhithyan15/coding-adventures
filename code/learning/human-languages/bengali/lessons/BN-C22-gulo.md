@@ -12,7 +12,7 @@ concept_tag: BN-GRAM-PLURAL-GULO
 prerequisites: [BN-C22-ra, BN-C15-jama, BN-C14-lal, BN-C12-chokh]
 sounds: []
 roots: []
-etymology_hook: "গুলো and the classifier টা are relatives: both descend from words that once meant a lump or a piece, which is how a language that will not count nouns directly ends up counting them in pieces instead."
+etymology_hook: "-gulo: origin not settled; CDIAL has no entry, though it lists gulī 'ball' under gōla 'ball' (CDIAL 4321)"
 duration:
   max_seconds: 240
 requires:
@@ -51,6 +51,11 @@ means *the* shirts, the particular ones, not shirts in general.
 So this ending is doing the classifier's job as well as the plural's — which is
 exactly what you should expect from a language whose singular *the* is also a
 stuck-on piece.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **গুলো** comes from is not settled. CDIAL has no entry for the ending; the nearest form it gives is Bengali *gulī*, "ball", under Sanskrit *gōla*, "ball" (CDIAL 4321), and it does not link the two.
 
 ## Grammar Lens: the full table, finally
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C22-PLURAL-GULO-01, BN-GRAMMAR-C22-PLURAL-RA-01, BN-GRAMMAR-C20-CLASSIFIER-01, BN-LEX-C14-LAL-01] -->

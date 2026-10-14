@@ -14,7 +14,8 @@ romanization: "phite"
 concept_tag: BN-JINIS229-PHITE
 prerequisites: [BN-C229-shikol, BN-C229-korat]
 sounds: []
-roots: []
+roots: [portuguese-fita]
+etymology_hook: "phite: usually traced to Portuguese fita 'ribbon'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C229-korat]
 <!-- hl-knowledge: introduces=[BN-LEX-C229-JINIS229-04]; assesses=[] -->
 
 **ফিতে** — *phite* — "a ribbon, a tape".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফিতে** (*phite*) is usually traced to Portuguese *fita*, "ribbon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

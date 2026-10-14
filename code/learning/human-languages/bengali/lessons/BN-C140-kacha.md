@@ -14,7 +14,8 @@ romanization: "kā̃chā"
 concept_tag: BN-QUAL140-KACHA
 prerequisites: [BN-C140-tatka, BN-C140-basi]
 sounds: []
-roots: []
+roots: [indo-aryan-kacca]
+etymology_hook: "kāṁchā ← *kacca 'raw, unripe', a reconstructed form; a tadbhava (CDIAL 2613)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C140-basi]
 <!-- hl-knowledge: introduces=[BN-LEX-C140-QUAL140-05]; assesses=[] -->
 
 **কাঁচা** — *kā̃chā* — "raw, unripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাঁচা** (*kāṁchā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kacca*, "raw, unripe", a form CDIAL reconstructs from its descendants (CDIAL 2613).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

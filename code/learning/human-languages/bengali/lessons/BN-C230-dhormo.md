@@ -14,7 +14,8 @@ romanization: "dhôrmô"
 concept_tag: BN-JINIS230-DHORMO
 prerequisites: [BN-C230-rajkumar, BN-C230-somaj]
 sounds: []
-roots: []
+roots: [sanskrit-dharma]
+etymology_hook: "dhôrmô ← Sanskrit dharma 'what is established; law, duty', a tatsama (CDIAL 6753)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C230-somaj]
 <!-- hl-knowledge: introduces=[BN-LEX-C230-JINIS230-05]; assesses=[] -->
 
 **ধর্ম** — *dhôrmô* — "religion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধর্ম** (*dhôrmô*) is Sanskrit *dharma*, "what is established; law, duty", taken over whole as a learned loan, a tatsama (CDIAL 6753). CDIAL lists Old Bengali *dhāma*, "religious conduct", the inherited form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

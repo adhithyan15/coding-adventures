@@ -14,7 +14,8 @@ romanization: "prāyi"
 concept_tag: BN-TIME94-PRAYI
 prerequisites: [BN-C94-dinkal, BN-C94-rattir]
 sounds: []
-roots: []
+roots: [sanskrit-praya]
+etymology_hook: "prāyi: prāy 'mostly', Sanskrit prāya 'for the most part', a tatsama, + the stressing ending -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C94-rattir]
 <!-- hl-knowledge: introduces=[BN-LEX-C94-TIME94-03]; assesses=[] -->
 
 **প্রায়ই** — *prāyi* — "often".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রায়ই** (*prāyi*) is *prāy*, "mostly", Sanskrit *prāya*, "for the most part", taken over whole, + the stressing ending *-i*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

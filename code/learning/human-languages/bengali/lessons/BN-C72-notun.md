@@ -14,7 +14,8 @@ romanization: "nôtun"
 concept_tag: BN-ADJ72-NOTUN
 prerequisites: [BN-C72-boro, BN-C72-chhoto]
 sounds: []
-roots: []
+roots: [sanskrit-nutana]
+etymology_hook: "nôtun: usually traced to Sanskrit nūtana 'new, fresh'; CDIAL has the entry but no Bengali form (CDIAL 7575)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C72-chhoto]
 <!-- hl-knowledge: introduces=[BN-LEX-C72-ADJ72-03]; assesses=[] -->
 
 **নতুন** — *nôtun* — "new".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নতুন** (*nôtun*) is usually traced to Sanskrit *nūtana*, "new, fresh", with its vowels rearranged. CDIAL has that entry but lists no Bengali form under it (CDIAL 7575).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

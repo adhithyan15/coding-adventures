@@ -14,7 +14,8 @@ romanization: "chibāno"
 concept_tag: BN-VERB-CHIBANO
 prerequisites: [BN-C179-chakha, BN-C179-gela]
 sounds: []
-roots: []
+roots: [sanskrit-carvati]
+etymology_hook: "chibāno ← Sanskrit carvati 'chews', a tadbhava (CDIAL 4711)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C179-gela]
 <!-- hl-knowledge: introduces=[BN-LEX-C179-ACT179-03]; assesses=[] -->
 
 **চিবানো** — *chibāno* — "to chew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চিবানো** (*chibāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *carvati*, "chews" (CDIAL 4711). CDIAL lists Bengali *cibā* and *cibāna*, "to chew".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

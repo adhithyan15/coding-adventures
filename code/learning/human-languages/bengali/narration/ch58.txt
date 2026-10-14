@@ -12,6 +12,9 @@ Before the new one: say the Bengali for honey, then the Bengali for oil.
 You'll want to know: কমলা.
 কমলা — kômlā — "an orange".
 
+The word, taken apart.
+কমলা (kômlā) is inherited from Sanskrit kamalā, "orange", and has come down with almost no change (CDIAL 2763). It belongs with kamala, "pale red".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for oil, then the Bengali for an orange.
 
 You'll want to know: লেবু.
 লেবু — lebu — "a lemon".
+
+The word, taken apart.
+লেবু (lebu) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nimbū, "lime" (CDIAL 7247). CDIAL takes the word from Austroasiatic, and says the Bengali e reflects a variant source of the loan.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for an orange, then the Bengali for a lemon.
 You'll want to know: ডিম.
 ডিম — ḍim — "an egg".
 
+The word, taken apart.
+ডিম (ḍim) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ḍimba, "egg" (CDIAL 5550). CDIAL suggests it may belong with a group of words for "lump".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a lemon, then the Bengali for an egg.
 You'll want to know: দই.
 দই — dôi — "yoghurt".
 
+The word, taken apart.
+দই (dôi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dadhi, "thick sour milk" (CDIAL 6146).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for an egg, then the Bengali for yoghurt.
 
 You'll want to know: পেঁয়াজ.
 পেঁয়াজ — pẽyāj — "an onion".
+
+The word, taken apart.
+পেঁয়াজ (pẽyāj) is a loan, usually traced to Persian piyāz, "onion".
 
 What you've built.
 One more word for this chapter.

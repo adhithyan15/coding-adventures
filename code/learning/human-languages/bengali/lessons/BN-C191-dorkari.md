@@ -14,7 +14,8 @@ romanization: "dôrkāri"
 concept_tag: BN-GUN191-DORKARI
 prerequisites: [BN-C190-durbhagyoboshoto, BN-C190-pholaphol]
 sounds: []
-roots: []
+roots: [persian-darkar]
+etymology_hook: "dôrkāri: usually traced to Persian darkār 'needed, necessary'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C190-pholaphol]
 <!-- hl-knowledge: introduces=[BN-LEX-C191-GUN191-01]; assesses=[] -->
 
 **দরকারি** — *dôrkāri* — "necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দরকারি** (*dôrkāri*) is a loan, usually traced to Persian *darkār*, "needed, necessary". It carries the adjective ending *-i*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

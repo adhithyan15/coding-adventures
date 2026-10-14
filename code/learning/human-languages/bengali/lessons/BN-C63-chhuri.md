@@ -14,7 +14,8 @@ romanization: "chhuri"
 concept_tag: BN-HOME63-CHHURI
 prerequisites: [BN-C62-thala, BN-C62-chamoch]
 sounds: []
-roots: []
+roots: [sanskrit-kshuri]
+etymology_hook: "chhuri ← Sanskrit kṣurī 'knife, dagger', a tadbhava (CDIAL 3727)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C62-chamoch]
 <!-- hl-knowledge: introduces=[BN-LEX-C63-HOME63-01]; assesses=[] -->
 
 **ছুরি** — *chhuri* — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছুরি** (*chhuri*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣurī*, "knife, dagger" (CDIAL 3727).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

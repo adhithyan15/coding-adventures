@@ -11,7 +11,8 @@ gloss: well, good — and the reply "আমি ভালো আছি"
 concept_tag: WORD-WELL
 prerequisites: [BN-C03-ami, BN-C03-tumi-kemon-achho]
 sounds: [bha-aspirate, long-o]
-roots: [bhadra-sanskrit]
+roots: [bhadra-sanskrit, sanskrit-bhalla]
+etymology_hook: "bhālo ← Sanskrit bhalla 'auspicious', from *bhadla-, a byform of bhadra 'fortunate' (CDIAL 9408)"
 duration:
   max_seconds: 240
 requires:
@@ -48,6 +49,8 @@ time.
 from Sanskrit *bhadra* ("good, auspicious, gentle"), worn down over
 centuries into *bhālo*. It is one of the most-used words in the language: *bhālo
 lāge* ("[I] like it"), *bhālobāsā* ("love," literally "good-dwelling").
+
+CDIAL lists it under Sanskrit *bhalla*, "auspicious", which it derives from a form *\*bhadla-* beside *bhadra* (CDIAL 9408).
 
 ## The exchange — the reply
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01] -->

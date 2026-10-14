@@ -14,7 +14,8 @@ romanization: "chāmṛā"
 concept_tag: BN-THINGS125-CHAMRA
 prerequisites: [BN-C124-bhuru, BN-C124-har2]
 sounds: []
-roots: []
+roots: [sanskrit-carman]
+etymology_hook: "chāmṛā: cām 'skin, leather' ← Sanskrit carman 'hide, skin' (CDIAL 4701) + the ending -ṛā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C124-har2]
 <!-- hl-knowledge: introduces=[BN-LEX-C125-THINGS125-01]; assesses=[] -->
 
 **চামড়া** — *chāmṛā* — "skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চামড়া** (*chāmṛā*) is *cām*, "skin, leather", which CDIAL lists under Sanskrit *carman*, "hide, skin" (CDIAL 4701), with the ending *-ṛā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

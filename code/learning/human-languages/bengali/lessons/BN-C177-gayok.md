@@ -14,7 +14,8 @@ romanization: "gāyôk"
 concept_tag: BN-KAJ177-GAYOK
 prerequisites: [BN-C177-injiniyar, BN-C177-bigyani]
 sounds: []
-roots: []
+roots: [sanskrit-gayaka]
+etymology_hook: "gāyôk ← Sanskrit gāyaka 'singer', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C177-bigyani]
 <!-- hl-knowledge: introduces=[BN-LEX-C177-KAJ177-05]; assesses=[] -->
 
 **গায়ক** — *gāyôk* — "a singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গায়ক** (*gāyôk*) is Sanskrit *gāyaka*, "singer", taken over whole as a learned loan, a tatsama. The inherited word is *gāin*, "singer", which CDIAL lists under Sanskrit *gāyana* (CDIAL 4136).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

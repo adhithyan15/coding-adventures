@@ -14,7 +14,8 @@ romanization: "girjā"
 concept_tag: BN-THINGS129-GIRJA
 prerequisites: [BN-C128-tikit, BN-C129-mosjid, BN-C40-words]
 sounds: []
-roots: []
+roots: [portuguese-igreja]
+etymology_hook: "girjā ← Portuguese igreja 'church'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [BN-C129-mosjid]
 <!-- hl-knowledge: introduces=[BN-LEX-C129-THINGS129-02]; assesses=[] -->
 
 **গির্জা** — *girjā* — "a church".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গির্জা** (*girjā*) is a loan from Portuguese *igreja*, "church".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gāowā"
 concept_tag: BN-VERB-GAOWA
 prerequisites: [BN-C50-hasa, BN-C50-kada]
 sounds: []
-roots: []
+roots: [sanskrit-gayati]
+etymology_hook: "gāowā ← Sanskrit gāyati 'sings', a tadbhava (CDIAL 4135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C50-kada]
 <!-- hl-knowledge: introduces=[BN-LEX-C50-VERBS50-04]; assesses=[] -->
 
 **গাওয়া** — *gāowā* — "to sing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গাওয়া** (*gāowā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gāyati*, "sings" (CDIAL 4135). CDIAL lists the Bengali verb, as *gauyā*, under the second form *gāpayati*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

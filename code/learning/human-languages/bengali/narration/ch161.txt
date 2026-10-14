@@ -12,6 +12,9 @@ Before the new one: say the Bengali for worried, then the Bengali for elderly.
 You'll want to know: ভদ্র.
 ভদ্র — bhôdrô — "polite".
 
+The word, taken apart.
+ভদ্র (bhôdrô) is Sanskrit bhadra, "fortunate, good", taken over whole as a learned loan, a tatsama (CDIAL 9377).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for elderly, then the Bengali for polite.
 
 You'll want to know: কোমল.
 কোমল — komôl — "gentle, tender".
+
+The word, taken apart.
+কোমল (komôl) is Sanskrit komala, "tender, soft", taken over whole as a learned loan, a tatsama (CDIAL 3523). The word inherited from it is Middle Bengali kõala, which CDIAL lists.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for polite, then the Bengali for gentle.
 You'll want to know: কড়া.
 কড়া — kôṛā — "strict; strong".
 
+The word, taken apart.
+কড়া (kôṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaḍḍati, "is rough" (CDIAL 2657). CDIAL lists Bengali kaṛā, "rough".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for gentle, then the Bengali for strict; str
 You'll want to know: সুখী.
 সুখী — sukhī — "contented, happy".
 
+The word, taken apart.
+সুখী (sukhī) is Sanskrit sukhin, "happy", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for strict; strong, then the Bengali for con
 
 You'll want to know: বিরক্ত.
 বিরক্ত — birôktô — "annoyed".
+
+The word, taken apart.
+বিরক্ত (birôktô) is Sanskrit virakta, "indifferent", taken over whole as a learned loan, a tatsama (CDIAL 11842).
 
 What you've built.
 One more word for this chapter.

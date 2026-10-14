@@ -14,7 +14,8 @@ romanization: "jôdi"
 concept_tag: BN-KARON159-JODI
 prerequisites: [BN-C159-tai, BN-C159-jehetu]
 sounds: []
-roots: []
+roots: [sanskrit-yadi]
+etymology_hook: "jôdi ← Sanskrit yadi 'if', a tatsama (CDIAL 10410)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C159-jehetu]
 <!-- hl-knowledge: introduces=[BN-LEX-C159-KARON159-03]; assesses=[] -->
 
 **যদি** — *jôdi* — "if".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**যদি** (*jôdi*) is Sanskrit *yadi*, "if", taken over whole as a learned loan, a tatsama (CDIAL 10410). The word inherited from it is Old Bengali *jaï*, "when", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

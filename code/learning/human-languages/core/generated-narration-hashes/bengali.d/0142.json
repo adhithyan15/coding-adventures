@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 142,
-  "sourceHash": "fnv1a64:6d69ab9e5eeb6402",
+  "sourceHash": "fnv1a64:15969c00acda0b9a",
   "lessonIds": [
     "BN-C142-priyo",
     "BN-C142-bikhyato",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch142.txt",
   "json": "bengali/narration/ch142.json",
-  "textHash": "fnv1a64:1de65be1b796698a",
-  "jsonHash": "fnv1a64:185540960698a436",
+  "textHash": "fnv1a64:8439252fd7af69c7",
+  "jsonHash": "fnv1a64:0cce63b0837127cd",
   "findings": []
 }

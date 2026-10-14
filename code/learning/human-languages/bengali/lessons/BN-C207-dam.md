@@ -14,7 +14,8 @@ romanization: "dām"
 concept_tag: BN-KAJ207-DAM
 prerequisites: [BN-C206-tre, BN-C206-chhakni]
 sounds: []
-roots: []
+roots: [sanskrit-dramma]
+etymology_hook: "dām ← Sanskrit dramma 'a coin', a tadbhava (CDIAL 6622)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C206-chhakni]
 <!-- hl-knowledge: introduces=[BN-LEX-C207-KAJ207-01]; assesses=[] -->
 
 **দাম** — *dām* — "a price".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দাম** (*dām*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dramma*, "a coin" (CDIAL 6622). CDIAL lists Bengali *dām*, "price", and takes *dramma* from Greek *drachmē* through Middle Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

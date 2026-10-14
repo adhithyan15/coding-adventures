@@ -14,7 +14,8 @@ romanization: "phāil"
 concept_tag: BN-JINIS164-PHAIL
 prerequisites: [BN-C163-toyale, BN-C163-tuthpest]
 sounds: []
-roots: []
+roots: [english-file]
+etymology_hook: "phāil ← English file"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C163-tuthpest]
 <!-- hl-knowledge: introduces=[BN-LEX-C164-JINIS164-01]; assesses=[] -->
 
 **ফাইল** — *phāil* — "a file, a folder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফাইল** (*phāil*) is a loan from English *file*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

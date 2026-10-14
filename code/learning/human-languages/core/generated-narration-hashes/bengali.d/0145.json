@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 145,
-  "sourceHash": "fnv1a64:3a82648db29d1854",
+  "sourceHash": "fnv1a64:711e76eed7c77253",
   "lessonIds": [
     "BN-C145-somproti",
     "BN-C145-agei",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch145.txt",
   "json": "bengali/narration/ch145.json",
-  "textHash": "fnv1a64:9893e64538bf736a",
-  "jsonHash": "fnv1a64:e738c0cb5a38ecbd",
+  "textHash": "fnv1a64:f1b20fb7cc9af24b",
+  "jsonHash": "fnv1a64:5244b2c5a102fa20",
   "findings": []
 }

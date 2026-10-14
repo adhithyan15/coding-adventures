@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a book, then the Bengali for an exercise
 You'll want to know: কলম.
 কলম — kôlôm — "a pen".
 
+The word, taken apart.
+কলম (kôlôm) is a loan from Arabic qalam, "reed pen", which reached Bengali through Persian. Its Arabic root is q-l-m (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for an exercise book, then the Bengali for a
 
 You'll want to know: কাগজ.
 কাগজ — kāgôj — "paper".
+
+The word, taken apart.
+কাগজ (kāgôj) is a loan, usually traced to Persian kāghaz, "paper".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a pen, then the Bengali for paper.
 You'll want to know: স্কুল.
 স্কুল — skul — "a school".
 
+The word, taken apart.
+স্কুল (skul) is a loan from English school.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for paper, then the Bengali for a school.
 You'll want to know: টাকা.
 টাকা — ṭākā — "money; taka".
 
+The word, taken apart.
+টাকা (ṭākā) comes from ṭakka, a form CDIAL reconstructs beside Sanskrit ṭaṅka, "a stamped coin" (CDIAL 5426). CDIAL reports Bloch's view that ṭaṅka itself came from a Tatar word tanka.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a school, then the Bengali for money; ta
 
 You'll want to know: প্রশ্ন.
 প্রশ্ন — prôshno — "a question".
+
+The word, taken apart.
+প্রশ্ন (prôshno) is Sanskrit praśna, "question", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

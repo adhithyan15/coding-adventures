@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a seat, then the Bengali for a platform.
 You'll want to know: নাগরিক.
 নাগরিক — nāgôrik — "a citizen".
 
+The word, taken apart.
+নাগরিক (nāgôrik) is Sanskrit nāgarika, "of the town; a townsman", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a platform, then the Bengali for a citiz
 
 You'll want to know: পর্যটক.
 পর্যটক — pôrjôṭôk — "a tourist".
+
+The word, taken apart.
+পর্যটক (pôrjôṭôk) is Sanskrit paryaṭaka, "wanderer", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a citizen, then the Bengali for a touris
 You'll want to know: বাক্য.
 বাক্য — bākyô — "a sentence".
 
+The word, taken apart.
+বাক্য (bākyô) is Sanskrit vākya, "speech, words", taken over whole as a learned loan, a tatsama (CDIAL 11468).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a tourist, then the Bengali for a senten
 You'll want to know: ভুল.
 ভুল — bhul — "a mistake".
 
+The word, taken apart.
+ভুল (bhul) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhull, "err, forget", a form CDIAL reconstructs from its descendants (CDIAL 9538). CDIAL lists Bengali bhulā, "to err, forget".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a sentence, then the Bengali for a mista
 
 You'll want to know: নিয়ম.
 নিয়ম — niyôm — "a rule".
+
+The word, taken apart.
+নিয়ম (niyôm) is Sanskrit niyama, "restraint; fixed law", taken over whole as a learned loan, a tatsama (CDIAL 7250). The word inherited from it is neo, "a law", which CDIAL lists.
 
 What you've built.
 One more word for this chapter.

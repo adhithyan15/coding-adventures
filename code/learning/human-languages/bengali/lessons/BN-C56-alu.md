@@ -14,7 +14,8 @@ romanization: "ālu"
 concept_tag: BN-FOOD56-ALU
 prerequisites: [BN-C56-apel, BN-C56-kola]
 sounds: []
-roots: []
+roots: [sanskrit-alu]
+etymology_hook: "ālu ← Sanskrit ālu 'an edible root', inherited (CDIAL 1388)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C56-kola]
 <!-- hl-knowledge: introduces=[BN-LEX-C56-FOOD56-05]; assesses=[] -->
 
 **আলু** — *ālu* — "a potato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আলু** (*ālu*) is inherited from Sanskrit *ālu*, "an edible root", and has come down with almost no change (CDIAL 1388).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

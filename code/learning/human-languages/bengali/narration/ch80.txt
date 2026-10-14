@@ -12,6 +12,9 @@ Before the new one: say the Bengali for now, then the Bengali for always.
 You'll want to know: দেরি.
 দেরি — deri — "lateness; late".
 
+The word, taken apart.
+দেরি (deri) is a loan, usually traced to Persian dēr, "late; a long time". Bengali adds the ending -i.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for always, then the Bengali for lateness; l
 
 You'll want to know: আগে.
 আগে — āge — "before".
+
+The word, taken apart.
+আগে (āge) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from agra, "top, front" (CDIAL 68). CDIAL lists āge under the locative agre, "in front".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for lateness; late, then the Bengali for bef
 You'll want to know: পরে.
 পরে — pôre — "after, later".
 
+The word, taken apart.
+পরে (pôre) is pôr, "later", with the ending -e. It goes back to Sanskrit para, "further, later", whose param means "after"; CDIAL has that entry but lists no Bengali form under it (CDIAL 7793).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for before, then the Bengali for after.
 You'll want to know: সময়.
 সময় — sômôy — "time".
 
+The word, taken apart.
+সময় (sômôy) is Sanskrit samaya, "meeting, agreement; time", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for after, then the Bengali for time.
 
 You'll want to know: দুপুর.
 দুপুর — dupur — "midday".
+
+The word, taken apart.
+দুপুর (dupur) is usually explained as Sanskrit dviprahara, "the second watch" of the day: dvi, "two", + prahara, "a watch of about three hours", which CDIAL lists as Bengali pahar (CDIAL 8900). CDIAL has no entry for the compound, and asks whether prahara is a Sanskrit form of Persian pahra, "watch".
 
 What you've built.
 One more word for this chapter.

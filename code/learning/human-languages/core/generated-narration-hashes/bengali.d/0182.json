@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 182,
-  "sourceHash": "fnv1a64:027982cfa567755a",
+  "sourceHash": "fnv1a64:05020c34effe42df",
   "lessonIds": [
     "BN-C182-chhera",
     "BN-C182-bhaj-kora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch182.txt",
   "json": "bengali/narration/ch182.json",
-  "textHash": "fnv1a64:85270335be154988",
-  "jsonHash": "fnv1a64:3a8fbac9cc709ba6",
+  "textHash": "fnv1a64:743ba613e1426b84",
+  "jsonHash": "fnv1a64:62f0144b5791fc05",
   "findings": []
 }

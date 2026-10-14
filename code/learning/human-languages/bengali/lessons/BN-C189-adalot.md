@@ -14,7 +14,8 @@ romanization: "ādālôt"
 concept_tag: BN-JAYGA189-ADALOT
 prerequisites: [BN-C188-phlt, BN-C188-tola]
 sounds: []
-roots: []
+roots: [arabic-adala]
+etymology_hook: "ādālôt ← Arabic ʿadāla 'justice', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C188-tola]
 <!-- hl-knowledge: introduces=[BN-LEX-C189-JAYGA189-01]; assesses=[] -->
 
 **আদালত** — *ādālôt* — "a court of law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আদালত** (*ādālôt*) is a loan from Arabic *ʿadāla*, "justice", which reached Bengali through Persian. Its Arabic root is *ʿ-d-l* (Lane). Persian keeps the *-t* of the Arabic ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

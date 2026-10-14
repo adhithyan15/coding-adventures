@@ -14,7 +14,8 @@ romanization: "jātīyô"
 concept_tag: BN-GUN221-JATIYO
 prerequisites: [BN-C220-ager, BN-C221-besorkari]
 sounds: []
-roots: []
+roots: [sanskrit-jatiya]
+etymology_hook: "jātīyô ← Sanskrit jātīya 'belonging to a people', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C221-besorkari]
 <!-- hl-knowledge: introduces=[BN-LEX-C221-GUN221-02]; assesses=[] -->
 
 **জাতীয়** — *jātīyô* — "national".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জাতীয়** (*jātīyô*) is Sanskrit *jātīya*, "belonging to a people", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

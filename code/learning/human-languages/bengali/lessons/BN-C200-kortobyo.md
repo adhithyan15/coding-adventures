@@ -14,7 +14,8 @@ romanization: "kôrtôbyô"
 concept_tag: BN-JINIS200-KORTOBYO
 prerequisites: [BN-C200-svadhinota, BN-C200-ain]
 sounds: []
-roots: []
+roots: [sanskrit-kartavya]
+etymology_hook: "kôrtôbyô ← Sanskrit kartavya 'to be done; duty', a tatsama (CDIAL 2859)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C200-ain]
 <!-- hl-knowledge: introduces=[BN-LEX-C200-JINIS200-04]; assesses=[] -->
 
 **কর্তব্য** — *kôrtôbyô* — "a duty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কর্তব্য** (*kôrtôbyô*) is Sanskrit *kartavya*, "to be done; duty", taken over whole as a learned loan, a tatsama (CDIAL 2859).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

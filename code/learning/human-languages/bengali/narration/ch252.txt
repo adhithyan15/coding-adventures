@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a party, then the Bengali for a journey.
 You'll want to know: কাকিমা.
 কাকিমা — kākimā — "a paternal aunt (by marriage)".
 
+The word, taken apart.
+কাকিমা (kākimā) is kāki, "wife of the father's younger brother", which CDIAL lists under kākka, "senior male relative", a word it takes from Dravidian (CDIAL 2998), + mā, "mother".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a journey, then the Bengali for a patern
 
 You'll want to know: ভাইপো.
 ভাইপো — bhāipo — "a nephew (brother's son)".
+
+The word, taken apart.
+ভাইপো (bhāipo) is bhāi, "brother", from Sanskrit bhrātṛ (CDIAL 9661), + po, "son", from Sanskrit pota, "young of an animal or plant", a word CDIAL takes as non-Aryan, probably Dravidian (CDIAL 8399): "brother's son".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a paternal aunt, then the Bengali for a 
 You'll want to know: নাতি.
 নাতি — nāti — "a grandson".
 
+The word, taken apart.
+নাতি (nāti) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from naptṛ, "grandson" (CDIAL 6955b). CDIAL lists Bengali nāti, "grandson".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a nephew, then the Bengali for a grandso
 You'll want to know: নাতনি.
 নাতনি — nātni — "a granddaughter".
 
+The word, taken apart.
+নাতনি (nātni) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from naptṛ, "grandson" (CDIAL 6955b). CDIAL lists Bengali nātini, "granddaughter", made from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a grandson, then the Bengali for a grand
 
 You'll want to know: শ্বশুর.
 শ্বশুর — shvôshur — "a father-in-law".
+
+The word, taken apart.
+শ্বশুর (shvôshur) is Sanskrit śvaśura, "husband's or wife's father", taken over whole as a learned loan, a tatsama (CDIAL 12753). The word inherited from it is sasar, which CDIAL lists.
 
 What you've built.
 One more word for this chapter.

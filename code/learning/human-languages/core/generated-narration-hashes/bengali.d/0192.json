@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 192,
-  "sourceHash": "fnv1a64:28f8bb659ddb8168",
+  "sourceHash": "fnv1a64:f48abdf5ebdb2ace",
   "lessonIds": [
     "BN-C192-hotash",
     "BN-C192-sorol",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch192.txt",
   "json": "bengali/narration/ch192.json",
-  "textHash": "fnv1a64:4aceef4c3780a038",
-  "jsonHash": "fnv1a64:6b2b806978123ce6",
+  "textHash": "fnv1a64:559065965a1c5c03",
+  "jsonHash": "fnv1a64:b963e53a9e54bd0d",
   "findings": []
 }

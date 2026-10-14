@@ -14,7 +14,8 @@ romanization: "bikhyātô"
 concept_tag: BN-QUAL142-BIKHYATO
 prerequisites: [BN-C141-nirapod, BN-C142-priyo]
 sounds: []
-roots: []
+roots: [sanskrit-vikhyata]
+etymology_hook: "bikhyātô ← Sanskrit vikhyāta 'famous', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C142-priyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C142-QUAL142-02]; assesses=[] -->
 
 **বিখ্যাত** — *bikhyātô* — "famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিখ্যাত** (*bikhyātô*) is Sanskrit *vikhyāta*, "famous", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

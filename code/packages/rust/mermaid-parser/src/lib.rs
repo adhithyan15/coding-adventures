@@ -6571,6 +6571,7 @@ fn parse_swimlane_flowchart_config(source: &str) -> Result<diagram_ir::SwimlaneF
         node_spacing: parse("nodeSpacing")?,
         rank_spacing: parse("rankSpacing")?,
         diagram_padding: parse("diagramPadding")?,
+        curve: value("curve").map(|value| parse_swimlane_edge_curve(&value, 1)).transpose()?,
     })
 }
 
@@ -6595,6 +6596,9 @@ fn parse_swimlane_theme(source: &str) -> diagram_ir::SwimlaneTheme {
             .filter(|value| value.is_finite() && *value > 0.0),
         text_color: value("textColor").unwrap_or(defaults.text_color),
         edge_label_background: value("edgeLabelBackground"),
+        cluster_background: value("clusterBkg"),
+        cluster_border: value("clusterBorder"),
+        title_color: value("titleColor"),
     }
 }
 

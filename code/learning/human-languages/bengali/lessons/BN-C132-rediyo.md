@@ -14,7 +14,8 @@ romanization: "rediyo"
 concept_tag: BN-THINGS132-REDIYO
 prerequisites: [BN-C131-kyamera, BN-C132-phon]
 sounds: []
-roots: []
+roots: [english-radio]
+etymology_hook: "rediyo ← English radio"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C132-phon]
 <!-- hl-knowledge: introduces=[BN-LEX-C132-THINGS132-02]; assesses=[] -->
 
 **রেডিও** — *rediyo* — "a radio".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রেডিও** (*rediyo*) is a loan from English *radio*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

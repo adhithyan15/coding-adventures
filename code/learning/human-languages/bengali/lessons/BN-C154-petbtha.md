@@ -14,7 +14,8 @@ romanization: "peṭbæthā"
 concept_tag: BN-SVASTHYO154-PETBTHA
 prerequisites: [BN-C154-kashi, BN-C154-mathabtha]
 sounds: []
-roots: []
+roots: [indo-aryan-petta, sanskrit-vyatha]
+etymology_hook: "peṭbæthā: peṭ 'belly' ← *pēṭṭa (CDIAL 8376) + bæthā 'pain', Sanskrit vyathā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C154-mathabtha]
 <!-- hl-knowledge: introduces=[BN-LEX-C154-SVASTHYO154-05]; assesses=[] -->
 
 **পেটব্যথা** — *peṭbæthā* — "a stomach ache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পেটব্যথা** (*peṭbæthā*) is *peṭ*, "belly", which CDIAL lists under *\*pēṭṭa*, "belly", a form it reconstructs (CDIAL 8376), + *bæthā*, "pain", Sanskrit *vyathā*, "pain, distress", taken over whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

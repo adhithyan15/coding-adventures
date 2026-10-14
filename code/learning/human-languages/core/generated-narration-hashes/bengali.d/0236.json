@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 236,
-  "sourceHash": "fnv1a64:e279ae1e2f93123e",
+  "sourceHash": "fnv1a64:686f9069d0261d85",
   "lessonIds": [
     "BN-C236-klas",
     "BN-C236-kormi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch236.txt",
   "json": "bengali/narration/ch236.json",
-  "textHash": "fnv1a64:eaa38c7d98a15d36",
-  "jsonHash": "fnv1a64:4651d8194e43c884",
+  "textHash": "fnv1a64:2c3ec135dc257e95",
+  "jsonHash": "fnv1a64:d6d9efd2c0ea9219",
   "findings": []
 }

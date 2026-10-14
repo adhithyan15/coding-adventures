@@ -14,7 +14,8 @@ romanization: "gonā"
 concept_tag: BN-VERB-GONA
 prerequisites: [BN-C51-chaowa, BN-C51-ana]
 sounds: []
-roots: []
+roots: [sanskrit-ganayati]
+etymology_hook: "gonā ← Sanskrit gaṇayati 'counts', a tadbhava (CDIAL 3993)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C51-ana]
 <!-- hl-knowledge: introduces=[BN-LEX-C51-VERBS51-05]; assesses=[] -->
 
 **গোনা** — *gonā* — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গোনা** (*gonā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gaṇayati*, "counts" (CDIAL 3993). CDIAL also lists Bengali *guṇā*, "to count", under *guṇayati* (CDIAL 4191).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

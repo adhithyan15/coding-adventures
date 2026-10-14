@@ -14,7 +14,8 @@ romanization: "kôrāt"
 concept_tag: BN-JINIS229-KORAT
 prerequisites: [BN-C229-torch, BN-C229-shikol]
 sounds: []
-roots: []
+roots: [sanskrit-karapattra]
+etymology_hook: "kôrāt ← Sanskrit karapattra 'saw', a tadbhava (CDIAL 2795)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C229-shikol]
 <!-- hl-knowledge: introduces=[BN-LEX-C229-JINIS229-03]; assesses=[] -->
 
 **করাত** — *kôrāt* — "a saw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**করাত** (*kôrāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karapattra*, "saw" (CDIAL 2795). CDIAL lists Bengali *karāt*, "saw", and notes that the Sanskrit form may be shaped by popular etymology, with a possible Dravidian source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

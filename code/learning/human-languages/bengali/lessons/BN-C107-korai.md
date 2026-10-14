@@ -14,7 +14,8 @@ romanization: "kôṛāi"
 concept_tag: BN-THINGS107-KORAI
 prerequisites: [BN-C107-bati, BN-C107-hari]
 sounds: []
-roots: []
+roots: [sanskrit-kataha]
+etymology_hook: "kôṛāi ← Sanskrit kaṭāha 'boiler, saucepan with handles', a tadbhava (CDIAL 2638)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C107-hari]
 <!-- hl-knowledge: introduces=[BN-LEX-C107-THINGS107-03]; assesses=[] -->
 
 **কড়াই** — *kôṛāi* — "a wok".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কড়াই** (*kôṛāi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṭāha*, "boiler, saucepan with handles" (CDIAL 2638).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

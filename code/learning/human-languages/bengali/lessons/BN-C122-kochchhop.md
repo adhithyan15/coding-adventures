@@ -14,7 +14,8 @@ romanization: "kôchchhôp"
 concept_tag: BN-THINGS122-KOCHCHHOP
 prerequisites: [BN-C122-kecho, BN-C122-tiktiki]
 sounds: []
-roots: []
+roots: [sanskrit-kacchapa]
+etymology_hook: "kôchchhôp ← Sanskrit kacchapa 'turtle', a tatsama; CDIAL lists the inherited form kāchim (CDIAL 2619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C122-tiktiki]
 <!-- hl-knowledge: introduces=[BN-LEX-C122-THINGS122-05]; assesses=[] -->
 
 **কচ্ছপ** — *kôchchhôp* — "a turtle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কচ্ছপ** (*kôchchhôp*) is Sanskrit *kacchapa*, "turtle, tortoise", taken over whole as a learned loan, a tatsama (CDIAL 2619). The word inherited from it is *kāchim*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

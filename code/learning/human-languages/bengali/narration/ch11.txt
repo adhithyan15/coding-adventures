@@ -115,7 +115,7 @@ The letters in this word.
 থা (thā, an aspirated t + long ā) + কা (kā) becomes থাকা (thākā).
 
 The word, taken apart.
-থাকা (thākā, "to live, to stay, to remain") is from Sanskrit sthā ("to stand, to stay") — the same PIE root steh₂- ("to stand") that gives English stand, stay, state, and Latin stāre. So Bengali's "to live/stay" and English's "to stand/stay" are, at the root, one word. "I live in Kolkata" is আমি কলকাতায় থাকি (āmi Kolkātāy thāki) — stem thāk- + the -i "I" ending, no gender.
+থাকা (thākā, "to live, to stay, to remain") goes back to sthakk, "stop, halt", a form CDIAL reconstructs and connects, probably but not certainly, with Sanskrit sthā ("to stand, to stay") (CDIAL 13737) — the same PIE root steh₂- ("to stand") that gives English stand, stay, state, and Latin stāre. So Bengali's "to live/stay" and English's "to stand/stay" probably share one root. "I live in Kolkata" is আমি কলকাতায় থাকি (āmi Kolkātāy thāki) — stem thāk- + the -i "I" ending, no gender.
 
 Grammar Lens: "in" comes after the noun.
 কলকাতায় (Kolkātāy) = Kolkata + -য় / -তে (-y/-te, "in, at"), glued to the end of the noun. Bengali uses postpositions (case-endings) where English uses prepositions: "Kolkata-in I live," the verb last.

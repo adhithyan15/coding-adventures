@@ -12,6 +12,9 @@ Before the new one: say the Bengali for parking, then the Bengali for people.
 You'll want to know: পদবি.
 পদবি — pôdôbi — "a surname".
 
+The word, taken apart.
+পদবি (pôdôbi) is Sanskrit padavī, "road; rank, title", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for people, then the Bengali for a surname.
 
 You'll want to know: বয়স.
 বয়স — bôyôs — "an age".
+
+The word, taken apart.
+বয়স (bôyôs) is Sanskrit vayas, "vigour, age", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a surname, then the Bengali for an age.
 You'll want to know: নম্বর.
 নম্বর — nômbôr — "a number".
 
+The word, taken apart.
+নম্বর (nômbôr) is a loan from English number.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for an age, then the Bengali for a number.
 You'll want to know: পরামর্শ.
 পরামর্শ — pôrāmôrshô — "advice".
 
+The word, taken apart.
+পরামর্শ (pôrāmôrshô) is Sanskrit parāmarśa, "consideration", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a number, then the Bengali for advice.
 
 You'll want to know: সত্য.
 সত্য — sôtyô — "the truth".
+
+The word, taken apart.
+সত্য (sôtyô) is Sanskrit satya, "true; truth", taken over whole as a learned loan, a tatsama (CDIAL 13112). The word inherited from it is sāṁc, "truth", which CDIAL lists.
 
 What you've built.
 One more word for this chapter.

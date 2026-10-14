@@ -14,7 +14,8 @@ romanization: "pātā"
 concept_tag: BN-SCHOOL65-PATA
 prerequisites: [BN-C65-gachh, BN-C65-phul]
 sounds: []
-roots: []
+roots: [sanskrit-patra]
+etymology_hook: "pātā ← Sanskrit pattra 'wing-feather; leaf', a tadbhava (CDIAL 7733)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C65-phul]
 <!-- hl-knowledge: introduces=[BN-LEX-C65-SCHOOL65-05]; assesses=[] -->
 
 **পাতা** — *pātā* — "a leaf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাতা** (*pātā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pattra*, "wing-feather; leaf" (CDIAL 7733).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

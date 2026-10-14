@@ -14,7 +14,8 @@ romanization: "gôlpo"
 concept_tag: BN-WORLD89-GOLPO
 prerequisites: [BN-C89-khobor, BN-C89-desh]
 sounds: []
-roots: []
+roots: [indo-aryan-gappa]
+etymology_hook: "gôlpo: apparently a form of gappa 'tittle-tattle' ← *gappa 'talk', an imitative word (CDIAL 4022)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C89-desh]
 <!-- hl-knowledge: introduces=[BN-LEX-C89-WORLD89-04]; assesses=[] -->
 
 **গল্প** — *gôlpo* — "a story".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Bengali *gappa*, "tittle-tattle", under *\*gappa*, "talk", which it calls imitative and compares with Sanskrit *jalpati*, "chatters" (CDIAL 4022). **গল্প** (*gôlpo*), with its *l*, appears to be a form of the same word, but CDIAL does not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

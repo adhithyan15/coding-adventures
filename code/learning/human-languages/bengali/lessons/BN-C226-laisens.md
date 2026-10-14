@@ -14,7 +14,8 @@ romanization: "lāisens"
 concept_tag: BN-JINIS226-LAISENS
 prerequisites: [BN-C226-janjot, BN-C226-jorimana]
 sounds: []
-roots: []
+roots: [english-licence]
+etymology_hook: "lāisens ← English licence"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C226-jorimana]
 <!-- hl-knowledge: introduces=[BN-LEX-C226-JINIS226-03]; assesses=[] -->
 
 **লাইসেন্স** — *lāisens* — "a licence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লাইসেন্স** (*lāisens*) is a loan from English *licence*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

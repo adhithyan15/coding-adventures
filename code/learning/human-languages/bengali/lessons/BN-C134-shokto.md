@@ -14,7 +14,8 @@ romanization: "shôktô"
 concept_tag: BN-QUAL134-SHOKTO
 prerequisites: [BN-C134-jhal, BN-C134-nonta]
 sounds: []
-roots: []
+roots: [sanskrit-shakta, persian-sakht]
+etymology_hook: "shôktô is spelled as Sanskrit śakta 'able, strong'; its sense 'hard' also matches Persian sakht 'hard, firm'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C134-nonta]
 <!-- hl-knowledge: introduces=[BN-LEX-C134-QUAL134-04]; assesses=[] -->
 
 **শক্ত** — *shôktô* — "hard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শক্ত** (*shôktô*) is spelled as Sanskrit *śakta*, "able, strong"; its sense "hard" also matches Persian *sakht*, "hard, firm", and the two may have run together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

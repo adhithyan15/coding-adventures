@@ -14,7 +14,8 @@ romanization: "pāthôr"
 concept_tag: BN-NATURE66-PATHOR
 prerequisites: [BN-C66-nodi, BN-C66-pukur]
 sounds: []
-roots: []
+roots: [sanskrit-prastara]
+etymology_hook: "pāthôr ← Sanskrit prastara 'anything strewn, flat surface; stone', a tadbhava (CDIAL 8857)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C66-pukur]
 <!-- hl-knowledge: introduces=[BN-LEX-C66-NATURE66-05]; assesses=[] -->
 
 **পাথর** — *pāthôr* — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাথর** (*pāthôr*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *prastara*, "anything strewn, flat surface; stone" (CDIAL 8857).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

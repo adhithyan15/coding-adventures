@@ -14,7 +14,8 @@ romanization: "ḍākṭikiṭ"
 concept_tag: BN-THINGS130-DAKTIKIT
 prerequisites: [BN-C130-poysa, BN-C130-kham]
 sounds: []
-roots: []
+roots: [indo-aryan-dakka, english-ticket]
+etymology_hook: "ḍākṭikiṭ: ḍāk 'post' ← *ḍakka 'relay, post' (CDIAL 5519) + ṭikiṭ ← English ticket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C130-kham]
 <!-- hl-knowledge: introduces=[BN-LEX-C130-THINGS130-04]; assesses=[] -->
 
 **ডাকটিকিট** — *ḍākṭikiṭ* — "a stamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ডাকটিকিট** (*ḍākṭikiṭ*) is *ḍāk*, "post", which CDIAL lists under *\*ḍakka*, "relay, post", a form it reconstructs (CDIAL 5519), + *ṭikiṭ*, from English *ticket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

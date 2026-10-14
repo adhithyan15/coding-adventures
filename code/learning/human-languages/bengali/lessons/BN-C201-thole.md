@@ -14,7 +14,8 @@ romanization: "thôle"
 concept_tag: BN-JINIS201-THOLE
 prerequisites: [BN-C201-shaoyar, BN-C201-droyar]
 sounds: []
-roots: []
+roots: [sanskrit-sthavi]
+etymology_hook: "thôle: CDIAL lists thali 'bag' under sthavi 'sack, bag', with the link marked unclear (CDIAL 13746)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C201-droyar]
 <!-- hl-knowledge: introduces=[BN-LEX-C201-JINIS201-04]; assesses=[] -->
 
 **থলে** — *thôle* — "a cloth bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Bengali *thali*, "bag", under Sanskrit *sthavi*, "sack, bag", but notes that the link is not clear (CDIAL 13746); **থলে** (*thôle*) is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

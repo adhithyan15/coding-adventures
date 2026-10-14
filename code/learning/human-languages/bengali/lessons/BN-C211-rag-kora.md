@@ -14,7 +14,8 @@ romanization: "rāg kôrā"
 concept_tag: BN-VERB-RAG-KORA
 prerequisites: [BN-C210-bacha, BN-C211-chechano]
 sounds: []
-roots: []
+roots: [sanskrit-raga, sanskrit-karoti]
+etymology_hook: "rāg kôrā: rāg 'anger', Sanskrit rāga 'passion' (CDIAL 10674), + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C211-chechano]
 <!-- hl-knowledge: introduces=[BN-LEX-C211-ACT211-02]; assesses=[] -->
 
 **রাগ করা** — *rāg kôrā* — "to get angry".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রাগ করা** (*rāg kôrā*) is *rāg*, "anger", Sanskrit *rāga*, "passion", taken over whole (CDIAL 10674), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

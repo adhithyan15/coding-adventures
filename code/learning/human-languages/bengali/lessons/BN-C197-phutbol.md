@@ -14,7 +14,8 @@ romanization: "phuṭbôl"
 concept_tag: BN-JINIS197-PHUTBOL
 prerequisites: [BN-C196-achar, BN-C196-chatni]
 sounds: []
-roots: []
+roots: [english-football]
+etymology_hook: "phuṭbôl ← English football"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C196-chatni]
 <!-- hl-knowledge: introduces=[BN-LEX-C197-JINIS197-01]; assesses=[] -->
 
 **ফুটবল** — *phuṭbôl* — "football".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফুটবল** (*phuṭbôl*) is a loan from English *football*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bā̃shi"
 concept_tag: BN-THINGS131-BASHI
 prerequisites: [BN-C130-putul, BN-C131-bol]
 sounds: []
-roots: []
+roots: [sanskrit-vamshi]
+etymology_hook: "bāṁshi ← Sanskrit vaṁśī 'flute, pipe', a tadbhava (CDIAL 11180)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C131-bol]
 <!-- hl-knowledge: introduces=[BN-LEX-C131-THINGS131-02]; assesses=[] -->
 
 **বাঁশি** — *bā̃shi* — "a flute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাঁশি** (*bāṁshi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vaṁśī*, "flute, pipe" (CDIAL 11180). CDIAL lists Middle Bengali *bāṁśī*, "flute".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

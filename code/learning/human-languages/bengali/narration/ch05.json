@@ -4,12 +4,12 @@
   "chapter": 5,
   "title": "How Are You?",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8830a2395f25179c",
+  "sourceHash": "fnv1a64:adcacb6f8fe655a0",
   "lessons": [
     {
       "id": "BN-C03-ami",
       "sequence": 340,
-      "title": "আমি (āmi) — \"I,\" cousin of English am",
+      "title": "আমি (āmi) — \"I,\" from an old word for \"we\"",
       "headword": "আমি",
       "romanization": "āmi",
       "gloss": "I",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c51f6c7b1d2cda4a",
+      "sourceHash": "fnv1a64:a624580885216571",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "To answer \"how are you?\" you first need \"I\" — and it hides the English word am."
+              "text": "To answer \"how are you?\" you first need \"I\" — and it began as a word for \"we\"."
             }
           ]
         },
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "আমি (āmi, \"I\") descends from Sanskrit asmi (\"I am\"), on the first-person stem asmad. That Sanskrit asmi is from Proto-Indo-European h₁es-, the \"to be\" root — the very same word that gives English am (and Latin sum). So Bengali's word for \"I\" is, at the root, a form of \"am\": \"I\" and \"am\" were once one word. Its possessive is the আমার (āmār, \"my\") from Chapter 3."
+              "text": "আমি (āmi, \"I\") is not from Sanskrit asmi, \"I am\", though the two look alike. CDIAL lists Old Bengali āmi under asmad, the stem of the Sanskrit plural pronoun \"we, us\" (CDIAL 986): Bengali took an old word for \"we\" and made it its everyday \"I\", as it did with tumi, \"you\". Its possessive is the আমার (āmār, \"my\") from Chapter 3."
             }
           ]
         },
@@ -113,11 +113,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the English cousin hidden in it (am — from the same asmi)",
+              "instruction": "the Sanskrit stem it comes from (asmad, \"we\")",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the English cousin hidden in it (*am* — from the same *asmi*)]"
+              "source": "[YOU SAY: the Sanskrit stem it comes from (*asmad*, \"we\")]"
             },
             {
               "kind": "prompt",
@@ -143,7 +143,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Sanskrit word is āmi from, and its English cousin? (Asmi, \"I am\"; English am — same PIE root h₁es-.)"
+              "text": "What Sanskrit stem is āmi from, and what did that stem mean? (Asmad, \"we, us\": Bengali made the old \"we\" its \"I\".)"
             }
           ]
         }
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c3eab6abe25ff84c",
+      "sourceHash": "fnv1a64:6de1d06bd26ba716",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -210,6 +210,10 @@
             {
               "kind": "speech",
               "text": "কেমন (kēmon, \"how, of what kind\") is from the interrogative stem ka-, from PIE kʷo- — the same question-root behind English wh- and Latin qu-. Bengali's questions nearly all begin with this k-: ki (what), ke (who), kôbe (when), kōthāy (where), kēmon (how). It is the Indian branch of the same family of question-words that gave English what/who/how."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Bengali ke, \"who\", under that stem (CDIAL 2574) but has no entry for kēmon itself, so how its ending formed is not settled."
             }
           ]
         },
@@ -276,7 +280,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b29a78bb41f9d3d2",
+      "sourceHash": "fnv1a64:0e098c57d558d443",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -328,6 +332,10 @@
             {
               "kind": "speech",
               "text": "আছো (āchho, \"are\") — \"you how are?\", the verb last."
+            },
+            {
+              "kind": "speech",
+              "text": "All three are inherited: tumi from yuṣmad-, \"you\" (CDIAL 10511), kēmon on the stem ka-, āchho from ākṣēti, \"abides\" (CDIAL 1031)."
             }
           ]
         },
@@ -414,7 +422,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:87bd197d37081fec",
+      "sourceHash": "fnv1a64:a0a427513395e5fa",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -462,6 +470,10 @@
             {
               "kind": "speech",
               "text": "ভালো (bhālo, \"good, well, fine\") is the everyday Bengali \"good\" — likely from Sanskrit bhadra (\"good, auspicious, gentle\"), worn down over centuries into bhālo. It is one of the most-used words in the language: bhālo lāge (\"[I] like it\"), bhālobāsā (\"love,\" literally \"good-dwelling\")."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists it under Sanskrit bhalla, \"auspicious\", which it derives from a form bhadla- beside bhadra (CDIAL 9408)."
             }
           ]
         },
@@ -552,7 +564,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:907bde8d5558d71f",
+      "sourceHash": "fnv1a64:0dfe6c8779c92607",
       "notice": {
         "modality": "sight",
         "needs": [

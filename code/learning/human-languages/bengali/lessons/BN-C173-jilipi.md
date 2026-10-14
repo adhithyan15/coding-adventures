@@ -14,7 +14,8 @@ romanization: "jilipi"
 concept_tag: BN-JINIS173-JILIPI
 prerequisites: [BN-C172-chok, BN-C172-britti]
 sounds: []
-roots: []
+roots: [arabic-zalabiya]
+etymology_hook: "jilipi: usually traced, through Persian, to Arabic zalābiya, a fried sweet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C172-britti]
 <!-- hl-knowledge: introduces=[BN-LEX-C173-JINIS173-01]; assesses=[] -->
 
 **জিলিপি** — *jilipi* — "a jalebi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জিলিপি** (*jilipi*) is usually traced, through Persian, to Arabic *zalābiya*, the name of a fried sweet.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

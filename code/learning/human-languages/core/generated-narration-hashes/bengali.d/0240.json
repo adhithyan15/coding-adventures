@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 240,
-  "sourceHash": "fnv1a64:f3852dbbc19c75b9",
+  "sourceHash": "fnv1a64:1d69f1e5d2260505",
   "lessonIds": [
     "BN-C240-atkano",
     "BN-C240-joma-deoya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch240.txt",
   "json": "bengali/narration/ch240.json",
-  "textHash": "fnv1a64:74efc49baf864ee3",
-  "jsonHash": "fnv1a64:dd34ef313d0fc1a6",
+  "textHash": "fnv1a64:571254c2910e5339",
+  "jsonHash": "fnv1a64:e84100eeea40dbdd",
   "findings": []
 }

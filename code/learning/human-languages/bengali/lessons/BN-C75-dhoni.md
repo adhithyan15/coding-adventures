@@ -14,7 +14,8 @@ romanization: "dhôni"
 concept_tag: BN-ADJ75-DHONI
 prerequisites: [BN-C74-bhorti, BN-C74-khali]
 sounds: []
-roots: []
+roots: [sanskrit-dhanin]
+etymology_hook: "dhôni ← Sanskrit dhanin 'rich', inherited (CDIAL 6722)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C74-khali]
 <!-- hl-knowledge: introduces=[BN-LEX-C75-ADJ75-01]; assesses=[] -->
 
 **ধনী** — *dhôni* — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধনী** (*dhôni*) is inherited from Sanskrit *dhanin*, "rich", and has come down with almost no change (CDIAL 6722).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

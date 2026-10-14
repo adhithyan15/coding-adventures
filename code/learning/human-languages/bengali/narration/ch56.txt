@@ -12,6 +12,9 @@ Before the new one: say the Bengali for meat, then the Bengali for a fish.
 You'll want to know: ডাল.
 ডাল — ḍāl — "lentils".
 
+The word, taken apart.
+ডাল (ḍāl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dāla, "split peas" (CDIAL 6309). CDIAL asks whether it is one word with another dāla, "piece split off".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a fish, then the Bengali for lentils.
 
 You'll want to know: ফল.
 ফল — phôl — "a fruit".
+
+The word, taken apart.
+ফল (phôl) is inherited from Sanskrit phala, "fruit", and has come down with almost no change (CDIAL 9051). CDIAL compares it with Dravidian words for ripe fruit.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for lentils, then the Bengali for a fruit.
 You'll want to know: আপেল.
 আপেল — āpel — "an apple".
 
+The word, taken apart.
+আপেল (āpel) is a loan from English apple.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a fruit, then the Bengali for an apple.
 You'll want to know: কলা.
 কলা — kôlā — "a banana".
 
+The word, taken apart.
+কলা (kôlā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kadala, "banana plant" (CDIAL 2712). CDIAL takes kadala itself from Austroasiatic.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for an apple, then the Bengali for a banana.
 
 You'll want to know: আলু.
 আলু — ālu — "a potato".
+
+The word, taken apart.
+আলু (ālu) is inherited from Sanskrit ālu, "an edible root", and has come down with almost no change (CDIAL 1388).
 
 What you've built.
 One more word for this chapter.

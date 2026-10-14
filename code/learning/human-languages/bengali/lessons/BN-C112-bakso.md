@@ -14,7 +14,8 @@ romanization: "bāksô"
 concept_tag: BN-THINGS112-BAKSO
 prerequisites: [BN-C111-kurul, BN-C111-chhata]
 sounds: []
-roots: []
+roots: [english-box]
+etymology_hook: "bāksô ← English box"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C111-chhata]
 <!-- hl-knowledge: introduces=[BN-LEX-C112-THINGS112-01]; assesses=[] -->
 
 **বাক্স** — *bāksô* — "a box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাক্স** (*bāksô*) is a loan from English *box*. Bengali adds a vowel at the end.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

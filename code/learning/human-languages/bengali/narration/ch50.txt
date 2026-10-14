@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to put, then the Bengali for to open.
 You'll want to know: ধোয়া.
 ধোয়া — dhoyā — "to wash".
 
+The word, taken apart.
+ধোয়া (dhoyā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhauvati, "washes", a form CDIAL reconstructs from its descendants (CDIAL 6886).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to open, then the Bengali for to wash.
 
 You'll want to know: হাসা.
 হাসা — hāsā — "to laugh".
+
+The word, taken apart.
+হাসা (hāsā) is a tadbhava, a word inherited and reshaped by sound change. It comes from hasyate, "one laughs", a form CDIAL reconstructs from its descendants (CDIAL 14048). It is a passive of Sanskrit hasati, "laughs".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to wash, then the Bengali for to laugh.
 You'll want to know: কাঁদা.
 কাঁদা — kā̃dā — "to cry".
 
+The word, taken apart.
+কাঁদা (kā̃dā) (kāṁdā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from krandati, "roars, laments" (CDIAL 3574).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to laugh, then the Bengali for to cry.
 You'll want to know: গাওয়া.
 গাওয়া — gāowā — "to sing".
 
+The word, taken apart.
+গাওয়া (gāowā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gāyati, "sings" (CDIAL 4135). CDIAL lists the Bengali verb, as gauyā, under the second form gāpayati.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to cry, then the Bengali for to sing.
 
 You'll want to know: নাচা.
 নাচা — nāchā — "to dance".
+
+The word, taken apart.
+নাচা (nāchā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nṛtyati, "dances" (CDIAL 7583).
 
 What you've built.
 One more word for this chapter.

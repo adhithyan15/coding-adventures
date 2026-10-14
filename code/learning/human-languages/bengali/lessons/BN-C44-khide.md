@@ -14,7 +14,8 @@ romanization: "khide"
 concept_tag: BN-BODY44-KHIDE
 prerequisites: [BN-C44-haspatal, BN-C44-btha]
 sounds: []
-roots: []
+roots: [sanskrit-kshudha]
+etymology_hook: "khide: usually traced to Sanskrit kṣudhā 'hunger'; CDIAL has the entry but no Bengali form under it (CDIAL 3716)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C44-btha]
 <!-- hl-knowledge: introduces=[BN-LEX-C44-BODY44-05]; assesses=[] -->
 
 **খিদে** — *khide* — "hunger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খিদে** (*khide*) is usually traced to Sanskrit *kṣudhā*, "hunger". CDIAL has that entry but lists no Bengali form under it (CDIAL 3716), so the line of descent is not confirmed there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

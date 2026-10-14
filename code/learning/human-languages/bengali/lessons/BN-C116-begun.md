@@ -14,7 +14,8 @@ romanization: "begun"
 concept_tag: BN-THINGS116-BEGUN
 prerequisites: [BN-C115-pepe, BN-C116-tormuj]
 sounds: []
-roots: []
+roots: [sanskrit-vatingana]
+etymology_hook: "begun ← Sanskrit vātiṅgaṇa 'egg-plant', a tadbhava (CDIAL 11503)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C116-tormuj]
 <!-- hl-knowledge: introduces=[BN-LEX-C116-THINGS116-02]; assesses=[] -->
 
 **বেগুন** — *begun* — "an aubergine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বেগুন** (*begun*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vātiṅgaṇa*, "egg-plant" (CDIAL 11503). CDIAL thinks it probably shares a source with other names for the plant, and reports a view that it is Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

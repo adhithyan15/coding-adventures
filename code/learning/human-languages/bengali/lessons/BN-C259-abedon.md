@@ -14,7 +14,8 @@ romanization: "ābedôn"
 concept_tag: BN-JINIS259-ABEDON
 prerequisites: [BN-C259-chhar, BN-C259-phorm]
 sounds: []
-roots: []
+roots: [sanskrit-avedana]
+etymology_hook: "ābedôn ← Sanskrit āvedana 'announcing, a petition', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C259-phorm]
 <!-- hl-knowledge: introduces=[BN-LEX-C259-JINIS259-04]; assesses=[] -->
 
 **আবেদন** — *ābedôn* — "an application".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আবেদন** (*ābedôn*) is Sanskrit *āvedana*, "announcing, a petition", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

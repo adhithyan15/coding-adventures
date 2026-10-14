@@ -14,7 +14,8 @@ romanization: "oyeṭār"
 concept_tag: BN-KAJ261-OYETAR
 prerequisites: [BN-C261-mistri, BN-C261-radhuni]
 sounds: []
-roots: []
+roots: [english-waiter]
+etymology_hook: "oyeṭār ← English waiter"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C261-radhuni]
 <!-- hl-knowledge: introduces=[BN-LEX-C261-KAJ261-03]; assesses=[] -->
 
 **ওয়েটার** — *oyeṭār* — "a waiter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ওয়েটার** (*oyeṭār*) is a loan from English *waiter*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mādur"
 concept_tag: BN-THINGS108-MADUR
 prerequisites: [BN-C108-chador, BN-C108-lep]
 sounds: []
-roots: []
+roots: [sanskrit-mandura]
+etymology_hook: "mādur ← Sanskrit mandurā 'mattress, bed', a tadbhava (CDIAL 9854)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C108-lep]
 <!-- hl-knowledge: introduces=[BN-LEX-C108-THINGS108-05]; assesses=[] -->
 
 **মাদুর** — *mādur* — "a mat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাদুর** (*mādur*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mandurā*, "mattress, bed" (CDIAL 9854).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

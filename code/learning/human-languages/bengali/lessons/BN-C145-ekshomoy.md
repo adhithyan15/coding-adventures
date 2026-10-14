@@ -14,7 +14,8 @@ romanization: "æksômôy"
 concept_tag: BN-ATIT145-EKSHOMOY
 prerequisites: [BN-C145-agei, BN-C145-goto]
 sounds: []
-roots: []
+roots: [sanskrit-eka, sanskrit-samaya]
+etymology_hook: "æksômôy: ek 'one' ← ēka (CDIAL 2462) + sômôy 'time', Sanskrit samaya"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C145-goto]
 <!-- hl-knowledge: introduces=[BN-LEX-C145-ATIT145-04]; assesses=[] -->
 
 **একসময়** — *æksômôy* — "once, at one time". It points far back: **একসময় এখানে একটা পুকুর ছিল** — *æksômôy ekhāne ekṭā pukur chhilô* — "There was once a pond here." **ছিল** is the past of **আছে**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**একসময়** (*æksômôy*) is *ek*, "one", from Sanskrit *ēka* (CDIAL 2462), + *sômôy*, "time", Sanskrit *samaya* taken over whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

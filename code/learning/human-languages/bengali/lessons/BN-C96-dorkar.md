@@ -14,7 +14,8 @@ romanization: "dôrkār"
 concept_tag: BN-WANT96-DORKAR
 prerequisites: [BN-C96-asha, BN-C96-shopno]
 sounds: []
-roots: []
+roots: [persian-darkar]
+etymology_hook: "dôrkār: usually traced to Persian darkār 'needed, wanted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C96-shopno]
 <!-- hl-knowledge: introduces=[BN-LEX-C96-WANT96-04]; assesses=[] -->
 
 **দরকার** — *dôrkār* — "a need".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দরকার** (*dôrkār*) is a loan, usually traced to Persian *darkār*, "needed, wanted". It is *dar*, "in", + *kār*, "work".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

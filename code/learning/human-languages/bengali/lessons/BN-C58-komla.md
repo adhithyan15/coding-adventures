@@ -14,7 +14,8 @@ romanization: "kômlā"
 concept_tag: BN-FOOD58-KOMLA
 prerequisites: [BN-C57-modhu, BN-C57-tel]
 sounds: []
-roots: []
+roots: [sanskrit-kamala]
+etymology_hook: "kômlā ← Sanskrit kamalā 'orange', inherited (CDIAL 2763)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C57-tel]
 <!-- hl-knowledge: introduces=[BN-LEX-C58-FOOD58-01]; assesses=[] -->
 
 **কমলা** — *kômlā* — "an orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কমলা** (*kômlā*) is inherited from Sanskrit *kamalā*, "orange", and has come down with almost no change (CDIAL 2763). It belongs with *kamala*, "pale red".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

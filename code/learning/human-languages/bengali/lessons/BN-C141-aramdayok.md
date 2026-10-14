@@ -14,7 +14,8 @@ romanization: "ārāmdāyôk"
 concept_tag: BN-QUAL141-ARAMDAYOK
 prerequisites: [BN-C141-paka, BN-C141-mojar]
 sounds: []
-roots: []
+roots: [persian-aram, sanskrit-dayaka]
+etymology_hook: "ārāmdāyôk: Persian ārām 'rest, ease' + Sanskrit dāyaka 'giving'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C141-mojar]
 <!-- hl-knowledge: introduces=[BN-LEX-C141-QUAL141-03]; assesses=[] -->
 
 **আরামদায়ক** — *ārāmdāyôk* — "comfortable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আরামদায়ক** (*ārāmdāyôk*) is *ārām*, "rest, ease", usually traced to Persian *ārām*, + *dāyôk*, "giving", Sanskrit *dāyaka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mālpôtrô"
 concept_tag: BN-JINIS163-MALPOTRO
 prerequisites: [BN-C162-puro, BN-C162-samanyo]
 sounds: []
-roots: []
+roots: [arabic-mal, sanskrit-patra]
+etymology_hook: "mālpôtrô: māl 'goods' ← Arabic māl, through Persian, + pôtrô, Sanskrit pattra 'leaf'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C162-samanyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C163-JINIS163-01]; assesses=[] -->
 
 **মালপত্র** — *mālpôtrô* — "luggage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মালপত্র** (*mālpôtrô*) is *māl*, "goods", from Arabic *māl*, "property", which reached Bengali through Persian (Lane), + *pôtrô*, Sanskrit *pattra*, "leaf, letter", here meaning "and such things".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

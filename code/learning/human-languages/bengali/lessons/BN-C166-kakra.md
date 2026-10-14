@@ -14,7 +14,8 @@ romanization: "kā̃kṛā"
 concept_tag: BN-JINIS166-KAKRA
 prerequisites: [BN-C166-shokun, BN-C166-timi]
 sounds: []
-roots: []
+roots: [sanskrit-karkata]
+etymology_hook: "kāṁkṛā ← Sanskrit karkaṭa 'crab', perhaps non-Aryan; a tadbhava (CDIAL 2816)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C166-timi]
 <!-- hl-knowledge: introduces=[BN-LEX-C166-JINIS166-03]; assesses=[] -->
 
 **কাঁকড়া** — *kā̃kṛā* — "a crab".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাঁকড়া** (*kāṁkṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karkaṭa*, "crab" (CDIAL 2816). CDIAL lists Bengali *kāṁkṛā*, "crab", and suspects that the Sanskrit word is itself of non-Aryan origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

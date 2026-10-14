@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 82,
-  "sourceHash": "fnv1a64:76e49b391a18af10",
+  "sourceHash": "fnv1a64:3d26844f50856bbe",
   "lessonIds": [
     "BN-C82-pichhone",
     "BN-C82-dokan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch82.txt",
   "json": "bengali/narration/ch82.json",
-  "textHash": "fnv1a64:fac9d43823ad3135",
-  "jsonHash": "fnv1a64:6ac539a5b8ebdd3a",
+  "textHash": "fnv1a64:2ab609a6cbb6d77d",
+  "jsonHash": "fnv1a64:736e874b2ff4af3b",
   "findings": []
 }

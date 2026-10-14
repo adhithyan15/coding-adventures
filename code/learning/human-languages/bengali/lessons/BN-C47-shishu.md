@@ -14,7 +14,8 @@ romanization: "shishu"
 concept_tag: BN-FAMILY47-SHISHU
 prerequisites: [BN-C47-shbami, BN-C47-stri]
 sounds: []
-roots: []
+roots: [sanskrit-shishu]
+etymology_hook: "shishu ← Sanskrit śiśu 'young of an animal, child', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C47-stri]
 <!-- hl-knowledge: introduces=[BN-LEX-C47-FAMILY47-04]; assesses=[] -->
 
 **শিশু** — *shishu* — "a child".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শিশু** (*shishu*) is Sanskrit *śiśu*, "young of an animal, child", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

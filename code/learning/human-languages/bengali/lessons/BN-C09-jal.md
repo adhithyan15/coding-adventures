@@ -14,7 +14,8 @@ gloss: "a net"
 concept_tag: BN-ANCHOR-JAL
 prerequisites: [BN-W04-achhi-read]
 sounds: []
-roots: []
+roots: [sanskrit-jala-net]
+etymology_hook: "jāl ← Sanskrit jāla 'net, snare', inherited (CDIAL 5213)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard
 
 Say it: *jāl*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **জ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জাল** (*jāl*) is inherited from Sanskrit *jāla*, "net, snare", and has come down with almost no change (CDIAL 5213).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-ANCHOR-JAL] -->

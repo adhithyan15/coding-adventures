@@ -14,7 +14,8 @@ romanization: "bārtā"
 concept_tag: BN-JINIS258-BARTA
 prerequisites: [BN-C257-phuchka, BN-C258-imel]
 sounds: []
-roots: []
+roots: [sanskrit-varta]
+etymology_hook: "bārtā ← Sanskrit vārttā 'tidings', a tatsama (CDIAL 11564)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C258-imel]
 <!-- hl-knowledge: introduces=[BN-LEX-C258-JINIS258-02]; assesses=[] -->
 
 **বার্তা** — *bārtā* — "a message".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বার্তা** (*bārtā*) is Sanskrit *vārttā*, "tidings", taken over whole as a learned loan, a tatsama (CDIAL 11564). The word inherited from it is *bāt*, "talk, matter", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

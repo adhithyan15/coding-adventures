@@ -14,7 +14,8 @@ romanization: "restorā̃"
 concept_tag: BN-JAYGA244-RESTORA
 prerequisites: [BN-C244-jati, BN-C244-dvip]
 sounds: []
-roots: []
+roots: [english-restaurant]
+etymology_hook: "restorāṁ ← English restaurant"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C244-dvip]
 <!-- hl-knowledge: introduces=[BN-LEX-C244-JAYGA244-05]; assesses=[] -->
 
 **রেস্তোরাঁ** — *restorā̃* — "a restaurant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রেস্তোরাঁ** (*restorāṁ*) is a loan from English *restaurant*. English has it from French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

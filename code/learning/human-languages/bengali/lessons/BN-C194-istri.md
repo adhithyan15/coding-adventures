@@ -14,7 +14,8 @@ romanization: "istri"
 concept_tag: BN-JINIS194-ISTRI
 prerequisites: [BN-C193-sorkari, BN-C194-brash]
 sounds: []
-roots: []
+roots: [portuguese-estirar]
+etymology_hook: "istri: usually traced to Portuguese estirar 'to stretch out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C194-brash]
 <!-- hl-knowledge: introduces=[BN-LEX-C194-JINIS194-02]; assesses=[] -->
 
 **ইস্ত্রি** — *istri* — "an iron (for clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ইস্ত্রি** (*istri*) is usually traced to Portuguese *estirar*, "to stretch out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

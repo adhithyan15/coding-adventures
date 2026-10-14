@@ -14,7 +14,8 @@ romanization: "chintitô"
 concept_tag: BN-GUN160-CHINTITO
 prerequisites: [BN-C160-porishromi, BN-C160-lobhi]
 sounds: []
-roots: []
+roots: [sanskrit-cintita]
+etymology_hook: "chintitô ← Sanskrit cintita 'thought about', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C160-lobhi]
 <!-- hl-knowledge: introduces=[BN-LEX-C160-GUN160-04]; assesses=[] -->
 
 **চিন্তিত** — *chintitô* — "worried".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চিন্তিত** (*chintitô*) is Sanskrit *cintita*, "thought about", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

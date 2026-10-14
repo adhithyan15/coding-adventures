@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 148,
-  "sourceHash": "fnv1a64:f4c22506ee484250",
+  "sourceHash": "fnv1a64:dded44509e4e38ca",
   "lessonIds": [
     "BN-C148-ranna-kora",
     "BN-C148-selai-kora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch148.txt",
   "json": "bengali/narration/ch148.json",
-  "textHash": "fnv1a64:72e55463c3902fcb",
-  "jsonHash": "fnv1a64:22be0c4dca9d58b1",
+  "textHash": "fnv1a64:a9d7340702d933f9",
+  "jsonHash": "fnv1a64:c8b23e4e39f59e47",
   "findings": []
 }

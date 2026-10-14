@@ -1061,7 +1061,9 @@ metadata with named and numeric entity
 decoding. Root `themeVariables` from init directives or front matter preserve `mainBkg`, `nodeBorder`,
 `lineColor`, `primaryTextColor`, `fontFamily`, and `fontSize` through semantic and layout IR to default
 node, edge, and glyph paint; themed font size also participates in node measurement. `textColor` and
-`edgeLabelBackground` theme labeled handoffs with portable glyph and background paint. Direct node
+`edgeLabelBackground` theme labeled handoffs with portable glyph and background paint, while
+`clusterBkg`, `clusterBorder`, and `titleColor` theme ownership lanes, nested groups, and their diagram
+or cluster labels through backend-neutral rectangle and glyph paint. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
 decorators cover fill, stroke, text color, stroke width, dash patterns, font family, font size,
 weight, and italic/oblique style. Typography survives semantic IR, informs node width, and lowers
@@ -1104,6 +1106,9 @@ Shared Flowchart `nodeSpacing`, `rankSpacing`, and `diagramPadding` configuratio
 init directives survives semantic and layout IR. The values control ownership-lane separation,
 consecutive-rank separation, and outer scene padding respectively, and remain visible in backend-neutral
 scene metadata.
+Shared Flowchart `curve` configuration accepts the complete supported curve catalog and supplies the
+layout-time default for edges without a direct or class-resolved curve. Per-edge curves retain precedence,
+and the resolved modes lower to backend-neutral line, quadratic, or cubic paint paths.
 When cross-lane ranking is active, `swimlane.optimizeRanksByCrossings` defaults to `true` and performs
 up to four deterministic local-search passes. Feasible rank delays propagate through downstream
 constraints and are retained only when the lane/rank segment crossing count strictly improves; the

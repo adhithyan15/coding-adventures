@@ -14,7 +14,8 @@ romanization: "sthir kôrā"
 concept_tag: BN-VERB-STHIR-KORA
 prerequisites: [BN-C146-erpor, BN-C146-porikolpona]
 sounds: []
-roots: []
+roots: [sanskrit-sthira, sanskrit-karoti]
+etymology_hook: "sthir kôrā: sthir 'firm', Sanskrit sthira (CDIAL 13771) + kôrā 'to do' ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C146-porikolpona]
 <!-- hl-knowledge: introduces=[BN-LEX-C146-AGAMI146-04]; assesses=[] -->
 
 **স্থির করা** — *sthir kôrā* — "to decide". **আমি স্থির করলাম যে রোজ হাঁটব** — *āmi sthir kôrlām je roj hā̃ṭbô* — "I decided that I would walk every day." Its past for "I" is **করলাম**.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**স্থির করা** (*sthir kôrā*) is *sthir*, "firm, fixed", Sanskrit *sthira* taken over whole, whose inherited form is *thir* (CDIAL 13771), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

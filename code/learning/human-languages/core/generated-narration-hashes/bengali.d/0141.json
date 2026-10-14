@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 141,
-  "sourceHash": "fnv1a64:2ac8224ea2657db3",
+  "sourceHash": "fnv1a64:920bb5da069ed012",
   "lessonIds": [
     "BN-C141-paka",
     "BN-C141-mojar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch141.txt",
   "json": "bengali/narration/ch141.json",
-  "textHash": "fnv1a64:6bd00a1f08dd447a",
-  "jsonHash": "fnv1a64:780f50d4cebb0816",
+  "textHash": "fnv1a64:6a723c63e961bc57",
+  "jsonHash": "fnv1a64:0c68d50a52b0be20",
   "findings": []
 }

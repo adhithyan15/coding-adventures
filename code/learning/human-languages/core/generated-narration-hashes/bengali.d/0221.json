@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 221,
-  "sourceHash": "fnv1a64:872c0f4a3de8094f",
+  "sourceHash": "fnv1a64:2f66a2599cc9d2e8",
   "lessonIds": [
     "BN-C221-besorkari",
     "BN-C221-jatiyo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch221.txt",
   "json": "bengali/narration/ch221.json",
-  "textHash": "fnv1a64:edc60b4c1835d5f9",
-  "jsonHash": "fnv1a64:9e6a9926b76b06f3",
+  "textHash": "fnv1a64:edfa3b1822c75e8b",
+  "jsonHash": "fnv1a64:ba46836e30063819",
   "findings": []
 }

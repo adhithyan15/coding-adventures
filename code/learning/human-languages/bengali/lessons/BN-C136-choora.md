@@ -14,7 +14,8 @@ romanization: "chôoṛā"
 concept_tag: BN-QUAL136-CHOORA
 prerequisites: [BN-C135-dhir, BN-C136-gobhir]
 sounds: []
-roots: []
+roots: [indo-aryan-ca-uda]
+etymology_hook: "chôoṛā ← *ca-uḍa 'wide, open', a reconstructed form; a tadbhava (CDIAL 4534)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C136-gobhir]
 <!-- hl-knowledge: introduces=[BN-LEX-C136-QUAL136-02]; assesses=[] -->
 
 **চওড়া** — *chôoṛā* — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চওড়া** (*chôoṛā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ca-uḍa*, "wide, open", a form CDIAL reconstructs from its descendants (CDIAL 4534). CDIAL suggests it may be built on *caü-*, the "four" of compounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

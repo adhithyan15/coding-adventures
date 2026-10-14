@@ -14,7 +14,8 @@ romanization: "sāhityô"
 concept_tag: BN-JINIS256-SAHITYO
 prerequisites: [BN-C256-bigyan, BN-C256-shilpo]
 sounds: []
-roots: []
+roots: [sanskrit-sahitya]
+etymology_hook: "sāhityô ← Sanskrit sāhitya 'association; literature', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C256-shilpo]
 <!-- hl-knowledge: introduces=[BN-LEX-C256-JINIS256-05]; assesses=[] -->
 
 **সাহিত্য** — *sāhityô* — "literature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সাহিত্য** (*sāhityô*) is Sanskrit *sāhitya*, "association; literature", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tālu"
 concept_tag: BN-SVASTHYO186-TALU
 prerequisites: [BN-C186-pajor, BN-C186-nabhi]
 sounds: []
-roots: []
+roots: [sanskrit-talu]
+etymology_hook: "tālu ← Sanskrit tālu 'palate', inherited (CDIAL 5803)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C186-nabhi]
 <!-- hl-knowledge: introduces=[BN-LEX-C186-SVASTHYO186-03]; assesses=[] -->
 
 **তালু** — *tālu* — "a palm; the palate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তালু** (*tālu*) is inherited from Sanskrit *tālu*, "palate", and has come down with almost no change (CDIAL 5803). CDIAL lists Bengali *tālu* as "palate, top of the head"; it does not list the sense "palm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

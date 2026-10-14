@@ -14,7 +14,8 @@ romanization: "bāṭi"
 concept_tag: BN-THINGS107-BATI
 prerequisites: [BN-C106-phera, BN-C106-chalano]
 sounds: []
-roots: []
+roots: [indo-aryan-varta]
+etymology_hook: "bāṭi: CDIAL lists Assamese and Oriya bāṭi 'cup' under *varta 'something made of metal' (CDIAL 11347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C106-chalano]
 <!-- hl-knowledge: introduces=[BN-LEX-C107-THINGS107-01]; assesses=[] -->
 
 **বাটি** — *bāṭi* — "a bowl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাটি** (*bāṭi*) goes back to *\*varta*, "a circular object", or more probably "something made of metal", a form CDIAL reconstructs. It lists Assamese *bāṭi*, "cup", Oriya *bāṭi*, "cup, saucer", and Bengali *bāṭā*, "box for betel", under it (CDIAL 11347).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

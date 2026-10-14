@@ -14,7 +14,8 @@ romanization: "juto"
 concept_tag: BN-CLOTHES86-JUTO
 prerequisites: [BN-C85-angti, BN-C85-tupi]
 sounds: []
-roots: []
+roots: [sanskrit-yukta]
+etymology_hook: "juto ← Sanskrit yukta 'joined, yoked', a tadbhava (CDIAL 10479)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C85-tupi]
 <!-- hl-knowledge: introduces=[BN-LEX-C86-CLOTHES86-01]; assesses=[] -->
 
 **জুতো** — *juto* — "a shoe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জুতো** (*juto*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *yukta*, "joined, yoked" (CDIAL 10479). CDIAL lists Bengali *jutā*, "shoe", under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

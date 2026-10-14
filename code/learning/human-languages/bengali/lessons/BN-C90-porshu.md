@@ -14,7 +14,8 @@ romanization: "pôrshu"
 concept_tag: BN-TIME90-PORSHU
 prerequisites: [BN-C90-bhor, BN-C90-majhrat]
 sounds: []
-roots: []
+roots: [sanskrit-parashvas]
+etymology_hook: "pôrshu ← Sanskrit paraśvas 'the day after tomorrow', a tadbhava (CDIAL 7799j)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C90-majhrat]
 <!-- hl-knowledge: introduces=[BN-LEX-C90-TIME90-04]; assesses=[] -->
 
 **পরশু** — *pôrshu* — "the day after tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পরশু** (*pôrshu*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *paraśvas*, "the day after tomorrow" (CDIAL 7799j). CDIAL glosses the Bengali form "the day after tomorrow or before yesterday".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

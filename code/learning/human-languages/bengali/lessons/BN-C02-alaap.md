@@ -12,6 +12,7 @@ concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [BN-C02-amar-naam]
 sounds: [long-aa]
 roots: [aalaapa-sanskrit]
+etymology_hook: "ālāp ← Sanskrit ālāpa 'conversing', from ā- 'toward' + lap 'to speak', a tatsama"
 duration:
   max_seconds: 240
 requires:

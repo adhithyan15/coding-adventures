@@ -14,7 +14,8 @@ romanization: "sôhôj"
 concept_tag: BN-ADJ73-SOHOJ
 prerequisites: [BN-C73-aste, BN-C73-taratari]
 sounds: []
-roots: []
+roots: [sanskrit-sahaja]
+etymology_hook: "sôhôj ← Sanskrit sahaja 'born together, innate', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C73-taratari]
 <!-- hl-knowledge: introduces=[BN-LEX-C73-ADJ73-05]; assesses=[] -->
 
 **সহজ** — *sôhôj* — "easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সহজ** (*sôhôj*) is Sanskrit *sahaja*, "born together, innate", taken over whole as a learned loan, a tatsama. In Bengali it has come to mean "easy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

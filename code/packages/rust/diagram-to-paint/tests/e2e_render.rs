@@ -3584,6 +3584,22 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.theme.edgeLabelBackground")),
                     Some(&"#dbeafe".to_string()));
             }
+            if fixture_name == "theme-cluster-variables" {
+                assert_eq!(layout.theme.cluster_background.as_deref(), Some("#fef3c7"));
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
+                        && rect.stroke.as_deref() == Some("#b45309")
+                )).count() >= 2, "cluster theme must style both lane and nested group paint");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(124, 45, 18)")
+                )).count() >= 3, "titleColor must style the diagram, lane, and nested group labels");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.clusterBkg")), Some(&"#fef3c7".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.clusterBorder")), Some(&"#b45309".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.titleColor")), Some(&"#7c2d12".to_string()));
+            }
             if fixture_name == "flowchart-spacing-config" {
                 assert_eq!(layout.flowchart_config.node_spacing, Some(96.0));
                 assert_eq!(layout.flowchart_config.rank_spacing, Some(28.0));
@@ -3602,6 +3618,22 @@ line "Target" [35, 50, 68, 82]"##,
                     metadata.get("swimlane.flowchart.rankSpacing")), Some(&"28".to_string()));
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata|
                     metadata.get("swimlane.flowchart.diagramPadding")), Some(&"32".to_string()));
+            }
+            if fixture_name == "flowchart-curve-config" {
+                assert_eq!(layout.flowchart_config.curve,
+                    Some(diagram_ir::SwimlaneEdgeCurve::StepAfter));
+                assert_eq!(layout.edges[0].curve, Some(diagram_ir::SwimlaneEdgeCurve::StepAfter));
+                assert_eq!(layout.edges[1].curve, Some(diagram_ir::SwimlaneEdgeCurve::Linear),
+                    "a per-edge curve must override the shared Flowchart curve");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 3
+                )), "the global step-after curve must lower to an orthogonal paint path");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.curve")), Some(&"stepAfter".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.edge.0.curve")), Some(&"stepAfter".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.edge.1.curve")), Some(&"linear".to_string()));
             }
             if fixture_name == "node-typography-styles" {
                 assert!(layout.nodes[0].width > layout.nodes[1].width,

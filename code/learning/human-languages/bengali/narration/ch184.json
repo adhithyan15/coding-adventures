@@ -4,7 +4,7 @@
   "chapter": 184,
   "title": "To accept, To agree, To force, To obstruct, To take a risk",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:927a63bc6f55af8b",
+  "sourceHash": "fnv1a64:ddf4125f214adcdf",
   "lessons": [
     {
       "id": "BN-C184-mene-neoya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39630dd522d702d1",
+      "sourceHash": "fnv1a64:72993e686f7c5be2",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মেনে নেওয়া (mene neoyā) is mene, \"having accepted\", a form of mānā, \"to consider, obey\", from Sanskrit manyate, \"thinks, agrees\" (CDIAL 9857), + neoyā, \"to take\", from Sanskrit nayati, \"leads, carries off\" (CDIAL 6966)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e9e7722ba7855ca",
+      "sourceHash": "fnv1a64:5e566cd30ff6f5c0",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রাজি হওয়া (rāji hôoyā) is rāji, \"willing\", from Arabic rāḍī, \"content\", which reached Bengali through Persian; its Arabic root is r-ḍ-w (Lane). Hôoyā, \"to be\", comes from Sanskrit bhavati, \"becomes, is\" (CDIAL 9416)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2433fe9e41ad8380",
+      "sourceHash": "fnv1a64:12f8112cc047c287",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জোর করা (jor kôrā) is jor, \"force\", usually traced to Persian zōr, \"strength\", + kôrā, \"to do\", from Sanskrit karoti, \"does\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48a9fe1a1d2e5863",
+      "sourceHash": "fnv1a64:3812b4d35cc51b02",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বাধা দেওয়া (bādhā deoyā) is bādhā, \"an obstacle\", Sanskrit bādhā, \"pressure, hindrance\", taken over whole, + deoyā, \"to give\", from Sanskrit dadāti, \"gives\" (CDIAL 6141)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b637f25a51b9475",
+      "sourceHash": "fnv1a64:bb3362c7e4573f16",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঝুঁকি নেওয়া (jhũki neoyā) is jhũki, \"a risk\", which appears to belong with Bengali jhũkā, \"to stoop\", listed under jhukkati, \"stoops\" (CDIAL 5399), + neoyā, \"to take\", from Sanskrit nayati, \"leads, carries off\" (CDIAL 6966)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

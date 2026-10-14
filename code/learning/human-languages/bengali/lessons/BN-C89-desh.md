@@ -14,7 +14,8 @@ romanization: "desh"
 concept_tag: BN-WORLD89-DESH
 prerequisites: [BN-C89-songit, BN-C89-khobor]
 sounds: []
-roots: []
+roots: [sanskrit-desha]
+etymology_hook: "desh ← Sanskrit deśa 'region, country', a tatsama; the inherited form is des (CDIAL 6547)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C89-khobor]
 <!-- hl-knowledge: introduces=[BN-LEX-C89-WORLD89-03]; assesses=[] -->
 
 **দেশ** — *desh* — "a country".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দেশ** (*desh*) is Sanskrit *deśa*, "region, country", taken over whole as a learned loan, a tatsama (CDIAL 6547). The word inherited from it is *des*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

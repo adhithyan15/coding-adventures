@@ -14,7 +14,8 @@ romanization: "gõph"
 concept_tag: BN-SVASTHYO243-GOPH
 prerequisites: [BN-C243-chulkani, BN-C243-dari]
 sounds: []
-roots: []
+roots: [indo-aryan-guppha]
+etymology_hook: "gõph ← *guppha 'something strung together', a reconstructed form; a tadbhava (CDIAL 4203)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C243-dari]
 <!-- hl-knowledge: introduces=[BN-LEX-C243-SVASTHYO243-04]; assesses=[] -->
 
 **গোঁফ** — *gõph* — "a moustache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গোঁফ** (*gõph*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*guppha*, "something strung together", a form CDIAL reconstructs from its descendants (CDIAL 4203). CDIAL lists Bengali *gõph*, "moustache", beside Sanskrit *gumpha*, "a whisker".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to bring, then the Bengali for to count.
 You'll want to know: ধরা.
 ধরা — dhôrā — "to hold, to catch".
 
+The word, taken apart.
+ধরা (dhôrā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dharati, "holds, keeps" (CDIAL 6747).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to count, then the Bengali for to hold.
 
 You'll want to know: কাটা.
 কাটা — kāṭā — "to cut".
+
+The word, taken apart.
+কাটা (kāṭā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kartati, "cuts" (CDIAL 2854).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to hold, then the Bengali for to cut.
 You'll want to know: থামা.
 থামা — thāmā — "to stop".
 
+The word, taken apart.
+থামা (thāmā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from stambhate, "supports, arrests" (CDIAL 13683).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to cut, then the Bengali for to stop.
 You'll want to know: খোঁজা.
 খোঁজা — khõjā — "to look for".
 
+The word, taken apart.
+খোঁজা (khõjā) is a tadbhava, a word inherited and reshaped by sound change. It comes from khojjati, "tracks, seeks", a form CDIAL reconstructs from its descendants (CDIAL 3929). CDIAL doubts a link with Sanskrit khojati, "steals".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to stop, then the Bengali for to look fo
 
 You'll want to know: হারানো.
 হারানো — hārāno — "to lose".
+
+The word, taken apart.
+হারানো (hārāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hārayati, "causes to be taken; loses" (CDIAL 14061). Hārāno is the causing form of hārā, "to lose", the verb CDIAL lists.
 
 What you've built.
 One more word for this chapter.

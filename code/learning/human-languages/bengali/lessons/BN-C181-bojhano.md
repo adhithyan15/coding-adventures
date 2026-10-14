@@ -14,7 +14,8 @@ romanization: "bojhāno"
 concept_tag: BN-VERB-BOJHANO
 prerequisites: [BN-C181-bheja, BN-C181-mukhostho-kora]
 sounds: []
-roots: []
+roots: [sanskrit-budhyate]
+etymology_hook: "bojhāno ← Sanskrit budhyate 'understands', a tadbhava (CDIAL 9279)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C181-mukhostho-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C181-ACT181-05]; assesses=[] -->
 
 **বোঝানো** — *bojhāno* — "to explain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বোঝানো** (*bojhāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *budhyate*, "understands" (CDIAL 9279). CDIAL lists Bengali *bojhā*, "to understand", and its causing form *bujhāna*, "to explain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

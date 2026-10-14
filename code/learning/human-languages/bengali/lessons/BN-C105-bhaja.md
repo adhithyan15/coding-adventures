@@ -14,7 +14,8 @@ romanization: "bhājā"
 concept_tag: BN-VERB-BHAJA
 prerequisites: [BN-C105-gochhano, BN-C105-sajano, BN-W07-digit-false-friends]
 sounds: []
-roots: []
+roots: [sanskrit-bhrjjati]
+etymology_hook: "bhājā ← Sanskrit bhṛjjati 'fries, parches', a tadbhava (CDIAL 9583)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [BN-C105-sajano]
 <!-- hl-knowledge: introduces=[BN-LEX-C105-ACT105-04]; assesses=[] -->
 
 **ভাজা** — *bhājā* — "to fry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভাজা** (*bhājā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhṛjjati*, "fries, parches" (CDIAL 9583). CDIAL lists the Bengali verb under the variant *bharjayati*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

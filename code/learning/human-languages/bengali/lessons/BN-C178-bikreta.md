@@ -14,7 +14,8 @@ romanization: "bikretā"
 concept_tag: BN-KAJ178-BIKRETA
 prerequisites: [BN-C178-domkol, BN-C178-dhatri]
 sounds: []
-roots: []
+roots: [sanskrit-vikreta]
+etymology_hook: "bikretā ← Sanskrit vikretā 'seller', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C178-dhatri]
 <!-- hl-knowledge: introduces=[BN-LEX-C178-KAJ178-04]; assesses=[] -->
 
 **বিক্রেতা** — *bikretā* — "a seller".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিক্রেতা** (*bikretā*) is Sanskrit *vikretā*, "seller", taken over whole as a learned loan, a tatsama. It is the naming form of *vikretṛ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

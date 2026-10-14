@@ -14,7 +14,8 @@ romanization: "jhā̃kāno"
 concept_tag: BN-VERB-JHAKANO
 prerequisites: [BN-C214-pas-kora, BN-C214-phel-kora]
 sounds: []
-roots: []
+roots: [indo-aryan-jhakk-movement]
+etymology_hook: "jhāṁkāno ← *jhakk 'sudden movement', a reconstructed form; a tadbhava (CDIAL 5316)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C214-phel-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C214-ACT214-04]; assesses=[] -->
 
 **ঝাঁকানো** — *jhā̃kāno* — "to shake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ঝাঁকানো** (*jhāṁkāno*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhakk*, "sudden movement", a form CDIAL reconstructs from its descendants (CDIAL 5316). CDIAL lists Bengali *jhāṁkan*, "jerking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kôphi"
 concept_tag: BN-THINGS118-KOPHI
 prerequisites: [BN-C118-luchi, BN-C118-muri]
 sounds: []
-roots: []
+roots: [english-coffee]
+etymology_hook: "kôphi ← English coffee"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C118-muri]
 <!-- hl-knowledge: introduces=[BN-LEX-C118-THINGS118-05]; assesses=[] -->
 
 **কফি** — *kôphi* — "coffee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কফি** (*kôphi*) is a loan from English *coffee*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

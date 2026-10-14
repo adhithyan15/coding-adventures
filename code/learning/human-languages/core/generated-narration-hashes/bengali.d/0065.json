@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 65,
-  "sourceHash": "fnv1a64:703c689b65ab0338",
+  "sourceHash": "fnv1a64:b72b5685ffacb62a",
   "lessonIds": [
     "BN-C65-shobdo",
     "BN-C65-chhobi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch65.txt",
   "json": "bengali/narration/ch65.json",
-  "textHash": "fnv1a64:4ed957b3906d4132",
-  "jsonHash": "fnv1a64:82d34bf4d21c361d",
+  "textHash": "fnv1a64:a1a8912a8d52311f",
+  "jsonHash": "fnv1a64:649fab7fe25237af",
   "findings": []
 }

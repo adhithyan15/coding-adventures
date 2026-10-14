@@ -14,7 +14,8 @@ romanization: "nāṭôk"
 concept_tag: BN-JINIS225-NATOK
 prerequisites: [BN-C225-kheloyar, BN-C225-sinema]
 sounds: []
-roots: []
+roots: [sanskrit-nataka]
+etymology_hook: "nāṭôk ← Sanskrit nāṭaka 'a play, drama', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C225-sinema]
 <!-- hl-knowledge: introduces=[BN-LEX-C225-JINIS225-04]; assesses=[] -->
 
 **নাটক** — *nāṭôk* — "a play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নাটক** (*nāṭôk*) is Sanskrit *nāṭaka*, "a play, drama", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

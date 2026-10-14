@@ -12,6 +12,9 @@ Before the new one: say the Bengali for the beginning, then the Bengali for nowa
 You'll want to know: দিনকাল.
 দিনকাল — dinkāl — "these days, the times".
 
+The word, taken apart.
+দিনকাল (dinkāl) is din, "day", from Sanskrit dina (CDIAL 6328), + kāl, "time", from Sanskrit kāla (CDIAL 3084).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for nowadays, then the Bengali for these day
 
 You'll want to know: রাত্তির.
 রাত্তির — rāttir — "night-time".
+
+The word, taken apart.
+রাত্তির (rāttir) is a semi-tatsama: Sanskrit rātri, "night", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 10702). The word inherited from it is rāt, which CDIAL lists.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for these days, then the Bengali for night-t
 You'll want to know: প্রায়ই.
 প্রায়ই — prāyi — "often".
 
+The word, taken apart.
+প্রায়ই (prāyi) is prāy, "mostly", Sanskrit prāya, "for the most part", taken over whole, + the stressing ending -i.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for night-time, then the Bengali for often.
 You'll want to know: কখনো.
 কখনো — kôkhôno — "ever, sometimes".
 
+The word, taken apart.
+কখনো (kôkhôno) is kôkhôn, "when", + -o, "even". CDIAL lists kakhan with takhan, "then", under Sanskrit tatkṣaṇa, "that very moment" (CDIAL 5640): the question head ka- on kṣaṇa, "moment".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for often, then the Bengali for ever.
 
 You'll want to know: শিগগির.
 শিগগির — shiggir — "soon".
+
+The word, taken apart.
+শিগগির (shiggir) is usually traced to Sanskrit śīghra, "quick", with its cluster turned into a doubled g. CDIAL has that entry but lists no Bengali form under it (CDIAL 12484).
 
 What you've built.
 One more word for this chapter.

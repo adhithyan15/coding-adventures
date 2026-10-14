@@ -14,7 +14,8 @@ romanization: "kôlā"
 concept_tag: BN-FOOD56-KOLA
 prerequisites: [BN-C56-phol, BN-C56-apel]
 sounds: []
-roots: []
+roots: [sanskrit-kadala]
+etymology_hook: "kôlā ← Sanskrit kadala 'banana plant', itself from Austroasiatic (CDIAL 2712)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C56-apel]
 <!-- hl-knowledge: introduces=[BN-LEX-C56-FOOD56-04]; assesses=[] -->
 
 **কলা** — *kôlā* — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কলা** (*kôlā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kadala*, "banana plant" (CDIAL 2712). CDIAL takes *kadala* itself from Austroasiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kishmish"
 concept_tag: BN-JINIS165-KISHMISH
 prerequisites: [BN-C164-haphpnt, BN-C164-soyetar]
 sounds: []
-roots: []
+roots: [persian-kishmish]
+etymology_hook: "kishmish: usually traced to Persian kishmish 'small raisins'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C164-soyetar]
 <!-- hl-knowledge: introduces=[BN-LEX-C165-JINIS165-01]; assesses=[] -->
 
 **কিশমিশ** — *kishmish* — "a raisin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কিশমিশ** (*kishmish*) is a loan, usually traced to Persian *kishmish*, "small raisins".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shilpī"
 concept_tag: BN-KAJ262-SHILPI
 prerequisites: [BN-C262-lekhok, BN-C262-kobi]
 sounds: []
-roots: []
+roots: [sanskrit-shilpin]
+etymology_hook: "shilpī ← Sanskrit śilpin 'artist, craftsman', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C262-kobi]
 <!-- hl-knowledge: introduces=[BN-LEX-C262-KAJ262-03]; assesses=[] -->
 
 **শিল্পী** — *shilpī* — "an artist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শিল্পী** (*shilpī*) is Sanskrit *śilpin*, "artist, craftsman", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

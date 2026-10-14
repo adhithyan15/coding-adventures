@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 212,
-  "sourceHash": "fnv1a64:4c3c32331a73fa51",
+  "sourceHash": "fnv1a64:50c6bcbf601f66fc",
   "lessonIds": [
     "BN-C212-tulona-kora",
     "BN-C212-bhara-neoya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch212.txt",
   "json": "bengali/narration/ch212.json",
-  "textHash": "fnv1a64:6d3fe53281a60afb",
-  "jsonHash": "fnv1a64:00d3f92e038d1209",
+  "textHash": "fnv1a64:de2f9cd2aa528909",
+  "jsonHash": "fnv1a64:2d2a7c2d7706e371",
   "findings": []
 }

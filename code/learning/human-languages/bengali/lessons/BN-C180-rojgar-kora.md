@@ -14,7 +14,8 @@ romanization: "rojgār kôrā"
 concept_tag: BN-VERB-ROJGAR-KORA
 prerequisites: [BN-C179-takano, BN-C179-bachha]
 sounds: []
-roots: []
+roots: [persian-rozgar, sanskrit-karoti]
+etymology_hook: "rojgār kôrā: rojgār 'earnings', usually traced to Persian rōzgār 'time; livelihood', + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C179-bachha]
 <!-- hl-knowledge: introduces=[BN-LEX-C180-ACT180-01]; assesses=[] -->
 
 **রোজগার করা** — *rojgār kôrā* — "to earn".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রোজগার করা** (*rojgār kôrā*) is *rojgār*, "earnings", usually traced to Persian *rōzgār*, "time, fortune; livelihood", + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

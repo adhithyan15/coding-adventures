@@ -14,7 +14,8 @@ romanization: "bænḍej"
 concept_tag: BN-SVASTHYO185-BNDEJ
 prerequisites: [BN-C185-chot, BN-C185-phoska]
 sounds: []
-roots: []
+roots: [english-bandage]
+etymology_hook: "bænḍej ← English bandage"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C185-phoska]
 <!-- hl-knowledge: introduces=[BN-LEX-C185-SVASTHYO185-05]; assesses=[] -->
 
 **ব্যান্ডেজ** — *bænḍej* — "a bandage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ব্যান্ডেজ** (*bænḍej*) is a loan from English *bandage*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

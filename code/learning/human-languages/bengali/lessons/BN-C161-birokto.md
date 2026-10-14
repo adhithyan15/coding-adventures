@@ -14,7 +14,8 @@ romanization: "birôktô"
 concept_tag: BN-GUN161-BIROKTO
 prerequisites: [BN-C161-kora, BN-C161-sukhi]
 sounds: []
-roots: []
+roots: [sanskrit-virakta]
+etymology_hook: "birôktô ← Sanskrit virakta 'indifferent', a tatsama (CDIAL 11842)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C161-sukhi]
 <!-- hl-knowledge: introduces=[BN-LEX-C161-GUN161-05]; assesses=[] -->
 
 **বিরক্ত** — *birôktô* — "annoyed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিরক্ত** (*birôktô*) is Sanskrit *virakta*, "indifferent", taken over whole as a learned loan, a tatsama (CDIAL 11842).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

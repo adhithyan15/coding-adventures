@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a ring, then the Bengali for a cap.
 You'll want to know: জুতো.
 জুতো — juto — "a shoe".
 
+The word, taken apart.
+জুতো (juto) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from yukta, "joined, yoked" (CDIAL 10479). CDIAL lists Bengali jutā, "shoe", under it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a cap, then the Bengali for a shoe.
 
 You'll want to know: ছয়.
 ছয় — chhôy — "six".
+
+The word, taken apart.
+ছয় (chhôy) is a tadbhava, a word inherited and reshaped by sound change. It comes from kṣaṭ, "six", a form CDIAL reconstructs from its descendants (CDIAL 12803). It is a variant CDIAL reconstructs beside Sanskrit ṣaṣ, "six".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a shoe, then the Bengali for six.
 You'll want to know: সাত.
 সাত — sāt — "seven".
 
+The word, taken apart.
+সাত (sāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sapta, "seven" (CDIAL 13139).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for six, then the Bengali for seven.
 You'll want to know: আট.
 আট — āṭ — "eight".
 
+The word, taken apart.
+আট (āṭ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṣṭā, "eight" (CDIAL 941).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for seven, then the Bengali for eight.
 
 You'll want to know: দশ.
 দশ — dôsh — "ten".
+
+The word, taken apart.
+দশ (dôsh) is inherited from Sanskrit daśa, "ten", and has come down with almost no change (CDIAL 6227).
 
 What you've built.
 One more word for this chapter.

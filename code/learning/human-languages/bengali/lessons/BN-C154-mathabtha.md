@@ -14,7 +14,8 @@ romanization: "māthābæthā"
 concept_tag: BN-SVASTHYO154-MATHABTHA
 prerequisites: [BN-C154-sordi, BN-C154-kashi]
 sounds: []
-roots: []
+roots: [sanskrit-mastaka, sanskrit-vyatha]
+etymology_hook: "māthābæthā: māthā 'head' ← mastaka (CDIAL 9926) + bæthā 'pain', Sanskrit vyathā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C154-kashi]
 <!-- hl-knowledge: introduces=[BN-LEX-C154-SVASTHYO154-04]; assesses=[] -->
 
 **মাথাব্যথা** — *māthābæthā* — "a headache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাথাব্যথা** (*māthābæthā*) is *māthā*, "head", from Sanskrit *mastaka*, "head, skull" (CDIAL 9926), + *bæthā*, "pain", Sanskrit *vyathā*, "pain, distress", taken over whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

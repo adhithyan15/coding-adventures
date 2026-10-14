@@ -14,7 +14,8 @@ romanization: "bimānbôndôr"
 concept_tag: BN-JAYGA217-BIMANBONDOR
 prerequisites: [BN-C217-hrod, BN-C217-bastnd]
 sounds: []
-roots: []
+roots: [sanskrit-vimana, persian-bandar]
+etymology_hook: "bimānbôndôr: Sanskrit vimāna (CDIAL 11823) + bôndôr 'port', usually traced to Persian bandar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C217-bastnd]
 <!-- hl-knowledge: introduces=[BN-LEX-C217-JAYGA217-03]; assesses=[] -->
 
 **বিমানবন্দর** — *bimānbôndôr* — "an airport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিমানবন্দর** (*bimānbôndôr*) is *bimān*, "aeroplane", Sanskrit *vimāna*, "car of the gods" (CDIAL 11823), + *bôndôr*, "port", usually traced to Persian *bandar*, "port".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

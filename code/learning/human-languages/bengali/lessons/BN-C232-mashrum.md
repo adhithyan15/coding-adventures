@@ -14,7 +14,8 @@ romanization: "māshrum"
 concept_tag: BN-JINIS232-MASHRUM
 prerequisites: [BN-C231-suji, BN-C232-shosa]
 sounds: []
-roots: []
+roots: [english-mushroom]
+etymology_hook: "māshrum ← English mushroom"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C232-shosa]
 <!-- hl-knowledge: introduces=[BN-LEX-C232-JINIS232-02]; assesses=[] -->
 
 **মাশরুম** — *māshrum* — "a mushroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাশরুম** (*māshrum*) is a loan from English *mushroom*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

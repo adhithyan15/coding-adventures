@@ -14,7 +14,8 @@ romanization: "gājôr"
 concept_tag: BN-FOOD57-GAJOR
 prerequisites: [BN-C56-kola, BN-C56-alu]
 sounds: []
-roots: []
+roots: [sanskrit-garjara]
+etymology_hook: "gājôr ← Sanskrit gārjara 'carrot', a tadbhava (CDIAL 4140)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C56-alu]
 <!-- hl-knowledge: introduces=[BN-LEX-C57-FOOD57-01]; assesses=[] -->
 
 **গাজর** — *gājôr* — "a carrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গাজর** (*gājôr*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gārjara*, "carrot" (CDIAL 4140).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

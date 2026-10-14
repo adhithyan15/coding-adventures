@@ -14,7 +14,8 @@ romanization: "hāi tolā"
 concept_tag: BN-VERB-HAI-TOLA
 prerequisites: [BN-C182-jog-kora, BN-C183-chulkano]
 sounds: []
-roots: []
+roots: [sanskrit-tolayati]
+etymology_hook: "hāi tolā: hāi 'yawn' is not settled; tolā 'to raise' ← tōlayati 'lifts' (CDIAL 5979)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C183-chulkano]
 <!-- hl-knowledge: introduces=[BN-LEX-C183-ACT183-02]; assesses=[] -->
 
 **হাই তোলা** — *hāi tolā* — "to yawn".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাই তোলা** (*hāi tolā*) is *hāi*, "a yawn", whose origin is not settled, as CDIAL has no entry for it, + *tolā*, "to raise", from Sanskrit *tōlayati*, "lifts, weighs" (CDIAL 5979).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

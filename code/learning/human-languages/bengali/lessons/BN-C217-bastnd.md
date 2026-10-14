@@ -14,7 +14,8 @@ romanization: "bāsṭænḍ"
 concept_tag: BN-JAYGA217-BASTND
 prerequisites: [BN-C216-kothao, BN-C217-hrod]
 sounds: []
-roots: []
+roots: [english-bus, english-stand]
+etymology_hook: "bāsṭænḍ ← English bus stand"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C217-hrod]
 <!-- hl-knowledge: introduces=[BN-LEX-C217-JAYGA217-02]; assesses=[] -->
 
 **বাসস্ট্যান্ড** — *bāsṭænḍ* — "a bus stand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাসস্ট্যান্ড** (*bāsṭænḍ*) is a loan from English *bus stand*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

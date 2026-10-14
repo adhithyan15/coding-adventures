@@ -14,7 +14,8 @@ romanization: "shim"
 concept_tag: BN-THINGS117-SHIM
 prerequisites: [BN-C116-ada, BN-C116-tometo]
 sounds: []
-roots: []
+roots: [sanskrit-shimba]
+etymology_hook: "shim ← Sanskrit śimba 'pod, legume', a tadbhava (CDIAL 12445)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C116-tometo]
 <!-- hl-knowledge: introduces=[BN-LEX-C117-THINGS117-01]; assesses=[] -->
 
 **শিম** — *shim* — "beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শিম** (*shim*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śimba*, "pod, legume" (CDIAL 12445).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

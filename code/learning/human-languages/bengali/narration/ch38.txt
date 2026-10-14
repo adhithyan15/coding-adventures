@@ -113,7 +113,7 @@ You'll want to know: চতুর্থ.
 Say চার, then চতুর্থ (choturthô). Two pieces cross over this time, the চ and the র, which is more of its number than any ordinal you have met keeps. The tail is থ — the letter this book waited longest for, and its second job in five lessons.
 
 What you've built: three endings, and only one of them repeats.
-Samsad's Bengali-English Dictionary gives চতুর্থ (choturthô) its own headword and romanizes it caturtha — the Sanskrit word carried over with nothing altered. Same layer as the last two, different ending:
+Samsad's Bengali-English Dictionary gives চতুর্থ (choturthô) its own headword and romanizes it caturtha: Sanskrit caturtha, "fourth", unaltered, a tatsama; the inherited form is cauth, "a quarter" (CDIAL 4600). Same layer as the last two, different ending:
 [a table of 2 rows, read aloud]
 ending: -তীয়. words: দ্বিতীয় (ditiyô), তৃতীয় (tritiyô).
 ending: -র্থ. words: চতুর্থ (choturthô).

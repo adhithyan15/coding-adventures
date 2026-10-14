@@ -14,7 +14,8 @@ romanization: "khāṭ"
 concept_tag: BN-THINGS132-KHAT
 prerequisites: [BN-C132-rediyo, BN-C132-alo]
 sounds: []
-roots: []
+roots: [sanskrit-khatva]
+etymology_hook: "khāṭ ← Sanskrit khaṭvā 'bedstead', a tadbhava (CDIAL 3781)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C132-alo]
 <!-- hl-knowledge: introduces=[BN-LEX-C132-THINGS132-04]; assesses=[] -->
 
 **খাট** — *khāṭ* — "a bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খাট** (*khāṭ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khaṭvā*, "bedstead" (CDIAL 3781).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

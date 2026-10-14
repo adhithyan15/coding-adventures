@@ -14,7 +14,8 @@ romanization: "nāṛi"
 concept_tag: BN-SVASTHYO215-NARI
 prerequisites: [BN-C215-daktarkhana, BN-C215-rogi]
 sounds: []
-roots: []
+roots: [sanskrit-nadi-tube]
+etymology_hook: "nāṛi ← Sanskrit nāḍī 'tubular organ, tube', a tadbhava (CDIAL 7047)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C215-rogi]
 <!-- hl-knowledge: introduces=[BN-LEX-C215-SVASTHYO215-04]; assesses=[] -->
 
 **নাড়ি** — *nāṛi* — "a pulse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নাড়ি** (*nāṛi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nāḍī*, "tubular organ, tube" (CDIAL 7047). CDIAL lists Bengali *nāṛi*, "vein, navel string".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

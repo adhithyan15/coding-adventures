@@ -14,7 +14,8 @@ romanization: "gāyikā"
 concept_tag: BN-KAJ262-GAYIKA
 prerequisites: [BN-C262-kobi, BN-C262-shilpi]
 sounds: []
-roots: []
+roots: [sanskrit-gayika]
+etymology_hook: "gāyikā ← Sanskrit gāyikā 'female singer', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C262-shilpi]
 <!-- hl-knowledge: introduces=[BN-LEX-C262-KAJ262-04]; assesses=[] -->
 
 **গায়িকা** — *gāyikā* — "a female singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গায়িকা** (*gāyikā*) is Sanskrit *gāyikā*, "female singer", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bôl"
 concept_tag: BN-THINGS131-BOL
 prerequisites: [BN-C130-daktikit, BN-C130-putul]
 sounds: []
-roots: []
+roots: [english-ball]
+etymology_hook: "bôl ← English ball"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C130-putul]
 <!-- hl-knowledge: introduces=[BN-LEX-C131-THINGS131-01]; assesses=[] -->
 
 **বল** — *bôl* — "a ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বল** (*bôl*) is a loan from English *ball*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

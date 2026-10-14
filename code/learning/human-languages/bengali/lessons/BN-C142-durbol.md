@@ -14,7 +14,8 @@ romanization: "durbôl"
 concept_tag: BN-QUAL142-DURBOL
 prerequisites: [BN-C142-porichchhonno, BN-C142-mojbut]
 sounds: []
-roots: []
+roots: [sanskrit-durbala]
+etymology_hook: "durbôl ← Sanskrit durbala 'weak', a tatsama; CDIAL lists the inherited dubalā 'thin' (CDIAL 6438)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C142-mojbut]
 <!-- hl-knowledge: introduces=[BN-LEX-C142-QUAL142-05]; assesses=[] -->
 
 **দুর্বল** — *durbôl* — "weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দুর্বল** (*durbôl*) is Sanskrit *durbala*, "weak", taken over whole as a learned loan, a tatsama (CDIAL 6438). The word inherited from it is *dubalā*, "thin", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

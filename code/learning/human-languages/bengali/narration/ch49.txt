@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to sit, then the Bengali for to walk.
 You'll want to know: খেলা.
 খেলা — khælā — "to play".
 
+The word, taken apart.
+খেলা (khælā) is a tadbhava, a word inherited and reshaped by sound change. It comes from khell, "play", a form CDIAL reconstructs from its descendants (CDIAL 3918). CDIAL adds that if Sanskrit krīḍati, "plays", is of non-Aryan origin, these forms may share that source.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to walk, then the Bengali for to play.
 
 You'll want to know: কেনা.
 কেনা — kenā — "to buy".
+
+The word, taken apart.
+কেনা (kenā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from krīṇāti, "buys" (CDIAL 3594). CDIAL writes the Bengali verb kinā.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to play, then the Bengali for to buy.
 You'll want to know: বেচা.
 বেচা — bechā — "to sell".
 
+The word, taken apart.
+বেচা (bechā) is a tadbhava, a word inherited and reshaped by sound change. It comes from vetyayati, "makes a price", a form CDIAL reconstructs from its descendants (CDIAL 12100).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to buy, then the Bengali for to sell.
 You'll want to know: রাখা.
 রাখা — rākhā — "to put, to keep".
 
+The word, taken apart.
+রাখা (rākhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rakṣati, "guards" (CDIAL 10547).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to sell, then the Bengali for to put.
 
 You'll want to know: খোলা.
 খোলা — kholā — "to open".
+
+The word, taken apart.
+খোলা (kholā) is a tadbhava, a word inherited and reshaped by sound change. It comes from kholl, "to open", a form CDIAL reconstructs from its descendants (CDIAL 3945).
 
 What you've built.
 One more word for this chapter.

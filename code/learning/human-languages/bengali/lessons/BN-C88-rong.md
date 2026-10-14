@@ -14,7 +14,8 @@ romanization: "rông"
 concept_tag: BN-NUMBERS88-RONG
 prerequisites: [BN-C88-hajar, BN-C88-prithibi]
 sounds: []
-roots: []
+roots: [sanskrit-ranga, persian-rang]
+etymology_hook: "rông matches both Sanskrit raṅga 'dye, colour' (CDIAL 10560) and Persian rang 'colour'; the two may have merged"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C88-prithibi]
 <!-- hl-knowledge: introduces=[BN-LEX-C88-NUMBERS88-03]; assesses=[] -->
 
 **রং** — *rông* — "a colour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রং** (*rông*) matches both Sanskrit *raṅga*, "dye, colour", under which CDIAL lists Bengali *rāṅā*, "red" (CDIAL 10560), and Persian *rang*, "colour"; the two may have run together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

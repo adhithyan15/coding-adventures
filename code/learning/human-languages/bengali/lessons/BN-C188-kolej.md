@@ -14,7 +14,8 @@ romanization: "kôlej"
 concept_tag: BN-JAYGA188-KOLEJ
 prerequisites: [BN-C187-soptahanto, BN-C188-bishvobidyaloy]
 sounds: []
-roots: []
+roots: [english-college]
+etymology_hook: "kôlej ← English college"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C188-bishvobidyaloy]
 <!-- hl-knowledge: introduces=[BN-LEX-C188-JAYGA188-02]; assesses=[] -->
 
 **কলেজ** — *kôlej* — "a college".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কলেজ** (*kôlej*) is a loan from English *college*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

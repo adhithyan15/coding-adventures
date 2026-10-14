@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a grinding stone, then the Bengali for g
 You'll want to know: পেশা.
 পেশা — peshā — "a profession".
 
+The word, taken apart.
+পেশা (peshā) is a loan, usually traced to Persian pesha, "craft, profession".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for gas, then the Bengali for a profession.
 
 You'll want to know: ধার.
 ধার — dhār — "a debt, a loan".
+
+The word, taken apart.
+ধার (dhār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uddhāra, "loan" (CDIAL 2018). CDIAL lists Middle Bengali udhāra and Bengali dhār, "loan".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a profession, then the Bengali for a deb
 You'll want to know: বিল.
 বিল — bil — "a bill".
 
+The word, taken apart.
+বিল (bil) is a loan from English bill.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a debt, then the Bengali for a bill.
 You'll want to know: খরচ.
 খরচ — khôrôch — "an expense".
 
+The word, taken apart.
+খরচ (khôrôch) is a loan from Arabic kharj, "expenditure", which reached Bengali through Persian. Its Arabic root is kh-r-j (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a bill, then the Bengali for an expense.
 
 You'll want to know: সঞ্চয়.
 সঞ্চয় — sôñchôy — "savings".
+
+The word, taken apart.
+সঞ্চয় (sôñchôy) is Sanskrit sañcaya, "collection, store", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "ālmāri"
 concept_tag: BN-HOME61-ALMARI
 prerequisites: [BN-C60-chhad, BN-C60-bichhana]
 sounds: []
-roots: []
+roots: [portuguese-armario]
+etymology_hook: "ālmāri ← Portuguese armário 'cupboard'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C60-bichhana]
 <!-- hl-knowledge: introduces=[BN-LEX-C61-HOME61-01]; assesses=[] -->
 
 **আলমারি** — *ālmāri* — "a cupboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আলমারি** (*ālmāri*) is a loan from Portuguese *armário*, "cupboard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

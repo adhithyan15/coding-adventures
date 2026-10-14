@@ -14,7 +14,8 @@ romanization: "āgun"
 concept_tag: BN-NATURE67-AGUN
 prerequisites: [BN-C67-chad, BN-C67-somudro]
 sounds: []
-roots: []
+roots: [sanskrit-agni]
+etymology_hook: "āgun ← Sanskrit agni 'fire', a tadbhava (CDIAL 14198)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C67-somudro]
 <!-- hl-knowledge: introduces=[BN-LEX-C67-NATURE67-04]; assesses=[] -->
 
 **আগুন** — *āgun* — "fire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আগুন** (*āgun*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *agni*, "fire" (CDIAL 14198). CDIAL's addenda list *āgun* and its variants; the main entry gives the shorter *āg* (CDIAL 55).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

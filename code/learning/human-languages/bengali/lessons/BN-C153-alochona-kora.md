@@ -14,7 +14,8 @@ romanization: "ālochônā kôrā"
 concept_tag: BN-VERB-ALOCHONA-KORA
 prerequisites: [BN-C152-achrano, BN-C152-kamrano]
 sounds: []
-roots: []
+roots: [sanskrit-alocana-consider, sanskrit-karoti]
+etymology_hook: "ālochônā kôrā: ālochônā 'discussion', Sanskrit ālocanā, + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C152-kamrano]
 <!-- hl-knowledge: introduces=[BN-LEX-C153-ACT153-01]; assesses=[] -->
 
 **আলোচনা করা** — *ālochônā kôrā* — "to discuss".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আলোচনা করা** (*ālochônā kôrā*) is *ālochônā*, "discussion", Sanskrit *ālocanā*, "consideration", taken over whole, + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

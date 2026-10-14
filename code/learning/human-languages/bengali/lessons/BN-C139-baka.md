@@ -14,7 +14,8 @@ romanization: "bā̃kā"
 concept_tag: BN-QUAL139-BAKA
 prerequisites: [BN-C139-joruri, BN-C139-soja]
 sounds: []
-roots: []
+roots: [sanskrit-vanka]
+etymology_hook: "bāṁkā ← Sanskrit vaṅka 'bent, crooked', a tadbhava (CDIAL 11191)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C139-soja]
 <!-- hl-knowledge: introduces=[BN-LEX-C139-QUAL139-05]; assesses=[] -->
 
 **বাঁকা** — *bā̃kā* — "crooked".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাঁকা** (*bāṁkā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vaṅka*, "bent, crooked" (CDIAL 11191). CDIAL thinks the word belongs to, or was influenced by, a probably non-Aryan group of words for "bent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 254,
-  "sourceHash": "fnv1a64:3b6572f26d26da6d",
+  "sourceHash": "fnv1a64:0342e26d12a7b319",
   "lessonIds": [
     "BN-C254-nirbachon",
     "BN-C254-subidha",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch254.txt",
   "json": "bengali/narration/ch254.json",
-  "textHash": "fnv1a64:a24069977b2997ad",
-  "jsonHash": "fnv1a64:3c15d43cfb923fe2",
+  "textHash": "fnv1a64:0ced735ac54efd7c",
+  "jsonHash": "fnv1a64:4aa6902a22bb3422",
   "findings": []
 }

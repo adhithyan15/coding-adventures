@@ -14,7 +14,8 @@ romanization: "chhuṭi"
 concept_tag: BN-NUMBERS88-CHHUTI
 prerequisites: [BN-C88-rong, BN-C88-gan]
 sounds: []
-roots: []
+roots: [indo-aryan-kshutyate]
+etymology_hook: "chhuṭi ← *kṣuṭyate 'is released', a reconstructed form; a tadbhava (CDIAL 3707)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C88-gan]
 <!-- hl-knowledge: introduces=[BN-LEX-C88-NUMBERS88-05]; assesses=[] -->
 
 **ছুটি** — *chhuṭi* — "a holiday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছুটি** (*chhuṭi*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kṣuṭyate*, "is released", a form CDIAL reconstructs from its descendants (CDIAL 3707).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

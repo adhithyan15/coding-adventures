@@ -14,7 +14,8 @@ romanization: "hāti"
 concept_tag: BN-ANIMALS70-HATI
 prerequisites: [BN-C69-idur, BN-C70-singho]
 sounds: []
-roots: []
+roots: [sanskrit-hastin]
+etymology_hook: "hāti ← Sanskrit hastin 'having hands; elephant', a tadbhava (CDIAL 14039)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C70-singho]
 <!-- hl-knowledge: introduces=[BN-LEX-C70-ANIMALS70-02]; assesses=[] -->
 
 **হাতি** — *hāti* — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাতি** (*hāti*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hastin*, "having hands; elephant" (CDIAL 14039).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

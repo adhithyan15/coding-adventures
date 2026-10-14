@@ -14,7 +14,8 @@ romanization: "bôṛi"
 concept_tag: BN-SVASTHYO185-BORI
 prerequisites: [BN-C184-badha-deoya, BN-C184-jhuki-neoya]
 sounds: []
-roots: []
+roots: [sanskrit-vataka]
+etymology_hook: "bôṛi ← Sanskrit vaṭa 'small lump; round cake of pulse', a tadbhava (CDIAL 11213)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C184-jhuki-neoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C185-SVASTHYO185-01]; assesses=[] -->
 
 **বড়ি** — *bôṛi* — "a pill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বড়ি** (*bôṛi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vaṭa*, "small lump; round cake of pulse" (CDIAL 11213). CDIAL lists Bengali *baṛi*, "ball of bruised pulse, pill".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

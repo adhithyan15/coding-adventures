@@ -14,7 +14,8 @@ romanization: "nārkel"
 concept_tag: BN-THINGS115-NARKEL
 prerequisites: [BN-C115-bash, BN-C115-amgachh]
 sounds: []
-roots: []
+roots: [sanskrit-narikela]
+etymology_hook: "nārkel ← Sanskrit nārikela 'coconut', which Bloch took from Dravidian; CDIAL lists Oriya naṛhera (CDIAL 7075)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C115-amgachh]
 <!-- hl-knowledge: introduces=[BN-LEX-C115-THINGS115-03]; assesses=[] -->
 
 **নারকেল** — *nārkel* — "a coconut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নারকেল** (*nārkel*) goes back to Sanskrit *nārikela*, "coconut palm and fruit". CDIAL gives no Bengali form under that entry, but it lists Oriya *naṛhera* and *naṛiā*, "coconut", the forms nearest to Bengali (CDIAL 7075). CDIAL reports Bloch's view that *nārikela* is a Dravidian compound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

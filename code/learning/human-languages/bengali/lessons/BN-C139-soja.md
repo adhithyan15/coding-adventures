@@ -14,7 +14,8 @@ romanization: "sojā"
 concept_tag: BN-QUAL139-SOJA
 prerequisites: [BN-C139-shanto, BN-C139-joruri]
 sounds: []
-roots: []
+roots: [sanskrit-shodhya]
+etymology_hook: "sojā ← Sanskrit śodhya 'to be cleaned', a tadbhava (CDIAL 12632)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C139-joruri]
 <!-- hl-knowledge: introduces=[BN-LEX-C139-QUAL139-04]; assesses=[] -->
 
 **সোজা** — *sojā* — "straight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সোজা** (*sojā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śodhya*, "to be cleaned" (CDIAL 12632). CDIAL prefers this source to a form *śudhya*, "to be made pure", that Chatterji proposed (CDIAL 12525).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

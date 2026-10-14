@@ -14,7 +14,8 @@ romanization: "sāmne"
 concept_tag: BN-PLACE81-SAMNE
 prerequisites: [BN-C81-baire, BN-C81-niche]
 sounds: []
-roots: []
+roots: [sanskrit-sammukha]
+etymology_hook: "sāmne ← Sanskrit saṁmukha 'facing, present', by the forms CDIAL gives nearby (CDIAL 12982)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C81-niche]
 <!-- hl-knowledge: introduces=[BN-LEX-C81-PLACE81-05]; assesses=[] -->
 
 **সামনে** — *sāmne* — "in front".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সামনে** (*sāmne*) goes back to Sanskrit *saṁmukha*, "facing, present". CDIAL gives no modern Bengali form under that entry, but it lists Middle Bengali *chāmu*, "in front", and Oriya *sāmanā*, "being in front", the forms nearest to Bengali (CDIAL 12982).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

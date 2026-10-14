@@ -14,7 +14,8 @@ romanization: "nôrôm"
 concept_tag: BN-QUAL134-NOROM
 prerequisites: [BN-C134-nonta, BN-C134-shokto]
 sounds: []
-roots: []
+roots: [persian-narm]
+etymology_hook: "nôrôm: usually traced to Persian narm 'soft'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C134-shokto]
 <!-- hl-knowledge: introduces=[BN-LEX-C134-QUAL134-05]; assesses=[] -->
 
 **নরম** — *nôrôm* — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নরম** (*nôrôm*) is a loan, usually traced to Persian *narm*, "soft".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

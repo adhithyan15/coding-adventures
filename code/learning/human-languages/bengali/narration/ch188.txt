@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a decade, then the Bengali for a weekend
 You'll want to know: বিশ্ববিদ্যালয়.
 বিশ্ববিদ্যালয় — bishvôbidyālôy — "a university".
 
+The word, taken apart.
+বিশ্ববিদ্যালয় (bishvôbidyālôy) is built from Sanskrit viśva, "all, the world", vidyā, "knowledge", and ālaya, "abode", a modern compound of Sanskrit parts.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a weekend, then the Bengali for a univer
 
 You'll want to know: কলেজ.
 কলেজ — kôlej — "a college".
+
+The word, taken apart.
+কলেজ (kôlej) is a loan from English college.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a university, then the Bengali for a col
 You'll want to know: থানা.
 থানা — thānā — "a police station".
 
+The word, taken apart.
+থানা (thānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sthāna, "firm stance; place of abode" (CDIAL 13753). CDIAL lists Bengali thānā, "post, watch-house, police station".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a college, then the Bengali for a police
 You'll want to know: ফ্ল্যাট.
 ফ্ল্যাট — phlæṭ — "a flat".
 
+The word, taken apart.
+ফ্ল্যাট (phlæṭ) is a loan from English flat.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a police station, then the Bengali for a
 
 You'll want to know: তলা.
 তলা — tôlā — "a storey, a floor".
+
+The word, taken apart.
+তলা (tôlā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tala, "surface, bottom" (CDIAL 5731). CDIAL lists Bengali talā, "bottom, groundwork".
 
 What you've built.
 One more word for this chapter.

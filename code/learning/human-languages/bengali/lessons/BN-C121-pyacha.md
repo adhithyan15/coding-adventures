@@ -14,7 +14,8 @@ romanization: "pyā̃chā"
 concept_tag: BN-THINGS121-PYACHA
 prerequisites: [BN-C120-shiyal, BN-C120-badur]
 sounds: []
-roots: []
+roots: [sanskrit-pecaka]
+etymology_hook: "pyāṁchā ← Sanskrit pecaka 'owl', a tadbhava (CDIAL 8375)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C120-badur]
 <!-- hl-knowledge: introduces=[BN-LEX-C121-THINGS121-01]; assesses=[] -->
 
 **প্যাঁচা** — *pyā̃chā* — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্যাঁচা** (*pyāṁchā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pecaka*, "owl" (CDIAL 8375).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

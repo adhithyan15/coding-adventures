@@ -14,7 +14,8 @@ romanization: "mājhe mājhe"
 concept_tag: BN-SOMOY156-MAJHE-MAJHE
 prerequisites: [BN-C155-byam, BN-C155-svasthyo]
 sounds: []
-roots: []
+roots: [sanskrit-madhya]
+etymology_hook: "mājhe mājhe: mājhe 'in the middle', said twice; mājh 'middle' ← madhya (CDIAL 9804)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C155-svasthyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C156-SOMOY156-01]; assesses=[] -->
 
 **মাঝে মাঝে** — *mājhe mājhe* — "sometimes".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাঝে মাঝে** (*mājhe mājhe*) is *mājhe*, "in the middle", said twice. *Mājh*, "middle", comes from Sanskrit *madhya*, "middle" (CDIAL 9804), and *-e* is the ending for "in, at".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

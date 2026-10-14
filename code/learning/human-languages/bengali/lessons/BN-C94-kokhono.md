@@ -14,7 +14,8 @@ romanization: "kôkhôno"
 concept_tag: BN-TIME94-KOKHONO
 prerequisites: [BN-C94-rattir, BN-C94-prayi]
 sounds: []
-roots: []
+roots: [sanskrit-kshana, ka-interrogative]
+etymology_hook: "kôkhôno: kôkhôn 'when' ← ka- + kṣaṇa 'moment' (CDIAL 5640) + -o 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C94-prayi]
 <!-- hl-knowledge: introduces=[BN-LEX-C94-TIME94-04]; assesses=[] -->
 
 **কখনো** — *kôkhôno* — "ever, sometimes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কখনো** (*kôkhôno*) is *kôkhôn*, "when", + *-o*, "even". CDIAL lists *kakhan* with *takhan*, "then", under Sanskrit *tatkṣaṇa*, "that very moment" (CDIAL 5640): the question head *ka-* on *kṣaṇa*, "moment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

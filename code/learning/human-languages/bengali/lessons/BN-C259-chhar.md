@@ -14,7 +14,8 @@ romanization: "chhāṛ"
 concept_tag: BN-JINIS259-CHHAR
 prerequisites: [BN-C258-suich, BN-C259-dor]
 sounds: []
-roots: []
+roots: [sanskrit-chardati]
+etymology_hook: "chhāṛ: apparently with chhāṛā 'to let go' ← chardati (CDIAL 4998)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C259-dor]
 <!-- hl-knowledge: introduces=[BN-LEX-C259-JINIS259-02]; assesses=[] -->
 
 **ছাড়** — *chhāṛ* — "a discount".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছাড়** (*chhāṛ*), "a discount", appears to belong with the verb *chāṛā*, "to let go", which CDIAL lists under Sanskrit *chardati*, "causes to flow over" (CDIAL 4998): "a letting go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

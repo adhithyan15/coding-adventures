@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 128,
-  "sourceHash": "fnv1a64:d3c356c3adfb14ef",
+  "sourceHash": "fnv1a64:dec0cf93b487920c",
   "lessonIds": [
     "BN-C128-maine",
     "BN-C128-bondor",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch128.txt",
   "json": "bengali/narration/ch128.json",
-  "textHash": "fnv1a64:35348313f1d4087e",
-  "jsonHash": "fnv1a64:60a57f699b105106",
+  "textHash": "fnv1a64:7ebf9654d55fd19e",
+  "jsonHash": "fnv1a64:13a1d96cc5170e09",
   "findings": []
 }

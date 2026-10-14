@@ -14,7 +14,8 @@ romanization: "kāṭāno"
 concept_tag: BN-VERB-KATANO
 prerequisites: [BN-C145-goto, BN-C145-ekshomoy]
 sounds: []
-roots: []
+roots: [sanskrit-kartati]
+etymology_hook: "kāṭāno ← Sanskrit kartati 'cuts', a tadbhava (CDIAL 2854)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C145-ekshomoy]
 <!-- hl-knowledge: introduces=[BN-LEX-C145-ATIT145-05]; assesses=[] -->
 
 **কাটানো** — *kāṭāno* — "to spend (time)". Said of time: **আমি ছুটিটা গ্রামে কাটালাম** — *āmi chhuṭiṭā grāme kāṭālām* — "I spent the holiday in the village."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাটানো** (*kāṭāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kartati*, "cuts" (CDIAL 2854). *Kāṭāno* is the causing form of *kāṭā*, "to cut"; CDIAL lists both.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

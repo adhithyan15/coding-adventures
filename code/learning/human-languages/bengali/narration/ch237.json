@@ -4,7 +4,7 @@
   "chapter": 237,
   "title": "To put out, To light, To bring to a halt, To cross, To go on an outing",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0ad173ccb79ac9a6",
+  "sourceHash": "fnv1a64:4281a97f006e1a85",
   "lessons": [
     {
       "id": "BN-C237-nebhano",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad2e26b9727a4a12",
+      "sourceHash": "fnv1a64:d86516b601175929",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নেভানো (nebhāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nirvāyati, \"is extinguished\" (CDIAL 7399). CDIAL lists Bengali nibāna, \"to extinguish\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52f5f306b8341a72",
+      "sourceHash": "fnv1a64:a14770246d5b8e97",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জ্বালানো (jvālāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jvālayati, \"sets on fire\" (CDIAL 5314). CDIAL lists Bengali jālā, \"to kindle\"; the spelling jv- follows Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3e3d3eb2703c596",
+      "sourceHash": "fnv1a64:4a7f2f2af648444c",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "থামানো (thāmāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from stambhate, \"supports, arrests\" (CDIAL 13683). CDIAL lists Bengali thāmā, \"to stop\"; thāmāno is its causing form."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b934dd2b5779511",
+      "sourceHash": "fnv1a64:267597d46e1b7bbd",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পার হওয়া (pār hôoyā) is pār, \"the far side, across\", from Sanskrit pāra, \"further bank\" (CDIAL 8100), + hôoyā, \"to be\", from Sanskrit bhavati, \"becomes, is\" (CDIAL 9416)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76a256b59fc7b387",
+      "sourceHash": "fnv1a64:caeaf5154414d812",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of বেড়ানো (beṛāno) is not settled. CDIAL lists Bengali beṛā, \"to surround (with a fence)\", under Sanskrit veṣṭayati, \"wraps up, surrounds\" (CDIAL 12132), but not the sense \"to stroll\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

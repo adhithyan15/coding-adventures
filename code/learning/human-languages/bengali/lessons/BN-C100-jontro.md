@@ -14,7 +14,8 @@ romanization: "jôntrô"
 concept_tag: BN-CAN100-JONTRO
 prerequisites: [BN-C100-sahos, BN-C100-protibha]
 sounds: []
-roots: []
+roots: [sanskrit-yantra]
+etymology_hook: "jôntrô ← Sanskrit yantra 'device, implement', a tatsama; CDIAL lists inherited jāṁtā 'millstone' (CDIAL 10412)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C100-protibha]
 <!-- hl-knowledge: introduces=[BN-LEX-C100-CAN100-03]; assesses=[] -->
 
 **যন্ত্র** — *jôntrô* — "a machine, a tool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**যন্ত্র** (*jôntrô*) is Sanskrit *yantra*, "controlling device, implement", taken over whole as a learned loan, a tatsama (CDIAL 10412). The words inherited from it include *jāṁtā*, "millstone", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

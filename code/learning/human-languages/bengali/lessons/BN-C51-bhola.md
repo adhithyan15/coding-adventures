@@ -14,7 +14,8 @@ romanization: "bholā"
 concept_tag: BN-VERB-BHOLA
 prerequisites: [BN-C50-nacha, BN-C51-shekha]
 sounds: []
-roots: []
+roots: [indo-aryan-bhull]
+etymology_hook: "bholā ← *bhull 'err, forget', a reconstructed form; a tadbhava (CDIAL 9538)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C51-shekha]
 <!-- hl-knowledge: introduces=[BN-LEX-C51-VERBS51-02]; assesses=[] -->
 
 **ভোলা** — *bholā* — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভোলা** (*bholā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhull*, "err, forget", a form CDIAL reconstructs from its descendants (CDIAL 9538). CDIAL writes the Bengali verb *bhulā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

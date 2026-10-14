@@ -14,7 +14,8 @@ romanization: "āsôn"
 concept_tag: BN-JINIS198-ASON
 prerequisites: [BN-C198-petrol, BN-C198-petrol-pamp]
 sounds: []
-roots: []
+roots: [sanskrit-asana]
+etymology_hook: "āsôn ← Sanskrit āsana 'sitting; seat', a tatsama (CDIAL 1484)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C198-petrol-pamp]
 <!-- hl-knowledge: introduces=[BN-LEX-C198-JINIS198-04]; assesses=[] -->
 
 **আসন** — *āsôn* — "a seat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আসন** (*āsôn*) is Sanskrit *āsana*, "sitting; seat", taken over whole as a learned loan, a tatsama (CDIAL 1484). CDIAL lists Bengali *āsan*, "stool".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

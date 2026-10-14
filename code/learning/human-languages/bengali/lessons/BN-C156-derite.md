@@ -14,7 +14,8 @@ romanization: "derite"
 concept_tag: BN-SOMOY156-DERITE
 prerequisites: [BN-C156-tarikh, BN-C156-jonmodin]
 sounds: []
-roots: []
+roots: [persian-der]
+etymology_hook: "derite: deri 'lateness', usually traced to Persian dēr 'late', + -te 'in, at'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C156-jonmodin]
 <!-- hl-knowledge: introduces=[BN-LEX-C156-SOMOY156-05]; assesses=[] -->
 
 **দেরিতে** — *derite* — "late".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দেরিতে** (*derite*) is *deri*, "lateness", usually traced to Persian *dēr*, "late", + the ending *-te*, "in, at".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

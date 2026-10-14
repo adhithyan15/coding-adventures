@@ -14,7 +14,8 @@ romanization: "hājār"
 concept_tag: BN-NUMBERS88-HAJAR
 prerequisites: [BN-C87-ponchash, BN-C87-eksho]
 sounds: []
-roots: []
+roots: [persian-hazar]
+etymology_hook: "hājār: usually traced to Persian hazār 'thousand'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C87-eksho]
 <!-- hl-knowledge: introduces=[BN-LEX-C88-NUMBERS88-01]; assesses=[] -->
 
 **হাজার** — *hājār* — "a thousand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাজার** (*hājār*) is a loan, usually traced to Persian *hazār*, "thousand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

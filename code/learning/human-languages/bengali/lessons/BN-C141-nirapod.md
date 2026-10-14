@@ -14,7 +14,8 @@ romanization: "nirāpôd"
 concept_tag: BN-QUAL141-NIRAPOD
 prerequisites: [BN-C141-aramdayok, BN-C141-bipojjonok]
 sounds: []
-roots: []
+roots: [sanskrit-nirapad]
+etymology_hook: "nirāpôd ← Sanskrit nirāpad 'free from danger', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C141-bipojjonok]
 <!-- hl-knowledge: introduces=[BN-LEX-C141-QUAL141-05]; assesses=[] -->
 
 **নিরাপদ** — *nirāpôd* — "safe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নিরাপদ** (*nirāpôd*) is Sanskrit *nirāpad*, "free from danger", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

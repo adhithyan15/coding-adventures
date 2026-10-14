@@ -14,7 +14,8 @@ romanization: "jômāno"
 concept_tag: BN-VERB-JOMANO
 prerequisites: [BN-C209-dhar-neoya, BN-C209-dhar-deoya]
 sounds: []
-roots: []
+roots: [sanskrit-yamyate]
+etymology_hook: "jômāno ← Sanskrit yamyate 'is fixed', a tadbhava (CDIAL 10428)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C209-dhar-deoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C209-ACT209-03]; assesses=[] -->
 
 **জমানো** — *jômāno* — "to save up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জমানো** (*jômāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *yamyate*, "is fixed" (CDIAL 10428). CDIAL lists Bengali *jamā*, "to collect", and its causing form *jamāna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

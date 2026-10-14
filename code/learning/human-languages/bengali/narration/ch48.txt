@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a child, then the Bengali for a person.
 You'll want to know: মহিলা.
 মহিলা — môhilā — "a woman".
 
+The word, taken apart.
+মহিলা (môhilā) is Sanskrit mahilā, "woman", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a person, then the Bengali for a woman.
 
 You'll want to know: প্রতিবেশী.
 প্রতিবেশী — prôtibeshi — "a neighbour".
+
+The word, taken apart.
+প্রতিবেশী (prôtibeshi) is Sanskrit prativeśin, "neighbour", taken over whole as a learned loan, a tatsama (CDIAL 8599). The word inherited from the related prativeśya is paṛsī, which CDIAL lists.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a woman, then the Bengali for a neighbou
 You'll want to know: শোনা.
 শোনা — shonā — "to hear, to listen".
 
+The word, taken apart.
+শোনা (shonā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śṛṇoti, "hears" (CDIAL 12598). CDIAL writes the Bengali verb sunā.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a neighbour, then the Bengali for to hea
 You'll want to know: বসা.
 বসা — bôsā — "to sit".
 
+The word, taken apart.
+বসা (bôsā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vasati, "stays, dwells" (CDIAL 11435). CDIAL also gives basā under upaviśati, "sits down", and asks whether it belongs there instead (CDIAL 2245).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to hear, then the Bengali for to sit.
 
 You'll want to know: হাঁটা.
 হাঁটা — hā̃ṭā — "to walk".
+
+The word, taken apart.
+হাঁটা (hā̃ṭā) (hāṁṭā) is a tadbhava, a word inherited and reshaped by sound change. It comes from haṇṭ, "move", a form CDIAL reconstructs from its descendants (CDIAL 13943). (In CDIAL the entry is headed haṭṭ, "move", and the Bengali verb sits under its variant haṇṭ-.)
 
 What you've built.
 One more word for this chapter.

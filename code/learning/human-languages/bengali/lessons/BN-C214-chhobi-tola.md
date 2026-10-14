@@ -14,7 +14,8 @@ romanization: "chhôbi tolā"
 concept_tag: BN-VERB-CHHOBI-TOLA
 prerequisites: [BN-C213-roona-deoya, BN-C213-chora]
 sounds: []
-roots: []
+roots: [sanskrit-chavi, sanskrit-tolayati]
+etymology_hook: "chhôbi tolā: chhôbi 'picture', Sanskrit chavi 'skin, beauty', + tolā 'to raise' (CDIAL 5979)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C213-chora]
 <!-- hl-knowledge: introduces=[BN-LEX-C214-ACT214-01]; assesses=[] -->
 
 **ছবি তোলা** — *chhôbi tolā* — "to take a photo".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছবি তোলা** (*chhôbi tolā*) is *chhôbi*, "a picture", Sanskrit *chavi*, "skin, colour, beauty", taken over whole, + *tolā*, "to raise", from Sanskrit *tōlayati*, "lifts, weighs" (CDIAL 5979).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

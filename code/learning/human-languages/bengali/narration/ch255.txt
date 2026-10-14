@@ -12,6 +12,9 @@ Before the new one: say the Bengali for safety, security, then the Bengali for a
 You'll want to know: রোদ.
 রোদ — rod — "sunshine".
 
+The word, taken apart.
+রোদ (rod) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from raudra, "terrible; heat, sunshine" (CDIAL 10872). CDIAL lists Bengali rod, "sunshine".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a noise, then the Bengali for sunshine.
 
 You'll want to know: ঝড়.
 ঝড় — jhôṛ — "a storm".
+
+The word, taken apart.
+ঝড় (jhôṛ) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhaḍī, "rainstorm", a form CDIAL reconstructs from its descendants (CDIAL 5329). CDIAL lists Bengali jhaṛ, "storm, high wind", and reports a view that the word is Dravidian.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for sunshine, then the Bengali for a storm.
 You'll want to know: বন্যা.
 বন্যা — bônyā — "a flood".
 
+The word, taken apart.
+বন্যা (bônyā) is Sanskrit vanyā, "flood", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a storm, then the Bengali for a flood.
 You'll want to know: ধোঁয়া.
 ধোঁয়া — dhõyā — "smoke".
 
+The word, taken apart.
+ধোঁয়া (dhõyā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dhūma, "smoke, vapour" (CDIAL 6849). CDIAL lists Bengali dhõyā, "smoke".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a flood, then the Bengali for smoke.
 
 You'll want to know: ছাই.
 ছাই — chhāi — "ash".
+
+The word, taken apart.
+ছাই (chhāi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from chādi, "covering" (CDIAL 5020). CDIAL lists Bengali chāi, "ashes", beside Sanskrit chādi-muṣṭi, "handful of ashes".
 
 What you've built.
 One more word for this chapter.

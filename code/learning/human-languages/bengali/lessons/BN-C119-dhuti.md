@@ -14,7 +14,8 @@ romanization: "dhuti"
 concept_tag: BN-THINGS119-DHUTI
 prerequisites: [BN-C119-halua, BN-C119-biskut]
 sounds: []
-roots: []
+roots: [indo-aryan-dhotta]
+etymology_hook: "dhuti ← *dhotta 'cloth', a reconstructed form; a tadbhava (CDIAL 6881)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C119-biskut]
 <!-- hl-knowledge: introduces=[BN-LEX-C119-THINGS119-04]; assesses=[] -->
 
 **ধুতি** — *dhuti* — "a dhoti".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধুতি** (*dhuti*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhotta*, "cloth", a form CDIAL reconstructs from its descendants (CDIAL 6881).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

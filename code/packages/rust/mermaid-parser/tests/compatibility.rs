@@ -2051,6 +2051,18 @@ fn swimlane_edge_label_theme_reaches_semantic_ir() {
 }
 
 #[test]
+fn swimlane_cluster_theme_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"clusterBkg\": \"#fef3c7\", \"clusterBorder\": \"#b45309\", \"titleColor\": \"#7c2d12\"}}}%%\nswimlane-beta LR\ntitle Themed workflow\nsubgraph Review[Review lane]\n  subgraph Approval[Approval phase]\n    request[Request]\n    done[Done]\n  end\nend\nrequest --> done",
+    ).expect("Swimlane cluster theme should parse");
+
+    assert_eq!(diagram.theme.cluster_background.as_deref(), Some("#fef3c7"));
+    assert_eq!(diagram.theme.cluster_border.as_deref(), Some("#b45309"));
+    assert_eq!(diagram.theme.title_color.as_deref(), Some("#7c2d12"));
+    assert_eq!(diagram.groups.len(), 1);
+}
+
+#[test]
 fn swimlane_inline_node_styles_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nrequest --> done",
@@ -2604,6 +2616,28 @@ fn swimlane_flowchart_spacing_config_lowers_to_semantic_ir() {
     assert!(parse_swimlane(&format!(
         "---\nconfig:\n  flowchart:\n    rankSpacing: -1\n---\n{source}"
     )).is_err(), "negative Flowchart spacing must be rejected");
+}
+
+#[test]
+fn swimlane_flowchart_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let source = "swimlane-beta LR\nsubgraph A\n  first[First]\n  second[Second]\n  third[Third]\nend\nfirst --> second\nsecond override@--> third\noverride@{ curve: linear }";
+    let front_matter = parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    curve: stepAfter\n---\n{source}"
+    )).expect("Flowchart curve front matter should parse for Swimlane");
+    let directive = parse_swimlane(&format!(
+        "%%{{init: {{\"flowchart\": {{\"curve\": \"basis\"}}}}}}%%\n{source}"
+    )).expect("Flowchart curve init directive should parse for Swimlane");
+
+    assert_eq!(front_matter.flowchart_config.curve, Some(SwimlaneEdgeCurve::StepAfter));
+    assert_eq!(directive.flowchart_config.curve, Some(SwimlaneEdgeCurve::Basis));
+    assert_eq!(front_matter.edges[0].curve, None,
+        "the parser must keep the global curve separate from per-edge overrides");
+    assert_eq!(front_matter.edges[1].curve, Some(SwimlaneEdgeCurve::Linear));
+    assert!(parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    curve: unsupported\n---\n{source}"
+    )).is_err(), "unsupported Flowchart curves must be rejected");
 }
 
 #[test]

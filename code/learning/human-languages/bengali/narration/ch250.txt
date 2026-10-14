@@ -12,6 +12,9 @@ Before the new one: say the Bengali for mint, then the Bengali for a cashew.
 You'll want to know: কুমির.
 কুমির — kumir — "a crocodile".
 
+The word, taken apart.
+কুমির (kumir) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kumbhīra, "crocodile" (CDIAL 3317). CDIAL lists Bengali kumīr beside the learned kumbhīr.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a cashew, then the Bengali for a crocodi
 
 You'll want to know: জিরাফ.
 জিরাফ — jirāph — "a giraffe".
+
+The word, taken apart.
+জিরাফ (jirāph) is a loan from English giraffe.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a crocodile, then the Bengali for a gira
 You'll want to know: জেব্রা.
 জেব্রা — jebrā — "a zebra".
 
+The word, taken apart.
+জেব্রা (jebrā) is a loan from English zebra.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a giraffe, then the Bengali for a zebra.
 You'll want to know: মাকড়সা.
 মাকড়সা — mākôṛsā — "a spider".
 
+The word, taken apart.
+মাকড়সা (mākôṛsā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from markaṭa, "spider" (CDIAL 9883). CDIAL lists Bengali mākaṛ, "spider"; mākôṛsā adds an ending.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a zebra, then the Bengali for a spider.
 
 You'll want to know: চিল.
 চিল — chil — "a kite (bird)".
+
+The word, taken apart.
+চিল (chil) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cilli, "a bird of prey; kite" (CDIAL 4829). CDIAL lists Bengali cil, "kite".
 
 What you've built.
 One more word for this chapter.

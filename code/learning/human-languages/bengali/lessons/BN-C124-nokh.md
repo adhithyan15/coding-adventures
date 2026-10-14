@@ -14,7 +14,8 @@ romanization: "nôkh"
 concept_tag: BN-THINGS124-NOKH
 prerequisites: [BN-C123-komor, BN-C123-gorali]
 sounds: []
-roots: []
+roots: [sanskrit-nakha]
+etymology_hook: "nôkh ← Sanskrit nakha 'nail of finger or toe, claw', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C123-gorali]
 <!-- hl-knowledge: introduces=[BN-LEX-C124-THINGS124-01]; assesses=[] -->
 
 **নখ** — *nôkh* — "a fingernail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নখ** (*nôkh*) is Sanskrit *nakha*, "nail of finger or toe, claw", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
