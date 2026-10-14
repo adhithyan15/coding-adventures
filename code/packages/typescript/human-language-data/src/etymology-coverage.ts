@@ -100,7 +100,8 @@
  *
  *   FALSE POSITIVES (counted visible, says no origin)
  *     - a "taken apart" block that takes apart SYNTAX: HI-C87-par explains
- *       why postpositions trail their noun and never says where पर came from;
+ *       why postpositions trail their noun and never says where पर came from.
+ *       Rules 1 and 2 cannot see this; the empty-block count below can;
  *     - a letter's origin rather than the word's: "**г**. It is Greek
  *       **gamma**" (RU-C03-govorit, whose word origin is in the hook only);
  *     - a "from English" that is not about a word at all: FA-C03-esm-e-
@@ -120,9 +121,107 @@
  *       parser keeps the heading out of the block's markdown, and headings
  *       are matched only against the origin-heading names.
  *   The looser signals that would close the false negatives -- a bare
- *   "borrowed", "inherited", "same word" -- were measured and rejected: on
- *   samples they fired as often on "She inherited the house" and "the same
- *   word covers it" as on etymology.
+ *   "borrowed", "inherited", "same word" -- were measured and rejected
+ *   CORPUS-WIDE: on samples they fired as often on "She inherited the house"
+ *   and "the same word covers it" as on etymology. Inside a "taken apart"
+ *   block they are another matter; see the next section.
+ *
+ * THE EMPTY "TAKEN APART" BLOCK (HL24 section 9.4)
+ *
+ *   wordLessonsWithEmptyEtymologyBlock   visible on rule 1 or rule 2 ALONE:
+ *                                        a "taken apart" block or an origin
+ *                                        heading is there, and nothing in the
+ *                                        lesson says where the word came from.
+ *
+ * A review of the Spanish track found 48 "taken apart" blocks that take
+ * apart a sentence or list the word's parts and stop. Rule 1 counts every one
+ * of them as visible etymology, so the visible count can reach zero over a
+ * track that still owes them. This count is disjoint from
+ * `wordLessonsWithoutVisibleEtymology` -- a lesson with no structure at all
+ * is already there -- and it has its own exact pin.
+ *
+ * A lesson is counted when it passes on structure, the preamble fails rule 3,
+ * and no block passes `blockStatesOrigin`: rule 3, OR -- inside a block the
+ * parser types `etymology`, and only there -- one of the loose signals in
+ * TAKEN_APART_ORIGIN_SIGNALS. Inside that block the words have had their
+ * meaning chosen for them; outside it they have not.
+ *
+ * Measured on the corpus when the count was added. 4,782 word lessons were
+ * visible on structure alone with no rule-3 statement anywhere; the signals
+ * read 4,307 of them as origins and left 475. "Fires" is lessons among those
+ * 4,782 where the signal matches; "sole" is lessons it alone rescues, the
+ * only hits that move the count:
+ *
+ *     signal          fires  sole     signal          fires  sole
+ *     inherited         139    15     derived-from      447    89
+ *     borrowed           43    17     cousin-of          19     5
+ *     a-loan             17     1     is-english         18    13
+ *     taken-over          2     0     donor-word        107    31
+ *     tatsama             5     0     native-family   2,165    19
+ *     tadbhava           95     0     source-tag      2,387     1
+ *     learned-word        0     0     source-named    3,673   120
+ *     semi-learned        0     0     uncertain         394   163
+ *     built-on          570    74     not-settled        17     1
+ *     comes-from        372    21     unknown-origin      2     0
+ *     goes-back-to       11     1     no-sure-origin     83    21
+ *     traced-to          29    16     disputed            7     0
+ *     descends-from      12     4     starred           237     9
+ *
+ * The left column and the source-tag, uncertain-to-disputed and starred rows
+ * are the list HL24 section 9.4 started from. None was dropped; three were
+ * TIGHTENED after a misfire or a likely one. `goes-back-to` read "the tenth
+ * goes back to behaving" (LA-C56-octavus), so a following gerund is refused.
+ * `a-loan` refuses a quoted or emphasised gloss, so *préstamo* -- "a loan" --
+ * cannot certify itself (no corpus hit lost). `learned-word` needs its
+ * article, so "you have learned words like *casa*" stays out (no corpus hit
+ * either way). Six were ADDED, because the list alone left over a thousand
+ * blocks the reader plainly sees as origins: `source-named` ("DEDR 3376
+ * lists ...", "Vasmer derives ..."), `native-family` ("is native
+ * Dravidian"), `derived-from` ("formed from *dessiner*", "*вход* ... from
+ * *ходить*"), `donor-word` ("Latin said *hodie*"), `cousin-of` ("a cousin of
+ * English *swine*") and `is-english` ("**drei** is English **three**"). A
+ * bare donor-language name anywhere in the block was measured and REJECTED:
+ * it fired on "in Latin letters", "no Hebrew twin worth the claim" and "like
+ * the Dravidian languages to its south", about one hit in seven.
+ *
+ * About a hundred sole-rescue hits were read in place, every signal's among
+ * them. Known misfires, recorded so the count is read honestly:
+ *
+ *   FALSE POSITIVES (a signal fires, the block names no origin of THIS word)
+ *     - a signal about another word: ES-C431-retraso takes *re-* and *tras*
+ *       apart and is rescued by "tardar, from a different Latin word";
+ *     - a negation: "No English word descends from ك-ت-ب" (AR-C31-kataba),
+ *       "not a borrowed verb" (AR-C32-saada). Both blocks also name the root
+ *       and its Hebrew cognate, so neither lesson is wrongly cleared -- but a
+ *       block saying only the negation would be;
+ *     - a descendant, not an ancestor: "English borrowed it late"
+ *       (LA-C55-tertius), "English *peril* comes from it". Common in the
+ *       Latin track, and harmless only when the block also derives the word,
+ *       as every sampled one did;
+ *     - "not recorded in EtymDB 2.1" and "uncertain ... DEDR has no entry"
+ *       are counted as answered. That is deliberate: HL24 section 9.1 allows
+ *       "unknown" stated plainly, and these say it.
+ *   FALSE NEGATIVES (counted empty, does say an origin)
+ *     - an origin with no signal word and no fixed shape: "Behind it is
+ *       **papyrus**" (ES-C301-papel), "The goddess is **Frija**"
+ *       (GE-C07-freitag), "on an old Slavic base" (RU-C11-do-vstrechi),
+ *       "Latin's general word for apple" (ES-C280-manzana: "general" sits
+ *       between the language and the noun);
+ *     - a cognate told without a signal: "**werden** is a lost English verb"
+ *       (GE-C16-werden), "*-sam*, the ending of English *-some*";
+ *     - "unsettled" and "Neither is agreed" (ES-C439-tirar), which
+ *       `not-settled` and `disputed` do not cover;
+ *     - "coined in Quebec in the 1990s from *courrier électronique*"
+ *       (FR-C135-courriel): the verb is too far from "from".
+ *   Of 30 of the 475 read in place, 7 were one of these. The rest are what
+ *   the count is for: a phrase split into words the reader already owns
+ *   (ES-C283-no-hay-de-que), a suffix recipe (ES-C427-vendedor), a sound or
+ *   stroke note (ZH-C15-tongxue), a sentence frame (PA-C38-ate-vaak). Parts
+ *   in the track's own language with no "from" (RU-C214-nazad, "*на* with
+ *   *зад*") are counted empty on purpose: they list the parts and stop. The
+ *   count is therefore an upper bound on the empty blocks, and clearing a
+ *   false negative costs one origin sentence the block should arguably have
+ *   stated plainly anyway.
  *
  * The hook measure has its own false positive, and no mechanical fix: a
  * non-empty hook that is not etymology. JA-C12-kami's reads "Hair adds no new
@@ -135,7 +234,9 @@
  * The only repeated GROUP in any pattern, the period qualifiers, repeats at
  * most three times, and every alternative inside it starts with a fixed
  * word, so no input -- however hostile -- can make a pattern backtrack
- * catastrophically. HTML comments are cut out with an indexOf walk rather
+ * catastrophically. The loose signals are fixed phrases with bounded runs
+ * between them (`is-english` reads at most 60 characters of headword), and
+ * they are tried only on "taken apart" blocks. HTML comments are cut out with an indexOf walk rather
  * than a lazy regex, for the same reason.
  *
  * REPORT-ONLY, AND A RATCHET
@@ -143,13 +244,15 @@
  * Nothing here throws. The debt predates the rule, and a gate that fails on
  * recorded debt teaches authors to route around it (the HL05 precedent). The
  * test suite instead pins each track's two counts EXACTLY
- * (tests/root-ledger.test.ts, ETYMOLOGY_GAP_PINS): a new word lesson without
+ * (tests/root-ledger.test.ts, ETYMOLOGY_GAP_PINS), and its empty-block count
+ * beside them (EMPTY_ETYMOLOGY_BLOCK_PINS): a new word lesson without
  * etymology raises a count and fails; a lesson that gains one lowers a count
  * and fails until the pin is lowered with it, so cleared debt can never be
  * quietly re-spent.
  */
 
 import type { ParsedLesson } from "./parse.js";
+import type { LessonBodyBlock } from "./types.js";
 import { introducedAtoms, readingOrder } from "./ramp.js";
 import { stripControlCharacters as clean } from "./constants.js";
 
@@ -364,9 +467,218 @@ export function hasVisibleEtymology(lesson: ParsedLesson): boolean {
   return lesson.blocks.some((block) => statesOrigin(block.markdown, lesson.language));
 }
 
+// ---- The empty "taken apart" block -------------------------------------------
+//
+// Rules 1 and 2 above trust STRUCTURE: a block typed `etymology`, or a heading
+// that names an origin, is visible etymology whatever it says. Usually that
+// trust is earned. When it is not, the lesson has an etymology-shaped hole --
+// a block that promises "the word, taken apart" and then takes apart a
+// sentence -- and the visible count cannot see it, because the lesson already
+// passed on rule 1. The count below is the second look.
+//
+// The second look reads the block's PROSE, but it may read it more loosely
+// than rule 3 does. Rule 3 runs over every paragraph of every lesson, where
+// "borrowed" is as likely to be a library book as a loanword, so rule 3 names
+// a language or it says nothing (see "the looser signals ... were measured
+// and rejected" above). Inside a block that already announces itself as the
+// word taken apart, the same words have had their meaning chosen for them:
+//
+//     corpus-wide                         inside "taken apart"
+//     ---------------------------------   ------------------------------------
+//     "She inherited the house"           "*Ōdu* is inherited, not borrowed"
+//     "a sentence built on the frame"     "**casar** is built from *casa*"
+//     "if you are uncertain, ask"         "The origin of ... is uncertain"
+//
+// So each signal below is confined to that block, and each was measured on
+// the corpus before it was kept; the module comment records the numbers.
+
+/**
+ * One loose origin signal: a name for the report and tests, and its pattern.
+ * A function when the pattern depends on the track, as `donor-word` does:
+ * it must skip the track's own language, like rule 3's verbless shapes.
+ */
+export interface TakenApartOriginSignal {
+  name: string;
+  pattern: RegExp | ((language: string) => RegExp);
+}
+
+function signalPattern(signal: TakenApartOriginSignal, language: string): RegExp {
+  return typeof signal.pattern === "function" ? signal.pattern(language) : signal.pattern;
+}
+
+/**
+ * The etymological dictionaries the corpus cites, as they appear in prose.
+ *
+ * DEDR and CDIAL only with an entry number ("DEDR 3376 lists ..."): a bare
+ * acronym is how a block says the dictionary has NO entry, and that sentence
+ * alone answers nothing. EtymDB, Vasmer and Lewis & Short are named only in
+ * the sentence that reports what they say, including "not recorded in EtymDB
+ * 2.1", which is the explicit "unknown" HL24 section 9.1 allows.
+ */
+const SOURCE_NAMED_IN_PROSE = /\b(?:DEDR|CDIAL)\s+\d|\b(?:EtymDB|Vasmer)\b|\bLewis\s+&\s+Short\b/;
+
+/**
+ * "formed from *dessiner*", "*porte*, from *porter*", "came from **res nata**".
+ *
+ * The verb list is closed and the form must be emphasised, so "from Monday"
+ * and "differently from *go*" (a spelling comparison in ES-C436-recoger)
+ * stay out: neither "differently" nor a bare space before "from" is on it.
+ * The comma is the corpus's appositive derivation, which carries most of the
+ * Russian track's "*вход* is *в*, with *ход*, from *ходить*" -- and may sit
+ * inside a closing quote: `"favour, grace," from *grātus*` (LA-C01-gratias).
+ * A dash does the same job: `"hail" — from *avēre*` (LA-C01-ave).
+ */
+const DERIVED_FROM_FORM = new RegExp(
+  "(?:[,—–][\"”]?|\\b(?:formed|made|derived|fused|coined|shortened|cut\\s+(?:short|down)|worn\\s+down|came|grew))" +
+    "\\s+from\\s+(?:the\\s+)?[*_]{1,3}[^\\s*_]",
+  "i",
+);
+
+/**
+ * A donor language named as the word's ancestor, by the nouns and verbs the
+ * corpus tells that story with: "Latin said *hodie*", "two Latin words: *per
+ * hoc*", "Latin's general word for apple", "a Germanic verb meaning to tear",
+ * "Two Greek pieces". Built per track, like `donorPatterns`, so the Latin
+ * track's "Latin had two words here" -- a fact about the language being
+ * taught -- stays out.
+ *
+ * The bare language name was measured too and rejected: it fired on "in Latin
+ * letters", "no Hebrew twin worth the claim" and "like the Dravidian languages
+ * to its south". The closed noun list is what keeps those out.
+ */
+const DONOR_WORD_LANGUAGES = [
+  ...DONOR_LANGUAGES, "Slavic", "Gothic", "Frankish", "Norse",
+];
+const DONOR_WORD_NOUNS =
+  "had|said|used|counted|word|words|verb|verbs|noun|phrase|pronoun|root|roots|stem|source|form|forms|pieces|ancestor";
+
+const donorWordCache = new Map<string, RegExp>();
+
+function donorWordPattern(language: string): RegExp {
+  const cached = donorWordCache.get(language);
+  if (cached !== undefined) return cached;
+  const own = language.toLowerCase();
+  const donors = DONOR_WORD_LANGUAGES.filter((name) => name.toLowerCase() !== own).join("|");
+  const pattern = new RegExp(`\\b(?:${donors})(?:['’]s)?\\s+(?:${DONOR_WORD_NOUNS})\\b`);
+  donorWordCache.set(language, pattern);
+  return pattern;
+}
+
+/**
+ * Every loose signal, in the order the HL24 section 9.4 table lists them.
+ *
+ * Each pattern is a fixed phrase with at most a bounded run of emphasis
+ * markers or whitespace in it, so none can backtrack catastrophically; the
+ * one lookahead (`goes-back-to`) is tried only after its fixed phrase has
+ * matched.
+ */
+export const TAKEN_APART_ORIGIN_SIGNALS: readonly TakenApartOriginSignal[] = [
+  // How the word entered the language.
+  { name: "inherited", pattern: /\binherited\b/i },
+  { name: "borrowed", pattern: /\bborrowed\b/i },
+  // Not after a quote or emphasis mark: `**préstamo** -- "a loan"` is a gloss.
+  { name: "a-loan", pattern: /(?<![“"'‘*_])\ba\s+loan/i },
+  { name: "taken-over", pattern: /\btaken\s+over\b/i },
+  { name: "tatsama", pattern: /\btatsamas?\b/i },
+  { name: "tadbhava", pattern: /\btadbhavas?\b/i },
+  // The article is required: "you have learned words like ..." is not a term.
+  { name: "learned-word", pattern: /\b(?:an?|the)\s+learned\s+(?:word|borrowing)s?\b/i },
+  { name: "semi-learned", pattern: /\bsemi-learned\b/i },
+  // Where it came from, in a verb.
+  { name: "built-on", pattern: /\bbuilt\s+(?:on|from)\b/i },
+  { name: "comes-from", pattern: /\bcomes?\s+from\b/i },
+  // "the tenth goes back to behaving" (LA-C56-octavus) is a return, not a descent.
+  { name: "goes-back-to", pattern: /\bgoes\s+back\s+to\b(?!\s+\w+ing\b)/i },
+  { name: "traced-to", pattern: /\btraced\s+to\b/i },
+  { name: "descends-from", pattern: /\bdescends?\s+from\b/i },
+  { name: "derived-from", pattern: DERIVED_FROM_FORM },
+  // Kinship told as family: "a cousin of English *swine*", "its relative in Greek".
+  {
+    name: "cousin-of",
+    pattern: new RegExp(
+      `\\b(?:cousins?|twins?|relatives?|kin)\\s+(?:of|to|in)\\s+(?:the\\s+)?[*_]{0,3}` +
+        `${PERIOD_QUALIFIERS}(?:${SOURCE_LANGUAGES})\\b`,
+      "i",
+    ),
+  },
+  // The German track's cognate line, "**drei** is English **three**": both
+  // forms in BOLD. A sound note writes its letters in italics -- "German *w*
+  // is English *v*" -- which is why rule 3 leaves English out of its copula.
+  { name: "is-english", pattern: /\*\*[^*\n]{1,60}\*\*\s+(?:is|are)\s+English\s+\*\*/ },
+  { name: "donor-word", pattern: donorWordPattern },
+  { name: "native-family", pattern: /\bnative\s+[*_]{0,3}(?:Dravidian|Indo-Aryan|Indo-European|Germanic|Slavic|Iranian|Semitic|Romance)\b/i },
+  // Who says so. Case-sensitive: these are proper names.
+  { name: "source-tag", pattern: /\((?:DEDR|CDIAL|EtymDB|Lewis\s+&\s+Short|Vasmer|Lane)\b/ },
+  { name: "source-named", pattern: SOURCE_NAMED_IN_PROSE },
+  // The explicit "unknown" or "disputed" that HL24 section 9.1 allows.
+  { name: "uncertain", pattern: /\buncertain\b/i },
+  { name: "not-settled", pattern: /\bnot\s+settled\b/i },
+  { name: "unknown-origin", pattern: /\bunknown\s+origin\b|\borigin\s+(?:is|remains)\s+unknown\b/i },
+  { name: "no-sure-origin", pattern: /\bno\s+sure\s+origin\b/i },
+  { name: "disputed", pattern: /\bdisputed\b/i },
+  // A starred reconstruction. The star is escaped in Markdown -- `*\*ātmanaka*`
+  // -- and must touch a letter, so a literal "5 \* 3" stays out.
+  { name: "starred", pattern: /\\\*[^\s*\\]/ },
+];
+
+/**
+ * The names of every loose signal that fires in `text`, comments stripped.
+ *
+ * Exported for the tests and for re-measuring the signals on the corpus;
+ * `blockStatesOrigin` only needs to know whether ANY fires.
+ */
+export function takenApartOriginSignals(text: string, language = ""): string[] {
+  const visible = withoutComments(text);
+  return TAKEN_APART_ORIGIN_SIGNALS.filter((signal) => signalPattern(signal, language).test(visible)).map(
+    (signal) => signal.name,
+  );
+}
+
+/**
+ * Does this block say where its word comes from?
+ *
+ * Rule 3's `statesOrigin` anywhere; the loose signals only inside a block the
+ * parser types `etymology`, the "taken apart" block. A heading that merely
+ * NAMES an origin (rule 2) does not earn the loose reading: "## Where it comes
+ * from" over "the answer comes from context" would otherwise certify itself.
+ */
+export function blockStatesOrigin(
+  block: Pick<LessonBodyBlock, "type" | "markdown">,
+  language = "",
+): boolean {
+  if (statesOrigin(block.markdown, language)) return true;
+  if (block.type !== "etymology") return false;
+  const visible = withoutComments(block.markdown);
+  return TAKEN_APART_ORIGIN_SIGNALS.some((signal) => signalPattern(signal, language).test(visible));
+}
+
+/**
+ * Is this lesson's visible etymology an empty heading?
+ *
+ * True when the lesson passes `hasVisibleEtymology` ONLY on structure (rule 1
+ * or rule 2) and nothing in it says where the word came from: no block passes
+ * `blockStatesOrigin`, and the preamble fails `statesOrigin`. Every block is
+ * read, not only the "taken apart" one -- an origin stated in "You'll want to
+ * know" is still an origin the reader sees.
+ *
+ * A lesson with no structural etymology at all is never counted here; it is
+ * already in `wordLessonsWithoutVisibleEtymology`, or it passed on prose.
+ */
+export function hasEmptyEtymologyBlock(lesson: ParsedLesson): boolean {
+  const structural =
+    lesson.blocks.some((block) => block.type === "etymology") ||
+    lesson.blocks.some((block) => ORIGIN_HEADING.test(block.title));
+  if (!structural) return false;
+  if (statesOrigin(lesson.preamble, lesson.language)) return false;
+  return !lesson.blocks.some((block) => blockStatesOrigin(block, lesson.language));
+}
+
 // ---- The report --------------------------------------------------------------
 
-/** One word-introducing lesson missing at least one of the two kinds. */
+/**
+ * One word-introducing lesson missing at least one of the two kinds, or whose
+ * visible etymology is an empty "taken apart" block.
+ */
 export interface EtymologyGap {
   lessonId: string;
   language: string;
@@ -374,6 +686,13 @@ export interface EtymologyGap {
   position: number;
   missingHook: boolean;
   missingVisible: boolean;
+  /**
+   * Visible only on structure: a "taken apart" block or origin heading that
+   * never says where the word came from (`hasEmptyEtymologyBlock`). Never
+   * true together with `missingVisible`, which is the lesson with no
+   * etymology structure at all.
+   */
+  emptyEtymologyBlock: boolean;
 }
 
 export interface TrackEtymologyCoverage {
@@ -384,6 +703,12 @@ export interface TrackEtymologyCoverage {
   wordLessonsWithoutVisibleEtymology: number;
   /** Neither a hook nor a visible statement: the lessons to work first. */
   wordLessonsWithoutAnyEtymology: number;
+  /**
+   * Counted visible only because a "taken apart" block or origin heading is
+   * there, while nothing in the lesson says where the word came from. A
+   * subset of the lessons NOT in `wordLessonsWithoutVisibleEtymology`.
+   */
+  wordLessonsWithEmptyEtymologyBlock: number;
 }
 
 export interface EtymologyCoverageReport {
@@ -400,6 +725,7 @@ export interface EtymologyCoverageReport {
     wordLessonsWithoutEtymologyHook: number;
     wordLessonsWithoutVisibleEtymology: number;
     wordLessonsWithoutAnyEtymology: number;
+    wordLessonsWithEmptyEtymologyBlock: number;
     /** Share of word lessons with a hook, rounded down so 99.6% never prints as 100. */
     hookPercent: number;
     /** Share of word lessons with visible etymology, rounded down for the same reason. */
@@ -434,6 +760,7 @@ export function measureEtymologyCoverage(lessons: ParsedLesson[]): EtymologyCove
       wordLessonsWithoutEtymologyHook: 0,
       wordLessonsWithoutVisibleEtymology: 0,
       wordLessonsWithoutAnyEtymology: 0,
+      wordLessonsWithEmptyEtymologyBlock: 0,
     };
     ordered.forEach((lesson, position) => {
       if (!introducesNewWord(lesson)) return;
@@ -443,13 +770,19 @@ export function measureEtymologyCoverage(lessons: ParsedLesson[]): EtymologyCove
       if (missingHook) track.wordLessonsWithoutEtymologyHook += 1;
       if (missingVisible) track.wordLessonsWithoutVisibleEtymology += 1;
       if (missingHook && missingVisible) track.wordLessonsWithoutAnyEtymology += 1;
-      if (missingHook || missingVisible) {
+      // Only a lesson that PASSED the visible test can have an empty block:
+      // one that failed is already counted, and counting it twice would make
+      // the two numbers overlap.
+      const emptyEtymologyBlock = !missingVisible && hasEmptyEtymologyBlock(lesson);
+      if (emptyEtymologyBlock) track.wordLessonsWithEmptyEtymologyBlock += 1;
+      if (missingHook || missingVisible || emptyEtymologyBlock) {
         gaps.push({
           lessonId: lesson.realization.lessonId,
           language,
           position,
           missingHook,
           missingVisible,
+          emptyEtymologyBlock,
         });
       }
     });
@@ -469,6 +802,7 @@ export function measureEtymologyCoverage(lessons: ParsedLesson[]): EtymologyCove
       wordLessonsWithoutEtymologyHook: withoutHook,
       wordLessonsWithoutVisibleEtymology: withoutVisible,
       wordLessonsWithoutAnyEtymology: sum((t) => t.wordLessonsWithoutAnyEtymology),
+      wordLessonsWithEmptyEtymologyBlock: sum((t) => t.wordLessonsWithEmptyEtymologyBlock),
       hookPercent: coveredPercent(wordLessons, withoutHook),
       visiblePercent: coveredPercent(wordLessons, withoutVisible),
     },
@@ -488,13 +822,16 @@ export function renderEtymologyCoverage(report: EtymologyCoverageSummary): strin
       `${summary.wordLessonsWithoutVisibleEtymology} show the reader no origin in the body ` +
       `(${summary.visiblePercent}% covered), ${summary.wordLessonsWithoutAnyEtymology} have neither`,
     "  the hook is read by the app only; the book and narration print the body, so both are counted",
+    `  ${summary.wordLessonsWithEmptyEtymologyBlock} more count as visible only because a "taken apart" ` +
+      "block or origin heading is there, and never say where the word came from",
   ];
   for (const track of report.tracks) {
     lines.push(
       `  ${clean(track.language)}: ${track.wordLessons} word lessons; ` +
         `${track.wordLessonsWithoutEtymologyHook} no hook, ` +
         `${track.wordLessonsWithoutVisibleEtymology} no visible etymology, ` +
-        `${track.wordLessonsWithoutAnyEtymology} neither`,
+        `${track.wordLessonsWithoutAnyEtymology} neither, ` +
+        `${track.wordLessonsWithEmptyEtymologyBlock} empty etymology block`,
     );
   }
   return lines;

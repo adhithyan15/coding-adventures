@@ -186,6 +186,12 @@ export interface CurriculumGapReport {
      * pattern match; see `etymology-coverage.ts` for its known misses.
      */
     wordLessonsWithoutVisibleEtymology: number;
+    /**
+     * HL24 §9.4: word lessons counted visible only because a "taken apart"
+     * block or origin heading is there, while no block says where the word
+     * came from -- the empty etymology block. Disjoint from the count above.
+     */
+    wordLessonsWithEmptyEtymologyBlock: number;
     /** HL09: lessons with no declared reading order. Until zero, the rest is provisional. */
     lessonsWithoutSequence: number;
     /** HL09: lessons reviewing a lesson the learner has not reached yet. */
@@ -775,6 +781,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
       wordLessons: etymologyCoverage.summary.wordLessons,
       wordLessonsWithoutEtymologyHook: etymologyCoverage.summary.wordLessonsWithoutEtymologyHook,
       wordLessonsWithoutVisibleEtymology: etymologyCoverage.summary.wordLessonsWithoutVisibleEtymology,
+      wordLessonsWithEmptyEtymologyBlock: etymologyCoverage.summary.wordLessonsWithEmptyEtymologyBlock,
       lessonsWithoutSequence: continuity.summary.lessonsWithoutSequence,
       forwardReviews: continuity.summary.forwardReviews,
       atomsNeverRevisited: continuity.summary.atomsNeverRevisited,
@@ -871,7 +878,8 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
     `forward references: ${report.continuity.summary.forwardReferences} uses of material a later lesson teaches`,
     `etymology: ${summary.wordLessonsWithoutEtymologyHook} of ${summary.wordLessons} word-introducing lessons ` +
       `carry no etymology_hook; ${summary.wordLessonsWithoutVisibleEtymology} show the reader no origin ` +
-      `in the body (per track below)`,
+      `in the body, and ${summary.wordLessonsWithEmptyEtymologyBlock} more only an empty etymology block ` +
+      `(per track below)`,
     ...(report.writingStages
       ? [
           `writing stages: ${report.writingStages.summary.tracksCompleteAtPreA1}/${report.writingStages.summary.tracks} ` +

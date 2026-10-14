@@ -225,6 +225,8 @@ describe("curriculum gap report", () => {
       wordLessons: 3,
       wordLessonsWithoutEtymologyHook: 3,
       wordLessonsWithoutVisibleEtymology: 2,
+      // HL24 §9.4: none of the three has a "taken apart" block, so none can be empty.
+      wordLessonsWithEmptyEtymologyBlock: 0,
     });
     expect(report.etymologyCoverage.tracks.map((track) => track.language)).toEqual(["alpha", "beta"]);
     // The gap list runs to tens of thousands on the real corpus; the report
@@ -233,6 +235,7 @@ describe("curriculum gap report", () => {
 
     const text = renderCurriculumGapReport(report);
     expect(text).toContain("etymology: 3 of 3 word-introducing lessons carry no etymology_hook; 2 show");
+    expect(text).toContain("in the body, and 0 more only an empty etymology block (per track below)");
     expect(text).toContain("Etymology coverage (HL24 §9)");
     expect(text).toContain("alpha: 2 word lessons; 2 no hook, 1 no visible etymology, 1 neither");
   });
