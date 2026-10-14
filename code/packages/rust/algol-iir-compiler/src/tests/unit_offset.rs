@@ -17,7 +17,12 @@ fn conditional_identity_specialization_keeps_nonidentity_calls() {
         ("integer procedure relay(x); real x;", "relay := entier(x)", false),
     ] {
         let source = format!("begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; {heading} {body}; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := relay(entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1))) end");
-        let module = compile_source(&source, "identity_boundary").unwrap_or_else(|e| panic!("{source}: {e}"));
+        let result = compile_source(&source, "identity_boundary");
+        if body.contains("x := 0.0") {
+            assert!(matches!(result, Err(CompileError::Type(message)) if message.contains("requires an assignable variable actual")), "write must retain ordinary name-actual validation: {source}");
+            continue;
+        }
+        let module = result.unwrap_or_else(|e| panic!("{source}: {e}"));
         let relay_calls = module.get_function("main").unwrap().instructions.iter().filter(|i| {
             i.op == "call" && i.srcs.first().and_then(Operand::as_var)
                 .is_some_and(|name| name == "relay" || name.starts_with("__algol_by_name_relay_"))
