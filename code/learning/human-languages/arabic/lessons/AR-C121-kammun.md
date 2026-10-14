@@ -14,7 +14,8 @@ romanization: "kammūn"
 concept_tag: AR-THINGS121-KAMMUN
 prerequisites: [AR-C121-baqdunis, AR-C121-zatar]
 sounds: []
-roots: []
+roots: [semitic-kammun]
+etymology_hook: "kammūn: an old Semitic plant name (Akkadian kamūnu); English cumin came from such a word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C121-zatar]
 <!-- hl-knowledge: introduces=[AR-LEX-C121-THINGS121-05]; assesses=[] -->
 
 **كمون** — *kammūn* — "cumin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كمون** (*kammūn*) is an old Semitic plant name; Akkadian *kamūnu* is its relative, and English *cumin* came through Greek *kyminon* from a Semitic word of this kind.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

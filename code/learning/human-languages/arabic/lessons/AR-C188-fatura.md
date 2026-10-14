@@ -14,7 +14,8 @@ romanization: "fātūra"
 concept_tag: AR-AMAL188-FATURA
 prerequisites: [AR-C187-habl, AR-C188-umla]
 sounds: []
-roots: []
+roots: [italian-fattura]
+etymology_hook: "fātūra: usually traced to Italian fattura 'invoice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C188-umla]
 <!-- hl-knowledge: introduces=[AR-LEX-C188-AMAL188-02]; assesses=[] -->
 
 **فاتورة** — *fātūra* — "a bill, an invoice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فاتورة** (*fātūra*) is usually traced to Italian *fattura*, "invoice"; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

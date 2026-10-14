@@ -14,7 +14,8 @@ romanization: "nazala"
 concept_tag: AR-VERB-NAZALA
 prerequisites: [AR-C65-hamala, AR-C65-faza]
 sounds: []
-roots: []
+roots: [n-z-l]
+etymology_hook: "nazala: built on the root n-z-l, 'to come down, to alight' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C65-faza]
 <!-- hl-knowledge: introduces=[AR-LEX-C65-VERBS65-04]; assesses=[] -->
 
 **نزل** — *nazala* — "to go down (he went down)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نزل** (*nazala*) is built on the native Arabic root *n-z-l*, "to come down, to alight" (Lane). The same root gives *manzil*, "a place of alighting, a house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

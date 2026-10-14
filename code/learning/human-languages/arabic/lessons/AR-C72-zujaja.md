@@ -14,7 +14,8 @@ romanization: "zujāja"
 concept_tag: AR-HOME72-ZUJAJA
 prerequisites: [AR-C71-sikkin, AR-C72-shawka]
 sounds: []
-roots: []
+roots: [z-j-j]
+etymology_hook: "zujāja: built on the root z-j-j, 'glass' (Lane); zujāja is a single piece or vessel of zujāj, 'glass'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C72-shawka]
 <!-- hl-knowledge: introduces=[AR-LEX-C72-HOME72-02]; assesses=[] -->
 
 **زجاجة** — *zujāja* — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زجاجة** (*zujāja*) is built on the native Arabic root *z-j-j*, "glass" (Lane). *Zujāja* is a single piece or vessel of *zujāj*, "glass".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

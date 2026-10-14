@@ -14,7 +14,8 @@ romanization: "taʾshīra"
 concept_tag: AR-SHAY215-TASHIRA
 prerequisites: [AR-C214-suf, AR-C215-hawiyya]
 sounds: []
-roots: []
+roots: [ʾ-sh-r]
+etymology_hook: "taʾshīra: built on the root ʾ-sh-r, 'to notch, to mark' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C215-hawiyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C215-SHAY215-02]; assesses=[] -->
 
 **تأشيرة** — *taʾshīra* — "a visa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تأشيرة** (*taʾshīra*) is built on the native Arabic root *ʾ-sh-r*, "to notch, to mark" (Lane). *Taʾshīra* is a modern word from Form II *ashshara*, "to mark": a visa is a mark in a passport.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

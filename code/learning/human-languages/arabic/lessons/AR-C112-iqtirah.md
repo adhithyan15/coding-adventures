@@ -14,7 +14,8 @@ romanization: "iqtirāḥ"
 concept_tag: AR-WANT112-IQTIRAH
 prerequisites: [AR-C112-ghaya, AR-C112-mashru]
 sounds: []
-roots: []
+roots: [q-r-ḥ]
+etymology_hook: "iqtirāḥ: built on the root q-r-ḥ, 'to devise, to propose' (Lane); iqtirāḥ is the verbal noun of Form VIII, 'proposing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C112-mashru]
 <!-- hl-knowledge: introduces=[AR-LEX-C112-WANT112-05]; assesses=[] -->
 
 **اقتراح** — *iqtirāḥ* — "a suggestion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اقتراح** (*iqtirāḥ*) is built on the native Arabic root *q-r-ḥ*, "to devise, to propose" (Lane). *Iqtirāḥ* is the verbal noun of Form VIII, "proposing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

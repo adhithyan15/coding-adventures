@@ -14,7 +14,8 @@ romanization: "maqhā"
 concept_tag: AR-MAKAN172-MAQHA
 prerequisites: [AR-C172-sala, AR-C172-makhbaz]
 sounds: []
-roots: []
+roots: [q-h-w]
+etymology_hook: "maqhā: built on the root q-h-w, 'wine' (Lane); maqhā is a place noun made from qahwa, 'coffee'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C172-makhbaz]
 <!-- hl-knowledge: introduces=[AR-LEX-C172-MAKAN172-03]; assesses=[] -->
 
 **مقهى** — *maqhā* — "a café".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مقهى** (*maqhā*) is built on the native Arabic root *q-h-w*, "wine; coffee" (Lane). *Maqhā* is a place noun made from *qahwa*, "coffee".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

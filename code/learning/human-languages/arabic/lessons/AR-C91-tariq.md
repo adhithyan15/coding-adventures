@@ -14,7 +14,8 @@ romanization: "ṭarīq"
 concept_tag: AR-TOWN91-TARIQ
 prerequisites: [AR-C90-matjar, AR-C90-shari]
 sounds: []
-roots: []
+roots: [ṭ-r-q]
+etymology_hook: "ṭarīq: built on the root ṭ-r-q, 'to strike, to beat' (Lane); Lane's ṭarīq is a beaten track, a road"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C90-shari]
 <!-- hl-knowledge: introduces=[AR-LEX-C91-TOWN91-01]; assesses=[] -->
 
 **طريق** — *ṭarīq* — "a road".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طريق** (*ṭarīq*) is built on the native Arabic root *ṭ-r-q*, "to strike, to beat" (Lane). Lane's *ṭarīq* is a beaten track, a road.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

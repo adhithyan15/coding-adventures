@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 206,
-  "sourceHash": "fnv1a64:9bb2609aee65f3da",
+  "sourceHash": "fnv1a64:592333a3572ee6a9",
   "lessonIds": [
     "AR-C206-rubbama",
     "AR-C206-mushkila",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch206.txt",
   "json": "arabic/narration/ch206.json",
-  "textHash": "fnv1a64:931230a97c808a2e",
-  "jsonHash": "fnv1a64:98e3f6dfc19ef102",
+  "textHash": "fnv1a64:bffcdecff5f3b480",
+  "jsonHash": "fnv1a64:21688b2079fb06fb",
   "findings": []
 }

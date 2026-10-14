@@ -14,7 +14,8 @@ romanization: "mutassikh"
 concept_tag: AR-QUAL151-MUTASSIKH
 prerequisites: [AR-C151-muballal, AR-C151-jaff]
 sounds: []
-roots: []
+roots: [w-s-kh]
+etymology_hook: "mutassikh: built on the root w-s-kh, 'to be dirty' (Lane); mutassikh is the Form VIII participle, 'become dirty'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C151-jaff]
 <!-- hl-knowledge: introduces=[AR-LEX-C151-QUAL151-05]; assesses=[] -->
 
 **متسخ** — *mutassikh* — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**متسخ** (*mutassikh*) is built on the native Arabic root *w-s-kh*, "to be dirty" (Lane). *Mutassikh* is the Form VIII participle, "become dirty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

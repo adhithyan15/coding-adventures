@@ -14,7 +14,8 @@ romanization: "nabaḥa"
 concept_tag: AR-VERB-NABAHA
 prerequisites: [AR-C229-ajana, AR-C229-masaha]
 sounds: []
-roots: []
+roots: [n-b-ḥ]
+etymology_hook: "nabaḥa: built on the root n-b-ḥ, 'to bark' (Lane); nabaḥa is the plain verb, 'it barked'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C229-masaha]
 <!-- hl-knowledge: introduces=[AR-LEX-C230-ACT230-01]; assesses=[] -->
 
 **نبح** — *nabaḥa* — "to bark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نبح** (*nabaḥa*) is built on the native Arabic root *n-b-ḥ*, "to bark" (Lane). *Nabaḥa* is the plain verb, "it barked".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

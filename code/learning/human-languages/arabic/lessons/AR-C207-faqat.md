@@ -14,7 +14,8 @@ romanization: "faqaṭ"
 concept_tag: AR-SABAB207-FAQAT
 prerequisites: [AR-C206-bahja, AR-C206-khawf]
 sounds: []
-roots: []
+roots: [qat-enough]
+etymology_hook: "faqaṭ: built from fa- 'so' + qaṭ 'enough', an old word in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C206-khawf]
 <!-- hl-knowledge: introduces=[AR-LEX-C207-SABAB207-01]; assesses=[] -->
 
 **فقط** — *faqaṭ* — "only".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فقط** (*faqaṭ*) is built from *fa-*, "and so", and *qaṭ*, "enough", which Lane gives as an old word of being satisfied.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

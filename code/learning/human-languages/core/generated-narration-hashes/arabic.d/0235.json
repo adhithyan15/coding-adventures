@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 235,
-  "sourceHash": "fnv1a64:2b9c4fee9a0f134c",
+  "sourceHash": "fnv1a64:015a13d9bd7e1369",
   "lessonIds": [
     "AR-C235-mathaf",
     "AR-C235-malab",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch235.txt",
   "json": "arabic/narration/ch235.json",
-  "textHash": "fnv1a64:5ee29043ac4f48b9",
-  "jsonHash": "fnv1a64:ef13c6e8aa9e6eaf",
+  "textHash": "fnv1a64:17833d1f07627095",
+  "jsonHash": "fnv1a64:6fe1c2489cbb7f43",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "dīn"
 concept_tag: AR-SABAB267-DIN
 prerequisites: [AR-C267-taqlid, AR-C267-thaqafa]
 sounds: []
-roots: []
+roots: [d-y-n]
+etymology_hook: "dīn: listed by Lane under d-y-n; some trace 'religion' to Middle Persian dēn; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C267-thaqafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C267-SABAB267-03]; assesses=[] -->
 
 **دين** — *dīn* — "religion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دين** (*dīn*) is listed by Lane under *d-y-n* with the senses recompense, obedience and religion. Some trace the sense "religion" to Middle Persian *dēn*, "religion"; the question is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

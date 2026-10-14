@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 242,
-  "sourceHash": "fnv1a64:20f09c7c1211b452",
+  "sourceHash": "fnv1a64:111b6364d2ac84c5",
   "lessonIds": [
     "AR-C242-sakhib",
     "AR-C242-mayyit",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch242.txt",
   "json": "arabic/narration/ch242.json",
-  "textHash": "fnv1a64:8ffebbb98b605e3c",
-  "jsonHash": "fnv1a64:dc01ed20db040e31",
+  "textHash": "fnv1a64:e000dfa32226de3e",
+  "jsonHash": "fnv1a64:68b8ac114dfb2331",
   "findings": []
 }

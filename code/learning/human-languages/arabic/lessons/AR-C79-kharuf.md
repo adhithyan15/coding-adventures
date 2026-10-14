@@ -14,7 +14,8 @@ romanization: "kharūf"
 concept_tag: AR-ANIMALS79-KHARUF
 prerequisites: [AR-C79-baqara, AR-C79-maiz]
 sounds: []
-roots: []
+roots: [khariif-autumn]
+etymology_hook: "kharūf: built on the root kh-r-f, 'a lamb' (Lane); the same root gives kharīf, 'autumn'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C79-maiz]
 <!-- hl-knowledge: introduces=[AR-LEX-C79-ANIMALS79-03]; assesses=[] -->
 
 **خروف** — *kharūf* — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خروف** (*kharūf*) is built on the native Arabic root *kh-r-f*, "a lamb; autumn" (Lane). The same root gives *kharīf*, "autumn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

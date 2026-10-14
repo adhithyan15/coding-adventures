@@ -14,7 +14,8 @@ romanization: "banafsajī"
 concept_tag: AR-SIFA271-BANAFSAJI
 prerequisites: [AR-C271-burtuqali, AR-C271-wardi]
 sounds: []
-roots: []
+roots: [persian-banafsha]
+etymology_hook: "banafsajī: banafsaj 'violet', arabicized from Persian banafsha (Lane), + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C271-wardi]
 <!-- hl-knowledge: introduces=[AR-LEX-C271-SIFA271-05]; assesses=[] -->
 
 **بنفسجي** — *banafsajī* — "purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بنفسجي** (*banafsajī*) is *banafsaj*, "violet", with the adjective ending *-ī*. Lane notes that *banafsaj* is arabicized from Persian *banafsha*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

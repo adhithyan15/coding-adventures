@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 90,
-  "sourceHash": "fnv1a64:44b772c483520762",
+  "sourceHash": "fnv1a64:d59d368adf3a2578",
   "lessonIds": [
     "AR-C90-huna",
     "AR-C90-hunaka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch90.txt",
   "json": "arabic/narration/ch90.json",
-  "textHash": "fnv1a64:675b94f296bc0cf3",
-  "jsonHash": "fnv1a64:c253f4b9b0a5712f",
+  "textHash": "fnv1a64:c62ab31ca2eb8ed3",
+  "jsonHash": "fnv1a64:ce34ae3f34a959ac",
   "findings": []
 }

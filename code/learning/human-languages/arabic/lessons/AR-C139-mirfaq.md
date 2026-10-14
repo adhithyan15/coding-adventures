@@ -14,7 +14,8 @@ romanization: "mirfaq"
 concept_tag: AR-THINGS139-MIRFAQ
 prerequisites: [AR-C139-sadr, AR-C139-khasr, AR-C01-masa-al-khayr, AR-C01-masa-al-khayr, AR-C01-masa-al-khayr]
 sounds: []
-roots: []
+roots: [r-f-q]
+etymology_hook: "mirfaq: built on the root r-f-q, 'to be gentle' (Lane); Lane's mirfaq is the elbow, a thing to lean on"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C139-khasr]
 <!-- hl-knowledge: introduces=[AR-LEX-C139-THINGS139-05]; assesses=[] -->
 
 **مرفق** — *mirfaq* — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مرفق** (*mirfaq*) is built on the native Arabic root *r-f-q*, "to be gentle; to lean on" (Lane). Lane's *mirfaq* is the elbow, a thing to lean on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

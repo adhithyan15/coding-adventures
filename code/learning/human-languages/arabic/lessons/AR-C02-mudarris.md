@@ -14,7 +14,8 @@ gloss: "a teacher"
 concept_tag: AR-ANCHOR-MUDARRIS
 prerequisites: [AR-W05-ya-and-my-name]
 sounds: []
-roots: []
+roots: [d-r-s]
+etymology_hook: "mudarris: built on the root d-r-s, 'to become effaced' (Lane)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: modern-standard-arabic
 **مُدَرِّس** — *mudarris* — "a teacher".
 
 Say it: *mudarris*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, the short-vowel marks **ـَ**, **ـِ** and **ـُ**, and the doubling mark **ـّ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مُدَرِّس** (*mudarris*) is built on the native Arabic root *d-r-s*, "to become effaced; to study" (Lane). *Mudarris* is the Form II participle, "one who makes others study": a teacher.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-MUDARRIS] -->

@@ -14,7 +14,8 @@ romanization: "sarīr"
 concept_tag: AR-HOME70-SARIR
 prerequisites: [AR-C70-tawila, AR-C70-jidar]
 sounds: []
-roots: []
+roots: [s-r-r]
+etymology_hook: "sarīr: built on the root s-r-r, 'a couch, a bedstead, a throne' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C70-jidar]
 <!-- hl-knowledge: introduces=[AR-LEX-C70-HOME70-04]; assesses=[] -->
 
 **سرير** — *sarīr* — "a bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سرير** (*sarīr*) is built on the native Arabic root *s-r-r*, "a couch, a bedstead, a throne" (Lane). Lane gives a couch on a frame, a bedstead and a throne.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

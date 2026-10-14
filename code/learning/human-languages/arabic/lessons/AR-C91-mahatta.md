@@ -14,7 +14,8 @@ romanization: "maḥaṭṭa"
 concept_tag: AR-TOWN91-MAHATTA
 prerequisites: [AR-C91-tariq, AR-C91-bank]
 sounds: []
-roots: []
+roots: [ḥ-ṭ-ṭ]
+etymology_hook: "maḥaṭṭa: built on the root ḥ-ṭ-ṭ, 'to put down, to set down' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C91-bank]
 <!-- hl-knowledge: introduces=[AR-LEX-C91-TOWN91-03]; assesses=[] -->
 
 **محطة** — *maḥaṭṭa* — "a station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**محطة** (*maḥaṭṭa*) is built on the native Arabic root *ḥ-ṭ-ṭ*, "to put down, to set down" (Lane). *Maḥaṭṭa* is the *ma-* place noun, "a place of setting down, a halt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

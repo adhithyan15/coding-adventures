@@ -14,7 +14,8 @@ romanization: "mishmish"
 concept_tag: AR-THINGS130-MISHMISH
 prerequisites: [AR-C130-tin, AR-C130-bittikh]
 sounds: []
-roots: []
+roots: [mishmish-apricot]
+etymology_hook: "mishmish: a well-known fruit in Lane, Kufan mashmash; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C130-bittikh]
 <!-- hl-knowledge: introduces=[AR-LEX-C130-THINGS130-03]; assesses=[] -->
 
 **مشمش** — *mishmish* — "apricots".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مشمش** (*mishmish*) is listed by Lane as a well-known fruit, with a Kufan variant *mashmash*. He gives no source, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

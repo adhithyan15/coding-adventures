@@ -14,7 +14,8 @@ romanization: "mawz"
 concept_tag: AR-FOOD66-MAWZ
 prerequisites: [AR-C66-fakiha, AR-C66-tuffaha]
 sounds: []
-roots: []
+roots: [persian-moz]
+etymology_hook: "mawz: from Middle Persian mōz (EtymDB), usually taken back to Sanskrit mocā 'banana'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C66-tuffaha]
 <!-- hl-knowledge: introduces=[AR-LEX-C66-FOOD66-04]; assesses=[] -->
 
 **موز** — *mawz* — "bananas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موز** (*mawz*) is a loan. EtymDB traces it to Middle Persian *mōz*, which is usually taken back to Sanskrit *mocā*, "banana". Lane lists it under *m-w-z* as a well-known tree and its fruit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

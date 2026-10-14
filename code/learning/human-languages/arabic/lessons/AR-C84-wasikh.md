@@ -14,7 +14,8 @@ romanization: "wasikh"
 concept_tag: AR-ADJ84-WASIKH
 prerequisites: [AR-C84-faqir, AR-C84-nazif]
 sounds: []
-roots: []
+roots: [w-s-kh]
+etymology_hook: "wasikh: built on the root w-s-kh, 'to be dirty' (Lane); wasikh is the adjective, 'dirty'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C84-nazif]
 <!-- hl-knowledge: introduces=[AR-LEX-C84-ADJ84-05]; assesses=[] -->
 
 **وسخ** — *wasikh* — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وسخ** (*wasikh*) is built on the native Arabic root *w-s-kh*, "to be dirty" (Lane). *Wasikh* is the adjective, "dirty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

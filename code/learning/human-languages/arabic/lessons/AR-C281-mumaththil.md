@@ -14,7 +14,8 @@ romanization: "mumaththil"
 concept_tag: AR-AMAL281-MUMATHTHIL
 prerequisites: [AR-C281-malumat, AR-C281-mudhi]
 sounds: []
-roots: []
+roots: [m-th-l]
+etymology_hook: "mumaththil: built on the root m-th-l, 'to be like' (Lane); mumaththil is the Form II participle, 'one who represents'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C281-mudhi]
 <!-- hl-knowledge: introduces=[AR-LEX-C281-AMAL281-05]; assesses=[] -->
 
 **ممثل** — *mumaththil* — "an actor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ممثل** (*mumaththil*) is built on the native Arabic root *m-th-l*, "to be like" (Lane). *Mumaththil* is the Form II participle, "one who represents".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

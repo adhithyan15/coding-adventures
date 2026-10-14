@@ -14,7 +14,8 @@ romanization: "jabīn"
 concept_tag: AR-THINGS138-JABIN
 prerequisites: [AR-C138-difda, AR-C138-khadd]
 sounds: []
-roots: []
+roots: [j-b-n]
+etymology_hook: "jabīn: built on the root j-b-n, 'the side of the forehead' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C138-khadd]
 <!-- hl-knowledge: introduces=[AR-LEX-C138-THINGS138-04]; assesses=[] -->
 
 **جبين** — *jabīn* — "a forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جبين** (*jabīn*) is built on the native Arabic root *j-b-n*, "the side of the forehead" (Lane). Lane's *jabīn* is the side of the forehead above the temple.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mashrūʿ"
 concept_tag: AR-WANT112-MASHRU
 prerequisites: [AR-C112-tumuh, AR-C112-ghaya]
 sounds: []
-roots: []
+roots: [sh-r-ʿ]
+etymology_hook: "mashrūʿ: built on the root sh-r-ʿ, 'to enter upon' (Lane); mashrūʿ is the passive participle, 'laid down, lawful'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C112-ghaya]
 <!-- hl-knowledge: introduces=[AR-LEX-C112-WANT112-04]; assesses=[] -->
 
 **مشروع** — *mashrūʿ* — "a project".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مشروع** (*mashrūʿ*) is built on the native Arabic root *sh-r-ʿ*, "to enter upon; to lay down a law" (Lane). *Mashrūʿ* is the passive participle, "laid down, lawful"; the project is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

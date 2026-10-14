@@ -14,7 +14,8 @@ romanization: "intabaha"
 concept_tag: AR-VERB-INTABAHA
 prerequisites: [AR-C197-qarana, AR-C197-lahaza]
 sounds: []
-roots: []
+roots: [n-b-h]
+etymology_hook: "intabaha: built on the root n-b-h, 'to wake, to be alert' (Lane); intabaha is Form VIII, 'to become alert'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C197-lahaza]
 <!-- hl-knowledge: introduces=[AR-LEX-C197-ACT197-04]; assesses=[] -->
 
 **انتبه** — *intabaha* — "to pay attention".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انتبه** (*intabaha*) is built on the native Arabic root *n-b-h*, "to wake, to be alert" (Lane). *Intabaha* is Form VIII, "to become alert".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

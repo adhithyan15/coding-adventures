@@ -14,7 +14,8 @@ romanization: "taqāṭuʿ"
 concept_tag: AR-MAKAN235-TAQATU
 prerequisites: [AR-C235-malab, AR-C235-rasif]
 sounds: []
-roots: []
+roots: [q-ṭ-ʿ]
+etymology_hook: "taqāṭuʿ: built on the root q-ṭ-ʿ, 'to cut, to sever' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C235-rasif]
 <!-- hl-knowledge: introduces=[AR-LEX-C235-MAKAN235-04]; assesses=[] -->
 
 **تقاطع** — *taqāṭuʿ* — "a crossroads, a junction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تقاطع** (*taqāṭuʿ*) is built on the native Arabic root *q-ṭ-ʿ*, "to cut, to sever" (Lane). *Taqāṭuʿ* is the verbal noun of Form VI, "cutting across each other".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

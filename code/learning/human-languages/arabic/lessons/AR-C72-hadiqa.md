@@ -14,7 +14,8 @@ romanization: "ḥadīqa"
 concept_tag: AR-HOME72-HADIQA
 prerequisites: [AR-C72-bab, AR-C72-matbakh]
 sounds: []
-roots: []
+roots: [ḥ-d-q]
+etymology_hook: "ḥadīqa: built on the root ḥ-d-q, 'a walled garden' (Lane); Lane's ḥadīqa is a garden surrounded by a wall"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C72-matbakh]
 <!-- hl-knowledge: introduces=[AR-LEX-C72-HOME72-05]; assesses=[] -->
 
 **حديقة** — *ḥadīqa* — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حديقة** (*ḥadīqa*) is built on the native Arabic root *ḥ-d-q*, "a walled garden" (Lane). Lane's *ḥadīqa* is a garden surrounded by a wall.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

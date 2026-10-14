@@ -14,7 +14,8 @@ romanization: "maḍagha"
 concept_tag: AR-VERB-MADAGHA
 prerequisites: [AR-C193-tasawwaqa, AR-C194-ibtalaa]
 sounds: []
-roots: []
+roots: [m-ḍ-gh]
+etymology_hook: "maḍagha: built on the root m-ḍ-gh, 'to chew' (Lane); maḍagha is the plain verb, 'he chewed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C194-ibtalaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C194-ACT194-02]; assesses=[] -->
 
 **مضغ** — *maḍagha* — "to chew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مضغ** (*maḍagha*) is built on the native Arabic root *m-ḍ-gh*, "to chew" (Lane). *Maḍagha* is the plain verb, "he chewed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kāḥil"
 concept_tag: AR-SIHHA168-KAHIL
 prerequisites: [AR-C168-dhira, AR-C168-jism]
 sounds: []
-roots: []
+roots: [k-ḥ-l]
+etymology_hook: "kāḥil: built on the root k-ḥ-l, 'to blacken the eyelids with kohl' (Lane); Lane has no entry for kāḥil"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C168-jism]
 <!-- hl-knowledge: introduces=[AR-LEX-C168-SIHHA168-03]; assesses=[] -->
 
 **كاحل** — *kāḥil* — "an ankle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كاحل** (*kāḥil*) is built on the native Arabic root *k-ḥ-l*, "to blacken the eyelids with kohl" (Lane). Lane has no entry for *kāḥil*; the same root gives *kuḥl*, "kohl", and English *alcohol* comes from *al-kuḥl*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mīnāʾ"
 concept_tag: AR-LOC100-MINA
 prerequisites: [AR-C100-maydan, AR-C100-matar]
 sounds: []
-roots: []
+roots: [w-n-y]
+etymology_hook: "mīnāʾ: listed by Lane under w-n-y, or perhaps an ancient Egyptian word; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C100-matar]
 <!-- hl-knowledge: introduces=[AR-LEX-C100-LOC100-05]; assesses=[] -->
 
 **ميناء** — *mīnāʾ* — "a port".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ميناء** (*mīnāʾ*) is listed by Lane under *w-n-y*, with the note that it may instead be an ancient Egyptian word; the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

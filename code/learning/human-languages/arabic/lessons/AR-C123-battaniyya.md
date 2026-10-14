@@ -14,7 +14,8 @@ romanization: "baṭṭāniyya"
 concept_tag: AR-THINGS123-BATTANIYYA
 prerequisites: [AR-C122-minshafa, AR-C122-firash]
 sounds: []
-roots: []
+roots: [b-ṭ-n]
+etymology_hook: "baṭṭāniyya: built on the root b-ṭ-n, 'the inside' (Lane); baṭṭāniyya is a modern word built on biṭāna, 'a lining'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C122-firash]
 <!-- hl-knowledge: introduces=[AR-LEX-C123-THINGS123-01]; assesses=[] -->
 
 **بطانية** — *baṭṭāniyya* — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بطانية** (*baṭṭāniyya*) is built on the native Arabic root *b-ṭ-n*, "the inside; a lining" (Lane). *Baṭṭāniyya* is a modern word built on *biṭāna*, "a lining".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Arabic for flour, then the Arabic for spices.
 You'll want to know: طابعة.
 طابعة — ṭābiʿa — "a printer".
 
+The word, taken apart.
+طابعة (ṭābiʿa) is built on the native Arabic root ṭ-b-ʿ, "to seal, to stamp" (Lane). Ṭābiʿa is the feminine active participle, "a thing that prints".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Arabic for spices, then the Arabic for a printer.
 
 You'll want to know: حبر.
 حبر — ḥibr — "ink".
+
+The word, taken apart.
+حبر (ḥibr) is built on the native Arabic root ḥ-b-r, "ink; to adorn" (Lane). Ḥibr is ink.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Arabic for a printer, then the Arabic for ink.
 You'll want to know: سبورة.
 سبورة — sabbūra — "a blackboard".
 
+The word, taken apart.
+سبورة (sabbūra) is a modern word for a blackboard; it has no entry in Lane, and its origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Arabic for ink, then the Arabic for a blackboard.
 You'll want to know: قاموس.
 قاموس — qāmūs — "a dictionary".
 
+The word, taken apart.
+قاموس (qāmūs) is usually traced to Greek ōkeanos, "ocean" (EtymDB). The dictionary sense comes from al-Fīrūzābādī's al-Qāmūs al-Muḥīṭ, "the surrounding ocean".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Arabic for a blackboard, then the Arabic for a dicti
 
 You'll want to know: ملف.
 ملف — malaff — "a file, a folder".
+
+The word, taken apart.
+ملف (malaff) is built on the native Arabic root l-f-f, "to wrap, to roll up" (Lane). Malaff is a thing to wrap papers in: a file.
 
 What you've built.
 One more word for this chapter.

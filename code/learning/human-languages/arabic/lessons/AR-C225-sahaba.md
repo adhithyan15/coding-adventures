@@ -14,7 +14,8 @@ romanization: "saḥaba"
 concept_tag: AR-VERB-SAHABA
 prerequisites: [AR-C224-ghayyara, AR-C224-asraa]
 sounds: []
-roots: []
+roots: [s-ḥ-b]
+etymology_hook: "saḥaba: built on the root s-ḥ-b, 'to drag, to draw along' (Lane); saḥaba is the plain verb, 'he pulled'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C224-asraa]
 <!-- hl-knowledge: introduces=[AR-LEX-C225-ACT225-01]; assesses=[] -->
 
 **سحب** — *saḥaba* — "to pull; to withdraw (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سحب** (*saḥaba*) is built on the native Arabic root *s-ḥ-b*, "to drag, to draw along" (Lane). *Saḥaba* is the plain verb, "he pulled".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

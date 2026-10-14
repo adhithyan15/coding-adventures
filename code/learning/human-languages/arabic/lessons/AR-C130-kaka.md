@@ -14,7 +14,8 @@ romanization: "kaʿka"
 concept_tag: AR-THINGS130-KAKA
 prerequisites: [AR-C130-mishmish, AR-C130-hasa]
 sounds: []
-roots: []
+roots: [k-ʿ-k]
+etymology_hook: "kaʿka: a bread or biscuit in Lane (k-ʿ-k); often traced to Persian kāk; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C130-hasa]
 <!-- hl-knowledge: introduces=[AR-LEX-C130-THINGS130-05]; assesses=[] -->
 
 **كعكة** — *kaʿka* — "a cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كعكة** (*kaʿka*) is listed by Lane under *k-ʿ-k* as a well-known bread or biscuit. It is often traced to Persian *kāk*, a dry bread, but Lane gives no source, and the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

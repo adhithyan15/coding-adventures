@@ -14,7 +14,8 @@ romanization: "jild"
 concept_tag: AR-THINGS141-JILD
 prerequisites: [AR-C141-batn, AR-C141-saq]
 sounds: []
-roots: []
+roots: [j-l-d]
+etymology_hook: "jild: built on the root j-l-d, 'skin, hide' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C141-saq]
 <!-- hl-knowledge: introduces=[AR-LEX-C141-THINGS141-04]; assesses=[] -->
 
 **جلد** — *jild* — "skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جلد** (*jild*) is built on the native Arabic root *j-l-d*, "skin, hide" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

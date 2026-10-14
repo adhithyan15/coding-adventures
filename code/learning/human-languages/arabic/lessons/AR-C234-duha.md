@@ -14,7 +14,8 @@ romanization: "ḍuḥā"
 concept_tag: AR-WAQT234-DUHA
 prerequisites: [AR-C233-milad, AR-C234-sanawi]
 sounds: []
-roots: []
+roots: [ḍ-ḥ-w]
+etymology_hook: "ḍuḥā: built on the root ḍ-ḥ-w, 'the forenoon' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C234-sanawi]
 <!-- hl-knowledge: introduces=[AR-LEX-C234-WAQT234-02]; assesses=[] -->
 
 **ضحى** — *ḍuḥā* — "late morning, forenoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضحى** (*ḍuḥā*) is built on the native Arabic root *ḍ-ḥ-w*, "the forenoon" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

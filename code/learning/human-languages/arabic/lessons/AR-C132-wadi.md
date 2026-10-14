@@ -14,7 +14,8 @@ romanization: "wādī"
 concept_tag: AR-THINGS132-WADI
 prerequisites: [AR-C132-shallal, AR-C132-kahf]
 sounds: []
-roots: []
+roots: [w-d-y]
+etymology_hook: "wādī: built on the root w-d-y, 'a valley, a river bed' (Lane); English wadi comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C132-kahf]
 <!-- hl-knowledge: introduces=[AR-LEX-C132-THINGS132-04]; assesses=[] -->
 
 **وادي** — *wādī* — "a valley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وادي** (*wādī*) is built on the native Arabic root *w-d-y*, "a valley, a river bed" (Lane). English *wadi* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

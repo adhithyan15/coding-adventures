@@ -14,7 +14,8 @@ romanization: "shūkūlāta"
 concept_tag: AR-SHAY273-SHUKULATA
 prerequisites: [AR-C272-muaqqad, AR-C272-maqul]
 sounds: []
-roots: []
+roots: [spanish-chocolate]
+etymology_hook: "shūkūlāta: a modern loan from European chocolate, through Spanish from Nahuatl"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C272-maqul]
 <!-- hl-knowledge: introduces=[AR-LEX-C273-SHAY273-01]; assesses=[] -->
 
 **شوكولاتة** — *shūkūlāta* — "chocolate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شوكولاتة** (*shūkūlāta*) is a modern loan from European *chocolate*, which goes back through Spanish to Nahuatl; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

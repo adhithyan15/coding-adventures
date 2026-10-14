@@ -14,7 +14,8 @@ romanization: "mukhtalif"
 concept_tag: AR-SIFA211-MUKHTALIF
 prerequisites: [AR-C210-ijtimai, AR-C211-mushmis]
 sounds: []
-roots: []
+roots: [kh-l-f]
+etymology_hook: "mukhtalif: built on the root kh-l-f, 'to come after, to differ' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C211-mushmis]
 <!-- hl-knowledge: introduces=[AR-LEX-C211-SIFA211-02]; assesses=[] -->
 
 **مختلف** — *mukhtalif* — "different".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مختلف** (*mukhtalif*) is built on the native Arabic root *kh-l-f*, "to come after, to differ" (Lane). *Mukhtalif* is the Form VIII participle, "differing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

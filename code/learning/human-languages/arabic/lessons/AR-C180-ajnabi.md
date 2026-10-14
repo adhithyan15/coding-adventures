@@ -14,7 +14,8 @@ romanization: "ajnabī"
 concept_tag: AR-SIFA180-AJNABI
 prerequisites: [AR-C180-rifi, AR-C180-taqlidi]
 sounds: []
-roots: []
+roots: [j-n-b]
+etymology_hook: "ajnabī: built on the root j-n-b, 'the side' (Lane); ajnabī is 'one at the side', hence 'a stranger, foreign'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C180-taqlidi]
 <!-- hl-knowledge: introduces=[AR-LEX-C180-SIFA180-04]; assesses=[] -->
 
 **أجنبي** — *ajnabī* — "foreign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أجنبي** (*ajnabī*) is built on the native Arabic root *j-n-b*, "the side; to put aside" (Lane). *Ajnabī* is "one at the side", hence "a stranger, foreign".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

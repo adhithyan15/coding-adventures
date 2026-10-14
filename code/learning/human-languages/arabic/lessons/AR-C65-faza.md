@@ -14,7 +14,8 @@ romanization: "fāza"
 concept_tag: AR-VERB-FAZA
 prerequisites: [AR-C65-takallama, AR-C65-hamala]
 sounds: []
-roots: []
+roots: [f-w-z]
+etymology_hook: "fāza: built on the root f-w-z, 'to attain, to succeed' (Lane); fāza is the plain verb, 'he won'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C65-hamala]
 <!-- hl-knowledge: introduces=[AR-LEX-C65-VERBS65-03]; assesses=[] -->
 
 **فاز** — *fāza* — "to win (he won)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فاز** (*fāza*) is built on the native Arabic root *f-w-z*, "to attain, to succeed" (Lane). *Fāza* is the plain verb, "he won".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

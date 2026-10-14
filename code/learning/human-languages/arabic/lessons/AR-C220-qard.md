@@ -14,7 +14,8 @@ romanization: "qarḍ"
 concept_tag: AR-AMAL220-QARD
 prerequisites: [AR-C219-harir, AR-C220-bitaqa]
 sounds: []
-roots: []
+roots: [q-r-ḍ]
+etymology_hook: "qarḍ: built on the root q-r-ḍ, 'to cut off' (Lane); Lane's qarḍ is a loan, a portion cut off from one's goods"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C220-bitaqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C220-AMAL220-02]; assesses=[] -->
 
 **قرض** — *qarḍ* — "a loan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قرض** (*qarḍ*) is built on the native Arabic root *q-r-ḍ*, "to cut off; to lend" (Lane). Lane's *qarḍ* is a loan, a portion cut off from one's goods.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

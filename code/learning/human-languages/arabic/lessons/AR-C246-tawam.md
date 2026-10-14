@@ -14,7 +14,8 @@ romanization: "tawʾam"
 concept_tag: AR-SHAY246-TAWAM
 prerequisites: [AR-C246-hafid, AR-C246-amma]
 sounds: []
-roots: []
+roots: [w-ʾ-m]
+etymology_hook: "tawʾam: built on the root w-ʾ-m, 'a twin' (Lane); Lane's tawʾam is one of two born at one birth"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C246-amma]
 <!-- hl-knowledge: introduces=[AR-LEX-C246-SHAY246-04]; assesses=[] -->
 
 **توأم** — *tawʾam* — "a twin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**توأم** (*tawʾam*) is built on the native Arabic root *w-ʾ-m*, "a twin" (Lane). Lane's *tawʾam* is one of two born at one birth; Aramaic *tʾōmā*, "twin", behind the name Thomas, is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

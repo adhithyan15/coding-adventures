@@ -14,7 +14,8 @@ romanization: "makān"
 concept_tag: AR-LOC104-MAKAN
 prerequisites: [AR-C104-sharq, AR-C104-gharb]
 sounds: []
-roots: []
+roots: [k-w-n]
+etymology_hook: "makān: built on the root k-w-n, 'to be, to exist' (Lane); makān is the ma- place noun, 'a place of being'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C104-gharb]
 <!-- hl-knowledge: introduces=[AR-LEX-C104-LOC104-04]; assesses=[] -->
 
 **مكان** — *makān* — "a place".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مكان** (*makān*) is built on the native Arabic root *k-w-n*, "to be, to exist" (Lane). *Makān* is the *ma-* place noun, "a place of being"; Lane notes some put it under *m-k-n*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

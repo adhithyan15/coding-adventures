@@ -14,7 +14,8 @@ romanization: "ghadan"
 concept_tag: AR-TIME87-GHADAN
 prerequisites: [AR-C86-daqiqa, AR-C87-ams]
 sounds: []
-roots: []
+roots: [gh-d-w]
+etymology_hook: "ghadan: built on the root gh-d-w, 'tomorrow' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C87-ams]
 <!-- hl-knowledge: introduces=[AR-LEX-C87-TIME87-02]; assesses=[] -->
 
 **غدا** — *ghadan* — "tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غدا** (*ghadan*) is built on the native Arabic root *gh-d-w*, "tomorrow; early morning" (Lane). Lane gives *ghad*, "tomorrow", and *ghudwa*, "early morning", on one root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

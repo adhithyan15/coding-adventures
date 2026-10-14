@@ -12,7 +12,7 @@ romanization: fakkara
 prerequisites: [AR-C32-akhadha]
 sounds: [shadda, faa, rtl-known-letters]
 roots: [f-k-r]
-etymology_hook: "فكّر (fakkara, 'he thought, he pondered') is root ف-ك-ر with its middle consonant doubled by a shadda — فَعَّلَ, the shape grammarians call Form II, which does a root hard, repeatedly, or to something else; beside it stand فِكْر (fikr, 'thought'), فِكْرة (fikra, 'an idea'), تَفْكير (tafkīr, 'thinking') and مُفَكِّر (mufakkir, 'a thinker'), whose مُ prefix is Form II's own doer shape in place of the long ā of kātib and qāriʾ; there is no English cousin and no Hebrew twin worth claiming"
+etymology_hook: "fakkara: Form II of the root f-k-r 'to consider, to reflect' (Lane), beside fikr 'thought'"
 duration:
   max_seconds: 240
 requires:
@@ -77,6 +77,8 @@ the raw material:
   rebuilt doer.
 
 No English cousin here, and no Hebrew twin worth the claim.
+
+*Fakkara* is built on this native root (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C32-FAKKARA-01, AR-CONCEPT-C32-FAKKARA-02, AR-CONCEPT-C32-AKHADHA-02, AR-CONCEPT-C31-KATABA-02] -->

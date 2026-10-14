@@ -14,7 +14,8 @@ romanization: "jarīda"
 concept_tag: AR-THINGS117-JARIDA
 prerequisites: [AR-C116-hasub, AR-C117-tilfaz]
 sounds: []
-roots: []
+roots: [j-r-d]
+etymology_hook: "jarīda: built on the root j-r-d, 'to strip' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C117-tilfaz]
 <!-- hl-knowledge: introduces=[AR-LEX-C117-THINGS117-02]; assesses=[] -->
 
 **جريدة** — *jarīda* — "a newspaper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جريدة** (*jarīda*) is built on the native Arabic root *j-r-d*, "to strip" (Lane). Lane's *jarīda* is a palm stalk stripped of its leaves, and also a register; the newspaper is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

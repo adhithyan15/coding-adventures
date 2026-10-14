@@ -14,7 +14,8 @@ romanization: "ṣunbūr"
 concept_tag: AR-SHAY187-SUNBUR
 prerequisites: [AR-C186-ala, AR-C187-khallat]
 sounds: []
-roots: []
+roots: [ṣ-n-b-r]
+etymology_hook: "ṣunbūr: built on the root ṣ-n-b-r, 'a lone palm tree' (Lane); Lane's ṣunbūr is a lone palm tree, slender at its base"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C187-khallat]
 <!-- hl-knowledge: introduces=[AR-LEX-C187-SHAY187-02]; assesses=[] -->
 
 **صنبور** — *ṣunbūr* — "a tap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صنبور** (*ṣunbūr*) is built on the native Arabic root *ṣ-n-b-r*, "a lone palm tree" (Lane). Lane's *ṣunbūr* is a lone palm tree, slender at its base; the tap is a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

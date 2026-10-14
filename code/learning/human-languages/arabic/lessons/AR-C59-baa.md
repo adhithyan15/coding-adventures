@@ -14,7 +14,8 @@ romanization: "bāʿa"
 concept_tag: AR-VERB-BAA
 prerequisites: [AR-C58-laiba, AR-C58-ishtara]
 sounds: []
-roots: []
+roots: [b-y-ʿ]
+etymology_hook: "bāʿa: built on the root b-y-ʿ, 'to sell' (Lane); Lane notes bāʿa could mean both 'to sell' and 'to buy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C58-ishtara]
 <!-- hl-knowledge: introduces=[AR-LEX-C59-VERBS59-01]; assesses=[] -->
 
 **باع** — *bāʿa* — "to sell (he sold)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**باع** (*bāʿa*) is built on the native Arabic root *b-y-ʿ*, "to sell; to buy" (Lane). Lane notes *bāʿa* could mean both "to sell" and "to buy"; selling won.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

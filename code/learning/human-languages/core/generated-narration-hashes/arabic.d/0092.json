@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 92,
-  "sourceHash": "fnv1a64:4d08f1cbd61c445e",
+  "sourceHash": "fnv1a64:34aed74556bdae1a",
   "lessonIds": [
     "AR-C92-qitar",
     "AR-C92-jisr",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch92.txt",
   "json": "arabic/narration/ch92.json",
-  "textHash": "fnv1a64:60d8d23028fabdd5",
-  "jsonHash": "fnv1a64:70a31ab75f240899",
+  "textHash": "fnv1a64:cddda7cdfe6b08e2",
+  "jsonHash": "fnv1a64:6e422c3b00721937",
   "findings": []
 }

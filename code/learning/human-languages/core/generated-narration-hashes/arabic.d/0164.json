@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 164,
-  "sourceHash": "fnv1a64:6bb5138745545c27",
+  "sourceHash": "fnv1a64:97ccbc40201f88bd",
   "lessonIds": [
     "AR-C164-sarakha",
     "AR-C164-salla",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch164.txt",
   "json": "arabic/narration/ch164.json",
-  "textHash": "fnv1a64:d5fff92effec5aa0",
-  "jsonHash": "fnv1a64:ab74c38bb1a36239",
+  "textHash": "fnv1a64:3e36e18e999d2fd5",
+  "jsonHash": "fnv1a64:bff127db362e619e",
   "findings": []
 }

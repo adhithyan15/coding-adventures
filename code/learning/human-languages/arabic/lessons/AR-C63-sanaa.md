@@ -14,7 +14,8 @@ romanization: "ṣanaʿa"
 concept_tag: AR-VERB-SANAA
 prerequisites: [AR-C63-tara, AR-C63-sabaha]
 sounds: []
-roots: []
+roots: [ṣ-n-ʿ]
+etymology_hook: "ṣanaʿa: built on the root ṣ-n-ʿ, 'to make, to fashion' (Lane); the same root gives maṣnaʿ, 'a factory'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C63-sabaha]
 <!-- hl-knowledge: introduces=[AR-LEX-C63-VERBS63-04]; assesses=[] -->
 
 **صنع** — *ṣanaʿa* — "to make (he made)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صنع** (*ṣanaʿa*) is built on the native Arabic root *ṣ-n-ʿ*, "to make, to fashion" (Lane). The same root gives *maṣnaʿ*, "a factory".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

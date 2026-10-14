@@ -14,7 +14,8 @@ romanization: "taqlīd"
 concept_tag: AR-SABAB267-TAQLID
 prerequisites: [AR-C266-siyaj, AR-C266-fina]
 sounds: []
-roots: []
+roots: [q-l-d]
+etymology_hook: "taqlīd: built on the root q-l-d, 'to hang on the neck' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C266-fina]
 <!-- hl-knowledge: introduces=[AR-LEX-C267-SABAB267-01]; assesses=[] -->
 
 **تقليد** — *taqlīd* — "a tradition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تقليد** (*taqlīd*) is built on the native Arabic root *q-l-d*, "to hang on the neck; to follow another" (Lane). *Taqlīd* is the verbal noun of Form II, "following another's lead".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

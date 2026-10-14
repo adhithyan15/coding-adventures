@@ -14,7 +14,8 @@ romanization: "mayyit"
 concept_tag: AR-SIFA242-MAYYIT
 prerequisites: [AR-C241-jadd, AR-C242-sakhib]
 sounds: []
-roots: []
+roots: [m-w-t]
+etymology_hook: "mayyit: built on the root m-w-t, 'to die' (Lane); mayyit is the adjective, 'dead'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C242-sakhib]
 <!-- hl-knowledge: introduces=[AR-LEX-C242-SIFA242-02]; assesses=[] -->
 
 **ميت** — *mayyit* — "dead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ميت** (*mayyit*) is built on the native Arabic root *m-w-t*, "to die" (Lane). *Mayyit* is the adjective, "dead".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

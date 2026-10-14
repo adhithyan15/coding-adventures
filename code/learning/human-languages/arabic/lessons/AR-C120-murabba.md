@@ -14,7 +14,8 @@ romanization: "murabbā"
 concept_tag: AR-THINGS120-MURABBA
 prerequisites: [AR-C119-asha, AR-C119-khall]
 sounds: []
-roots: []
+roots: [r-b-b]
+etymology_hook: "murabbā: built on the root r-b-b, 'thickened fruit juice (rubb)' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C119-khall]
 <!-- hl-knowledge: introduces=[AR-LEX-C120-THINGS120-01]; assesses=[] -->
 
 **مربى** — *murabbā* — "jam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مربى** (*murabbā*) is built on the native Arabic root *r-b-b*, "thickened fruit juice (rubb)" (Lane). *Murabbā* is fruit preserved, usually linked with *rubb*, the thickened fruit juice that Lane describes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

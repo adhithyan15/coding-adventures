@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 211,
-  "sourceHash": "fnv1a64:26989981663ff2d1",
+  "sourceHash": "fnv1a64:eebd8fc1bfcde757",
   "lessonIds": [
     "AR-C211-mushmis",
     "AR-C211-mukhtalif",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch211.txt",
   "json": "arabic/narration/ch211.json",
-  "textHash": "fnv1a64:62ca19fc89411b9b",
-  "jsonHash": "fnv1a64:de109c7ef6ac0c6b",
+  "textHash": "fnv1a64:af6c6eacc30786ae",
+  "jsonHash": "fnv1a64:71d15f6b9a19cf40",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "ʿadas"
 concept_tag: AR-THINGS128-ADAS
 prerequisites: [AR-C128-filfil, AR-C128-qamh, AR-C29-raa, AR-C29-raa]
 sounds: []
-roots: []
+roots: [ʿ-d-s]
+etymology_hook: "ʿadas: built on the root ʿ-d-s, 'lentils' (Lane); Hebrew ʿadashim, 'lentils', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C128-qamh]
 <!-- hl-knowledge: introduces=[AR-LEX-C128-THINGS128-04]; assesses=[] -->
 
 **عدس** — *ʿadas* — "lentils".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عدس** (*ʿadas*) is built on the native Arabic root *ʿ-d-s*, "lentils" (Lane). Hebrew *ʿadashim*, "lentils", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gharb"
 concept_tag: AR-LOC104-GHARB
 prerequisites: [AR-C104-janub, AR-C104-sharq]
 sounds: []
-roots: []
+roots: [gh-r-b]
+etymology_hook: "gharb: built on the root gh-r-b, 'to go away' (Lane); gharb is where the sun sets"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C104-sharq]
 <!-- hl-knowledge: introduces=[AR-LEX-C104-LOC104-03]; assesses=[] -->
 
 **غرب** — *gharb* — "west".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غرب** (*gharb*) is built on the native Arabic root *gh-r-b*, "to go away; to set (of the sun)" (Lane). *Gharb* is where the sun sets; the same root gives *maghrib*, the source of English *Maghreb*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

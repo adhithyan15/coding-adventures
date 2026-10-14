@@ -14,7 +14,8 @@ romanization: "ḍiyāfa"
 concept_tag: AR-SABAB175-DIYAFA
 prerequisites: [AR-C175-sadaqa, AR-C175-mujtama]
 sounds: []
-roots: []
+roots: [ḍ-y-f]
+etymology_hook: "ḍiyāfa: built on the root ḍ-y-f, 'to lodge as a guest' (Lane); the word ḍiyāfa is the receiving of guests"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C175-mujtama]
 <!-- hl-knowledge: introduces=[AR-LEX-C175-SABAB175-03]; assesses=[] -->
 
 **ضيافة** — *ḍiyāfa* — "hospitality".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضيافة** (*ḍiyāfa*) is built on the native Arabic root *ḍ-y-f*, "to lodge as a guest" (Lane). The word *ḍiyāfa* is the receiving of guests.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

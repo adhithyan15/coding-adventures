@@ -14,7 +14,8 @@ romanization: "burtuqāl"
 concept_tag: AR-FOOD68-BURTUQAL
 prerequisites: [AR-C67-asal, AR-C67-inab]
 sounds: []
-roots: []
+roots: [portugal-orange]
+etymology_hook: "burtuqāl: named after Portugal, whose traders brought the sweet orange; compare Turkish portakal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C67-inab]
 <!-- hl-knowledge: introduces=[AR-LEX-C68-FOOD68-01]; assesses=[] -->
 
 **برتقال** — *burtuqāl* — "oranges".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**برتقال** (*burtuqāl*) is named after Portugal, whose traders brought the sweet orange from the east; the same name runs through Turkish *portakal* and Greek *portokali*. It has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

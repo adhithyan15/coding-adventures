@@ -14,7 +14,8 @@ romanization: "sirwāl"
 concept_tag: AR-CLOTHES94-SIRWAL
 prerequisites: [AR-C94-qamis, AR-C94-fustan]
 sounds: []
-roots: []
+roots: [persian-shalwar]
+etymology_hook: "sirwāl: a Persian word, originally shalwār 'trousers', arabicized (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C94-fustan]
 <!-- hl-knowledge: introduces=[AR-LEX-C94-CLOTHES94-04]; assesses=[] -->
 
 **سروال** — *sirwāl* — "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سروال** (*sirwāl*) is a loan: Lane records it as a Persian word, originally *shalwār*, "drawers, trousers", arabicized, and quotes Sībawayh calling it foreign.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

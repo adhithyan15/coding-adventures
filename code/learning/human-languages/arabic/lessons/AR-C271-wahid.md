@@ -14,7 +14,8 @@ romanization: "waḥīd"
 concept_tag: AR-SIFA271-WAHID
 prerequisites: [AR-C270-mahalli, AR-C271-anid]
 sounds: []
-roots: []
+roots: [w-ḥ-d]
+etymology_hook: "waḥīd: built on the root w-ḥ-d, 'to be one, to be alone' (Lane); waḥīd is 'one alone'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C271-anid]
 <!-- hl-knowledge: introduces=[AR-LEX-C271-SIFA271-02]; assesses=[] -->
 
 **وحيد** — *waḥīd* — "lonely; only".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وحيد** (*waḥīd*) is built on the native Arabic root *w-ḥ-d*, "to be one, to be alone" (Lane). *Waḥīd* is "one alone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

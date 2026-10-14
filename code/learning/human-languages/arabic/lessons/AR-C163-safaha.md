@@ -14,7 +14,8 @@ romanization: "ṣāfaḥa"
 concept_tag: AR-VERB-SAFAHA
 prerequisites: [AR-C163-daa, AR-C163-tazawwaja]
 sounds: []
-roots: []
+roots: [ṣ-f-ḥ]
+etymology_hook: "ṣāfaḥa: built on the root ṣ-f-ḥ, 'the flat of the hand' (Lane); ṣāfaḥa is Form III, 'to lay palm to palm'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C163-tazawwaja]
 <!-- hl-knowledge: introduces=[AR-LEX-C163-ACT163-04]; assesses=[] -->
 
 **صافح** — *ṣāfaḥa* — "to shake hands with".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صافح** (*ṣāfaḥa*) is built on the native Arabic root *ṣ-f-ḥ*, "the flat of the hand" (Lane). *Ṣāfaḥa* is Form III, "to lay palm to palm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

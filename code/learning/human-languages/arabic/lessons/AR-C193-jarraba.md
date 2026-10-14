@@ -14,7 +14,8 @@ romanization: "jarraba"
 concept_tag: AR-VERB-JARRABA
 prerequisites: [AR-C192-kallafa, AR-C193-khalaa]
 sounds: []
-roots: []
+roots: [j-r-b]
+etymology_hook: "jarraba: built on the root j-r-b, 'to try, to test' (Lane); jarraba is Form II, 'to put to the test'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C193-khalaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C193-ACT193-02]; assesses=[] -->
 
 **جرب** — *jarraba* — "to try (on)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جرب** (*jarraba*) is built on the native Arabic root *j-r-b*, "to try, to test" (Lane). *Jarraba* is Form II, "to put to the test".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

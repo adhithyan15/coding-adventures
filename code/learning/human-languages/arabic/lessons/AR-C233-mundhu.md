@@ -14,7 +14,8 @@ romanization: "mundhu"
 concept_tag: AR-WAQT233-MUNDHU
 prerequisites: [AR-C232-ukkaz, AR-C232-nazif]
 sounds: []
-roots: []
+roots: [mundhu-since]
+etymology_hook: "mundhu: an old particle of time; the grammarians differ on its parts; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C232-nazif]
 <!-- hl-knowledge: introduces=[AR-LEX-C233-WAQT233-01]; assesses=[] -->
 
 **منذ** — *mundhu* — "since, ago".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**منذ** (*mundhu*) is an old particle of time. The grammarians took it apart in different ways, and its origin is not settled; it is not built on a three-letter root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "wasaṭ"
 concept_tag: AR-LOC103-WASAT
 prerequisites: [AR-C103-bijanib, AR-C103-yasar]
 sounds: []
-roots: []
+roots: [w-s-ṭ]
+etymology_hook: "wasaṭ: built on the root w-s-ṭ, 'the middle' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C103-yasar]
 <!-- hl-knowledge: introduces=[AR-LEX-C103-LOC103-03]; assesses=[] -->
 
 **وسط** — *wasaṭ* — "the middle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وسط** (*wasaṭ*) is built on the native Arabic root *w-s-ṭ*, "the middle" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

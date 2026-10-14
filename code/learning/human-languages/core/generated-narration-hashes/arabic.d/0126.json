@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 126,
-  "sourceHash": "fnv1a64:1bc808479af8db6e",
+  "sourceHash": "fnv1a64:11a65e38bc68d497",
   "lessonIds": [
     "AR-C126-shama",
     "AR-C126-sajjada",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch126.txt",
   "json": "arabic/narration/ch126.json",
-  "textHash": "fnv1a64:079d2573d8061bc7",
-  "jsonHash": "fnv1a64:20c657aea976f01b",
+  "textHash": "fnv1a64:d32b64be963fa69f",
+  "jsonHash": "fnv1a64:75d587442330e8cc",
   "findings": []
 }

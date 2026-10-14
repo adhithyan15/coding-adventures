@@ -14,7 +14,8 @@ romanization: "ishtāqa"
 concept_tag: AR-VERB-ISHTAQA
 prerequisites: [AR-C110-hafiza, AR-C110-mawhiba]
 sounds: []
-roots: []
+roots: [sh-w-q]
+etymology_hook: "ishtāqa: built on the root sh-w-q, 'to long for' (Lane); ishtāqa is Form VIII, 'to feel longing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C110-mawhiba]
 <!-- hl-knowledge: introduces=[AR-LEX-C111-WANT111-01]; assesses=[] -->
 
 **اشتاق** — *ishtāqa* — "to long for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اشتاق** (*ishtāqa*) is built on the native Arabic root *sh-w-q*, "to long for" (Lane). *Ishtāqa* is Form VIII, "to feel longing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

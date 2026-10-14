@@ -14,7 +14,8 @@ romanization: "khashab"
 concept_tag: AR-SHAY219-KHASHAB
 prerequisites: [AR-C218-wazn, AR-C219-khartum]
 sounds: []
-roots: []
+roots: [kh-sh-b]
+etymology_hook: "khashab: built on the root kh-sh-b, 'wood' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C219-khartum]
 <!-- hl-knowledge: introduces=[AR-LEX-C219-SHAY219-02]; assesses=[] -->
 
 **خشب** — *khashab* — "wood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خشب** (*khashab*) is built on the native Arabic root *kh-sh-b*, "wood" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

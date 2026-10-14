@@ -14,7 +14,8 @@ romanization: "maydān"
 concept_tag: AR-LOC100-MAYDAN
 prerequisites: [AR-C100-misad, AR-C100-mamarr]
 sounds: []
-roots: []
+roots: [m-y-d]
+etymology_hook: "maydān: a race-ground in Lane (m-y-d); native and Iranian sources both proposed, not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C100-mamarr]
 <!-- hl-knowledge: introduces=[AR-LEX-C100-LOC100-03]; assesses=[] -->
 
 **ميدان** — *maydān* — "a public square, a field".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ميدان** (*maydān*) is listed by Lane under *m-y-d* as a race-ground for horses. He quotes two native derivations, from *māda*, "to move", or from *madana*, "to dwell"; some modern scholars trace it instead to an Iranian source, so the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

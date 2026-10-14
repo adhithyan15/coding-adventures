@@ -11,8 +11,8 @@ gloss: and — the commonest word in written Arabic, glossed once in chapter one
 concept_tag: AR-JOIN-WA
 prerequisites: [AR-R37-now-and-not, AR-C33-shay, AR-C33-halib, AR-C34-milh, AR-C34-lahm]
 sounds: [arabic-waw]
-roots: []
-etymology_hook: "و is the pan-Semitic conjunction: Hebrew writes it ו and Aramaic ו, the same single letter in the same job, and it is one of the oldest continuously used words in any writing system — three thousand years of meaning 'and' without changing shape"
+roots: [semitic-wa-and]
+etymology_hook: "wa-: an inherited Semitic 'and', a cousin of Hebrew wə-; it has no three-letter root"
 duration:
   max_seconds: 240
 requires:
@@ -64,6 +64,8 @@ margin the commonest word in written Arabic: Arabic prose strings clauses with
 
 Note that **و** is also the letter *wāw*, the long *ū* inside **كوب** and **يوم**.
 One shape, two jobs, told apart by whether it stands alone at the head of a word.
+
+*Wa* is inherited from the Semitic parent language, a cousin of Hebrew *wə-*, "and".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C38-WA-01, AR-CONCEPT-C33-SHAY-01, AR-CONCEPT-C33-HALIB-01, AR-CONCEPT-C34-MILH-01, AR-CONCEPT-C34-LAHM-01] -->

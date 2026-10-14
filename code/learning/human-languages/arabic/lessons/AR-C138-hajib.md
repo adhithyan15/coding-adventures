@@ -14,7 +14,8 @@ romanization: "ḥājib"
 concept_tag: AR-THINGS138-HAJIB
 prerequisites: [AR-C138-khadd, AR-C138-jabin]
 sounds: []
-roots: []
+roots: [ḥ-j-b]
+etymology_hook: "ḥājib: built on the root ḥ-j-b, 'to veil, to screen' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C138-jabin]
 <!-- hl-knowledge: introduces=[AR-LEX-C138-THINGS138-05]; assesses=[] -->
 
 **حاجب** — *ḥājib* — "an eyebrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حاجب** (*ḥājib*) is built on the native Arabic root *ḥ-j-b*, "to veil, to screen" (Lane). *Ḥājib* is "that which screens": the eyebrow, and a chamberlain; the same root gives *ḥijāb*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

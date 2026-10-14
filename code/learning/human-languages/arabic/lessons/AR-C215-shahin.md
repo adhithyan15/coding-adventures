@@ -14,7 +14,8 @@ romanization: "shāḥin"
 concept_tag: AR-SHAY215-SHAHIN
 prerequisites: [AR-C215-tashira, AR-C215-amtia]
 sounds: []
-roots: []
+roots: [sh-ḥ-n]
+etymology_hook: "shāḥin: built on the root sh-ḥ-n, 'to load, to fill' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C215-amtia]
 <!-- hl-knowledge: introduces=[AR-LEX-C215-SHAY215-04]; assesses=[] -->
 
 **شاحن** — *shāḥin* — "a charger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شاحن** (*shāḥin*) is built on the native Arabic root *sh-ḥ-n*, "to load, to fill" (Lane). *Shāḥin* is the active participle, "one that loads": a charger.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

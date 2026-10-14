@@ -14,7 +14,8 @@ romanization: "adab"
 concept_tag: AR-AMAL222-ADAB
 prerequisites: [AR-C222-kimiya, AR-C222-fiziya]
 sounds: []
-roots: []
+roots: [ʾ-d-b]
+etymology_hook: "adab: built on the root ʾ-d-b, 'good manners, discipline' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C222-fiziya]
 <!-- hl-knowledge: introduces=[AR-LEX-C222-AMAL222-04]; assesses=[] -->
 
 **أدب** — *adab* — "literature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أدب** (*adab*) is built on the native Arabic root *ʾ-d-b*, "good manners, discipline" (Lane). Lane notes that *adab* for the literary sciences is a later, Islamic-era use.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

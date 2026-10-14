@@ -14,7 +14,8 @@ romanization: "nās"
 concept_tag: AR-SHAY275-NAS
 prerequisites: [AR-C275-arus, AR-C275-shakhs]
 sounds: []
-roots: []
+roots: [n-w-s]
+etymology_hook: "nās: built on the root n-w-s, 'to move to and fro' (Lane); Lane lists nās, 'people', under n-w-s"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C275-shakhs]
 <!-- hl-knowledge: introduces=[AR-LEX-C275-SHAY275-03]; assesses=[] -->
 
 **ناس** — *nās* — "people".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناس** (*nās*) is built on the native Arabic root *n-w-s*, "to move to and fro; people" (Lane). Lane lists *nās*, "people", under *n-w-s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

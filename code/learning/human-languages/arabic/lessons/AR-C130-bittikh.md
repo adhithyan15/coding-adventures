@@ -14,7 +14,8 @@ romanization: "biṭṭīkh"
 concept_tag: AR-THINGS130-BITTIKH
 prerequisites: [AR-C129-tamr, AR-C130-tin]
 sounds: []
-roots: []
+roots: [b-ṭ-kh]
+etymology_hook: "biṭṭīkh: built on the root b-ṭ-kh, 'the melon' (Lane); Hebrew avattiaḥ, 'melon', is usually counted a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C130-tin]
 <!-- hl-knowledge: introduces=[AR-LEX-C130-THINGS130-02]; assesses=[] -->
 
 **بطيخ** — *biṭṭīkh* — "a watermelon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بطيخ** (*biṭṭīkh*) is built on the native Arabic root *b-ṭ-kh*, "the melon" (Lane). Hebrew *avattiaḥ*, "melon", is usually counted a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

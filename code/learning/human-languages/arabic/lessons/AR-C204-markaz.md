@@ -14,7 +14,8 @@ romanization: "markaz"
 concept_tag: AR-MAKAN204-MARKAZ
 prerequisites: [AR-C204-nahwa, AR-C204-mintaqa]
 sounds: []
-roots: []
+roots: [r-k-z]
+etymology_hook: "markaz: built on the root r-k-z, 'to plant (a spear) upright' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C204-mintaqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C204-MAKAN204-03]; assesses=[] -->
 
 **مركز** — *markaz* — "a centre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مركز** (*markaz*) is built on the native Arabic root *r-k-z*, "to plant (a spear) upright" (Lane). Lane's *markaz* is the place where a spear is planted upright; the centre grew from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 170,
-  "sourceHash": "fnv1a64:98e46464e121844c",
+  "sourceHash": "fnv1a64:de5076ba339140fe",
   "lessonIds": [
     "AR-C170-mubakkiran",
     "AR-C170-yawmiyyan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch170.txt",
   "json": "arabic/narration/ch170.json",
-  "textHash": "fnv1a64:991f1d7e512ed68c",
-  "jsonHash": "fnv1a64:e0fb9ce7d2172968",
+  "textHash": "fnv1a64:d19a72560c63e426",
+  "jsonHash": "fnv1a64:83af989956765884",
   "findings": []
 }

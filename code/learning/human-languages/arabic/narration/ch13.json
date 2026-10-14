@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Water and Bread",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4994634714f6d25c",
+  "sourceHash": "fnv1a64:fdfe6946d3b44419",
   "lessons": [
     {
       "id": "AR-C13-maa-khubz",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff6c6fc7f3d0a1e9",
+      "sourceHash": "fnv1a64:5d164143193f0420",
       "notice": null,
       "blocks": [
         {
@@ -63,6 +63,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ماء (māʾ) is an old Semitic noun, listed by Lane under m-w-h; Hebrew mayim, \"water\", is its cousin. خبز (khubz), \"bread\", is built on the native root kh-b-z, \"to bake\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

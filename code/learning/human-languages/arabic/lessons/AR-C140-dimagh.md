@@ -14,7 +14,8 @@ romanization: "dimāgh"
 concept_tag: AR-THINGS140-DIMAGH
 prerequisites: [AR-C140-kaff, AR-C140-zufr]
 sounds: []
-roots: []
+roots: [d-m-gh]
+etymology_hook: "dimāgh: built on the root d-m-gh, 'the brain' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C140-zufr]
 <!-- hl-knowledge: introduces=[AR-LEX-C140-THINGS140-03]; assesses=[] -->
 
 **دماغ** — *dimāgh* — "a brain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دماغ** (*dimāgh*) is built on the native Arabic root *d-m-gh*, "the brain" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

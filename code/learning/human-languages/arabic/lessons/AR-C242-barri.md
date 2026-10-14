@@ -14,7 +14,8 @@ romanization: "barrī"
 concept_tag: AR-SIFA242-BARRI
 prerequisites: [AR-C242-sakhib, AR-C242-mayyit]
 sounds: []
-roots: []
+roots: [b-r-r]
+etymology_hook: "barrī: built on the root b-r-r, 'land, the open country' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C242-mayyit]
 <!-- hl-knowledge: introduces=[AR-LEX-C242-SIFA242-03]; assesses=[] -->
 
 **بري** — *barrī* — "wild".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بري** (*barrī*) is built on the native Arabic root *b-r-r*, "land, the open country" (Lane). *Barrī* is *barr*, "the land, the wild", with the adjective ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

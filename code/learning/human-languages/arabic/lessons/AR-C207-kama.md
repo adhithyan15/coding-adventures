@@ -14,7 +14,8 @@ romanization: "kamā"
 concept_tag: AR-SABAB207-KAMA
 prerequisites: [AR-C207-hatta, AR-C207-idha]
 sounds: []
-roots: []
+roots: [ka-like]
+etymology_hook: "kamā: built from ka- 'like' + mā 'what': 'as'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C207-idha]
 <!-- hl-knowledge: introduces=[AR-LEX-C207-SABAB207-05]; assesses=[] -->
 
 **كما** — *kamā* — "as, in the same way as".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كما** (*kamā*) is built from *ka-*, "like", and *mā*, "what": "like what", hence "as".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

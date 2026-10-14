@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 187,
-  "sourceHash": "fnv1a64:f32f69070e78f8b9",
+  "sourceHash": "fnv1a64:51d70a4b9c737806",
   "lessonIds": [
     "AR-C187-khallat",
     "AR-C187-sunbur",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch187.txt",
   "json": "arabic/narration/ch187.json",
-  "textHash": "fnv1a64:1525577898cb6c2e",
-  "jsonHash": "fnv1a64:e34977cb1d53c4f0",
+  "textHash": "fnv1a64:91cc5d74319d1758",
+  "jsonHash": "fnv1a64:6316f79ccab3621b",
   "findings": []
 }

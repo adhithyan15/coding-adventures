@@ -14,7 +14,8 @@ gloss: "steady, firm"
 concept_tag: AR-ANCHOR-THABIT
 prerequisites: [AR-W00-ra-ha]
 sounds: []
-roots: []
+roots: [th-b-t]
+etymology_hook: "thābit: built on the root th-b-t, 'to remain fixed, to be firm' (Lane); thābit is the active participle, 'standing firm'"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: modern-standard-arabic
 
 Say it: *thābit*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ب ت ث — مرحبا**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ثابت** (*thābit*) is built on the native Arabic root *th-b-t*, "to remain fixed, to be firm" (Lane). *Thābit* is the active participle, "standing firm".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-THABIT] -->

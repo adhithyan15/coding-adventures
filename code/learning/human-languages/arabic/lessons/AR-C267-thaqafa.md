@@ -14,7 +14,8 @@ romanization: "thaqāfa"
 concept_tag: AR-SABAB267-THAQAFA
 prerequisites: [AR-C266-fina, AR-C267-taqlid]
 sounds: []
-roots: []
+roots: [th-q-f]
+etymology_hook: "thaqāfa: built on the root th-q-f, 'to be skilful, to be sharp' (Lane); thaqāfa is skill, cultivation"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C267-taqlid]
 <!-- hl-knowledge: introduces=[AR-LEX-C267-SABAB267-02]; assesses=[] -->
 
 **ثقافة** — *thaqāfa* — "culture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ثقافة** (*thaqāfa*) is built on the native Arabic root *th-q-f*, "to be skilful, to be sharp" (Lane). *Thaqāfa* is skill, cultivation; the same root gives *thiqāf*, a tool for straightening spears.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nādī"
 concept_tag: AR-MAKAN265-NADI
 prerequisites: [AR-C265-masrah, AR-C265-sinima]
 sounds: []
-roots: []
+roots: [n-d-w]
+etymology_hook: "nādī: built on the root n-d-w, 'to assemble' (Lane); Lane's nādī is a place of assembly"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C265-sinima]
 <!-- hl-knowledge: introduces=[AR-LEX-C265-MAKAN265-03]; assesses=[] -->
 
 **نادي** — *nādī* — "a club".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نادي** (*nādī*) is built on the native Arabic root *n-d-w*, "to assemble" (Lane). Lane's *nādī* is a place of assembly.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

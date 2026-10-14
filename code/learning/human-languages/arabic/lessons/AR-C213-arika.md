@@ -14,7 +14,8 @@ romanization: "arīka"
 concept_tag: AR-SHAY213-ARIKA
 prerequisites: [AR-C212-shaffaf, AR-C212-lami]
 sounds: []
-roots: []
+roots: [ʾ-r-k]
+etymology_hook: "arīka: built on the root ʾ-r-k, 'a couch' (Lane); Lane's arīka is a couch within a curtained canopy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C212-lami]
 <!-- hl-knowledge: introduces=[AR-LEX-C213-SHAY213-01]; assesses=[] -->
 
 **أريكة** — *arīka* — "a sofa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أريكة** (*arīka*) is built on the native Arabic root *ʾ-r-k*, "a couch" (Lane). Lane's *arīka* is a couch within a curtained canopy.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

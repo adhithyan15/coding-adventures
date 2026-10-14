@@ -14,7 +14,8 @@ romanization: "katif"
 concept_tag: AR-BODY51-KATIF
 prerequisites: [AR-C51-qadam, AR-C51-isba]
 sounds: []
-roots: []
+roots: [k-t-f]
+etymology_hook: "katif: built on the root k-t-f, 'the shoulder, the shoulder-blade' (Lane); Hebrew katef, 'shoulder', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C51-isba]
 <!-- hl-knowledge: introduces=[AR-LEX-C51-BODY51-04]; assesses=[] -->
 
 **كتف** — *katif* — "a shoulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كتف** (*katif*) is built on the native Arabic root *k-t-f*, "the shoulder, the shoulder-blade" (Lane). Hebrew *katef*, "shoulder", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

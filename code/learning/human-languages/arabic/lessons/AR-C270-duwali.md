@@ -14,7 +14,8 @@ romanization: "duwalī"
 concept_tag: AR-SIFA270-DUWALI
 prerequisites: [AR-C270-mahjuz, AR-C270-mutah]
 sounds: []
-roots: []
+roots: [d-w-l]
+etymology_hook: "duwalī: built on the root d-w-l, 'to go round in turn' (Lane); duwalī is duwal, 'states', with the adjective ending -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C270-mutah]
 <!-- hl-knowledge: introduces=[AR-LEX-C270-SIFA270-04]; assesses=[] -->
 
 **دولي** — *duwalī* — "international".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دولي** (*duwalī*) is built on the native Arabic root *d-w-l*, "to go round in turn" (Lane). *Duwalī* is *duwal*, "states", with the adjective ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

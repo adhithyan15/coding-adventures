@@ -14,7 +14,8 @@ romanization: "nazīf"
 concept_tag: AR-SIHHA232-NAZIF
 prerequisites: [AR-C232-jarrah, AR-C232-ukkaz]
 sounds: []
-roots: []
+roots: [n-z-f]
+etymology_hook: "nazīf: built on the root n-z-f, 'to draw out (blood)' (Lane); nazīf is bleeding"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C232-ukkaz]
 <!-- hl-knowledge: introduces=[AR-LEX-C232-SIHHA232-05]; assesses=[] -->
 
 **نزيف** — *nazīf* — "bleeding".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نزيف** (*nazīf*) is built on the native Arabic root *n-z-f*, "to draw out (blood)" (Lane). *Nazīf* is bleeding.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

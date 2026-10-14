@@ -14,7 +14,8 @@ romanization: "akthar"
 concept_tag: AR-SABAB176-AKTHAR
 prerequisites: [AR-C176-thumma, AR-C176-baynama]
 sounds: []
-roots: []
+roots: [k-th-r]
+etymology_hook: "akthar: built on the root k-th-r, 'to be many' (Lane); akthar is the afʿal comparative, 'more'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C176-baynama]
 <!-- hl-knowledge: introduces=[AR-LEX-C176-SABAB176-03]; assesses=[] -->
 
 **أكثر** — *akthar* — "more".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أكثر** (*akthar*) is built on the native Arabic root *k-th-r*, "to be many" (Lane). *Akthar* is the *afʿal* comparative, "more".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

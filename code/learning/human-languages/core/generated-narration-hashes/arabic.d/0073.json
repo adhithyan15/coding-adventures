@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 73,
-  "sourceHash": "fnv1a64:1535ca9df7bc9ac3",
+  "sourceHash": "fnv1a64:f532179d7ea796a5",
   "lessonIds": [
     "AR-C73-kitab",
     "AR-C73-daftar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch73.txt",
   "json": "arabic/narration/ch73.json",
-  "textHash": "fnv1a64:3f8b9202cabcab2b",
-  "jsonHash": "fnv1a64:3223452697f858ee",
+  "textHash": "fnv1a64:872de537996f8c52",
+  "jsonHash": "fnv1a64:7749fd008cbe7bb7",
   "findings": []
 }

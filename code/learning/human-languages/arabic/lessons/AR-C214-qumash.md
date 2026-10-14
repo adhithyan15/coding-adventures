@@ -14,7 +14,8 @@ romanization: "qumāsh"
 concept_tag: AR-SHAY214-QUMASH
 prerequisites: [AR-C214-badla, AR-C214-sandal]
 sounds: []
-roots: []
+roots: [q-m-sh]
+etymology_hook: "qumāsh: built on the root q-m-sh, 'household stuff' (Lane); Lane gives qammāsh as a seller of household goods"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C214-sandal]
 <!-- hl-knowledge: introduces=[AR-LEX-C214-SHAY214-03]; assesses=[] -->
 
 **قماش** — *qumāsh* — "fabric, cloth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قماش** (*qumāsh*) is built on the native Arabic root *q-m-sh*, "household stuff" (Lane). Lane gives *qammāsh* as a seller of household goods; *qumāsh* is stuff, and fabric is the modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

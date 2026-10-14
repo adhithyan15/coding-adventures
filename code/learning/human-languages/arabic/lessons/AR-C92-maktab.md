@@ -14,7 +14,8 @@ romanization: "maktab"
 concept_tag: AR-TOWN92-MAKTAB
 prerequisites: [AR-C92-masjid, AR-C92-funduq]
 sounds: []
-roots: []
+roots: [k-t-b]
+etymology_hook: "maktab: built on the root k-t-b, 'to write' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C92-funduq]
 <!-- hl-knowledge: introduces=[AR-LEX-C92-TOWN92-05]; assesses=[] -->
 
 **مكتب** — *maktab* — "an office; a desk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مكتب** (*maktab*) is built on the native Arabic root *k-t-b*, "to write" (Lane). *Maktab* is the *ma-* place noun, "a place of writing": a desk, an office.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

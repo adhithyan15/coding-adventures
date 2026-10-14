@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 148,
-  "sourceHash": "fnv1a64:d12fe2a2de56261b",
+  "sourceHash": "fnv1a64:29767aebb9db539b",
   "lessonIds": [
     "AR-C148-masrur",
     "AR-C148-wasi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch148.txt",
   "json": "arabic/narration/ch148.json",
-  "textHash": "fnv1a64:03d7bc0879196551",
-  "jsonHash": "fnv1a64:9ed30ee3e92667ce",
+  "textHash": "fnv1a64:0689f923eba57e30",
+  "jsonHash": "fnv1a64:d86347d34f65fbe9",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 202,
-  "sourceHash": "fnv1a64:21590bf0603fdc6c",
+  "sourceHash": "fnv1a64:da3825ac803752e4",
   "lessonIds": [
     "AR-C202-ghaliban",
     "AR-C202-fawran",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch202.txt",
   "json": "arabic/narration/ch202.json",
-  "textHash": "fnv1a64:58623552e4178920",
-  "jsonHash": "fnv1a64:e6f2c5b66e54cd34",
+  "textHash": "fnv1a64:95017f3aef722918",
+  "jsonHash": "fnv1a64:ecdbbc4126ae7478",
   "findings": []
 }

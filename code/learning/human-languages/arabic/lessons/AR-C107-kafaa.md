@@ -14,7 +14,8 @@ romanization: "kafāʾa"
 concept_tag: AR-CAN107-KAFAA
 prerequisites: [AR-C106-itqan, AR-C106-qudra]
 sounds: []
-roots: []
+roots: [k-f-ʾ]
+etymology_hook: "kafāʾa: built on the root k-f-ʾ, 'to be equal, to suffice' (Lane); kafāʾa is equality, fitness"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C106-qudra]
 <!-- hl-knowledge: introduces=[AR-LEX-C107-CAN107-01]; assesses=[] -->
 
 **كفاءة** — *kafāʾa* — "competence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كفاءة** (*kafāʾa*) is built on the native Arabic root *k-f-ʾ*, "to be equal, to suffice" (Lane). *Kafāʾa* is equality, fitness; "competence" is the modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

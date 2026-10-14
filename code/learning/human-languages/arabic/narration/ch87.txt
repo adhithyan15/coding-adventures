@@ -12,6 +12,9 @@ Before the new one: say the Arabic for a month, then the Arabic for a minute.
 You'll want to know: أمس.
 أمس — ams — "yesterday".
 
+The word, taken apart.
+أمس (ams) is built on the native Arabic root ʾ-m-s, "yesterday" (Lane). Hebrew emesh, "last night", is usually compared.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Arabic for a minute, then the Arabic for yesterday.
 
 You'll want to know: غدا.
 غدا — ghadan — "tomorrow".
+
+The word, taken apart.
+غدا (ghadan) is built on the native Arabic root gh-d-w, "tomorrow; early morning" (Lane). Lane gives ghad, "tomorrow", and ghudwa, "early morning", on one root.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Arabic for yesterday, then the Arabic for tomorrow.
 You'll want to know: الآن.
 الآن — al-ān — "now".
 
+The word, taken apart.
+الآن (al-ān) is listed by Lane under ʾ-y-n (some put it under ʾ-w-n) as a noun of the present time whose al- is never removed. It is built on ān, "time".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Arabic for tomorrow, then the Arabic for now.
 You'll want to know: أحيانا.
 أحيانا — aḥyānan — "sometimes".
 
+The word, taken apart.
+أحيانا (aḥyānan) is built on the native Arabic root ḥ-y-n, "a time" (Lane). Aḥyānan is aḥyān, the plural of ḥīn, "a time", with the adverb ending -an: "at times".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Arabic for now, then the Arabic for sometimes.
 
 You'll want to know: قبل.
 قبل — qabla — "before".
+
+The word, taken apart.
+قبل (qabla) is built on the native Arabic root q-b-l, "to face, to be in front" (Lane). The same root gives qibla, the direction one faces in prayer.
 
 What you've built.
 One more word for this chapter.

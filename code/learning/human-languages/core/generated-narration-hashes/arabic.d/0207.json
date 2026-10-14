@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 207,
-  "sourceHash": "fnv1a64:a9e6755ba3fcf15d",
+  "sourceHash": "fnv1a64:4b1ad09752e4f0d9",
   "lessonIds": [
     "AR-C207-faqat",
     "AR-C207-jiddan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch207.txt",
   "json": "arabic/narration/ch207.json",
-  "textHash": "fnv1a64:667f94467b9317fc",
-  "jsonHash": "fnv1a64:e137462550fbcdc1",
+  "textHash": "fnv1a64:8672ff86dfe64407",
+  "jsonHash": "fnv1a64:1e52b8e29dda7d4d",
   "findings": []
 }

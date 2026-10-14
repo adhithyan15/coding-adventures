@@ -14,7 +14,8 @@ romanization: "asraʿa"
 concept_tag: AR-VERB-ASRAA
 prerequisites: [AR-C224-aqrada, AR-C224-ghayyara]
 sounds: []
-roots: []
+roots: [s-r-ʿ]
+etymology_hook: "asraʿa: built on the root s-r-ʿ, 'to be quick' (Lane); asraʿa is Form IV, 'to hasten'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C224-ghayyara]
 <!-- hl-knowledge: introduces=[AR-LEX-C224-ACT224-05]; assesses=[] -->
 
 **أسرع** — *asraʿa* — "to hurry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أسرع** (*asraʿa*) is built on the native Arabic root *s-r-ʿ*, "to be quick" (Lane). *Asraʿa* is Form IV, "to hasten".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

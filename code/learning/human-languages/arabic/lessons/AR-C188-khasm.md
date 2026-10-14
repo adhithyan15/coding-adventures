@@ -14,7 +14,8 @@ romanization: "khaṣm"
 concept_tag: AR-AMAL188-KHASM
 prerequisites: [AR-C188-umla, AR-C188-fatura]
 sounds: []
-roots: []
+roots: [kh-ṣ-m]
+etymology_hook: "khaṣm: built on the root kh-ṣ-m, 'to dispute' (Lane); khaṣm is an adversary"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C188-fatura]
 <!-- hl-knowledge: introduces=[AR-LEX-C188-AMAL188-03]; assesses=[] -->
 
 **خصم** — *khaṣm* — "a discount".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خصم** (*khaṣm*) is built on the native Arabic root *kh-ṣ-m*, "to dispute" (Lane). *Khaṣm* is an adversary; the discount, a deduction, is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

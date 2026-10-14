@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 54,
-  "sourceHash": "fnv1a64:f1481298ad610ac3",
+  "sourceHash": "fnv1a64:6d54e38a8a3292dd",
   "lessonIds": [
     "AR-C54-ju",
     "AR-C54-said",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch54.txt",
   "json": "arabic/narration/ch54.json",
-  "textHash": "fnv1a64:7abafaf2857042ab",
-  "jsonHash": "fnv1a64:bd6ac6395bfd85be",
+  "textHash": "fnv1a64:2723577362762487",
+  "jsonHash": "fnv1a64:3294e41e9f835f6a",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "ibra"
 concept_tag: AR-THINGS124-IBRA
 prerequisites: [AR-C123-ina, AR-C124-miqass]
 sounds: []
-roots: []
+roots: [ʾ-b-r]
+etymology_hook: "ibra: built on the root ʾ-b-r, 'to prick' (Lane); ibra is a needle, a thing that pricks"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C124-miqass]
 <!-- hl-knowledge: introduces=[AR-LEX-C124-THINGS124-02]; assesses=[] -->
 
 **إبرة** — *ibra* — "a needle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**إبرة** (*ibra*) is built on the native Arabic root *ʾ-b-r*, "to prick" (Lane). *Ibra* is a needle, a thing that pricks.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

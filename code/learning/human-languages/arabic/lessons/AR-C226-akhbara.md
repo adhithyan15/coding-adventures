@@ -14,7 +14,8 @@ romanization: "akhbara"
 concept_tag: AR-VERB-AKHBARA
 prerequisites: [AR-C226-shahana, AR-C226-itadhara]
 sounds: []
-roots: []
+roots: [kh-b-r]
+etymology_hook: "akhbara: built on the root kh-b-r, 'to know, to have experience of' (Lane); akhbara is Form IV, 'to give news'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C226-itadhara]
 <!-- hl-knowledge: introduces=[AR-LEX-C226-ACT226-04]; assesses=[] -->
 
 **أخبر** — *akhbara* — "to inform, to tell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أخبر** (*akhbara*) is built on the native Arabic root *kh-b-r*, "to know, to have experience of" (Lane). *Akhbara* is Form IV, "to give news".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

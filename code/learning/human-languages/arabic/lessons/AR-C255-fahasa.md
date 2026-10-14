@@ -14,7 +14,8 @@ romanization: "faḥaṣa"
 concept_tag: AR-VERB-FAHASA
 prerequisites: [AR-C255-ittasala, AR-C255-tahassana]
 sounds: []
-roots: []
+roots: [f-ḥ-ṣ]
+etymology_hook: "faḥaṣa: built on the root f-ḥ-ṣ, 'to search, to examine' (Lane); faḥaṣa is the plain verb, 'he examined'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C255-tahassana]
 <!-- hl-knowledge: introduces=[AR-LEX-C255-ACT255-05]; assesses=[] -->
 
 **فحص** — *faḥaṣa* — "to examine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فحص** (*faḥaṣa*) is built on the native Arabic root *f-ḥ-ṣ*, "to search, to examine" (Lane). *Faḥaṣa* is the plain verb, "he examined".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

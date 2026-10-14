@@ -14,7 +14,8 @@ romanization: "jadwal"
 concept_tag: AR-QIRAA158-JADWAL
 prerequisites: [AR-C157-qarrara, AR-C157-nawa]
 sounds: []
-roots: []
+roots: [j-d-l]
+etymology_hook: "jadwal: built on the root j-d-l, 'a rivulet' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [AR-C157-nawa]
 
 The board says **موعد الحافلة: الساعة الثامنة صباحا** — *mawʿid al-ḥāfila:
 as-sāʿa ath-thāmina ṣabāḥan* — "Bus time: 8 a.m." Be there before eight.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جدول** (*jadwal*) is built on the native Arabic root *j-d-l*, "a rivulet" (Lane). Lane's *jadwal* is a small stream or irrigation channel, and its verb means to rule a book with lines.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

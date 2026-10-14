@@ -14,7 +14,8 @@ romanization: "turāb"
 concept_tag: AR-MAKAN205-TURAB
 prerequisites: [AR-C204-ayna, AR-C205-tabia]
 sounds: []
-roots: []
+roots: [t-r-b]
+etymology_hook: "turāb: built on the root t-r-b, 'dust, earth' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C205-tabia]
 <!-- hl-knowledge: introduces=[AR-LEX-C205-MAKAN205-02]; assesses=[] -->
 
 **تراب** — *turāb* — "dust, soil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تراب** (*turāb*) is built on the native Arabic root *t-r-b*, "dust, earth" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jalīd"
 concept_tag: AR-MAKAN236-JALID
 prerequisites: [AR-C236-zilzal, AR-C236-fayadan]
 sounds: []
-roots: []
+roots: [j-l-d]
+etymology_hook: "jalīd: built on the root j-l-d, 'hoar-frost' (Lane); Lane's jalīd is hoar-frost"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C236-fayadan]
 <!-- hl-knowledge: introduces=[AR-LEX-C236-MAKAN236-03]; assesses=[] -->
 
 **جليد** — *jalīd* — "ice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جليد** (*jalīd*) is built on the native Arabic root *j-l-d*, "hoar-frost; skin" (Lane). Lane's *jalīd* is hoar-frost.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

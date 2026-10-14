@@ -14,7 +14,8 @@ romanization: "jadd"
 concept_tag: AR-HEALTH54-JADD
 prerequisites: [AR-C54-hazin, AR-C54-tabib]
 sounds: []
-roots: []
+roots: [j-d-d]
+etymology_hook: "jadd: built on the root j-d-d, 'a grandfather' (Lane); Lane gives jadd both as the grandfather and as fortune"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C54-tabib]
 <!-- hl-knowledge: introduces=[AR-LEX-C54-HEALTH54-05]; assesses=[] -->
 
 **جد** — *jadd* — "a grandfather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جد** (*jadd*) is built on the native Arabic root *j-d-d*, "a grandfather; fortune, good luck" (Lane). Lane gives *jadd* both as the grandfather and as fortune.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

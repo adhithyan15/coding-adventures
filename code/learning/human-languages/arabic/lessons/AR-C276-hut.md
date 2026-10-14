@@ -14,7 +14,8 @@ romanization: "ḥūt"
 concept_tag: AR-SHAY276-HUT
 prerequisites: [AR-C276-usfur, AR-C276-zarafa]
 sounds: []
-roots: []
+roots: [ḥ-w-t]
+etymology_hook: "ḥūt: built on the root ḥ-w-t, 'a fish, a large fish' (Lane); ḥūt is a large fish, a whale"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C276-zarafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C276-SHAY276-05]; assesses=[] -->
 
 **حوت** — *ḥūt* — "a whale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حوت** (*ḥūt*) is built on the native Arabic root *ḥ-w-t*, "a fish, a large fish" (Lane). *Ḥūt* is a large fish, a whale.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

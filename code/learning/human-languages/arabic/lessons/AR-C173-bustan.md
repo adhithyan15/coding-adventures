@@ -14,7 +14,8 @@ romanization: "bustān"
 concept_tag: AR-MAKAN173-BUSTAN
 prerequisites: [AR-C172-ittijah, AR-C172-muqabil]
 sounds: []
-roots: []
+roots: [persian-bustan]
+etymology_hook: "bustān: arabicized from Persian būstān 'garden', Lane concludes after rival accounts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C172-muqabil]
 <!-- hl-knowledge: introduces=[AR-LEX-C173-MAKAN173-01]; assesses=[] -->
 
 **بستان** — *bustān* — "an orchard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بستان** (*bustān*) is a loan: Lane's sources argued over it, some calling it Arabic and some Greek, but Lane concludes it is arabicized from Persian *būstān*, "garden".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

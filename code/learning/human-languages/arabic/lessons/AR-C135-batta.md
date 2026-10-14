@@ -14,7 +14,8 @@ romanization: "baṭṭa"
 concept_tag: AR-THINGS135-BATTA
 prerequisites: [AR-C135-thalab, AR-C135-hamama]
 sounds: []
-roots: []
+roots: [batt-duck]
+etymology_hook: "baṭṭa: Lane's sources call baṭṭ Persian, arabicized; Ibn Jinnī thought it imitative; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C135-hamama]
 <!-- hl-knowledge: introduces=[AR-LEX-C135-THINGS135-04]; assesses=[] -->
 
 **بطة** — *baṭṭa* — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بطة** (*baṭṭa*) is one bird of *baṭṭ*, "ducks". Lane's sources call *baṭṭ* a Persian word, arabicized, while Ibn Jinnī thought it imitates the bird's cry; the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

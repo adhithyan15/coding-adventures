@@ -14,7 +14,8 @@ romanization: "munāsib"
 concept_tag: AR-SIFA240-MUNASIB
 prerequisites: [AR-C240-jahiz, AR-C240-asli]
 sounds: []
-roots: []
+roots: [n-s-b]
+etymology_hook: "munāsib: built on the root n-s-b, 'to be related, to be suitable' (Lane); munāsib is the Form III participle, 'suiting'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C240-asli]
 <!-- hl-knowledge: introduces=[AR-LEX-C240-SIFA240-04]; assesses=[] -->
 
 **مناسب** — *munāsib* — "suitable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مناسب** (*munāsib*) is built on the native Arabic root *n-s-b*, "to be related, to be suitable" (Lane). *Munāsib* is the Form III participle, "suiting".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

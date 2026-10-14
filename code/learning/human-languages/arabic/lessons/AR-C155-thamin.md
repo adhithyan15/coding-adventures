@@ -14,7 +14,8 @@ romanization: "thamīn"
 concept_tag: AR-QUAL155-THAMIN
 prerequisites: [AR-C155-daruri, AR-C155-qabih]
 sounds: []
-roots: []
+roots: [th-m-n]
+etymology_hook: "thamīn: built on the root th-m-n, 'a price' (Lane); thamīn is 'of great price'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C155-qabih]
 <!-- hl-knowledge: introduces=[AR-LEX-C155-QUAL155-03]; assesses=[] -->
 
 **ثمين** — *thamīn* — "precious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ثمين** (*thamīn*) is built on the native Arabic root *th-m-n*, "a price" (Lane). *Thamīn* is "of great price".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

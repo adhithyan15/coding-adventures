@@ -14,7 +14,8 @@ romanization: "naʿnāʿ"
 concept_tag: AR-THINGS121-NANA
 prerequisites: [AR-C120-badhinjan, AR-C121-malfuf]
 sounds: []
-roots: []
+roots: [nana-mint]
+etymology_hook: "naʿnāʿ: a reduplicated plant name with no entry in Lane; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C121-malfuf]
 <!-- hl-knowledge: introduces=[AR-LEX-C121-THINGS121-02]; assesses=[] -->
 
 **نعناع** — *naʿnāʿ* — "mint".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نعناع** (*naʿnāʿ*) is a reduplicated word with no entry in Lane; its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

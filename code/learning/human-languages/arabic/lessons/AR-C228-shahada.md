@@ -14,7 +14,8 @@ romanization: "shāhada"
 concept_tag: AR-VERB-SHAHADA
 prerequisites: [AR-C227-tashajara, AR-C227-tasalaha]
 sounds: []
-roots: []
+roots: [sh-h-d]
+etymology_hook: "shāhada: built on the root sh-h-d, 'to witness, to be present' (Lane); shāhada is Form III, 'to see with one's own eyes'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C227-tasalaha]
 <!-- hl-knowledge: introduces=[AR-LEX-C228-ACT228-01]; assesses=[] -->
 
 **شاهد** — *shāhada* — "to watch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شاهد** (*shāhada*) is built on the native Arabic root *sh-h-d*, "to witness, to be present" (Lane). *Shāhada* is Form III, "to see with one's own eyes".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

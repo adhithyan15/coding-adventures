@@ -14,7 +14,8 @@ romanization: "kartūn"
 concept_tag: AR-SHAY250-KARTUN
 prerequisites: [AR-C249-mabruk, AR-C249-tanjara]
 sounds: []
-roots: []
+roots: [italian-cartone]
+etymology_hook: "kartūn: a modern loan from Italian cartone or French carton 'pasteboard'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C249-tanjara]
 <!-- hl-knowledge: introduces=[AR-LEX-C250-SHAY250-01]; assesses=[] -->
 
 **كرتون** — *kartūn* — "cardboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كرتون** (*kartūn*) is a modern loan from Italian *cartone* or French *carton*, "pasteboard"; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

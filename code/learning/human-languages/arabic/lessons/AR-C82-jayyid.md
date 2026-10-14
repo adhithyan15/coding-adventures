@@ -14,7 +14,8 @@ romanization: "jayyid"
 concept_tag: AR-ADJ82-JAYYID
 prerequisites: [AR-C82-jadid, AR-C82-qadim]
 sounds: []
-roots: []
+roots: [j-w-d]
+etymology_hook: "jayyid: built on the root j-w-d, 'to be good, to be excellent' (Lane); jayyid is the adjective, 'good'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C82-qadim]
 <!-- hl-knowledge: introduces=[AR-LEX-C82-ADJ82-03]; assesses=[] -->
 
 **جيد** — *jayyid* — "good".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جيد** (*jayyid*) is built on the native Arabic root *j-w-d*, "to be good, to be excellent" (Lane). *Jayyid* is the adjective, "good".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jurḥ"
 concept_tag: AR-SIHHA200-JURH
 prerequisites: [AR-C200-sual, AR-C200-hassasiyya]
 sounds: []
-roots: []
+roots: [j-r-ḥ]
+etymology_hook: "jurḥ: built on the root j-r-ḥ, 'to wound' (Lane); jurḥ is a wound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C200-hassasiyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C200-SIHHA200-04]; assesses=[] -->
 
 **جرح** — *jurḥ* — "a wound".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جرح** (*jurḥ*) is built on the native Arabic root *j-r-ḥ*, "to wound" (Lane). *Jurḥ* is a wound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

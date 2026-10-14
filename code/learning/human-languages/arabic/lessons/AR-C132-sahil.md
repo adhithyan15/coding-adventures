@@ -14,7 +14,8 @@ romanization: "sāḥil"
 concept_tag: AR-THINGS132-SAHIL
 prerequisites: [AR-C131-ghusn, AR-C131-jazira]
 sounds: []
-roots: []
+roots: [s-ḥ-l]
+etymology_hook: "sāḥil: built on the root s-ḥ-l, 'to scrape, to pare' (Lane); Lane gives sāḥil as the shore"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C131-jazira]
 <!-- hl-knowledge: introduces=[AR-LEX-C132-THINGS132-01]; assesses=[] -->
 
 **ساحل** — *sāḥil* — "a coast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ساحل** (*sāḥil*) is built on the native Arabic root *s-ḥ-l*, "to scrape, to pare" (Lane). Lane gives *sāḥil* as the shore; Swahili comes from its plural *sawāḥil*, "coasts".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

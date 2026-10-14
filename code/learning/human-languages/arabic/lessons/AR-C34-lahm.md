@@ -12,7 +12,7 @@ romanization: laḥm
 prerequisites: [AR-C34-milh, AR-W07-hook-family-ha-kha]
 sounds: [haa-pharyngeal, rtl-known-letters]
 roots: [l-h-m]
-etymology_hook: "لَحْم (laḥm, 'meat') and Hebrew לֶחֶם (leḥem, 'bread') are the same Semitic root ل-ح-م, which named the staple food and let each people fill it with whatever their staple was; the town Arabic calls بيت لحم (Bayt Laḥm) is the town Hebrew calls בֵּית לֶחֶם (Bēt Leḥem) and English calls Bethlehem, so the seam runs straight through a place name English already owns, while خبز (khubz) shows Arabic naming bread from its own root خ-ب-ز instead"
+etymology_hook: "laḥm 'meat': root l-ḥ-m (Lane); Hebrew leḥem 'bread' is the same word, as in Bethlehem"
 duration:
   max_seconds: 240
 requires:

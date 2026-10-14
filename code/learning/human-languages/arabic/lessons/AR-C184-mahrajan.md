@@ -14,7 +14,8 @@ romanization: "mahrajān"
 concept_tag: AR-SHAY184-MAHRAJAN
 prerequisites: [AR-C183-istimara, AR-C183-wathiqa]
 sounds: []
-roots: []
+roots: [persian-mihragan]
+etymology_hook: "mahrajān: from Persian mihragān, the autumn festival of Mihr (Mithra)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C183-wathiqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C184-SHAY184-01]; assesses=[] -->
 
 **مهرجان** — *mahrajān* — "a festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مهرجان** (*mahrajān*) is a loan from Persian *mihragān*, the autumn festival named after Mihr, Mithra; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

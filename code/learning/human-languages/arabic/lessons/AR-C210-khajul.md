@@ -14,7 +14,8 @@ romanization: "khajūl"
 concept_tag: AR-SIFA210-KHAJUL
 prerequisites: [AR-C210-karim, AR-C210-bakhil]
 sounds: []
-roots: []
+roots: [kh-j-l]
+etymology_hook: "khajūl: built on the root kh-j-l, 'to be ashamed, shy' (Lane); khajūl is the faʿūl adjective, 'shy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C210-bakhil]
 <!-- hl-knowledge: introduces=[AR-LEX-C210-SIFA210-04]; assesses=[] -->
 
 **خجول** — *khajūl* — "shy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خجول** (*khajūl*) is built on the native Arabic root *kh-j-l*, "to be ashamed, shy" (Lane). *Khajūl* is the *faʿūl* adjective, "shy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

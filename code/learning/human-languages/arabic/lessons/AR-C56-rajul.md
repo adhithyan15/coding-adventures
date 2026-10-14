@@ -14,7 +14,8 @@ romanization: "rajul"
 concept_tag: AR-FAMILY56-RAJUL
 prerequisites: [AR-C56-tifl, AR-C56-walad]
 sounds: []
-roots: []
+roots: [r-j-l]
+etymology_hook: "rajul: built on the root r-j-l, 'a man' (Lane); the same root gives rijl, 'foot, leg'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C56-walad]
 <!-- hl-knowledge: introduces=[AR-LEX-C56-FAMILY56-03]; assesses=[] -->
 
 **رجل** — *rajul* — "a man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رجل** (*rajul*) is built on the native Arabic root *r-j-l*, "a man; the foot, the leg" (Lane). The same root gives *rijl*, "foot, leg".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

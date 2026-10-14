@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 178,
-  "sourceHash": "fnv1a64:ecea80b7dd2f2fd2",
+  "sourceHash": "fnv1a64:bc93c893105e4f30",
   "lessonIds": [
     "AR-C178-rasmi",
     "AR-C178-khass",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch178.txt",
   "json": "arabic/narration/ch178.json",
-  "textHash": "fnv1a64:61f46c3fc82b8573",
-  "jsonHash": "fnv1a64:58c5362976425999",
+  "textHash": "fnv1a64:3e74e89d12046728",
+  "jsonHash": "fnv1a64:b35be27b93797316",
   "findings": []
 }

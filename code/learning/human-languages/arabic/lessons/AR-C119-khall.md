@@ -14,7 +14,8 @@ romanization: "khall"
 concept_tag: AR-THINGS119-KHALL
 prerequisites: [AR-C119-ghada, AR-C119-asha, AR-C20-ahada-ashar-ishrun, AR-C20-ahada-ashar-ishrun]
 sounds: []
-roots: []
+roots: [kh-l-l]
+etymology_hook: "khall: built on the root kh-l-l, 'vinegar' (Lane); an old noun"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C119-asha]
 <!-- hl-knowledge: introduces=[AR-LEX-C119-THINGS119-05]; assesses=[] -->
 
 **خل** — *khall* — "vinegar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خل** (*khall*) is built on the native Arabic root *kh-l-l*, "vinegar" (Lane). An old noun; Lane lists it under *kh-l-l*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

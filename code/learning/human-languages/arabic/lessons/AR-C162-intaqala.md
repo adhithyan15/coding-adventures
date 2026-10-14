@@ -14,7 +14,8 @@ romanization: "intaqala"
 concept_tag: AR-VERB-INTAQALA
 prerequisites: [AR-C162-tabaa, AR-C162-nasakha]
 sounds: []
-roots: []
+roots: [n-q-l]
+etymology_hook: "intaqala: built on the root n-q-l, 'to carry, to transfer' (Lane); intaqala is Form VIII, 'to move oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C162-nasakha]
 <!-- hl-knowledge: introduces=[AR-LEX-C162-ACT162-03]; assesses=[] -->
 
 **انتقل** — *intaqala* — "to move (house)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انتقل** (*intaqala*) is built on the native Arabic root *n-q-l*, "to carry, to transfer" (Lane). *Intaqala* is Form VIII, "to move oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

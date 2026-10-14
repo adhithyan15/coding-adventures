@@ -14,7 +14,8 @@ romanization: "mubārā"
 concept_tag: AR-SHAY277-MUBARA
 prerequisites: [AR-C276-hut, AR-C277-kura]
 sounds: []
-roots: []
+roots: [b-r-y]
+etymology_hook: "mubārā: built on the root b-r-y, 'to rival' (Lane); mubārāh is the verbal noun of Form III, 'a contest'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C277-kura]
 <!-- hl-knowledge: introduces=[AR-LEX-C277-SHAY277-02]; assesses=[] -->
 
 **مباراة** — *mubārā* — "a match".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مباراة** (*mubārā*) is built on the native Arabic root *b-r-y*, "to rival" (Lane). *Mubārāh* is the verbal noun of Form III, "a contest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

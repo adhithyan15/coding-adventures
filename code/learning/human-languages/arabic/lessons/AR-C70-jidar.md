@@ -14,7 +14,8 @@ romanization: "jidār"
 concept_tag: AR-HOME70-JIDAR
 prerequisites: [AR-C70-kursi, AR-C70-tawila]
 sounds: []
-roots: []
+roots: [j-d-r]
+etymology_hook: "jidār: built on the root j-d-r, 'a wall' (Lane); Lane lists jidār under the root j-d-r"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C70-tawila]
 <!-- hl-knowledge: introduces=[AR-LEX-C70-HOME70-03]; assesses=[] -->
 
 **جدار** — *jidār* — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جدار** (*jidār*) is built on the native Arabic root *j-d-r*, "a wall" (Lane). Lane lists *jidār* under the root *j-d-r*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

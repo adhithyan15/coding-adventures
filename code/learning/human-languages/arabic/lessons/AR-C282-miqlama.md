@@ -14,7 +14,8 @@ romanization: "miqlama"
 concept_tag: AR-AMAL282-MIQLAMA
 prerequisites: [AR-C281-mumaththil, AR-C282-hasiba]
 sounds: []
-roots: []
+roots: [q-l-m]
+etymology_hook: "miqlama: built on the root q-l-m, 'a reed pen' (Lane); miqlama is a case for pens"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C282-hasiba]
 <!-- hl-knowledge: introduces=[AR-LEX-C282-AMAL282-02]; assesses=[] -->
 
 **مقلمة** — *miqlama* — "a pencil case".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مقلمة** (*miqlama*) is built on the native Arabic root *q-l-m*, "a reed pen" (Lane). *Miqlama* is a case for pens.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jazzār"
 concept_tag: AR-AMAL220-JAZZAR
 prerequisites: [AR-C220-bidaa, AR-C220-hisab]
 sounds: []
-roots: []
+roots: [j-z-r]
+etymology_hook: "jazzār: built on the root j-z-r, 'to cut' (Lane); jazzār is the faʿʿāl trade noun, 'slaughterer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C220-hisab]
 <!-- hl-knowledge: introduces=[AR-LEX-C220-AMAL220-05]; assesses=[] -->
 
 **جزار** — *jazzār* — "a butcher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جزار** (*jazzār*) is built on the native Arabic root *j-z-r*, "to cut; to slaughter" (Lane). *Jazzār* is the *faʿʿāl* trade noun, "slaughterer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

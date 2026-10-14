@@ -14,7 +14,8 @@ romanization: "ṭayr"
 concept_tag: AR-SHAY276-TAYR
 prerequisites: [AR-C275-zifaf, AR-C276-hayawan]
 sounds: []
-roots: []
+roots: [ṭ-y-r]
+etymology_hook: "ṭayr: built on the root ṭ-y-r, 'to fly' (Lane); ṭayr is birds, the flying things"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C276-hayawan]
 <!-- hl-knowledge: introduces=[AR-LEX-C276-SHAY276-02]; assesses=[] -->
 
 **طير** — *ṭayr* — "birds".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طير** (*ṭayr*) is built on the native Arabic root *ṭ-y-r*, "to fly" (Lane). *Ṭayr* is birds, the flying things.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

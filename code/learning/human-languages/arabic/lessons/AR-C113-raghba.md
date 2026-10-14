@@ -14,7 +14,8 @@ romanization: "raghba"
 concept_tag: AR-WANT113-RAGHBA
 prerequisites: [AR-C113-ihtimam, AR-C113-kariha]
 sounds: []
-roots: []
+roots: [r-gh-b]
+etymology_hook: "raghba: built on the root r-gh-b, 'to desire' (Lane); raghba is the noun, 'a desire'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C113-kariha]
 <!-- hl-knowledge: introduces=[AR-LEX-C113-WANT113-03]; assesses=[] -->
 
 **رغبة** — *raghba* — "a desire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رغبة** (*raghba*) is built on the native Arabic root *r-gh-b*, "to desire" (Lane). *Raghba* is the noun, "a desire".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

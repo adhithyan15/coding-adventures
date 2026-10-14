@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:97b49f2a5fcced72",
+  "sourceHash": "fnv1a64:26b6250101eee355",
   "lessons": [
     {
       "id": "AR-C16-al-saa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:775d7bbd3c3d39c8",
+      "sourceHash": "fnv1a64:d5ee1fe982d4c569",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ساعة (sāʿa) = \"hour\" — but also \"clock/watch\" (as an object) and \"a while, a moment\" (as in \"wait a sāʿa\"). According to the historical linguist Theodor Nöldeke, Arabic ساعة was borrowed from Aramaic شָׁעְתָא (šāʿəṯā) — the same Semitic root that gives Hebrew its word for hour, שָׁעָה (šāʿā). This borrowing happened long before Islam, deep in Arabic's pre-Islamic contact with Aramaic-speaking communities — so unlike some of the religiously-tied vocabulary you've seen (like aẓ-ẓuhr), sāʿa is simply an old, everyday loanword, carrying no special religious weight."
+              "text": "ساعة (sāʿa) = \"hour\" — but also \"clock/watch\" (as an object) and \"a while, a moment\" (as in \"wait a sāʿa\"). According to the historical linguist Theodor Nöldeke, Arabic ساعة was borrowed from Aramaic šāʿəṯā — the same Semitic root that gives Hebrew its word for hour, שָׁעָה (šāʿā). This borrowing happened long before Islam, deep in Arabic's pre-Islamic contact with Aramaic-speaking communities — so unlike some of the religiously-tied vocabulary you've seen (like aẓ-ẓuhr), sāʿa is simply an old, everyday loanword, carrying no special religious weight."
             }
           ]
         },

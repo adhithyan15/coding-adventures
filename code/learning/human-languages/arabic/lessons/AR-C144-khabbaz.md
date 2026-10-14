@@ -14,7 +14,8 @@ romanization: "khabbāz"
 concept_tag: AR-THINGS144-KHABBAZ
 prerequisites: [AR-C144-khayyat, AR-C144-najjar]
 sounds: []
-roots: []
+roots: [khabaza-bake]
+etymology_hook: "khabbāz: built on the root kh-b-z, 'to bake bread' (Lane); khabbāz is the faʿʿāl trade noun, 'baker'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C144-najjar]
 <!-- hl-knowledge: introduces=[AR-LEX-C144-THINGS144-03]; assesses=[] -->
 
 **خباز** — *khabbāz* — "a baker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خباز** (*khabbāz*) is built on the native Arabic root *kh-b-z*, "to bake bread" (Lane). *Khabbāz* is the *faʿʿāl* trade noun, "baker".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

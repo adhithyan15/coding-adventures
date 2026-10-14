@@ -14,7 +14,8 @@ romanization: "ʿushb"
 concept_tag: AR-THINGS131-USHB
 prerequisites: [AR-C130-hasa, AR-C130-kaka, AR-C32-ahabba]
 sounds: []
-roots: []
+roots: [ʿ-sh-b]
+etymology_hook: "ʿushb: built on the root ʿ-sh-b, 'fresh herbage' (Lane); Hebrew ʿesev, 'grass', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C130-kaka]
 <!-- hl-knowledge: introduces=[AR-LEX-C131-THINGS131-01]; assesses=[] -->
 
 **عشب** — *ʿushb* — "grass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عشب** (*ʿushb*) is built on the native Arabic root *ʿ-sh-b*, "fresh herbage" (Lane). Hebrew *ʿesev*, "grass", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

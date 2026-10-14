@@ -14,7 +14,8 @@ romanization: "ḥadīthan"
 concept_tag: AR-MADI156-HADITHAN
 prerequisites: [AR-C155-sakhin, AR-C155-muzdahim]
 sounds: []
-roots: []
+roots: [ḥ-d-th]
+etymology_hook: "ḥadīthan: built on the root ḥ-d-th, 'to be new' (Lane); ḥadīthan is ḥadīth, 'new, recent', with the adverb ending -an"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C155-muzdahim]
 <!-- hl-knowledge: introduces=[AR-LEX-C156-MADI156-01]; assesses=[] -->
 
 **حديثا** — *ḥadīthan* — "recently". Arabic's past for "I" ends in **-تُ** (*-tu*): **قرأت حديثا كتابا جميلا** — *qaraʾtu ḥadīthan kitāban jamīlan* — "I recently read a lovely book."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حديثا** (*ḥadīthan*) is built on the native Arabic root *ḥ-d-th*, "to be new; to happen" (Lane). *Ḥadīthan* is *ḥadīth*, "new, recent", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

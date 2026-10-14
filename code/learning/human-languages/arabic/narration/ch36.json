@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Cups, Plates, and More Than One",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:99f0c4796e8d9f3e",
+  "sourceHash": "fnv1a64:ffaf4617f88d33fb",
   "lessons": [
     {
       "id": "AR-C36-zayt",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c88f3fe2184c007d",
+      "sourceHash": "fnv1a64:a48e340a0d5b10cf",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -103,6 +103,10 @@
             {
               "kind": "speech",
               "text": "ز is a sun letter, which is why al- is said az- — the assimilation that makes al- + sukkar into as-sukkar. Spanish took the sound it heard, article and all. Portuguese did the same with azeite."
+            },
+            {
+              "kind": "speech",
+              "text": "Zayt is an old Semitic word, listed under z-y-t (Lane), and a cousin of Hebrew zayit, \"olive\"."
             }
           ]
         },
@@ -214,7 +218,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c5a32351b2d7d7b1",
+      "sourceHash": "fnv1a64:8cce2eadf8f91ef4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -406,7 +410,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:91d403700793bc3e",
+      "sourceHash": "fnv1a64:3f7fb197aa380914",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -482,6 +486,10 @@
             {
               "kind": "speech",
               "text": "A plate, a floor and a social class, off one idea about layers. And the plates themselves belong somewhere you already built: مَطْعَم (maṭʿam), the place of eating."
+            },
+            {
+              "kind": "speech",
+              "text": "Ṭabaq is built on this native root (Lane)."
             }
           ]
         },
@@ -593,7 +601,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:23da8b80df9ef9dc",
+      "sourceHash": "fnv1a64:34ff268ae1ed4e26",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -677,6 +685,10 @@
             {
               "kind": "speech",
               "text": "The rule of thumb: a noun in ة usually takes the added ending, and most other everyday nouns break. Milʿaqa is the honest reminder that \"usually\" is doing work — it ends in ة and breaks anyway."
+            },
+            {
+              "kind": "speech",
+              "text": "Milʿaqa is built on this native root (Lane)."
             }
           ]
         },

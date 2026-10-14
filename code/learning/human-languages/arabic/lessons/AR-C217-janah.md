@@ -14,7 +14,8 @@ romanization: "janāḥ"
 concept_tag: AR-SHAY217-JANAH
 prerequisites: [AR-C216-dabab, AR-C217-dhayl]
 sounds: []
-roots: []
+roots: [j-n-ḥ]
+etymology_hook: "janāḥ: built on the root j-n-ḥ, 'to incline' (Lane); janāḥ is a wing"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C217-dhayl]
 <!-- hl-knowledge: introduces=[AR-LEX-C217-SHAY217-02]; assesses=[] -->
 
 **جناح** — *janāḥ* — "a wing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جناح** (*janāḥ*) is built on the native Arabic root *j-n-ḥ*, "to incline; a wing" (Lane). *Janāḥ* is a wing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 190,
-  "sourceHash": "fnv1a64:b6e2c9ce552a4df6",
+  "sourceHash": "fnv1a64:10440ac8fe5eb063",
   "lessonIds": [
     "AR-C190-mughanni",
     "AR-C190-laib",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch190.txt",
   "json": "arabic/narration/ch190.json",
-  "textHash": "fnv1a64:0a5db502fc3f7db9",
-  "jsonHash": "fnv1a64:fe0e08f4dee52c68",
+  "textHash": "fnv1a64:155d400aefbdcdeb",
+  "jsonHash": "fnv1a64:db101197974aa851",
   "findings": []
 }

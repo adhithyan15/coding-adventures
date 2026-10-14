@@ -14,7 +14,8 @@ romanization: "qird"
 concept_tag: AR-ANIMALS80-QIRD
 prerequisites: [AR-C80-namir, AR-C80-fil]
 sounds: []
-roots: []
+roots: [q-r-d]
+etymology_hook: "qird: built on the root q-r-d, 'an ape, a monkey' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C80-fil]
 <!-- hl-knowledge: introduces=[AR-LEX-C80-ANIMALS80-03]; assesses=[] -->
 
 **قرد** — *qird* — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قرد** (*qird*) is built on the native Arabic root *q-r-d*, "an ape, a monkey" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

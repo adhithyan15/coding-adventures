@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 33,
-  "sourceHash": "fnv1a64:7460f2e7164b5e30",
+  "sourceHash": "fnv1a64:4c613da6629cb44a",
   "lessonIds": [
     "AR-C33-shay",
     "AR-C33-halib",
@@ -14,6 +14,6 @@
   "text": "arabic/narration/ch33.txt",
   "json": "arabic/narration/ch33.json",
   "textHash": "fnv1a64:b2d05ef8cf8d3e7d",
-  "jsonHash": "fnv1a64:4e3c684b20c4e1a2",
+  "jsonHash": "fnv1a64:a40ec38a8b2be612",
   "findings": []
 }

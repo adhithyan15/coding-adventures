@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:13490c4d381973be",
+  "sourceHash": "fnv1a64:c88e7bb40c501047",
   "lessons": [
     {
       "id": "AR-C25-yawm",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28ff6a4dfbcb2da7",
+      "sourceHash": "fnv1a64:99accdd1d1b22f1a",
       "notice": null,
       "blocks": [
         {

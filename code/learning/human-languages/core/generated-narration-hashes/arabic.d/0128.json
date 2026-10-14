@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 128,
-  "sourceHash": "fnv1a64:6a945d12c619b0cf",
+  "sourceHash": "fnv1a64:d8917ac97d206332",
   "lessonIds": [
     "AR-C128-nazzara",
     "AR-C128-filfil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch128.txt",
   "json": "arabic/narration/ch128.json",
-  "textHash": "fnv1a64:a42a705aeb700a19",
-  "jsonHash": "fnv1a64:a3b6a35d7faa083e",
+  "textHash": "fnv1a64:09672edc24022e5f",
+  "jsonHash": "fnv1a64:7b2d9ad194c42803",
   "findings": []
 }

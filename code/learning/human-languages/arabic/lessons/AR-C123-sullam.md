@@ -14,7 +14,8 @@ romanization: "sullam"
 concept_tag: AR-THINGS123-SULLAM
 prerequisites: [AR-C123-battaniyya, AR-C123-wisada]
 sounds: []
-roots: []
+roots: [sullam-ladder]
+etymology_hook: "sullam: built on the root s-l-m, 'a ladder' (Lane); Lane lists sullam under s-l-m"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C123-wisada]
 <!-- hl-knowledge: introduces=[AR-LEX-C123-THINGS123-03]; assesses=[] -->
 
 **سلم** — *sullam* — "a ladder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سلم** (*sullam*) is built on the native Arabic root *s-l-m*, "a ladder" (Lane). Lane lists *sullam* under *s-l-m*; Hebrew *sullam*, "ladder", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

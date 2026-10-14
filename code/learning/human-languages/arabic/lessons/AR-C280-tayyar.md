@@ -14,7 +14,8 @@ romanization: "ṭayyār"
 concept_tag: AR-AMAL280-TAYYAR
 prerequisites: [AR-C280-muhandis, AR-C280-muhami]
 sounds: []
-roots: []
+roots: [ṭ-y-r]
+etymology_hook: "ṭayyār: built on the root ṭ-y-r, 'to fly' (Lane); ṭayyār is the faʿʿāl noun, 'one who flies'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C280-muhami]
 <!-- hl-knowledge: introduces=[AR-LEX-C280-AMAL280-04]; assesses=[] -->
 
 **طيار** — *ṭayyār* — "a pilot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طيار** (*ṭayyār*) is built on the native Arabic root *ṭ-y-r*, "to fly" (Lane). *Ṭayyār* is the *faʿʿāl* noun, "one who flies".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

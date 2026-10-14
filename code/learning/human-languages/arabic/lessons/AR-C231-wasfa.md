@@ -14,7 +14,8 @@ romanization: "waṣfa"
 concept_tag: AR-SIHHA231-WASFA
 prerequisites: [AR-C230-rakala, AR-C231-ilaj]
 sounds: []
-roots: []
+roots: [w-ṣ-f]
+etymology_hook: "waṣfa: built on the root w-ṣ-f, 'to describe' (Lane); waṣfa is a description, a prescription"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C231-ilaj]
 <!-- hl-knowledge: introduces=[AR-LEX-C231-SIHHA231-02]; assesses=[] -->
 
 **وصفة** — *waṣfa* — "a prescription; a recipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وصفة** (*waṣfa*) is built on the native Arabic root *w-ṣ-f*, "to describe" (Lane). *Waṣfa* is a description, a prescription.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "qābala"
 concept_tag: AR-VERB-QABALA
 prerequisites: [AR-C195-istaqala, AR-C195-adara]
 sounds: []
-roots: []
+roots: [q-b-l]
+etymology_hook: "qābala: built on the root q-b-l, 'to face' (Lane); qābala is Form III, 'to meet face to face'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C195-adara]
 <!-- hl-knowledge: introduces=[AR-LEX-C195-ACT195-03]; assesses=[] -->
 
 **قابل** — *qābala* — "to meet (someone)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قابل** (*qābala*) is built on the native Arabic root *q-b-l*, "to face" (Lane). *Qābala* is Form III, "to meet face to face".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khiyār"
 concept_tag: AR-THINGS129-KHIYAR
 prerequisites: [AR-C129-ful, AR-C129-thum]
 sounds: []
-roots: []
+roots: [persian-khiyar]
+etymology_hook: "khiyār: arabicized from Persian khiyār 'cucumber' (Lane); a look-alike of kh-y-r 'choice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C129-thum]
 <!-- hl-knowledge: introduces=[AR-LEX-C129-THINGS129-03]; assesses=[] -->
 
 **خيار** — *khiyār* — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خيار** (*khiyār*) is a loan: Lane's sources call it arabicized from Persian *khiyār*, "cucumber", not Arabic. It only looks like the root *kh-y-r*, "good, choice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

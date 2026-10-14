@@ -14,7 +14,8 @@ romanization: "madrasa"
 concept_tag: AR-SCHOOL73-MADRASA
 prerequisites: [AR-C73-qalam, AR-C73-waraqa]
 sounds: []
-roots: []
+roots: [d-r-s]
+etymology_hook: "madrasa: built on the root d-r-s, 'to become effaced' (Lane); madrasa is the ma- place noun, 'a place of study'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C73-waraqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C73-SCHOOL73-05]; assesses=[] -->
 
 **مدرسة** — *madrasa* — "a school".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مدرسة** (*madrasa*) is built on the native Arabic root *d-r-s*, "to become effaced; to study" (Lane). *Madrasa* is the *ma-* place noun, "a place of study".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

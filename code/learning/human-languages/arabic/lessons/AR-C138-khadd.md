@@ -14,7 +14,8 @@ romanization: "khadd"
 concept_tag: AR-THINGS138-KHADD
 prerequisites: [AR-C138-nasr, AR-C138-difda, AR-C01-sabah-al-khayr, AR-C01-sabah-al-khayr, AR-C01-sabah-al-khayr]
 sounds: []
-roots: []
+roots: [kh-d-d]
+etymology_hook: "khadd: built on the root kh-d-d, 'the cheek' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C138-difda]
 <!-- hl-knowledge: introduces=[AR-LEX-C138-THINGS138-03]; assesses=[] -->
 
 **خد** — *khadd* — "a cheek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خد** (*khadd*) is built on the native Arabic root *kh-d-d*, "the cheek" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

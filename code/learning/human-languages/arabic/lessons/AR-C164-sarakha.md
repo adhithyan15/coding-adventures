@@ -14,7 +14,8 @@ romanization: "ṣarakha"
 concept_tag: AR-VERB-SARAKHA
 prerequisites: [AR-C163-safaha, AR-C163-anaqa]
 sounds: []
-roots: []
+roots: [ṣ-r-kh]
+etymology_hook: "ṣarakha: built on the root ṣ-r-kh, 'to cry out' (Lane); ṣarakha is the plain verb, 'he cried out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C163-anaqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C164-ACT164-01]; assesses=[] -->
 
 **صرخ** — *ṣarakha* — "to shout, to scream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صرخ** (*ṣarakha*) is built on the native Arabic root *ṣ-r-kh*, "to cry out" (Lane). *Ṣarakha* is the plain verb, "he cried out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

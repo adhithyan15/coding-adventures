@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 75,
-  "sourceHash": "fnv1a64:591df908733f579c",
+  "sourceHash": "fnv1a64:75c4f5cdb74c9002",
   "lessonIds": [
     "AR-C75-kalima",
     "AR-C75-sura",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch75.txt",
   "json": "arabic/narration/ch75.json",
-  "textHash": "fnv1a64:b425cb7c7fd110d5",
-  "jsonHash": "fnv1a64:33dd2686d6ed0a6b",
+  "textHash": "fnv1a64:2e9f2dcc64b43b67",
+  "jsonHash": "fnv1a64:6b5dbb03c30025bb",
   "findings": []
 }

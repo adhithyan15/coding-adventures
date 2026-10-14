@@ -14,7 +14,8 @@ romanization: "maḥrūq"
 concept_tag: AR-SIFA209-MAHRUQ
 prerequisites: [AR-C209-mashwi, AR-C209-masluq]
 sounds: []
-roots: []
+roots: [ḥ-r-q]
+etymology_hook: "maḥrūq: built on the root ḥ-r-q, 'to burn' (Lane); maḥrūq is the passive participle, 'burnt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C209-masluq]
 <!-- hl-knowledge: introduces=[AR-LEX-C209-SIFA209-03]; assesses=[] -->
 
 **محروق** — *maḥrūq* — "burnt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**محروق** (*maḥrūq*) is built on the native Arabic root *ḥ-r-q*, "to burn" (Lane). *Maḥrūq* is the passive participle, "burnt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nāʿim"
 concept_tag: AR-QUAL152-NAIM
 prerequisites: [AR-C152-hamid, AR-C152-murr]
 sounds: []
-roots: []
+roots: [n-ʿ-m]
+etymology_hook: "nāʿim: built on the root n-ʿ-m, 'to be soft, to live in ease' (Lane); nāʿim is the active participle, 'soft, smooth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C152-murr]
 <!-- hl-knowledge: introduces=[AR-LEX-C152-QUAL152-03]; assesses=[] -->
 
 **ناعم** — *nāʿim* — "soft, smooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناعم** (*nāʿim*) is built on the native Arabic root *n-ʿ-m*, "to be soft, to live in ease" (Lane). *Nāʿim* is the active participle, "soft, smooth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

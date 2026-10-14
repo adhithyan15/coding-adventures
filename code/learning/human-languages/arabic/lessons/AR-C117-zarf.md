@@ -14,7 +14,8 @@ romanization: "ẓarf"
 concept_tag: AR-THINGS117-ZARF
 prerequisites: [AR-C117-majalla, AR-C117-risala]
 sounds: []
-roots: []
+roots: [ẓ-r-f]
+etymology_hook: "ẓarf: built on the root ẓ-r-f, 'a vessel, a receptacle' (Lane); Lane's ẓarf is a vessel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C117-risala]
 <!-- hl-knowledge: introduces=[AR-LEX-C117-THINGS117-05]; assesses=[] -->
 
 **ظرف** — *ẓarf* — "an envelope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ظرف** (*ẓarf*) is built on the native Arabic root *ẓ-r-f*, "a vessel, a receptacle" (Lane). Lane's *ẓarf* is a vessel; the envelope is a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṣiḥḥī"
 concept_tag: AR-SIFA209-SIHHI
 prerequisites: [AR-C209-masluq, AR-C209-mahruq]
 sounds: []
-roots: []
+roots: [ṣ-ḥ-ḥ]
+etymology_hook: "ṣiḥḥī: built on the root ṣ-ḥ-ḥ, 'to be sound, healthy' (Lane); ṣiḥḥī is ṣiḥḥa, 'health', with the adjective ending -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C209-mahruq]
 <!-- hl-knowledge: introduces=[AR-LEX-C209-SIFA209-04]; assesses=[] -->
 
 **صحي** — *ṣiḥḥī* — "healthy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صحي** (*ṣiḥḥī*) is built on the native Arabic root *ṣ-ḥ-ḥ*, "to be sound, healthy" (Lane). *Ṣiḥḥī* is *ṣiḥḥa*, "health", with the adjective ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

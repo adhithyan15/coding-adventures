@@ -14,7 +14,8 @@ romanization: "tābaʿa"
 concept_tag: AR-VERB-TABAA2
 prerequisites: [AR-C259-nashara, AR-C259-baththa]
 sounds: []
-roots: []
+roots: [t-b-ʿ]
+etymology_hook: "tābaʿa: built on the root t-b-ʿ, 'to follow' (Lane); tābaʿa is Form III, 'to keep following'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C259-baththa]
 <!-- hl-knowledge: introduces=[AR-LEX-C259-ACT259-03]; assesses=[] -->
 
 **تابع** — *tābaʿa* — "to follow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تابع** (*tābaʿa*) is built on the native Arabic root *t-b-ʿ*, "to follow" (Lane). *Tābaʿa* is Form III, "to keep following".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

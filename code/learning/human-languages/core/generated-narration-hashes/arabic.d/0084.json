@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 84,
-  "sourceHash": "fnv1a64:87f6b478d45dd5f0",
+  "sourceHash": "fnv1a64:235b65efad61fbac",
   "lessonIds": [
     "AR-C84-farigh",
     "AR-C84-ghani",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch84.txt",
   "json": "arabic/narration/ch84.json",
-  "textHash": "fnv1a64:5bf605bf742b76ef",
-  "jsonHash": "fnv1a64:bf344af35bd38072",
+  "textHash": "fnv1a64:541ffe924a5936ca",
+  "jsonHash": "fnv1a64:70ad0c19bbe8408a",
   "findings": []
 }

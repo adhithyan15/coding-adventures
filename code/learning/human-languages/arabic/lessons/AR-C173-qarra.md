@@ -14,7 +14,8 @@ romanization: "qārra"
 concept_tag: AR-MAKAN173-QARRA
 prerequisites: [AR-C173-khayma, AR-C173-mawqif]
 sounds: []
-roots: []
+roots: [q-r-r]
+etymology_hook: "qārra: built on the root q-r-r, 'to settle, to be still' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C173-mawqif]
 <!-- hl-knowledge: introduces=[AR-LEX-C173-MAKAN173-04]; assesses=[] -->
 
 **قارة** — *qārra* — "a continent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قارة** (*qārra*) is built on the native Arabic root *q-r-r*, "to settle, to be still" (Lane). *Qārra* is the feminine active participle, "settled, firm": the mainland, now a continent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

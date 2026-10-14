@@ -14,7 +14,8 @@ romanization: "ʿamma"
 concept_tag: AR-SHAY246-AMMA
 prerequisites: [AR-C246-usra, AR-C246-hafid]
 sounds: []
-roots: []
+roots: [ʿ-m-m]
+etymology_hook: "ʿamma: built on the root ʿ-m-m, 'a paternal uncle' (Lane); ʿamma is the feminine of ʿamm"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C246-hafid]
 <!-- hl-knowledge: introduces=[AR-LEX-C246-SHAY246-03]; assesses=[] -->
 
 **عمة** — *ʿamma* — "an aunt (father's sister)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عمة** (*ʿamma*) is built on the native Arabic root *ʿ-m-m*, "a paternal uncle" (Lane). *ʿAmma* is the feminine of *ʿamm*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

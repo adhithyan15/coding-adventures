@@ -14,7 +14,8 @@ romanization: "maghsala"
 concept_tag: AR-SHAY181-MAGHSALA
 prerequisites: [AR-C181-mukayyif, AR-C181-ulba]
 sounds: []
-roots: []
+roots: [gh-s-l]
+etymology_hook: "maghsala: built on the root gh-s-l, 'to wash' (Lane); maghsala is the ma- place noun, 'a place of washing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C181-ulba]
 <!-- hl-knowledge: introduces=[AR-LEX-C181-SHAY181-04]; assesses=[] -->
 
 **مغسلة** — *maghsala* — "a sink, a washbasin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مغسلة** (*maghsala*) is built on the native Arabic root *gh-s-l*, "to wash" (Lane). *Maghsala* is the *ma-* place noun, "a place of washing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

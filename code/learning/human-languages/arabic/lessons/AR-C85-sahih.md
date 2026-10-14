@@ -14,7 +14,8 @@ romanization: "ṣaḥīḥ"
 concept_tag: AR-ADJ85-SAHIH
 prerequisites: [AR-C85-khafif, AR-C85-thaqil]
 sounds: []
-roots: []
+roots: [ṣ-ḥ-ḥ]
+etymology_hook: "ṣaḥīḥ: built on the root ṣ-ḥ-ḥ, 'to be sound, free from defect' (Lane); ṣaḥīḥ is the faʿīl adjective, 'sound, correct'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C85-thaqil]
 <!-- hl-knowledge: introduces=[AR-LEX-C85-ADJ85-03]; assesses=[] -->
 
 **صحيح** — *ṣaḥīḥ* — "correct, true".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صحيح** (*ṣaḥīḥ*) is built on the native Arabic root *ṣ-ḥ-ḥ*, "to be sound, free from defect" (Lane). *Ṣaḥīḥ* is the *faʿīl* adjective, "sound, correct".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

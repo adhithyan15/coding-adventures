@@ -14,7 +14,8 @@ romanization: "hiwāya"
 concept_tag: AR-SHAY186-HIWAYA
 prerequisites: [AR-C185-thawr, AR-C185-hashara]
 sounds: []
-roots: []
+roots: [h-w-y]
+etymology_hook: "hiwāya: built on the root h-w-y, 'to love, to desire' (Lane); hiwāya is a modern word built on hawā, 'liking'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C185-hashara]
 <!-- hl-knowledge: introduces=[AR-LEX-C186-SHAY186-01]; assesses=[] -->
 
 **هواية** — *hiwāya* — "a hobby".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**هواية** (*hiwāya*) is built on the native Arabic root *h-w-y*, "to love, to desire" (Lane). *Hiwāya* is a modern word built on *hawā*, "liking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

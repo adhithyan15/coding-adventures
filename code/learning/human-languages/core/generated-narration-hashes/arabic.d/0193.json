@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 193,
-  "sourceHash": "fnv1a64:c5a500d4a566a818",
+  "sourceHash": "fnv1a64:97b6a94d211b1270",
   "lessonIds": [
     "AR-C193-khalaa",
     "AR-C193-jarraba",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch193.txt",
   "json": "arabic/narration/ch193.json",
-  "textHash": "fnv1a64:dfbf14904c1485d7",
-  "jsonHash": "fnv1a64:8af443faba2cd5a2",
+  "textHash": "fnv1a64:ea8ec126247b8411",
+  "jsonHash": "fnv1a64:b9dfcfdc51b64b47",
   "findings": []
 }

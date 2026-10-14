@@ -14,7 +14,8 @@ romanization: "waḍaʿa"
 concept_tag: AR-VERB-WADAA
 prerequisites: [AR-C59-baa, AR-C59-ata]
 sounds: []
-roots: []
+roots: [w-ḍ-ʿ]
+etymology_hook: "waḍaʿa: built on the root w-ḍ-ʿ, 'to put down, to lay' (Lane); waḍaʿa is the plain verb, 'he put'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C59-ata]
 <!-- hl-knowledge: introduces=[AR-LEX-C59-VERBS59-03]; assesses=[] -->
 
 **وضع** — *waḍaʿa* — "to put (he put)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وضع** (*waḍaʿa*) is built on the native Arabic root *w-ḍ-ʿ*, "to put down, to lay" (Lane). *Waḍaʿa* is the plain verb, "he put".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

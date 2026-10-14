@@ -14,7 +14,8 @@ romanization: "masrūr"
 concept_tag: AR-QUAL148-MASRUR
 prerequisites: [AR-C147-latif, AR-C147-ghadib]
 sounds: []
-roots: []
+roots: [s-r-r]
+etymology_hook: "masrūr: built on the root s-r-r, 'to gladden' (Lane); masrūr is the passive participle, 'gladdened, pleased'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C147-ghadib]
 <!-- hl-knowledge: introduces=[AR-LEX-C148-QUAL148-01]; assesses=[] -->
 
 **مسرور** — *masrūr* — "pleased".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسرور** (*masrūr*) is built on the native Arabic root *s-r-r*, "to gladden" (Lane). *Masrūr* is the passive participle, "gladdened, pleased".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

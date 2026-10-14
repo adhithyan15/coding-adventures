@@ -14,7 +14,8 @@ romanization: "ḥāfila"
 concept_tag: AR-TOWN91-HAFILA
 prerequisites: [AR-C91-mahatta, AR-C91-sayyara]
 sounds: []
-roots: []
+roots: [ḥ-f-l]
+etymology_hook: "ḥāfila: built on the root ḥ-f-l, 'to gather, to fill' (Lane); Lane's ḥāfil is a full udder or a valley in flood"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C91-sayyara]
 <!-- hl-knowledge: introduces=[AR-LEX-C91-TOWN91-05]; assesses=[] -->
 
 **حافلة** — *ḥāfila* — "a bus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حافلة** (*ḥāfila*) is built on the native Arabic root *ḥ-f-l*, "to gather, to fill" (Lane). Lane's *ḥāfil* is a full udder or a valley in flood; as the word for a bus *ḥāfila* is a modern coinage.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

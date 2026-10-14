@@ -14,7 +14,8 @@ romanization: "ṣabba"
 concept_tag: AR-VERB-SABBA
 prerequisites: [AR-C159-abara, AR-C160-dhaqa]
 sounds: []
-roots: []
+roots: [ṣ-b-b]
+etymology_hook: "ṣabba: built on the root ṣ-b-b, 'to pour' (Lane); ṣabba is the plain verb, 'he poured'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C160-dhaqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C160-ACT160-02]; assesses=[] -->
 
 **صب** — *ṣabba* — "to pour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صب** (*ṣabba*) is built on the native Arabic root *ṣ-b-b*, "to pour" (Lane). *Ṣabba* is the plain verb, "he poured".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

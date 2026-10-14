@@ -14,7 +14,8 @@ romanization: "mushmis"
 concept_tag: AR-SIFA211-MUSHMIS
 prerequisites: [AR-C210-khajul, AR-C210-ijtimai]
 sounds: []
-roots: []
+roots: [sh-m-s]
+etymology_hook: "mushmis: built on the root sh-m-s, 'the sun' (Lane); mushmis is the Form IV participle, 'full of sun'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C210-ijtimai]
 <!-- hl-knowledge: introduces=[AR-LEX-C211-SIFA211-01]; assesses=[] -->
 
 **مشمس** — *mushmis* — "sunny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مشمس** (*mushmis*) is built on the native Arabic root *sh-m-s*, "the sun" (Lane). *Mushmis* is the Form IV participle, "full of sun".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

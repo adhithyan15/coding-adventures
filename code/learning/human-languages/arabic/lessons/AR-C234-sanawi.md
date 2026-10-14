@@ -14,7 +14,8 @@ romanization: "sanawī"
 concept_tag: AR-WAQT234-SANAWI
 prerequisites: [AR-C233-ghurub, AR-C233-milad]
 sounds: []
-roots: []
+roots: [s-n-w]
+etymology_hook: "sanawī: built on the root s-n-w, 'a year' (Lane); sanawī is sana, 'year', with the adjective ending -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C233-milad]
 <!-- hl-knowledge: introduces=[AR-LEX-C234-WAQT234-01]; assesses=[] -->
 
 **سنوي** — *sanawī* — "yearly, annual".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سنوي** (*sanawī*) is built on the native Arabic root *s-n-w*, "a year" (Lane). *Sanawī* is *sana*, "year", with the adjective ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

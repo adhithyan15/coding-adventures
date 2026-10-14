@@ -14,7 +14,8 @@ romanization: "rātib"
 concept_tag: AR-THINGS143-RATIB
 prerequisites: [AR-C143-talib, AR-C143-wazifa]
 sounds: []
-roots: []
+roots: [r-t-b]
+etymology_hook: "rātib: built on the root r-t-b, 'to be fixed, to be firm' (Lane); Lane's rātib is a thing fixed and constant"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C143-wazifa]
 <!-- hl-knowledge: introduces=[AR-LEX-C143-THINGS143-05]; assesses=[] -->
 
 **راتب** — *rātib* — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**راتب** (*rātib*) is built on the native Arabic root *r-t-b*, "to be fixed, to be firm" (Lane). Lane's *rātib* is a thing fixed and constant; the salary is a fixed sum.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

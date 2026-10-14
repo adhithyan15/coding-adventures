@@ -14,7 +14,8 @@ romanization: "ghassāla"
 concept_tag: AR-SHAY181-GHASSALA
 prerequisites: [AR-C180-ajnabi, AR-C180-musattah]
 sounds: []
-roots: []
+roots: [gh-s-l]
+etymology_hook: "ghassāla: built on the root gh-s-l, 'to wash' (Lane); ghassāla is a modern faʿʿāla word, 'the washer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C180-musattah]
 <!-- hl-knowledge: introduces=[AR-LEX-C181-SHAY181-01]; assesses=[] -->
 
 **غسالة** — *ghassāla* — "a washing machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غسالة** (*ghassāla*) is built on the native Arabic root *gh-s-l*, "to wash" (Lane). *Ghassāla* is a modern *faʿʿāla* word, "the washer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

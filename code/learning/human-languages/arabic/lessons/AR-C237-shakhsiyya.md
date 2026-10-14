@@ -14,7 +14,8 @@ romanization: "shakhṣiyya"
 concept_tag: AR-SABAB237-SHAKHSIYYA
 prerequisites: [AR-C237-shuur, AR-C237-akhlaq]
 sounds: []
-roots: []
+roots: [sh-kh-ṣ]
+etymology_hook: "shakhṣiyya: built on the root sh-kh-ṣ, 'a person seen from afar' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C237-akhlaq]
 <!-- hl-knowledge: introduces=[AR-LEX-C237-SABAB237-05]; assesses=[] -->
 
 **شخصية** — *shakhṣiyya* — "personality, a character".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شخصية** (*shakhṣiyya*) is built on the native Arabic root *sh-kh-ṣ*, "a person seen from afar" (Lane). *Shakhṣiyya* is *shakhṣ*, "a person", with the abstract ending *-iyya*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

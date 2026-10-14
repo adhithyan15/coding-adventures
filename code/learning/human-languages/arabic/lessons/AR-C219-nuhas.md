@@ -14,7 +14,8 @@ romanization: "nuḥās"
 concept_tag: AR-SHAY219-NUHAS
 prerequisites: [AR-C219-khashab, AR-C219-zujaj]
 sounds: []
-roots: []
+roots: [n-ḥ-s]
+etymology_hook: "nuḥās: built on the root n-ḥ-s, 'copper' (Lane); Hebrew neḥoshet, 'copper, bronze', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C219-zujaj]
 <!-- hl-knowledge: introduces=[AR-LEX-C219-SHAY219-04]; assesses=[] -->
 
 **نحاس** — *nuḥās* — "copper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نحاس** (*nuḥās*) is built on the native Arabic root *n-ḥ-s*, "copper" (Lane). Hebrew *neḥoshet*, "copper, bronze", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

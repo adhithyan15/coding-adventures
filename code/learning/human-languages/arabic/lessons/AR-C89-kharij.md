@@ -14,7 +14,8 @@ romanization: "khārij"
 concept_tag: AR-PLACE89-KHARIJ
 prerequisites: [AR-C88-qarib, AR-C88-dakhil]
 sounds: []
-roots: []
+roots: [kh-r-j]
+etymology_hook: "khārij: built on the root kh-r-j, 'to go out' (Lane); khārij is the active participle, 'going out', hence 'outside'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C88-dakhil]
 <!-- hl-knowledge: introduces=[AR-LEX-C89-PLACE89-01]; assesses=[] -->
 
 **خارج** — *khārij* — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خارج** (*khārij*) is built on the native Arabic root *kh-r-j*, "to go out" (Lane). *Khārij* is the active participle, "going out", hence "outside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

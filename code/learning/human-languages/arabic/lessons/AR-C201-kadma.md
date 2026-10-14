@@ -14,7 +14,8 @@ romanization: "kadma"
 concept_tag: AR-SIHHA201-KADMA
 prerequisites: [AR-C201-huqna, AR-C201-amaliyya]
 sounds: []
-roots: []
+roots: [k-d-m]
+etymology_hook: "kadma: built on the root k-d-m, 'to bite with the front of the mouth' (Lane); kadma is one bite-mark, a bruise"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C201-amaliyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C201-SIHHA201-03]; assesses=[] -->
 
 **كدمة** — *kadma* — "a bruise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كدمة** (*kadma*) is built on the native Arabic root *k-d-m*, "to bite with the front of the mouth" (Lane). *Kadma* is one bite-mark, a bruise.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

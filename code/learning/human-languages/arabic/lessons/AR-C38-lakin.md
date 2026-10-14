@@ -11,8 +11,8 @@ gloss: but — the first word in this book that can set one clause against anoth
 concept_tag: AR-JOIN-LAKIN
 prerequisites: [AR-C38-aw, AR-C37-la-afham, AR-C33-shay]
 sounds: [lam-alif-ligature]
-roots: []
-etymology_hook: "لكن is built on the negator لا with an old particle behind it — so Arabic's word for 'but' has a 'not' inside it, exactly as English 'but' descends from be-ūtan, 'be out, except'; two unrelated languages made their adversative out of a word for leaving something aside"
+roots: [lakin-but]
+etymology_hook: "lākin: the grammarians see lā 'not' with an old particle behind it; the full origin is not settled"
 duration:
   max_seconds: 240
 requires:
@@ -68,6 +68,8 @@ aside.
 In writing you will also meet **لكنّ** with a shadda, which takes a following
 noun in the accusative. The plain **لكن** in this lesson joins clauses and asks
 nothing of what follows.
+
+The grammarians differ over which old particle stands behind *lā*, so the full origin of *lākin* is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C38-LAKIN-01, AR-LEX-C38-WA-01, AR-FUNC-C37-LA-AFHAM-01, AR-CONCEPT-C33-HALIB-01] -->

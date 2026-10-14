@@ -14,7 +14,8 @@ romanization: "ʿānaqa"
 concept_tag: AR-VERB-ANAQA
 prerequisites: [AR-C163-tazawwaja, AR-C163-safaha]
 sounds: []
-roots: []
+roots: [ʿ-n-q]
+etymology_hook: "ʿānaqa: built on the root ʿ-n-q, 'the neck' (Lane); ʿānaqa is Form III, 'to take by the neck', to embrace"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C163-safaha]
 <!-- hl-knowledge: introduces=[AR-LEX-C163-ACT163-05]; assesses=[] -->
 
 **عانق** — *ʿānaqa* — "to hug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عانق** (*ʿānaqa*) is built on the native Arabic root *ʿ-n-q*, "the neck" (Lane). *ʿĀnaqa* is Form III, "to take by the neck", to embrace.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

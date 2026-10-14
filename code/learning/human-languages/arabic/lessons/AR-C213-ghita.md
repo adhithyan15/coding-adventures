@@ -14,7 +14,8 @@ romanization: "ghiṭāʾ"
 concept_tag: AR-SHAY213-GHITA
 prerequisites: [AR-C213-arika, AR-C213-fursha]
 sounds: []
-roots: []
+roots: [gh-ṭ-w]
+etymology_hook: "ghiṭāʾ: built on the root gh-ṭ-w, 'to cover' (Lane); ghiṭāʾ is a covering"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C213-fursha]
 <!-- hl-knowledge: introduces=[AR-LEX-C213-SHAY213-03]; assesses=[] -->
 
 **غطاء** — *ghiṭāʾ* — "a lid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غطاء** (*ghiṭāʾ*) is built on the native Arabic root *gh-ṭ-w*, "to cover" (Lane). *Ghiṭāʾ* is a covering.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

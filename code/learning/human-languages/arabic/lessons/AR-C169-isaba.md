@@ -14,7 +14,8 @@ romanization: "iṣāba"
 concept_tag: AR-SIHHA169-ISABA
 prerequisites: [AR-C169-tamrin, AR-C169-liyaqa]
 sounds: []
-roots: []
+roots: [ṣ-w-b]
+etymology_hook: "iṣāba: built on the root ṣ-w-b, 'to hit the mark' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C169-liyaqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C169-SIHHA169-04]; assesses=[] -->
 
 **إصابة** — *iṣāba* — "an injury".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**إصابة** (*iṣāba*) is built on the native Arabic root *ṣ-w-b*, "to hit the mark" (Lane). *Iṣāba* is the verbal noun of Form IV, "being hit", hence "an injury".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

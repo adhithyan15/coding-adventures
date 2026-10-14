@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 72,
-  "sourceHash": "fnv1a64:898ce542b46271f4",
+  "sourceHash": "fnv1a64:578901562fbdf825",
   "lessonIds": [
     "AR-C72-shawka",
     "AR-C72-zujaja",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch72.txt",
   "json": "arabic/narration/ch72.json",
-  "textHash": "fnv1a64:e2ad41428cb856ef",
-  "jsonHash": "fnv1a64:52e78654adbc1dcd",
+  "textHash": "fnv1a64:425124a436e555c5",
+  "jsonHash": "fnv1a64:ad9b966fdd3a8075",
   "findings": []
 }

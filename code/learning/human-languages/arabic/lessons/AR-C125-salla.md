@@ -14,7 +14,8 @@ romanization: "salla"
 concept_tag: AR-THINGS125-SALLA
 prerequisites: [AR-C125-miknasa, AR-C125-qumama]
 sounds: []
-roots: []
+roots: [s-l-l]
+etymology_hook: "salla: built on the root s-l-l, 'to draw out' (Lane); Lane's salla is a basket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C125-qumama]
 <!-- hl-knowledge: introduces=[AR-LEX-C125-THINGS125-04]; assesses=[] -->
 
 **سلة** — *salla* — "a basket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سلة** (*salla*) is built on the native Arabic root *s-l-l*, "to draw out" (Lane). Lane's *salla* is a basket; Syriac has a related word (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

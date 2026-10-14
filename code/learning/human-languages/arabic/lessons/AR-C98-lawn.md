@@ -14,7 +14,8 @@ romanization: "lawn"
 concept_tag: AR-WORLD98-LAWN
 prerequisites: [AR-C97-khamsun, AR-C97-alf]
 sounds: []
-roots: []
+roots: [l-w-n]
+etymology_hook: "lawn: built on the root l-w-n, 'colour' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C97-alf]
 <!-- hl-knowledge: introduces=[AR-LEX-C98-WORLD98-01]; assesses=[] -->
 
 **لون** — *lawn* — "a colour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لون** (*lawn*) is built on the native Arabic root *l-w-n*, "colour" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

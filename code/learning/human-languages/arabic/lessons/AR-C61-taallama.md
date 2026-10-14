@@ -14,7 +14,8 @@ romanization: "taʿallama"
 concept_tag: AR-VERB-TAALLAMA
 prerequisites: [AR-C60-baka, AR-C60-raqasa]
 sounds: []
-roots: []
+roots: [ʿ-l-m]
+etymology_hook: "taʿallama: built on the root ʿ-l-m, 'to know' (Lane); taʿallama is Form V, 'to get oneself taught', to learn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C60-raqasa]
 <!-- hl-knowledge: introduces=[AR-LEX-C61-VERBS61-01]; assesses=[] -->
 
 **تعلم** — *taʿallama* — "to learn (he learned)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تعلم** (*taʿallama*) is built on the native Arabic root *ʿ-l-m*, "to know" (Lane). *Taʿallama* is Form V, "to get oneself taught", to learn.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

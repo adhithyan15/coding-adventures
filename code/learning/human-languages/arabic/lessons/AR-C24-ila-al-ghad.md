@@ -12,7 +12,7 @@ concept_tag: AR-FAREWELL-TOMORROW
 prerequisites: [AR-C04-ila-liqaa]
 sounds: [ghayn, sun-letter-assimilation]
 roots: [gh-d-w]
-etymology_hook: "إلى الغد (ilā l-ghad), 'until tomorrow,' reuses إلى (ilā, 'until') from ilā l-liqāʾ; الغد (al-ghad, 'tomorrow') is root gh-d-w, whose core sense is 'to go out at dawn, early morning' — the same 'morning becomes tomorrow' shift already seen in Latin's māne→mañana/demain, an honest cross-language echo, not a coincidence unique to Romance"
+etymology_hook: "ilā l-ghad: ilā 'until' + al-ghad 'tomorrow', root gh-d-w 'to go out early in the morning' (Lane)"
 duration:
   max_seconds: 240
 requires:
@@ -62,6 +62,11 @@ happened in Latin, where *māne* ("morning") became French's *demain* and
 Spanish's *mañana* ("tomorrow"). Two completely unrelated language
 families — Semitic and Indo-European — independently building "tomorrow"
 out of "morning."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**إلى الغد** (*ilā l-ghad*) is built from *ilā*, "until", an inherited preposition, and *al-ghad*, "the morrow", on the native root *gh-d-w*, "to go out early in the morning" (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C24-ILA-AL-GHAD-01, AR-CONCEPT-C24-ILA-AL-GHAD-02] -->

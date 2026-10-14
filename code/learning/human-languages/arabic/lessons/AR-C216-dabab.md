@@ -14,7 +14,8 @@ romanization: "ḍabāb"
 concept_tag: AR-SHAY216-DABAB
 prerequisites: [AR-C216-sirr, AR-C216-wad]
 sounds: []
-roots: []
+roots: [ḍ-b-b]
+etymology_hook: "ḍabāb: built on the root ḍ-b-b, 'mist, fog' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C216-wad]
 <!-- hl-knowledge: introduces=[AR-LEX-C216-SHAY216-05]; assesses=[] -->
 
 **ضباب** — *ḍabāb* — "fog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضباب** (*ḍabāb*) is built on the native Arabic root *ḍ-b-b*, "mist, fog" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

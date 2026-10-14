@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 215,
-  "sourceHash": "fnv1a64:3cc0e287a3267b07",
+  "sourceHash": "fnv1a64:aca37b25ab937ee8",
   "lessonIds": [
     "AR-C215-hawiyya",
     "AR-C215-tashira",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch215.txt",
   "json": "arabic/narration/ch215.json",
-  "textHash": "fnv1a64:2bff55110b70c605",
-  "jsonHash": "fnv1a64:fd6985576ea88a83",
+  "textHash": "fnv1a64:c90cd85e3d1e343e",
+  "jsonHash": "fnv1a64:ebc2f1d689d489d5",
   "findings": []
 }

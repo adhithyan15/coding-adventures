@@ -14,7 +14,8 @@ romanization: "māʿiz"
 concept_tag: AR-ANIMALS79-MAIZ
 prerequisites: [AR-C78-hisan, AR-C79-baqara]
 sounds: []
-roots: []
+roots: [m-ʿ-z]
+etymology_hook: "māʿiz: built on the root m-ʿ-z, 'goats' (Lane); māʿiz is one goat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C79-baqara]
 <!-- hl-knowledge: introduces=[AR-LEX-C79-ANIMALS79-02]; assesses=[] -->
 
 **ماعز** — *māʿiz* — "a goat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ماعز** (*māʿiz*) is built on the native Arabic root *m-ʿ-z*, "goats" (Lane). *Māʿiz* is one goat; *maʿz* is the collective.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

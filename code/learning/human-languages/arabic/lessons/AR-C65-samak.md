@@ -14,7 +14,8 @@ romanization: "samak"
 concept_tag: AR-VERBS65-SAMAK
 prerequisites: [AR-C65-faza, AR-C65-nazala]
 sounds: []
-roots: []
+roots: [s-m-k]
+etymology_hook: "samak: built on the root s-m-k, 'fish' (Lane); Lane lists samak, 'fish', under s-m-k"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C65-nazala]
 <!-- hl-knowledge: introduces=[AR-LEX-C65-VERBS65-05]; assesses=[] -->
 
 **سمك** — *samak* — "fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سمك** (*samak*) is built on the native Arabic root *s-m-k*, "fish" (Lane). Lane lists *samak*, "fish", under *s-m-k*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

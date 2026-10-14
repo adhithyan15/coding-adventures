@@ -14,7 +14,8 @@ romanization: "thumma"
 concept_tag: AR-SABAB176-THUMMA
 prerequisites: [AR-C175-raghma, AR-C175-aydan]
 sounds: []
-roots: []
+roots: [thumma-then]
+etymology_hook: "thumma: an old conjunction with no three-letter root, set beside thamma 'there'; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C175-aydan]
 <!-- hl-knowledge: introduces=[AR-LEX-C176-SABAB176-01]; assesses=[] -->
 
 **ثم** — *thumma* — "then, next".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ثم** (*thumma*) is an old conjunction of sequence. It is not built on a three-letter root; it is usually set beside *thamma*, "there", and its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

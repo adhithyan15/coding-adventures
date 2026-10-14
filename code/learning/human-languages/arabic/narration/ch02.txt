@@ -47,6 +47,7 @@ The letters in this word.
 
 The word, taken apart.
 Arabic builds "my" by suffix, not a separate word: اسم (ism, "name") + ي (-ī, "my") = اسمي (ismī, "my name"). This is the same trick as the attached al- ("the") from Chapter 1 — Arabic loves to fasten little pieces onto a word rather than string separate words together.
+The ending -ī is inherited from the Semitic parent language: Hebrew marks "my" with the same -ī, as in ʾēlī, "my God".
 
 Guided Practice.
 [pause 1 second]
@@ -74,6 +75,9 @@ Ismī Arun. becomes "My name is Arun."
 
 Grammar Lens: no word for "is" — again.
 Recall from as-salāmu ʿalaykum (Ch. 1) that Arabic sets two words side by side and lets "is" be understood. So ismī Arun is literally "my-name Arun." Arabic shares this zero copula with the Dravidian languages (Tamil eṉ peyar Arun) — two unrelated families meeting on the same habit.
+
+The word, taken apart.
+اسمي (ismī) is built from ism, "name", on the root s-m-w (Lane), and the ending -ī, "my": "my name".
 
 Guided Practice.
 [pause 1 second]
@@ -133,6 +137,7 @@ The letters in this word.
 
 The word, taken apart.
 ما (mā, "what") is the everyday question-word for things. (Arabic has a second, māḏā, for "what" before verbs; mā is the one you want before a noun, as in "what [is] your name?")
+Mā is inherited from the Semitic parent language, not built on a three-letter root; Hebrew mā, "what", is its cousin.
 
 Guided Practice.
 [pause 1 second]
@@ -161,6 +166,9 @@ No "is," the possessive glued on, the gender carried in the suffix.
 Grammar Lens: the matched suffixes.
 "My name" takes ي (-ī), "your name" takes ك (-ka/-ki). The suffixes are the grammar of the exchange. Answer with ismī Arun.
 
+The word, taken apart.
+ما اسمك (mā ismuka) is built from mā, "what", an inherited Semitic question word, and ismuka, "your name": ism, on the root s-m-w (Lane), with -ka, "your".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "mā ismuka?" (to a man), "mā ismuki?" (to a woman)]
@@ -187,7 +195,8 @@ The letters in this word.
 (Skim if you read Arabic.) Uses ت (tāʾ, just met), ش (shīn) and ر (rāʾ) from Ch. 1, plus ف (fāʾ, "f").
 
 The word, taken apart.
-تشرفنا (tasharrafnā), root sh–r–f (honour, nobility): sharaf ("honour"), sharīf ("noble" — the Sharif of Mecca, and distantly the title behind English sheriff). tasharrafnā means literally "we have been honoured" — to meet you is presented as an honour received. A more literal option is furṣa saʿīda ("a happy occasion").
+تشرفنا (tasharrafnā), root sh–r–f (honour, nobility): sharaf ("honour"), sharīf ("noble" — the Sharif of Mecca). tasharrafnā means literally "we have been honoured" — to meet you is presented as an honour received. A more literal option is furṣa saʿīda ("a happy occasion").
+English sheriff only looks like sharīf: it comes from Old English scīrgerēfa, "shire-reeve", so that link is a folk etymology. Tasharrafnā is Form V of the native root, built on sharaf (Lane).
 
 Guided Practice.
 [pause 1 second]
@@ -260,6 +269,9 @@ You'll want to know: ثمن.
 Say it: thaman.
 [once you have stopped driving — look: at its shape as you say it.]
 The next lesson takes one piece of it, ن، ت، ث (nūn, tāʾ, thāʾ), and writes it on its own.
+
+The word, taken apart.
+ثمن (thaman) is built on the native Arabic root th-m-n, "a price" (Lane). Lane's thaman is what a seller receives in return for a thing sold.
 
 Guided Practice.
 [pause 1 second]
@@ -373,6 +385,9 @@ Say it: mudarris.
 [once you have stopped driving — look: at its shape as you say it.]
 The lessons that follow take pieces of it, the short-vowel marks ـَ, ـِ and ـُ, and the doubling mark ـّ, and write each one on its own.
 
+The word, taken apart.
+مُدَرِّس (mudarris) is built on the native Arabic root d-r-s, "to become effaced; to study" (Lane). Mudarris is the Form II participle, "one who makes others study": a teacher.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: mudarris]
@@ -433,6 +448,9 @@ You'll want to know: أَهْلًا.
 Say it: ahlan.
 [once you have stopped driving — look: at its shape as you say it.]
 The lessons that follow take pieces of it, the no-vowel mark ـْ and the ending ـً, and write each one on its own.
+
+The word, taken apart.
+أَهْلًا (ahlan) is the accusative of ahl, "the people of a house, family", built on the native root ʾ-h-l (Lane): "(you have come to) family".
 
 Guided Practice.
 [pause 1 second]

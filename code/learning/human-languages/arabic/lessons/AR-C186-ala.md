@@ -14,7 +14,8 @@ romanization: "āla"
 concept_tag: AR-SHAY186-ALA
 prerequisites: [AR-C186-riwaya, AR-C186-lawha]
 sounds: []
-roots: []
+roots: [ʾ-w-l]
+etymology_hook: "āla: built on the root ʾ-w-l, 'an instrument' (Lane); Lane's āla is an instrument or tool"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C186-lawha]
 <!-- hl-knowledge: introduces=[AR-LEX-C186-SHAY186-05]; assesses=[] -->
 
 **آلة** — *āla* — "a machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آلة** (*āla*) is built on the native Arabic root *ʾ-w-l*, "an instrument" (Lane). Lane's *āla* is an instrument or tool.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "taḥassana"
 concept_tag: AR-VERB-TAHASSANA
 prerequisites: [AR-C255-zara, AR-C255-ittasala]
 sounds: []
-roots: []
+roots: [h-s-n]
+etymology_hook: "taḥassana: built on the root ḥ-s-n, 'to be good, beautiful' (Lane); taḥassana is Form V, 'to become better'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C255-ittasala]
 <!-- hl-knowledge: introduces=[AR-LEX-C255-ACT255-04]; assesses=[] -->
 
 **تحسن** — *taḥassana* — "to get better, to improve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تحسن** (*taḥassana*) is built on the native Arabic root *ḥ-s-n*, "to be good, beautiful" (Lane). *Taḥassana* is Form V, "to become better".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

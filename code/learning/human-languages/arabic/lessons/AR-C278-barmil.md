@@ -14,7 +14,8 @@ romanization: "barmīl"
 concept_tag: AR-SHAY278-BARMIL
 prerequisites: [AR-C278-misfah, AR-C278-mighrafa]
 sounds: []
-roots: []
+roots: [spanish-barril]
+etymology_hook: "barmīl: usually traced to Spanish barril 'barrel' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C278-mighrafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C278-SHAY278-05]; assesses=[] -->
 
 **برميل** — *barmīl* — "a barrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**برميل** (*barmīl*) is usually traced to Spanish *barril*, "barrel" (EtymDB); it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

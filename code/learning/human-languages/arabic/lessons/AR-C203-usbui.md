@@ -14,7 +14,8 @@ romanization: "usbūʿī"
 concept_tag: AR-WAQT203-USBUI
 prerequisites: [AR-C203-athnaa, AR-C203-qarn]
 sounds: []
-roots: []
+roots: [s-b-ʿ]
+etymology_hook: "usbūʿī: built on the root s-b-ʿ, 'seven' (Lane); usbūʿī is usbūʿ, 'week', with the adjective ending -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C203-qarn]
 <!-- hl-knowledge: introduces=[AR-LEX-C203-WAQT203-05]; assesses=[] -->
 
 **أسبوعي** — *usbūʿī* — "weekly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أسبوعي** (*usbūʿī*) is built on the native Arabic root *s-b-ʿ*, "seven" (Lane). *Usbūʿī* is *usbūʿ*, "week", with the adjective ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

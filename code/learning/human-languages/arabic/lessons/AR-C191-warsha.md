@@ -14,7 +14,8 @@ romanization: "warsha"
 concept_tag: AR-AMAL191-WARSHA
 prerequisites: [AR-C191-baqqal, AR-C191-sayyad]
 sounds: []
-roots: []
+roots: [warsha-workshop]
+etymology_hook: "warsha: a modern word for a workshop; not in Lane; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C191-sayyad]
 <!-- hl-knowledge: introduces=[AR-LEX-C191-AMAL191-04]; assesses=[] -->
 
 **ورشة** — *warsha* — "a workshop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ورشة** (*warsha*) is a modern word for a workshop; it has no entry in Lane, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṣūf"
 concept_tag: AR-SHAY214-SUF
 prerequisites: [AR-C214-qumash, AR-C214-qutn]
 sounds: []
-roots: []
+roots: [ṣ-w-f]
+etymology_hook: "ṣūf: built on the root ṣ-w-f, 'wool' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C214-qutn]
 <!-- hl-knowledge: introduces=[AR-LEX-C214-SHAY214-05]; assesses=[] -->
 
 **صوف** — *ṣūf* — "wool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صوف** (*ṣūf*) is built on the native Arabic root *ṣ-w-f*, "wool" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

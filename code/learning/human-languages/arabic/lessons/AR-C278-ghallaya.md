@@ -14,7 +14,8 @@ romanization: "ghallāya"
 concept_tag: AR-SHAY278-GHALLAYA
 prerequisites: [AR-C277-sibaq, AR-C277-riyada]
 sounds: []
-roots: []
+roots: [gh-l-y]
+etymology_hook: "ghallāya: built on the root gh-l-y, 'to boil' (Lane); ghallāya is a modern faʿʿāla word, 'the boiler'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C277-riyada]
 <!-- hl-knowledge: introduces=[AR-LEX-C278-SHAY278-01]; assesses=[] -->
 
 **غلاية** — *ghallāya* — "a kettle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غلاية** (*ghallāya*) is built on the native Arabic root *gh-l-y*, "to boil" (Lane). *Ghallāya* is a modern *faʿʿāla* word, "the boiler".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

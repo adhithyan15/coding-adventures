@@ -14,7 +14,8 @@ romanization: "baṣal"
 concept_tag: AR-FOOD68-BASAL
 prerequisites: [AR-C68-laymun, AR-C68-bayd]
 sounds: []
-roots: []
+roots: [b-ṣ-l]
+etymology_hook: "baṣal: built on the root b-ṣ-l, 'onions' (Lane); Hebrew betsel, 'onion', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C68-bayd]
 <!-- hl-knowledge: introduces=[AR-LEX-C68-FOOD68-04]; assesses=[] -->
 
 **بصل** — *baṣal* — "onions".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بصل** (*baṣal*) is built on the native Arabic root *b-ṣ-l*, "onions" (Lane). Hebrew *betsel*, "onion", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

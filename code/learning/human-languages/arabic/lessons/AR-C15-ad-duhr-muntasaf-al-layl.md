@@ -12,7 +12,7 @@ concept_tag: AR-TIME-NOON-MIDNIGHT
 prerequisites: [AR-C14-ashhur]
 sounds: [arabic-rtl, emphatic-zaa]
 roots: [zahara-appear, nisf-half]
-etymology_hook: "الظهر (adh-dhuhr) 'noon' is also the name of the midday prayer, salat al-zuhr — Arabic's word for noon is bound up with the daily prayer schedule, not a neutral clock-time word; منتصف الليل (muntasaf al-layl) 'the half of the night' is fully transparent, from nisf 'half'"
+etymology_hook: "aẓ-ẓuhr: root ẓ-h-r 'to appear' (Lane); muntaṣaf al-layl: n-ṣ-f 'half' + layl 'night': 'midnight'"
 duration:
   max_seconds: 240
 requires:
@@ -61,6 +61,11 @@ half of the night**." **منتصف** (*muntaṣaf*) comes from the root **ن-ص-
 **الليل** (*al-layl*) is simply "**the night**." This one is fully
 transparent — no erosion, no double meaning, just "the middle of the
 night," structurally exactly like Latin's *media nox*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**الظهر** (*aẓ-ẓuhr*), "noon", is built on the native root *ẓ-h-r*, "to appear, to be outward" (Lane). *Muntaṣaf al-layl* is "the middle of the night": *muntaṣaf* on *n-ṣ-f*, "half", with *layl*, "night" (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-01, AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-02] -->

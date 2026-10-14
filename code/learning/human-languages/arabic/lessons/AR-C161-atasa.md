@@ -14,7 +14,8 @@ romanization: "ʿaṭasa"
 concept_tag: AR-VERB-ATASA
 prerequisites: [AR-C160-malaa, AR-C160-istahamma]
 sounds: []
-roots: []
+roots: [ʿ-ṭ-s]
+etymology_hook: "ʿaṭasa: built on the root ʿ-ṭ-s, 'to sneeze' (Lane); ʿaṭasa is the plain verb, 'he sneezed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C160-istahamma]
 <!-- hl-knowledge: introduces=[AR-LEX-C161-ACT161-01]; assesses=[] -->
 
 **عطس** — *ʿaṭasa* — "to sneeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عطس** (*ʿaṭasa*) is built on the native Arabic root *ʿ-ṭ-s*, "to sneeze" (Lane). *ʿAṭasa* is the plain verb, "he sneezed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "raml"
 concept_tag: AR-NATURE76-RAML
 prerequisites: [AR-C76-nahr, AR-C76-hajar]
 sounds: []
-roots: []
+roots: [r-m-l]
+etymology_hook: "raml: built on the root r-m-l, 'sand' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C76-hajar]
 <!-- hl-knowledge: introduces=[AR-LEX-C76-NATURE76-04]; assesses=[] -->
 
 **رمل** — *raml* — "sand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رمل** (*raml*) is built on the native Arabic root *r-m-l*, "sand" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

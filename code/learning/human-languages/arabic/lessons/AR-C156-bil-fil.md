@@ -14,7 +14,8 @@ romanization: "bi-l-fiʿl"
 concept_tag: AR-MADI156-BIL-FIL
 prerequisites: [AR-C155-muzdahim, AR-C156-hadithan]
 sounds: []
-roots: []
+roots: [f-ʿ-l]
+etymology_hook: "bi-l-fiʿl: bi- 'in' + al- + fiʿl 'deed', from the root f-ʿ-l 'to do' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C156-hadithan]
 <!-- hl-knowledge: introduces=[AR-LEX-C156-MADI156-02]; assesses=[] -->
 
 **بالفعل** — *bi-l-fiʿl* — "already; indeed". With the past: **أكلت بالفعل** — *akaltu bi-l-fiʿl* — "I have already eaten."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بالفعل** (*bi-l-fiʿl*) is built from *bi-*, "by, in", the article *al-*, and *fiʿl*, "a deed", from the root *f-ʿ-l*, "to do" (Lane): "in deed", hence "already, indeed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: WORD-NAME
 prerequisites: [AR-W00-alif-mim-salam]
 sounds: [rtl-known-letters]
 roots: [s-m-w]
+etymology_hook: "ism: listed under s-m-w by the grammarians (Lane); Hebrew shem 'name' is its cousin, Latin nōmen is not"
 duration:
   max_seconds: 180
 requires:

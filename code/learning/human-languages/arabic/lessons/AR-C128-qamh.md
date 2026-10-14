@@ -14,7 +14,8 @@ romanization: "qamḥ"
 concept_tag: AR-THINGS128-QAMH
 prerequisites: [AR-C128-nazzara, AR-C128-filfil]
 sounds: []
-roots: []
+roots: [q-m-ḥ]
+etymology_hook: "qamḥ: built on the root q-m-ḥ, 'wheat' (Lane); Lane calls qamḥ a word of Syria"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C128-filfil]
 <!-- hl-knowledge: introduces=[AR-LEX-C128-THINGS128-03]; assesses=[] -->
 
 **قمح** — *qamḥ* — "wheat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قمح** (*qamḥ*) is built on the native Arabic root *q-m-ḥ*, "wheat" (Lane). Lane calls *qamḥ* a word of Syria; some say it is Coptic, but his sources prefer the Syrian account.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

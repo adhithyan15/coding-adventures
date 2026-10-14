@@ -14,7 +14,8 @@ romanization: "miftāḥ"
 concept_tag: AR-HOME71-MIFTAH
 prerequisites: [AR-C71-mirah, AR-C71-misbah]
 sounds: []
-roots: []
+roots: [f-t-ḥ]
+etymology_hook: "miftāḥ: built on the root f-t-ḥ, 'to open' (Lane); miftāḥ is the mifʿāl instrument noun, 'an instrument of opening'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C71-misbah]
 <!-- hl-knowledge: introduces=[AR-LEX-C71-HOME71-03]; assesses=[] -->
 
 **مفتاح** — *miftāḥ* — "a key".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مفتاح** (*miftāḥ*) is built on the native Arabic root *f-t-ḥ*, "to open" (Lane). *Miftāḥ* is the *mifʿāl* instrument noun, "an instrument of opening".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

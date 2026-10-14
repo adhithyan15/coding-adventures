@@ -14,7 +14,8 @@ romanization: "ghāya"
 concept_tag: AR-WANT112-GHAYA
 prerequisites: [AR-C112-shawq, AR-C112-tumuh, AR-C12-al-fusul, AR-C12-al-fusul]
 sounds: []
-roots: []
+roots: [gh-y-y]
+etymology_hook: "ghāya: built on the root gh-y-y, 'the utmost limit, a goal' (Lane); Lane's ghāya is the furthest point of a thing"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C112-tumuh]
 <!-- hl-knowledge: introduces=[AR-LEX-C112-WANT112-03]; assesses=[] -->
 
 **غاية** — *ghāya* — "a purpose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غاية** (*ghāya*) is built on the native Arabic root *gh-y-y*, "the utmost limit, a goal" (Lane). Lane's *ghāya* is the furthest point of a thing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

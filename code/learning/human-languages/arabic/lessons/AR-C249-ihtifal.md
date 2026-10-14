@@ -14,7 +14,8 @@ romanization: "iḥtifāl"
 concept_tag: AR-SHAY249-IHTIFAL
 prerequisites: [AR-C249-kammiyya, AR-C249-jawda]
 sounds: []
-roots: []
+roots: [ḥ-f-l]
+etymology_hook: "iḥtifāl: built on the root ḥ-f-l, 'to gather, to fill' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C249-jawda]
 <!-- hl-knowledge: introduces=[AR-LEX-C249-SHAY249-03]; assesses=[] -->
 
 **احتفال** — *iḥtifāl* — "a celebration".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**احتفال** (*iḥtifāl*) is built on the native Arabic root *ḥ-f-l*, "to gather, to fill" (Lane). *Iḥtifāl* is the verbal noun of Form VIII, "gathering for an occasion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

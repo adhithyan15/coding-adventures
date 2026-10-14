@@ -14,7 +14,8 @@ romanization: "ittijāh"
 concept_tag: AR-MAKAN172-ITTIJAH
 prerequisites: [AR-C172-makhbaz, AR-C172-maqha]
 sounds: []
-roots: []
+roots: [w-j-h]
+etymology_hook: "ittijāh: built on the root w-j-h, 'the face' (Lane); ittijāh is the verbal noun of Form VIII, 'facing toward'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C172-maqha]
 <!-- hl-knowledge: introduces=[AR-LEX-C172-MAKAN172-04]; assesses=[] -->
 
 **اتجاه** — *ittijāh* — "a direction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اتجاه** (*ittijāh*) is built on the native Arabic root *w-j-h*, "the face; to face toward" (Lane). *Ittijāh* is the verbal noun of Form VIII, "facing toward".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

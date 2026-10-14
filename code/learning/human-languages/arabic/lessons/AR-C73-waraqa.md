@@ -14,7 +14,8 @@ romanization: "waraqa"
 concept_tag: AR-SCHOOL73-WARAQA
 prerequisites: [AR-C73-daftar, AR-C73-qalam]
 sounds: []
-roots: []
+roots: [w-r-q]
+etymology_hook: "waraqa: built on the root w-r-q, 'leaves' (Lane); Lane's waraq covers the leaves of a tree and the leaves of a book"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C73-qalam]
 <!-- hl-knowledge: introduces=[AR-LEX-C73-SCHOOL73-04]; assesses=[] -->
 
 **ورقة** — *waraqa* — "a sheet of paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ورقة** (*waraqa*) is built on the native Arabic root *w-r-q*, "leaves" (Lane). Lane's *waraq* covers the leaves of a tree and the leaves of a book.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

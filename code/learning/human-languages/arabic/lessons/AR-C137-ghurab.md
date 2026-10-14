@@ -14,7 +14,8 @@ romanization: "ghurāb"
 concept_tag: AR-THINGS137-GHURAB
 prerequisites: [AR-C137-qitta, AR-C137-buma]
 sounds: []
-roots: []
+roots: [gh-r-b]
+etymology_hook: "ghurāb: built on the root gh-r-b, 'a crow, a raven' (Lane); Hebrew ʿorev, 'raven', is usually counted a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C137-buma]
 <!-- hl-knowledge: introduces=[AR-LEX-C137-THINGS137-05]; assesses=[] -->
 
 **غراب** — *ghurāb* — "a crow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غراب** (*ghurāb*) is built on the native Arabic root *gh-r-b*, "a crow, a raven" (Lane). Hebrew *ʿorev*, "raven", is usually counted a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

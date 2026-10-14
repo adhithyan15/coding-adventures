@@ -12,7 +12,7 @@ concept_tag: AR-PREP-WITH
 prerequisites: [AR-C03-practice, AR-W10-ayn]
 sounds: [rtl-known-letters, ayn-throat]
 roots: [semitic-imma]
-etymology_hook: "maʿa ← Semitic *ʿimma, cousin of Hebrew ʿim 'with' — the same family pairing as salām/shalom; and 'with' is the hinge of farewells in more languages than Arabic: English goodbye is worn down from 'God be WITH ye'"
+etymology_hook: "maʿa: an old Semitic preposition 'with', usually set beside Hebrew ʿim; it has no three-letter root"
 duration:
   max_seconds: 180
 requires:

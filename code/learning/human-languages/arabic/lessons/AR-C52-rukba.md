@@ -14,7 +14,8 @@ romanization: "rukba"
 concept_tag: AR-BODY52-RUKBA
 prerequisites: [AR-C52-wajh, AR-C52-dam]
 sounds: []
-roots: []
+roots: [r-k-b]
+etymology_hook: "rukba: built on the root r-k-b, 'to ride, to mount' (Lane); rukba is the knee"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C52-dam]
 <!-- hl-knowledge: introduces=[AR-LEX-C52-BODY52-03]; assesses=[] -->
 
 **ركبة** — *rukba* — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ركبة** (*rukba*) is built on the native Arabic root *r-k-b*, "to ride, to mount" (Lane). *Rukba* is the knee; the verb *rakiba*, "to ride", is on the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

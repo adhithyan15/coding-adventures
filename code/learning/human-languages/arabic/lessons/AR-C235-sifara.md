@@ -14,7 +14,8 @@ romanization: "sifāra"
 concept_tag: AR-MAKAN235-SIFARA
 prerequisites: [AR-C235-rasif, AR-C235-taqatu]
 sounds: []
-roots: []
+roots: [s-f-r]
+etymology_hook: "sifāra: built on the root s-f-r, 'to make peace between' (Lane); sifāra is the office of safīr, 'a go-between'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C235-taqatu]
 <!-- hl-knowledge: introduces=[AR-LEX-C235-MAKAN235-05]; assesses=[] -->
 
 **سفارة** — *sifāra* — "an embassy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سفارة** (*sifāra*) is built on the native Arabic root *s-f-r*, "to make peace between" (Lane). *Sifāra* is the office of *safīr*, "a go-between".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

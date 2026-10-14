@@ -14,7 +14,8 @@ romanization: "nayʾ"
 concept_tag: AR-SIFA177-NAY
 prerequisites: [AR-C177-mukallif, AR-C177-majjani]
 sounds: []
-roots: []
+roots: [n-y-ʾ]
+etymology_hook: "nayʾ: built on the root n-y-ʾ, 'to be raw, uncooked' (Lane); nayʾ is 'raw'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C177-majjani]
 <!-- hl-knowledge: introduces=[AR-LEX-C177-SIFA177-03]; assesses=[] -->
 
 **نيء** — *nayʾ* — "raw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نيء** (*nayʾ*) is built on the native Arabic root *n-y-ʾ*, "to be raw, uncooked" (Lane). *Nayʾ* is "raw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

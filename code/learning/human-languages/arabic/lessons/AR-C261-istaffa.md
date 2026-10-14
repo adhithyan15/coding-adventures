@@ -14,7 +14,8 @@ romanization: "iṣṭaffa"
 concept_tag: AR-VERB-ISTAFFA
 prerequisites: [AR-C261-tajammada, AR-C261-rakana]
 sounds: []
-roots: []
+roots: [ṣ-f-f]
+etymology_hook: "iṣṭaffa: built on the root ṣ-f-f, 'a row, a rank' (Lane); iṣṭaffa is Form VIII, 'to stand in a row'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C261-rakana]
 <!-- hl-knowledge: introduces=[AR-LEX-C261-ACT261-04]; assesses=[] -->
 
 **اصطف** — *iṣṭaffa* — "to queue, to line up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اصطف** (*iṣṭaffa*) is built on the native Arabic root *ṣ-f-f*, "a row, a rank" (Lane). *Iṣṭaffa* is Form VIII, "to stand in a row".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mubakkiran"
 concept_tag: AR-WAQT170-MUBAKKIRAN
 prerequisites: [AR-C169-isaba, AR-C169-habba]
 sounds: []
-roots: []
+roots: [b-k-r]
+etymology_hook: "mubakkiran: built on the root b-k-r, 'to come early' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C169-habba]
 <!-- hl-knowledge: introduces=[AR-LEX-C170-WAQT170-01]; assesses=[] -->
 
 **مبكرا** — *mubakkiran* — "early".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مبكرا** (*mubakkiran*) is built on the native Arabic root *b-k-r*, "to come early" (Lane). *Mubakkiran* is the Form II participle, "coming early", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

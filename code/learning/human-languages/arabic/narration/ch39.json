@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Denying, and Asking",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:b02f845b03b8ca33",
+  "sourceHash": "fnv1a64:c888dbd89070e6e4",
   "lessons": [
     {
       "id": "AR-C39-laysa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c883a13cf6e66798",
+      "sourceHash": "fnv1a64:3ea34aee1ed6f70b",
       "notice": null,
       "blocks": [
         {
@@ -79,6 +79,10 @@
             {
               "kind": "speech",
               "text": "Arab grammarians read ليس (laysa) as لا — the negator of chapter five — welded to أيس, an old word meaning there is. So the word began as there-is-not, and it still behaves like a verb: it takes person endings, even though nothing it denies is a verb. It is a fossil doing a job nothing else in the language does."
+            },
+            {
+              "kind": "speech",
+              "text": "That reading is the grammarians' own, and the origin is not settled; Aramaic layt, \"there is not\", is usually compared."
             }
           ]
         },

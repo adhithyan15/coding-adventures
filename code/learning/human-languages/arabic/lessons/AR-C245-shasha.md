@@ -14,7 +14,8 @@ romanization: "shāsha"
 concept_tag: AR-SHAY245-SHASHA
 prerequisites: [AR-C245-hatif, AR-C245-jawwal]
 sounds: []
-roots: []
+roots: [shasha-screen]
+etymology_hook: "shāsha: a modern word for a screen; not in Lane; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C245-jawwal]
 <!-- hl-knowledge: introduces=[AR-LEX-C245-SHAY245-05]; assesses=[] -->
 
 **شاشة** — *shāsha* — "a screen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شاشة** (*shāsha*) is a modern word for a screen; it has no entry in Lane, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

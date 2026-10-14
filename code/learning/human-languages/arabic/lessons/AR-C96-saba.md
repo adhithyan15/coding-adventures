@@ -14,7 +14,8 @@ romanization: "sabʿa"
 concept_tag: AR-CLOTHES96-SABA
 prerequisites: [AR-C96-hizam, AR-C96-sitta]
 sounds: []
-roots: []
+roots: [s-b-ʿ]
+etymology_hook: "sabʿa: built on the root s-b-ʿ, 'seven' (Lane); Hebrew shevaʿ, 'seven', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C96-sitta]
 <!-- hl-knowledge: introduces=[AR-LEX-C96-CLOTHES96-03]; assesses=[] -->
 
 **سبعة** — *sabʿa* — "seven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سبعة** (*sabʿa*) is built on the native Arabic root *s-b-ʿ*, "seven" (Lane). Hebrew *shevaʿ*, "seven", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

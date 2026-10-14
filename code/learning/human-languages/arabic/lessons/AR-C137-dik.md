@@ -14,7 +14,8 @@ romanization: "dīk"
 concept_tag: AR-THINGS137-DIK
 prerequisites: [AR-C136-farasha, AR-C137-ankabut, AR-C01-al, AR-C01-al, AR-C01-al]
 sounds: []
-roots: []
+roots: [d-y-k]
+etymology_hook: "dīk: built on the root d-y-k, 'a cock' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C137-ankabut]
 <!-- hl-knowledge: introduces=[AR-LEX-C137-THINGS137-02]; assesses=[] -->
 
 **ديك** — *dīk* — "a rooster".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ديك** (*dīk*) is built on the native Arabic root *d-y-k*, "a cock" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

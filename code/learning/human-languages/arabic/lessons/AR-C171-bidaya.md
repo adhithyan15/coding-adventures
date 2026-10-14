@@ -14,7 +14,8 @@ romanization: "bidāya"
 concept_tag: AR-WAQT171-BIDAYA
 prerequisites: [AR-C171-mustaqbal, AR-C171-mudda]
 sounds: []
-roots: []
+roots: [b-d-ʾ]
+etymology_hook: "bidāya: built on the root b-d-ʾ, 'to begin' (Lane); bidāya is 'a beginning'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C171-mudda]
 <!-- hl-knowledge: introduces=[AR-LEX-C171-WAQT171-03]; assesses=[] -->
 
 **بداية** — *bidāya* — "a beginning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بداية** (*bidāya*) is built on the native Arabic root *b-d-ʾ*, "to begin" (Lane). *Bidāya* is "a beginning".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

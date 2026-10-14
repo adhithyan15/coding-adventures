@@ -14,7 +14,8 @@ romanization: "lāḥaẓa"
 concept_tag: AR-VERB-LAHAZA
 prerequisites: [AR-C197-naqasha, AR-C197-qarana]
 sounds: []
-roots: []
+roots: [l-ḥ-ẓ]
+etymology_hook: "lāḥaẓa: built on the root l-ḥ-ẓ, 'to look with the corner of the eye' (Lane); lāḥaẓa is Form III, 'to observe'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C197-qarana]
 <!-- hl-knowledge: introduces=[AR-LEX-C197-ACT197-03]; assesses=[] -->
 
 **لاحظ** — *lāḥaẓa* — "to notice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لاحظ** (*lāḥaẓa*) is built on the native Arabic root *l-ḥ-ẓ*, "to look with the corner of the eye" (Lane). *Lāḥaẓa* is Form III, "to observe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,7 +12,7 @@ romanization: qahwa
 prerequisites: [AR-C33-sukkar, AR-W11-ha-and-ta-marbuta, AR-C04-al-salama, AR-C23-afwan]
 sounds: [qaf, ta-marbuta, rtl-known-letters]
 roots: [q-h-w]
-etymology_hook: "قهوة (qahwa, 'coffee') ends in ة (tāʾ marbūṭa), the tied tāʾ that marks a noun feminine — the same ending that turns مَكْتَب (maktab, an office) into مَكْتَبة (maktaba, a library) and that sits on السلامة (as-salāma); the word travelled out of Arabic through Ottoman Turkish kahve into Italian caffè, French café, German Kaffee and English coffee, so a learner meeting قهوة is meeting a word their own language already borrowed"
+etymology_hook: "qahwa: Lane uses it for wine, its older sense; English coffee comes from it through Turkish kahve"
 duration:
   max_seconds: 240
 requires:

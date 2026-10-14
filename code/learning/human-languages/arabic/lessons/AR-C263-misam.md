@@ -14,7 +14,8 @@ romanization: "miʿṣam"
 concept_tag: AR-SIHHA263-MISAM
 prerequisites: [AR-C263-laqah, AR-C263-araq]
 sounds: []
-roots: []
+roots: [ʿ-ṣ-m]
+etymology_hook: "miʿṣam: built on the root ʿ-ṣ-m, 'the wrist' (Lane); miʿṣam is the wrist"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C263-araq]
 <!-- hl-knowledge: introduces=[AR-LEX-C263-SIHHA263-03]; assesses=[] -->
 
 **معصم** — *miʿṣam* — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**معصم** (*miʿṣam*) is built on the native Arabic root *ʿ-ṣ-m*, "the wrist" (Lane). *Miʿṣam* is the wrist.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

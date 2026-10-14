@@ -14,7 +14,8 @@ romanization: "mushābih"
 concept_tag: AR-SIFA211-MUSHABIH
 prerequisites: [AR-C211-mushmis, AR-C211-mukhtalif]
 sounds: []
-roots: []
+roots: [sh-b-h]
+etymology_hook: "mushābih: built on the root sh-b-h, 'to resemble' (Lane); mushābih is the Form III participle, 'resembling'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C211-mukhtalif]
 <!-- hl-knowledge: introduces=[AR-LEX-C211-SIFA211-03]; assesses=[] -->
 
 **مشابه** — *mushābih* — "similar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مشابه** (*mushābih*) is built on the native Arabic root *sh-b-h*, "to resemble" (Lane). *Mushābih* is the Form III participle, "resembling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

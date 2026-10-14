@@ -14,7 +14,8 @@ romanization: "muwaẓẓaf"
 concept_tag: AR-AMAL251-MUWAZZAF
 prerequisites: [AR-C251-nadil, AR-C251-mudir]
 sounds: []
-roots: []
+roots: [w-ẓ-f]
+etymology_hook: "muwaẓẓaf: built on the root w-ẓ-f, 'a daily allowance' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C251-mudir]
 <!-- hl-knowledge: introduces=[AR-LEX-C251-AMAL251-03]; assesses=[] -->
 
 **موظف** — *muwaẓẓaf* — "an employee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موظف** (*muwaẓẓaf*) is built on the native Arabic root *w-ẓ-f*, "a daily allowance" (Lane). *Muwaẓẓaf* is the Form II passive participle, "one given a fixed post".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

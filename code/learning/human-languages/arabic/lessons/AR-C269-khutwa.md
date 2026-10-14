@@ -14,7 +14,8 @@ romanization: "khuṭwa"
 concept_tag: AR-SABAB269-KHUTWA
 prerequisites: [AR-C268-awwalan, AR-C269-fashal]
 sounds: []
-roots: []
+roots: [kh-ṭ-w]
+etymology_hook: "khuṭwa: built on the root kh-ṭ-w, 'to step' (Lane); khuṭwa is a step"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C269-fashal]
 <!-- hl-knowledge: introduces=[AR-LEX-C269-SABAB269-02]; assesses=[] -->
 
 **خطوة** — *khuṭwa* — "a step".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خطوة** (*khuṭwa*) is built on the native Arabic root *kh-ṭ-w*, "to step" (Lane). *Khuṭwa* is a step.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

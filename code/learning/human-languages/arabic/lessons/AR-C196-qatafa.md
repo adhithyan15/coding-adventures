@@ -14,7 +14,8 @@ romanization: "qaṭafa"
 concept_tag: AR-VERB-QATAFA
 prerequisites: [AR-C195-dalla2, AR-C196-zaraa]
 sounds: []
-roots: []
+roots: [q-ṭ-f]
+etymology_hook: "qaṭafa: built on the root q-ṭ-f, 'to pluck, to gather' (Lane); qaṭafa is the plain verb, 'he plucked'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C196-zaraa]
 <!-- hl-knowledge: introduces=[AR-LEX-C196-ACT196-02]; assesses=[] -->
 
 **قطف** — *qaṭafa* — "to pick (fruit, flowers)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قطف** (*qaṭafa*) is built on the native Arabic root *q-ṭ-f*, "to pluck, to gather" (Lane). *Qaṭafa* is the plain verb, "he plucked".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

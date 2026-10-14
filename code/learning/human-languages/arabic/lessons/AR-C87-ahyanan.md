@@ -14,7 +14,8 @@ romanization: "aḥyānan"
 concept_tag: AR-TIME87-AHYANAN
 prerequisites: [AR-C87-ghadan, AR-C87-alan]
 sounds: []
-roots: []
+roots: [h-y-n]
+etymology_hook: "aḥyānan: built on the root ḥ-y-n, 'a time' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C87-alan]
 <!-- hl-knowledge: introduces=[AR-LEX-C87-TIME87-04]; assesses=[] -->
 
 **أحيانا** — *aḥyānan* — "sometimes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أحيانا** (*aḥyānan*) is built on the native Arabic root *ḥ-y-n*, "a time" (Lane). *Aḥyānan* is *aḥyān*, the plural of *ḥīn*, "a time", with the adverb ending *-an*: "at times".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

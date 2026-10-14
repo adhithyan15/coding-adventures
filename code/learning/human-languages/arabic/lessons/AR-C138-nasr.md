@@ -14,7 +14,8 @@ romanization: "nasr"
 concept_tag: AR-THINGS138-NASR
 prerequisites: [AR-C137-buma, AR-C137-ghurab]
 sounds: []
-roots: []
+roots: [n-s-r]
+etymology_hook: "nasr: built on the root n-s-r, 'a vulture, an eagle' (Lane); Lane compares Hebrew nesher, 'eagle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C137-ghurab]
 <!-- hl-knowledge: introduces=[AR-LEX-C138-THINGS138-01]; assesses=[] -->
 
 **نسر** — *nasr* — "an eagle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نسر** (*nasr*) is built on the native Arabic root *n-s-r*, "a vulture, an eagle" (Lane). Lane compares Hebrew *nesher*, "eagle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

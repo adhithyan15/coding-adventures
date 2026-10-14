@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 174,
-  "sourceHash": "fnv1a64:d872616d4f4ac5ce",
+  "sourceHash": "fnv1a64:09ac4ff0ee76d36b",
   "lessonIds": [
     "AR-C174-sabab",
     "AR-C174-natija",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch174.txt",
   "json": "arabic/narration/ch174.json",
-  "textHash": "fnv1a64:4ec0b07192d41137",
-  "jsonHash": "fnv1a64:7392ec685453bdd9",
+  "textHash": "fnv1a64:5067eeba1e20805b",
+  "jsonHash": "fnv1a64:0f527ef93c7dabab",
   "findings": []
 }

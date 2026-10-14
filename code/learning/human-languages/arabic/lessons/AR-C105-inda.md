@@ -14,7 +14,8 @@ romanization: "ʿinda"
 concept_tag: AR-LOC105-INDA
 prerequisites: [AR-C105-mustaqim, AR-C105-hawla]
 sounds: []
-roots: []
+roots: [ʿ-n-d]
+etymology_hook: "ʿinda: built on the root ʿ-n-d, 'at, near, by' (Lane); an old preposition with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C105-hawla]
 <!-- hl-knowledge: introduces=[AR-LEX-C105-LOC105-05]; assesses=[] -->
 
 **عند** — *ʿinda* — "at, by".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عند** (*ʿinda*) is built on the native Arabic root *ʿ-n-d*, "at, near, by" (Lane). An old preposition with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

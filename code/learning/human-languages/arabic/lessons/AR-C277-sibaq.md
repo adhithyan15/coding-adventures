@@ -14,7 +14,8 @@ romanization: "sibāq"
 concept_tag: AR-SHAY277-SIBAQ
 prerequisites: [AR-C277-mubara, AR-C277-fariq]
 sounds: []
-roots: []
+roots: [s-b-q]
+etymology_hook: "sibāq: built on the root s-b-q, 'to go before, to outstrip' (Lane); sibāq is the verbal noun of Form III, 'racing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C277-fariq]
 <!-- hl-knowledge: introduces=[AR-LEX-C277-SHAY277-04]; assesses=[] -->
 
 **سباق** — *sibāq* — "a race".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سباق** (*sibāq*) is built on the native Arabic root *s-b-q*, "to go before, to outstrip" (Lane). *Sibāq* is the verbal noun of Form III, "racing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

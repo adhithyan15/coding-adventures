@@ -14,7 +14,8 @@ romanization: "rajaʿa"
 concept_tag: AR-VERB-RAJAA
 prerequisites: [AR-C64-sakana, AR-C64-intazara]
 sounds: []
-roots: []
+roots: [r-j-ʿ]
+etymology_hook: "rajaʿa: built on the root r-j-ʿ, 'to return' (Lane); rajaʿa is the plain verb, 'he came back'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C64-intazara]
 <!-- hl-knowledge: introduces=[AR-LEX-C64-VERBS64-05]; assesses=[] -->
 
 **رجع** — *rajaʿa* — "to come back (he came back)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رجع** (*rajaʿa*) is built on the native Arabic root *r-j-ʿ*, "to return" (Lane). *Rajaʿa* is the plain verb, "he came back".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

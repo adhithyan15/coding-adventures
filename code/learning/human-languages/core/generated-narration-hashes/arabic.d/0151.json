@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 151,
-  "sourceHash": "fnv1a64:c9cac5f062af6243",
+  "sourceHash": "fnv1a64:c8258ac4d9b540b5",
   "lessonIds": [
     "AR-C151-nahif",
     "AR-C151-samin",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch151.txt",
   "json": "arabic/narration/ch151.json",
-  "textHash": "fnv1a64:43d266e9339d0804",
-  "jsonHash": "fnv1a64:ab31d74a4a9d697d",
+  "textHash": "fnv1a64:6f3d6a543d7cc6f5",
+  "jsonHash": "fnv1a64:855ee4c0b0679d70",
   "findings": []
 }

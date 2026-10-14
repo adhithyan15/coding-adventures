@@ -14,7 +14,8 @@ romanization: "bakhīl"
 concept_tag: AR-SIFA210-BAKHIL
 prerequisites: [AR-C210-mubashir, AR-C210-karim]
 sounds: []
-roots: []
+roots: [b-kh-l]
+etymology_hook: "bakhīl: built on the root b-kh-l, 'to be stingy' (Lane); bakhīl is the faʿīl adjective, 'stingy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C210-karim]
 <!-- hl-knowledge: introduces=[AR-LEX-C210-SIFA210-03]; assesses=[] -->
 
 **بخيل** — *bakhīl* — "mean, stingy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بخيل** (*bakhīl*) is built on the native Arabic root *b-kh-l*, "to be stingy" (Lane). *Bakhīl* is the *faʿīl* adjective, "stingy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

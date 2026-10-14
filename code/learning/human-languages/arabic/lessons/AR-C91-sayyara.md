@@ -14,7 +14,8 @@ romanization: "sayyāra"
 concept_tag: AR-TOWN91-SAYYARA
 prerequisites: [AR-C91-bank, AR-C91-mahatta]
 sounds: []
-roots: []
+roots: [s-y-r]
+etymology_hook: "sayyāra: built on the root s-y-r, 'to go, to travel' (Lane); Lane gives sayyāra as a company of travellers, a caravan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C91-mahatta]
 <!-- hl-knowledge: introduces=[AR-LEX-C91-TOWN91-04]; assesses=[] -->
 
 **سيارة** — *sayyāra* — "a car".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سيارة** (*sayyāra*) is built on the native Arabic root *s-y-r*, "to go, to travel" (Lane). Lane gives *sayyāra* as a company of travellers, a caravan; the car is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

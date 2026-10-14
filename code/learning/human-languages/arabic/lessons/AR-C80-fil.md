@@ -14,7 +14,8 @@ romanization: "fīl"
 concept_tag: AR-ANIMALS80-FIL
 prerequisites: [AR-C79-asad, AR-C80-namir]
 sounds: []
-roots: []
+roots: [persian-pil]
+etymology_hook: "fīl: from Persian pīl 'elephant' (Lane, EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C80-namir]
 <!-- hl-knowledge: introduces=[AR-LEX-C80-ANIMALS80-02]; assesses=[] -->
 
 **فيل** — *fīl* — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فيل** (*fīl*) is a loan: Lane gives it with Persian *pīl*, "elephant", and EtymDB derives it from Middle Persian *pīl*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

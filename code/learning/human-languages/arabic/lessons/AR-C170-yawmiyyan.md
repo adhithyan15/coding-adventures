@@ -14,7 +14,8 @@ romanization: "yawmiyyan"
 concept_tag: AR-WAQT170-YAWMIYYAN
 prerequisites: [AR-C169-habba, AR-C170-mubakkiran]
 sounds: []
-roots: []
+roots: [y-w-m]
+etymology_hook: "yawmiyyan: built on the root y-w-m, 'a day' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C170-mubakkiran]
 <!-- hl-knowledge: introduces=[AR-LEX-C170-WAQT170-02]; assesses=[] -->
 
 **يوميا** — *yawmiyyan* — "daily, every day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**يوميا** (*yawmiyyan*) is built on the native Arabic root *y-w-m*, "a day" (Lane). *Yawmiyyan* is *yawm*, "day", with the adjective ending *-ī* and the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

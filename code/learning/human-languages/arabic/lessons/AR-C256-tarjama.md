@@ -14,7 +14,8 @@ romanization: "tarjama"
 concept_tag: AR-VERB-TARJAMA
 prerequisites: [AR-C256-ijtaza, AR-C256-sharaha]
 sounds: []
-roots: []
+roots: [t-r-j-m]
+etymology_hook: "tarjama: Lane's verb beside tarjumān 'interpreter', usually traced to Aramaic targmānā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C256-sharaha]
 <!-- hl-knowledge: introduces=[AR-LEX-C256-ACT256-04]; assesses=[] -->
 
 **ترجم** — *tarjama* — "to translate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ترجم** (*tarjama*) is the four-letter verb that Lane gives with *tarjumān*, "interpreter". *Tarjumān* is usually traced to Aramaic *targmānā*; English *dragoman* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

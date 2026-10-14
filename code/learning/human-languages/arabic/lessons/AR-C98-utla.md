@@ -14,7 +14,8 @@ romanization: "ʿuṭla"
 concept_tag: AR-WORLD98-UTLA
 prerequisites: [AR-C98-ughniya, AR-C98-rihla]
 sounds: []
-roots: []
+roots: [ʿ-ṭ-l]
+etymology_hook: "ʿuṭla: built on the root ʿ-ṭ-l, 'to be without work' (Lane); Lane's ʿuṭla is the state of being without work"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C98-rihla]
 <!-- hl-knowledge: introduces=[AR-LEX-C98-WORLD98-04]; assesses=[] -->
 
 **عطلة** — *ʿuṭla* — "a holiday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عطلة** (*ʿuṭla*) is built on the native Arabic root *ʿ-ṭ-l*, "to be without work" (Lane). Lane's *ʿuṭla* is the state of being without work; a holiday is time off work.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sharīṭ"
 concept_tag: AR-SHAY279-SHARIT
 prerequisites: [AR-C279-mishjab, AR-C279-isfanja]
 sounds: []
-roots: []
+roots: [sh-r-ṭ]
+etymology_hook: "sharīṭ: built on the root sh-r-ṭ, 'a twisted cord' (Lane); Lane's sharīṭ is a twisted cord"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C279-isfanja]
 <!-- hl-knowledge: introduces=[AR-LEX-C279-SHAY279-04]; assesses=[] -->
 
 **شريط** — *sharīṭ* — "a tape, a ribbon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شريط** (*sharīṭ*) is built on the native Arabic root *sh-r-ṭ*, "a twisted cord" (Lane). Lane's *sharīṭ* is a twisted cord.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

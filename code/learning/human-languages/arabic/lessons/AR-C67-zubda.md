@@ -14,7 +14,8 @@ romanization: "zubda"
 concept_tag: AR-FOOD67-ZUBDA
 prerequisites: [AR-C67-tamatim, AR-C67-jazar]
 sounds: []
-roots: []
+roots: [z-b-d]
+etymology_hook: "zubda: built on the root z-b-d, 'froth, foam' (Lane); the same root gives zabad, 'froth, foam'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C67-jazar]
 <!-- hl-knowledge: introduces=[AR-LEX-C67-FOOD67-03]; assesses=[] -->
 
 **زبدة** — *zubda* — "butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زبدة** (*zubda*) is built on the native Arabic root *z-b-d*, "froth, foam; to take butter from milk" (Lane). The same root gives *zabad*, "froth, foam".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,7 +12,7 @@ concept_tag: AR-DAYS-WEEKEND
 prerequisites: [AR-C08-al-ahad-al-khamis]
 sounds: [arabic-rtl, ayn-sound, teh-marbuta]
 roots: [jamaa-gather, sabt-semitic]
-etymology_hook: "as-sabt is a Semitic COUSIN of Hebrew shabbat (same family, shared root) — unlike Latin's Sabbatum, which BORROWED the word across a language-family line"
+etymology_hook: "al-jumʿa: 'the gathering', root j-m-ʿ (Lane); as-sabt: root s-b-t 'to rest', set beside Hebrew shabbat"
 duration:
   max_seconds: 240
 requires:

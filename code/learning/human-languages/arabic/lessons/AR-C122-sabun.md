@@ -14,7 +14,8 @@ romanization: "ṣābūn"
 concept_tag: AR-THINGS122-SABUN
 prerequisites: [AR-C122-khizana, AR-C122-musht, AR-C22-akhdar-asfar, AR-C22-akhdar-asfar]
 sounds: []
-roots: []
+roots: [sapo-latin]
+etymology_hook: "ṣābūn: usually traced to Latin sāpō 'soap' (EtymDB); a native derivation in Lane is a folk etymology"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C122-musht]
 <!-- hl-knowledge: introduces=[AR-LEX-C122-THINGS122-03]; assesses=[] -->
 
 **صابون** — *ṣābūn* — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صابون** (*ṣābūn*) is usually traced to Latin *sāpō*, "soap" (EtymDB), probably through Aramaic or Greek. Lane quotes a grammarian who derived it from an Arabic verb, a folk etymology, and another who called it a word common to many languages.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

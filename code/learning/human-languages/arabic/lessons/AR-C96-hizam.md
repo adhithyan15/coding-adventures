@@ -14,7 +14,8 @@ romanization: "ḥizām"
 concept_tag: AR-CLOTHES96-HIZAM
 prerequisites: [AR-C95-hidha, AR-C95-mitaf]
 sounds: []
-roots: []
+roots: [ḥ-z-m]
+etymology_hook: "ḥizām: built on the root ḥ-z-m, 'to bind, to tie' (Lane); ḥizām is a thing to bind with: a belt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C95-mitaf]
 <!-- hl-knowledge: introduces=[AR-LEX-C96-CLOTHES96-01]; assesses=[] -->
 
 **حزام** — *ḥizām* — "a belt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حزام** (*ḥizām*) is built on the native Arabic root *ḥ-z-m*, "to bind, to tie" (Lane). *Ḥizām* is a thing to bind with: a belt.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

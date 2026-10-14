@@ -14,7 +14,8 @@ romanization: "tāksī"
 concept_tag: AR-SHAY215-TAKSI
 prerequisites: [AR-C215-amtia, AR-C215-shahin]
 sounds: []
-roots: []
+roots: [french-taxi]
+etymology_hook: "tāksī: a modern loan from French taxi (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C215-shahin]
 <!-- hl-knowledge: introduces=[AR-LEX-C215-SHAY215-05]; assesses=[] -->
 
 **تاكسي** — *tāksī* — "a taxi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تاكسي** (*tāksī*) is a modern loan from French *taxi* (EtymDB); it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

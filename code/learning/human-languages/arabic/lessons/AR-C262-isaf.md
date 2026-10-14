@@ -14,7 +14,8 @@ romanization: "isʿāf"
 concept_tag: AR-SIHHA262-ISAF
 prerequisites: [AR-C261-istaffa, AR-C261-wazzaa]
 sounds: []
-roots: []
+roots: [s-ʿ-f]
+etymology_hook: "isʿāf: built on the root s-ʿ-f, 'to help' (Lane); isʿāf is the verbal noun of Form IV, 'giving help'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C261-wazzaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C262-SIHHA262-01]; assesses=[] -->
 
 **إسعاف** — *isʿāf* — "an ambulance; first aid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**إسعاف** (*isʿāf*) is built on the native Arabic root *s-ʿ-f*, "to help" (Lane). *Isʿāf* is the verbal noun of Form IV, "giving help".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ʿumla"
 concept_tag: AR-AMAL188-UMLA
 prerequisites: [AR-C187-silk, AR-C187-habl]
 sounds: []
-roots: []
+roots: [ʿ-m-l]
+etymology_hook: "ʿumla: built on the root ʿ-m-l, 'to work' (Lane); Lane's ʿumla is pay for work"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C187-habl]
 <!-- hl-knowledge: introduces=[AR-LEX-C188-AMAL188-01]; assesses=[] -->
 
 **عملة** — *ʿumla* — "a currency".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عملة** (*ʿumla*) is built on the native Arabic root *ʿ-m-l*, "to work" (Lane). Lane's *ʿumla* is pay for work; the currency is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

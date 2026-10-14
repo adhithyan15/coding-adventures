@@ -14,7 +14,8 @@ romanization: "qadara"
 concept_tag: AR-VERB-QADARA
 prerequisites: [AR-C107-milkiyya, AR-C107-istataa]
 sounds: []
-roots: []
+roots: [q-d-r]
+etymology_hook: "qadara: built on the root q-d-r, 'to measure' (Lane); qadara is the plain verb, 'to have power over'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C107-istataa]
 <!-- hl-knowledge: introduces=[AR-LEX-C107-CAN107-05]; assesses=[] -->
 
 **قدر** — *qadara* — "to be able to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قدر** (*qadara*) is built on the native Arabic root *q-d-r*, "to measure; to have power" (Lane). *Qadara* is the plain verb, "to have power over".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

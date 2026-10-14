@@ -14,7 +14,8 @@ romanization: "ʿamīq"
 concept_tag: AR-QUAL148-AMIQ
 prerequisites: [AR-C148-masrur, AR-C148-wasi, AR-C18-al-taqs, AR-C18-al-taqs]
 sounds: []
-roots: []
+roots: [ʿ-m-q]
+etymology_hook: "ʿamīq: built on the root ʿ-m-q, 'to be deep' (Lane); ʿamīq is the faʿīl adjective, 'deep'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C148-wasi]
 <!-- hl-knowledge: introduces=[AR-LEX-C148-QUAL148-03]; assesses=[] -->
 
 **عميق** — *ʿamīq* — "deep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عميق** (*ʿamīq*) is built on the native Arabic root *ʿ-m-q*, "to be deep" (Lane). *ʿAmīq* is the *faʿīl* adjective, "deep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

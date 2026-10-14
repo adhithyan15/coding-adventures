@@ -14,7 +14,8 @@ romanization: "qamar"
 concept_tag: AR-NATURE77-QAMAR
 prerequisites: [AR-C77-sahaba, AR-C77-shams]
 sounds: []
-roots: []
+roots: [q-m-r]
+etymology_hook: "qamar: built on the root q-m-r, 'the moon' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C77-shams]
 <!-- hl-knowledge: introduces=[AR-LEX-C77-NATURE77-04]; assesses=[] -->
 
 **قمر** — *qamar* — "the moon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قمر** (*qamar*) is built on the native Arabic root *q-m-r*, "the moon" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

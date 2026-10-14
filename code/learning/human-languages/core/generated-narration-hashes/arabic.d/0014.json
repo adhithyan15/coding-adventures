@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 14,
-  "sourceHash": "fnv1a64:536369b753d438d3",
+  "sourceHash": "fnv1a64:3642269b47dfbcfd",
   "lessonIds": [
     "AR-C14-ashhur"
   ],
@@ -10,6 +10,6 @@
   "text": "arabic/narration/ch14.txt",
   "json": "arabic/narration/ch14.json",
   "textHash": "fnv1a64:693631327b4741ec",
-  "jsonHash": "fnv1a64:a94807a82b2f8f93",
+  "jsonHash": "fnv1a64:6b9d255e5b5f61c2",
   "findings": []
 }

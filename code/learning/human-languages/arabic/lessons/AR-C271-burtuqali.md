@@ -14,7 +14,8 @@ romanization: "burtuqālī"
 concept_tag: AR-SIFA271-BURTUQALI
 prerequisites: [AR-C271-anid, AR-C271-wahid]
 sounds: []
-roots: []
+roots: [portugal-orange]
+etymology_hook: "burtuqālī: burtuqāl 'orange', named after Portugal, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C271-wahid]
 <!-- hl-knowledge: introduces=[AR-LEX-C271-SIFA271-03]; assesses=[] -->
 
 **برتقالي** — *burtuqālī* — "orange (colour)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**برتقالي** (*burtuqālī*) is built from *burtuqāl*, "orange", with the adjective ending *-ī*; *burtuqāl* is named after Portugal, whose traders brought the sweet orange.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

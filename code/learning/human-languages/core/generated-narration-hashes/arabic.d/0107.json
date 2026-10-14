@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 107,
-  "sourceHash": "fnv1a64:a5463b1a4aa78c4f",
+  "sourceHash": "fnv1a64:fff91d1e17854ea5",
   "lessonIds": [
     "AR-C107-kafaa",
     "AR-C107-shahada",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch107.txt",
   "json": "arabic/narration/ch107.json",
-  "textHash": "fnv1a64:2ffc5d7eabcebd6e",
-  "jsonHash": "fnv1a64:abd685147f27c5fb",
+  "textHash": "fnv1a64:036039e85d7d4868",
+  "jsonHash": "fnv1a64:9f165f5bf01e432f",
   "findings": []
 }

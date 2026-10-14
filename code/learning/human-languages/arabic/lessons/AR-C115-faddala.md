@@ -14,7 +14,8 @@ romanization: "faḍḍala"
 concept_tag: AR-VERB-FADDALA
 prerequisites: [AR-C115-qarar, AR-C115-ikhtara]
 sounds: []
-roots: []
+roots: [fadl]
+etymology_hook: "faḍḍala: built on the root f-ḍ-l, 'to exceed' (Lane); faḍḍala is Form II, 'to give excess to', to prefer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C115-ikhtara]
 <!-- hl-knowledge: introduces=[AR-LEX-C115-WANT115-03]; assesses=[] -->
 
 **فضل** — *faḍḍala* — "to prefer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فضل** (*faḍḍala*) is built on the native Arabic root *f-ḍ-l*, "to exceed; excess, favour" (Lane). *Faḍḍala* is Form II, "to give excess to", to prefer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

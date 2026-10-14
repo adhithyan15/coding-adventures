@@ -14,7 +14,8 @@ romanization: "khamsūn"
 concept_tag: AR-NUMBERS97-KHAMSUN
 prerequisites: [AR-C97-thalathun, AR-C97-arbaun]
 sounds: []
-roots: []
+roots: [khamsa]
+etymology_hook: "khamsūn: built on the root kh-m-s, 'five' (Lane); khamsūn is khams, 'five', with the tens ending -ūn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C97-arbaun]
 <!-- hl-knowledge: introduces=[AR-LEX-C97-NUMBERS97-04]; assesses=[] -->
 
 **خمسون** — *khamsūn* — "fifty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خمسون** (*khamsūn*) is built on the native Arabic root *kh-m-s*, "five" (Lane). *Khamsūn* is *khams*, "five", with the tens ending *-ūn*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

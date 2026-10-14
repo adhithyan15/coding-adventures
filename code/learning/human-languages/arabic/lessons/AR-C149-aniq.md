@@ -14,7 +14,8 @@ romanization: "anīq"
 concept_tag: AR-QUAL149-ANIQ
 prerequisites: [AR-C149-muzlim, AR-C149-mulawwan]
 sounds: []
-roots: []
+roots: [ʾ-n-q]
+etymology_hook: "anīq: built on the root ʾ-n-q, 'to please, to delight' (Lane); anīq is 'pleasing to the eye', hence 'elegant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C149-mulawwan]
 <!-- hl-knowledge: introduces=[AR-LEX-C149-QUAL149-03]; assesses=[] -->
 
 **أنيق** — *anīq* — "elegant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أنيق** (*anīq*) is built on the native Arabic root *ʾ-n-q*, "to please, to delight" (Lane). *Anīq* is "pleasing to the eye", hence "elegant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

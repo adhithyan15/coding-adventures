@@ -14,7 +14,8 @@ romanization: "li-dhālika"
 concept_tag: AR-SABAB174-LI-DHALIKA
 prerequisites: [AR-C174-sabab, AR-C174-natija]
 sounds: []
-roots: []
+roots: [dhalika-that]
+etymology_hook: "li-dhālika: built from li- 'for' + dhālika 'that': 'for that'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C174-natija]
 <!-- hl-knowledge: introduces=[AR-LEX-C174-SABAB174-03]; assesses=[] -->
 
 **لذلك** — *li-dhālika* — "therefore, so".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لذلك** (*li-dhālika*) is built from *li-*, "for", and *dhālika*, "that": "for that", hence "therefore".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

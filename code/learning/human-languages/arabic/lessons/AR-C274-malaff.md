@@ -14,7 +14,8 @@ romanization: "malaff"
 concept_tag: AR-SHAY274-MALAFF
 prerequisites: [AR-C274-sabbura, AR-C274-qamus]
 sounds: []
-roots: []
+roots: [l-f-f]
+etymology_hook: "malaff: built on the root l-f-f, 'to wrap, to roll up' (Lane); malaff is a thing to wrap papers in: a file"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C274-qamus]
 <!-- hl-knowledge: introduces=[AR-LEX-C274-SHAY274-05]; assesses=[] -->
 
 **ملف** — *malaff* — "a file, a folder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ملف** (*malaff*) is built on the native Arabic root *l-f-f*, "to wrap, to roll up" (Lane). *Malaff* is a thing to wrap papers in: a file.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

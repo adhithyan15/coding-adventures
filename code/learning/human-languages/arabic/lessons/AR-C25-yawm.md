@@ -12,7 +12,7 @@ concept_tag: TIME-DAY
 prerequisites: [AR-C08-al-ahad-al-khamis]
 sounds: [waw-glide, meem]
 roots: [y-w-m]
-etymology_hook: "يوم (yawm, 'day') ← Proto-Semitic *yawm-, a genuine Common Semitic word shared with Hebrew יוֹם (yōm, as in Yom Kippur), Akkadian ūmum, and Aramaic yawmā; further back, some scholars connect it to Proto-Afroasiatic *yam- ('day'), possibly related to Egyptian ỉmy ('sun, as an eye') — a speculative but genuinely proposed deep link, not settled fact"
+etymology_hook: "yawm: an inherited Semitic noun, cousin of Hebrew yōm (as in Yom Kippur) and Akkadian ūmu 'day'"
 duration:
   max_seconds: 240
 requires:

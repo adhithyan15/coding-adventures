@@ -14,7 +14,8 @@ romanization: "abadan"
 concept_tag: AR-WAQT170-ABADAN
 prerequisites: [AR-C170-takhir, AR-C170-mutaakhkhiran]
 sounds: []
-roots: []
+roots: [ʾ-b-d]
+etymology_hook: "abadan: built on the root ʾ-b-d, 'endless time' (Lane); abadan is abad, 'endless time', with the adverb ending -an"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C170-mutaakhkhiran]
 <!-- hl-knowledge: introduces=[AR-LEX-C170-WAQT170-05]; assesses=[] -->
 
 **أبدا** — *abadan* — "never, ever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أبدا** (*abadan*) is built on the native Arabic root *ʾ-b-d*, "endless time" (Lane). *Abadan* is *abad*, "endless time", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

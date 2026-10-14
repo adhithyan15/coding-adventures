@@ -14,7 +14,8 @@ romanization: "sitta"
 concept_tag: AR-CLOTHES96-SITTA
 prerequisites: [AR-C95-mitaf, AR-C96-hizam]
 sounds: []
-roots: []
+roots: [s-d-s]
+etymology_hook: "sitta: built on the root s-d-s, 'six' (Lane); Lane notes sitta was originally sidsa, the d merged into the t"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C96-hizam]
 <!-- hl-knowledge: introduces=[AR-LEX-C96-CLOTHES96-02]; assesses=[] -->
 
 **ستة** — *sitta* — "six".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ستة** (*sitta*) is built on the native Arabic root *s-d-s*, "six" (Lane). Lane notes *sitta* was originally *sidsa*, the *d* merged into the *t*; Hebrew *shesh* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

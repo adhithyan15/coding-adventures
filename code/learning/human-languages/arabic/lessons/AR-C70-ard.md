@@ -14,7 +14,8 @@ romanization: "arḍ"
 concept_tag: AR-HOME70-ARD
 prerequisites: [AR-C70-jidar, AR-C70-sarir]
 sounds: []
-roots: []
+roots: [ʾ-r-ḍ]
+etymology_hook: "arḍ: built on the root ʾ-r-ḍ, 'the earth, land' (Lane); Hebrew ʾerets, 'land', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C70-sarir]
 <!-- hl-knowledge: introduces=[AR-LEX-C70-HOME70-05]; assesses=[] -->
 
 **أرض** — *arḍ* — "the floor; the earth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أرض** (*arḍ*) is built on the native Arabic root *ʾ-r-ḍ*, "the earth, land" (Lane). Hebrew *ʾerets*, "land", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

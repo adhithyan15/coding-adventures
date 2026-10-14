@@ -14,7 +14,8 @@ romanization: "mutawāḍiʿ"
 concept_tag: AR-SIFA241-MUTAWADI
 prerequisites: [AR-C241-muhadhdhab, AR-C241-sabur]
 sounds: []
-roots: []
+roots: [w-ḍ-ʿ]
+etymology_hook: "mutawāḍiʿ: built on the root w-ḍ-ʿ, 'to put down, to lay' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C241-sabur]
 <!-- hl-knowledge: introduces=[AR-LEX-C241-SIFA241-03]; assesses=[] -->
 
 **متواضع** — *mutawāḍiʿ* — "modest, humble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**متواضع** (*mutawāḍiʿ*) is built on the native Arabic root *w-ḍ-ʿ*, "to put down, to lay" (Lane). *Mutawāḍiʿ* is the Form VI participle, "lowering oneself", hence "humble".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

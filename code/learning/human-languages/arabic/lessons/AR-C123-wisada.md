@@ -14,7 +14,8 @@ romanization: "wisāda"
 concept_tag: AR-THINGS123-WISADA
 prerequisites: [AR-C122-firash, AR-C123-battaniyya]
 sounds: []
-roots: []
+roots: [w-s-d]
+etymology_hook: "wisāda: built on the root w-s-d, 'a pillow' (Lane); wisāda is a pillow, a cushion"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C123-battaniyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C123-THINGS123-02]; assesses=[] -->
 
 **وسادة** — *wisāda* — "a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وسادة** (*wisāda*) is built on the native Arabic root *w-s-d*, "a pillow" (Lane). *Wisāda* is a pillow, a cushion.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

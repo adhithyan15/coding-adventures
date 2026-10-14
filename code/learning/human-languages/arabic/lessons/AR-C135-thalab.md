@@ -14,7 +14,8 @@ romanization: "thaʿlab"
 concept_tag: AR-THINGS135-THALAB
 prerequisites: [AR-C134-arnab, AR-C135-ghazal]
 sounds: []
-roots: []
+roots: [th-ʿ-l-b]
+etymology_hook: "thaʿlab: built on the root th-ʿ-l-b, 'a fox' (Lane); Hebrew shuʿal, 'fox', is usually counted a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C135-ghazal]
 <!-- hl-knowledge: introduces=[AR-LEX-C135-THINGS135-02]; assesses=[] -->
 
 **ثعلب** — *thaʿlab* — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ثعلب** (*thaʿlab*) is built on the native Arabic root *th-ʿ-l-b*, "a fox" (Lane). Hebrew *shuʿal*, "fox", is usually counted a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

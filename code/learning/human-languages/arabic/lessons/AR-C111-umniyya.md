@@ -14,7 +14,8 @@ romanization: "umniyya"
 concept_tag: AR-WANT111-UMNIYYA
 prerequisites: [AR-C111-tawaqqu, AR-C111-hamas]
 sounds: []
-roots: []
+roots: [m-n-y]
+etymology_hook: "umniyya: built on the root m-n-y, 'to wish, to desire' (Lane); Lane's umniyya is a thing wished for"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C111-hamas]
 <!-- hl-knowledge: introduces=[AR-LEX-C111-WANT111-04]; assesses=[] -->
 
 **أمنية** — *umniyya* — "a wish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أمنية** (*umniyya*) is built on the native Arabic root *m-n-y*, "to wish, to desire" (Lane). Lane's *umniyya* is a thing wished for.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

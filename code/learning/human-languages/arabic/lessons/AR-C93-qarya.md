@@ -14,7 +14,8 @@ romanization: "qarya"
 concept_tag: AR-TOWN93-QARYA
 prerequisites: [AR-C93-shurta, AR-C93-suq]
 sounds: []
-roots: []
+roots: [q-r-y]
+etymology_hook: "qarya: built on the root q-r-y, 'a town, a village' (Lane); Lane's qarya is a town or village, smaller than a madīna"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C93-suq]
 <!-- hl-knowledge: introduces=[AR-LEX-C93-TOWN93-03]; assesses=[] -->
 
 **قرية** — *qarya* — "a village".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قرية** (*qarya*) is built on the native Arabic root *q-r-y*, "a town, a village" (Lane). Lane's *qarya* is a town or village, smaller than a *madīna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

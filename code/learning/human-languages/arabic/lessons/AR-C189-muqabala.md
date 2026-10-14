@@ -14,7 +14,8 @@ romanization: "muqābala"
 concept_tag: AR-AMAL189-MUQABALA
 prerequisites: [AR-C189-amil, AR-C189-mutarjim]
 sounds: []
-roots: []
+roots: [q-b-l]
+etymology_hook: "muqābala: built on the root q-b-l, 'to face' (Lane); muqābala is the verbal noun of Form III, 'meeting face to face'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C189-mutarjim]
 <!-- hl-knowledge: introduces=[AR-LEX-C189-AMAL189-05]; assesses=[] -->
 
 **مقابلة** — *muqābala* — "an interview".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مقابلة** (*muqābala*) is built on the native Arabic root *q-b-l*, "to face" (Lane). *Muqābala* is the verbal noun of Form III, "meeting face to face".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

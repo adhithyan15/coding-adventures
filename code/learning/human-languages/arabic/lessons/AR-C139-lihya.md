@@ -14,7 +14,8 @@ romanization: "liḥya"
 concept_tag: AR-THINGS139-LIHYA
 prerequisites: [AR-C138-jabin, AR-C138-hajib]
 sounds: []
-roots: []
+roots: [l-ḥ-y]
+etymology_hook: "liḥya: built on the root l-ḥ-y, 'a beard' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C138-hajib]
 <!-- hl-knowledge: introduces=[AR-LEX-C139-THINGS139-01]; assesses=[] -->
 
 **لحية** — *liḥya* — "a beard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لحية** (*liḥya*) is built on the native Arabic root *l-ḥ-y*, "a beard" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

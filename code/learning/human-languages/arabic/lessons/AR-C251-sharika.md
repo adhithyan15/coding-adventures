@@ -14,7 +14,8 @@ romanization: "sharika"
 concept_tag: AR-AMAL251-SHARIKA
 prerequisites: [AR-C251-muwazzaf, AR-C251-zamil]
 sounds: []
-roots: []
+roots: [sh-r-k]
+etymology_hook: "sharika: built on the root sh-r-k, 'to share, to be a partner' (Lane); sharika is a partnership"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C251-zamil]
 <!-- hl-knowledge: introduces=[AR-LEX-C251-AMAL251-05]; assesses=[] -->
 
 **شركة** — *sharika* — "a company".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شركة** (*sharika*) is built on the native Arabic root *sh-r-k*, "to share, to be a partner" (Lane). *Sharika* is a partnership.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

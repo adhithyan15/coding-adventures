@@ -14,7 +14,8 @@ romanization: "madkhal"
 concept_tag: AR-LOC105-MADKHAL
 prerequisites: [AR-C104-makan, AR-C104-unwan]
 sounds: []
-roots: []
+roots: [d-kh-l]
+etymology_hook: "madkhal: built on the root d-kh-l, 'to enter' (Lane); madkhal is the ma- place noun, 'a place of entering'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C104-unwan]
 <!-- hl-knowledge: introduces=[AR-LEX-C105-LOC105-01]; assesses=[] -->
 
 **مدخل** — *madkhal* — "an entrance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مدخل** (*madkhal*) is built on the native Arabic root *d-kh-l*, "to enter" (Lane). *Madkhal* is the *ma-* place noun, "a place of entering".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

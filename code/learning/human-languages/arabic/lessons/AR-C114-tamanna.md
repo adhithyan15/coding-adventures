@@ -14,7 +14,8 @@ romanization: "tamannā"
 concept_tag: AR-VERB-TAMANNA
 prerequisites: [AR-C114-haja, AR-C114-ihtaja, AR-C15-ad-duhr-muntasaf-al-layl, AR-C15-ad-duhr-muntasaf-al-layl]
 sounds: []
-roots: []
+roots: [m-n-y]
+etymology_hook: "tamannā: built on the root m-n-y, 'to wish, to desire' (Lane); tamannā is Form V, 'to wish'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C114-ihtaja]
 <!-- hl-knowledge: introduces=[AR-LEX-C114-WANT114-05]; assesses=[] -->
 
 **تمنى** — *tamannā* — "to wish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تمنى** (*tamannā*) is built on the native Arabic root *m-n-y*, "to wish, to desire" (Lane). *Tamannā* is Form V, "to wish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

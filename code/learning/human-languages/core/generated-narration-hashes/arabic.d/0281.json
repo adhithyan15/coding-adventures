@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 281,
-  "sourceHash": "fnv1a64:4b655e05dd288403",
+  "sourceHash": "fnv1a64:d2e13c66660b94b9",
   "lessonIds": [
     "AR-C281-raqm",
     "AR-C281-mukalama",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch281.txt",
   "json": "arabic/narration/ch281.json",
-  "textHash": "fnv1a64:d6a6c3582e4c7545",
-  "jsonHash": "fnv1a64:cb9b7d69f22d115a",
+  "textHash": "fnv1a64:86c5451d7276e6a4",
+  "jsonHash": "fnv1a64:1b1e0e7464923017",
   "findings": []
 }

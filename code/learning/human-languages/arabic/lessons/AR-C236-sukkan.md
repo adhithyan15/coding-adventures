@@ -14,7 +14,8 @@ romanization: "sukkān"
 concept_tag: AR-MAKAN236-SUKKAN
 prerequisites: [AR-C236-jalid, AR-C236-muwatin]
 sounds: []
-roots: []
+roots: [s-k-n]
+etymology_hook: "sukkān: built on the root s-k-n, 'to be still' (Lane); sukkān is the plural of sākin, 'one who dwells'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C236-muwatin]
 <!-- hl-knowledge: introduces=[AR-LEX-C236-MAKAN236-05]; assesses=[] -->
 
 **سكان** — *sukkān* — "inhabitants, population".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سكان** (*sukkān*) is built on the native Arabic root *s-k-n*, "to be still; to dwell" (Lane). *Sukkān* is the plural of *sākin*, "one who dwells".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

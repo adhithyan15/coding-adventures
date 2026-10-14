@@ -14,7 +14,8 @@ romanization: "iʿlān"
 concept_tag: AR-QIRAA158-ILAN
 prerequisites: [AR-C158-lafita, AR-C158-ijar]
 sounds: []
-roots: []
+roots: [ʿ-l-n]
+etymology_hook: "iʿlān: built on the root ʿ-l-n, 'to be public, to be open' (Lane); iʿlān is the verbal noun of Form IV, 'making public'"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [AR-C158-ijar]
 [YOU READ: the advert]
 
 The advert says **شقة للإيجار** — *shaqqa li-l-ījār* — "Flat for rent."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**إعلان** (*iʿlān*) is built on the native Arabic root *ʿ-l-n*, "to be public, to be open" (Lane). *Iʿlān* is the verbal noun of Form IV, "making public".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
