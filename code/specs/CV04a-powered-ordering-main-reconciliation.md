@@ -46,6 +46,24 @@ gates and Miri DEFERRED/PENDING requirements below remain binding.
 
 ## Source boundary
 
+### Shared gap index for the new rank consumer
+
+Actual merged source3d906f80/main5526 compilation session69111 returns EXIT101
+with E0425: the new rank constraint builder calls the old gap helper replaced by
+the owned once-per-layout index. Pass the already constructed `SwimlaneLinkGaps`
+to `swimlane_cross_lane_ranks`; use its existing `units` lookup. Do not restore
+an edge scan per query or construct another index in the rank builder. Preserve
+undirected maximum min-length/default-one behavior and every old gap assertion.
+
+Add an enabled-rank control using the existing 512 duplicate/reversed styled
+edges and eight nodes in all four directions. Actual edge visits must stay512,
+actual gap queries14. The new rank-grid behavior has exact first gaps390 pixels
+in horizontal directions/234 in vertical directions and second gap42; this is
+distinct from the disabled legacy gap126, whose tests remain unchanged. Disable
+rank-crossing optimization in this control so it exercises the new gap consumer
+without conflating a separate global crossing heuristic. Record subsequent
+required-field compile errors before repairing fixture initialization.
+
 This bounded reconciliation starts after actual native session97289 EXIT0 at
 `282193e9b1911fb3846b4a107d5d11fb8bec02f0`, integrated main
 `160b1b4e0e8c52bf7dc8b02119e666611fd6001f`. Its immutable receipt records
