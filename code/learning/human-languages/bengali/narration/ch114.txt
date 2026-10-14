@@ -77,7 +77,7 @@ You'll want to know: শিকড়.
 শিকড় — shikôṛ — "a root".
 
 The word, taken apart.
-The origin of শিকড় (shikôṛ) is not settled. CDIAL has no entry for it; the nearest form it gives is Assamese xihari, "rootlet", under Sanskrit śiphā, "fibrous root" (CDIAL 12443), with no Bengali form beside it.
+শিকড় (shikôṛ) appears to belong with Sanskrit śiphā, "fibrous root". CDIAL has no entry for the modern word, but under śiphā it lists Old Bengali śihaḍa, "root", and Assamese xihari, "rootlet", both with an added -ḍ- (CDIAL 12443). How shikôṛ came by its k is not explained there.
 
 What you've built.
 One more word for this chapter.

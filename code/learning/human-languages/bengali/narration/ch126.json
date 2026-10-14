@@ -4,7 +4,7 @@
   "chapter": 126,
   "title": "Barber, Tailor, Washerman, Grocer, Nurse",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:545b8a24455d047f",
+  "sourceHash": "fnv1a64:eb4cbfe46fcf4597",
   "lessons": [
     {
       "id": "BN-C126-napit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:771243d33ac7e21c",
+      "sourceHash": "fnv1a64:8833630582718e05",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "নাপিত (nāpit) is Sanskrit nāpita, \"barber\", taken over whole as a learned loan, a tatsama (CDIAL 13792). The word inherited from it is nāu, which CDIAL lists."
+              "text": "নাপিত (nāpit) is Sanskrit nāpita, \"barber\", taken over whole as a learned loan, a tatsama (CDIAL 13792). CDIAL lists the inherited Bengali nāi, \"barber\", under it, and nāu, \"barber\", under the related snāpaka, \"bath attendant\", in the same entry."
             }
           ]
         },

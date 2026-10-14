@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Here, There, and Where",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7d36f375b72ca719",
+  "sourceHash": "fnv1a64:1cbbae22ae7f6226",
   "lessons": [
     {
       "id": "BN-W05-tha",
@@ -192,7 +192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8551177be34cba22",
+      "sourceHash": "fnv1a64:ec1f5a4d2a705d41",
       "notice": null,
       "blocks": [
         {

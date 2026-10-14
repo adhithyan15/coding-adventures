@@ -14,8 +14,8 @@ romanization: "hôyto"
 concept_tag: BN-KARON190-HOYTO
 prerequisites: [BN-C189-jhorna, BN-C190-borong]
 sounds: []
-roots: [sanskrit-asti]
-etymology_hook: "hôyto: hôy 'is', listed under Sanskrit asti 'is' (CDIAL 977), + the particle -to"
+roots: [sanskrit-bhavati]
+etymology_hook: "hôyto: hôy 'is', of hôoyā ← Sanskrit bhavati 'becomes, is' (CDIAL 9416), + the particle -to"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [BN-C190-borong]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**হয়তো** (*hôyto*) is *hôy*, "is", which CDIAL lists under Sanskrit *asti*, "is" (CDIAL 977), + the particle *-to*, "indeed": "it may be so".
+**হয়তো** (*hôyto*) is *hôy*, "is", a form of *hôoyā*, "to be", from Sanskrit *bhavati*, "becomes, is" (CDIAL 9416), + the particle *-to*, "indeed": "it may be so". CDIAL's addenda move *hôy* there from *asti*, "is" (CDIAL 977).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

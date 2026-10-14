@@ -4,7 +4,7 @@
   "chapter": 231,
   "title": "Hassle, Solution, Wholemeal flour, Fine flour, Semolina",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:590b035fa0601cf2",
+  "sourceHash": "fnv1a64:62f503686468b995",
   "lessons": [
     {
       "id": "BN-C231-jhamela",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02af77575dbf52ff",
+      "sourceHash": "fnv1a64:7d6661007c9ba26f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of ঝামেলা (jhāmelā) is not settled: CDIAL has no entry for it, and a search by form and by the glosses \"trouble\" and \"entangle\" finds only words of other shapes; its Bengali jhāmā, \"pumice-stone\" (CDIAL 5366), is a different word."
+              "text": "CDIAL has no Bengali row for ঝামেলা (jhāmelā), but it lists Hindi jhamelā, \"wrangling\", and Nepali jhamelā, \"entanglement, quarrel\", under jhamm, \"entanglement\", a form it reconstructs (CDIAL 5340). The Bengali word appears to be the same one: \"a tangle\"."
             }
           ]
         },

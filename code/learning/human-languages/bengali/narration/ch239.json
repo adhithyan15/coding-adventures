@@ -4,7 +4,7 @@
   "chapter": 239,
   "title": "To kiss, To paint, To play music, To give back, To remember",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:318ed47becc4fe04",
+  "sourceHash": "fnv1a64:f668a71c348c900d",
   "lessons": [
     {
       "id": "BN-C239-chumu-khaoya",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13641e88ec2348ce",
+      "sourceHash": "fnv1a64:01041fbf7467b1ad",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "রং করা (rông kôrā) is rông, \"colour\", Sanskrit raṅga, \"dye, colour\", whose inherited form is rāṅā (CDIAL 10560), and the same as Persian rang, + kôrā, \"to do\", from Sanskrit karoti, \"does\" (CDIAL 2814)."
+              "text": "রং করা (rông kôrā) is rông, \"colour\", which matches both Sanskrit raṅga, \"dye, colour\", whose inherited form is rāṅā (CDIAL 10560), and Persian rang, \"colour\", + kôrā, \"to do\", from Sanskrit karoti, \"does\" (CDIAL 2814)."
             }
           ]
         },

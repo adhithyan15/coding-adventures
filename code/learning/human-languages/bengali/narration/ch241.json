@@ -4,7 +4,7 @@
   "chapter": 241,
   "title": "To get lost, To find, To notice, To inform, To chat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e9697226da5eb450",
+  "sourceHash": "fnv1a64:e394d3dc814b8b69",
   "lessons": [
     {
       "id": "BN-C241-hariye-jaoya",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d27df3ea5a3c9db",
+      "sourceHash": "fnv1a64:a0bedcc2664c0979",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "গল্প করা (gôlpô kôrā) is gôlpô, \"a story, a chat\", which appears to belong with Bengali gappa, \"tittle-tattle\", listed under gappa, \"talk\", which CDIAL calls imitative (CDIAL 4022), + kôrā, \"to do\", from Sanskrit karoti, \"does\" (CDIAL 2814)."
+              "text": "গল্প করা (gôlpô kôrā) is gôlpô, \"a story, a chat\", which appears to belong with Bengali gappa, \"tittle-tattle\", listed under gappa, \"talk\", which CDIAL calls imitative and compares with Sanskrit jalpati, \"chatters\" (CDIAL 4022), + kôrā, \"to do\", from Sanskrit karoti, \"does\" (CDIAL 2814)."
             }
           ]
         },

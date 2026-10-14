@@ -45,7 +45,7 @@ You'll want to know: গেলা.
 গেলা — gelā — "to swallow".
 
 The word, taken apart.
-গেলা (gelā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from galati, "swallows" (CDIAL 4075). CDIAL writes the Bengali verb gilā, beside Sanskrit gilati.
+গেলা (gelā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gilati, "swallows", a byform of galati (CDIAL 4075). CDIAL writes the Bengali verb gilā.
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: বাছা.
 বাছা — bāchhā — "to pick, to choose".
 
 The word, taken apart.
-বাছা (bāchhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vṛkṣate, "chooses" (CDIAL 12080). CDIAL lists Bengali bāchā, "to select, choose", in the entry it shares with vṛścati, "cuts".
+বাছা (bāchhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists Bengali bāchā, "to select, choose", under vraścati, a form of vṛścati, "cuts" (CDIAL 12080), and explains that verbs for "cut" and "choose", such as vṛkṣate, "chooses", ran together there.
 
 What you've built.
 One more word for this chapter.

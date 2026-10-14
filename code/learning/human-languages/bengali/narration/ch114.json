@@ -4,7 +4,7 @@
   "chapter": 114,
   "title": "Fog, Dew, Root, Seed, Thorn",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e8d1695876e25d16",
+  "sourceHash": "fnv1a64:3adfeeab4182bc43",
   "lessons": [
     {
       "id": "BN-C114-kuyasha",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac63b31a164f3a48",
+      "sourceHash": "fnv1a64:aad5fcdbac036a73",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of শিকড় (shikôṛ) is not settled. CDIAL has no entry for it; the nearest form it gives is Assamese xihari, \"rootlet\", under Sanskrit śiphā, \"fibrous root\" (CDIAL 12443), with no Bengali form beside it."
+              "text": "শিকড় (shikôṛ) appears to belong with Sanskrit śiphā, \"fibrous root\". CDIAL has no entry for the modern word, but under śiphā it lists Old Bengali śihaḍa, \"root\", and Assamese xihari, \"rootlet\", both with an added -ḍ- (CDIAL 12443). How shikôṛ came by its k is not explained there."
             }
           ]
         },

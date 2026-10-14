@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 243,
-  "sourceHash": "fnv1a64:b9e69915017b271e",
+  "sourceHash": "fnv1a64:28f6675d3143b63e",
   "lessonIds": [
     "BN-C243-bomi",
     "BN-C243-chulkani",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch243.txt",
   "json": "bengali/narration/ch243.json",
-  "textHash": "fnv1a64:acabbaf7b2994ca8",
-  "jsonHash": "fnv1a64:e7d5fbc74ef5ce9e",
+  "textHash": "fnv1a64:3db8e9714663e686",
+  "jsonHash": "fnv1a64:77ca5de74fa12a4e",
   "findings": []
 }

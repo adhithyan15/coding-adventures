@@ -14,7 +14,7 @@ romanization: "tālā"
 concept_tag: BN-HOME62-TALA
 prerequisites: [BN-C62-pakha, BN-C62-chabi]
 sounds: []
-roots: [sanskrit-tala]
+roots: [sanskrit-tala-latch]
 etymology_hook: "tālā ← Sanskrit tāla 'latch, bolt', a tadbhava (CDIAL 5749)"
 duration:
   max_seconds: 200

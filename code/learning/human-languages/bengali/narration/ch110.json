@@ -4,7 +4,7 @@
   "chapter": 110,
   "title": "Scissors, Hurricane lamp, Candle, Matches, Coal",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:91c84040004d9df3",
+  "sourceHash": "fnv1a64:5cf5d33e2a5ad30c",
   "lessons": [
     {
       "id": "BN-C110-kachi",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6de7a1b06b608f9a",
+      "sourceHash": "fnv1a64:edc67c6f6b451201",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of দেশলাই (deshlāi) is not settled: CDIAL has no entry for it, and a search by form and by the gloss \"match\" finds nothing close."
+              "text": "The origin of দেশলাই (deshlāi) is not settled: CDIAL has no entry for it. Its end looks like salāi, which CDIAL lists as Nepali for \"matchstick\" under Sanskrit śalākā, \"small stake or stick\", beside Bengali salā, \"thin stick\" (CDIAL 12349); its first half is not explained there."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:440ca014f2418ec5",
+      "sourceHash": "fnv1a64:0c4f50d7ccd96001",
       "notice": null,
       "blocks": [
         {

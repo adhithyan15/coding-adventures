@@ -77,7 +77,7 @@ You'll want to know: কাছের.
 কাছের — kāchher — "nearby".
 
 The word, taken apart.
-কাছের (kāchher) is kāchh, "nearness", + -er, "of". The origin of kāchh is not settled: CDIAL has no entry for it, though under Sanskrit kakṣa, "armpit, side", it lists Bengali kāṁkh, "flank" (CDIAL 2588).
+কাছের (kāchher) is kāchh, "nearness", + -er, "of". CDIAL has no entry for kāchh, but it appears to belong with Sanskrit kakṣa, "armpit, side": there CDIAL lists Bengali kāṁkh, "flank", Nepali kāch, "side, edge", and Assamese kāxe, "by the side of", and notes that some words for "beside" probably grew from the sense "side" (CDIAL 2588).
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: সরকারি.
 সরকারি — sôrkāri — "public, governmental".
 
 The word, taken apart.
-সরকারি (sôrkāri) is a loan, usually traced to Persian sarkār, "government; master". Bengali adds the ending -i.
+সরকারি (sôrkāri) is a loan, usually traced to Persian sarkār, "government; master". It carries the adjective ending -i.
 
 What you've built.
 One more word for this chapter.

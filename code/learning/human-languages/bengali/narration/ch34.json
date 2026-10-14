@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Somebody Else",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0a665362db0cac7f",
+  "sourceHash": "fnv1a64:3bce05f2f9785858",
   "lessons": [
     {
       "id": "BN-C23-she",
@@ -545,7 +545,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7580503888a5210d",
+      "sourceHash": "fnv1a64:a5000ad0ec128d4f",
       "notice": null,
       "blocks": [
         {

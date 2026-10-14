@@ -15,7 +15,7 @@ concept_tag: BN-THINGS126-NAPIT
 prerequisites: [BN-C125-kumor, BN-C125-tati]
 sounds: []
 roots: [sanskrit-napita]
-etymology_hook: "nāpit ← Sanskrit nāpita 'barber', a tatsama; CDIAL lists the inherited form nāu (CDIAL 13792)"
+etymology_hook: "nāpit ← Sanskrit nāpita 'barber', a tatsama; CDIAL lists the inherited nāi and nāu 'barber' (CDIAL 13792)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [BN-C125-tati]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**নাপিত** (*nāpit*) is Sanskrit *nāpita*, "barber", taken over whole as a learned loan, a tatsama (CDIAL 13792). The word inherited from it is *nāu*, which CDIAL lists.
+**নাপিত** (*nāpit*) is Sanskrit *nāpita*, "barber", taken over whole as a learned loan, a tatsama (CDIAL 13792). CDIAL lists the inherited Bengali *nāi*, "barber", under it, and *nāu*, "barber", under the related *snāpaka*, "bath attendant", in the same entry.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ concept_tag: BN-AGAMI146-ERPOR
 prerequisites: [BN-C145-katano, BN-C146-agami]
 sounds: []
 roots: [sanskrit-esha, sanskrit-para]
-etymology_hook: "erpôr: er 'of this' (the near head e-) + pôr 'after' ← para (CDIAL 7793)"
+etymology_hook: "erpôr: er 'of this' (the near head e-) + pôr 'after', Sanskrit para; CDIAL has no Bengali form (CDIAL 7793)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [BN-C146-agami]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**এরপর** (*erpôr*) is *er*, "of this", the near head *e-* with the possessive *-r*, + *pôr*, "after", from Sanskrit *para*, "later" (CDIAL 7793).
+**এরপর** (*erpôr*) is *er*, "of this", the near head *e-* with the possessive *-r*, + *pôr*, "after", Sanskrit *para*, "further, later", whose *param* means "after"; CDIAL has that entry but lists no Bengali form under it (CDIAL 7793).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

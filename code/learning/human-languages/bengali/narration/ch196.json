@@ -4,7 +4,7 @@
   "chapter": 196,
   "title": "Biryani, Khichuri, Croquette, Pickle, Chutney",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:250e0c5e7992e350",
+  "sourceHash": "fnv1a64:12b7337e6c18402c",
   "lessons": [
     {
       "id": "BN-C196-biriyani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d31ae7bc57106f12",
+      "sourceHash": "fnv1a64:d833e1128b07d3e2",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "বিরিয়ানি (biriyāni) is a loan, usually traced to Persian biryān, \"fried, roasted\". Bengali adds the ending -i."
+              "text": "বিরিয়ানি (biriyāni) is a loan, usually traced to Persian biryān, \"fried, roasted\". It carries the ending -i."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "All of Us",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:dd9de195b754d1f4",
+  "sourceHash": "fnv1a64:8cc60924d48862fe",
   "lessons": [
     {
       "id": "BN-C24-amra",
@@ -359,7 +359,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ffed6890c06ad865",
+      "sourceHash": "fnv1a64:05b6c6636f1a7bb5",
       "notice": {
         "modality": "sight",
         "needs": [

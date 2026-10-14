@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Box, Shelf, Wall, Veranda, Garden",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f6189acb4f53c71c",
+  "sourceHash": "fnv1a64:cbd47e52d840aacd",
   "lessons": [
     {
       "id": "BN-C112-bakso",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:112414866b1fa85e",
+      "sourceHash": "fnv1a64:ac9ee6db88e1bc20",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "বাগান (bāgān) is a loan, usually traced to Persian bāgh, \"garden\". Bengali adds the ending -ān."
+              "text": "বাগান (bāgān) is a loan, usually traced to Persian bāgh, \"garden\". Where its ending -ān comes from is not settled."
             }
           ]
         },

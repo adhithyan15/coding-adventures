@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Pointing at Things",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d503c91173a65a5b",
+  "sourceHash": "fnv1a64:54100e8ad4251331",
   "lessons": [
     {
       "id": "BN-C21-ei",
@@ -542,7 +542,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c920687d0d03352e",
+      "sourceHash": "fnv1a64:e0a63279738e0207",
       "notice": null,
       "blocks": [
         {

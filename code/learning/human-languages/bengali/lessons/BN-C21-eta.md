@@ -12,7 +12,7 @@ concept_tag: BN-LEX-ETA
 prerequisites: [BN-C21-dem-order, BN-C02-tomar-naam-ki, BN-C10-jol, BN-C15-jama]
 sounds: []
 roots: [sanskrit-esha]
-etymology_hook: "এটা is এ- plus the very classifier taught two lessons ago, standing with no noun in front of it. Bengali does not need a separate word for this thing: it lets the classifier BE the thing, which is a trick no European language has."
+etymology_hook: "eṭā: e- ← ēṣa 'this' (CDIAL 2530) + the classifier -ṭā, whose origin is not settled"
 duration:
   max_seconds: 255
 requires:

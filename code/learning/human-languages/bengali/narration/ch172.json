@@ -4,7 +4,7 @@
   "chapter": 172,
   "title": "Sports, Female student, Board, Chalk, Scholarship",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b447d69d9731164e",
+  "sourceHash": "fnv1a64:50258f2da82d4e10",
   "lessons": [
     {
       "id": "BN-C172-kheladhula",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04ec65fdbfda0850",
+      "sourceHash": "fnv1a64:e3769f140febb500",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "খেলাধুলা (khelādhulā) is khelā, \"play\", which CDIAL lists under khēḍ, \"play\", a form it reconstructs and thinks may be non-Aryan (CDIAL 3918), + dhulā, \"dust\", under dhūḍi, \"dust\", beside Sanskrit dhūli (CDIAL 6835): \"play and dust\"."
+              "text": "খেলাধুলা (khelādhulā) is khelā, \"play\", which CDIAL lists under khēll, \"play\", one of a group of forms it reconstructs (CDIAL 3918), + dhulā, \"dust\", under dhūḍi, \"dust\", beside Sanskrit dhūli (CDIAL 6835): \"play and dust\"."
             }
           ]
         },

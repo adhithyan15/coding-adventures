@@ -14,8 +14,8 @@ romanization: "chæpṭā"
 concept_tag: BN-GUN247-CHPTA
 prerequisites: [BN-C247-phkashe, BN-C247-khara]
 sounds: []
-roots: [indo-aryan-capp]
-etymology_hook: "chæpṭā: apparently with chāpā 'to press' ← *capp (CDIAL 4674)"
+roots: [sanskrit-cipita]
+etymology_hook: "chæpṭā: CDIAL lists Bengali cepṭā 'flattened' under Sanskrit cipiṭa 'flat' (CDIAL 4818)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [BN-C247-khara]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**চ্যাপ্টা** (*chæpṭā*), "flattened", appears to belong with Bengali *cāpā*, "to press", which CDIAL lists under *\*capp*, "press", a form it reconstructs (CDIAL 4674).
+CDIAL lists **চ্যাপ্টা** (*chæpṭā*), "flattened", as Bengali *cepṭā* under Sanskrit *cipiṭa*, "flat, flat-nosed", in its variant *\*cippiṭṭa* (CDIAL 4818), and compares *\*capp*, "press".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -45,7 +45,7 @@ You'll want to know: হয়তো.
 হয়তো — hôyto — "perhaps".
 
 The word, taken apart.
-হয়তো (hôyto) is hôy, "is", which CDIAL lists under Sanskrit asti, "is" (CDIAL 977), + the particle -to, "indeed": "it may be so".
+হয়তো (hôyto) is hôy, "is", a form of hôoyā, "to be", from Sanskrit bhavati, "becomes, is" (CDIAL 9416), + the particle -to, "indeed": "it may be so". CDIAL's addenda move hôy there from asti, "is" (CDIAL 977).
 
 What you've built.
 One more word for this chapter.

@@ -4,7 +4,7 @@
   "chapter": 165,
   "title": "Raisin, Jam, Cake, Sandesh, Paratha",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:21d8814d03febe55",
+  "sourceHash": "fnv1a64:5c457c600292a584",
   "lessons": [
     {
       "id": "BN-C165-kishmish",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e36d5a0b322640b",
+      "sourceHash": "fnv1a64:e8304b2006a349d4",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "সন্দেশ (sôndesh), the sweet, has the same form as Bengali sôndesh, \"news, a message\", which is Sanskrit saṁdeśa, \"message\", taken over whole (CDIAL 12904). How the sweet came to bear the name is not recorded there."
+              "text": "সন্দেশ (sôndesh), the sweet, has the same form as Bengali sôndesh, \"news, a message\", Sanskrit saṁdeśa, \"message\", taken over whole (CDIAL 12904). CDIAL gives no Bengali form there, but it lists Maithili sanes for both \"news\" and \"a present sent to another\", which shows how a word for a message could come to name a gift; for the sweet itself the link is not recorded."
             }
           ]
         },

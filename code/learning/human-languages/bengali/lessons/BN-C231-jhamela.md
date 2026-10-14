@@ -14,8 +14,8 @@ romanization: "jhāmelā"
 concept_tag: BN-JINIS231-JHAMELA
 prerequisites: [BN-C230-somaj, BN-C230-dhormo]
 sounds: []
-roots: []
-etymology_hook: "jhāmelā: origin not settled; CDIAL has no entry for it"
+roots: [indo-aryan-jhamm]
+etymology_hook: "jhāmelā: CDIAL lists Hindi and Nepali jhamelā under *jhamm 'entanglement' (CDIAL 5340)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [BN-C230-dhormo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **ঝামেলা** (*jhāmelā*) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "trouble" and "entangle" finds only words of other shapes; its Bengali *jhāmā*, "pumice-stone" (CDIAL 5366), is a different word.
+CDIAL has no Bengali row for **ঝামেলা** (*jhāmelā*), but it lists Hindi *jhamelā*, "wrangling", and Nepali *jhamelā*, "entanglement, quarrel", under *\*jhamm*, "entanglement", a form it reconstructs (CDIAL 5340). The Bengali word appears to be the same one: "a tangle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

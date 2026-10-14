@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 139,
-  "sourceHash": "fnv1a64:5da53dda79317b8b",
+  "sourceHash": "fnv1a64:b7c4d7cd16be01eb",
   "lessonIds": [
     "BN-C139-bhitu",
     "BN-C139-shanto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch139.txt",
   "json": "bengali/narration/ch139.json",
-  "textHash": "fnv1a64:d5b8a82d739b98e2",
-  "jsonHash": "fnv1a64:e1872ff932617bfd",
+  "textHash": "fnv1a64:347ba5ddc0029ea7",
+  "jsonHash": "fnv1a64:20ad01869ea057aa",
   "findings": []
 }

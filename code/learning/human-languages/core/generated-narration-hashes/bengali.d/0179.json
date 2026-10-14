@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 179,
-  "sourceHash": "fnv1a64:7bac2f73f0736da3",
+  "sourceHash": "fnv1a64:44404bda67d92ab1",
   "lessonIds": [
     "BN-C179-chakha",
     "BN-C179-gela",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch179.txt",
   "json": "bengali/narration/ch179.json",
-  "textHash": "fnv1a64:0440bb0c608d6b5f",
-  "jsonHash": "fnv1a64:5244a97a937f141b",
+  "textHash": "fnv1a64:3dd6c0a60372977d",
+  "jsonHash": "fnv1a64:b871369d8c8ffc31",
   "findings": []
 }

@@ -12,7 +12,7 @@ concept_tag: BN-LEX-TARA
 prerequisites: [BN-C24-tomra, BN-C23-she, BN-C22-ra, BN-C11-bon]
 sounds: []
 roots: [sanskrit-ta]
-etymology_hook: "তারা is সে's stem plus the living plural, exactly as আমরা is আমি's. Six persons, one ending, no exceptions — a whole pronoun system built out of two pieces the reader already owns."
+etymology_hook: "tārā: tā- ← ta- 'that' (CDIAL 5612) + the plural -rā, whose origin is not settled"
 duration:
   max_seconds: 240
 requires:

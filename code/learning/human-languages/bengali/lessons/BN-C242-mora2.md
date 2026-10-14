@@ -15,7 +15,7 @@ concept_tag: BN-VERB-MORA2
 prerequisites: [BN-C242-chhorano, BN-C242-gotano]
 sounds: []
 roots: [sanskrit-motati]
-etymology_hook: "moṛā 'to wrap': apparently with moṛā 'to twist' ← muṭati (CDIAL 10186)"
+etymology_hook: "moṛā 'to wrap': apparently with moṛā 'to twist' ← mōṭati, beside muṭati (CDIAL 10186)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [BN-C242-gotano]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**মোড়া** (*moṛā*), "to wrap", appears to be the verb CDIAL lists as Bengali *moṛā*, "to twist", under Sanskrit *muṭati*, "twists" (CDIAL 10186).
+**মোড়া** (*moṛā*), "to wrap", appears to be the verb CDIAL lists as Bengali *moṛā*, "to twist", under Sanskrit *mōṭati*, a form of *muṭati*, "twists" (CDIAL 10186).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

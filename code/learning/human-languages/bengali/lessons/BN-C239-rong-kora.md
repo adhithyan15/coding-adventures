@@ -14,8 +14,8 @@ romanization: "rông kôrā"
 concept_tag: BN-VERB-RONG-KORA
 prerequisites: [BN-C238-bishvas-kora, BN-C239-chumu-khaoya]
 sounds: []
-roots: [sanskrit-ranga, sanskrit-karoti]
-etymology_hook: "rông kôrā: rông 'colour', Sanskrit raṅga 'dye' (CDIAL 10560), as Persian rang, + kôrā (CDIAL 2814)"
+roots: [sanskrit-ranga, persian-rang, sanskrit-karoti]
+etymology_hook: "rông kôrā: rông 'colour' matches Sanskrit raṅga (CDIAL 10560) and Persian rang, + kôrā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [BN-C239-chumu-khaoya]
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**রং করা** (*rông kôrā*) is *rông*, "colour", Sanskrit *raṅga*, "dye, colour", whose inherited form is *rāṅā* (CDIAL 10560), and the same as Persian *rang*, + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
+**রং করা** (*rông kôrā*) is *rông*, "colour", which matches both Sanskrit *raṅga*, "dye, colour", whose inherited form is *rāṅā* (CDIAL 10560), and Persian *rang*, "colour", + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

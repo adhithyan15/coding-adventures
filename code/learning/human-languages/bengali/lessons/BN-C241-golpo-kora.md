@@ -47,7 +47,7 @@ reviews_of: [BN-C241-janano]
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**গল্প করা** (*gôlpô kôrā*) is *gôlpô*, "a story, a chat", which appears to belong with Bengali *gappa*, "tittle-tattle", listed under *\*gappa*, "talk", which CDIAL calls imitative (CDIAL 4022), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
+**গল্প করা** (*gôlpô kôrā*) is *gôlpô*, "a story, a chat", which appears to belong with Bengali *gappa*, "tittle-tattle", listed under *\*gappa*, "talk", which CDIAL calls imitative and compares with Sanskrit *jalpati*, "chatters" (CDIAL 4022), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

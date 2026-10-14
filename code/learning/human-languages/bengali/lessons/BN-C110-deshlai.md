@@ -15,7 +15,7 @@ concept_tag: BN-THINGS110-DESHLAI
 prerequisites: [BN-C110-hariken, BN-C110-mombati]
 sounds: []
 roots: []
-etymology_hook: "deshlāi: origin not settled; CDIAL has no entry for it"
+etymology_hook: "deshlāi: not settled; its end looks like salāi, Nepali 'matchstick', under śalākā 'stick' (CDIAL 12349)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [BN-C110-mombati]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **দেশলাই** (*deshlāi*) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "match" finds nothing close.
+The origin of **দেশলাই** (*deshlāi*) is not settled: CDIAL has no entry for it. Its end looks like *salāi*, which CDIAL lists as Nepali for "matchstick" under Sanskrit *śalākā*, "small stake or stick", beside Bengali *salā*, "thin stick" (CDIAL 12349); its first half is not explained there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

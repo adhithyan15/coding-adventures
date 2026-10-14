@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "The Roof, the Teeth, and the Grid Closed",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d7c9206dd4bc2129",
+  "sourceHash": "fnv1a64:baab560bac7877e7",
   "lessons": [
     {
       "id": "BN-W04-pa",
@@ -909,7 +909,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c40cd07f8e084581",
+      "sourceHash": "fnv1a64:acdbf60d9d49c14b",
       "notice": null,
       "blocks": [
         {

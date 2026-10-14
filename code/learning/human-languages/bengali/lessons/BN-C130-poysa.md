@@ -47,7 +47,7 @@ reviews_of: [BN-C130-manibyag]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**পয়সা** (*pôysā*) is the coin CDIAL traces to *\*padāṁśa*, "quarter part", a form it reconstructs. It gives no Bengali form, and marks Oriya *paisā*, "quarter anna", as taken from Hindi (CDIAL 7761).
+**পয়সা** (*pôysā*) is the coin CDIAL traces to *\*padāṁśa*, "quarter part", a form it reconstructs. It gives no Bengali form, and marks Oriya *paisā*, "quarter anna", as probably taken from Hindi (CDIAL 7761).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

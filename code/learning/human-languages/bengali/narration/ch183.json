@@ -4,7 +4,7 @@
   "chapter": 183,
   "title": "To scratch, To yawn, To snore, To wake up, To bathe",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b0fc0615b384f618",
+  "sourceHash": "fnv1a64:f124b2fdb9e047f9",
   "lessons": [
     {
       "id": "BN-C183-chulkano",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50bc66ef69ce8311",
+      "sourceHash": "fnv1a64:dff86dd79efbea14",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of চুলকানো (chulkāno) is not settled: CDIAL has no entry for it, and a search by form and by the glosses \"itch\" and \"scratch\" finds only words of other shapes, such as Bengali khos, \"itch\" (CDIAL 3854)."
+              "text": "CDIAL has no row for চুলকানো (chulkāno), but it appears to belong with cul, \"fidget, itch\", a form CDIAL reconstructs; under it CDIAL lists Hindi cul, \"itching\", and culculānā, \"to itch\", and Bengali culculiyā, \"restless\" (CDIAL 4874)."
             }
           ]
         },

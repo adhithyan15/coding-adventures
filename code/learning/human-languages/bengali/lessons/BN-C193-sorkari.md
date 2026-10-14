@@ -47,7 +47,7 @@ reviews_of: [BN-C193-bktigoto]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**সরকারি** (*sôrkāri*) is a loan, usually traced to Persian *sarkār*, "government; master". Bengali adds the ending *-i*.
+**সরকারি** (*sôrkāri*) is a loan, usually traced to Persian *sarkār*, "government; master". It carries the adjective ending *-i*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

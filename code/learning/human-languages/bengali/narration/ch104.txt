@@ -45,7 +45,7 @@ You'll want to know: দাঁড়ানো.
 দাঁড়ানো — dā̃ṛāno — "to stand".
 
 The word, taken apart.
-The origin of দাঁড়ানো (dā̃ṛāno) (dāṁṛāno) is not settled. CDIAL has no entry for the verb; under Sanskrit daṇḍa, "stick", a word it thinks probably non-Aryan, it lists Bengali dāṁṛā, "stick, backbone" (CDIAL 6128), but it does not connect the two.
+The origin of দাঁড়ানো (dā̃ṛāno) (dāṁṛāno) is not certain, but it appears to belong with Sanskrit daṇḍa, "stick", a word CDIAL thinks probably non-Aryan. CDIAL has no entry for the Bengali verb, but under daṇḍa it lists Maithili ḍāṁṛab, "to stand upright", beside Bengali dāṁṛā, "stick, backbone" (CDIAL 6128).
 
 What you've built.
 One more word for this chapter.

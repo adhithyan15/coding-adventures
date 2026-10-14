@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 165,
-  "sourceHash": "fnv1a64:21d8814d03febe55",
+  "sourceHash": "fnv1a64:5c457c600292a584",
   "lessonIds": [
     "BN-C165-kishmish",
     "BN-C165-jm",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch165.txt",
   "json": "bengali/narration/ch165.json",
-  "textHash": "fnv1a64:e2c4f83947da7e05",
-  "jsonHash": "fnv1a64:32ff37959cda1913",
+  "textHash": "fnv1a64:21912c32e4793e54",
+  "jsonHash": "fnv1a64:6e9f2a29b06ee4e0",
   "findings": []
 }

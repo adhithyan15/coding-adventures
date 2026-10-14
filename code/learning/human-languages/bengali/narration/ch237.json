@@ -4,7 +4,7 @@
   "chapter": 237,
   "title": "To put out, To light, To bring to a halt, To cross, To go on an outing",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bfe733943ba91b8a",
+  "sourceHash": "fnv1a64:4281a97f006e1a85",
   "lessons": [
     {
       "id": "BN-C237-nebhano",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4a7c5cfb8fb6952",
+      "sourceHash": "fnv1a64:267597d46e1b7bbd",
       "notice": null,
       "blocks": [
         {
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7b5d083726995ae",
+      "sourceHash": "fnv1a64:caeaf5154414d812",
       "notice": null,
       "blocks": [
         {

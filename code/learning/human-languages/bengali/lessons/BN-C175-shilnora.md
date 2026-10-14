@@ -14,7 +14,7 @@ romanization: "shilnoṛā"
 concept_tag: BN-JINIS175-SHILNORA
 prerequisites: [BN-C175-jharon, BN-C175-boti]
 sounds: []
-roots: [sanskrit-shila, sanskrit-lotha]
+roots: [sanskrit-shila-stone, sanskrit-lotha]
 etymology_hook: "shilnoṛā: sil 'grinding slab' ← śilā (CDIAL 12459) + noṛā 'rolling-pin' (CDIAL 11134)"
 duration:
   max_seconds: 200

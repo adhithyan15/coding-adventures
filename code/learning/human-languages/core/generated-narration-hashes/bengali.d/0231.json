@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 231,
-  "sourceHash": "fnv1a64:590b035fa0601cf2",
+  "sourceHash": "fnv1a64:62f503686468b995",
   "lessonIds": [
     "BN-C231-jhamela",
     "BN-C231-somadhan",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch231.txt",
   "json": "bengali/narration/ch231.json",
-  "textHash": "fnv1a64:563e497edf65f2a2",
-  "jsonHash": "fnv1a64:a2c44ce59d4b072b",
+  "textHash": "fnv1a64:4794e47e5bb62c1c",
+  "jsonHash": "fnv1a64:eb5b575083dc53f4",
   "findings": []
 }

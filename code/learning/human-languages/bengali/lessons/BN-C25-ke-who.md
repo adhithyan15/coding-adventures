@@ -12,7 +12,7 @@ concept_tag: BN-LEX-KE-WHO
 prerequisites: [BN-C25-tomake, BN-C19-jokhon, BN-C11-bhai, BN-C23-she]
 sounds: []
 roots: [ka-interrogative]
-etymology_hook: "The ক- that asks is the same head that opens কেমন and কখন, three chapters and thirty apart. Bengali asks all its questions with one letter at the front of a frame, so learning the frame is learning the whole question word list."
+etymology_hook: "ke ← Sanskrit ka- 'who' (CDIAL 2574)"
 duration:
   max_seconds: 250
 requires:

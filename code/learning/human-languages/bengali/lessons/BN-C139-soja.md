@@ -47,7 +47,7 @@ reviews_of: [BN-C139-joruri]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**সোজা** (*sojā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śodhya*, "to be cleaned" (CDIAL 12632). CDIAL prefers this source to a form *śudhya*, "to be made pure", that Chatterji proposed.
+**সোজা** (*sojā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śodhya*, "to be cleaned" (CDIAL 12632). CDIAL prefers this source to a form *śudhya*, "to be made pure", that Chatterji proposed (CDIAL 12525).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

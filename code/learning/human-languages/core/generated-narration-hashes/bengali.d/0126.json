@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 126,
-  "sourceHash": "fnv1a64:545b8a24455d047f",
+  "sourceHash": "fnv1a64:eb4cbfe46fcf4597",
   "lessonIds": [
     "BN-C126-napit",
     "BN-C126-dorji",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch126.txt",
   "json": "bengali/narration/ch126.json",
-  "textHash": "fnv1a64:d785b2c361dbbe7f",
-  "jsonHash": "fnv1a64:13198fa8d5ee7d24",
+  "textHash": "fnv1a64:88c9031ebe1c9f2c",
+  "jsonHash": "fnv1a64:574a23d49eedeec0",
   "findings": []
 }

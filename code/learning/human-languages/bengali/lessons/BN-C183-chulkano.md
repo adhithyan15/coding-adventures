@@ -14,8 +14,8 @@ romanization: "chulkāno"
 concept_tag: BN-VERB-CHULKANO
 prerequisites: [BN-C182-bhag-kora, BN-C182-jog-kora]
 sounds: []
-roots: []
-etymology_hook: "chulkāno: origin not settled; CDIAL has no entry for it"
+roots: [indo-aryan-cul]
+etymology_hook: "chulkāno: no CDIAL row; appears to belong with *cul 'fidget, itch' (CDIAL 4874)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [BN-C182-jog-kora]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **চুলকানো** (*chulkāno*) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "itch" and "scratch" finds only words of other shapes, such as Bengali *khos*, "itch" (CDIAL 3854).
+CDIAL has no row for **চুলকানো** (*chulkāno*), but it appears to belong with *\*cul*, "fidget, itch", a form CDIAL reconstructs; under it CDIAL lists Hindi *cul*, "itching", and *culculānā*, "to itch", and Bengali *culculiyā*, "restless" (CDIAL 4874).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

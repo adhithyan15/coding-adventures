@@ -4,7 +4,7 @@
   "chapter": 191,
   "title": "Necessary, Possible, Modern, Ancient, Real",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e67d6f3f373d48a4",
+  "sourceHash": "fnv1a64:263ac112c415dec8",
   "lessons": [
     {
       "id": "BN-C191-dorkari",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:614891cdc8949a43",
+      "sourceHash": "fnv1a64:729ddc214d763719",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "দরকারি (dôrkāri) is a loan, usually traced to Persian darkār, \"needed, necessary\". Bengali adds the ending -i."
+              "text": "দরকারি (dôrkāri) is a loan, usually traced to Persian darkār, \"needed, necessary\". It carries the adjective ending -i."
             }
           ]
         },

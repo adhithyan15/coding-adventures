@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 32,
-  "sourceHash": "fnv1a64:d503c91173a65a5b",
+  "sourceHash": "fnv1a64:54100e8ad4251331",
   "lessonIds": [
     "BN-C21-ei",
     "BN-C21-oi",
@@ -14,6 +14,6 @@
   "text": "bengali/narration/ch32.txt",
   "json": "bengali/narration/ch32.json",
   "textHash": "fnv1a64:0c860d102ce976e5",
-  "jsonHash": "fnv1a64:8628fb7e817c869f",
+  "jsonHash": "fnv1a64:090cd412357746a6",
   "findings": []
 }

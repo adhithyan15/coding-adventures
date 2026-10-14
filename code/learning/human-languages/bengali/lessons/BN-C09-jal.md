@@ -14,7 +14,7 @@ gloss: "a net"
 concept_tag: BN-ANCHOR-JAL
 prerequisites: [BN-W04-achhi-read]
 sounds: []
-roots: [sanskrit-jala]
+roots: [sanskrit-jala-net]
 etymology_hook: "jāl ← Sanskrit jāla 'net, snare', inherited (CDIAL 5213)"
 duration:
   max_seconds: 120

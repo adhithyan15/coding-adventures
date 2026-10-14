@@ -12,7 +12,7 @@ concept_tag: BN-LEX-EKHANE
 prerequisites: [BN-W05-tha, BN-C21-ei, BN-C11-bhai, BN-C10-cha]
 sounds: []
 roots: [sanskrit-esha]
-etymology_hook: "এখানে is the এ- of nearness on a frame meaning place, exactly as এই is that head on a frame meaning thing. The reader who noticed the pattern in chapter thirty-two already knows what ওখানে will be before it is shown."
+etymology_hook: "ekhāne: the near head e- ← ēṣa 'this' (CDIAL 2530); the place frame -khāne is not settled"
 duration:
   max_seconds: 240
 requires:

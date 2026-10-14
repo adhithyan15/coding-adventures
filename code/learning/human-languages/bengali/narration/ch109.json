@@ -4,7 +4,7 @@
   "chapter": 109,
   "title": "Comb, Soap, Thin towel, Needle, Thread",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:42bee0b1eecd5d09",
+  "sourceHash": "fnv1a64:29c0b80c804023cf",
   "lessons": [
     {
       "id": "BN-C109-chiruni",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a84f9e995a1d3b25",
+      "sourceHash": "fnv1a64:23c629fd249c8b1b",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of গামছা (gāmchhā) is not settled: CDIAL has no entry for it, and a search by form and by the gloss \"towel\" finds nothing close in Bengali."
+              "text": "The origin of গামছা (gāmchhā) is not certain, but it appears to belong with Sanskrit aṅgoñcha, \"towel\". CDIAL gives no Bengali form there, but it lists Bihari gamchā, \"towel\", beside Hindi āṁgochā, and suggests the word may be aṅga, \"limb, body\", + a word for wiping (CDIAL 139)."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 146,
-  "sourceHash": "fnv1a64:46438d46d3d25bfe",
+  "sourceHash": "fnv1a64:3eb3198a12ec314f",
   "lessonIds": [
     "BN-C146-agami",
     "BN-C146-erpor",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch146.txt",
   "json": "bengali/narration/ch146.json",
-  "textHash": "fnv1a64:b7138cc3db93e8d8",
-  "jsonHash": "fnv1a64:94504d05b68018b8",
+  "textHash": "fnv1a64:3e2b38a6b40a9f08",
+  "jsonHash": "fnv1a64:fbc35100abbe7256",
   "findings": []
 }

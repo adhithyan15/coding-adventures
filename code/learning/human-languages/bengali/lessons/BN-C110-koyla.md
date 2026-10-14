@@ -14,7 +14,7 @@ romanization: "kôylā"
 concept_tag: BN-THINGS110-KOYLA
 prerequisites: [BN-C110-mombati, BN-C110-deshlai]
 sounds: []
-roots: [sanskrit-kokila]
+roots: [sanskrit-kokila-coal]
 etymology_hook: "kôylā ← Sanskrit kōkila 'charcoal', which CDIAL reports may come from Munda (CDIAL 3484)"
 duration:
   max_seconds: 200

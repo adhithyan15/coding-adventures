@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 237,
-  "sourceHash": "fnv1a64:bfe733943ba91b8a",
+  "sourceHash": "fnv1a64:4281a97f006e1a85",
   "lessonIds": [
     "BN-C237-nebhano",
     "BN-C237-jvalano",
@@ -14,6 +14,6 @@
   "text": "bengali/narration/ch237.txt",
   "json": "bengali/narration/ch237.json",
   "textHash": "fnv1a64:c081664d7352d280",
-  "jsonHash": "fnv1a64:ddb47a3ef853dc1c",
+  "jsonHash": "fnv1a64:86007db95aa598d1",
   "findings": []
 }

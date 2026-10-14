@@ -47,7 +47,7 @@ reviews_of: [BN-C112-baranda]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**বাগান** (*bāgān*) is a loan, usually traced to Persian *bāgh*, "garden". Bengali adds the ending *-ān*.
+**বাগান** (*bāgān*) is a loan, usually traced to Persian *bāgh*, "garden". Where its ending *-ān* comes from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

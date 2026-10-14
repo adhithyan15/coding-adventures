@@ -14,7 +14,7 @@ romanization: "pār hôoyā"
 concept_tag: BN-VERB-PAR-HOOYA
 prerequisites: [BN-C237-jvalano, BN-C237-thamano]
 sounds: []
-roots: [sanskrit-para, sanskrit-bhavati]
+roots: [sanskrit-para-bank, sanskrit-bhavati]
 etymology_hook: "pār hôoyā: pār 'the far side' ← pāra (CDIAL 8100) + hôoyā ← bhavati (CDIAL 9416)"
 duration:
   max_seconds: 200

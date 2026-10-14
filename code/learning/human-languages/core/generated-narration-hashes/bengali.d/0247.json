@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 247,
-  "sourceHash": "fnv1a64:487f5cbd9d34e786",
+  "sourceHash": "fnv1a64:f0988a90f45d2163",
   "lessonIds": [
     "BN-C247-porer",
     "BN-C247-phkashe",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch247.txt",
   "json": "bengali/narration/ch247.json",
-  "textHash": "fnv1a64:85246138574ff1be",
-  "jsonHash": "fnv1a64:5a279a10b1746732",
+  "textHash": "fnv1a64:5591bf91140792d0",
+  "jsonHash": "fnv1a64:e1fe96fbc7790272",
   "findings": []
 }

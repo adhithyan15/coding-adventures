@@ -12,7 +12,7 @@ concept_tag: BN-GRAM-TAR
 prerequisites: [BN-C23-o-pron, BN-C02-amar, BN-C11-bhai, BN-C15-jama]
 sounds: []
 roots: [sanskrit-ta]
-etymology_hook: "The ত- of তার is the demonstrative head from chapter thirty — the same one inside তখন. Bengali's whole grammar of persons and moments is three heads on a small number of frames, and this is that grid paying for itself again."
+etymology_hook: "tār: tā- ← the pronoun stem ta- 'that' (CDIAL 5612) + the possessive -r"
 duration:
   max_seconds: 240
 requires:

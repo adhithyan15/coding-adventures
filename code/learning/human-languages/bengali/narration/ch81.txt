@@ -13,7 +13,7 @@ You'll want to know: কাছে.
 কাছে — kāchhe — "near".
 
 The word, taken apart.
-The origin of কাছে (kāchhe) is not settled. CDIAL has no entry for it; under Sanskrit kakṣa, "armpit, side", it lists Bengali kāṁkh, "flank", and says some postpositions probably grew from the sense "side" (CDIAL 2588), but it does not trace কাছে (kāchhe) there.
+কাছে (kāchhe), "near", probably goes back to Sanskrit kakṣa, "armpit, side", through Middle Indo-Aryan kaccha (CDIAL 2588). CDIAL has no Bengali row for it, but under that entry it lists Nepali kāch, "side, edge", and Assamese kāxe, "by the side of", and says some postpositions probably grew from the sense "side". The ending -e means "at".
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: সামনে.
 সামনে — sāmne — "in front".
 
 The word, taken apart.
-সামনে (sāmne) goes back to Sanskrit saṁmukha, "facing, present". CDIAL gives no Bengali form under that entry, but it lists Middle Bengali chāmu, "in front", and Oriya sāmanā, "being in front", the forms nearest to Bengali (CDIAL 12982).
+সামনে (sāmne) goes back to Sanskrit saṁmukha, "facing, present". CDIAL gives no modern Bengali form under that entry, but it lists Middle Bengali chāmu, "in front", and Oriya sāmanā, "being in front", the forms nearest to Bengali (CDIAL 12982).
 
 What you've built.
 One more word for this chapter.

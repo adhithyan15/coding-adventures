@@ -14,7 +14,7 @@ romanization: "beṛāno"
 concept_tag: BN-VERB-BERANO
 prerequisites: [BN-C237-thamano, BN-C237-par-hooya]
 sounds: []
-roots: [sanskrit-veshtayati]
+roots: []
 etymology_hook: "beṛāno: origin not settled; CDIAL lists beṛā 'to surround' (CDIAL 12132) but not 'to stroll'"
 duration:
   max_seconds: 200

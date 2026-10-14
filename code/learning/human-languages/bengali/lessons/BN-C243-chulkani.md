@@ -14,8 +14,8 @@ romanization: "chulkāni"
 concept_tag: BN-SVASTHYO243-CHULKANI
 prerequisites: [BN-C242-khora, BN-C243-bomi]
 sounds: []
-roots: []
-etymology_hook: "chulkāni: on chulkāno 'to scratch', whose origin is not settled"
+roots: [indo-aryan-cul]
+etymology_hook: "chulkāni: noun of chulkāno 'to itch', which appears to belong with *cul 'fidget, itch' (CDIAL 4874)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [BN-C243-bomi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**চুলকানি** (*chulkāni*) is the noun of *chulkāno*, "to scratch", whose origin is not settled: CDIAL has no entry for it.
+**চুলকানি** (*chulkāni*) is the noun of *chulkāno*, "to scratch, to itch". CDIAL has no row for that verb, but it appears to belong with *\*cul*, "fidget, itch", a form CDIAL reconstructs; under it CDIAL lists Hindi *cul*, "itching", and *culculānā*, "to itch", and Bengali *culculiyā*, "restless" (CDIAL 4874).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

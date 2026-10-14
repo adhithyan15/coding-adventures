@@ -13,7 +13,7 @@ You'll want to know: ঝামেলা.
 ঝামেলা — jhāmelā — "a hassle".
 
 The word, taken apart.
-The origin of ঝামেলা (jhāmelā) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "trouble" and "entangle" finds only words of other shapes; its Bengali jhāmā, "pumice-stone" (CDIAL 5366), is a different word.
+CDIAL has no Bengali row for ঝামেলা (jhāmelā), but it lists Hindi jhamelā, "wrangling", and Nepali jhamelā, "entanglement, quarrel", under jhamm, "entanglement", a form it reconstructs (CDIAL 5340). The Bengali word appears to be the same one: "a tangle".
 
 What you've built.
 One more word for this chapter.

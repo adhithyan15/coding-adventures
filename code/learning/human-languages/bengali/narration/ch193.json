@@ -4,7 +4,7 @@
   "chapter": 193,
   "title": "Huge, Medium, Nearby, Personal, Public",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:be964b9004f0c35a",
+  "sourceHash": "fnv1a64:6fb091cd8cc310d7",
   "lessons": [
     {
       "id": "BN-C193-bishal",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42af0e9f413aa4e3",
+      "sourceHash": "fnv1a64:a9994972e596edd0",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "কাছের (kāchher) is kāchh, \"nearness\", + -er, \"of\". The origin of kāchh is not settled: CDIAL has no entry for it, though under Sanskrit kakṣa, \"armpit, side\", it lists Bengali kāṁkh, \"flank\" (CDIAL 2588)."
+              "text": "কাছের (kāchher) is kāchh, \"nearness\", + -er, \"of\". CDIAL has no entry for kāchh, but it appears to belong with Sanskrit kakṣa, \"armpit, side\": there CDIAL lists Bengali kāṁkh, \"flank\", Nepali kāch, \"side, edge\", and Assamese kāxe, \"by the side of\", and notes that some words for \"beside\" probably grew from the sense \"side\" (CDIAL 2588)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:941fc87380616b96",
+      "sourceHash": "fnv1a64:440b80bfc509b514",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "সরকারি (sôrkāri) is a loan, usually traced to Persian sarkār, \"government; master\". Bengali adds the ending -i."
+              "text": "সরকারি (sôrkāri) is a loan, usually traced to Persian sarkār, \"government; master\". It carries the adjective ending -i."
             }
           ]
         },

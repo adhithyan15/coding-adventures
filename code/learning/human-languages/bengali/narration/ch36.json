@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "The One It Happens To",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b4b844d665c87823",
+  "sourceHash": "fnv1a64:c0fb69279f079c7f",
   "lessons": [
     {
       "id": "BN-C25-ke-suffix",
@@ -567,7 +567,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d31123353d6cce9d",
+      "sourceHash": "fnv1a64:2a3a9f0dd9f1190e",
       "notice": {
         "modality": "sight",
         "needs": [

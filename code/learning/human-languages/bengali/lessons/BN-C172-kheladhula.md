@@ -14,8 +14,8 @@ romanization: "khelādhulā"
 concept_tag: BN-JINIS172-KHELADHULA
 prerequisites: [BN-C171-dhan, BN-C171-joyar]
 sounds: []
-roots: [indo-aryan-khed, indo-aryan-dhudi]
-etymology_hook: "khelādhulā: khelā 'play' ← *khēḍ (CDIAL 3918) + dhulā 'dust' ← *dhūḍi (CDIAL 6835)"
+roots: [indo-aryan-khel, indo-aryan-dhudi]
+etymology_hook: "khelādhulā: khelā 'play' ← *khēll (CDIAL 3918) + dhulā 'dust' ← *dhūḍi (CDIAL 6835)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [BN-C171-joyar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**খেলাধুলা** (*khelādhulā*) is *khelā*, "play", which CDIAL lists under *\*khēḍ*, "play", a form it reconstructs and thinks may be non-Aryan (CDIAL 3918), + *dhulā*, "dust", under *\*dhūḍi*, "dust", beside Sanskrit *dhūli* (CDIAL 6835): "play and dust".
+**খেলাধুলা** (*khelādhulā*) is *khelā*, "play", which CDIAL lists under *\*khēll*, "play", one of a group of forms it reconstructs (CDIAL 3918), + *dhulā*, "dust", under *\*dhūḍi*, "dust", beside Sanskrit *dhūli* (CDIAL 6835): "play and dust".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [BN-C190-pholaphol]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**দরকারি** (*dôrkāri*) is a loan, usually traced to Persian *darkār*, "needed, necessary". Bengali adds the ending *-i*.
+**দরকারি** (*dôrkāri*) is a loan, usually traced to Persian *darkār*, "needed, necessary". It carries the adjective ending *-i*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

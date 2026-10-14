@@ -4,7 +4,7 @@
   "chapter": 247,
   "title": "Next, Pale, Steep, Flattened, Shiny",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:487f5cbd9d34e786",
+  "sourceHash": "fnv1a64:f0988a90f45d2163",
   "lessons": [
     {
       "id": "BN-C247-porer",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46292f4596ab9deb",
+      "sourceHash": "fnv1a64:4dd11c94019a0342",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of ফ্যাকাশে (phækāshe) is not settled: CDIAL has no entry for it. The closest form it lists is Bengali phikā, \"weak (of tea), pale\", under phikka, \"defective\" (CDIAL 9037), but the shapes differ."
+              "text": "CDIAL has no Bengali row for ফ্যাকাশে (phækāshe), \"pale\", but it appears to belong with Oriya phakā, \"light-coloured\", which CDIAL lists under Sanskrit phakka, \"cripple\", beside phikka, \"defective\" (CDIAL 9037). The same entry gives Bengali phikā, \"weak (of tea), pale\"."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7611500aaa20a050",
+      "sourceHash": "fnv1a64:ccdb36c65d09f6aa",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "চ্যাপ্টা (chæpṭā), \"flattened\", appears to belong with Bengali cāpā, \"to press\", which CDIAL lists under capp, \"press\", a form it reconstructs (CDIAL 4674)."
+              "text": "CDIAL lists চ্যাপ্টা (chæpṭā), \"flattened\", as Bengali cepṭā under Sanskrit cipiṭa, \"flat, flat-nosed\", in its variant cippiṭṭa (CDIAL 4818), and compares capp, \"press\"."
             }
           ]
         },

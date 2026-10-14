@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 239,
-  "sourceHash": "fnv1a64:318ed47becc4fe04",
+  "sourceHash": "fnv1a64:f668a71c348c900d",
   "lessonIds": [
     "BN-C239-chumu-khaoya",
     "BN-C239-rong-kora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch239.txt",
   "json": "bengali/narration/ch239.json",
-  "textHash": "fnv1a64:df404b80433f3dc5",
-  "jsonHash": "fnv1a64:478147068edb6c0e",
+  "textHash": "fnv1a64:668d151f79beecfd",
+  "jsonHash": "fnv1a64:b527b5d0d8bf8376",
   "findings": []
 }

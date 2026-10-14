@@ -47,7 +47,7 @@ reviews_of: [BN-C81-niche]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**সামনে** (*sāmne*) goes back to Sanskrit *saṁmukha*, "facing, present". CDIAL gives no Bengali form under that entry, but it lists Middle Bengali *chāmu*, "in front", and Oriya *sāmanā*, "being in front", the forms nearest to Bengali (CDIAL 12982).
+**সামনে** (*sāmne*) goes back to Sanskrit *saṁmukha*, "facing, present". CDIAL gives no modern Bengali form under that entry, but it lists Middle Bengali *chāmu*, "in front", and Oriya *sāmanā*, "being in front", the forms nearest to Bengali (CDIAL 12982).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

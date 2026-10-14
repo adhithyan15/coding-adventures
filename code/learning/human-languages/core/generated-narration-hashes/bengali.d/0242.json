@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 242,
-  "sourceHash": "fnv1a64:c09290362eaf30f1",
+  "sourceHash": "fnv1a64:985ff6504550ed76",
   "lessonIds": [
     "BN-C242-berono",
     "BN-C242-chhorano",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch242.txt",
   "json": "bengali/narration/ch242.json",
-  "textHash": "fnv1a64:af2cae9b096932c2",
-  "jsonHash": "fnv1a64:93f65c28b7914248",
+  "textHash": "fnv1a64:5efa55d2046b8324",
+  "jsonHash": "fnv1a64:fbdbcde22b5c8408",
   "findings": []
 }

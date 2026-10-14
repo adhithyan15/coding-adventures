@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "To wear, To leave, To throw, To fly, To teach",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:046c98ff2c375d98",
+  "sourceHash": "fnv1a64:c4da80ca46a5ea8d",
   "lessons": [
     {
       "id": "BN-C53-pora",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96b40add39029791",
+      "sourceHash": "fnv1a64:4107501e8406fa5f",
       "notice": null,
       "blocks": [
         {

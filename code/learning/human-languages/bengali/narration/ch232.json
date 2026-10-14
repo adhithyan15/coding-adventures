@@ -4,7 +4,7 @@
   "chapter": 232,
   "title": "Cucumber, Mushroom, Maize, Chickpeas, Internet",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0ba4966060c15706",
+  "sourceHash": "fnv1a64:a18981c18c160f60",
   "lessons": [
     {
       "id": "BN-C232-shosa",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca4496b4f219974f",
+      "sourceHash": "fnv1a64:6fdf683aed5a5fc0",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of ছোলা (chholā) is not settled: CDIAL has no entry for it, and a search by the gloss \"chickpea\" finds only words of other shapes, such as Bengali canā (CDIAL 4579)."
+              "text": "ছোলা (chholā) probably belongs with chōll, \"to peel, skin\", a form CDIAL reconstructs and reports Burrow as taking from Dravidian (CDIAL 5073). Under it CDIAL lists Bengali cholā, \"to skin\", and Oriya cholā, \"gram\", which it explains, with a query, as \"husked\". It has no Bengali row for the pulse itself."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 243,
   "title": "Vomiting, Itch, Beard, Moustache, Chin",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b9e69915017b271e",
+  "sourceHash": "fnv1a64:28f6675d3143b63e",
   "lessons": [
     {
       "id": "BN-C243-bomi",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b23ec9d06c7c3226",
+      "sourceHash": "fnv1a64:3a4994b414557abc",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "চুলকানি (chulkāni) is the noun of chulkāno, \"to scratch\", whose origin is not settled: CDIAL has no entry for it."
+              "text": "চুলকানি (chulkāni) is the noun of chulkāno, \"to scratch, to itch\". CDIAL has no row for that verb, but it appears to belong with cul, \"fidget, itch\", a form CDIAL reconstructs; under it CDIAL lists Hindi cul, \"itching\", and culculānā, \"to itch\", and Bengali culculiyā, \"restless\" (CDIAL 4874)."
             }
           ]
         },

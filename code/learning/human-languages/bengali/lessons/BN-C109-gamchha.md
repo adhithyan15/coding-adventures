@@ -14,8 +14,8 @@ romanization: "gāmchhā"
 concept_tag: BN-THINGS109-GAMCHHA
 prerequisites: [BN-C109-chiruni, BN-C109-saban]
 sounds: []
-roots: []
-etymology_hook: "gāmchhā: origin not settled; CDIAL has no entry for it"
+roots: [sanskrit-angoncha]
+etymology_hook: "gāmchhā: apparently with aṅgoñcha 'towel', where CDIAL lists Bihari gamchā 'towel' (CDIAL 139)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [BN-C109-saban]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **গামছা** (*gāmchhā*) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "towel" finds nothing close in Bengali.
+The origin of **গামছা** (*gāmchhā*) is not certain, but it appears to belong with Sanskrit *aṅgoñcha*, "towel". CDIAL gives no Bengali form there, but it lists Bihari *gamchā*, "towel", beside Hindi *āṁgochā*, and suggests the word may be *aṅga*, "limb, body", + a word for wiping (CDIAL 139).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

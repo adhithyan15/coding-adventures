@@ -4,7 +4,7 @@
   "chapter": 175,
   "title": "Stench, Duster, Bonti, Grinding stone, Gas",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bb286244b983ebc0",
+  "sourceHash": "fnv1a64:d6db918c5fbed18b",
   "lessons": [
     {
       "id": "BN-C175-durgondho",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03cad5872b73ec7a",
+      "sourceHash": "fnv1a64:dda2c3ffc9f44146",
       "notice": null,
       "blocks": [
         {

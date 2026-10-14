@@ -14,8 +14,8 @@ romanization: "dôl"
 concept_tag: BN-JINIS225-DOL
 prerequisites: [BN-C224-sheyal, BN-C224-nekre]
 sounds: []
-roots: [sanskrit-dala]
-etymology_hook: "dôl ← Sanskrit dala 'party, band', a tadbhava (CDIAL 6215)"
+roots: [sanskrit-dala-band]
+etymology_hook: "dôl ← Sanskrit dala 'party, band', inherited (CDIAL 6215)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [BN-C224-nekre]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**দল** (*dôl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dala*, "party, band" (CDIAL 6215). CDIAL lists Bengali *dal*, "company", and reports Burrow's view that the word is Dravidian.
+**দল** (*dôl*) is inherited from Sanskrit *dala*, "party, band", and has come down with almost no change (CDIAL 6215). CDIAL lists Bengali *dal*, "company", and reports Burrow's view that the word is Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

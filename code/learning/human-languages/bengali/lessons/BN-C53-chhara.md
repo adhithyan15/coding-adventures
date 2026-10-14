@@ -14,7 +14,7 @@ romanization: "chhāṛā"
 concept_tag: BN-VERB-CHHARA
 prerequisites: [BN-C52-harano, BN-C53-pora]
 sounds: []
-roots: [sanskrit-chardayati]
+roots: [sanskrit-chardati]
 etymology_hook: "chhāṛā ← Sanskrit chardayati 'causes to flow over, vomits', a tadbhava (CDIAL 4998)"
 duration:
   max_seconds: 200

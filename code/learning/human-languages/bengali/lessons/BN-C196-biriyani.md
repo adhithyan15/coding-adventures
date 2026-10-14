@@ -47,7 +47,7 @@ reviews_of: [BN-C195-dul]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**বিরিয়ানি** (*biriyāni*) is a loan, usually traced to Persian *biryān*, "fried, roasted". Bengali adds the ending *-i*.
+**বিরিয়ানি** (*biriyāni*) is a loan, usually traced to Persian *biryān*, "fried, roasted". It carries the ending *-i*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

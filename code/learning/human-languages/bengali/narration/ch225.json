@@ -4,7 +4,7 @@
   "chapter": 225,
   "title": "Team, Player, Film, Play, Poem",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b5f0baa99d3d92f7",
+  "sourceHash": "fnv1a64:0c7ae191638f032e",
   "lessons": [
     {
       "id": "BN-C225-dol",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6305900bdc910a1a",
+      "sourceHash": "fnv1a64:05bad773431c97de",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "দল (dôl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dala, \"party, band\" (CDIAL 6215). CDIAL lists Bengali dal, \"company\", and reports Burrow's view that the word is Dravidian."
+              "text": "দল (dôl) is inherited from Sanskrit dala, \"party, band\", and has come down with almost no change (CDIAL 6215). CDIAL lists Bengali dal, \"company\", and reports Burrow's view that the word is Dravidian."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74864ea508a73245",
+      "sourceHash": "fnv1a64:5b021c33b847cd13",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "খেলোয়াড় (kheloyāṛ) is khelā, \"play\", which CDIAL lists under khēḍ, \"play\", a form it reconstructs and thinks may be non-Aryan (CDIAL 3918), + an ending meaning \"one who\"."
+              "text": "খেলোয়াড় (kheloyāṛ) is khelā, \"play\", which CDIAL lists under khēll, \"play\", one of a group of forms it reconstructs (CDIAL 3918), + an ending meaning \"one who\"."
             }
           ]
         },

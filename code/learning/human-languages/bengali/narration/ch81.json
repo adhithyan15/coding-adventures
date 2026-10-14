@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "Near, Inside, Outside, Below, In front",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5636c445d8e231cd",
+  "sourceHash": "fnv1a64:d607ad0978860007",
   "lessons": [
     {
       "id": "BN-C81-kachhe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f472ff677a35fbb",
+      "sourceHash": "fnv1a64:7b158ef94908bea0",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of কাছে (kāchhe) is not settled. CDIAL has no entry for it; under Sanskrit kakṣa, \"armpit, side\", it lists Bengali kāṁkh, \"flank\", and says some postpositions probably grew from the sense \"side\" (CDIAL 2588), but it does not trace কাছে (kāchhe) there."
+              "text": "কাছে (kāchhe), \"near\", probably goes back to Sanskrit kakṣa, \"armpit, side\", through Middle Indo-Aryan kaccha (CDIAL 2588). CDIAL has no Bengali row for it, but under that entry it lists Nepali kāch, \"side, edge\", and Assamese kāxe, \"by the side of\", and says some postpositions probably grew from the sense \"side\". The ending -e means \"at\"."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fba0a050e07d7b0",
+      "sourceHash": "fnv1a64:053b4641d3268f62",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "সামনে (sāmne) goes back to Sanskrit saṁmukha, \"facing, present\". CDIAL gives no Bengali form under that entry, but it lists Middle Bengali chāmu, \"in front\", and Oriya sāmanā, \"being in front\", the forms nearest to Bengali (CDIAL 12982)."
+              "text": "সামনে (sāmne) goes back to Sanskrit saṁmukha, \"facing, present\". CDIAL gives no modern Bengali form under that entry, but it lists Middle Bengali chāmu, \"in front\", and Oriya sāmanā, \"being in front\", the forms nearest to Bengali (CDIAL 12982)."
             }
           ]
         },

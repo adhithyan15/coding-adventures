@@ -14,8 +14,8 @@ romanization: "kheloyāṛ"
 concept_tag: BN-JINIS225-KHELOYAR
 prerequisites: [BN-C224-nekre, BN-C225-dol]
 sounds: []
-roots: [indo-aryan-khed]
-etymology_hook: "kheloyāṛ: khelā 'play' (CDIAL 3918) + -oyāṛ 'one who'"
+roots: [indo-aryan-khel]
+etymology_hook: "kheloyāṛ: khelā 'play', under *khēll (CDIAL 3918), + -oyāṛ 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [BN-C225-dol]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**খেলোয়াড়** (*kheloyāṛ*) is *khelā*, "play", which CDIAL lists under *\*khēḍ*, "play", a form it reconstructs and thinks may be non-Aryan (CDIAL 3918), + an ending meaning "one who".
+**খেলোয়াড়** (*kheloyāṛ*) is *khelā*, "play", which CDIAL lists under *\*khēll*, "play", one of a group of forms it reconstructs (CDIAL 3918), + an ending meaning "one who".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

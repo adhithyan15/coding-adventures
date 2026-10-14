@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "Timid, Calm, Urgent, Straight, Crooked",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5da53dda79317b8b",
+  "sourceHash": "fnv1a64:b7c4d7cd16be01eb",
   "lessons": [
     {
       "id": "BN-C139-bhitu",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee97a448a51cd14c",
+      "sourceHash": "fnv1a64:8b2e7de5dfb8b236",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "সোজা (sojā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śodhya, \"to be cleaned\" (CDIAL 12632). CDIAL prefers this source to a form śudhya, \"to be made pure\", that Chatterji proposed."
+              "text": "সোজা (sojā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śodhya, \"to be cleaned\" (CDIAL 12632). CDIAL prefers this source to a form śudhya, \"to be made pure\", that Chatterji proposed (CDIAL 12525)."
             }
           ]
         },

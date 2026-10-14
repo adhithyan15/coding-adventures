@@ -45,7 +45,7 @@ You'll want to know: ফ্যাকাশে.
 ফ্যাকাশে — phækāshe — "pale".
 
 The word, taken apart.
-The origin of ফ্যাকাশে (phækāshe) is not settled: CDIAL has no entry for it. The closest form it lists is Bengali phikā, "weak (of tea), pale", under phikka, "defective" (CDIAL 9037), but the shapes differ.
+CDIAL has no Bengali row for ফ্যাকাশে (phækāshe), "pale", but it appears to belong with Oriya phakā, "light-coloured", which CDIAL lists under Sanskrit phakka, "cripple", beside phikka, "defective" (CDIAL 9037). The same entry gives Bengali phikā, "weak (of tea), pale".
 
 What you've built.
 One more word for this chapter.
@@ -109,7 +109,7 @@ You'll want to know: চ্যাপ্টা.
 চ্যাপ্টা — chæpṭā — "flattened, flat".
 
 The word, taken apart.
-চ্যাপ্টা (chæpṭā), "flattened", appears to belong with Bengali cāpā, "to press", which CDIAL lists under capp, "press", a form it reconstructs (CDIAL 4674).
+CDIAL lists চ্যাপ্টা (chæpṭā), "flattened", as Bengali cepṭā under Sanskrit cipiṭa, "flat, flat-nosed", in its variant cippiṭṭa (CDIAL 4818), and compares capp, "press".
 
 What you've built.
 One more word for this chapter.

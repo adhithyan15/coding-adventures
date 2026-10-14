@@ -4,7 +4,7 @@
   "chapter": 242,
   "title": "To go out, To scatter, To roll up, To wrap, To dig",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c09290362eaf30f1",
+  "sourceHash": "fnv1a64:985ff6504550ed76",
   "lessons": [
     {
       "id": "BN-C242-berono",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dcd9d49dcf2c5cef",
+      "sourceHash": "fnv1a64:da35b6e8c0148849",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "মোড়া (moṛā), \"to wrap\", appears to be the verb CDIAL lists as Bengali moṛā, \"to twist\", under Sanskrit muṭati, \"twists\" (CDIAL 10186)."
+              "text": "মোড়া (moṛā), \"to wrap\", appears to be the verb CDIAL lists as Bengali moṛā, \"to twist\", under Sanskrit mōṭati, a form of muṭati, \"twists\" (CDIAL 10186)."
             }
           ]
         },
