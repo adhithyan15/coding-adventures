@@ -30,3 +30,9 @@ independent exact-head security review; full native/publication/merge gates
 remain pending for the original native arity failures. General-hop work and
 all Closure completion/provenance requirements remain open. Miri remains
 DEFERRED/PENDING; frozen run/source/inputs/target/receipts untouched/unpolled.
+
+The full candidate JVM suite exposed an old byte-opcode oracle requiring
+dcmpg for greater-than. Real JVM table84 comparisons now pass, including NaN
+on either side: greater-than must use dcmpl with ifle to keep unordered false.
+Reconcile the existing assertion to that exact semantic opcode/branch pair;
+retain its test and the original failing suite receipt rather than deleting it.
