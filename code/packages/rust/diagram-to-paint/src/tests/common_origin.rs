@@ -3,6 +3,8 @@
 //! executed evidence; a mathematical design review alone is not acceptance.
 use super::*;
 
+type LegacyGroup = (Point, Point, Vec<(usize, usize)>);
+
 type Signature = Vec<(usize, usize, u64, u64, u64)>;
 fn signature(values: Vec<(f64, Point, usize, usize)>) -> Signature {
     values.into_iter().map(|(t, p, edge, segment)|
@@ -78,7 +80,7 @@ fn independent_occurrence_order_and_directed_bits_match_legacy() {
     for axes in [false, true] {
         for permutation in 0..3 {
             let mut index = SwimlaneHopCrossings::default();
-            let mut groups: Vec<(Point, Point, Vec<(usize, usize)>)> = Vec::new();
+            let mut groups: Vec<LegacyGroup> = Vec::new();
             for step in 0..48usize {
                 let i = match permutation { 0 => step, 1 => 47-step, _ => step*17%48 };
                 let start = (i % 13) as i64 - 6;
@@ -247,5 +249,78 @@ fn origin_work_counts_actual_candidates_and_occurrences() {
     for kind in [Work::Certificate,Work::Observe,Work::Insert,Work::Refresh,Work::Query,
                  Work::Compare,Work::Rotation,Work::Drop,Work::Candidate,Work::Sort,Work::Occurrence] {
         assert!(counts[kind as usize]>0,"actual {kind:?} counter is exercised: {counts:?}");
+    }
+}
+
+#[test]
+fn invalidated_origin_cohorts_never_rebuild_on_certified_reentry() {
+    for axes in [false, true] {
+        for disqualify_fraction in [false, true] {
+            let mut index = SwimlaneHopCrossings::default();
+            let mut prior = Vec::new();
+            for (i, (x, y, dx, end)) in [(0.0, 0.0, 10.0, 10.0),
+                (0.0, 4.0, 12.0, -8.0),
+                (if disqualify_fraction { 0.5 } else { 1.0 }, 3.0, 17.0, -5.0),
+                (0.0, -2.0, 25.0, 11.0), (0.0, 8.0, 19.0, -7.0)].into_iter().enumerate() {
+                let (a,b) = transformed(Point{x,y}, Point{x:dx,y:end}, axes, i%2==0);
+                index.insert_geometry(i, 0, &a, &b);
+                prior.push((a,b));
+                if i >= 2 {
+                    assert!(index.origin_x_cohort.is_none() && index.origin_y_cohort.is_none());
+                    let (q0,q1) = transformed(Point{x:0.0,y:2.0}, Point{x:30.0,y:2.0}, axes, i%2!=0);
+                    let expected = prior.iter().enumerate().filter_map(|(id,(a,b))|
+                        swimlane_line_crossing(&q0,&q1,a,b).map(|(t,p)|(t,p,id,0))).collect();
+                    assert_eq!(signature(index.prior_crossings(&q0,&q1)), signature(expected));
+                }
+            }
+        }
+    }
+}
+
+#[test]
+fn exact_candidate_counts_cover_endpoint_equalities_and_coordinate_extremes() {
+    use crate::swimlane_hop_origin::{observe, project, reset_work, work_snapshot, Work};
+    let limit = 1i64 << 24;
+    // Each tuple is (start, right ordinate, positive dx), all coordinates remain
+    // in the certificate even at maximum span and minimal dx. Some intersections
+    // equal a right endpoint exactly; strict-interior candidates must omit them.
+    let lines = [(-limit,limit,2*limit), (-limit+1,limit-1,2*limit-1),
+                 (2,1,1), (1,-1,2), (0,1,2), (1,0,1),
+                 (0,4,4), (1,2,2), (0,0,4), (limit,-limit,2*limit)];
+    for axes in [false,true] {
+        for reverse in [false,true] {
+            let mut index = SwimlaneHopCrossings::default();
+            let mut cohort = None;
+            let mut originals = Vec::new();
+            for (id,&(start,end,dx)) in lines.iter().enumerate().filter(|(_,p)|p.0!=p.1) {
+                let (a,b) = transformed(Point{x:-limit as f64,y:start as f64},
+                    Point{x:(-limit+dx) as f64,y:end as f64}, axes, (id%2==0)^reverse);
+                let p=project(&a,&b,axes).unwrap();
+                observe(&mut cohort,originals.is_empty(),Some(p),id);
+                index.insert_geometry(id,0,&a,&b);
+                originals.push((id,a,b));
+            }
+            for &(qs,qe,qdx) in &lines {
+                let (q0,q1)=transformed(Point{x:-limit as f64,y:qs as f64},
+                    Point{x:(-limit+qdx) as f64,y:qe as f64},axes,reverse);
+                let mut expected_candidates=Vec::new();
+                for (id,&(ps,pe,pdx)) in lines.iter().enumerate().filter(|(_,p)|p.0!=p.1) {
+                    // Independent determinant/parameter oracle: no cached
+                    // extrema, slope comparisons or production endpoint helper.
+                    let d=i128::from(qdx)*i128::from(pe-ps)-i128::from(pdx)*i128::from(qe-qs);
+                    let t=-i128::from(ps-qs)*i128::from(pdx);
+                    let u=-i128::from(ps-qs)*i128::from(qdx);
+                    if d!=0 && t.signum()==d.signum() && u.signum()==d.signum()
+                        && t.abs()<d.abs() && u.abs()<d.abs() { expected_candidates.push(id); }
+                }
+                reset_work();
+                let actual=cohort.as_ref().unwrap().candidates(project(&q0,&q1,axes).unwrap()).unwrap();
+                assert_eq!(actual,expected_candidates,"axes={axes} reverse={reverse} query={qs}/{qe}/{qdx}");
+                assert_eq!(work_snapshot()[Work::Candidate as usize],actual.len());
+                let expected=originals.iter().filter_map(|(id,a,b)|
+                    swimlane_line_crossing(&q0,&q1,a,b).map(|(t,p)|(t,p,*id,0))).collect();
+                assert_eq!(signature(index.prior_crossings(&q0,&q1)),signature(expected));
+            }
+        }
     }
 }
