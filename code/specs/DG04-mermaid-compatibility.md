@@ -1066,7 +1066,8 @@ actions, and legacy callback aliases survive as scene metadata. Flowchart edge i
 survive semantic IR, layout, and scene metadata; named classes and direct styles for identified
 edges resolve stroke color, width, dash patterns, and label color into backend-neutral paint.
 Positional `linkStyle` directives accept `default` or comma-separated edge indices and resolve
-into the same backend-neutral edge style fields.
+into the same backend-neutral edge style fields. Their `interpolate` form applies supported curve
+modes by position through semantic and layout IR to portable path instructions.
 Identified edge animation attributes preserve enabled state and slow/fast timing in scene metadata,
 with a deterministic static dash pattern for non-animated paint backends.
 Per-edge `linear` and `basis` curve attributes survive semantic and layout IR; basis routing lowers
