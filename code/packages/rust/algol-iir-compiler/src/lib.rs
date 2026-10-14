@@ -16200,7 +16200,7 @@ mod tests {
         for root in ["left", "right"] {
             for condition in ["true", "false"] {
                 for assigned in [false, true] {
-                    let conditional = format!("if choose({root}) then relay(abs(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)))))) else relay(abs(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))))))");
+                    let conditional = format!("if choose({root}) then relay(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0)))))) else relay(abs(abs(abs(sqrt(abs(entier(sign(right))))))))");
                     let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
                     let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
                     let error = compile_source(&source, "test").expect_err("computed branch name actuals cannot restore proof lost by the selector");
@@ -16217,7 +16217,7 @@ mod tests {
         for root in ["left", "right"] {
             for condition in ["true", "false"] {
                 for assigned in [false, true] {
-                    let conditional = format!("if choose({root}) then relay(abs(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)))))) else relay(abs(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))))))");
+                    let conditional = format!("if choose({root}) then relay(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0)))))) else relay(abs(abs(abs(sqrt(abs(entier(sign(right))))))))");
                     let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
                     let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
                     let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("root={root}, condition={condition}, assigned={assigned}: {error:?}"));
