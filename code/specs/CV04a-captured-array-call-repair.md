@@ -50,6 +50,15 @@ multiple calls, ignored returns and actual real JVM execution of the original
 array rows with verification enabled. Preserve existing Code/scene/resource
 tests and run relevant affected suites and strict lint.
 
+Independent review identified that JVM Ref categories alone cannot establish
+reference descriptor compatibility: long[] and double[] both use aload but
+cannot be substituted at a call. Index declared reference descriptors once
+with the same first-definition policy as local type allocation. Accept exact
+reference descriptors and widening a reference to java.lang.Object; refuse
+other unproved substitutions. Check the destination's allocated type and
+reference descriptor against the callee return, too. This is a conservative
+direct-call boundary, not a general reference-subtyping engine.
+
 Miri remains DEFERRED/PENDING and its frozen checkout/inputs/target/receipts
 untouched. No new crates.io dependencies. General-hop 32/32 resource failures,
 full Closure parity, byte/source and transformation lineage, stable identities,
