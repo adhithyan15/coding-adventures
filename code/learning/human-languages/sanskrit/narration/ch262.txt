@@ -1,0 +1,131 @@
+Sanskrit, chapter 262: Us and you all as objects.
+4 lessons. All 4 can be done entirely by ear.
+
+
+Lesson 1 of 4.
+अस्मान् (asmān) — us, several people, as the object.
+
+Warm-up.
+[pause 2 seconds]
+“Us two” is आवाम् (āvām). “Our” for several possessors is अस्माकम् (asmākam). Keep the asm- opening and make several people the object.
+
+You'll want to know: अस्मान्.
+अस्मान् (asmān) means “us” when several people including the speaker are the object.
+सः अस्मान् पश्यति। saḥ asmān paśyati. He sees us.
+Whitney §491 lists अस्मान् as the independent accusative plural. Do not confuse it with अस्माकम्, “our / of us”: asmān is a person reached by the action; asmākam answers “whose?”.
+
+Taken Apart.
+As a grammatical form, अस्मान् (asmān) comes from the first-person pronoun paradigm; it is not a word from a separate lexical root. Whitney's Sanskrit Grammar §491 records it as the independent accusative plural. This lesson makes no deeper historical derivation claim.
+Source: Whitney, Sanskrit Grammar (1889), §491.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “us two” as object — āvām]
+[pause 8 seconds for the answer]
+[your turn — say: “us, several people” as object — asmān]
+[pause 8 seconds for the answer]
+[your turn — say: “he sees us” — saḥ asmān paśyati]
+[pause 8 seconds for the answer]
+[your turn — contrast: object asmān; possessor asmākam]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Several people including the speaker are seen. Which object form means “us”? (अस्मान्, asmān.)
+
+
+Lesson 2 of 4.
+युष्मान् (yuṣmān) — you, several people, as the object.
+
+Warm-up.
+[pause 2 seconds]
+“Us, several people” is अस्मान् (asmān). “Your” to several people is युष्माकम् (yuṣmākam). Keep the yuṣm- opening and make the several addressees the object.
+
+You'll want to know: युष्मान्.
+युष्मान् (yuṣmān) means “you” when several familiar addressees are the object.
+सः युष्मान् पश्यति। saḥ yuṣmān paśyati. He sees you all.
+Whitney §491 lists युष्मान् (yuṣmān) as the independent accusative plural. Keep it apart from युष्माकम्, “your / of you all”: the first is an object and the second is a possessor.
+
+Taken Apart.
+As a grammatical form, युष्मान् (yuṣmān) comes from the second-person pronoun paradigm; it is not a word from a separate lexical root. Whitney's Sanskrit Grammar §491 records it as the independent accusative plural. This lesson makes no deeper historical derivation claim.
+Source: Whitney, Sanskrit Grammar (1889), §491.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “he sees us” — saḥ asmān paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: “he sees you all” — saḥ yuṣmān paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: several people with the speaker — asmān; several addressees — yuṣmān]
+[pause 8 seconds for the answer]
+[your turn — contrast: object yuṣmān; possessor yuṣmākam]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Several familiar addressees are seen. Which object form means “you all”? (युष्मान्, yuṣmān.)
+
+
+Lesson 3 of 4.
+Who is seen, and how many? — choose me, us two, us, you, you two, or you all.
+
+Warm-up.
+[pause 2 seconds]
+Give the singular pair, then the dual pair, then the several-person pair. (Mām, tvām; āvām, yuvām; asmān, yuṣmān.)
+
+Grammar Lens: person first, then number.
+Choose in two small steps.
+First ask who the object is:
+first person includes the speaker;
+second person is the familiar person or people addressed.
+Then count the people:
+one person: माम् / त्वाम् (mām / tvām);
+two people: आवाम् / युवाम् (āvām / yuvām);
+several people: अस्मान् / युष्मान् (asmān / yuṣmān).
+The six are independent full forms. Choose person, choose number, then place the chosen object before the known verb.
+
+Guided Practice.
+[pause 2 seconds after each]
+[your turn — say: first person, one — mām; first person, two — āvām; first person, several — asmān]
+[pause 8 seconds for the answer]
+[your turn — say: second person, one — tvām; second person, two — yuvām; second person, several — yuṣmān]
+[pause 8 seconds for the answer]
+[your turn — say: “he sees us two” — saḥ āvām paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: “he sees you all” — saḥ yuṣmān paśyati]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the two choices you make before selecting the object form? (Person: speaker included or addressee; then number: one, two, or several.)
+
+
+Lesson 4 of 4.
+One, two, or several — me/us or you.
+
+Warm-up.
+[pause 2 seconds]
+Say the decision aloud: person first, then number. Do not recite a table; answer each scene separately.
+
+Guided Practice — choose before you speak.
+[pause 2 seconds after each]
+[your turn — say: the speaker alone is seen — saḥ mām paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: one familiar addressee is seen — saḥ tvām paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: the speaker and one companion are seen — saḥ āvām paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: two familiar addressees are seen — saḥ yuvām paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: several people including the speaker are seen — saḥ asmān paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: several familiar addressees are seen — saḥ yuṣmān paśyati]
+[pause 8 seconds for the answer]
+
+Grammar Lens: the boundary of this chapter.
+These six are the independent full forms taught here. Classical Sanskrit also has short alternatives in particular positions, and it has third-person and respectful object forms. Those belong to later lessons. This set is not the whole Classical Sanskrit pronoun system; it is the complete first- and second-person full-form choice across one person, two people, and several people.
+Source for the full and short forms: William Dwight Whitney, Sanskrit Grammar (1889), §491.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Without a table, answer six prompts: me, you one, us two, you two, us several, you several. (Mām; tvām; āvām; yuvām; asmān; yuṣmān.)

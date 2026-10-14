@@ -106,7 +106,9 @@ it("adds the Sanskrit A1 object-pronoun series one number at a time", () => {
   expect(learnerCopy).toContain("not the whole Classical Sanskrit pronoun system");
 
   const ledger = loadTrackChapters().find((track) => track.language === "sanskrit");
-  expect(ledger?.chapters.filter((chapter) => chapter.chapter >= 260)).toMatchObject([
+  expect(
+    ledger?.chapters.filter((chapter) => chapter.chapter >= 260 && chapter.chapter <= 262),
+  ).toMatchObject([
     {
       chapter: 260,
       payoff: {

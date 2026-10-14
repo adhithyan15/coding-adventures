@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:f3b4736254ea83b6",
+  "lessonIds": [
+    "SA-C261-avam",
+    "SA-C261-yuvam",
+    "SA-C261-dual-object-practice"
+  ],
+  "tex": "sanskrit/book/chapters/ch261-us-two-and-you-two-as-objects.tex"
+}

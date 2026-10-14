@@ -1,0 +1,12 @@
+{
+  "language": "sanskrit",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:39148e4d95ad4481",
+  "lessonIds": [
+    "SA-C262-asman",
+    "SA-C262-yusman",
+    "SA-C262-object-person-number",
+    "SA-C262-object-pronoun-retrieval"
+  ],
+  "tex": "sanskrit/book/chapters/ch262-us-and-you-all-as-objects.tex"
+}

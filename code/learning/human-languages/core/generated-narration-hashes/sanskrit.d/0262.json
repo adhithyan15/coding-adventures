@@ -1,0 +1,18 @@
+{
+  "language": "sanskrit",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:be5f1ae77423aab3",
+  "lessonIds": [
+    "SA-C262-asman",
+    "SA-C262-yusman",
+    "SA-C262-object-person-number",
+    "SA-C262-object-pronoun-retrieval"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "sanskrit/narration/ch262.txt",
+  "json": "sanskrit/narration/ch262.json",
+  "textHash": "fnv1a64:b6f440ffe41012d7",
+  "jsonHash": "fnv1a64:0c7e4bf33ec2007f",
+  "findings": []
+}
