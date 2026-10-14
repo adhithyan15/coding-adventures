@@ -40,8 +40,8 @@ reviews_of: [PA-W10-form-repair-values, PA-W10-form-repair-layout, PA-R174-form-
 
 Use only these old fictional cards, never your own details. **ਕ** chooses A:
 age **੧੫**, phone **੦੧੨ ੨੫੧**, date **੧੫/੦੧/੨੦੨੫**. **ਖ** chooses B:
-age **੨੫**, phone **੦੨੫ ੧੨੫**, date **੨੫/੦੨/੨੦੨੫**. Keep the bank visible.
-Check the card first, then the three labels and values one line at a time.
+age **੨੫**, phone **੦੨੫ ੧੨੫**, date **੨੫/੦੨/੨੦੨੫**. Read the printed
+A/B banks one line at a time, then keep them visible for the next step.
 This gentle return is not a scored A1 mock.
 
 ## Guided Practice
@@ -65,14 +65,16 @@ or rewrite the two correct lines.
 
 Cover the bank and the guided correction. The card is now **ਕ**. Compare the
 printed three-field form below with the values you remember. Find the one
-different line and write its repaired version on a fresh line without looking
-back. Leave the two matching lines alone.
+different line. Leave the two matching lines alone.
 
 > ਉਮਰ: ੧੫
 >
 > ਫ਼ੋਨ: ੦੧੨ ੨੫੧
 >
 > ਤਾਰੀਖ਼: ੧੫/੦੧੨੦੨੫
+
+Write the repaired line on fresh paper, from memory, with the bank still
+covered.
 
 Now uncover the bank and check your repair: **ਤਾਰੀਖ਼: ੧੫/੦੧/੨੦੨੫**.
 The only change was the missing slash; every digit, age, and phone stays the

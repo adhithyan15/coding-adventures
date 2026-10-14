@@ -4,7 +4,7 @@
   "chapter": 175,
   "title": "Return to One Familiar Three-Field Repair",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7ebd0d232d300a20",
+  "sourceHash": "fnv1a64:606cc64a9189f02f",
   "lessons": [
     {
       "id": "PA-R175-form-repair-again",
@@ -20,7 +20,7 @@
         "writing-type",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:794f6e726e76e191",
+      "sourceHash": "fnv1a64:695cc1172d786ca3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -28,9 +28,11 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -40,7 +42,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Use only these old fictional cards, never your own details. ਕ chooses A: age ੧੫, phone ੦੧੨ ੨੫੧, date ੧੫/੦੧/੨੦੨੫. ਖ chooses B: age ੨੫, phone ੦੨੫ ੧੨੫, date ੨੫/੦੨/੨੦੨੫. Keep the bank visible. Check the card first, then the three labels and values one line at a time. This gentle return is not a scored A1 mock."
+              "text": "Use only these old fictional cards, never your own details. ਕ chooses A: age ੧੫, phone ੦੧੨ ੨੫੧, date ੧੫/੦੧/੨੦੨੫. ਖ chooses B: age ੨੫, phone ੦੨੫ ੧੨੫, date ੨੫/੦੨/੨੦੨੫. Read the printed A/B banks one line at a time, then keep them visible for the next step. This gentle return is not a scored A1 mock."
             }
           ]
         },
@@ -66,11 +68,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Cover the bank and the guided correction. The card is now ਕ. Compare the printed three-field form below with the values you remember. Find the one different line and write its repaired version on a fresh line without looking back. Leave the two matching lines alone."
+              "text": "Cover the bank and the guided correction. The card is now ਕ. Compare the printed three-field form below with the values you remember. Find the one different line. Leave the two matching lines alone."
             },
             {
               "kind": "speech",
               "text": "ਉਮਰ: ੧੫ ਫ਼ੋਨ: ੦੧੨ ੨੫੧ ਤਾਰੀਖ਼: ੧੫/੦੧੨੦੨੫."
+            },
+            {
+              "kind": "speech",
+              "text": "Write the repaired line on fresh paper, from memory, with the bank still covered."
             },
             {
               "kind": "speech",

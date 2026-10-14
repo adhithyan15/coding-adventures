@@ -1,6 +1,7 @@
 import { expect, it } from "vitest";
 import { measureContinuity } from "../../../src/continuity.js";
 import { loadTrackLessons } from "../../../src/loader.js";
+import { narrateLesson, renderLessonNarrationText } from "../../../src/narration.js";
 import { estimateLessonDuration } from "../../../src/report.js";
 
 const id = "PA-R175-form-repair-again";
@@ -42,4 +43,15 @@ it("retrieves one genuine Punjabi three-field repair at R4 without mock credit",
   expect([...previousPairs].filter((pair) => !currentPairs.has(pair))).toEqual([`R4|${atom}`]);
   expect([...currentPairs].filter((pair) => !previousPairs.has(pair))).toEqual([]);
   expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 512, R4: 572 });
+});
+
+it("guards every Punjabi printed-form section before a driver reaches it", () => {
+  const narration = narrateLesson(review);
+  expect(narration.notice?.waitUntilStopped).toEqual(["Warm-up", "Guided Practice", "Wrap-up Recall"]);
+  const lines = renderLessonNarrationText(narration).split("\n");
+  for (const title of ["Warm-up.", "Guided Practice.", "Wrap-up Recall."]) {
+    const index = lines.indexOf(title);
+    expect(index).toBeGreaterThan(0);
+    expect(lines[index - 1]).toContain("once you have stopped driving");
+  }
 });
