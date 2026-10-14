@@ -51,7 +51,7 @@ fn imported_subgraph_margin_nested_geometry_and_default_identity() {
                 for empty in [false,true] {
                     let mut baseline=ordering_diagram(2,if ranked {&[(0,1,1)]} else {&[]});
                     baseline.direction=direction.clone();baseline.automatic_lane_ordering=false;
-                    baseline.ignore_cross_lane_edges=!ranked;
+                    baseline.ignore_cross_lane_edges = !ranked;
                     for i in 0..depth {
                         baseline.groups.push(diagram_ir::SwimlaneGroup {
                             id:format!("group{i}"),label:format!("Group{i}"),lane_id:"lane0".into(),
@@ -60,6 +60,9 @@ fn imported_subgraph_margin_nested_geometry_and_default_identity() {
                             classes:vec!["owned".into()],style:Default::default(),
                         });
                     }
+                    for padding in [None,Some(100.0),Some(65_536.0)] {
+                    for shape in [DiagramShape::Rect,DiagramShape::Summary,DiagramShape::ForkJoin,DiagramShape::LightningBolt] {
+                    baseline.flowchart_config.padding=padding;baseline.nodes[0].shape=shape.clone();
                     for outer in [None,Some(0.0),Some(12.0),Some(65_536.0)] {
                     baseline.flowchart_config.diagram_padding=outer;
                     let golden=try_layout_swimlane(&baseline).unwrap();
@@ -105,13 +108,15 @@ fn imported_subgraph_margin_nested_geometry_and_default_identity() {
                                 ok &= inside(rect,[child.x,child.y,child.width,child.height]) && title_end+bottom.unwrap_or(0.0)<=child.y;
                             }
                         }
-                        if !ok {failures.push((direction.clone(),ranked,depth,empty,outer,top,bottom));}
+                        if !ok {failures.push((direction.clone(),ranked,depth,empty,padding,shape.clone(),outer,top,bottom));}
+                    }
+                    }
                     }
                     }
                 }
             }
         }
     }
-    assert_eq!(cells,1344);
-    assert!(failures.is_empty(),"nested geometry failed {}/1344 cells: {failures:?}",failures.len());
+    assert_eq!(cells,16128);
+    assert!(failures.is_empty(),"nested geometry failed {}/16128 cells; first20: {:?}",failures.len(),&failures[..failures.len().min(20)]);
 }
