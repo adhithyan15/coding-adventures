@@ -4,8 +4,10 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.4` accumulate here until the next version is
+Entries added after `task-app-v0.5.5` accumulate here until the next version is
 cut.
+
+## [0.5.5] - 2026-10-13
 
 ### Fixed — XAML preserves the seven-column calendar grid (#17394)
 
