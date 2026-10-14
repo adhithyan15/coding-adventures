@@ -5640,7 +5640,7 @@ impl Compiler {
     /// standard functions cannot use it. Discovery is iterative and counted
     /// just like the dedicated outer-entier classifier.
     fn is_conditional_unit_identity_actual(&self, node: &GrammarASTNode) -> bool {
-        let transparent = |mut node: &GrammarASTNode| {
+        fn transparent(mut node: &GrammarASTNode) -> &GrammarASTNode {
             loop {
                 #[cfg(test)] selector_classifier_visit();
                 if let Some(child) = single_parenthesized_child(node) { node = child; continue; }
@@ -5650,7 +5650,7 @@ impl Compiler {
                 }
                 return node;
             }
-        };
+        }
         let call = transparent(node);
         if call.rule_name != "proc_call" { return false; }
         let Some(name) = direct_tokens(call).into_iter().find(|t| t.effective_type_name() == "NAME") else { return false; };
