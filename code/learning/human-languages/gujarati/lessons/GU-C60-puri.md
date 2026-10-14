@@ -14,7 +14,8 @@ romanization: "pūrī"
 concept_tag: GU-SNACKS-PURI
 prerequisites: [GU-C60-thepla, GU-C60-jalebi]
 sounds: []
-roots: []
+roots: [sanskrit-purika]
+etymology_hook: "pūrī ← Sanskrit pūrikā 'cake', a tadbhava (CDIAL 8331)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C60-jalebi]
 <!-- hl-knowledge: introduces=[GU-LEX-C60-SNACKS-05]; assesses=[] -->
 
 **પૂરી** (*pūrī*) — "puri, fried bread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પૂરી** (*pūrī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pūrikā*, "cake" (CDIAL 8331).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

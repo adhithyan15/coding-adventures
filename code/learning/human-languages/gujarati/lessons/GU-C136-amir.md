@@ -14,7 +14,8 @@ romanization: "amīr"
 concept_tag: GU-QUAL136-AMIR
 prerequisites: [GU-C136-sacu, GU-C136-khotu]
 sounds: []
-roots: []
+roots: [arabic-amir]
+etymology_hook: "amīr ← Arabic amīr 'commander, prince', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C136-khotu]
 <!-- hl-knowledge: introduces=[GU-LEX-C136-QUAL136-05]; assesses=[] -->
 
 **અમીર** (*amīr*) — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**અમીર** (*amīr*) is a loan from Arabic *amīr*, "commander, prince", which reached Gujarati through Persian. Its Arabic root is *ʾ-m-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

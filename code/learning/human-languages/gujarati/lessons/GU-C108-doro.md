@@ -14,7 +14,8 @@ romanization: "doro"
 concept_tag: GU-THINGS108-DORO
 prerequisites: [GU-C108-katar, GU-C108-soy]
 sounds: []
-roots: []
+roots: [sanskrit-davara]
+etymology_hook: "doro ← Sanskrit davara 'string', a tadbhava (CDIAL 6225)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C108-soy]
 <!-- hl-knowledge: introduces=[GU-LEX-C108-THINGS108-05]; assesses=[] -->
 
 **દોરો** (*doro*) — "a thread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દોરો** (*doro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *davara*, "string" (CDIAL 6225).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

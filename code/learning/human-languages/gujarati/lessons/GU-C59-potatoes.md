@@ -14,7 +14,8 @@ romanization: "baṭākā"
 concept_tag: GU-PRODUCE-POTATOES
 prerequisites: [GU-C59-banana, GU-C59-apple]
 sounds: []
-roots: []
+roots: [portuguese-batata]
+etymology_hook: "baṭākā: usually traced to Portuguese batata 'potato'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C59-apple]
 <!-- hl-knowledge: introduces=[GU-LEX-C59-PRODUCE-04]; assesses=[] -->
 
 **બટાકા** (*baṭākā*) — "potatoes". A common **શાક**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બટાકા** (*baṭākā*) is a loan, usually traced to Portuguese *batata*, "potato".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

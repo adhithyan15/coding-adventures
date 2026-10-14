@@ -14,7 +14,8 @@ romanization: "darvājo"
 concept_tag: GU-THINGS129-DARVAJO
 prerequisites: [GU-C129-gali, GU-C129-bag, GU-C33-vichaarun-ke]
 sounds: []
-roots: []
+roots: [persian-darvaza]
+etymology_hook: "darvājo: usually traced to Persian darvāza 'gate, door'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [GU-C129-bag]
 <!-- hl-knowledge: introduces=[GU-LEX-C129-THINGS129-03]; assesses=[] -->
 
 **દરવાજો** (*darvājo*) — "a gate, a door".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દરવાજો** (*darvājo*) is a loan, usually traced to Persian *darvāza*, "gate, door".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

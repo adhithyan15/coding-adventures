@@ -14,7 +14,8 @@ romanization: "ṭikiṭ"
 concept_tag: GU-JOURNEY-TICKET
 prerequisites: [GU-C85-port, GU-C86-journey]
 sounds: []
-roots: []
+roots: [english-ticket]
+etymology_hook: "ṭikiṭ ← English ticket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C86-journey]
 <!-- hl-knowledge: introduces=[GU-LEX-C86-JOURNEY-02]; assesses=[] -->
 
 **ટિકિટ** (*ṭikiṭ*) — "a ticket". For the **બસ** or the **ટ્રેન**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ટિકિટ** (*ṭikiṭ*) is a loan from English *ticket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

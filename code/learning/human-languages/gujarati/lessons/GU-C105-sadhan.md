@@ -14,7 +14,8 @@ romanization: "sādhan"
 concept_tag: GU-CAN105-SADHAN
 prerequisites: [GU-C104-layakat, GU-C104-kala]
 sounds: []
-roots: []
+roots: [sanskrit-sadhana]
+etymology_hook: "sādhan ← Sanskrit sādhana 'furthering; completion', a tatsama (CDIAL 13334)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C104-kala]
 <!-- hl-knowledge: introduces=[GU-LEX-C105-CAN105-01]; assesses=[] -->
 
 **સાધન** (*sādhan*) — "a tool, a means".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સાધન** (*sādhan*) is Sanskrit *sādhana*, "furthering; completion", taken over whole as a learned loan, a tatsama (CDIAL 13334).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

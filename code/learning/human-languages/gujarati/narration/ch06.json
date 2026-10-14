@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Four Final Forms Before the Verbs",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f602c76f1a3a7d86",
+  "sourceHash": "fnv1a64:035d86f9ebbb1006",
   "lessons": [
     {
       "id": "GU-C06-ukhaanun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7831863fea3e2f88",
+      "sourceHash": "fnv1a64:61ede5e717ded55e",
       "notice": null,
       "blocks": [
         {
@@ -79,6 +79,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉખાણું (ukhāṇũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from upākhyāna, \"subordinate story, episode\" (CDIAL 2289). CDIAL lists Gujarati ukhāṇ and ukhāṇo, \"riddle\", beside it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -109,7 +120,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -140,7 +151,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:470d0d3c25d15a32",
+      "sourceHash": "fnv1a64:3132d13ae9a88e42",
       "notice": null,
       "blocks": [
         {
@@ -209,6 +220,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "એકલું (eklũ) is a tadbhava, a word inherited and reshaped by sound change. CDIAL reconstructs ekkala, \"alone\", built on eka, \"one\", and lists the Gujarati word under its doubled variant ekkalla (CDIAL 2506)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -239,7 +261,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

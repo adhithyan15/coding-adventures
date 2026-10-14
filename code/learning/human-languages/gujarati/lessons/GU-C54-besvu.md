@@ -14,7 +14,8 @@ romanization: "besvũ"
 concept_tag: GU-VERB-BESVU
 prerequisites: [GU-C53-relative, GU-C53-guest]
 sounds: []
-roots: []
+roots: [sanskrit-upavishati]
+etymology_hook: "besvũ ← Sanskrit upaviśati 'approaches; sits down', a tadbhava (CDIAL 2245)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C53-guest]
 <!-- hl-knowledge: introduces=[GU-LEX-C54-MOVE-01]; assesses=[] -->
 
 **બેસવું** (*besvũ*) — "to sit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બેસવું** (*besvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *upaviśati*, "approaches; sits down" (CDIAL 2245).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

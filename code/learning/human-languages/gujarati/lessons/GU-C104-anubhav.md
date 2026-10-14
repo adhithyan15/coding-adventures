@@ -14,7 +14,8 @@ romanization: "anubhav"
 concept_tag: GU-CAN104-ANUBHAV
 prerequisites: [GU-C103-sampatti, GU-C103-malik]
 sounds: []
-roots: []
+roots: [sanskrit-anubhava]
+etymology_hook: "anubhav: Sanskrit anubhava 'perception, experience', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C103-malik]
 <!-- hl-knowledge: introduces=[GU-LEX-C104-CAN104-01]; assesses=[] -->
 
 **અનુભવ** (*anubhav*) — "experience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**અનુભવ** (*anubhav*) is Sanskrit *anubhava*, "perception, experience", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

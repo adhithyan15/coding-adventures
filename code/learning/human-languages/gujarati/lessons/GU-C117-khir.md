@@ -14,7 +14,8 @@ romanization: "khīr"
 concept_tag: GU-THINGS117-KHIR
 prerequisites: [GU-C117-catni, GU-C117-halvo]
 sounds: []
-roots: []
+roots: [sanskrit-kshiri]
+etymology_hook: "khīr ← Sanskrit kṣīrī 'a dish prepared with milk', a tadbhava (CDIAL 3705)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C117-halvo]
 <!-- hl-knowledge: introduces=[GU-LEX-C117-THINGS117-05]; assesses=[] -->
 
 **ખીર** (*khīr*) — "rice pudding".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખીર** (*khīr*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣīrī*, "a dish prepared with milk" (CDIAL 3705). It is built on *kṣīra*, "milk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

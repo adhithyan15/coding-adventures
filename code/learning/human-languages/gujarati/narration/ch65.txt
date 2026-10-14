@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a forest, then the Gujarati for a stone
 You'll want to know: દરિયો.
 દરિયો (dariyo) — "the sea".
 
+The word, taken apart.
+દરિયો (dariyo) is a loan, usually traced to Persian daryā, "sea, great river".
+
 What you've built.
 One more word for sea, lake and well.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a stone, then the Gujarati for the sea.
 
 You'll want to know: તળાવ.
 તળાવ (taḷāv) — "a lake, a pond".
+
+The word, taken apart.
+તળાવ (taḷāv) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from taḍāga, "pool" (CDIAL 5635).
 
 What you've built.
 One more word for sea, lake and well.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for the sea, then the Gujarati for a lake.
 You'll want to know: કૂવો.
 કૂવો (kūvo) — "a well".
 
+The word, taken apart.
+કૂવો (kūvo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kūpa, "hole, hollow; pit, well" (CDIAL 3400).
+
 What you've built.
 One more word for sea, lake and well.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a lake, then the Gujarati for a well.
 You'll want to know: રેતી.
 રેતી (retī) — "sand".
 
+The word, taken apart.
+રેતી (retī) is a tadbhava. CDIAL lists it, beside Gujarati ret, "sand", under the lexical Sanskrit retra, "perfumed powder" (CDIAL 10816). It thinks scarcely likely the view that the Sanskrit word reshapes a Munda one.
+
 What you've built.
 One more word for sea, lake and well.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a well, then the Gujarati for sand.
 
 You'll want to know: માટી.
 માટી (māṭī) — "soil, earth, clay".
+
+The word, taken apart.
+માટી (māṭī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mṛttikā, "earth, clay" (CDIAL 10286).
 
 What you've built.
 One more word for sea, lake and well.

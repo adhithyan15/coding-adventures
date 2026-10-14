@@ -14,7 +14,8 @@ romanization: "āgaḷ"
 concept_tag: GU-WHERE2-AHEAD
 prerequisites: [GU-C74-up, GU-C74-down]
 sounds: []
-roots: []
+roots: [sanskrit-agra]
+etymology_hook: "āgaḷ ← Sanskrit agra 'top, front', with an -l- suffix (CDIAL 68)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C74-down]
 <!-- hl-knowledge: introduces=[GU-LEX-C75-WHERE2-01]; assesses=[] -->
 
 **આગળ** (*āgaḷ*) — "ahead, in front".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**આગળ** (*āgaḷ*) is a tadbhava. CDIAL lists it under Sanskrit *agra*, "top, front", among the forms built with an *-l-* suffix (CDIAL 68).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

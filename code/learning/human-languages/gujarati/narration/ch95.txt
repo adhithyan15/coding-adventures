@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a date, then the Gujarati for right now
 You'll want to know: હજી.
 હજી (hajī) — "still, yet".
 
+The word, taken apart.
+The origin of હજી (hajī) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for right now, then the Gujarati for still.
 
 You'll want to know: તરત.
 તરત (tarat) — "immediately".
+
+The word, taken apart.
+The origin of તરત (tarat) is not fully settled. It matches Hindi turat, "quickly", which CDIAL lists under Sanskrit turant, "hastening" (CDIAL 5879), but CDIAL lists no Gujarati form there.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for still, then the Gujarati for immediatel
 You'll want to know: જાન્યુઆરી.
 જાન્યુઆરી (jānyuārī) — "January".
 
+The word, taken apart.
+જાન્યુઆરી (jānyuārī) is a loan from English January.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for immediately, then the Gujarati for Janu
 You'll want to know: ફેબ્રુઆરી.
 ફેબ્રુઆરી (phebruārī) — "February".
 
+The word, taken apart.
+ફેબ્રુઆરી (phebruārī) is a loan from English February.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for January, then the Gujarati for February
 
 You'll want to know: માર્ચ.
 માર્ચ (mārc) — "March".
+
+The word, taken apart.
+માર્ચ (mārc) is a loan from English March.
 
 What you've built.
 One more word for this chapter.

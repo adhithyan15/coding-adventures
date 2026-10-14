@@ -14,7 +14,8 @@ romanization: "pāyjāmo"
 concept_tag: GU-THINGS111-PAYJAMO
 prerequisites: [GU-C110-dhigli, GU-C111-kurto]
 sounds: []
-roots: []
+roots: [persian-payjama]
+etymology_hook: "pāyjāmo: usually traced to Persian pāy-jāma 'leg garment', pāy 'leg' + jāma 'garment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C111-kurto]
 <!-- hl-knowledge: introduces=[GU-LEX-C111-THINGS111-02]; assesses=[] -->
 
 **પાયજામો** (*pāyjāmo*) — "pyjamas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પાયજામો** (*pāyjāmo*) is a loan, usually traced to Persian *pāy-jāma*, "leg garment": *pāy*, "leg", and *jāma*, "garment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

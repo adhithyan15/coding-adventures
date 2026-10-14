@@ -14,7 +14,8 @@ romanization: "mākhī"
 concept_tag: GU-THINGS123-MAKHI
 prerequisites: [GU-C123-magar, GU-C123-macchar, GU-C44-pehli-vanchan]
 sounds: []
-roots: []
+roots: [sanskrit-makshika]
+etymology_hook: "mākhī ← Sanskrit makṣikā 'fly, bee', a tadbhava (CDIAL 9696)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [GU-C123-macchar]
 <!-- hl-knowledge: introduces=[GU-LEX-C123-THINGS123-04]; assesses=[] -->
 
 **માખી** (*mākhī*) — "a fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**માખી** (*mākhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *makṣikā*, "fly, bee" (CDIAL 9696).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

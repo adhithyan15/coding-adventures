@@ -15,6 +15,7 @@ concept_tag: GU-DEF101-TYA
 prerequisites: [GU-C101-etlu, GU-C101-ahi]
 sounds: []
 roots: []
+etymology_hook: "tyāṁ 'there': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C101-ahi]
 <!-- hl-knowledge: introduces=[GU-LEX-C101-DEF101-05]; assesses=[] -->
 
 **ત્યાં** (*tyā̃*) — "there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ત્યાં** (*tyāṁ*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

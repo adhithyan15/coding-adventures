@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 94,
-  "sourceHash": "fnv1a64:f01fa8f643fc63b4",
+  "sourceHash": "fnv1a64:a2e29d56745f5e91",
   "lessonIds": [
     "GU-C94-pankhar",
     "GU-C94-vahelu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch94.txt",
   "json": "gujarati/narration/ch94.json",
-  "textHash": "fnv1a64:e4eb873e0f030879",
-  "jsonHash": "fnv1a64:e61e35a0af226cca",
+  "textHash": "fnv1a64:cbcd0978ba0bcb19",
+  "jsonHash": "fnv1a64:4f3668011fbfe651",
   "findings": []
 }

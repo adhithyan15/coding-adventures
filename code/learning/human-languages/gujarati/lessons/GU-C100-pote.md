@@ -15,6 +15,7 @@ concept_tag: GU-DEF100-POTE
 prerequisites: [GU-C100-kaik, GU-C100-kasu]
 sounds: []
 roots: []
+etymology_hook: "pote 'oneself': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C100-kasu]
 <!-- hl-knowledge: introduces=[GU-LEX-C100-DEF100-03]; assesses=[] -->
 
 **પોતે** (*pote*) — "oneself".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **પોતે** (*pote*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

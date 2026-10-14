@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Who, Where, When, How Many",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1d23ca512480bbff",
+  "sourceHash": "fnv1a64:eee7e3954200d7d1",
   "lessons": [
     {
       "id": "GU-C37-kon",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e292a44b69e1b486",
+      "sourceHash": "fnv1a64:04e128c3a7714f1e",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,10 @@
             {
               "kind": "speech",
               "text": "This chapter is that family. Nothing in it is a new kind of thing; each lesson is one more question the same stem can ask."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists કોણ (koṇ) under Sanskrit kaḥ punar, \"who\", built from kaḥ, \"who\", and punar, \"again\" (CDIAL 2575)."
             }
           ]
         },
@@ -139,7 +143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:412eff4952c2e8d3",
+      "sourceHash": "fnv1a64:e5a35ba07d4df3dd",
       "notice": null,
       "blocks": [
         {
@@ -197,6 +201,10 @@
             {
               "kind": "speech",
               "text": "Those five words were written more than a hundred lessons ago and most of them have not been asked for since; reading them cold, here, is the point of putting them in this lesson rather than a shorter example."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL has no entry for ક્યાં (kyā̃) (kyāṁ), so beyond its question stem its history is not settled."
             }
           ]
         },
@@ -411,7 +419,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b0ac173435365c2",
+      "sourceHash": "fnv1a64:5ba0b178fd8b3784",
       "notice": null,
       "blocks": [
         {
@@ -460,6 +468,10 @@
             {
               "kind": "speech",
               "text": "That pairing runs through the whole language — ક- for asking, જ- for the clause that answers, ત- for the thing pointed at. જે … તે … was the same system seen from the other side."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL has no entry for ક્યારે (kyāre), so beyond its question stem its history is not settled."
             }
           ]
         },
@@ -535,7 +547,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a94014558479903d",
+      "sourceHash": "fnv1a64:6f0f431a9916500b",
       "notice": null,
       "blocks": [
         {
@@ -584,6 +596,10 @@
             {
               "kind": "speech",
               "text": "કોણ (koṇ) who, ક્યાં (kyā̃) where, ક્યારે (kyāre) when, કેટલા (keṭlā) how many."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Gujarati keṭlī and keṭlāk, \"how much\", under a reconstructed kiyatta, \"how great\" (CDIAL 3167)."
             }
           ]
         },

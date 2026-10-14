@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 130,
-  "sourceHash": "fnv1a64:4bb8cf8b955fd929",
+  "sourceHash": "fnv1a64:5bed65635d143783",
   "lessonIds": [
     "GU-C130-varg",
     "GU-C130-guru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch130.txt",
   "json": "gujarati/narration/ch130.json",
-  "textHash": "fnv1a64:499d56ce83ab2ae1",
-  "jsonHash": "fnv1a64:567a69801e2b44e2",
+  "textHash": "fnv1a64:c21ee09fde96d756",
+  "jsonHash": "fnv1a64:3c478fb51c2117c7",
   "findings": []
 }

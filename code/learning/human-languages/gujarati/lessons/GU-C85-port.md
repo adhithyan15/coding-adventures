@@ -14,7 +14,8 @@ romanization: "bandar"
 concept_tag: GU-TRAVEL-PORT
 prerequisites: [GU-C85-station, GU-C85-plane]
 sounds: []
-roots: []
+roots: [persian-bandar]
+etymology_hook: "bandar: usually traced to Persian bandar 'port, harbour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C85-plane]
 <!-- hl-knowledge: introduces=[GU-LEX-C85-TRAVEL-05]; assesses=[] -->
 
 **બંદર** (*bandar*) — "a port, a harbour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બંદર** (*bandar*) is a loan, usually traced to Persian *bandar*, "port, harbour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

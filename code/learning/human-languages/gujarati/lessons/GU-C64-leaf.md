@@ -14,7 +14,8 @@ romanization: "pān"
 concept_tag: GU-LAND-LEAF
 prerequisites: [GU-C63-address, GU-C64-flower]
 sounds: []
-roots: []
+roots: [sanskrit-parna]
+etymology_hook: "pān ← Sanskrit parṇa 'plumage, foliage; leaf', a tadbhava (CDIAL 7918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C64-flower]
 <!-- hl-knowledge: introduces=[GU-LEX-C64-LAND-02]; assesses=[] -->
 
 **પાન** (*pān*) — "a leaf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પાન** (*pān*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *parṇa*, "plumage, foliage; leaf" (CDIAL 7918).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

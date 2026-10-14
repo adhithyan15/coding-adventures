@@ -14,7 +14,8 @@ romanization: "śrāvaṇ"
 concept_tag: GU-TIME98-SRAVAN
 prerequisites: [GU-C98-vaisakh, GU-C98-jeth]
 sounds: []
-roots: []
+roots: [sanskrit-shravana]
+etymology_hook: "śrāvaṇ ← Sanskrit śrāvaṇa 'the twentieth or twenty-third asterism', a tatsama (CDIAL 12699)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C98-jeth]
 <!-- hl-knowledge: introduces=[GU-LEX-C98-TIME98-03]; assesses=[] -->
 
 **શ્રાવણ** (*śrāvaṇ*) — "Shravan, a Gujarati month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શ્રાવણ** (*śrāvaṇ*) is Sanskrit *śrāvaṇa*, "the twentieth or twenty-third asterism", taken over whole as a learned loan, a tatsama (CDIAL 12699). CDIAL lists the inherited Gujarati form as *sāvaṇ*, "the fourth month".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

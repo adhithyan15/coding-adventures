@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Hand and Money Join the Map",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:35bf5bac27da03ee",
+  "sourceHash": "fnv1a64:14c67b8bd07bef65",
   "lessons": [
     {
       "id": "GU-C21-hear-haath",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac852bcc17122bfa",
+      "sourceHash": "fnv1a64:9af2c13090787bea",
       "notice": null,
       "blocks": [
         {
@@ -35,6 +35,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હાથ (hāth) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hasta, \"hand\" (CDIAL 14024)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -45,7 +56,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -176,7 +187,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e7277ae2a87c413",
+      "sourceHash": "fnv1a64:e87d8c4df3895ff0",
       "notice": null,
       "blocks": [
         {
@@ -192,6 +203,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પૈસા (paisā) goes back to padāṁśa, \"quarter part\", a form CDIAL reconstructs from pada, \"quarter\", and aṁśa, \"share\" (CDIAL 7761). CDIAL thinks Gujarati probably took the word from Hindi paisā."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -202,7 +224,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -11,8 +11,8 @@ gloss: paper, heard and said before it is ever shown
 concept_tag: GU-PEOPLE-PAPER-HEARD
 prerequisites: [GU-C30-hear-pustak]
 sounds: [ka, long-aa, voiced-g, retroflex-lla]
-roots: []
-etymology_hook: Paper closes the chapter because a book is made of it, and because it ends on the curled-back ḷ that dāḷ also ends on.
+roots: [persian-kaghaz]
+etymology_hook: "kāgaḷ: usually traced to Persian kāghaz 'paper'"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C30-hear-pustak, GU-C27-hear-daal]
 
 [PAUSE 3s] Say the words for book and for person. Now listen twice: **kāgaḷ**. It means
 **paper** — what a *pustak* is made of, ending on the curled-back *ḷ* you also hear in *dāḷ*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કાગળ** (*kāgaḷ*) is a loan, usually traced to Persian *kāghaz*, "paper". Gujarati ends it in *ḷ*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-KAAGAL-01, GU-LEX-PUSTAK-01, GU-LEX-DAAL-01] -->

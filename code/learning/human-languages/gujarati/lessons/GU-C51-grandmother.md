@@ -14,7 +14,8 @@ romanization: "dādī"
 concept_tag: GU-FAMILY1-GRANDMOTHER
 prerequisites: [GU-C51-mother, GU-C51-grandfather]
 sounds: []
-roots: []
+roots: [indo-aryan-dadda]
+etymology_hook: "dādī ← *dādda 'father or other elderly relative', a reconstructed form; a tadbhava (CDIAL 6261)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C51-grandfather]
 <!-- hl-knowledge: introduces=[GU-LEX-C51-FAMILY1-04]; assesses=[] -->
 
 **દાદી** (*dādī*) — "grandmother (father's mother)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દાદી** (*dādī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dādda*, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261). CDIAL lists Gujarati *dādī* beside *dādo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

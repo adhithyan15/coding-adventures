@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for short, then the Gujarati for heavy.
 You'll want to know: હલકું.
 હલકું (halkũ) — "light (not heavy)". The opposite of ભારે.
 
+The word, taken apart.
+હલકું (halkũ) goes back to Sanskrit laghu, "light", with its first sounds swapped (CDIAL 10896). CDIAL marks this form as taken from Hindi; Gujarati's own descendants include haḷvũ, "light, soft".
+
 What you've built.
 One more word for light, new, old, hot, cheap.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for heavy, then the Gujarati for light.
 
 You'll want to know: નવું.
 નવું (navũ) — "new".
+
+The word, taken apart.
+નવું (navũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nava, "new, young" (CDIAL 6983).
 
 What you've built.
 One more word for light, new, old, hot, cheap.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for light, then the Gujarati for new.
 You'll want to know: જૂનું.
 જૂનું (jūnũ) — "old (of things)".
 
+The word, taken apart.
+જૂનું (jūnũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jūrṇa, "old, decayed" (CDIAL 5260).
+
 What you've built.
 One more word for light, new, old, hot, cheap.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for new, then the Gujarati for old.
 You'll want to know: ગરમ.
 ગરમ (garam) — "hot".
 
+The word, taken apart.
+ગરમ (garam) is a loan, usually traced to Persian garm, "warm, hot".
+
 What you've built.
 One more word for light, new, old, hot, cheap.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for old, then the Gujarati for hot.
 
 You'll want to know: સસ્તું.
 સસ્તું (sastũ) — "cheap".
+
+The word, taken apart.
+The origin of સસ્તું (sastũ) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 What you've built.
 One more word for light, new, old, hot, cheap.

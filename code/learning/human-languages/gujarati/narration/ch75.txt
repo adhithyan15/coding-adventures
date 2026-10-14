@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for up, then the Gujarati for down.
 You'll want to know: આગળ.
 આગળ (āgaḷ) — "ahead, in front".
 
+The word, taken apart.
+આગળ (āgaḷ) is a tadbhava. CDIAL lists it under Sanskrit agra, "top, front", among the forms built with an -l- suffix (CDIAL 68).
+
 What you've built.
 One more word for ahead, behind, in and out.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for down, then the Gujarati for ahead.
 
 You'll want to know: પાછળ.
 પાછળ (pāchaḷ) — "behind".
+
+The word, taken apart.
+પાછળ (pāchaḷ) is built on the stem of pāchũ, "back", which CDIAL lists under paśca, "hinder part" (CDIAL 7990). CDIAL does not list પાછળ (pāchaḷ) itself.
 
 What you've built.
 One more word for ahead, behind, in and out.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for ahead, then the Gujarati for behind.
 You'll want to know: અંદર.
 અંદર (andar) — "inside".
 
+The word, taken apart.
+અંદર (andar) is a loan, usually traced to Persian andar, "inside".
+
 What you've built.
 One more word for ahead, behind, in and out.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for behind, then the Gujarati for inside.
 You'll want to know: બહાર.
 બહાર (bahār) — "outside".
 
+The word, taken apart.
+બહાર (bahār) is a tadbhava, a word inherited and reshaped by sound change. It comes from bāhira, "external", a form CDIAL reconstructs from its descendants (CDIAL 9226). It is built on Sanskrit bahis, "outside".
+
 What you've built.
 One more word for ahead, behind, in and out.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for inside, then the Gujarati for outside.
 
 You'll want to know: વચ્ચે.
 વચ્ચે (vacce) — "between, in the middle".
+
+The word, taken apart.
+વચ્ચે (vacce) is a tadbhava, a word inherited and reshaped by sound change. It comes from vīcya, "middle", a form CDIAL reconstructs from its descendants (CDIAL 12042).
 
 What you've built.
 One more word for ahead, behind, in and out.

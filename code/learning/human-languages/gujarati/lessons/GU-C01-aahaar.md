@@ -14,7 +14,8 @@ gloss: "food, a meal"
 concept_tag: GU-ANCHOR-AAHAAR
 prerequisites: [GU-C01-namaste]
 sounds: []
-roots: []
+roots: [sanskrit-ahara]
+etymology_hook: "āhār ← Sanskrit āhāra 'taking food, food', inherited almost unchanged (CDIAL 1544)"
 duration:
   max_seconds: 120
 requires:
@@ -45,6 +46,11 @@ variety: standard
 Say it: *āhār*. Its whole Gujarati spelling waits until every piece of it is
 yours. For now, look at three of those pieces as you say it: **હ**, **ા** and
 **આ**. The lessons that follow write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Āhār* is inherited from Sanskrit *āhāra*, "taking food, food", and has come down with almost no change (CDIAL 1544).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-AAHAAR] -->

@@ -14,7 +14,8 @@ romanization: "vīs"
 concept_tag: GU-NUM2-TWENTY
 prerequisites: [GU-C82-seventeen, GU-C82-eighteen]
 sounds: []
-roots: []
+roots: [sanskrit-vimshati]
+etymology_hook: "vīs ← Sanskrit viṁśati 'twenty', a tadbhava (CDIAL 11616)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C82-eighteen]
 <!-- hl-knowledge: introduces=[GU-LEX-C82-NUM2-03]; assesses=[] -->
 
 **વીસ** (*vīs*) — "twenty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વીસ** (*vīs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *viṁśati*, "twenty" (CDIAL 11616).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

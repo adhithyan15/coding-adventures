@@ -12,7 +12,7 @@ concept_tag: GU-JOIN-KE
 prerequisites: [GU-C32-pan, GU-C31-nathi]
 sounds: []
 roots: []
-etymology_hook: "કે is the old relative stem k- doing a second job: the same k- that starts કેમ, કોણ and ક્યાં."
+etymology_hook: "ke 'that': origin not settled; CDIAL has no entry for it, and Hindi ki 'that' is usually traced to Persian ki"
 duration:
   max_seconds: 240
 requires:
@@ -54,9 +54,11 @@ thing a verb is about.
 English does the same with *that* — "I know **that** it is late" — and, like
 English, Gujarati often lets it drop in speech. Learn it in place first.
 
-**કે** is not a stranger. It is the old **k-** stem that also starts **કેમ**
+**કે** is not a stranger. It looks like the old **k-** stem that also starts **કેમ**
 (*why*) — the same handful of sounds does the asking and the reporting, and that
 stem has more work to do before this run of chapters is finished.
+
+Whether it really is that stem is not settled. CDIAL has no entry for **કે** (*ke*) in this sense, and the matching Hindi *ki*, "that", is usually traced to Persian *ki*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-JOIN-KE-01, GU-NEG-NATHI-01] -->

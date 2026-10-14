@@ -14,7 +14,8 @@ romanization: "śanivār"
 concept_tag: GU-WEEK2-SATURDAY
 prerequisites: [GU-C78-thursday, GU-C78-friday]
 sounds: []
-roots: []
+roots: [sanskrit-shani, sanskrit-vara-day]
+etymology_hook: "śanivār: Sanskrit śani 'Saturn' + vāra 'day of the week' (CDIAL 11547), a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C78-friday]
 <!-- hl-knowledge: introduces=[GU-LEX-C79-WEEK2-01]; assesses=[] -->
 
 **શનિવાર** (*śanivār*) — "Saturday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શનિવાર** (*śanivār*) is a Sanskrit compound, a tatsama: *śani*, "the planet Saturn", and *vāra*, "day of the week" (CDIAL 11547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

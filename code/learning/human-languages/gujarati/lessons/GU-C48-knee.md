@@ -14,7 +14,8 @@ romanization: "ghū̃ṭaṇ"
 concept_tag: GU-BODY3-KNEE
 prerequisites: [GU-C47-lip, GU-C47-tongue]
 sounds: []
-roots: []
+roots: [sanskrit-ghuta]
+etymology_hook: "ghūṁṭaṇ: listed under ghuṇṭa, a variant of Sanskrit ghuṭa 'ankle', which CDIAL takes from Dravidian (CDIAL 4479)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C47-tongue]
 <!-- hl-knowledge: introduces=[GU-LEX-C48-BODY3-01]; assesses=[] -->
 
 **ઘૂંટણ** (*ghū̃ṭaṇ*) — "a knee". Halfway down the **પગ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ઘૂંટણ** (*ghūṁṭaṇ*) is a tadbhava. CDIAL lists it under *ghuṇṭa*, a variant of the lexical Sanskrit *ghuṭa*, "ankle" (CDIAL 4479). It takes the word from Dravidian, after T. Burrow.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

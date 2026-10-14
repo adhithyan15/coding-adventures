@@ -14,7 +14,8 @@ romanization: "mātā"
 concept_tag: GU-FAMILY1-MOTHER
 prerequisites: [GU-C50-tiredness, GU-C51-father]
 sounds: []
-roots: []
+roots: [sanskrit-matr]
+etymology_hook: "mātā: Sanskrit mātā, the nominative of mātṛ 'mother', a tatsama; the inherited form is mā (CDIAL 10016)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C51-father]
 <!-- hl-knowledge: introduces=[GU-LEX-C51-FAMILY1-02]; assesses=[] -->
 
 **માતા** (*mātā*) — "mother".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**માતા** (*mātā*) is Sanskrit *mātā*, the nominative of *mātṛ*, "mother", taken over whole as a learned loan, a tatsama (CDIAL 10016). CDIAL lists the inherited Gujarati form as *mā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

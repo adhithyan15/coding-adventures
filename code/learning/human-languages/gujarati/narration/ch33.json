@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Sun, Sky, and River",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:dc1a2f8999e0677f",
+  "sourceHash": "fnv1a64:b0c88a3dd29f10a3",
   "lessons": [
     {
       "id": "GU-C29-hear-sooraj",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0e4adf18494e872",
+      "sourceHash": "fnv1a64:42f28cc0f24f7c44",
       "notice": null,
       "blocks": [
         {
@@ -41,6 +41,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સૂરજ (sūraj) is usually traced to Sanskrit sūrya, \"sun\". CDIAL's entry for the word lists no Gujarati form (CDIAL 13574)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -71,7 +82,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -128,7 +139,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85c38f200e195a07",
+      "sourceHash": "fnv1a64:abde11a1e4431c14",
       "notice": null,
       "blocks": [
         {
@@ -150,6 +161,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચંદ્ર (chandra) is Sanskrit candra, \"shining; moon\", taken over whole as a learned loan, a tatsama (CDIAL 4661). CDIAL lists the inherited form as Gujarati cāṁd."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -180,7 +202,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -236,7 +258,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7dc5ff263398f719",
+      "sourceHash": "fnv1a64:ce2104973369fd9c",
       "notice": null,
       "blocks": [
         {
@@ -258,6 +280,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આકાશ (ākāsh) is Sanskrit ākāśa, \"sky\", taken over whole as a learned loan, a tatsama (CDIAL 1008)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -288,7 +321,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -344,7 +377,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9be529d2c2074426",
+      "sourceHash": "fnv1a64:40c62a824b967d58",
       "notice": null,
       "blocks": [
         {
@@ -366,6 +399,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of વરસાદ (varsād) is not fully settled. CDIAL has no entry for it, so its ending is unexplained; its first part matches the Gujarati verb varasvũ, \"to rain\", which CDIAL lists under Sanskrit varṣati, \"it rains\" (CDIAL 11394)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -396,7 +440,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -452,7 +496,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:107f3e83a668bdb6",
+      "sourceHash": "fnv1a64:577f1e9536cf1121",
       "notice": null,
       "blocks": [
         {
@@ -474,6 +518,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નદી (nadī) is Sanskrit nadī, \"river\", taken over whole as a learned loan, a tatsama (CDIAL 6943)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -504,7 +559,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

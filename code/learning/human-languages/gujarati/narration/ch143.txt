@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for to save, then the Gujarati for to sow.
 You'll want to know: ભાગવું.
 ભાગવું (bhāgvũ) — "to run away".
 
+The word, taken apart.
+ભાગવું (bhāgvũ) is a tadbhava. CDIAL lists it under Sanskrit bhagna, "broken, defeated", beside bhajyate, "is broken" (CDIAL 9361). It reports that J. Bloch separated the words meaning "flee" from this root.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for to sow, then the Gujarati for to run aw
 
 You'll want to know: ફરવું.
 ફરવું (pharvũ) — "to go around".
+
+The word, taken apart.
+ફરવું (pharvũ) comes from phirati, "moves, wanders, turns", a form CDIAL reconstructs (CDIAL 9078). CDIAL also lists it under pharati, "moves, turns", but thinks phirati the likelier source (CDIAL 9050).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for to run away, then the Gujarati for to g
 You'll want to know: અટકવું.
 અટકવું (aṭakvũ) — "to stop".
 
+The word, taken apart.
+અટકવું (aṭakvũ) is a tadbhava, a word inherited and reshaped by sound change. It comes from aṭṭakk, "obstruct, stop", a form CDIAL reconstructs from its descendants (CDIAL 182).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for to go around, then the Gujarati for to 
 You'll want to know: માનવું.
 માનવું (mānvũ) — "to believe".
 
+The word, taken apart.
+માનવું (mānvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from manyate, "thinks, honours; agrees" (CDIAL 9857).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for to stop, then the Gujarati for to belie
 
 You'll want to know: બદલવું.
 બદલવું (badalvũ) — "to change".
+
+The word, taken apart.
+બદલવું (badalvũ) is a loan from Arabic badal, "a substitute, an exchange", which reached Gujarati through Persian. Its Arabic root is b-d-l (Lane).
 
 What you've built.
 One more word for this chapter.

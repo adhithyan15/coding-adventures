@@ -14,7 +14,8 @@ romanization: "ramvũ"
 concept_tag: GU-VERB-RAMVU
 prerequisites: [GU-C54-uthvu, GU-C54-suvu]
 sounds: []
-roots: []
+roots: [sanskrit-ramate]
+etymology_hook: "ramvũ ← Sanskrit ramate 'pauses, devotes oneself to; takes pleasure in', a tadbhava (CDIAL 10628)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C54-suvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C54-MOVE-05]; assesses=[] -->
 
 **રમવું** (*ramvũ*) — "to play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**રમવું** (*ramvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ramate*, "pauses, devotes oneself to; takes pleasure in" (CDIAL 10628).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

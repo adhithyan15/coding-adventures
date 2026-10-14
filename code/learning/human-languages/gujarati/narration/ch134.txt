@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for clever, then the Gujarati for lazy.
 You'll want to know: બહાદુર.
 બહાદુર (bahādur) — "brave".
 
+The word, taken apart.
+બહાદુર (bahādur) is a loan, usually traced through Persian bahādur to a Turkic or Mongol word for "hero".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for lazy, then the Gujarati for brave.
 
 You'll want to know: શાંત.
 શાંત (śānt) — "calm, quiet".
+
+The word, taken apart.
+શાંત (śānt) is Sanskrit śānta, "abated; calm", taken over whole as a learned loan, a tatsama (CDIAL 12390).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for brave, then the Gujarati for calm.
 You'll want to know: ખુશ.
 ખુશ (khuś) — "happy".
 
+The word, taken apart.
+ખુશ (khuś) is a loan, usually traced to Persian khush, "happy, pleasant".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for calm, then the Gujarati for happy.
 You'll want to know: ઉદાસ.
 ઉદાસ (udās) — "sad".
 
+The word, taken apart.
+ઉદાસ (udās) is usually traced to Sanskrit udāsa, "indifference". CDIAL, searched by form and by meaning, does not list the word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for happy, then the Gujarati for sad.
 
 You'll want to know: ભૂખ્યું.
 ભૂખ્યું (bhūkhyũ) — "hungry".
+
+The word, taken apart.
+ભૂખ્યું (bhūkhyũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bubhukṣita, "hungry" (CDIAL 9287).
 
 What you've built.
 One more word for this chapter.

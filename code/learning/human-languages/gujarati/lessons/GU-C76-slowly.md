@@ -14,7 +14,8 @@ romanization: "dhīme"
 concept_tag: GU-HOWMUCH-SLOWLY
 prerequisites: [GU-C76-alot, GU-C76-all]
 sounds: []
-roots: []
+roots: [indo-aryan-dhimma]
+etymology_hook: "dhīme: the -e form of dhīmũ 'slow' ← *dhīmma, a reconstructed form (CDIAL 6814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C76-all]
 <!-- hl-knowledge: introduces=[GU-LEX-C76-HOWMUCH-03]; assesses=[] -->
 
 **ધીમે** (*dhīme*) — "slowly". Ask for it when someone speaks fast.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ધીમે** (*dhīme*) is the adverb of *dhīmũ*, "slow", which CDIAL lists under a reconstructed *\*dhīmma*, "slow" (CDIAL 6814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

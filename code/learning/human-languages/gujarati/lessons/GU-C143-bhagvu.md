@@ -14,7 +14,8 @@ romanization: "bhāgvũ"
 concept_tag: GU-VERB-BHAGVU
 prerequisites: [GU-C142-bacavvu, GU-C142-vavvu]
 sounds: []
-roots: []
+roots: [sanskrit-bhajyate]
+etymology_hook: "bhāgvũ 'to flee' ← bhagna 'broken'; J. Bloch tied 'flee' to another root (CDIAL 9361)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C142-vavvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C143-ACT143-01]; assesses=[] -->
 
 **ભાગવું** (*bhāgvũ*) — "to run away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ભાગવું** (*bhāgvũ*) is a tadbhava. CDIAL lists it under Sanskrit *bhagna*, "broken, defeated", beside *bhajyate*, "is broken" (CDIAL 9361). It reports that J. Bloch separated the words meaning "flee" from this root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

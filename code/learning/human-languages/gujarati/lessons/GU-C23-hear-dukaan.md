@@ -11,8 +11,8 @@ gloss: shop, heard before it is shown as a reading target
 concept_tag: GU-PLACE-SHOP-HEARD
 prerequisites: [GU-C23-gaam]
 sounds: [voiced-d, short-u, long-aa]
-roots: []
-etymology_hook: A useful destination begins as a sound-and-meaning unit.
+roots: [arabic-dukkan]
+etymology_hook: "dukān ← Arabic dukkān 'shop', through Persian"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: []
 
 Listen twice: **dukān**. It means **shop**. Hear the short *u* before the long
 final *ā*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દુકાન** (*dukān*) is a loan from Arabic *dukkān*, "shop", which reached Gujarati through Persian. Its Arabic root is *d-k-n* (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-DUKAAN-01] -->

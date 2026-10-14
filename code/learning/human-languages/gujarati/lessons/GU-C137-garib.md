@@ -14,7 +14,8 @@ romanization: "garīb"
 concept_tag: GU-QUAL137-GARIB
 prerequisites: [GU-C136-khotu, GU-C136-amir]
 sounds: []
-roots: []
+roots: [arabic-gharib]
+etymology_hook: "garīb ← Arabic gharīb 'a stranger', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C136-amir]
 <!-- hl-knowledge: introduces=[GU-LEX-C137-QUAL137-01]; assesses=[] -->
 
 **ગરીબ** (*garīb*) — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગરીબ** (*garīb*) is a loan from Arabic *gharīb*, "a stranger", which reached Gujarati through Persian. Its Arabic root is *gh-r-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

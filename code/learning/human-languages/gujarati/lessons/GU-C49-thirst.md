@@ -14,7 +14,8 @@ romanization: "taras"
 concept_tag: GU-CARE-THIRST
 prerequisites: [GU-C49-rest, GU-C49-hunger]
 sounds: []
-roots: []
+roots: [sanskrit-trsha]
+etymology_hook: "taras ← Sanskrit tṛṣā 'thirst', a tadbhava (CDIAL 5936)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C49-hunger]
 <!-- hl-knowledge: introduces=[GU-LEX-C49-CARE-05]; assesses=[] -->
 
 **તરસ** (*taras*) — "thirst". **પાણી** answers it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તરસ** (*taras*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tṛṣā*, "thirst" (CDIAL 5936).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

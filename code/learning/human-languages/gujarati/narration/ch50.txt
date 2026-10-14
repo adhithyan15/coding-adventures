@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for hunger, then the Gujarati for thirst.
 You'll want to know: ખુશી.
 ખુશી (khuśī) — "happiness, joy".
 
+The word, taken apart.
+ખુશી (khuśī) is a loan, usually traced to Persian khushī, "happiness", built on khush, "happy, pleasant".
+
 What you've built.
 One more word for how it feels.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for thirst, then the Gujarati for happiness
 
 You'll want to know: ગુસ્સો.
 ગુસ્સો (gusso) — "anger".
+
+The word, taken apart.
+ગુસ્સો (gusso) is a loan from Arabic ghuṣṣa, "a choking; grief", which reached Gujarati through Persian. Its Arabic root is gh-ṣ-ṣ (Lane).
 
 What you've built.
 One more word for how it feels.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for happiness, then the Gujarati for anger.
 You'll want to know: બીક.
 બીક (bīk) — "fear".
 
+The word, taken apart.
+બીક (bīk) belongs with the verb bīvũ, "to fear", which CDIAL lists under Sanskrit bibheti, "fears" (CDIAL 9241). CDIAL does not list the noun itself.
+
 What you've built.
 One more word for how it feels.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for anger, then the Gujarati for fear.
 You'll want to know: ચિંતા.
 ચિંતા (cintā) — "worry".
 
+The word, taken apart.
+ચિંતા (cintā) is Sanskrit cintā, "thought, care", taken over whole as a learned loan, a tatsama (CDIAL 4816).
+
 What you've built.
 One more word for how it feels.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for fear, then the Gujarati for worry.
 
 You'll want to know: થાક.
 થાક (thāk) — "tiredness". What a long day leaves.
+
+The word, taken apart.
+થાક (thāk) belongs with thākvũ, "to become weary", which CDIAL lists under a reconstructed sthakk, "stop, halt" (CDIAL 13737). CDIAL thinks a link with sthā, "to stand", probable but not clear.
 
 What you've built.
 One more word for how it feels.

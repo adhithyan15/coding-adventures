@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Village and Shop Complete Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cb23294b459ed9d1",
+  "sourceHash": "fnv1a64:8ccdaedaa554b97c",
   "lessons": [
     {
       "id": "GU-C23-hear-gaam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b341774cd255a45",
+      "sourceHash": "fnv1a64:8f1efaa8ad225da8",
       "notice": null,
       "blocks": [
         {
@@ -35,6 +35,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગામ (gām) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from grāma, \"troop, village\" (CDIAL 4368)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -45,7 +56,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -350,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:673d727f05919e1b",
+      "sourceHash": "fnv1a64:ef30b8ad8b5d4470",
       "notice": null,
       "blocks": [
         {
@@ -366,6 +377,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દુકાન (dukān) is a loan from Arabic dukkān, \"shop\", which reached Gujarati through Persian. Its Arabic root is d-k-n (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -376,7 +398,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

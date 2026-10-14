@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 129,
-  "sourceHash": "fnv1a64:06e0316010fb70f5",
+  "sourceHash": "fnv1a64:7836e5cefa53acbb",
   "lessonIds": [
     "GU-C129-gali",
     "GU-C129-bag",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch129.txt",
   "json": "gujarati/narration/ch129.json",
-  "textHash": "fnv1a64:9904c0be22937e44",
-  "jsonHash": "fnv1a64:2b33fbdac6f097cd",
+  "textHash": "fnv1a64:11cccaee2419ebed",
+  "jsonHash": "fnv1a64:73c32fea86380b92",
   "findings": []
 }

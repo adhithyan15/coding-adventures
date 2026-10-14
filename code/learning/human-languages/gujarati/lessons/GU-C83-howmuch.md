@@ -14,7 +14,8 @@ romanization: "keṭlũ"
 concept_tag: GU-NUM3-HOWMUCH
 prerequisites: [GU-C83-hundred, GU-C83-thousand]
 sounds: []
-roots: []
+roots: [indo-aryan-kiyatta]
+etymology_hook: "keṭlũ ← *kiyatta 'how great?', a reconstructed form CDIAL lists with Gujarati keṭlī (CDIAL 3167)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C83-thousand]
 <!-- hl-knowledge: introduces=[GU-LEX-C83-NUM3-04]; assesses=[] -->
 
 **કેટલું** (*keṭlũ*) — "how much". The single form of **કેટલા**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કેટલું** (*keṭlũ*) is a tadbhava. CDIAL lists Gujarati *keṭlī* and *keṭlāk*, "how much", under a reconstructed *\*kiyatta*, "how great" (CDIAL 3167).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

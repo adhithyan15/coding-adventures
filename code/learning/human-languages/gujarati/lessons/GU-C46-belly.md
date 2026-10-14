@@ -14,7 +14,8 @@ romanization: "peṭ"
 concept_tag: GU-BODY1-BELLY
 prerequisites: [GU-C46-head, GU-C46-leg]
 sounds: []
-roots: []
+roots: [indo-aryan-petta]
+etymology_hook: "peṭ ← *peṭṭa 'belly', a reconstructed form; a tadbhava (CDIAL 8376)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C46-leg]
 <!-- hl-knowledge: introduces=[GU-LEX-C46-BODY1-03]; assesses=[] -->
 
 **પેટ** (*peṭ*) — "the belly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પેટ** (*peṭ*) is a tadbhava. It comes from *\*peṭṭa*, "belly", a form CDIAL reconstructs from its descendants (CDIAL 8376). CDIAL notes that the words for "basket" show the same range of forms and may be the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

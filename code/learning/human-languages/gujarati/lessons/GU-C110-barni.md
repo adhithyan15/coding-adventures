@@ -15,6 +15,7 @@ concept_tag: GU-THINGS110-BARNI
 prerequisites: [GU-C109-topli, GU-C110-peti]
 sounds: []
 roots: []
+etymology_hook: "barṇī 'jar': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C110-peti]
 <!-- hl-knowledge: introduces=[GU-LEX-C110-THINGS110-02]; assesses=[] -->
 
 **બરણી** (*barṇī*) — "a jar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **બરણી** (*barṇī*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

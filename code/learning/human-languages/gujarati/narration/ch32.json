@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Inside the House",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:770ac12c4bbb9523",
+  "sourceHash": "fnv1a64:062818e5a6cef3bd",
   "lessons": [
     {
       "id": "GU-C28-hear-baarnun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:262695e945d85d1a",
+      "sourceHash": "fnv1a64:2c7edaf06f75049a",
       "notice": null,
       "blocks": [
         {
@@ -41,6 +41,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બારણું (bārṇũ) is a tadbhava. CDIAL lists it, beside Gujarati bār, \"door\", under Sanskrit dvāra, \"door\" (CDIAL 6663)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -71,7 +82,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -127,7 +138,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f444909ab0fd662",
+      "sourceHash": "fnv1a64:0487b6aa5f68094e",
       "notice": null,
       "blocks": [
         {
@@ -149,6 +160,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બારી (bārī) is a tadbhava. CDIAL lists it under Sanskrit dvāra, \"door\", which also had a feminine dvārī (CDIAL 6663): a window is a small door."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -179,7 +201,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -234,7 +256,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f61a04946f7f8d4e",
+      "sourceHash": "fnv1a64:d6454b1c406f61a0",
       "notice": null,
       "blocks": [
         {
@@ -256,6 +278,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખુરશી (khurshī) is a loan from Arabic kursī, \"chair, throne\", which reached Gujarati through Persian. Its Arabic root is k-r-s (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -286,7 +319,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -342,7 +375,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:948c47b73d73ffb8",
+      "sourceHash": "fnv1a64:b9f6e4789e173ea6",
       "notice": null,
       "blocks": [
         {
@@ -364,6 +397,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચાવી (chāvī) is a loan, usually traced to Portuguese chave, \"key\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -394,7 +438,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -450,7 +494,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c06f165b89bb6bb9",
+      "sourceHash": "fnv1a64:86fb1e4e2058ba6f",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +516,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દીવો (dīvo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dīpa, \"lamp\" (CDIAL 6348)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -502,7 +557,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

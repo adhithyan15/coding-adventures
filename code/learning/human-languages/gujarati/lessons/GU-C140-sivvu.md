@@ -14,7 +14,8 @@ romanization: "sīvvũ"
 concept_tag: GU-VERB-SIVVU
 prerequisites: [GU-C139-banavvu, GU-C140-kapvu]
 sounds: []
-roots: []
+roots: [sanskrit-sivyati]
+etymology_hook: "sīvvũ ← Sanskrit sīvyati 'sews', or its form sīvayati (CDIAL 13444)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C140-kapvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C140-ACT140-02]; assesses=[] -->
 
 **સીવવું** (*sīvvũ*) — "to sew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સીવવું** (*sīvvũ*) is a tadbhava. CDIAL lists it under Sanskrit *sīvyati*, "sews", noting that it may come instead from the form *sīvayati* (CDIAL 13444).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

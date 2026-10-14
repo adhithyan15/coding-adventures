@@ -12,6 +12,7 @@ concept_tag: WORD-WELL
 prerequisites: [GU-C03-hun, GU-C03-tame-kem-chho, GU-W02-vocalic-r]
 sounds: [ja, long-aa]
 roots: [maza-persian]
+etymology_hook: "majā: usually traced to Persian maza 'taste, relish'"
 duration:
   max_seconds: 240
 requires:

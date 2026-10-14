@@ -14,7 +14,8 @@ romanization: "galī"
 concept_tag: GU-THINGS129-GALI
 prerequisites: [GU-C128-pustakalay, GU-C128-cok]
 sounds: []
-roots: []
+roots: [indo-aryan-gali]
+etymology_hook: "galī: as Hindi galī 'lane' ← *galī 'defile, lane', reconstructed (CDIAL 4085)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C128-cok]
 <!-- hl-knowledge: introduces=[GU-LEX-C129-THINGS129-01]; assesses=[] -->
 
 **ગલી** (*galī*) — "a lane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગલી** (*galī*) matches Hindi *galī*, "lane", which CDIAL lists under a reconstructed *\*galī*, "defile, lane" (CDIAL 4085). The Gujarati word CDIAL lists there is *gālī*, "valley".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

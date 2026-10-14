@@ -14,7 +14,8 @@ romanization: "āḷsu"
 concept_tag: GU-QUAL133-ALSU
 prerequisites: [GU-C133-agharu, GU-C133-hosiyar]
 sounds: []
-roots: []
+roots: [sanskrit-alasa]
+etymology_hook: "āḷsu ← Sanskrit alasa 'inactive', with the suffix -uka (CDIAL 708)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C133-hosiyar]
 <!-- hl-knowledge: introduces=[GU-LEX-C133-QUAL133-05]; assesses=[] -->
 
 **આળસુ** (*āḷsu*) — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**આળસુ** (*āḷsu*) is a tadbhava. CDIAL lists it under Sanskrit *alasa*, "inactive", among forms built with an *-uka* suffix (CDIAL 708).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

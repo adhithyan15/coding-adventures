@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 106,
-  "sourceHash": "fnv1a64:cd5e3009b22c97bf",
+  "sourceHash": "fnv1a64:b9532b2527156dfe",
   "lessonIds": [
     "GU-C106-kabat",
     "GU-C106-ariso",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch106.txt",
   "json": "gujarati/narration/ch106.json",
-  "textHash": "fnv1a64:2bc9b4f7bb514845",
-  "jsonHash": "fnv1a64:dd1d96ee0efc2018",
+  "textHash": "fnv1a64:c3b608a4809eb64b",
+  "jsonHash": "fnv1a64:e06e39de21acae32",
   "findings": []
 }

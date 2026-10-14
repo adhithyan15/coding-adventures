@@ -14,7 +14,8 @@ romanization: "āso"
 concept_tag: GU-TIME98-ASO
 prerequisites: [GU-C98-sravan, GU-C98-bhadarvo]
 sounds: []
-roots: []
+roots: [sanskrit-ashvayuja]
+etymology_hook: "āso ← Sanskrit aśvayuja 'the month Āśvina, September-October', a tadbhava (CDIAL 925)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C98-bhadarvo]
 <!-- hl-knowledge: introduces=[GU-LEX-C98-TIME98-05]; assesses=[] -->
 
 **આસો** (*āso*) — "Aso, the month of Diwali".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**આસો** (*āso*) is a tadbhava of Sanskrit *aśvayuja*, "the month Āśvina, September-October" (CDIAL 925). CDIAL compares *aśvayuj*, "harnessing horses", also the name of a constellation.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for outside, then the Gujarati for between.
 You'll want to know: ઘણું.
 ઘણું (ghaṇũ) — "a lot, much".
 
+The word, taken apart.
+ઘણું (ghaṇũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghana, "compact, firm, dense" (CDIAL 4424).
+
 What you've built.
 One more word for a lot, all, slowly, quickly, again.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for between, then the Gujarati for a lot.
 
 You'll want to know: બધું.
 બધું (badhũ) — "all, everything".
+
+The word, taken apart.
+બધું (badhũ) matches Gujarati bādhũ, "whole, entire", which CDIAL lists under Sanskrit baddha, "bound" (CDIAL 9126).
 
 What you've built.
 One more word for a lot, all, slowly, quickly, again.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a lot, then the Gujarati for all.
 You'll want to know: ધીમે.
 ધીમે (dhīme) — "slowly". Ask for it when someone speaks fast.
 
+The word, taken apart.
+ધીમે (dhīme) is the adverb of dhīmũ, "slow", which CDIAL lists under a reconstructed dhīmma, "slow" (CDIAL 6814).
+
 What you've built.
 One more word for a lot, all, slowly, quickly, again.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for all, then the Gujarati for slowly.
 You'll want to know: જલદી.
 જલદી (jaldī) — "quickly, soon".
 
+The word, taken apart.
+જલદી (jaldī) is a loan built on Persian jald, "quick", itself of Arabic origin, with the ending -ī.
+
 What you've built.
 One more word for a lot, all, slowly, quickly, again.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for slowly, then the Gujarati for quickly.
 
 You'll want to know: ફરી.
 ફરી (pharī) — "again".
+
+The word, taken apart.
+ફરી (pharī) comes from phirati, "moves, turns", a form CDIAL reconstructs (CDIAL 9078). It is the old absolutive, "having turned", used as an adverb.
 
 What you've built.
 One more word for a lot, all, slowly, quickly, again.

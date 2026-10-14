@@ -14,7 +14,8 @@ romanization: "māmī"
 concept_tag: GU-FAMILY2-MAMI
 prerequisites: [GU-C52-kaki, GU-C52-mama]
 sounds: []
-roots: []
+roots: [sanskrit-mama]
+etymology_hook: "māmī: the feminine of māmā ← Sanskrit māma 'uncle', a nursery word (CDIAL 10055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C52-mama]
 <!-- hl-knowledge: introduces=[GU-LEX-C52-FAMILY2-04]; assesses=[] -->
 
 **મામી** (*māmī*) — "aunt (mother's brother's wife)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મામી** (*māmī*) is the feminine of *māmā*. CDIAL lists both under Sanskrit *māma*, "uncle", a nursery word with similar words in Dravidian (CDIAL 10055).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

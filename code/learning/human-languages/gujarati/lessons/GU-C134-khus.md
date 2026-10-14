@@ -14,7 +14,8 @@ romanization: "khuś"
 concept_tag: GU-QUAL134-KHUS
 prerequisites: [GU-C134-bahadur, GU-C134-sant]
 sounds: []
-roots: []
+roots: [khush-persian]
+etymology_hook: "khuś: usually traced to Persian khush 'happy, pleasant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C134-sant]
 <!-- hl-knowledge: introduces=[GU-LEX-C134-QUAL134-03]; assesses=[] -->
 
 **ખુશ** (*khuś*) — "happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખુશ** (*khuś*) is a loan, usually traced to Persian *khush*, "happy, pleasant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

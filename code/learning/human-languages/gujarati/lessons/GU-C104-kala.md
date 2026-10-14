@@ -14,7 +14,8 @@ romanization: "kaḷā"
 concept_tag: GU-CAN104-KALA
 prerequisites: [GU-C104-adat, GU-C104-layakat]
 sounds: []
-roots: []
+roots: [sanskrit-kala-art]
+etymology_hook: "kaḷā: Sanskrit kalā 'any practical art', which CDIAL takes from Dravidian (CDIAL 2927)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C104-layakat]
 <!-- hl-knowledge: introduces=[GU-LEX-C104-CAN104-05]; assesses=[] -->
 
 **કળા** (*kaḷā*) — "an art".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કળા** (*kaḷā*) is Sanskrit *kalā*, "any practical art", lightly reshaped with Gujarati *ḷ* (CDIAL 2927). CDIAL takes the Sanskrit word from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kāḷo"
 concept_tag: GU-COLOUR1-BLACK
 prerequisites: [GU-C70-green, GU-C70-blue]
 sounds: []
-roots: []
+roots: [sanskrit-kala]
+etymology_hook: "kāḷo ← Sanskrit kāla 'black, dark-blue'; CDIAL reports a view that it came from Dravidian (CDIAL 3083)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C70-blue]
 <!-- hl-knowledge: introduces=[GU-LEX-C70-COLOUR1-05]; assesses=[] -->
 
 **કાળો** (*kāḷo*) — "black".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કાળો** (*kāḷo*) is a tadbhava of Sanskrit *kāla*, "black, dark-blue" (CDIAL 3083). CDIAL reports a view that the Sanskrit word itself came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 124,
-  "sourceHash": "fnv1a64:d171ce9958f5f3a2",
+  "sourceHash": "fnv1a64:4f0673106c8a4585",
   "lessonIds": [
     "GU-C124-patangiyu",
     "GU-C124-khiskoli",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch124.txt",
   "json": "gujarati/narration/ch124.json",
-  "textHash": "fnv1a64:2ad0967dfe72d341",
-  "jsonHash": "fnv1a64:03b571f2b3e7700f",
+  "textHash": "fnv1a64:ee07574697300e26",
+  "jsonHash": "fnv1a64:b4681ecc7fd13f52",
   "findings": []
 }

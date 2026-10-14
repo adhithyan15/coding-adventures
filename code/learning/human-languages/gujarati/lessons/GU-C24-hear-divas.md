@@ -11,8 +11,8 @@ gloss: day, the whole span the four parts divide
 concept_tag: GU-TIME-DAY-HEARD
 prerequisites: [GU-C24-raat]
 sounds: [voiced-d, short-i, sa]
-roots: []
-etymology_hook: One word names the whole span that the four parts divide, so it arrives after them rather than before.
+roots: [sanskrit-divasa]
+etymology_hook: "divas ← Sanskrit divasa 'day', almost unchanged; CDIAL lists it beside the more worn dīs (CDIAL 6333)"
 duration:
   max_seconds: 120
 requires:
@@ -40,6 +40,11 @@ reviews_of: [GU-C24-hear-raat, GU-C24-raat]
 [PAUSE 3s] Say the word for **night**, and recall the three signs that wrote it.
 Now listen twice: **divas**. It means **day** — the whole span that *savār*,
 *bapor*, *sānj*, and *rāt* divide between them.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દિવસ** (*divas*) is inherited from Sanskrit *divasa*, "day", and has come down with almost no change. CDIAL lists it beside the more worn Gujarati *dīs* (CDIAL 6333).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-DIVAS-01, GU-LEX-SAVAAR-01] -->

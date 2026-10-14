@@ -14,7 +14,8 @@ romanization: "śiyāḷo"
 concept_tag: GU-TIME93-SIYALO
 prerequisites: [GU-C93-mosam, GU-C93-unalo]
 sounds: []
-roots: []
+roots: [sanskrit-shitakala]
+etymology_hook: "śiyāḷo ← Sanskrit śītakāla 'cold season', a tadbhava (CDIAL 12486)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C93-unalo]
 <!-- hl-knowledge: introduces=[GU-LEX-C93-TIME93-03]; assesses=[] -->
 
 **શિયાળો** (*śiyāḷo*) — "winter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શિયાળો** (*śiyāḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śītakāla*, "cold season" (CDIAL 12486). It is *śīta*, "cold", and *kāla*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

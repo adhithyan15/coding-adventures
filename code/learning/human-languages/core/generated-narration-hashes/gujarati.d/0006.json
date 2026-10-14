@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 6,
-  "sourceHash": "fnv1a64:f602c76f1a3a7d86",
+  "sourceHash": "fnv1a64:035d86f9ebbb1006",
   "lessonIds": [
     "GU-C06-ukhaanun",
     "GU-C06-eklun",
@@ -15,7 +15,7 @@
   "drivablePrefix": 2,
   "text": "gujarati/narration/ch06.txt",
   "json": "gujarati/narration/ch06.json",
-  "textHash": "fnv1a64:6f713f0d1d6d0f41",
-  "jsonHash": "fnv1a64:2976c234195c78a7",
+  "textHash": "fnv1a64:e1c16ee52760157b",
+  "jsonHash": "fnv1a64:c19f2c585448d435",
   "findings": []
 }

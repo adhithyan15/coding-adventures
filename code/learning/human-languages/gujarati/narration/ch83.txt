@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for thirty, then the Gujarati for forty.
 You'll want to know: પચાસ.
 પચાસ (pacās) — "fifty".
 
+The word, taken apart.
+પચાસ (pacās) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pañcāśat, "fifty" (CDIAL 7682).
+
 What you've built.
 One more word for fifty to a thousand, and how much.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for forty, then the Gujarati for fifty.
 
 You'll want to know: સો.
 સો (so) — "a hundred".
+
+The word, taken apart.
+સો (so) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śata, "hundred" (CDIAL 12278).
 
 What you've built.
 One more word for fifty to a thousand, and how much.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for fifty, then the Gujarati for a hundred.
 You'll want to know: હજાર.
 હજાર (hajār) — "a thousand".
 
+The word, taken apart.
+હજાર (hajār) is a loan, usually traced to Persian hazār, "thousand". Gujarati writes the z as j.
+
 What you've built.
 One more word for fifty to a thousand, and how much.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a hundred, then the Gujarati for a thou
 You'll want to know: કેટલું.
 કેટલું (keṭlũ) — "how much". The single form of કેટલા.
 
+The word, taken apart.
+કેટલું (keṭlũ) is a tadbhava. CDIAL lists Gujarati keṭlī and keṭlāk, "how much", under a reconstructed kiyatta, "how great" (CDIAL 3167).
+
 What you've built.
 One more word for fifty to a thousand, and how much.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a thousand, then the Gujarati for how m
 
 You'll want to know: કયું.
 કયું (kayũ) — "which one".
+
+The word, taken apart.
+કયું (kayũ) rests on the old question stem k-. CDIAL has no entry for it, so the rest of its history is not settled.
 
 What you've built.
 One more word for fifty to a thousand, and how much.

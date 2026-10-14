@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 104,
-  "sourceHash": "fnv1a64:4cdbd9afd8365474",
+  "sourceHash": "fnv1a64:61b0ed370f2868c0",
   "lessonIds": [
     "GU-C104-anubhav",
     "GU-C104-tev",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch104.txt",
   "json": "gujarati/narration/ch104.json",
-  "textHash": "fnv1a64:048059b319cf681d",
-  "jsonHash": "fnv1a64:ed57ee6ddbd57498",
+  "textHash": "fnv1a64:9496fa157d4db5bc",
+  "jsonHash": "fnv1a64:41b1fbc2ea1eac3b",
   "findings": []
 }

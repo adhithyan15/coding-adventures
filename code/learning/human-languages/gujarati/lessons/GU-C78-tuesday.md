@@ -14,7 +14,8 @@ romanization: "maṅgaḷvār"
 concept_tag: GU-WEEK1-TUESDAY
 prerequisites: [GU-C77-before, GU-C78-monday]
 sounds: []
-roots: []
+roots: [sanskrit-mangala, sanskrit-vara-day]
+etymology_hook: "maṅgaḷvār: Sanskrit maṅgala 'the planet Mars' + vāra 'day of the week' (CDIAL 11547), with Gujarati ḷ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C78-monday]
 <!-- hl-knowledge: introduces=[GU-LEX-C78-WEEK1-02]; assesses=[] -->
 
 **મંગળવાર** (*maṅgaḷvār*) — "Tuesday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મંગળવાર** (*maṅgaḷvār*) is a Sanskrit compound: *maṅgala*, "the planet Mars", and *vāra*, "day of the week" (CDIAL 9706, 11547). Gujarati says the *l* as *ḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

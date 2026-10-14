@@ -275,6 +275,9 @@ edge: the exceptions. what it says: એક, બે, ત્રણ, ચાર, છ
 edge: the top edge. what it says: છ (chha) is the last name on it. From સાત (sāt) up, -મું every time.
 છ (chha) is the interesting edge, because it sits inside the count: the rule works at five, stops at six, starts again at seven. Wiktionary gives the sixth as છઠ્ઠું, on a doubled ઠ (ṭha). This book does not ask you to use that word — only to see that the exception is real, and is not the number with -મું behind it.
 
+The word, taken apart.
+All four are inherited Sanskrit ordinals: saptama, aṣṭama, navama, daśama (CDIAL 13151, 937, 7006, 6233).
+
 What you've built: four ordinals nobody taught you.
 [a table of 4 rows, read aloud]
 number: સાત (sāt). ordinal: સાતમું.

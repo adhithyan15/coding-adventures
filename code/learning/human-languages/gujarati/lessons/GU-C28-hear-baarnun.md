@@ -11,8 +11,8 @@ gloss: door, heard and said before it is ever shown
 concept_tag: GU-HOUSE-DOOR-HEARD
 prerequisites: [GU-R27-plate-five-r1]
 sounds: [voiced-b, long-aa, retroflex-na, u-nasal]
-roots: []
-etymology_hook: The house is entered through its door, and the door carries the neuter ending you have heard on every verb name.
+roots: [sanskrit-dvara]
+etymology_hook: "bārṇũ: listed by CDIAL, with bārī 'window', under Sanskrit dvāra 'door' (CDIAL 6663)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C20-hear-ghar, GU-C12-modhu]
 
 [PAUSE 3s] Say the Gujarati word for home, from the first three-place map. Now listen twice: **bārṇũ**. It means
 **door** — the one you open to come in, and listen to that ending: the nasalized *-ũ* that marks a neuter word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બારણું** (*bārṇũ*) is a tadbhava. CDIAL lists it, beside Gujarati *bār*, "door", under Sanskrit *dvāra*, "door" (CDIAL 6663).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-BAARNUN-01, GU-LEX-GHAR-01, GU-GRAMMAR-NEUTER-U-NASAL-TELL] -->

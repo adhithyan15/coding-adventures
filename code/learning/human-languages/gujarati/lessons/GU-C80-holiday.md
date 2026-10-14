@@ -14,7 +14,8 @@ romanization: "rajā"
 concept_tag: GU-TIME-HOLIDAY
 prerequisites: [GU-C80-hour, GU-C80-minute]
 sounds: []
-roots: []
+roots: [arabic-rida]
+etymology_hook: "rajā: usually traced, through Persian razā 'consent, leave', to Arabic riḍā 'contentment' (Lane, root r-ḍ-w)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C80-minute]
 <!-- hl-knowledge: introduces=[GU-LEX-C80-TIME-03]; assesses=[] -->
 
 **રજા** (*rajā*) — "a holiday, leave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**રજા** (*rajā*) is a loan, usually traced through Persian *razā*, "consent, leave", to Arabic *riḍā*, "contentment, approval". Its Arabic root is *r-ḍ-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

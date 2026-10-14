@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 109,
-  "sourceHash": "fnv1a64:6a22d4daefee91e4",
+  "sourceHash": "fnv1a64:ce1a10a5e936b30e",
   "lessonIds": [
     "GU-C109-batan",
     "GU-C109-baldi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "gujarati/narration/ch109.txt",
   "json": "gujarati/narration/ch109.json",
-  "textHash": "fnv1a64:da12a98ed0473623",
-  "jsonHash": "fnv1a64:3bd2e6adb36d094b",
+  "textHash": "fnv1a64:7bd3015afdceaa92",
+  "jsonHash": "fnv1a64:d9a895fa04d869b9",
   "findings": []
 }

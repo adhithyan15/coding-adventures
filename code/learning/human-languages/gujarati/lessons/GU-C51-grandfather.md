@@ -14,7 +14,8 @@ romanization: "dādā"
 concept_tag: GU-FAMILY1-GRANDFATHER
 prerequisites: [GU-C51-father, GU-C51-mother]
 sounds: []
-roots: []
+roots: [indo-aryan-dadda]
+etymology_hook: "dādā ← *dādda 'father or other elderly relative', a reconstructed form; a tadbhava (CDIAL 6261)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C51-mother]
 <!-- hl-knowledge: introduces=[GU-LEX-C51-FAMILY1-03]; assesses=[] -->
 
 **દાદા** (*dādā*) — "grandfather (father's father)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દાદા** (*dādā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dādda*, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

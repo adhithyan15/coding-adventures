@@ -15,6 +15,7 @@ concept_tag: GU-VERB-MOKALVU
 prerequisites: [GU-C138-kholvu, GU-C138-bolavvu]
 sounds: []
 roots: []
+etymology_hook: "mokalvũ 'to send': origin not settled; CDIAL has no entry for the verb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C138-bolavvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C139-ACT139-01]; assesses=[] -->
 
 **મોકલવું** (*mokalvũ*) — "to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **મોકલવું** (*mokalvũ*) is not settled; CDIAL has no entry for the verb. It may belong with *mokḷũ*, "loose, free", which CDIAL lists under a reconstructed *\*mukna*, "loosed" (CDIAL 10157).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

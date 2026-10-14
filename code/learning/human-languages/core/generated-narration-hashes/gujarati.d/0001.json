@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 1,
-  "sourceHash": "fnv1a64:eeaca3b115c06687",
+  "sourceHash": "fnv1a64:34284eaf735e95d9",
   "lessonIds": [
     "GU-C01-namaste",
     "GU-C01-aahaar",
@@ -20,7 +20,7 @@
   "drivablePrefix": 1,
   "text": "gujarati/narration/ch01.txt",
   "json": "gujarati/narration/ch01.json",
-  "textHash": "fnv1a64:b93bbe50437a8e7b",
-  "jsonHash": "fnv1a64:05e4a033025c988a",
+  "textHash": "fnv1a64:252aca71da5b9e38",
+  "jsonHash": "fnv1a64:079a3aaf645e376c",
   "findings": []
 }

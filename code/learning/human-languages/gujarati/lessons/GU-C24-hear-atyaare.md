@@ -12,7 +12,7 @@ concept_tag: GU-TIME-NOW-HEARD
 prerequisites: [GU-C24-aaj]
 sounds: [short-a, consonant-cluster, long-aa, e-sign]
 roots: []
-etymology_hook: The eighth word narrows from a whole day to a single moment, and it is the longest of the eight to say aloud.
+etymology_hook: "atyāre 'now': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 150
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C24-hear-aaj, GU-C24-aaj]
 
 [PAUSE 3s] Say **today**, name the two signs that write it, then say **month**.
 Now listen twice: **atyāre**. It means **now**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **અત્યારે** (*atyāre*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ATYAARE-01, GU-LEX-AAJ-01, GU-LEX-MAHINO-01] -->

@@ -14,7 +14,8 @@ romanization: "bhūkhyũ"
 concept_tag: GU-QUAL134-BHUKHYU
 prerequisites: [GU-C134-khus, GU-C134-udas]
 sounds: []
-roots: []
+roots: [sanskrit-bubhukshita]
+etymology_hook: "bhūkhyũ ← Sanskrit bubhukṣita 'hungry', a tadbhava (CDIAL 9287)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C134-udas]
 <!-- hl-knowledge: introduces=[GU-LEX-C134-QUAL134-05]; assesses=[] -->
 
 **ભૂખ્યું** (*bhūkhyũ*) — "hungry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ભૂખ્યું** (*bhūkhyũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bubhukṣita*, "hungry" (CDIAL 9287).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

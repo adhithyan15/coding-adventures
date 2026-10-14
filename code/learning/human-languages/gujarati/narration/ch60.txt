@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for potatoes, then the Gujarati for a tomat
 You'll want to know: મરચું.
 મરચું (marcũ) — "a chilli".
 
+The word, taken apart.
+મરચું (marcũ) is a tadbhava. CDIAL lists it under maricca, a variant of Sanskrit marīca, "peppercorn", and reports that the Sanskrit word came from Austroasiatic (CDIAL 9875). The name moved from black pepper to the chilli.
+
 What you've built.
 One more word for salt, chilli and something sweet.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a tomato, then the Gujarati for a chill
 
 You'll want to know: મીઠું.
 મીઠું (mīṭhũ) — "salt".
+
+The word, taken apart.
+CDIAL lists Gujarati mīṭhũ, "sweet", under Sanskrit miṣṭa, "dainty, sweet" (CDIAL 10299). મીઠું (mīṭhũ), "salt", is the same word.
 
 What you've built.
 One more word for salt, chilli and something sweet.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a chilli, then the Gujarati for salt.
 You'll want to know: થેપલાં.
 થેપલાં (theplā̃) — "thepla, spiced flatbread". A travelling snack.
 
+The word, taken apart.
+The origin of થેપલાં (theplā̃) (theplāṁ) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
+
 What you've built.
 One more word for salt, chilli and something sweet.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for salt, then the Gujarati for thepla.
 You'll want to know: જલેબી.
 જલેબી (jalebī) — "jalebi, a syrupy sweet".
 
+The word, taken apart.
+જલેબી (jalebī) is a loan, usually traced through Persian to Arabic zalābiya, a fried sweet.
+
 What you've built.
 One more word for salt, chilli and something sweet.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for thepla, then the Gujarati for jalebi.
 
 You'll want to know: પૂરી.
 પૂરી (pūrī) — "puri, fried bread".
+
+The word, taken apart.
+પૂરી (pūrī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pūrikā, "cake" (CDIAL 8331).
 
 What you've built.
 One more word for salt, chilli and something sweet.

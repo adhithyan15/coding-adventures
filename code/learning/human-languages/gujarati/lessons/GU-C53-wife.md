@@ -14,7 +14,8 @@ romanization: "patnī"
 concept_tag: GU-FAMILY3-WIFE
 prerequisites: [GU-C52-mami, GU-C52-husband]
 sounds: []
-roots: []
+roots: [sanskrit-patni]
+etymology_hook: "patnī ← Sanskrit patnī 'mistress, wife', a tatsama (CDIAL 7742)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C52-husband]
 <!-- hl-knowledge: introduces=[GU-LEX-C53-FAMILY3-01]; assesses=[] -->
 
 **પત્ની** (*patnī*) — "a wife". The pair of **પતિ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પત્ની** (*patnī*) is Sanskrit *patnī*, "mistress, wife", taken over whole as a learned loan, a tatsama (CDIAL 7742).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: "if … then … — the two-part condition Gujarati prefers"
 concept_tag: GU-JOIN-JO-TO
 prerequisites: [GU-C35-jo, GU-C31-nathi]
 sounds: []
-roots: []
-etymology_hook: "Gujarati marks both ends of a condition; English marks only the first."
+roots: [sanskrit-yatah, sanskrit-tatah]
+etymology_hook: "jo ← yataḥ 'whence; because' (CDIAL 10401); to, probably from Old Gujarati taü 'then' ← tataḥ (CDIAL 5639)"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +56,8 @@ what you will hear.
 
 **તો** is a worn-down demonstrative — the sentence says, in effect, *if … that
 …* — which is why it sits at the head of the result rather than inside it.
+
+Both halves are inherited. CDIAL lists *jo* under Sanskrit *yataḥ*, "whence; because" (CDIAL 10401), and Old Gujarati *taü*, "then", the likely source of *to*, under *tataḥ*, "from there; then" (CDIAL 5639).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-JOIN-JO-TO-01, GU-JOIN-JO-01, GU-NEG-NATHI-01] -->

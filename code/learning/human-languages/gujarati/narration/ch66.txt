@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for sand, then the Gujarati for soil.
 You'll want to know: પવન.
 પવન (pavan) — "wind".
 
+The word, taken apart.
+પવન (pavan) is Sanskrit pavana, "wind", taken over whole as a learned loan, a tatsama (CDIAL 7978).
+
 What you've built.
 One more word for wind, cloud and heat.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for soil, then the Gujarati for wind.
 
 You'll want to know: વાદળ.
 વાદળ (vādaḷ) — "a cloud". Before the વરસાદ.
+
+The word, taken apart.
+વાદળ (vādaḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vārdala, "rainy day, bad weather" (CDIAL 11567).
 
 What you've built.
 One more word for wind, cloud and heat.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for wind, then the Gujarati for a cloud.
 You'll want to know: ગરમી.
 ગરમી (garmī) — "heat, hot weather".
 
+The word, taken apart.
+ગરમી (garmī) is a loan, usually traced to Persian garmī, "heat".
+
 What you've built.
 One more word for wind, cloud and heat.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a cloud, then the Gujarati for heat.
 You'll want to know: બરફ.
 બરફ (baraph) — "ice, snow".
 
+The word, taken apart.
+બરફ (baraph) is a loan, usually traced to Persian barf, "snow, ice".
+
 What you've built.
 One more word for wind, cloud and heat.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for heat, then the Gujarati for ice.
 
 You'll want to know: ધુમ્મસ.
 ધુમ્મસ (dhummas) — "fog, mist".
+
+The word, taken apart.
+ધુમ્મસ (dhummas) is a tadbhava. It comes from dhūmaśa, "smoky", a form CDIAL reconstructs on Sanskrit dhūma, "smoke" (CDIAL 6855).
 
 What you've built.
 One more word for wind, cloud and heat.

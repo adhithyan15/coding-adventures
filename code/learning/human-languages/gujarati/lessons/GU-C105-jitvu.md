@@ -14,7 +14,8 @@ romanization: "jītvũ"
 concept_tag: GU-VERB-JITVU
 prerequisites: [GU-C105-rakhvu, GU-C105-dharavvu]
 sounds: []
-roots: []
+roots: [sanskrit-jita]
+etymology_hook: "jītvũ ← Sanskrit jita 'won, conquered', a tadbhava (CDIAL 5224)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C105-dharavvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C105-CAN105-04]; assesses=[] -->
 
 **જીતવું** (*jītvũ*) — "to win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જીતવું** (*jītvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jita*, "won, conquered" (CDIAL 5224).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

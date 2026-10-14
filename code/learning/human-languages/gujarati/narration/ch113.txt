@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a sweater, then the Gujarati for a coat
 You'll want to know: ખિસ્સું.
 ખિસ્સું (khissũ) — "a pocket".
 
+The word, taken apart.
+ખિસ્સું (khissũ) is a loan, usually traced to Persian kīsa, "purse, pouch".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a coat, then the Gujarati for a pocket.
 
 You'll want to know: ગોળ.
 ગોળ (goḷ) — "jaggery".
+
+The word, taken apart.
+ગોળ (goḷ) is a tadbhava of Sanskrit guḍa, "boiled sugarcane juice, molasses" (CDIAL 4182). CDIAL asks whether this is the same word as guḍa, "ball".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a pocket, then the Gujarati for jaggery
 You'll want to know: મધ.
 મધ (madh) — "honey".
 
+The word, taken apart.
+મધ (madh) is a semi-tatsama: Sanskrit madhu, "honey, mead", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9784).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for jaggery, then the Gujarati for honey.
 You'll want to know: ચણા.
 ચણા (caṇā) — "chickpeas".
 
+The word, taken apart.
+ચણા (caṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caṇa, "the chickpea" (CDIAL 4579).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for honey, then the Gujarati for chickpeas.
 
 You'll want to know: મગ.
 મગ (mag) — "mung beans".
+
+The word, taken apart.
+મગ (mag) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mudga, "the bean Phaseolus mungo" (CDIAL 10198).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "vādaḷī"
 concept_tag: GU-COLOUR1-BLUE
 prerequisites: [GU-C70-yellow, GU-C70-green]
 sounds: []
-roots: []
+roots: [sanskrit-vardala]
+etymology_hook: "vādaḷī: like vādaḷ 'cloud' ← Sanskrit vārdala 'rainy day, bad weather' (CDIAL 11567)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C70-green]
 <!-- hl-knowledge: introduces=[GU-LEX-C70-COLOUR1-04]; assesses=[] -->
 
 **વાદળી** (*vādaḷī*) — "blue". It is built from **વાદળ**, cloud.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વાદળી** (*vādaḷī*) is the same word as *vādḷī*, "small cloud", which CDIAL lists with *vādaḷ*, "cloud", under Sanskrit *vārdala*, "rainy day, bad weather" (CDIAL 11567).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vāvvũ"
 concept_tag: GU-VERB-VAVVU
 prerequisites: [GU-C142-kharcvu, GU-C142-bacavvu]
 sounds: []
-roots: []
+roots: [sanskrit-vapayati]
+etymology_hook: "vāvvũ ← Sanskrit vāpayati 'sows', a tadbhava (CDIAL 11525)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C142-bacavvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C142-ACT142-05]; assesses=[] -->
 
 **વાવવું** (*vāvvũ*) — "to sow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વાવવું** (*vāvvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vāpayati*, "sows" (CDIAL 11525).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

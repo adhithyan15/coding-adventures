@@ -82,6 +82,7 @@ The letters in this word.
 
 The word, taken apart.
 છે (chhe, "is") is Gujarati's copula — and, unusually, it is not the hai of Hindi or the asti of Sanskrit. It grew from an Old Gujarati form (achhaï) along its own path, so it is one of the words that most quickly marks a sentence as Gujarati rather than Hindi. Hear its forms first: hũ chhũ ("I am"), tũ chhe ("you are," familiar), તે છે (te chhe, "he/she/it is"), and tame chho ("you are," respectful). The later pronoun lessons will put the first, familiar-you, and respectful-you forms into Gujarati script gently.
+CDIAL lists it, beside Old Gujarati achaï, under Sanskrit ākṣeti, "abides, dwells in" (CDIAL 1031).
 
 Grammar Lens: the verb goes last.
 Gujarati is subject–object–verb, like all its Indo-Aryan sisters: "my name Arun is." Chhe sits at the end of the sentence, where English puts "is" in the middle.
@@ -109,6 +110,9 @@ Three atoms you now own, assembled into a first sentence.
 
 The two words — assembled.
 મારું (my, neuter) + નામ (name) + your name + છે (is) = mārũ nām … chhe, "my name is…" Mārũ nām Arun chhe. becomes "My name is Arun."
+
+The phrase, taken apart.
+All three words are inherited. CDIAL lists mārũ under the Sanskrit first-person base ma- (CDIAL 9691), nām under nāman, "name" (CDIAL 7067), and chhe under ākṣeti, "abides, dwells in" (CDIAL 1031).
 
 Grammar Lens: the verb goes last.
 Gujarati keeps the verb at the end — "my name Arun is." Note too that mārũ is neuter to agree with nām (neuter): the agreement you learned two lessons ago is already doing its quiet work.
@@ -205,6 +209,7 @@ The letters in this word.
 
 The word, taken apart.
 શું (shũ, "what") descends, by a winding road, from the Sanskrit interrogative stem ક- (ka-, PIE kʷo-) — the root behind English what, Latin quis, and Hindi kyā. Most of Gujarati's questions still show that k- plainly — kem (how), કોણ (kōṇ, who), ક્યાં (kyā̃, where), ક્યારે (kyāre, when) — but "what" wore down into this sh- form. So shũ is the odd cousin in a k- family.
+CDIAL lists it under Sanskrit kīdṛśa, "of what kind", through a form ksiũ that lost its first vowel (CDIAL 3197).
 
 Guided Practice.
 [pause 1 second]
@@ -236,6 +241,9 @@ Turn the introduction around — ask, instead of tell.
 
 The two words — assembled.
 તમારું (tamārũ, "your," the respectful possessive from tame, neuter to match nām) + નામ (name) + શું (what) + છે (chhe) (is) becomes literally "your name what is?" Gujarati keeps the verb last and drops the question-word shũ into the object slot.
+
+The phrase, taken apart.
+All four words are inherited, from yuṣmad-, nāman, kīdṛśa and ākṣeti (CDIAL 10511, 7067, 3197, 1031).
 
 Grammar Lens: answering, and the familiar form.
 Answer with the sentence you built: Mārũ nām Arun chhe. The familiar version swaps tamārũ for તારું (tārũ, "your," from tũ): tārũ nām shũ chhe? Note mārũ / tārũ / tamārũ — "my / your / your (resp.)" — all take the neuter -ũ before nām.

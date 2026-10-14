@@ -14,7 +14,8 @@ romanization: "caṇā"
 concept_tag: GU-THINGS113-CANA
 prerequisites: [GU-C113-gol, GU-C113-madh]
 sounds: []
-roots: []
+roots: [sanskrit-cana]
+etymology_hook: "caṇā ← Sanskrit caṇa 'the chickpea', a tadbhava (CDIAL 4579)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C113-madh]
 <!-- hl-knowledge: introduces=[GU-LEX-C113-THINGS113-04]; assesses=[] -->
 
 **ચણા** (*caṇā*) — "chickpeas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચણા** (*caṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *caṇa*, "the chickpea" (CDIAL 4579).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

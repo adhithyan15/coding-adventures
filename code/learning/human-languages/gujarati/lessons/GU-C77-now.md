@@ -14,7 +14,8 @@ romanization: "have"
 concept_tag: GU-WHEN-NOW
 prerequisites: [GU-C77-always, GU-C77-sometimes]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva]
+etymology_hook: "have 'now': listed by CDIAL, as Old Gujarati hava, under evam eva 'exactly so', crossed with the stem a- (CDIAL 2528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C77-sometimes]
 <!-- hl-knowledge: introduces=[GU-LEX-C77-WHEN-03]; assesses=[] -->
 
 **હવે** (*have*) — "now, from now on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Old Gujarati *hava*, "now", the older form of **હવે** (*have*), under Sanskrit *evam eva*, "exactly so", crossed with the pronoun stem *a-* (CDIAL 2528).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

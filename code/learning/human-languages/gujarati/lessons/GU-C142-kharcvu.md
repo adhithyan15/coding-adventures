@@ -14,7 +14,8 @@ romanization: "kharcvũ"
 concept_tag: GU-VERB-KHARCVU
 prerequisites: [GU-C142-kahevu, GU-C142-jivvu]
 sounds: []
-roots: []
+roots: [arabic-kharj]
+etymology_hook: "kharcvũ: on kharc 'expense', usually traced through Persian kharch to Arabic kharj 'expenditure' (Lane, root kh-r-j)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C142-jivvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C142-ACT142-03]; assesses=[] -->
 
 **ખર્ચવું** (*kharcvũ*) — "to spend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખર્ચવું** (*kharcvũ*) is built on *kharc*, "expense", usually traced through Persian *kharch* to Arabic *kharj*, "expenditure; tribute". The Arabic root is *kh-r-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

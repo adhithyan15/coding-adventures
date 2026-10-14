@@ -11,7 +11,8 @@ gloss: goodbye (lit. "[please] come [again]")
 concept_tag: FAREWELL
 prerequisites: [GU-C01-namaste, GU-W02-ya]
 sounds: [independent-aa, o-ending]
-roots: [aav-come]
+roots: [aav-come, sanskrit-apayati]
+etymology_hook: "āvjo, from āvvũ 'to come' ← Sanskrit āpayati 'causes to reach'; Prakrit āvaï 'comes' (CDIAL 1200)"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,8 @@ runs through the whole subcontinent — Tamil *pōy varugiṟēṉ* ("I'll go an
 back"), Bengali *āshi* ("I'll come"), Hindi *phir milenge* ("we'll meet again") —
 here made into a single warm word built on the verb *to come*. (To one person,
 familiarly: **આવજે** *āvje*.)
+
+The verb itself is inherited: CDIAL lists *āvvũ* under Sanskrit *āpayati*, "causes to reach", whose Prakrit form *āvaï* already meant "comes" (CDIAL 1200).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-AAVJO-01, GU-CONCEPT-C01-NAMASTE-01] -->

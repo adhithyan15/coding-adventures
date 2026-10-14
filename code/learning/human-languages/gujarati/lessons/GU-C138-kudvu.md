@@ -14,7 +14,8 @@ romanization: "kūdvũ"
 concept_tag: GU-VERB-KUDVU
 prerequisites: [GU-C137-nabalu, GU-C137-jaruri]
 sounds: []
-roots: []
+roots: [sanskrit-kurdati]
+etymology_hook: "kūdvũ ← Sanskrit kūrdati 'leaps, jumps', probably from Dravidian (CDIAL 3412)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C137-jaruri]
 <!-- hl-knowledge: introduces=[GU-LEX-C138-ACT138-01]; assesses=[] -->
 
 **કૂદવું** (*kūdvũ*) — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કૂદવું** (*kūdvũ*) is a tadbhava of Sanskrit *kūrdati*, "leaps, jumps" (CDIAL 3412). CDIAL thinks the Sanskrit verb probably came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

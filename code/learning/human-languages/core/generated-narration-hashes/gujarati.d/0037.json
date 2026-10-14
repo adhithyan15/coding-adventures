@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 37,
-  "sourceHash": "fnv1a64:b5f178e63377eb59",
+  "sourceHash": "fnv1a64:fc6daf3d5a0d52ff",
   "lessonIds": [
     "GU-C33-ke",
     "GU-C33-vichaarun-ke",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "gujarati/narration/ch37.txt",
   "json": "gujarati/narration/ch37.json",
-  "textHash": "fnv1a64:71b7f9337ce0303c",
-  "jsonHash": "fnv1a64:8d053c673d9f4e21",
+  "textHash": "fnv1a64:8b889e450334ad49",
+  "jsonHash": "fnv1a64:93f78432c3b71cd0",
   "findings": []
 }

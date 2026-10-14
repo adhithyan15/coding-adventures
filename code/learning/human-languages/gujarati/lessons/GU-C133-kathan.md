@@ -14,7 +14,8 @@ romanization: "kaṭhaṇ"
 concept_tag: GU-QUAL133-KATHAN
 prerequisites: [GU-C132-tikhu, GU-C132-naram]
 sounds: []
-roots: []
+roots: [sanskrit-kathina]
+etymology_hook: "kaṭhaṇ ← Sanskrit kaṭhina 'hard, stiff', of a group traced to Dravidian (CDIAL 2650)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C132-naram]
 <!-- hl-knowledge: introduces=[GU-LEX-C133-QUAL133-01]; assesses=[] -->
 
 **કઠણ** (*kaṭhaṇ*) — "hard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કઠણ** (*kaṭhaṇ*) goes back to Sanskrit *kaṭhina*, "hard, stiff" (CDIAL 2650). CDIAL notes the view that this group of words came from Dravidian, and lists no Gujarati form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

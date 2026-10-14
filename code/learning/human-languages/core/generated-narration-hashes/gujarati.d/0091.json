@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 91,
-  "sourceHash": "fnv1a64:3dad69df3b4b71c4",
+  "sourceHash": "fnv1a64:43bb2c5df5e28001",
   "lessonIds": [
     "GU-C91-welcome",
     "GU-C91-congratulations",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "gujarati/narration/ch91.txt",
   "json": "gujarati/narration/ch91.json",
-  "textHash": "fnv1a64:3164e93ebea49f32",
-  "jsonHash": "fnv1a64:14659de74ba2c9ab",
+  "textHash": "fnv1a64:f07b9925f335e91f",
+  "jsonHash": "fnv1a64:002b723447454bcd",
   "findings": []
 }

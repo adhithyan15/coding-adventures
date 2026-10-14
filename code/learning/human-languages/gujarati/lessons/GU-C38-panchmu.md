@@ -11,10 +11,10 @@ gloss: "fifth — the only ordinal in this chapter you could have built yourself
 concept_tag: GU-ORDINAL-MU
 prerequisites: [GU-C37-ketla, GU-C37-kon, GU-C34-kemke, GU-C25-mahino, GU-C06-numbers-1-5, GU-C02-maarun]
 sounds: [nasal-aa, long-aa]
-roots: []
-etymology_hook: "Wiktionary takes paanchmun apart as paanch plus the suffix -mun, and gives the other four ordinals of this chapter an inheritance instead"
+roots: [sanskrit-pancama]
+etymology_hook: "pāṁchmũ: pāṁch + -mũ, and CDIAL also lists pāṁcmo under Sanskrit pañcama 'fifth' (CDIAL 7669)"
 duration:
-  max_seconds: 240
+  max_seconds: 281
 requires:
   knowledge: [GU-LEX-NUMBERS-ONE-TO-FIVE, GU-Q-KETLA-01, GU-Q-KON-01, GU-JOIN-KEMKE-01, GU-SCRIPT-MAHINO-01, GU-LEX-MAHINO-01, GU-GRAMMAR-NEUTER-U-NASAL-TELL]
 introduces:
@@ -66,6 +66,11 @@ other:
 | neuter | **પાંચમું** — *pā̃chmũ* |
 
 **મહિનો** is masculine, so the fifth month is **પાંચમો મહિનો**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists the word, as *pāṁcmo*, under Sanskrit *pañcama*, "fifth" (CDIAL 7669), so it may also be inherited whole.
 
 ## What you've built: an ending that keeps working
 <!-- hl-knowledge: introduces=[GU-GRAMMAR-ORDINAL-MU]; assesses=[GU-LEX-PANCHMU, GU-JOIN-KEMKE-01, GU-LEX-NUMBERS-ONE-TO-FIVE] -->

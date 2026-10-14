@@ -14,7 +14,8 @@ romanization: "tarbūc"
 concept_tag: GU-THINGS116-TARBUC
 prerequisites: [GU-C115-libu, GU-C115-naliyer]
 sounds: []
-roots: []
+roots: [persian-tarbuz]
+etymology_hook: "tarbūc: usually traced to Persian tarbuz 'watermelon'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C115-naliyer]
 <!-- hl-knowledge: introduces=[GU-LEX-C116-THINGS116-01]; assesses=[] -->
 
 **તરબૂચ** (*tarbūc*) — "a watermelon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તરબૂચ** (*tarbūc*) is a loan, usually traced to Persian *tarbuz*, "watermelon". Gujarati ends it in *c*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

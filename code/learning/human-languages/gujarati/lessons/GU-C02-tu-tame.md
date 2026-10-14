@@ -11,7 +11,8 @@ gloss: you (familiar / respectful)
 concept_tag: PRONOUN-YOU
 prerequisites: [GU-C02-naam, GU-W02-ra]
 sounds: [u-nasal, e-sign]
-roots: [tu-second-person]
+roots: [tu-second-person, tvam, sanskrit-yushmad]
+etymology_hook: "tũ ← Sanskrit tvam 'thou' (CDIAL 5889); tame ← yuṣmad- 'you (plural)', with t- from tvam (CDIAL 10511)"
 duration:
   max_seconds: 240
 requires:

@@ -11,7 +11,8 @@ gloss: yes / no
 concept_tag: RESPONSE-YESNO
 prerequisites: [GU-C01-namaste, GU-W02-bha]
 sounds: [long-aa, no-top-line]
-roots: [na-negative]
+roots: [na-negative, haan, sanskrit-na]
+etymology_hook: "hā ← Sanskrit ām 'yes', with an h- added (CDIAL 1235); nā goes with na 'not' ← Sanskrit na (CDIAL 6906)"
 duration:
   max_seconds: 180
 requires:
@@ -53,6 +54,8 @@ the long-*ā* sign.
 **not**, **none**, Latin *nōn*, Hindi *nahīṁ*, and Bengali *nā*. Of all the words
 in this book, this "no" reaches furthest unchanged: one syllable spoken, in some
 form, from Iceland to Gujarat for five thousand years.
+
+The "yes" is inherited too: CDIAL lists Gujarati *hāṁ* under Sanskrit *ām*, "yes", its *h-* added either for emphasis or from the verb "to be" (CDIAL 1235). The "no" goes with Gujarati *na*, "not", which CDIAL lists under Sanskrit *na* (CDIAL 6906).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-HAANAA-01, GU-CONCEPT-C01-NAMASTE-01] -->

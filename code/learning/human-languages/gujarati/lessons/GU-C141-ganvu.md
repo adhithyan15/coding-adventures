@@ -14,7 +14,8 @@ romanization: "gaṇvũ"
 concept_tag: GU-VERB-GANVU
 prerequisites: [GU-C141-pahervu, GU-C141-calavvu]
 sounds: []
-roots: []
+roots: [sanskrit-ganayati]
+etymology_hook: "gaṇvũ ← Sanskrit gaṇayati 'counts', a tadbhava (CDIAL 3993)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C141-calavvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C141-ACT141-05]; assesses=[] -->
 
 **ગણવું** (*gaṇvũ*) — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગણવું** (*gaṇvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gaṇayati*, "counts" (CDIAL 3993).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

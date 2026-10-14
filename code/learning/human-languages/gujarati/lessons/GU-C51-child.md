@@ -14,7 +14,8 @@ romanization: "bāḷak"
 concept_tag: GU-FAMILY1-CHILD
 prerequisites: [GU-C51-grandfather, GU-C51-grandmother]
 sounds: []
-roots: []
+roots: [sanskrit-bala]
+etymology_hook: "bāḷak ← Sanskrit bālaka 'young; a boy', a semi-tatsama (CDIAL 9216)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C51-grandmother]
 <!-- hl-knowledge: introduces=[GU-LEX-C51-FAMILY1-05]; assesses=[] -->
 
 **બાળક** (*bāḷak*) — "a child".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બાળક** (*bāḷak*) is a semi-tatsama: Sanskrit *bālaka*, "young; a boy", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9216). CDIAL lists the inherited Gujarati form as *bāḷ*, "child".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

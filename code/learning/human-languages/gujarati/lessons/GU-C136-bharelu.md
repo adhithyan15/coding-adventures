@@ -14,7 +14,8 @@ romanization: "bharelũ"
 concept_tag: GU-QUAL136-BHARELU
 prerequisites: [GU-C135-kacu, GU-C136-khali]
 sounds: []
-roots: []
+roots: [sanskrit-bharati]
+etymology_hook: "bharelũ: the past participle of bharvũ 'to fill' ← Sanskrit bharati 'bears, fills' (CDIAL 9397)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C136-khali]
 <!-- hl-knowledge: introduces=[GU-LEX-C136-QUAL136-02]; assesses=[] -->
 
 **ભરેલું** (*bharelũ*) — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ભરેલું** (*bharelũ*) is the past participle of *bharvũ*, "to fill", which CDIAL lists under Sanskrit *bharati*, "bears, brings; fills" (CDIAL 9397).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ gloss: "Diwali, the festival of lights"
 concept_tag: GU-ANCHOR-DIVAALI
 prerequisites: [GU-C04-athaanun]
 sounds: []
-roots: []
+roots: [sanskrit-dipavali]
+etymology_hook: "divāḷī ← Sanskrit dīpāvali 'row of lamps': dīpa 'lamp' + āvali 'row', a tadbhava (CDIAL 6358)"
 duration:
   max_seconds: 120
 requires:
@@ -45,6 +46,11 @@ variety: standard
 **દિવાળી** — *divāḷī* — "Diwali, the festival of lights".
 
 Say it: *divāḷī*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ળ** and **િ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દિવાળી** (*divāḷī*) is a tadbhava of Sanskrit *dīpāvali*, "row of lamps": *dīpa*, "lamp", and *āvali*, "row" (CDIAL 6358).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-DIVAALI] -->

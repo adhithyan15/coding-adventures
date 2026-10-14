@@ -15,6 +15,7 @@ concept_tag: GU-THINGS117-BHAJIYA
 prerequisites: [GU-C116-dhokla, GU-C117-kadhi]
 sounds: []
 roots: []
+etymology_hook: "bhajiyāṁ 'fritters': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C117-kadhi]
 <!-- hl-knowledge: introduces=[GU-LEX-C117-THINGS117-02]; assesses=[] -->
 
 **ભજિયાં** (*bhajiyā̃*) — "fritters".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ભજિયાં** (*bhajiyāṁ*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

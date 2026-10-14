@@ -14,7 +14,8 @@ romanization: "vimān"
 concept_tag: GU-TRAVEL-PLANE
 prerequisites: [GU-C85-train, GU-C85-station]
 sounds: []
-roots: []
+roots: [sanskrit-vimana]
+etymology_hook: "vimān: Sanskrit vimāna 'car of the gods', a tatsama, now 'aeroplane' (CDIAL 11823)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C85-station]
 <!-- hl-knowledge: introduces=[GU-LEX-C85-TRAVEL-04]; assesses=[] -->
 
 **વિમાન** (*vimān*) — "an aeroplane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વિમાન** (*vimān*) is Sanskrit *vimāna*, "car of the gods, palace of a supreme ruler", taken over whole as a learned loan, a tatsama (CDIAL 11823). Modern Gujarati uses it for the aeroplane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

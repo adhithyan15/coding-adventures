@@ -12,6 +12,7 @@ concept_tag: GU-VERB-RAHEVU
 prerequisites: [GU-C05-bolvun]
 sounds: [e-sign, u-nasal]
 roots: [rah-remain]
+etymology_hook: "rahevũ ← *rahati 'remains', a form CDIAL reconstructs (CDIAL 10666)"
 duration:
   max_seconds: 240
 requires:
@@ -47,8 +48,7 @@ reviews_of: [GU-C05-bolvun, GU-C05-hun-gujarati-bolun-chhun]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C05-BOLVUN-01, GU-CONCEPT-C05-RAHEVUN-01] -->
 
-**રહેવું** (*rahevũ*, "to live, to remain, to stay") is from Sanskrit **રહ્**
-(*rah-*, "to remain") — the same root as Hindi *rahnā* and Punjabi *rahiṇā*. "I
+**રહેવું** (*rahevũ*, "to live, to remain, to stay") goes back to *\*rahati*, "remains", a form CDIAL reconstructs from its descendants (CDIAL 10666), — the same root as Hindi *rahnā* and Punjabi *rahiṇā*. "I
 live in Ahmedabad" is **હું અમદાવાદમાં રહું છું** (*hũ Amdāvādmā rahũ chhũ*) —
 stem *rah-* + person + copula, exactly like *bolvũ*.
 

@@ -14,7 +14,8 @@ romanization: "ādat"
 concept_tag: GU-CAN104-ADAT
 prerequisites: [GU-C104-anubhav, GU-C104-tev]
 sounds: []
-roots: []
+roots: [arabic-ada]
+etymology_hook: "ādat ← Arabic ʿāda 'custom, habit', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C104-tev]
 <!-- hl-knowledge: introduces=[GU-LEX-C104-CAN104-03]; assesses=[] -->
 
 **આદત** (*ādat*) — "a habit, a custom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**આદત** (*ādat*) is a loan from Arabic *ʿāda*, "custom, habit", which reached Gujarati through Persian. Its Arabic root is *ʿ-w-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

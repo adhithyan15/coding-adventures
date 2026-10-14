@@ -14,7 +14,8 @@ romanization: "gāl"
 concept_tag: GU-THINGS124-GAL
 prerequisites: [GU-C124-khiskoli, GU-C124-marghi]
 sounds: []
-roots: []
+roots: [sanskrit-galla]
+etymology_hook: "gāl ← Sanskrit galla 'cheek', perhaps from Dravidian; a tadbhava (CDIAL 4089)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C124-marghi]
 <!-- hl-knowledge: introduces=[GU-LEX-C124-THINGS124-04]; assesses=[] -->
 
 **ગાલ** (*gāl*) — "a cheek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગાલ** (*gāl*) is a tadbhava of Sanskrit *galla*, "cheek" (CDIAL 4089). CDIAL compares *gaṇḍa*, "cheek", and reports a view that the word came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

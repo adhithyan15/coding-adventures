@@ -14,7 +14,8 @@ romanization: "būṭ"
 concept_tag: GU-THINGS112-BUT
 prerequisites: [GU-C111-butti, GU-C111-moja]
 sounds: []
-roots: []
+roots: [english-boot]
+etymology_hook: "būṭ ← English boot"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C111-moja]
 <!-- hl-knowledge: introduces=[GU-LEX-C112-THINGS112-01]; assesses=[] -->
 
 **બૂટ** (*būṭ*) — "shoes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બૂટ** (*būṭ*) is a loan from English *boot*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

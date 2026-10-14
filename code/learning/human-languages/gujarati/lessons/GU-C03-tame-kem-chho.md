@@ -11,7 +11,8 @@ gloss: how are you? (respectful)
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [GU-C03-kem, GU-C02-tu-tame, GU-C02-chhe, GU-W02-dha]
 sounds: [o-ending]
-roots: []
+roots: [sanskrit-yushmad, ka-interrogative, sanskrit-akseti]
+etymology_hook: "tame ← yuṣmad- (CDIAL 10511); kem on the question stem ka-; chho, a form of chhe ← ākṣeti (CDIAL 1031)"
 duration:
   max_seconds: 240
 requires:
@@ -46,6 +47,11 @@ own.
 **છો** (*chho*, "are") — literally "**you how are?**", the verb last. *Chho* is
 the respectful/plural form of the copula *chhe* you met in the name exchange (*hũ chhũ* I
 am / *tame chho* you are). To a friend (*tũ*): **તું કેમ છે?** (*tũ kem chhe?*).
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Tame* and *chho* are inherited, from Sanskrit *yuṣmad-*, "you", and *ākṣeti*, "abides" (CDIAL 10511, 1031). *Kem* has no CDIAL entry.
 
 ## Grammar Lens: match the "you" to the copula
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-TUTAME-01, GU-CONCEPT-C03-KEM-01, GU-CONCEPT-C03-TAMEKEMCHHO-01] -->

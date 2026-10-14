@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 116,
-  "sourceHash": "fnv1a64:b25500221cdfd31f",
+  "sourceHash": "fnv1a64:f5ae14e25bf5f6c8",
   "lessonIds": [
     "GU-C116-tarbuc",
     "GU-C116-papaiyu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch116.txt",
   "json": "gujarati/narration/ch116.json",
-  "textHash": "fnv1a64:1a5419dc9bdc0a8e",
-  "jsonHash": "fnv1a64:536da03446ae6874",
+  "textHash": "fnv1a64:efce05e8d12a046d",
+  "jsonHash": "fnv1a64:11b7dd1e9e3fe3c3",
   "findings": []
 }

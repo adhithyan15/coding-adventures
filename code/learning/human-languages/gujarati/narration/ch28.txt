@@ -9,6 +9,9 @@ Warm-up.
 [pause 2 seconds]
 Listen twice: savār. It means morning. Hold the sound and the meaning together; the Gujarati spelling waits for a later lesson in this chapter.
 
+The word, taken apart.
+સવાર (savār) is a tadbhava, a word inherited and reshaped by sound change. It comes from savāra, "in good time", a form CDIAL reconstructs from its descendants (CDIAL 13290). CDIAL builds it from sa-, "with", and vāra, "time, turn".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "savār"]
@@ -30,6 +33,9 @@ Lesson 2 of 14.
 Warm-up.
 [pause 2 seconds]
 Say savār from morning. Now listen twice: bapor. It means midday, the middle hours that English also calls the afternoon.
+
+The word, taken apart.
+બપોર (bapor) is usually explained as "two watches": a form of the word for two, and pahor, the old watch of about three hours. CDIAL lists Gujarati pahor under Sanskrit prahara, "a watch", and asks whether the Sanskrit word is itself a reshaping of Persian pahra, "watch" (CDIAL 8900).
 
 Guided Practice.
 [pause 1 second]
@@ -53,6 +59,9 @@ Warm-up.
 [pause 2 seconds]
 Say savār, then bapor. Now listen twice: sānj. It means evening. The nasal in the middle is light — the tongue never quite closes.
 
+The word, taken apart.
+સાંજ (sānj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṁdhyā, "twilight" (CDIAL 12918).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "sānj"]
@@ -74,6 +83,9 @@ Lesson 4 of 14.
 Warm-up.
 [pause 2 seconds]
 Say bapor, then sānj. Now listen twice: rāt. It means night. Three sounds, one beat.
+
+The word, taken apart.
+રાત (rāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rātrī, "night" (CDIAL 10702).
 
 Guided Practice.
 [pause 1 second]
@@ -142,6 +154,9 @@ Warm-up.
 [pause 3 seconds]
 Say the word for night, and recall the three signs that wrote it. Now listen twice: divas. It means day — the whole span that savār, bapor, sānj, and rāt divide between them.
 
+The word, taken apart.
+દિવસ (divas) is inherited from Sanskrit divasa, "day", and has come down with almost no change. CDIAL lists it beside the more worn Gujarati dīs (CDIAL 6333).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "divas"]
@@ -164,6 +179,9 @@ Warm-up.
 [pause 3 seconds]
 Say the word for day, and say how many signs wrote rāt. Now listen twice: mahino. It means month — the span that holds many a divas.
 
+The word, taken apart.
+મહિનો (mahino) is a loan, usually traced to Persian māhīna, "monthly". It is built on Persian māh, "moon, month".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "mahino"]
@@ -185,6 +203,9 @@ Lesson 9 of 14.
 Warm-up.
 [pause 3 seconds]
 Say the word for day, then the word for month. Now listen twice: āj. It means today — this divas, the one you are standing in. Two sounds only.
+
+The word, taken apart.
+આજ (āj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from adya, "today" (CDIAL 242).
 
 Guided Practice.
 [pause 1 second]
@@ -232,6 +253,9 @@ Lesson 11 of 14.
 Warm-up.
 [pause 3 seconds]
 Say today, name the two signs that write it, then say month. Now listen twice: atyāre. It means now.
+
+The word, taken apart.
+The origin of અત્યારે (atyāre) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 Guided Practice.
 Three widths of time, narrowing:

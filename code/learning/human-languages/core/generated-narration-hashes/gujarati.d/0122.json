@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 122,
-  "sourceHash": "fnv1a64:3a6c976629ba4df4",
+  "sourceHash": "fnv1a64:58db95748a08cfa4",
   "lessonIds": [
     "GU-C122-rich",
     "GU-C122-siyal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch122.txt",
   "json": "gujarati/narration/ch122.json",
-  "textHash": "fnv1a64:2834c2852e6b271b",
-  "jsonHash": "fnv1a64:cc54d40587a60469",
+  "textHash": "fnv1a64:5f8089afc810d35d",
+  "jsonHash": "fnv1a64:f00b682ea94a72b6",
   "findings": []
 }

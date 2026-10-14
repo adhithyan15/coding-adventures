@@ -14,7 +14,8 @@ romanization: "māgśar"
 concept_tag: GU-TIME97-MAGSAR
 prerequisites: [GU-C97-navembar, GU-C97-kartak]
 sounds: []
-roots: []
+roots: [sanskrit-margashiras]
+etymology_hook: "māgśar ← Sanskrit mārgaśiras 'the month November-December', a tadbhava (CDIAL 10076)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C97-kartak]
 <!-- hl-knowledge: introduces=[GU-LEX-C97-TIME97-03]; assesses=[] -->
 
 **માગશર** (*māgśar*) — "Magshar, a Gujarati month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**માગશર** (*māgśar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mārgaśiras*, "the month November-December" (CDIAL 10076).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

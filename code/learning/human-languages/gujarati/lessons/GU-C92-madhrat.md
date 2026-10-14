@@ -14,7 +14,8 @@ romanization: "madhrāt"
 concept_tag: GU-TIME92-MADHRAT
 prerequisites: [GU-C91-apology, GU-C91-okay, GU-C05-practice, GU-C05-rahevun]
 sounds: []
-roots: []
+roots: [sanskrit-madhya, sanskrit-ratri]
+etymology_hook: "madhrāt: madh 'mid-', from Sanskrit madhya 'middle' (CDIAL 9804), + rāt 'night' ← rātrī (CDIAL 10702)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [GU-C91-okay]
 <!-- hl-knowledge: introduces=[GU-LEX-C92-TIME92-01]; assesses=[] -->
 
 **મધરાત** (*madhrāt*) — "midnight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મધરાત** (*madhrāt*) is "mid-night". Its first part goes back to Sanskrit *madhya*, "middle" (CDIAL 9804), and *rāt* is a tadbhava of *rātrī*, "night" (CDIAL 10702).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

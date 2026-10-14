@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 33,
-  "sourceHash": "fnv1a64:dc1a2f8999e0677f",
+  "sourceHash": "fnv1a64:b0c88a3dd29f10a3",
   "lessonIds": [
     "GU-C29-hear-sooraj",
     "GU-C29-hear-chandra",
@@ -16,7 +16,7 @@
   "drivablePrefix": 6,
   "text": "gujarati/narration/ch33.txt",
   "json": "gujarati/narration/ch33.json",
-  "textHash": "fnv1a64:869d7062f6794256",
-  "jsonHash": "fnv1a64:11bc136070951cb7",
+  "textHash": "fnv1a64:b9a27eaa2f259814",
+  "jsonHash": "fnv1a64:8d57aeeaf2fc8856",
   "findings": []
 }

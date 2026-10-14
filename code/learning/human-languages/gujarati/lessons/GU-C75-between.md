@@ -14,7 +14,8 @@ romanization: "vacce"
 concept_tag: GU-WHERE2-BETWEEN
 prerequisites: [GU-C75-inside, GU-C75-outside]
 sounds: []
-roots: []
+roots: [indo-aryan-vicya]
+etymology_hook: "vacce ← *vīcya 'middle', a reconstructed form; a tadbhava (CDIAL 12042)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C75-outside]
 <!-- hl-knowledge: introduces=[GU-LEX-C75-WHERE2-05]; assesses=[] -->
 
 **વચ્ચે** (*vacce*) — "between, in the middle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વચ્ચે** (*vacce*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vīcya*, "middle", a form CDIAL reconstructs from its descendants (CDIAL 12042).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

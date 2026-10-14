@@ -14,7 +14,8 @@ romanization: "batak"
 concept_tag: GU-THINGS122-BATAK
 prerequisites: [GU-C122-varu, GU-C122-kabutar]
 sounds: []
-roots: []
+roots: [arabic-batt]
+etymology_hook: "batak: usually traced, through Persian baṭ, to Arabic baṭṭ, a water-fowl (Lane, root b-ṭ-ṭ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C122-kabutar]
 <!-- hl-knowledge: introduces=[GU-LEX-C122-THINGS122-05]; assesses=[] -->
 
 **બતક** (*batak*) — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બતક** (*batak*) is a loan, usually traced through Persian *baṭ*, "duck", to Arabic *baṭṭ*, a kind of water-fowl (Lane, root *b-ṭ-ṭ*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

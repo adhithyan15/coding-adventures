@@ -14,7 +14,8 @@ romanization: "sā̃bhaḷvũ"
 concept_tag: GU-VERB-SAAMBHALVU
 prerequisites: [GU-C56-naachvu, GU-C56-hasvu]
 sounds: []
-roots: []
+roots: [indo-aryan-sambhalati]
+etymology_hook: "sāṁbhaḷvũ ← *saṁbhalati 'attends to', a reconstructed form; a tadbhava (CDIAL 12962)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C56-hasvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C56-VOICE-04]; assesses=[] -->
 
 **સાંભળવું** (*sā̃bhaḷvũ*) — "to listen, to hear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સાંભળવું** (*sāṁbhaḷvũ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*saṁbhalati*, "attends to", a form CDIAL reconstructs from its descendants (CDIAL 12962).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

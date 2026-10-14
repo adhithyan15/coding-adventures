@@ -14,7 +14,8 @@ romanization: "pākīṭ"
 concept_tag: GU-CARRY-WALLET
 prerequisites: [GU-C88-glasses, GU-C88-bag]
 sounds: []
-roots: []
+roots: [english-packet]
+etymology_hook: "pākīṭ: usually traced to English packet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C88-bag]
 <!-- hl-knowledge: introduces=[GU-LEX-C88-CARRY-03]; assesses=[] -->
 
 **પાકીટ** (*pākīṭ*) — "a wallet". Where the **પૈસા** go.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પાકીટ** (*pākīṭ*) is a loan, usually traced to English *packet*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

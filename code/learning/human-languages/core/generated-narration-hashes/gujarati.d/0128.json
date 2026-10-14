@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 128,
-  "sourceHash": "fnv1a64:c5d3e837de2067c8",
+  "sourceHash": "fnv1a64:43748a6db173aa9f",
   "lessonIds": [
     "GU-C128-kaceri",
     "GU-C128-karkhanu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch128.txt",
   "json": "gujarati/narration/ch128.json",
-  "textHash": "fnv1a64:d418d1c1300882fd",
-  "jsonHash": "fnv1a64:43d84279497592f1",
+  "textHash": "fnv1a64:51623bab5ddb3ffd",
+  "jsonHash": "fnv1a64:6eb555284826416d",
   "findings": []
 }

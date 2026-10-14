@@ -14,7 +14,8 @@ romanization: "paramdivas"
 concept_tag: GU-TIME92-PARAMDIVAS
 prerequisites: [GU-C92-madhrat, GU-C92-parodh]
 sounds: []
-roots: []
+roots: [sanskrit-divasa]
+etymology_hook: "paramdivas: param 'day after tomorrow' + divas 'day' (CDIAL 6333); CDIAL has no entry for param"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C92-parodh]
 <!-- hl-knowledge: introduces=[GU-LEX-C92-TIME92-03]; assesses=[] -->
 
 **પરમદિવસ** (*paramdivas*) — "the day after tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પરમદિવસ** (*paramdivas*) is *param*, "the day after tomorrow", with *divas*, "day" (CDIAL 6333). CDIAL has no entry for Gujarati *param*, so its origin is not settled; the Sanskrit word for that day was *paraśvas* (CDIAL 7799j).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

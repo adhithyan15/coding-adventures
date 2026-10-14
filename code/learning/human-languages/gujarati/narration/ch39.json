@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "If, and When",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d76925d3905d4402",
+  "sourceHash": "fnv1a64:0ddf39f4cf4ee660",
   "lessons": [
     {
       "id": "GU-C35-jo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7af6d438e4c68b9",
+      "sourceHash": "fnv1a64:bd5e2a2922950c02",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,10 @@
             {
               "kind": "speech",
               "text": "જો (jo) stands at the front of the condition, where English also puts if. That is unusual for this book: most of the small words you have met — માટે, પણ in its also sense, the postpositions — come after what they apply to. જો (jo) comes first, and that alone tells your ear a condition is starting."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists જો (jo), with Old Gujarati jaü, \"if\", under Sanskrit yataḥ, \"whence; where, because\" (CDIAL 10401)."
             }
           ]
         },
@@ -139,7 +143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed10b527bc64b664",
+      "sourceHash": "fnv1a64:a971256e7598a322",
       "notice": null,
       "blocks": [
         {
@@ -188,6 +192,10 @@
             {
               "kind": "speech",
               "text": "તો is a worn-down demonstrative — the sentence says, in effect, if … that … — which is why it sits at the head of the result rather than inside it."
+            },
+            {
+              "kind": "speech",
+              "text": "Both halves are inherited. CDIAL lists jo under Sanskrit yataḥ, \"whence; because\" (CDIAL 10401), and Old Gujarati taü, \"then\", the likely source of to, under tataḥ, \"from there; then\" (CDIAL 5639)."
             }
           ]
         },
@@ -360,7 +368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:185eee35e3baa164",
+      "sourceHash": "fnv1a64:957728e074ddeb9a",
       "notice": null,
       "blocks": [
         {
@@ -405,6 +413,10 @@
             {
               "kind": "speech",
               "text": "It is not a random shape. The જ્- at its front belongs to a large family: Gujarati builds a whole set of clause-openers on that one stem, and you are learning a single member of it here rather than the pattern all at once."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL has no entry for જ્યારે (jyāre) itself. Its stem is the relative one that goes back to Sanskrit ya- (CDIAL 10391); the rest of its history is not settled."
             }
           ]
         },

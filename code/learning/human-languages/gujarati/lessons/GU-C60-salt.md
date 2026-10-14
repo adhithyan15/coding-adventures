@@ -14,7 +14,8 @@ romanization: "mīṭhũ"
 concept_tag: GU-SNACKS-SALT
 prerequisites: [GU-C59-tomato, GU-C60-chilli]
 sounds: []
-roots: []
+roots: [sanskrit-mishta]
+etymology_hook: "mīṭhũ 'salt': mīṭhũ 'sweet' ← Sanskrit miṣṭa 'dainty, sweet' (CDIAL 10299)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C60-chilli]
 <!-- hl-knowledge: introduces=[GU-LEX-C60-SNACKS-02]; assesses=[] -->
 
 **મીઠું** (*mīṭhũ*) — "salt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Gujarati *mīṭhũ*, "sweet", under Sanskrit *miṣṭa*, "dainty, sweet" (CDIAL 10299). **મીઠું** (*mīṭhũ*), "salt", is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

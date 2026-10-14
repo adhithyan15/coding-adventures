@@ -14,7 +14,8 @@ romanization: "cūlo"
 concept_tag: GU-THINGS107-CULO
 prerequisites: [GU-C107-dhabalo, GU-C107-pagthiyu]
 sounds: []
-roots: []
+roots: [sanskrit-culli]
+etymology_hook: "cūlo ← Sanskrit cullī 'fireplace', which CDIAL takes from Dravidian (CDIAL 4879)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C107-pagthiyu]
 <!-- hl-knowledge: introduces=[GU-LEX-C107-THINGS107-05]; assesses=[] -->
 
 **ચૂલો** (*cūlo*) — "a stove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચૂલો** (*cūlo*) is a tadbhava of Sanskrit *cullī*, "fireplace" (CDIAL 4879). CDIAL reports that the Sanskrit word itself came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

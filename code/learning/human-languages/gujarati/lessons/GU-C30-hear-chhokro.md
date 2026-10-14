@@ -11,8 +11,8 @@ gloss: boy, heard and said before it is ever shown
 concept_tag: GU-PEOPLE-BOY-HEARD
 prerequisites: [GU-R29-sky-five-r1]
 sounds: [chha, o-sign, ka, long-o]
-roots: []
-etymology_hook: The book has named a brother and a sister; it has not yet named a child, and this is the word for one.
+roots: [indo-aryan-chokara]
+etymology_hook: "chhokro ← *chokkara 'boy', a variant of the reconstructed *chokara; a tadbhava (CDIAL 5070)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C11-bhai, GU-C11-bahen]
 
 [PAUSE 3s] Say the Gujarati words for brother and for sister. Now listen twice: **chhokro**. It means
 **boy** — younger than the *bhāī* you already know, and ending in the masculine *-o*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**છોકરો** (*chhokro*) is a tadbhava. CDIAL reconstructs *\*chokara*, "boy", and lists the Gujarati word under its variant *\*chokkara* (CDIAL 5070).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-CHHOKRO-01, GU-LEX-BHAI, GU-LEX-BAHEN] -->

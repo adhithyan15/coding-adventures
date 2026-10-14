@@ -14,7 +14,8 @@ romanization: "rākhvũ"
 concept_tag: GU-VERB-RAKHVU
 prerequisites: [GU-C104-kala, GU-C105-sadhan]
 sounds: []
-roots: []
+roots: [sanskrit-rakshati]
+etymology_hook: "rākhvũ ← Sanskrit rakṣati 'guards', a tadbhava (CDIAL 10547)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C105-sadhan]
 <!-- hl-knowledge: introduces=[GU-LEX-C105-CAN105-02]; assesses=[] -->
 
 **રાખવું** (*rākhvũ*) — "to keep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**રાખવું** (*rākhvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rakṣati*, "guards" (CDIAL 10547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bahār"
 concept_tag: GU-WHERE2-OUTSIDE
 prerequisites: [GU-C75-behind, GU-C75-inside]
 sounds: []
-roots: []
+roots: [indo-aryan-bahira]
+etymology_hook: "bahār ← *bāhira 'external', a reconstructed form; a tadbhava (CDIAL 9226)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C75-inside]
 <!-- hl-knowledge: introduces=[GU-LEX-C75-WHERE2-04]; assesses=[] -->
 
 **બહાર** (*bahār*) — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બહાર** (*bahār*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bāhira*, "external", a form CDIAL reconstructs from its descendants (CDIAL 9226). It is built on Sanskrit *bahis*, "outside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

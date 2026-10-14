@@ -14,7 +14,8 @@ romanization: "pāchaḷ"
 concept_tag: GU-WHERE2-BEHIND
 prerequisites: [GU-C74-down, GU-C75-ahead]
 sounds: []
-roots: []
+roots: [indo-aryan-pashca]
+etymology_hook: "pāchaḷ: on the stem of pāchũ 'back' ← *paśca 'hinder part' (CDIAL 7990); CDIAL does not list pāchaḷ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C75-ahead]
 <!-- hl-knowledge: introduces=[GU-LEX-C75-WHERE2-02]; assesses=[] -->
 
 **પાછળ** (*pāchaḷ*) — "behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પાછળ** (*pāchaḷ*) is built on the stem of *pāchũ*, "back", which CDIAL lists under *\*paśca*, "hinder part" (CDIAL 7990). CDIAL does not list **પાછળ** (*pāchaḷ*) itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
