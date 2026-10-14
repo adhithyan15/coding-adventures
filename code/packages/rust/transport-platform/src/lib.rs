@@ -288,8 +288,8 @@ impl fmt::Debug for WakeHandle {
 
 /// An owned OS socket handle that can be adopted into a platform as a stream via
 /// [`TransportPlatform::adopt_stream`].  Unix: a file descriptor (`OwnedFd`);
-/// Windows: a socket handle (`OwnedSocket`).  The alias keeps the trait
-/// cross-platform while the meaningful implementations are the Unix backends.
+/// Windows: a socket handle (`OwnedSocket`).  The epoll, kqueue and IOCP
+/// backends all implement adoption.
 #[cfg(unix)]
 pub type AdoptableFd = std::os::fd::OwnedFd;
 #[cfg(windows)]
@@ -2640,6 +2640,34 @@ pub mod windows {
             }))
         }
 
+        fn adopt_stream(&mut self, fd: AdoptableFd) -> Result<StreamId, PlatformError> {
+            // `tcp-runtime`'s accept fan-out hands over a socket that a plain
+            // `std::net::TcpListener` accepted on another thread. Register it
+            // exactly like the tail of `accept` above. std creates every socket
+            // with `WSA_FLAG_OVERLAPPED` and an `accept`ed socket inherits its
+            // listener's attributes, so it can join this completion port; no
+            // blocking-mode change is needed, because overlapped I/O ignores it.
+            // If association fails, `stream` drops here and the socket closes.
+            let stream = TcpStream::from(fd);
+            let id = StreamId(self.alloc_token());
+            self.associate_stream(&stream, id)?;
+            self.register_resource(id.0, ResourceId::Stream(id));
+            self.streams.insert(
+                id,
+                WindowsStreamState {
+                    socket: stream,
+                    interest: StreamInterest::none(),
+                    read_buffer_size: WINDOWS_IO_BUFFER_SIZE,
+                    pending_read: None,
+                    completed_reads: VecDeque::new(),
+                    pending_write: None,
+                    completed_writes: VecDeque::new(),
+                    read_closed: false,
+                },
+            );
+            Ok(id)
+        }
+
         fn configure_stream(
             &mut self,
             stream: StreamId,
@@ -2780,12 +2808,33 @@ pub mod windows {
         }
 
         fn close_stream(&mut self, stream: StreamId) -> Result<(), PlatformError> {
-            if self.streams.remove(&stream).is_some() {
-                self.unregister_resource(stream.0);
-                Ok(())
-            } else {
-                Err(PlatformError::InvalidResource)
-            }
+            let Some(state) = self.streams.remove(&stream) else {
+                return Err(PlatformError::InvalidResource);
+            };
+            // Send FIN *before* the socket is dropped.
+            //
+            // Winsock makes `closesocket()` abortive (an RST, not a FIN)
+            // while an overlapped `WSARecv` is still pending, and this
+            // provider nearly always has one pending: `read` re-arms it.
+            // A peer that receives the RST throws away whatever it had not
+            // read yet, so a server that flushes a final message and then
+            // closes (a WebSocket Close echo, an HTTP response) loses that
+            // message on the client's side as `ConnectionReset`.
+            //
+            //   without this   write(close frame) -> closesocket -> RST
+            //                  peer: recv() = WSAECONNRESET, frame gone
+            //   with this      write(close frame) -> shutdown(SD_SEND) -> FIN
+            //                  -> closesocket; peer reads the frame, then EOF
+            //
+            // libuv's `uv_tcp_close` does the same for the same reason. A
+            // failure (the peer already gone) changes nothing about closing.
+            // The pending read's buffer is owned by `self.operations` until
+            // its (cancelled) completion is drained, so dropping the socket
+            // here is still memory-safe.
+            let _ = state.socket.shutdown(Shutdown::Write);
+            drop(state);
+            self.unregister_resource(stream.0);
+            Ok(())
         }
 
         fn close_listener(&mut self, listener: ListenerId) -> Result<(), PlatformError> {
@@ -3064,11 +3113,10 @@ mod tests {
 
     /// An externally-accepted connection, handed in via `adopt_stream`, reads and
     /// writes exactly like one the platform `accept`ed itself.  This is the
-    /// foundation of the macOS/BSD accept fan-out: the acceptor thread does the
-    /// `accept`, the worker platform `adopt`s the socket.
-    #[cfg(unix)]
+    /// foundation of the accept fan-out (macOS/BSD and Windows): the acceptor
+    /// thread does the `accept`, the worker platform `adopt`s the socket.
+    #[cfg(any(unix, windows))]
     fn assert_adopts_external_stream<P: TransportPlatform>(platform: &mut P) {
-        use std::os::fd::OwnedFd;
 
         // A separate std listener stands in for the fan-out acceptor: it accepts a
         // real loopback connection, and we hand the accepted socket to `platform`.
@@ -3081,7 +3129,7 @@ mod tests {
         let (server, _peer) = listener.accept().expect("accept on std listener");
 
         // Transfer ownership of the accepted socket into the platform.
-        let owned: OwnedFd = server.into();
+        let owned: AdoptableFd = server.into();
         let stream = platform.adopt_stream(owned).expect("adopt external stream");
         platform
             .configure_stream(stream, StreamOptions::default())
@@ -3173,22 +3221,110 @@ mod tests {
 
     #[cfg(any(target_os = "linux", target_os = "windows"))]
     fn assert_ipv6_listener_stays_ipv6_only<P: TransportPlatform>(platform: &mut P) {
+        // The old shape of this test bound `[::]:0` and then expected a
+        // connect to `127.0.0.1:<same port>` to fail. Port numbers are
+        // shared across address families, so on a busy CI runner any
+        // *other* process listening on that IPv4 port made the connect
+        // succeed and the test fail, although V6ONLY was set.
+        //
+        // So we claim the IPv4 side ourselves first:
+        //
+        //   1. bind a plain std listener on 127.0.0.1:0      -> port P
+        //   2. bind the platform listener on [::]:P
+        //
+        // Step 2 only succeeds if the platform socket is IPv6-only; a
+        // dual-stack socket would also want 0.0.0.0:P, which we hold.
+        // Then a connect to 127.0.0.1:P must land on *our* IPv4 listener.
+        //
+        // Another process may grab [::]:P between the two binds; that is
+        // an AddrInUse unrelated to V6ONLY, so we try a few fresh ports.
+        // A dual-stack implementation fails every attempt.
+        let mut last_error = None;
+        for _ in 0..5 {
+            let ipv4 = std::net::TcpListener::bind("127.0.0.1:0").expect("bind ipv4 listener");
+            let port = ipv4.local_addr().expect("ipv4 listener addr").port();
+            let bind_addr: SocketAddr = format!("[::]:{port}").parse().expect("ipv6 wildcard addr");
+            match platform.bind_listener(BindAddress::Ip(bind_addr), ListenerOptions::default()) {
+                Ok(listener) => {
+                    let addr = platform.local_addr(listener).expect("ipv6 listener addr");
+                    assert_eq!(addr.port(), port);
+                    let _client = TcpStream::connect_timeout(
+                        &SocketAddr::from(([127, 0, 0, 1], port)),
+                        Duration::from_secs(2),
+                    )
+                    .expect("connect to the ipv4 listener");
+                    ipv4.accept()
+                        .expect("ipv4 traffic must reach the ipv4 listener, not the ipv6 one");
+                    return;
+                }
+                Err(error) => last_error = Some(format!("{error:?}")),
+            }
+        }
+        panic!(
+            "could not bind [::]:P beside 127.0.0.1:P in 5 tries; a dual-stack \
+             (not V6ONLY) listener fails this way, and so does a host without \
+             IPv6 (last error: {last_error:?})",
+        );
+    }
+
+    /// A server that writes its last bytes and closes at once must deliver
+    /// them: the peer reads the bytes, then end-of-stream, never a reset.
+    ///
+    /// The read armed first matters on Windows, where a socket closed with
+    /// an overlapped `WSARecv` still pending is reset unless it was shut
+    /// down for sending first (`close_stream`'s comment has the details).
+    /// This is the shape that lost `websocket-runtime`'s Close echo.
+    #[cfg(any(target_os = "linux", target_os = "windows"))]
+    fn assert_close_after_write_delivers_data_then_eof<P: TransportPlatform>(platform: &mut P) {
         let listener = platform
             .bind_listener(
-                BindAddress::Ip("[::]:0".parse().expect("ipv6 wildcard addr")),
+                BindAddress::Ip("127.0.0.1:0".parse().expect("loopback addr")),
                 ListenerOptions::default(),
             )
-            .expect("bind ipv6 listener");
-        let addr = platform.local_addr(listener).expect("ipv6 listener addr");
+            .expect("bind listener");
+        let addr = platform.local_addr(listener).expect("listener addr");
 
-        let result = TcpStream::connect_timeout(
-            &SocketAddr::from(([127, 0, 0, 1], addr.port())),
-            Duration::from_millis(200),
+        let mut client = TcpStream::connect(addr).expect("connect client");
+        let stream = accept_loop(platform, listener).stream;
+        platform
+            .set_stream_interest(stream, StreamInterest::readable())
+            .expect("read interest");
+
+        // The client never sends, so this read stays pending.
+        let mut scratch = [0u8; 16];
+        assert_eq!(
+            platform.read(stream, &mut scratch).expect("arm a read"),
+            ReadOutcome::WouldBlock,
         );
-        assert!(
-            result.is_err(),
-            "ipv6 wildcard listener unexpectedly accepted an ipv4 connection",
-        );
+
+        let payload = b"last words before close";
+        let deadline = Instant::now() + Duration::from_secs(2);
+        let mut events = Vec::new();
+        loop {
+            match platform.write(stream, payload).expect("write") {
+                WriteOutcome::Wrote(n) => {
+                    assert_eq!(n, payload.len());
+                    break;
+                }
+                WriteOutcome::WouldBlock => {
+                    assert!(Instant::now() < deadline, "write never completed");
+                    platform
+                        .poll(Some(Duration::from_millis(10)), &mut events)
+                        .expect("poll transport platform");
+                }
+                WriteOutcome::Closed => panic!("stream closed before the write"),
+            }
+        }
+        platform.close_stream(stream).expect("close stream");
+
+        client
+            .set_read_timeout(Some(Duration::from_secs(2)))
+            .expect("client read timeout");
+        let mut received = Vec::new();
+        client
+            .read_to_end(&mut received)
+            .expect("a graceful close ends in EOF, not a reset");
+        assert_eq!(received, payload);
     }
 
     #[cfg(any(target_os = "linux", target_os = "windows"))]
@@ -3344,6 +3480,12 @@ mod tests {
         }
 
         #[test]
+        fn close_after_write_delivers_data_then_eof() {
+            let mut platform = EpollTransportPlatform::new().expect("create platform");
+            assert_close_after_write_delivers_data_then_eof(&mut platform);
+        }
+
+        #[test]
         fn peer_shutdown_is_observable() {
             let mut platform = EpollTransportPlatform::new().expect("create platform");
             assert_peer_shutdown_is_observable(&mut platform);
@@ -3373,6 +3515,18 @@ mod tests {
         fn timer_and_wakeup_generate_events() {
             let mut platform = WindowsTransportPlatform::new().expect("create platform");
             assert_timer_and_wakeup_generate_events(&mut platform);
+        }
+
+        #[test]
+        fn close_after_write_delivers_data_then_eof() {
+            let mut platform = WindowsTransportPlatform::new().expect("create platform");
+            assert_close_after_write_delivers_data_then_eof(&mut platform);
+        }
+
+        #[test]
+        fn adopts_externally_accepted_stream() {
+            let mut platform = WindowsTransportPlatform::new().expect("create platform");
+            assert_adopts_external_stream(&mut platform);
         }
 
         #[test]

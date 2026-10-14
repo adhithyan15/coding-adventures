@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Multi-worker runtimes on Windows use the accept fan-out (one listener,
+  accepted sockets round-robined to the workers and adopted by their IOCP
+  providers) instead of `SO_REUSEPORT`, which Windows does not have and the
+  Windows provider refuses. `bind_windows_sharded` with more than one worker
+  used to fail at bind; `sharded-echo-bench`'s two multi-shard tests failed
+  that way. New Windows test that connections spread across shards.
 - Keep the BSD-only accept fan-out state clean under Rust 1.97 when compiling
   the Windows transport dependency closure.
 
