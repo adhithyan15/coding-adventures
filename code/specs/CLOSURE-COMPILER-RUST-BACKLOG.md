@@ -3,49 +3,50 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a current-main reconciliation -->
-October14: actual76/main7b6 native77435 EXIT0:4936/289,0FAIL/3existing ignores,
-74rows/strict56/docs and real isolated WinUI/callback controls;60focus excluded.
-Integer9a1 actual5925 EXIT0:619/10/strict3,48 full empty-work scenes through8192,
-six authored scenes and exact predicate/AVL/occurrence controls. General arbitrary-
-support/floating P2 remains WITHHELD. Earlier failed receipts remain immutable.
+October14: current tested source `96b26233b26576f382ab36fd951c48ddb8026889` integrates main
+`f26caa738d25f1d30e059b6dfaba07c293181433`. Closed 25-path import proof:
+15 exact pure imports, 10 overlaps, 156 other owned objects initially retained;
+source96b retains155/156, with only the documented spec amendment differing.
+376 registry identities unchanged. No new crates.io dependency.
 
-Source4a/main563 actual81156 EXIT0: compiler/IR/paint/hierarchy/parser1501/17,
-0FAIL/0ignore/strict5/docs;5focus excluded. Initial178 import1901paths/1888pure/
-13overlaps/146owned; final4a144/146exact, only documented spec/refusal oracle
-exceptions. Four conflict stages archived;376registry identities unchanged.
-Main25 imported four exact TaskApp docs,224882other objects retained.
+Actual core validator63937 EXIT0: full compiler/IR/paint/hierarchy/parser
+1509 passed across17targets,0fail/0ignore; repeated focus rows excluded.
+Sign alias/value controls cover both roots, outcomes and direct/assigned
+consumers; formatter refusal uses unchanged8192 classifier cap. Eight complete
+value programs run on six available backends:48actual cells, every Some(0),
+exact -1/1 stdout. CLR unavailable/unvalidated. Theme control verifies all
+font queries/glyphs, complete background rectangle fields/order and full
+remaining scene equality against the same font/color baseline. Integer work
+controls retain every scene/default metadata field and original work bounds.
+Initial629 metadata failure remains in its immutable receipt; no safety or
+production-limit assertion was weakened. Strict6/lessons/whitespace pass.
 
-Current tested source `d8dc7306715d9ed3b95dd4a9c3ed6e856448e81d`: sixth computed-name AST alias/value
-matrix covers both roots/outcomes/consumers, exact2relay additions and whole
-original arguments, ordered wrappers/roots/original tree. Alias refusal uses
-the real Type formatter error under unchanged8192 classifier cap; value keeps
-one formatter. Direct sixth source explicitly retains Parse135; cloned positions
-are excluded from source-map/lineage evidence. Full compiler2638 actual54630
-EXIT0:869/5/strict2,3focus repeats excluded; entire475compiler objects retainedd8.
-Initial263 stdout-only native acceptance WITHHELD by independent review; immutable
-finding9555136c and return-semantics amendment61b0f921 retained.
+Actual downstream23389 EXIT0: union24 including dev consumers, remaining
+18 nonLANG packages plus exact unchanged11 LANG BUILD commands and48 native
+roster,8 additional paired/upstream/completion controls; Rust totals
+1258 passed/176targets/1existing ignores, separate from core.
+Original75181 EXIT1 stopped on a harness cp1252 BUILD decode after nonLANG928/60
+passed. Its receipt/log remain immutable;23389 retains that exact same-head row
+and executes every remaining command using explicit UTF-8. No native command
+was skipped and the initial harness failure is not reported as acceptance.
+Strict24, Python native-contract pytest/Ruff and doc shards pass. Native
+WinUI acceptance is included through its actual full package test; no skip flag.
+Independent exact-source scoped security review retained at SHA880ef1711964569396c229bbae23cab40f2a029d19b9c0a41a7c6ef633557150.
+Earlier source-attributed receipts and failed logs remain immutable; prior
+sixth native24 zero-exit cells and AST/direct Parse135 controls are retained
+and rechecked. Cloned AST positions are excluded from mapping/lineage evidence.
 
-Repaired d8 actual59062 EXIT0: four assigned source programs × six actual
-NativeAot/Llvm/Wasm/Jvm/Vm/Jit backends =24observed cells, every codeSome(0),
-exact9/1stdout. saved avoids intentional result return; everyprogram requires
-actual execution, availability guard retained. CLR unavailable/unvalidated.
-Adversarial matching stdout with abnormal/missing exit rejected; simulatedcells
-are separate from runtime evidence. StrictLANG/lessons/whitespace0; exact-head
-independent review PASS (5cee3d33), no production or existing-control changes.
-
-Latest audited main `f26caa738d25f1d30e059b6dfaba07c293181433` now adds sign-wrapped standard name actuals
-and Swimlane edge-label theme. These runtime imports are pending; earlier native
-receipts do not accept them. Next: pin closed sign/theme spec/import, retain all
-ownership/limits/resource controls, add exact paired sign and full theme-scene/
-glyph/rect/metadata controls, recompute affected cone and execute downstream/
-SwiftUI/Python/native11production+48roster validation before final security.
-Whole456/current-main/native/hosted/requiredCI/review/conflict/P2 gates pending.
-Sole Closure/sharedPR17288 published`82209953a0909dfaa66c8065ee6f163d7478c2d1` remains
-conflicted/failedCI, autoOFF. No push/merge/cleanup/CV04b. BaseESTree/own types/
-no newcrates.io retained. Full parity/output byte-source/all lineage/goal OPEN.
-Final-source Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/source/
-target/receipts untouched/unpolled. Delivery first, genuine Miri later;heartbeat
-ACTIVE. Own validators54630/59062 are actual terminal, not still running.
+Latest audited origin/main `b7d25cafd14a5e260bb2d05dea0329da117b6cee`; its newer runtime imports
+are pending and are not accepted by the source96b/f26 receipts. Sole Closure/sharedPR17288
+published `82209953a0909dfaa66c8065ee6f163d7478c2d1` remains conflicted/failed CI, auto-mergeOFF.
+Whole456/general arbitrary-support-floating P2/hosted native3OS/requiredCI/
+exact published-head review/conflict gates remain OPEN. No push, merge,
+cleanup or CV04b yet. Base ESTree canonical boundary/own types preserved.
+Full Closure parity/output-byte-to-source/all folding-renaming-inlining-motion-
+merging-deletion lineage and pass/sweep/identity/span evidence remain OPEN.
+Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/checkout/target/
+receipts untouched and unpolled. Delivery first, genuine final-source Miri
+afterward. Full objective incomplete; heartbeat ACTIVE.
 <!-- /CV04a current-main reconciliation -->
 
 <!-- CV04a BEAM heap native continuation -->

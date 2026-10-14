@@ -68,3 +68,24 @@ after removing precisely those two proven rectangles and the sole background
 metadata key. Pin all ordered font queries and glyph text/size/fill/ref, plus
 default textColor/absent background and explicit edge-style precedence. This
 retains every remaining scene field and is not token-presence-only evidence.
+
+
+At source96b26233 actual63937 EXIT0: sign ownership2, exact theme1, integer3,
+native8programs/48zero-exit cells on six backends (CLR unavailable), fullcore
+1509/17/0fail/0ignore; strict6/docs0. Focus repeats are excluded from fullcore.
+Actual23389 EXIT0: downstream union24 and unchanged11production+48native
+roster plus8 extra controls, Rust1258/176/1existing ignores;
+strict24/Python/Ruff/doc shards pass. Receipts retain exact source/log hashes.
+Scoped security report SHA880ef1711964569396c229bbae23cab40f2a029d19b9c0a41a7c6ef633557150. This does not accept whole456,
+general arbitrary/floating work, published-head hosted checks, full parity or
+provenance completion. Initial75181 EXIT1 is a preserved harness cp1252 BUILD
+decode failure after nonLANG928/60 passed; the corrected UTF-8 continuation
+retains the verified exact same-head row and executes all remaining commands.
+Miri DEFERRED/PENDING; frozen run remains untouched.
+
+Fresh audit133330Z finds newer mainb7d25cafd14a5e260bb2d05dea0329da117b6cee.
+Its additional runtime/content imports are pending; these source96b/f26 receipts
+do not validate them. Documentation checkpoint23482 failed the lesson-title slug
+contract before commit or issue publication; the title was corrected and the
+unchanged validation rerun before delivery. Keep that failure separate from
+actual23389 native acceptance.

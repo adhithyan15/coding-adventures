@@ -613,3 +613,11 @@ parsed tree. Value-copy selectors keep one formatter; by-name promotion is
 refused under the unchanged classifier cap. Direct sixth source retains Parse135;
 four assigned native programs produce9/1 with verified zero exits. Cloned AST
 positions remain excluded from mapping/lineage evidence.
+
+
+Sign-wrapped computed-name controls pair alias refusal and value snapshots
+across both roots, outcomes and output/assignment consumers. The unchanged8192
+classifier budget and real formatter error remain checked; admitted value
+programs retain one formatter. Eight native source programs verify exact -1/1
+and normal exit0 on six available backends. CLR is unvalidated. Final-source
+Miri remains DEFERRED/PENDING; these controls do not establish Closure lineage.
