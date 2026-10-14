@@ -9422,6 +9422,7 @@ fn simple_arrowhead(prev: &Point, tip: &Point, stroke: &str) -> PaintPath {
 #[cfg(test)]
 mod tests {
     mod common_origin;
+    mod subgraph_margin;
     use super::*;
     use diagram_ir::{
         DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, LayoutedGraphDiagram,
