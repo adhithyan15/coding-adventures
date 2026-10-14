@@ -3250,11 +3250,12 @@ fn f64_comparison_uses_dcmp_not_if_icmp() {
         "f64 comparison must NOT fall back to the integer if_icmp path");
 }
 
-/// `>` / `>=` over reals use `dcmpg` (so a NaN operand makes them false),
-/// matching javac's convention.
+/// Greater-than uses dcmpl followed by ifle: an unordered -1 result skips
+/// true. The real JVM IEEE table also checks NaN in either operand position.
 #[test]
-fn f64_greater_uses_dcmpg() {
-    const DCMPG: u8 = 0x98;
+fn f64_greater_uses_dcmpl_for_unordered_false() {
+    const DCMPL: u8 = 0x97;
+    const IFLE: u8 = 0x9e;
     let gt = IIRFunction::new("main", vec![], "i64", vec![
         IIRInstr::new("const", Some("a".into()), vec![Operand::Float(7.0)], "f64"),
         IIRInstr::new("const", Some("b".into()), vec![Operand::Float(4.0)], "f64"),
@@ -3263,7 +3264,8 @@ fn f64_greater_uses_dcmpg() {
         IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
     ]);
     let code = code_bytes(&lower(&module_with(gt)));
-    assert!(code.contains(&DCMPG), "cmp_gt over f64 should use dcmpg");
+    assert!(code.windows(2).any(|pair| pair == [DCMPL, IFLE]),
+        "cmp_gt over f64 must use dcmpl/ifle so NaN is false");
 }
 
 // ===========================================================================
