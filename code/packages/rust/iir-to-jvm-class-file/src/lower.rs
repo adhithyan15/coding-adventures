@@ -813,6 +813,7 @@ fn type_to_jvm_descriptor(hint: &str) -> &str {
         "str" => "Ljava/lang/String;",
         t if is_array_type(t) => match array_elem_type(t).as_deref() {
             Some("i64") | Some("u64") => "[J",
+            Some("f32") => "[F",
             Some("f64") => "[D",
             Some("str") => "[Ljava/lang/String;",
             _ => "[I",
