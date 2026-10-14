@@ -1103,3 +1103,13 @@ capability_check(
 ```
 
 Every package gets a `capability_check` target automatically via the `py_library` rule. You cannot forget it. If you try to publish without declaring capabilities, the build fails. That is the payoff of moving from shell-script BUILD files to a structured configuration language.
+
+
+## Standalone opcode-provider compatibility
+
+[STP01](STP01-starlark-opcode-provider.md) freezes the retained inert opcode
+and operator table component as `standalone-provider-v1`. It supplies no AST
+compiler or VM execution. PY03's future restricted Python-mode instruction
+policy is a separate profile; it does not silently remove current provider
+bytes. Shared-corpus native adoption and the Python stub/Ruby facade obligations
+remain separate parity owners.
