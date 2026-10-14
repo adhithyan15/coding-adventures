@@ -54,3 +54,18 @@ non-overlap with group content, exact stable IDs/styles/config/input retention,
 and unchanged existing resource guards. A conservative global depth reserve is
 permitted; it must be reflected in canvas/lane/node/group geometry together.
 No extra accepted-margin restrictions or reduced production capacities.
+
+The336 geometry cells executed134 failures and the80 invalid cells executed
+wrong admissions at698d96ca; neither is a compilation-only red. For nonzero
+margin sum s, reserve s*(D+1) on the horizontal cross axis, moving node centers
+by the complete reserve instead of half. Vertical layout needs (s+30)*D beyond
+the already expanded lane header: it lacks the centered horizontal layout's
+existing30-per-depth slack. Empty-group fallback bounds need the same fixed
+depth slack, even horizontally. Recursive group content bounds retain the
+incoming30+s title inset. Keep the exact zero/default path.
+
+When nonzero margins expose a previously floor-hidden extent, rank tails must
+also include their actual outer padding: horizontal tail at least20+2*padding,
+vertical tail at least20+padding, retaining larger existing tails. This keeps
+node rectangles inside their lane after the420 canvas minimum stops dominating.
+All arithmetic remains bounded by existing finite scalar/depth/node limits.

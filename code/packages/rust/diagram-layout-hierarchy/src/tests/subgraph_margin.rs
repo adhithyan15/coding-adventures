@@ -16,7 +16,10 @@ fn imported_subgraph_margin_exact_typed_admission() {
                     let before=input.clone();
                     match std::panic::catch_unwind(||try_layout_swimlane(&input)) {
                         Ok(Err(SwimlaneLayoutError::UnsupportedSpacing {field:actual})) if actual==field=>{},
-                        other=>failures.push((direction.clone(),titled,field,bad.to_bits(),format!("{other:?}"))),
+                        other=>{
+                            let detail=match other {Ok(Ok(_))=>"accepted".to_owned(),Ok(Err(e))=>format!("wrong error: {e}"),Err(_)=>"panicked".to_owned()};
+                            failures.push((direction.clone(),titled,field,bad.to_bits(),detail));
+                        },
                     }
                     assert_eq!(input.flowchart_config.subgraph_title_margin_top.map(f64::to_bits),before.flowchart_config.subgraph_title_margin_top.map(f64::to_bits));
                     assert_eq!(input.flowchart_config.subgraph_title_margin_bottom.map(f64::to_bits),before.flowchart_config.subgraph_title_margin_bottom.map(f64::to_bits));
