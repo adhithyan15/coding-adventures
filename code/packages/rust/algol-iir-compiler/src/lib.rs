@@ -3967,7 +3967,7 @@ impl Compiler {
                 if !self.proc_sigs.contains_key(&target_name) && target_name == "entier" {
                     let actuals = self.standard_fn_actuals(node);
                     return actuals.len() == 1
-                        && self.builtin_sign_operand(actuals[0]).is_some_and(|operand| {
+                        && self.builtin_outer_entier_operand(actuals[0]).is_some_and(|operand| {
                             self.is_selector_call_safe_runtime_real_root(operand)
                         });
                 }
@@ -4184,7 +4184,7 @@ impl Compiler {
                 if !self.proc_sigs.contains_key(&target_name) && target_name == "entier" {
                     let actuals = self.standard_fn_actuals(node);
                     return actuals.len() == 1
-                        && self.builtin_sign_operand(actuals[0]).is_some_and(|operand| {
+                        && self.builtin_outer_entier_operand(actuals[0]).is_some_and(|operand| {
                             self.is_selector_call_safe_runtime_real_root(operand)
                         });
                 }
@@ -4780,6 +4780,73 @@ impl Compiler {
         self.builtin_nonpositive_unit_sign_operand(operand)
     }
 
+    /// An outer entier may consume one small additive offset without changing
+    /// the narrower proof used inside exp/log chains. The dynamic operand must
+    /// use that old proof: recursing here would forget an inner offset and let
+    /// parentheses or standard calls reset the one-offset budget.
+    fn builtin_outer_entier_operand<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        #[cfg(test)]
+        selector_classifier_visit();
+        if let Some(operand) = self.builtin_sign_operand(node) {
+            return Some(operand);
+        }
+        // Scan the old expression once, then normalize wrappers once. Calling
+        // the full old classifier at every wrapper would introduce quadratic
+        // work on a deeply parenthesized refusal.
+        let mut flat = node;
+        loop {
+            #[cfg(test)]
+            selector_classifier_visit();
+            if let Some(child) = single_parenthesized_child(flat) {
+                flat = child;
+                continue;
+            }
+            if let Some((sign, child)) = single_signed_child(flat) {
+                if !matches!(sign, "+" | "-") { return None; }
+                flat = child;
+                continue;
+            }
+            if flat.rule_name != "proc_call" && direct_tokens(flat).is_empty() {
+                let children = direct_nodes(flat);
+                if children.len() == 1 {
+                    flat = children[0];
+                    continue;
+                }
+            }
+            break;
+        }
+        if !matches!(flat.rule_name.as_str(), "expr_add" | "simple_arith") { return None; }
+        let sequence = pieces(flat);
+        if sequence.len() < 3 || sequence.len() % 2 != 1 { return None; }
+        let mut root = None;
+        let mut saw_unit = false;
+        for (index, piece) in sequence.iter().enumerate() {
+            #[cfg(test)]
+            selector_classifier_visit();
+            if index % 2 == 0 {
+                let Piece::Node(operand) = piece else { return None; };
+                if let Some(operand) = self.builtin_sign_operand(operand) {
+                    if root.replace(operand).is_some() { return None; }
+                } else {
+                    let mut dependencies = HashSet::new();
+                    collect_expression_dependency_names(operand, "", &mut dependencies);
+                    if !dependencies.is_empty() { return None; }
+                    let value = expr_static_real_arithmetic_value_with(operand, &|_| None)?;
+                    if value != 0.0 {
+                        if saw_unit || value.abs() != 1.0 { return None; }
+                        saw_unit = true;
+                    }
+                }
+            } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                return None;
+            }
+        }
+        root
+    }
+
     fn builtin_sign_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
@@ -4818,7 +4885,6 @@ impl Compiler {
             let sequence = pieces(node);
             if sequence.len() >= 3 && sequence.len() % 2 == 1 {
                 let mut sign_operand = None;
-                let mut saw_unit_offset = false;
                 for (index, piece) in sequence.iter().enumerate() {
                     if index % 2 == 0 {
                         let Piece::Node(operand) = piece else {
@@ -4828,15 +4894,10 @@ impl Compiler {
                             if sign_operand.replace(operand).is_some() {
                                 return None;
                             }
-                        } else {
-                            let value =
-                                expr_static_real_arithmetic_value_with(operand, &|_| None)?;
-                            if value != 0.0 {
-                                if saw_unit_offset || value.abs() != 1.0 {
-                                    return None;
-                                }
-                                saw_unit_offset = true;
-                            }
+                        } else if !expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_some_and(|value| value == 0.0)
+                        {
+                            return None;
                         }
                     } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
                         return None;
@@ -5050,7 +5111,7 @@ impl Compiler {
                         let actuals = self.standard_fn_actuals(node);
                         if actuals.len() == 1
                             && self
-                                .builtin_sign_operand(actuals[0])
+                                .builtin_outer_entier_operand(actuals[0])
                                 .is_some_and(|operand| {
                                     self.is_selector_call_safe_runtime_real_value(operand)
                                 })
@@ -5255,7 +5316,7 @@ impl Compiler {
                     let actuals = self.standard_fn_actuals(node);
                     return actuals.len() == 1
                         && self
-                            .builtin_sign_operand(actuals[0])
+                            .builtin_outer_entier_operand(actuals[0])
                             .is_some_and(|operand| {
                                 self.is_runtime_real_assignment_value(operand)
                             });
