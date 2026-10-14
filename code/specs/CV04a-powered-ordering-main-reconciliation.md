@@ -238,3 +238,23 @@ termination or duplicate execution. Implementation/delivery precede genuine
 final-source Miri and any invalidated-input reruns. Base ESTree, own types and no
 new crates.io dependencies remain the owner boundary. Full Closure parity,
 source/output joins, all transformation lineage and the full goal remain OPEN.
+
+
+## October14 selector component acceptance
+
+Exact source4238d43a completes actual validator41459 EXIT0. Full compiler856/5
+includes every eight previously failing name-actual test; the powered16 and
+computed-name8 complete programs pass on every available standard backend.
+Strict ALGOL/LANG lint, doc shards, lessons1192 and whitespace pass. The eight
+negative work cells observe535/496/535/496/609/570/609/570 classifier visits,
+preserving the unchanged8192 bound and semantic refusal. Independent review
+passes only this exact component; all original807 compiler,448 LANG and six
+BEAM test declarations and six MAX constants are unchanged from the reviewed
+main. Original failures and stopped partial red remain preserved, not relabeled.
+
+Later audited mainfdf1a247 imports a fourth standard-function name-actual layer
+with its own accepted/refused controls, plus authored Swimlane typography. These
+need a separate pinned import/spec/native frame. Prior component acceptance
+does not imply that new main, the full453 cone, LANG production11/native48,
+ordering/oblique work, whole-PR final security or hosted Linux is accepted.
+Miri DEFERRED/PENDING and the full OPEN completion contract remain unchanged.

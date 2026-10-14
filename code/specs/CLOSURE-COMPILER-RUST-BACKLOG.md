@@ -3,45 +3,43 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a current-main reconciliation -->
-October14 candidate `bd3610d48aa0b8834602c50604d6354f0cf93ba5` integrates main
-`5526f94f956ac390fc667af525dabef602ec7fce`. Actual native session27645 EXIT0
-passes **658 tests/docs across14 targets**, zero failures/ignores, for hierarchy,
-parser, paint and Chief daemon; strict all-target session6489 returns EXIT0.
-The immutable receipts retain every earlier compile/red failure. Cross-lane ranks
-reuse one gap index (512 visits/14 queries in all four directions). Paint adds
-72 exact whole-scene orthogonal-hop controls while retaining duplicate/same-axis
-work bounds. Parser endpoint metadata and the unchanged eight-opener source-anchor
-security assertion pass; canonical LF repairs the conflict writer's CRLF bytes.
+October14 candidate `4238d43a5f50c21ccb9ee85ebbe75cf11450ad2a` / integrated main5526 completes
+actual native session41459 EXIT0: full compiler856/5 plus two exact LANG backend
+matrices (24 programs) pass **858 tests/docs across7 targets**, zero failures/
+ignores. Strict all-target lint for ALGOL/LANG, doc shards, lessons1192 and
+whitespace pass. The extra focused work test is excluded from those totals.
+All eight original imported name-actual failures are repaired. Both consumers
+retain pre-proof AND post-proof; only a fresh same-Real conditional result proven
+for both arms after condition effects may carry materialized proof. All prior
+alias/shared-root/finite/production-limit tests remain unchanged.
 
-Read-only planner54525 returns actual EXIT0: current Cargo metadata identifies
-38 changed Rust seeds and453 affected packages including dev dependencies. This
-is a plan, **not complete-cone acceptance**. Powered-selector controls, ordering
-and arbitrary-oblique work assessment, changed compiler/native/downstream suites,
-exact-final independent security review and genuine repaired hosted Linux remain
-pending. Earlier3347/211 native acceptance stays attributed to source282/main160.
+Counted refusal work first fails at8193 against8192. Existing transparent-wrapper
+fallbacks now run first; eight actual programs observe535/496/535/496/609/570/
+609/570 classifier entries and retain the specific formatter refusal. Typed
+call/variable shapes, operator tokens and standard-call depth keep their guards.
+Stopped candidate-only red10295 preserves actualEXIT1/child0xffffffff and an
+observed positive failure; its unfinished negative matrix is never called PASS.
+Original full compiler18101 EXIT1/845PASS/8FAIL and all earlier red logs persist.
 
-Powered controls at7f84f9f5 expose actual full compiler session18101 EXIT1
-(Cargo101), 845PASS/8FAIL/five targets. Both powered policy tests (32 cells) pass;
-native and lint phases were unreached. Eight imported computed-name branches fail
-the formatter gate after their captures promote roots. Spec3d594174 precedes new
-paired controls4694b035 and repair11466347, which carries proof only on a fresh
-conditional scalar proven for both arms after condition effects. Its execution
-acceptance remains PENDING. New positive red is observed; stopped candidate-only
-session10295 preserves actual EXIT1/child0xffffffff and unfinished negative cells,
-never a negative PASS. Miri was neither queried nor stopped.
+Independent exact-source review **PASS for the selector component only**, report
+CV04a-selector-security-4238d43a.md SHA256 8ff8b286bae6780119c13ef4623cfe108070d2067c69f70f177a4f58a5d5f6cc.
+Whole-PR final security remains PENDING. Earlier four-consumer658/14 and strict
+6489 remain attributed to bd361/main5526; earlier3347/211 remain282/main160.
+Cargo plan38seeds/453affected including dev dependencies is not cone acceptance.
 
-Fresh complete PR/backlog/epic audit session30949 sees main
-`fd6df512b7c750733095c8d87f3c6c10db17ec83`; its extra commit changes human-language
-source/tests/specs only and is not yet imported or runtime-accepted here. Sole
-Closure/shared PR17288 remains published at822, DIRTY, terminal Linux/CI-gate
-failures, auto-mergeOFF. Original build-plan artifact is now unavailable; preserved
-archive/plan hashes remain verified historical evidence, never fresh acceptance.
-No publication, merge, cleanup or CV04b selection occurred.
+Fresh full-file PR/backlog/epic audit10058 sees main `fdf1a247b9c1b6b5abdcdcc67bafdf9f2e7926d0`:
+new quadruple standard name actuals and Swimlane typography need import and
+bounded validation. Current-source LANG production11/native48, complete changed
+downstream cones, ordering/unique-oblique work and repaired hosted Linux remain
+pending. Sole Closure/shared PR17288 remains published at822, DIRTY, terminal
+Linux/CI-gate failures, auto-mergeOFF. Expired build-plan artifact is UNAVAILABLE;
+verified preserved hashes are historical evidence. No publication/merge/cleanup/
+CV04b selection occurred.
 
-Full final-source Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/
-checkout/receipts/target remain untouched and unpolled. Base ESTree, own types and
-no new crates.io dependencies remain binding. Full parity, source/output joins,
-all transformation lineage and the full objective remain OPEN; heartbeat ACTIVE.
+Full final-source Miri **DEFERRED/PENDING**, never passed. Frozen497inputs/run/
+checkout/receipts/target stay untouched and unpolled. Base ESTree/own types/no
+new crates.io dependencies remain binding. Full parity, source/output joins,
+all transformation lineage and the objective remain OPEN; heartbeat ACTIVE.
 <!-- /CV04a current-main reconciliation -->
 
 <!-- CV04a BEAM heap native continuation -->
