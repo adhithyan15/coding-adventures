@@ -46,6 +46,30 @@ gates and Miri DEFERRED/PENDING requirements below remain binding.
 
 ## Source boundary
 
+### Actual three-target red on the reconciled source
+
+Session74791 at source61f3a9cd returns actual EXIT101 for three library targets;
+the complete log and all successful target summaries remain immutable.
+The original source-anchor security assertion must stay unchanged. The conflict
+writer emitted CRLF in daemon source; normalize that file back to canonical LF,
+preserving its Git blob and production/test content. Do not weaken its marker or
+the exact eight anchored-opener count.
+
+Restore the existing parser dispatch order: positional `linkStyle` first,
+then a detected edge chain (including endpoint shape metadata), then a standalone
+edge configuration. The merge accidentally inserted an additional configuration
+parse before the edge chain. Remove that duplicate, retaining all new positional
+style/config behavior and the exact endpoint metadata regression.
+
+Rounded routes are now explicitly orthogonal-hop eligible upstream. Keep the
+old invisible/unsupported-curve exclusions and their full instruction equality;
+use Basis for the unsupported-curve cases. Preserve the former Rounded cases as
+new positive exact-command controls for both arc/gap and every eligible route
+family, including crossing prior Rounded segments. Pin the intermediate50-pixel
+segment boundary for Step/Rounded, the14/26-pixel hop endpoints around crossing20,
+and all routes/styles/markers/metadata. No safety or work-limit assertion is
+relaxed. Retain the duplicate/same-axis work controls and exact multiplicity.
+
 ### Shared gap index for the new rank consumer
 
 Actual merged source3d906f80/main5526 compilation session69111 returns EXIT101
