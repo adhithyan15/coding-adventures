@@ -82,3 +82,9 @@ Expand the same336 title-band cells across diagramPadding None/0/12/65536
 outer-padding domain in every ranked/unranked/direction/depth/empty case.
 Preserve full zero/default equivalence even when old zero-path geometry has
 different historical extents. Only the positive-margin branch is repaired.
+
+The expanded2d75 controls actually expose48 vertical unranked cap-padding
+failures. Its unranked tail still omitted outer padding, so subtracting padding
+from the lane height consumes the new title reserve. Apply the same nonzero
+vertical tail bound20+padding+groupInset to this branch, preserving its existing
+gap term and larger tail, and keep the failed receipt unchanged.
