@@ -14,7 +14,8 @@ romanization: "paṅkho"
 concept_tag: GU-FURNITURE-FAN
 prerequisites: [GU-C62-cot, GU-C62-table]
 sounds: []
-roots: []
+roots: [sanskrit-paksha]
+etymology_hook: "paṅkho ← Sanskrit pakṣa 'wing, feather', pakṣaka 'fan'; CDIAL queries the source of its nasal (CDIAL 7627)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C62-table]
 <!-- hl-knowledge: introduces=[GU-LEX-C62-FURNITURE-04]; assesses=[] -->
 
 **પંખો** (*paṅkho*) — "a fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પંખો** (*paṅkho*) is a tadbhava of Sanskrit *pakṣa*, "wing, feather", which also had a form *pakṣaka*, "fan" (CDIAL 7627). CDIAL suggests, with a query, that its nasal comes from *puṅkha*, "feathered shaft of an arrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

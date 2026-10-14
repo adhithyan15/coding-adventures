@@ -14,7 +14,8 @@ gloss: "a heron"
 concept_tag: GU-ANCHOR-BAGALO
 prerequisites: [GU-C05-chappal]
 sounds: []
-roots: []
+roots: [sanskrit-baka]
+etymology_hook: "bagalo: like bag 'crane' ← Sanskrit baka, probably imitative in origin (CDIAL 9115)"
 duration:
   max_seconds: 120
 requires:
@@ -45,6 +46,11 @@ variety: standard
 **બગલો** — *bagalo* — "a heron".
 
 Say it: *bagalo*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **બ** and, a little later, **ગ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બગલો** (*bagalo*) belongs with Gujarati *bag*, "crane", which CDIAL lists under Sanskrit *baka*, a heron or crane (CDIAL 9115). CDIAL thinks the word was probably imitative in origin. It does not list the longer Gujarati form.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-BAGALO] -->

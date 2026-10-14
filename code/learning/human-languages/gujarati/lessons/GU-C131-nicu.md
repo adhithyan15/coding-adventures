@@ -14,7 +14,8 @@ romanization: "nīcũ"
 concept_tag: GU-QUAL131-NICU
 prerequisites: [GU-C130-pagar, GU-C130-darji]
 sounds: []
-roots: []
+roots: [sanskrit-nica]
+etymology_hook: "nīcũ ← Sanskrit nīca 'low', a tadbhava (CDIAL 7540)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C130-darji]
 <!-- hl-knowledge: introduces=[GU-LEX-C131-QUAL131-01]; assesses=[] -->
 
 **નીચું** (*nīcũ*) — "low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**નીચું** (*nīcũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nīca*, "low" (CDIAL 7540). CDIAL explains the Gujarati form as shaped by its opposite, *ucca*, "high".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

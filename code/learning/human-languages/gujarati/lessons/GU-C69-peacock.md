@@ -14,7 +14,8 @@ romanization: "mor"
 concept_tag: GU-SKY-PEACOCK
 prerequisites: [GU-C69-star, GU-C69-parrot]
 sounds: []
-roots: []
+roots: [sanskrit-mayura]
+etymology_hook: "mor ← Sanskrit mayūra 'peacock', through *mora (CDIAL 9865); traced by some to Dravidian or Austroasiatic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C69-parrot]
 <!-- hl-knowledge: introduces=[GU-LEX-C69-SKY-03]; assesses=[] -->
 
 **મોર** (*mor*) — "a peacock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મોર** (*mor*) is a tadbhava. CDIAL lists it under *\*mora*, a form beside Sanskrit *mayūra*, "peacock" (CDIAL 9865). It reports that some scholars take the Sanskrit word from Dravidian, others from Austroasiatic, and H. W. Bailey from Iranian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

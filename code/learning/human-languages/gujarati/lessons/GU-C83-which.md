@@ -14,7 +14,8 @@ romanization: "kayũ"
 concept_tag: GU-NUM3-WHICH
 prerequisites: [GU-C83-thousand, GU-C83-howmuch]
 sounds: []
-roots: []
+roots: [ka-interrogative]
+etymology_hook: "kayũ 'which': on the question stem k-; CDIAL has no entry for it, so its history is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C83-howmuch]
 <!-- hl-knowledge: introduces=[GU-LEX-C83-NUM3-05]; assesses=[] -->
 
 **કયું** (*kayũ*) — "which one".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કયું** (*kayũ*) rests on the old question stem *k-*. CDIAL has no entry for it, so the rest of its history is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

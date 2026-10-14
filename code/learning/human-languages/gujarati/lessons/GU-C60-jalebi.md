@@ -14,7 +14,8 @@ romanization: "jalebī"
 concept_tag: GU-SNACKS-JALEBI
 prerequisites: [GU-C60-salt, GU-C60-thepla]
 sounds: []
-roots: []
+roots: [arabic-zalabiya]
+etymology_hook: "jalebī: usually traced, through Persian, to Arabic zalābiya, a fried sweet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C60-thepla]
 <!-- hl-knowledge: introduces=[GU-LEX-C60-SNACKS-04]; assesses=[] -->
 
 **જલેબી** (*jalebī*) — "jalebi, a syrupy sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જલેબી** (*jalebī*) is a loan, usually traced through Persian to Arabic *zalābiya*, a fried sweet.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

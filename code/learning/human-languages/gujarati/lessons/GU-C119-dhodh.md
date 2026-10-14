@@ -15,6 +15,7 @@ concept_tag: GU-THINGS119-DHODH
 prerequisites: [GU-C118-tapu, GU-C119-kinaro]
 sounds: []
 roots: []
+etymology_hook: "dhodh 'waterfall': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C119-kinaro]
 <!-- hl-knowledge: introduces=[GU-LEX-C119-THINGS119-02]; assesses=[] -->
 
 **ધોધ** (*dhodh*) — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ધોધ** (*dhodh*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

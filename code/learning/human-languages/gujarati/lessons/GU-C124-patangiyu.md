@@ -14,7 +14,8 @@ romanization: "patangiyũ"
 concept_tag: GU-THINGS124-PATANGIYU
 prerequisites: [GU-C123-makhi, GU-C123-madhmakhi]
 sounds: []
-roots: []
+roots: [sanskrit-patanga]
+etymology_hook: "patangiyũ: built on Sanskrit pataṅga 'insect; flying thing' (CDIAL 7721)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C123-madhmakhi]
 <!-- hl-knowledge: introduces=[GU-LEX-C124-THINGS124-01]; assesses=[] -->
 
 **પતંગિયું** (*patangiyũ*) — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પતંગિયું** (*patangiyũ*) is built on Sanskrit *pataṅga*, "insect", a word used in the Veda for flying things (CDIAL 7721). CDIAL explains the Sanskrit word as a word for "wing" crossed with some non-Aryan word, and lists no Gujarati form there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: GU-DEF101-ATLU
 prerequisites: [GU-C100-banne, GU-C101-amuk]
 sounds: []
 roots: []
+etymology_hook: "āṭlũ 'this much': CDIAL lists its partner eṭlũ under Sanskrit iyattaka 'so little' (CDIAL 1589); no entry for āṭlũ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C101-amuk]
 <!-- hl-knowledge: introduces=[GU-LEX-C101-DEF101-02]; assesses=[] -->
 
 **આટલું** (*āṭlũ*) — "this much".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL has no entry for **આટલું** (*āṭlũ*). It lists the matching *eṭlũ*, "that much", under Sanskrit *iyattaka*, "so little", built on *iyant*, "so much" (CDIAL 1589).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

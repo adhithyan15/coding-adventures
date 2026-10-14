@@ -14,7 +14,8 @@ romanization: "agiyār"
 concept_tag: GU-NUM1-ELEVEN
 prerequisites: [GU-C80-festival, GU-C80-holi]
 sounds: []
-roots: []
+roots: [sanskrit-ekadasha]
+etymology_hook: "agiyār ← Sanskrit ekādaśa 'eleven', a tadbhava (CDIAL 2485)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C80-holi]
 <!-- hl-knowledge: introduces=[GU-LEX-C81-NUM1-01]; assesses=[] -->
 
 **અગિયાર** (*agiyār*) — "eleven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**અગિયાર** (*agiyār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ekādaśa*, "eleven" (CDIAL 2485). It is *eka*, "one", and *daśa*, "ten".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

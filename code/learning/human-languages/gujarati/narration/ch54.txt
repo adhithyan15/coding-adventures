@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a relative, then the Gujarati for a gue
 You'll want to know: બેસવું.
 બેસવું (besvũ) — "to sit".
 
+The word, taken apart.
+બેસવું (besvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from upaviśati, "approaches; sits down" (CDIAL 2245).
+
 What you've built.
 One more word for sit, walk, get up, sleep, play.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a guest, then the Gujarati for to sit.
 
 You'll want to know: ચાલવું.
 ચાલવું (cālvũ) — "to walk".
+
+The word, taken apart.
+ચાલવું (cālvũ) is a tadbhava, a word inherited and reshaped by sound change. It comes from calyati, "goes", a form CDIAL reconstructs from its descendants (CDIAL 4721). It is built on Sanskrit calati, "goes away".
 
 What you've built.
 One more word for sit, walk, get up, sleep, play.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for to sit, then the Gujarati for to walk.
 You'll want to know: ઉઠવું.
 ઉઠવું (uṭhvũ) — "to get up".
 
+The word, taken apart.
+ઉઠવું (uṭhvũ) is a tadbhava, a word inherited and reshaped by sound change. It comes from utsthāti, "stands up", a form CDIAL reconstructs from its descendants (CDIAL 1900).
+
 What you've built.
 One more word for sit, walk, get up, sleep, play.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for to walk, then the Gujarati for to get u
 You'll want to know: સૂવું.
 સૂવું (sūvũ) — "to sleep, to lie down".
 
+The word, taken apart.
+સૂવું (sūvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from svapati, "sleeps" (CDIAL 13902).
+
 What you've built.
 One more word for sit, walk, get up, sleep, play.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for to get up, then the Gujarati for to sle
 
 You'll want to know: રમવું.
 રમવું (ramvũ) — "to play".
+
+The word, taken apart.
+રમવું (ramvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ramate, "pauses, devotes oneself to; takes pleasure in" (CDIAL 10628).
 
 What you've built.
 One more word for sit, walk, get up, sleep, play.

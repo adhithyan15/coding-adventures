@@ -14,7 +14,8 @@ romanization: "dīvāl"
 concept_tag: GU-HOUSE-WALL
 prerequisites: [GU-C62-lock, GU-C63-roof]
 sounds: []
-roots: []
+roots: [persian-divar]
+etymology_hook: "dīvāl: usually traced to Persian dīvār 'wall'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C63-roof]
 <!-- hl-knowledge: introduces=[GU-LEX-C63-HOUSE-02]; assesses=[] -->
 
 **દીવાલ** (*dīvāl*) — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દીવાલ** (*dīvāl*) is a loan, usually traced to Persian *dīvār*, "wall". Gujarati ends it in *l*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "taḷāv"
 concept_tag: GU-WATER-LAKE
 prerequisites: [GU-C64-stone, GU-C65-sea]
 sounds: []
-roots: []
+roots: [sanskrit-tadaga]
+etymology_hook: "taḷāv ← Sanskrit taḍāga 'pool', a tadbhava (CDIAL 5635)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C65-sea]
 <!-- hl-knowledge: introduces=[GU-LEX-C65-WATER-02]; assesses=[] -->
 
 **તળાવ** (*taḷāv*) — "a lake, a pond".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તળાવ** (*taḷāv*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *taḍāga*, "pool" (CDIAL 5635).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

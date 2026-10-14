@@ -14,7 +14,8 @@ romanization: "thāḷī"
 concept_tag: GU-TABLE-PLATE
 prerequisites: [GU-C60-jalebi, GU-C60-puri]
 sounds: []
-roots: []
+roots: [sanskrit-sthali]
+etymology_hook: "thāḷī ← Sanskrit sthālī 'earthen dish', a tadbhava (CDIAL 13766)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C60-puri]
 <!-- hl-knowledge: introduces=[GU-LEX-C61-TABLE-01]; assesses=[] -->
 
 **થાળી** (*thāḷī*) — "a plate, a thali".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**થાળી** (*thāḷī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sthālī*, "earthen dish" (CDIAL 13766).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hammeśā"
 concept_tag: GU-WHEN-ALWAYS
 prerequisites: [GU-C76-quickly, GU-C76-again]
 sounds: []
-roots: []
+roots: [persian-hamesha]
+etymology_hook: "hammeśā: usually traced to Persian hamēsha 'always'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C76-again]
 <!-- hl-knowledge: introduces=[GU-LEX-C77-WHEN-01]; assesses=[] -->
 
 **હંમેશા** (*hammeśā*) — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હંમેશા** (*hammeśā*) is a loan, usually traced to Persian *hamēsha*, "always".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

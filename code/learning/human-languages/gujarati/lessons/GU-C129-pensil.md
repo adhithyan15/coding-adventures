@@ -14,7 +14,8 @@ romanization: "pensil"
 concept_tag: GU-THINGS129-PENSIL
 prerequisites: [GU-C129-darvajo, GU-C129-pen]
 sounds: []
-roots: []
+roots: [english-pencil]
+etymology_hook: "pensil ← English pencil"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C129-pen]
 <!-- hl-knowledge: introduces=[GU-LEX-C129-THINGS129-05]; assesses=[] -->
 
 **પેન્સિલ** (*pensil*) — "a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પેન્સિલ** (*pensil*) is a loan from English *pencil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

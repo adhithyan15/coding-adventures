@@ -14,7 +14,8 @@ romanization: "cokhā"
 concept_tag: GU-PANTRY-RICE-GRAIN
 prerequisites: [GU-C57-rupees, GU-C57-coin]
 sounds: []
-roots: []
+roots: [sanskrit-coksha]
+etymology_hook: "cokhā ← Sanskrit cokṣa 'pure, clean', a tadbhava (CDIAL 4918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C57-coin]
 <!-- hl-knowledge: introduces=[GU-LEX-C58-PANTRY-01]; assesses=[] -->
 
 **ચોખા** (*cokhā*) — "rice (uncooked)". Cooked, it is **ભાત**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચોખા** (*cokhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cokṣa*, "pure, clean" (CDIAL 4918). CDIAL lists Gujarati *cokhā*, "rice", under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

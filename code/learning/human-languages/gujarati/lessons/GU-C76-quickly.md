@@ -14,7 +14,8 @@ romanization: "jaldī"
 concept_tag: GU-HOWMUCH-QUICKLY
 prerequisites: [GU-C76-all, GU-C76-slowly]
 sounds: []
-roots: []
+roots: [persian-jald]
+etymology_hook: "jaldī: Persian jald 'quick', of Arabic origin, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C76-slowly]
 <!-- hl-knowledge: introduces=[GU-LEX-C76-HOWMUCH-04]; assesses=[] -->
 
 **જલદી** (*jaldī*) — "quickly, soon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જલદી** (*jaldī*) is a loan built on Persian *jald*, "quick", itself of Arabic origin, with the ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṭebal"
 concept_tag: GU-FURNITURE-TABLE
 prerequisites: [GU-C62-bed, GU-C62-cot]
 sounds: []
-roots: []
+roots: [english-table]
+etymology_hook: "ṭebal ← English table"
 duration:
   max_seconds: 200
 requires:

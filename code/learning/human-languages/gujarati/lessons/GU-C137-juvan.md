@@ -14,7 +14,8 @@ romanization: "juvān"
 concept_tag: GU-QUAL137-JUVAN
 prerequisites: [GU-C136-amir, GU-C137-garib]
 sounds: []
-roots: []
+roots: [persian-javan]
+etymology_hook: "juvān: usually traced to Persian javān 'young'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C137-garib]
 <!-- hl-knowledge: introduces=[GU-LEX-C137-QUAL137-02]; assesses=[] -->
 
 **જુવાન** (*juvān*) — "young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જુવાન** (*juvān*) is a loan, usually traced to Persian *javān*, "young".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

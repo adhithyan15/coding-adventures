@@ -14,7 +14,8 @@ romanization: "takiyo"
 concept_tag: GU-THINGS110-TAKIYO
 prerequisites: [GU-C110-barni, GU-C110-minbatti]
 sounds: []
-roots: []
+roots: [persian-takya]
+etymology_hook: "takiyo: usually traced to Persian takya 'pillow, support', itself from Arabic (root w-k-ʾ 'to lean')"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C110-minbatti]
 <!-- hl-knowledge: introduces=[GU-LEX-C110-THINGS110-04]; assesses=[] -->
 
 **તકિયો** (*takiyo*) — "a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તકિયો** (*takiyo*) is a loan, usually traced to Persian *takya*, "pillow, support", a word Persian took from Arabic. Its Arabic root is *w-k-ʾ*, "to lean" (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

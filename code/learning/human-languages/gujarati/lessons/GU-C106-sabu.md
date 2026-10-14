@@ -14,7 +14,8 @@ romanization: "sābu"
 concept_tag: GU-THINGS106-SABU
 prerequisites: [GU-C106-ariso, GU-C106-kasko]
 sounds: []
-roots: []
+roots: [arabic-sabun]
+etymology_hook: "sābu: a loan, traced to Portuguese sabão or, like Hindi sābun, to Arabic ṣābūn through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C106-kasko]
 <!-- hl-knowledge: introduces=[GU-LEX-C106-THINGS106-04]; assesses=[] -->
 
 **સાબુ** (*sābu*) — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સાબુ** (*sābu*) is a loan. It is traced either to Portuguese *sabão* or, like Hindi *sābun*, to Arabic *ṣābūn* through Persian (Lane, root *ṣ-b-n*). Both go back to Latin *sāpō*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

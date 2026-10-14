@@ -14,7 +14,8 @@ romanization: "so"
 concept_tag: GU-NUM3-HUNDRED
 prerequisites: [GU-C82-forty, GU-C83-fifty]
 sounds: []
-roots: []
+roots: [sanskrit-shata]
+etymology_hook: "so ← Sanskrit śata 'hundred', a tadbhava (CDIAL 12278)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C83-fifty]
 <!-- hl-knowledge: introduces=[GU-LEX-C83-NUM3-02]; assesses=[] -->
 
 **સો** (*so*) — "a hundred".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સો** (*so*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śata*, "hundred" (CDIAL 12278).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

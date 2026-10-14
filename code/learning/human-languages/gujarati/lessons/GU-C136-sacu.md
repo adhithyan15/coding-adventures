@@ -14,7 +14,8 @@ romanization: "sācũ"
 concept_tag: GU-QUAL136-SACU
 prerequisites: [GU-C136-khali, GU-C136-bharelu]
 sounds: []
-roots: []
+roots: [satya]
+etymology_hook: "sācũ ← Sanskrit satya 'true', a tadbhava (CDIAL 13112)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C136-bharelu]
 <!-- hl-knowledge: introduces=[GU-LEX-C136-QUAL136-03]; assesses=[] -->
 
 **સાચું** (*sācũ*) — "true, right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સાચું** (*sācũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *satya*, "true" (CDIAL 13112).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

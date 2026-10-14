@@ -11,8 +11,8 @@ gloss: "and, joining two whole sentences — the first two-clause sentence in th
 concept_tag: GU-JOIN-ANE-CLAUSE
 prerequisites: [GU-C32-ane, GU-C31-nathi]
 sounds: []
-roots: []
-etymology_hook: "The same one word joins two nouns and two sentences; Gujarati asks nothing extra of it."
+roots: [sanskrit-anya]
+etymology_hook: "ane: CDIAL lists it, as 'and', under Sanskrit anya 'other', comparing anyac ca 'moreover' (CDIAL 399)"
 duration:
   max_seconds: 240
 requires:
@@ -61,6 +61,8 @@ be a negative:
 
 That is a two-clause sentence, and it is the first one this book has been able
 to make.
+
+**અને** (*ane*) itself is inherited: CDIAL lists it, as the word for "and", under Sanskrit *anya*, "other", comparing *anyac ca*, "moreover" (CDIAL 399).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-JOIN-ANE-CLAUSE-01, GU-JOIN-ANE-01, GU-NEG-NATHI-01] -->

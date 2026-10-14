@@ -15,6 +15,7 @@ concept_tag: GU-THINGS111-BUTTI
 prerequisites: [GU-C111-payjamo, GU-C111-viti]
 sounds: []
 roots: []
+etymology_hook: "buṭṭī: not settled; CDIAL lists a Gujarati buṭṭī only as 'painted flower', under *būṭa 'bush, plant' (CDIAL 9297)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C111-viti]
 <!-- hl-knowledge: introduces=[GU-LEX-C111-THINGS111-04]; assesses=[] -->
 
 **બુટ્ટી** (*buṭṭī*) — "an earring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **બુટ્ટી** (*buṭṭī*) is not settled. CDIAL lists a Gujarati *buṭṭī* only as "painted flower", under a reconstructed *\*būṭa*, "bush, plant" (CDIAL 9297); whether the earring is the same word is not known.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -9,6 +9,9 @@ Warm-up.
 [pause 3 seconds]
 Say the Gujarati word for the flatbread you met in the water-and-tea chapter. Now listen twice: bhāt. It means rice — cooked rice, the base of the plate, not the raw grain.
 
+The word, taken apart.
+ભાત (bhāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhakta, "meal, food; boiled rice" (CDIAL 9331).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "bhāt"]
@@ -30,6 +33,9 @@ Lesson 2 of 8.
 Warm-up.
 [pause 3 seconds]
 Say the word for rice. Now listen twice: dāḷ. It means lentils — cooked lentils, the other half of the pair Gujaratis name in one breath as dāḷ-bhāt.
+
+The word, taken apart.
+દાળ (dāḷ) is a tadbhava of Sanskrit dāla, "a kind of grain, split peas" (CDIAL 6309). CDIAL asks whether this is the same word as its dāla, "splitting".
 
 Guided Practice.
 [pause 1 second]
@@ -53,6 +59,9 @@ Warm-up.
 [pause 3 seconds]
 Say the pair name for lentils and rice. Now listen twice: shāk. It means vegetable — one vegetable, and equally the cooked dish made from it.
 
+The word, taken apart.
+શાક (shāk) is Sanskrit śāka, "potherb, vegetable", taken over whole as a learned loan, a tatsama (CDIAL 12370).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "shāk"]
@@ -75,6 +84,9 @@ Warm-up.
 [pause 3 seconds]
 Say the words for vegetable and for lentils. Now listen twice: tel. It means oil — cooking oil, the thing the shāk is cooked in.
 
+The word, taken apart.
+તેલ (tel) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from taila, "sesamum oil, oil" (CDIAL 5958). It is built on tila, "sesame".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "tel"]
@@ -96,6 +108,9 @@ Lesson 5 of 8.
 Warm-up.
 [pause 3 seconds]
 Say the word for oil, then the word for flatbread. Now listen twice: kerī. It means mango — the fruit of the hot months, and note it ends in -ī, exactly like roṭlī.
+
+The word, taken apart.
+The origin of કેરી (kerī) is not settled. CDIAL, searched by form and by meaning, has no entry for it; the older word for the mango, āmra, gave Gujarati ām and āmbo instead (CDIAL 1268).
 
 Guided Practice.
 [pause 1 second]

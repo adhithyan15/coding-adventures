@@ -14,7 +14,8 @@ romanization: "bhaṇvũ"
 concept_tag: GU-VERB-BHANVU
 prerequisites: [GU-C89-question, GU-C89-answer]
 sounds: []
-roots: []
+roots: [sanskrit-bhanati]
+etymology_hook: "bhaṇvũ ← Sanskrit bhaṇati 'calls aloud, speaks'; a Munda origin has also been proposed (CDIAL 9383)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C89-answer]
 <!-- hl-knowledge: introduces=[GU-LEX-C89-SCHOOL-04]; assesses=[] -->
 
 **ભણવું** (*bhaṇvũ*) — "to study".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ભણવું** (*bhaṇvũ*) is a tadbhava of Sanskrit *bhaṇati*, "calls aloud, speaks" (CDIAL 9383). CDIAL lists the Gujarati verb with the senses "to say, repeat, study", and notes that a Munda origin has also been proposed for the verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

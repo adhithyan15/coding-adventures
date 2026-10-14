@@ -12,7 +12,7 @@ concept_tag: GU-SKY-RAIN-HEARD
 prerequisites: [GU-C29-hear-aakaash]
 sounds: [rolled-r, sa, long-aa, voiced-d]
 roots: []
-etymology_hook: Rain is what the sky does rather than what it holds, so it is the first word here that names an event.
+etymology_hook: "varsād: CDIAL lists barsād 'rainy season' under varṣārātri, or a blend with varṣartu (CDIAL 11398)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C29-hear-aakaash]
 
 [PAUSE 3s] Say the word for sky. Now listen twice: **varsād**. It means
 **rain** — the one thing in this chapter that the *ākāsh* does rather than holds.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **વરસાદ** (*varsād*) in the form *barsād*, "the rainy season", under Sanskrit *varṣārātri*, "the rainy season", or else a blend of it with *varṣartu*, "the season of rain" (CDIAL 11398). Its first part matches the Gujarati verb *varasvũ*, "to rain", which CDIAL lists under Sanskrit *varṣati*, "it rains" (CDIAL 11394).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-VARSAAD-01, GU-LEX-AAKAASH-01] -->

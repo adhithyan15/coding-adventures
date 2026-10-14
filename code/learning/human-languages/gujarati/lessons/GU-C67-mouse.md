@@ -14,7 +14,8 @@ romanization: "undar"
 concept_tag: GU-ANIMALS1-MOUSE
 prerequisites: [GU-C67-goat, GU-C67-dog]
 sounds: []
-roots: []
+roots: [sanskrit-undura]
+etymology_hook: "undar ← Sanskrit undura 'rat, mouse', itself from Austroasiatic; a tadbhava (CDIAL 2095)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C67-dog]
 <!-- hl-knowledge: introduces=[GU-LEX-C67-ANIMALS1-05]; assesses=[] -->
 
 **ઉંદર** (*undar*) — "a mouse, a rat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ઉંદર** (*undar*) is a tadbhava of Sanskrit *undura*, "rat, mouse" (CDIAL 2095). CDIAL reports that the Sanskrit word itself came from Austroasiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

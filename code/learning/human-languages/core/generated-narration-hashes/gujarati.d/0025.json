@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 25,
-  "sourceHash": "fnv1a64:35bf5bac27da03ee",
+  "sourceHash": "fnv1a64:14c67b8bd07bef65",
   "lessonIds": [
     "GU-C21-hear-haath",
     "GU-C21-haath",
@@ -15,7 +15,7 @@
   "drivablePrefix": 1,
   "text": "gujarati/narration/ch25.txt",
   "json": "gujarati/narration/ch25.json",
-  "textHash": "fnv1a64:5e757f21759243ee",
-  "jsonHash": "fnv1a64:3213d36cb40065fe",
+  "textHash": "fnv1a64:5aea911e980ca020",
+  "jsonHash": "fnv1a64:7a9dbdf098726591",
   "findings": []
 }

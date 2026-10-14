@@ -14,7 +14,8 @@ romanization: "pyālo"
 concept_tag: GU-TABLE-CUP
 prerequisites: [GU-C61-bowl, GU-C61-spoon]
 sounds: []
-roots: []
+roots: [persian-piyala]
+etymology_hook: "pyālo: usually traced to Persian piyāla 'cup'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C61-spoon]
 <!-- hl-knowledge: introduces=[GU-LEX-C61-TABLE-04]; assesses=[] -->
 
 **પ્યાલો** (*pyālo*) — "a cup, a glass". For **ચા** or **પાણી**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પ્યાલો** (*pyālo*) is a loan, usually traced to Persian *piyāla*, "cup".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

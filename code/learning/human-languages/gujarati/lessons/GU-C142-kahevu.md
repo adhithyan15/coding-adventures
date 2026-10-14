@@ -14,7 +14,8 @@ romanization: "kahevũ"
 concept_tag: GU-VERB-KAHEVU
 prerequisites: [GU-C141-calavvu, GU-C141-ganvu]
 sounds: []
-roots: []
+roots: [sanskrit-kathayati]
+etymology_hook: "kahevũ ← Sanskrit kathayati 'converses with, describes', a tadbhava (CDIAL 2703)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C141-ganvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C142-ACT142-01]; assesses=[] -->
 
 **કહેવું** (*kahevũ*) — "to say, to tell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કહેવું** (*kahevũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kathayati*, "converses with, describes" (CDIAL 2703).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

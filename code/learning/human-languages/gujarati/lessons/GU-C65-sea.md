@@ -14,7 +14,8 @@ romanization: "dariyo"
 concept_tag: GU-WATER-SEA
 prerequisites: [GU-C64-forest, GU-C64-stone]
 sounds: []
-roots: []
+roots: [persian-darya]
+etymology_hook: "dariyo: usually traced to Persian daryā 'sea, great river'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C64-stone]
 <!-- hl-knowledge: introduces=[GU-LEX-C65-WATER-01]; assesses=[] -->
 
 **દરિયો** (*dariyo*) — "the sea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દરિયો** (*dariyo*) is a loan, usually traced to Persian *daryā*, "sea, great river".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

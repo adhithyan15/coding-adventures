@@ -14,7 +14,8 @@ romanization: "pag"
 concept_tag: GU-BODY1-LEG
 prerequisites: [GU-C39-das, GU-C46-head]
 sounds: []
-roots: []
+roots: [sanskrit-padga]
+etymology_hook: "pag ← Sanskrit padga 'afoot; footsoldier', a tadbhava (CDIAL 7766)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C46-head]
 <!-- hl-knowledge: introduces=[GU-LEX-C46-BODY1-02]; assesses=[] -->
 
 **પગ** (*pag*) — "a leg, a foot". One word for both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પગ** (*pag*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *padga*, "afoot; footsoldier" (CDIAL 7766). It is *pad*, "foot", and *ga*, "going".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

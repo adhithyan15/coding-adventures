@@ -14,7 +14,8 @@ romanization: "rūpiyā"
 concept_tag: GU-MARKET-RUPEES
 prerequisites: [GU-C57-vechvu, GU-C57-price]
 sounds: []
-roots: []
+roots: [sanskrit-rupya]
+etymology_hook: "rūpiyā: usually traced to Sanskrit rūpya 'bearing a stamp; silver' (CDIAL 10805)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C57-price]
 <!-- hl-knowledge: introduces=[GU-LEX-C57-MARKET-04]; assesses=[] -->
 
 **રૂપિયા** (*rūpiyā*) — "rupees". The **પૈસા** of India.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**રૂપિયા** (*rūpiyā*) is usually traced to Sanskrit *rūpya*, "bearing a stamp; silver", built on *rūpa*, "form" (CDIAL 10805). CDIAL reconstructs a variant *\*rūpiya* beside it, and lists Gujarati *rūpũ*, "silver".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

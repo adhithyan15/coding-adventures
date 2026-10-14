@@ -12,6 +12,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [inherent-a, no-top-line, st-conjunct]
 roots: [namas, te]
+etymology_hook: "namaste: Sanskrit namas 'a bow' + te 'to you', taken over whole as a greeting"
 duration:
   max_seconds: 240
 requires:
@@ -54,7 +55,7 @@ six pieces of this word are familiar will the book ask you to read or copy it.
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-NAMASTE-01] -->
 
 *Namaste* continues Sanskrit *namas*, "a bow," plus *te*, "to you": literally,
-"a bow to you." Gujarati inherited the greeting through its Indo-Aryan history.
+"a bow to you." Gujarati took the greeting over whole from Sanskrit.
 You do not need to remember the two historical pieces yet; they are simply a
 memory hook for the greeting's respectful shape.
 

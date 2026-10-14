@@ -14,7 +14,8 @@ romanization: "navũ"
 concept_tag: GU-QUALITY-NEW
 prerequisites: [GU-C72-heavy, GU-C73-light]
 sounds: []
-roots: []
+roots: [sanskrit-nava]
+etymology_hook: "navũ ← Sanskrit nava 'new, young', a tadbhava (CDIAL 6983)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C73-light]
 <!-- hl-knowledge: introduces=[GU-LEX-C73-QUALITY-02]; assesses=[] -->
 
 **નવું** (*navũ*) — "new".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**નવું** (*navũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nava*, "new, young" (CDIAL 6983).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

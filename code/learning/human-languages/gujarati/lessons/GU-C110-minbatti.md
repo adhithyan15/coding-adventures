@@ -14,7 +14,8 @@ romanization: "mīṇbattī"
 concept_tag: GU-THINGS110-MINBATTI
 prerequisites: [GU-C110-peti, GU-C110-barni]
 sounds: []
-roots: []
+roots: [sanskrit-madana-wax, sanskrit-varti]
+etymology_hook: "mīṇbattī: mīṇ 'beeswax' ← Sanskrit madana (CDIAL 9778) + battī 'wick', the Hindi form of varti (CDIAL 11359)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C110-barni]
 <!-- hl-knowledge: introduces=[GU-LEX-C110-THINGS110-03]; assesses=[] -->
 
 **મીણબત્તી** (*mīṇbattī*) — "a candle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મીણબત્તી** (*mīṇbattī*) is "wax-wick": *mīṇ*, "beeswax", from the lexical Sanskrit *madana*, "beeswax" (CDIAL 9778), and *battī*, "wick", the Hindi form of Sanskrit *varti*, "wick" (CDIAL 11359).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

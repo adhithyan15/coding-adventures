@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for fifteen, then the Gujarati for sixteen.
 You'll want to know: સત્તર.
 સત્તર (sattar) — "seventeen".
 
+The word, taken apart.
+સત્તર (sattar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saptadaśa, "seventeen" (CDIAL 13146). It is sapta, "seven", and daśa, "ten".
+
 What you've built.
 One more word for seventeen to forty.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for sixteen, then the Gujarati for seventee
 
 You'll want to know: અઢાર.
 અઢાર (aḍhār) — "eighteen".
+
+The word, taken apart.
+અઢાર (aḍhār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṣṭādaśa, "eighteen" (CDIAL 946). It is aṣṭā, "eight", and daśa, "ten".
 
 What you've built.
 One more word for seventeen to forty.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for seventeen, then the Gujarati for eighte
 You'll want to know: વીસ.
 વીસ (vīs) — "twenty".
 
+The word, taken apart.
+વીસ (vīs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from viṁśati, "twenty" (CDIAL 11616).
+
 What you've built.
 One more word for seventeen to forty.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for eighteen, then the Gujarati for twenty.
 You'll want to know: ત્રીસ.
 ત્રીસ (trīs) — "thirty".
 
+The word, taken apart.
+ત્રીસ (trīs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from triṁśat, "thirty" (CDIAL 6015).
+
 What you've built.
 One more word for seventeen to forty.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for twenty, then the Gujarati for thirty.
 
 You'll want to know: ચાળીસ.
 ચાળીસ (cāḷīs) — "forty".
+
+The word, taken apart.
+ચાળીસ (cāḷīs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from catvāriṁśat, "forty" (CDIAL 4656).
 
 What you've built.
 One more word for seventeen to forty.

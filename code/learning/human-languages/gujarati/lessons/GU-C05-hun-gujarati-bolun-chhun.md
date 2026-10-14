@@ -11,7 +11,8 @@ gloss: I speak Gujarati
 concept_tag: GU-WORD-GUJARATI
 prerequisites: [GU-C05-bolvun, GU-C03-hun]
 sounds: [long-aa, u-nasal]
-roots: [gurjar]
+roots: [gurjar, aham-first-person, bol-speak, sanskrit-akseti]
+etymology_hook: "hũ ← aham 'I' (CDIAL 992); bolũ from bolvũ ← *boll 'speak' (CDIAL 9321); chhũ, a form of chhe (CDIAL 1031)"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,8 @@ The name **ગુજરાત** (*Gujarāt*) comes from the **Gurjar** — a peo
 western India around the 6th–8th centuries and gave their name to the land
 (*Gurjara-deśa* → *Gujarāt*); *gujarātī* is "[the language] of Gujarat." So the
 language is named after a people, and the region after them in turn.
+
+Of the three native words, CDIAL lists *hũ* under Sanskrit *aham*, "I" (CDIAL 992), *bolvũ* under a reconstructed *\*boll-*, "speak" (CDIAL 9321), and *chhe*, of which *chhũ* is a form, under *ākṣeti*, "abides" (CDIAL 1031).
 
 ## Grammar Lens: no gender in the plain present
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C05-BOLVUN-01, GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01] -->

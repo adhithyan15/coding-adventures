@@ -14,7 +14,8 @@ romanization: "haraṇ"
 concept_tag: GU-THINGS121-HARAN
 prerequisites: [GU-C121-chayo, GU-C121-saslu]
 sounds: []
-roots: []
+roots: [sanskrit-harina]
+etymology_hook: "haraṇ ← Sanskrit hariṇa 'deer', built on hari 'yellow' (CDIAL 13982)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C121-saslu]
 <!-- hl-knowledge: introduces=[GU-LEX-C121-THINGS121-05]; assesses=[] -->
 
 **હરણ** (*haraṇ*) — "a deer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હરણ** (*haraṇ*) is a tadbhava of Sanskrit *hariṇa*, "deer", which also meant "yellow" (CDIAL 13982). CDIAL notes that the Munda words cited for an Austroasiatic source were themselves taken from Indo-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

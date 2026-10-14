@@ -14,7 +14,8 @@ romanization: "dharāvvũ"
 concept_tag: GU-VERB-DHARAVVU
 prerequisites: [GU-C105-sadhan, GU-C105-rakhvu]
 sounds: []
-roots: []
+roots: [sanskrit-dharati]
+etymology_hook: "dharāvvũ: the causing form of dharvũ 'to hold' ← Sanskrit dharati 'holds, keeps' (CDIAL 6747)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C105-rakhvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C105-CAN105-03]; assesses=[] -->
 
 **ધરાવવું** (*dharāvvũ*) — "to possess, to hold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ધરાવવું** (*dharāvvũ*) is built on *dharvũ*, "to hold, catch", which CDIAL lists under Sanskrit *dharati*, "holds, keeps" (CDIAL 6747). A Gujarati *dharāvvũ*, "to satisfy", which CDIAL lists elsewhere, is a different word (CDIAL 6890).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

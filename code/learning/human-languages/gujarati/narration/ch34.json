@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "People, Paper, and a Book",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:947ba303e8592ef5",
+  "sourceHash": "fnv1a64:8c6578d0e3e4fb1b",
   "lessons": [
     {
       "id": "GU-C30-hear-chhokro",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac5fe791cd2a6bee",
+      "sourceHash": "fnv1a64:3d7b2c80c5061b50",
       "notice": null,
       "blocks": [
         {
@@ -41,6 +41,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છોકરો (chhokro) is a tadbhava. CDIAL reconstructs chokara, \"boy\", and lists the Gujarati word under its variant chokkara (CDIAL 5070)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -71,7 +82,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -128,7 +139,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1d657b8fe38f737",
+      "sourceHash": "fnv1a64:97c899b59323cb39",
       "notice": null,
       "blocks": [
         {
@@ -150,6 +161,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છોકરી (chhokrī) is the feminine of chhokro, \"boy\". CDIAL lists chhokro under a reconstructed chokkara, a variant of chokara, \"boy\" (CDIAL 5070)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -180,7 +202,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -236,7 +258,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1ed58ec0671f62a",
+      "sourceHash": "fnv1a64:896d67484aadf207",
       "notice": null,
       "blocks": [
         {
@@ -258,6 +280,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "માણસ (māṇas) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mānuṣa, \"human; man\" (CDIAL 10049)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -288,7 +321,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -344,7 +377,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf0ab3c6f155d3c5",
+      "sourceHash": "fnv1a64:8eebcc49496003ff",
       "notice": null,
       "blocks": [
         {
@@ -366,6 +399,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પુસ્તક (pustak) is Sanskrit pustaka, \"book\", taken over whole as a learned loan, a tatsama. CDIAL traces the Sanskrit word to Iranian, comparing Persian pōst, \"skin\", and lists the inherited Gujarati pothī, \"book\", from the same source (CDIAL 8413)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -396,7 +440,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -453,7 +497,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:185c0ca7544995c8",
+      "sourceHash": "fnv1a64:8be77954a7419822",
       "notice": null,
       "blocks": [
         {
@@ -475,6 +519,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાગળ (kāgaḷ) is a loan, usually traced to Persian kāghaz, \"paper\". Gujarati ends it in ḷ."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -505,7 +560,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

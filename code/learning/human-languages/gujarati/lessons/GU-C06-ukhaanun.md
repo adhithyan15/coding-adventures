@@ -14,7 +14,8 @@ gloss: "a riddle"
 concept_tag: GU-ANCHOR-UKHAANUN
 prerequisites: [GU-R05-second-four-r1]
 sounds: []
-roots: []
+roots: [sanskrit-upakhyana]
+etymology_hook: "ukhāṇũ ← Sanskrit upākhyāna 'subordinate story, episode', a tadbhava (CDIAL 2289)"
 duration:
   max_seconds: 120
 requires:
@@ -45,6 +46,11 @@ variety: standard
 **ઉખાણું** — *ukhāṇũ* — "a riddle".
 
 Say it: *ukhāṇũ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ઉ** and **ખ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ઉખાણું** (*ukhāṇũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *upākhyāna*, "subordinate story, episode" (CDIAL 2289). CDIAL lists Gujarati *ukhāṇ* and *ukhāṇo*, "riddle", beside it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-UKHAANUN] -->

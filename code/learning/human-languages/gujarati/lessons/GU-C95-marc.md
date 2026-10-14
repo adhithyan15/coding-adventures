@@ -14,7 +14,8 @@ romanization: "mārc"
 concept_tag: GU-TIME95-MARC
 prerequisites: [GU-C95-janyuari, GU-C95-phebruari]
 sounds: []
-roots: []
+roots: [english-march]
+etymology_hook: "mārc ← English March"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C95-phebruari]
 <!-- hl-knowledge: introduces=[GU-LEX-C95-TIME95-05]; assesses=[] -->
 
 **માર્ચ** (*mārc*) — "March".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**માર્ચ** (*mārc*) is a loan from English *March*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

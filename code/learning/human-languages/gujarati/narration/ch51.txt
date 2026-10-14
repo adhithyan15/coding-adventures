@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for worry, then the Gujarati for tiredness.
 You'll want to know: પિતા.
 પિતા (pitā) — "father".
 
+The word, taken apart.
+પિતા (pitā) is Sanskrit pitā, the nominative of pitṛ, "father", taken over whole as a learned loan, a tatsama (CDIAL 8179).
+
 What you've built.
 One more word for father, mother, grandparents.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for tiredness, then the Gujarati for father
 
 You'll want to know: માતા.
 માતા (mātā) — "mother".
+
+The word, taken apart.
+માતા (mātā) is Sanskrit mātā, the nominative of mātṛ, "mother", taken over whole as a learned loan, a tatsama (CDIAL 10016). CDIAL lists the inherited Gujarati form as mā.
 
 What you've built.
 One more word for father, mother, grandparents.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for father, then the Gujarati for mother.
 You'll want to know: દાદા.
 દાદા (dādā) — "grandfather (father's father)".
 
+The word, taken apart.
+દાદા (dādā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261).
+
 What you've built.
 One more word for father, mother, grandparents.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for mother, then the Gujarati for grandfath
 You'll want to know: દાદી.
 દાદી (dādī) — "grandmother (father's mother)".
 
+The word, taken apart.
+દાદી (dādī) is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261). CDIAL lists Gujarati dādī beside dādo.
+
 What you've built.
 One more word for father, mother, grandparents.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for grandfather, then the Gujarati for gran
 
 You'll want to know: બાળક.
 બાળક (bāḷak) — "a child".
+
+The word, taken apart.
+બાળક (bāḷak) is a semi-tatsama: Sanskrit bālaka, "young; a boy", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 9216). CDIAL lists the inherited Gujarati form as bāḷ, "child".
 
 What you've built.
 One more word for father, mother, grandparents.

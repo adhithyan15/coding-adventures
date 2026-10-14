@@ -12,6 +12,7 @@ concept_tag: RESPONSE-OKAY
 prerequisites: [GU-C01-namaste]
 sounds: [long-aa, u-nasal]
 roots: [saara-sanskrit]
+etymology_hook: "sārũ ← Sanskrit sāra 'hardness, best part; firm, strong', a tadbhava (CDIAL 13355)"
 duration:
   max_seconds: 240
 requires:
@@ -49,8 +50,7 @@ of Gujarati's three genders.
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-NAMASTE-01, GU-CONCEPT-C01-SAARUN-01] -->
 
 **સારું** (*sārũ*, "good, fine, okay") is from Sanskrit **સાર** (*sāra*,
-"essence, substance, the best part") — the same *sāra* behind Bengali's *sāramilla*
-("no matter"). As "okay/agreed" it oils every Gujarati conversation, the way
+"essence, substance, the best part"; CDIAL 13355). As "okay/agreed" it oils every Gujarati conversation, the way
 English uses "alright."
 
 ## Grammar Lens: three genders, on the adjective

@@ -14,7 +14,8 @@ romanization: "pitā"
 concept_tag: GU-FAMILY1-FATHER
 prerequisites: [GU-C50-worry, GU-C50-tiredness]
 sounds: []
-roots: []
+roots: [sanskrit-pitr]
+etymology_hook: "pitā: Sanskrit pitā, the nominative of pitṛ 'father', a tatsama (CDIAL 8179)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C50-tiredness]
 <!-- hl-knowledge: introduces=[GU-LEX-C51-FAMILY1-01]; assesses=[] -->
 
 **પિતા** (*pitā*) — "father".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પિતા** (*pitā*) is Sanskrit *pitā*, the nominative of *pitṛ*, "father", taken over whole as a learned loan, a tatsama (CDIAL 8179).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

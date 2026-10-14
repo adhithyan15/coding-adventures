@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 88,
-  "sourceHash": "fnv1a64:70f72b8f8edd80fe",
+  "sourceHash": "fnv1a64:cdcbd4f4424c6d4d",
   "lessonIds": [
     "GU-C88-glasses",
     "GU-C88-bag",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch88.txt",
   "json": "gujarati/narration/ch88.json",
-  "textHash": "fnv1a64:7ba3e9cb86b709e6",
-  "jsonHash": "fnv1a64:f3aafd1c5eda5eca",
+  "textHash": "fnv1a64:bfd3c8d705b4da3c",
+  "jsonHash": "fnv1a64:ad6bd5a8487a1f1b",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "sapharjan"
 concept_tag: GU-PRODUCE-APPLE
 prerequisites: [GU-C59-fruit, GU-C59-banana]
 sounds: []
-roots: []
+roots: [arabic-safarjal]
+etymology_hook: "sapharjan: usually traced to Persian safarjal 'quince', itself from Arabic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C59-banana]
 <!-- hl-knowledge: introduces=[GU-LEX-C59-PRODUCE-03]; assesses=[] -->
 
 **સફરજન** (*sapharjan*) — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સફરજન** (*sapharjan*) is a loan, usually traced to Persian *safarjal*, "quince", a word Persian took from Arabic. Gujarati moved it from the quince to the apple.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

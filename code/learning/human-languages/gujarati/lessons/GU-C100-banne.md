@@ -15,6 +15,7 @@ concept_tag: GU-DEF100-BANNE
 prerequisites: [GU-C100-pote, GU-C100-potanu]
 sounds: []
 roots: []
+etymology_hook: "banne 'both': appears built on be 'two' ← Sanskrit dva (CDIAL 6648); CDIAL has no entry for banne"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C100-potanu]
 <!-- hl-knowledge: introduces=[GU-LEX-C100-DEF100-05]; assesses=[] -->
 
 **બંને** (*banne*) — "both".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બંને** (*banne*) appears to be built on *be*, "two", which CDIAL lists under Sanskrit *dva*, "two" (CDIAL 6648). CDIAL has no entry for **બંને** (*banne*) itself, so the rest of its history is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

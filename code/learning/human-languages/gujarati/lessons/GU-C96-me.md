@@ -14,7 +14,8 @@ romanization: "me"
 concept_tag: GU-TIME96-ME
 prerequisites: [GU-C95-marc, GU-C96-epril]
 sounds: []
-roots: []
+roots: [english-may]
+etymology_hook: "me ← English May"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C96-epril]
 <!-- hl-knowledge: introduces=[GU-LEX-C96-TIME96-02]; assesses=[] -->
 
 **મે** (*me*) — "May".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મે** (*me*) is a loan from English *May*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

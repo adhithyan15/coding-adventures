@@ -14,7 +14,8 @@ romanization: "magaj"
 concept_tag: GU-THINGS127-MAGAJ
 prerequisites: [GU-C126-hatheli, GU-C126-nakh]
 sounds: []
-roots: []
+roots: [persian-maghz]
+etymology_hook: "magaj: usually traced to Persian maghz 'brain, marrow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C126-nakh]
 <!-- hl-knowledge: introduces=[GU-LEX-C127-THINGS127-01]; assesses=[] -->
 
 **મગજ** (*magaj*) — "a brain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મગજ** (*magaj*) is a loan, usually traced to Persian *maghz*, "brain, marrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

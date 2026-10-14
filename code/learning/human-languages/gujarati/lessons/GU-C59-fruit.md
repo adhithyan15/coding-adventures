@@ -14,7 +14,8 @@ romanization: "phaḷ"
 concept_tag: GU-PRODUCE-FRUIT
 prerequisites: [GU-C58-yogurt, GU-C58-buttermilk]
 sounds: []
-roots: []
+roots: [sanskrit-phala]
+etymology_hook: "phaḷ ← Sanskrit phala 'fruit' (CDIAL 9051), which CDIAL compares with Dravidian words for ripe fruit"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C58-buttermilk]
 <!-- hl-knowledge: introduces=[GU-LEX-C59-PRODUCE-01]; assesses=[] -->
 
 **ફળ** (*phaḷ*) — "fruit". A **કેરી** is one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ફળ** (*phaḷ*) is a tadbhava of Sanskrit *phala*, "fruit" (CDIAL 9051). CDIAL compares Dravidian words such as Tamil *paṛam*, "ripe fruit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

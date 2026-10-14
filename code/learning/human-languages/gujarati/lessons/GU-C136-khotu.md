@@ -14,7 +14,8 @@ romanization: "khoṭũ"
 concept_tag: GU-QUAL136-KHOTU
 prerequisites: [GU-C136-bharelu, GU-C136-sacu]
 sounds: []
-roots: []
+roots: [indo-aryan-khotta]
+etymology_hook: "khoṭũ ← *khoṭṭa, a variant of the reconstructed *khoṭi 'blemish' (CDIAL 3931)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C136-sacu]
 <!-- hl-knowledge: introduces=[GU-LEX-C136-QUAL136-04]; assesses=[] -->
 
 **ખોટું** (*khoṭũ*) — "false, wrong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખોટું** (*khoṭũ*) is a tadbhava. CDIAL lists it under *\*khoṭṭa*, a variant of a reconstructed *\*khoṭi*, "blemish" (CDIAL 3931).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

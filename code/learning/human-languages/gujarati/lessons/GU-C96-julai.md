@@ -14,7 +14,8 @@ romanization: "julāī"
 concept_tag: GU-TIME96-JULAI
 prerequisites: [GU-C96-me, GU-C96-jun]
 sounds: []
-roots: []
+roots: [english-july]
+etymology_hook: "julāī ← English July"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C96-jun]
 <!-- hl-knowledge: introduces=[GU-LEX-C96-TIME96-04]; assesses=[] -->
 
 **જુલાઈ** (*julāī*) — "July".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જુલાઈ** (*julāī*) is a loan from English *July*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,9 +11,10 @@ gloss: what's your name?
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [GU-C02-tu-tame, GU-C02-shun, GU-C02-chhe, GU-W02-va]
 sounds: []
-roots: []
+roots: [sanskrit-yushmad, naaman-sanskrit, sanskrit-kidrsha, sanskrit-akseti]
+etymology_hook: "tamārũ on tame ← yuṣmad- (CDIAL 10511); nām ← nāman (CDIAL 7067); shũ ← kīdṛśa (CDIAL 3197); chhe ← ākṣeti (CDIAL 1031)"
 duration:
-  max_seconds: 180
+  max_seconds: 190
 requires:
   knowledge: [GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-SHUN-01, GU-CONCEPT-C02-TUTAME-01]
 introduces:
@@ -45,6 +46,11 @@ reviews_of: [GU-C02-shun, GU-C02-chhe, GU-C02-tu-tame]
 match *nām*) + **નામ** (name) + **શું** (what) + **છે** (is) → literally "**your
 name what is?**" Gujarati keeps the verb last and drops the question-word *shũ*
 into the object slot.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+All four words are inherited, from *yuṣmad-*, *nāman*, *kīdṛśa* and *ākṣeti* (CDIAL 10511, 7067, 3197, 1031).
 
 ## Grammar Lens: answering, and the familiar form
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-SHUN-01, GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01, GU-CONCEPT-C02-TUTAME-01] -->

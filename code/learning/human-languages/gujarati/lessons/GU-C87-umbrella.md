@@ -14,7 +14,8 @@ romanization: "chatrī"
 concept_tag: GU-CLOTHES-UMBRELLA
 prerequisites: [GU-C87-sandals, GU-C87-cap]
 sounds: []
-roots: []
+roots: [sanskrit-chattra]
+etymology_hook: "chatrī: built on Sanskrit chattra 'parasol', feminine chattrikā (CDIAL 4972)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C87-cap]
 <!-- hl-knowledge: introduces=[GU-LEX-C87-CLOTHES-05]; assesses=[] -->
 
 **છત્રી** (*chatrī*) — "an umbrella". For the **વરસાદ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**છત્રી** (*chatrī*) is built on Sanskrit *chattra*, "parasol", which had a feminine *chattrikā* (CDIAL 4972). CDIAL lists no Gujarati form there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

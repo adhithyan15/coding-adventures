@@ -11,8 +11,8 @@ gloss: vegetable, heard and said before it is ever shown
 concept_tag: GU-FOOD-VEGETABLE-HEARD
 prerequisites: [GU-C27-hear-daal]
 sounds: [voiceless-sh, long-aa, ka]
-roots: []
-etymology_hook: One word covers both the raw vegetable and the cooked dish made of it, which is a thing English needs two words for.
+roots: [sanskrit-shaka]
+etymology_hook: "shāk ← Sanskrit śāka 'potherb, vegetable', a tatsama (CDIAL 12370)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C27-hear-daal]
 
 [PAUSE 3s] Say the pair name for lentils and rice. Now listen twice: **shāk**. It means
 **vegetable** — one vegetable, and equally the cooked dish made from it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શાક** (*shāk*) is Sanskrit *śāka*, "potherb, vegetable", taken over whole as a learned loan, a tatsama (CDIAL 12370).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-SHAAK-01, GU-LEX-DAAL-01] -->

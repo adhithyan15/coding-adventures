@@ -14,7 +14,8 @@ romanization: "koī"
 concept_tag: GU-DEF99-KOI
 prerequisites: [GU-C99-evu, GU-C99-darek]
 sounds: []
-roots: []
+roots: [sanskrit-kashcid]
+etymology_hook: "koī ← Sanskrit kaścid 'someone, anyone', a tadbhava (CDIAL 2967)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C99-darek]
 <!-- hl-knowledge: introduces=[GU-LEX-C99-DEF99-05]; assesses=[] -->
 
 **કોઈ** (*koī*) — "someone, anyone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કોઈ** (*koī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaścid*, "someone, anyone" (CDIAL 2967).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

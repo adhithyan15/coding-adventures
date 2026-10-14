@@ -14,7 +14,8 @@ romanization: "sapṭembar"
 concept_tag: GU-TIME96-SAPTEMBAR
 prerequisites: [GU-C96-jun, GU-C96-julai]
 sounds: []
-roots: []
+roots: [english-september]
+etymology_hook: "sapṭembar ← English September"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C96-julai]
 <!-- hl-knowledge: introduces=[GU-LEX-C96-TIME96-05]; assesses=[] -->
 
 **સપ્ટેમ્બર** (*sapṭembar*) — "September".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સપ્ટેમ્બર** (*sapṭembar*) is a loan from English *September*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

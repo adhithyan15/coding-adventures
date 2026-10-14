@@ -15,6 +15,7 @@ concept_tag: GU-DEF101-AHI
 prerequisites: [GU-C101-atlu, GU-C101-etlu]
 sounds: []
 roots: []
+etymology_hook: "ahīṁ 'here': not settled; CDIAL has no entry, though it ties words like Hindi yahāṁ to Sanskrit iha 'here' (CDIAL 1605)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C101-etlu]
 <!-- hl-knowledge: introduces=[GU-LEX-C101-DEF101-04]; assesses=[] -->
 
 **અહીં** (*ahī̃*) — "here".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **અહીં** (*ahīṁ*) is not settled; CDIAL has no entry for it. CDIAL does say that modern words for "here", such as Hindi *yahāṁ*, are ultimately connected with Sanskrit *iha*, "here" (CDIAL 1605).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "palaṅg"
 concept_tag: GU-FURNITURE-BED
 prerequisites: [GU-C61-cup, GU-C61-pot]
 sounds: []
-roots: []
+roots: [sanskrit-palyanka]
+etymology_hook: "palaṅg ← Sanskrit palyaṅka 'bed'; CDIAL says the north-western form with -ṅg was borrowed widely (CDIAL 7964)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C61-pot]
 <!-- hl-knowledge: introduces=[GU-LEX-C62-FURNITURE-01]; assesses=[] -->
 
 **પલંગ** (*palaṅg*) — "a bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પલંગ** (*palaṅg*) goes back to Sanskrit *palyaṅka*, "bed" (CDIAL 7964). CDIAL notes that the north-western form with *-ṅg* was borrowed into many languages, Gujarati among them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

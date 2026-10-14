@@ -12,7 +12,7 @@ concept_tag: CONNECTIVE-BECAUSE
 prerequisites: [GU-C33-ke-checkpoint, GU-C03-kem]
 sounds: []
 roots: []
-etymology_hook: "કેમકે is કેમ + કે — the question word and the swallowing word, fused into the answer."
+etymology_hook: "કેમકે is કેમ + કે, the question word and the swallowing word, fused; CDIAL has no entry for either"
 duration:
   max_seconds: 240
 requires:
@@ -57,6 +57,8 @@ answers *why* by saying, in effect, "why-that" — and then the reason follows a
 a whole sentence.
 
 > *(what happened)* **કેમકે** *(the reason)*
+
+CDIAL has no entry for *kem* or for *ke* in this sense, so the deeper history of **કેમકે** (*kemke*) is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-JOIN-KEMKE-01, GU-CONCEPT-C03-KEM-01] -->

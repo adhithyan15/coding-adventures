@@ -14,7 +14,8 @@ romanization: "kācũ"
 concept_tag: GU-QUAL135-KACU
 prerequisites: [GU-C135-taju, GU-C135-paku]
 sounds: []
-roots: []
+roots: [indo-aryan-kacca]
+etymology_hook: "kācũ ← *kacca 'raw, unripe', a reconstructed form; a tadbhava (CDIAL 2613)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C135-paku]
 <!-- hl-knowledge: introduces=[GU-LEX-C135-QUAL135-05]; assesses=[] -->
 
 **કાચું** (*kācũ*) — "raw, unripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કાચું** (*kācũ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kacca*, "raw, unripe", a form CDIAL reconstructs from its descendants (CDIAL 2613).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

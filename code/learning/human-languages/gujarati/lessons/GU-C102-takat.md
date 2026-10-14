@@ -14,7 +14,8 @@ romanization: "tākāt"
 concept_tag: GU-CAN102-TAKAT
 prerequisites: [GU-C102-sakvu, GU-C102-pase]
 sounds: []
-roots: []
+roots: [arabic-taqa]
+etymology_hook: "tākāt ← Arabic ṭāqa 'power, ability', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C102-pase]
 <!-- hl-knowledge: introduces=[GU-LEX-C102-CAN102-03]; assesses=[] -->
 
 **તાકાત** (*tākāt*) — "strength".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તાકાત** (*tākāt*) is a loan from Arabic *ṭāqa*, "power, ability", which reached Gujarati through Persian. Its Arabic root is *ṭ-w-q* (Lane). Persian made *ṭāqat* of it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

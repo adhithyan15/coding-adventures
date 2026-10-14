@@ -14,7 +14,8 @@ romanization: "moṅghũ"
 concept_tag: GU-WHERE1-EXPENSIVE
 prerequisites: [GU-C73-hot, GU-C73-cheap]
 sounds: []
-roots: []
+roots: [sanskrit-mahargha]
+etymology_hook: "moṅghũ ← Sanskrit mahārgha 'high-priced', a tadbhava (CDIAL 9954)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C73-cheap]
 <!-- hl-knowledge: introduces=[GU-LEX-C74-WHERE1-01]; assesses=[] -->
 
 **મોંઘું** (*moṅghũ*) — "expensive". The opposite of **સસ્તું**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મોંઘું** (*moṅghũ*) is a tadbhava of Sanskrit *mahārgha*, "high-priced", from *mahā*, "great", and *argha*, "price" (CDIAL 9954).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

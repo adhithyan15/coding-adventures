@@ -14,7 +14,8 @@ romanization: "gāy"
 concept_tag: GU-ANIMALS1-COW
 prerequisites: [GU-C66-ice, GU-C66-fog]
 sounds: []
-roots: []
+roots: [sanskrit-go]
+etymology_hook: "gāy ← Sanskrit gāvī 'cow', a form of go (CDIAL 4147)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C66-fog]
 <!-- hl-knowledge: introduces=[GU-LEX-C67-ANIMALS1-01]; assesses=[] -->
 
 **ગાય** (*gāy*) — "a cow". It gives **દૂધ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગાય** (*gāy*) is a tadbhava of Sanskrit *gāvī*, "cow", a form of *go* (CDIAL 4147).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

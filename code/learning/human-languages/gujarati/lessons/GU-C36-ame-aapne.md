@@ -11,8 +11,8 @@ gloss: "the two words for we — one that shuts you out, one that takes you in"
 concept_tag: GU-PRON-AME-AAPNE
 prerequisites: [GU-C36-te, GU-C32-ane]
 sounds: []
-roots: []
-etymology_hook: "Gujarati has two words for we, and choosing wrongly tells your listener they are not included."
+roots: [sanskrit-asmad, sanskrit-atman]
+etymology_hook: "ame ← Sanskrit asmad, base of 'we' (CDIAL 986); āpaṇe ← ātman 'self', as āpaṇ 'we (inclusive)' (CDIAL 1135)"
 duration:
   max_seconds: 250
 requires:
@@ -58,6 +58,8 @@ different things, and the mistake is audible.
 This distinction has a name — linguists call it exclusive and inclusive *we* —
 and a great many languages make it. English speakers have to learn to hear a
 choice they have never had to make.
+
+Both are inherited. CDIAL lists Old Gujarati *ame* under Sanskrit *asmad*, the base of the plural "we" (CDIAL 986), and Gujarati *āpaṇ*, "we (inclusive)", under *ātman*, "self" (CDIAL 1135).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-PRON-AME-01, GU-PRON-AAPNE-01, GU-PRON-TE-01] -->

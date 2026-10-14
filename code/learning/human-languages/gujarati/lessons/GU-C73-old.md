@@ -14,7 +14,8 @@ romanization: "jūnũ"
 concept_tag: GU-QUALITY-OLD
 prerequisites: [GU-C73-light, GU-C73-new]
 sounds: []
-roots: []
+roots: [sanskrit-jurna]
+etymology_hook: "jūnũ ← Sanskrit jūrṇa 'old, decayed', a tadbhava (CDIAL 5260)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C73-new]
 <!-- hl-knowledge: introduces=[GU-LEX-C73-QUALITY-03]; assesses=[] -->
 
 **જૂનું** (*jūnũ*) — "old (of things)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જૂનું** (*jūnũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jūrṇa*, "old, decayed" (CDIAL 5260).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

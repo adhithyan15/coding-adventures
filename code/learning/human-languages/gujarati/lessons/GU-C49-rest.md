@@ -14,7 +14,8 @@ romanization: "ārām"
 concept_tag: GU-CARE-REST
 prerequisites: [GU-C49-pain, GU-C49-medicine]
 sounds: []
-roots: []
+roots: [persian-aram]
+etymology_hook: "ārām: usually traced to Persian ārām 'rest, ease'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C49-medicine]
 <!-- hl-knowledge: introduces=[GU-LEX-C49-CARE-03]; assesses=[] -->
 
 **આરામ** (*ārām*) — "rest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**આરામ** (*ārām*) is a loan, usually traced to Persian *ārām*, "rest, ease".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

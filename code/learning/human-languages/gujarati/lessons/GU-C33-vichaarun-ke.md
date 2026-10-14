@@ -11,8 +11,8 @@ gloss: "I think that… — the frame an opinion travels in"
 concept_tag: GU-JOIN-VICHAARUN-KE
 prerequisites: [GU-C33-ke, GU-C08-vicharvun, GU-C02-chhe]
 sounds: []
-roots: []
-etymology_hook: "The verb 'to think' was taught twenty-nine chapters ago and has never once been given anything to think."
+roots: [sanskrit-vicara, sanskrit-akseti]
+etymology_hook: "vichārũ from vichārvũ, on Sanskrit vicāra 'pondering' (CDIAL 11683); chhũ, a form of chhe (CDIAL 1031)"
 duration:
   max_seconds: 250
 requires:
@@ -55,6 +55,8 @@ Everything you can already say can now be said **as an opinion** rather than as
 a fact, by putting it after **કે** and nothing else. That is a large change for one small
 word, and it is the difference between reporting the world and having a view
 about it.
+
+The verb is built on Sanskrit *vicāra*, "pondering", a learned word (CDIAL 11683), and *chhũ* is a form of *chhe*, which CDIAL lists under *ākṣeti*, "abides" (CDIAL 1031).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

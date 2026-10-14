@@ -14,7 +14,8 @@ romanization: "khamīs"
 concept_tag: GU-CLOTHES-SHIRT
 prerequisites: [GU-C86-post, GU-C87-dhoti]
 sounds: []
-roots: []
+roots: [arabic-qamis]
+etymology_hook: "khamīs ← Arabic qamīṣ 'shirt', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C87-dhoti]
 <!-- hl-knowledge: introduces=[GU-LEX-C87-CLOTHES-02]; assesses=[] -->
 
 **ખમીસ** (*khamīs*) — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખમીસ** (*khamīs*) is a loan from Arabic *qamīṣ*, "shirt", which reached Gujarati through Persian. Its Arabic root is *q-m-ṣ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

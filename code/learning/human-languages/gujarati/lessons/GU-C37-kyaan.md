@@ -12,7 +12,7 @@ concept_tag: QUESTION-WHERE
 prerequisites: [GU-C37-kon, GU-C22-shahar, GU-C22-shaalaa, GU-C22-rasto, GU-C22-route-three]
 sounds: []
 roots: []
-etymology_hook: "The track has taught city, village, home, school and road, and until now had no way to ask where any of them was."
+etymology_hook: "kyāṁ 'where': on the question stem k-; CDIAL has no entry for it, so its history is not settled"
 duration:
   max_seconds: 250
 requires:
@@ -60,6 +60,8 @@ and road — and until this lesson there was no way to ask where any of them was
 Those five words were written more than a hundred lessons ago and most of them
 have not been asked for since; reading them cold, here, is the point of putting
 them in this lesson rather than a shorter example.
+
+CDIAL has no entry for **ક્યાં** (*kyāṁ*), so beyond its question stem its history is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-Q-KYAAN-01, GU-SCRIPT-SHAHAR-01] -->

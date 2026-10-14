@@ -14,7 +14,8 @@ romanization: "thāk"
 concept_tag: GU-FEEL-TIREDNESS
 prerequisites: [GU-C50-fear, GU-C50-worry]
 sounds: []
-roots: []
+roots: [indo-aryan-sthakk]
+etymology_hook: "thāk: with thākvũ 'to become weary' ← *sthakk 'stop, halt', reconstructed (CDIAL 13737)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C50-worry]
 <!-- hl-knowledge: introduces=[GU-LEX-C50-FEEL-05]; assesses=[] -->
 
 **થાક** (*thāk*) — "tiredness". What a long day leaves.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**થાક** (*thāk*) belongs with *thākvũ*, "to become weary", which CDIAL lists under a reconstructed *\*sthakk*, "stop, halt" (CDIAL 13737). CDIAL thinks a link with *sthā*, "to stand", probable but not clear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

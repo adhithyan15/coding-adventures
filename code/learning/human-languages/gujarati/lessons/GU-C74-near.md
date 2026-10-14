@@ -14,7 +14,8 @@ romanization: "najīk"
 concept_tag: GU-WHERE1-NEAR
 prerequisites: [GU-C73-cheap, GU-C74-expensive]
 sounds: []
-roots: []
+roots: [persian-nazdik]
+etymology_hook: "najīk: usually traced to Persian nazdīk 'near'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C74-expensive]
 <!-- hl-knowledge: introduces=[GU-LEX-C74-WHERE1-02]; assesses=[] -->
 
 **નજીક** (*najīk*) — "near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**નજીક** (*najīk*) is a loan, usually traced to Persian *nazdīk*, "near". Gujarati writes the *z* as *j* and drops the *d*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

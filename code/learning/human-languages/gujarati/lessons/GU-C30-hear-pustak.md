@@ -11,8 +11,8 @@ gloss: book, heard and said before it is ever shown
 concept_tag: GU-PEOPLE-BOOK-HEARD
 prerequisites: [GU-C30-hear-maanas]
 sounds: [pa, short-u, st-conjunct, ka]
-roots: []
-etymology_hook: The word for the thing you are holding, and it carries the same st- join you first met in the very first greeting.
+roots: [sanskrit-pustaka]
+etymology_hook: "pustak: Sanskrit pustaka 'book', a tatsama, which CDIAL traces to Iranian, cf. Persian pōst 'skin' (CDIAL 8413)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C30-hear-maanas, GU-C08-vanchvun]
 
 [PAUSE 3s] Say the Gujarati verb for *to read*. Now listen twice: **pustak**. It means
 **book** — the thing a *māṇas* reads, and it carries the same **st** join as *namaste*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પુસ્તક** (*pustak*) is Sanskrit *pustaka*, "book", taken over whole as a learned loan, a tatsama. CDIAL traces the Sanskrit word to Iranian, comparing Persian *pōst*, "skin", and lists the inherited Gujarati *pothī*, "book", from the same source (CDIAL 8413).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-PUSTAK-01, GU-LEX-MAANAS-01, GU-LEX-VANCHVU] -->

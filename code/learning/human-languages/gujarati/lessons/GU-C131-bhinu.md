@@ -14,7 +14,8 @@ romanization: "bhīnũ"
 concept_tag: GU-QUAL131-BHINU
 prerequisites: [GU-C131-paholu, GU-C131-patlu]
 sounds: []
-roots: []
+roots: [indo-aryan-bhiyagna]
+etymology_hook: "bhīnũ ← *bhiyagna 'smeared, wet', reshaped after bhinna (CDIAL 9500)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C131-patlu]
 <!-- hl-knowledge: introduces=[GU-LEX-C131-QUAL131-04]; assesses=[] -->
 
 **ભીનું** (*bhīnũ*) — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ભીનું** (*bhīnũ*) under a reconstructed *\*bhiyagna*, "smeared, wet", and explains its ending by the influence of *bhinna*, "split" (CDIAL 9500).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

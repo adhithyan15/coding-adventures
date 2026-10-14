@@ -14,7 +14,8 @@ romanization: "sampatti"
 concept_tag: GU-CAN103-SAMPATTI
 prerequisites: [GU-C103-tak, GU-C103-milkat]
 sounds: []
-roots: []
+roots: [sanskrit-sampatti]
+etymology_hook: "sampatti ← Sanskrit saṁpatti 'acquisition; prosperity', a tatsama (CDIAL 12931)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C103-milkat]
 <!-- hl-knowledge: introduces=[GU-LEX-C103-CAN103-04]; assesses=[] -->
 
 **સંપત્તિ** (*sampatti*) — "wealth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સંપત્તિ** (*sampatti*) is Sanskrit *saṁpatti*, "acquisition; prosperity", taken over whole as a learned loan, a tatsama (CDIAL 12931).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

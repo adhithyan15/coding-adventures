@@ -11,8 +11,8 @@ gloss: person, heard and said before it is ever shown
 concept_tag: GU-PEOPLE-PERSON-HEARD
 prerequisites: [GU-C30-hear-chhokri]
 sounds: [ma, long-aa, retroflex-na, sa]
-roots: []
-etymology_hook: One word for anybody at all, which is the word you reach for when the boy-or-girl pair is the wrong question.
+roots: [sanskrit-manusha]
+etymology_hook: "māṇas ← Sanskrit mānuṣa 'human; man', a tadbhava (CDIAL 10049)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C30-hear-chhokri]
 
 [PAUSE 3s] Say the words for boy and for girl. Now listen twice: **māṇas**. It means
 **person** — anybody at all, the word to use when boy or girl is not the question.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**માણસ** (*māṇas*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mānuṣa*, "human; man" (CDIAL 10049).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-MAANAS-01, GU-LEX-CHHOKRI-01] -->

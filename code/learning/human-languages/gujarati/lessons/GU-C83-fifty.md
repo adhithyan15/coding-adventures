@@ -14,7 +14,8 @@ romanization: "pacās"
 concept_tag: GU-NUM3-FIFTY
 prerequisites: [GU-C82-thirty, GU-C82-forty]
 sounds: []
-roots: []
+roots: [sanskrit-pancashat]
+etymology_hook: "pacās ← Sanskrit pañcāśat 'fifty', a tadbhava (CDIAL 7682)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C82-forty]
 <!-- hl-knowledge: introduces=[GU-LEX-C83-NUM3-01]; assesses=[] -->
 
 **પચાસ** (*pacās*) — "fifty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પચાસ** (*pacās*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pañcāśat*, "fifty" (CDIAL 7682).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

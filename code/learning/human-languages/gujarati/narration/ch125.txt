@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a cheek, then the Gujarati for a forehe
 You'll want to know: ભમર.
 ભમર (bhamar) — "an eyebrow".
 
+The word, taken apart.
+ભમર (bhamar) is a tadbhava. CDIAL lists it, as bhammar, under Sanskrit bhrū, "eyebrow" (CDIAL 9688). Its -m- is not fully explained; CDIAL thinks it scarcely comes from the verb bhram, "to whirl".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a forehead, then the Gujarati for an ey
 
 You'll want to know: દાઢી.
 દાઢી (dāḍhī) — "a beard, a chin".
+
+The word, taken apart.
+CDIAL lists દાઢી (dāḍhī), "beard, chin", under a reconstructed dāṁṣṭra, "fang, tusk, beard", beside Sanskrit daṁṣṭra, "tusk, fang" (CDIAL 6250). It holds that the sense could move from "fang" to "beard", and does not rule out some Dravidian or Munda influence.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for an eyebrow, then the Gujarati for a bea
 You'll want to know: મૂછ.
 મૂછ (mūch) — "a moustache".
 
+The word, taken apart.
+મૂછ (mūch) comes from mucchā, "mustache", a form CDIAL reconstructs (CDIAL 10180). CDIAL asks whether it blends gocchā, "furrow of the upper lip", with mukha, "mouth", or comes through Middle Indo-Aryan from Sanskrit śmaśru, "beard".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a beard, then the Gujarati for a mousta
 You'll want to know: ગરદન.
 ગરદન (gardan) — "a neck".
 
+The word, taken apart.
+ગરદન (gardan) is a loan, usually traced to Persian gardan, "neck".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a moustache, then the Gujarati for a ne
 
 You'll want to know: છાતી.
 છાતી (chātī) — "a chest".
+
+The word, taken apart.
+છાતી (chātī) is a tadbhava, a word inherited and reshaped by sound change. It comes from chātti, "chest, breast", a form CDIAL reconstructs from its descendants (CDIAL 5014).
 
 What you've built.
 One more word for this chapter.

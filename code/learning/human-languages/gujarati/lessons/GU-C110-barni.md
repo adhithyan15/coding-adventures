@@ -15,6 +15,7 @@ concept_tag: GU-THINGS110-BARNI
 prerequisites: [GU-C109-topli, GU-C110-peti]
 sounds: []
 roots: []
+etymology_hook: "barṇī 'jar': not settled; DEDR lists Kannada and Tulu baraṇi 'china jar', but no Gujarati word (DEDR 3954)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C110-peti]
 <!-- hl-knowledge: introduces=[GU-LEX-C110-THINGS110-02]; assesses=[] -->
 
 **બરણી** (*barṇī*) — "a jar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **બરણી** (*barṇī*) is not settled. CDIAL has no entry for it. DEDR lists Dravidian words for a jar or casket, such as Kannada and Tulu *baraṇi*, "china jar", and Tamil *paraṇi*, but no Gujarati word, so whether **બરણી** (*barṇī*) belongs with them is not known (DEDR 3954).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

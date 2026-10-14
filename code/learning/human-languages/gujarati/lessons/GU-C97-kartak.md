@@ -14,7 +14,8 @@ romanization: "kārtak"
 concept_tag: GU-TIME97-KARTAK
 prerequisites: [GU-C96-saptembar, GU-C97-navembar]
 sounds: []
-roots: []
+roots: [sanskrit-karttika]
+etymology_hook: "kārtak ← Sanskrit kārttika 'the month October-November' (CDIAL 3070)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C97-navembar]
 <!-- hl-knowledge: introduces=[GU-LEX-C97-TIME97-02]; assesses=[] -->
 
 **કારતક** (*kārtak*) — "Kartak, the first month of the Gujarati year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કારતક** (*kārtak*) goes back to Sanskrit *kārttika*, "the month October-November", named after the constellation *kṛttikā* (CDIAL 3070). CDIAL lists no Gujarati form there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

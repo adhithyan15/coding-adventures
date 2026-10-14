@@ -14,7 +14,8 @@ romanization: "gulābī"
 concept_tag: GU-COLOUR2-PINK
 prerequisites: [GU-C71-white, GU-C71-brown]
 sounds: []
-roots: []
+roots: [persian-gulab]
+etymology_hook: "gulābī: usually traced to Persian gulābī 'rose-coloured', from gulāb 'rose-water'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C71-brown]
 <!-- hl-knowledge: introduces=[GU-LEX-C71-COLOUR2-03]; assesses=[] -->
 
 **ગુલાબી** (*gulābī*) — "pink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગુલાબી** (*gulābī*) is a loan, usually traced to Persian *gulābī*, "rose-coloured", from *gulāb*, "rose-water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

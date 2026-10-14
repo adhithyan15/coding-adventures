@@ -12,6 +12,7 @@ concept_tag: GU-VERB-BOLVU
 prerequisites: [GU-C03-hun]
 sounds: [o-sign, u-nasal]
 roots: [bol-speak]
+etymology_hook: "bolvũ ← *boll 'speak', a form CDIAL reconstructs behind Prakrit bolla-; its deeper source is debated (CDIAL 9321)"
 duration:
   max_seconds: 240
 requires:
@@ -48,11 +49,13 @@ you'll see on every Gujarati verb.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C05-BOLVUN-01] -->
 
-**બોલવું** (*bolvũ*, "to speak") is a native Indo-Aryan verb (the same *bol-* as
+**બોલવું** (*bolvũ*, "to speak") is an inherited verb (the same *bol-* as
 Hindi *bolnā* and Punjabi *bolṇā*). Its ending **-વું** (*-vũ*) is Gujarati's
 infinitive marker — the "to ___" form: *bol-vũ* "to speak," *maḷ-vũ* "to meet"
 (from *maḷīshũ*), *āv-vũ* "to come" (behind *āvjo*). Strip the *-vũ* and you have
 the **stem** (*bol-*).
+
+CDIAL reconstructs *\*boll-*, "speak", behind Prakrit *bollaï*, "speaks" (CDIAL 9321). Where that came from is debated, and CDIAL calls a Dravidian source very doubtful.
 
 ## Grammar Lens: stem + person + copula
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C05-BOLVUN-01] -->

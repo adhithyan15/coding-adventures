@@ -14,7 +14,8 @@ romanization: "kimmat"
 concept_tag: GU-MARKET-PRICE
 prerequisites: [GU-C57-kharidvu, GU-C57-vechvu]
 sounds: []
-roots: []
+roots: [arabic-qima]
+etymology_hook: "kimmat ← Arabic qīma 'value', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C57-vechvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C57-MARKET-03]; assesses=[] -->
 
 **કિંમત** (*kimmat*) — "a price".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કિંમત** (*kimmat*) is a loan from Arabic *qīma*, "value", which reached Gujarati through Persian. Its Arabic root is *q-w-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

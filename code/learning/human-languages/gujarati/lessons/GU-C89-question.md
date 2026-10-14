@@ -14,7 +14,8 @@ romanization: "praśna"
 concept_tag: GU-SCHOOL-QUESTION
 prerequisites: [GU-C88-gift, GU-C89-student]
 sounds: []
-roots: []
+roots: [sanskrit-prashna]
+etymology_hook: "praśna ← Sanskrit praśna 'question, astrological inquiry into the future', a tatsama (CDIAL 8818)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C89-student]
 <!-- hl-knowledge: introduces=[GU-LEX-C89-SCHOOL-02]; assesses=[] -->
 
 **પ્રશ્ન** (*praśna*) — "a question".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પ્રશ્ન** (*praśna*) is Sanskrit *praśna*, "question, astrological inquiry into the future", taken over whole as a learned loan, a tatsama (CDIAL 8818).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

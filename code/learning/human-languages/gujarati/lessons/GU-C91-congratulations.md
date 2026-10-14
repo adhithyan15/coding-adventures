@@ -14,7 +14,8 @@ romanization: "abhinandan"
 concept_tag: GU-COURTESY-CONGRATULATIONS
 prerequisites: [GU-C90-merchant, GU-C91-welcome]
 sounds: []
-roots: []
+roots: [sanskrit-abhinandana]
+etymology_hook: "abhinandan: Sanskrit abhinandana 'rejoicing at, greeting', a tatsama, on nand 'to rejoice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C91-welcome]
 <!-- hl-knowledge: introduces=[GU-LEX-C91-COURTESY-02]; assesses=[] -->
 
 **અભિનંદન** (*abhinandan*) — "congratulations".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**અભિનંદન** (*abhinandan*) is Sanskrit *abhinandana*, "rejoicing at, greeting", taken over whole as a learned loan, a tatsama. It is built on *nand*, "to rejoice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

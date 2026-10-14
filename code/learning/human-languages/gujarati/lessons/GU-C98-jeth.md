@@ -14,7 +14,8 @@ romanization: "jeṭh"
 concept_tag: GU-TIME98-JETH
 prerequisites: [GU-C97-caitra, GU-C98-vaisakh]
 sounds: []
-roots: []
+roots: [sanskrit-jyaishtha]
+etymology_hook: "jeṭh ← Sanskrit jyaiṣṭha 'the month May-June', a tadbhava (CDIAL 5293)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C98-vaisakh]
 <!-- hl-knowledge: introduces=[GU-LEX-C98-TIME98-02]; assesses=[] -->
 
 **જેઠ** (*jeṭh*) — "Jeth, a Gujarati month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જેઠ** (*jeṭh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jyaiṣṭha*, "the month May-June" (CDIAL 5293). It is named after *jyeṣṭhā*, a lunar mansion.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

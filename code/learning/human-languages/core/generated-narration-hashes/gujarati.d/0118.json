@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 118,
-  "sourceHash": "fnv1a64:b3a295abae8c3540",
+  "sourceHash": "fnv1a64:2e8fc86102eeecb7",
   "lessonIds": [
     "GU-C118-masalo",
     "GU-C118-haldar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "gujarati/narration/ch118.txt",
   "json": "gujarati/narration/ch118.json",
-  "textHash": "fnv1a64:ac45d48d24ba1745",
-  "jsonHash": "fnv1a64:f06914eace1f49e3",
+  "textHash": "fnv1a64:1a1d7a2f727de4a3",
+  "jsonHash": "fnv1a64:659fb0f2a85984ff",
   "findings": []
 }

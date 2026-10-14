@@ -14,7 +14,8 @@ romanization: "cintā"
 concept_tag: GU-FEEL-WORRY
 prerequisites: [GU-C50-anger, GU-C50-fear]
 sounds: []
-roots: []
+roots: [sanskrit-cinta]
+etymology_hook: "cintā ← Sanskrit cintā 'thought, care', a tatsama (CDIAL 4816)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C50-fear]
 <!-- hl-knowledge: introduces=[GU-LEX-C50-FEEL-04]; assesses=[] -->
 
 **ચિંતા** (*cintā*) — "worry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચિંતા** (*cintā*) is Sanskrit *cintā*, "thought, care", taken over whole as a learned loan, a tatsama (CDIAL 4816).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

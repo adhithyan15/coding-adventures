@@ -14,7 +14,8 @@ romanization: "līlo"
 concept_tag: GU-COLOUR1-GREEN
 prerequisites: [GU-C70-red, GU-C70-yellow]
 sounds: []
-roots: []
+roots: [sanskrit-nila]
+etymology_hook: "līlo ← Sanskrit nīla 'dark blue, dark green, black', with l- for n- (CDIAL 7563)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C70-yellow]
 <!-- hl-knowledge: introduces=[GU-LEX-C70-COLOUR1-03]; assesses=[] -->
 
 **લીલો** (*līlo*) — "green". The colour of a **પાન**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**લીલો** (*līlo*) is a tadbhava of Sanskrit *nīla*, "dark blue, dark green, black" (CDIAL 7563). CDIAL lists it beside *nīlũ* and *nīḷũ*; the Gujarati word changed its first *n* to *l*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

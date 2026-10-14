@@ -14,7 +14,8 @@ romanization: "banāvvũ"
 concept_tag: GU-VERB-BANAVVU
 prerequisites: [GU-C139-sodhvu, GU-C139-vaparvu]
 sounds: []
-roots: []
+roots: [sanskrit-vanati]
+etymology_hook: "banāvvũ: causing form of banvũ 'to be made' ← Sanskrit vanati; CDIAL marks banvũ as from Hindi (CDIAL 11260)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C139-vaparvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C139-ACT139-05]; assesses=[] -->
 
 **બનાવવું** (*banāvvũ*) — "to make".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બનાવવું** (*banāvvũ*) is the causing form of *banvũ*, "to be made", which CDIAL lists under Sanskrit *vanati*, "desires, gains, makes ready" (CDIAL 11260). CDIAL marks the Gujarati verb as taken from Hindi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

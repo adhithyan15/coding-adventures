@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a fever, then the Gujarati for a cough.
 You'll want to know: દુખાવો.
 દુખાવો (dukhāvo) — "pain, an ache".
 
+The word, taken apart.
+દુખાવો (dukhāvo) is a tadbhava. It comes from duḥkhabhāva, "state of misfortune", a form CDIAL reconstructs from duḥkha, "pain, misfortune", and bhāva, "state" (CDIAL 6376a).
+
 What you've built.
 One more word for pain, medicine and rest.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a cough, then the Gujarati for pain.
 
 You'll want to know: દવા.
 દવા (davā) — "medicine". What you take for a તાવ.
+
+The word, taken apart.
+દવા (davā) is a loan from Arabic dawāʾ, "remedy, medicine", which reached Gujarati through Persian. Its Arabic root is d-w-y (Lane).
 
 What you've built.
 One more word for pain, medicine and rest.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for pain, then the Gujarati for medicine.
 You'll want to know: આરામ.
 આરામ (ārām) — "rest".
 
+The word, taken apart.
+આરામ (ārām) is a loan, usually traced to Persian ārām, "rest, ease".
+
 What you've built.
 One more word for pain, medicine and rest.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for medicine, then the Gujarati for rest.
 You'll want to know: ભૂખ.
 ભૂખ (bhūkh) — "hunger".
 
+The word, taken apart.
+ભૂખ (bhūkh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bubhukṣā, "desire to eat, hunger" (CDIAL 9286).
+
 What you've built.
 One more word for pain, medicine and rest.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for rest, then the Gujarati for hunger.
 
 You'll want to know: તરસ.
 તરસ (taras) — "thirst". પાણી answers it.
+
+The word, taken apart.
+તરસ (taras) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tṛṣā, "thirst" (CDIAL 5936).
 
 What you've built.
 One more word for pain, medicine and rest.
