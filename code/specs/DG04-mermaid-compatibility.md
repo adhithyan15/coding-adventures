@@ -1286,5 +1286,13 @@ deliberate bounded policy, not unrestricted upstream parity. Checked hierarchy
 layout refuses invalid derived geometry; coincident centers have finite source
 right/target top boundary anchors. Complete default/ordinary scenes, work bounds
 and endpoint-bit/reference assertions remain required. See
-`CV04a-bounded-swimlane-spacing.md`. Inherited direct-IR rank arithmetic and
-general floating work remain OPEN. Final-source Miri is DEFERRED/PENDING.
+`CV04a-bounded-swimlane-spacing.md`. Checked direct-IR rank arithmetic now returns a typed overflow refusal.
+General floating work remains OPEN. Final-source Miri is DEFERRED/PENDING.
+
+
+Global flowchart curve configuration is tested against complete explicit-edge
+IR/layout/PaintScene references for all thirteen families/aliases and all four
+directions. Explicit edge curves win; absent and linear defaults retain full
+old scenes after only independently proven metadata normalization. Typed rank
+overflow propagates through the checked hierarchy API. Miri DEFERRED/PENDING;
+no unrestricted routing/device/full Closure acceptance is inferred.

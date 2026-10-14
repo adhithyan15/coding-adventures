@@ -7,7 +7,8 @@ content#17505/#17508. No curriculum accuracy or TypeScript/device execution is
 claimed from importing producer objects.
 
 The closed frame c351402c→a9f35e54 has3593 paths:3586 pure imports,7 owned
-overlaps and193 other retained owned objects. Archive actual conflicts/stages.
+overlaps and193 pre-spec owned objects. Final mergeb256 retains194 after the
+new selection spec; actual40639 EXIT0, no conflict stages needed.
 Preserve the owned spacing cap/checked geometry/cancellation/admission/shutdown
 repairs and every existing work/scene/refusal assertion. The curve field may
 require neutral None in old explicit config literals; this is not relaxation.
@@ -36,3 +37,14 @@ whole456/Unix tcp-reactor/full Closure parity/CV04b/all lineage/source joins
 remain OPEN. Miri DEFERRED/PENDING; frozen run/inputs/checkout/target/receipts
 untouched and unpolled. Delivery first, genuine final-source Miri later. Full
 objective incomplete; heartbeat ACTIVE. This spec is not native acceptance.
+
+
+Actual sourcee2fd7e9c validates the complete14-package reverse cone:829PASS/32
+targets/0ignore and strict14 EXIT0. The focused647/12 is included, not added.
+Complete25 other Windows packages retain actualcf331/55/5existingignore through
+whole object proof, with only previously reviewed docs differing; all87 old log
+rows were partitioned and old changed-package rows excluded. Standalone benchmark
+5/3+strict and ALGOL/LANG native acceptance retain original source attribution.
+Scoped independent exact-source security PASS SHA
+b9ab9884e3ec611459240cb2fa0b061f2f4920180f24fb541266a665340c669b.
+No nativeMac/full/generalP2/hosted/provenance/Miri acceptance inferred.

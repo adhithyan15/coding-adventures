@@ -36,8 +36,17 @@ authored duplicate subgraph IDs remain refused by the parser.
 
 ## Bounded spacing and transport reconciliation
 
-try_layout_swimlane returns own typed UnsupportedSpacing or InvalidDerivedGeometry errors. The legacy layout_swimlane wrapper explicitly panics on unsupported input. Supported large padding expands minimum canvas extent so lane dimensions stay nonnegative. Coincident node centers use exact right-side/source and top-side/target anchors; other endpoint formulas remain unchanged. This checked boundary covers spacing/derived geometry on previously supported structural/numeric IR; inherited unchecked rank arithmetic remains open, and arbitrary cyclic/malformed caller IR is not certified.
+try_layout_swimlane returns own typed UnsupportedSpacing, InvalidDerivedGeometry or RankArithmeticOverflow errors. The legacy layout_swimlane wrapper explicitly panics on unsupported input. Supported large padding expands minimum canvas extent so lane dimensions stay nonnegative. Coincident node centers use exact right-side/source and top-side/target anchors; other endpoint formulas remain unchanged. This checked boundary covers spacing/derived geometry on previously supported structural/numeric IR; checked rank arithmetic now refuses overflow, while arbitrary cyclic/malformed caller IR is not certified.
 
 Validation is source-attributed: Windows applicable packages and standalone
 checks are recorded separately from Unix-only/hosted and whole-PR gates.
 Final-source Miri is **DEFERRED/PENDING**, never passed.
+
+
+## Global curves and checked ranks
+
+Global flowchart curve is applied only when an edge has no explicit curve. Rank propagation, optimizer increments/constraints and rank count use checked integer additions and return RankArithmeticOverflow through try_layout_swimlane before geometric arithmetic; the legacy wrapper explicitly refuses that error. Normal output, reference bits, work counters and parser limits remain unchanged.
+
+Affected Windows suites/strict lint are source-attributed to e2fd7e9c;
+producer native macOS rendering, general floating work and whole-PR/hosted
+gates remain separate. Final-source Miri is **DEFERRED/PENDING**.

@@ -61,3 +61,12 @@ MAX_SWIMLANE_FLOWCHART_SPACING defines the own IR production range 0..=65536 for
 Validation is source-attributed: Windows applicable packages and standalone
 checks are recorded separately from Unix-only/hosted and whole-PR gates.
 Final-source Miri is **DEFERRED/PENDING**, never passed.
+
+
+## Global curves and checked ranks
+
+Global Swimlane flowchart curve uses the existing own curve enum; absent configuration retains None and all previous defaults.
+
+Affected Windows suites/strict lint are source-attributed to e2fd7e9c;
+producer native macOS rendering, general floating work and whole-PR/hosted
+gates remain separate. Final-source Miri is **DEFERRED/PENDING**.

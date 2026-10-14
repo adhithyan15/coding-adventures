@@ -26,14 +26,16 @@ No saturation, truncation, float conversion replacing checked rank arithmetic,
 or weakened parser8192 limits. Normal ranks, all four directions, node/edge
 identity and complete scene/layout/work counters remain unchanged.
 
-Run affected hierarchy/paint/parser suites, reverse consumers and strict lint,
-then independent exact-source security review. This spec is selection only;
-implementation/acceptance are pending; the immutable red is not acceptance.
-Current sourcecf remains attributed
-to its immutable receipts; later source changes require fresh affected evidence.
-Latest audited/fetched main5ff75a40 adds only25 producer curriculum paths and no
-Rust source change; its integration remains pending, without curriculum accuracy
-or TypeScript execution claims. One PR17288, autoOFF; no publication/merge.
+Actual sourcee2fd7e9c closes this bounded arithmetic debt: propagation,
+optimizer candidate/constraint and rank-count additions are checked; exact own
+typed error and display are pinned. All16 originally panicking cases now return
+the expected typed refusal, private MAX/MAX-1 controls pass, and all prior normal
+scene/layout/reference/work controls remain. Native647/12 focused suite plus
+full14-package829/32/0ignore/strict14 EXIT0 and independent scoped review PASS
+are source-attributed; focus totals are repeated subsets. The original native
+red/exit101/log remains immutable. Curve-config maina9f35e54 is now integrated
+under its prior committed spec and closed import proof; no curriculum accuracy
+or TypeScript/device execution is claimed. No new crates.io dependencies.
 
 General floating P2/whole456/Unix tcp-reactor/hosted native3OS/exact-head required
 CI/conflicts/full Closure parity/provenance remain OPEN. Miri DEFERRED/PENDING,

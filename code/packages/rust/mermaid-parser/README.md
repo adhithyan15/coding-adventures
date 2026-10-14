@@ -343,3 +343,12 @@ Swimlane flowchart spacing fields accept only finite values in 0..=65536. Existi
 Validation is source-attributed: Windows applicable packages and standalone
 checks are recorded separately from Unix-only/hosted and whole-PR gates.
 Final-source Miri is **DEFERRED/PENDING**, never passed.
+
+
+## Global curves and checked ranks
+
+Swimlane global flowchart curve parsing retains directive/front-matter precedence, separate per-edge overrides, all existing aliases and the exact unsupported-curve refusal. Complete source fields are compared after normalizing only the proven global curve config.
+
+Affected Windows suites/strict lint are source-attributed to e2fd7e9c;
+producer native macOS rendering, general floating work and whole-PR/hosted
+gates remain separate. Final-source Miri is **DEFERRED/PENDING**.

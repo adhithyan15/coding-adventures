@@ -2,7 +2,10 @@
 
 ## Unreleased
 
-- Add checked spacing/derived geometry boundary and explicit legacy-wrapper refusal. Keep large-padding lane dimensions nonnegative. Repair coincident-center NaN endpoints with finite anchors, preserving all endpoint bits/reference/work assertions and adding independent exact anchor controls. Inherited rank arithmetic remains open.
+- Global flowchart curve is applied only when an edge has no explicit curve. Rank propagation, optimizer increments/constraints and rank count use checked integer additions and return RankArithmeticOverflow through try_layout_swimlane before geometric arithmetic; the legacy wrapper explicitly refuses that error. Normal output, reference bits, work counters and parser limits remain unchanged.
+- Miri **DEFERRED/PENDING**; no whole or hosted acceptance inferred.
+
+- Add checked spacing/derived geometry boundary and explicit legacy-wrapper refusal. Keep large-padding lane dimensions nonnegative. Repair coincident-center NaN endpoints with finite anchors, preserving all endpoint bits/reference/work assertions and adding independent exact anchor controls. The later checked-rank slice now refuses rank arithmetic overflow.
 - Final-source Miri **DEFERRED/PENDING**; native/hosted and whole-PR gates remain separately attributed.
 
 - Evaluate adjacent automatic lane swaps from checked lane balances and a

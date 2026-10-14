@@ -3,48 +3,46 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a current-main reconciliation -->
-October14: bounded spacing/transport repair source `cf1674c74c16333b9500b18f64730998b721491a` integrates main
-`c351402c3b6096464273663a0e95aaba00bfa7fd`. Spec-first slices repair Windows
-terminal-operation lifetime/AcceptEx BOOL/failed packet handling, bounded pending
-adoption ownership through drain/error/unwind/shrink, coordinated participant
-shutdown before provider destruction, and finite timeout sentinel conversion.
-Spacing now has production cap65536, typed checked layout refusals, nonnegative
-padding extents and independently pinned finite coincident-center anchors.
-All ordinary fullscene/reference-bit/work controls retained; obsolete NaN masking
-replaced mandatory finite assertions. Original0389 infinite-extent, f14 lint,
-f62/2a74 withheld reviews, b9 selfloop and7b Unix-only compile failures preserved.
+October14: checked-rank/global-curve source `e2fd7e9ce7971993278e82dca18e6b5a072aa36e`
+integrates audited main `a9f35e5401e4eef1a3ee218d6079c67fcedb8752`.
+Closed3593-path frame:3586 pure imports/7 owned overlaps;193 pre-spec and194
+final retained owned objects (only later intentional rank-spec amendment differs).
+Actual40639 merge EXIT0/no conflict.24 complete transport and1276 ALGOL/LANG
+objects retained;376 registry identities unchanged, no new crates.io dependency.
+Producer Sanskrit/Bengali imports give no curriculum or TypeScript/device claim.
 
-Actual Windows continuation:39 applicable packages, 1156 tests across
-87 targets, 5 existing ignores,0fail; strict39 plus standalone
-benchmark tests/strict pass. Complete reverse cone remains40: unchanged
-tcp-reactor explicitly refuses Windows Unix-style FD compilation; supported
-Unix native/hosted acceptance remains OPEN, not Windows success. No heavy
-benchmark execution is claimed.376 registry identities unchanged; standalone
-registry subset verified,1276 ALGOL/LANG objects retained with original96b/f26
-native acceptance. Prior scoped diagram643/12 and transport26/8 counts are
-repeated subsets, not added to continuation totals.
+Actual native red70c5924c EXIT1010PASS1FAIL:all16 direction/optimizer/count/
+accumulation cases panic, preserved verbatim. Spec300c precedes checked rank
+repair: propagation/optimizer/count checked additions, exact own typed
+RankArithmeticOverflow through tryAPI, legacy explicit refusal. All16 now
+checked-refuse, private MAX/MAX-1 controls pass. Original unranked maximum-length,
+all ordering/gap/scene/bit/resource/parser8192 assertions remain. Global curve
+controls cover13families/7aliases/casefold/all4directions, exact complete IR/
+layout/scene/metadata, source precedence, per-edge override and full old defaults.
 
-Independent scoped transport review PASS at sourceb9, retained complete objects,
-SHA98c1f06ccb803078672dfe02a014d11063ce71b32d2f70ad3a073e5c09237abc.
-Independent scoped spacing review PASScf,
-SHAdf8a3d5eae1ef2a3f3d9fbf4f2067b3b3db08d25fc72b0ca93b386a3ecc0fc25.
-Checked API acceptance covers previously supported structural/numeric IR;
-inherited unchecked rank arithmetic remains OPEN/static/unexecuted. General
-arbitrary-support/floating P2 and whole456 acceptance remain OPEN.
+Actual90242 focused647/12/0ignore and7028 full14 cone829/32/0ignore, strict14
+EXIT0. Focus is included, not added. Complete25 complementary Windows packages
+retain actualcf331/55/5existingignore, source/test/config/BUILD exact through
+reviewed docs and whole object proof; all87 old rows partitioned. Thus current
+Windows39 evidence is829new+331source-retained, no double counting. Standalone
+5/3+strict retains originalcf source via whole object proof. Unix-only tcp-reactor
+explicit Windows refusal/native Unix pending remains in complete40 cone.
+Originalcf1156, scoped647 and all failures/reviews remain immutable.
 
-Sole Closure/sharedPR17288 remains unpushed here, published82209953/autoOFF.
-Fresh publication audit, exact-head hosted native3OS/requiredCI/review/conflict
-and actual merge proof/cleanup remain required. Docs-only ae2 retention review PASS (446-to-449 complete
-eight-package objects; code/tests/config/BUILD exactcf), SHA
-14907d63f67820f29a41a640f4137348384b8a04a7ceb75dc518a631fcca081b.
-Actual doc shards/lessons1215/whitespace pass; original c26 malformed-shard
-failure retained. Latest audited/fetched main 5ff75a40aceb8cdf1cf53202bcc2e510483880ba
-adds25 producer curriculum paths and no Rust changes; integration pending.
-Next bounded selection: checked Swimlane rank arithmetic, spec-first only,
-red controls/implementation pending. Full Closure parity/CV04b/output-byte source/all folding-renaming-
-inlining-motion-merging-deletion lineage/pass-sweep/identity/span evidence OPEN.
+Independent bounded source review PASSe2 SHA
+b9ab9884e3ec611459240cb2fa0b061f2f4920180f24fb541266a665340c669b.
+Prior lifetime/admission/shutdown/spacing source-attributed reviews retained.
+Final documentation retention review pending. No unrestricted caller-IR,
+general floating/arbitrary-support P2, whole456 or nativeMac/device claim.
+Next blocking scope is general line-hop discovery work; contract/proof still OPEN.
+
+Sole Closure/sharedPR17288 still published82209953/failed checks/autoOFF;
+no push/merge/cleanup here. Exact-head hosted native3OS/requiredCI/review/conflict
+and actual merge reachability remain required. Base ESTree/own types preserved.
+Full Closure parity/CV04b/output-byte source/all folding-renaming-inlining-motion-
+merging-deletion lineage/pass-sweep/stableidentity/span evidence remain OPEN.
 Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/checkout/target/
-receipts untouched and unpolled. Deliver first, genuine final-source Miri later.
+receipts untouched/unpolled. Delivery first, genuine final-source Miri later.
 Full objective incomplete; heartbeat ACTIVE.
 <!-- /CV04a current-main reconciliation -->
 
