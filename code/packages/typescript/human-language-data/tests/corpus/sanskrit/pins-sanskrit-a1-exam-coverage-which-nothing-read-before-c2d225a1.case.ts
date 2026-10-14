@@ -45,8 +45,12 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // 145 -> 146: chapters 263-264 bridge from known third-person future
   // recognition to three first-person singular plans, then require two rounds
   // of model-free near-term retrieval before SA-A1-F-10 closes.
-  expect(coverage.covered).toBe(146);
-  expect(coverage.unmapped).toBe(18);
+  // 146 -> 147: chapter 265 reuses the already-owned meal, restaurant, food,
+  // drink, courtesy, recipient, and giving atoms, adds only dadātu and the
+  // complete polite-order frame, then retrieves the request twice without a
+  // visible Sanskrit model before SA-A1-M-02 closes.
+  expect(coverage.covered).toBe(147);
+  expect(coverage.unmapped).toBe(17);
   expect(coverage.partial).toBe(0);
   // The highest percentage in the corpus, and the reason is worth stating so it
   // is not read as the track being furthest along: this inventory is DERIVED
@@ -54,7 +58,7 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // denominator is the smallest of the twenty-five. 86% of 164 is not
   // comparable with 84% of 273.
   expect(formatExamCoverage(coverage)).toContain(
-    "sanskrit A1 (partial inventory): 146/164 points covered (89%)",
+    "sanskrit A1 (partial inventory): 147/164 points covered (90%)",
   );
   // Where the 18 gaps actually are, named rather than counted. Two columns hold
   // 13 of them, and they are the two an editorially derived A1 inventory is
@@ -62,7 +66,7 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // and the orthography beyond the characters the script ladder teaches.
   expect(coverage.byCategory[
     "Modern life — fields a spoken revival needs and a classical corpus lacks"
-  ]!).toEqual({ enumerated: 15, covered: 5 });
+  ]!).toEqual({ enumerated: 15, covered: 6 });
   expect(coverage.byCategory["Lipi — the script and its orthography"]!).toEqual({
     enumerated: 10,
     covered: 7,

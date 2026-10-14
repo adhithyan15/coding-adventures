@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-265-ORDER265",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can politely ask for a familiar food or drink in a restaurant.",
+  "prerequisites": [
+    "SA-EXT-264-FUT264"
+  ]
+}
