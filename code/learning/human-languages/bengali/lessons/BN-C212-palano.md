@@ -14,7 +14,8 @@ romanization: "pālāno"
 concept_tag: BN-VERB-PALANO
 prerequisites: [BN-C212-paltano, BN-C212-lora]
 sounds: []
-roots: []
+roots: [sanskrit-palayate]
+etymology_hook: "pālāno ← Sanskrit palāyate 'flees', a tadbhava (CDIAL 7955)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C212-lora]
 <!-- hl-knowledge: introduces=[BN-LEX-C212-ACT212-05]; assesses=[] -->
 
 **পালানো** — *pālāno* — "to run away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পালানো** (*pālāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *palāyate*, "flees" (CDIAL 7955). CDIAL lists Bengali *palāna*, "to run away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

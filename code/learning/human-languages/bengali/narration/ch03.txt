@@ -77,6 +77,9 @@ Assemble the two atoms — and notice a whole word English needs that Bengali dr
 The two words — assembled.
 আমার (my) + নাম (name) + your name becomes আমার নাম … (āmār nām …) = "my name …" becomes "my name is…" Āmār nām Arun. becomes "My name is Arun."
 
+The phrase, taken apart.
+Both words are inherited. আমার (āmār) is the possessive of āmi, "I", which CDIAL lists under Sanskrit asmad, the stem of "we" (CDIAL 986); নাম (nām) is Sanskrit nāman, "name" (CDIAL 7067).
+
 Grammar Lens: Bengali drops "is" in the present.
 Look at what is missing: there is no verb. Bengali sets "my name" beside "Arun" — āmār nām Arun — and the "is" is understood without being said. This is the zero copula: for present-tense equational sentences (X is Y), Bengali needs no "to be" at all. (It is the same habit Tamil has — and unlike Hindi's merā nām … hai, which keeps the hai.) Bengali only brings back a verb when it talks about a state or place — you'll see that in Chapter 5.
 
@@ -163,11 +166,12 @@ The letters in this word.
 নি.
 
 The word, taken apart.
-তুমি (tumi, familiar "you") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu. Bengali grades respect in three levels:
+তুমি (tumi, familiar "you") goes back to the Sanskrit plural yuṣmad-, "you", with its t- taken from singular tvam, "thou" (CDIAL 10511); tvam is from PIE tū — the same root as English archaic thou, Latin tū, French tu. Bengali grades respect in three levels:
 tui — intimate: close friends, children, family.
 তুমি (tumi) — familiar: friends, juniors, warmth.
 আপনি (āpni) — respectful: elders, strangers, formality.
 (This is like Hindi's tū / tum / āp, and finer than the two-way split of the Romance tracks.) For a first meeting, use আপনি.
+আপনি (āpni) is Sanskrit ātman, "self": CDIAL lists the respectful Bengali pronoun under it (CDIAL 1135), so the polite "you" is, at the root, "your self".
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -194,6 +198,9 @@ Turn the introduction around — ask, instead of tell.
 
 The two words — assembled.
 তোমার (tomār, "your," from tumi) + নাম (nām) (name) + কি (ki) (what) becomes literally "your name what?" And note — still no "is." The zero copula holds here too: Bengali lays "your name" beside "what," and the question is complete.
+
+The phrase, taken apart.
+তোমার is the possessive of tumi, from Sanskrit yuṣmad-, "you" (CDIAL 10511); নাম (nām) is Sanskrit nāman, "name" (CDIAL 7067); কি (ki) is Sanskrit kim, "what" (CDIAL 3164).
 
 Grammar Lens: answering, and the respectful form.
 Answer with the sentence you built: Āmār nām Arun. The respectful version swaps tomār (from tumi) for āpnār ("your," from āpni): āpnār nām ki? — the one to use with a stranger.

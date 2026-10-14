@@ -11,8 +11,8 @@ gloss: he, she — one word for both, and the first time in this book that anybo
 concept_tag: BN-LEX-SHE
 prerequisites: [BN-R22-more-than-one, BN-C03-ami, BN-C02-tumi-apni, BN-C03-bhalo]
 sounds: []
-roots: []
-etymology_hook: "Bengali has no he and no she. One pronoun covers both, and the language gets through a whole conversation without ever announcing anybody's sex — a thing English cannot do without reaching for they."
+roots: [sanskrit-sa]
+etymology_hook: "se ← Sanskrit sa 'he, that' (CDIAL 12815)"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +52,11 @@ ever been **talked about**.
 English needs two words for. It is *he* and it is *she*, and Bengali will not
 tell you which. Sex is not marked on a Bengali pronoun at all — not here, not
 anywhere.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সে** is Sanskrit *sa*, "he, that": CDIAL lists the Bengali word under it (CDIAL 12815).
 
 ## Grammar Lens: the third row of a table you already half know
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C23-SHE-01, BN-CONCEPT-C02-TUMIAPNI-01, BN-LEX-C21-EI-01] -->

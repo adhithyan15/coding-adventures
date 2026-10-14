@@ -14,7 +14,8 @@ romanization: "netā"
 concept_tag: BN-JINIS230-NETA
 prerequisites: [BN-C229-phite, BN-C229-abohaoya]
 sounds: []
-roots: []
+roots: [sanskrit-neta]
+etymology_hook: "netā ← Sanskrit netā 'leader', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C229-abohaoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C230-JINIS230-01]; assesses=[] -->
 
 **নেতা** — *netā* — "a leader".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নেতা** (*netā*) is Sanskrit *netā*, "leader", taken over whole as a learned loan, a tatsama. It is the naming form of *netṛ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

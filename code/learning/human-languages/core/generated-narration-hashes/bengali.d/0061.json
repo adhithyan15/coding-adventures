@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 61,
-  "sourceHash": "fnv1a64:d6e821a1071928e2",
+  "sourceHash": "fnv1a64:38ba3abdadd8c960",
   "lessonIds": [
     "BN-C61-almari",
     "BN-C61-mejhe",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch61.txt",
   "json": "bengali/narration/ch61.json",
-  "textHash": "fnv1a64:652dab216ef0de72",
-  "jsonHash": "fnv1a64:2cbbb5693d8eb3cb",
+  "textHash": "fnv1a64:479d8ca2a2d0d81a",
+  "jsonHash": "fnv1a64:fe42c09c396b45cd",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "bhôy"
 concept_tag: BN-JINIS169-BHOY
 prerequisites: [BN-C169-anondo, BN-C169-lojja]
 sounds: []
-roots: []
+roots: [sanskrit-bhaya]
+etymology_hook: "bhôy ← Sanskrit bhaya 'fear, peril', a tatsama (CDIAL 9390)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C169-lojja]
 <!-- hl-knowledge: introduces=[BN-LEX-C169-JINIS169-03]; assesses=[] -->
 
 **ভয়** — *bhôy* — "fear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভয়** (*bhôy*) is Sanskrit *bhaya*, "fear, peril", taken over whole as a learned loan, a tatsama (CDIAL 9390).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

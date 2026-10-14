@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "Near, Inside, Outside, Below, In front",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cbd1b57c572f64cf",
+  "sourceHash": "fnv1a64:5636c445d8e231cd",
   "lessons": [
     {
       "id": "BN-C81-kachhe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:deb56ac5f8560b62",
+      "sourceHash": "fnv1a64:0f472ff677a35fbb",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of কাছে (kāchhe) is not settled. CDIAL has no entry for it; under Sanskrit kakṣa, \"armpit, side\", it lists Bengali kāṁkh, \"flank\", and says some postpositions probably grew from the sense \"side\" (CDIAL 2588), but it does not trace কাছে (kāchhe) there."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bc10fd672710ad5",
+      "sourceHash": "fnv1a64:d64afaaf1272f390",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভিতরে (bhitôre) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhiyantara, \"inner\", a form CDIAL reconstructs from its descendants (CDIAL 9504). It stands beside Sanskrit abhyantara, \"inner\"; CDIAL lists Bengali bhitar, \"inside\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b04edd3f6efe571f",
+      "sourceHash": "fnv1a64:0604fab68ffee05c",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বাইরে (bāire) is a tadbhava, a word inherited and reshaped by sound change. It comes from bāhira, \"external\", a form CDIAL reconstructs from its descendants (CDIAL 9226). CDIAL lists Bengali bāhir and bār; bāire has the ending -e."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69f872819b094943",
+      "sourceHash": "fnv1a64:6629786b4ac830eb",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিচে (niche) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nīca, \"low\" (CDIAL 7540). Niche adds the ending -e, \"below\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00fff7a194875a9f",
+      "sourceHash": "fnv1a64:0fba0a050e07d7b0",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সামনে (sāmne) goes back to Sanskrit saṁmukha, \"facing, present\". CDIAL gives no Bengali form under that entry, but it lists Middle Bengali chāmu, \"in front\", and Oriya sāmanā, \"being in front\", the forms nearest to Bengali (CDIAL 12982)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

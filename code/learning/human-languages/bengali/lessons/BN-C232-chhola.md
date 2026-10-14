@@ -15,6 +15,7 @@ concept_tag: BN-JINIS232-CHHOLA
 prerequisites: [BN-C232-mashrum, BN-C232-bhutta]
 sounds: []
 roots: []
+etymology_hook: "chholā: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C232-bhutta]
 <!-- hl-knowledge: introduces=[BN-LEX-C232-JINIS232-04]; assesses=[] -->
 
 **ছোলা** — *chholā* — "chickpeas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ছোলা** (*chholā*) is not settled: CDIAL has no entry for it, and a search by the gloss "chickpea" finds only words of other shapes, such as Bengali *canā* (CDIAL 4579).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

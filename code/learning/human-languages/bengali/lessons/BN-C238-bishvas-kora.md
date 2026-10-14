@@ -14,7 +14,8 @@ romanization: "bishvās kôrā"
 concept_tag: BN-VERB-BISHVAS-KORA
 prerequisites: [BN-C238-komano, BN-C238-tara-kora]
 sounds: []
-roots: []
+roots: [sanskrit-vishvasa, sanskrit-karoti]
+etymology_hook: "bishvās kôrā: bishvās 'trust', Sanskrit viśvāsa, + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C238-tara-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C238-ACT238-05]; assesses=[] -->
 
 **বিশ্বাস করা** — *bishvās kôrā* — "to believe, to trust".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিশ্বাস করা** (*bishvās kôrā*) is *bishvās*, "trust", Sanskrit *viśvāsa* taken over whole, + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

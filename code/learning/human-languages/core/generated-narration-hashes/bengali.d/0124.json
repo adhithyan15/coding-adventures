@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 124,
-  "sourceHash": "fnv1a64:843242faebb19090",
+  "sourceHash": "fnv1a64:3dde30595e82886e",
   "lessonIds": [
     "BN-C124-nokh",
     "BN-C124-gal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch124.txt",
   "json": "bengali/narration/ch124.json",
-  "textHash": "fnv1a64:41b76f16fd8f8986",
-  "jsonHash": "fnv1a64:2c94ec5b992d5eed",
+  "textHash": "fnv1a64:6801690b34b76dea",
+  "jsonHash": "fnv1a64:08eebe7d92545826",
   "findings": []
 }

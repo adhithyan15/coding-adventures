@@ -14,7 +14,8 @@ romanization: "dôsh"
 concept_tag: BN-CLOTHES86-DOSH
 prerequisites: [BN-C86-sat, BN-C86-at]
 sounds: []
-roots: []
+roots: [sanskrit-dasha]
+etymology_hook: "dôsh ← Sanskrit daśa 'ten', inherited (CDIAL 6227)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C86-at]
 <!-- hl-knowledge: introduces=[BN-LEX-C86-CLOTHES86-05]; assesses=[] -->
 
 **দশ** — *dôsh* — "ten".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দশ** (*dôsh*) is inherited from Sanskrit *daśa*, "ten", and has come down with almost no change (CDIAL 6227).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 179,
   "title": "To taste, To swallow, To chew, To look, To pick",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:82f36a7ec6fc5301",
+  "sourceHash": "fnv1a64:7bac2f73f0736da3",
   "lessons": [
     {
       "id": "BN-C179-chakha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ca08799c5f0867f",
+      "sourceHash": "fnv1a64:21617488a64912e2",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চাখা (chākhā) is a tadbhava, a word inherited and reshaped by sound change. It comes from cakṣati, \"tastes\", a form CDIAL reconstructs from its descendants (CDIAL 4557). CDIAL lists Bengali cākhā, \"to taste\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db8a27f8b808563f",
+      "sourceHash": "fnv1a64:6682a15d4f71bc5f",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গেলা (gelā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from galati, \"swallows\" (CDIAL 4075). CDIAL writes the Bengali verb gilā, beside Sanskrit gilati."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7582f7ad863ea3fb",
+      "sourceHash": "fnv1a64:f1af529148eb0993",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চিবানো (chibāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from carvati, \"chews\" (CDIAL 4711). CDIAL lists Bengali cibā and cibāna, \"to chew\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b4f673c4d8d5de1",
+      "sourceHash": "fnv1a64:4a80a5d50902b423",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তাকানো (tākāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tarkayati, \"guesses, thinks\" (CDIAL 5716). CDIAL lists Bengali tākā, \"to behold, aim at\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2d8639d22d89400",
+      "sourceHash": "fnv1a64:f4e6ad70fc059250",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বাছা (bāchhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vṛkṣate, \"chooses\" (CDIAL 12080). CDIAL lists Bengali bāchā, \"to select, choose\", in the entry it shares with vṛścati, \"cuts\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -243,7 +243,7 @@ const etymologyGapPinOwnerDirectory = resolve(
  */
 const EMPTY_ETYMOLOGY_BLOCK_PINS: Readonly<Record<string, number>> = {
   arabic: 19,
-  bengali: 3,
+  bengali: 0,
   chinese: 43,
   french: 66,
   german: 43,

@@ -14,7 +14,8 @@ romanization: "durgôndhô"
 concept_tag: BN-JINIS175-DURGONDHO
 prerequisites: [BN-C174-tayar, BN-C174-brek]
 sounds: []
-roots: []
+roots: [sanskrit-durgandha]
+etymology_hook: "durgôndhô ← Sanskrit durgandha 'bad smell', a tatsama (CDIAL 6431)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C174-brek]
 <!-- hl-knowledge: introduces=[BN-LEX-C175-JINIS175-01]; assesses=[] -->
 
 **দুর্গন্ধ** — *durgôndhô* — "a stench".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দুর্গন্ধ** (*durgôndhô*) is Sanskrit *durgandha*, "bad smell", taken over whole as a learned loan, a tatsama (CDIAL 6431).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

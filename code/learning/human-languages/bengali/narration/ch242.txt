@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to inform, then the Bengali for to chat.
 You'll want to know: বেরোনো.
 বেরোনো — berono — "to go out".
 
+The word, taken apart.
+The origin of বেরোনো (berono) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "go out" and "come out" finds only words of other shapes, such as Bengali nikalā, "to come out" (CDIAL 7478).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to chat, then the Bengali for to go out.
 
 You'll want to know: ছড়ানো.
 ছড়ানো — chhôṛāno — "to scatter, to spread".
+
+The word, taken apart.
+ছড়ানো (chhôṛāno) is a tadbhava, a word inherited and reshaped by sound change. It comes from chaṭ, "scatter, sift", a form CDIAL reconstructs from its descendants (CDIAL 4965). CDIAL lists Bengali chaṛāna, "to scatter".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to go out, then the Bengali for to scatt
 You'll want to know: গোটানো.
 গোটানো — goṭāno — "to roll up".
 
+The word, taken apart.
+গোটানো (goṭāno) appears to be built on Bengali goṭā, "whole, a seed", which CDIAL lists under gōṭṭa, "something round" (CDIAL 4271): "to make round".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to scatter, then the Bengali for to roll
 You'll want to know: মোড়া.
 মোড়া — moṛā — "to wrap".
 
+The word, taken apart.
+মোড়া (moṛā), "to wrap", appears to be the verb CDIAL lists as Bengali moṛā, "to twist", under Sanskrit muṭati, "twists" (CDIAL 10186).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to roll up, then the Bengali for to wrap
 
 You'll want to know: খোঁড়া.
 খোঁড়া — khõṛā — "to dig".
+
+The word, taken apart.
+খোঁড়া (khõṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from khodd, "dig", a form CDIAL reconstructs from its descendants (CDIAL 3934). CDIAL lists Bengali khõṛā, "to dig", here and also under khuṭati, "breaks" (CDIAL 3892).
 
 What you've built.
 One more word for this chapter.

@@ -15,6 +15,7 @@ concept_tag: BN-THINGS109-GAMCHHA
 prerequisites: [BN-C109-chiruni, BN-C109-saban]
 sounds: []
 roots: []
+etymology_hook: "gāmchhā: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C109-saban]
 <!-- hl-knowledge: introduces=[BN-LEX-C109-THINGS109-03]; assesses=[] -->
 
 **গামছা** — *gāmchhā* — "a thin towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **গামছা** (*gāmchhā*) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "towel" finds nothing close in Bengali.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

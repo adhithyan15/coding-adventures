@@ -14,7 +14,8 @@ romanization: "itihās"
 concept_tag: BN-JINIS256-ITIHAS
 prerequisites: [BN-C255-chhai, BN-C256-songskriti]
 sounds: []
-roots: []
+roots: [sanskrit-itihasa]
+etymology_hook: "itihās ← Sanskrit itihāsa 'tradition, history', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C256-songskriti]
 <!-- hl-knowledge: introduces=[BN-LEX-C256-JINIS256-02]; assesses=[] -->
 
 **ইতিহাস** — *itihās* — "history".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ইতিহাস** (*itihās*) is Sanskrit *itihāsa*, "tradition, history", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

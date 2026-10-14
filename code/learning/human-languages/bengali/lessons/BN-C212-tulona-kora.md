@@ -14,7 +14,8 @@ romanization: "tulônā kôrā"
 concept_tag: BN-VERB-TULONA-KORA
 prerequisites: [BN-C211-jhogra-kora, BN-C211-joriye-dhora]
 sounds: []
-roots: []
+roots: [sanskrit-tulana, sanskrit-karoti]
+etymology_hook: "tulônā kôrā: tulônā 'comparison', Sanskrit tulanā, + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C211-joriye-dhora]
 <!-- hl-knowledge: introduces=[BN-LEX-C212-ACT212-01]; assesses=[] -->
 
 **তুলনা করা** — *tulônā kôrā* — "to compare".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তুলনা করা** (*tulônā kôrā*) is *tulônā*, "comparison", Sanskrit *tulanā*, "weighing, comparing", taken over whole, + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

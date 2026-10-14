@@ -14,7 +14,8 @@ romanization: "āgei"
 concept_tag: BN-ATIT145-AGEI
 prerequisites: [BN-C144-khoskhose, BN-C145-somproti]
 sounds: []
-roots: []
+roots: [sanskrit-agra]
+etymology_hook: "āgei: āge 'before' ← agra, agre 'in front' (CDIAL 68) + the stressing -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C145-somproti]
 <!-- hl-knowledge: introduces=[BN-LEX-C145-ATIT145-02]; assesses=[] -->
 
 **আগেই** — *āgei* — "already". It is **আগে**, "before", with the emphatic **-ই**: **আমি আগেই খেয়েছি** — *āmi āgei kheyechhi* — "I have already eaten."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আগেই** (*āgei*) is *āge*, "before", from Sanskrit *agre*, "in front" (CDIAL 68), + the stressing ending *-i*: "already".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

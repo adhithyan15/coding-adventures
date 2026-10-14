@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 186,
-  "sourceHash": "fnv1a64:771262e1aea35875",
+  "sourceHash": "fnv1a64:baf625cc07cf7995",
   "lessonIds": [
     "BN-C186-pajor",
     "BN-C186-nabhi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch186.txt",
   "json": "bengali/narration/ch186.json",
-  "textHash": "fnv1a64:65f28ef3de512570",
-  "jsonHash": "fnv1a64:c15e41db49daf6ac",
+  "textHash": "fnv1a64:b3fa9eeae4e0b2fb",
+  "jsonHash": "fnv1a64:4f2ccafa15c20c58",
   "findings": []
 }

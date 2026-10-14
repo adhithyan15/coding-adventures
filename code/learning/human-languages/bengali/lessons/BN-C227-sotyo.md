@@ -14,7 +14,8 @@ romanization: "sôtyô"
 concept_tag: BN-JINIS227-SOTYO
 prerequisites: [BN-C227-nombor, BN-C227-poramorsho]
 sounds: []
-roots: []
+roots: [satya]
+etymology_hook: "sôtyô ← Sanskrit satya 'true; truth', a tatsama (CDIAL 13112)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C227-poramorsho]
 <!-- hl-knowledge: introduces=[BN-LEX-C227-JINIS227-05]; assesses=[] -->
 
 **সত্য** — *sôtyô* — "the truth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সত্য** (*sôtyô*) is Sanskrit *satya*, "true; truth", taken over whole as a learned loan, a tatsama (CDIAL 13112). The word inherited from it is *sāṁc*, "truth", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

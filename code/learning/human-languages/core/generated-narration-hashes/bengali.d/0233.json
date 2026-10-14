@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 233,
-  "sourceHash": "fnv1a64:a5f5da6e363eacf3",
+  "sourceHash": "fnv1a64:df90daaf23c63726",
   "lessonIds": [
     "BN-C233-mitar",
     "BN-C233-pket",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch233.txt",
   "json": "bengali/narration/ch233.json",
-  "textHash": "fnv1a64:37f8333466f79f78",
-  "jsonHash": "fnv1a64:dcbdbd794dd3c420",
+  "textHash": "fnv1a64:d9ac68c30ed322eb",
+  "jsonHash": "fnv1a64:7d6f4c996576fee3",
   "findings": []
 }

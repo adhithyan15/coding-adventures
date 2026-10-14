@@ -14,7 +14,8 @@ romanization: "khôbôr"
 concept_tag: BN-WORLD89-KHOBOR
 prerequisites: [BN-C88-chhuti, BN-C89-songit]
 sounds: []
-roots: []
+roots: [arabic-khabar]
+etymology_hook: "khôbôr ← Arabic khabar 'news, report', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C89-songit]
 <!-- hl-knowledge: introduces=[BN-LEX-C89-WORLD89-02]; assesses=[] -->
 
 **খবর** — *khôbôr* — "news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খবর** (*khôbôr*) is a loan from Arabic *khabar*, "news, report", which reached Bengali through Persian. Its Arabic root is *kh-b-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

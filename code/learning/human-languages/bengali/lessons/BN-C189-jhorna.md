@@ -14,7 +14,8 @@ romanization: "jhôrnā"
 concept_tag: BN-JAYGA189-JHORNA
 prerequisites: [BN-C189-guha, BN-C189-khad]
 sounds: []
-roots: []
+roots: [indo-aryan-jharati]
+etymology_hook: "jhôrnā ← *jharati 'flowing down', a reconstructed form; a tadbhava (CDIAL 5346)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C189-khad]
 <!-- hl-knowledge: introduces=[BN-LEX-C189-JAYGA189-05]; assesses=[] -->
 
 **ঝরনা** — *jhôrnā* — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ঝরনা** (*jhôrnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jharati*, "flowing down", a form CDIAL reconstructs from its descendants (CDIAL 5346). CDIAL lists the verb *jharā*, "to ooze out, drip"; *jhôrnā* is a noun built on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "goṭāno"
 concept_tag: BN-VERB-GOTANO
 prerequisites: [BN-C242-berono, BN-C242-chhorano]
 sounds: []
-roots: []
+roots: [indo-aryan-gotta]
+etymology_hook: "goṭāno: apparently on goṭā 'whole', listed under *gōṭṭa 'something round' (CDIAL 4271)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C242-chhorano]
 <!-- hl-knowledge: introduces=[BN-LEX-C242-ACT242-03]; assesses=[] -->
 
 **গোটানো** — *goṭāno* — "to roll up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গোটানো** (*goṭāno*) appears to be built on Bengali *goṭā*, "whole, a seed", which CDIAL lists under *\*gōṭṭa*, "something round" (CDIAL 4271): "to make round".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

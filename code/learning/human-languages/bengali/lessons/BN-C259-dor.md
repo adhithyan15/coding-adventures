@@ -15,6 +15,7 @@ concept_tag: BN-JINIS259-DOR
 prerequisites: [BN-C258-btari, BN-C258-suich]
 sounds: []
 roots: []
+etymology_hook: "dôr 'rate': origin not settled; CDIAL has no entry for it in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C258-suich]
 <!-- hl-knowledge: introduces=[BN-LEX-C259-JINIS259-01]; assesses=[] -->
 
 **দর** — *dôr* — "a rate, a price".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **দর** (*dôr*) is not settled: CDIAL has no entry for it in this sense, and a search by the glosses "rate" and "price" finds only words of other shapes, such as Bengali *dām* (CDIAL 6622).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

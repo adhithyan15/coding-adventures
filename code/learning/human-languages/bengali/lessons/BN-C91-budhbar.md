@@ -14,7 +14,8 @@ romanization: "budhbār"
 concept_tag: BN-TIME91-BUDHBAR
 prerequisites: [BN-C91-agamikal, BN-C91-sombar]
 sounds: []
-roots: []
+roots: [vara-sanskrit]
+etymology_hook: "budhbār ← Sanskrit budhavāra 'Wednesday', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C91-sombar]
 <!-- hl-knowledge: introduces=[BN-LEX-C91-TIME91-03]; assesses=[] -->
 
 **বুধবার** — *budhbār* — "Wednesday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বুধবার** (*budhbār*) is Sanskrit *budhavāra*, "Wednesday", taken over whole as a learned loan, a tatsama. It is *budha*, "Mercury", + *vāra*, "day of the week".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

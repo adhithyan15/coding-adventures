@@ -14,7 +14,8 @@ romanization: "phon kôrā"
 concept_tag: BN-VERB-PHON-KORA
 prerequisites: [BN-C209-ojon-kora, BN-C210-soi-kora]
 sounds: []
-roots: []
+roots: [english-phone, sanskrit-karoti]
+etymology_hook: "phon kôrā: phon ← English phone + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C210-soi-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C210-ACT210-02]; assesses=[] -->
 
 **ফোন করা** — *phon kôrā* — "to phone".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফোন করা** (*phon kôrā*) is *phon*, from English *phone*, + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

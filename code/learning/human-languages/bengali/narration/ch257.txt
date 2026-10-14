@@ -12,6 +12,9 @@ Before the new one: say the Bengali for art; industry, then the Bengali for lite
 You'll want to know: ছানা.
 ছানা — chhānā — "chhana (fresh cheese)".
 
+The word, taken apart.
+ছানা (chhānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from styāna, "coagulated" (CDIAL 13731). CDIAL lists Bengali chānā, "a kind of soft cheese".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for literature, then the Bengali for chhana.
 
 You'll want to know: পনির.
 পনির — pônir — "paneer".
+
+The word, taken apart.
+পনির (pônir) is a loan, usually traced to Persian panīr, "cheese".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for chhana, then the Bengali for paneer.
 You'll want to know: আইসক্রিম.
 আইসক্রিম — āiskrim — "ice cream".
 
+The word, taken apart.
+আইসক্রিম (āiskrim) is a loan from English ice cream.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for paneer, then the Bengali for ice cream.
 You'll want to know: চিঁড়ে.
 চিঁড়ে — chĩṛe — "chira (flattened rice)".
 
+The word, taken apart.
+চিঁড়ে (chĩṛe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cipiṭa, "flat; flattened rice" (CDIAL 4818). CDIAL lists Bengali cĩṛā, "parched and flattened rice".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for ice cream, then the Bengali for chira.
 
 You'll want to know: ফুচকা.
 ফুচকা — phuchkā — "phuchka".
+
+The word, taken apart.
+The origin of ফুচকা (phuchkā) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "fried" finds only words of other shapes, such as Bengali puri (CDIAL 8331).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "ṭikiṭ"
 concept_tag: BN-THINGS128-TIKIT
 prerequisites: [BN-C128-jahaj, BN-C128-tren]
 sounds: []
-roots: []
+roots: [english-ticket]
+etymology_hook: "ṭikiṭ ← English ticket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C128-tren]
 <!-- hl-knowledge: introduces=[BN-LEX-C128-THINGS128-05]; assesses=[] -->
 
 **টিকিট** — *ṭikiṭ* — "a ticket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টিকিট** (*ṭikiṭ*) is a loan from English *ticket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

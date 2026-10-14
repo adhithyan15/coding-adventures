@@ -4,7 +4,7 @@
   "chapter": 159,
   "title": "So, Since, If, Yet, Otherwise",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3ebffb876d5459d7",
+  "sourceHash": "fnv1a64:fc455931c5eeaf5e",
   "lessons": [
     {
       "id": "BN-C159-tai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f58dfc5e4b52b9d4",
+      "sourceHash": "fnv1a64:1b0cc0ae78b8a069",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তাই (tāi) is tā, \"that\", + -i, \"indeed\": \"that very thing, so\". CDIAL lists Bengali tā under the Sanskrit pronoun base ta-, \"that\" (CDIAL 5612), with Middle Bengali tẽ, \"therefore\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e1cf2b722511f34",
+      "sourceHash": "fnv1a64:4d142d4182e9cfe5",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যেহেতু (jehetu) is je, \"which\", from the Sanskrit pronoun ya-, \"who, which\" (CDIAL 10391), + hetu, \"cause\", Sanskrit hetu taken over whole: \"for which cause\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:267678d6be26d950",
+      "sourceHash": "fnv1a64:ba762190b16108f6",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যদি (jôdi) is Sanskrit yadi, \"if\", taken over whole as a learned loan, a tatsama (CDIAL 10410). The word inherited from it is Old Bengali jaï, \"when\", which CDIAL lists."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:496b498006e3d31b",
+      "sourceHash": "fnv1a64:b6c602030ab4f23c",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of তবু (tôbu) is not settled. CDIAL lists Assamese teo, \"yet, still\", under Sanskrit tathāpi, \"even so\" (CDIAL 5647), and Bengali tabe, \"then\", under ēvam ēva, \"exactly so\" (CDIAL 2528), but gives no Bengali tôbu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fee8625b7f59487",
+      "sourceHash": "fnv1a64:31c4db412c27c869",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নাহলে (nāhôle) is nā, \"not\", from Sanskrit na (CDIAL 6906), + hôle, \"if it is\", a form of hôoyā, \"to be\", from Sanskrit bhavati, \"becomes, is\" (CDIAL 9416): \"if not so\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

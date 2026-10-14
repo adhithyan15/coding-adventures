@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 62,
-  "sourceHash": "fnv1a64:69fd0edbaf13d962",
+  "sourceHash": "fnv1a64:280121611b22f0f9",
   "lessonIds": [
     "BN-C62-pakha",
     "BN-C62-chabi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch62.txt",
   "json": "bengali/narration/ch62.json",
-  "textHash": "fnv1a64:1b0b284949d7be07",
-  "jsonHash": "fnv1a64:69aecfb189e15bb9",
+  "textHash": "fnv1a64:6cd482f0df1dba52",
+  "jsonHash": "fnv1a64:b9c2a4bd945ff565",
   "findings": []
 }

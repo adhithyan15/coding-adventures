@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a tray, then the Bengali for a strainer.
 You'll want to know: দাম.
 দাম — dām — "a price".
 
+The word, taken apart.
+দাম (dām) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dramma, "a coin" (CDIAL 6622). CDIAL lists Bengali dām, "price", and takes dramma from Greek drachmē through Middle Persian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a strainer, then the Bengali for a price
 
 You'll want to know: দোকানদার.
 দোকানদার — dokāndār — "a shopkeeper".
+
+The word, taken apart.
+দোকানদার (dokāndār) is dokān, "shop", from Arabic dukkān, which reached Bengali through Persian (Lane), + the Persian ending -dār, "holder".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a price, then the Bengali for a shopkeep
 You'll want to know: খদ্দের.
 খদ্দের — khôdder — "a customer".
 
+The word, taken apart.
+খদ্দের (khôdder) is usually traced to Persian kharīdār, "buyer", worn down in Bengali.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a shopkeeper, then the Bengali for a cus
 You'll want to know: ব্যবসা.
 ব্যবসা — bæbsā — "business".
 
+The word, taken apart.
+ব্যবসা (bæbsā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vyavasāya, "resolve; trade" (CDIAL 11831). CDIAL lists Bengali byabsā, "business", and notes the pull of the learned byabasāyī.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a customer, then the Bengali for busines
 
 You'll want to know: কোম্পানি.
 কোম্পানি — kompāni — "a company".
+
+The word, taken apart.
+কোম্পানি (kompāni) is a loan from English company.
 
 What you've built.
 One more word for this chapter.

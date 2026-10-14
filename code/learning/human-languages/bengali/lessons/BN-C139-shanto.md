@@ -14,7 +14,8 @@ romanization: "shāntô"
 concept_tag: BN-QUAL139-SHANTO
 prerequisites: [BN-C138-sahosi, BN-C139-bhitu]
 sounds: []
-roots: []
+roots: [sanskrit-shanta]
+etymology_hook: "shāntô ← Sanskrit śānta 'abated, calm', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C139-bhitu]
 <!-- hl-knowledge: introduces=[BN-LEX-C139-QUAL139-02]; assesses=[] -->
 
 **শান্ত** — *shāntô* — "calm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শান্ত** (*shāntô*) is Sanskrit *śānta*, "abated, calm", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

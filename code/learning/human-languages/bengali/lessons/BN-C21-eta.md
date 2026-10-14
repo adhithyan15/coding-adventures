@@ -11,10 +11,10 @@ gloss: this one, this thing — the pointer standing alone as a subject, which f
 concept_tag: BN-LEX-ETA
 prerequisites: [BN-C21-dem-order, BN-C02-tomar-naam-ki, BN-C10-jol, BN-C15-jama]
 sounds: []
-roots: []
+roots: [sanskrit-esha]
 etymology_hook: "এটা is এ- plus the very classifier taught two lessons ago, standing with no noun in front of it. Bengali does not need a separate word for this thing: it lets the classifier BE the thing, which is a trick no European language has."
 duration:
-  max_seconds: 250
+  max_seconds: 255
 requires:
   knowledge: [BN-GRAMMAR-C21-DEM-ORDER-01, BN-CONCEPT-C02-TOMARNAAMKI-01, BN-GRAMMAR-C20-CLASSIFIER-01, BN-LEX-C10-JOL-01]
 introduces:
@@ -54,6 +54,11 @@ them they make the first question a learner of any language actually uses, and
 it has been out of reach for thirty-one chapters.
 
 The far one works the same way: **ওটা** — *oṭā* — **that one**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**এ-** goes back to Sanskrit *ēṣa*, "this" (CDIAL 2530); the origin of **টা** is not settled.
 
 ## Grammar Lens: no verb in the middle
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C21-ETA-01, BN-GRAMMAR-C16-NOY-01, BN-LEX-C10-CHA-01] -->

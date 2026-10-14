@@ -14,7 +14,8 @@ romanization: "bhāṭā"
 concept_tag: BN-JINIS202-BHATA
 prerequisites: [BN-C201-thole, BN-C201-glas]
 sounds: []
-roots: []
+roots: [sanskrit-bhrashta]
+etymology_hook: "bhāṭā ← Sanskrit bhraṣṭa 'fallen', a tadbhava (CDIAL 9655)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C201-glas]
 <!-- hl-knowledge: introduces=[BN-LEX-C202-JINIS202-01]; assesses=[] -->
 
 **ভাটা** — *bhāṭā* — "low tide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভাটা** (*bhāṭā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhraṣṭa*, "fallen" (CDIAL 9655). CDIAL lists Bengali *bhāṭā*, "low-lying land, ebb-tide".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

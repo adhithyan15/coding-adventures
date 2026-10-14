@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 172,
-  "sourceHash": "fnv1a64:afb5ea5fbfb036cd",
+  "sourceHash": "fnv1a64:b447d69d9731164e",
   "lessonIds": [
     "BN-C172-kheladhula",
     "BN-C172-chhatri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch172.txt",
   "json": "bengali/narration/ch172.json",
-  "textHash": "fnv1a64:75866b084d00ebfc",
-  "jsonHash": "fnv1a64:8716d42728685534",
+  "textHash": "fnv1a64:6ad37085e45b2a93",
+  "jsonHash": "fnv1a64:27aa8501403425b2",
   "findings": []
 }

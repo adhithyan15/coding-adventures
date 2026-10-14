@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a snail, then the Bengali for cricket.
 You'll want to know: যাত্রী.
 যাত্রী — jātrī — "a passenger".
 
+The word, taken apart.
+যাত্রী (jātrī) is Sanskrit yātrā, "journey", taken over whole, + the ending -ī, "one who": "one on a journey". CDIAL has Sanskrit yātrika, "traveller", but gives no Bengali form for it (CDIAL 10457).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for cricket, then the Bengali for a passenge
 
 You'll want to know: ট্যাক্সি.
 ট্যাক্সি — ṭæksi — "a taxi".
+
+The word, taken apart.
+ট্যাক্সি (ṭæksi) is a loan from English taxi.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a passenger, then the Bengali for a taxi
 You'll want to know: রিকশা.
 রিকশা — rikshā — "a rickshaw".
 
+The word, taken apart.
+রিকশা (rikshā) is a loan from English rickshaw. English took it from Japanese jinrikisha.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a taxi, then the Bengali for a rickshaw.
 You'll want to know: মোটরসাইকেল.
 মোটরসাইকেল — moṭôrsāikel — "a motorbike".
 
+The word, taken apart.
+মোটরসাইকেল (moṭôrsāikel) is a loan from English motorcycle.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a rickshaw, then the Bengali for a motor
 
 You'll want to know: ট্রাক.
 ট্রাক — ṭrāk — "a lorry".
+
+The word, taken apart.
+ট্রাক (ṭrāk) is a loan from English truck.
 
 What you've built.
 One more word for this chapter.

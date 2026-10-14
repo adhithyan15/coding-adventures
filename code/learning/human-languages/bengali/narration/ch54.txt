@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to fly, then the Bengali for to teach.
 You'll want to know: বানানো.
 বানানো — bānāno — "to make".
 
+The word, taken apart.
+বানানো (bānāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vanati, "desires, makes ready" (CDIAL 11260). Bānāno is the causing form of banā, a verb CDIAL glosses "to agree, do".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to teach, then the Bengali for to make.
 
 You'll want to know: তোলা.
 তোলা — tolā — "to lift".
+
+The word, taken apart.
+তোলা (tolā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tolayati, "lifts, weighs" (CDIAL 5979).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to make, then the Bengali for to lift.
 You'll want to know: টানা.
 টানা — ṭānā — "to pull".
 
+The word, taken apart.
+টানা (ṭānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭān, "tighten", a form CDIAL reconstructs from its descendants (CDIAL 5443). CDIAL calls its relation to Sanskrit tanoti, "stretches", obscure.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to lift, then the Bengali for to pull.
 You'll want to know: লুকানো.
 লুকানো — lukāno — "to hide".
 
+The word, taken apart.
+লুকানো (lukāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lupyate, "is lost, is removed" (CDIAL 11083). Lukāno is the causing form of lukā, "to hide", the verb CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to pull, then the Bengali for to hide.
 
 You'll want to know: জেতা.
 জেতা — jetā — "to win".
+
+The word, taken apart.
+জেতা (jetā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jita, "won, conquered" (CDIAL 5224). CDIAL writes the Bengali verb jitā.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "prinṭār"
 concept_tag: BN-JINIS222-PRINTAR
 prerequisites: [BN-C222-rimot, BN-C222-lptop]
 sounds: []
-roots: []
+roots: [english-printer]
+etymology_hook: "prinṭār ← English printer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C222-lptop]
 <!-- hl-knowledge: introduces=[BN-LEX-C222-JINIS222-05]; assesses=[] -->
 
 **প্রিন্টার** — *prinṭār* — "a printer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রিন্টার** (*prinṭār*) is a loan from English *printer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

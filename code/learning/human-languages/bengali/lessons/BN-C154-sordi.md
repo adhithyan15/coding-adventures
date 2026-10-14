@@ -14,7 +14,8 @@ romanization: "sôrdi"
 concept_tag: BN-SVASTHYO154-SORDI
 prerequisites: [BN-C153-sohyo-kora, BN-C154-rog]
 sounds: []
-roots: []
+roots: [persian-sardi]
+etymology_hook: "sôrdi: usually traced to Persian sardī 'cold; a cold'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C154-rog]
 <!-- hl-knowledge: introduces=[BN-LEX-C154-SVASTHYO154-02]; assesses=[] -->
 
 **সর্দি** — *sôrdi* — "a cold (illness)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সর্দি** (*sôrdi*) is a loan, usually traced to Persian *sardī*, "cold; a cold". It is built on Persian *sard*, "cold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

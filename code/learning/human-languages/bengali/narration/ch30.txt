@@ -48,6 +48,9 @@ You'll want to know: যখন.
 যখন আমি আসি, তখন চা খাই — jôkhon āmi āshi, tôkhon chā khāi — when I come, then I drink tea.
 Bengali does not leave the pair half-finished the way English does. যখন (jôkhon) opens the clause and তখন answers it, and a fluent speaker says both. English would say when I come, I drink tea and let the then be understood; Bengali puts it in.
 
+The word, taken apart.
+যখন (jôkhon) is the relative stem ja- on -khôn, "moment": CDIAL lists তখন under Sanskrit tatkṣaṇa, "that very moment", with jakhan, "when", built the same way (CDIAL 5640).
+
 Grammar Lens: one frame, three prefixes.
 [a table of 3 rows, read aloud]
 word: যখন (jôkhon). prefix: য-, the relative. job: when … (opens a clause).
@@ -83,6 +86,9 @@ You'll want to know: আবার বলবেন.
 আবার বলবেন — ābār bôlben — please say it again.
 দয়া করে আবার বলবেন — doyā kore ābār bôlben — the same request, with please in front of it.
 The ending is not new. Chapter twenty-two taught māf kôrben, "excuse me", and named -বেন as the polite ending that sounds like a future and works as a request. Put it on বলা and you have asked somebody to repeat themselves without learning a single new word.
+
+The phrase, taken apart.
+Bôlben is the polite form of bôlā, from bōll, "speak", a form CDIAL reconstructs (CDIAL 9321); ābār has no CDIAL entry, so its origin is not settled.
 
 Grammar Lens: the whole repair kit, in two sentences.
 A learner who is lost needs to say two things and no more: I do not understand and say it again. Chapter twenty-seven built the first out of না. This lesson builds the second out of two words from chapters seven and eleven. Neither needed new vocabulary; both needed somebody to put the pieces together.

@@ -14,7 +14,8 @@ romanization: "sômāj"
 concept_tag: BN-JINIS230-SOMAJ
 prerequisites: [BN-C230-montri, BN-C230-rajkumar]
 sounds: []
-roots: []
+roots: [sanskrit-samaja]
+etymology_hook: "sômāj ← Sanskrit samāja 'festive gathering', a tatsama (CDIAL 13207)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C230-rajkumar]
 <!-- hl-knowledge: introduces=[BN-LEX-C230-JINIS230-04]; assesses=[] -->
 
 **সমাজ** — *sômāj* — "society".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সমাজ** (*sômāj*) is Sanskrit *samāja*, "festive gathering", taken over whole as a learned loan, a tatsama (CDIAL 13207).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

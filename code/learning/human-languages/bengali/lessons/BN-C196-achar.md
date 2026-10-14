@@ -14,7 +14,8 @@ romanization: "āchār"
 concept_tag: BN-JINIS196-ACHAR
 prerequisites: [BN-C196-khichuri, BN-C196-chop]
 sounds: []
-roots: []
+roots: [persian-achar]
+etymology_hook: "āchār: usually traced to Persian āchār 'pickle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C196-chop]
 <!-- hl-knowledge: introduces=[BN-LEX-C196-JINIS196-04]; assesses=[] -->
 
 **আচার** — *āchār* — "pickle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আচার** (*āchār*) is a loan, usually traced to Persian *āchār*, "pickle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

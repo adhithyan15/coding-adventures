@@ -14,7 +14,8 @@ romanization: "sekend"
 concept_tag: BN-TIME93-SEKEND
 prerequisites: [BN-C93-bosonto, BN-C93-hemonto]
 sounds: []
-roots: []
+roots: [english-second]
+etymology_hook: "sekend ← English second"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C93-hemonto]
 <!-- hl-knowledge: introduces=[BN-LEX-C93-TIME93-03]; assesses=[] -->
 
 **সেকেন্ড** — *sekend* — "a second".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সেকেন্ড** (*sekend*) is a loan from English *second*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

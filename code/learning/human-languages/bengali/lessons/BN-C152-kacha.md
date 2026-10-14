@@ -15,6 +15,7 @@ concept_tag: BN-VERB-KACHA
 prerequisites: [BN-C152-shukano, BN-C152-bhejano]
 sounds: []
 roots: []
+etymology_hook: "kāchā 'to launder': origin not settled; CDIAL has no entry for it in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C152-bhejano]
 <!-- hl-knowledge: introduces=[BN-LEX-C152-ACT152-03]; assesses=[] -->
 
 **কাচা** — *kāchā* — "to launder, to wash (clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **কাচা** (*kāchā*) is not settled: CDIAL has no Bengali verb of this shape meaning "to wash", and a search by form and by the glosses "wash" and "clean" finds nothing close.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

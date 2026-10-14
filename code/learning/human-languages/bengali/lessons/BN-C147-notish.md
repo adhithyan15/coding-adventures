@@ -14,7 +14,8 @@ romanization: "noṭish"
 concept_tag: BN-PORA147-NOTISH
 prerequisites: [BN-C146-asha-kora, BN-C147-taimtebil]
 sounds: []
-roots: []
+roots: [english-notice]
+etymology_hook: "noṭish ← English notice"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [BN-C147-taimtebil]
 
 The notice says **প্রতি রবিবার দোকান বন্ধ** — *prôti rôbibār dokān bôndhô* —
 "Shop closed every Sunday." Come on another day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নোটিশ** (*noṭish*) is a loan from English *notice*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

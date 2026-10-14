@@ -14,7 +14,8 @@ romanization: "choṭ"
 concept_tag: BN-SVASTHYO185-CHOT
 prerequisites: [BN-C185-bori, BN-C185-injekshon]
 sounds: []
-roots: []
+roots: [sanskrit-cutati]
+etymology_hook: "choṭ ← Sanskrit cuṭati 'cuts off, strikes', a tadbhava (CDIAL 4857)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C185-injekshon]
 <!-- hl-knowledge: introduces=[BN-LEX-C185-SVASTHYO185-03]; assesses=[] -->
 
 **চোট** — *choṭ* — "an injury".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চোট** (*choṭ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cuṭati*, "cuts off, strikes" (CDIAL 4857). CDIAL lists Bengali *coṭ*, "to hit", and calls the group non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

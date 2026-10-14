@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 105,
-  "sourceHash": "fnv1a64:50f94027517f235b",
+  "sourceHash": "fnv1a64:ff597961ad5ef712",
   "lessonIds": [
     "BN-C105-jhara",
     "BN-C105-gochhano",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch105.txt",
   "json": "bengali/narration/ch105.json",
-  "textHash": "fnv1a64:1d36c8c5a6e2a700",
-  "jsonHash": "fnv1a64:653fc5ae564d4f30",
+  "textHash": "fnv1a64:f485fa0a18328b52",
+  "jsonHash": "fnv1a64:6d8dcfd4a1eefca4",
   "findings": []
 }

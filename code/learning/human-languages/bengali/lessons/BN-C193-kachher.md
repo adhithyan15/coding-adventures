@@ -15,6 +15,7 @@ concept_tag: BN-GUN193-KACHHER
 prerequisites: [BN-C193-bishal, BN-C193-majhari]
 sounds: []
 roots: []
+etymology_hook: "kāchher: kāchh 'nearness' + -er 'of'; the origin of kāchh is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C193-majhari]
 <!-- hl-knowledge: introduces=[BN-LEX-C193-GUN193-03]; assesses=[] -->
 
 **কাছের** — *kāchher* — "nearby".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাছের** (*kāchher*) is *kāchh*, "nearness", + *-er*, "of". The origin of *kāchh* is not settled: CDIAL has no entry for it, though under Sanskrit *kakṣa*, "armpit, side", it lists Bengali *kāṁkh*, "flank" (CDIAL 2588).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

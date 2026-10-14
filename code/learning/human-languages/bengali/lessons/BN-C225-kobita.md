@@ -14,7 +14,8 @@ romanization: "kôbitā"
 concept_tag: BN-JINIS225-KOBITA
 prerequisites: [BN-C225-sinema, BN-C225-natok]
 sounds: []
-roots: []
+roots: [sanskrit-kavita]
+etymology_hook: "kôbitā ← Sanskrit kavitā 'poetry', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C225-natok]
 <!-- hl-knowledge: introduces=[BN-LEX-C225-JINIS225-05]; assesses=[] -->
 
 **কবিতা** — *kôbitā* — "a poem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কবিতা** (*kôbitā*) is Sanskrit *kavitā*, "poetry", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

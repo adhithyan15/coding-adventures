@@ -14,7 +14,8 @@ romanization: "lichu"
 concept_tag: BN-JINIS173-LICHU
 prerequisites: [BN-C173-gur, BN-C173-jam]
 sounds: []
-roots: []
+roots: [chinese-lizhi]
+etymology_hook: "lichu: usually traced to Chinese lizhi, the name of the fruit"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C173-jam]
 <!-- hl-knowledge: introduces=[BN-LEX-C173-JINIS173-05]; assesses=[] -->
 
 **লিচু** — *lichu* — "a lychee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লিচু** (*lichu*) is usually traced to Chinese *lizhi*, the name of the fruit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

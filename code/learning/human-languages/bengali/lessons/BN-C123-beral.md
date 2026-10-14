@@ -14,7 +14,8 @@ romanization: "beṛāl"
 concept_tag: BN-THINGS123-BERAL
 prerequisites: [BN-C122-tiktiki, BN-C122-kochchhop]
 sounds: []
-roots: []
+roots: [sanskrit-bidala]
+etymology_hook: "beṛāl ← Sanskrit biḍāla 'cat', a tadbhava (CDIAL 9237)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C122-kochchhop]
 <!-- hl-knowledge: introduces=[BN-LEX-C123-THINGS123-01]; assesses=[] -->
 
 **বেড়াল** — *beṛāl* — "a cat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বেড়াল** (*beṛāl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *biḍāla*, "cat" (CDIAL 9237). CDIAL writes the Bengali forms *birāl* and *bilāl*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

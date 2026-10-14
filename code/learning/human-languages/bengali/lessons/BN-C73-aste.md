@@ -14,7 +14,8 @@ romanization: "āste"
 concept_tag: BN-ADJ73-ASTE
 prerequisites: [BN-C73-lomba, BN-C73-gorom]
 sounds: []
-roots: []
+roots: [persian-ahista]
+etymology_hook: "āste: usually traced to Persian āhista 'slow, gentle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C73-gorom]
 <!-- hl-knowledge: introduces=[BN-LEX-C73-ADJ73-03]; assesses=[] -->
 
 **আস্তে** — *āste* — "slowly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আস্তে** (*āste*) is a loan, usually traced to Persian *āhista*, "slow, gentle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

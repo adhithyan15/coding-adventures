@@ -14,7 +14,8 @@ romanization: "chhāi"
 concept_tag: BN-JINIS255-CHHAI
 prerequisites: [BN-C255-bonya, BN-C255-dhoya]
 sounds: []
-roots: []
+roots: [sanskrit-chadi]
+etymology_hook: "chhāi ← Sanskrit chādi 'covering', a tadbhava (CDIAL 5020)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C255-dhoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C255-JINIS255-05]; assesses=[] -->
 
 **ছাই** — *chhāi* — "ash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছাই** (*chhāi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *chādi*, "covering" (CDIAL 5020). CDIAL lists Bengali *chāi*, "ashes", beside Sanskrit *chādi-muṣṭi*, "handful of ashes".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

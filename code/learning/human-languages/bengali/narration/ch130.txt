@@ -12,6 +12,9 @@ Before the new one: say the Bengali for an eraser, then the Bengali for a bag.
 You'll want to know: মানিব্যাগ.
 মানিব্যাগ — mānibyāg — "a wallet".
 
+The word, taken apart.
+মানিব্যাগ (mānibyāg) is a loan from English money-bag. It is English money + bag.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a bag, then the Bengali for a wallet.
 
 You'll want to know: পয়সা.
 পয়সা — pôysā — "a coin".
+
+The word, taken apart.
+পয়সা (pôysā) is the coin CDIAL traces to padāṁśa, "quarter part", a form it reconstructs. It gives no Bengali form, and marks Oriya paisā, "quarter anna", as taken from Hindi (CDIAL 7761).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a wallet, then the Bengali for a coin.
 You'll want to know: খাম.
 খাম — khām — "an envelope".
 
+The word, taken apart.
+The origin of খাম (khām) is not settled. CDIAL has no entry for it in the sense "envelope"; its Bengali khām is a different word, "pillar, post", from Sanskrit skambha (CDIAL 13639).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a coin, then the Bengali for an envelope
 You'll want to know: ডাকটিকিট.
 ডাকটিকিট — ḍākṭikiṭ — "a stamp".
 
+The word, taken apart.
+ডাকটিকিট (ḍākṭikiṭ) is ḍāk, "post", which CDIAL lists under ḍakka, "relay, post", a form it reconstructs (CDIAL 5519), + ṭikiṭ, from English ticket.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for an envelope, then the Bengali for a stam
 
 You'll want to know: পুতুল.
 পুতুল — putul — "a doll".
+
+The word, taken apart.
+পুতুল (putul) is a tadbhava, a word inherited and reshaped by sound change. It comes from putrala, "puppet, pupil of eye", a form CDIAL reconstructs from its descendants (CDIAL 8269). Late Sanskrit has puttalikā, "puppet".
 
 What you've built.
 One more word for this chapter.

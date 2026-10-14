@@ -14,7 +14,8 @@ romanization: "thālā"
 concept_tag: BN-HOME62-THALA
 prerequisites: [BN-C62-chabi, BN-C62-tala]
 sounds: []
-roots: []
+roots: [sanskrit-sthali]
+etymology_hook: "thālā ← Sanskrit sthālī 'earthen dish', a tadbhava (CDIAL 13766)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C62-tala]
 <!-- hl-knowledge: introduces=[BN-LEX-C62-HOME62-04]; assesses=[] -->
 
 **থালা** — *thālā* — "a plate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**থালা** (*thālā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sthālī*, "earthen dish" (CDIAL 13766).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 217,
-  "sourceHash": "fnv1a64:d042756bea2d797a",
+  "sourceHash": "fnv1a64:f1ebe57e6ecca4e4",
   "lessonIds": [
     "BN-C217-hrod",
     "BN-C217-bastnd",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch217.txt",
   "json": "bengali/narration/ch217.json",
-  "textHash": "fnv1a64:f0bea3c600caa466",
-  "jsonHash": "fnv1a64:f5e7d96b438b7ae0",
+  "textHash": "fnv1a64:8867aaf90ba0f533",
+  "jsonHash": "fnv1a64:541d87dd26a15911",
   "findings": []
 }

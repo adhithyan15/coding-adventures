@@ -14,7 +14,8 @@ romanization: "ṭebil"
 concept_tag: BN-HOME60-TEBIL
 prerequisites: [BN-C59-janala, BN-C60-cheyar]
 sounds: []
-roots: []
+roots: [english-table]
+etymology_hook: "ṭebil ← English table"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C60-cheyar]
 <!-- hl-knowledge: introduces=[BN-LEX-C60-HOME60-02]; assesses=[] -->
 
 **টেবিল** — *ṭebil* — "a table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টেবিল** (*ṭebil*) is a loan from English *table*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

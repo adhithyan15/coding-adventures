@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 56,
-  "sourceHash": "fnv1a64:adc0ac9dfcb84ab6",
+  "sourceHash": "fnv1a64:c559a86778120c18",
   "lessonIds": [
     "BN-C56-dal",
     "BN-C56-phol",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch56.txt",
   "json": "bengali/narration/ch56.json",
-  "textHash": "fnv1a64:87e6e0d4c2168971",
-  "jsonHash": "fnv1a64:eaa55fd30887d965",
+  "textHash": "fnv1a64:52674cd938762e62",
+  "jsonHash": "fnv1a64:ef93a1a4c47d9026",
   "findings": []
 }

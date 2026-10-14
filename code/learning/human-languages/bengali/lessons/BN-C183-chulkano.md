@@ -15,6 +15,7 @@ concept_tag: BN-VERB-CHULKANO
 prerequisites: [BN-C182-bhag-kora, BN-C182-jog-kora]
 sounds: []
 roots: []
+etymology_hook: "chulkāno: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C182-jog-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C183-ACT183-01]; assesses=[] -->
 
 **চুলকানো** — *chulkāno* — "to scratch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **চুলকানো** (*chulkāno*) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "itch" and "scratch" finds only words of other shapes, such as Bengali *khos*, "itch" (CDIAL 3854).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

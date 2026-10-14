@@ -12,6 +12,9 @@ Before the new one: say the Bengali for paddy, then the Bengali for high tide.
 You'll want to know: খেলাধুলা.
 খেলাধুলা — khelādhulā — "sports".
 
+The word, taken apart.
+খেলাধুলা (khelādhulā) is khelā, "play", which CDIAL lists under khēḍ, "play", a form it reconstructs and thinks may be non-Aryan (CDIAL 3918), + dhulā, "dust", under dhūḍi, "dust", beside Sanskrit dhūli (CDIAL 6835): "play and dust".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for high tide, then the Bengali for sports.
 
 You'll want to know: ছাত্রী.
 ছাত্রী — chhātrī — "a female student".
+
+The word, taken apart.
+ছাত্রী (chhātrī) is Sanskrit chātrī, "female pupil", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for sports, then the Bengali for a female st
 You'll want to know: বোর্ড.
 বোর্ড — borḍ — "a board".
 
+The word, taken apart.
+বোর্ড (borḍ) is a loan from English board.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a female student, then the Bengali for a
 You'll want to know: চক.
 চক — chôk — "chalk".
 
+The word, taken apart.
+চক (chôk) is a loan from English chalk.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a board, then the Bengali for chalk.
 
 You'll want to know: বৃত্তি.
 বৃত্তি — britti — "a scholarship".
+
+The word, taken apart.
+বৃত্তি (britti) is Sanskrit vṛtti, "livelihood, maintenance", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

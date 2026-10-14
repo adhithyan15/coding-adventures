@@ -15,6 +15,7 @@ concept_tag: BN-GUN247-PHKASHE
 prerequisites: [BN-C246-akashi, BN-C247-porer]
 sounds: []
 roots: []
+etymology_hook: "phækāshe: origin not settled; CDIAL has no entry for it; phikā 'pale' (CDIAL 9037) is close"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C247-porer]
 <!-- hl-knowledge: introduces=[BN-LEX-C247-GUN247-02]; assesses=[] -->
 
 **ফ্যাকাশে** — *phækāshe* — "pale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ফ্যাকাশে** (*phækāshe*) is not settled: CDIAL has no entry for it. The closest form it lists is Bengali *phikā*, "weak (of tea), pale", under *\*phikka*, "defective" (CDIAL 9037), but the shapes differ.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

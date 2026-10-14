@@ -14,7 +14,8 @@ romanization: "miniṭ"
 concept_tag: BN-TIME79-MINIT
 prerequisites: [BN-C78-mash, BN-C79-bochhor]
 sounds: []
-roots: []
+roots: [english-minute]
+etymology_hook: "miniṭ ← English minute"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C79-bochhor]
 <!-- hl-knowledge: introduces=[BN-LEX-C79-TIME79-02]; assesses=[] -->
 
 **মিনিট** — *miniṭ* — "a minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মিনিট** (*miniṭ*) is a loan from English *minute*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

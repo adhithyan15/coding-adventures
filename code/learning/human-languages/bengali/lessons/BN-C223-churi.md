@@ -14,7 +14,8 @@ romanization: "chuṛi"
 concept_tag: BN-JINIS223-CHURI
 prerequisites: [BN-C222-lptop, BN-C222-printar]
 sounds: []
-roots: []
+roots: [sanskrit-cuda]
+etymology_hook: "chuṛi ← Sanskrit cūḍa 'bracelet', a tadbhava (CDIAL 4884)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C222-printar]
 <!-- hl-knowledge: introduces=[BN-LEX-C223-JINIS223-01]; assesses=[] -->
 
 **চুড়ি** — *chuṛi* — "a bangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চুড়ি** (*chuṛi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cūḍa*, "bracelet" (CDIAL 4884). CDIAL lists Bengali *cuṛī*, "bracelet", and asks whether the word is the same as *cūḍa*, "tuft of hair".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

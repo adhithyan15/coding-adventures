@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to share, then the Bengali for to add.
 You'll want to know: চুলকানো.
 চুলকানো — chulkāno — "to scratch".
 
+The word, taken apart.
+The origin of চুলকানো (chulkāno) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "itch" and "scratch" finds only words of other shapes, such as Bengali khos, "itch" (CDIAL 3854).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to add, then the Bengali for to scratch.
 
 You'll want to know: হাই তোলা.
 হাই তোলা — hāi tolā — "to yawn".
+
+The phrase, taken apart.
+হাই তোলা (hāi tolā) is hāi, "a yawn", whose origin is not settled, as CDIAL has no entry for it, + tolā, "to raise", from Sanskrit tōlayati, "lifts, weighs" (CDIAL 5979).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to scratch, then the Bengali for to yawn
 You'll want to know: নাক ডাকা.
 নাক ডাকা — nāk ḍākā — "to snore".
 
+The phrase, taken apart.
+নাক ডাকা (nāk ḍākā) is nāk, "nose", from nakka, "nose" (CDIAL 6909), + ḍākā, "to call", from ḍakk, "shout" (CDIAL 5516), both forms CDIAL reconstructs: "the nose calls".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to yawn, then the Bengali for to snore.
 You'll want to know: জাগা.
 জাগা — jāgā — "to wake up".
 
+The word, taken apart.
+জাগা (jāgā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāgrati, "are awake" (CDIAL 5175). CDIAL lists Bengali jāgā, "to wake, watch".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to snore, then the Bengali for to wake u
 
 You'll want to know: স্নান করা.
 স্নান করা — snān kôrā — "to bathe".
+
+The phrase, taken apart.
+স্নান করা (snān kôrā) is snān, "a bath", Sanskrit snāna taken over whole, + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814). The verb inherited from the same root is nāoyā, "to bathe", which CDIAL lists under Sanskrit snāti, "bathes" (CDIAL 13786).
 
 What you've built.
 One more word for this chapter.

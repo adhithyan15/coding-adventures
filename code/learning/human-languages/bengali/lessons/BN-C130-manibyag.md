@@ -14,7 +14,8 @@ romanization: "mānibyāg"
 concept_tag: BN-THINGS130-MANIBYAG
 prerequisites: [BN-C129-robar, BN-C129-byag]
 sounds: []
-roots: []
+roots: [english-bag]
+etymology_hook: "mānibyāg ← English money-bag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C129-byag]
 <!-- hl-knowledge: introduces=[BN-LEX-C130-THINGS130-01]; assesses=[] -->
 
 **মানিব্যাগ** — *mānibyāg* — "a wallet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মানিব্যাগ** (*mānibyāg*) is a loan from English *money-bag*. It is English *money* + *bag*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jāti"
 concept_tag: BN-JAYGA244-JATI
 prerequisites: [BN-C244-simanto, BN-C244-sorkar]
 sounds: []
-roots: []
+roots: [sanskrit-jati]
+etymology_hook: "jāti ← Sanskrit jāti 'birth, lineage', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C244-sorkar]
 <!-- hl-knowledge: introduces=[BN-LEX-C244-JAYGA244-03]; assesses=[] -->
 
 **জাতি** — *jāti* — "a nation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জাতি** (*jāti*) is Sanskrit *jāti*, "birth, lineage", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

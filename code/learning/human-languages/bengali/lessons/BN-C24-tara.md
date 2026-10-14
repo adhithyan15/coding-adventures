@@ -11,7 +11,7 @@ gloss: they — the last row of the pronoun grid, and the sixth person this book
 concept_tag: BN-LEX-TARA
 prerequisites: [BN-C24-tomra, BN-C23-she, BN-C22-ra, BN-C11-bon]
 sounds: []
-roots: []
+roots: [sanskrit-ta]
 etymology_hook: "তারা is সে's stem plus the living plural, exactly as আমরা is আমি's. Six persons, one ending, no exceptions — a whole pronoun system built out of two pieces the reader already owns."
 duration:
   max_seconds: 240
@@ -55,6 +55,11 @@ chapters able to talk about two:
 | you, carefully | **আপনি** | **আপনারা** |
 | he, she, plainly | **সে** | **তারা** |
 | he, she, carefully | **তিনি** | **তাঁরা** |
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The stem **তা-** goes back to Sanskrit *ta-*, "that" (CDIAL 5612); where the plural **-রা** comes from is not settled.
 
 ## Grammar Lens: one ending did all of it
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C24-TARA-01, BN-GRAMMAR-C22-PLURAL-RA-01, BN-LEX-C11-BHAI-01] -->

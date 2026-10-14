@@ -14,7 +14,8 @@ romanization: "sôrkāri"
 concept_tag: BN-GUN193-SORKARI
 prerequisites: [BN-C193-kachher, BN-C193-bktigoto]
 sounds: []
-roots: []
+roots: [persian-sarkar]
+etymology_hook: "sôrkāri: usually traced to Persian sarkār 'government; master'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C193-bktigoto]
 <!-- hl-knowledge: introduces=[BN-LEX-C193-GUN193-05]; assesses=[] -->
 
 **সরকারি** — *sôrkāri* — "public, governmental".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সরকারি** (*sôrkāri*) is a loan, usually traced to Persian *sarkār*, "government; master". Bengali adds the ending *-i*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

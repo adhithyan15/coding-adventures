@@ -14,7 +14,8 @@ romanization: "susbādu"
 concept_tag: BN-QUAL143-SUSBADU
 prerequisites: [BN-C142-durbol, BN-C143-shoktishali]
 sounds: []
-roots: []
+roots: [sanskrit-susvadu]
+etymology_hook: "susbādu ← Sanskrit susvādu 'very tasty', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C143-shoktishali]
 <!-- hl-knowledge: introduces=[BN-LEX-C143-QUAL143-02]; assesses=[] -->
 
 **সুস্বাদু** — *susbādu* — "tasty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সুস্বাদু** (*susbādu*) is Sanskrit *susvādu*, "very tasty", taken over whole as a learned loan, a tatsama. It is *su*, "well", + *svādu*, "sweet, tasty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

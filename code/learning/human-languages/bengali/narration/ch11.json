@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The First Verbs",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:943d7162fde05526",
+  "sourceHash": "fnv1a64:07ab2f3bc63037a5",
   "lessons": [
     {
       "id": "BN-C05-bola",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:58923dab7222d7de",
+      "sourceHash": "fnv1a64:68b01ccebdfd7781",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:04b5dac0028800cc",
+      "sourceHash": "fnv1a64:6587087370e2951a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:307ea6dcf5efb0f9",
+      "sourceHash": "fnv1a64:919762cbd7c39c7c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -422,7 +422,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:db14b6eaabd99cfb",
+      "sourceHash": "fnv1a64:74a004929c27b0cd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -469,7 +469,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "থাকা (thākā, \"to live, to stay, to remain\") is from Sanskrit sthā (\"to stand, to stay\") — the same PIE root steh₂- (\"to stand\") that gives English stand, stay, state, and Latin stāre. So Bengali's \"to live/stay\" and English's \"to stand/stay\" are, at the root, one word. \"I live in Kolkata\" is আমি কলকাতায় থাকি (āmi Kolkātāy thāki) — stem thāk- + the -i \"I\" ending, no gender."
+              "text": "থাকা (thākā, \"to live, to stay, to remain\") goes back to sthakk, \"stop, halt\", a form CDIAL reconstructs and connects, probably but not certainly, with Sanskrit sthā (\"to stand, to stay\") (CDIAL 13737) — the same PIE root steh₂- (\"to stand\") that gives English stand, stay, state, and Latin stāre. So Bengali's \"to live/stay\" and English's \"to stand/stay\" probably share one root. \"I live in Kolkata\" is আমি কলকাতায় থাকি (āmi Kolkātāy thāki) — stem thāk- + the -i \"I\" ending, no gender."
             }
           ]
         },

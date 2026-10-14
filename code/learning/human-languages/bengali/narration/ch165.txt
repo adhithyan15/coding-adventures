@@ -12,6 +12,9 @@ Before the new one: say the Bengali for shorts, then the Bengali for a sweater.
 You'll want to know: কিশমিশ.
 কিশমিশ — kishmish — "a raisin".
 
+The word, taken apart.
+কিশমিশ (kishmish) is a loan, usually traced to Persian kishmish, "small raisins".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a sweater, then the Bengali for a raisin
 
 You'll want to know: জ্যাম.
 জ্যাম — jæm — "jam".
+
+The word, taken apart.
+জ্যাম (jæm) is a loan from English jam.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a raisin, then the Bengali for jam.
 You'll want to know: কেক.
 কেক — kek — "a cake".
 
+The word, taken apart.
+কেক (kek) is a loan from English cake.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for jam, then the Bengali for a cake.
 You'll want to know: সন্দেশ.
 সন্দেশ — sôndesh — "sandesh".
 
+The word, taken apart.
+সন্দেশ (sôndesh), the sweet, has the same form as Bengali sôndesh, "news, a message", which is Sanskrit saṁdeśa, "message", taken over whole (CDIAL 12904). How the sweet came to bear the name is not recorded there.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a cake, then the Bengali for sandesh.
 
 You'll want to know: পরোটা.
 পরোটা — pôroṭā — "a paratha".
+
+The word, taken apart.
+The origin of পরোটা (pôroṭā) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "bread" and "cake" finds only words of other shapes, such as Bengali ruṭi, "bread" (CDIAL 10837).
 
 What you've built.
 One more word for this chapter.

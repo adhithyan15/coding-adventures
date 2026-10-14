@@ -14,7 +14,8 @@ romanization: "bôr"
 concept_tag: BN-JINIS168-BOR
 prerequisites: [BN-C167-trak, BN-C168-shashuri]
 sounds: []
-roots: []
+roots: [sanskrit-vara-bridegroom]
+etymology_hook: "bôr ← Sanskrit vara 'suitor, bridegroom', inherited (CDIAL 11309)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C168-shashuri]
 <!-- hl-knowledge: introduces=[BN-LEX-C168-JINIS168-02]; assesses=[] -->
 
 **বর** — *bôr* — "a bridegroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বর** (*bôr*) is inherited from Sanskrit *vara*, "suitor, bridegroom", and has come down with almost no change (CDIAL 11309).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

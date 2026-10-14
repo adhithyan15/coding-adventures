@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 35,
-  "sourceHash": "fnv1a64:1bc3c9b78a6f1dce",
+  "sourceHash": "fnv1a64:dd9de195b754d1f4",
   "lessonIds": [
     "BN-C24-amra",
     "BN-C24-tomra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "bengali/narration/ch35.txt",
   "json": "bengali/narration/ch35.json",
-  "textHash": "fnv1a64:c1e0bcd5d5054261",
-  "jsonHash": "fnv1a64:aaaab8cc6e18f0ea",
+  "textHash": "fnv1a64:05a320f9d50c9357",
+  "jsonHash": "fnv1a64:0dac16c59acb4d1a",
   "findings": []
 }

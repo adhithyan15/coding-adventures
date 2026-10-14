@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 53,
-  "sourceHash": "fnv1a64:ba0ed150af2958c5",
+  "sourceHash": "fnv1a64:046c98ff2c375d98",
   "lessonIds": [
     "BN-C53-pora",
     "BN-C53-chhara",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch53.txt",
   "json": "bengali/narration/ch53.json",
-  "textHash": "fnv1a64:a258ac98a9a33775",
-  "jsonHash": "fnv1a64:b550491e19466ce1",
+  "textHash": "fnv1a64:ab143633e343469b",
+  "jsonHash": "fnv1a64:dec61bea94e77515",
   "findings": []
 }

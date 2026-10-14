@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a mistake, then the Bengali for a rule.
 You'll want to know: যুদ্ধ.
 যুদ্ধ — juddhô — "a war".
 
+The word, taken apart.
+যুদ্ধ (juddhô) is Sanskrit yuddha, "fought; battle", taken over whole as a learned loan, a tatsama (CDIAL 10499).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a rule, then the Bengali for a war.
 
 You'll want to know: স্বাধীনতা.
 স্বাধীনতা — svādhīnôtā — "freedom".
+
+The word, taken apart.
+স্বাধীনতা (svādhīnôtā) is Sanskrit svādhīna, "dependent on oneself, independent", + the ending -tā, "-ness", both taken over whole.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a war, then the Bengali for freedom.
 You'll want to know: আইন.
 আইন — āin — "a law".
 
+The word, taken apart.
+আইন (āin) is a loan, usually traced to Persian āʾīn, "custom, rule".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for freedom, then the Bengali for a law.
 You'll want to know: কর্তব্য.
 কর্তব্য — kôrtôbyô — "a duty".
 
+The word, taken apart.
+কর্তব্য (kôrtôbyô) is Sanskrit kartavya, "to be done; duty", taken over whole as a learned loan, a tatsama (CDIAL 2859).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a law, then the Bengali for a duty.
 
 You'll want to know: সাফল্য.
 সাফল্য — sāphôlyô — "success".
+
+The word, taken apart.
+সাফল্য (sāphôlyô) is Sanskrit sāphalya, "fruitfulness, success", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

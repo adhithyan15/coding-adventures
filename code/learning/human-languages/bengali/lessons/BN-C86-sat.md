@@ -14,7 +14,8 @@ romanization: "sāt"
 concept_tag: BN-CLOTHES86-SAT
 prerequisites: [BN-C86-juto, BN-C86-chhoy]
 sounds: []
-roots: []
+roots: [sanskrit-sapta]
+etymology_hook: "sāt ← Sanskrit sapta 'seven', a tadbhava (CDIAL 13139)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C86-chhoy]
 <!-- hl-knowledge: introduces=[BN-LEX-C86-CLOTHES86-03]; assesses=[] -->
 
 **সাত** — *sāt* — "seven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সাত** (*sāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sapta*, "seven" (CDIAL 13139).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

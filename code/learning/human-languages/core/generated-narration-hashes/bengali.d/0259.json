@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 259,
-  "sourceHash": "fnv1a64:1aefa581f1d8821a",
+  "sourceHash": "fnv1a64:83e72d496d9857c6",
   "lessonIds": [
     "BN-C259-dor",
     "BN-C259-chhar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch259.txt",
   "json": "bengali/narration/ch259.json",
-  "textHash": "fnv1a64:4f4aaf9733be71fa",
-  "jsonHash": "fnv1a64:d12d0aa952ea67c0",
+  "textHash": "fnv1a64:4a57a1baeec22b67",
+  "jsonHash": "fnv1a64:ca94689d7ed653a5",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "purôskār"
 concept_tag: BN-JINIS260-PUROSKAR
 prerequisites: [BN-C259-porichoypotro, BN-C260-sadh]
 sounds: []
-roots: []
+roots: [sanskrit-puraskara]
+etymology_hook: "purôskār ← Sanskrit puraskāra 'honouring', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C260-sadh]
 <!-- hl-knowledge: introduces=[BN-LEX-C260-JINIS260-02]; assesses=[] -->
 
 **পুরস্কার** — *purôskār* — "a prize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পুরস্কার** (*purôskār*) is Sanskrit *puraskāra*, "honouring", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

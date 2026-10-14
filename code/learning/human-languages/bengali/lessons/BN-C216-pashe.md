@@ -14,7 +14,8 @@ romanization: "pāshe"
 concept_tag: BN-JAYGA216-PASHE
 prerequisites: [BN-C215-nihshvas, BN-C216-grej]
 sounds: []
-roots: []
+roots: [sanskrit-parshva]
+etymology_hook: "pāshe: pāsh 'side' ← pārśva (CDIAL 8118) + -e 'at'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C216-grej]
 <!-- hl-knowledge: introduces=[BN-LEX-C216-JAYGA216-02]; assesses=[] -->
 
 **পাশে** — *pāshe* — "beside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাশে** (*pāshe*) is *pāsh*, "side", from Sanskrit *pārśva*, "side" (CDIAL 8118), + *-e*, "at".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

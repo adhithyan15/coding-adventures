@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Pointing at Things",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4c1cf05dfb454f96",
+  "sourceHash": "fnv1a64:d503c91173a65a5b",
   "lessons": [
     {
       "id": "BN-C21-ei",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd5201433ef6cf87",
+      "sourceHash": "fnv1a64:c38a1ef713867ad7",
       "notice": null,
       "blocks": [
         {
@@ -73,6 +73,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Bengali e, \"in this way\", and Assamese ei under Sanskrit ēṣa, \"this\" (CDIAL 2530), which is where the near head এ- points; it has no entry for এই itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the near head",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -151,7 +162,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -186,7 +197,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b9c59d5498618dc",
+      "sourceHash": "fnv1a64:4255cdd94006f1c4",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +247,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Middle Bengali oū and ohā, \"that\", under Sanskrit asau, \"that\" (CDIAL 972): the far head ও- has a long history, though CDIAL has no entry for ওই (oi) itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: one letter, two jobs",
           "segments": [
@@ -262,7 +284,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -311,7 +333,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -346,7 +368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e949308e4c7a540",
+      "sourceHash": "fnv1a64:3ac1b31520e6d243",
       "notice": null,
       "blocks": [
         {
@@ -395,6 +417,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "এই (ei) points back to Sanskrit ēṣa, \"this\" (CDIAL 2530); জামা is usually traced to Persian jāma, \"garment\"; and the origin of টা is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the fixed order",
           "segments": [
@@ -425,7 +458,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -474,7 +507,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -509,7 +542,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa4b0bdd71e072a9",
+      "sourceHash": "fnv1a64:c920687d0d03352e",
       "notice": null,
       "blocks": [
         {
@@ -558,6 +591,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "এ- goes back to Sanskrit ēṣa, \"this\" (CDIAL 2530); the origin of টা is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: no verb in the middle",
           "segments": [
@@ -580,7 +624,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -638,7 +682,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

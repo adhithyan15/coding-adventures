@@ -14,7 +14,8 @@ romanization: "jôl deoyā"
 concept_tag: BN-VERB-JOL-DEOYA
 prerequisites: [BN-C180-dkhashona-kora, BN-C180-pala]
 sounds: []
-roots: []
+roots: [sanskrit-jala, sanskrit-dadati]
+etymology_hook: "jôl deoyā: jôl 'water' ← jala (CDIAL 5155) + deoyā 'to give' ← dadāti (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C180-pala]
 <!-- hl-knowledge: introduces=[BN-LEX-C180-ACT180-04]; assesses=[] -->
 
 **জল দেওয়া** — *jôl deoyā* — "to water".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জল দেওয়া** (*jôl deoyā*) is *jôl*, "water", from Sanskrit *jala* (CDIAL 5155), + *deoyā*, "to give", from Sanskrit *dadāti*, "gives" (CDIAL 6141): "to give water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: BN-JINIS165-POROTA
 prerequisites: [BN-C165-kek, BN-C165-sondesh]
 sounds: []
 roots: []
+etymology_hook: "pôroṭā: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C165-sondesh]
 <!-- hl-knowledge: introduces=[BN-LEX-C165-JINIS165-05]; assesses=[] -->
 
 **পরোটা** — *pôroṭā* — "a paratha".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **পরোটা** (*pôroṭā*) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "bread" and "cake" finds only words of other shapes, such as Bengali *ruṭi*, "bread" (CDIAL 10837).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

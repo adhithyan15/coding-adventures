@@ -14,7 +14,8 @@ romanization: "mālik"
 concept_tag: BN-CAN98-MALIK
 prerequisites: [BN-C98-shokti, BN-C98-sujog]
 sounds: []
-roots: []
+roots: [arabic-malik]
+etymology_hook: "mālik ← Arabic mālik 'owner', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C98-sujog]
 <!-- hl-knowledge: introduces=[BN-LEX-C98-CAN98-04]; assesses=[] -->
 
 **মালিক** — *mālik* — "an owner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মালিক** (*mālik*) is a loan from Arabic *mālik*, "owner", which reached Bengali through Persian. Its Arabic root is *m-l-k* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

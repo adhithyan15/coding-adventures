@@ -14,7 +14,8 @@ romanization: "rum"
 concept_tag: BN-JAYGA217-RUM
 prerequisites: [BN-C217-bastnd, BN-C217-bimanbondor]
 sounds: []
-roots: []
+roots: [english-room]
+etymology_hook: "rum ← English room"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C217-bimanbondor]
 <!-- hl-knowledge: introduces=[BN-LEX-C217-JAYGA217-04]; assesses=[] -->
 
 **রুম** — *rum* — "a room (in a hotel)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রুম** (*rum*) is a loan from English *room*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a competition, then the Bengali for vict
 You'll want to know: মিস্ত্রি.
 মিস্ত্রি — mistri — "a mechanic, a tradesman".
 
+The word, taken apart.
+মিস্ত্রি (mistri) is usually traced to Portuguese mestre, "master".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for victory, then the Bengali for a mechanic
 
 You'll want to know: রাঁধুনি.
 রাঁধুনি — rā̃dhuni — "a cook".
+
+The word, taken apart.
+রাঁধুনি (rā̃dhuni) (rāṁdhuni) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from randhana, "cooking" (CDIAL 10615). CDIAL lists Bengali rāṁdhuni, "cook".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a mechanic, then the Bengali for a cook.
 You'll want to know: ওয়েটার.
 ওয়েটার — oyeṭār — "a waiter".
 
+The word, taken apart.
+ওয়েটার (oyeṭār) is a loan from English waiter.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a cook, then the Bengali for a waiter.
 You'll want to know: দারোয়ান.
 দারোয়ান — dāroyān — "a gatekeeper".
 
+The word, taken apart.
+দারোয়ান (dāroyān) is a loan, usually traced to Persian darbān, "doorkeeper".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a waiter, then the Bengali for a gatekee
 
 You'll want to know: সেনাবাহিনী.
 সেনাবাহিনী — senābāhinī — "an army".
+
+The word, taken apart.
+সেনাবাহিনী (senābāhinī) is built from Sanskrit senā, "army" (CDIAL 13587), and vāhinī, "a host, an army", both taken over whole.
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 241,
-  "sourceHash": "fnv1a64:5f96d11c08dc6314",
+  "sourceHash": "fnv1a64:e9697226da5eb450",
   "lessonIds": [
     "BN-C241-hariye-jaoya",
     "BN-C241-khuje-paoya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch241.txt",
   "json": "bengali/narration/ch241.json",
-  "textHash": "fnv1a64:9c5558cb4c4e4d24",
-  "jsonHash": "fnv1a64:ba76ee36295c3add",
+  "textHash": "fnv1a64:8d8e92b77bf8912d",
+  "jsonHash": "fnv1a64:a728c4efbdd54539",
   "findings": []
 }

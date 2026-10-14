@@ -15,6 +15,7 @@ concept_tag: BN-QUAL134-BETE
 prerequisites: [BN-C133-phuldani, BN-C133-kap]
 sounds: []
 roots: []
+etymology_hook: "beṭe: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C133-kap]
 <!-- hl-knowledge: introduces=[BN-LEX-C134-QUAL134-01]; assesses=[] -->
 
 **বেঁটে** — *beṭe* — "short (of height)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **বেঁটে** (*beṭe*) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "short" and "stunted" finds nothing of this shape in Bengali.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

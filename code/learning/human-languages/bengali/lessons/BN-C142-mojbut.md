@@ -14,7 +14,8 @@ romanization: "môjbut"
 concept_tag: BN-QUAL142-MOJBUT
 prerequisites: [BN-C142-bikhyato, BN-C142-porichchhonno]
 sounds: []
-roots: []
+roots: [arabic-madbut]
+etymology_hook: "môjbut ← Arabic maḍbūṭ 'held firm, secured', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C142-porichchhonno]
 <!-- hl-knowledge: introduces=[BN-LEX-C142-QUAL142-04]; assesses=[] -->
 
 **মজবুত** — *môjbut* — "sturdy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মজবুত** (*môjbut*) is a loan from Arabic *maḍbūṭ*, "held firm, secured", which reached Bengali through Persian. Its Arabic root is *ḍ-b-ṭ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

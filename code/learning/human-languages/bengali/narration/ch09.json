@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "The Roof, the Teeth, and the Grid Closed",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a9410df0c8af4cd1",
+  "sourceHash": "fnv1a64:d7c9206dd4bc2129",
   "lessons": [
     {
       "id": "BN-W04-pa",
@@ -909,7 +909,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a798ab6e5d27562",
+      "sourceHash": "fnv1a64:c40cd07f8e084581",
       "notice": null,
       "blocks": [
         {
@@ -959,6 +959,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জাল (jāl) is inherited from Sanskrit jāla, \"net, snare\", and has come down with almost no change (CDIAL 5213)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -989,7 +1000,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

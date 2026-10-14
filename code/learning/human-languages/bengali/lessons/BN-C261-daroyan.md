@@ -14,7 +14,8 @@ romanization: "dāroyān"
 concept_tag: BN-KAJ261-DAROYAN
 prerequisites: [BN-C261-radhuni, BN-C261-oyetar]
 sounds: []
-roots: []
+roots: [persian-darban]
+etymology_hook: "dāroyān: usually traced to Persian darbān 'doorkeeper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C261-oyetar]
 <!-- hl-knowledge: introduces=[BN-LEX-C261-KAJ261-04]; assesses=[] -->
 
 **দারোয়ান** — *dāroyān* — "a gatekeeper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দারোয়ান** (*dāroyān*) is a loan, usually traced to Persian *darbān*, "doorkeeper".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hāriye jāoyā"
 concept_tag: BN-VERB-HARIYE-JAOYA
 prerequisites: [BN-C240-doba, BN-C240-bhasa]
 sounds: []
-roots: []
+roots: [sanskrit-harayati, sanskrit-yati]
+etymology_hook: "hāriye jāoyā: hāriye, of hārā 'to lose' ← hārayati (CDIAL 14061), + jāoyā 'to go' ← yāti (CDIAL 10452)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C240-bhasa]
 <!-- hl-knowledge: introduces=[BN-LEX-C241-ACT241-01]; assesses=[] -->
 
 **হারিয়ে যাওয়া** — *hāriye jāoyā* — "to get lost".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হারিয়ে যাওয়া** (*hāriye jāoyā*) is *hāriye*, "losing", a form of *hārā*, "to lose", from Sanskrit *hārayati*, "loses" (CDIAL 14061), + *jāoyā*, "to go", from Sanskrit *yāti*, "goes" (CDIAL 10452).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rājkumār"
 concept_tag: BN-JINIS230-RAJKUMAR
 prerequisites: [BN-C230-neta, BN-C230-montri]
 sounds: []
-roots: []
+roots: [sanskrit-rajakumara]
+etymology_hook: "rājkumār ← Sanskrit rājakumāra 'king's son, prince', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C230-montri]
 <!-- hl-knowledge: introduces=[BN-LEX-C230-JINIS230-03]; assesses=[] -->
 
 **রাজকুমার** — *rājkumār* — "a prince".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রাজকুমার** (*rājkumār*) is Sanskrit *rājakumāra*, "king's son, prince", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

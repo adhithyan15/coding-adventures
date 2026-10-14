@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 45,
-  "sourceHash": "fnv1a64:e69216a9a00ed1d7",
+  "sourceHash": "fnv1a64:062dfd57e8cc2478",
   "lessonIds": [
     "BN-C45-khushi",
     "BN-C45-daktar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch45.txt",
   "json": "bengali/narration/ch45.json",
-  "textHash": "fnv1a64:3ccc7686f83c5f9c",
-  "jsonHash": "fnv1a64:f505a35f40344040",
+  "textHash": "fnv1a64:6616b36b7d7b67c7",
+  "jsonHash": "fnv1a64:9f287b07ffa76516",
   "findings": []
 }

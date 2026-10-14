@@ -14,7 +14,8 @@ romanization: "mishuk"
 concept_tag: BN-QUAL144-MISHUK
 prerequisites: [BN-C143-hasikhushi, BN-C144-lajuk]
 sounds: []
-roots: []
+roots: [sanskrit-mishrayati]
+etymology_hook: "mishuk: built on mishā 'to mix, mingle', with misāna 'to mix' ← miśrayati (CDIAL 10137), + -uk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C144-lajuk]
 <!-- hl-knowledge: introduces=[BN-LEX-C144-QUAL144-02]; assesses=[] -->
 
 **মিশুক** — *mishuk* — "sociable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মিশুক** (*mishuk*) is built on *mishā*, "to mix, mingle", which CDIAL lists as Bengali *misāna*, "to mix", under Sanskrit *miśrayati*, "mixes" (CDIAL 10137), with the ending *-uk*, "given to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a potter, then the Bengali for a weaver.
 You'll want to know: নাপিত.
 নাপিত — nāpit — "a barber".
 
+The word, taken apart.
+নাপিত (nāpit) is Sanskrit nāpita, "barber", taken over whole as a learned loan, a tatsama (CDIAL 13792). The word inherited from it is nāu, which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a weaver, then the Bengali for a barber.
 
 You'll want to know: দর্জি.
 দর্জি — dôrji — "a tailor".
+
+The word, taken apart.
+দর্জি (dôrji) is a loan, usually traced to Persian darzī, "tailor".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a barber, then the Bengali for a tailor.
 You'll want to know: ধোপা.
 ধোপা — dhopā — "a washerman".
 
+The word, taken apart.
+ধোপা (dhopā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhauvati, "washes", a form CDIAL reconstructs from its descendants (CDIAL 6886). CDIAL lists dhopā, "washerman", among the later forms built on it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a tailor, then the Bengali for a washerm
 You'll want to know: মুদি.
 মুদি — mudi — "a grocer".
 
+The word, taken apart.
+The origin of মুদি (mudi) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "grocer" finds nothing close.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a washerman, then the Bengali for a groc
 
 You'll want to know: নার্স.
 নার্স — nārs — "a nurse".
+
+The word, taken apart.
+নার্স (nārs) is a loan from English nurse.
 
 What you've built.
 One more word for this chapter.

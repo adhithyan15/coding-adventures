@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 112,
-  "sourceHash": "fnv1a64:ff9db2d3d2b25bee",
+  "sourceHash": "fnv1a64:f6189acb4f53c71c",
   "lessonIds": [
     "BN-C112-bakso",
     "BN-C112-tak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch112.txt",
   "json": "bengali/narration/ch112.json",
-  "textHash": "fnv1a64:c358d265d99d4884",
-  "jsonHash": "fnv1a64:6fc8b77237111832",
+  "textHash": "fnv1a64:56de4c447becbb3e",
+  "jsonHash": "fnv1a64:6640e20c4058649a",
   "findings": []
 }

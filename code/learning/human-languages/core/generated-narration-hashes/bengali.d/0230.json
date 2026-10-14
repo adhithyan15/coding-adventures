@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 230,
-  "sourceHash": "fnv1a64:98ba130060245ae3",
+  "sourceHash": "fnv1a64:ec3279d096d1fb22",
   "lessonIds": [
     "BN-C230-neta",
     "BN-C230-montri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch230.txt",
   "json": "bengali/narration/ch230.json",
-  "textHash": "fnv1a64:585e52a76288f834",
-  "jsonHash": "fnv1a64:33e2cd47323220de",
+  "textHash": "fnv1a64:bfb8c97cbf38d3a9",
+  "jsonHash": "fnv1a64:fdd0cdd1ebabcd62",
   "findings": []
 }

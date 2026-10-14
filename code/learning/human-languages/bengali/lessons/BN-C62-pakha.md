@@ -14,7 +14,8 @@ romanization: "pākhā"
 concept_tag: BN-HOME62-PAKHA
 prerequisites: [BN-C61-ayna, BN-C61-bati]
 sounds: []
-roots: []
+roots: [sanskrit-paksha]
+etymology_hook: "pākhā ← Sanskrit pakṣa 'wing, side; fan', a tadbhava (CDIAL 7627)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C61-bati]
 <!-- hl-knowledge: introduces=[BN-LEX-C62-HOME62-01]; assesses=[] -->
 
 **পাখা** — *pākhā* — "a fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাখা** (*pākhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pakṣa*, "wing, side; fan" (CDIAL 7627).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

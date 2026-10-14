@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 127,
-  "sourceHash": "fnv1a64:48f3bfca5955d7c0",
+  "sourceHash": "fnv1a64:c3abcd886a4bee36",
   "lessonIds": [
     "BN-C127-raja",
     "BN-C127-rani",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch127.txt",
   "json": "bengali/narration/ch127.json",
-  "textHash": "fnv1a64:7b1618a81375c453",
-  "jsonHash": "fnv1a64:d6b4c9a1a2caab6a",
+  "textHash": "fnv1a64:4c9729710540b72d",
+  "jsonHash": "fnv1a64:9c1e879d826332be",
   "findings": []
 }

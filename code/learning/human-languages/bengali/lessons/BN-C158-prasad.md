@@ -14,7 +14,8 @@ romanization: "prāsād"
 concept_tag: BN-JAYGA158-PRASAD
 prerequisites: [BN-C157-chiriyakhana, BN-C158-koborsthan]
 sounds: []
-roots: []
+roots: [sanskrit-prasada]
+etymology_hook: "prāsād ← Sanskrit prāsāda 'lofty mansion', a tatsama (CDIAL 8971)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C158-koborsthan]
 <!-- hl-knowledge: introduces=[BN-LEX-C158-JAYGA158-02]; assesses=[] -->
 
 **প্রাসাদ** — *prāsād* — "a palace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রাসাদ** (*prāsād*) is Sanskrit *prāsāda*, "lofty mansion", taken over whole as a learned loan, a tatsama (CDIAL 8971).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kuṛi"
 concept_tag: BN-NUMBERS87-KURI
 prerequisites: [BN-C86-at, BN-C86-dosh]
 sounds: []
-roots: []
+roots: [indo-aryan-kodi]
+etymology_hook: "kuṛi ← *kōḍi 'a score', which CDIAL, after Przyluski, takes from Austroasiatic (CDIAL 3503)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C86-dosh]
 <!-- hl-knowledge: introduces=[BN-LEX-C87-NUMBERS87-01]; assesses=[] -->
 
 **কুড়ি** — *kuṛi* — "twenty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কুড়ি** (*kuṛi*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*koḍi*, "a score, twenty", a form CDIAL reconstructs from its descendants (CDIAL 3503). CDIAL reports Przyluski's view that the word is Austroasiatic, perhaps first a word for "man", twenty being the count of a person's fingers and toes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

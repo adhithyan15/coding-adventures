@@ -15,6 +15,7 @@ concept_tag: BN-JINIS257-PHUCHKA
 prerequisites: [BN-C257-aiskrim, BN-C257-chire]
 sounds: []
 roots: []
+etymology_hook: "phuchkā: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C257-chire]
 <!-- hl-knowledge: introduces=[BN-LEX-C257-JINIS257-05]; assesses=[] -->
 
 **ফুচকা** — *phuchkā* — "phuchka".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ফুচকা** (*phuchkā*) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "fried" finds only words of other shapes, such as Bengali *puri* (CDIAL 8331).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

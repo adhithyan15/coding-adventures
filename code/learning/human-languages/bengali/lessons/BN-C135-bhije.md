@@ -14,7 +14,8 @@ romanization: "bhije"
 concept_tag: BN-QUAL135-BHIJE
 prerequisites: [BN-C134-shokto, BN-C134-norom]
 sounds: []
-roots: []
+roots: [indo-aryan-bhiyajyate]
+etymology_hook: "bhije ← *bhiyajyate 'is smeared, gets wet', a reconstructed form; a tadbhava (CDIAL 9502)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C134-norom]
 <!-- hl-knowledge: introduces=[BN-LEX-C135-QUAL135-01]; assesses=[] -->
 
 **ভিজে** — *bhije* — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভিজে** (*bhije*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhiyajyate*, "is smeared, gets wet", a form CDIAL reconstructs from its descendants (CDIAL 9502). CDIAL lists Bengali *bhijā*, "to get wet"; *bhije* is its participle.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

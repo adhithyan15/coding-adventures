@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 252,
-  "sourceHash": "fnv1a64:1578fba6613196bc",
+  "sourceHash": "fnv1a64:873c0bc4042e62df",
   "lessonIds": [
     "BN-C252-kakima",
     "BN-C252-bhaipo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch252.txt",
   "json": "bengali/narration/ch252.json",
-  "textHash": "fnv1a64:7066e657b9b5fd4d",
-  "jsonHash": "fnv1a64:ec87b28924f05cd2",
+  "textHash": "fnv1a64:31138aa1f115fccb",
+  "jsonHash": "fnv1a64:2f14dccc17aef054",
   "findings": []
 }

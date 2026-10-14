@@ -14,7 +14,8 @@ romanization: "purôno"
 concept_tag: BN-ADJ72-PURONO
 prerequisites: [BN-C72-chhoto, BN-C72-notun]
 sounds: []
-roots: []
+roots: [sanskrit-purana]
+etymology_hook: "purôno ← Sanskrit purāṇa 'ancient', a tadbhava (CDIAL 8283)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C72-notun]
 <!-- hl-knowledge: introduces=[BN-LEX-C72-ADJ72-04]; assesses=[] -->
 
 **পুরনো** — *purôno* — "old".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পুরনো** (*purôno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *purāṇa*, "ancient" (CDIAL 8283).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

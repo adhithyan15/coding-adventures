@@ -12,6 +12,9 @@ Before the new one: say the Bengali for first, then the Bengali for fifth.
 You'll want to know: হাত.
 হাত — hāt — "a hand".
 
+The word, taken apart.
+হাত (hāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hasta, "hand" (CDIAL 14024).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for fifth, then the Bengali for a hand.
 
 You'll want to know: চুল.
 চুল — chul — "hair".
+
+The word, taken apart.
+চুল (chul) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cūḍa, "topknot on the head" (CDIAL 4883). CDIAL takes cūḍa from Dravidian, while noting that it may instead belong with a group of words for "hair" traced to Munda.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a hand, then the Bengali for hair.
 You'll want to know: দাঁত.
 দাঁত — dā̃t — "a tooth".
 
+The word, taken apart.
+দাঁত (dā̃t) (dāṁt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from danta, "tooth" (CDIAL 6152).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for hair, then the Bengali for a tooth.
 You'll want to know: গলা.
 গলা — gôlā — "the throat".
 
+The word, taken apart.
+গলা (gôlā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gala, "throat, neck" (CDIAL 4070).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a tooth, then the Bengali for the throat
 
 You'll want to know: পেট.
 পেট — peṭ — "the stomach".
+
+The word, taken apart.
+পেট (peṭ) is a tadbhava, a word inherited and reshaped by sound change. It comes from peṭṭa, "belly", a form CDIAL reconstructs from its descendants (CDIAL 8376). CDIAL notes that it may be one word with a similar pēṭṭa, "basket".
 
 What you've built.
 One more word for this chapter.

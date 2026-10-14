@@ -15,6 +15,7 @@ concept_tag: BN-JINIS171-KURI
 prerequisites: [BN-C170-michhil, BN-C170-kol]
 sounds: []
 roots: []
+etymology_hook: "kũṛi 'bud': origin not settled; CDIAL's kũṛi is 'earthen pot' (CDIAL 3264)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C170-kol]
 <!-- hl-knowledge: introduces=[BN-LEX-C171-JINIS171-01]; assesses=[] -->
 
 **কুঁড়ি** — *kũṛi* — "a bud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **কুঁড়ি** (*kũṛi*), "a bud", is not settled. CDIAL lists a Bengali *kũṛi* only as "earthen pot" (CDIAL 3264), a different word, and a search by the gloss "bud" finds only *kali* (CDIAL 2934) and *bol* (CDIAL 10146).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

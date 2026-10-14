@@ -14,7 +14,8 @@ romanization: "môntrī"
 concept_tag: BN-JINIS230-MONTRI
 prerequisites: [BN-C229-abohaoya, BN-C230-neta]
 sounds: []
-roots: []
+roots: [sanskrit-mantrin]
+etymology_hook: "môntrī ← Sanskrit mantrin 'wise; counsellor', a tatsama (CDIAL 9838)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C230-neta]
 <!-- hl-knowledge: introduces=[BN-LEX-C230-JINIS230-02]; assesses=[] -->
 
 **মন্ত্রী** — *môntrī* — "a minister".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মন্ত্রী** (*môntrī*) is Sanskrit *mantrin*, "wise; counsellor", taken over whole as a learned loan, a tatsama (CDIAL 9838).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

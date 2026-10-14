@@ -14,7 +14,8 @@ romanization: "suich"
 concept_tag: BN-JINIS258-SUICH
 prerequisites: [BN-C258-pasoyard, BN-C258-btari]
 sounds: []
-roots: []
+roots: [english-switch]
+etymology_hook: "suich ← English switch"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C258-btari]
 <!-- hl-knowledge: introduces=[BN-LEX-C258-JINIS258-05]; assesses=[] -->
 
 **সুইচ** — *suich* — "a switch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সুইচ** (*suich*) is a loan from English *switch*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

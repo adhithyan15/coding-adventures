@@ -14,7 +14,8 @@ romanization: "chhoṭôkhāṭo"
 concept_tag: BN-QUAL143-CHHOTOKHATO
 prerequisites: [BN-C143-susbadu, BN-C143-borosoro]
 sounds: []
-roots: []
+roots: [indo-aryan-chotta]
+etymology_hook: "chhoṭôkhāṭo: chhoṭo 'small' ← *chōṭṭa (CDIAL 5071), doubled as an echo word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C143-borosoro]
 <!-- hl-knowledge: introduces=[BN-LEX-C143-QUAL143-04]; assesses=[] -->
 
 **ছোটখাটো** — *chhoṭôkhāṭo* — "small, minor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছোটখাটো** (*chhoṭôkhāṭo*) is *chhoṭo*, "small", from *\*chōṭṭa*, a form CDIAL reconstructs (CDIAL 5071), followed by *khāṭo*, an echo of it with no meaning of its own.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "moṭā"
 concept_tag: BN-ADJ76-MOTA
 prerequisites: [BN-C75-teto, BN-C75-tok]
 sounds: []
-roots: []
+roots: [indo-aryan-mutta]
+etymology_hook: "moṭā ← *mōṭṭa, in a group of forms CDIAL heads *muṭṭa 'defective' (CDIAL 10187)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C75-tok]
 <!-- hl-knowledge: introduces=[BN-LEX-C76-ADJ76-01]; assesses=[] -->
 
 **মোটা** — *moṭā* — "fat, thick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মোটা** (*moṭā*) comes from *\*mōṭṭa*, one of a group of forms CDIAL heads *\*muṭṭa*, "defective", and reconstructs from their descendants (CDIAL 10187).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

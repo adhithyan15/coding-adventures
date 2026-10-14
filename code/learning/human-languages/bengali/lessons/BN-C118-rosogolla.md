@@ -14,7 +14,8 @@ romanization: "rôsôgollā"
 concept_tag: BN-THINGS118-ROSOGOLLA
 prerequisites: [BN-C117-mulo, BN-C117-chal]
 sounds: []
-roots: []
+roots: [sanskrit-rasa, sanskrit-gola]
+etymology_hook: "rôsôgollā: rôs 'juice, syrup', Sanskrit rasa, + gollā 'ball', with golā 'ball' ← gōla (CDIAL 4321)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C117-chal]
 <!-- hl-knowledge: introduces=[BN-LEX-C118-THINGS118-01]; assesses=[] -->
 
 **রসগোল্লা** — *rôsôgollā* — "rasgulla".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রসগোল্লা** (*rôsôgollā*) is *rôs*, "juice, syrup", Sanskrit *rasa*, + *gollā*, "ball", which belongs with Bengali *golā*, "ball", from Sanskrit *gōla* (CDIAL 4321).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

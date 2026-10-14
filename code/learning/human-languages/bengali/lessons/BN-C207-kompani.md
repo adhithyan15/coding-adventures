@@ -14,7 +14,8 @@ romanization: "kompāni"
 concept_tag: BN-KAJ207-KOMPANI
 prerequisites: [BN-C207-khodder, BN-C207-bbsa]
 sounds: []
-roots: []
+roots: [english-company]
+etymology_hook: "kompāni ← English company"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C207-bbsa]
 <!-- hl-knowledge: introduces=[BN-LEX-C207-KAJ207-05]; assesses=[] -->
 
 **কোম্পানি** — *kompāni* — "a company".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কোম্পানি** (*kompāni*) is a loan from English *company*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

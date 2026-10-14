@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 60,
-  "sourceHash": "fnv1a64:d92b6fc2dd943c6e",
+  "sourceHash": "fnv1a64:0ba6a8400663e27b",
   "lessonIds": [
     "BN-C60-cheyar",
     "BN-C60-tebil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch60.txt",
   "json": "bengali/narration/ch60.json",
-  "textHash": "fnv1a64:40c44d6080f4b840",
-  "jsonHash": "fnv1a64:c2a8869b2cb74fd9",
+  "textHash": "fnv1a64:6921dd684fec872c",
+  "jsonHash": "fnv1a64:d9666966ecad6c66",
   "findings": []
 }

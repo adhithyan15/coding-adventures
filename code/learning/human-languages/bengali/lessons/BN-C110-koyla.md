@@ -14,7 +14,8 @@ romanization: "kôylā"
 concept_tag: BN-THINGS110-KOYLA
 prerequisites: [BN-C110-mombati, BN-C110-deshlai]
 sounds: []
-roots: []
+roots: [sanskrit-kokila]
+etymology_hook: "kôylā ← Sanskrit kōkila 'charcoal', which CDIAL reports may come from Munda (CDIAL 3484)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C110-deshlai]
 <!-- hl-knowledge: introduces=[BN-LEX-C110-THINGS110-05]; assesses=[] -->
 
 **কয়লা** — *kôylā* — "coal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কয়লা** (*kôylā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kokila*, "lighted coal, charcoal" (CDIAL 3484). CDIAL reports the view that Sanskrit took the word from Munda, comparing Santali *kuila*, "black".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

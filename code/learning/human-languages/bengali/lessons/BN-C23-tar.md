@@ -11,7 +11,7 @@ gloss: his, her — সে wearing the same ending আমার and তোমা
 concept_tag: BN-GRAM-TAR
 prerequisites: [BN-C23-o-pron, BN-C02-amar, BN-C11-bhai, BN-C15-jama]
 sounds: []
-roots: []
+roots: [sanskrit-ta]
 etymology_hook: "The ত- of তার is the demonstrative head from chapter thirty — the same one inside তখন. Bengali's whole grammar of persons and moments is three heads on a small number of frames, and this is that grid paying for itself again."
 duration:
   max_seconds: 240
@@ -59,6 +59,11 @@ is the second of several you will meet.
 
 The careful form follows the same rule from **তিনি**: **তাঁর** — *tā̃r* — with
 the moon-dot you learned in chapter five sitting over the vowel.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Bengali *tā* and *tāhā* under Sanskrit *ta-*, "that" (CDIAL 5612); **তার** is that stem with the possessive **-র**.
 
 ## Grammar Lens: order does not change
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C23-TAR-01, BN-GRAMMAR-C20-CLASSIFIER-01, BN-LEX-C14-LAL-01] -->

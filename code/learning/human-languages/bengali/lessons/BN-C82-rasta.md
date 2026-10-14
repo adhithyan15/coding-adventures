@@ -14,7 +14,8 @@ romanization: "rāstā"
 concept_tag: BN-PLACE82-RASTA
 prerequisites: [BN-C82-pichhone, BN-C82-dokan]
 sounds: []
-roots: []
+roots: [persian-rasta]
+etymology_hook: "rāstā: usually traced to Persian rāsta 'a road, a street'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C82-dokan]
 <!-- hl-knowledge: introduces=[BN-LEX-C82-PLACE82-03]; assesses=[] -->
 
 **রাস্তা** — *rāstā* — "a road".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রাস্তা** (*rāstā*) is a loan, usually traced to Persian *rāsta*, "a road, a street".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,7 @@ gloss: who? — the interrogative head on the pronoun frame, and a word that loo
 concept_tag: BN-LEX-KE-WHO
 prerequisites: [BN-C25-tomake, BN-C19-jokhon, BN-C11-bhai, BN-C23-she]
 sounds: []
-roots: []
+roots: [ka-interrogative]
 etymology_hook: "The ক- that asks is the same head that opens কেমন and কখন, three chapters and thirty apart. Bengali asks all its questions with one letter at the front of a frame, so learning the frame is learning the whole question word list."
 duration:
   max_seconds: 250
@@ -44,7 +44,7 @@ done to.
 
 > **সে কে?** — *she ke?* — **who is he?**
 
-This is a different word from the ending you learned two lessons ago. They are
+This is Sanskrit *ka-*, "who" (CDIAL 2574), not the ending of two lessons ago. They are
 spelled identically and they are not related, and Bengali tells them apart the
 way it tells **ও** apart from **ও**: by where they sit.
 

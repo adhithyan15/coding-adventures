@@ -14,7 +14,8 @@ romanization: "bhītu"
 concept_tag: BN-QUAL139-BHITU
 prerequisites: [BN-C138-doyalu, BN-C138-sahosi]
 sounds: []
-roots: []
+roots: [sanskrit-bhita]
+etymology_hook: "bhītu: bhīt 'afraid', Sanskrit bhīta, + -u"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C138-sahosi]
 <!-- hl-knowledge: introduces=[BN-LEX-C139-QUAL139-01]; assesses=[] -->
 
 **ভীতু** — *bhītu* — "timid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভীতু** (*bhītu*) is *bhīt*, "afraid", Sanskrit *bhīta*, with the ending *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

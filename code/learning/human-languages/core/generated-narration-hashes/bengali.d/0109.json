@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 109,
-  "sourceHash": "fnv1a64:a91eef9a433f7e77",
+  "sourceHash": "fnv1a64:42bee0b1eecd5d09",
   "lessonIds": [
     "BN-C109-chiruni",
     "BN-C109-saban",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch109.txt",
   "json": "bengali/narration/ch109.json",
-  "textHash": "fnv1a64:5368c04a390e3da6",
-  "jsonHash": "fnv1a64:bd027e792d07f0f3",
+  "textHash": "fnv1a64:d29f981fa993a478",
+  "jsonHash": "fnv1a64:231d4cc03b0bd465",
   "findings": []
 }

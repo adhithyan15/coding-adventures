@@ -14,7 +14,8 @@ romanization: "buṛo"
 concept_tag: BN-GUN160-BURO
 prerequisites: [BN-C160-lobhi, BN-C160-chintito]
 sounds: []
-roots: []
+roots: [indo-aryan-buddha]
+etymology_hook: "buṛo ← *buḍḍha 'old', a reconstructed form; a tadbhava (CDIAL 9271)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C160-chintito]
 <!-- hl-knowledge: introduces=[BN-LEX-C160-GUN160-05]; assesses=[] -->
 
 **বুড়ো** — *buṛo* — "elderly, old (of a person)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বুড়ো** (*buṛo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*buḍḍha*, "old", a form CDIAL reconstructs from its descendants (CDIAL 9271). CDIAL lists Bengali *buṛā*, "old", and notes that the initial *b-* makes direct descent from Sanskrit *vṛddha*, "grown", unlikely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pherā"
 concept_tag: BN-VERB-PHERA
 prerequisites: [BN-C106-tepa, BN-C106-aka]
 sounds: []
-roots: []
+roots: [indo-aryan-pherayati]
+etymology_hook: "pherā ← *pherayati 'makes move, turns', a reconstructed form; a tadbhava (CDIAL 9078)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C106-aka]
 <!-- hl-knowledge: introduces=[BN-LEX-C106-ACT106-04]; assesses=[] -->
 
 **ফেরা** — *pherā* — "to return".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফেরা** (*pherā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*pherayati*, "makes move, turns", a form CDIAL reconstructs from its descendants (CDIAL 9078). CDIAL lists Bengali *pherā*, "to turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

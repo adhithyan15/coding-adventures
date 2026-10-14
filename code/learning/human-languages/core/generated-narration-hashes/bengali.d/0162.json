@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 162,
-  "sourceHash": "fnv1a64:ae6df5ccb23976ea",
+  "sourceHash": "fnv1a64:6c7b048fa8d1f2de",
   "lessonIds": [
     "BN-C162-sugondhi",
     "BN-C162-pocha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch162.txt",
   "json": "bengali/narration/ch162.json",
-  "textHash": "fnv1a64:43eb034660dddaaa",
-  "jsonHash": "fnv1a64:68b81a4ba0ec7a91",
+  "textHash": "fnv1a64:54a9c7433ac1dabe",
+  "jsonHash": "fnv1a64:9e675527b040537f",
   "findings": []
 }

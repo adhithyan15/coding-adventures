@@ -15,6 +15,7 @@ concept_tag: BN-PLACE81-KACHHE
 prerequisites: [BN-C80-somoy, BN-C80-dupur]
 sounds: []
 roots: []
+etymology_hook: "kāchhe: origin not settled; CDIAL ties some postpositions to kakṣa 'side' but does not trace this one (CDIAL 2588)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C80-dupur]
 <!-- hl-knowledge: introduces=[BN-LEX-C81-PLACE81-01]; assesses=[] -->
 
 **কাছে** — *kāchhe* — "near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **কাছে** (*kāchhe*) is not settled. CDIAL has no entry for it; under Sanskrit *kakṣa*, "armpit, side", it lists Bengali *kāṁkh*, "flank", and says some postpositions probably grew from the sense "side" (CDIAL 2588), but it does not trace **কাছে** (*kāchhe*) there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

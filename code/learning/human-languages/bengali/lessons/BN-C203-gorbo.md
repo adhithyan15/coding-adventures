@@ -14,7 +14,8 @@ romanization: "gôrbô"
 concept_tag: BN-JINIS203-GORBO
 prerequisites: [BN-C203-svobhab, BN-C203-mejaj]
 sounds: []
-roots: []
+roots: [sanskrit-garva]
+etymology_hook: "gôrbô ← Sanskrit garva 'pride', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C203-mejaj]
 <!-- hl-knowledge: introduces=[BN-LEX-C203-JINIS203-03]; assesses=[] -->
 
 **গর্ব** — *gôrbô* — "pride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গর্ব** (*gôrbô*) is Sanskrit *garva*, "pride", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ gloss: "a brick"
 concept_tag: BN-ANCHOR-IT
 prerequisites: [BN-W02-i-matra]
 sounds: []
-roots: []
+roots: [sanskrit-ishtaka]
+etymology_hook: "iṭ ← Sanskrit iṣṭakā 'brick', a tadbhava (CDIAL 1600)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard
 
 Say it: *iṭ*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ই**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ইট** (*iṭ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *iṣṭakā*, "brick" (CDIAL 1600).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-ANCHOR-IT] -->

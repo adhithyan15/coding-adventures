@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a needle, then the Bengali for thread.
 You'll want to know: কাঁচি.
 কাঁচি — kā̃chi — "scissors".
 
+The word, taken apart.
+কাঁচি (kā̃chi) (kāṁchi) is a loan, usually traced to Persian qaichī, "scissors". Persian took the word from Turkic.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for thread, then the Bengali for scissors.
 
 You'll want to know: হারিকেন.
 হারিকেন — hāriken — "a hurricane lamp".
+
+The word, taken apart.
+হারিকেন (hāriken) is a loan from English hurricane. It is short for "hurricane lamp".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for scissors, then the Bengali for a hurrica
 You'll want to know: মোমবাতি.
 মোমবাতি — mombāti — "a candle".
 
+The word, taken apart.
+মোমবাতি (mombāti) is mom, "wax", usually traced to Persian mūm, + bāti, "wick, lamp", from Sanskrit varti, "wick" (CDIAL 11359).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a hurricane lamp, then the Bengali for a
 You'll want to know: দেশলাই.
 দেশলাই — deshlāi — "matches".
 
+The word, taken apart.
+The origin of দেশলাই (deshlāi) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "match" finds nothing close.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a candle, then the Bengali for matches.
 
 You'll want to know: কয়লা.
 কয়লা — kôylā — "coal".
+
+The word, taken apart.
+কয়লা (kôylā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kokila, "lighted coal, charcoal" (CDIAL 3484). CDIAL reports the view that Sanskrit took the word from Munda, comparing Santali kuila, "black".
 
 What you've built.
 One more word for this chapter.

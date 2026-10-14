@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "The One It Happens To",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6799e0faf49f0d66",
+  "sourceHash": "fnv1a64:b4b844d665c87823",
   "lessons": [
     {
       "id": "BN-C25-ke-suffix",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4001aa5be110ccd",
+      "sourceHash": "fnv1a64:7939ff778f9087c5",
       "notice": null,
       "blocks": [
         {
@@ -85,6 +85,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of কে (-ke) is not settled. Under kakṣa, \"side\", CDIAL lists Old Bengali kakhu, \"to, for\", and says some postpositions probably grew from that sense (CDIAL 2588), but not কে (-ke)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the same slot, still one at a time",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -164,7 +175,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -199,7 +210,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fade4cd4e4cb3597",
+      "sourceHash": "fnv1a64:ecb62380d90415bf",
       "notice": null,
       "blocks": [
         {
@@ -255,6 +266,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The stem আমা- goes back to Sanskrit asmad, the stem of \"we\" (CDIAL 986); where the ending -কে (-ke) comes from is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the frame that had no filler",
           "segments": [
@@ -277,7 +299,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -326,7 +348,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -361,7 +383,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:cd512996923e76e1",
+      "sourceHash": "fnv1a64:22512848c3848fc6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -432,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The stem tomā- goes back, with তুমি, to Sanskrit yuṣmad-, \"you\" (CDIAL 10511); where -কে (-ke) comes from is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: what English makes you memorise and Bengali does not",
           "segments": [
@@ -450,7 +483,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -499,7 +532,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -534,7 +567,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:752cb59b449e6e73",
+      "sourceHash": "fnv1a64:d31123353d6cce9d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -576,7 +609,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is a different word from the ending you learned two lessons ago. They are spelled identically and they are not related, and Bengali tells them apart the way it tells ও apart from ও: by where they sit."
+              "text": "This is Sanskrit ka-, \"who\" (CDIAL 2574), not the ending of two lessons ago. They are spelled identically and they are not related, and Bengali tells them apart the way it tells ও apart from ও: by where they sit."
             },
             {
               "kind": "table",

@@ -14,7 +14,8 @@ romanization: "ṭibhi"
 concept_tag: BN-JINIS222-TIBHI
 prerequisites: [BN-C221-niyomito, BN-C222-balb]
 sounds: []
-roots: []
+roots: [english-tv]
+etymology_hook: "ṭibhi: English TV, the short form of television"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C222-balb]
 <!-- hl-knowledge: introduces=[BN-LEX-C222-JINIS222-02]; assesses=[] -->
 
 **টিভি** — *ṭibhi* — "a television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টিভি** (*ṭibhi*) is a loan from English *TV*, the short form of *television*, read out letter by letter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

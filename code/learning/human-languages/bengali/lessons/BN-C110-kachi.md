@@ -14,7 +14,8 @@ romanization: "kā̃chi"
 concept_tag: BN-THINGS110-KACHI
 prerequisites: [BN-C109-sui, BN-C109-suto]
 sounds: []
-roots: []
+roots: [persian-qaichi]
+etymology_hook: "kāṁchi: usually traced to Persian qaichī 'scissors'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C109-suto]
 <!-- hl-knowledge: introduces=[BN-LEX-C110-THINGS110-01]; assesses=[] -->
 
 **কাঁচি** — *kā̃chi* — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাঁচি** (*kāṁchi*) is a loan, usually traced to Persian *qaichī*, "scissors". Persian took the word from Turkic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

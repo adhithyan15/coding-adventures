@@ -14,7 +14,8 @@ romanization: "sôndesh"
 concept_tag: BN-JINIS165-SONDESH
 prerequisites: [BN-C165-jm, BN-C165-kek]
 sounds: []
-roots: []
+roots: [sanskrit-samdesha]
+etymology_hook: "sôndesh: the same word as sôndesh 'message', Sanskrit saṁdeśa (CDIAL 12904)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C165-kek]
 <!-- hl-knowledge: introduces=[BN-LEX-C165-JINIS165-04]; assesses=[] -->
 
 **সন্দেশ** — *sôndesh* — "sandesh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সন্দেশ** (*sôndesh*), the sweet, has the same form as Bengali *sôndesh*, "news, a message", which is Sanskrit *saṁdeśa*, "message", taken over whole (CDIAL 12904). How the sweet came to bear the name is not recorded there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

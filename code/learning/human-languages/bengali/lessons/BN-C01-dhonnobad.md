@@ -12,6 +12,7 @@ concept_tag: COURTESY-THANKS
 prerequisites: [BN-C01-nomoshkar]
 sounds: [inherent-o, ny-conjunct, v-to-b]
 roots: [dhanya, vada]
+etymology_hook: "dhônyobad ← Sanskrit dhanya 'fortunate, blessed' + vāda 'a saying', a tatsama compound"
 duration:
   max_seconds: 240
 requires:
@@ -47,7 +48,7 @@ its whole spelling.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-NOMOSHKAR-01] -->
 
-*Dhônyobad* = Sanskrit *dhanya* ("worthy") + *vāda* ("a saying") — the very
+*Dhônyobad* = Sanskrit *dhanya* ("fortunate, blessed") + *vāda* ("a saying") — the very
 "thank you" behind Hindi *dhanyavād*. Two Bengali quirks fire at once: the
 inherent *a→ô* again (*dhônyobad*), and — because Bengali has **no separate "v,"**
 only *b* — Sanskrit *vāda* is spoken *bad*. *V* becoming *b* is a Bengali
@@ -72,4 +73,4 @@ knew: only the *sound* changed, not the roots.
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-NOMOSHKAR-01] -->
 
 [PAUSE 3s] *Dhônyobad* comes from which two Sanskrit parts, and why is the "v"
-gone? (*Dhanya* "worthy" + *vāda* "saying"; Bengali has no "v," only *b*.)
+gone? (*Dhanya* "fortunate" + *vāda* "saying"; Bengali has no "v," only *b*.)

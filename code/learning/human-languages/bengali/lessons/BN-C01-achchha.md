@@ -12,6 +12,7 @@ concept_tag: RESPONSE-OKAY
 prerequisites: [BN-C01-hyan-na]
 sounds: [independent-vowel, chchh-conjunct]
 roots: [accha]
+etymology_hook: "āchchhā ← Sanskrit accha 'clear, transparent', which may first have meant 'shadowless' (CDIAL 142)"
 duration:
   max_seconds: 240
 requires:
@@ -47,7 +48,7 @@ letter.) Then the doubled **চ্ছ** (**চ** *ch* + **ছ** *chh*). Read **�
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-ACHCHHA-01, BN-CONCEPT-C01-HYANNA-01] -->
 
 **আচ্ছা** (*āchchhā*) is the all-purpose "okay, alright, I see, go on" — a true
-workhorse of spoken Bengali, from Sanskrit *acchā* ("good, clear"). It is the
+workhorse of spoken Bengali, from Sanskrit *accha*, "clear, transparent", which CDIAL suggests may first have meant "shadowless" (CDIAL 142). It is the
 word a Bengali speaker peppers through speech the way an English speaker says
 "right… right," a nod made audible.
 

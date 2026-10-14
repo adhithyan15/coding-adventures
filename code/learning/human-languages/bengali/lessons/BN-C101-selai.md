@@ -14,7 +14,8 @@ romanization: "selāi"
 concept_tag: BN-ACT101-SELAI
 prerequisites: [BN-C101-bhorano, BN-C101-porano]
 sounds: []
-roots: []
+roots: [sanskrit-sivyati]
+etymology_hook: "selāi: a noun from the verb 'to sew', which CDIAL lists as siyāna under Sanskrit sīvyati 'sews' (CDIAL 13444)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C101-porano]
 <!-- hl-knowledge: introduces=[BN-LEX-C101-ACT101-05]; assesses=[] -->
 
 **সেলাই** — *selāi* — "sewing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সেলাই** (*selāi*) appears to be a noun built on the verb "to sew", which CDIAL lists as Bengali *siyāna* under Sanskrit *sīvyati*, "sews" (CDIAL 13444). CDIAL has no entry for **সেলাই** (*selāi*) itself, and its *e* is not explained there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

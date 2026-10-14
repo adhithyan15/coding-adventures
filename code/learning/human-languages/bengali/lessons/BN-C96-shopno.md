@@ -14,7 +14,8 @@ romanization: "shôpnô"
 concept_tag: BN-WANT96-SHOPNO
 prerequisites: [BN-C96-ichchha, BN-C96-asha]
 sounds: []
-roots: []
+roots: [sanskrit-svapna]
+etymology_hook: "shôpnô ← Sanskrit svapna 'sleep, dream', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C96-asha]
 <!-- hl-knowledge: introduces=[BN-LEX-C96-WANT96-03]; assesses=[] -->
 
 **স্বপ্ন** — *shôpnô* — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**স্বপ্ন** (*shôpnô*) is Sanskrit *svapna*, "sleep, dream", taken over whole as a learned loan, a tatsama. Old Bengali had an inherited *suina*, "dream", which CDIAL lists under *\*supna*, "dream" (CDIAL 13481).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

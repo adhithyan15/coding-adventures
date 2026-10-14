@@ -14,7 +14,8 @@ romanization: "brāsh"
 concept_tag: BN-JINIS194-BRASH
 prerequisites: [BN-C193-bktigoto, BN-C193-sorkari]
 sounds: []
-roots: []
+roots: [english-brush]
+etymology_hook: "brāsh ← English brush"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C193-sorkari]
 <!-- hl-knowledge: introduces=[BN-LEX-C194-JINIS194-01]; assesses=[] -->
 
 **ব্রাশ** — *brāsh* — "a brush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ব্রাশ** (*brāsh*) is a loan from English *brush*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

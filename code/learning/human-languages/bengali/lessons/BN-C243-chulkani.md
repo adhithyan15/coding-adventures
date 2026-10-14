@@ -15,6 +15,7 @@ concept_tag: BN-SVASTHYO243-CHULKANI
 prerequisites: [BN-C242-khora, BN-C243-bomi]
 sounds: []
 roots: []
+etymology_hook: "chulkāni: on chulkāno 'to scratch', whose origin is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C243-bomi]
 <!-- hl-knowledge: introduces=[BN-LEX-C243-SVASTHYO243-02]; assesses=[] -->
 
 **চুলকানি** — *chulkāni* — "an itch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চুলকানি** (*chulkāni*) is the noun of *chulkāno*, "to scratch", whose origin is not settled: CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

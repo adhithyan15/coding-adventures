@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "To measure, To stand, To lie down, Closed, To wipe",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6b2a50bc00f70059",
+  "sourceHash": "fnv1a64:18fde84a655928b4",
   "lessons": [
     {
       "id": "BN-C104-mapa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf4de147e949e81b",
+      "sourceHash": "fnv1a64:0d05cf42fb55025a",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মাপা (māpā) is a tadbhava, a word inherited and reshaped by sound change. It comes from māpyate, \"is measured\", a form CDIAL reconstructs from its descendants (CDIAL 10054)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25885e38a33c7fd1",
+      "sourceHash": "fnv1a64:e9ed43aa7c80bb91",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of দাঁড়ানো (dā̃ṛāno) (dāṁṛāno) is not settled. CDIAL has no entry for the verb; under Sanskrit daṇḍa, \"stick\", a word it thinks probably non-Aryan, it lists Bengali dāṁṛā, \"stick, backbone\" (CDIAL 6128), but it does not connect the two."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8bfc343261e8ee12",
+      "sourceHash": "fnv1a64:de5c560023a12728",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শোয়া (shoyā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from svapati, \"sleeps\" (CDIAL 13902). CDIAL writes the Bengali verb soyā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a95c877969fbf7e4",
+      "sourceHash": "fnv1a64:1301bec830c10d3d",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বন্ধ (bôndhô) is spelled as Sanskrit bandha, \"bond, binding\", whose inherited form CDIAL gives as bāṁdh (CDIAL 9136); in the sense \"closed\" it also matches Persian band, \"shut, bound\", and the two may have run together."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60d4965666db679e",
+      "sourceHash": "fnv1a64:b272dd1dda914a07",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL, under Sanskrit proñchati, \"wipes off\", gives Bengali pũchā, \"to wipe\", and explains the form muchā as crossed with mājā, from Sanskrit mārjati, \"wipes\" (CDIAL 9011). মোছা (mochhā) belongs with that muchā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

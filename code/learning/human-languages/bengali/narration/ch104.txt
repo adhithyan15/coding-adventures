@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to hit, then the Bengali for a share.
 You'll want to know: মাপা.
 মাপা — māpā — "to measure".
 
+The word, taken apart.
+মাপা (māpā) is a tadbhava, a word inherited and reshaped by sound change. It comes from māpyate, "is measured", a form CDIAL reconstructs from its descendants (CDIAL 10054).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a share, then the Bengali for to measure
 
 You'll want to know: দাঁড়ানো.
 দাঁড়ানো — dā̃ṛāno — "to stand".
+
+The word, taken apart.
+The origin of দাঁড়ানো (dā̃ṛāno) (dāṁṛāno) is not settled. CDIAL has no entry for the verb; under Sanskrit daṇḍa, "stick", a word it thinks probably non-Aryan, it lists Bengali dāṁṛā, "stick, backbone" (CDIAL 6128), but it does not connect the two.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to measure, then the Bengali for to stan
 You'll want to know: শোয়া.
 শোয়া — shoyā — "to lie down".
 
+The word, taken apart.
+শোয়া (shoyā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from svapati, "sleeps" (CDIAL 13902). CDIAL writes the Bengali verb soyā.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to stand, then the Bengali for to lie do
 You'll want to know: বন্ধ.
 বন্ধ — bôndhô — "closed, shut".
 
+The word, taken apart.
+বন্ধ (bôndhô) is spelled as Sanskrit bandha, "bond, binding", whose inherited form CDIAL gives as bāṁdh (CDIAL 9136); in the sense "closed" it also matches Persian band, "shut, bound", and the two may have run together.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to lie down, then the Bengali for closed
 
 You'll want to know: মোছা.
 মোছা — mochhā — "to wipe".
+
+The word, taken apart.
+CDIAL, under Sanskrit proñchati, "wipes off", gives Bengali pũchā, "to wipe", and explains the form muchā as crossed with mājā, from Sanskrit mārjati, "wipes" (CDIAL 9011). মোছা (mochhā) belongs with that muchā.
 
 What you've built.
 One more word for this chapter.

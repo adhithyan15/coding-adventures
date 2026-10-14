@@ -14,7 +14,8 @@ romanization: "idānīng"
 concept_tag: BN-TIME95-IDANING
 prerequisites: [BN-C94-kokhono, BN-C94-shiggir]
 sounds: []
-roots: []
+roots: [sanskrit-idanim]
+etymology_hook: "idānīng ← Sanskrit idānīm 'now, at this time', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C94-shiggir]
 <!-- hl-knowledge: introduces=[BN-LEX-C95-TIME95-01]; assesses=[] -->
 
 **ইদানীং** — *idānīng* — "lately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ইদানীং** (*idānīng*) is Sanskrit *idānīm*, "now, at this time", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nāch"
 concept_tag: BN-JINIS251-NACH
 prerequisites: [BN-C250-makorsa, BN-C250-chil]
 sounds: []
-roots: []
+roots: [sanskrit-nrtya]
+etymology_hook: "nāch ← Sanskrit nṛtya 'dancing', a tadbhava (CDIAL 7582)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C250-chil]
 <!-- hl-knowledge: introduces=[BN-LEX-C251-JINIS251-01]; assesses=[] -->
 
 **নাচ** — *nāch* — "a dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নাচ** (*nāch*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nṛtya*, "dancing" (CDIAL 7582). CDIAL lists Bengali *nāc*, "dancing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

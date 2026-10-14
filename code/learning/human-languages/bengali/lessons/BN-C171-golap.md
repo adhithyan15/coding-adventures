@@ -14,7 +14,8 @@ romanization: "golāp"
 concept_tag: BN-JINIS171-GOLAP
 prerequisites: [BN-C170-kol, BN-C171-kuri]
 sounds: []
-roots: []
+roots: [persian-gulab]
+etymology_hook: "golāp: usually traced to Persian gulāb 'rose-water'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C171-kuri]
 <!-- hl-knowledge: introduces=[BN-LEX-C171-JINIS171-02]; assesses=[] -->
 
 **গোলাপ** — *golāp* — "a rose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গোলাপ** (*golāp*) is a loan, usually traced to Persian *gulāb*, "rose-water". Persian *gulāb* is *gul*, "rose", + *āb*, "water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

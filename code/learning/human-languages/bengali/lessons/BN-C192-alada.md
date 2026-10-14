@@ -14,7 +14,8 @@ romanization: "ālādā"
 concept_tag: BN-GUN192-ALADA
 prerequisites: [BN-C192-sorol, BN-C192-jotil]
 sounds: []
-roots: []
+roots: [arabic-ala-hida]
+etymology_hook: "ālādā: usually traced to Persian ʿalāḥida 'separate', from Arabic ʿalā ḥida 'by itself' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C192-jotil]
 <!-- hl-knowledge: introduces=[BN-LEX-C192-GUN192-04]; assesses=[] -->
 
 **আলাদা** — *ālādā* — "separate, different".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আলাদা** (*ālādā*) is usually traced to Persian *ʿalāḥida*, "separate", from the Arabic phrase *ʿalā ḥida*, "by itself", on the root *w-ḥ-d*, "one" (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

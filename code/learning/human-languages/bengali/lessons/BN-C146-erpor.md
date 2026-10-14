@@ -14,7 +14,8 @@ romanization: "erpôr"
 concept_tag: BN-AGAMI146-ERPOR
 prerequisites: [BN-C145-katano, BN-C146-agami]
 sounds: []
-roots: []
+roots: [sanskrit-esha, sanskrit-para]
+etymology_hook: "erpôr: er 'of this' (the near head e-) + pôr 'after' ← para (CDIAL 7793)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C146-agami]
 <!-- hl-knowledge: introduces=[BN-LEX-C146-AGAMI146-02]; assesses=[] -->
 
 **এরপর** — *erpôr* — "after this, from now on". It is **এর**, "of this", with **পর**, "after"; add **থেকে**, "from", for "from now on": **এরপর থেকে আমি রোজ হাঁটব** — *erpôr theke āmi roj hā̃ṭbô* — "From now on I will walk every day."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**এরপর** (*erpôr*) is *er*, "of this", the near head *e-* with the possessive *-r*, + *pôr*, "after", from Sanskrit *para*, "later" (CDIAL 7793).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

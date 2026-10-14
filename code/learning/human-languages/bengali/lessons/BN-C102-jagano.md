@@ -14,7 +14,8 @@ romanization: "jāgāno"
 concept_tag: BN-VERB-JAGANO
 prerequisites: [BN-C102-lagano, BN-C102-sorano]
 sounds: []
-roots: []
+roots: [sanskrit-jagrati]
+etymology_hook: "jāgāno ← Sanskrit jāgrati 'are awake', a tadbhava (CDIAL 5175)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C102-sorano]
 <!-- hl-knowledge: introduces=[BN-LEX-C102-ACT102-04]; assesses=[] -->
 
 **জাগানো** — *jāgāno* — "to wake someone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জাগানো** (*jāgāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jāgrati*, "are awake" (CDIAL 5175). *Jāgāno* is the causing form of *jāgā*, "to wake"; CDIAL lists both.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

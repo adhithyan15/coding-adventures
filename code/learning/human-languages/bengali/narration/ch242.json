@@ -4,7 +4,7 @@
   "chapter": 242,
   "title": "To go out, To scatter, To roll up, To wrap, To dig",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:708adb311485dc6d",
+  "sourceHash": "fnv1a64:c09290362eaf30f1",
   "lessons": [
     {
       "id": "BN-C242-berono",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8794a082b0d3eca",
+      "sourceHash": "fnv1a64:ad79426a5178bffc",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of বেরোনো (berono) is not settled: CDIAL has no entry for it, and a search by form and by the glosses \"go out\" and \"come out\" finds only words of other shapes, such as Bengali nikalā, \"to come out\" (CDIAL 7478)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6de63663b387f549",
+      "sourceHash": "fnv1a64:771df94b1ff7479d",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছড়ানো (chhôṛāno) is a tadbhava, a word inherited and reshaped by sound change. It comes from chaṭ, \"scatter, sift\", a form CDIAL reconstructs from its descendants (CDIAL 4965). CDIAL lists Bengali chaṛāna, \"to scatter\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b82452814eee52c5",
+      "sourceHash": "fnv1a64:a31bbdde96b4ce01",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গোটানো (goṭāno) appears to be built on Bengali goṭā, \"whole, a seed\", which CDIAL lists under gōṭṭa, \"something round\" (CDIAL 4271): \"to make round\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54bccb44783cae6d",
+      "sourceHash": "fnv1a64:dcd9d49dcf2c5cef",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মোড়া (moṛā), \"to wrap\", appears to be the verb CDIAL lists as Bengali moṛā, \"to twist\", under Sanskrit muṭati, \"twists\" (CDIAL 10186)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fbdaad99c6a96f5a",
+      "sourceHash": "fnv1a64:28d5fa5df4ce9b74",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খোঁড়া (khõṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from khodd, \"dig\", a form CDIAL reconstructs from its descendants (CDIAL 3934). CDIAL lists Bengali khõṛā, \"to dig\", here and also under khuṭati, \"breaks\" (CDIAL 3892)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

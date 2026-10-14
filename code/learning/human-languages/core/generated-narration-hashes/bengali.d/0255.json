@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 255,
-  "sourceHash": "fnv1a64:e2176bba68673280",
+  "sourceHash": "fnv1a64:f670b285c7114a29",
   "lessonIds": [
     "BN-C255-rod",
     "BN-C255-jhor",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch255.txt",
   "json": "bengali/narration/ch255.json",
-  "textHash": "fnv1a64:aa194a1dcda13414",
-  "jsonHash": "fnv1a64:2e100eb83ef7d740",
+  "textHash": "fnv1a64:9fdd165465911cf4",
+  "jsonHash": "fnv1a64:701dd579de213e0c",
   "findings": []
 }

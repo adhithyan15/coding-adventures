@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 110,
-  "sourceHash": "fnv1a64:bd753cf2e7e1f6b1",
+  "sourceHash": "fnv1a64:91c84040004d9df3",
   "lessonIds": [
     "BN-C110-kachi",
     "BN-C110-hariken",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch110.txt",
   "json": "bengali/narration/ch110.json",
-  "textHash": "fnv1a64:a8eab26ae2031063",
-  "jsonHash": "fnv1a64:610af0c6cbdf0d7c",
+  "textHash": "fnv1a64:8eed4f6cfcc081a4",
+  "jsonHash": "fnv1a64:de6052f47b8d0486",
   "findings": []
 }

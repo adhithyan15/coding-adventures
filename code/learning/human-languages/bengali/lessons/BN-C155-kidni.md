@@ -14,7 +14,8 @@ romanization: "kiḍni"
 concept_tag: BN-SVASTHYO155-KIDNI
 prerequisites: [BN-C155-kobji, BN-C155-phusphus]
 sounds: []
-roots: []
+roots: [english-kidney]
+etymology_hook: "kiḍni ← English kidney"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C155-phusphus]
 <!-- hl-knowledge: introduces=[BN-LEX-C155-SVASTHYO155-03]; assesses=[] -->
 
 **কিডনি** — *kiḍni* — "a kidney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কিডনি** (*kiḍni*) is a loan from English *kidney*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

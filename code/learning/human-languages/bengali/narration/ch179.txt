@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a seller, then the Bengali for a buyer.
 You'll want to know: চাখা.
 চাখা — chākhā — "to taste".
 
+The word, taken apart.
+চাখা (chākhā) is a tadbhava, a word inherited and reshaped by sound change. It comes from cakṣati, "tastes", a form CDIAL reconstructs from its descendants (CDIAL 4557). CDIAL lists Bengali cākhā, "to taste".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a buyer, then the Bengali for to taste.
 
 You'll want to know: গেলা.
 গেলা — gelā — "to swallow".
+
+The word, taken apart.
+গেলা (gelā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from galati, "swallows" (CDIAL 4075). CDIAL writes the Bengali verb gilā, beside Sanskrit gilati.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to taste, then the Bengali for to swallo
 You'll want to know: চিবানো.
 চিবানো — chibāno — "to chew".
 
+The word, taken apart.
+চিবানো (chibāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from carvati, "chews" (CDIAL 4711). CDIAL lists Bengali cibā and cibāna, "to chew".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to swallow, then the Bengali for to chew
 You'll want to know: তাকানো.
 তাকানো — tākāno — "to look (at)".
 
+The word, taken apart.
+তাকানো (tākāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tarkayati, "guesses, thinks" (CDIAL 5716). CDIAL lists Bengali tākā, "to behold, aim at".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to chew, then the Bengali for to look.
 
 You'll want to know: বাছা.
 বাছা — bāchhā — "to pick, to choose".
+
+The word, taken apart.
+বাছা (bāchhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vṛkṣate, "chooses" (CDIAL 12080). CDIAL lists Bengali bāchā, "to select, choose", in the entry it shares with vṛścati, "cuts".
 
 What you've built.
 One more word for this chapter.

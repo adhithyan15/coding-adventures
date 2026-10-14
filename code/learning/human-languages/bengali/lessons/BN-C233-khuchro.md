@@ -14,7 +14,8 @@ romanization: "khuchro"
 concept_tag: BN-JINIS233-KHUCHRO
 prerequisites: [BN-C233-tin, BN-C233-bosta]
 sounds: []
-roots: []
+roots: [persian-khurda]
+etymology_hook: "khuchro: usually traced to Persian khurda 'small; small change'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C233-bosta]
 <!-- hl-knowledge: introduces=[BN-LEX-C233-JINIS233-05]; assesses=[] -->
 
 **খুচরো** — *khuchro* — "small change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খুচরো** (*khuchro*) is a loan, usually traced to Persian *khurda*, "small; small change".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

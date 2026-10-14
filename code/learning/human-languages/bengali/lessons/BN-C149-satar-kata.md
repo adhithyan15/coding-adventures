@@ -14,7 +14,8 @@ romanization: "sā̃tār kāṭā"
 concept_tag: BN-VERB-SATAR-KATA
 prerequisites: [BN-C148-jhat-deoya, BN-C148-seddho-kora]
 sounds: []
-roots: []
+roots: [sanskrit-samtara, sanskrit-kartati]
+etymology_hook: "sāṁtār kāṭā: sāṁtār 'a swim' ← saṁtāra (CDIAL 12888) + kāṭā 'to cut' ← kartati (CDIAL 2854)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C148-seddho-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C149-ACT149-01]; assesses=[] -->
 
 **সাঁতার কাটা** — *sā̃tār kāṭā* — "to swim".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সাঁতার কাটা** (*sāṁtār kāṭā*) is *sāṁtār*, "a swim", from Sanskrit *saṁtāra*, "crossing over" (CDIAL 12888), + *kāṭā*, "to cut", from Sanskrit *kartati*, "cuts" (CDIAL 2854).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

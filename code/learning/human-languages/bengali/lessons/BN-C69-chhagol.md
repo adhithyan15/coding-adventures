@@ -14,7 +14,8 @@ romanization: "chhāgôl"
 concept_tag: BN-ANIMALS69-CHHAGOL
 prerequisites: [BN-C68-biral, BN-C69-goru]
 sounds: []
-roots: []
+roots: [sanskrit-chagala]
+etymology_hook: "chhāgôl ← Sanskrit chāgala 'goat', a tatsama; the inherited cheli 'goat' is under chagala (CDIAL 4963)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C69-goru]
 <!-- hl-knowledge: introduces=[BN-LEX-C69-ANIMALS69-02]; assesses=[] -->
 
 **ছাগল** — *chhāgôl* — "a goat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছাগল** (*chhāgôl*) is Sanskrit *chāgala*, "of a goat; a goat", taken over whole as a learned loan, a tatsama (CDIAL 4963). CDIAL lists the inherited form *cheli*, "goat", under the related *chagala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

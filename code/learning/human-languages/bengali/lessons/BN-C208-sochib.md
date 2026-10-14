@@ -14,7 +14,8 @@ romanization: "sôchib"
 concept_tag: BN-KAJ208-SOCHIB
 prerequisites: [BN-C208-nabik, BN-C208-mali]
 sounds: []
-roots: []
+roots: [sanskrit-saciva]
+etymology_hook: "sôchib ← Sanskrit saciva 'companion; minister', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C208-mali]
 <!-- hl-knowledge: introduces=[BN-LEX-C208-KAJ208-04]; assesses=[] -->
 
 **সচিব** — *sôchib* — "a secretary (government official)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সচিব** (*sôchib*) is Sanskrit *saciva*, "companion; minister", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

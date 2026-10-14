@@ -11,8 +11,8 @@ gloss: a, one — the numeral এক passing through the classifier, which is th
 concept_tag: BN-GRAM-EKTA
 prerequisites: [BN-C20-tta-classifier, BN-W04-ek-read, BN-C15-jama, BN-C11-bondhu]
 sounds: []
-roots: []
-etymology_hook: "There is no separate word for a in Bengali, exactly as there is none for the. Both jobs are done by the same ending, and the difference between them is only whether a number is standing in front of it."
+roots: [sanskrit-eka]
+etymology_hook: "ekṭā: ek ← Sanskrit ēka 'one' (CDIAL 2462) + the classifier -ṭā, whose origin is not settled"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +55,11 @@ So the ending you learned one lesson ago turns out to have been two doors:
 - **একটা জামা** — **a** shirt, any one
 
 Same **টা**. Nothing in front of it, or a number in front of it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**এক** goes back to Sanskrit *ēka*, "one" (CDIAL 2462); where the classifier **টা** comes from is not settled.
 
 ## Grammar Lens: where the ending goes, and it moves
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C20-EKTA-01, BN-GRAMMAR-C20-CLASSIFIER-01] -->

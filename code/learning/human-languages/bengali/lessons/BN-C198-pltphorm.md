@@ -14,7 +14,8 @@ romanization: "plæṭphôrm"
 concept_tag: BN-JINIS198-PLTPHORM
 prerequisites: [BN-C198-petrol-pamp, BN-C198-ason]
 sounds: []
-roots: []
+roots: [english-platform]
+etymology_hook: "plæṭphôrm ← English platform"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C198-ason]
 <!-- hl-knowledge: introduces=[BN-LEX-C198-JINIS198-05]; assesses=[] -->
 
 **প্ল্যাটফর্ম** — *plæṭphôrm* — "a platform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্ল্যাটফর্ম** (*plæṭphôrm*) is a loan from English *platform*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

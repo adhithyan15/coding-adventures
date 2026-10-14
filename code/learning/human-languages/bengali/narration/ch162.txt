@@ -12,6 +12,9 @@ Before the new one: say the Bengali for contented, then the Bengali for annoyed.
 You'll want to know: সুগন্ধি.
 সুগন্ধি — sugôndhi — "fragrant".
 
+The word, taken apart.
+সুগন্ধি (sugôndhi) is Sanskrit sugandhi, "fragrant", taken over whole as a learned loan, a tatsama (CDIAL 13455). The word inherited from it is Middle Bengali sundhi, "scented", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for annoyed, then the Bengali for fragrant.
 
 You'll want to know: পচা.
 পচা — pôchā — "rotten".
+
+The word, taken apart.
+পচা (pôchā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pacyate, "is cooked, is digested" (CDIAL 7654). CDIAL lists Bengali pacā, "to be digested, to rot".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for fragrant, then the Bengali for rotten.
 You'll want to know: আধা.
 আধা — ādhā — "half".
 
+The word, taken apart.
+আধা (ādhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ardha, "half" (CDIAL 644).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for rotten, then the Bengali for half.
 You'll want to know: পুরো.
 পুরো — puro — "whole, entire".
 
+The word, taken apart.
+পুরো (puro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pūra, "filling" (CDIAL 8330). CDIAL lists Bengali purā, "full".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for half, then the Bengali for whole.
 
 You'll want to know: সামান্য.
 সামান্য — sāmānyô — "slight, a little".
+
+The word, taken apart.
+সামান্য (sāmānyô) is Sanskrit sāmānya, "equal, alike", taken over whole as a learned loan, a tatsama (CDIAL 13351).
 
 What you've built.
 One more word for this chapter.

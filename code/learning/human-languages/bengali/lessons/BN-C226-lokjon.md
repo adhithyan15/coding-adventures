@@ -14,7 +14,8 @@ romanization: "lokjôn"
 concept_tag: BN-JINIS226-LOKJON
 prerequisites: [BN-C226-laisens, BN-C226-parking]
 sounds: []
-roots: []
+roots: [sanskrit-loka, sanskrit-jana]
+etymology_hook: "lokjôn: lok 'people', Sanskrit loka, + jôn 'person', Sanskrit jana"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C226-parking]
 <!-- hl-knowledge: introduces=[BN-LEX-C226-JINIS226-05]; assesses=[] -->
 
 **লোকজন** — *lokjôn* — "people".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লোকজন** (*lokjôn*) is *lok*, "people", Sanskrit *loka*, "world, people", + *jôn*, "person", Sanskrit *jana*, both taken over whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hārāno"
 concept_tag: BN-VERB-HARANO
 prerequisites: [BN-C52-thama, BN-C52-khoja]
 sounds: []
-roots: []
+roots: [sanskrit-harayati]
+etymology_hook: "hārāno ← Sanskrit hārayati 'causes to be taken; loses', a tadbhava (CDIAL 14061)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C52-khoja]
 <!-- hl-knowledge: introduces=[BN-LEX-C52-VERBS52-05]; assesses=[] -->
 
 **হারানো** — *hārāno* — "to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হারানো** (*hārāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hārayati*, "causes to be taken; loses" (CDIAL 14061). *Hārāno* is the causing form of *hārā*, "to lose", the verb CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bālb"
 concept_tag: BN-JINIS222-BALB
 prerequisites: [BN-C221-shohure, BN-C221-niyomito]
 sounds: []
-roots: []
+roots: [english-bulb]
+etymology_hook: "bālb ← English bulb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C221-niyomito]
 <!-- hl-knowledge: introduces=[BN-LEX-C222-JINIS222-01]; assesses=[] -->
 
 **বাল্ব** — *bālb* — "a light bulb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাল্ব** (*bālb*) is a loan from English *bulb*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

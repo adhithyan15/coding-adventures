@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 103,
-  "sourceHash": "fnv1a64:5100ddaee1db7894",
+  "sourceHash": "fnv1a64:ffceb54d8cf79890",
   "lessonIds": [
     "BN-C103-nama",
     "BN-C103-satar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch103.txt",
   "json": "bengali/narration/ch103.json",
-  "textHash": "fnv1a64:6242072f2f832031",
-  "jsonHash": "fnv1a64:9c7a842be6cf1d9b",
+  "textHash": "fnv1a64:f2dd998d672fefa4",
+  "jsonHash": "fnv1a64:83cfd355fbdb3c5a",
   "findings": []
 }

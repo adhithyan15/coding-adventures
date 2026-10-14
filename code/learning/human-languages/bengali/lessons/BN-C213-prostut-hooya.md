@@ -14,7 +14,8 @@ romanization: "prôstut hôoyā"
 concept_tag: BN-VERB-PROSTUT-HOOYA
 prerequisites: [BN-C213-chul-kata, BN-C213-saja]
 sounds: []
-roots: []
+roots: [sanskrit-prastuta, sanskrit-bhavati]
+etymology_hook: "prôstut hôoyā: Sanskrit prastuta 'prepared', a tatsama, + hôoyā ← bhavati (CDIAL 9416)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C213-saja]
 <!-- hl-knowledge: introduces=[BN-LEX-C213-ACT213-03]; assesses=[] -->
 
 **প্রস্তুত হওয়া** — *prôstut hôoyā* — "to get ready".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রস্তুত হওয়া** (*prôstut hôoyā*) is *prôstut*, "ready", Sanskrit *prastuta*, "begun, prepared", taken over whole, + *hôoyā*, "to be", from Sanskrit *bhavati*, "becomes, is" (CDIAL 9416).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for golden, then the Bengali for sky blue.
 You'll want to know: পরের.
 পরের — pôrer — "next, following".
 
+The word, taken apart.
+পরের (pôrer) is pôr, "after", Sanskrit para, "later, other", + -er, "of".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for sky blue, then the Bengali for next.
 
 You'll want to know: ফ্যাকাশে.
 ফ্যাকাশে — phækāshe — "pale".
+
+The word, taken apart.
+The origin of ফ্যাকাশে (phækāshe) is not settled: CDIAL has no entry for it. The closest form it lists is Bengali phikā, "weak (of tea), pale", under phikka, "defective" (CDIAL 9037), but the shapes differ.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for next, then the Bengali for pale.
 You'll want to know: খাড়া.
 খাড়া — khāṛā — "steep, upright".
 
+The word, taken apart.
+খাড়া (khāṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khaḍaka, "erect; a post" (CDIAL 3784). CDIAL lists Bengali khāṛā, "standing erect".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for pale, then the Bengali for steep.
 You'll want to know: চ্যাপ্টা.
 চ্যাপ্টা — chæpṭā — "flattened, flat".
 
+The word, taken apart.
+চ্যাপ্টা (chæpṭā), "flattened", appears to belong with Bengali cāpā, "to press", which CDIAL lists under capp, "press", a form it reconstructs (CDIAL 4674).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for steep, then the Bengali for flattened.
 
 You'll want to know: চকচকে.
 চকচকে — chôkchôke — "shiny".
+
+The word, taken apart.
+The origin of চকচকে (chôkchôke) is not settled: CDIAL has no entry for it, and a search by the glosses "shine" and "glitter" finds only words of other shapes, such as Bengali camkāna, "to glitter" (CDIAL 4676).
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 136,
-  "sourceHash": "fnv1a64:0253f4f4012641ee",
+  "sourceHash": "fnv1a64:db5789891f884fa7",
   "lessonIds": [
     "BN-C136-gobhir",
     "BN-C136-choora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch136.txt",
   "json": "bengali/narration/ch136.json",
-  "textHash": "fnv1a64:f64bb7af742bf6da",
-  "jsonHash": "fnv1a64:5a8c5e085f1e7c7a",
+  "textHash": "fnv1a64:18dcae7a8b80adcc",
+  "jsonHash": "fnv1a64:e6043398f3962a39",
   "findings": []
 }

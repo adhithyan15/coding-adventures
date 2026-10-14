@@ -14,7 +14,8 @@ romanization: "mône rākhā"
 concept_tag: BN-VERB-MONE-RAKHA
 prerequisites: [BN-C239-bajano, BN-C239-phiriye-deoya]
 sounds: []
-roots: []
+roots: [sanskrit-manas, sanskrit-rakshati]
+etymology_hook: "mône rākhā: mône 'in mind' ← manas (CDIAL 9822) + rākhā 'to keep' ← rakṣati (CDIAL 10547)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C239-phiriye-deoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C239-ACT239-05]; assesses=[] -->
 
 **মনে রাখা** — *mône rākhā* — "to remember".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মনে রাখা** (*mône rākhā*) is *mône*, "in the mind", from *mon*, "mind", Sanskrit *manas* (CDIAL 9822), + *rākhā*, "to keep", from Sanskrit *rakṣati*, "guards" (CDIAL 10547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

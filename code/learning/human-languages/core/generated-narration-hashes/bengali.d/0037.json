@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 37,
-  "sourceHash": "fnv1a64:66d3beea572e61d1",
+  "sourceHash": "fnv1a64:7d36f375b72ca719",
   "lessonIds": [
     "BN-W05-tha",
     "BN-C26-ekhane",
@@ -14,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "bengali/narration/ch37.txt",
   "json": "bengali/narration/ch37.json",
-  "textHash": "fnv1a64:f0a8965f20ef339e",
-  "jsonHash": "fnv1a64:f08da39703321268",
+  "textHash": "fnv1a64:d7690690e4c4af24",
+  "jsonHash": "fnv1a64:2a951c6cf152e21f",
   "findings": []
 }

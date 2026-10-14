@@ -12,6 +12,9 @@ Before the new one: say the Bengali for quickly, then the Bengali for easy.
 You'll want to know: দামি.
 দামি — dāmi — "expensive".
 
+The word, taken apart.
+দামি (dāmi) is dām, "price", with the ending -i. CDIAL lists Bengali dām under Sanskrit dramma, "a coin", which it traces to Greek drakhmē through Middle Persian (CDIAL 6622).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for easy, then the Bengali for expensive.
 
 You'll want to know: সস্তা.
 সস্তা — sôstā — "cheap".
+
+The word, taken apart.
+The origin of সস্তা (sôstā) is not settled. CDIAL has no entry for it, and a search of its word lists by form and by the gloss "cheap" turns up nothing of this shape; the same word in Hindi, sastā, is untraced there too.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for expensive, then the Bengali for cheap.
 You'll want to know: নিচু.
 নিচু — nichu — "low".
 
+The word, taken apart.
+নিচু (nichu) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nīca, "low" (CDIAL 7540). CDIAL writes the Bengali form nica.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for cheap, then the Bengali for low.
 You'll want to know: ভর্তি.
 ভর্তি — bhôrti — "full".
 
+The word, taken apart.
+ভর্তি (bhôrti) is built on the stem bhar-, "fill": CDIAL lists Bengali bharā, "to load", under Sanskrit bharati, "bears, fills" (CDIAL 9397), but has no entry for ভর্তি (bhôrti) itself.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for low, then the Bengali for full.
 
 You'll want to know: খালি.
 খালি — khāli — "empty".
+
+The word, taken apart.
+খালি (khāli) is a loan from Arabic khālī, "empty", which reached Bengali through Persian. Its Arabic root is kh-l-w (Lane).
 
 What you've built.
 One more word for this chapter.

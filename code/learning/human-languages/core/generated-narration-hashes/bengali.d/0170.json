@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 170,
-  "sourceHash": "fnv1a64:b1598433d08c12b4",
+  "sourceHash": "fnv1a64:a08e6dd0e7d5e6f6",
   "lessonIds": [
     "BN-C170-akar",
     "BN-C170-tukro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch170.txt",
   "json": "bengali/narration/ch170.json",
-  "textHash": "fnv1a64:eb01138cce5ce2f8",
-  "jsonHash": "fnv1a64:7b194f30ab869340",
+  "textHash": "fnv1a64:4f2fb3b9509646d4",
+  "jsonHash": "fnv1a64:397ae36b5af22566",
   "findings": []
 }

@@ -14,7 +14,8 @@ gloss: "alone"
 concept_tag: BN-ANCHOR-EKA
 prerequisites: [BN-W02-e-matra]
 sounds: []
-roots: []
+roots: [sanskrit-eka]
+etymology_hook: "ekā 'alone', from ek 'one' ← Sanskrit ēka (CDIAL 2462); CDIAL gives Oriya ekā 'alone' there"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard
 
 Say it: *ekā*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **এ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**একা** (*ekā*), "alone", is built on *ek*, "one", which goes back to Sanskrit *ēka*, "one" (CDIAL 2462). CDIAL lists Oriya *ekā*, "alone", under the same entry but gives no Bengali form with that sense.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-ANCHOR-EKA] -->

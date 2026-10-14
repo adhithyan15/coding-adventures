@@ -15,6 +15,7 @@ concept_tag: BN-JINIS231-JHAMELA
 prerequisites: [BN-C230-somaj, BN-C230-dhormo]
 sounds: []
 roots: []
+etymology_hook: "jhāmelā: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C230-dhormo]
 <!-- hl-knowledge: introduces=[BN-LEX-C231-JINIS231-01]; assesses=[] -->
 
 **ঝামেলা** — *jhāmelā* — "a hassle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ঝামেলা** (*jhāmelā*) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "trouble" and "entangle" finds only words of other shapes; its Bengali *jhāmā*, "pumice-stone" (CDIAL 5366), is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

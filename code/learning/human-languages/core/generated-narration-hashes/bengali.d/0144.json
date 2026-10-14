@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 144,
-  "sourceHash": "fnv1a64:fe5482185937639a",
+  "sourceHash": "fnv1a64:0dfef41407492d27",
   "lessonIds": [
     "BN-C144-lajuk",
     "BN-C144-mishuk",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch144.txt",
   "json": "bengali/narration/ch144.json",
-  "textHash": "fnv1a64:5e2ba54f7f4438ed",
-  "jsonHash": "fnv1a64:86d8d8b3e19b01dd",
+  "textHash": "fnv1a64:39e7822778258b60",
+  "jsonHash": "fnv1a64:3b6b05326b0f0333",
   "findings": []
 }

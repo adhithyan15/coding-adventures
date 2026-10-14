@@ -14,7 +14,8 @@ romanization: "senābāhinī"
 concept_tag: BN-KAJ261-SENABAHINI
 prerequisites: [BN-C261-oyetar, BN-C261-daroyan]
 sounds: []
-roots: []
+roots: [sanskrit-sena, sanskrit-vahini]
+etymology_hook: "senābāhinī: Sanskrit senā 'army' (CDIAL 13587) + vāhinī 'army, host', tatsama parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C261-daroyan]
 <!-- hl-knowledge: introduces=[BN-LEX-C261-KAJ261-05]; assesses=[] -->
 
 **সেনাবাহিনী** — *senābāhinī* — "an army".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সেনাবাহিনী** (*senābāhinī*) is built from Sanskrit *senā*, "army" (CDIAL 13587), and *vāhinī*, "a host, an army", both taken over whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

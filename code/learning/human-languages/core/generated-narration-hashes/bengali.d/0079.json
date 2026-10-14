@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 79,
-  "sourceHash": "fnv1a64:952beb044ab6e447",
+  "sourceHash": "fnv1a64:72cdb3408a77542f",
   "lessonIds": [
     "BN-C79-bochhor",
     "BN-C79-minit",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch79.txt",
   "json": "bengali/narration/ch79.json",
-  "textHash": "fnv1a64:76e64e25a444b3ed",
-  "jsonHash": "fnv1a64:a2c29ee8596ec915",
+  "textHash": "fnv1a64:a3e992484bfc410a",
+  "jsonHash": "fnv1a64:7520b4c184ff6ce8",
   "findings": []
 }

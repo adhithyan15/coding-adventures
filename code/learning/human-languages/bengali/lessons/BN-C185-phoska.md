@@ -14,7 +14,8 @@ romanization: "phoskā"
 concept_tag: BN-SVASTHYO185-PHOSKA
 prerequisites: [BN-C185-injekshon, BN-C185-chot]
 sounds: []
-roots: []
+roots: [indo-aryan-phossa]
+etymology_hook: "phoskā ← *phossa 'hollow', a reconstructed form; a tadbhava (CDIAL 9114)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C185-chot]
 <!-- hl-knowledge: introduces=[BN-LEX-C185-SVASTHYO185-04]; assesses=[] -->
 
 **ফোসকা** — *phoskā* — "a blister".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফোসকা** (*phoskā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*phossa*, "hollow", a form CDIAL reconstructs from its descendants (CDIAL 9114). CDIAL lists Bengali *phoskā*, "blister".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

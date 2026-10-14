@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a button, then the Bengali for an earrin
 You'll want to know: বিরিয়ানি.
 বিরিয়ানি — biriyāni — "biryani".
 
+The word, taken apart.
+বিরিয়ানি (biriyāni) is a loan, usually traced to Persian biryān, "fried, roasted". Bengali adds the ending -i.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for an earring, then the Bengali for biryani
 
 You'll want to know: খিচুড়ি.
 খিচুড়ি — khichuṛi — "khichuri".
+
+The word, taken apart.
+খিচুড়ি (khichuṛi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khiccā, "dish of rice and peas" (CDIAL 3880). CDIAL lists Bengali khicaṛi, "rice and lentils".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for biryani, then the Bengali for khichuri.
 You'll want to know: চপ.
 চপ — chôp — "a croquette".
 
+The word, taken apart.
+চপ (chôp) is a loan from English chop.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for khichuri, then the Bengali for a croquet
 You'll want to know: আচার.
 আচার — āchār — "pickle".
 
+The word, taken apart.
+আচার (āchār) is a loan, usually traced to Persian āchār, "pickle".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a croquette, then the Bengali for pickle
 
 You'll want to know: চাটনি.
 চাটনি — chāṭni — "chutney".
+
+The word, taken apart.
+চাটনি (chāṭni) is not in CDIAL. It is often tied to the verb chāṭā, "to lick", which CDIAL lists under caṭṭ, "lick, taste", a form it reconstructs (CDIAL 4573), but that link is not settled.
 
 What you've built.
 One more word for this chapter.

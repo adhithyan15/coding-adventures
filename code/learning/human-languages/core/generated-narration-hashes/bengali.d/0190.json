@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 190,
-  "sourceHash": "fnv1a64:5823de50b340c918",
+  "sourceHash": "fnv1a64:699d2bfd5437cfca",
   "lessonIds": [
     "BN-C190-borong",
     "BN-C190-hoyto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch190.txt",
   "json": "bengali/narration/ch190.json",
-  "textHash": "fnv1a64:efa56f23e8de17f8",
-  "jsonHash": "fnv1a64:f48639eb85aebccf",
+  "textHash": "fnv1a64:8fa819d88c2a54ec",
+  "jsonHash": "fnv1a64:195c9ab3a2ba903e",
   "findings": []
 }

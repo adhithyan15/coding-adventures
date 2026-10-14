@@ -14,7 +14,8 @@ romanization: "sundôr"
 concept_tag: BN-ADJ77-SUNDOR
 prerequisites: [BN-C77-holud, BN-C77-badami]
 sounds: []
-roots: []
+roots: [sanskrit-sundara]
+etymology_hook: "sundôr ← Sanskrit sundara 'beautiful', a tatsama; CDIAL lists inherited sũdar (CDIAL 13474)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C77-badami]
 <!-- hl-knowledge: introduces=[BN-LEX-C77-ADJ77-04]; assesses=[] -->
 
 **সুন্দর** — *sundôr* — "beautiful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সুন্দর** (*sundôr*) is Sanskrit *sundara*, "beautiful", taken over whole as a learned loan, a tatsama (CDIAL 13474). The inherited form is *sũdar*, which CDIAL lists; CDIAL asks whether *sundara* is itself a Middle Indo-Aryan form of *sūnara*, "excellent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

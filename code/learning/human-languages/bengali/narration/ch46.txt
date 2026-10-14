@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a son; a boy, then the Bengali for a dau
 You'll want to know: দাদু.
 দাদু — dādu — "a grandfather".
 
+The word, taken apart.
+দাদু (dādu) is a pet form of dādā, "grandfather", which CDIAL lists under dādda, "father or other elderly relative", a form it reconstructs (CDIAL 6261).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a daughter; a girl, then the Bengali for
 
 You'll want to know: দিদিমা.
 দিদিমা — didimā — "a grandmother (mother's mother)".
+
+The word, taken apart.
+দিদিমা (didimā) is didi + mā. CDIAL lists didi, "elder sister", and notes that Bengali also uses it for "grandmother", under diddā, "elder sister", a form it reconstructs (CDIAL 6327); mā, "mother", is Sanskrit mātṛ (CDIAL 10016).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a grandfather, then the Bengali for a gr
 You'll want to know: কাকা.
 কাকা — kākā — "an uncle (father's brother)".
 
+The word, taken apart.
+কাকা (kākā) is a tadbhava, a word inherited and reshaped by sound change. It comes from kākka, "senior male relative", a form CDIAL reconstructs from its descendants (CDIAL 2998). CDIAL takes it from Dravidian, comparing Kannada kakka, "uncle".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a grandmother, then the Bengali for an u
 You'll want to know: মামা.
 মামা — māmā — "an uncle (mother's brother)".
 
+The word, taken apart.
+মামা (māmā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from māma, "uncle" (CDIAL 10055). CDIAL calls it a nursery word, with similar words in Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for an uncle, then the Bengali for an uncle.
 
 You'll want to know: মাসি.
 মাসি — māshi — "an aunt (mother's sister)".
+
+The word, taken apart.
+মাসি (māshi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mātuḥṣvasṛ, "mother's sister" (CDIAL 10001). It is mātṛ, "mother", + svasṛ, "sister".
 
 What you've built.
 One more word for this chapter.

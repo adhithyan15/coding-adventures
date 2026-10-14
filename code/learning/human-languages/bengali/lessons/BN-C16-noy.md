@@ -11,10 +11,10 @@ gloss: is not — the denial of a sentence that never had a verb in it, and the 
 concept_tag: BN-NEG-NOY
 prerequisites: [BN-C16-na-verb, BN-C02-amar-naam, BN-C03-bhalo, BN-W04-nukta, BN-C15-jama]
 sounds: [ya-glide-review]
-roots: []
-etymology_hook: "নয় is না plus the third-person ending of the be-verb that Bengali otherwise refuses to say out loud: the copula is invisible in the affirmative and appears only to be denied, which is why the denial has a form the statement does not"
+roots: [sanskrit-na]
+etymology_hook: "nôy: the negator na 'not' (CDIAL 6906); CDIAL has no entry for the whole, so how its ending formed is not settled"
 duration:
-  max_seconds: 235
+  max_seconds: 248
 requires:
   knowledge: [BN-GRAMMAR-C16-NA-VERB-01, BN-CONCEPT-C02-AMARNAAM-01, BN-CONCEPT-C03-BHALO-01, BN-SCRIPT-NUKTA-01]
 introduces:
@@ -50,6 +50,11 @@ Chapter three taught the frame **আমার নাম …** and said plainly t
 word for *is*. Bengali leaves the present-tense *is* out. To deny that sentence
 you cannot negate a verb that was never said, so the language supplies one, and
 it supplies it only here: **নয়**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নয়** begins with the negator *na*, "not" (CDIAL 6906); CDIAL has no entry for the whole word, so how its ending formed is not settled.
 
 ## Grammar Lens: the form follows the person
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C16-NOY-01] -->

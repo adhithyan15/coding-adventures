@@ -14,7 +14,8 @@ romanization: "hāriken"
 concept_tag: BN-THINGS110-HARIKEN
 prerequisites: [BN-C109-suto, BN-C110-kachi]
 sounds: []
-roots: []
+roots: [english-hurricane]
+etymology_hook: "hāriken ← English hurricane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C110-kachi]
 <!-- hl-knowledge: introduces=[BN-LEX-C110-THINGS110-02]; assesses=[] -->
 
 **হারিকেন** — *hāriken* — "a hurricane lamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হারিকেন** (*hāriken*) is a loan from English *hurricane*. It is short for "hurricane lamp".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mojā"
 concept_tag: BN-CLOTHES85-MOJA
 prerequisites: [BN-C84-shohor, BN-C85-pnt]
 sounds: []
-roots: []
+roots: [persian-moza]
+etymology_hook: "mojā: usually traced to Persian mōza 'sock, stocking'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C85-pnt]
 <!-- hl-knowledge: introduces=[BN-LEX-C85-CLOTHES85-02]; assesses=[] -->
 
 **মোজা** — *mojā* — "a sock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মোজা** (*mojā*) is a loan, usually traced to Persian *mōza*, "sock, stocking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

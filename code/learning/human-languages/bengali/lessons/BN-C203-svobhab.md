@@ -14,7 +14,8 @@ romanization: "svôbhāb"
 concept_tag: BN-JINIS203-SVOBHAB
 prerequisites: [BN-C202-mamla, BN-C202-bhot]
 sounds: []
-roots: []
+roots: [sanskrit-svabhava]
+etymology_hook: "svôbhāb ← Sanskrit svabhāva 'own nature', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C202-bhot]
 <!-- hl-knowledge: introduces=[BN-LEX-C203-JINIS203-01]; assesses=[] -->
 
 **স্বভাব** — *svôbhāb* — "a nature, a temperament".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**স্বভাব** (*svôbhāb*) is Sanskrit *svabhāva*, "own nature", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hālkā"
 concept_tag: BN-ADJ76-HALKA
 prerequisites: [BN-C76-mota, BN-C76-roga]
 sounds: []
-roots: []
+roots: [sanskrit-laghu]
+etymology_hook: "hālkā ← Sanskrit laghu 'light', a tadbhava (CDIAL 10896)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C76-roga]
 <!-- hl-knowledge: introduces=[BN-LEX-C76-ADJ76-03]; assesses=[] -->
 
 **হালকা** — *hālkā* — "light (in weight)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হালকা** (*hālkā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *laghu*, "light" (CDIAL 10896). CDIAL lists *halkā* as an extended form with its consonants swapped.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

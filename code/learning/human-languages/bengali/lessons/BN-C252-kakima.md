@@ -14,7 +14,8 @@ romanization: "kākimā"
 concept_tag: BN-JINIS252-KAKIMA
 prerequisites: [BN-C251-parti, BN-C251-jatra]
 sounds: []
-roots: []
+roots: [indo-aryan-kakka]
+etymology_hook: "kākimā: kāki 'uncle's wife' ← *kākka (CDIAL 2998), from Dravidian, + mā 'mother'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C251-jatra]
 <!-- hl-knowledge: introduces=[BN-LEX-C252-JINIS252-01]; assesses=[] -->
 
 **কাকিমা** — *kākimā* — "a paternal aunt (by marriage)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাকিমা** (*kākimā*) is *kāki*, "wife of the father's younger brother", which CDIAL lists under *\*kākka*, "senior male relative", a word it takes from Dravidian (CDIAL 2998), + *mā*, "mother".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

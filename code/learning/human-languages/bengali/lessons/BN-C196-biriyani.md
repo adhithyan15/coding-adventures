@@ -14,7 +14,8 @@ romanization: "biriyāni"
 concept_tag: BN-JINIS196-BIRIYANI
 prerequisites: [BN-C195-botam, BN-C195-dul]
 sounds: []
-roots: []
+roots: [persian-biryan]
+etymology_hook: "biriyāni: usually traced to Persian biryān 'fried, roasted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C195-dul]
 <!-- hl-knowledge: introduces=[BN-LEX-C196-JINIS196-01]; assesses=[] -->
 
 **বিরিয়ানি** — *biriyāni* — "biryani".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিরিয়ানি** (*biriyāni*) is a loan, usually traced to Persian *biryān*, "fried, roasted". Bengali adds the ending *-i*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shīt"
 concept_tag: BN-TIME92-SHIT
 prerequisites: [BN-C92-protidin, BN-C92-roj]
 sounds: []
-roots: []
+roots: [sanskrit-shita]
+etymology_hook: "shīt ← Sanskrit śīta 'cold', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C92-roj]
 <!-- hl-knowledge: introduces=[BN-LEX-C92-TIME92-05]; assesses=[] -->
 
 **শীত** — *shīt* — "winter; cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শীত** (*shīt*) is Sanskrit *śīta*, "cold", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

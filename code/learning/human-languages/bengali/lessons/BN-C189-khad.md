@@ -14,7 +14,8 @@ romanization: "khād"
 concept_tag: BN-JAYGA189-KHAD
 prerequisites: [BN-C189-jel, BN-C189-guha]
 sounds: []
-roots: []
+roots: [sanskrit-khata]
+etymology_hook: "khād: apparently ← khāta 'dug up; ditch', under which CDIAL lists khāī 'ditch' (CDIAL 3862)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C189-guha]
 <!-- hl-knowledge: introduces=[BN-LEX-C189-JAYGA189-04]; assesses=[] -->
 
 **খাদ** — *khād* — "a ravine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খাদ** (*khād*), "a ravine", appears to go back to Sanskrit *khāta*, "dug up; a ditch", under which CDIAL lists Bengali *khāī*, "ditch", and a *khād*, "refuse" (CDIAL 3862); CDIAL does not list *khād* in the sense "ravine".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

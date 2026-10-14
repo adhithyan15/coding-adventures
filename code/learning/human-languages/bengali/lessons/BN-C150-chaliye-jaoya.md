@@ -14,7 +14,8 @@ romanization: "chāliye jāoyā"
 concept_tag: BN-VERB-CHALIYE-JAOYA
 prerequisites: [BN-C150-sondeh-kora, BN-C150-torko-kora]
 sounds: []
-roots: []
+roots: [indo-aryan-calyati, sanskrit-yati]
+etymology_hook: "chāliye jāoyā: chāliye 'keeping going', from chālāno ← *calyati (CDIAL 4721), + jāoyā 'to go' ← yāti (CDIAL 10452)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C150-torko-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C150-ACT150-03]; assesses=[] -->
 
 **চালিয়ে যাওয়া** — *chāliye jāoyā* — "to carry on".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চালিয়ে যাওয়া** (*chāliye jāoyā*) is *chāliye*, "keeping going", a form of *chālāno*, "to drive, run", which belongs with Bengali *cālā*, "to be moved", under *\*calyati*, "goes" (CDIAL 4721), + *jāoyā*, "to go", from Sanskrit *yāti*, "goes" (CDIAL 10452).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

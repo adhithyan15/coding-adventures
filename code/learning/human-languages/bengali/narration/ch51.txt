@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to sing, then the Bengali for to dance.
 You'll want to know: শেখা.
 শেখা — shekhā — "to learn".
 
+The word, taken apart.
+শেখা (shekhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śikṣate, "learns" (CDIAL 12430).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to dance, then the Bengali for to learn.
 
 You'll want to know: ভোলা.
 ভোলা — bholā — "to forget".
+
+The word, taken apart.
+ভোলা (bholā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhull, "err, forget", a form CDIAL reconstructs from its descendants (CDIAL 9538). CDIAL writes the Bengali verb bhulā.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to learn, then the Bengali for to forget
 You'll want to know: চাওয়া.
 চাওয়া — chāowā — "to want".
 
+The word, taken apart.
+চাওয়া (chāowā) is a tadbhava, a word inherited and reshaped by sound change. It comes from cāh, "see, look for, desire", a form CDIAL reconstructs from its descendants (CDIAL 4775). Its source is uncertain: CDIAL reports J. Bloch's view that it is a deformed form of a verb from Sanskrit cakṣate, "sees", and leaves the question open.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to forget, then the Bengali for to want.
 You'll want to know: আনা.
 আনা — ānā — "to bring".
 
+The word, taken apart.
+আনা (ānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ānayati, "leads forward, fetches" (CDIAL 1174).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to want, then the Bengali for to bring.
 
 You'll want to know: গোনা.
 গোনা — gonā — "to count".
+
+The word, taken apart.
+গোনা (gonā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gaṇayati, "counts" (CDIAL 3993). CDIAL also lists Bengali guṇā, "to count", under guṇayati (CDIAL 4191).
 
 What you've built.
 One more word for this chapter.

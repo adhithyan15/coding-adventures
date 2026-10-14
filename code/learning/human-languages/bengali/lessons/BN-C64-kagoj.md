@@ -14,7 +14,8 @@ romanization: "kāgôj"
 concept_tag: BN-SCHOOL64-KAGOJ
 prerequisites: [BN-C63-khata, BN-C64-kolom]
 sounds: []
-roots: []
+roots: [persian-kaghaz]
+etymology_hook: "kāgôj: usually traced to Persian kāghaz 'paper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C64-kolom]
 <!-- hl-knowledge: introduces=[BN-LEX-C64-SCHOOL64-02]; assesses=[] -->
 
 **কাগজ** — *kāgôj* — "paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাগজ** (*kāgôj*) is a loan, usually traced to Persian *kāghaz*, "paper".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

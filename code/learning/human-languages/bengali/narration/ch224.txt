@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a prawn, then the Bengali for hilsa.
 You'll want to know: সালাদ.
 সালাদ — sālād — "a salad".
 
+The word, taken apart.
+সালাদ (sālād) is a loan from English salad.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for hilsa, then the Bengali for a salad.
 
 You'll want to know: জন্তু.
 জন্তু — jôntu — "an animal".
+
+The word, taken apart.
+জন্তু (jôntu) is Sanskrit jantu, "offspring, creature", taken over whole as a learned loan, a tatsama (CDIAL 5110).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a salad, then the Bengali for an animal.
 You'll want to know: চিতা.
 চিতা — chitā — "a leopard".
 
+The word, taken apart.
+চিতা (chitā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from citraka, "leopard" (CDIAL 4804). CDIAL lists Bengali citā, "leopard".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for an animal, then the Bengali for a leopar
 You'll want to know: শেয়াল.
 শেয়াল — sheyāl — "a fox".
 
+The word, taken apart.
+শেয়াল (sheyāl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śṛgāla, "jackal" (CDIAL 12578). CDIAL lists Bengali seyāl, "jackal"; in Bengali it is the word for "fox" as well.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a leopard, then the Bengali for a fox.
 
 You'll want to know: নেকড়ে.
 নেকড়ে — nekṛe — "a wolf".
+
+The word, taken apart.
+The origin of নেকড়ে (nekṛe) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "wolf" finds nothing close; its Bengali nekṛā, "rag" (CDIAL 11044), is a different word.
 
 What you've built.
 One more word for this chapter.

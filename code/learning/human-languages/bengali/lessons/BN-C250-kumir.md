@@ -14,7 +14,8 @@ romanization: "kumir"
 concept_tag: BN-JINIS250-KUMIR
 prerequisites: [BN-C249-pudina, BN-C249-kaju]
 sounds: []
-roots: []
+roots: [sanskrit-kumbhira]
+etymology_hook: "kumir ← Sanskrit kumbhīra 'crocodile', a tadbhava (CDIAL 3317)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C249-kaju]
 <!-- hl-knowledge: introduces=[BN-LEX-C250-JINIS250-01]; assesses=[] -->
 
 **কুমির** — *kumir* — "a crocodile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কুমির** (*kumir*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kumbhīra*, "crocodile" (CDIAL 3317). CDIAL lists Bengali *kumīr* beside the learned *kumbhīr*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

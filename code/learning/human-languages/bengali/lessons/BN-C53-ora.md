@@ -14,7 +14,8 @@ romanization: "oṛā"
 concept_tag: BN-VERB-ORA
 prerequisites: [BN-C53-chhara, BN-C53-phla]
 sounds: []
-roots: []
+roots: [sanskrit-uddiyate]
+etymology_hook: "oṛā ← Sanskrit uḍḍīyate 'flies up', a tadbhava (CDIAL 1697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C53-phla]
 <!-- hl-knowledge: introduces=[BN-LEX-C53-VERBS53-04]; assesses=[] -->
 
 **ওড়া** — *oṛā* — "to fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ওড়া** (*oṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *uḍḍīyate*, "flies up" (CDIAL 1697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

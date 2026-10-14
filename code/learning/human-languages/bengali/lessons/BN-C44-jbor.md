@@ -14,7 +14,8 @@ romanization: "jbôr"
 concept_tag: BN-BODY44-JBOR
 prerequisites: [BN-C43-matha, BN-C44-kan]
 sounds: []
-roots: []
+roots: [sanskrit-jvara]
+etymology_hook: "jbôr ← Sanskrit jvara 'fever', a tatsama; CDIAL lists the inherited form jar (CDIAL 5303)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C44-kan]
 <!-- hl-knowledge: introduces=[BN-LEX-C44-BODY44-02]; assesses=[] -->
 
 **জ্বর** — *jbôr* — "a fever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জ্বর** (*jbôr*) is Sanskrit *jvara*, "fever", taken over whole as a learned loan, a tatsama (CDIAL 5303). The word inherited from it is *jar*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

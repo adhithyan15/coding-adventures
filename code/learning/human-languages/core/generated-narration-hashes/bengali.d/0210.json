@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 210,
-  "sourceHash": "fnv1a64:1b24722fb36e75df",
+  "sourceHash": "fnv1a64:69c0c2f81e431a1d",
   "lessonIds": [
     "BN-C210-soi-kora",
     "BN-C210-phon-kora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch210.txt",
   "json": "bengali/narration/ch210.json",
-  "textHash": "fnv1a64:625737434648c2ab",
-  "jsonHash": "fnv1a64:dfeb94c5d0d095d8",
+  "textHash": "fnv1a64:b7d499fdadbd7f3b",
+  "jsonHash": "fnv1a64:44ac85b767d57dfa",
   "findings": []
 }

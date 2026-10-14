@@ -14,7 +14,8 @@ romanization: "bekāri"
 concept_tag: BN-JAYGA245-BEKARI
 prerequisites: [BN-C245-jim, BN-C245-selun]
 sounds: []
-roots: []
+roots: [english-bakery]
+etymology_hook: "bekāri ← English bakery"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C245-selun]
 <!-- hl-knowledge: introduces=[BN-LEX-C245-JAYGA245-04]; assesses=[] -->
 
 **বেকারি** — *bekāri* — "a bakery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বেকারি** (*bekāri*) is a loan from English *bakery*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kā̃pā"
 concept_tag: BN-VERB-KAPA
 prerequisites: [BN-C180-chhapa, BN-C181-nihshvas-neoya]
 sounds: []
-roots: []
+roots: [sanskrit-kampate]
+etymology_hook: "kāṁpā ← Sanskrit kampate 'trembles, shivers', a tadbhava (CDIAL 2767)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C181-nihshvas-neoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C181-ACT181-02]; assesses=[] -->
 
 **কাঁপা** — *kā̃pā* — "to shiver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাঁপা** (*kāṁpā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kampate*, "trembles, shivers" (CDIAL 2767).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kumṛo"
 concept_tag: BN-THINGS117-KUMRO
 prerequisites: [BN-C116-tometo, BN-C117-shim]
 sounds: []
-roots: []
+roots: [sanskrit-kushmanda]
+etymology_hook: "kumṛo ← *kohaṇḍa 'pumpkin-gourd', a reconstructed form; a tadbhava (CDIAL 3374)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C117-shim]
 <!-- hl-knowledge: introduces=[BN-LEX-C117-THINGS117-02]; assesses=[] -->
 
 **কুমড়ো** — *kumṛo* — "a pumpkin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কুমড়ো** (*kumṛo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kohaṇḍa*, "pumpkin-gourd", a form CDIAL reconstructs from its descendants (CDIAL 3374). It stands beside Sanskrit *kuṣmāṇḍa*, "pumpkin-gourd"; CDIAL writes the Bengali forms *kõrā* and *kohõṛā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

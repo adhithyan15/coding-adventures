@@ -14,7 +14,8 @@ romanization: "jhũki neoyā"
 concept_tag: BN-VERB-JHUKI-NEOYA
 prerequisites: [BN-C184-jor-kora, BN-C184-badha-deoya]
 sounds: []
-roots: []
+roots: [indo-aryan-jhukkati, sanskrit-nayati]
+etymology_hook: "jhũki neoyā: jhũki 'risk', apparently with jhũkā 'to stoop' (CDIAL 5399), + neoyā ← nayati (CDIAL 6966)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C184-badha-deoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C184-ACT184-05]; assesses=[] -->
 
 **ঝুঁকি নেওয়া** — *jhũki neoyā* — "to take a risk".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ঝুঁকি নেওয়া** (*jhũki neoyā*) is *jhũki*, "a risk", which appears to belong with Bengali *jhũkā*, "to stoop", listed under *\*jhukkati*, "stoops" (CDIAL 5399), + *neoyā*, "to take", from Sanskrit *nayati*, "leads, carries off" (CDIAL 6966).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

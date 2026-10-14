@@ -14,7 +14,8 @@ romanization: "jhā̃ṭā"
 concept_tag: BN-THINGS108-JHATA
 prerequisites: [BN-C107-kolsi, BN-C107-balti]
 sounds: []
-roots: []
+roots: [indo-aryan-jhata]
+etymology_hook: "jhāṁṭā: CDIAL lists it under *jhāṇṭa, beside Sanskrit jhāṭa 'forest, arbour', perhaps from Munda (CDIAL 5362)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C107-balti]
 <!-- hl-knowledge: introduces=[BN-LEX-C108-THINGS108-01]; assesses=[] -->
 
 **ঝাঁটা** — *jhā̃ṭā* — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ঝাঁটা** (*jhāṁṭā*), "broom", under *\*jhāṇṭa*, a variant of Sanskrit *jhāṭa*, "forest, arbour", which it reports may come from Munda (CDIAL 5362).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

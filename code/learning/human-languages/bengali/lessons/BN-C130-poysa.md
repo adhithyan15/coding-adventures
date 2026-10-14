@@ -14,7 +14,8 @@ romanization: "pôysā"
 concept_tag: BN-THINGS130-POYSA
 prerequisites: [BN-C129-byag, BN-C130-manibyag]
 sounds: []
-roots: []
+roots: [indo-aryan-padamsha]
+etymology_hook: "pôysā: the coin CDIAL traces to *padāṁśa 'quarter part'; it gives no Bengali form (CDIAL 7761)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C130-manibyag]
 <!-- hl-knowledge: introduces=[BN-LEX-C130-THINGS130-02]; assesses=[] -->
 
 **পয়সা** — *pôysā* — "a coin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পয়সা** (*pôysā*) is the coin CDIAL traces to *\*padāṁśa*, "quarter part", a form it reconstructs. It gives no Bengali form, and marks Oriya *paisā*, "quarter anna", as taken from Hindi (CDIAL 7761).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

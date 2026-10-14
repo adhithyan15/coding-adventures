@@ -14,7 +14,8 @@ romanization: "singhô"
 concept_tag: BN-ANIMALS70-SINGHO
 prerequisites: [BN-C69-pakhi, BN-C69-idur]
 sounds: []
-roots: []
+roots: [sanskrit-simha]
+etymology_hook: "singhô ← Sanskrit siṁha 'lion', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C69-idur]
 <!-- hl-knowledge: introduces=[BN-LEX-C70-ANIMALS70-01]; assesses=[] -->
 
 **সিংহ** — *singhô* — "a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সিংহ** (*singhô*) is Sanskrit *siṁha*, "lion", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

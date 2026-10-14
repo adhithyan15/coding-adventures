@@ -14,7 +14,8 @@ romanization: "sui"
 concept_tag: BN-THINGS109-SUI
 prerequisites: [BN-C109-saban, BN-C109-gamchha]
 sounds: []
-roots: []
+roots: [sanskrit-suci]
+etymology_hook: "sui ← Sanskrit sūcī 'needle', a tadbhava (CDIAL 13551)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C109-gamchha]
 <!-- hl-knowledge: introduces=[BN-LEX-C109-THINGS109-04]; assesses=[] -->
 
 **সুই** — *sui* — "a needle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সুই** (*sui*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sūcī*, "needle" (CDIAL 13551).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

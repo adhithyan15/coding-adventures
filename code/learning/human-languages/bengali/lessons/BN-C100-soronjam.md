@@ -14,7 +14,8 @@ romanization: "sôrônjām"
 concept_tag: BN-CAN100-SORONJAM
 prerequisites: [BN-C100-protibha, BN-C100-jontro]
 sounds: []
-roots: []
+roots: [persian-sar-anjam]
+etymology_hook: "sôrônjām: usually traced to Persian sar-anjām 'completion, provision, equipment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C100-jontro]
 <!-- hl-knowledge: introduces=[BN-LEX-C100-CAN100-04]; assesses=[] -->
 
 **সরঞ্জাম** — *sôrônjām* — "equipment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সরঞ্জাম** (*sôrônjām*) is a loan, usually traced to Persian *sar-anjām*, "completion, provision, equipment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

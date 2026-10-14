@@ -14,7 +14,8 @@ romanization: "mombāti"
 concept_tag: BN-THINGS110-MOMBATI
 prerequisites: [BN-C110-kachi, BN-C110-hariken]
 sounds: []
-roots: []
+roots: [persian-mum, sanskrit-varti]
+etymology_hook: "mombāti: mom 'wax', usually traced to Persian mūm, + bāti 'wick, lamp' ← varti (CDIAL 11359)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C110-hariken]
 <!-- hl-knowledge: introduces=[BN-LEX-C110-THINGS110-03]; assesses=[] -->
 
 **মোমবাতি** — *mombāti* — "a candle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মোমবাতি** (*mombāti*) is *mom*, "wax", usually traced to Persian *mūm*, + *bāti*, "wick, lamp", from Sanskrit *varti*, "wick" (CDIAL 11359).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

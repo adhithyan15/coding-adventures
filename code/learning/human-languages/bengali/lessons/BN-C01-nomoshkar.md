@@ -11,7 +11,8 @@ gloss: hello / goodbye (nômoshkar)
 concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [inherent-o, hasanta-conjunct, s-to-sh]
-roots: [namas, kara]
+roots: [namas, kara, sanskrit-namaskara]
+etymology_hook: "nômoshkar ← Sanskrit namaskāra 'adoration': namas 'a bow' + kāra 'making', a tatsama"
 duration:
   max_seconds: 240
 requires:

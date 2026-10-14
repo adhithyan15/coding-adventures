@@ -14,7 +14,8 @@ romanization: "phusphus"
 concept_tag: BN-SVASTHYO155-PHUSPHUS
 prerequisites: [BN-C154-petbtha, BN-C155-kobji]
 sounds: []
-roots: []
+roots: [sanskrit-phupphusa]
+etymology_hook: "phusphus: Sanskrit phupphusa 'lungs', probably imitative; CDIAL lists phõprā 'lungs' (CDIAL 9090)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C155-kobji]
 <!-- hl-knowledge: introduces=[BN-LEX-C155-SVASTHYO155-02]; assesses=[] -->
 
 **ফুসফুস** — *phusphus* — "a lung".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফুসফুস** (*phusphus*) matches Sanskrit *phupphusa*, "lungs", which CDIAL calls probably imitative; the Bengali word inherited from it is *phõprā*, "lungs" (CDIAL 9090). CDIAL also lists a Bengali *phusphus*, "whispering", under *\*phuss*, "hissing" (CDIAL 9099).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

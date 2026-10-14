@@ -14,7 +14,8 @@ romanization: "shāoyār"
 concept_tag: BN-JINIS201-SHAOYAR
 prerequisites: [BN-C200-sapholyo, BN-C201-besin]
 sounds: []
-roots: []
+roots: [english-shower]
+etymology_hook: "shāoyār ← English shower"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C201-besin]
 <!-- hl-knowledge: introduces=[BN-LEX-C201-JINIS201-02]; assesses=[] -->
 
 **শাওয়ার** — *shāoyār* — "a shower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শাওয়ার** (*shāoyār*) is a loan from English *shower*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

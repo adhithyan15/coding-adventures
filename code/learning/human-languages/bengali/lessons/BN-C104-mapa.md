@@ -14,7 +14,8 @@ romanization: "māpā"
 concept_tag: BN-VERB-MAPA
 prerequisites: [BN-C103-mara, BN-C103-bhag]
 sounds: []
-roots: []
+roots: [indo-aryan-mapyate]
+etymology_hook: "māpā ← *māpyate 'is measured', a reconstructed form; a tadbhava (CDIAL 10054)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C103-bhag]
 <!-- hl-knowledge: introduces=[BN-LEX-C104-ACT104-01]; assesses=[] -->
 
 **মাপা** — *māpā* — "to measure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাপা** (*māpā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*māpyate*, "is measured", a form CDIAL reconstructs from its descendants (CDIAL 10054).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

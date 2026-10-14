@@ -14,7 +14,8 @@ romanization: "pônchāsh"
 concept_tag: BN-NUMBERS87-PONCHASH
 prerequisites: [BN-C87-tirish, BN-C87-chollish]
 sounds: []
-roots: []
+roots: [sanskrit-pancashat]
+etymology_hook: "pônchāsh ← Sanskrit pañcāśat 'fifty', a tadbhava (CDIAL 7682)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C87-chollish]
 <!-- hl-knowledge: introduces=[BN-LEX-C87-NUMBERS87-04]; assesses=[] -->
 
 **পঞ্চাশ** — *pônchāsh* — "fifty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পঞ্চাশ** (*pônchāsh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pañcāśat*, "fifty" (CDIAL 7682).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

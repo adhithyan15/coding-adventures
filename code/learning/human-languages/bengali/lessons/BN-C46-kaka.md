@@ -14,7 +14,8 @@ romanization: "kākā"
 concept_tag: BN-FAMILY46-KAKA
 prerequisites: [BN-C46-dadu, BN-C46-didima]
 sounds: []
-roots: []
+roots: [indo-aryan-kakka]
+etymology_hook: "kākā ← *kākka 'senior male relative', which CDIAL takes from Dravidian (CDIAL 2998)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C46-didima]
 <!-- hl-knowledge: introduces=[BN-LEX-C46-FAMILY46-03]; assesses=[] -->
 
 **কাকা** — *kākā* — "an uncle (father's brother)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাকা** (*kākā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kākka*, "senior male relative", a form CDIAL reconstructs from its descendants (CDIAL 2998). CDIAL takes it from Dravidian, comparing Kannada *kakka*, "uncle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

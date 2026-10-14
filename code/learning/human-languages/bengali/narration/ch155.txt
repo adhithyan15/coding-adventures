@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a headache, then the Bengali for a stoma
 You'll want to know: কবজি.
 কবজি — kôbji — "a wrist".
 
+The word, taken apart.
+The origin of কবজি (kôbji) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "wrist" finds only Bengali rākhi, "thread worn round the wrist" (CDIAL 10551), a different word.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a stomach ache, then the Bengali for a w
 
 You'll want to know: ফুসফুস.
 ফুসফুস — phusphus — "a lung".
+
+The word, taken apart.
+ফুসফুস (phusphus) matches Sanskrit phupphusa, "lungs", which CDIAL calls probably imitative; the Bengali word inherited from it is phõprā, "lungs" (CDIAL 9090). CDIAL also lists a Bengali phusphus, "whispering", under phuss, "hissing" (CDIAL 9099).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a wrist, then the Bengali for a lung.
 You'll want to know: কিডনি.
 কিডনি — kiḍni — "a kidney".
 
+The word, taken apart.
+কিডনি (kiḍni) is a loan from English kidney.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a lung, then the Bengali for a kidney.
 You'll want to know: ব্যায়াম.
 ব্যায়াম — bæyām — "exercise".
 
+The word, taken apart.
+ব্যায়াম (bæyām) is Sanskrit vyāyāma, "exertion", taken over whole as a learned loan, a tatsama (CDIAL 12209).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a kidney, then the Bengali for exercise.
 
 You'll want to know: স্বাস্থ্য.
 স্বাস্থ্য — svāsthyô — "health".
+
+The word, taken apart.
+স্বাস্থ্য (svāsthyô) is Sanskrit svāsthya, "health, well-being", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
