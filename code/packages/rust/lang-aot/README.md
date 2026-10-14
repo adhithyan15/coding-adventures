@@ -16,8 +16,8 @@ with finite static operands and pure supported standard-function
 transforms, plus the exact bounded `entier(sign(...))` transform. Unrestricted
 runtime `entier`, globals, captured locals, and other real-name branches remain
 conservative. A specialised real name formal may carry that exact transform
-through power composition and up to six supported built-in real transforms. It may
-also carry the same unaliased
+through power composition and up to six supported built-in numeric transforms,
+including integer-valued `sign`. It may also carry the same unaliased
 local-rooted proof through a selector, including unary signs around the exact
 bounded transform, additive composition with finite static terms, and
 multiplication or division of that additive form by finite static terms. A

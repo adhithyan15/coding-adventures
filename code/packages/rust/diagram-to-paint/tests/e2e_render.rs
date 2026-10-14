@@ -3573,6 +3573,17 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.theme.fontFamily")),
                     Some(&"Helvetica Neue".to_string()));
             }
+            if fixture_name == "theme-edge-label-variables" {
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dbeafe")
+                        && rect.stroke.is_none() && rect.width == 104.0 && rect.height == 22.0
+                )), "edgeLabelBackground must lower behind the edge label");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(23, 37, 84)")
+                )), "textColor must lower to the themed edge label glyph run");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.theme.edgeLabelBackground")),
+                    Some(&"#dbeafe".to_string()));
+            }
             if fixture_name == "node-typography-styles" {
                 assert!(layout.nodes[0].width > layout.nodes[1].width,
                     "larger bold text must reserve more backend-neutral node width");
