@@ -34,8 +34,14 @@ arbitrary-support/floating P2 and whole456 acceptance remain OPEN.
 
 Sole Closure/sharedPR17288 remains unpushed here, published82209953/autoOFF.
 Fresh publication audit, exact-head hosted native3OS/requiredCI/review/conflict
-and actual merge proof/cleanup remain required. Docs-only retention review
-pending. Full Closure parity/CV04b/output-byte source/all folding-renaming-
+and actual merge proof/cleanup remain required. Docs-only ae2 retention review PASS (446-to-449 complete
+eight-package objects; code/tests/config/BUILD exactcf), SHA
+14907d63f67820f29a41a640f4137348384b8a04a7ceb75dc518a631fcca081b.
+Actual doc shards/lessons1215/whitespace pass; original c26 malformed-shard
+failure retained. Latest audited/fetched main 5ff75a40aceb8cdf1cf53202bcc2e510483880ba
+adds25 producer curriculum paths and no Rust changes; integration pending.
+Next bounded selection: checked Swimlane rank arithmetic, spec-first only,
+red controls/implementation pending. Full Closure parity/CV04b/output-byte source/all folding-renaming-
 inlining-motion-merging-deletion lineage/pass-sweep/identity/span evidence OPEN.
 Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/checkout/target/
 receipts untouched and unpolled. Deliver first, genuine final-source Miri later.
