@@ -296,6 +296,8 @@ pub fn try_layout_swimlane(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimlane
         ("diagramPadding", diagram.flowchart_config.diagram_padding),
         ("padding", diagram.flowchart_config.padding),
         ("titleTopMargin", diagram.flowchart_config.title_top_margin),
+        ("subGraphTitleMargin.top", diagram.flowchart_config.subgraph_title_margin_top),
+        ("subGraphTitleMargin.bottom", diagram.flowchart_config.subgraph_title_margin_bottom),
     ] {
         if value.is_some_and(|v| !v.is_finite() || !(0.0..=diagram_ir::MAX_SWIMLANE_FLOWCHART_SPACING).contains(&v)) {
             return Err(SwimlaneLayoutError::UnsupportedSpacing { field });
@@ -365,12 +367,27 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
     }).max().unwrap_or(0);
     // Accepted node padding may exceed the ordinary lane extent. Reserve the
     // same cross-axis inset for height as for width before centering nodes.
-    let lane_cross = if horizontal_flow { (node_height + 18.0).max(150.0) } else { (rank_slot_width + 18.0).max(150.0) }
+    // Each nested title gets its own margin band. Horizontal centering already
+    // contributes30 per depth; vertical cursors and empty-group bounds do not.
+    // The explicit zero branch preserves every pre-margin layout exactly.
+    let title_margin = subgraph_title_margin_top + subgraph_title_margin_bottom;
+    let cross_title_reserve = if title_margin > 0.0 {
+        title_margin * (max_group_depth + 1) as f64
+    } else { 0.0 };
+    let nested_title_reserve = if title_margin > 0.0 {
+        (title_margin + 30.0) * max_group_depth as f64
+    } else { 0.0 };
+    let empty_title_reserve = if title_margin > 0.0 {
+        title_margin + nested_title_reserve
+    } else { 0.0 };
+    let lane_cross = if horizontal_flow { (node_height + 18.0).max(150.0) + cross_title_reserve } else { (rank_slot_width + 18.0).max(150.0) }
         + 60.0 * max_group_depth as f64;
     let lane_along = if cross_lane_ranks.is_some() && horizontal_flow {
-        lane_header + rank_count as f64 * rank_slot_width + max_rank as f64 * node_gap + 40.0
+        let tail = if title_margin > 0.0 { (20.0 + 2.0 * outer_padding).max(40.0) } else { 40.0 };
+        lane_header + rank_count as f64 * rank_slot_width + max_rank as f64 * node_gap + tail
     } else if cross_lane_ranks.is_some() {
-        lane_header + rank_count as f64 * node_height + max_rank as f64 * node_gap + 28.0
+        let tail = if title_margin > 0.0 { (20.0 + outer_padding).max(28.0) } else { 28.0 };
+        lane_header + rank_count as f64 * node_height + max_rank as f64 * node_gap + tail + nested_title_reserve
     } else if horizontal_flow {
         diagram.lanes.iter().map(|lane| {
             let widths = lane.node_ids.iter().filter_map(|node_id| {
@@ -391,7 +408,7 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
                 link_gaps.units(&pair[0], &pair[1]) as f64
             ).sum::<f64>();
             lane_header + lane.node_ids.len().max(1) as f64 * node_height
-                + (gap_units + 1.0) * node_gap + 28.0
+                + (gap_units + 1.0) * node_gap + 28.0 + nested_title_reserve
         }).fold(0.0, f64::max)
     };
     let (width, height) = if horizontal_flow {
@@ -446,7 +463,7 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
             member_ids.reverse();
         }
         let mut horizontal_cursor = x + lane_header + 20.0;
-        let mut vertical_cursor = y + lane_header + 20.0;
+        let mut vertical_cursor = y + lane_header + 20.0 + nested_title_reserve;
         for (node_index, node_id) in member_ids.iter().enumerate() {
             let Some(node) = diagram.nodes.iter().find(|node| &node.id == node_id) else {
                 continue;
@@ -467,18 +484,18 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
             let (node_x, node_y) = if let (true, Some(rank)) = (horizontal_flow, rank) {
                 (
                     x + lane_header + 20.0 + rank as f64 * (rank_slot_width + node_gap),
-                    y + (lane_cross - resolved_node_height) / 2.0,
+                    y + (lane_cross - resolved_node_height + cross_title_reserve) / 2.0,
                 )
             } else if let Some(rank) = rank {
                 (
                     x + (lane_cross - resolved_node_width) / 2.0,
                     y + lane_header + 20.0 + rank as f64 * (node_height + node_gap)
-                        + (node_height - resolved_node_height) / 2.0,
+                        + (node_height - resolved_node_height) / 2.0 + nested_title_reserve,
                 )
             } else if horizontal_flow {
                 (
                     horizontal_cursor,
-                    y + (lane_cross - resolved_node_height) / 2.0,
+                    y + (lane_cross - resolved_node_height + cross_title_reserve) / 2.0,
                 )
             } else {
                 (
@@ -515,7 +532,8 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
         content.extend(groups.iter().filter(|child| child.parent_id.as_deref() == Some(group.id.as_str()))
             .map(|child| (child.x, child.y, child.x + child.width, child.y + child.height)));
         let (mut left, mut top, mut right, mut bottom) = content.first().copied().unwrap_or((
-            lane.x + 20.0, lane.y + 42.0, lane.x + 120.0, lane.y + 92.0,
+            lane.x + 20.0, lane.y + 42.0 + empty_title_reserve,
+            lane.x + 120.0, lane.y + 92.0 + empty_title_reserve,
         ));
         for (x1, y1, x2, y2) in content.into_iter().skip(1) {
             left = left.min(x1); top = top.min(y1); right = right.max(x2); bottom = bottom.max(y2);
