@@ -51,6 +51,7 @@
     "metadata-entities",
     "inline-node-styles",
     "node-typography-styles",
+    "node-corner-radius-styles",
     "named-node-classes",
     "semicolon-class-statements",
     "node-class-decorators",

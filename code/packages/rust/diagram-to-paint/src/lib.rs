@@ -1387,11 +1387,11 @@ where
                 fill: Some(fill.clone()),
                 stroke: Some(stroke.clone()),
                 stroke_width: Some(stroke_width),
-                corner_radius: Some(match node.shape {
+                corner_radius: Some(node.style.corner_radius.unwrap_or(match node.shape {
                     DiagramShape::Rect | DiagramShape::Subroutine => 2.0,
                     DiagramShape::Cylinder => 12.0,
                     _ => 18.0,
-                }),
+                })),
                 stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),

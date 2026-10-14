@@ -3559,6 +3559,18 @@ line "Target" [35, 50, 68, 82]"##,
                         && run.fill.as_deref() == Some("rgb(20, 83, 45)")
                 )), "direct typography must lower to styled glyph runs");
             }
+            if fixture_name == "node-corner-radius-styles" {
+                assert_eq!(layout.nodes[0].style.corner_radius, Some(16.0));
+                assert_eq!(layout.nodes[1].style.corner_radius, Some(4.0));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.corner_radius == Some(16.0)
+                        && rect.fill.as_deref() == Some("#fef3c7")
+                )), "class corner radius must lower to backend-neutral rectangle paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.corner_radius == Some(4.0)
+                        && rect.fill.as_deref() == Some("#dcfce7")
+                )), "direct corner radius must lower to backend-neutral rectangle paint");
+            }
             if fixture_name == "cloud-and-bang-attribute-shapes" {
                 assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
                     PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. }))

@@ -203,6 +203,10 @@
       "source": "swimlane-beta LR\nsubgraph Review\n  emphasized[Typographic approval step]\n  direct[Typographic delivery step]\nend\nclassDef emphasis font-size:22px,font-weight:bold,font-style:italic,font-family:\"Helvetica Neue\",color:#7c2d12\nclass emphasized emphasis\nstyle direct font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d\nemphasized --> direct"
     },
     {
+      "name": "node-corner-radius-styles",
+      "source": "swimlane-beta LR\nsubgraph Review\n  rounded[Class rounded]\n  compact[Direct compact]\nend\nclassDef soft fill:#fef3c7,stroke:#b45309,rx:16px,ry:16px\nclass rounded soft\nstyle compact fill:#dcfce7,stroke:#166534,rx:4px,ry:4px\nrounded --> compact"
+    },
+    {
       "name": "named-node-classes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  review[Review]\n  done[Done]\nend\nclass request,review accent\nclassDef default fill:#f8fafc,stroke:#64748b\nclassDef accent fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nstyle review fill:#dcfce7,stroke:#166534\nrequest --> review --> done"
     },

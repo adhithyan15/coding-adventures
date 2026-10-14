@@ -2049,6 +2049,19 @@ fn swimlane_node_typography_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_node_corner_radii_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  rounded[Class rounded]\n  compact[Direct compact]\nend\nclassDef soft fill:#fef3c7,stroke:#b45309,rx:16px,ry:16px\nclass rounded soft\nstyle compact fill:#dcfce7,stroke:#166534,rx:4px,ry:4px\nrounded --> compact",
+    ).expect("Swimlane node corner radii should parse");
+
+    assert_eq!(diagram.nodes[0].style.corner_radius, Some(16.0));
+    assert_eq!(diagram.nodes[1].style.corner_radius, Some(4.0));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph A\n  one[One]\nend\nstyle one rx:4px,ry:8px"
+    ).is_err());
+}
+
+#[test]
 fn swimlane_named_classes_resolve_into_semantic_styles() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclass request accent\nclassDef default fill:#f8fafc,stroke:#64748b\nclassDef accent fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nstyle request fill:#dcfce7\nrequest --> done",
