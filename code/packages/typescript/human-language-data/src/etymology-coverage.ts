@@ -230,14 +230,19 @@
  *
  * LINEAR TIME
  *
- * Every lesson is visited once and every pattern is tested once per block.
- * The only repeated GROUP in any pattern, the period qualifiers, repeats at
- * most three times, and every alternative inside it starts with a fixed
- * word, so no input -- however hostile -- can make a pattern backtrack
- * catastrophically. The loose signals are fixed phrases with bounded runs
- * between them (`is-english` reads at most 60 characters of headword), and
- * they are tried only on "taken apart" blocks. HTML comments are cut out with an indexOf walk rather
- * than a lazy regex, for the same reason.
+ * Every lesson is visited once, and every pattern is tested at most twice
+ * per block: once for the visible count, once more for the empty-block
+ * count. The only repeated GROUP in any pattern, the period qualifiers,
+ * repeats at most three times, and every alternative inside it starts with a
+ * fixed word, so no input -- however hostile -- can make a pattern backtrack
+ * catastrophically. The loose signals nest nothing else (`cousin-of` reuses
+ * the period qualifiers): each unbounded run -- `\s+`, and the `\w+` in
+ * `goes-back-to`'s lookahead -- is a single quantifier followed by fixed
+ * text, so a failed attempt costs one scan of that run, and `is-english`
+ * reads at most 60 characters of headword. Measured: hostile inputs of 100k,
+ * 200k and 400k characters take time in proportion to their length. HTML
+ * comments are cut out with an indexOf walk rather than a lazy regex, for
+ * the same reason.
  *
  * REPORT-ONLY, AND A RATCHET
  *
@@ -498,8 +503,8 @@ export function hasVisibleEtymology(lesson: ParsedLesson): boolean {
  * it must skip the track's own language, like rule 3's verbless shapes.
  */
 export interface TakenApartOriginSignal {
-  name: string;
-  pattern: RegExp | ((language: string) => RegExp);
+  readonly name: string;
+  readonly pattern: RegExp | ((language: string) => RegExp);
 }
 
 function signalPattern(signal: TakenApartOriginSignal, language: string): RegExp {
@@ -565,12 +570,17 @@ function donorWordPattern(language: string): RegExp {
 }
 
 /**
- * Every loose signal, in the order the HL24 section 9.4 table lists them.
+ * Every loose signal, grouped by what it reads: how the word entered the
+ * language, a verb of descent, kin or a donor language, a cited source, an
+ * explicit "unknown", a starred reconstruction. The HL24 section 9.4 table
+ * lists the same signals, in a different order.
  *
- * Each pattern is a fixed phrase with at most a bounded run of emphasis
- * markers or whitespace in it, so none can backtrack catastrophically; the
- * one lookahead (`goes-back-to`) is tried only after its fixed phrase has
- * matched.
+ * Each pattern is fixed words joined by single quantifiers -- whitespace,
+ * emphasis markers, or a 60-character cap in `is-english` -- and nothing
+ * nested but `cousin-of`'s period qualifiers, bounded at three, so none can
+ * backtrack catastrophically. The one lookbehind
+ * (`a-loan`) reads a single character; the one lookahead (`goes-back-to`) is
+ * tried only after its fixed phrase has matched, and scans one word.
  */
 export const TAKEN_APART_ORIGIN_SIGNALS: readonly TakenApartOriginSignal[] = [
   // How the word entered the language.

@@ -343,7 +343,9 @@ const SIGNAL_FIXTURES: Record<string, { fires: SignalCase[]; rejects: SignalCase
   },
   "source-tag": {
     fires: ["(DEDR 3301)", "(Lewis & Short)", "(Lane, s.v.)", "(EtymDB 2.1)"],
-    rejects: ["Keep to the slow lane."],
+    // Case-sensitive, and the name must end there: a lowercase lane or a
+    // longer word after the parenthesis is not Lane's Lexicon.
+    rejects: ["Keep to the slow lane.", "(lane closed)", "(Laneway entrance)"],
   },
   "source-named": {
     fires: ["DEDR 3376 lists Malayalam *tūṅṅuka*.", "Vasmer derives it from *руб*.", "its origin is not recorded in EtymDB 2.1."],
