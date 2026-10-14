@@ -101,6 +101,7 @@
     "flowchart-wrapping-width",
     "flowchart-node-padding",
     "flowchart-title-top-margin",
+    "flowchart-subgraph-title-margins",
     "cross-lane-rank-constraints",
     "rank-crossing-optimization"
   ]

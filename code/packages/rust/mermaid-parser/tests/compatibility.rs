@@ -2681,6 +2681,25 @@ fn swimlane_flowchart_title_margin_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_flowchart_subgraph_title_margins_lower_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph Review\n  first[Review]\nend";
+    let front_matter = parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    subGraphTitleMargin:\n      top: 12\n      bottom: 18\n---\n{source}"
+    )).expect("Flowchart subgraph title margins should parse from Swimlane front matter");
+    let directive = parse_swimlane(&format!(
+        "%%{{init: {{\"flowchart\": {{\"subGraphTitleMargin\": {{\"top\": 8, \"bottom\": 14}}}}}}}}%%\n{source}"
+    )).expect("Flowchart subgraph title margins should parse from a Swimlane init directive");
+
+    assert_eq!(front_matter.flowchart_config.subgraph_title_margin_top, Some(12.0));
+    assert_eq!(front_matter.flowchart_config.subgraph_title_margin_bottom, Some(18.0));
+    assert_eq!(directive.flowchart_config.subgraph_title_margin_top, Some(8.0));
+    assert_eq!(directive.flowchart_config.subgraph_title_margin_bottom, Some(14.0));
+    assert!(parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    subGraphTitleMargin:\n      top: -1\n---\n{source}"
+    )).is_err(), "negative Flowchart subgraph title margins must be rejected");
+}
+
+#[test]
 fn swimlane_flowchart_curve_config_lowers_to_semantic_ir() {
     use diagram_ir::SwimlaneEdgeCurve;
 

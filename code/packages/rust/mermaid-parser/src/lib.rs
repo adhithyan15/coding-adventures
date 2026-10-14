@@ -6565,7 +6565,8 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
 
 fn parse_swimlane_flowchart_config(source: &str) -> Result<diagram_ir::SwimlaneFlowchartConfig, ParseError> {
     let front_matter = mermaid_front_matter_section(source, &["config", "flowchart"]);
-    let config_source = mermaid_directive_object(source, "flowchart")
+    let directive = mermaid_directive_object(source, "flowchart");
+    let config_source = directive
         .or(front_matter.as_deref()).unwrap_or("");
     let value = |name: &str| {
         quadrant_directive_value(config_source, name).or_else(|| config_source.lines().find_map(|line| {
@@ -6573,8 +6574,8 @@ fn parse_swimlane_flowchart_config(source: &str) -> Result<diagram_ir::SwimlaneF
             (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
         })).filter(|value| !value.is_empty())
     };
-    let parse = |name: &str| -> Result<Option<f64>, ParseError> {
-        let Some(value) = value(name) else { return Ok(None); };
+    let parse_number = |value: Option<String>, name: &str| -> Result<Option<f64>, ParseError> {
+        let Some(value) = value else { return Ok(None); };
         let parsed = value.parse::<f64>().map_err(|_| swimlane_error(
             1, format!("Swimlane flowchart {name} must be a non-negative number"),
         ))?;
@@ -6588,6 +6589,21 @@ fn parse_swimlane_flowchart_config(source: &str) -> Result<diagram_ir::SwimlaneF
         }
         Ok(Some(parsed))
     };
+    let parse = |name: &str| parse_number(value(name), name);
+    let margin_front_matter = mermaid_front_matter_section(
+        source, &["config", "flowchart", "subGraphTitleMargin"],
+    );
+    let margin_source = directive.and_then(|flowchart|
+        mermaid_directive_object(flowchart, "subGraphTitleMargin")
+    ).or(margin_front_matter.as_deref()).unwrap_or("");
+    let margin_value = |name: &str| {
+        quadrant_directive_value(margin_source, name).or_else(|| {
+            margin_source.lines().find_map(|line| {
+                let (key, value) = line.trim().split_once(':')?;
+                (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        }).filter(|value| !value.is_empty())
+    };
     Ok(diagram_ir::SwimlaneFlowchartConfig {
         node_spacing: parse("nodeSpacing")?,
         rank_spacing: parse("rankSpacing")?,
@@ -6596,6 +6612,12 @@ fn parse_swimlane_flowchart_config(source: &str) -> Result<diagram_ir::SwimlaneF
         wrapping_width: parse("wrappingWidth")?.filter(|value| *value > 0.0),
         padding: parse("padding")?,
         title_top_margin: parse("titleTopMargin")?,
+        subgraph_title_margin_top: parse_number(
+            margin_value("top"), "subGraphTitleMargin.top",
+        )?,
+        subgraph_title_margin_bottom: parse_number(
+            margin_value("bottom"), "subGraphTitleMargin.bottom",
+        )?,
     })
 }
 
