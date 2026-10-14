@@ -69,3 +69,10 @@ also include their actual outer padding: horizontal tail at least20+2*padding,
 vertical tail at least20+padding, retaining larger existing tails. This keeps
 node rectangles inside their lane after the420 canvas minimum stops dominating.
 All arithmetic remains bounded by existing finite scalar/depth/node limits.
+
+Actual candidateb81 passes admission and332/336 geometry cells. The remaining
+four horizontal unranked grouped cap cells expose a two-unit right clipping:
+groups clamp their right boundary six units inside the lane, while the old48
+tail leaves only four beyond the last node once the canvas floor is exceeded.
+For nonzero margins, include this six-unit group inset in the ranked tails and
+the horizontal unranked tail when groups exist. Keep the exact zero path.
