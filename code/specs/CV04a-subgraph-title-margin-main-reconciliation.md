@@ -40,3 +40,17 @@ parity, byte/source joins, stable identities, all transformation lineage,
 CV04b, generic formatter range-proof composition and general floating resource
 accounting remain open. Frozen Miri source/inputs/target/receipts stay untouched;
 delivery precedes genuine final-source Miri validation.
+
+## Demonstrated finite geometry repair contract
+
+Independent formula review identifies two accepted finite failures: horizontal
+top65536 moves the lane title outside its unchanged-height lane/canvas; top100
+can move group.top below its member nodes. Preserve genuine red receipts for
+these controls before repair. Valid margins must reserve vertical space for the
+lane title and each nested group title, including empty groups, in ranked and
+unranked layouts and all directions. The complete default/zero layout remains
+exact. Require finite canvas/lane/group/node bounds, title-band enclosure and
+non-overlap with group content, exact stable IDs/styles/config/input retention,
+and unchanged existing resource guards. A conservative global depth reserve is
+permitted; it must be reflected in canvas/lane/node/group geometry together.
+No extra accepted-margin restrictions or reduced production capacities.
