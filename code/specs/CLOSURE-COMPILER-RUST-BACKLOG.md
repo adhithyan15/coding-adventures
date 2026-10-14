@@ -54,6 +54,14 @@ reportSHA 1f47734f0ff79c89367f95c348faa31afc8b2705f2d6713d601276d0be2404a1. All 
 Next bounded implementation: repair demonstrated varied-support general-hop
 work debt, preserving rounded predicate/output/collector/limits and full cost
 accounting. Full arbitrary-floating/general resource acceptance remains open.
+Selected spec CV04a-integer-common-origin-hop-work.md (46c674be): exact integer
+common-left rational inversion tree with conservative query/prior-right bounds.
+Independent initial sign proof PASS, but slope-only output-sensitive work was
+WITHHELD: the reviewed (0,i)->(4N+i,i+1) family has quadratic outside-right
+candidates and zero crossings. Preserve it as a new pre-production control;
+revised endpoint design review is pending. No new tests/production or actual32
+PASS yet; C false positives are counted separately from final K. Original32red
+receipt/tests and all8192/limit/whole-scene controls remain unchanged.
 
 SolePR17288 remains prior published82209953a0909dfaa66c8065ee6f163d7478c2d1/conflicting/failedCI/autoOFF.
 No new push/merge/cleanup; re-audit live main/openPR/backlog/epic each resume.
