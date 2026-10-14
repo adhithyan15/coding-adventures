@@ -1,0 +1,74 @@
+# CV04a: bounded adjacent lane-ordering work
+
+## Source and validation boundary
+
+Base a20c12ac29538863807209b4ccb935950064b2be retains the exact reviewed
+quadruple-selector/typography package contents from f64d2188, integrated main
+fdf1a247. Its unchanged LANG production11/native48 validation remains running
+in the original isolated checkout and separate target; no changes there.
+This second isolated checkout and its separate ordering target preserve those
+inputs. Latest audited main1cf6e05e has48 additional paths, including Mosaic
+source changes; reconciliation and final current-head gates remain pending.
+Keep one active implementation PR17288; this is local preparation for that PR.
+
+## Existing behavior and resource problem
+
+Automatic ordering starts from declared lane order and eight seeded shuffles.
+Each start tries adjacent swaps for at most L passes, accepts only strictly
+smaller weighted-distance cost and stops an unchanged pass. Across starts,
+minimum cost wins, then minimum distance from source order; ties retain the
+earlier result. Seeds use the existing sorted weighted signature and UTF16 hash.
+Invisible, unknown and within-lane edges keep their existing exclusion rules;
+reversed and repeated visible edges contribute to the same undirected weight.
+
+Every present trial rebuilds positions and visits every weighted pair. A dense
+16-lane equal-weight graph has no improving swaps but still repeats those scans.
+Measure actual weighted-edge visits, not elapsed time. First instrument the
+existing cost path under cfg(test), and observe the new counted control fail.
+Do not increase its bound after seeing the failure.
+
+## Compatible delta evaluation
+
+For a unique-lane permutation, initialize each lane's balance as weight to lanes
+on its left minus weight to lanes on its right. For adjacent u,v in that order,
+delta = balance(u) - balance(v) + 2*weight(u,v). A retained swap changes only
+balance(u) += 2*weight(u,v), balance(v) -= 2*weight(u,v). Rejecting a swap leaves
+order, balances and cost untouched. Build pair weights once per start with
+borrowed IDs; never rescan all weighted pairs for a trial.
+
+Preserve nine starts, seeds, pass count, exact costs, chosen order and tie behavior.
+Use checked signed arithmetic for balances/deltas and checked cost arithmetic
+before comparisons/conversions. An unrepresentable cost must fail closed instead
+of wrapping into a smaller score. No new production cap, unsafe code or dependency
+is required. Canonical authored subgraphs reject duplicate lane IDs already;
+preserve existing behavior for malformed direct IR with a non-bijective order
+through the retained full-cost path, and explicitly exclude it from the optimized
+unique-lane work claim. Keep that parser refusal and test fallback equivalence.
+
+Three bounded weighted-pair initialization visits per start (initial cost,
+balances and pair index) give at most27W visits for nine starts; trial lookups
+take logarithmic pair-index work with no weighted-pair traversal. The counted
+dense control must retain complete public layout output. This is a bounded
+ordering claim, not a bound on unrelated rank, route or arbitrary oblique work.
+
+## Exact controls and validation
+
+Retain an independent cfg(test) copy of the original full-cost algorithm, including
+seed and shuffle code. Compare complete chosen order, cost and source distance
+for every four-lane graph with pair weights0/1/2 and every initial permutation;
+include Unicode IDs, zero-edge cases, ties, duplicate/reversed/invisible edges,
+both flow axes and all four directions. Count only the actual optimized path.
+Compare full public layouts against the reference-chosen order with automatic
+ordering disabled and its metadata flag restored; verify authored parser/paint
+fixtures with line hops on/off and complete PaintScene output/metadata.
+
+Run affected hierarchy/parser/paint suites and strict all-target lint; determine
+the metadata reverse cone including dev dependencies for final acceptance.
+Independent exact-source security review is required before publication.
+Full453-cone/current-main/hostedLinux/whole final security gates remain pending.
+Base ESTree, own types and no new crates.io dependencies remain binding.
+
+Full final-source Miri **DEFERRED/PENDING**, never passed. The original frozen
+run/497inputs/checkout/receipts/target remain untouched and unpolled. Implementation
+delivery precedes genuine final-source Miri acceptance. Full Closure parity,
+output source joins and all transformation lineage remain OPEN; heartbeat ACTIVE.
