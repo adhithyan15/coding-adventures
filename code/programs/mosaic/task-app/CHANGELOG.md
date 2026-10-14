@@ -4,8 +4,10 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.5` accumulate here until the next version is
+Entries added after `task-app-v0.5.6` accumulate here until the next version is
 cut.
+
+## [0.5.6] - 2026-10-14
 
 ### Fixed — SwiftUI drag-body gaps leave the degradation report (#17481)
 

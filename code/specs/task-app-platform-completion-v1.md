@@ -237,14 +237,14 @@ rather than letting them read as silent gaps.
 
 ### Native fidelity release checkpoint
 
-**Next style item — #17481: SwiftUI drag-body spacing reports.** Both
+**Completed in #17483 — #17481: SwiftUI drag-body spacing reports.** Both
 `HostDraggable` and `HostDropTarget` already construct a vertical stack with
 authored spacing. Recognize those constructors in the gap reporter, requiring
 every occurrence of a shared part to consume the property. Unsupported values
 and reuse on non-spacing primitives must remain reported. Verify generated
 TaskApp before retiring its four gap allowances. Fresh package-expanded
 generation measures 59 style drops and no gap drops, down from 63; native
-runtime generation and Swift compilation remain required in macOS CI.
+runtime generation and Swift compilation passed in the macOS release CI lane.
 Drag callbacks and native
 behavior are unchanged; this is reporting reconciliation.
 
@@ -268,12 +268,16 @@ behavior are unchanged; this is reporting reconciliation.
     Components, and Paint remain CI-only, while signing, notarization, and
     installers remain tracked by #13977.
 
-**Next release checkpoint — P1 [#17469](https://github.com/adhithyan15/coding-adventures/issues/17469):
-publish `task-app-v0.5.5`.** The native lifecycle gates are complete; this
-compatible patch rolls forward the Qt shadow reporting fix (#17386) and XAML
-seven-column calendar lowering (#17394). Validate the preparation PR through
-the existing release payload matrix, then publish from main and audit the
-immutable tag, source manifest, checksums, and coverage notes. Static HTML,
+**Published checkpoint — [#17469](https://github.com/adhithyan15/coding-adventures/issues/17469):
+`task-app-v0.5.5`.** Published from #17470 and audited: immutable tag and
+manifest match the source commit, all twelve checksum entries match GitHub
+asset digests, and the existing artifact coverage and limitations are retained.
+
+**Next release checkpoint — P1 [#17491](https://github.com/adhithyan15/coding-adventures/issues/17491):
+publish `task-app-v0.5.6`.** Roll forward the compatible SwiftUI drag-body
+gap reporting correction (#17483). This corrects diagnostics and tightens the
+style regression gate; emitted drag behavior is unchanged. Validate the existing
+release matrix, publish from main, and audit the immutable assets. Static HTML,
 Web Components, and Paint remain CI-only; signing and installers remain #13977.
 
 ### Tier C — reach, stated honestly
