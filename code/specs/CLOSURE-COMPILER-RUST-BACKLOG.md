@@ -3,46 +3,48 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a current-main reconciliation -->
-October14 reconciliation: integrated audited main7b6da667; native source
-`76d54e429f81273cc644c7548797984a7167d8a5` in isolated staging. Main now includes quintuple name
-actuals, edge typography/corners, Mosaic and Windows host imports. Complete
-closed proof preserves3721 pure import objects,18 overlaps and130 owned objects;
-all376 registry name/version/source/checksum identities remain unchanged.
+October14: source76/main7b6 native77435 actualEXIT0:4936PASS/289targets,
+0FAIL/3existing ignores after excluding60 repeated focus tests. All74 rows,
+strict56/docs and unchanged11 production BUILD commands/48 native roster pass;
+real isolated WinUI build/launch/interaction and worker callbacks pass. Receipts
+preserve the earlier85/894/d49/ee50 failures; no proxy native acceptance.
 
-Original9455 actualEXIT1 at85: nonLANG55 4606PASS/1FAIL/176targets/two existing
-ignores; WinUI used the default persistent profile. Child-only isolated profile
-retains every native assertion. Original87820 actualEXIT1 at894: 4608/1/176,
-same ignores; real WinUI builds/launches/completes interaction, but Synology's
-fixed20ms failure test stops before its callback. Seven related worker fixtures
-now await the Release/Acquire failure callback under five seconds before exact
-error/stop/join assertions. Native76 daemon focus54/1 PASS; full runner77435
-RUNNING (full56 changed-main cone, native40 paired programs/upstream, exact11
-production BUILD/48 native roster, strict56/docs). Never infer whole acceptance.
+Integer two-support hop repair native source `9a1f4e0ff3c5880489958b22aaeb6801c385e9e1`:
+actual5925 EXIT0, full paint/layout/parser619PASS/10targets/0FAIL/0ignore,
+strict3/lessons/whitespace pass;3 repeated focus tests excluded.48 empty-work
+scenes cover32..8192 unique geometries, both axes/orientations/hop modes, with
+one original predicate call each.8192 uses286690 counted index work versus
+unchanged7864320 bound. Authored32/64/256 arc/gap fixtures assert exact integer
+endpoints and complete scenes; independent leaf AVL invariants and unchanged
+original crossing collector retain exact IDs/t/point bits, duplicates and
+fallback invalidation. All108 pre-existing paint tests are retained. Original
+red77 compiles then fails496 predicates at32;834 strict type failure and a038
+sole metadata container mismatch remain failed receipts. No limit/lint weakening.
 
-Exact same-root depth controls PASS at894 (two tests plus strict compiler), and
-repeat at76. Five layers accept all true/false direct/assigned cells; assigned
-sixth source gives Type/formatter refusal, direct sixth source gives Parse135.
-Public compile_ast paired5/6 checks both exact relay replacements/call counts/
-roots and semantic refusal for all four cells. Cloned positions are excluded
-from source-map/provenance evidence. The earlier d49/ee50 parser/assertion
-failures remain failed receipts. Edge controls compare complete font-query/
-glyph traces and every ordered PaintRect field with specific numeric refusals.
-Scoped security85/894/76 PASS/no introduced findings; whole final review pending.
+Narrow eligible integer coordinates abs<=2^24 sharing two x or y supports use
+own safe AVL trees; original f64 predicate/six-unit cuts/routes/styles/markers/
+occurrence order remain. General arbitrary-support/floating candidate work is
+WITHHELD/OPEN, including its P2 assessment. Scoped exact-head security is a
+separate required receipt; no whole final-source security acceptance inferred.
+Affected reverse consumer cone is diagram-to-paint only (including dev);
+layout/parser are also tested. Earlier native76 is source-attributed and does
+not accept the changed renderer or latest-main imports by itself.
 
-Fresh delivery metadata plan43seeds/456affected includesdev, not native approval.
-Distinct noncrossing oblique segments still cause G(G-1)/2 empty predicates;
-two-support/near-degeneracy-safe repair and exact golden/work controls are next
-before final security. Older ordering612/10, LANG322/108 and quadruple1469/19
-remain477/a20/f64 source-attributed. Prior original failures/stages are retained.
-Sole Closure/sharedPR17288 remains published822, auto-mergeOFF; no publication,
-merge, cleanup or CV04b. Hosted Linux/required CI/review/conflict gates pending.
+Fresh audited origin/main `563ea13d194db6b6df0612dbf179f23270a44218` includes sextuple name actuals,
+shapes and theme typography; closed reconciliation and new affected native/
+security proof are pending. Sole Closure/sharedPR17288 published
+`82209953a0909dfaa66c8065ee6f163d7478c2d1`, conflict/CI failures, auto-mergeOFF. No publication/merge/
+cleanup/CV04b. Whole456 delivery/native/hosted/review/conflict gates pending.
+Current ordering/main7b6 inputs remain distinct from latest main acceptance.
 
-Base ESTree/own types/no new crates.io retained. Full parity/CV04b/output byte
-source joins/all transformation lineage and goal OPEN. Full final-source Miri
+Base ESTree/own types/no new crates.io retained. Full parity/output byte-source
+joins/all transformation lineage/CV04b/goal OPEN. Full final-source Miri
 **DEFERRED/PENDING**, never passed; frozen497inputs/run/checkout/receipts/target
-untouched/unpolled. Implementation/delivery first, genuine Miri later.
-Heartbeat ACTIVE. External current source receipt: CV04a-quintuple-main-native-
-76d54e42.json; actual run77435 must finish before changing its staging/target.
+untouched/unpolled. Delivery first, genuine final-source Miri afterward.
+Heartbeat ACTIVE. Next: retain this bounded reviewed slice, reconcile latest
+main in the isolated delivery checkout, then address the general resource gate.
+External receipts:CV04a-quintuple-main-77435-actual-terminal.json and
+CV04a-integer-hop-core-9a1f4e0f.json; actual native runs are now terminal.
 <!-- /CV04a current-main reconciliation -->
 
 <!-- CV04a BEAM heap native continuation -->

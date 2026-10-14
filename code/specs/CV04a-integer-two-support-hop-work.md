@@ -89,3 +89,12 @@ Some(empty metadata) versus the disabled scene's None. Assert both metadata
 representations explicitly, then normalize that proven sole flag before the
 unchanged complete scene comparison. Keep the failed receipt and rerun all
 affected checks; this is an oracle correction, with no renderer change.
+
+
+Actual9a1 native5925 EXIT0: focused3PASS, nonduplicated full core/parser619PASS
+in10targets, strict3/lessons/whitespace allEXIT0. The authored32/64/256 arc/gap
+family passes exact endpoints, full scenes and unchanged work bounds.48 empty
+scenes through8192 have one original predicate each;8192 counted286690 index
+work against7864320 bound. Original failed receipts remain. This validates the
+bounded integer cohort only; arbitrary supports/floating fallback and whole
+latest-main/native/security/hosted gates remain open. Miri DEFERRED/PENDING.

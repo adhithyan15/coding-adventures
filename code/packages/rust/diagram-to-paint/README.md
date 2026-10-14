@@ -107,3 +107,14 @@ occurrence. Same-axis cohorts are excluded before candidate iteration; duplicate
 geometry expands crossings back into original order/multiplicity. Counted authored
 duplicate/Cartesian controls and golden repeated-crossing commands guard this
 contract. Arbitrary unique oblique candidate work has no global sweep-line bound.
+
+
+Distinct oblique line-hop geometry has a bounded integer cohort optimization:
+all coordinates must be integral with magnitude at most2^24 and share the
+same pair of x supports or y supports. Safe own AVL trees query endpoint-order
+inversions before the unchanged crossing predicate, retaining directed geometry
+bits and each original edge/segment occurrence. A noneligible geometry
+invalidates its cohort once and retains the existing fallback. Complete scenes
+and counted index work cover both axes, orientations and hop modes through8192
+distinct segments, plus authored parser/layout scenes. The bound includes
+geometric inversions; general arbitrary-support/floating work remains open.
