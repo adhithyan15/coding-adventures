@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 52,
-  "sourceHash": "fnv1a64:99c43c18f485c9ad",
+  "sourceHash": "fnv1a64:bfce0fbec1ac4cbf",
   "lessonIds": [
     "MW-C52-baithno",
     "MW-C52-sovno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch52.txt",
   "json": "marwadi/narration/ch52.json",
-  "textHash": "fnv1a64:6baf6fda41f88eb9",
-  "jsonHash": "fnv1a64:b289759cbf0c9039",
+  "textHash": "fnv1a64:dfac4839f0df3622",
+  "jsonHash": "fnv1a64:bc4e65cf6396d0b3",
   "findings": []
 }

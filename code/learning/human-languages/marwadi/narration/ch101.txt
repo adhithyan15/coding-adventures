@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a fair, then the Marwadi for a weekly ma
 You'll want to know: यो.
 यो — yo — "this".
 
+The word, taken apart.
+CDIAL lists Hindi yah, "this", under Sanskrit eṣa, "this" (CDIAL 2530). It gives no Marwari form, so the exact path to यो (yo) is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a weekly market, then the Marwadi for th
 
 You'll want to know: इसो.
 इसो — iso — "like this, such".
+
+The word, taken apart.
+इसो (iso) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from īdṛśa, "such, like this". CDIAL lists Old Marwari iso under it (CDIAL 1611).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for this, then the Marwadi for like this.
 You'll want to know: उसो.
 उसो — uso — "like that".
 
+The word, taken apart.
+CDIAL has no entry for उसो (uso), so its history is not settled. It pairs with iso, "like this", which CDIAL lists under Sanskrit īdṛśa, "such" (CDIAL 1611).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for like this, then the Marwadi for like tha
 You'll want to know: किसो.
 किसो — kiso — "which, what kind of".
 
+The word, taken apart.
+किसो (kiso) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kīdṛśa, "of what kind". CDIAL lists Old Marwari kiso under it (CDIAL 3197).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for like that, then the Marwadi for which.
 
 You'll want to know: कुण.
 कुण — kuṇ — "who".
+
+The word, taken apart.
+कुण (kuṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaḥ punar, "who". CDIAL lists Old Marwari kuṇa under it (CDIAL 2575). It is built on kaḥ, "who", and punar, "again".
 
 What you've built.
 One more word for this chapter.

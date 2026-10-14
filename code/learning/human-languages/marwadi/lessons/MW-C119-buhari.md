@@ -14,7 +14,8 @@ romanization: "buhārī"
 concept_tag: MW-THINGS119-BUHARI
 prerequisites: [MW-C119-gilas, MW-C119-balti]
 sounds: []
-roots: []
+roots: [sanskrit-bahukara]
+etymology_hook: "buhārī ← Sanskrit bahukāra 'effecting much', a tadbhava (CDIAL 9188, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C119-balti]
 <!-- hl-knowledge: introduces=[MW-LEX-C119-THINGS119-05]; assesses=[] -->
 
 **बुहारी** — *buhārī* — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बुहारी** (*buhārī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bahukāra*, "effecting much". CDIAL gives no Marwari form in this entry (CDIAL 9188); the match is through Hindi *buhārū*. Sanskrit *bahukarī* already meant "broom"; CDIAL asks whether "sweeper" began as a joking title.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bachāvṇo"
 concept_tag: MW-VERB-BACHAVNO
 prerequisites: [MW-C107-bichhavno, MW-C108-jagavno]
 sounds: []
-roots: []
+roots: [sanskrit-vancati]
+etymology_hook: "bachāvṇo ← Sanskrit vañcati 'moves crookedly; escapes from', a tadbhava (CDIAL 11208, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C108-jagavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C108-ACT108-02]; assesses=[] -->
 
 **बचावणो** — *bachāvṇo* — "to save, to rescue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बचावणो** (*bachāvṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vañcati*, "moves crookedly; escapes from". CDIAL lists Old Marwari *vacaï* under it (CDIAL 11208). It is the causing form of "to escape": "make escape", so "save"; the Old Marwari row means "is saved".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

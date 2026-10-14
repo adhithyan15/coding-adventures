@@ -14,7 +14,8 @@ romanization: "chhurī"
 concept_tag: MW-HOME64-CHHURI
 prerequisites: [MW-C64-thali, MW-C64-chamcho]
 sounds: []
-roots: []
+roots: [sanskrit-kshura]
+etymology_hook: "chhurī ← Sanskrit kṣurī 'knife, dagger', a tadbhava (CDIAL 3727, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C64-chamcho]
 <!-- hl-knowledge: introduces=[MW-LEX-C64-HOME64-04]; assesses=[] -->
 
 **छुरी** — *chhurī* — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छुरी** (*chhurī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣurī*, "knife, dagger". CDIAL gives no Marwari form in this entry (CDIAL 3727); the match is through Hindi *churī*. It is built on *kṣura*, "razor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

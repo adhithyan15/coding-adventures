@@ -14,7 +14,8 @@ romanization: "pīṇo"
 concept_tag: MW-VERB-PINO
 prerequisites: [MW-C50-mastar, MW-C50-khano]
 sounds: []
-roots: []
+roots: [sanskrit-pibati]
+etymology_hook: "pīṇo ← Sanskrit pibati 'drinks', a tadbhava (CDIAL 8209, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C50-khano]
 <!-- hl-knowledge: introduces=[MW-LEX-C51-VERBS51-01]; assesses=[] -->
 
 **पीणो** — *pīṇo* — "to drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पीणो** (*pīṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pibati*, "drinks". CDIAL gives no Marwari form in this entry (CDIAL 8209); the match is through Hindi *pīnā* and Gujarati *pīvũ*. It is built on the root *pā*, "to drink", as *pāṇī* is.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

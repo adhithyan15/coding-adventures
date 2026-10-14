@@ -14,7 +14,8 @@ romanization: "pāpaṛ"
 concept_tag: MW-THINGS131-PAPAR
 prerequisites: [MW-C131-sagri, MW-C131-gatta]
 sounds: []
-roots: []
+roots: [sanskrit-parpata]
+etymology_hook: "pāpaṛ ← Sanskrit parpaṭa 'thin cake of rice or pease-meal', a tadbhava (CDIAL 7934, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C131-gatta]
 <!-- hl-knowledge: introduces=[MW-LEX-C131-THINGS131-05]; assesses=[] -->
 
 **पापड़** — *pāpaṛ* — "a papad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पापड़** (*pāpaṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *parpaṭa*, "thin cake of rice or pease-meal". CDIAL gives no Marwari form in this entry (CDIAL 7934); the match is through Hindi *pāpaṛ* and Gujarati *pāpaṛ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

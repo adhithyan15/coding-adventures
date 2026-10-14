@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to lose (a game), then the Marwadi for t
 You'll want to know: बांटणो.
 बांटणो — bā̃ṭṇo — "to share out".
 
+The word, taken apart.
+बांटणो (bā̃ṭṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vaṇṭati, "shares". CDIAL lists Old Marwari bāṃṭaï under it (CDIAL 11238).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to hit, then the Marwadi for to share ou
 
 You'll want to know: गमावणो.
 गमावणो — gamāvṇo — "to mislay, to lose (a thing)".
+
+The word, taken apart.
+गमावणो (gamāvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gamayati, "causes to go". CDIAL lists Old Marwari gavī under it (CDIAL 4028). The Old Marwari row means "lost"; the sense moved from "send away" to "lose".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to share out, then the Marwadi for to mi
 You'll want to know: पूगणो.
 पूगणो — pūgṇo — "to reach, to arrive".
 
+The word, taken apart.
+पूगणो (pūgṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pūryate, "is filled". CDIAL gives no Marwari form in this entry (CDIAL 8342); the match is through Gujarati pugvũ. The Gujarati row means "to reach", as पूगणो (pūgṇo) does; Old Gujarati pūjaï means "reaches".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to mislay, then the Marwadi for to reach
 You'll want to know: उडणो.
 उडणो — uṛṇo — "to fly".
 
+The word, taken apart.
+उडणो (uṛṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uḍḍīyate, "flies up". CDIAL lists Old Marwari ūḍaï under it (CDIAL 1697).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to reach, then the Marwadi for to fly.
 
 You'll want to know: तोलणो.
 तोलणो — tolṇo — "to weigh".
+
+The word, taken apart.
+तोलणो (tolṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tolayati, "lifts, weighs". CDIAL gives no Marwari form in this entry (CDIAL 5979); the match is through Hindi tolnā and Gujarati toḷvũ.
 
 What you've built.
 One more word for this chapter.

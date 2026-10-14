@@ -11,8 +11,8 @@ gloss: make it a little cheaper, written with the vowel-killer already taught fo
 concept_tag: MW-SHOPPING-BARGAIN-REQUEST-WRITTEN
 prerequisites: [MW-C23-hear-bargain-request]
 sounds: [aspirated-th, voiceless-s, consonant-cluster, unaspirated-k]
-roots: []
-etymology_hook: The one written change from sasta is its last mark, and the hand has drawn that mark since Chapter 19.
+roots: [sanskrit-stoka, sanskrit-karoti]
+etymology_hook: "thoṛu sasto karo: thoṛu ← stoka (CDIAL 13720); sasto not settled; karo ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 205
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C23-hear-bargain-request, MW-C23-thodu, MW-C14-sasta, MW-C23-kar
 Three written words. **सस्तो** is the **सस्ता** of Chapter 19 with **ो** where
 **ा** stood; its vowel-killer between the two **स** does not move. The stop at
 the end is the **।** you have written since Chapter 9.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थोड़ु सस्तो करो** (*thoṛu sasto karo*) joins words with their own lessons: *thoṛu*, "a little", from Sanskrit *stoka*, "a drop" (CDIAL 13720); *sasto*, "cheap", whose origin is not settled; and *karo*, "make", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BARGAIN-REQUEST-01, MW-SCRIPT-VIRAMA-01] -->

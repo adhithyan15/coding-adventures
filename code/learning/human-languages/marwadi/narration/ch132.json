@@ -4,7 +4,7 @@
   "chapter": 132,
   "title": "Pickle, Sweet wheat dish, Honeycomb sweet, Maize, Wheat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:94a8f0d070cc633f",
+  "sourceHash": "fnv1a64:3423a32d4eb08aef",
   "lessons": [
     {
       "id": "MW-C132-achar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:054a45365aea1977",
+      "sourceHash": "fnv1a64:c289d1d144b43c4a",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अचार (achār) is a loan, usually traced to Persian āčār, \"pickle\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2aa3952cc393e7dd",
+      "sourceHash": "fnv1a64:6d0fea363736741b",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लापसी (lāpsī) is a tadbhava, a word inherited and reshaped by sound change. It comes from lappasikā, \"a sweetmeat or dish\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 10941); the match is through Hindi lāpsī and Gujarati lāpśī. CDIAL calls Sanskrit lapsikā a Sanskritized form of the Middle Indo-Aryan word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89b1b27939257f39",
+      "sourceHash": "fnv1a64:0ed9567c05f2e48d",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घेवर (ghevar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghṛtapūra, \"sweetmeat of flour, milk, coconut and ghee\". CDIAL gives no Marwari form in this entry (CDIAL 4502); the match is through Gujarati ghebar. It is built on ghṛta, \"ghee\", and pūra, \"cake\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad59416eb6019b57",
+      "sourceHash": "fnv1a64:25f5c0295ba1c11d",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Hindi makkā and makāī, \"maize\", under Sanskrit markaka, the name of a heron-like bird (CDIAL 9879), without explaining the link. Maize reached India from the Americas, so how its name arose is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93e58331d8f9bc5b",
+      "sourceHash": "fnv1a64:418c57674641e4cc",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गेहूं (gehū̃) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from godhūma, \"wheat\". CDIAL gives no Marwari form in this entry (CDIAL 4287); the match is through Hindi gehū̃."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to stop, then the Marwadi for to tell.
 You'll want to know: पैरणो.
 पैरणो — pairṇo — "to wear".
 
+The word, taken apart.
+पैरणो (pairṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from paridadhāti, "sets round; puts on clothes". CDIAL lists Old Marwari paharaï under it (CDIAL 7835). Hindi has pahirnā; Marwadi has dropped the h.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to tell, then the Marwadi for to wear.
 
 You'll want to know: छोड़णो.
 छोड़णो — chhoṛṇo — "to leave, to let go".
+
+The word, taken apart.
+छोड़णो (chhoṛṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣoṭayati, "throws". CDIAL lists Marwari choṛṇo under it (CDIAL 3747).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to wear, then the Marwadi for to leave.
 You'll want to know: बोलणो.
 बोलणो — bolṇo — "to speak".
 
+The word, taken apart.
+बोलणो (bolṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from boll, "speak", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari bolaï under it (CDIAL 9321).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to leave, then the Marwadi for to speak.
 You'll want to know: लिखणो.
 लिखणो — likhṇo — "to write".
 
+The word, taken apart.
+लिखणो (likhṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from likhati, "scratches, writes". CDIAL gives no Marwari form in this entry (CDIAL 11048); the match is through Hindi likhnā.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to speak, then the Marwadi for to write.
 
 You'll want to know: सोचणो.
 सोचणो — sochṇo — "to think".
+
+The word, taken apart.
+सोचणो (sochṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śocyate, "is made to feel pain". CDIAL lists Old Marwari soca under it (CDIAL 12621). The Old Marwari row is the noun "thought"; Hindi socnā means "to ponder". The sense moved from "grieve" to "think".
 
 What you've built.
 One more word for this chapter.

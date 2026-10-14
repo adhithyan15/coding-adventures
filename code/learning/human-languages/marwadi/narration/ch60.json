@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Sugar, Salt, Chilli, Yoghurt, Oil",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:346545b205e3ab2c",
+  "sourceHash": "fnv1a64:b2c9196bde62ae3a",
   "lessons": [
     {
       "id": "MW-C60-khad",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a44dbb4f300b87bc",
+      "sourceHash": "fnv1a64:9eed8a80b8572866",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खांड (khā̃ḍ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khaṇḍa, \"partially dried molasses\". CDIAL lists Old Marwari khāḍa under it (CDIAL 3800)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5afb9fd45e34d423",
+      "sourceHash": "fnv1a64:4ceb08fe2ea5cc94",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लूण (lūṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lavaṇa, \"salt\". CDIAL lists Marwari lūṇ under it (CDIAL 10978). CDIAL prefers a Middle Indo-Aryan blend of lavana with lūna, \"a piece of rock-salt\", for the long ū."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc89fcae3db9cdc7",
+      "sourceHash": "fnv1a64:216aa01e2f9910cc",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिरच (mirach) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from marīca, \"peppercorn\". CDIAL gives no Marwari form in this entry (CDIAL 9875); the match is through Hindi mirc. CDIAL takes the Sanskrit word itself from an Austroasiatic language. The name moved from black pepper to the chilli."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76235855da3ca2fe",
+      "sourceHash": "fnv1a64:4deaddabc7ad2e23",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दही (dahī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dadhi, \"thick sour milk\". CDIAL gives no Marwari form in this entry (CDIAL 6146); the match is through Hindi dahī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9356b54fa5d64ca9",
+      "sourceHash": "fnv1a64:068b35421a891de8",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तेल (tel) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from taila, \"sesamum oil, oil\". CDIAL gives no Marwari form in this entry (CDIAL 5958); the match is through Hindi tel and Gujarati tel. It is built on tila, \"sesame\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "jītṇo"
 concept_tag: MW-VERB-JITNO
 prerequisites: [MW-C109-parno, MW-C109-thakno]
 sounds: []
-roots: []
+roots: [sanskrit-jita]
+etymology_hook: "jītṇo ← Sanskrit jita 'won, conquered', a tadbhava (CDIAL 5224, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C109-thakno]
 <!-- hl-knowledge: introduces=[MW-LEX-C109-ACT109-03]; assesses=[] -->
 
 **जीतणो** — *jītṇo* — "to win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जीतणो** (*jītṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jita*, "won, conquered". CDIAL gives no Marwari form in this entry (CDIAL 5224); the match is through Hindi *jītnā* and Gujarati *jītvũ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

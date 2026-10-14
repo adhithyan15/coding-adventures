@@ -12,7 +12,7 @@ concept_tag: MW-FOOD-BAATI
 prerequisites: [MW-C19-roti]
 sounds: [voiced-b, long-aa, retroflex-tt, long-ii]
 roots: []
-etymology_hook: The second bread word carries the same curled sound as the first, so only the opening consonant changes.
+etymology_hook: "bāṭī: origin not settled; CDIAL has no entry; vaṭikā 'small lump' (CDIAL 11213) is a lead, not a match"
 duration:
   max_seconds: 145
 requires:
@@ -49,6 +49,11 @@ Then say rickshaw.
 Two beats, both long, with the same curled middle consonant heard in *roṭī*.
 These are baked hard rather than soft, which is why they take a different name
 from ordinary flatbread. Hear it twice and say it once.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of *bāṭī* is not settled. CDIAL has no entry for it. The nearest lead is Sanskrit *vaṭikā*, "small lump", whose regular descendants are Hindi *baṛā* and *baṛī*, fried cakes (CDIAL 11213); the *ṭ* of *bāṭī* does not fit that path.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAATI-01] -->

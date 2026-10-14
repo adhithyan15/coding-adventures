@@ -14,7 +14,8 @@ romanization: "mātho"
 concept_tag: MW-BODY44-MATHO
 prerequisites: [MW-C39-koni, MW-C44-pag]
 sounds: []
-roots: []
+roots: [sanskrit-masta]
+etymology_hook: "mātho ← Sanskrit masta 'head', a tadbhava (CDIAL 9926, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C44-pag]
 <!-- hl-knowledge: introduces=[MW-LEX-C44-BODY44-02]; assesses=[] -->
 
 **माथो** — *mātho* — "the head".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माथो** (*mātho*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *masta*, "head". CDIAL lists Marwari *mātho* under it (CDIAL 9926). Sanskrit also had *mastaka*, "head, skull".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

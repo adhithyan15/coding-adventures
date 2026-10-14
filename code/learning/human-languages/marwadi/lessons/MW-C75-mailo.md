@@ -14,7 +14,8 @@ romanization: "mailo"
 concept_tag: MW-ADJ75-MAILO
 prerequisites: [MW-C75-khali, MW-C75-garib]
 sounds: []
-roots: []
+roots: [indo-aryan-malin]
+etymology_hook: "mailo ← *malin 'dirty', reconstructed (CDIAL 9904, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C75-garib]
 <!-- hl-knowledge: introduces=[MW-LEX-C75-ADJ75-04]; assesses=[] -->
 
 **मैलो** — *mailo* — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मैलो** (*mailo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*malin*, "dirty", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *mailā* under it (CDIAL 9904). It is built on Sanskrit *mala*, "dirt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

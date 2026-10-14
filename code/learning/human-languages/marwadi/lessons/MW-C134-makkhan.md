@@ -14,7 +14,8 @@ romanization: "makkhaṇ"
 concept_tag: MW-THINGS134-MAKKHAN
 prerequisites: [MW-C133-til, MW-C133-gur]
 sounds: []
-roots: []
+roots: [sanskrit-mrakshana]
+etymology_hook: "makkhaṇ ← Sanskrit mrakṣaṇa 'rubbing in; ointment, oil', a tadbhava (CDIAL 10378, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C133-gur]
 <!-- hl-knowledge: introduces=[MW-LEX-C134-THINGS134-01]; assesses=[] -->
 
 **मक्खण** — *makkhaṇ* — "butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मक्खण** (*makkhaṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mrakṣaṇa*, "rubbing in; ointment, oil". CDIAL gives no Marwari form in this entry (CDIAL 10378); the match is through Hindi *mākhan* and Gujarati *mākhaṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

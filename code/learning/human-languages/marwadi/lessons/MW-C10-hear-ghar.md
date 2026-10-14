@@ -11,8 +11,8 @@ gloss: home; house
 concept_tag: MW-PLACE-HOME
 prerequisites: [MW-C10-bajar]
 sounds: [aspirated-gh, short-a, rolled-r]
-roots: []
-etymology_hook: A one-beat home word arrives before its new initial sign.
+roots: [sanskrit-ghara]
+etymology_hook: "ghar: usually taken as a popular form of Sanskrit gṛha 'house', a link CDIAL calls phonetically difficult (CDIAL 4428)"
 duration:
   max_seconds: 130
 requires:
@@ -47,6 +47,11 @@ Then recall the polite-yes and twelve-label four-skill payoffs.
 > *ghar* — **home; house**
 
 Say the single beat with breath after the first sound. Writing waits one step.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Marwari *ghar* under *ghara-*, "house", a word already in early Middle Indo-Aryan (CDIAL 4428). It is usually taken as a popular form of Sanskrit *gṛha*, "house", but CDIAL calls that link phonetically difficult, so the origin is not fully settled.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GHAR-01, MW-LEX-BAJAR-01] -->

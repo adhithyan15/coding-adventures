@@ -11,8 +11,8 @@ gloss: temple
 concept_tag: MW-PLACE-TEMPLE
 prerequisites: [MW-C10-ghar]
 sounds: [nasal-consonant, dental-d, short-i]
-roots: []
-etymology_hook: A third useful destination arrives by ear and will need no new sign.
+roots: [sanskrit-mandira]
+etymology_hook: "mandir ← Sanskrit mandira 'dwelling, camp, town, temple', a tatsama (CDIAL 9852)"
 duration:
   max_seconds: 135
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C10-ghar, MW-C10-bajar, MW-W10-ja]
 
 Say the three short sound groups. The complete spelling uses only earned signs,
 but meaning stays first.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mandir* is Sanskrit *mandira*, "dwelling, camp, town, temple", taken over whole as a learned loan, a tatsama (CDIAL 9852).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MANDIR-01, MW-LEX-GHAR-01, MW-LEX-BAJAR-01] -->

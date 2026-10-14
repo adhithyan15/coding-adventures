@@ -11,7 +11,8 @@ gloss: name
 concept_tag: WORD-NAME
 prerequisites: [MW-C05-mharo]
 sounds: [dental-n, long-aa]
-roots: [SANSKRIT-NAMAN-NAME, PIE-NOMN-NAME]
+roots: [SANSKRIT-NAMAN-NAME, PIE-NOMN-NAME, naaman-sanskrit]
+etymology_hook: "nām ← Sanskrit nāman 'name' (CDIAL 7067; Old Marwari nāva); English name is the same old word"
 duration:
   max_seconds: 150
 requires:
@@ -51,6 +52,8 @@ Then hear *mhāro* and say **my**. [YOU READ: **म्हारो** once]
 Listen twice, then say it once. Marwadi *nām*, Sanskrit *nāman*, and English
 *name* are distant members of the same old word family. That history is a
 memory hook; today's task is only sound and meaning.
+
+Old Marwari had *nāva* (CDIAL 7067).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NAAM-01, MW-LEX-MHARO-01] -->

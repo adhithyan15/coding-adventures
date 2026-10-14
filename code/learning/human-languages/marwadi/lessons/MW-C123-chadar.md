@@ -14,7 +14,8 @@ romanization: "chādar"
 concept_tag: MW-THINGS123-CHADAR
 prerequisites: [MW-C122-gadi, MW-C123-takiyo]
 sounds: []
-roots: []
+roots: [persian-chadar]
+etymology_hook: "chādar: usually traced to Persian čādar 'sheet, veil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C123-takiyo]
 <!-- hl-knowledge: introduces=[MW-LEX-C123-THINGS123-02]; assesses=[] -->
 
 **चादर** — *chādar* — "a sheet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चादर** (*chādar*) is a loan, usually traced to Persian *čādar*, "sheet, veil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

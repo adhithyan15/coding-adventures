@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 64,
-  "sourceHash": "fnv1a64:656d6a96a939c443",
+  "sourceHash": "fnv1a64:d4e8244830682a15",
   "lessonIds": [
     "MW-C64-pyalo",
     "MW-C64-thali",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch64.txt",
   "json": "marwadi/narration/ch64.json",
-  "textHash": "fnv1a64:7738f8aaa6a1f7d4",
-  "jsonHash": "fnv1a64:b73babe495ee6310",
+  "textHash": "fnv1a64:dac1751f8dace7dc",
+  "jsonHash": "fnv1a64:2a8d1149157813cb",
   "findings": []
 }

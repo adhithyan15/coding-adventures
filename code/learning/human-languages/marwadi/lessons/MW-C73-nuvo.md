@@ -14,7 +14,8 @@ romanization: "nuvo"
 concept_tag: MW-ADJ73-NUVO
 prerequisites: [MW-C72-baro, MW-C72-chhoto]
 sounds: []
-roots: []
+roots: [sanskrit-nava]
+etymology_hook: "nuvo ← Sanskrit nava 'new, young', a tadbhava (CDIAL 6983, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C72-chhoto]
 <!-- hl-knowledge: introduces=[MW-LEX-C73-ADJ73-01]; assesses=[] -->
 
 **नुवो** — *nuvo* — "new".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नुवो** (*nuvo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nava*, "new, young". CDIAL lists Marwari *navo* under it (CDIAL 6983). English *new* is the same ancient word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

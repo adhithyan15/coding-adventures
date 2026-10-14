@@ -14,7 +14,8 @@ romanization: "moh"
 concept_tag: MW-LIKE113-MOH
 prerequisites: [MW-C113-sauk, MW-C113-het]
 sounds: []
-roots: []
+roots: [sanskrit-moha]
+etymology_hook: "moh ← Sanskrit moha 'bewilderment', a tadbhava (CDIAL 10360, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C113-het]
 <!-- hl-knowledge: introduces=[MW-LEX-C113-LIKE113-05]; assesses=[] -->
 
 **मोह** — *moh* — "attachment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोह** (*moh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *moha*, "bewilderment". CDIAL gives no Marwari form in this entry (CDIAL 10360); the match is through Hindi *moh*. The sense moved from "bewilderment" to "infatuation, attachment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nīmbū"
 concept_tag: MW-VERBS61-NIMBU
 prerequisites: [MW-C60-tel, MW-C61-angur]
 sounds: []
-roots: []
+roots: [sanskrit-nimbu]
+etymology_hook: "nīmbū ← Sanskrit nimbū 'lime', itself from Austroasiatic (CDIAL 7247)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C61-angur]
 <!-- hl-knowledge: introduces=[MW-LEX-C61-VERBS61-02]; assesses=[] -->
 
 **नींबू** — *nīmbū* — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नींबू** (*nīmbū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nimbū*, "the lime". CDIAL gives no Marwari form in this entry (CDIAL 7247); the match is through Hindi *nīmbū*. CDIAL takes the Sanskrit word itself from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

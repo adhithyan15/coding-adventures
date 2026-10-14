@@ -14,7 +14,8 @@ romanization: "tairṇo"
 concept_tag: MW-VERB-TAIRNO
 prerequisites: [MW-C108-bachavno, MW-C108-utarno]
 sounds: []
-roots: []
+roots: [sanskrit-tirate]
+etymology_hook: "tairṇo ← Sanskrit tirate 'crosses over', a tadbhava (CDIAL 5821, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C108-utarno]
 <!-- hl-knowledge: introduces=[MW-LEX-C108-ACT108-04]; assesses=[] -->
 
 **तैरणो** — *tairṇo* — "to swim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तैरणो** (*tairṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tirate*, "crosses over". CDIAL gives no Marwari form in this entry (CDIAL 5821); the match is through Hindi *tairnā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

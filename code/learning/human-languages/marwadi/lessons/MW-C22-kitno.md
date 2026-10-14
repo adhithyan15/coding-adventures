@@ -11,8 +11,8 @@ gloss: how much, written entirely from signs already taught
 concept_tag: MW-QUESTION-HOW-MUCH-WRITTEN
 prerequisites: [MW-C22-hear-kitno]
 sounds: [unaspirated-k, short-i, dental-t, retroflex-n, long-o]
-roots: []
-etymology_hook: Four signs, all of them old, and the retroflex n comes straight from the word for water.
+roots: [indo-aryan-kiyatta]
+etymology_hook: "kitṇo ← *kiyatta 'how great', with an added -n- (CDIAL 3167)"
 duration:
   max_seconds: 175
 requires:
@@ -48,6 +48,11 @@ Every unit is old. The **ण** is the same retroflex sign that sits in the middl
 of **पाणी**, and it is what makes this word Marwadi rather than the Hindi form
 a reader may expect. Write **पाणी** and **कितणो** one under the other and check
 that the **ण** is drawn the same way in both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कितणो** (*kitṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kiyatta*, "how great", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *kītarāka* under it (CDIAL 3167). The *-ṇ-* matches Hindi *kitnā* and Lahnda *kitṇā*, whose *-n-* CDIAL explains as an added suffix.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KITNO-01, MW-SCRIPT-NNA-01] -->

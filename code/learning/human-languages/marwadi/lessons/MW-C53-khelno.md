@@ -14,7 +14,8 @@ romanization: "khelṇo"
 concept_tag: MW-VERB-KHELNO
 prerequisites: [MW-C52-chalno, MW-C52-daurno]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "khelṇo ← *khēl- 'play', in a reconstructed group (CDIAL 3918, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C52-daurno]
 <!-- hl-knowledge: introduces=[MW-LEX-C53-VERBS53-01]; assesses=[] -->
 
 **खेलणो** — *khelṇo* — "to play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खेलणो** (*khelṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khel*, "play", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *khelaï* under it (CDIAL 3918). CDIAL heads a group of reconstructed words for "play" *\*khēḍ*, and says that if Sanskrit *krīḍati*, "plays", is of non-Aryan origin, these may share its source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

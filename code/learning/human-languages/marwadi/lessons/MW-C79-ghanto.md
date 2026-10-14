@@ -14,7 +14,8 @@ romanization: "ghaṇṭo"
 concept_tag: MW-TIME79-GHANTO
 prerequisites: [MW-C78-mahino, MW-C78-baras]
 sounds: []
-roots: []
+roots: [sanskrit-ghanta]
+etymology_hook: "ghaṇṭo ← Sanskrit ghaṇṭā 'bell', a tadbhava (CDIAL 4421, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C78-baras]
 <!-- hl-knowledge: introduces=[MW-LEX-C79-TIME79-01]; assesses=[] -->
 
 **घंटो** — *ghaṇṭo* — "an hour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घंटो** (*ghaṇṭo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghaṇṭā*, "bell". CDIAL gives no Marwari form in this entry (CDIAL 4421); the match is through Hindi *ghaṇṭā*. The bell that struck the hours gave its name to the hour.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

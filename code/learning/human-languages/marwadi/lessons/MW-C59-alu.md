@@ -14,7 +14,8 @@ romanization: "ālū"
 concept_tag: MW-VERBS59-ALU
 prerequisites: [MW-C59-seb, MW-C59-kelo]
 sounds: []
-roots: []
+roots: [sanskrit-alu]
+etymology_hook: "ālū ← Sanskrit ālu 'esculent root', a tadbhava (CDIAL 1388, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C59-kelo]
 <!-- hl-knowledge: introduces=[MW-LEX-C59-VERBS59-03]; assesses=[] -->
 
 **आलू** — *ālū* — "a potato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आलू** (*ālū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ālu*, "esculent root". CDIAL gives no Marwari form in this entry (CDIAL 1388); the match is through Hindi *ālū*. The potato took the name of an older edible root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

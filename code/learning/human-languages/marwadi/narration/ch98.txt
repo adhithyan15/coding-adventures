@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for opposite, then the Marwadi for left.
 You'll want to know: जीमणो.
 जीमणो — jīmaṇo — "right (the side)".
 
+The word, taken apart.
+जीमणो (jīmaṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jemana, "eating". CDIAL lists Old Marwari jīmaṇa under it (CDIAL 5268). The Old Marwari row means "food, meal", and Old Gujarati jimaṇaüṃ means "to the righthand side": the right is the eating hand.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for left, then the Marwadi for right.
 
 You'll want to know: चौक.
 चौक — chauk — "a town square".
+
+The word, taken apart.
+चौक (chauk) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from catuṣka, "set of four; square courtyard". CDIAL gives no Marwari form in this entry (CDIAL 4629); the match is through Hindi cauk. It is built on catur, "four".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for right, then the Marwadi for a town squar
 You'll want to know: चौराहो.
 चौराहो — chaurāho — "a crossroads".
 
+The word, taken apart.
+चौराहो (chaurāho) is a meeting of four roads: chau-, "four", as in chauk (CDIAL 4629), with rāh, "road", usually traced to Persian rāh, "road, way". CDIAL has no entry for the compound.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a town square, then the Marwadi for a cr
 You'll want to know: मोड़.
 मोड़ — moṛ — "a turn, a bend".
 
+The word, taken apart.
+मोड़ (moṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from muṭati, "twists". CDIAL gives no Marwari form in this entry (CDIAL 10186); the match is through Hindi moṛnā and Gujarati moṛvũ. It is the noun of the verb "to turn, to bend". CDIAL notes that the Sanskrit verb partly ran together with a look-alike it takes from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a crossroads, then the Marwadi for a tur
 
 You'll want to know: गेलो.
 गेलो — gelo — "a path, the way".
+
+The word, taken apart.
+गेलो (gelo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gati, "going, gait". CDIAL lists Old Marwari gailo under it (CDIAL 4009). The Old Marwari row means "road"; Hindi has gail, "path".
 
 What you've built.
 One more word for this chapter.

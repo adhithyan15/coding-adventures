@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 88,
-  "sourceHash": "fnv1a64:d126117bed8e3998",
+  "sourceHash": "fnv1a64:f45d873c6950f7f5",
   "lessonIds": [
     "MW-C88-rang",
     "MW-C88-git",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch88.txt",
   "json": "marwadi/narration/ch88.json",
-  "textHash": "fnv1a64:08a613b977223eda",
-  "jsonHash": "fnv1a64:d26cba47684b0008",
+  "textHash": "fnv1a64:aceaf065d57820a3",
+  "jsonHash": "fnv1a64:b2a7afe7acfcf082",
   "findings": []
 }

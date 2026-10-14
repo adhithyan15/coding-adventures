@@ -14,7 +14,8 @@ romanization: "jūtī"
 concept_tag: MW-TOWN84-JUTI
 prerequisites: [MW-C84-kurto, MW-C84-pajamo]
 sounds: []
-roots: []
+roots: [sanskrit-yukta]
+etymology_hook: "jūtī ← Sanskrit yukta 'joined, yoked', a tadbhava (CDIAL 10479, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C84-pajamo]
 <!-- hl-knowledge: introduces=[MW-LEX-C84-TOWN84-05]; assesses=[] -->
 
 **जूती** — *jūtī* — "a shoe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जूती** (*jūtī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *yukta*, "joined, yoked". CDIAL gives no Marwari form in this entry (CDIAL 10479); the match is through Hindi *jūtī* and Gujarati *jūtī*. The sense moved from "fastened on" to "shoe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

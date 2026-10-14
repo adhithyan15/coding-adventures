@@ -14,7 +14,8 @@ romanization: "sūko"
 concept_tag: MW-QUAL142-SUKO
 prerequisites: [MW-C142-naram, MW-C142-gilo]
 sounds: []
-roots: []
+roots: [sanskrit-shushka]
+etymology_hook: "sūko ← Sanskrit śuṣka 'dried', a tadbhava (CDIAL 12548, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C142-gilo]
 <!-- hl-knowledge: introduces=[MW-LEX-C142-QUAL142-05]; assesses=[] -->
 
 **सूको** — *sūko* — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सूको** (*sūko*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śuṣka*, "dried". CDIAL gives no Marwari form in this entry (CDIAL 12548); the match is through Hindi *sūkā* and Gujarati *sūkũ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

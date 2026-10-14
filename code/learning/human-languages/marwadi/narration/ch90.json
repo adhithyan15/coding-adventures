@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Midday, Evening, In the early morning, Dawn, Day after tomorrow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bf67f87a8ef627a6",
+  "sourceHash": "fnv1a64:50da0c66ffe458de",
   "lessons": [
     {
       "id": "MW-C90-dopar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81a86e687d31a4b7",
+      "sourceHash": "fnv1a64:33a4e3cf22d5aa9b",
       "notice": null,
       "blocks": [
         {
@@ -67,6 +67,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दोपार (dopār) is usually explained as do, \"two\", and pahar, \"a watch of about three hours\", which CDIAL lists as Old Marwari pahara under Sanskrit prahara, \"a watch\" (CDIAL 8900). CDIAL asks whether the Sanskrit word is itself a reshaping of Persian pahra, \"watch\". It has no entry for दोपार (dopār)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -77,7 +88,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -126,7 +137,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -176,7 +187,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce15d04604fd7fb8",
+      "sourceHash": "fnv1a64:86e345872f37a5f1",
       "notice": null,
       "blocks": [
         {
@@ -209,6 +220,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आथण (āthaṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from astamayana, \"setting of the sun\". CDIAL lists Old Marwari āthaṇa under it (CDIAL 975). It is built on astam eti, \"goes home\", said of the sun."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -219,7 +241,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +290,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -318,7 +340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97ed9d62fa2d3dfd",
+      "sourceHash": "fnv1a64:e09d87de0d996f02",
       "notice": null,
       "blocks": [
         {
@@ -351,6 +373,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL has no entry for दिनूगै (dinūgai), so its history is not settled. It seems to be din, \"day\" (CDIAL 6328), with a form of the verb CDIAL lists as Old Marwari ūgaï, \"rises, appears\", under udgāti, \"rises\" (CDIAL 1954): the time when the day comes up."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -361,7 +394,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -410,7 +443,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -460,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6b7e1e05d456c08",
+      "sourceHash": "fnv1a64:ac2083f357bfa7f6",
       "notice": null,
       "blocks": [
         {
@@ -493,6 +526,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परभात (parbhāt) is a semi-tatsama: Sanskrit prabhāta, \"shone forth; daybreak\", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 8707). Marwadi splits the pr with a vowel. The inherited descendant is Gujarati paroḍh, \"dawn\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -503,7 +547,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -552,7 +596,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -602,7 +646,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f75bf450558674c0",
+      "sourceHash": "fnv1a64:9968b7e991388a4b",
       "notice": null,
       "blocks": [
         {
@@ -635,6 +679,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परसूं (parsū̃) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from paraśvas, \"the day after tomorrow\". CDIAL gives no Marwari form in this entry (CDIAL 7799j); the match is through Hindi parsū̃. It is built on para, \"beyond\", and śvas, \"tomorrow\"; like Hindi, Marwadi uses it for both directions in time."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -645,7 +700,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -694,7 +749,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

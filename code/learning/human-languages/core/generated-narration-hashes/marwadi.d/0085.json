@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 85,
-  "sourceHash": "fnv1a64:1f8dc870d8865cd6",
+  "sourceHash": "fnv1a64:c667f01b2817d539",
   "lessonIds": [
     "MW-C85-mojo",
     "MW-C85-jeb",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch85.txt",
   "json": "marwadi/narration/ch85.json",
-  "textHash": "fnv1a64:c0c887e3085f8e03",
-  "jsonHash": "fnv1a64:4e6b92a6303dc525",
+  "textHash": "fnv1a64:a97f2c4249482aeb",
+  "jsonHash": "fnv1a64:835ac6c1abf221b6",
   "findings": []
 }

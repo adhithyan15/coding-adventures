@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for sand, then the Marwadi for a field.
 You'll want to know: तारो.
 तारो — tāro — "a star".
 
+The word, taken apart.
+तारो (tāro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tārā, "fixed star". CDIAL gives no Marwari form in this entry (CDIAL 5798); the match is through Hindi tārā and Gujarati tāro. English star is a distant cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a field, then the Marwadi for a star.
 
 You'll want to know: सूरज.
 सूरज — sūraj — "the sun".
+
+The word, taken apart.
+सूरज (sūraj) is usually traced to Sanskrit sūrya, "sun". CDIAL lists the Sanskrit word (CDIAL 13574) but no Marwari or Hindi form of it, so the exact path is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a star, then the Marwadi for the sun.
 You'll want to know: चांद.
 चांद — chā̃d — "the moon".
 
+The word, taken apart.
+चांद (chā̃d) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from candra, "shining; moon". CDIAL gives no Marwari form in this entry (CDIAL 4661); the match is through Hindi cā̃d and Gujarati cā̃d.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for the sun, then the Marwadi for the moon.
 You'll want to know: समंदर.
 समंदर — samandar — "the sea".
 
+The word, taken apart.
+समंदर (samandar) goes back to Sanskrit samudra, "sea", with an added nasal, like the Old Awadhi samuṃda that CDIAL lists under it (CDIAL 13236). CDIAL gives no Marwari form.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for the moon, then the Marwadi for the sea.
 
 You'll want to know: आग.
 आग — āg — "fire".
+
+The word, taken apart.
+आग (āg) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from agni, "fire". CDIAL lists Old Marwari āgi under it (CDIAL 55). Latin ignis, "fire", is the same ancient word.
 
 What you've built.
 One more word for this chapter.

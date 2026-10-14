@@ -14,7 +14,8 @@ romanization: "chūṛī"
 concept_tag: MW-THINGS129-CHURI
 prerequisites: [MW-C129-mochri, MW-C129-karo]
 sounds: []
-roots: []
+roots: [sanskrit-cuda-bracelet]
+etymology_hook: "chūṛī ← Sanskrit cūḍa 'bracelet', a tadbhava (CDIAL 4884, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C129-karo]
 <!-- hl-knowledge: introduces=[MW-LEX-C129-THINGS129-05]; assesses=[] -->
 
 **चूड़ी** — *chūṛī* — "a bangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चूड़ी** (*chūṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cūḍa*, "bracelet". CDIAL gives no Marwari form in this entry (CDIAL 4884); the match is through Hindi *cūṛī* and Gujarati *cūṛī*. CDIAL asks whether it is the same word as *cūḍa*, "topknot", which it takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

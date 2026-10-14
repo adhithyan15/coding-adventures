@@ -14,7 +14,8 @@ romanization: "sāmī"
 concept_tag: MW-LOC97-SAMI
 prerequisites: [MW-C97-bichai, MW-C97-kanai]
 sounds: []
-roots: []
+roots: [sanskrit-sammukha]
+etymology_hook: "sāmī ← Sanskrit saṃmukha 'facing', a tadbhava (CDIAL 12982, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C97-kanai]
 <!-- hl-knowledge: introduces=[MW-LEX-C97-LOC97-04]; assesses=[] -->
 
 **सामी** — *sāmī* — "opposite, facing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सामी** (*sāmī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *saṃmukha*, "facing". CDIAL lists Old Marwari *sāmo* under it (CDIAL 12982). It is built on *sam*, "with", and *mukha*, "face".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

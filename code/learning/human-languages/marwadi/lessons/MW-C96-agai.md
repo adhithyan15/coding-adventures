@@ -14,7 +14,8 @@ romanization: "āgai"
 concept_tag: MW-LOC96-AGAI
 prerequisites: [MW-C96-kathai, MW-C96-uthai]
 sounds: []
-roots: []
+roots: [sanskrit-agra]
+etymology_hook: "āgai ← Sanskrit agra 'top, front', a tadbhava (CDIAL 68, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C96-uthai]
 <!-- hl-knowledge: introduces=[MW-LEX-C96-LOC96-03]; assesses=[] -->
 
 **आगै** — *āgai* — "in front, ahead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आगै** (*āgai*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *agra*, "top, front". CDIAL lists Old Marwari *āgai* under it (CDIAL 68).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

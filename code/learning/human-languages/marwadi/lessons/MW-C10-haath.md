@@ -11,8 +11,8 @@ gloss: hand, written entirely with known signs
 concept_tag: MW-DIRECTION-HAND-WRITTEN
 prerequisites: [MW-C10-hear-haath]
 sounds: [breathy-h, long-aa, aspirated-th]
-roots: []
-etymology_hook: Familiar ह, ा, and थ carry the direction word without a new glyph.
+roots: [hasta-sanskrit]
+etymology_hook: "hāth ← Sanskrit hasta 'hand', a tadbhava (CDIAL 14024, Marwari row)"
 duration:
   max_seconds: 150
 requires:
@@ -44,6 +44,11 @@ reviews_of: [MW-C10-hear-haath, MW-W03-ha, MW-W05-tha, MW-C10-ghar]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAATH-01, MW-SCRIPT-HAATH-01] -->
 
 > **हा** + **थ** → **हाथ** — *hāth* — hand
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हाथ** (*hāth*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hasta*, "hand". CDIAL lists Marwari *hāth* under it (CDIAL 14024).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-HAATH-01] -->

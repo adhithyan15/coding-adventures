@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for the cold season, then the Marwadi for th
 You'll want to know: बसंत.
 बसंत — basant — "spring".
 
+The word, taken apart.
+बसंत (basant) is a semi-tatsama: Sanskrit vasanta, "spring season", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 11439). Marwadi says the v as b; CDIAL lists no Marwari or Hindi form.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for the rainy season, then the Marwadi for s
 
 You'll want to know: तड़कै.
 तड़कै — taṛkai — "at daybreak".
+
+The word, taken apart.
+तड़कै (taṛkai) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from traṭ, "crackle". CDIAL lists Old Marwari taṛako under it (CDIAL 5988). The Old Marwari row means "morning", and Hindi taṛkā means "dawn": CDIAL compares English "crack of dawn".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for spring, then the Marwadi for at daybreak
 You'll want to know: बगत.
 बगत — bagat — "time".
 
+The word, taken apart.
+बगत (bagat) is a loan from Arabic waqt, "time", which reached Marwadi through Persian. Its Arabic root is w-q-t (Lane). Marwadi says the w as b and the q as g, and splits the final consonants with a vowel.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for at daybreak, then the Marwadi for time.
 You'll want to know: रोज.
 रोज — roj — "every day".
 
+The word, taken apart.
+रोज (roj) is a loan, usually traced to Persian rōz, "day". Marwadi says the z as j.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for time, then the Marwadi for every day.
 
 You'll want to know: आजकाल.
 आजकाल — ājkāl — "nowadays".
+
+The word, taken apart.
+आजकाल (ājkāl) joins two words with their own lessons: āj, "today", from Sanskrit adya (CDIAL 242), and kāl, "yesterday, tomorrow", from Sanskrit kālya, "at dawn" (CDIAL 3104).
 
 What you've built.
 One more word for this chapter.

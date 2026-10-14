@@ -14,7 +14,8 @@ romanization: "jarūrat"
 concept_tag: MW-WANT112-JARURAT
 prerequisites: [MW-C111-as, MW-C111-mag]
 sounds: []
-roots: []
+roots: [arabic-darura]
+etymology_hook: "jarūrat ← Arabic ḍarūra 'need, necessity', through Persian (Lane, root ḍ-r-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C111-mag]
 <!-- hl-knowledge: introduces=[MW-LEX-C112-WANT112-01]; assesses=[] -->
 
 **जरूरत** — *jarūrat* — "a need".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जरूरत** (*jarūrat*) is a loan from Arabic *ḍarūra*, "need, necessity", which reached Marwadi through Persian. Its Arabic root is *ḍ-r-r* (Lane). Marwadi says the *ḍ*, which Persian pronounces *z*, as *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

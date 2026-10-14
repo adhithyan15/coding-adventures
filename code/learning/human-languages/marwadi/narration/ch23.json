@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "First Food Words: No New Signs",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:2e377f4840f59394",
+  "sourceHash": "fnv1a64:4c420ce264b37eb3",
   "lessons": [
     {
       "id": "MW-C18-hear-daal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05ba1f2a926605d2",
+      "sourceHash": "fnv1a64:5feca2ccb1ecd5c9",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dāl is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dāla, \"kind of grain, split peas\". CDIAL gives no Marwari form in this entry (CDIAL 6309); the match is through Hindi dāl. CDIAL asks whether it is the same word as dāla, \"splitting\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -100,7 +111,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30dfdde8e88edda6",
+      "sourceHash": "fnv1a64:9b18881fd7951a9a",
       "notice": null,
       "blocks": [
         {
@@ -146,6 +157,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दाल (dāl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dāla, \"kind of grain, split peas\". CDIAL gives no Marwari form in this entry (CDIAL 6309); the match is through Hindi dāl. CDIAL asks whether it is the same word as dāla, \"splitting\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -170,7 +192,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -215,7 +237,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:680bfad49957f890",
+      "sourceHash": "fnv1a64:8e668f27b3ff801d",
       "notice": null,
       "blocks": [
         {
@@ -261,6 +283,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ghī is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghṛta, \"fluid grease, clarified butter or ghee\". CDIAL gives no Marwari form in this entry (CDIAL 4501); the match is through Hindi ghī and Gujarati ghī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -305,7 +338,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8789ea80ca73e905",
+      "sourceHash": "fnv1a64:fd0835cd1fcad744",
       "notice": null,
       "blocks": [
         {
@@ -342,6 +375,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घी (ghī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghṛta, \"fluid grease, clarified butter or ghee\". CDIAL gives no Marwari form in this entry (CDIAL 4501); the match is through Hindi ghī and Gujarati ghī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -366,7 +410,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -412,7 +456,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a727202926802ce3",
+      "sourceHash": "fnv1a64:0b0a651772337b4e",
       "notice": null,
       "blocks": [
         {
@@ -454,6 +498,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sabjī is a loan, usually traced to Persian sabzī, \"greenness, greens\". Marwadi says the z as j."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -498,7 +553,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be3ae693181bbbc4",
+      "sourceHash": "fnv1a64:1b81083d2a22fb94",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +599,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सबजी (sabjī) is a loan, usually traced to Persian sabzī, \"greenness, greens\". Marwadi says the z as j."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -568,7 +634,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

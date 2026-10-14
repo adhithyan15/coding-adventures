@@ -11,8 +11,8 @@ gloss: heat or hot weather; the source also labels summer
 concept_tag: MW-WEATHER-HEAT
 prerequisites: [MW-C12-mausam]
 sounds: [voiced-g, trilled-r, long-ii]
-roots: []
-etymology_hook: Heat arrives by ear before its one new consonant.
+roots: [persian-garmi]
+etymology_hook: "garmī: usually traced to Persian garmī 'heat'"
 duration:
   max_seconds: 145
 requires:
@@ -49,6 +49,11 @@ Recall rain and the three-place payoff, and ask *āp kaiso ho?*
 
 The source also groups this word with summer. Keep the narrow heat meaning for
 now; the season contrast comes later.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*garmī* is a loan, usually traced to Persian *garmī*, "heat". It is built on Persian *garm*, "warm, hot".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GARMI-01] -->

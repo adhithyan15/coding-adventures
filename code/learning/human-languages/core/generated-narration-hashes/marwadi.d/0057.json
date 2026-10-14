@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 57,
-  "sourceHash": "fnv1a64:e044e5958379f3a8",
+  "sourceHash": "fnv1a64:ddf351272045d211",
   "lessonIds": [
     "MW-C57-pairno",
     "MW-C57-chhorno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch57.txt",
   "json": "marwadi/narration/ch57.json",
-  "textHash": "fnv1a64:ac49763959e5fee8",
-  "jsonHash": "fnv1a64:3dcea8134616a2cf",
+  "textHash": "fnv1a64:d72d0c5ffade0efe",
+  "jsonHash": "fnv1a64:dbe7fc551daa574e",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "heṭhai"
 concept_tag: MW-LOC97-HETHAI
 prerequisites: [MW-C96-larai, MW-C96-mathai]
 sounds: []
-roots: []
+roots: [sanskrit-adhastat]
+etymology_hook: "heṭhai ← Sanskrit adhastāt 'underneath', a tadbhava (CDIAL 248, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C96-mathai]
 <!-- hl-knowledge: introduces=[MW-LEX-C97-LOC97-01]; assesses=[] -->
 
 **हेठै** — *heṭhai* — "underneath".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हेठै** (*heṭhai*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *adhastāt*, "underneath". CDIAL gives no Marwari form in this entry (CDIAL 248); the match is through Hindi *heṭh* and Gujarati *heṭhe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

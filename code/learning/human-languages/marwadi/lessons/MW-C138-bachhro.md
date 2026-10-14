@@ -14,7 +14,8 @@ romanization: "bāchhṛo"
 concept_tag: MW-THINGS138-BACHHRO
 prerequisites: [MW-C137-narel, MW-C138-balad]
 sounds: []
-roots: []
+roots: [vatsa-sanskrit]
+etymology_hook: "bāchhṛo ← Sanskrit vatsa 'calf, child', a tadbhava (CDIAL 11239, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C138-balad]
 <!-- hl-knowledge: introduces=[MW-LEX-C138-THINGS138-02]; assesses=[] -->
 
 **बाछड़ो** — *bāchhṛo* — "a calf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाछड़ो** (*bāchhṛo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vatsa*, "calf, child". CDIAL gives no Marwari form in this entry (CDIAL 11239); the match is through Hindi *bāchā*. The *ṛ* is an added suffix. The Sanskrit word first meant "yearling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

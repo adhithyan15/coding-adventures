@@ -11,8 +11,8 @@ gloss: make it ten, on the page — an old verb with a number in front of it
 concept_tag: MW-FUNCTION-COUNTER-OFFER-WRITTEN
 prerequisites: [MW-C34-hear-counter-offer]
 sounds: [mixed]
-roots: []
-etymology_hook: Two words the hand has already made, in an order it has not made them in.
+roots: [sanskrit-dasha, sanskrit-karoti]
+etymology_hook: "das karo: das ← Sanskrit daśa 'ten' (CDIAL 6227); karo ← karoti 'does' (CDIAL 2814)"
 duration:
   max_seconds: 180
 requires:
@@ -48,6 +48,11 @@ came in two chapters ago, and the number goes in front.
 
 Swap the figure and the offer changes: **पांच करो।**, **बीस करो।**. The verb
 never moves.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दस करो** (*das karo*) joins two inherited words with their own lessons: *das*, "ten", which CDIAL lists as Marwari *das* under Sanskrit *daśa* (CDIAL 6227), and *karo*, "make", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-COUNTER-OFFER-01, MW-SCRIPT-PAANCH-01, MW-SCRIPT-BEES-01] -->

@@ -14,7 +14,8 @@ romanization: "tākat"
 concept_tag: MW-CAN114-TAKAT
 prerequisites: [MW-C114-sakno, MW-C114-hunar]
 sounds: []
-roots: []
+roots: [arabic-taqa]
+etymology_hook: "tākat ← Arabic ṭāqa 'power, ability', through Persian (Lane, root ṭ-w-q)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C114-hunar]
 <!-- hl-knowledge: introduces=[MW-LEX-C114-CAN114-03]; assesses=[] -->
 
 **ताकत** — *tākat* — "strength".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ताकत** (*tākat*) is a loan from Arabic *ṭāqa*, "power, ability", which reached Marwadi through Persian. Its Arabic root is *ṭ-w-q* (Lane). Persian added the ending *-t*, *ṭāqat*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

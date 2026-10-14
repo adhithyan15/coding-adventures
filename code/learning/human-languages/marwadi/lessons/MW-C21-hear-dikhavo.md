@@ -11,8 +11,8 @@ gloss: show it — the source's asking form, said to one person across a counter
 concept_tag: MW-VERB-SHOW
 prerequisites: [MW-C21-ye]
 sounds: [voiced-d, short-i, aspirated-kh, long-aa, voiced-v, long-o]
-roots: []
-etymology_hook: The first Marwadi word in this track that asks somebody to do something rather than naming a thing.
+roots: [indo-aryan-drkshati]
+etymology_hook: "dikhāvo 'show': the causative of dekhṇo 'to see' ← *dṛkṣati 'sees' (CDIAL 6507)"
 duration:
   max_seconds: 165
 requires:
@@ -54,6 +54,11 @@ The source prints this form twice, once for a menu and once for another colour.
 It is the asking form used to one person across a counter, not a command shouted
 at anyone, and this lesson teaches the printed form rather than the whole
 system of asking forms behind it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dikhāvo*, "show", is the causing form of the verb "to see". CDIAL lists Marwari *dekhṇo*, "to see", and Old Marwari *dikhāṛaï* under *\*dṛkṣati*, "sees", a present stem it reconstructs from Sanskrit (CDIAL 6507).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DIKHAVO-01] -->

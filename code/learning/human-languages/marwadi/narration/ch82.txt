@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for outside, then the Marwadi for below.
 You'll want to know: अठै.
 अठै — aṭhai — "here".
 
+The word, taken apart.
+The origin of अठै (aṭhai) is not settled; CDIAL has no entry for it. A likely relative is Sanskrit atra, "here", under which CDIAL lists Gujarati atre (CDIAL 228), but that entry does not explain the ṭh of अठै (aṭhai).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for below, then the Marwadi for here.
 
 You'll want to know: बठै.
 बठै — baṭhai — "there".
+
+The word, taken apart.
+The origin of बठै (baṭhai) is not settled. CDIAL, searched by form and by meaning, has no entry for it; it pairs with aṭhai, "here", whose history is not settled either.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for here, then the Marwadi for there.
 You'll want to know: सड़क.
 सड़क — saṛak — "a road".
 
+The word, taken apart.
+CDIAL gives two accounts of सड़क (saṛak). It first lists the Hindi word under Sanskrit sṛti, "road, path" (CDIAL 13577), then in its addenda under śaṭati, "goes" (CDIAL 12269), so the source is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for there, then the Marwadi for a road.
 You'll want to know: गळी.
 गळी — gaḷī — "a lane".
 
+The word, taken apart.
+गळी (gaḷī) is a tadbhava, a word inherited and reshaped by sound change. It comes from galī, "defile, lane", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4085); the match is through Hindi galī. Marwadi, like Gujarati, says the l curled back.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a road, then the Marwadi for a lane.
 
 You'll want to know: टेसण.
 टेसण — ṭesaṇ — "a station".
+
+The word, taken apart.
+टेसण (ṭesaṇ) is a loan from English station. Marwadi drops the first s and ends the word in ṇ.
 
 What you've built.
 One more word for this chapter.

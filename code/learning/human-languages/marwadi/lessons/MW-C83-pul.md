@@ -14,7 +14,8 @@ romanization: "pul"
 concept_tag: MW-TOWN83-PUL
 prerequisites: [MW-C82-gali, MW-C82-tesan]
 sounds: []
-roots: []
+roots: [persian-pul]
+etymology_hook: "pul: usually traced to Persian pul 'bridge'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C82-tesan]
 <!-- hl-knowledge: introduces=[MW-LEX-C83-TOWN83-01]; assesses=[] -->
 
 **पुल** — *pul* — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पुल** (*pul*) is a loan, usually traced to Persian *pul*, "bridge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

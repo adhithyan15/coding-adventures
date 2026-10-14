@@ -14,7 +14,8 @@ romanization: "pachhai"
 concept_tag: MW-TIME91-PACHHAI
 prerequisites: [MW-C90-parbhat, MW-C90-parsu]
 sounds: []
-roots: []
+roots: [indo-aryan-pashca]
+etymology_hook: "pachhai ← *paśca 'hinder part', reconstructed (CDIAL 7990, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C90-parsu]
 <!-- hl-knowledge: introduces=[MW-LEX-C91-TIME91-01]; assesses=[] -->
 
 **पछै** — *pachhai* — "afterwards, later".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पछै** (*pachhai*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*paśca*, "hinder part", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *pāchaï* under it (CDIAL 7990). CDIAL says this form was drawn from Sanskrit *paścāt*, "behind, afterwards".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

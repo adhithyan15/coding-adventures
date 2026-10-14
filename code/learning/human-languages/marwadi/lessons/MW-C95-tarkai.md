@@ -14,7 +14,8 @@ romanization: "taṛkai"
 concept_tag: MW-TIME95-TARKAI
 prerequisites: [MW-C94-chaumaso, MW-C95-basant]
 sounds: []
-roots: []
+roots: [sanskrit-trat]
+etymology_hook: "taṛkai: Old Marwari taṛako 'morning', under traṭ 'crackle', as in 'crack of dawn' (CDIAL 5988)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C95-basant]
 <!-- hl-knowledge: introduces=[MW-LEX-C95-TIME95-02]; assesses=[] -->
 
 **तड़कै** — *taṛkai* — "at daybreak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तड़कै** (*taṛkai*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *traṭ*, "crackle". CDIAL lists Old Marwari *taṛako* under it (CDIAL 5988). The Old Marwari row means "morning", and Hindi *taṛkā* means "dawn": CDIAL compares English "crack of dawn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

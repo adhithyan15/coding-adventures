@@ -4,7 +4,7 @@
   "chapter": 118,
   "title": "Hearth, Griddle, Wok, Cooking pot, Water pot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ca3394fc65829a75",
+  "sourceHash": "fnv1a64:d4cd5654785c4757",
   "lessons": [
     {
       "id": "MW-C118-chulho",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6aec8bdd8e8cc28",
+      "sourceHash": "fnv1a64:9d59b4e53850f40b",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चूल्हो (chūlho) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cullī, \"fireplace\". CDIAL gives no Marwari form in this entry (CDIAL 4879); the match is through Hindi cūlhā. CDIAL takes the Sanskrit word itself from Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5352ec4079ba0870",
+      "sourceHash": "fnv1a64:54de574d86adb043",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तवो (tavo) is a tadbhava, a word inherited and reshaped by sound change. It comes from tapaka, \"frying pan\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5670); the match is through Hindi tawā and Gujarati tavo. It is built on the root tap, \"to heat\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37d02cef56dd30f3",
+      "sourceHash": "fnv1a64:ec9b0419ca6a4f15",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कड़ाही (kaṛāhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaṭāha, \"boiler, saucepan with handles\". CDIAL gives no Marwari form in this entry (CDIAL 2638); the match is through Hindi kaṛāhī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c353bce6f4054b2",
+      "sourceHash": "fnv1a64:86100ba7cf1f5120",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हांडी (hā̃ḍī) is a tadbhava, a word inherited and reshaped by sound change. It comes from hāṇḍa, \"pot\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 14050); the match is through Hindi hā̃ḍī and Gujarati hā̃ḍī. CDIAL says any link with Sanskrit bhāṇḍa, \"pot\", is not clear."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c546793293f207f",
+      "sourceHash": "fnv1a64:66fe5362be6837dd",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घड़ो (ghaṛo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghaṭa, \"pot\". CDIAL lists Marwari ghaṛī under it (CDIAL 4406). The Marwari row is ghaṛī, \"water-clock\"; Hindi ghaṛā and Gujarati ghaṛo mean \"water pot\", as घड़ो (ghaṛo) does."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

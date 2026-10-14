@@ -14,7 +14,8 @@ romanization: "īmāndār"
 concept_tag: MW-QUAL147-IMANDAR
 prerequisites: [MW-C146-alsi, MW-C147-mehanti]
 sounds: []
-roots: []
+roots: [arabic-iman, persian-dar]
+etymology_hook: "īmāndār: Arabic īmān 'faith' (Lane, root ʾ-m-n) + Persian -dār 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C147-mehanti]
 <!-- hl-knowledge: introduces=[MW-LEX-C147-QUAL147-02]; assesses=[] -->
 
 **ईमानदार** — *īmāndār* — "honest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ईमानदार** (*īmāndār*) joins Arabic *īmān*, "faith", whose root is *ʾ-m-n* (Lane), with Persian *-dār*, "holder": "one who keeps faith". It reached Marwadi through Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

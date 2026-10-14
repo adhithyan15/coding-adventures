@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Take the Money: Closing the Bargain",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f4947680482bd0de",
+  "sourceHash": "fnv1a64:ed99cb9e68517591",
   "lessons": [
     {
       "id": "MW-C24-hear-lo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6701b183f3f75e7d",
+      "sourceHash": "fnv1a64:c2aed445d8133997",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lo is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from labhate, \"catches, takes\". CDIAL lists Old Marwari lei under it (CDIAL 10948). lo is the asking form of this verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -115,7 +126,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:3ab55d420c5061ca",
+      "sourceHash": "fnv1a64:d6cfa6eb70049d90",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -164,6 +175,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लो (lo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from labhate, \"catches, takes\". CDIAL lists Old Marwari lei under it (CDIAL 10948). lo is the asking form of this verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -174,7 +196,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -219,7 +241,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:589c17cceadfa555",
+      "sourceHash": "fnv1a64:b1ae358293ef8bed",
       "notice": null,
       "blocks": [
         {
@@ -269,6 +291,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "paisā le lo joins words with their own lessons: paisā, \"money\", from padāṃśa, \"quarter part\" (CDIAL 7761); and le and lo, two forms of the verb \"to take\", which CDIAL lists as Old Marwari lei under Sanskrit labhate, \"takes\" (CDIAL 10948)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -314,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67d6f9244778f47f",
+      "sourceHash": "fnv1a64:c2ed9286aafe784d",
       "notice": null,
       "blocks": [
         {
@@ -369,6 +402,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पैसा ले लो (paisā le lo) joins words with their own lessons: paisā, \"money\", from padāṃśa, \"quarter part\" (CDIAL 7761); and le and lo, two forms of the verb \"to take\", which CDIAL lists as Old Marwari lei under Sanskrit labhate, \"takes\" (CDIAL 10948)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -393,7 +437,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -546,7 +590,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45d1020ecbcd3a2f",
+      "sourceHash": "fnv1a64:7e20c11850cbb50d",
       "notice": null,
       "blocks": [
         {
@@ -596,6 +640,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "do is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dadāti, \"gives\". CDIAL lists Marwari deṇo under it (CDIAL 6141). do is the asking form of this verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -642,7 +697,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:0af1f22932fe7838",
+      "sourceHash": "fnv1a64:42e2135d2aa2b680",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -692,6 +747,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दो (do) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dadāti, \"gives\". CDIAL lists Marwari deṇo under it (CDIAL 6141). do is the asking form of this verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -702,7 +768,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -747,7 +813,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4c12b3253bbf487",
+      "sourceHash": "fnv1a64:7aff154e8be19e81",
       "notice": null,
       "blocks": [
         {
@@ -793,6 +859,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ākhrī is a loan from Arabic ākhir, \"last\", which reached Marwadi through Persian. Its Arabic root is ʾ-ḫ-r (Lane). Persian āxirī, \"final\", added the ending -ī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -839,7 +916,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:e65d72b2327c00c7",
+      "sourceHash": "fnv1a64:78a31701db5123a4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -889,6 +966,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आखरी (ākhrī) is a loan from Arabic ākhir, \"last\", which reached Marwadi through Persian. Its Arabic root is ʾ-ḫ-r (Lane). Persian āxirī, \"final\", added the ending -ī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -899,7 +987,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -944,7 +1032,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0691c8232014780c",
+      "sourceHash": "fnv1a64:3258498c996c1b67",
       "notice": null,
       "blocks": [
         {
@@ -994,6 +1082,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kitṇo ākhrī bhāv doge joins words with their own lessons: kitṇo, \"how much\" (CDIAL 3167); ākhrī, \"final\", from Arabic ākhir, \"last\", through Persian; bhāv, \"price\" (CDIAL 9475); and doge, \"will you give\", a future of the verb CDIAL lists as Marwari deṇo under Sanskrit dadāti, \"gives\" (CDIAL 6141)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1039,7 +1138,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55337ecef6e2393d",
+      "sourceHash": "fnv1a64:17333df44ff1abfe",
       "notice": null,
       "blocks": [
         {
@@ -1090,6 +1189,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कितणो आखरी भाव दोगे (kitṇo ākhrī bhāv doge) joins words with their own lessons: kitṇo, \"how much\" (CDIAL 3167); ākhrī, \"final\", from Arabic ākhir, \"last\", through Persian; bhāv, \"price\" (CDIAL 9475); and doge, \"will you give\", a future of the verb CDIAL lists as Marwari deṇo under Sanskrit dadāti, \"gives\" (CDIAL 6141)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1114,7 +1224,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

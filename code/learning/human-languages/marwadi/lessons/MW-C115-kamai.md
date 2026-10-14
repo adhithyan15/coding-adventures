@@ -14,7 +14,8 @@ romanization: "kamāī"
 concept_tag: MW-CAN115-KAMAI
 prerequisites: [MW-C115-jaydad, MW-C115-puji]
 sounds: []
-roots: []
+roots: [indo-aryan-karmapayati]
+etymology_hook: "kamāī: noun of the verb to earn ← *karmāpayati 'works, earns', reconstructed (CDIAL 2897)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C115-puji]
 <!-- hl-knowledge: introduces=[MW-LEX-C115-CAN115-04]; assesses=[] -->
 
 **कमाई** — *kamāī* — "earnings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कमाई** (*kamāī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*karmāpayati*, "works, earns", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 2897); the match is through Hindi *kamānā* and Gujarati *kamāvũ*. **कमाई** (*kamāī*) is the noun of the verb "to earn"; CDIAL builds that verb on Sanskrit *karman*, "work".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vāstai"
 concept_tag: MW-WHY117-VASTAI
 prerequisites: [MW-C117-kyu, MW-C117-karan]
 sounds: []
-roots: []
+roots: [arabic-wasita]
+etymology_hook: "vāstai: usually traced to Persian vāsṭe 'for', from Arabic wāsiṭa 'means' (Lane, root w-s-ṭ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C117-karan]
 <!-- hl-knowledge: introduces=[MW-LEX-C117-WHY117-03]; assesses=[] -->
 
 **वास्तै** — *vāstai* — "for, for the sake of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वास्तै** (*vāstai*) is a loan from Arabic *wāsiṭa*, "means, intermediary", which reached Marwadi through Persian. Its Arabic root is *w-s-ṭ* (Lane). Persian *vāsṭe*, "for the sake of", grew from it; Marwadi ends it in *-ai*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

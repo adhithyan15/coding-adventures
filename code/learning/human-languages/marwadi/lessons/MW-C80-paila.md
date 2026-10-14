@@ -14,7 +14,8 @@ romanization: "pailā̃"
 concept_tag: MW-TIME80-PAILA
 prerequisites: [MW-C80-jaldi, MW-C80-der]
 sounds: []
-roots: []
+roots: [indo-aryan-prathila]
+etymology_hook: "pailā̃ ← *prathila 'first', reconstructed (CDIAL 8652, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C80-der]
 <!-- hl-knowledge: introduces=[MW-LEX-C80-TIME80-05]; assesses=[] -->
 
 **पैलां** — *pailā̃* — "before".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पैलां** (*pailā̃*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*prathila*, "first", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *pahalo* under it (CDIAL 8652). **पैलां** (*pailā̃*), "before", is a form of the word for "first", built on Sanskrit *prathama*, "first".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

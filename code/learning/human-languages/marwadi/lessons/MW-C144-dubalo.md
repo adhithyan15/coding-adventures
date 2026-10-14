@@ -14,7 +14,8 @@ romanization: "dubaḷo"
 concept_tag: MW-QUAL144-DUBALO
 prerequisites: [MW-C144-rupalo, MW-C144-javan]
 sounds: []
-roots: []
+roots: [sanskrit-durbala]
+etymology_hook: "dubaḷo ← Sanskrit durbala 'weak', a tadbhava (CDIAL 6438, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C144-javan]
 <!-- hl-knowledge: introduces=[MW-LEX-C144-QUAL144-04]; assesses=[] -->
 
 **दुबळो** — *dubaḷo* — "thin, weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुबळो** (*dubaḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *durbala*, "weak". CDIAL lists Old Marwari *dūbalaü* under it (CDIAL 6438). It is built on *dus-*, "ill", and *bala*, "strength".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: MW-LEX-RAAM-01
 prerequisites: [MW-W01-aa-matra]
 sounds: [tap-r, long-aa]
 roots: [rāma]
+etymology_hook: "rām: the Sanskrit name Rāma, taken over whole, a tatsama; CDIAL has no entry for names"
 duration:
   max_seconds: 180
 requires:
@@ -51,6 +52,11 @@ At the end of this word, the built-in vowel of **म** is not pronounced in
 ordinary speech. Read the whole word *rām*. **राम** is the name *Ram*. The
 Marwadi greeting you are building will repeat this name. Today you only need
 the one word **राम**; the complete greeting still comes later.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**राम** (*rām*) is the Sanskrit name *Rāma*, taken over whole, a tatsama. CDIAL, which lists words by their inherited descendants, has no entry for the name.
 
 ## Writing — from copy to memory
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01] -->

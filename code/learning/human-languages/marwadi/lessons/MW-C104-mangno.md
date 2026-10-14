@@ -14,7 +14,8 @@ romanization: "māṅgṇo"
 concept_tag: MW-VERB-MANGNO
 prerequisites: [MW-C104-ugharno, MW-C104-bulavno]
 sounds: []
-roots: []
+roots: [sanskrit-margati]
+etymology_hook: "māṅgṇo ← Sanskrit mārgati 'seeks, requests', a tadbhava (CDIAL 10074, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C104-bulavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C104-ACT104-04]; assesses=[] -->
 
 **मांगणो** — *māṅgṇo* — "to ask for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मांगणो** (*māṅgṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mārgati*, "seeks, requests". CDIAL lists Old Marwari *māgaï* under it (CDIAL 10074).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

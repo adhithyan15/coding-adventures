@@ -11,8 +11,8 @@ gloss: market
 concept_tag: MW-PLACE-MARKET
 prerequisites: [MW-R09-script-close]
 sounds: [voiced-b, long-aa, voiced-j]
-roots: []
-etymology_hook: A useful destination arrives by ear before its one new consonant.
+roots: [persian-bazar]
+etymology_hook: "bājār: usually traced to Persian bāzār 'market'"
 duration:
   max_seconds: 135
 requires:
@@ -46,6 +46,11 @@ reviews_of: [MW-C09-family-twelve, MW-C08-parivaar]
 
 Hear the two long vowels and say the destination. Its new middle consonant stays
 off the page until the next lesson.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bājār* is a loan, usually traced to Persian *bāzār*, "market". Marwadi says the *z* as *j*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAJAR-01] -->

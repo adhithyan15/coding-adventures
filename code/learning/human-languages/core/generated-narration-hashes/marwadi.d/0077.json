@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 77,
-  "sourceHash": "fnv1a64:603cac1a3082a57b",
+  "sourceHash": "fnv1a64:2a8fdf9fea2e7194",
   "lessonIds": [
     "MW-C77-lal",
     "MW-C77-nilo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch77.txt",
   "json": "marwadi/narration/ch77.json",
-  "textHash": "fnv1a64:1a736156b04c83e8",
-  "jsonHash": "fnv1a64:bf25008b70a42f33",
+  "textHash": "fnv1a64:79bcdad16addd975",
+  "jsonHash": "fnv1a64:b7abb536814405cc",
   "findings": []
 }

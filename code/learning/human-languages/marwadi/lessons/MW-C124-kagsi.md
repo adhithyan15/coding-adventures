@@ -14,7 +14,8 @@ romanization: "kā̃gsī"
 concept_tag: MW-THINGS124-KAGSI
 prerequisites: [MW-C123-pardo, MW-C123-arsi]
 sounds: []
-roots: []
+roots: [sanskrit-kankata]
+etymology_hook: "kā̃gsī ← Sanskrit kaṅkata 'comb', with sounds swapped; of doubtful origin (CDIAL 2598)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C123-arsi]
 <!-- hl-knowledge: introduces=[MW-LEX-C124-THINGS124-01]; assesses=[] -->
 
 **कांगसी** — *kā̃gsī* — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कांगसी** (*kā̃gsī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṅkata*, "comb". CDIAL gives no Marwari form in this entry (CDIAL 2598); the match is through Gujarati *kā̃gsī*. CDIAL notes that the Gujarati form swapped its sounds, and calls the further origin of the Sanskrit word doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for the sea, then the Marwadi for fire.
 You'll want to know: आभो.
 आभो — ābho — "the sky".
 
+The word, taken apart.
+आभो (ābho) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from abhra, "cloud, rainy weather". CDIAL lists Old Marwari ābhai under it (CDIAL 549). The Old Marwari row means "in the sky"; Gujarati ābh means "sky, clouds".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for fire, then the Marwadi for the sky.
 
 You'll want to know: कुत्तो.
 कुत्तो — kutto — "a dog".
+
+The word, taken apart.
+कुत्तो (kutto) is a tadbhava, a word inherited and reshaped by sound change. It comes from kutta, "dog", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari kuto under it (CDIAL 3275). CDIAL thinks the word imitates a call to a dog.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for the sky, then the Marwadi for a dog.
 You'll want to know: बिल्ली.
 बिल्ली — billī — "a cat".
 
+The word, taken apart.
+बिल्ली (billī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from biḍāla, "cat". CDIAL gives no Marwari form in this entry (CDIAL 9237); the match is through Hindi billī. CDIAL lists Hindi billī under a variant it reconstructs, billa.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a dog, then the Marwadi for a cat.
 You'll want to know: गाय.
 गाय — gāy — "a cow".
 
+The word, taken apart.
+गाय (gāy) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gāvī, "cow". CDIAL lists Old Marwari gāi under it (CDIAL 4147). It is a form of Sanskrit go, "cow", the same ancient word as English cow.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a cat, then the Marwadi for a cow.
 
 You'll want to know: भैंस.
 भैंस — bhaĩs — "a buffalo".
+
+The word, taken apart.
+भैंस (bhaĩs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mahiṣī, "buffalo cow". CDIAL lists Old Marwari bhaïṃsa under it (CDIAL 9964). The Sanskrit word first meant "great, powerful".
 
 What you've built.
 One more word for this chapter.

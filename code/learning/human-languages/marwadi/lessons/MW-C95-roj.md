@@ -14,7 +14,8 @@ romanization: "roj"
 concept_tag: MW-TIME95-ROJ
 prerequisites: [MW-C95-tarkai, MW-C95-bagat]
 sounds: []
-roots: []
+roots: [persian-roz]
+etymology_hook: "roj: usually traced to Persian rōz 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C95-bagat]
 <!-- hl-knowledge: introduces=[MW-LEX-C95-TIME95-04]; assesses=[] -->
 
 **रोज** — *roj* — "every day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रोज** (*roj*) is a loan, usually traced to Persian *rōz*, "day". Marwadi says the *z* as *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

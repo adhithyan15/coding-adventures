@@ -11,8 +11,8 @@ gloss: wife, written with known signs and a known vowel-killer
 concept_tag: MW-FAMILY-WIFE-WRITTEN
 prerequisites: [MW-C09-hear-patni]
 sounds: [unaspirated-p, dental-t, dental-n, long-ii]
-roots: []
-etymology_hook: Known त, virama, न, and ी form a compact cluster without a new sign.
+roots: [sanskrit-patni]
+etymology_hook: "patnī ← Sanskrit patnī 'mistress, wife', a tatsama (CDIAL 7742)"
 duration:
   max_seconds: 175
 requires:
@@ -46,6 +46,11 @@ Then say the respectful **राम राम सा** greeting.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PATNI-01, MW-SCRIPT-PATNI-01] -->
 
 > **प** + **त्** + **नी** → **पत्नी** — *patnī* — wife
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पत्नी** (*patnī*) is Sanskrit *patnī*, "mistress, wife", taken over whole as a learned loan, a tatsama (CDIAL 7742).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PATNI-01, MW-LEX-PATI-01] -->

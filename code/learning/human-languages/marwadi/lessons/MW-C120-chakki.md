@@ -14,7 +14,8 @@ romanization: "chakkī"
 concept_tag: MW-THINGS120-CHAKKI
 prerequisites: [MW-C120-supro, MW-C120-chalni]
 sounds: []
-roots: []
+roots: [sanskrit-cakra]
+etymology_hook: "chakkī ← Sanskrit cakra 'wheel; oil mill', a tadbhava (CDIAL 4538, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C120-chalni]
 <!-- hl-knowledge: introduces=[MW-LEX-C120-THINGS120-03]; assesses=[] -->
 
 **चक्की** — *chakkī* — "a grinding mill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चक्की** (*chakkī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cakra*, "wheel; oil mill". CDIAL gives no Marwari form in this entry (CDIAL 4538); the match is through Hindi *cākī*. English *wheel* is a distant cousin of the Sanskrit word. **चक्की** (*chakkī*) keeps a doubled *k* that Hindi *cākī*, "millstone", has lost.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

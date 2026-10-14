@@ -14,7 +14,8 @@ romanization: "bhejṇo"
 concept_tag: MW-VERB-BHEJNO
 prerequisites: [MW-C55-bhulno, MW-C55-lavno]
 sounds: []
-roots: []
+roots: [indo-aryan-bhejj]
+etymology_hook: "bhejṇo ← *bhējj 'send', reconstructed, of uncertain source (CDIAL 9603, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C55-lavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C55-VERBS55-05]; assesses=[] -->
 
 **भेजणो** — *bhejṇo* — "to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भेजणो** (*bhejṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhejj*, "send", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *bhejaï* under it (CDIAL 9603). CDIAL offers two possible sources for the stem and calls neither sure.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

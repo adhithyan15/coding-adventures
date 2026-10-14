@@ -14,7 +14,8 @@ romanization: "gāy"
 concept_tag: MW-NATURE70-GAY
 prerequisites: [MW-C70-kutto, MW-C70-billi]
 sounds: []
-roots: []
+roots: [sanskrit-gavi]
+etymology_hook: "gāy ← Sanskrit gāvī 'cow', a tadbhava (CDIAL 4147, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C70-billi]
 <!-- hl-knowledge: introduces=[MW-LEX-C70-NATURE70-04]; assesses=[] -->
 
 **गाय** — *gāy* — "a cow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गाय** (*gāy*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gāvī*, "cow". CDIAL lists Old Marwari *gāi* under it (CDIAL 4147). It is a form of Sanskrit *go*, "cow", the same ancient word as English *cow*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "māmo"
 concept_tag: MW-FAMILY49-MAMO
 prerequisites: [MW-C48-beti, MW-C49-kako]
 sounds: []
-roots: []
+roots: [sanskrit-mama]
+etymology_hook: "māmo ← Sanskrit māma 'uncle', a nursery word; similar words in Dravidian (CDIAL 10055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C49-kako]
 <!-- hl-knowledge: introduces=[MW-LEX-C49-FAMILY49-02]; assesses=[] -->
 
 **मामो** — *māmo* — "an uncle (mother's brother)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मामो** (*māmo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *māma*, "uncle". CDIAL gives no Marwari form in this entry (CDIAL 10055); the match is through Hindi *māmā* and Gujarati *māmo*. CDIAL calls it a nursery word and notes similar words in Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

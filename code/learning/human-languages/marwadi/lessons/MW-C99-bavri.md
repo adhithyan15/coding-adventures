@@ -14,7 +14,8 @@ romanization: "bāvṛī"
 concept_tag: MW-LOC99-BAVRI
 prerequisites: [MW-C99-agano, MW-C99-baro]
 sounds: []
-roots: []
+roots: [sanskrit-vapi]
+etymology_hook: "bāvṛī ← Sanskrit vāpī 'pond, tank', a tadbhava (CDIAL 11529, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C99-baro]
 <!-- hl-knowledge: introduces=[MW-LEX-C99-LOC99-04]; assesses=[] -->
 
 **बावड़ी** — *bāvṛī* — "a stepwell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बावड़ी** (*bāvṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vāpī*, "pond, tank". CDIAL gives no Marwari form in this entry (CDIAL 11529); the match is through Hindi *bāuṛī*. CDIAL explains the *ṛ* as an added suffix.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

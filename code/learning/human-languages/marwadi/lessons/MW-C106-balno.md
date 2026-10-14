@@ -14,7 +14,8 @@ romanization: "bāḷṇo"
 concept_tag: MW-VERB-BALNO
 prerequisites: [MW-C106-uthavno, MW-C106-gerno]
 sounds: []
-roots: []
+roots: [indo-aryan-dvalayati]
+etymology_hook: "bāḷṇo ← *dvālayati 'kindles', reconstructed (CDIAL 6671, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C106-gerno]
 <!-- hl-knowledge: introduces=[MW-LEX-C106-ACT106-04]; assesses=[] -->
 
 **बाळणो** — *bāḷṇo* — "to burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाळणो** (*bāḷṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dvālayati*, "kindles", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 6671); the match is through Hindi *bālnā* and Gujarati *bāḷvũ*. CDIAL sets it beside Sanskrit *jvālayati*, "kindles".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: INTRO-MY-NAME-IS
 prerequisites: [MW-W05-ai-matra]
 sounds: [aspirated-mh, long-aa, tapped-r, long-o, dental-n, open-ai]
 roots: [SANSKRIT-NAMAN-NAME, PIE-NOMN-NAME]
+etymology_hook: "mhāro nām rām hai: my (not settled) + nām ← nāman (CDIAL 7067) + Rāma + hai (CDIAL 1031)"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,11 @@ reviews_of: [MW-C05-mharo, MW-C05-naam, MW-C05-hear-hai, MW-W05-ai-matra, MW-W01
 The written line adds no new sign. **है** is known **ह** plus **ै**. Replace
 **राम** with your chosen name when speaking; keep Ram for the first writing
 attempt because every sign is already yours.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**म्हारो नाम राम है** (*mhāro nām rām hai*) joins four words with their own lessons: *mhāro*, "my", whose history is not settled; *nām*, "name", from Sanskrit *nāman* (CDIAL 7067); the Sanskrit name *Rāma*; and *hai*, "is", which CDIAL ties to Sanskrit *ākṣēti*, "abides" (CDIAL 1031).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PHRASE-MY-NAME-IS-01, MW-SCRIPT-HAI-01] -->

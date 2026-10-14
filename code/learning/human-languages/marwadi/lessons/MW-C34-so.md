@@ -11,8 +11,8 @@ gloss: a hundred, on the page — two signs, and the pair that a mishearing turn
 concept_tag: MW-NUMBER-HUNDRED-WRITTEN
 prerequisites: [MW-C34-hear-so]
 sounds: [voiceless-s, long-o]
-roots: []
-etymology_hook: Ten, twenty and a hundred all carry the same s; only a hundred puts a vowel mark after it.
+roots: [sanskrit-shata]
+etymology_hook: "so ← Sanskrit śata 'hundred', a tadbhava (CDIAL 12278, Old Marwari row)"
 duration:
   max_seconds: 170
 requires:
@@ -49,6 +49,11 @@ between two, nine and a hundred.
 
 That column is worth keeping. It is the one place in this book where a single
 mistaken stroke changes a price by a factor of fifty.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सो** (*so*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śata*, "hundred". CDIAL lists Old Marwari *sau* under it (CDIAL 12278). English *hundred* holds a cousin of the same ancient word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SO-01, MW-SCRIPT-NO-NINE-01, MW-SCRIPT-DO-TWO-01] -->

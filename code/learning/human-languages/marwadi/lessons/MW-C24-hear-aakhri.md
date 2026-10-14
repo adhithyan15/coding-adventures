@@ -11,8 +11,8 @@ gloss: final; last — the word that ends a bargain
 concept_tag: MW-SHOPPING-FINAL
 prerequisites: [MW-C24-do]
 sounds: [long-aa, aspirated-kh, tapped-r, long-ii]
-roots: []
-etymology_hook: A counter-offer can go round forever until one word closes it.
+roots: [arabic-akhir]
+etymology_hook: "ākhrī ← Arabic ākhir 'last', through Persian (Lane, root ʾ-ḫ-r)"
 duration:
   max_seconds: 165
 requires:
@@ -51,6 +51,11 @@ place.
 A counter-offer can be answered with another counter-offer forever. *ākhrī* is
 the word that says this one is the end of it, and it is why the question in the
 next lesson gets a different kind of answer from the first price question.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ākhrī* is a loan from Arabic *ākhir*, "last", which reached Marwadi through Persian. Its Arabic root is *ʾ-ḫ-r* (Lane). Persian *āxirī*, "final", added the ending *-ī*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-AAKHRI-01] -->

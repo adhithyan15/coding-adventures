@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a stepwell, then the Marwadi for a pond,
 You'll want to know: दरवाजो.
 दरवाजो — darvājo — "a gate, a doorway".
 
+The word, taken apart.
+दरवाजो (darvājo) is a loan, usually traced to Persian darvāza, "gate, door". Marwadi says the z as j. The Persian word is a cousin of English door.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a pond, a lake, then the Marwadi for a g
 
 You'll want to know: पोळ.
 पोळ — poḷ — "a gateway".
+
+The word, taken apart.
+पोळ (poḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pratolī, "gate of town or fort". CDIAL gives no Marwari form in this entry (CDIAL 8633); the match is through Hindi pol and Gujarati poḷ.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a gate, then the Marwadi for a gateway.
 You'll want to know: हवेली.
 हवेली — havelī — "a mansion".
 
+The word, taken apart.
+हवेली (havelī) is a loan, usually traced to Persian havēlī, "mansion". Persian took it from Arabic ḥawālī, "surroundings" (Lane, root ḥ-w-l).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a gateway, then the Marwadi for a mansio
 You'll want to know: मेळो.
 मेळो — meḷo — "a fair".
 
+The word, taken apart.
+मेळो (meḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mela, "meeting". CDIAL lists Marwari meḷo under it (CDIAL 10331). It is built on the root mil, "to meet".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a mansion, then the Marwadi for a fair.
 
 You'll want to know: हाट.
 हाट — hāṭ — "a weekly market".
+
+The word, taken apart.
+हाट (hāṭ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from haṭṭa, "market, fair". CDIAL lists Old Marwari hāṭi under it (CDIAL 13944).
 
 What you've built.
 One more word for this chapter.

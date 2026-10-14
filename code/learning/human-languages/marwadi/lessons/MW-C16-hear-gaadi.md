@@ -11,8 +11,8 @@ gloss: vehicle
 concept_tag: MW-TRANSPORT-VEHICLE
 prerequisites: [MW-C16-bas]
 sounds: [voiced-g, retroflex-flap, long-ii]
-roots: []
-etymology_hook: A general vehicle word reuses the dotted sound from clothes.
+roots: [indo-aryan-gadda]
+etymology_hook: "gāṛī ← *gāḍḍa 'cart', reconstructed (CDIAL 4116, Hindi row)"
 duration:
   max_seconds: 145
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C16-bas, MW-C15-hear-kapda, MW-W15-nukta]
 
 Use vehicle as the broad meaning here. Hear the curled middle sound, then say
 the word once from a vehicle picture.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gāṛī* is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*gāḍḍa*, "cart", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4116); the match is through Hindi *gāṛī*. CDIAL thinks it may be the same word as one for a seat.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GAADI-01] -->

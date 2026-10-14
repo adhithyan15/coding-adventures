@@ -15,6 +15,7 @@ concept_tag: MW-TIME80-KADI
 prerequisites: [MW-C79-abar, MW-C80-hamesa]
 sounds: []
 roots: []
+etymology_hook: "kadī 'ever': not in CDIAL, so not settled; its k- is the question stem, as in Hindi kabhī (CDIAL 2528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C80-hamesa]
 <!-- hl-knowledge: introduces=[MW-LEX-C80-TIME80-02]; assesses=[] -->
 
 **कदी** — *kadī* — "sometimes, ever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL has no entry for **कदी** (*kadī*), so its history is not settled. Its *k-* is the old question stem: CDIAL lists Hindi *kabhī*, "ever", under Sanskrit *evam eva*, "exactly so", crossed with the stem *ka-* (CDIAL 2528), but nothing with the shape of **कदी** (*kadī*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

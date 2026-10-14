@@ -4,7 +4,7 @@
   "chapter": 117,
   "title": "Why, Reason, For, Because of, Because",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:14d55a06a46e3d2c",
+  "sourceHash": "fnv1a64:a0a68076669101e5",
   "lessons": [
     {
       "id": "MW-C117-kyu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b66ded555cfa6d4",
+      "sourceHash": "fnv1a64:776353c58c226d74",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्यूं (kyū̃) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kim, \"what, why\". CDIAL lists Old Marwari kyu under it (CDIAL 3164). Its k- is the old question stem."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5b6101d19e7f725",
+      "sourceHash": "fnv1a64:a9395aa6ab015071",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कारण (kāraṇ) is Sanskrit kāraṇa, \"cause\", taken over whole as a learned loan, a tatsama (CDIAL 3057). CDIAL also lists Gujarati kāraṇ and Hindi kāran, \"reason\", under it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79e412a97314cd2c",
+      "sourceHash": "fnv1a64:a11a5c50a2e48832",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वास्तै (vāstai) is a loan from Arabic wāsiṭa, \"means, intermediary\", which reached Marwadi through Persian. Its Arabic root is w-s-ṭ (Lane). Persian vāsṭe, \"for the sake of\", grew from it; Marwadi ends it in -ai."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a70c433b16252ce",
+      "sourceHash": "fnv1a64:c9d268ce701dd6a6",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खातर (khātar) is a loan from Arabic ḫāṭir, \"mind; sake\", which reached Marwadi through Persian. Its Arabic root is ḫ-ṭ-r (Lane). Persian uses it in ba xāṭir, \"for the sake of\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4f19d4af4c977ee",
+      "sourceHash": "fnv1a64:be0d85c0016c927e",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्यूंकै (kyū̃kai) joins kyū̃, \"why\", which CDIAL lists as Old Marwari kyu under Sanskrit kim, \"what\" (CDIAL 3164), with kai, \"that\". CDIAL takes the similar Hindi ki, \"that\", from Persian (CDIAL 3164), but gives no Marwari form of it, so that part is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "bahādur"
 concept_tag: MW-QUAL149-BAHADUR
 prerequisites: [MW-C149-khus, MW-C149-darpok]
 sounds: []
-roots: []
+roots: [persian-bahadur]
+etymology_hook: "bahādur: usually traced, through Persian, to a Turkic or Mongol word for 'hero'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C149-darpok]
 <!-- hl-knowledge: introduces=[MW-LEX-C149-QUAL149-04]; assesses=[] -->
 
 **बहादुर** — *bahādur* — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बहादुर** (*bahādur*) is a loan, usually traced to Persian *bahādur*, "brave, hero". Persian took it from a Turkic or Mongol word for "hero".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

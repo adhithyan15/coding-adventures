@@ -14,7 +14,8 @@ romanization: "marjī"
 concept_tag: MW-WANT112-MARJI
 prerequisites: [MW-C112-sapno, MW-C112-ummid]
 sounds: []
-roots: []
+roots: [arabic-marzi]
+etymology_hook: "marjī ← Arabic marḍī 'pleasing, approved', through Persian (Lane, root r-ḍ-w)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C112-ummid]
 <!-- hl-knowledge: introduces=[MW-LEX-C112-WANT112-05]; assesses=[] -->
 
 **मरजी** — *marjī* — "one's will, a choice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मरजी** (*marjī*) is a loan from Arabic *marḍī*, "pleasing, approved", which reached Marwadi through Persian. Its Arabic root is *r-ḍ-w* (Lane). Persian says it *marzī*; Marwadi says the *z* as *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

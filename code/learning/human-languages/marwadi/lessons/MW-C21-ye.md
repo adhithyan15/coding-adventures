@@ -11,8 +11,8 @@ gloss: this, written with two signs the hand already owns
 concept_tag: MW-DEMONSTRATIVE-THIS-WRITTEN
 prerequisites: [MW-C21-hear-ye]
 sounds: [semivowel-y, long-e]
-roots: []
-etymology_hook: The glide taught for tea comes back one lesson later carrying a different vowel.
+roots: [sanskrit-esha]
+etymology_hook: "ye 'this': CDIAL lists Hindi yah under Sanskrit eṣa 'this' (CDIAL 2530); no Marwari form, path not settled"
 duration:
   max_seconds: 160
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C21-hear-ye, MW-W20-ya, MW-W07-e-matra, MW-C20-chaay]
 In **चाय** the glide **य** closed a word and carried no vowel mark. Here the
 same sign opens a word and carries **े** above the headstroke. One sign, two
 jobs, and nothing new to learn.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Hindi *yah*, "this", under Sanskrit *eṣa*, "this" (CDIAL 2530). It gives no Marwari form, so the exact path to **ये** (*ye*) is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-YE-01] -->

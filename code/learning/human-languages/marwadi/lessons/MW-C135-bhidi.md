@@ -14,7 +14,8 @@ romanization: "bhī̃ḍī"
 concept_tag: MW-THINGS135-BHIDI
 prerequisites: [MW-C135-matiro, MW-C135-kakri]
 sounds: []
-roots: []
+roots: [sanskrit-bhinda]
+etymology_hook: "bhī̃ḍī ← Sanskrit bhiṇḍā 'okra', a tadbhava (CDIAL 9492, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C135-kakri]
 <!-- hl-knowledge: introduces=[MW-LEX-C135-THINGS135-03]; assesses=[] -->
 
 **भींडी** — *bhī̃ḍī* — "okra".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भींडी** (*bhī̃ḍī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhiṇḍā*, "okra". CDIAL gives no Marwari form in this entry (CDIAL 9492); the match is through Hindi *bhiṇḍī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

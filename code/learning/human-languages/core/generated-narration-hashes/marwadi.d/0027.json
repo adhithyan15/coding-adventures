@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 27,
-  "sourceHash": "fnv1a64:f29d1c90613d7885",
+  "sourceHash": "fnv1a64:d6e8a0ccf23b834c",
   "lessonIds": [
     "MW-C22-hear-kitno",
     "MW-C22-kitno",
@@ -17,7 +17,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch27.txt",
   "json": "marwadi/narration/ch27.json",
-  "textHash": "fnv1a64:3dfc2398b2f30aa3",
-  "jsonHash": "fnv1a64:60aadff26d48740a",
+  "textHash": "fnv1a64:1e4241896b5efc3b",
+  "jsonHash": "fnv1a64:af6c234daa6bc669",
   "findings": []
 }

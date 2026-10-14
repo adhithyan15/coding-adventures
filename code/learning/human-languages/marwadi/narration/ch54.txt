@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to take, then the Marwadi for to keep.
 You'll want to know: खोलणो.
 खोलणो — kholṇo — "to open".
 
+The word, taken apart.
+खोलणो (kholṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from kholl, "to open", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari kholṇo under it (CDIAL 3945).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to keep, then the Marwadi for to open.
 
 You'll want to know: हंसणो.
 हंसणो — hãsṇo — "to laugh".
+
+The word, taken apart.
+हंसणो (hãsṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hasati, "laughs". CDIAL lists Marwari hãsṇo under it (CDIAL 14021).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to open, then the Marwadi for to laugh.
 You'll want to know: रोवणो.
 रोवणो — rovṇo — "to cry".
 
+The word, taken apart.
+रोवणो (rovṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rodati, "howls, weeps". CDIAL lists Old Marwari roi under it (CDIAL 10840).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to laugh, then the Marwadi for to cry.
 You'll want to know: गावणो.
 गावणो — gāvṇo — "to sing".
 
+The word, taken apart.
+गावणो (gāvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gāyati, "sings". CDIAL lists Old Marwari gāve under it (CDIAL 4135).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to cry, then the Marwadi for to sing.
 
 You'll want to know: नाचणो.
 नाचणो — nāchṇo — "to dance".
+
+The word, taken apart.
+नाचणो (nāchṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nṛtyati, "dances". CDIAL gives no Marwari form in this entry (CDIAL 7583); the match is through Hindi nācnā and Gujarati nācvũ.
 
 What you've built.
 One more word for this chapter.

@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for wet, then the Marwadi for dry.
 You'll want to know: तातो.
 तातो — tāto — "hot (to the touch)".
 
+The word, taken apart.
+तातो (tāto) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tapta, "heated, hot". CDIAL lists Marwari tāto under it (CDIAL 5679).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for dry, then the Marwadi for hot.
 
 You'll want to know: खारो.
 खारो — khāro — "salty".
+
+The word, taken apart.
+खारो (khāro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣāra, "corrosive; alkali". CDIAL lists Marwari khāro under it (CDIAL 3674).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for hot, then the Marwadi for salty.
 You'll want to know: खाटो.
 खाटो — khāṭo — "sour".
 
+The word, taken apart.
+खाटो (khāṭo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khaṭṭa, "sour". CDIAL gives no Marwari form in this entry (CDIAL 3777); the match is through Gujarati khāṭũ. CDIAL asks whether it is connected with kaṭu, "pungent".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for salty, then the Marwadi for sour.
 You'll want to know: कड़वो.
 कड़वो — kaṛvo — "bitter".
 
+The word, taken apart.
+कड़वो (kaṛvo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaṭu, "pungent, bitter". CDIAL lists Old Marwari kaṛuvaü under it (CDIAL 2641).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for sour, then the Marwadi for bitter.
 
 You'll want to know: तीखो.
 तीखो — tīkho — "spicy, sharp".
+
+The word, taken apart.
+तीखो (tīkho) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tīkṣṇa, "sharp; hot, pungent". CDIAL gives no Marwari form in this entry (CDIAL 5839); the match is through Hindi tīkhā and Gujarati tīkhũ.
 
 What you've built.
 One more word for this chapter.

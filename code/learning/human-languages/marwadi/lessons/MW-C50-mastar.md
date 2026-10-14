@@ -14,7 +14,8 @@ romanization: "māsṭar"
 concept_tag: MW-FAMILY50-MASTAR
 prerequisites: [MW-C50-parosi, MW-C50-pavno]
 sounds: []
-roots: []
+roots: [english-master]
+etymology_hook: "māsṭar ← English master"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C50-pavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C50-FAMILY50-04]; assesses=[] -->
 
 **मास्टर** — *māsṭar* — "a teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मास्टर** (*māsṭar*) is a loan from English *master*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

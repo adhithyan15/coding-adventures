@@ -14,7 +14,8 @@ romanization: "mor"
 concept_tag: MW-ANIMALS72-MOR
 prerequisites: [MW-C72-badro, MW-C72-sap]
 sounds: []
-roots: []
+roots: [sanskrit-mayura]
+etymology_hook: "mor ← Sanskrit mayūra 'peacock'; some trace it to Dravidian or Austroasiatic (CDIAL 9865)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C72-sap]
 <!-- hl-knowledge: introduces=[MW-LEX-C72-ANIMALS72-03]; assesses=[] -->
 
 **मोर** — *mor* — "a peacock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोर** (*mor*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mayūra*, "peacock". CDIAL lists Old Marwari *moraḍī* under it (CDIAL 9865). The Old Marwari row means "peahen"; Hindi and Gujarati have *mor*. CDIAL records proposals that the Sanskrit word came from Dravidian or from Austroasiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

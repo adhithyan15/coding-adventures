@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 49,
-  "sourceHash": "fnv1a64:f43697c477eaf593",
+  "sourceHash": "fnv1a64:82dabffb806796aa",
   "lessonIds": [
     "MW-C49-kako",
     "MW-C49-mamo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch49.txt",
   "json": "marwadi/narration/ch49.json",
-  "textHash": "fnv1a64:4b6cc49d83a71d07",
-  "jsonHash": "fnv1a64:7d744372113f60c6",
+  "textHash": "fnv1a64:eb38ed42e7491557",
+  "jsonHash": "fnv1a64:896dac5cb506b8e6",
   "findings": []
 }

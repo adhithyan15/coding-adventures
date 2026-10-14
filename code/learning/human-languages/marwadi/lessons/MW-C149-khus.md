@@ -14,7 +14,8 @@ romanization: "khus"
 concept_tag: MW-QUAL149-KHUS
 prerequisites: [MW-C148-anokho, MW-C149-puro]
 sounds: []
-roots: []
+roots: [khush-persian]
+etymology_hook: "khus: usually traced to Persian xuš 'happy, pleasant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C149-puro]
 <!-- hl-knowledge: introduces=[MW-LEX-C149-QUAL149-02]; assesses=[] -->
 
 **खुस** — *khus* — "happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खुस** (*khus*) is a loan, usually traced to Persian *xuš*, "happy, pleasant". Marwadi says the *š* as *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

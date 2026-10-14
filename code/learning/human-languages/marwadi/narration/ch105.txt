@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to ask for, then the Marwadi for to look
 You'll want to know: रैवणो.
 रैवणो — raivṇo — "to stay, to live".
 
+The word, taken apart.
+रैवणो (raivṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from rahati, "remains", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari rahaï under it (CDIAL 10666).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to look, then the Marwadi for to stay.
 
 You'll want to know: बांचणो.
 बांचणो — bā̃chṇo — "to read".
+
+The word, taken apart.
+बांचणो (bā̃chṇo) is usually linked with Sanskrit vācayati, "causes to say, reads", which CDIAL follows into Prakrit vāyēi, "reads" (CDIAL 11471), but not into Marwari or Hindi. That entry does not explain the nasal and the ch of बांचणो (bā̃chṇo), so the link is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to stay, then the Marwadi for to read.
 You'll want to know: जाणणो.
 जाणणो — jāṇṇo — "to know".
 
+The word, taken apart.
+जाणणो (jāṇṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jānāti, "knows". CDIAL lists Marwari jāṇṇo under it (CDIAL 5193). English know is the same ancient word.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to read, then the Marwadi for to know.
 You'll want to know: भरणो.
 भरणो — bharṇo — "to fill".
 
+The word, taken apart.
+भरणो (bharṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bharati, "bears; fills". CDIAL lists Old Marwari bharaï under it (CDIAL 9397).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to know, then the Marwadi for to fill.
 
 You'll want to know: खींचणो.
 खींचणो — khī̃chṇo — "to pull".
+
+The word, taken apart.
+खींचणो (khī̃chṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from khiñc, "to drag, pull", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari khaĩcaï under it (CDIAL 3881).
 
 What you've built.
 One more word for this chapter.

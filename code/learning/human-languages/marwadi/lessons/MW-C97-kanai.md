@@ -14,7 +14,8 @@ romanization: "kanai"
 concept_tag: MW-LOC97-KANAI
 prerequisites: [MW-C97-hethai, MW-C97-bichai]
 sounds: []
-roots: []
+roots: [sanskrit-karna]
+etymology_hook: "kanai ← Sanskrit karṇa 'ear', a tadbhava (CDIAL 2830, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C97-bichai]
 <!-- hl-knowledge: introduces=[MW-LEX-C97-LOC97-03]; assesses=[] -->
 
 **कनै** — *kanai* — "near, beside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कनै** (*kanai*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karṇa*, "ear". CDIAL lists Old Marwari *kanai* under it (CDIAL 2830). CDIAL explains it as the word for "ear" used as an adverb, "at the side, near".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

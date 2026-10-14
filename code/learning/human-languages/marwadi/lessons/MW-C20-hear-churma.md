@@ -11,8 +11,8 @@ gloss: sweet crumbled wheat dessert
 concept_tag: MW-FOOD-CHURMA
 prerequisites: [MW-R19-script-close]
 sounds: [unaspirated-ch, long-uu, tapped-r, long-aa]
-roots: []
-etymology_hook: The sweet that completes the region's best known plate arrives by ear, and every sign it needs is already secure.
+roots: [indo-aryan-cura]
+etymology_hook: "chūrmā: on chūr 'crumbled', listed by CDIAL as Hindi cūr under *cūra, from Sanskrit cūrṇa (CDIAL 4888)"
 duration:
   max_seconds: 145
 requires:
@@ -48,6 +48,11 @@ reviews_of: [MW-R19-script-close, MW-C11-hawa, MW-C19-hear-baati]
 Three beats, the middle one long. Hear it twice and say it once. The source
 names it beside *dāl* and *bāṭī*; the three are often served together, and this
 lesson teaches the word rather than the custom.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chūrmā* is built on *chūr*, "crumbled". CDIAL lists Hindi *cūr*, "powder", under *\*cūra*, a form drawn from Sanskrit *cūrṇa*, "powdered" (CDIAL 4888). It has no entry for *chūrmā* itself or for its ending.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-CHURMA-01] -->

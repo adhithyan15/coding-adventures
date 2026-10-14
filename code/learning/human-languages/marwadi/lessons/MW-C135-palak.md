@@ -14,7 +14,8 @@ romanization: "pālak"
 concept_tag: MW-THINGS135-PALAK
 prerequisites: [MW-C135-bhidi, MW-C135-baingan]
 sounds: []
-roots: []
+roots: [sanskrit-palakya]
+etymology_hook: "pālak ← Sanskrit pālakyā 'Beta bengalensis', a tadbhava (CDIAL 8126, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C135-baingan]
 <!-- hl-knowledge: introduces=[MW-LEX-C135-THINGS135-05]; assesses=[] -->
 
 **पालक** — *pālak* — "spinach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पालक** (*pālak*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pālakyā*, "Beta bengalensis". CDIAL gives no Marwari form in this entry (CDIAL 8126); the match is through Hindi *pālak*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

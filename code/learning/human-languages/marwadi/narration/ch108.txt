@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to remove, then the Marwadi for to sprea
 You'll want to know: जगावणो.
 जगावणो — jagāvṇo — "to wake someone".
 
+The word, taken apart.
+जगावणो (jagāvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāgrati, "are awake". CDIAL lists Marwari jāgṇo under it (CDIAL 5175). It is the causing form, "make awake".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to spread out, then the Marwadi for to w
 
 You'll want to know: बचावणो.
 बचावणो — bachāvṇo — "to save, to rescue".
+
+The word, taken apart.
+बचावणो (bachāvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vañcati, "moves crookedly; escapes from". CDIAL lists Old Marwari vacaï under it (CDIAL 11208). It is the causing form of "to escape": "make escape", so "save"; the Old Marwari row means "is saved".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to wake someone, then the Marwadi for to
 You'll want to know: उतरणो.
 उतरणो — utarṇo — "to get down".
 
+The word, taken apart.
+उतरणो (utarṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uttarati, "passes over; descends". CDIAL lists Old Marwari utaraï under it (CDIAL 1770). It is built on ud, "up, out", and tar, "to cross".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to save, then the Marwadi for to get dow
 You'll want to know: तैरणो.
 तैरणो — tairṇo — "to swim".
 
+The word, taken apart.
+तैरणो (tairṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tirate, "crosses over". CDIAL gives no Marwari form in this entry (CDIAL 5821); the match is through Hindi tairnā.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to get down, then the Marwadi for to swi
 
 You'll want to know: कूदणो.
 कूदणो — kūdṇo — "to jump".
+
+The word, taken apart.
+कूदणो (kūdṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kūrdati, "leaps, jumps". CDIAL lists Old Marwari kūdaï under it (CDIAL 3412). CDIAL thinks the Sanskrit verb itself probably came from Dravidian.
 
 What you've built.
 One more word for this chapter.

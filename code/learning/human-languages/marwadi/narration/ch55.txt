@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to sing, then the Marwadi for to dance.
 You'll want to know: मिलणो.
 मिलणो — milṇo — "to meet".
 
+The word, taken apart.
+मिलणो (milṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from milati, "meets, encounters". CDIAL lists Old Marwari milaï under it (CDIAL 10133).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to dance, then the Marwadi for to meet.
 
 You'll want to know: सीखणो.
 सीखणो — sīkhṇo — "to learn".
+
+The word, taken apart.
+सीखणो (sīkhṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śikṣate, "learns". CDIAL gives no Marwari form in this entry (CDIAL 12430); the match is through Hindi sīkhnā and Gujarati sikhvũ.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to meet, then the Marwadi for to learn.
 You'll want to know: भूलणो.
 भूलणो — bhūlṇo — "to forget".
 
+The word, taken apart.
+भूलणो (bhūlṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhull, "err, forget", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari bhūlaï under it (CDIAL 9538).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to learn, then the Marwadi for to forget
 You'll want to know: लावणो.
 लावणो — lāvṇo — "to bring".
 
+The word, taken apart.
+CDIAL gives no Marwari row for लावणो (lāvṇo), "to bring". It lists Hindi lānā, "to bring", under Sanskrit labhate, "takes", in forms it explains as crossed with dadāti, "gives" (CDIAL 10948). The match is through Hindi.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to forget, then the Marwadi for to bring
 
 You'll want to know: भेजणो.
 भेजणो — bhejṇo — "to send".
+
+The word, taken apart.
+भेजणो (bhejṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhejj, "send", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari bhejaï under it (CDIAL 9603). CDIAL offers two possible sources for the stem and calls neither sure.
 
 What you've built.
 One more word for this chapter.

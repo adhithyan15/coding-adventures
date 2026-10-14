@@ -14,7 +14,8 @@ romanization: "nīcho"
 concept_tag: MW-ADJ75-NICHO
 prerequisites: [MW-C74-soro, MW-C74-doro]
 sounds: []
-roots: []
+roots: [sanskrit-nica]
+etymology_hook: "nīcho ← Sanskrit nīca 'low', a tadbhava (CDIAL 7540, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C74-doro]
 <!-- hl-knowledge: introduces=[MW-LEX-C75-ADJ75-01]; assesses=[] -->
 
 **नीचो** — *nīcho* — "low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नीचो** (*nīcho*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nīca*, "low". CDIAL lists Old Marwari *nīcaï* under it (CDIAL 7540). The Old Marwari row means "below".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

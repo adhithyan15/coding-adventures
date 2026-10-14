@@ -14,7 +14,8 @@ romanization: "javān"
 concept_tag: MW-QUAL144-JAVAN
 prerequisites: [MW-C144-sundar, MW-C144-rupalo]
 sounds: []
-roots: []
+roots: [persian-javan]
+etymology_hook: "javān: usually traced to Persian javān 'young'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C144-rupalo]
 <!-- hl-knowledge: introduces=[MW-LEX-C144-QUAL144-03]; assesses=[] -->
 
 **जवान** — *javān* — "young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जवान** (*javān*) is a loan, usually traced to Persian *javān*, "young".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaṛāhī"
 concept_tag: MW-THINGS118-KARAHI
 prerequisites: [MW-C118-chulho, MW-C118-tavo]
 sounds: []
-roots: []
+roots: [sanskrit-kataha]
+etymology_hook: "kaṛāhī ← Sanskrit kaṭāha 'boiler, saucepan with handles', a tadbhava (CDIAL 2638, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C118-tavo]
 <!-- hl-knowledge: introduces=[MW-LEX-C118-THINGS118-03]; assesses=[] -->
 
 **कड़ाही** — *kaṛāhī* — "a wok".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कड़ाही** (*kaṛāhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṭāha*, "boiler, saucepan with handles". CDIAL gives no Marwari form in this entry (CDIAL 2638); the match is through Hindi *kaṛāhī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

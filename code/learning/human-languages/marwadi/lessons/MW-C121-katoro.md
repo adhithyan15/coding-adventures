@@ -14,7 +14,8 @@ romanization: "kaṭoro"
 concept_tag: MW-THINGS121-KATORO
 prerequisites: [MW-C121-chaklo, MW-C121-parat]
 sounds: []
-roots: []
+roots: [indo-aryan-kattora]
+etymology_hook: "kaṭoro ← *kaṭṭora 'cup', reconstructed (CDIAL 2648, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C121-parat]
 <!-- hl-knowledge: introduces=[MW-LEX-C121-THINGS121-03]; assesses=[] -->
 
 **कटोरो** — *kaṭoro* — "a bowl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कटोरो** (*kaṭoro*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kaṭṭora*, "cup", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 2648); the match is through Hindi *kaṭorā* and Gujarati *kaṭoro*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

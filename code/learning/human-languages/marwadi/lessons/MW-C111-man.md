@@ -14,7 +14,8 @@ romanization: "man"
 concept_tag: MW-WANT111-MAN
 prerequisites: [MW-C111-chavno, MW-C111-ichchha]
 sounds: []
-roots: []
+roots: [sanskrit-manas]
+etymology_hook: "man ← Sanskrit manas 'mind', a tatsama (CDIAL 9822)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C111-ichchha]
 <!-- hl-knowledge: introduces=[MW-LEX-C111-WANT111-03]; assesses=[] -->
 
 **मन** — *man* — "the mind, a wish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मन** (*man*) is Sanskrit *manas*, "mind", taken over whole as a learned loan, a tatsama (CDIAL 9822). The *-as* ending was dropped. English *mind* is a distant cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

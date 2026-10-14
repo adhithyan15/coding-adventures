@@ -11,8 +11,8 @@ gloss: flatbread, written after the curled ta is isolated
 concept_tag: MW-FOOD-FLATBREAD-WRITTEN
 prerequisites: [MW-W19-tta]
 sounds: [tapped-r, long-o, retroflex-tt, long-ii]
-roots: []
-etymology_hook: The one new sign lands between two units already secure, so the whole word can be written the moment it is met.
+roots: [indo-aryan-rotta]
+etymology_hook: "roṭī ← *roṭṭa 'bread', reconstructed (CDIAL 10837, Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -45,6 +45,11 @@ reviews_of: [MW-W19-tta, MW-C10-hear-paisa]
 > **रो** + **टी** → **रोटी** — *roṭī* — flatbread
 
 The **ो** on **र** and the **ी** on **ट** are both long vowels met earlier.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रोटी** (*roṭī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*roṭṭa*, "bread", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari *roṭī* under it (CDIAL 10837).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-ROTI-01] -->

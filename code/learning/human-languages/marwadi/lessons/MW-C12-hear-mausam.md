@@ -11,8 +11,8 @@ gloss: weather
 concept_tag: MW-WEATHER-GENERAL
 prerequisites: [MW-R11-weather-close]
 sounds: [au-diphthong, voiced-m, voiceless-s]
-roots: []
-etymology_hook: The general weather word arrives by ear before one new vowel mark.
+roots: [arabic-mawsim-season]
+etymology_hook: "mausam ← Arabic mawsim 'season, festival time', through Persian (Lane, root w-s-m)"
 duration:
   max_seconds: 140
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C11-weather-three, MW-C11-hawa, MW-C11-baadal, MW-C11-barsaat, M
 
 Listen for the *au* sound. Say the general word once; its new vowel mark stays
 off the page until the next lesson.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mausam* is a loan from Arabic *mawsim*, "season, festival time", which reached Marwadi through Persian. Its Arabic root is *w-s-m* (Lane). The sense "weather" grew from "season".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAUSAM-01] -->

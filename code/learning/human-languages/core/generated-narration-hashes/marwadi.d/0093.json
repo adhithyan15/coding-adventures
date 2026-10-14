@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 93,
-  "sourceHash": "fnv1a64:9d97e22760b0ca23",
+  "sourceHash": "fnv1a64:e7142a2dc0a8e62c",
   "lessonIds": [
     "MW-C93-savan",
     "MW-C93-bhadvo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch93.txt",
   "json": "marwadi/narration/ch93.json",
-  "textHash": "fnv1a64:c1bf4c16db3dae9e",
-  "jsonHash": "fnv1a64:ea9de3f952d3fccc",
+  "textHash": "fnv1a64:7c1208f9672e1637",
+  "jsonHash": "fnv1a64:7fa6f607bf677921",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "āvṇo"
 concept_tag: MW-VERB-AVNO
 prerequisites: [MW-C51-pino, MW-C51-jano]
 sounds: []
-roots: []
+roots: [sanskrit-apayati]
+etymology_hook: "āvṇo ← Sanskrit āpayati 'causes to reach', a tadbhava (CDIAL 1200, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C51-jano]
 <!-- hl-knowledge: introduces=[MW-LEX-C51-VERBS51-03]; assesses=[] -->
 
 **आवणो** — *āvṇo* — "to come".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आवणो** (*āvṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *āpayati*, "causes to reach". CDIAL lists Old Marwari *āvaï* under it (CDIAL 1200).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

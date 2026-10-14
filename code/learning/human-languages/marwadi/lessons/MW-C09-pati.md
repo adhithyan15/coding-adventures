@@ -11,8 +11,8 @@ gloss: husband, written after dental ta
 concept_tag: MW-FAMILY-HUSBAND-WRITTEN
 prerequisites: [MW-W09-ta]
 sounds: [unaspirated-p, dental-t, short-i]
-roots: []
-etymology_hook: Familiar प and ि now meet the newly isolated त.
+roots: [sanskrit-pati]
+etymology_hook: "pati ← Sanskrit pati 'master, husband', a tatsama (CDIAL 7727)"
 duration:
   max_seconds: 155
 requires:
@@ -44,6 +44,11 @@ reviews_of: [MW-C09-hear-pati, MW-W09-ta, MW-W07-i-matra, MW-C09-nana]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PATI-01, MW-SCRIPT-PATI-01] -->
 
 > **प** + **ति** → **पति** — *pati* — husband
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पति** (*pati*) is Sanskrit *pati*, "master, husband", taken over whole as a learned loan, a tatsama (CDIAL 7727).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PATI-01] -->

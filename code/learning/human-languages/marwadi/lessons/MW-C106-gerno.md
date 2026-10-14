@@ -14,7 +14,8 @@ romanization: "gerṇo"
 concept_tag: MW-VERB-GERNO
 prerequisites: [MW-C106-thelno, MW-C106-uthavno]
 sounds: []
-roots: []
+roots: [indo-aryan-girati]
+etymology_hook: "gerṇo 'to drop': probably a causing form of *girati 'drips, falls', reconstructed (CDIAL 4159)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C106-uthavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C106-ACT106-03]; assesses=[] -->
 
 **गेरणो** — *gerṇo* — "to drop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गेरणो** (*gerṇo*) is probably a causing form, "make fall", of *\*girati*, "drips, falls", a form CDIAL reconstructs. CDIAL lists Old Marwari *giraï*, "falls", under it, with Old Hindi *gernā*, "to throw", and Gujarati *geravvũ*, causing forms with the same *e* as **गेरणो** (*gerṇo*) (CDIAL 4159).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

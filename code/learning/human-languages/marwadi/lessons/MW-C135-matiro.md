@@ -15,6 +15,7 @@ concept_tag: MW-THINGS135-MATIRO
 prerequisites: [MW-C134-kachori, MW-C134-bhujiya]
 sounds: []
 roots: []
+etymology_hook: "matīro 'watermelon': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C134-bhujiya]
 <!-- hl-knowledge: introduces=[MW-LEX-C135-THINGS135-01]; assesses=[] -->
 
 **मतीरो** — *matīro* — "a watermelon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **मतीरो** (*matīro*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

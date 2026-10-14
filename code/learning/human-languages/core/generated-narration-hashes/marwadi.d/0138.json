@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 138,
-  "sourceHash": "fnv1a64:42235c1414f5a16e",
+  "sourceHash": "fnv1a64:5d6974f0396ce7b4",
   "lessonIds": [
     "MW-C138-balad",
     "MW-C138-bachhro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch138.txt",
   "json": "marwadi/narration/ch138.json",
-  "textHash": "fnv1a64:c22f128baa9f1a1e",
-  "jsonHash": "fnv1a64:f376c680bcbe1b15",
+  "textHash": "fnv1a64:d6389895553b58b2",
+  "jsonHash": "fnv1a64:2691cf4c8c37f0a3",
   "findings": []
 }

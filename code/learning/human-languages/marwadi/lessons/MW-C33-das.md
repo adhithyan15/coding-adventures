@@ -11,8 +11,8 @@ gloss: ten, on the page — built out of pieces of two other numbers
 concept_tag: MW-NUMBER-TEN-WRITTEN
 prerequisites: [MW-C33-hear-das]
 sounds: [dental-d, short-a, voiceless-s]
-roots: []
-etymology_hook: The d of two and the s of seven, with no vowel mark between them.
+roots: [sanskrit-dasha]
+etymology_hook: "das ← Sanskrit daśa 'ten', a tadbhava (CDIAL 6227, Marwari row)"
 duration:
   max_seconds: 170
 requires:
@@ -49,6 +49,11 @@ without being told.
 
 The **द** is two's; the **स** is seven's. Ten is written out of pieces the hand
 already made for other numbers.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दस** (*das*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *daśa*, "ten". CDIAL lists Marwari *das* under it (CDIAL 6227). English *ten* is the same ancient word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DAS-01, MW-SCRIPT-DO-TWO-01] -->

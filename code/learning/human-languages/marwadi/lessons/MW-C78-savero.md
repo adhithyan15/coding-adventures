@@ -14,7 +14,8 @@ romanization: "savero"
 concept_tag: MW-TIME78-SAVERO
 prerequisites: [MW-C78-din, MW-C78-rat]
 sounds: []
-roots: []
+roots: [indo-aryan-savela]
+etymology_hook: "savero ← *savela 'in time, early', reconstructed (CDIAL 13291, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C78-rat]
 <!-- hl-knowledge: introduces=[MW-LEX-C78-TIME78-03]; assesses=[] -->
 
 **सवेरो** — *savero* — "morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सवेरो** (*savero*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*savela*, "in time, early", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 13291); the match is through Hindi *saverā* and Gujarati *saverā*. It is built on *sa-*, "with", and *velā*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

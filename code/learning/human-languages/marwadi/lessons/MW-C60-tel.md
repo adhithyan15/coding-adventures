@@ -14,7 +14,8 @@ romanization: "tel"
 concept_tag: MW-VERBS60-TEL
 prerequisites: [MW-C60-mirach, MW-C60-dahi]
 sounds: []
-roots: []
+roots: [sanskrit-taila]
+etymology_hook: "tel ← Sanskrit taila 'sesamum oil, oil', a tadbhava (CDIAL 5958, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C60-dahi]
 <!-- hl-knowledge: introduces=[MW-LEX-C60-VERBS60-05]; assesses=[] -->
 
 **तेल** — *tel* — "oil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तेल** (*tel*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *taila*, "sesamum oil, oil". CDIAL gives no Marwari form in this entry (CDIAL 5958); the match is through Hindi *tel* and Gujarati *tel*. It is built on *tila*, "sesame".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

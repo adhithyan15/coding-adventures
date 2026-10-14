@@ -14,7 +14,8 @@ romanization: "mā̃g"
 concept_tag: MW-WANT111-MAG
 prerequisites: [MW-C111-man, MW-C111-as]
 sounds: []
-roots: []
+roots: [sanskrit-margya]
+etymology_hook: "mā̃g ← Sanskrit mārgya 'to be sought', a tadbhava (CDIAL 10078, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C111-as]
 <!-- hl-knowledge: introduces=[MW-LEX-C111-WANT111-05]; assesses=[] -->
 
 **मांग** — *mā̃g* — "a demand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मांग** (*mā̃g*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mārgya*, "to be sought". CDIAL lists Old Marwari *māṃga* under it (CDIAL 10078). **मांग** (*mā̃g*) is the noun of *māṅgṇo*, "to ask for"; the Old Marwari row means "betrothed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

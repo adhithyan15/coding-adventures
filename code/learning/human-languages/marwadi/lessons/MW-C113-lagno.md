@@ -14,7 +14,8 @@ romanization: "lāgṇo"
 concept_tag: MW-VERB-LAGNO
 prerequisites: [MW-C112-ummid, MW-C112-marji]
 sounds: []
-roots: []
+roots: [sanskrit-lagyati]
+etymology_hook: "lāgṇo ← Sanskrit lagyati 'adheres to', a tadbhava (CDIAL 10895, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C112-marji]
 <!-- hl-knowledge: introduces=[MW-LEX-C113-LIKE113-01]; assesses=[] -->
 
 **लागणो** — *lāgṇo* — "to seem, to feel (to someone)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लागणो** (*lāgṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lagyati*, "adheres to". CDIAL lists Old Marwari *lāgaï* under it (CDIAL 10895). The sense moved from "stick to" to "seem, feel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

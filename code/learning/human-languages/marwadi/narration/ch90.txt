@@ -14,6 +14,9 @@ Before the new one: say the Marwadi for a matter; talk, then the Marwadi for a l
 You'll want to know: दोपार.
 दोपार — dopār — "midday, the afternoon".
 
+The word, taken apart.
+दोपार (dopār) is usually explained as do, "two", and pahar, "a watch of about three hours", which CDIAL lists as Old Marwari pahara under Sanskrit prahara, "a watch" (CDIAL 8900). CDIAL asks whether the Sanskrit word is itself a reshaping of Persian pahra, "watch". It has no entry for दोपार (dopār).
+
 What you've built.
 One more word for this chapter.
 
@@ -44,6 +47,9 @@ Before the new one: say the Marwadi for a language, then the Marwadi for midday.
 
 You'll want to know: आथण.
 आथण — āthaṇ — "the evening".
+
+The word, taken apart.
+आथण (āthaṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from astamayana, "setting of the sun". CDIAL lists Old Marwari āthaṇa under it (CDIAL 975). It is built on astam eti, "goes home", said of the sun.
 
 What you've built.
 One more word for this chapter.
@@ -76,6 +82,9 @@ Before the new one: say the Marwadi for midday, then the Marwadi for the evening
 You'll want to know: दिनूगै.
 दिनूगै — dinūgai — "in the early morning".
 
+The word, taken apart.
+CDIAL has no entry for दिनूगै (dinūgai), so its history is not settled. It seems to be din, "day" (CDIAL 6328), with a form of the verb CDIAL lists as Old Marwari ūgaï, "rises, appears", under udgāti, "rises" (CDIAL 1954): the time when the day comes up.
+
 What you've built.
 One more word for this chapter.
 
@@ -107,6 +116,9 @@ Before the new one: say the Marwadi for the evening, then the Marwadi for in the
 You'll want to know: परभात.
 परभात — parbhāt — "dawn".
 
+The word, taken apart.
+परभात (parbhāt) is a semi-tatsama: Sanskrit prabhāta, "shone forth; daybreak", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 8707). Marwadi splits the pr with a vowel. The inherited descendant is Gujarati paroḍh, "dawn".
+
 What you've built.
 One more word for this chapter.
 
@@ -137,6 +149,9 @@ Before the new one: say the Marwadi for in the early morning, then the Marwadi f
 
 You'll want to know: परसूं.
 परसूं — parsū̃ — "the day after tomorrow; the day before yesterday".
+
+The word, taken apart.
+परसूं (parsū̃) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from paraśvas, "the day after tomorrow". CDIAL gives no Marwari form in this entry (CDIAL 7799j); the match is through Hindi parsū̃. It is built on para, "beyond", and śvas, "tomorrow"; like Hindi, Marwadi uses it for both directions in time.
 
 What you've built.
 One more word for this chapter.

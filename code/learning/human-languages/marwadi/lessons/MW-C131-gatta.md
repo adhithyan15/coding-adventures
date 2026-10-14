@@ -14,7 +14,8 @@ romanization: "gaṭṭā"
 concept_tag: MW-THINGS131-GATTA
 prerequisites: [MW-C131-ker, MW-C131-sagri]
 sounds: []
-roots: []
+roots: [indo-aryan-gatta]
+etymology_hook: "gaṭṭā: not settled; CDIAL lists Hindi gaṭṭā 'stopper' under *gaṭṭa 'piece' (CDIAL 3965)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C131-sagri]
 <!-- hl-knowledge: introduces=[MW-LEX-C131-THINGS131-04]; assesses=[] -->
 
 **गट्टा** — *gaṭṭā* — "gram-flour dumplings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **गट्टा** (*gaṭṭā*) is not settled. CDIAL lists Hindi *gaṭṭā*, "stopper", under *\*gaṭṭa*, "piece" (CDIAL 3965); a link with the dumpling is possible but not shown there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nāv"
 concept_tag: MW-TOWN83-NAV
 prerequisites: [MW-C83-hotal, MW-C83-pulis]
 sounds: []
-roots: []
+roots: [sanskrit-nava-boat]
+etymology_hook: "nāv ← Sanskrit nāvā 'boat', a tadbhava (CDIAL 7081, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C83-pulis]
 <!-- hl-knowledge: introduces=[MW-LEX-C83-TOWN83-04]; assesses=[] -->
 
 **नाव** — *nāv* — "a boat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाव** (*nāv*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nāvā*, "boat". CDIAL gives no Marwari form in this entry (CDIAL 7081); the match is through Gujarati *nāv*. English *navy* goes back, through Latin *navis*, to the same ancient word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ābho"
 concept_tag: MW-NATURE70-ABHO
 prerequisites: [MW-C69-samandar, MW-C69-ag]
 sounds: []
-roots: []
+roots: [sanskrit-abhra]
+etymology_hook: "ābho ← Sanskrit abhra 'cloud, rainy weather', a tadbhava (CDIAL 549, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C69-ag]
 <!-- hl-knowledge: introduces=[MW-LEX-C70-NATURE70-01]; assesses=[] -->
 
 **आभो** — *ābho* — "the sky".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आभो** (*ābho*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *abhra*, "cloud, rainy weather". CDIAL lists Old Marwari *ābhai* under it (CDIAL 549). The Old Marwari row means "in the sky"; Gujarati *ābh* means "sky, clouds".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

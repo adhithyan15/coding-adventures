@@ -14,7 +14,8 @@ romanization: "mālak"
 concept_tag: MW-CAN114-MALAK
 prerequisites: [MW-C114-takat, MW-C114-himmat]
 sounds: []
-roots: []
+roots: [arabic-malik]
+etymology_hook: "mālak ← Arabic mālik 'owner', through Persian (Lane, root m-l-k)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C114-himmat]
 <!-- hl-knowledge: introduces=[MW-LEX-C114-CAN114-05]; assesses=[] -->
 
 **मालक** — *mālak* — "an owner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मालक** (*mālak*) is a loan from Arabic *mālik*, "owner", which reached Marwadi through Persian. Its Arabic root is *m-l-k* (Lane). Marwadi says the second vowel as *a*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "lassī"
 concept_tag: MW-THINGS134-LASSI
 prerequisites: [MW-C134-makkhan, MW-C134-chhachh]
 sounds: []
-roots: []
+roots: [indo-aryan-lassi]
+etymology_hook: "lassī ← *lassī 'buttermilk', reconstructed by CDIAL from Punjabi and Sindhi forms; no Marwari form listed (CDIAL 10998)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C134-chhachh]
 <!-- hl-knowledge: introduces=[MW-LEX-C134-THINGS134-03]; assesses=[] -->
 
 **लस्सी** — *lassī* — "lassi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL reconstructs *\*lassī*, "buttermilk", from Punjabi and Sindhi forms (CDIAL 10998). It lists no Marwari or Hindi form, and has no older source for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 111,
-  "sourceHash": "fnv1a64:70643d56382d6575",
+  "sourceHash": "fnv1a64:5b1722ada69e6bae",
   "lessonIds": [
     "MW-C111-chavno",
     "MW-C111-ichchha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch111.txt",
   "json": "marwadi/narration/ch111.json",
-  "textHash": "fnv1a64:0dbfa45b4f7c8687",
-  "jsonHash": "fnv1a64:84729eb58400eb7d",
+  "textHash": "fnv1a64:2acf1a8a43d74929",
+  "jsonHash": "fnv1a64:8751735baeb66559",
   "findings": []
 }

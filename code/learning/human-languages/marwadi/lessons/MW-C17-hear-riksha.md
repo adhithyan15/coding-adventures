@@ -11,8 +11,8 @@ gloss: rickshaw
 concept_tag: MW-TRANSPORT-RICKSHAW
 prerequisites: [MW-R16-transport-close]
 sounds: [short-i, consonant-cluster, long-aa]
-roots: []
-etymology_hook: A familiar vehicle arrives by ear before its one new consonant.
+roots: [english-rickshaw]
+etymology_hook: "rikśā ← English rickshaw"
 duration:
   max_seconds: 145
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-R16-transport-close]
 
 Hear the three beats, picture a rickshaw, and say the word once.
 Keep the written cluster covered for now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rikśā* is a loan from English *rickshaw*. English took the word from Japanese *jinrikisha*, "man-powered vehicle".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RIKSHA-01] -->

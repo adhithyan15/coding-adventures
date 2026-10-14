@@ -14,7 +14,8 @@ romanization: "thāḷī"
 concept_tag: MW-HOME64-THALI
 prerequisites: [MW-C63-chabi, MW-C64-pyalo]
 sounds: []
-roots: []
+roots: [sanskrit-sthali]
+etymology_hook: "thāḷī ← Sanskrit sthālī 'earthen dish', a tadbhava (CDIAL 13766, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C64-pyalo]
 <!-- hl-knowledge: introduces=[MW-LEX-C64-HOME64-02]; assesses=[] -->
 
 **थाळी** — *thāḷī* — "a plate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थाळी** (*thāḷī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sthālī*, "earthen dish". CDIAL lists Old Marwari *thālī* under it (CDIAL 13766).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

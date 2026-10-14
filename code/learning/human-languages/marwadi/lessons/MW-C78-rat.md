@@ -14,7 +14,8 @@ romanization: "rāt"
 concept_tag: MW-TIME78-RAT
 prerequisites: [MW-C77-mitho, MW-C78-din]
 sounds: []
-roots: []
+roots: [sanskrit-ratri]
+etymology_hook: "rāt ← Sanskrit rātrī 'night', a tadbhava (CDIAL 10702, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C78-din]
 <!-- hl-knowledge: introduces=[MW-LEX-C78-TIME78-02]; assesses=[] -->
 
 **रात** — *rāt* — "night".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रात** (*rāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rātrī*, "night". CDIAL lists Old Marwari *rāti* under it (CDIAL 10702).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

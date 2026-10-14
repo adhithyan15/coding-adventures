@@ -14,7 +14,8 @@ romanization: "pāvṇo"
 concept_tag: MW-FAMILY50-PAVNO
 prerequisites: [MW-C50-lugai, MW-C50-parosi]
 sounds: []
-roots: []
+roots: [sanskrit-prahuna]
+etymology_hook: "pāvṇo ← Sanskrit prāhuṇa 'guest', a tadbhava (CDIAL 8973, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C50-parosi]
 <!-- hl-knowledge: introduces=[MW-LEX-C50-FAMILY50-03]; assesses=[] -->
 
 **पावणो** — *pāvṇo* — "a guest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पावणो** (*pāvṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *prāhuṇa*, "guest". CDIAL lists Marwari *pāhuṇo* under it (CDIAL 8973). **पावणो** (*pāvṇo*) is the same word said with *v* for *h*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: paternal grandfather
 concept_tag: MW-FAMILY-PATERNAL-GRANDFATHER
 prerequisites: [MW-W08-da]
 sounds: [dental-d, long-aa]
-roots: []
-etymology_hook: Repeat one new consonant and one familiar vowel sign to match the repeated sound.
+roots: [indo-aryan-dadda]
+etymology_hook: "dādā ← *dādda 'father or other elderly relative', reconstructed (CDIAL 6261, Hindi row)"
 duration:
   max_seconds: 165
 requires:
@@ -46,6 +46,11 @@ say sister from memory.
 > **दा** + **दा** → **दादा** — *dādā* — paternal grandfather
 
 The spelling repeats exactly what the ear heard: two matching long beats.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दादा** (*dādā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dādda*, "father or other elderly relative", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 6261); the match is through Hindi *dādā*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DADA-01, MW-SCRIPT-DADA-01] -->

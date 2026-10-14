@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for big, then the Marwadi for small.
 You'll want to know: नुवो.
 नुवो — nuvo — "new".
 
+The word, taken apart.
+नुवो (nuvo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nava, "new, young". CDIAL lists Marwari navo under it (CDIAL 6983). English new is the same ancient word.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for small, then the Marwadi for new.
 
 You'll want to know: जूनो.
 जूनो — jūno — "old".
+
+The word, taken apart.
+जूनो (jūno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jūrṇa, "old, decayed". CDIAL gives no Marwari form in this entry (CDIAL 5260); the match is through Hindi jūnā and Gujarati jūnũ.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for new, then the Marwadi for old.
 You'll want to know: आछो.
 आछो — āchho — "good".
 
+The word, taken apart.
+आछो (āchho) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from accha, "clear, transparent". CDIAL lists Old Marwari āchyo under it (CDIAL 142). CDIAL calls the further history of the Sanskrit word unclear.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for old, then the Marwadi for good.
 You'll want to know: माड़ो.
 माड़ो — māṛo — "bad".
 
+The word, taken apart.
+The origin of माड़ो (māṛo) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for good, then the Marwadi for bad.
 
 You'll want to know: लांबो.
 लांबो — lā̃bo — "long, tall".
+
+The word, taken apart.
+लांबो (lā̃bo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lamba, "pendent; long". CDIAL lists Old Marwari lāṃbaü under it (CDIAL 10951).
 
 What you've built.
 One more word for this chapter.

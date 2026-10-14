@@ -14,7 +14,8 @@ romanization: "rovṇo"
 concept_tag: MW-VERB-ROVNO
 prerequisites: [MW-C54-kholno, MW-C54-hasno]
 sounds: []
-roots: []
+roots: [sanskrit-rodati]
+etymology_hook: "rovṇo ← Sanskrit rodati 'howls, weeps', a tadbhava (CDIAL 10840, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C54-hasno]
 <!-- hl-knowledge: introduces=[MW-LEX-C54-VERBS54-03]; assesses=[] -->
 
 **रोवणो** — *rovṇo* — "to cry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रोवणो** (*rovṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rodati*, "howls, weeps". CDIAL lists Old Marwari *roi* under it (CDIAL 10840).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

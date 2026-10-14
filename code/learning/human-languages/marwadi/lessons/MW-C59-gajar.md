@@ -14,7 +14,8 @@ romanization: "gājar"
 concept_tag: MW-VERBS59-GAJAR
 prerequisites: [MW-C59-alu, MW-C59-tamatar]
 sounds: []
-roots: []
+roots: [sanskrit-garjara]
+etymology_hook: "gājar ← Sanskrit gārjara 'carrot', a tadbhava (CDIAL 4140, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C59-tamatar]
 <!-- hl-knowledge: introduces=[MW-LEX-C59-VERBS59-05]; assesses=[] -->
 
 **गाजर** — *gājar* — "a carrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गाजर** (*gājar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gārjara*, "carrot". CDIAL gives no Marwari form in this entry (CDIAL 4140); the match is through Hindi *gājar* and Gujarati *gājar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

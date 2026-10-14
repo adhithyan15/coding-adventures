@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 79,
-  "sourceHash": "fnv1a64:abbbc1747a062359",
+  "sourceHash": "fnv1a64:deb17039f28794c1",
   "lessonIds": [
     "MW-C79-ghanto",
     "MW-C79-minat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch79.txt",
   "json": "marwadi/narration/ch79.json",
-  "textHash": "fnv1a64:edc5096d61bfd228",
-  "jsonHash": "fnv1a64:3cd5c4af60c19e47",
+  "textHash": "fnv1a64:58f237b22fe07923",
+  "jsonHash": "fnv1a64:30b72f7c54439919",
   "findings": []
 }

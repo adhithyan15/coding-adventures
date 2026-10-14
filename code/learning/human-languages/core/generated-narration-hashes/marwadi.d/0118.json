@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 118,
-  "sourceHash": "fnv1a64:ca3394fc65829a75",
+  "sourceHash": "fnv1a64:d4cd5654785c4757",
   "lessonIds": [
     "MW-C118-chulho",
     "MW-C118-tavo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch118.txt",
   "json": "marwadi/narration/ch118.json",
-  "textHash": "fnv1a64:4550423ec0f02e76",
-  "jsonHash": "fnv1a64:2407ca94b00be905",
+  "textHash": "fnv1a64:ef7855f266b39e4a",
+  "jsonHash": "fnv1a64:995ff2303faf9f5a",
   "findings": []
 }

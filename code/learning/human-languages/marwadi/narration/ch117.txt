@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a right, then the Marwadi for a chance.
 You'll want to know: क्यूं.
 क्यूं — kyū̃ — "why".
 
+The word, taken apart.
+क्यूं (kyū̃) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kim, "what, why". CDIAL lists Old Marwari kyu under it (CDIAL 3164). Its k- is the old question stem.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a chance, then the Marwadi for why.
 
 You'll want to know: कारण.
 कारण — kāraṇ — "a reason".
+
+The word, taken apart.
+कारण (kāraṇ) is Sanskrit kāraṇa, "cause", taken over whole as a learned loan, a tatsama (CDIAL 3057). CDIAL also lists Gujarati kāraṇ and Hindi kāran, "reason", under it.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for why, then the Marwadi for a reason.
 You'll want to know: वास्तै.
 वास्तै — vāstai — "for, for the sake of".
 
+The word, taken apart.
+वास्तै (vāstai) is a loan from Arabic wāsiṭa, "means, intermediary", which reached Marwadi through Persian. Its Arabic root is w-s-ṭ (Lane). Persian vāsṭe, "for the sake of", grew from it; Marwadi ends it in -ai.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a reason, then the Marwadi for for.
 You'll want to know: खातर.
 खातर — khātar — "because of, for".
 
+The word, taken apart.
+खातर (khātar) is a loan from Arabic ḫāṭir, "mind; sake", which reached Marwadi through Persian. Its Arabic root is ḫ-ṭ-r (Lane). Persian uses it in ba xāṭir, "for the sake of".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for for, then the Marwadi for because of.
 
 You'll want to know: क्यूंकै.
 क्यूंकै — kyū̃kai — "because".
+
+The word, taken apart.
+क्यूंकै (kyū̃kai) joins kyū̃, "why", which CDIAL lists as Old Marwari kyu under Sanskrit kim, "what" (CDIAL 3164), with kai, "that". CDIAL takes the similar Hindi ki, "that", from Persian (CDIAL 3164), but gives no Marwari form of it, so that part is not settled.
 
 What you've built.
 One more word for this chapter.

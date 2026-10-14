@@ -14,7 +14,8 @@ romanization: "akal"
 concept_tag: MW-CAN116-AKAL
 prerequisites: [MW-C115-naukri, MW-C116-gun]
 sounds: []
-roots: []
+roots: [arabic-aql]
+etymology_hook: "akal ← Arabic ʿaql 'reason, intelligence', through Persian (Lane, root ʿ-q-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C116-gun]
 <!-- hl-knowledge: introduces=[MW-LEX-C116-CAN116-02]; assesses=[] -->
 
 **अकल** — *akal* — "good sense, intelligence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अकल** (*akal*) is a loan from Arabic *ʿaql*, "reason, intelligence", which reached Marwadi through Persian. Its Arabic root is *ʿ-q-l* (Lane). Marwadi splits the final consonants with a vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

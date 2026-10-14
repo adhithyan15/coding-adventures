@@ -14,7 +14,8 @@ romanization: "masālo"
 concept_tag: MW-THINGS137-MASALO
 prerequisites: [MW-C136-haldi, MW-C136-jiro]
 sounds: []
-roots: []
+roots: [arabic-masalih]
+etymology_hook: "masālo ← Arabic maṣāliḥ 'things that are needful', through Persian (Lane, root ṣ-l-ḥ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C136-jiro]
 <!-- hl-knowledge: introduces=[MW-LEX-C137-THINGS137-01]; assesses=[] -->
 
 **मसालो** — *masālo* — "spice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मसालो** (*masālo*) is a loan from Arabic *maṣāliḥ*, "things that are needful", which reached Marwadi through Persian. Its Arabic root is *ṣ-l-ḥ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 92,
   "title": "Saturday, Sunday, Chait, Baisakh, Jeth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3611cde21d9224f1",
+  "sourceHash": "fnv1a64:ac44b9b79c23ef5e",
   "lessons": [
     {
       "id": "MW-C92-sanivar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:204bc7dcc5b8bbf2",
+      "sourceHash": "fnv1a64:a10e43495fd08617",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सनिवार (sanivār) is a Sanskrit compound: śani, \"the planet Saturn\", and vāra, \"day of the week\" (CDIAL 11547). Marwadi says the ś as s; CDIAL has no entry for śani."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a03b0c52870ae51",
+      "sourceHash": "fnv1a64:5998c81105c0f31c",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रविवार (ravivār) is a Sanskrit compound, a tatsama: ravi, \"the sun\" (CDIAL 10646), and vāra, \"day of the week\" (CDIAL 11547)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24609bfab8acda49",
+      "sourceHash": "fnv1a64:f366c4a0aebd7ec3",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चैत (chait) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caitra, \"the month of the Citrā full moon\". CDIAL gives no Marwari form in this entry (CDIAL 4915); the match is through Punjabi cetar. The month is named for the star Citrā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93765bfb86653bb0",
+      "sourceHash": "fnv1a64:afb19a392cd3dad8",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बैसाख (baisākh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vaiśākha, \"the month April-May\". CDIAL gives no Marwari form in this entry (CDIAL 12149); the match is through Prakrit vēsāha. The month is named for the star pair Viśākhā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fed359872c063543",
+      "sourceHash": "fnv1a64:ca7099e83b9e0e36",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जेठ (jeṭh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jyaiṣṭha, \"the month May-June\". CDIAL lists Marwari jeṭh under it (CDIAL 5293). The month is named for the star Jyeṣṭhā, \"eldest\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

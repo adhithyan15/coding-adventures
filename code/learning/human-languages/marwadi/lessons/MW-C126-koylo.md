@@ -14,7 +14,8 @@ romanization: "koylo"
 concept_tag: MW-THINGS126-KOYLO
 prerequisites: [MW-C125-machis, MW-C125-lakri]
 sounds: []
-roots: []
+roots: [sanskrit-kokila-coal]
+etymology_hook: "koylo ← Sanskrit kokila 'charcoal', from a Proto-Munda word for 'black' (CDIAL 3484, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C125-lakri]
 <!-- hl-knowledge: introduces=[MW-LEX-C126-THINGS126-01]; assesses=[] -->
 
 **कोयलो** — *koylo* — "coal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोयलो** (*koylo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kokila*, "lighted coal, charcoal". CDIAL lists Marwari *koilo* under it (CDIAL 3484). CDIAL takes the Sanskrit word from Middle Indo-Aryan *kōila*, itself from Proto-Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 105,
   "title": "To stay, To read, To know, To fill, To pull",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:70e05f63c1cb8a9b",
+  "sourceHash": "fnv1a64:01031de3ba1e9b55",
   "lessons": [
     {
       "id": "MW-C105-raivno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb2a8c47cf649fc4",
+      "sourceHash": "fnv1a64:70bfd06041dfb29a",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रैवणो (raivṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from rahati, \"remains\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari rahaï under it (CDIAL 10666)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0983988e0525808",
+      "sourceHash": "fnv1a64:c73d84da37fdcd79",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बांचणो (bā̃chṇo) is usually linked with Sanskrit vācayati, \"causes to say, reads\", which CDIAL follows into Prakrit vāyēi, \"reads\" (CDIAL 11471), but not into Marwari or Hindi. That entry does not explain the nasal and the ch of बांचणो (bā̃chṇo), so the link is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e55590f6fab43016",
+      "sourceHash": "fnv1a64:1cc4cbccad73923e",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जाणणो (jāṇṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jānāti, \"knows\". CDIAL lists Marwari jāṇṇo under it (CDIAL 5193). English know is the same ancient word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35c9dec347f9ee28",
+      "sourceHash": "fnv1a64:2c223e43d0904d7c",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भरणो (bharṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bharati, \"bears; fills\". CDIAL lists Old Marwari bharaï under it (CDIAL 9397)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:743cb89bb4b6c95b",
+      "sourceHash": "fnv1a64:f23e1e39023558ef",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खींचणो (khī̃chṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from khiñc, \"to drag, pull\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari khaĩcaï under it (CDIAL 3881)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

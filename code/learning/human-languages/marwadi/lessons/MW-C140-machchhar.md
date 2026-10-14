@@ -14,7 +14,8 @@ romanization: "machchhar"
 concept_tag: MW-THINGS140-MACHCHHAR
 prerequisites: [MW-C140-undro, MW-C140-makhi]
 sounds: []
-roots: []
+roots: [sanskrit-matsara]
+etymology_hook: "machchhar ← Sanskrit matsara 'mosquito, fly', a tadbhava (CDIAL 9757, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C140-makhi]
 <!-- hl-knowledge: introduces=[MW-LEX-C140-THINGS140-03]; assesses=[] -->
 
 **मच्छर** — *machchhar* — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मच्छर** (*machchhar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *matsara*, "mosquito, fly". CDIAL gives no Marwari form in this entry (CDIAL 9757); the match is through Hindi *macchar*. CDIAL notes the possibility that the Sanskrit word was made back from Prakrit *macchara*, but finds no support for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

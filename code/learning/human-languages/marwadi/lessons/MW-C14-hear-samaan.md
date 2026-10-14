@@ -11,8 +11,8 @@ gloss: goods or merchandise
 concept_tag: MW-SHOPPING-GOODS
 prerequisites: [MW-C14-sasta]
 sounds: [voiceless-s, long-aa, voiced-m]
-roots: []
-etymology_hook: The collective word for goods arrives by ear with no new script load.
+roots: [persian-saman]
+etymology_hook: "sāmān: usually traced to Persian sāmān 'goods, equipment'"
 duration:
   max_seconds: 145
 requires:
@@ -47,6 +47,11 @@ Recall item and price. [YOU WRITE: the words for home and sister, then **गर�
 > *sāmān* — **goods; merchandise**
 
 Hear the two long-vowel beats and say the word once from a group-of-items cue.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sāmān* is a loan, usually traced to Persian *sāmān*, "goods, equipment".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SAMAAN-01] -->

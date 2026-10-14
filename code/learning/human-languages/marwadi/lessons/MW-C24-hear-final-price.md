@@ -11,8 +11,8 @@ gloss: what final price will you give? — the question that closes a bargain
 concept_tag: MW-SHOPPING-FINAL-PRICE-QUESTION
 prerequisites: [MW-C24-aakhri]
 sounds: [retroflex-n, aspirated-kh, aspirated-bh, voiced-d]
-roots: []
-etymology_hook: The word for price, taught eleven chapters ago, finally appears inside a question.
+roots: [sanskrit-dadati, arabic-akhir]
+etymology_hook: "kitṇo ākhrī bhāv doge: ākhrī ← Arabic ākhir 'last'; doge 'will give' ← dadāti (CDIAL 6141)"
 duration:
   max_seconds: 185
 requires:
@@ -53,6 +53,11 @@ the *do* of the last lesson with an ending that puts it in the future: not
 Learn the line as one heard shape. The ending on *doge* is real Marwadi
 machinery and it gets its own lesson later; taking it whole now costs nothing,
 because *do* has already been taught on its own.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kitṇo ākhrī bhāv doge* joins words with their own lessons: *kitṇo*, "how much" (CDIAL 3167); *ākhrī*, "final", from Arabic *ākhir*, "last", through Persian; *bhāv*, "price" (CDIAL 9475); and *doge*, "will you give", a future of the verb CDIAL lists as Marwari *deṇo* under Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-FINAL-PRICE-01] -->

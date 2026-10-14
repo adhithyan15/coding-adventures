@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for sesame, then the Marwadi for jaggery.
 You'll want to know: मक्खण.
 मक्खण — makkhaṇ — "butter".
 
+The word, taken apart.
+मक्खण (makkhaṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mrakṣaṇa, "rubbing in; ointment, oil". CDIAL gives no Marwari form in this entry (CDIAL 10378); the match is through Hindi mākhan and Gujarati mākhaṇ.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for jaggery, then the Marwadi for butter.
 
 You'll want to know: छाछ.
 छाछ — chhāchh — "buttermilk".
+
+The word, taken apart.
+छाछ (chhāchh) is a tadbhava, a word inherited and reshaped by sound change. It comes from chācchī, "buttermilk", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari chāchī under it (CDIAL 5012).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for butter, then the Marwadi for buttermilk.
 You'll want to know: लस्सी.
 लस्सी — lassī — "lassi".
 
+The word, taken apart.
+CDIAL reconstructs lassī, "buttermilk", from Punjabi and Sindhi forms (CDIAL 10998). It lists no Marwari or Hindi form, and has no older source for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for buttermilk, then the Marwadi for lassi.
 You'll want to know: कचोरी.
 कचोरी — kachorī — "a kachori".
 
+The word, taken apart.
+कचोरी (kachorī) is a tadbhava, a word inherited and reshaped by sound change. It comes from kaccapūra, "a wheaten cake", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 2614); the match is through Hindi kacaurī and Gujarati kacorī. CDIAL builds it on pūra, "cake", with a first part it queries.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for lassi, then the Marwadi for a kachori.
 
 You'll want to know: भुजिया.
 भुजिया — bhujiyā — "bhujia".
+
+The word, taken apart.
+भुजिया (bhujiyā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhṛjjita, "fried, parched", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 9584); the match is through Hindi bhujiyā. It is built on the root bhrajj, "to fry".
 
 What you've built.
 One more word for this chapter.

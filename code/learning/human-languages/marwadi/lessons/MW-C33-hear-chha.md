@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-SIX
 prerequisites: [MW-R32-script-close]
 sounds: [aspirated-chh, long-e]
 roots: [sanskrit-shash]
-etymology_hook: Four and six begin with the same closure of the mouth; only the puff of air separates them.
+etymology_hook: "chha ← Sanskrit ṣaṣ 'six', a tadbhava (CDIAL 12803, Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -56,6 +56,11 @@ it separates two numbers that sit next to each other on a price ticket.
 The same number is also printed *chhe*, with a vowel mark after the
 consonant. Both are in use; count with the bare form for now and read the
 other when a page prints it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chha* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ṣaṣ*, "six". CDIAL lists Marwari *cha* under it (CDIAL 12803).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-CHHA-SIX-01, MW-LEX-CHAAR-01] -->

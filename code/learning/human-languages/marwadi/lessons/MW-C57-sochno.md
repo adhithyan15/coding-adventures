@@ -14,7 +14,8 @@ romanization: "sochṇo"
 concept_tag: MW-VERB-SOCHNO
 prerequisites: [MW-C57-bolno, MW-C57-likhno]
 sounds: []
-roots: []
+roots: [sanskrit-shocyate]
+etymology_hook: "sochṇo ← Sanskrit śocyate 'is made to feel pain', a tadbhava (CDIAL 12621, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C57-likhno]
 <!-- hl-knowledge: introduces=[MW-LEX-C57-VERBS57-05]; assesses=[] -->
 
 **सोचणो** — *sochṇo* — "to think".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सोचणो** (*sochṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śocyate*, "is made to feel pain". CDIAL lists Old Marwari *soca* under it (CDIAL 12621). The Old Marwari row is the noun "thought"; Hindi *socnā* means "to ponder". The sense moved from "grieve" to "think".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

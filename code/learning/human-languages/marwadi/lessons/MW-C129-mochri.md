@@ -15,6 +15,7 @@ concept_tag: MW-THINGS129-MOCHRI
 prerequisites: [MW-C129-kamij, MW-C129-chappal]
 sounds: []
 roots: []
+etymology_hook: "mochṛī 'embroidered shoes': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C129-chappal]
 <!-- hl-knowledge: introduces=[MW-LEX-C129-THINGS129-03]; assesses=[] -->
 
 **मोचड़ी** — *mochṛī* — "embroidered shoes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **मोचड़ी** (*mochṛī*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: QUESTION-WHAT
 prerequisites: [MW-W05-ii-independent]
 sounds: [unaspirated-k, long-aa, nasal-vowel, long-ii]
 roots: [SANSKRIT-KIM-WHAT, PIE-KWO-INTERROGATIVE]
+etymology_hook: "kāĩ 'what': not in CDIAL, so not settled; its k- is the question stem of Sanskrit kim (CDIAL 3164)"
 duration:
   max_seconds: 180
 requires:
@@ -49,6 +50,11 @@ Say *kāĩ* and its meaning. [YOU WRITE: **क** and independent **ई**]
 
 No shape is new.
 [YOU READ: the whole word smoothly — the dot lightly nasalizes the long middle rather than creating an extra beat]
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL has no entry for **कांई** (*kāĩ*), so the full history of the word is not settled. Its *k-* is the old question stem of Sanskrit *kim*, "what", under which CDIAL lists Old Marwari *kyaü*, "what, why" (CDIAL 3164).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KAIN-01, MW-LEX-KAIN-01] -->

@@ -11,8 +11,8 @@ gloss: wind, written entirely with familiar signs
 concept_tag: MW-WEATHER-WIND-WRITTEN
 prerequisites: [MW-C11-hear-hawa]
 sounds: [voiced-h, voiced-v, long-aa]
-roots: []
-etymology_hook: Familiar ह, व, and ा turn a heard weather word into writing.
+roots: [arabic-hawa]
+etymology_hook: "havā ← Arabic hawāʾ 'air', through Persian (Lane, root h-w-y)"
 duration:
   max_seconds: 155
 requires:
@@ -44,6 +44,11 @@ reviews_of: [MW-C11-hear-hawa, MW-C10-paisa, MW-C10-ghar]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01] -->
 
 > **ह** + **वा** → **हवा** — *havā* — wind
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हवा** (*havā*) is a loan from Arabic *hawāʾ*, "air", which reached Marwadi through Persian. Its Arabic root is *h-w-y* (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-HAWA-01] -->

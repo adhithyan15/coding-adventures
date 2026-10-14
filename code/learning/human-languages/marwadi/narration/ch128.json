@@ -4,7 +4,7 @@
   "chapter": 128,
   "title": "Turban, Long skirt, Woman's wrap, Bodice, Long coat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fe266ce89c37f3b4",
+  "sourceHash": "fnv1a64:b57dc5395315bdb8",
   "lessons": [
     {
       "id": "MW-C128-pagri",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66b878615d14b6e6",
+      "sourceHash": "fnv1a64:4df52125b1a95dc8",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पगड़ी (pagṛī) is a tadbhava, a word inherited and reshaped by sound change. It comes from paggā, \"headdress\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 7644); the match is through Hindi pagṛī. CDIAL thinks a source in Sanskrit pragraha scarcely likely, and explains the ṛ as an added suffix."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2e0a0f996aef74d",
+      "sourceHash": "fnv1a64:dce55e0df99891a2",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घाघरो (ghāghro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghargharī, \"girdle of small bells\". CDIAL gives no Marwari form in this entry (CDIAL 4444); the match is through Hindi ghāghrā and Gujarati ghāghro."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3ec105460115278",
+      "sourceHash": "fnv1a64:a89af5784654afc8",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लूगड़ो (lūgṛo) is a tadbhava, a word inherited and reshaped by sound change. It comes from lugga, \"defective\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari lovaṛī under it (CDIAL 11072). The Old Marwari row means \"a woman's waist garment\"; in the same large group of \"defective\" words, Hindi lugṛā means \"rag\" and Gujarati lugṛũ \"clothes\". How the senses connect is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d351c95f3beb5ef",
+      "sourceHash": "fnv1a64:331116ee4ff2f23e",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कांचळी (kā̃chaḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kañculī, \"bodice\". CDIAL gives no Marwari form in this entry (CDIAL 2627); the match is through Gujarati kā̃cḷī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5fe6ba00c7a9968",
+      "sourceHash": "fnv1a64:837c29b4ad55a255",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंगरखी (aṅgarkhī) is a tadbhava, a word inherited and reshaped by sound change. It comes from aṅgarakṣa, \"garment\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 120); the match is through Hindi ãgarkhī and Gujarati ãgarkhī. It is built on aṅga, \"body\", and rakṣa, \"guard\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

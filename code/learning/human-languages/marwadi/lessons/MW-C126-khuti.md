@@ -14,7 +14,8 @@ romanization: "khū̃ṭī"
 concept_tag: MW-THINGS126-KHUTI
 prerequisites: [MW-C126-boro, MW-C126-rassi]
 sounds: []
-roots: []
+roots: [indo-aryan-khutta]
+etymology_hook: "khū̃ṭī ← *khuṭṭa 'peg, post', reconstructed (CDIAL 3893, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C126-rassi]
 <!-- hl-knowledge: introduces=[MW-LEX-C126-THINGS126-05]; assesses=[] -->
 
 **खूंटी** — *khū̃ṭī* — "a peg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खूंटी** (*khū̃ṭī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khuṭṭa*, "peg, post", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari *khuṭī* under it (CDIAL 3893).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

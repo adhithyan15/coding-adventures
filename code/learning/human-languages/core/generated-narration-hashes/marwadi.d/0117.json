@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 117,
-  "sourceHash": "fnv1a64:14d55a06a46e3d2c",
+  "sourceHash": "fnv1a64:a0a68076669101e5",
   "lessonIds": [
     "MW-C117-kyu",
     "MW-C117-karan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch117.txt",
   "json": "marwadi/narration/ch117.json",
-  "textHash": "fnv1a64:7d2f83c591ff7122",
-  "jsonHash": "fnv1a64:c53af44a3c5c08e6",
+  "textHash": "fnv1a64:fe57865c390fc146",
+  "jsonHash": "fnv1a64:61105fd63500fb14",
   "findings": []
 }

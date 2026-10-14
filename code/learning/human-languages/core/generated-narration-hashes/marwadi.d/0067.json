@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 67,
-  "sourceHash": "fnv1a64:143a2d3049bba18b",
+  "sourceHash": "fnv1a64:7bc4f8dbfb7ae609",
   "lessonIds": [
     "MW-C67-khel",
     "MW-C67-chitthi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch67.txt",
   "json": "marwadi/narration/ch67.json",
-  "textHash": "fnv1a64:3224172f21e5620d",
-  "jsonHash": "fnv1a64:e9944e0ac2c75560",
+  "textHash": "fnv1a64:5b1cd85ef6918d2c",
+  "jsonHash": "fnv1a64:856d435da1b6b37b",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "undro"
 concept_tag: MW-THINGS140-UNDRO
 prerequisites: [MW-C139-koyal, MW-C139-chil]
 sounds: []
-roots: []
+roots: [sanskrit-undura]
+etymology_hook: "undro ← Sanskrit undura 'rat, mouse', itself from Austroasiatic (CDIAL 2095)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C139-chil]
 <!-- hl-knowledge: introduces=[MW-LEX-C140-THINGS140-01]; assesses=[] -->
 
 **उंदरो** — *undro* — "a mouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उंदरो** (*undro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *undura*, "rat, mouse". CDIAL gives no Marwari form in this entry (CDIAL 2095); the match is through Gujarati *ũdar* and Hindi *ũdur*. CDIAL takes the Sanskrit word itself from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

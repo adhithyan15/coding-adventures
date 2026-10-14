@@ -14,7 +14,8 @@ romanization: "chamkīlo"
 concept_tag: MW-QUAL146-CHAMKILO
 prerequisites: [MW-C145-baingni, MW-C145-narangi]
 sounds: []
-roots: []
+roots: [indo-aryan-camakka]
+etymology_hook: "chamkīlo: chamak 'shine' + -īlo; CDIAL lists Hindi camaknā 'to glitter' under *camakka (CDIAL 4676)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C145-narangi]
 <!-- hl-knowledge: introduces=[MW-LEX-C146-QUAL146-01]; assesses=[] -->
 
 **चमकीलो** — *chamkīlo* — "shiny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चमकीलो** (*chamkīlo*) is built with *-īlo* on *chamak*, "shine". CDIAL lists Hindi *camaknā*, "to glitter", under *\*camakka*, "sudden movement" (CDIAL 4676).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

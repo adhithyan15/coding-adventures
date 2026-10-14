@@ -14,7 +14,8 @@ romanization: "bāṛo"
 concept_tag: MW-LOC99-BARO
 prerequisites: [MW-C99-rasto, MW-C99-agano]
 sounds: []
-roots: []
+roots: [sanskrit-vata]
+etymology_hook: "bāṛo ← Sanskrit vāṭa 'enclosure, fence', a tadbhava (CDIAL 11480, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C99-agano]
 <!-- hl-knowledge: introduces=[MW-LEX-C99-LOC99-03]; assesses=[] -->
 
 **बाड़ो** — *bāṛo* — "an enclosure, a yard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाड़ो** (*bāṛo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vāṭa*, "enclosure, fence". CDIAL lists Marwari *bāṛī* under it (CDIAL 11480). The Marwari row *bāṛī* means "garden"; Hindi has *bāṛā*, "enclosure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

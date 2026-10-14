@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a bodice, then the Marwadi for a long co
 You'll want to know: कमीज.
 कमीज — kamīj — "a shirt".
 
+The word, taken apart.
+कमीज (kamīj) is a loan from Arabic qamīṣ, "shirt", which reached Marwadi through Persian. Its Arabic root is q-m-ṣ (Lane). Persian says it qamīz; Marwadi says the last sound as j.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a long coat, then the Marwadi for a shir
 
 You'll want to know: चप्पल.
 चप्पल — chappal — "sandals".
+
+The word, taken apart.
+The origin of चप्पल (chappal) is not settled. CDIAL has no entry for it; DEDR compares Hindi cappal, with a "Cf.", to Dravidian words for "sandal" such as Telugu ceppu (DEDR 1963).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a shirt, then the Marwadi for sandals.
 You'll want to know: मोचड़ी.
 मोचड़ी — mochṛī — "embroidered shoes".
 
+The word, taken apart.
+The origin of मोचड़ी (mochṛī) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for sandals, then the Marwadi for embroidere
 You'll want to know: कड़ो.
 कड़ो — kaṛo — "a thick bangle".
 
+The word, taken apart.
+कड़ो (kaṛo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaṭaka, "twist of straw; bracelet". CDIAL lists Marwari kaṛo under it (CDIAL 2629). Sanskrit kaṭaka already meant "bracelet".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for embroidered shoes, then the Marwadi for 
 
 You'll want to know: चूड़ी.
 चूड़ी — chūṛī — "a bangle".
+
+The word, taken apart.
+चूड़ी (chūṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cūḍa, "bracelet". CDIAL gives no Marwari form in this entry (CDIAL 4884); the match is through Hindi cūṛī and Gujarati cūṛī. CDIAL asks whether it is the same word as cūḍa, "topknot", which it takes from Dravidian.
 
 What you've built.
 One more word for this chapter.

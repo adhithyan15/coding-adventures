@@ -15,6 +15,7 @@ concept_tag: MW-NATURE68-BHATO
 prerequisites: [MW-C68-jangal, MW-C68-nadi]
 sounds: []
 roots: []
+etymology_hook: "bhāṭo 'stone': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C68-nadi]
 <!-- hl-knowledge: introduces=[MW-LEX-C68-NATURE68-03]; assesses=[] -->
 
 **भाटो** — *bhāṭo* — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **भाटो** (*bhāṭo*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

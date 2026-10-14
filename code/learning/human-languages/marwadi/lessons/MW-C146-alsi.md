@@ -14,7 +14,8 @@ romanization: "āḷsī"
 concept_tag: MW-QUAL146-ALSI
 prerequisites: [MW-C146-husiyar, MW-C146-bavalo]
 sounds: []
-roots: []
+roots: [sanskrit-alasya]
+etymology_hook: "āḷsī ← Sanskrit ālasya 'sloth', a tadbhava (CDIAL 1371, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C146-bavalo]
 <!-- hl-knowledge: introduces=[MW-LEX-C146-QUAL146-05]; assesses=[] -->
 
 **आळसी** — *āḷsī* — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आळसी** (*āḷsī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ālasya*, "sloth". CDIAL gives no Marwari form in this entry (CDIAL 1371); the match is through Hindi *ālsī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

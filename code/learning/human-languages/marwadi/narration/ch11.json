@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Grandparents and Family: Two New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a03b2698e35c5415",
+  "sourceHash": "fnv1a64:f837c461800efab7",
   "lessons": [
     {
       "id": "MW-C08-hear-dada",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe24cd219d9baca0",
+      "sourceHash": "fnv1a64:5ae3ef28e5140f1d",
       "notice": null,
       "blocks": [
         {
@@ -65,6 +65,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dādā goes back to dādda, \"father or elderly relative\", a form CDIAL reconstructs. It gives no Marwari form; the match is through Hindi dādā (CDIAL 6261)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -75,7 +86,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -235,7 +246,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:57e22948779b9bd6",
+      "sourceHash": "fnv1a64:dbd57739d937486e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -284,6 +295,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दादा (dādā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, \"father or other elderly relative\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 6261); the match is through Hindi dādā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -294,7 +316,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -344,7 +366,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2143cc7c8e9d93ec",
+      "sourceHash": "fnv1a64:34e81d68c3a457cf",
       "notice": null,
       "blocks": [
         {
@@ -394,6 +416,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dādī is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, \"father or other elderly relative\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 6261); the match is through Hindi dādī and Gujarati dādī. It is the feminine of dādā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -404,7 +437,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -452,7 +485,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:825dd33c5518bd1c",
+      "sourceHash": "fnv1a64:50840c2d8a660feb",
       "notice": null,
       "blocks": [
         {
@@ -502,6 +535,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दादी (dādī) is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, \"father or other elderly relative\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 6261); the match is through Hindi dādī and Gujarati dādī. It is the feminine of dādā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -521,7 +565,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -577,7 +621,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61bf2ec846a73bf9",
+      "sourceHash": "fnv1a64:aa75fd1feb67b98a",
       "notice": null,
       "blocks": [
         {
@@ -623,6 +667,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "parivār is Sanskrit parivāra, \"cover, surroundings; followers\", taken over whole as a learned loan, a tatsama (CDIAL 7876). The sense \"family\" grew from \"followers\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -633,7 +688,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -792,7 +847,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:585923814fcc5a50",
+      "sourceHash": "fnv1a64:9ecf0db099ae0b21",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -841,6 +896,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिवार (parivār) is Sanskrit parivāra, \"cover, surroundings; followers\", taken over whole as a learned loan, a tatsama (CDIAL 7876). The sense \"family\" grew from \"followers\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -851,7 +917,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

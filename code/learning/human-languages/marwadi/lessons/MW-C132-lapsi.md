@@ -14,7 +14,8 @@ romanization: "lāpsī"
 concept_tag: MW-THINGS132-LAPSI
 prerequisites: [MW-C131-papar, MW-C132-achar]
 sounds: []
-roots: []
+roots: [indo-aryan-lappasika]
+etymology_hook: "lāpsī ← *lappasikā 'a sweetmeat or dish', reconstructed (CDIAL 10941, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C132-achar]
 <!-- hl-knowledge: introduces=[MW-LEX-C132-THINGS132-02]; assesses=[] -->
 
 **लापसी** — *lāpsī* — "a sweet wheat dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लापसी** (*lāpsī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*lappasikā*, "a sweetmeat or dish", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 10941); the match is through Hindi *lāpsī* and Gujarati *lāpśī*. CDIAL calls Sanskrit *lapsikā* a Sanskritized form of the Middle Indo-Aryan word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

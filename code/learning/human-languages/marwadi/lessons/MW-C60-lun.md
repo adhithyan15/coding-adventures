@@ -14,7 +14,8 @@ romanization: "lūṇ"
 concept_tag: MW-VERBS60-LUN
 prerequisites: [MW-C59-gajar, MW-C60-khad]
 sounds: []
-roots: []
+roots: [sanskrit-lavana]
+etymology_hook: "lūṇ ← Sanskrit lavaṇa 'salt', a tadbhava (CDIAL 10978, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C60-khad]
 <!-- hl-knowledge: introduces=[MW-LEX-C60-VERBS60-02]; assesses=[] -->
 
 **लूण** — *lūṇ* — "salt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लूण** (*lūṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lavaṇa*, "salt". CDIAL lists Marwari *lūṇ* under it (CDIAL 10978). CDIAL prefers a Middle Indo-Aryan blend of *lavana* with *lūna*, "a piece of rock-salt", for the long *ū*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

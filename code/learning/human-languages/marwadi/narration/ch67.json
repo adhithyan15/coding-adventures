@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "Game, Letter, Tree, Leaf, Hill",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:143a2d3049bba18b",
+  "sourceHash": "fnv1a64:7bc4f8dbfb7ae609",
   "lessons": [
     {
       "id": "MW-C67-khel",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77ad2120140777ab",
+      "sourceHash": "fnv1a64:f77d31de8e40a1b0",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खेल (khel) is a tadbhava, a word inherited and reshaped by sound change. It comes from khel, \"play\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari khelaï under it (CDIAL 3918). It is the noun of the verb khelṇo, \"to play\". CDIAL says that if Sanskrit krīḍati, \"plays\", is of non-Aryan origin, these forms may share its source."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2a7fc6b70f60480",
+      "sourceHash": "fnv1a64:07a8b92334176ab3",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिट्ठी (chiṭṭhī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ciṣṭa, \"message\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4832); the match is through Hindi ciṭṭhī and Gujarati ciṭṭhī. CDIAL compares Avestan činasti, \"teaches, makes known\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3ed2d79ed479bb7",
+      "sourceHash": "fnv1a64:4fab66744e0e172a",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रूंख (rū̃kh) is a tadbhava, a word inherited and reshaped by sound change. It comes from rukṣa, \"tree\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 10757); the match is through Hindi rūkh and Gujarati rūkh. CDIAL sets it beside Sanskrit vṛkṣa, \"tree\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:093128d0ef080b5f",
+      "sourceHash": "fnv1a64:83f584efedfb0906",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पत्तो (patto) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pattra, \"wing-feather; leaf\". CDIAL gives no Marwari form in this entry (CDIAL 7733); the match is through Hindi pattā. It is built on the root pat, \"to fly\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92244041b5591a7c",
+      "sourceHash": "fnv1a64:35e270b64e24210c",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डूंगर (ḍū̃gar) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍuṅga, \"hill\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5423); the match is through Hindi ḍū̃gar and Gujarati ḍũgar. CDIAL sets it in a large group of reconstructed words for \"hill\" headed ṭakka, and explains the -r as an added suffix."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Too Dear: The Answer and the Counter",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bdaba9467f46b4e3",
+  "sourceHash": "fnv1a64:3726fb13002d74d3",
   "lessons": [
     {
       "id": "MW-C23-hear-ghano",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38296cb9d04ba461",
+      "sourceHash": "fnv1a64:525eff83ba523c64",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ghaṇo is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghana, \"compact, firm, dense\". CDIAL lists Marwari ghaṇo under it (CDIAL 4424). The sense moved from \"dense\" to \"much\" and \"very\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -106,7 +117,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:bf0203421176bb03",
+      "sourceHash": "fnv1a64:1be9d0b62766f8c2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -156,6 +167,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घणो (ghaṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghana, \"compact, firm, dense\". CDIAL lists Marwari ghaṇo under it (CDIAL 4424). The sense moved from \"dense\" to \"much\" and \"very\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -166,7 +188,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -211,7 +233,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d3cc1c38b67e857",
+      "sourceHash": "fnv1a64:bbbea2b33988252c",
       "notice": null,
       "blocks": [
         {
@@ -274,6 +296,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ye ghaṇo mahaṅgo hai joins words with their own lessons: ghaṇo, \"very\", from Sanskrit ghana, \"dense\", listed by CDIAL as Marwari ghaṇo (CDIAL 4424); and mahaṅgo, \"expensive\", from Sanskrit mahārgha, \"high-priced\" (CDIAL 9954). ye and hai are older (CDIAL 2530, 1031)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -319,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:416dafcd614e70ce",
+      "sourceHash": "fnv1a64:eda1898d4aa4a800",
       "notice": null,
       "blocks": [
         {
@@ -365,6 +398,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ये घणो महंगो है (ye ghaṇo mahaṅgo hai) joins words with their own lessons: ghaṇo, \"very\", from Sanskrit ghana, \"dense\", listed by CDIAL as Marwari ghaṇo (CDIAL 4424); and mahaṅgo, \"expensive\", from Sanskrit mahārgha, \"high-priced\" (CDIAL 9954). ye and hai are older (CDIAL 2530, 1031)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -389,7 +433,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -538,7 +582,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d4efab9d69a61b3",
+      "sourceHash": "fnv1a64:3247ff363fc6960e",
       "notice": null,
       "blocks": [
         {
@@ -588,6 +632,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "thoṛu is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from stoka, \"drop; a little\". CDIAL lists Marwari thoṛo under it (CDIAL 13720). CDIAL explains the ṛ as an added suffix."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -634,7 +689,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b4def7748217272d",
+      "sourceHash": "fnv1a64:2675926f9a917597",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -684,6 +739,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थोड़ु (thoṛu) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from stoka, \"drop; a little\". CDIAL lists Marwari thoṛo under it (CDIAL 13720). CDIAL explains the ṛ as an added suffix."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -694,7 +760,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -739,7 +805,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:adc72e503f4382dd",
+      "sourceHash": "fnv1a64:fedfddddd7f18725",
       "notice": null,
       "blocks": [
         {
@@ -789,6 +855,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "karo is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karoti, \"does\". CDIAL lists Old Marwari karaï under it (CDIAL 2814). karo is the asking form of this verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -835,7 +912,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:f4ce765e49ea682f",
+      "sourceHash": "fnv1a64:1996cf065b6a0401",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -884,6 +961,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "करो (karo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karoti, \"does\". CDIAL lists Old Marwari karaï under it (CDIAL 2814). karo is the asking form of this verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -894,7 +982,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -939,7 +1027,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:327aad71abfb8c1f",
+      "sourceHash": "fnv1a64:ee3f282c67f7e9c0",
       "notice": null,
       "blocks": [
         {
@@ -993,6 +1081,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "thoṛu sasto karo joins words with their own lessons: thoṛu, \"a little\", from Sanskrit stoka, \"a drop\" (CDIAL 13720); sasto, \"cheap\", whose origin is not settled; and karo, \"make\", from Sanskrit karoti, \"does\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1038,7 +1137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f48b57b8cc3af535",
+      "sourceHash": "fnv1a64:31a5d6fa0eefae59",
       "notice": null,
       "blocks": [
         {
@@ -1080,6 +1179,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थोड़ु सस्तो करो (thoṛu sasto karo) joins words with their own lessons: thoṛu, \"a little\", from Sanskrit stoka, \"a drop\" (CDIAL 13720); sasto, \"cheap\", whose origin is not settled; and karo, \"make\", from Sanskrit karoti, \"does\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1104,7 +1214,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

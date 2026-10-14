@@ -15,6 +15,7 @@ concept_tag: MW-ADJ73-MARO
 prerequisites: [MW-C73-juno, MW-C73-achho]
 sounds: []
 roots: []
+etymology_hook: "māṛo 'bad': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C73-achho]
 <!-- hl-knowledge: introduces=[MW-LEX-C73-ADJ73-04]; assesses=[] -->
 
 **माड़ो** — *māṛo* — "bad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **माड़ो** (*māṛo*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

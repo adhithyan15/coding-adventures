@@ -14,7 +14,8 @@ romanization: "hak"
 concept_tag: MW-CAN116-HAK
 prerequisites: [MW-C116-akal, MW-C116-gyan]
 sounds: []
-roots: []
+roots: [arabic-haqq]
+etymology_hook: "hak ← Arabic ḥaqq 'truth, a right', through Persian (Lane, root ḥ-q-q)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C116-gyan]
 <!-- hl-knowledge: introduces=[MW-LEX-C116-CAN116-04]; assesses=[] -->
 
 **हक** — *hak* — "a right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हक** (*hak*) is a loan from Arabic *ḥaqq*, "truth, a right", which reached Marwadi through Persian. Its Arabic root is *ḥ-q-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

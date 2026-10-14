@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 108,
-  "sourceHash": "fnv1a64:371bc92a6f03a6e8",
+  "sourceHash": "fnv1a64:4ab533e12edb7683",
   "lessonIds": [
     "MW-C108-jagavno",
     "MW-C108-bachavno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch108.txt",
   "json": "marwadi/narration/ch108.json",
-  "textHash": "fnv1a64:ffe5ee67f23df515",
-  "jsonHash": "fnv1a64:28748f5545ebef6f",
+  "textHash": "fnv1a64:6c2d983531d0ea3f",
+  "jsonHash": "fnv1a64:e52a7cec826c0c05",
   "findings": []
 }

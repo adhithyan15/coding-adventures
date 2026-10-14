@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a hundred thousand, then the Marwadi for
 You'll want to know: रंग.
 रंग — raṅg — "a colour".
 
+The word, taken apart.
+रंग (raṅg) has two possible sources that may have merged: Sanskrit raṅga, "dye, colour", under which CDIAL lists Hindi rā̃g, "dye" (CDIAL 10560), and Persian rang, "colour", the more likely source of the exact form.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for the world, then the Marwadi for a colour
 
 You'll want to know: गीत.
 गीत — gīt — "a song".
+
+The word, taken apart.
+गीत (gīt) is Sanskrit gīta, "singing", taken over whole as a learned loan, a tatsama (CDIAL 4167).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a colour, then the Marwadi for a song.
 You'll want to know: जातरा.
 जातरा — jātrā — "a journey".
 
+The word, taken apart.
+जातरा (jātrā) is a semi-tatsama: Sanskrit yātrā, "journey", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 10456). It is built on the root yā, "to go"; Marwadi says the y as j and splits the tr with a vowel.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a song, then the Marwadi for a journey.
 You'll want to know: छुट्टी.
 छुट्टी — chhuṭṭī — "a holiday".
 
+The word, taken apart.
+छुट्टी (chhuṭṭī) is a tadbhava, a word inherited and reshaped by sound change. It comes from kṣuṭyate, "is released", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari chuṭṇo under it (CDIAL 3707). The Marwari row is the verb "to get loose"; CDIAL marks Hindi and Gujarati chuṭṭī, "leave", as taken from Punjabi.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a journey, then the Marwadi for a holida
 
 You'll want to know: प्रेम.
 प्रेम — prem — "love".
+
+The word, taken apart.
+प्रेम (prem) is Sanskrit preman, "love", taken over whole as a learned loan, a tatsama (CDIAL 8999).
 
 What you've built.
 One more word for this chapter.

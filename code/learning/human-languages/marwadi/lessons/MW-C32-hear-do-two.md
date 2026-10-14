@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-TWO
 prerequisites: [MW-C32-ek]
 sounds: [dental-d, long-o]
 roots: [sanskrit-dvi]
-etymology_hook: The asking word do, give, and the number do, two, are the same two signs; what settles them is where they stand.
+etymology_hook: "do ← Sanskrit dva 'two', a tadbhava (CDIAL 6648, Marwari row)"
 duration:
   max_seconds: 175
 requires:
@@ -54,6 +54,11 @@ both hears the difference from the shape of the sentence, not from the word.
 Rajasthani also prints **बे** (*be*) for two, alongside *do*. Both are in use;
 this book counts with *do* and names *be* so a printed page holding it is not a
 surprise.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*do* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dva*, "two". CDIAL lists Marwari *do* under it (CDIAL 6648). English *two* is the same ancient word.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DO-TWO-01, MW-LEX-DO-01] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for an answer, then the Marwadi for a word.
 You'll want to know: खेल.
 खेल — khel — "a game".
 
+The word, taken apart.
+खेल (khel) is a tadbhava, a word inherited and reshaped by sound change. It comes from khel, "play", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari khelaï under it (CDIAL 3918). It is the noun of the verb khelṇo, "to play". CDIAL says that if Sanskrit krīḍati, "plays", is of non-Aryan origin, these forms may share its source.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a word, then the Marwadi for a game.
 
 You'll want to know: चिट्ठी.
 चिट्ठी — chiṭṭhī — "a letter (post)".
+
+The word, taken apart.
+चिट्ठी (chiṭṭhī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ciṣṭa, "message", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4832); the match is through Hindi ciṭṭhī and Gujarati ciṭṭhī. CDIAL compares Avestan činasti, "teaches, makes known".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a game, then the Marwadi for a letter.
 You'll want to know: रूंख.
 रूंख — rū̃kh — "a tree".
 
+The word, taken apart.
+रूंख (rū̃kh) is a tadbhava, a word inherited and reshaped by sound change. It comes from rukṣa, "tree", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 10757); the match is through Hindi rūkh and Gujarati rūkh. CDIAL sets it beside Sanskrit vṛkṣa, "tree".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a letter, then the Marwadi for a tree.
 You'll want to know: पत्तो.
 पत्तो — patto — "a leaf".
 
+The word, taken apart.
+पत्तो (patto) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pattra, "wing-feather; leaf". CDIAL gives no Marwari form in this entry (CDIAL 7733); the match is through Hindi pattā. It is built on the root pat, "to fly".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a tree, then the Marwadi for a leaf.
 
 You'll want to know: डूंगर.
 डूंगर — ḍū̃gar — "a hill, a mountain".
+
+The word, taken apart.
+डूंगर (ḍū̃gar) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍuṅga, "hill", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5423); the match is through Hindi ḍū̃gar and Gujarati ḍũgar. CDIAL sets it in a large group of reconstructed words for "hill" headed ṭakka, and explains the -r as an added suffix.
 
 What you've built.
 One more word for this chapter.

@@ -11,8 +11,8 @@ gloss: how much — the question word every price question is built on
 concept_tag: MW-QUESTION-HOW-MUCH
 prerequisites: [MW-R21-script-close]
 sounds: [unaspirated-k, short-i, dental-t, retroflex-n, long-o]
-roots: []
-etymology_hook: The track has taught the word for price for nine chapters without a way to ask for one.
+roots: [indo-aryan-kiyatta]
+etymology_hook: "kitṇo ← *kiyatta 'how great', with an added -n- (CDIAL 3167)"
 duration:
   max_seconds: 165
 requires:
@@ -50,6 +50,11 @@ retroflex *n* already heard inside *pāṇī*, made with the tongue curled back.
 
 You have known *bhāv*, price, since Chapter 18. *kitṇo* is what you say when you
 want somebody to tell you one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kitṇo* is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kiyatta*, "how great", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *kītarāka* under it (CDIAL 3167). The *-ṇ-* matches Hindi *kitnā* and Lahnda *kitṇā*, whose *-n-* CDIAL explains as an added suffix.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KITNO-01, MW-LEX-BHAAV-01] -->

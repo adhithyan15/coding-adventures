@@ -14,7 +14,8 @@ romanization: "dayāḷu"
 concept_tag: MW-QUAL147-DAYALU
 prerequisites: [MW-C147-mehanti, MW-C147-imandar]
 sounds: []
-roots: []
+roots: [sanskrit-dayalu]
+etymology_hook: "dayāḷu ← Sanskrit dayālu 'compassionate', a semi-tatsama (CDIAL -)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C147-imandar]
 <!-- hl-knowledge: introduces=[MW-LEX-C147-QUAL147-03]; assesses=[] -->
 
 **दयाळु** — *dayāḷu* — "kind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दयाळु** (*dayāḷu*) is a semi-tatsama: Sanskrit *dayālu*, "compassionate", borrowed after the old sound changes had run their course and then lightly reshaped. Marwadi says the *l* curled back; CDIAL has no entry for the word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

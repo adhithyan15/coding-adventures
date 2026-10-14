@@ -11,8 +11,8 @@ gloss: bring tea, written from two words already written
 concept_tag: MW-FOOD-BRING-REQUEST-WRITTEN
 prerequisites: [MW-C25-hear-bring-request]
 sounds: [unaspirated-ch, long-aa, semivowel-y, dental-l]
-roots: []
-etymology_hook: The shortest complete Marwadi sentence this track can write, and both of its words are old.
+roots: [persian-chay, sanskrit-labhate]
+etymology_hook: "chāy lāvo: chāy, usually traced to Persian chāy 'tea'; lāvo 'bring', through Hindi lānā (CDIAL 10948)"
 duration:
   max_seconds: 190
 requires:
@@ -49,6 +49,11 @@ Two written words and a stop.
 
 Only the first word changes, and you have written all three of those words
 before.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चाय लावो** (*chāy lāvo*) joins two words with their own lessons: *chāy*, "tea", usually traced to Persian *chāy*, from Chinese *chá*; and *lāvo*, "bring", which CDIAL matches only through Hindi *lānā*, "to bring", under Sanskrit *labhate*, "takes" (CDIAL 10948).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BRING-REQUEST-01, MW-SCRIPT-LAVO-01] -->

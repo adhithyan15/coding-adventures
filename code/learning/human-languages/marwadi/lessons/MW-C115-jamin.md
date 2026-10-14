@@ -14,7 +14,8 @@ romanization: "jamīn"
 concept_tag: MW-CAN115-JAMIN
 prerequisites: [MW-C114-himmat, MW-C114-malak]
 sounds: []
-roots: []
+roots: [persian-zamin]
+etymology_hook: "jamīn: usually traced to Persian zamīn 'earth, ground'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C114-malak]
 <!-- hl-knowledge: introduces=[MW-LEX-C115-CAN115-01]; assesses=[] -->
 
 **जमीन** — *jamīn* — "land".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जमीन** (*jamīn*) is a loan, usually traced to Persian *zamīn*, "earth, ground". Marwadi says the *z* as *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

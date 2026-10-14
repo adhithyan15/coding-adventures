@@ -14,7 +14,8 @@ romanization: "udās"
 concept_tag: MW-HEALTH48-UDAS
 prerequisites: [MW-C47-bhukh, MW-C48-raji]
 sounds: []
-roots: []
+roots: [sanskrit-udasa]
+etymology_hook: "udās: usually traced to Sanskrit udāsa 'indifference'; CDIAL does not list it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C48-raji]
 <!-- hl-knowledge: introduces=[MW-LEX-C48-HEALTH48-02]; assesses=[] -->
 
 **उदास** — *udās* — "sad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उदास** (*udās*) is usually traced to Sanskrit *udāsa*, "indifference", with the sense moving from "indifferent" to "sad". CDIAL, searched by form and by meaning, does not list it, so the account is not confirmed there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

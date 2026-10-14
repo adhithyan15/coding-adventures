@@ -14,7 +14,8 @@ romanization: "poḷ"
 concept_tag: MW-LOC100-POL
 prerequisites: [MW-C99-talav, MW-C100-darvajo]
 sounds: []
-roots: []
+roots: [sanskrit-pratoli]
+etymology_hook: "poḷ ← Sanskrit pratolī 'gate of town or fort', a tadbhava (CDIAL 8633, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C100-darvajo]
 <!-- hl-knowledge: introduces=[MW-LEX-C100-LOC100-02]; assesses=[] -->
 
 **पोळ** — *poḷ* — "a gateway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पोळ** (*poḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pratolī*, "gate of town or fort". CDIAL gives no Marwari form in this entry (CDIAL 8633); the match is through Hindi *pol* and Gujarati *poḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

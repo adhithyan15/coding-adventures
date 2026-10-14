@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to walk, then the Marwadi for to run.
 You'll want to know: खेलणो.
 खेलणो — khelṇo — "to play".
 
+The word, taken apart.
+खेलणो (khelṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from khel, "play", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari khelaï under it (CDIAL 3918). CDIAL heads a group of reconstructed words for "play" khēḍ, and says that if Sanskrit krīḍati, "plays", is of non-Aryan origin, these may share its source.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to run, then the Marwadi for to play.
 
 You'll want to know: बेचणो.
 बेचणो — bechṇo — "to sell".
+
+The word, taken apart.
+बेचणो (bechṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from vetyayati, "makes a price", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 12100); the match is through Hindi becnā and Gujarati vecvũ. CDIAL builds it on Middle Indo-Aryan vēcā, "hire, wages".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to play, then the Marwadi for to sell.
 You'll want to know: देणो.
 देणो — deṇo — "to give".
 
+The word, taken apart.
+देणो (deṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dadāti, "gives". CDIAL lists Marwari deṇo under it (CDIAL 6141).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to sell, then the Marwadi for to give.
 You'll want to know: लेणो.
 लेणो — leṇo — "to take".
 
+The word, taken apart.
+लेणो (leṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from labhate, "catches, takes". CDIAL lists Old Marwari lei under it (CDIAL 10948).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to give, then the Marwadi for to take.
 
 You'll want to know: राखणो.
 राखणो — rākhṇo — "to keep, to put".
+
+The word, taken apart.
+राखणो (rākhṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rakṣati, "guards". CDIAL lists Old Marwari rākhaï under it (CDIAL 10547).
 
 What you've built.
 One more word for this chapter.

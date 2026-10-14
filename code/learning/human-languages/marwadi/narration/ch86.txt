@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a watch, then the Marwadi for a cap.
 You'll want to know: तीस.
 तीस — tīs — "thirty".
 
+The word, taken apart.
+तीस (tīs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from triṃśat, "thirty". CDIAL lists Marwari tīs under it (CDIAL 6015).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a cap, then the Marwadi for thirty.
 
 You'll want to know: चाळीस.
 चाळीस — chāḷīs — "forty".
+
+The word, taken apart.
+चाळीस (chāḷīs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from catvāriṃśat, "forty". CDIAL lists Old Marwari cyārīsa under it (CDIAL 4656). CDIAL notes that the Old Marwari r comes from cyāri, "four".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for thirty, then the Marwadi for forty.
 You'll want to know: पचास.
 पचास — pachās — "fifty".
 
+The word, taken apart.
+पचास (pachās) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pañcāśat, "fifty". CDIAL gives no Marwari form in this entry (CDIAL 7682); the match is through Hindi pacās and Gujarati pacās.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for forty, then the Marwadi for fifty.
 You'll want to know: साठ.
 साठ — sāṭh — "sixty".
 
+The word, taken apart.
+साठ (sāṭh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ṣaṣṭi, "sixty". CDIAL gives no Marwari form in this entry (CDIAL 12804); the match is through Hindi sāṭh and Gujarati sāṭhi.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for fifty, then the Marwadi for sixty.
 
 You'll want to know: सित्तर.
 सित्तर — sittar — "seventy".
+
+The word, taken apart.
+सित्तर (sittar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saptati, "seventy". CDIAL gives no Marwari form in this entry (CDIAL 13143); the match is through Hindi sattar and Gujarati sitter.
 
 What you've built.
 One more word for this chapter.

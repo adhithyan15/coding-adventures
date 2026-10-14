@@ -43,6 +43,9 @@ One beat, and the vowel is the one whose letter the hand made a moment ago.
 A seller has been naming amounts since chapter 27 and this book has been unable to hear a single one of them. That stops here. ek is the first of twelve number words this slice teaches.
 ek also does work inside numbers far larger than itself. Marwari counts down to a round number as readily as up from one: the dictionary records ekuṇcālīs for thirty-nine — one short of forty. Learn ek and a piece of thirty-nine comes with it.
 
+The word, taken apart.
+ek is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from eka, "one". CDIAL gives no Marwari form in this entry (CDIAL 2462); the match is through Hindi ek and Gujarati ek. CDIAL traces it through a form with a doubled k, ēkka, which it explains either as emphasis or as a Middle Indo-Aryan loan from Sanskrit.
+
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages.
 [question — say your answer, then pause 10 seconds]
@@ -62,6 +65,9 @@ Recall the three-word food payoff, write the word for final, and write ए (e).
 You'll want to know.
 ए (e) + क becomes एक — ek — one.
 Nothing joins and nothing changes shape. The standing vowel keeps its own head -line stroke, क keeps its, and the two run together under one line.
+
+The word, taken apart.
+एक (ek) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from eka, "one". CDIAL gives no Marwari form in this entry (CDIAL 2462); the match is through Hindi ek and Gujarati ek. CDIAL traces it through a form with a doubled k, ēkka, which it explains either as emphasis or as a Middle Indo-Aryan loan from Sanskrit.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -86,6 +92,9 @@ Chapter 29 taught do as an asking word: hand it over. This is the same sound and
 Nothing marks which one is meant except where it stands. Before a thing, do counts it. After a thing, in a request, do asks for it. A learner who has met both hears the difference from the shape of the sentence, not from the word.
 Rajasthani also prints बे (be) for two, alongside do. Both are in use; this book counts with do and names be so a printed page holding it is not a surprise.
 
+The word, taken apart.
+do is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dva, "two". CDIAL lists Marwari do under it (CDIAL 6648). English two is the same ancient word.
+
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages.
 [question — say your answer, then pause 14 seconds]
@@ -103,6 +112,9 @@ You'll want to know.
 द + ो becomes दो — do — two.
 The hand made this word in chapter 29. What is new is on the meaning side only: one written form, two jobs.
 That is worth stating plainly, because it is why a page of Marwari can look as though it contains no numbers at all. A reader counting occurrences of दो (do) across this book finds seventeen of them, and every one is the asking word. The number had never been taught.
+
+The word, taken apart.
+दो (do) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dva, "two". CDIAL lists Marwari do under it (CDIAL 6648). English two is the same ancient word.
 
 Guided Practice.
 [once you have stopped driving — write: एक (ek) and दो (do) one under the other; then पाणी दो (do)। underneath, and mark which दो (do) counts]
@@ -124,6 +136,9 @@ tīn — three.
 The vowel is long, and it is the same long vowel the ear learned in pāṇī in chapter 4. Hold it. A short one turns the number into something else.
 Count aloud: ek, do, tīn. Three words in, and two of them arrived with no new sign for the hand at all.
 
+The word, taken apart.
+tīn is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from trīṇi, "three". CDIAL lists Marwari tīn under it (CDIAL 5994). English three is the same ancient word.
+
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages.
 [question — say your answer, then pause 12 seconds]
@@ -143,6 +158,9 @@ Say the final-price question. Write flatbread and put a finger on its retroflex 
 You'll want to know.
 त + ी + न becomes तीन — tīn — three.
 The त here is the dental one, made with the tongue against the teeth — not the ट of रोटी, which is made further back. The two look different on the page and sound different in the mouth, and three uses the front one.
+
+The word, taken apart.
+तीन (tīn) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from trīṇi, "three". CDIAL lists Marwari tīn under it (CDIAL 5994). English three is the same ancient word.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -167,6 +185,9 @@ Say it and listen for the breath. There is no puff of air on the opening consona
 Hold on to that, because the next chapter opens six with the same consonant carrying a puff. In Marwari, four and six begin a breath apart.
 Count: ek, do, tīn, chār.
 
+The word, taken apart.
+chār is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from catvāri, "four". CDIAL lists Old Marwari cyāri under it (CDIAL 4655). Hindi and Gujarati have cār, as Marwadi does.
+
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages.
 [question — say your answer, then pause 14 seconds]
@@ -186,6 +207,9 @@ Write the hard wheat roll, write the final-price question, then write three.
 You'll want to know.
 च + ा + र becomes चार — chār — four.
 र was the first sign this book ever asked the hand to make, in chapter 1, on the way to राम. Thirty-one chapters later it closes the fourth number. Every sign in चार (chār) is older than the market this number is for.
+
+The word, taken apart.
+चार (chār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from catvāri, "four". CDIAL lists Old Marwari cyāri under it (CDIAL 4655). Hindi and Gujarati have cār, as Marwadi does.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -210,6 +234,9 @@ The vowel is nasal: the air goes out through the nose as well as the mouth. The 
 Four and five also close and open on the same consonant. chār begins with the plain ch; pāṅch ends with it. Say them back to back and hear the sound move from the front of one word to the back of the other.
 Count the whole set: ek, do, tīn, chār, pāṅch.
 
+The word, taken apart.
+pāṅch is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pañca, "five". CDIAL lists Marwari pā̃c under it (CDIAL 7655). English five is the same ancient word.
+
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages.
 [question — say your answer, then pause 16 seconds]
@@ -230,6 +257,9 @@ You'll want to know.
 प + ा + ं + च becomes पांच — pāṅch — five.
 The dot above the head-line is the anusvara from chapter 3. It sits over हां and it sits over पां for the same reason: the vowel under it is nasal.
 That is the whole cost of the first five numbers — one letter, ए (e), and one mark the hand had already been making since the third chapter.
+
+The word, taken apart.
+पांच (pāṅch) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pañca, "five". CDIAL lists Marwari pā̃c under it (CDIAL 7655). English five is the same ancient word.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.

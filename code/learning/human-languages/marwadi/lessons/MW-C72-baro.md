@@ -14,7 +14,8 @@ romanization: "baṛo"
 concept_tag: MW-ANIMALS72-BARO
 prerequisites: [MW-C72-sap, MW-C72-mor]
 sounds: []
-roots: []
+roots: [sanskrit-vadra]
+etymology_hook: "baṛo ← Sanskrit vaḍra 'big', a tadbhava (CDIAL 11225, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C72-mor]
 <!-- hl-knowledge: introduces=[MW-LEX-C72-ANIMALS72-04]; assesses=[] -->
 
 **बड़ो** — *baṛo* — "big".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बड़ो** (*baṛo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vaḍra*, "big". CDIAL lists Marwari *baṛo* under it (CDIAL 11225). CDIAL thinks a link with Sanskrit *vṛddha*, "grown", scarcely likely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
