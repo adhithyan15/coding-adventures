@@ -12,6 +12,9 @@ Before the new one: say the Bengali for an expense, then the Bengali for savings
 You'll want to know: বিচারক.
 বিচারক — bichārôk — "a judge".
 
+The word, taken apart.
+বিচারক (bichārôk) is built on Sanskrit vicāra, "consideration, judgement", taken over whole, + the ending -ôk, "one who": "one who judges".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for savings, then the Bengali for a judge.
 
 You'll want to know: ছাত্র.
 ছাত্র — chhātrô — "a student".
+
+The word, taken apart.
+ছাত্র (chhātrô) is Sanskrit chātra, "pupil", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a judge, then the Bengali for a student.
 You'll want to know: ইঞ্জিনিয়ার.
 ইঞ্জিনিয়ার — injiniyār — "an engineer".
 
+The word, taken apart.
+ইঞ্জিনিয়ার (injiniyār) is a loan from English engineer.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a student, then the Bengali for an engin
 You'll want to know: বিজ্ঞানী.
 বিজ্ঞানী — bigyānī — "a scientist".
 
+The word, taken apart.
+বিজ্ঞানী (bigyānī) is Sanskrit vijñāna, "knowledge, science", taken over whole, + the ending -ī, "one who has": "one who has science".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for an engineer, then the Bengali for a scie
 
 You'll want to know: গায়ক.
 গায়ক — gāyôk — "a singer".
+
+The word, taken apart.
+গায়ক (gāyôk) is Sanskrit gāyaka, "singer", taken over whole as a learned loan, a tatsama. The inherited word is gāin, "singer", which CDIAL lists under Sanskrit gāyana (CDIAL 4136).
 
 What you've built.
 One more word for this chapter.

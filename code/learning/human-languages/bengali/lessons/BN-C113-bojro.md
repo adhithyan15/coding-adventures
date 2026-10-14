@@ -14,7 +14,8 @@ romanization: "bôjrô"
 concept_tag: BN-THINGS113-BOJRO
 prerequisites: [BN-C113-kada, BN-C113-dhulo]
 sounds: []
-roots: []
+roots: [sanskrit-vajra]
+etymology_hook: "bôjrô ← Sanskrit vajra 'thunderbolt', a tatsama; CDIAL lists the inherited form bāj (CDIAL 11204)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C113-dhulo]
 <!-- hl-knowledge: introduces=[BN-LEX-C113-THINGS113-04]; assesses=[] -->
 
 **বজ্র** — *bôjrô* — "thunder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বজ্র** (*bôjrô*) is Sanskrit *vajra*, "thunderbolt", taken over whole as a learned loan, a tatsama (CDIAL 11204). The word inherited from it is *bāj*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

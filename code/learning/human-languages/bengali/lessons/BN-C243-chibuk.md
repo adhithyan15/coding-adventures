@@ -14,7 +14,8 @@ romanization: "chibuk"
 concept_tag: BN-SVASTHYO243-CHIBUK
 prerequisites: [BN-C243-dari, BN-C243-goph]
 sounds: []
-roots: []
+roots: [sanskrit-cibuka]
+etymology_hook: "chibuk ← Sanskrit cibuka 'chin', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C243-goph]
 <!-- hl-knowledge: introduces=[BN-LEX-C243-SVASTHYO243-05]; assesses=[] -->
 
 **চিবুক** — *chibuk* — "a chin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চিবুক** (*chibuk*) is Sanskrit *cibuka*, "chin", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

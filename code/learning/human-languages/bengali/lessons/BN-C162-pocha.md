@@ -14,7 +14,8 @@ romanization: "pôchā"
 concept_tag: BN-GUN162-POCHA
 prerequisites: [BN-C161-birokto, BN-C162-sugondhi]
 sounds: []
-roots: []
+roots: [sanskrit-pacyate]
+etymology_hook: "pôchā ← Sanskrit pacyate 'is cooked, is digested', a tadbhava (CDIAL 7654)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C162-sugondhi]
 <!-- hl-knowledge: introduces=[BN-LEX-C162-GUN162-02]; assesses=[] -->
 
 **পচা** — *pôchā* — "rotten".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পচা** (*pôchā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pacyate*, "is cooked, is digested" (CDIAL 7654). CDIAL lists Bengali *pacā*, "to be digested, to rot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

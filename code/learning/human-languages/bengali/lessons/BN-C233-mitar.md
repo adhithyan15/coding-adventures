@@ -14,7 +14,8 @@ romanization: "miṭār"
 concept_tag: BN-JINIS233-MITAR
 prerequisites: [BN-C232-chhola, BN-C232-intarnet]
 sounds: []
-roots: []
+roots: [english-metre]
+etymology_hook: "miṭār ← English metre"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C232-intarnet]
 <!-- hl-knowledge: introduces=[BN-LEX-C233-JINIS233-01]; assesses=[] -->
 
 **মিটার** — *miṭār* — "a metre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মিটার** (*miṭār*) is a loan from English *metre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dokāndār"
 concept_tag: BN-KAJ207-DOKANDAR
 prerequisites: [BN-C206-chhakni, BN-C207-dam]
 sounds: []
-roots: []
+roots: [arabic-dukkan, persian-dar]
+etymology_hook: "dokāndār: dokān 'shop' ← Arabic dukkān, through Persian, + Persian -dār 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C207-dam]
 <!-- hl-knowledge: introduces=[BN-LEX-C207-KAJ207-02]; assesses=[] -->
 
 **দোকানদার** — *dokāndār* — "a shopkeeper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দোকানদার** (*dokāndār*) is *dokān*, "shop", from Arabic *dukkān*, which reached Bengali through Persian (Lane), + the Persian ending *-dār*, "holder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

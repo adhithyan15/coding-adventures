@@ -14,7 +14,8 @@ romanization: "tirish"
 concept_tag: BN-NUMBERS87-TIRISH
 prerequisites: [BN-C86-dosh, BN-C87-kuri]
 sounds: []
-roots: []
+roots: [sanskrit-trimshat]
+etymology_hook: "tirish ← Sanskrit triṁśat 'thirty', a tadbhava (CDIAL 6015)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C87-kuri]
 <!-- hl-knowledge: introduces=[BN-LEX-C87-NUMBERS87-02]; assesses=[] -->
 
 **তিরিশ** — *tirish* — "thirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তিরিশ** (*tirish*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *triṁśat*, "thirty" (CDIAL 6015). CDIAL writes the Bengali form *tris*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

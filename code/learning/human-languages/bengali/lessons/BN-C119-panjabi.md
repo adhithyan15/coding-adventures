@@ -14,7 +14,8 @@ romanization: "pānjābi"
 concept_tag: BN-THINGS119-PANJABI
 prerequisites: [BN-C119-biskut, BN-C119-dhuti]
 sounds: []
-roots: []
+roots: [persian-panjab]
+etymology_hook: "pānjābi: named after the Punjab, whose name is usually traced to Persian panj āb 'five waters'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C119-dhuti]
 <!-- hl-knowledge: introduces=[BN-LEX-C119-THINGS119-05]; assesses=[] -->
 
 **পাঞ্জাবি** — *pānjābi* — "a long shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাঞ্জাবি** (*pānjābi*) is *Pānjāb*, the Punjab, with the ending *-i*: the shirt is named after the region, whose name is usually traced to Persian *panj āb*, "five waters".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

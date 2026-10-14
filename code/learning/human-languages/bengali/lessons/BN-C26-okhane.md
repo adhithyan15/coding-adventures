@@ -11,8 +11,8 @@ gloss: there — the far head on the place frame, and a word the reader can pred
 concept_tag: BN-LEX-OKHANE
 prerequisites: [BN-C26-ekhane, BN-C21-oi, BN-C23-o-pron, BN-C11-bondhu]
 sounds: []
-roots: []
-etymology_hook: "By this point the pattern should be doing the work: if এই is here-thing and এখানে is here-place, then ওই being there-thing makes ওখানে unavoidable. A reader who guesses it correctly has learned the system rather than the word."
+roots: [sanskrit-asau]
+etymology_hook: "okhāne: the far head o-, as in Middle Bengali oū 'that' ← asau (CDIAL 972); -khāne is not settled"
 duration:
   max_seconds: 230
 requires:
@@ -50,6 +50,11 @@ first letter does.
 - **ওখানে** — there, where I am not
 
 Two places, as there were two distances. Bengali does not add a third.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The far head **ও-** has Middle Bengali *oū*, "that", behind it, from Sanskrit *asau* (CDIAL 972); CDIAL has no entry for the frame *-khāne*, so its origin is not settled.
 
 ## Grammar Lens: eight of nine
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C26-OKHANE-01, BN-LEX-C26-EKHANE-01, BN-LEX-C23-O-PRON-01, BN-LEX-C21-EI-01] -->

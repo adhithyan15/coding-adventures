@@ -14,7 +14,8 @@ romanization: "sombār"
 concept_tag: BN-TIME91-SOMBAR
 prerequisites: [BN-C90-gotokal, BN-C91-agamikal]
 sounds: []
-roots: []
+roots: [vara-sanskrit]
+etymology_hook: "sombār ← Sanskrit somavāra 'Monday', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C91-agamikal]
 <!-- hl-knowledge: introduces=[BN-LEX-C91-TIME91-02]; assesses=[] -->
 
 **সোমবার** — *sombār* — "Monday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সোমবার** (*sombār*) is Sanskrit *somavāra*, "Monday", taken over whole as a learned loan, a tatsama. It is *soma*, "the moon", + *vāra*, "day of the week".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

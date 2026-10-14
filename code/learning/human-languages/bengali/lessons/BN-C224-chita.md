@@ -14,7 +14,8 @@ romanization: "chitā"
 concept_tag: BN-JINIS224-CHITA
 prerequisites: [BN-C224-salad, BN-C224-jontu]
 sounds: []
-roots: []
+roots: [sanskrit-citraka]
+etymology_hook: "chitā ← Sanskrit citraka 'leopard', a tadbhava (CDIAL 4804)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C224-jontu]
 <!-- hl-knowledge: introduces=[BN-LEX-C224-JINIS224-03]; assesses=[] -->
 
 **চিতা** — *chitā* — "a leopard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চিতা** (*chitā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *citraka*, "leopard" (CDIAL 4804). CDIAL lists Bengali *citā*, "leopard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

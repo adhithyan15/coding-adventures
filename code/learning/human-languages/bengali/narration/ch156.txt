@@ -12,6 +12,9 @@ Before the new one: say the Bengali for exercise, then the Bengali for health.
 You'll want to know: মাঝে মাঝে.
 মাঝে মাঝে — mājhe mājhe — "sometimes".
 
+The phrase, taken apart.
+মাঝে মাঝে (mājhe mājhe) is mājhe, "in the middle", said twice. Mājh, "middle", comes from Sanskrit madhya, "middle" (CDIAL 9804), and -e is the ending for "in, at".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for health, then the Bengali for sometimes.
 
 You'll want to know: প্রথমে.
 প্রথমে — prôthôme — "at first".
+
+The word, taken apart.
+প্রথমে (prôthôme) is Sanskrit prathama, "first", taken over whole, + the ending -e, "in, at": "in the first place".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for sometimes, then the Bengali for at first
 You'll want to know: তারিখ.
 তারিখ — tārikh — "a calendar date".
 
+The word, taken apart.
+তারিখ (tārikh) is a loan from Arabic tārīkh, "date, history", which reached Bengali through Persian. Its Arabic root is ʾ-r-kh (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for at first, then the Bengali for a calenda
 You'll want to know: জন্মদিন.
 জন্মদিন — jônmôdin — "a birthday".
 
+The word, taken apart.
+জন্মদিন (jônmôdin) is jônmô, "birth", Sanskrit janman taken over whole (CDIAL 5113), + din, "day", inherited from Sanskrit dina, "day" (CDIAL 6328).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a calendar date, then the Bengali for a 
 
 You'll want to know: দেরিতে.
 দেরিতে — derite — "late".
+
+The word, taken apart.
+দেরিতে (derite) is deri, "lateness", usually traced to Persian dēr, "late", + the ending -te, "in, at".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "bāṛi"
 concept_tag: BN-FOOD59-BARI
 prerequisites: [BN-C59-am, BN-C59-sobji]
 sounds: []
-roots: []
+roots: [sanskrit-vatika]
+etymology_hook: "bāṛi ← Sanskrit vāṭikā 'enclosure, garden', a tadbhava (CDIAL 11480)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C59-sobji]
 <!-- hl-knowledge: introduces=[BN-LEX-C59-FOOD59-04]; assesses=[] -->
 
 **বাড়ি** — *bāṛi* — "a house, home".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাড়ি** (*bāṛi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vāṭikā*, "enclosure, garden" (CDIAL 11480). CDIAL glosses the Bengali form "garden".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

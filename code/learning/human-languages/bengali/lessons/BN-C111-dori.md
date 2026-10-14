@@ -14,7 +14,8 @@ romanization: "dôṛi"
 concept_tag: BN-THINGS111-DORI
 prerequisites: [BN-C110-deshlai, BN-C110-koyla]
 sounds: []
-roots: []
+roots: [sanskrit-drti]
+etymology_hook: "dôṛi ← Sanskrit dṛti 'skin, leather bag', a tadbhava (CDIAL 6511)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C110-koyla]
 <!-- hl-knowledge: introduces=[BN-LEX-C111-THINGS111-01]; assesses=[] -->
 
 **দড়ি** — *dôṛi* — "a rope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দড়ি** (*dôṛi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dṛti*, "skin, leather bag" (CDIAL 6511). CDIAL glosses Bengali *daṛi* "sinew, tendon, cord, string".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

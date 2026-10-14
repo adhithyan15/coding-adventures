@@ -14,7 +14,8 @@ romanization: "bātās"
 concept_tag: BN-NATURE68-BATAS
 prerequisites: [BN-C67-boroph, BN-C68-mati]
 sounds: []
-roots: []
+roots: [indo-aryan-vatatrasa]
+etymology_hook: "bātās ← *vātatrāsa 'wind-storm', a reconstructed form; a tadbhava (CDIAL 11493)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C68-mati]
 <!-- hl-knowledge: introduces=[BN-LEX-C68-NATURE68-02]; assesses=[] -->
 
 **বাতাস** — *bātās* — "wind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাতাস** (*bātās*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vātatrāsa*, "wind-storm", a form CDIAL reconstructs from its descendants (CDIAL 11493). It is a compound of *vāta*, "wind", and *trāsa*, "fear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

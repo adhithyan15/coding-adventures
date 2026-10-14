@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a parcel, then the Bengali for a magazin
 You'll want to know: মশলা.
 মশলা — môshlā — "spice".
 
+The word, taken apart.
+মশলা (môshlā) is a loan from Arabic maṣāliḥ, "things that are needful", which reached Bengali through Persian. Its Arabic root is ṣ-l-ḥ (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a magazine, then the Bengali for spice.
 
 You'll want to know: জিরে.
 জিরে — jire — "cumin".
+
+The word, taken apart.
+জিরে (jire) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jīraka, "cummin-seed" (CDIAL 5234). CDIAL lists Bengali jīr, "cummin-seed".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for spice, then the Bengali for cumin.
 You'll want to know: ধনে.
 ধনে — dhône — "coriander".
 
+The word, taken apart.
+ধনে (dhône) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dhānaka, "coriander" (CDIAL 6776). CDIAL lists Bengali dhaniyā, "coriander".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for cumin, then the Bengali for coriander.
 You'll want to know: পুদিনা.
 পুদিনা — pudinā — "mint".
 
+The word, taken apart.
+পুদিনা (pudinā) is a loan, usually traced to Persian pūdina, "mint".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for coriander, then the Bengali for mint.
 
 You'll want to know: কাজু.
 কাজু — kāju — "a cashew".
+
+The word, taken apart.
+কাজু (kāju) is a loan from Portuguese caju, "cashew".
 
 What you've built.
 One more word for this chapter.

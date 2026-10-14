@@ -14,7 +14,8 @@ romanization: "liṭār"
 concept_tag: BN-JINIS205-LITAR
 prerequisites: [BN-C205-mp, BN-C205-keji]
 sounds: []
-roots: []
+roots: [english-litre]
+etymology_hook: "liṭār ← English litre"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C205-keji]
 <!-- hl-knowledge: introduces=[BN-LEX-C205-JINIS205-05]; assesses=[] -->
 
 **লিটার** — *liṭār* — "a litre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লিটার** (*liṭār*) is a loan from English *litre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

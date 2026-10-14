@@ -14,7 +14,8 @@ romanization: "kān"
 concept_tag: BN-BODY44-KAN
 prerequisites: [BN-C43-jibh, BN-C43-matha]
 sounds: []
-roots: []
+roots: [sanskrit-karna]
+etymology_hook: "kān ← Sanskrit karṇa 'ear', a tadbhava (CDIAL 2830)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C43-matha]
 <!-- hl-knowledge: introduces=[BN-LEX-C44-BODY44-01]; assesses=[] -->
 
 **কান** — *kān* — "an ear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কান** (*kān*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karṇa*, "ear" (CDIAL 2830).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

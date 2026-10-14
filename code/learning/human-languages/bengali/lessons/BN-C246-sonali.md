@@ -14,7 +14,8 @@ romanization: "sonāli"
 concept_tag: BN-GUN246-SONALI
 prerequisites: [BN-C246-ingreji, BN-C246-bharotiyo]
 sounds: []
-roots: []
+roots: [sanskrit-suvarna]
+etymology_hook: "sonāli: sonā 'gold' ← suvarṇa (CDIAL 13519) + -āli"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C246-bharotiyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C246-GUN246-04]; assesses=[] -->
 
 **সোনালি** — *sonāli* — "golden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সোনালি** (*sonāli*) is *sonā*, "gold", from Sanskrit *suvarṇa*, "golden; gold" (CDIAL 13519), + the ending *-āli*, "like".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

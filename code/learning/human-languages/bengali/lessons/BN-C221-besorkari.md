@@ -14,7 +14,8 @@ romanization: "besôrkāri"
 concept_tag: BN-GUN221-BESORKARI
 prerequisites: [BN-C220-durdanto, BN-C220-ager]
 sounds: []
-roots: []
+roots: [persian-be, persian-sarkar]
+etymology_hook: "besôrkāri: Persian be- 'without' + sarkār 'government' + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C220-ager]
 <!-- hl-knowledge: introduces=[BN-LEX-C221-GUN221-01]; assesses=[] -->
 
 **বেসরকারি** — *besôrkāri* — "private".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বেসরকারি** (*besôrkāri*) is the Persian prefix *be-*, "without", + *sôrkāri*, "governmental", from Persian *sarkār*, "government": "not of the government".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

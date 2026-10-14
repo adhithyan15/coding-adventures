@@ -14,7 +14,8 @@ romanization: "rôbibār"
 concept_tag: BN-TIME92-ROBIBAR
 prerequisites: [BN-C91-shukrobar, BN-C92-shonibar]
 sounds: []
-roots: []
+roots: [vara-sanskrit]
+etymology_hook: "rôbibār ← Sanskrit ravivāra 'Sunday', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C92-shonibar]
 <!-- hl-knowledge: introduces=[BN-LEX-C92-TIME92-02]; assesses=[] -->
 
 **রবিবার** — *rôbibār* — "Sunday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রবিবার** (*rôbibār*) is Sanskrit *ravivāra*, "Sunday", taken over whole as a learned loan, a tatsama. It is *ravi*, "the sun", + *vāra*, "day of the week".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

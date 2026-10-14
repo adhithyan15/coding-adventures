@@ -14,7 +14,8 @@ romanization: "britti"
 concept_tag: BN-JINIS172-BRITTI
 prerequisites: [BN-C172-bord, BN-C172-chok]
 sounds: []
-roots: []
+roots: [sanskrit-vrtti-conduct]
+etymology_hook: "britti ← Sanskrit vṛtti 'livelihood, maintenance', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C172-chok]
 <!-- hl-knowledge: introduces=[BN-LEX-C172-JINIS172-05]; assesses=[] -->
 
 **বৃত্তি** — *britti* — "a scholarship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বৃত্তি** (*britti*) is Sanskrit *vṛtti*, "livelihood, maintenance", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

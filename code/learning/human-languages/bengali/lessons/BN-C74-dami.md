@@ -14,7 +14,8 @@ romanization: "dāmi"
 concept_tag: BN-ADJ74-DAMI
 prerequisites: [BN-C73-taratari, BN-C73-sohoj]
 sounds: []
-roots: []
+roots: [sanskrit-dramma]
+etymology_hook: "dāmi: dām 'price' + -i; CDIAL lists dām under dramma 'a coin', from Greek drakhmē (CDIAL 6622)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C73-sohoj]
 <!-- hl-knowledge: introduces=[BN-LEX-C74-ADJ74-01]; assesses=[] -->
 
 **দামি** — *dāmi* — "expensive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দামি** (*dāmi*) is *dām*, "price", with the ending *-i*. CDIAL lists Bengali *dām* under Sanskrit *dramma*, "a coin", which it traces to Greek *drakhmē* through Middle Persian (CDIAL 6622).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

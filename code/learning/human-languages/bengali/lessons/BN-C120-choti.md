@@ -15,6 +15,7 @@ concept_tag: BN-THINGS120-CHOTI
 prerequisites: [BN-C119-dhuti, BN-C119-panjabi]
 sounds: []
 roots: []
+etymology_hook: "chôṭi: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C119-panjabi]
 <!-- hl-knowledge: introduces=[BN-LEX-C120-THINGS120-01]; assesses=[] -->
 
 **চটি** — *chôṭi* — "slippers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **চটি** (*chôṭi*) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "slipper" and "shoe" finds nothing close.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

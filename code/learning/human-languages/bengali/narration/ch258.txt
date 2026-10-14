@@ -12,6 +12,9 @@ Before the new one: say the Bengali for chira, then the Bengali for phuchka.
 You'll want to know: ইমেল.
 ইমেল — imel — "an email".
 
+The word, taken apart.
+ইমেল (imel) is a loan from English email.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for phuchka, then the Bengali for an email.
 
 You'll want to know: বার্তা.
 বার্তা — bārtā — "a message".
+
+The word, taken apart.
+বার্তা (bārtā) is Sanskrit vārttā, "tidings", taken over whole as a learned loan, a tatsama (CDIAL 11564). The word inherited from it is bāt, "talk, matter", which CDIAL lists.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for an email, then the Bengali for a message
 You'll want to know: পাসওয়ার্ড.
 পাসওয়ার্ড — pāsoyārḍ — "a password".
 
+The word, taken apart.
+পাসওয়ার্ড (pāsoyārḍ) is a loan from English password.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a message, then the Bengali for a passwo
 You'll want to know: ব্যাটারি.
 ব্যাটারি — bæṭāri — "a battery".
 
+The word, taken apart.
+ব্যাটারি (bæṭāri) is a loan from English battery.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a password, then the Bengali for a batte
 
 You'll want to know: সুইচ.
 সুইচ — suich — "a switch".
+
+The word, taken apart.
+সুইচ (suich) is a loan from English switch.
 
 What you've built.
 One more word for this chapter.

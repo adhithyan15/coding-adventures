@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 76,
-  "sourceHash": "fnv1a64:a94b97d881dd1fdf",
+  "sourceHash": "fnv1a64:5cb7cfb0f56141a6",
   "lessonIds": [
     "BN-C76-mota",
     "BN-C76-roga",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch76.txt",
   "json": "bengali/narration/ch76.json",
-  "textHash": "fnv1a64:41978c48d11df01a",
-  "jsonHash": "fnv1a64:fcda5b0e2efa4752",
+  "textHash": "fnv1a64:02098b336903a622",
+  "jsonHash": "fnv1a64:e057be3bf4a2ce78",
   "findings": []
 }

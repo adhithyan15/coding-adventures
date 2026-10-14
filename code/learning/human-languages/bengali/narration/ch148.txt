@@ -12,6 +12,9 @@ Before the new one: say the Bengali for an advert, then the Bengali for a receip
 You'll want to know: রান্না করা.
 রান্না করা — rānnā kôrā — "to cook".
 
+The phrase, taken apart.
+রান্না করা (rānnā kôrā) is rānnā, "cooking", from Sanskrit randhana, "cooking" (CDIAL 10615), + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a receipt, then the Bengali for to cook.
 
 You'll want to know: সেলাই করা.
 সেলাই করা — selāi kôrā — "to sew".
+
+The phrase, taken apart.
+সেলাই করা (selāi kôrā) is selāi, "sewing", which appears to be built on the verb CDIAL lists as Bengali siyāna under Sanskrit sīvyati, "sews" (CDIAL 13444), + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to cook, then the Bengali for to sew.
 You'll want to know: ইস্ত্রি করা.
 ইস্ত্রি করা — istri kôrā — "to iron".
 
+The phrase, taken apart.
+ইস্ত্রি করা (istri kôrā) is istri, "an iron", usually traced to Portuguese estirar, "to stretch out", + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to sew, then the Bengali for to iron.
 You'll want to know: ঝাঁট দেওয়া.
 ঝাঁট দেওয়া — jhā̃ṭ deoyā — "to sweep".
 
+The phrase, taken apart.
+ঝাঁট দেওয়া (jhā̃ṭ deoyā) (jhāṁṭ deoyā) is jhāṁṭ, "broom", which CDIAL lists under jhāṇṭa, beside Sanskrit jhāṭa, "forest, arbour", which has been traced to Munda (CDIAL 5362), + deoyā, "to give", from Sanskrit dadāti, "gives" (CDIAL 6141).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to iron, then the Bengali for to sweep.
 
 You'll want to know: সেদ্ধ করা.
 সেদ্ধ করা — seddhô kôrā — "to boil".
+
+The phrase, taken apart.
+সেদ্ধ করা (seddhô kôrā) is seddhô, "boiled", Sanskrit siddha, "accomplished; cooked", lightly reshaped, + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

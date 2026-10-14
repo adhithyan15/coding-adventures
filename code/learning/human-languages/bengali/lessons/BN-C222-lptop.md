@@ -14,7 +14,8 @@ romanization: "læpṭôp"
 concept_tag: BN-JINIS222-LPTOP
 prerequisites: [BN-C222-tibhi, BN-C222-rimot]
 sounds: []
-roots: []
+roots: [english-laptop]
+etymology_hook: "læpṭôp ← English laptop"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C222-rimot]
 <!-- hl-knowledge: introduces=[BN-LEX-C222-JINIS222-04]; assesses=[] -->
 
 **ল্যাপটপ** — *læpṭôp* — "a laptop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ল্যাপটপ** (*læpṭôp*) is a loan from English *laptop*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

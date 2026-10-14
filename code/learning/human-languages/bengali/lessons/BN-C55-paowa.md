@@ -14,7 +14,8 @@ romanization: "pāowā"
 concept_tag: BN-VERB-PAOWA
 prerequisites: [BN-C55-bodlano, BN-C55-daka]
 sounds: []
-roots: []
+roots: [sanskrit-prapayati]
+etymology_hook: "pāowā ← Sanskrit prāpayati 'causes to be obtained, obtains', a tadbhava (CDIAL 8943)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C55-daka]
 <!-- hl-knowledge: introduces=[BN-LEX-C55-VERBS55-03]; assesses=[] -->
 
 **পাওয়া** — *pāowā* — "to get, to find".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাওয়া** (*pāowā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *prāpayati*, "causes to be obtained, obtains" (CDIAL 8943).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

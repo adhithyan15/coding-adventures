@@ -4,7 +4,7 @@
   "chapter": 211,
   "title": "To shout, To get angry, To feel shy, To quarrel, To hug",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dadadb77456b556f",
+  "sourceHash": "fnv1a64:833999c39bc00f23",
   "lessons": [
     {
       "id": "BN-C211-chechano",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:131c9738c94e96b3",
+      "sourceHash": "fnv1a64:6bd555e36ac58690",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চেঁচানো (chẽchāno) is a tadbhava, a word inherited and reshaped by sound change. It comes from cicc, \"scream\", a form CDIAL reconstructs from its descendants (CDIAL 4789). CDIAL lists Bengali cẽcāna, \"to cry out\", and calls the word imitative."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c84ae33947a1912",
+      "sourceHash": "fnv1a64:9a7393b3bab91667",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রাগ করা (rāg kôrā) is rāg, \"anger\", Sanskrit rāga, \"passion\", taken over whole (CDIAL 10674), + kôrā, \"to do\", from Sanskrit karoti, \"does\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c96d3a3f27b36b7e",
+      "sourceHash": "fnv1a64:a78ca26f26cbfbf4",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লজ্জা পাওয়া (lôjjā pāoyā) is lôjjā, \"shame\", Sanskrit lajjā taken over whole (CDIAL 10910), + pāoyā, \"to get\", from Sanskrit prāpayati, \"causes to reach\" (CDIAL 8943): \"to get shame\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbe2bec0752d2407",
+      "sourceHash": "fnv1a64:c3e4fd5986965729",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঝগড়া করা (jhôgṛā kôrā) is jhôgṛā, \"a quarrel\", which CDIAL lists under jhagaḍ, \"quarrel\", a form it reconstructs (CDIAL 5321), + kôrā, \"to do\", from Sanskrit karoti, \"does\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d6ab781ce37c1d3",
+      "sourceHash": "fnv1a64:1582ba53b3aa484f",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জড়িয়ে ধরা (jôṛiye dhôrā) is jôṛiye, \"wrapping round\", a form of the verb CDIAL lists as Bengali jaṛāna, \"to wrap round\", under jaḍati, \"joins\", which it takes from Dravidian (CDIAL 5091), + dhôrā, \"to hold\", from Sanskrit dharati, \"holds\" (CDIAL 6747)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

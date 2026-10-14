@@ -14,7 +14,8 @@ romanization: "bādām"
 concept_tag: BN-JINIS204-BADAM
 prerequisites: [BN-C204-peyara, BN-C204-khejur]
 sounds: []
-roots: []
+roots: [persian-badam]
+etymology_hook: "bādām: usually traced to Persian bādām 'almond'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C204-khejur]
 <!-- hl-knowledge: introduces=[BN-LEX-C204-JINIS204-05]; assesses=[] -->
 
 **বাদাম** — *bādām* — "a nut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাদাম** (*bādām*) is a loan, usually traced to Persian *bādām*, "almond".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

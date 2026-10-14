@@ -14,7 +14,8 @@ romanization: "jorā"
 concept_tag: BN-VERB-JORA
 prerequisites: [BN-C100-poddhoti, BN-C101-ranna]
 sounds: []
-roots: []
+roots: [indo-aryan-yotayati]
+etymology_hook: "jorā ← *yoṭayati 'joins', a reconstructed form; a tadbhava (CDIAL 10496)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C101-ranna]
 <!-- hl-knowledge: introduces=[BN-LEX-C101-ACT101-02]; assesses=[] -->
 
 **জোড়া** — *jorā* — "to join".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জোড়া** (*jorā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*yoṭayati*, "joins", a form CDIAL reconstructs from its descendants (CDIAL 10496). CDIAL reconstructs it under *\*yuṭati*, "is joined".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nābik"
 concept_tag: BN-KAJ208-NABIK
 prerequisites: [BN-C207-kompani, BN-C208-pailot]
 sounds: []
-roots: []
+roots: [sanskrit-navika]
+etymology_hook: "nābik ← Sanskrit nāvika 'boatman, sailor', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C208-pailot]
 <!-- hl-knowledge: introduces=[BN-LEX-C208-KAJ208-02]; assesses=[] -->
 
 **নাবিক** — *nābik* — "a sailor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নাবিক** (*nābik*) is Sanskrit *nāvika*, "boatman, sailor", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

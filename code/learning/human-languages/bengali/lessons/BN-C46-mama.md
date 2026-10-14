@@ -14,7 +14,8 @@ romanization: "māmā"
 concept_tag: BN-FAMILY46-MAMA
 prerequisites: [BN-C46-didima, BN-C46-kaka]
 sounds: []
-roots: []
+roots: [sanskrit-mama]
+etymology_hook: "māmā ← Sanskrit māma 'uncle', a nursery word (CDIAL 10055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C46-kaka]
 <!-- hl-knowledge: introduces=[BN-LEX-C46-FAMILY46-04]; assesses=[] -->
 
 **মামা** — *māmā* — "an uncle (mother's brother)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মামা** (*māmā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *māma*, "uncle" (CDIAL 10055). CDIAL calls it a nursery word, with similar words in Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

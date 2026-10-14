@@ -14,7 +14,8 @@ romanization: "bôṛo"
 concept_tag: BN-ADJ72-BORO
 prerequisites: [BN-C71-pipre, BN-C71-murgi]
 sounds: []
-roots: []
+roots: [sanskrit-vadra]
+etymology_hook: "bôṛo ← Sanskrit vaḍra 'big', a tadbhava (CDIAL 11225)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C71-murgi]
 <!-- hl-knowledge: introduces=[BN-LEX-C72-ADJ72-01]; assesses=[] -->
 
 **বড়** — *bôṛo* — "big".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বড়** (*bôṛo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vaḍra*, "big" (CDIAL 11225). CDIAL rejects, as unlikely, a derivation from *vṛddha*, "grown".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

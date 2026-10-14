@@ -14,7 +14,8 @@ romanization: "shiggir"
 concept_tag: BN-TIME94-SHIGGIR
 prerequisites: [BN-C94-prayi, BN-C94-kokhono]
 sounds: []
-roots: []
+roots: [sanskrit-shighra]
+etymology_hook: "shiggir: usually traced to Sanskrit śīghra 'quick', with its cluster doubled; CDIAL has no Bengali form (CDIAL 12484)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C94-kokhono]
 <!-- hl-knowledge: introduces=[BN-LEX-C94-TIME94-05]; assesses=[] -->
 
 **শিগগির** — *shiggir* — "soon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শিগগির** (*shiggir*) is usually traced to Sanskrit *śīghra*, "quick", with its cluster turned into a doubled *g*. CDIAL has that entry but lists no Bengali form under it (CDIAL 12484).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

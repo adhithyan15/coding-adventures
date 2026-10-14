@@ -14,7 +14,8 @@ romanization: "ekhôn"
 concept_tag: BN-TIME79-EKHON
 prerequisites: [BN-C79-minit, BN-C79-aj]
 sounds: []
-roots: []
+roots: [sanskrit-kshana]
+etymology_hook: "ekhôn: the near head e- on -khôn ← Sanskrit kṣaṇa 'moment', as takhan ← tatkṣaṇa (CDIAL 5640)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C79-aj]
 <!-- hl-knowledge: introduces=[BN-LEX-C79-TIME79-04]; assesses=[] -->
 
 **এখন** — *ekhôn* — "now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**এখন** (*ekhôn*) is the near head *e-* on *-khôn*, from Sanskrit *kṣaṇa*, "moment": CDIAL lists *takhan*, "then", under Sanskrit *tatkṣaṇa*, "that very moment", with the same ending on the other pronoun stems (CDIAL 5640).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

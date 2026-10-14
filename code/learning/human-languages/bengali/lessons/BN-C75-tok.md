@@ -14,7 +14,8 @@ romanization: "ṭôk"
 concept_tag: BN-ADJ75-TOK
 prerequisites: [BN-C75-nongra, BN-C75-teto]
 sounds: []
-roots: []
+roots: [sanskrit-takra]
+etymology_hook: "ṭôk ← Sanskrit takra 'buttermilk', a tadbhava (CDIAL 5617)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C75-teto]
 <!-- hl-knowledge: introduces=[BN-LEX-C75-ADJ75-05]; assesses=[] -->
 
 **টক** — *ṭôk* — "sour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টক** (*ṭôk*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *takra*, "buttermilk" (CDIAL 5617). CDIAL lists the Bengali word under a second sense it reconstructs, "bitter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āpel"
 concept_tag: BN-FOOD56-APEL
 prerequisites: [BN-C56-dal, BN-C56-phol]
 sounds: []
-roots: []
+roots: [english-apple]
+etymology_hook: "āpel ← English apple"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C56-phol]
 <!-- hl-knowledge: introduces=[BN-LEX-C56-FOOD56-03]; assesses=[] -->
 
 **আপেল** — *āpel* — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আপেল** (*āpel*) is a loan from English *apple*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

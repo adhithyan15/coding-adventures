@@ -14,7 +14,8 @@ romanization: "dhār deoyā"
 concept_tag: BN-VERB-DHAR-DEOYA
 prerequisites: [BN-C208-mnejar, BN-C209-dhar-neoya]
 sounds: []
-roots: []
+roots: [sanskrit-uddhara, sanskrit-dadati]
+etymology_hook: "dhār deoyā: dhār 'loan' ← uddhāra (CDIAL 2018) + deoyā 'to give' ← dadāti (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C209-dhar-neoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C209-ACT209-02]; assesses=[] -->
 
 **ধার দেওয়া** — *dhār deoyā* — "to lend".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধার দেওয়া** (*dhār deoyā*) is *dhār*, "a loan", from Sanskrit *uddhāra*, "loan" (CDIAL 2018), + *deoyā*, "to give", from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

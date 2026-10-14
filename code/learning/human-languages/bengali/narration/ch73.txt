@@ -12,6 +12,9 @@ Before the new one: say the Bengali for old, then the Bengali for bad.
 You'll want to know: লম্বা.
 লম্বা — lômbā — "long, tall".
 
+The word, taken apart.
+লম্বা (lômbā) goes back to Sanskrit lamba, "pendent; long". CDIAL gives no Bengali form under that entry, but it lists Assamese lambā, "long", and Oriya lambā, "long, tall", the forms nearest to Bengali (CDIAL 10951).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for bad, then the Bengali for long.
 
 You'll want to know: গরম.
 গরম — gôrôm — "hot".
+
+The word, taken apart.
+গরম (gôrôm) is a loan, usually traced to Persian garm, "warm, hot".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for long, then the Bengali for hot.
 You'll want to know: আস্তে.
 আস্তে — āste — "slowly".
 
+The word, taken apart.
+আস্তে (āste) is a loan, usually traced to Persian āhista, "slow, gentle".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for hot, then the Bengali for slowly.
 You'll want to know: তাড়াতাড়ি.
 তাড়াতাড়ি — tāṛātāṛi — "quickly".
 
+The word, taken apart.
+তাড়াতাড়ি (tāṛātāṛi) doubles tāṛā, "haste". Its origin is not settled: CDIAL has no entry for that word; the nearest form it gives is Bengali tāṛāna, "to drive away, drive on", under Sanskrit tāḍayati, "beats" (CDIAL 5752), and it does not link the two.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for slowly, then the Bengali for quickly.
 
 You'll want to know: সহজ.
 সহজ — sôhôj — "easy".
+
+The word, taken apart.
+সহজ (sôhôj) is Sanskrit sahaja, "born together, innate", taken over whole as a learned loan, a tatsama. In Bengali it has come to mean "easy".
 
 What you've built.
 One more word for this chapter.

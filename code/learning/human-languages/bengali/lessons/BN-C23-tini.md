@@ -11,8 +11,8 @@ gloss: he, she, respectfully — the third-person rung of the same ladder আপ
 concept_tag: BN-LEX-TINI
 prerequisites: [BN-C23-she, BN-C02-tumi-apni, BN-C11-bhai, BN-C13-dukkhito]
 sounds: []
-roots: []
-etymology_hook: "Bengali grades respect in the third person as well as the second, which English gave up doing centuries ago. Speaking of somebody's mother with the plain pronoun is not a small slip: it is heard the way calling a stranger by their first name would be heard."
+roots: [sanskrit-ta]
+etymology_hook: "tini: on the stem ta- 'that' (CDIAL 5612), which gives Bengali tā; the ending -ni is not settled"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +52,11 @@ The table from the last lesson is now complete:
 
 Two rungs in the second person, two rungs in the third, and the choice is made
 the same way both times: age, standing, and how well you know them.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Bengali *tā* and *tāhā*, "him, her", under Sanskrit *ta-*, "that" (CDIAL 5612). **তিনি** is built on the same *t-*; CDIAL does not take its ending apart, so that part is not settled.
 
 ## Grammar Lens: the cost of getting it wrong
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C23-TINI-01, BN-LEX-C23-SHE-01, BN-LEX-C11-BHAI-01, BN-LEX-C13-DUKKHITO-01] -->

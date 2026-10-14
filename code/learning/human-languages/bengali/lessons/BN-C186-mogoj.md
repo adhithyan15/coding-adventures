@@ -14,7 +14,8 @@ romanization: "môgôj"
 concept_tag: BN-SVASTHYO186-MOGOJ
 prerequisites: [BN-C186-nabhi, BN-C186-talu]
 sounds: []
-roots: []
+roots: [persian-maghz]
+etymology_hook: "môgôj: usually traced to Persian maghz 'brain, marrow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C186-talu]
 <!-- hl-knowledge: introduces=[BN-LEX-C186-SVASTHYO186-04]; assesses=[] -->
 
 **মগজ** — *môgôj* — "the brain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মগজ** (*môgôj*) is a loan, usually traced to Persian *maghz*, "brain, marrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

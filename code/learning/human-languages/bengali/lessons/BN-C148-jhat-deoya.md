@@ -14,7 +14,8 @@ romanization: "jhā̃ṭ deoyā"
 concept_tag: BN-VERB-JHAT-DEOYA
 prerequisites: [BN-C148-selai-kora, BN-C148-istri-kora]
 sounds: []
-roots: []
+roots: [indo-aryan-jhata, sanskrit-dadati]
+etymology_hook: "jhāṁṭ deoyā: jhāṁṭ 'broom', listed under *jhāṇṭa (CDIAL 5362), + deoyā 'to give' ← dadāti (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C148-istri-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C148-ACT148-04]; assesses=[] -->
 
 **ঝাঁট দেওয়া** — *jhā̃ṭ deoyā* — "to sweep".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ঝাঁট দেওয়া** (*jhāṁṭ deoyā*) is *jhāṁṭ*, "broom", which CDIAL lists under *\*jhāṇṭa*, beside Sanskrit *jhāṭa*, "forest, arbour", which has been traced to Munda (CDIAL 5362), + *deoyā*, "to give", from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

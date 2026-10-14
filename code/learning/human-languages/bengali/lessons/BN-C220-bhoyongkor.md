@@ -14,7 +14,8 @@ romanization: "bhôyôngkôr"
 concept_tag: BN-GUN220-BHOYONGKOR
 prerequisites: [BN-C220-soman, BN-C220-prodhan]
 sounds: []
-roots: []
+roots: [sanskrit-bhayankara]
+etymology_hook: "bhôyôngkôr ← Sanskrit bhayaṅkara 'causing fear', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C220-prodhan]
 <!-- hl-knowledge: introduces=[BN-LEX-C220-GUN220-03]; assesses=[] -->
 
 **ভয়ংকর** — *bhôyôngkôr* — "terrible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভয়ংকর** (*bhôyôngkôr*) is Sanskrit *bhayaṅkara*, "causing fear", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

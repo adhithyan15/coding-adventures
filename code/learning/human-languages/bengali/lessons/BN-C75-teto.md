@@ -14,7 +14,8 @@ romanization: "teto"
 concept_tag: BN-ADJ75-TETO
 prerequisites: [BN-C75-gorib, BN-C75-nongra]
 sounds: []
-roots: []
+roots: [sanskrit-tikta]
+etymology_hook: "teto ← Sanskrit tikta 'pungent, bitter', a tadbhava (CDIAL 5806)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C75-nongra]
 <!-- hl-knowledge: introduces=[BN-LEX-C75-ADJ75-04]; assesses=[] -->
 
 **তেতো** — *teto* — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তেতো** (*teto*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tikta*, "pungent, bitter" (CDIAL 5806). CDIAL writes the Bengali form *tita*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

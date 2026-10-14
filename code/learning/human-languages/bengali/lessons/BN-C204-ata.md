@@ -15,6 +15,7 @@ concept_tag: BN-JINIS204-ATA
 prerequisites: [BN-C203-hingsa, BN-C203-somman]
 sounds: []
 roots: []
+etymology_hook: "ātā: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C203-somman]
 <!-- hl-knowledge: introduces=[BN-LEX-C204-JINIS204-01]; assesses=[] -->
 
 **আতা** — *ātā* — "a custard apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **আতা** (*ātā*) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "custard apple" finds nothing close.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

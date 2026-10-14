@@ -14,7 +14,8 @@ romanization: "tôlā"
 concept_tag: BN-JAYGA188-TOLA
 prerequisites: [BN-C188-thana, BN-C188-phlt]
 sounds: []
-roots: []
+roots: [sanskrit-tala]
+etymology_hook: "tôlā ← Sanskrit tala 'surface, bottom', a tadbhava (CDIAL 5731)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C188-phlt]
 <!-- hl-knowledge: introduces=[BN-LEX-C188-JAYGA188-05]; assesses=[] -->
 
 **তলা** — *tôlā* — "a storey, a floor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তলা** (*tôlā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tala*, "surface, bottom" (CDIAL 5731). CDIAL lists Bengali *talā*, "bottom, groundwork".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

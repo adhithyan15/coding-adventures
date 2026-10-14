@@ -14,7 +14,8 @@ romanization: "tārikh"
 concept_tag: BN-SOMOY156-TARIKH
 prerequisites: [BN-C156-majhe-majhe, BN-C156-prothome]
 sounds: []
-roots: []
+roots: [arabic-tarikh]
+etymology_hook: "tārikh ← Arabic tārīkh 'date, history', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C156-prothome]
 <!-- hl-knowledge: introduces=[BN-LEX-C156-SOMOY156-03]; assesses=[] -->
 
 **তারিখ** — *tārikh* — "a calendar date".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তারিখ** (*tārikh*) is a loan from Arabic *tārīkh*, "date, history", which reached Bengali through Persian. Its Arabic root is *ʾ-r-kh* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

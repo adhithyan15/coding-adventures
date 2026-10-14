@@ -14,7 +14,8 @@ romanization: "ṭuthpesṭ"
 concept_tag: BN-JINIS163-TUTHPEST
 prerequisites: [BN-C163-shmpu, BN-C163-toyale]
 sounds: []
-roots: []
+roots: [english-toothpaste]
+etymology_hook: "ṭuthpesṭ ← English toothpaste"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C163-toyale]
 <!-- hl-knowledge: introduces=[BN-LEX-C163-JINIS163-05]; assesses=[] -->
 
 **টুথপেস্ট** — *ṭuthpesṭ* — "toothpaste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টুথপেস্ট** (*ṭuthpesṭ*) is a loan from English *toothpaste*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

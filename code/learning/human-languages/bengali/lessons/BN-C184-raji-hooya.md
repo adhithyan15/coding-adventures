@@ -14,7 +14,8 @@ romanization: "rāji hôoyā"
 concept_tag: BN-VERB-RAJI-HOOYA
 prerequisites: [BN-C183-snan-kora, BN-C184-mene-neoya]
 sounds: []
-roots: []
+roots: [arabic-radi, sanskrit-bhavati]
+etymology_hook: "rāji hôoyā: rāji 'willing' ← Arabic rāḍī 'content', through Persian, + hôoyā ← bhavati (CDIAL 9416)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C184-mene-neoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C184-ACT184-02]; assesses=[] -->
 
 **রাজি হওয়া** — *rāji hôoyā* — "to agree".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রাজি হওয়া** (*rāji hôoyā*) is *rāji*, "willing", from Arabic *rāḍī*, "content", which reached Bengali through Persian; its Arabic root is *r-ḍ-w* (Lane). *Hôoyā*, "to be", comes from Sanskrit *bhavati*, "becomes, is" (CDIAL 9416).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "setu"
 concept_tag: BN-TOWN83-SETU
 prerequisites: [BN-C83-gari, BN-C83-bas]
 sounds: []
-roots: []
+roots: [sanskrit-setu]
+etymology_hook: "setu ← Sanskrit setu 'dam, bridge', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C83-bas]
 <!-- hl-knowledge: introduces=[BN-LEX-C83-TOWN83-03]; assesses=[] -->
 
 **সেতু** — *setu* — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সেতু** (*setu*) is Sanskrit *setu*, "dam, bridge", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

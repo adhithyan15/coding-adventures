@@ -14,7 +14,8 @@ romanization: "ṭôrch"
 concept_tag: BN-JINIS229-TORCH
 prerequisites: [BN-C228-bhagyo, BN-C228-siddhanto]
 sounds: []
-roots: []
+roots: [english-torch]
+etymology_hook: "ṭôrch ← English torch"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C228-siddhanto]
 <!-- hl-knowledge: introduces=[BN-LEX-C229-JINIS229-01]; assesses=[] -->
 
 **টর্চ** — *ṭôrch* — "a torch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টর্চ** (*ṭôrch*) is a loan from English *torch*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

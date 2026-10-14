@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 95,
-  "sourceHash": "fnv1a64:9d62f3c6ebb65742",
+  "sourceHash": "fnv1a64:7167af1b7561d99c",
   "lessonIds": [
     "BN-C95-idaning",
     "BN-C95-saradin",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch95.txt",
   "json": "bengali/narration/ch95.json",
-  "textHash": "fnv1a64:55e47db8b2ff6f8d",
-  "jsonHash": "fnv1a64:55ec602745753931",
+  "textHash": "fnv1a64:d4595ac560d5769c",
+  "jsonHash": "fnv1a64:0af2f9b1114b6666",
   "findings": []
 }

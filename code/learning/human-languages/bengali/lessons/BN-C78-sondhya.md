@@ -14,7 +14,8 @@ romanization: "sôndhyā"
 concept_tag: BN-TIME78-SONDHYA
 prerequisites: [BN-C77-din, BN-C78-rat]
 sounds: []
-roots: []
+roots: [sanskrit-samdhya]
+etymology_hook: "sôndhyā ← Sanskrit saṁdhyā 'twilight', a tatsama; CDIAL lists the inherited sāṁjh 'evening' (CDIAL 12918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C78-rat]
 <!-- hl-knowledge: introduces=[BN-LEX-C78-TIME78-02]; assesses=[] -->
 
 **সন্ধ্যা** — *sôndhyā* — "evening".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সন্ধ্যা** (*sôndhyā*) is Sanskrit *saṁdhyā*, "twilight", taken over whole as a learned loan, a tatsama (CDIAL 12918). The word inherited from it is *sāṁjh*, "evening", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 134,
-  "sourceHash": "fnv1a64:2b57808ce718018d",
+  "sourceHash": "fnv1a64:0266994fe4fbad25",
   "lessonIds": [
     "BN-C134-bete",
     "BN-C134-jhal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch134.txt",
   "json": "bengali/narration/ch134.json",
-  "textHash": "fnv1a64:4302ca53926e7f05",
-  "jsonHash": "fnv1a64:819ec93b2186ff57",
+  "textHash": "fnv1a64:ce55ac808f44642c",
+  "jsonHash": "fnv1a64:25e45160be26048b",
   "findings": []
 }

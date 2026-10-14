@@ -14,7 +14,8 @@ romanization: "khôrôch"
 concept_tag: BN-KAJ176-KHOROCH
 prerequisites: [BN-C176-dhar, BN-C176-bil]
 sounds: []
-roots: []
+roots: [arabic-kharj]
+etymology_hook: "khôrôch ← Arabic kharj 'expenditure', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C176-bil]
 <!-- hl-knowledge: introduces=[BN-LEX-C176-KAJ176-04]; assesses=[] -->
 
 **খরচ** — *khôrôch* — "an expense".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খরচ** (*khôrôch*) is a loan from Arabic *kharj*, "expenditure", which reached Bengali through Persian. Its Arabic root is *kh-r-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

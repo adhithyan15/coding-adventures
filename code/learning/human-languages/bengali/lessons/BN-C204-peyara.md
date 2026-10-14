@@ -14,7 +14,8 @@ romanization: "peyārā"
 concept_tag: BN-JINIS204-PEYARA
 prerequisites: [BN-C204-ata, BN-C204-bedana]
 sounds: []
-roots: []
+roots: [portuguese-pera]
+etymology_hook: "peyārā: usually traced to Portuguese pera 'pear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C204-bedana]
 <!-- hl-knowledge: introduces=[BN-LEX-C204-JINIS204-03]; assesses=[] -->
 
 **পেয়ারা** — *peyārā* — "a guava".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পেয়ারা** (*peyārā*) is usually traced to Portuguese *pera*, "pear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

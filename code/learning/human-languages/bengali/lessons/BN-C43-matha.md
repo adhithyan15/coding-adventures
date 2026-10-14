@@ -14,7 +14,8 @@ romanization: "māthā"
 concept_tag: BN-BODY43-MATHA
 prerequisites: [BN-C43-hatu, BN-C43-jibh]
 sounds: []
-roots: []
+roots: [sanskrit-mastaka]
+etymology_hook: "māthā ← Sanskrit mastaka 'head, skull', a tadbhava (CDIAL 9926)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C43-jibh]
 <!-- hl-knowledge: introduces=[BN-LEX-C43-BODY43-05]; assesses=[] -->
 
 **মাথা** — *māthā* — "the head".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাথা** (*māthā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mastaka*, "head, skull" (CDIAL 9926). CDIAL writes the Bengali form as *mātā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

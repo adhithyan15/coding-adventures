@@ -14,7 +14,8 @@ romanization: "jôṛiye dhôrā"
 concept_tag: BN-VERB-JORIYE-DHORA
 prerequisites: [BN-C211-lojja-paoya, BN-C211-jhogra-kora]
 sounds: []
-roots: []
+roots: [indo-aryan-jadati, sanskrit-dharati]
+etymology_hook: "jôṛiye dhôrā: jôṛiye 'wrapping round' (CDIAL 5091) + dhôrā 'to hold' ← dharati (CDIAL 6747)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C211-jhogra-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C211-ACT211-05]; assesses=[] -->
 
 **জড়িয়ে ধরা** — *jôṛiye dhôrā* — "to hug".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জড়িয়ে ধরা** (*jôṛiye dhôrā*) is *jôṛiye*, "wrapping round", a form of the verb CDIAL lists as Bengali *jaṛāna*, "to wrap round", under *\*jaḍati*, "joins", which it takes from Dravidian (CDIAL 5091), + *dhôrā*, "to hold", from Sanskrit *dharati*, "holds" (CDIAL 6747).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

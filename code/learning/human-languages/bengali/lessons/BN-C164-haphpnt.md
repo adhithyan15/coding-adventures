@@ -14,7 +14,8 @@ romanization: "hāphpænṭ"
 concept_tag: BN-JINIS164-HAPHPNT
 prerequisites: [BN-C164-poshak, BN-C164-jins]
 sounds: []
-roots: []
+roots: [english-half-pants]
+etymology_hook: "hāphpænṭ ← English half pants"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C164-jins]
 <!-- hl-knowledge: introduces=[BN-LEX-C164-JINIS164-04]; assesses=[] -->
 
 **হাফপ্যান্ট** — *hāphpænṭ* — "shorts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাফপ্যান্ট** (*hāphpænṭ*) is a loan from English *half pants*. It is made in South Asia from English *half* and *pants*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

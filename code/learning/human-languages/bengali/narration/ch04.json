@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "In Front, Underneath, and On Its Own",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:91f84ab1c3facd6a",
+  "sourceHash": "fnv1a64:24b180251dae09e6",
   "lessons": [
     {
       "id": "BN-W02-naam-read",
@@ -305,7 +305,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8791fceed60fc210",
+      "sourceHash": "fnv1a64:34a1dbf269e3bdea",
       "notice": null,
       "blocks": [
         {
@@ -355,6 +355,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ইট (iṭ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from iṣṭakā, \"brick\" (CDIAL 1600)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -385,7 +396,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "chhātrô"
 concept_tag: BN-KAJ177-CHHATRO
 prerequisites: [BN-C176-sonchoy, BN-C177-bicharok]
 sounds: []
-roots: []
+roots: [sanskrit-chatra-pupil]
+etymology_hook: "chhātrô ← Sanskrit chātra 'pupil', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C177-bicharok]
 <!-- hl-knowledge: introduces=[BN-LEX-C177-KAJ177-02]; assesses=[] -->
 
 **ছাত্র** — *chhātrô* — "a student".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছাত্র** (*chhātrô*) is Sanskrit *chātra*, "pupil", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

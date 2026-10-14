@@ -12,6 +12,9 @@ Before the new one: say the Bengali for smooth, then the Bengali for rough.
 You'll want to know: সম্প্রতি.
 সম্প্রতি — sômprôti — "recently". Bengali's simple past adds -লাম for "I": আমি সম্প্রতি একটা বই পড়লাম — āmi sômprôti ekṭā bôi pôṛlām — "I recently read a book."
 
+The word, taken apart.
+সম্প্রতি (sômprôti) is Sanskrit saṁprati, "now, at present", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for rough, then the Bengali for recently.
 
 You'll want to know: আগেই.
 আগেই — āgei — "already". It is আগে, "before", with the emphatic -ই: আমি আগেই খেয়েছি — āmi āgei kheyechhi — "I have already eaten."
+
+The word, taken apart.
+আগেই (āgei) is āge, "before", from Sanskrit agre, "in front" (CDIAL 68), + the stressing ending -i: "already".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for recently, then the Bengali for already.
 You'll want to know: গত.
 গত — gôtô — "last, previous". গত সপ্তাহে — gôtô sôptāhe — "last week"; গত বছর — gôtô bôchhôr — "last year".
 
+The word, taken apart.
+গত (gôtô) is Sanskrit gata, "gone, past", taken over whole as a learned loan, a tatsama (CDIAL 4008). The inherited forms are Old Bengali gaü and Bengali gela, "gone", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for already, then the Bengali for last.
 You'll want to know: একসময়.
 একসময় — æksômôy — "once, at one time". It points far back: একসময় এখানে একটা পুকুর ছিল — æksômôy ekhāne ekṭā pukur chhilô — "There was once a pond here." ছিল is the past of আছে.
 
+The word, taken apart.
+একসময় (æksômôy) is ek, "one", from Sanskrit ēka (CDIAL 2462), + sômôy, "time", Sanskrit samaya taken over whole.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for last, then the Bengali for once.
 
 You'll want to know: কাটানো.
 কাটানো — kāṭāno — "to spend (time)". Said of time: আমি ছুটিটা গ্রামে কাটালাম — āmi chhuṭiṭā grāme kāṭālām — "I spent the holiday in the village."
+
+The word, taken apart.
+কাটানো (kāṭāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kartati, "cuts" (CDIAL 2854). Kāṭāno is the causing form of kāṭā, "to cut"; CDIAL lists both.
 
 What you've built.
 One more word for this chapter.

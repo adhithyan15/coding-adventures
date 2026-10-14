@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 176,
-  "sourceHash": "fnv1a64:e4a49fae31c37677",
+  "sourceHash": "fnv1a64:be692e91ec074648",
   "lessonIds": [
     "BN-C176-pesha",
     "BN-C176-dhar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch176.txt",
   "json": "bengali/narration/ch176.json",
-  "textHash": "fnv1a64:1e3fc63b2f9613f2",
-  "jsonHash": "fnv1a64:0199131bd757bc32",
+  "textHash": "fnv1a64:928adcb16b43c5ca",
+  "jsonHash": "fnv1a64:fa55c390c5c4edd6",
   "findings": []
 }

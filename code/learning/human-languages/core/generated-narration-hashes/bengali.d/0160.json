@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 160,
-  "sourceHash": "fnv1a64:21c10328e85184cc",
+  "sourceHash": "fnv1a64:1248d79829c30645",
   "lessonIds": [
     "BN-C160-buddhiman",
     "BN-C160-porishromi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch160.txt",
   "json": "bengali/narration/ch160.json",
-  "textHash": "fnv1a64:404751e5553a9de0",
-  "jsonHash": "fnv1a64:1a75c506a2bff9af",
+  "textHash": "fnv1a64:a94052517067bf64",
+  "jsonHash": "fnv1a64:256ba689bf092ea5",
   "findings": []
 }

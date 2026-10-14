@@ -15,6 +15,7 @@ concept_tag: BN-GUN247-CHOKCHOKE
 prerequisites: [BN-C247-khara, BN-C247-chpta]
 sounds: []
 roots: []
+etymology_hook: "chôkchôke: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C247-chpta]
 <!-- hl-knowledge: introduces=[BN-LEX-C247-GUN247-05]; assesses=[] -->
 
 **চকচকে** — *chôkchôke* — "shiny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **চকচকে** (*chôkchôke*) is not settled: CDIAL has no entry for it, and a search by the glosses "shine" and "glitter" finds only words of other shapes, such as Bengali *camkāna*, "to glitter" (CDIAL 4676).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

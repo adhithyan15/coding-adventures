@@ -14,7 +14,8 @@ romanization: "chôp"
 concept_tag: BN-JINIS196-CHOP
 prerequisites: [BN-C196-biriyani, BN-C196-khichuri]
 sounds: []
-roots: []
+roots: [english-chop]
+etymology_hook: "chôp ← English chop"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C196-khichuri]
 <!-- hl-knowledge: introduces=[BN-LEX-C196-JINIS196-03]; assesses=[] -->
 
 **চপ** — *chôp* — "a croquette".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চপ** (*chôp*) is a loan from English *chop*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

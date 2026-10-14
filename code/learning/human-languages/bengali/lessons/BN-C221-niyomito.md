@@ -14,7 +14,8 @@ romanization: "niyômitô"
 concept_tag: BN-GUN221-NIYOMITO
 prerequisites: [BN-C221-antorjatik, BN-C221-shohure]
 sounds: []
-roots: []
+roots: [sanskrit-niyamita]
+etymology_hook: "niyômitô ← Sanskrit niyamita 'regulated', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C221-shohure]
 <!-- hl-knowledge: introduces=[BN-LEX-C221-GUN221-05]; assesses=[] -->
 
 **নিয়মিত** — *niyômitô* — "regular".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নিয়মিত** (*niyômitô*) is Sanskrit *niyamita*, "regulated", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

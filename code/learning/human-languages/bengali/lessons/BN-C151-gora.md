@@ -14,7 +14,8 @@ romanization: "gôṛā"
 concept_tag: BN-VERB-GORA
 prerequisites: [BN-C150-kasha, BN-C151-bondho-kora]
 sounds: []
-roots: []
+roots: [indo-aryan-gathati]
+etymology_hook: "gôṛā ← *gaṭhati 'makes, forms', a reconstructed form; a tadbhava (CDIAL 3966)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C151-bondho-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C151-ACT151-02]; assesses=[] -->
 
 **গড়া** — *gôṛā* — "to build, to shape".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গড়া** (*gôṛā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*gaṭhati*, "makes, forms", a form CDIAL reconstructs from its descendants (CDIAL 3966). CDIAL lists Bengali *gaṛā*, "to hammer into shape, form".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

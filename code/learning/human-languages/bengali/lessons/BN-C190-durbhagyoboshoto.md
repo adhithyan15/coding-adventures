@@ -14,7 +14,8 @@ romanization: "durbhāgyôbôshôtô"
 concept_tag: BN-KARON190-DURBHAGYOBOSHOTO
 prerequisites: [BN-C190-hoyto, BN-C190-nishchoyi]
 sounds: []
-roots: []
+roots: [sanskrit-durbhagya, sanskrit-vashatas]
+etymology_hook: "durbhāgyôbôshôtô: Sanskrit durbhāgya 'ill luck' + vaśataḥ 'by force of', tatsama parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C190-nishchoyi]
 <!-- hl-knowledge: introduces=[BN-LEX-C190-KARON190-04]; assesses=[] -->
 
 **দুর্ভাগ্যবশত** — *durbhāgyôbôshôtô* — "unfortunately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দুর্ভাগ্যবশত** (*durbhāgyôbôshôtô*) is built from Sanskrit *durbhāgya*, "ill luck", and *vaśataḥ*, "by force of", both taken over whole: "by force of ill luck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

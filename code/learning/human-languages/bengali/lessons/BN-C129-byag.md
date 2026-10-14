@@ -14,7 +14,8 @@ romanization: "byāg"
 concept_tag: BN-THINGS129-BYAG
 prerequisites: [BN-C129-pensil, BN-C129-robar]
 sounds: []
-roots: []
+roots: [english-bag]
+etymology_hook: "byāg ← English bag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C129-robar]
 <!-- hl-knowledge: introduces=[BN-LEX-C129-THINGS129-05]; assesses=[] -->
 
 **ব্যাগ** — *byāg* — "a bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ব্যাগ** (*byāg*) is a loan from English *bag*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

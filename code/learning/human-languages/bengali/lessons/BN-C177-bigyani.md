@@ -14,7 +14,8 @@ romanization: "bigyānī"
 concept_tag: BN-KAJ177-BIGYANI
 prerequisites: [BN-C177-chhatro, BN-C177-injiniyar]
 sounds: []
-roots: []
+roots: [sanskrit-vijnana]
+etymology_hook: "bigyānī: Sanskrit vijñāna 'knowledge', a tatsama, + -ī 'one who has'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C177-injiniyar]
 <!-- hl-knowledge: introduces=[BN-LEX-C177-KAJ177-04]; assesses=[] -->
 
 **বিজ্ঞানী** — *bigyānī* — "a scientist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিজ্ঞানী** (*bigyānī*) is Sanskrit *vijñāna*, "knowledge, science", taken over whole, + the ending *-ī*, "one who has": "one who has science".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

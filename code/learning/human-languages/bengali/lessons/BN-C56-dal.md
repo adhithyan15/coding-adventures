@@ -14,7 +14,8 @@ romanization: "ḍāl"
 concept_tag: BN-FOOD56-DAL
 prerequisites: [BN-C55-mangsho, BN-C55-machh]
 sounds: []
-roots: []
+roots: [sanskrit-dala]
+etymology_hook: "ḍāl ← Sanskrit dāla 'split peas', a tadbhava (CDIAL 6309)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C55-machh]
 <!-- hl-knowledge: introduces=[BN-LEX-C56-FOOD56-01]; assesses=[] -->
 
 **ডাল** — *ḍāl* — "lentils".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ডাল** (*ḍāl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dāla*, "split peas" (CDIAL 6309). CDIAL asks whether it is one word with another *dāla*, "piece split off".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

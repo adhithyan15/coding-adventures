@@ -14,7 +14,8 @@ romanization: "pākā"
 concept_tag: BN-QUAL141-PAKA
 prerequisites: [BN-C140-basi, BN-C140-kacha]
 sounds: []
-roots: []
+roots: [sanskrit-pakva]
+etymology_hook: "pākā ← Sanskrit pakva 'cooked, ripe', a tadbhava (CDIAL 7621)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C140-kacha]
 <!-- hl-knowledge: introduces=[BN-LEX-C141-QUAL141-01]; assesses=[] -->
 
 **পাকা** — *pākā* — "ripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাকা** (*pākā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pakva*, "cooked, ripe" (CDIAL 7621).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

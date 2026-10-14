@@ -14,7 +14,8 @@ romanization: "phuṭpāt"
 concept_tag: BN-JAYGA157-PHUTPAT
 prerequisites: [BN-C156-derite, BN-C157-jayga]
 sounds: []
-roots: []
+roots: [english-footpath]
+etymology_hook: "phuṭpāt ← English footpath"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C157-jayga]
 <!-- hl-knowledge: introduces=[BN-LEX-C157-JAYGA157-02]; assesses=[] -->
 
 **ফুটপাত** — *phuṭpāt* — "a pavement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফুটপাত** (*phuṭpāt*) is a loan from English *footpath*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

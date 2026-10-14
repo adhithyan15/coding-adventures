@@ -14,7 +14,8 @@ romanization: "seddhô kôrā"
 concept_tag: BN-VERB-SEDDHO-KORA
 prerequisites: [BN-C148-istri-kora, BN-C148-jhat-deoya]
 sounds: []
-roots: []
+roots: [sanskrit-siddha, sanskrit-karoti]
+etymology_hook: "seddhô kôrā: seddhô 'boiled', a reshaped Sanskrit siddha 'cooked', + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C148-jhat-deoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C148-ACT148-05]; assesses=[] -->
 
 **সেদ্ধ করা** — *seddhô kôrā* — "to boil".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সেদ্ধ করা** (*seddhô kôrā*) is *seddhô*, "boiled", Sanskrit *siddha*, "accomplished; cooked", lightly reshaped, + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "biskut"
 concept_tag: BN-THINGS119-BISKUT
 prerequisites: [BN-C119-sorbot, BN-C119-halua]
 sounds: []
-roots: []
+roots: [english-biscuit]
+etymology_hook: "biskut ← English biscuit"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C119-halua]
 <!-- hl-knowledge: introduces=[BN-LEX-C119-THINGS119-03]; assesses=[] -->
 
 **বিস্কুট** — *biskut* — "a biscuit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিস্কুট** (*biskut*) is a loan from English *biscuit*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

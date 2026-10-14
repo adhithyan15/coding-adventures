@@ -14,7 +14,8 @@ romanization: "biṛāl"
 concept_tag: BN-NATURE68-BIRAL
 prerequisites: [BN-C68-akash, BN-C68-kukur]
 sounds: []
-roots: []
+roots: [sanskrit-bidala]
+etymology_hook: "biṛāl ← Sanskrit biḍāla 'cat', a tadbhava (CDIAL 9237)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C68-kukur]
 <!-- hl-knowledge: introduces=[BN-LEX-C68-NATURE68-05]; assesses=[] -->
 
 **বিড়াল** — *biṛāl* — "a cat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিড়াল** (*biṛāl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *biḍāla*, "cat" (CDIAL 9237). CDIAL writes the Bengali form *birāl*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

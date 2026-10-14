@@ -11,7 +11,8 @@ gloss: to work (lit. "work-do")
 concept_tag: BN-VERB-KORA
 prerequisites: [BN-C05-bola]
 sounds: [long-aa, o-inherent]
-roots: [kr-do, karya-work]
+roots: [kr-do, karya-work, sanskrit-karoti]
+etymology_hook: "kāj ← Sanskrit kārya 'work, business' (CDIAL 3078); kôrā ← karoti 'does' (CDIAL 2814), both on kṛ 'to do'"
 duration:
   max_seconds: 240
 requires:

@@ -14,7 +14,8 @@ romanization: "injiniyār"
 concept_tag: BN-KAJ177-INJINIYAR
 prerequisites: [BN-C177-bicharok, BN-C177-chhatro]
 sounds: []
-roots: []
+roots: [english-engineer]
+etymology_hook: "injiniyār ← English engineer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C177-chhatro]
 <!-- hl-knowledge: introduces=[BN-LEX-C177-KAJ177-03]; assesses=[] -->
 
 **ইঞ্জিনিয়ার** — *injiniyār* — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ইঞ্জিনিয়ার** (*injiniyār*) is a loan from English *engineer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

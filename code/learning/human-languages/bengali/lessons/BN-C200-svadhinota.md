@@ -14,7 +14,8 @@ romanization: "svādhīnôtā"
 concept_tag: BN-JINIS200-SVADHINOTA
 prerequisites: [BN-C199-niyom, BN-C200-juddho]
 sounds: []
-roots: []
+roots: [sanskrit-svadhina]
+etymology_hook: "svādhīnôtā: Sanskrit svādhīna 'independent' + -tā '-ness', tatsama parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C200-juddho]
 <!-- hl-knowledge: introduces=[BN-LEX-C200-JINIS200-02]; assesses=[] -->
 
 **স্বাধীনতা** — *svādhīnôtā* — "freedom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**স্বাধীনতা** (*svādhīnôtā*) is Sanskrit *svādhīna*, "dependent on oneself, independent", + the ending *-tā*, "-ness", both taken over whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

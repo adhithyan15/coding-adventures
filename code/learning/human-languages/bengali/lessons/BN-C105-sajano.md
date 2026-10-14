@@ -14,7 +14,8 @@ romanization: "sājāno"
 concept_tag: BN-VERB-SAJANO
 prerequisites: [BN-C105-jhara, BN-C105-gochhano]
 sounds: []
-roots: []
+roots: [sanskrit-sajjayati]
+etymology_hook: "sājāno ← Sanskrit sajjayati 'makes ready, equips', a tadbhava (CDIAL 13091)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C105-gochhano]
 <!-- hl-knowledge: introduces=[BN-LEX-C105-ACT105-03]; assesses=[] -->
 
 **সাজানো** — *sājāno* — "to decorate, to arrange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সাজানো** (*sājāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sajjayati*, "makes ready, equips" (CDIAL 13091). *Sājāno* is the causing form of *sājā*, "to make ready, dress"; CDIAL lists both.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sômudrô"
 concept_tag: BN-NATURE67-SOMUDRO
 prerequisites: [BN-C67-bali, BN-C67-chad]
 sounds: []
-roots: []
+roots: [sanskrit-samudra]
+etymology_hook: "sômudrô ← Sanskrit samudra 'sea', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C67-chad]
 <!-- hl-knowledge: introduces=[BN-LEX-C67-NATURE67-03]; assesses=[] -->
 
 **সমুদ্র** — *sômudrô* — "the sea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সমুদ্র** (*sômudrô*) is Sanskrit *samudra*, "sea", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

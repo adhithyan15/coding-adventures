@@ -14,7 +14,8 @@ romanization: "kômôr"
 concept_tag: BN-THINGS123-KOMOR
 prerequisites: [BN-C123-konui, BN-C123-buk]
 sounds: []
-roots: []
+roots: [persian-kamar]
+etymology_hook: "kômôr: usually traced to Persian kamar 'waist'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C123-buk]
 <!-- hl-knowledge: introduces=[BN-LEX-C123-THINGS123-04]; assesses=[] -->
 
 **কোমর** — *kômôr* — "the waist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কোমর** (*kômôr*) is a loan, usually traced to Persian *kamar*, "waist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

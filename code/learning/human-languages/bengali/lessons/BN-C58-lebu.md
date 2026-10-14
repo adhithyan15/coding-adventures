@@ -14,7 +14,8 @@ romanization: "lebu"
 concept_tag: BN-FOOD58-LEBU
 prerequisites: [BN-C57-tel, BN-C58-komla]
 sounds: []
-roots: []
+roots: [sanskrit-nimbu]
+etymology_hook: "lebu ← Sanskrit nimbū 'lime', which CDIAL takes from Austroasiatic (CDIAL 7247)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C58-komla]
 <!-- hl-knowledge: introduces=[BN-LEX-C58-FOOD58-02]; assesses=[] -->
 
 **লেবু** — *lebu* — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লেবু** (*lebu*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nimbū*, "lime" (CDIAL 7247). CDIAL takes the word from Austroasiatic, and says the Bengali *e* reflects a variant source of the loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

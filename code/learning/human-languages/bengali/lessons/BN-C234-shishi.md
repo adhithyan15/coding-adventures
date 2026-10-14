@@ -14,7 +14,8 @@ romanization: "shishi"
 concept_tag: BN-JINIS234-SHISHI
 prerequisites: [BN-C233-bosta, BN-C233-khuchro]
 sounds: []
-roots: []
+roots: [persian-shisha]
+etymology_hook: "shishi: usually traced to Persian shīsha 'glass, a bottle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C233-khuchro]
 <!-- hl-knowledge: introduces=[BN-LEX-C234-JINIS234-01]; assesses=[] -->
 
 **শিশি** — *shishi* — "a vial, a small bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শিশি** (*shishi*) is a loan, usually traced to Persian *shīsha*, "glass, a bottle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 137,
-  "sourceHash": "fnv1a64:2f412566692ba6ef",
+  "sourceHash": "fnv1a64:fc6e7fdf2ddcda45",
   "lessonIds": [
     "BN-C137-golapi",
     "BN-C137-dukhi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch137.txt",
   "json": "bengali/narration/ch137.json",
-  "textHash": "fnv1a64:9d40bf8a220c4e44",
-  "jsonHash": "fnv1a64:5907967c0d354bdb",
+  "textHash": "fnv1a64:1ee486431a8a300b",
+  "jsonHash": "fnv1a64:c510a7aacc80e7e2",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "giṭār"
 concept_tag: BN-THINGS131-GITAR
 prerequisites: [BN-C131-bashi, BN-C131-tobla]
 sounds: []
-roots: []
+roots: [english-guitar]
+etymology_hook: "giṭār ← English guitar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C131-tobla]
 <!-- hl-knowledge: introduces=[BN-LEX-C131-THINGS131-04]; assesses=[] -->
 
 **গিটার** — *giṭār* — "a guitar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গিটার** (*giṭār*) is a loan from English *guitar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

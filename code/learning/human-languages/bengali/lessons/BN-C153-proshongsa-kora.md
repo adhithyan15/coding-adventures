@@ -14,7 +14,8 @@ romanization: "prôshôngsā kôrā"
 concept_tag: BN-VERB-PROSHONGSA-KORA
 prerequisites: [BN-C152-kamrano, BN-C153-alochona-kora]
 sounds: []
-roots: []
+roots: [sanskrit-prashamsa, sanskrit-karoti]
+etymology_hook: "prôshôngsā kôrā: prôshôngsā 'praise', Sanskrit praśaṁsā, + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C153-alochona-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C153-ACT153-02]; assesses=[] -->
 
 **প্রশংসা করা** — *prôshôngsā kôrā* — "to praise".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রশংসা করা** (*prôshôngsā kôrā*) is *prôshôngsā*, "praise", Sanskrit *praśaṁsā* taken over whole, + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "klās"
 concept_tag: BN-KAJ236-KLAS
 prerequisites: [BN-C235-muchi, BN-C235-chhutor]
 sounds: []
-roots: []
+roots: [english-class]
+etymology_hook: "klās ← English class"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C235-chhutor]
 <!-- hl-knowledge: introduces=[BN-LEX-C236-KAJ236-01]; assesses=[] -->
 
 **ক্লাস** — *klās* — "a class".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ক্লাস** (*klās*) is a loan from English *class*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

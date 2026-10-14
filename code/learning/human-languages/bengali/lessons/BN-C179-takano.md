@@ -14,7 +14,8 @@ romanization: "tākāno"
 concept_tag: BN-VERB-TAKANO
 prerequisites: [BN-C179-gela, BN-C179-chibano]
 sounds: []
-roots: []
+roots: [sanskrit-tarkayati]
+etymology_hook: "tākāno ← Sanskrit tarkayati 'guesses, thinks', a tadbhava (CDIAL 5716)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C179-chibano]
 <!-- hl-knowledge: introduces=[BN-LEX-C179-ACT179-04]; assesses=[] -->
 
 **তাকানো** — *tākāno* — "to look (at)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তাকানো** (*tākāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tarkayati*, "guesses, thinks" (CDIAL 5716). CDIAL lists Bengali *tākā*, "to behold, aim at".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bæyām"
 concept_tag: BN-SVASTHYO155-BYAM
 prerequisites: [BN-C155-phusphus, BN-C155-kidni]
 sounds: []
-roots: []
+roots: [sanskrit-vyayama]
+etymology_hook: "bæyām ← Sanskrit vyāyāma 'exertion', a tatsama (CDIAL 12209)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C155-kidni]
 <!-- hl-knowledge: introduces=[BN-LEX-C155-SVASTHYO155-04]; assesses=[] -->
 
 **ব্যায়াম** — *bæyām* — "exercise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ব্যায়াম** (*bæyām*) is Sanskrit *vyāyāma*, "exertion", taken over whole as a learned loan, a tatsama (CDIAL 12209).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

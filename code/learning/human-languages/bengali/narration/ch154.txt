@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to thank, then the Bengali for to put up
 You'll want to know: রোগ.
 রোগ — rog — "a disease".
 
+The word, taken apart.
+রোগ (rog) is Sanskrit roga, "disease", taken over whole as a learned loan, a tatsama (CDIAL 10829).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to put up with, then the Bengali for a d
 
 You'll want to know: সর্দি.
 সর্দি — sôrdi — "a cold (illness)".
+
+The word, taken apart.
+সর্দি (sôrdi) is a loan, usually traced to Persian sardī, "cold; a cold". It is built on Persian sard, "cold".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a disease, then the Bengali for a cold.
 You'll want to know: কাশি.
 কাশি — kāshi — "a cough".
 
+The word, taken apart.
+কাশি (kāshi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kāsikā, "cough" (CDIAL 3138). CDIAL lists Bengali kāsi, "cough".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a cold, then the Bengali for a cough.
 You'll want to know: মাথাব্যথা.
 মাথাব্যথা — māthābæthā — "a headache".
 
+The word, taken apart.
+মাথাব্যথা (māthābæthā) is māthā, "head", from Sanskrit mastaka, "head, skull" (CDIAL 9926), + bæthā, "pain", Sanskrit vyathā, "pain, distress", taken over whole.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a cough, then the Bengali for a headache
 
 You'll want to know: পেটব্যথা.
 পেটব্যথা — peṭbæthā — "a stomach ache".
+
+The word, taken apart.
+পেটব্যথা (peṭbæthā) is peṭ, "belly", which CDIAL lists under pēṭṭa, "belly", a form it reconstructs (CDIAL 8376), + bæthā, "pain", Sanskrit vyathā, "pain, distress", taken over whole.
 
 What you've built.
 One more word for this chapter.

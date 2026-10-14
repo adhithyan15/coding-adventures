@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 171,
-  "sourceHash": "fnv1a64:8dae9064a800ba17",
+  "sourceHash": "fnv1a64:13982dbdbbd604f7",
   "lessonIds": [
     "BN-C171-kuri",
     "BN-C171-golap",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch171.txt",
   "json": "bengali/narration/ch171.json",
-  "textHash": "fnv1a64:1514c17e272e66fe",
-  "jsonHash": "fnv1a64:04d391a161809356",
+  "textHash": "fnv1a64:0312c643b14fd735",
+  "jsonHash": "fnv1a64:7058bb6d4141568f",
   "findings": []
 }

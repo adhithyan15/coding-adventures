@@ -14,7 +14,8 @@ romanization: "sôrāno"
 concept_tag: BN-VERB-SORANO
 prerequisites: [BN-C102-bona, BN-C102-lagano]
 sounds: []
-roots: []
+roots: [sanskrit-sarati]
+etymology_hook: "sôrāno ← Sanskrit sarati 'moves', a tadbhava (CDIAL 13250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C102-lagano]
 <!-- hl-knowledge: introduces=[BN-LEX-C102-ACT102-03]; assesses=[] -->
 
 **সরানো** — *sôrāno* — "to move aside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সরানো** (*sôrāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sarati*, "moves" (CDIAL 13250). *Sôrāno* is the causing form of *sarā*, "to move, glide", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

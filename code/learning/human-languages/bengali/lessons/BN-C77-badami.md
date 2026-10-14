@@ -14,7 +14,8 @@ romanization: "bādāmi"
 concept_tag: BN-ADJ77-BADAMI
 prerequisites: [BN-C77-mittha, BN-C77-holud]
 sounds: []
-roots: []
+roots: [persian-badam]
+etymology_hook: "bādāmi: bādām 'almond' + -i, 'almond-coloured'; bādām is usually traced to Persian bādām"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C77-holud]
 <!-- hl-knowledge: introduces=[BN-LEX-C77-ADJ77-03]; assesses=[] -->
 
 **বাদামি** — *bādāmi* — "brown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাদামি** (*bādāmi*) is *bādām*, "almond", with the ending *-i*: "almond-coloured". *Bādām* is usually traced to Persian *bādām*, "almond".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chhutor"
 concept_tag: BN-KAJ235-CHHUTOR
 prerequisites: [BN-C235-sohokormi, BN-C235-muchi]
 sounds: []
-roots: []
+roots: [sanskrit-sutradhara]
+etymology_hook: "chhutor ← Sanskrit sūtradhāra 'carpenter', a tadbhava (CDIAL 13563)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C235-muchi]
 <!-- hl-knowledge: introduces=[BN-LEX-C235-KAJ235-05]; assesses=[] -->
 
 **ছুতোর** — *chhutor* — "a carpenter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছুতোর** (*chhutor*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sūtradhāra*, "carpenter" (CDIAL 13563). CDIAL lists Bengali *chutār*, "carpenter"; the Sanskrit word means "holder of the measuring line".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

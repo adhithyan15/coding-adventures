@@ -14,6 +14,9 @@ Say "I speak Bengali" and "I work." (Āmi bānglā bôli; āmi kāj kôri.)
 You'll want to know: বিকেল.
 বিকেল — bikel — "the late afternoon".
 
+The word, taken apart.
+বিকেল (bikel) goes back to Sanskrit vikāla, "twilight, evening". CDIAL gives no Bengali form under that entry, but it lists Assamese biyali, "afternoon", the forms nearest to Bengali (CDIAL 11625).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Bengali for a toy, then the Bengali for the late aft
 
 You'll want to know: ভোর.
 ভোর — bhor — "dawn".
+
+The word, taken apart.
+ভোর (bhor) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhorā, "daybreak", a form CDIAL reconstructs from its descendants (CDIAL 9634).
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the Bengali for the late afternoon, then the Bengali for
 You'll want to know: মাঝরাত.
 মাঝরাত — mājhrāt — "midnight".
 
+The word, taken apart.
+মাঝরাত (mājhrāt) is mājh, "middle", from Sanskrit madhya (CDIAL 9804), + rāt, "night", from Sanskrit rātrī (CDIAL 10702): both halves inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Bengali for dawn, then the Bengali for midnight.
 You'll want to know: পরশু.
 পরশু — pôrshu — "the day after tomorrow".
 
+The word, taken apart.
+পরশু (pôrshu) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from paraśvas, "the day after tomorrow" (CDIAL 7799j). CDIAL glosses the Bengali form "the day after tomorrow or before yesterday".
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Bengali for midnight, then the Bengali for the day a
 
 You'll want to know: গতকাল.
 গতকাল — gôtôkāl — "yesterday".
+
+The word, taken apart.
+গতকাল (gôtôkāl) is gôtô, "gone", Sanskrit gata taken over whole, + kāl, "yesterday, tomorrow", from Sanskrit kalya, "dawn" (CDIAL 3104).
 
 What you've built.
 One more word for this chapter.

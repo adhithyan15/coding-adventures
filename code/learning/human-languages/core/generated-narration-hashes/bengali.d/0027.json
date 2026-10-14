@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 27,
-  "sourceHash": "fnv1a64:2461ad88fb71f6b4",
+  "sourceHash": "fnv1a64:fed4ef4f02a317da",
   "lessonIds": [
     "BN-C16-na-verb",
     "BN-C16-noy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch27.txt",
   "json": "bengali/narration/ch27.json",
-  "textHash": "fnv1a64:00b7f78e9afbb0b9",
-  "jsonHash": "fnv1a64:7bfee4693b42d6ca",
+  "textHash": "fnv1a64:34d69306803b421d",
+  "jsonHash": "fnv1a64:2794b8175ee8c322",
   "findings": []
 }

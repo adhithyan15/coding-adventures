@@ -14,7 +14,8 @@ romanization: "jel"
 concept_tag: BN-JAYGA189-JEL
 prerequisites: [BN-C188-tola, BN-C189-adalot]
 sounds: []
-roots: []
+roots: [english-jail]
+etymology_hook: "jel ← English jail"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C189-adalot]
 <!-- hl-knowledge: introduces=[BN-LEX-C189-JAYGA189-02]; assesses=[] -->
 
 **জেল** — *jel* — "a prison".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জেল** (*jel*) is a loan from English *jail*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

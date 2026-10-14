@@ -14,7 +14,8 @@ romanization: "nāṛāno"
 concept_tag: BN-VERB-NARANO
 prerequisites: [BN-C214-phel-kora, BN-C214-jhakano]
 sounds: []
-roots: []
+roots: [indo-aryan-natati]
+etymology_hook: "nāṛāno ← *naṭati 'trembles, totters', a reconstructed form; a tadbhava (CDIAL 6934)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C214-jhakano]
 <!-- hl-knowledge: introduces=[BN-LEX-C214-ACT214-05]; assesses=[] -->
 
 **নাড়ানো** — *nāṛāno* — "to stir, to wave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নাড়ানো** (*nāṛāno*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*naṭati*, "trembles, totters", a form CDIAL reconstructs from its descendants (CDIAL 6934). CDIAL lists Bengali *nāṛā*, "to shake, agitate", and takes the group as probably Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

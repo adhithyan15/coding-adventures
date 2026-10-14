@@ -14,7 +14,8 @@ romanization: "gôtô"
 concept_tag: BN-ATIT145-GOTO
 prerequisites: [BN-C145-somproti, BN-C145-agei]
 sounds: []
-roots: []
+roots: [sanskrit-gata]
+etymology_hook: "gôtô ← Sanskrit gata 'gone', a tatsama; CDIAL lists the inherited gela 'gone' (CDIAL 4008)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C145-agei]
 <!-- hl-knowledge: introduces=[BN-LEX-C145-ATIT145-03]; assesses=[] -->
 
 **গত** — *gôtô* — "last, previous". **গত সপ্তাহে** — *gôtô sôptāhe* — "last week"; **গত বছর** — *gôtô bôchhôr* — "last year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গত** (*gôtô*) is Sanskrit *gata*, "gone, past", taken over whole as a learned loan, a tatsama (CDIAL 4008). The inherited forms are Old Bengali *gaü* and Bengali *gela*, "gone", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

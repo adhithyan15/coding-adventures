@@ -14,7 +14,8 @@ romanization: "khāṛā"
 concept_tag: BN-GUN247-KHARA
 prerequisites: [BN-C247-porer, BN-C247-phkashe]
 sounds: []
-roots: []
+roots: [sanskrit-khadaka]
+etymology_hook: "khāṛā ← Sanskrit khaḍaka 'erect; a post', a tadbhava (CDIAL 3784)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C247-phkashe]
 <!-- hl-knowledge: introduces=[BN-LEX-C247-GUN247-03]; assesses=[] -->
 
 **খাড়া** — *khāṛā* — "steep, upright".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খাড়া** (*khāṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khaḍaka*, "erect; a post" (CDIAL 3784). CDIAL lists Bengali *khāṛā*, "standing erect".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

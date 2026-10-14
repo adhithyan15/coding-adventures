@@ -14,7 +14,8 @@ romanization: "bāchhā"
 concept_tag: BN-VERB-BACHHA
 prerequisites: [BN-C179-chibano, BN-C179-takano]
 sounds: []
-roots: []
+roots: [sanskrit-vrkshate]
+etymology_hook: "bāchhā: CDIAL lists bāchā 'to choose' under vraścati 'cuts', where 'cut' and 'choose' merged (CDIAL 12080)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C179-takano]
 <!-- hl-knowledge: introduces=[BN-LEX-C179-ACT179-05]; assesses=[] -->
 
 **বাছা** — *bāchhā* — "to pick, to choose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাছা** (*bāchhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists Bengali *bāchā*, "to select, choose", under *vraścati*, a form of *vṛścati*, "cuts" (CDIAL 12080), and explains that verbs for "cut" and "choose", such as *vṛkṣate*, "chooses", ran together there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

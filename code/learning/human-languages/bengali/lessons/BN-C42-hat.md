@@ -14,7 +14,8 @@ romanization: "hāt"
 concept_tag: BN-BODY42-HAT
 prerequisites: [BN-C27-prothom, BN-C27-ponchom]
 sounds: []
-roots: []
+roots: [hasta-sanskrit]
+etymology_hook: "hāt ← Sanskrit hasta 'hand', a tadbhava (CDIAL 14024)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C27-ponchom]
 <!-- hl-knowledge: introduces=[BN-LEX-C42-BODY42-01]; assesses=[] -->
 
 **হাত** — *hāt* — "a hand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাত** (*hāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hasta*, "hand" (CDIAL 14024).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

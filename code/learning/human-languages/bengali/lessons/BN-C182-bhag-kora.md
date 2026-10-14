@@ -14,7 +14,8 @@ romanization: "bhāg kôrā"
 concept_tag: BN-VERB-BHAG-KORA
 prerequisites: [BN-C182-bhaj-kora, BN-C182-joro-kora]
 sounds: []
-roots: []
+roots: [sanskrit-bhaga, sanskrit-karoti]
+etymology_hook: "bhāg kôrā: bhāg 'share', Sanskrit bhāga, + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C182-joro-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C182-ACT182-04]; assesses=[] -->
 
 **ভাগ করা** — *bhāg kôrā* — "to share, to divide".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভাগ করা** (*bhāg kôrā*) is *bhāg*, "a share", Sanskrit *bhāga* taken over whole, + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

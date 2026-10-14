@@ -4,7 +4,7 @@
   "chapter": 239,
   "title": "To kiss, To paint, To play music, To give back, To remember",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a09544f26eaea470",
+  "sourceHash": "fnv1a64:f668a71c348c900d",
   "lessons": [
     {
       "id": "BN-C239-chumu-khaoya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ff69149031eb733",
+      "sourceHash": "fnv1a64:a7eb71d08407fa44",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চুমু খাওয়া (chumu khāoyā) is chumu, \"a kiss\", which belongs with Bengali cumā, \"to kiss\", from Sanskrit cumbati, \"kisses\" (CDIAL 4870), + khāoyā, \"to eat\", from Sanskrit khādati, \"eats\" (CDIAL 3865): \"to eat a kiss\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c51eb180c59817f6",
+      "sourceHash": "fnv1a64:01041fbf7467b1ad",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রং করা (rông kôrā) is rông, \"colour\", which matches both Sanskrit raṅga, \"dye, colour\", whose inherited form is rāṅā (CDIAL 10560), and Persian rang, \"colour\", + kôrā, \"to do\", from Sanskrit karoti, \"does\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7347fa01ed52cc0a",
+      "sourceHash": "fnv1a64:c931ff8c4f125abe",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বাজানো (bājāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vādyate, \"is made to sound\" (CDIAL 11513). CDIAL lists Bengali bājā, \"to sound\"; bājāno is its causing form."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67fb1632046664bd",
+      "sourceHash": "fnv1a64:78d1f0297e3dcbed",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফিরিয়ে দেওয়া (phiriye deoyā) is phiriye, \"turning back\", a form of phirā, \"to turn\", from phirati, \"turns\", a form CDIAL reconstructs (CDIAL 9078), + deoyā, \"to give\", from Sanskrit dadāti, \"gives\" (CDIAL 6141)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ec911fade4216be",
+      "sourceHash": "fnv1a64:92dec952671559c2",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মনে রাখা (mône rākhā) is mône, \"in the mind\", from mon, \"mind\", Sanskrit manas (CDIAL 9822), + rākhā, \"to keep\", from Sanskrit rakṣati, \"guards\" (CDIAL 10547)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

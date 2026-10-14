@@ -14,7 +14,8 @@ romanization: "bāire"
 concept_tag: BN-PLACE81-BAIRE
 prerequisites: [BN-C81-kachhe, BN-C81-bhitore]
 sounds: []
-roots: []
+roots: [indo-aryan-bahira]
+etymology_hook: "bāire ← *bāhira 'external', a reconstructed form; a tadbhava (CDIAL 9226)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C81-bhitore]
 <!-- hl-knowledge: introduces=[BN-LEX-C81-PLACE81-03]; assesses=[] -->
 
 **বাইরে** — *bāire* — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাইরে** (*bāire*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bāhira*, "external", a form CDIAL reconstructs from its descendants (CDIAL 9226). CDIAL lists Bengali *bāhir* and *bār*; *bāire* has the ending *-e*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

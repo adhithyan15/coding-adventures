@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 100,
-  "sourceHash": "fnv1a64:6b6d042a885c5b90",
+  "sourceHash": "fnv1a64:18b8ff695640f566",
   "lessonIds": [
     "BN-C100-sahos",
     "BN-C100-protibha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch100.txt",
   "json": "bengali/narration/ch100.json",
-  "textHash": "fnv1a64:35efa89b12722e76",
-  "jsonHash": "fnv1a64:bec24156a15624f7",
+  "textHash": "fnv1a64:ecafe4fdf479e93d",
+  "jsonHash": "fnv1a64:c76fd2a63f0b20bc",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for bitter, then the Bengali for sour.
 You'll want to know: মোটা.
 মোটা — moṭā — "fat, thick".
 
+The word, taken apart.
+মোটা (moṭā) comes from mōṭṭa, one of a group of forms CDIAL heads muṭṭa, "defective", and reconstructs from their descendants (CDIAL 10187).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for sour, then the Bengali for fat.
 
 You'll want to know: রোগা.
 রোগা — rogā — "thin".
+
+The word, taken apart.
+রোগা (rogā) is rog, "illness", with the adjective ending -ā: "sickly", and so "thin". Rog is Sanskrit roga, "disease", a tatsama; CDIAL has the entry but no Bengali form (CDIAL 10829).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for fat, then the Bengali for thin.
 You'll want to know: হালকা.
 হালকা — hālkā — "light (in weight)".
 
+The word, taken apart.
+হালকা (hālkā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from laghu, "light" (CDIAL 10896). CDIAL lists halkā as an extended form with its consonants swapped.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for thin, then the Bengali for light.
 You'll want to know: ভারী.
 ভারী — bhāri — "heavy".
 
+The word, taken apart.
+ভারী (bhāri) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhārika, "forming a load, heavy" (CDIAL 9465).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for light, then the Bengali for heavy.
 
 You'll want to know: সত্যি.
 সত্যি — sôtti — "true".
+
+The word, taken apart.
+সত্যি (sôtti) is a semi-tatsama: Sanskrit satya, "true", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 13112). The word inherited from it is sāṁcā, which CDIAL lists.
 
 What you've built.
 One more word for this chapter.

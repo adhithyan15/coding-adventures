@@ -14,7 +14,8 @@ romanization: "chôṛui"
 concept_tag: BN-THINGS121-CHORUI
 prerequisites: [BN-C121-tiya, BN-C121-kobutor]
 sounds: []
-roots: []
+roots: [sanskrit-cataka]
+etymology_hook: "chôṛui ← Sanskrit caṭaka 'sparrow', a tadbhava (CDIAL 4571)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C121-kobutor]
 <!-- hl-knowledge: introduces=[BN-LEX-C121-THINGS121-04]; assesses=[] -->
 
 **চড়ুই** — *chôṛui* — "a sparrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চড়ুই** (*chôṛui*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *caṭaka*, "sparrow" (CDIAL 4571). CDIAL calls the word imitative of the bird's call.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

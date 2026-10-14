@@ -14,7 +14,8 @@ romanization: "bishvôbidyālôy"
 concept_tag: BN-JAYGA188-BISHVOBIDYALOY
 prerequisites: [BN-C187-doshok, BN-C187-soptahanto]
 sounds: []
-roots: []
+roots: [sanskrit-vishva, sanskrit-vidya, sanskrit-alaya]
+etymology_hook: "bishvôbidyālôy: Sanskrit viśva 'all' + vidyā 'knowledge' + ālaya 'abode', a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C187-soptahanto]
 <!-- hl-knowledge: introduces=[BN-LEX-C188-JAYGA188-01]; assesses=[] -->
 
 **বিশ্ববিদ্যালয়** — *bishvôbidyālôy* — "a university".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিশ্ববিদ্যালয়** (*bishvôbidyālôy*) is built from Sanskrit *viśva*, "all, the world", *vidyā*, "knowledge", and *ālaya*, "abode", a modern compound of Sanskrit parts.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

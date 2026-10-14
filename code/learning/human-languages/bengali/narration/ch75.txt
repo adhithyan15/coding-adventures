@@ -12,6 +12,9 @@ Before the new one: say the Bengali for full, then the Bengali for empty.
 You'll want to know: ধনী.
 ধনী — dhôni — "rich".
 
+The word, taken apart.
+ধনী (dhôni) is inherited from Sanskrit dhanin, "rich", and has come down with almost no change (CDIAL 6722).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for empty, then the Bengali for rich.
 
 You'll want to know: গরিব.
 গরিব — gôrib — "poor".
+
+The word, taken apart.
+গরিব (gôrib) is a loan from Arabic gharīb, "a stranger", which reached Bengali through Persian. Its Arabic root is gh-r-b (Lane). In Bengali, as in Hindi, it has come to mean "poor".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for rich, then the Bengali for poor.
 You'll want to know: নোংরা.
 নোংরা — nongrā — "dirty".
 
+The word, taken apart.
+CDIAL lists Bengali noṅarā, "filthy", under luṅgara, one of a group of forms for "defective" that it reconstructs (CDIAL 11072).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for poor, then the Bengali for dirty.
 You'll want to know: তেতো.
 তেতো — teto — "bitter".
 
+The word, taken apart.
+তেতো (teto) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tikta, "pungent, bitter" (CDIAL 5806). CDIAL writes the Bengali form tita.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for dirty, then the Bengali for bitter.
 
 You'll want to know: টক.
 টক — ṭôk — "sour".
+
+The word, taken apart.
+টক (ṭôk) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from takra, "buttermilk" (CDIAL 5617). CDIAL lists the Bengali word under a second sense it reconstructs, "bitter".
 
 What you've built.
 One more word for this chapter.

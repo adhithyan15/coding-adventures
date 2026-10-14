@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 188,
-  "sourceHash": "fnv1a64:035f8d87a6921349",
+  "sourceHash": "fnv1a64:71b08376cc403290",
   "lessonIds": [
     "BN-C188-bishvobidyaloy",
     "BN-C188-kolej",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch188.txt",
   "json": "bengali/narration/ch188.json",
-  "textHash": "fnv1a64:e42f89649f9c9db9",
-  "jsonHash": "fnv1a64:eaaf8b4055df3554",
+  "textHash": "fnv1a64:8fd7dd081f245082",
+  "jsonHash": "fnv1a64:b139f296a9bd0d83",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "prôdhān"
 concept_tag: BN-GUN220-PRODHAN
 prerequisites: [BN-C219-sthaniyo, BN-C220-soman]
 sounds: []
-roots: []
+roots: [sanskrit-pradhana]
+etymology_hook: "prôdhān ← Sanskrit pradhāna 'chief, principal', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C220-soman]
 <!-- hl-knowledge: introduces=[BN-LEX-C220-GUN220-02]; assesses=[] -->
 
 **প্রধান** — *prôdhān* — "main, chief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রধান** (*prôdhān*) is Sanskrit *pradhāna*, "chief, principal", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

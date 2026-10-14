@@ -14,7 +14,8 @@ romanization: "jôntu"
 concept_tag: BN-JINIS224-JONTU
 prerequisites: [BN-C223-ilish, BN-C224-salad]
 sounds: []
-roots: []
+roots: [sanskrit-jantu]
+etymology_hook: "jôntu ← Sanskrit jantu 'offspring, creature', a tatsama (CDIAL 5110)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C224-salad]
 <!-- hl-knowledge: introduces=[BN-LEX-C224-JINIS224-02]; assesses=[] -->
 
 **জন্তু** — *jôntu* — "an animal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জন্তু** (*jôntu*) is Sanskrit *jantu*, "offspring, creature", taken over whole as a learned loan, a tatsama (CDIAL 5110).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

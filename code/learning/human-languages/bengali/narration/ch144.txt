@@ -12,6 +12,9 @@ Before the new one: say the Bengali for small, then the Bengali for cheerful.
 You'll want to know: লাজুক.
 লাজুক — lājuk — "shy".
 
+The word, taken apart.
+লাজুক (lājuk) is lāj, "shame, modesty", from Sanskrit lajjā (CDIAL 10910), with the ending -uk, "given to".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for cheerful, then the Bengali for shy.
 
 You'll want to know: মিশুক.
 মিশুক — mishuk — "sociable".
+
+The word, taken apart.
+মিশুক (mishuk) is built on mishā, "to mix, mingle", which CDIAL lists as Bengali misāna, "to mix", under Sanskrit miśrayati, "mixes" (CDIAL 10137), with the ending -uk, "given to".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for shy, then the Bengali for sociable.
 You'll want to know: চুপচাপ.
 চুপচাপ — chupchāp — "quiet".
 
+The word, taken apart.
+চুপচাপ (chupchāp) is chup, "silent", which CDIAL lists under cuppa, a form it reconstructs (CDIAL 4864), followed by chāp, an echo of it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for sociable, then the Bengali for quiet.
 You'll want to know: মোলায়েম.
 মোলায়েম — molāyem — "smooth".
 
+The word, taken apart.
+মোলায়েম (molāyem) is a loan from Arabic mulāʾim, "suitable, agreeable", which reached Bengali through Persian. Its Arabic root is l-ʾ-m (Lane). In Persian and Bengali it has come to mean "soft, smooth".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for quiet, then the Bengali for smooth.
 
 You'll want to know: খসখসে.
 খসখসে — khôskhôse — "rough".
+
+The word, taken apart.
+CDIAL lists Bengali khaskhas, "harsh, rough to the touch", under khasa, a form it reconstructs (CDIAL 3855); খসখসে (khôskhôse) is that word with the ending -e.
 
 What you've built.
 One more word for this chapter.

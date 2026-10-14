@@ -14,7 +14,8 @@ romanization: "ṭānā"
 concept_tag: BN-VERB-TANA
 prerequisites: [BN-C54-banano, BN-C54-tola]
 sounds: []
-roots: []
+roots: [indo-aryan-tan]
+etymology_hook: "ṭānā ← *ṭān 'tighten', a reconstructed form; a tadbhava (CDIAL 5443)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C54-tola]
 <!-- hl-knowledge: introduces=[BN-LEX-C54-VERBS54-03]; assesses=[] -->
 
 **টানা** — *ṭānā* — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টানা** (*ṭānā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭān*, "tighten", a form CDIAL reconstructs from its descendants (CDIAL 5443). CDIAL calls its relation to Sanskrit *tanoti*, "stretches", obscure.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

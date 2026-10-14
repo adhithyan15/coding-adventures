@@ -14,7 +14,8 @@ romanization: "chul kāṭā"
 concept_tag: BN-VERB-CHUL-KATA
 prerequisites: [BN-C212-lora, BN-C212-palano]
 sounds: []
-roots: []
+roots: [sanskrit-cuda-hair, sanskrit-kartati]
+etymology_hook: "chul kāṭā: chul 'hair' ← cūḍa (CDIAL 4883) + kāṭā 'to cut' ← kartati (CDIAL 2854)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C212-palano]
 <!-- hl-knowledge: introduces=[BN-LEX-C213-ACT213-01]; assesses=[] -->
 
 **চুল কাটা** — *chul kāṭā* — "to have a haircut".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চুল কাটা** (*chul kāṭā*) is *chul*, "hair", from Sanskrit *cūḍa*, "tuft of hair", a word CDIAL traces to Dravidian or Munda (CDIAL 4883), + *kāṭā*, "to cut", from Sanskrit *kartati*, "cuts" (CDIAL 2854).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

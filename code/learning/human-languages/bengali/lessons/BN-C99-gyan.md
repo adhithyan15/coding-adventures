@@ -14,7 +14,8 @@ romanization: "gyān"
 concept_tag: BN-CAN99-GYAN
 prerequisites: [BN-C99-chakri, BN-C99-buddhi]
 sounds: []
-roots: []
+roots: [sanskrit-jnana]
+etymology_hook: "gyān ← Sanskrit jñāna 'knowledge', a tatsama; CDIAL lists the inherited form jān (CDIAL 5281)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C99-buddhi]
 <!-- hl-knowledge: introduces=[BN-LEX-C99-CAN99-05]; assesses=[] -->
 
 **জ্ঞান** — *gyān* — "knowledge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জ্ঞান** (*gyān*) is Sanskrit *jñāna*, "knowledge", taken over whole as a learned loan, a tatsama (CDIAL 5281). The inherited form, with *j-*, is *jān*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dhār neoyā"
 concept_tag: BN-VERB-DHAR-NEOYA
 prerequisites: [BN-C208-sochib, BN-C208-mnejar]
 sounds: []
-roots: []
+roots: [sanskrit-uddhara, sanskrit-nayati]
+etymology_hook: "dhār neoyā: dhār 'loan' ← uddhāra (CDIAL 2018) + neoyā 'to take' ← nayati (CDIAL 6966)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C208-mnejar]
 <!-- hl-knowledge: introduces=[BN-LEX-C209-ACT209-01]; assesses=[] -->
 
 **ধার নেওয়া** — *dhār neoyā* — "to borrow".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধার নেওয়া** (*dhār neoyā*) is *dhār*, "a loan", from Sanskrit *uddhāra*, "loan" (CDIAL 2018), + *neoyā*, "to take", from Sanskrit *nayati*, "leads, carries off" (CDIAL 6966).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

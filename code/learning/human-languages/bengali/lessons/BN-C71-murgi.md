@@ -14,7 +14,8 @@ romanization: "murgi"
 concept_tag: BN-ANIMALS71-MURGI
 prerequisites: [BN-C71-projapoti, BN-C71-pipre]
 sounds: []
-roots: []
+roots: [persian-murgh]
+etymology_hook: "murgi: usually traced to Persian murgh 'bird, fowl'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C71-pipre]
 <!-- hl-knowledge: introduces=[BN-LEX-C71-ANIMALS71-05]; assesses=[] -->
 
 **মুরগি** — *murgi* — "a hen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মুরগি** (*murgi*) is a loan, usually traced to Persian *murgh*, "bird, fowl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

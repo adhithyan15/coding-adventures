@@ -14,7 +14,8 @@ romanization: "bôk"
 concept_tag: BN-THINGS121-BOK
 prerequisites: [BN-C121-kobutor, BN-C121-chorui]
 sounds: []
-roots: []
+roots: [sanskrit-baka]
+etymology_hook: "bôk ← Sanskrit baka 'the egret Ardea nivea', inherited (CDIAL 9115)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C121-chorui]
 <!-- hl-knowledge: introduces=[BN-LEX-C121-THINGS121-05]; assesses=[] -->
 
 **বক** — *bôk* — "a heron".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বক** (*bôk*) is inherited from Sanskrit *baka*, "the egret Ardea nivea", and has come down with almost no change (CDIAL 9115). CDIAL thinks the word probably imitative in origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

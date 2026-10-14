@@ -14,7 +14,8 @@ romanization: "sājā"
 concept_tag: BN-VERB-SAJA
 prerequisites: [BN-C212-palano, BN-C213-chul-kata]
 sounds: []
-roots: []
+roots: [sanskrit-sajjayati]
+etymology_hook: "sājā ← Sanskrit sajjayati 'makes ready', a tadbhava (CDIAL 13091)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C213-chul-kata]
 <!-- hl-knowledge: introduces=[BN-LEX-C213-ACT213-02]; assesses=[] -->
 
 **সাজা** — *sājā* — "to dress up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সাজা** (*sājā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sajjayati*, "makes ready" (CDIAL 13091). CDIAL lists Bengali *sājā*, "to make ready, dress".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

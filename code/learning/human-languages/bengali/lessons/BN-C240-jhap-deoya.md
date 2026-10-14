@@ -14,7 +14,8 @@ romanization: "jhā̃p deoyā"
 concept_tag: BN-VERB-JHAP-DEOYA
 prerequisites: [BN-C240-atkano, BN-C240-joma-deoya]
 sounds: []
-roots: []
+roots: [indo-aryan-jhapp, sanskrit-dadati]
+etymology_hook: "jhāṁp deoyā: jhāṁp 'a leap' ← *jhapp 'sudden movement' (CDIAL 5336) + deoyā (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C240-joma-deoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C240-ACT240-03]; assesses=[] -->
 
 **ঝাঁপ দেওয়া** — *jhā̃p deoyā* — "to dive".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ঝাঁপ দেওয়া** (*jhāṁp deoyā*) is *jhāṁp*, "a sudden movement, a leap", which CDIAL lists under *\*jhapp*, "sudden movement", a form it reconstructs (CDIAL 5336), + *deoyā*, "to give", from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

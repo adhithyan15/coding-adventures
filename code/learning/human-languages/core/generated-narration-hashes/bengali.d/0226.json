@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 226,
-  "sourceHash": "fnv1a64:f88fa92f1e5ade1b",
+  "sourceHash": "fnv1a64:ac91b5e5302067aa",
   "lessonIds": [
     "BN-C226-janjot",
     "BN-C226-jorimana",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch226.txt",
   "json": "bengali/narration/ch226.json",
-  "textHash": "fnv1a64:4299412b77d329b6",
-  "jsonHash": "fnv1a64:e4db684c75bda655",
+  "textHash": "fnv1a64:05d32947f5e85a55",
+  "jsonHash": "fnv1a64:54c1b15c3fe24eeb",
   "findings": []
 }

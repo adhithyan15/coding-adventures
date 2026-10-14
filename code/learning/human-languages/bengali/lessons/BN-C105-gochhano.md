@@ -14,7 +14,8 @@ romanization: "gochhāno"
 concept_tag: BN-VERB-GOCHHANO
 prerequisites: [BN-C104-mochha, BN-C105-jhara]
 sounds: []
-roots: []
+roots: [sanskrit-guccha]
+etymology_hook: "gochhāno ← Sanskrit guccha 'bunch of flowers', where CDIAL lists gochāna 'to arrange', with a query (CDIAL 4172)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C105-jhara]
 <!-- hl-knowledge: introduces=[BN-LEX-C105-ACT105-02]; assesses=[] -->
 
 **গোছানো** — *gochhāno* — "to tidy up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গোছানো** (*gochhāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *guccha*, "bunch of flowers" (CDIAL 4172). CDIAL lists Bengali *gochāna*, "to arrange", under it, with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

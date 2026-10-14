@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 219,
-  "sourceHash": "fnv1a64:7f90064a46842469",
+  "sourceHash": "fnv1a64:dbb41d1f12fbb497",
   "lessonIds": [
     "BN-C219-nokol",
     "BN-C219-jibonto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch219.txt",
   "json": "bengali/narration/ch219.json",
-  "textHash": "fnv1a64:c69be537eb889197",
-  "jsonHash": "fnv1a64:f50e00fc74de5f79",
+  "textHash": "fnv1a64:586641f606a6d155",
+  "jsonHash": "fnv1a64:d946cc279cf6a2ad",
   "findings": []
 }

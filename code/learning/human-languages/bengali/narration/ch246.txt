@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a bakery, then the Bengali for a library
 You'll want to know: বিদেশি.
 বিদেশি — bideshi — "foreign".
 
+The word, taken apart.
+বিদেশি (bideshi) is Sanskrit videśa, "a foreign land", taken over whole, + the ending -i, "of".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a library, then the Bengali for foreign.
 
 You'll want to know: ইংরেজি.
 ইংরেজি — ingreji — "English".
+
+The word, taken apart.
+ইংরেজি (ingreji) is usually traced, through Persian angrēz, "an Englishman", to Portuguese inglês, "English", with the ending -i.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for foreign, then the Bengali for English.
 You'll want to know: ভারতীয়.
 ভারতীয় — bhārôtīyô — "Indian".
 
+The word, taken apart.
+ভারতীয় (bhārôtīyô) is Sanskrit bhāratīya, "of Bhārata, Indian", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for English, then the Bengali for Indian.
 You'll want to know: সোনালি.
 সোনালি — sonāli — "golden".
 
+The word, taken apart.
+সোনালি (sonāli) is sonā, "gold", from Sanskrit suvarṇa, "golden; gold" (CDIAL 13519), + the ending -āli, "like".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for Indian, then the Bengali for golden.
 
 You'll want to know: আকাশি.
 আকাশি — ākāshi — "sky blue".
+
+The word, taken apart.
+আকাশি (ākāshi) is Sanskrit ākāśa, "sky", taken over whole, + the ending -i, "of": "of the sky".
 
 What you've built.
 One more word for this chapter.

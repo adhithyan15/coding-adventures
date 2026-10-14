@@ -3,20 +3,20 @@ Bengali, chapter 5: How Are You?.
 
 
 Lesson 1 of 6.
-আমি (āmi) — "I," cousin of English am.
+আমি (āmi) — "I," from an old word for "we".
 
 Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word.
 
 Warm-up.
 [pause 2 seconds]
-To answer "how are you?" you first need "I" — and it hides the English word am.
+To answer "how are you?" you first need "I" — and it began as a word for "we".
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The letters in this word.
 আ (independent long ā) + মি (mi) becomes আমি (āmi).
 
 The word, taken apart.
-আমি (āmi, "I") descends from Sanskrit asmi ("I am"), on the first-person stem asmad. That Sanskrit asmi is from Proto-Indo-European h₁es-, the "to be" root — the very same word that gives English am (and Latin sum). So Bengali's word for "I" is, at the root, a form of "am": "I" and "am" were once one word. Its possessive is the আমার (āmār, "my") from Chapter 3.
+আমি (āmi, "I") is not from Sanskrit asmi, "I am", though the two look alike. CDIAL lists Old Bengali āmi under asmad, the stem of the Sanskrit plural pronoun "we, us" (CDIAL 986): Bengali took an old word for "we" and made it its everyday "I", as it did with tumi, "you". Its possessive is the আমার (āmār, "my") from Chapter 3.
 
 Grammar Lens: "I" can often be dropped.
 Bengali verbs carry the person in their ending — āchhi already means "I am" — so āmi is often left out once it's clear. You still learn it first, because the answer to kēmon āchho? begins with it.
@@ -27,14 +27,14 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the pair — āmi (I), āmār (my)]
 [pause 8 seconds for the answer]
-[your turn — say: the English cousin hidden in it (am — from the same asmi)]
+[your turn — say: the Sanskrit stem it comes from (asmad, "we")]
 [pause 8 seconds for the answer]
 [your turn — recall: say ki, then say tumi / āpni]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Sanskrit word is āmi from, and its English cousin? (Asmi, "I am"; English am — same PIE root h₁es-.)
+What Sanskrit stem is āmi from, and what did that stem mean? (Asmad, "we, us": Bengali made the old "we" its "I".)
 
 
 Lesson 2 of 6.
@@ -52,6 +52,7 @@ The letters in this word.
 
 The word, taken apart.
 কেমন (kēmon, "how, of what kind") is from the interrogative stem ka-, from PIE kʷo- — the same question-root behind English wh- and Latin qu-. Bengali's questions nearly all begin with this k-: ki (what), ke (who), kôbe (when), kōthāy (where), kēmon (how). It is the Indian branch of the same family of question-words that gave English what/who/how.
+CDIAL lists Bengali ke, "who", under that stem (CDIAL 2574) but has no entry for kēmon itself, so how its ending formed is not settled.
 
 Guided Practice.
 [pause 1 second]
@@ -81,6 +82,7 @@ The new word is আছো (āchho, "are you"), from the verb আছা (āchhā,
 The phrase, taken apart.
 তুমি কেমন আছো? (tumi kēmon āchho?) = তুমি (tumi, familiar "you") + কেমন (kēmon, "how").
 আছো (āchho, "are") — "you how are?", the verb last.
+All three are inherited: tumi from yuṣmad-, "you" (CDIAL 10511), kēmon on the stem ka-, āchho from ākṣēti, "abides" (CDIAL 1031).
 
 Grammar Lens: now the copula returns.
 In Chapter 3, Bengali dropped "is": āmār nām Arun ("my name Arun"). That zero copula works for equations (X is Y). But "how are you?" asks about a state — how you exist — and for that Bengali uses a real verb, আছা (āchhā). So: no verb for "my name is Arun," a real verb for "how are you." Respectful form: āpni kēmon āchhen? (āchhen for āpni). Match the "you" to the verb-ending.
@@ -114,6 +116,7 @@ The letters in this word.
 
 The word, taken apart.
 ভালো (bhālo, "good, well, fine") is the everyday Bengali "good" — likely from Sanskrit bhadra ("good, auspicious, gentle"), worn down over centuries into bhālo. It is one of the most-used words in the language: bhālo lāge ("[I] like it"), bhālobāsā ("love," literally "good-dwelling").
+CDIAL lists it under Sanskrit bhalla, "auspicious", which it derives from a form bhadla- beside bhadra (CDIAL 9408).
 
 The exchange — the reply.
 With the āchhā verb: āmi bhālo āchhi — "I am well" (āchhi = "I am/exist"). The whole exchange:

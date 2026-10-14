@@ -14,7 +14,8 @@ romanization: "durgô"
 concept_tag: BN-JAYGA158-DURGO
 prerequisites: [BN-C158-koborsthan, BN-C158-prasad]
 sounds: []
-roots: []
+roots: [sanskrit-durga]
+etymology_hook: "durgô ← Sanskrit durga 'hard to reach; a fort', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C158-prasad]
 <!-- hl-knowledge: introduces=[BN-LEX-C158-JAYGA158-03]; assesses=[] -->
 
 **দুর্গ** — *durgô* — "a fort".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দুর্গ** (*durgô*) is Sanskrit *durga*, "hard to reach; a fort", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

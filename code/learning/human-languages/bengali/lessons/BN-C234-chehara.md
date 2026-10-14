@@ -14,7 +14,8 @@ romanization: "chehārā"
 concept_tag: BN-JINIS234-CHEHARA
 prerequisites: [BN-C234-smriti, BN-C234-chinta]
 sounds: []
-roots: []
+roots: [persian-chihra]
+etymology_hook: "chehārā: usually traced to Persian chihra 'face'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C234-chinta]
 <!-- hl-knowledge: introduces=[BN-LEX-C234-JINIS234-04]; assesses=[] -->
 
 **চেহারা** — *chehārā* — "looks, appearance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চেহারা** (*chehārā*) is a loan, usually traced to Persian *chihra*, "face".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,7 @@ gloss: one to five — and the "two" that kept its Sanskrit vowel
 concept_tag: BN-NUMBERS-1-5
 prerequisites: [BN-C01-nomoshkar, BN-W02-chandrabindu]
 sounds: [long-aa, chandrabindu-nasal, i-sign]
-roots: [sanskrit-dvi, sanskrit-panca]
+roots: [sanskrit-dvi, sanskrit-panca, sanskrit-eka, sanskrit-trini, sanskrit-catvari]
 etymology_hook: "Bengali দুই dui keeps a trace of the vowel following the old dv- that Hindi and Marathi flattened into do/don — which is why it has two syllables where they have one; it shares this with Assamese, Odia and Nepali, and is unusual only among the four languages compared here"
 duration:
   max_seconds: 290
@@ -51,6 +51,11 @@ something both of them lost.
 
 The **ঁ** on *pā̃ch* is the **chandrabindu**, the same moon-dot Hindi uses,
 nasalising the vowel.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+All five are inherited from Sanskrit. *Ek* goes back to *ēka*, "one", through a doubled *ekka* (CDIAL 2462); *dui* to *dva*, "two" (CDIAL 6648); *tin* to *trīṇi*, "three" (CDIAL 5994); *chār* to *catvāraḥ*, "four" (CDIAL 4655); and the word for five to *pañca*, "five" (CDIAL 7655).
 
 ## Sounds you'll need: where Bengali's inherent *ô* does not appear
 <!-- hl-knowledge: introduces=[BN-SOUND-INHERENT-O-NOT-IN-NUMBERS]; assesses=[] -->

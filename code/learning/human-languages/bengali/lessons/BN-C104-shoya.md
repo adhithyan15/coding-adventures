@@ -14,7 +14,8 @@ romanization: "shoyā"
 concept_tag: BN-VERB-SHOYA
 prerequisites: [BN-C104-mapa, BN-C104-darano]
 sounds: []
-roots: []
+roots: [sanskrit-svapati]
+etymology_hook: "shoyā ← Sanskrit svapati 'sleeps', a tadbhava (CDIAL 13902)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C104-darano]
 <!-- hl-knowledge: introduces=[BN-LEX-C104-ACT104-03]; assesses=[] -->
 
 **শোয়া** — *shoyā* — "to lie down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শোয়া** (*shoyā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *svapati*, "sleeps" (CDIAL 13902). CDIAL writes the Bengali verb *soyā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

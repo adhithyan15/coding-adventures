@@ -14,7 +14,8 @@ romanization: "ḍāktār"
 concept_tag: BN-HEALTH45-DAKTAR
 prerequisites: [BN-C44-khide, BN-C45-khushi]
 sounds: []
-roots: []
+roots: [english-doctor]
+etymology_hook: "ḍāktār ← English doctor"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C45-khushi]
 <!-- hl-knowledge: introduces=[BN-LEX-C45-HEALTH45-02]; assesses=[] -->
 
 **ডাক্তার** — *ḍāktār* — "a doctor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ডাক্তার** (*ḍāktār*) is a loan from English *doctor*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

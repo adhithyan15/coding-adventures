@@ -14,7 +14,8 @@ romanization: "māsh"
 concept_tag: BN-TIME78-MASH
 prerequisites: [BN-C78-sokal, BN-C78-soptaho]
 sounds: []
-roots: []
+roots: [sanskrit-masa]
+etymology_hook: "māsh ← Sanskrit māsa 'moon, month', inherited (CDIAL 10104)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C78-soptaho]
 <!-- hl-knowledge: introduces=[BN-LEX-C78-TIME78-05]; assesses=[] -->
 
 **মাস** — *māsh* — "a month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাস** (*māsh*) is inherited from Sanskrit *māsa*, "moon, month", and has come down with almost no change (CDIAL 10104).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

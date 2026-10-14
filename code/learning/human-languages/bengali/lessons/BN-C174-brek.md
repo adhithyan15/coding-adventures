@@ -14,7 +14,8 @@ romanization: "brek"
 concept_tag: BN-JINIS174-BREK
 prerequisites: [BN-C174-chaka, BN-C174-tayar]
 sounds: []
-roots: []
+roots: [english-brake]
+etymology_hook: "brek ← English brake"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C174-tayar]
 <!-- hl-knowledge: introduces=[BN-LEX-C174-JINIS174-05]; assesses=[] -->
 
 **ব্রেক** — *brek* — "a brake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ব্রেক** (*brek*) is a loan from English *brake*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

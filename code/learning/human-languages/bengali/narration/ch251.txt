@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a spider, then the Bengali for a kite.
 You'll want to know: নাচ.
 নাচ — nāch — "a dance".
 
+The word, taken apart.
+নাচ (nāch) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nṛtya, "dancing" (CDIAL 7582). CDIAL lists Bengali nāc, "dancing".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a kite, then the Bengali for a dance.
 
 You'll want to know: প্রদর্শনী.
 প্রদর্শনী — prôdôrshônī — "an exhibition".
+
+The word, taken apart.
+প্রদর্শনী (prôdôrshônī) is Sanskrit pradarśana, "a showing", taken over whole, + the ending -ī: "a show".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a dance, then the Bengali for an exhibit
 You'll want to know: মেলা.
 মেলা — melā — "a fair".
 
+The word, taken apart.
+মেলা (melā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mela, "meeting" (CDIAL 10331). CDIAL lists Bengali mel, "meeting, fair".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for an exhibition, then the Bengali for a fa
 You'll want to know: পার্টি.
 পার্টি — pārṭi — "a party".
 
+The word, taken apart.
+পার্টি (pārṭi) is a loan from English party.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a fair, then the Bengali for a party.
 
 You'll want to know: যাত্রা.
 যাত্রা — jātrā — "a journey".
+
+The word, taken apart.
+যাত্রা (jātrā) is Sanskrit yātrā, "journey, procession", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

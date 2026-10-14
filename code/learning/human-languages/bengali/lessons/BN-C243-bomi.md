@@ -14,7 +14,8 @@ romanization: "bômi"
 concept_tag: BN-SVASTHYO243-BOMI
 prerequisites: [BN-C242-mora2, BN-C242-khora]
 sounds: []
-roots: []
+roots: [sanskrit-vami]
+etymology_hook: "bômi ← Sanskrit vami 'vomiting', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C242-khora]
 <!-- hl-knowledge: introduces=[BN-LEX-C243-SVASTHYO243-01]; assesses=[] -->
 
 **বমি** — *bômi* — "vomiting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বমি** (*bômi*) is Sanskrit *vami*, "vomiting", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

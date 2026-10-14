@@ -14,7 +14,8 @@ romanization: "goṛāli"
 concept_tag: BN-THINGS123-GORALI
 prerequisites: [BN-C123-buk, BN-C123-komor]
 sounds: []
-roots: []
+roots: [indo-aryan-godda]
+etymology_hook: "goṛāli: built on goṛ 'foot, leg' ← *gōḍḍa 'foot, leg, knee' (CDIAL 4272)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C123-komor]
 <!-- hl-knowledge: introduces=[BN-LEX-C123-THINGS123-05]; assesses=[] -->
 
 **গোড়ালি** — *goṛāli* — "an ankle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গোড়ালি** (*goṛāli*) is built on *goṛ*, "foot, leg", which CDIAL lists under *\*gōḍḍa*, "foot, leg, knee", a form it reconstructs (CDIAL 4272); CDIAL does not list **গোড়ালি** (*goṛāli*) itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 198,
-  "sourceHash": "fnv1a64:b6987350908408cc",
+  "sourceHash": "fnv1a64:589be6fda09e9b6c",
   "lessonIds": [
     "BN-C198-biman",
     "BN-C198-petrol",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch198.txt",
   "json": "bengali/narration/ch198.json",
-  "textHash": "fnv1a64:47c2cbf122137497",
-  "jsonHash": "fnv1a64:b4e1c288adb15f10",
+  "textHash": "fnv1a64:64f46bd123a48975",
+  "jsonHash": "fnv1a64:15424427ad6c3b7e",
   "findings": []
 }

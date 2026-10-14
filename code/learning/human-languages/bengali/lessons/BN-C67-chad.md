@@ -14,7 +14,8 @@ romanization: "chā̃d"
 concept_tag: BN-NATURE67-CHAD
 prerequisites: [BN-C66-pathor, BN-C67-bali]
 sounds: []
-roots: []
+roots: [sanskrit-candra]
+etymology_hook: "chāṁd ← Sanskrit candra 'shining; moon', a tadbhava (CDIAL 4661)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C67-bali]
 <!-- hl-knowledge: introduces=[BN-LEX-C67-NATURE67-02]; assesses=[] -->
 
 **চাঁদ** — *chā̃d* — "the moon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চাঁদ** (*chāṁd*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *candra*, "shining; moon" (CDIAL 4661).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

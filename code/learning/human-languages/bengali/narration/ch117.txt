@@ -12,6 +12,9 @@ Before the new one: say the Bengali for ginger, then the Bengali for a tomato.
 You'll want to know: শিম.
 শিম — shim — "beans".
 
+The word, taken apart.
+শিম (shim) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śimba, "pod, legume" (CDIAL 12445).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a tomato, then the Bengali for beans.
 
 You'll want to know: কুমড়ো.
 কুমড়ো — kumṛo — "a pumpkin".
+
+The word, taken apart.
+কুমড়ো (kumṛo) is a tadbhava, a word inherited and reshaped by sound change. It comes from kohaṇḍa, "pumpkin-gourd", a form CDIAL reconstructs from its descendants (CDIAL 3374). It stands beside Sanskrit kuṣmāṇḍa, "pumpkin-gourd"; CDIAL writes the Bengali forms kõrā and kohõṛā.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for beans, then the Bengali for a pumpkin.
 You'll want to know: শাক.
 শাক — shāk — "leafy greens".
 
+The word, taken apart.
+শাক (shāk) is Sanskrit śāka, "potherb, vegetable", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a pumpkin, then the Bengali for leafy gr
 You'll want to know: মুলো.
 মুলো — mulo — "a radish".
 
+The word, taken apart.
+মুলো (mulo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mūla, "root; radish" (CDIAL 10250). CDIAL thinks the word perhaps of Dravidian origin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for leafy greens, then the Bengali for a rad
 
 You'll want to know: চাল.
 চাল — chāl — "uncooked rice".
+
+The word, taken apart.
+চাল (chāl) is a tadbhava, a word inherited and reshaped by sound change. It comes from cāmala, "husked rice", a form CDIAL reconstructs from its descendants (CDIAL 4749). CDIAL thinks it possibly of the same non-Aryan origin as Sanskrit taṇḍula, "rice".
 
 What you've built.
 One more word for this chapter.

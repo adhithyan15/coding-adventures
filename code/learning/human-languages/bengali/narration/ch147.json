@@ -4,7 +4,7 @@
   "chapter": 147,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:26035a0019cb59e9",
+  "sourceHash": "fnv1a64:1a9fc7047a2f11b5",
   "lessons": [
     {
       "id": "BN-C147-taimtebil",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7afc10d93f250338",
+      "sourceHash": "fnv1a64:0b4eec55c4487314",
       "notice": null,
       "blocks": [
         {
@@ -65,6 +65,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "টাইমটেবিল (ṭāimṭebil) is a loan from English timetable."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -75,7 +86,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -124,7 +135,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -155,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d3d7ff56de7c3fa",
+      "sourceHash": "fnv1a64:4bf9b52511211ff9",
       "notice": null,
       "blocks": [
         {
@@ -201,6 +212,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নোটিশ (noṭish) is a loan from English notice."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -211,7 +233,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -260,7 +282,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -291,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01584021ca137009",
+      "sourceHash": "fnv1a64:790c0dbd08b111ad",
       "notice": null,
       "blocks": [
         {
@@ -324,6 +346,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাড়া (bhāṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhārta, \"pertaining to servants\", a form CDIAL reconstructs from its descendants (CDIAL 9468). CDIAL lists Bengali bhāṛā, \"hire, rent\", under it, through Middle Indo-Aryan bhāṭa, \"wages\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -334,7 +367,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -383,7 +416,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -414,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:821b6d2eeda719a2",
+      "sourceHash": "fnv1a64:57b1a76f49011fc6",
       "notice": null,
       "blocks": [
         {
@@ -460,6 +493,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিজ্ঞাপন (bigyāpôn) is Sanskrit vijñāpana, \"making known, information\", taken over whole as a learned loan, a tatsama."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -470,7 +514,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -519,7 +563,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -550,7 +594,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d7e7280f336d054",
+      "sourceHash": "fnv1a64:3ad197c570a3a2ca",
       "notice": null,
       "blocks": [
         {
@@ -583,6 +627,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রসিদ (rôsid) is a loan, usually traced to Persian rasīd, \"arrived; a receipt\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -593,7 +648,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -642,7 +697,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

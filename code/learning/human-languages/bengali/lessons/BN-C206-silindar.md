@@ -14,7 +14,8 @@ romanization: "silinḍār"
 concept_tag: BN-JINIS206-SILINDAR
 prerequisites: [BN-C205-keji, BN-C205-litar]
 sounds: []
-roots: []
+roots: [english-cylinder]
+etymology_hook: "silinḍār ← English cylinder"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C205-litar]
 <!-- hl-knowledge: introduces=[BN-LEX-C206-JINIS206-01]; assesses=[] -->
 
 **সিলিন্ডার** — *silinḍār* — "a cylinder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সিলিন্ডার** (*silinḍār*) is a loan from English *cylinder*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

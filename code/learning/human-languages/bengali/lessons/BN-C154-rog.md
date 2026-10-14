@@ -14,7 +14,8 @@ romanization: "rog"
 concept_tag: BN-SVASTHYO154-ROG
 prerequisites: [BN-C153-dhonyobad-deoya, BN-C153-sohyo-kora]
 sounds: []
-roots: []
+roots: [sanskrit-roga]
+etymology_hook: "rog ← Sanskrit roga 'disease', a tatsama (CDIAL 10829)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C153-sohyo-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C154-SVASTHYO154-01]; assesses=[] -->
 
 **রোগ** — *rog* — "a disease".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রোগ** (*rog*) is Sanskrit *roga*, "disease", taken over whole as a learned loan, a tatsama (CDIAL 10829).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

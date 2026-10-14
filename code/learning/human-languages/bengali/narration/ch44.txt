@@ -12,6 +12,9 @@ Before the new one: say the Bengali for the tongue, then the Bengali for the hea
 You'll want to know: কান.
 কান — kān — "an ear".
 
+The word, taken apart.
+কান (kān) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karṇa, "ear" (CDIAL 2830).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for the head, then the Bengali for an ear.
 
 You'll want to know: জ্বর.
 জ্বর — jbôr — "a fever".
+
+The word, taken apart.
+জ্বর (jbôr) is Sanskrit jvara, "fever", taken over whole as a learned loan, a tatsama (CDIAL 5303). The word inherited from it is jar, which CDIAL lists.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for an ear, then the Bengali for a fever.
 You'll want to know: হাসপাতাল.
 হাসপাতাল — hāspātāl — "a hospital".
 
+The word, taken apart.
+হাসপাতাল (hāspātāl) is a loan from English hospital.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a fever, then the Bengali for a hospital
 You'll want to know: ব্যথা.
 ব্যথা — bæthā — "pain".
 
+The word, taken apart.
+ব্যথা (bæthā) is Sanskrit vyathā, "pain, distress", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a hospital, then the Bengali for pain.
 
 You'll want to know: খিদে.
 খিদে — khide — "hunger".
+
+The word, taken apart.
+খিদে (khide) is usually traced to Sanskrit kṣudhā, "hunger". CDIAL has that entry but lists no Bengali form under it (CDIAL 3716), so the line of descent is not confirmed there.
 
 What you've built.
 One more word for this chapter.

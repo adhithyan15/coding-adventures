@@ -11,7 +11,8 @@ gloss: (we) will meet (lit. "seeing will happen")
 concept_tag: BN-VERB-DEKHA
 prerequisites: [BN-C03-tumi-kemon-achho, BN-C03-bhalo]
 sounds: [long-e, o-ending]
-roots: [dekh-see, ho-be]
+roots: [dekh-see, ho-be, sanskrit-bhavati]
+etymology_hook: "dækhā ← *dṛkṣati 'sees' (CDIAL 6507); hôbe, from hôwā ← Sanskrit bhavati 'becomes, is' (CDIAL 9416)"
 duration:
   max_seconds: 240
 requires:

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 106,
-  "sourceHash": "fnv1a64:08bb50cfea89376b",
+  "sourceHash": "fnv1a64:45cf74f1ee2d04c5",
   "lessonIds": [
     "BN-C106-chhora",
     "BN-C106-tepa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch106.txt",
   "json": "bengali/narration/ch106.json",
-  "textHash": "fnv1a64:2f9e9dccd2ed9449",
-  "jsonHash": "fnv1a64:d80c64022fcc27fa",
+  "textHash": "fnv1a64:08e4b17c03f2d336",
+  "jsonHash": "fnv1a64:63407d0062341a7d",
   "findings": []
 }

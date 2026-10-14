@@ -14,7 +14,8 @@ romanization: "bikel"
 concept_tag: BN-TIME90-BIKEL
 prerequisites: [BN-C89-golpo, BN-C89-khlna, BN-C05-practice]
 sounds: []
-roots: []
+roots: [sanskrit-vikala]
+etymology_hook: "bikel ← Sanskrit vikāla 'twilight, evening'; CDIAL lists Assamese biyali, 'afternoon' (CDIAL 11625)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [BN-C89-khlna]
 <!-- hl-knowledge: introduces=[BN-LEX-C90-TIME90-01]; assesses=[] -->
 
 **বিকেল** — *bikel* — "the late afternoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিকেল** (*bikel*) goes back to Sanskrit *vikāla*, "twilight, evening". CDIAL gives no Bengali form under that entry, but it lists Assamese *biyali*, "afternoon", the forms nearest to Bengali (CDIAL 11625).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

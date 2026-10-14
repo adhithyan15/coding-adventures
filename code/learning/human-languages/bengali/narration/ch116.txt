@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a pineapple, then the Bengali for a papa
 You'll want to know: তরমুজ.
 তরমুজ — tôrmuj — "a watermelon".
 
+The word, taken apart.
+তরমুজ (tôrmuj) is a loan, usually traced to Persian tarbuz, "watermelon".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a papaya, then the Bengali for a waterme
 
 You'll want to know: বেগুন.
 বেগুন — begun — "an aubergine".
+
+The word, taken apart.
+বেগুন (begun) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vātiṅgaṇa, "egg-plant" (CDIAL 11503). CDIAL thinks it probably shares a source with other names for the plant, and reports a view that it is Dravidian.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a watermelon, then the Bengali for an au
 You'll want to know: রসুন.
 রসুন — rôsun — "garlic".
 
+The word, taken apart.
+রসুন (rôsun) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from laśuna, "garlic" (CDIAL 10990). CDIAL lists Bengali rasun under the variant rasuna.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for an aubergine, then the Bengali for garli
 You'll want to know: আদা.
 আদা — ādā — "ginger".
 
+The word, taken apart.
+আদা (ādā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ārdraka, "fresh ginger" (CDIAL 1341).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for garlic, then the Bengali for ginger.
 
 You'll want to know: টমেটো.
 টমেটো — tômeṭo — "a tomato".
+
+The word, taken apart.
+টমেটো (tômeṭo) is a loan from English tomato.
 
 What you've built.
 One more word for this chapter.

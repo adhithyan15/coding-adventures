@@ -14,7 +14,8 @@ romanization: "bādhā deoyā"
 concept_tag: BN-VERB-BADHA-DEOYA
 prerequisites: [BN-C184-raji-hooya, BN-C184-jor-kora]
 sounds: []
-roots: []
+roots: [sanskrit-badha, sanskrit-dadati]
+etymology_hook: "bādhā deoyā: bādhā 'obstacle', Sanskrit bādhā, + deoyā ← dadāti (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C184-jor-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C184-ACT184-04]; assesses=[] -->
 
 **বাধা দেওয়া** — *bādhā deoyā* — "to obstruct".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাধা দেওয়া** (*bādhā deoyā*) is *bādhā*, "an obstacle", Sanskrit *bādhā*, "pressure, hindrance", taken over whole, + *deoyā*, "to give", from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

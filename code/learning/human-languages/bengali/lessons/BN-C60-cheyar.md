@@ -14,7 +14,8 @@ romanization: "cheyār"
 concept_tag: BN-HOME60-CHEYAR
 prerequisites: [BN-C59-bari, BN-C59-janala]
 sounds: []
-roots: []
+roots: [english-chair]
+etymology_hook: "cheyār ← English chair"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C59-janala]
 <!-- hl-knowledge: introduces=[BN-LEX-C60-HOME60-01]; assesses=[] -->
 
 **চেয়ার** — *cheyār* — "a chair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চেয়ার** (*cheyār*) is a loan from English *chair*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

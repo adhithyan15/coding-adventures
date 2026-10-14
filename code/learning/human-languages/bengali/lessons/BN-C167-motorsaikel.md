@@ -14,7 +14,8 @@ romanization: "moṭôrsāikel"
 concept_tag: BN-JINIS167-MOTORSAIKEL
 prerequisites: [BN-C167-tksi, BN-C167-riksha]
 sounds: []
-roots: []
+roots: [english-motorcycle]
+etymology_hook: "moṭôrsāikel ← English motorcycle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C167-riksha]
 <!-- hl-knowledge: introduces=[BN-LEX-C167-JINIS167-04]; assesses=[] -->
 
 **মোটরসাইকেল** — *moṭôrsāikel* — "a motorbike".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মোটরসাইকেল** (*moṭôrsāikel*) is a loan from English *motorcycle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

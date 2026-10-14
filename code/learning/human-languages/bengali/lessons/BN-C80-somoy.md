@@ -14,7 +14,8 @@ romanization: "sômôy"
 concept_tag: BN-TIME80-SOMOY
 prerequisites: [BN-C80-age, BN-C80-pore]
 sounds: []
-roots: []
+roots: [sanskrit-samaya]
+etymology_hook: "sômôy ← Sanskrit samaya 'meeting, agreement; time', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C80-pore]
 <!-- hl-knowledge: introduces=[BN-LEX-C80-TIME80-04]; assesses=[] -->
 
 **সময়** — *sômôy* — "time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সময়** (*sômôy*) is Sanskrit *samaya*, "meeting, agreement; time", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ādhā"
 concept_tag: BN-GUN162-ADHA
 prerequisites: [BN-C162-sugondhi, BN-C162-pocha]
 sounds: []
-roots: []
+roots: [sanskrit-ardha]
+etymology_hook: "ādhā ← Sanskrit ardha 'half', a tadbhava (CDIAL 644)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C162-pocha]
 <!-- hl-knowledge: introduces=[BN-LEX-C162-GUN162-03]; assesses=[] -->
 
 **আধা** — *ādhā* — "half".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আধা** (*ādhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ardha*, "half" (CDIAL 644).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

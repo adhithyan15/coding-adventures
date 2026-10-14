@@ -14,7 +14,8 @@ romanization: "jômi"
 concept_tag: BN-CAN98-JOMI
 prerequisites: [BN-C98-sujog, BN-C98-malik]
 sounds: []
-roots: []
+roots: [persian-zamin]
+etymology_hook: "jômi: usually traced to Persian zamīn 'earth, ground'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C98-malik]
 <!-- hl-knowledge: introduces=[BN-LEX-C98-CAN98-05]; assesses=[] -->
 
 **জমি** — *jômi* — "land".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জমি** (*jômi*) is a loan, usually traced to Persian *zamīn*, "earth, ground".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

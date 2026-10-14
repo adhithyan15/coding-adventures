@@ -14,7 +14,8 @@ romanization: "ṭæksi"
 concept_tag: BN-JINIS167-TKSI
 prerequisites: [BN-C166-kriket, BN-C167-jatri]
 sounds: []
-roots: []
+roots: [english-taxi]
+etymology_hook: "ṭæksi ← English taxi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C167-jatri]
 <!-- hl-knowledge: introduces=[BN-LEX-C167-JINIS167-02]; assesses=[] -->
 
 **ট্যাক্সি** — *ṭæksi* — "a taxi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ট্যাক্সি** (*ṭæksi*) is a loan from English *taxi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

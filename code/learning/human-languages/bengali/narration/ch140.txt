@@ -12,6 +12,9 @@ Before the new one: say the Bengali for straight, then the Bengali for crooked.
 You'll want to know: ধারালো.
 ধারালো — dhārālo — "sharp".
 
+The word, taken apart.
+ধারালো (dhārālo) is dhār, "edge", from Sanskrit dhārā, "sharp edge, blade" (CDIAL 6793), with the ending -ālo.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for crooked, then the Bengali for sharp.
 
 You'll want to know: ভোঁতা.
 ভোঁতা — bhõtā — "blunt".
+
+The word, taken apart.
+CDIAL lists ভোঁতা (bhõtā), "blunt", under a group of forms for "defective" headed bhutta, which it reconstructs (CDIAL 9532).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for sharp, then the Bengali for blunt.
 You'll want to know: টাটকা.
 টাটকা — ṭāṭkā — "fresh".
 
+The word, taken apart.
+The origin of টাটকা (ṭāṭkā) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "fresh" finds nothing close.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for blunt, then the Bengali for fresh.
 You'll want to know: বাসি.
 বাসি — bāsi — "stale".
 
+The word, taken apart.
+বাসি (bāsi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāsita, "infused, scented" (CDIAL 11604). CDIAL lists Bengali bāsi, "stale".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for fresh, then the Bengali for stale.
 
 You'll want to know: কাঁচা.
 কাঁচা — kā̃chā — "raw, unripe".
+
+The word, taken apart.
+কাঁচা (kā̃chā) (kāṁchā) is a tadbhava, a word inherited and reshaped by sound change. It comes from kacca, "raw, unripe", a form CDIAL reconstructs from its descendants (CDIAL 2613).
 
 What you've built.
 One more word for this chapter.

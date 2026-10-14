@@ -14,7 +14,8 @@ romanization: "niḥshvās neoyā"
 concept_tag: BN-VERB-NIHSHVAS-NEOYA
 prerequisites: [BN-C180-jol-deoya, BN-C180-chhapa]
 sounds: []
-roots: []
+roots: [sanskrit-nihshvasa, sanskrit-nayati]
+etymology_hook: "niḥshvās neoyā: Sanskrit niḥśvāsa 'breath', a tatsama, + neoyā ← nayati (CDIAL 6966)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C180-chhapa]
 <!-- hl-knowledge: introduces=[BN-LEX-C181-ACT181-01]; assesses=[] -->
 
 **নিঃশ্বাস নেওয়া** — *niḥshvās neoyā* — "to breathe".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নিঃশ্বাস নেওয়া** (*niḥshvās neoyā*) is *niḥshvās*, "breath", Sanskrit *niḥśvāsa* taken over whole, + *neoyā*, "to take", from Sanskrit *nayati*, "leads, carries off" (CDIAL 6966).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 189,
-  "sourceHash": "fnv1a64:6883d6eac9dd6bc2",
+  "sourceHash": "fnv1a64:d3d7b99aa1f722d1",
   "lessonIds": [
     "BN-C189-adalot",
     "BN-C189-jel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch189.txt",
   "json": "bengali/narration/ch189.json",
-  "textHash": "fnv1a64:302ff02f86f852ab",
-  "jsonHash": "fnv1a64:daf1cbc2994e26cc",
+  "textHash": "fnv1a64:6b869c4a5375a2a6",
+  "jsonHash": "fnv1a64:b8520c7c8dd68e50",
   "findings": []
 }

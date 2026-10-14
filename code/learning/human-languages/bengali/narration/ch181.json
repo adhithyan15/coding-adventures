@@ -4,7 +4,7 @@
   "chapter": 181,
   "title": "To breathe, To shiver, To get wet, To memorise, To explain",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:81bd0ed4a0baee27",
+  "sourceHash": "fnv1a64:1dce155147055f1e",
   "lessons": [
     {
       "id": "BN-C181-nihshvas-neoya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f5c646f624df375",
+      "sourceHash": "fnv1a64:76d02f7682f5c0eb",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিঃশ্বাস নেওয়া (niḥshvās neoyā) is niḥshvās, \"breath\", Sanskrit niḥśvāsa taken over whole, + neoyā, \"to take\", from Sanskrit nayati, \"leads, carries off\" (CDIAL 6966)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53bcbb16110d01cd",
+      "sourceHash": "fnv1a64:820b349b92589ae4",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাঁপা (kā̃pā) (kāṁpā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kampate, \"trembles, shivers\" (CDIAL 2767)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87d0f5b9b6c95a63",
+      "sourceHash": "fnv1a64:008e4c95776b9a9b",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভেজা (bhejā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhiyajyate, \"is smeared, gets wet\", a form CDIAL reconstructs from its descendants (CDIAL 9502). CDIAL writes the Bengali verb bhijā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b80717f3afd069fd",
+      "sourceHash": "fnv1a64:c35bc5add940862c",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মুখস্থ করা (mukhôsthô kôrā) is mukhôsthô, \"by heart\", built from Sanskrit mukha, \"mouth\", and -stha, \"standing in\": \"held in the mouth\", + kôrā, \"to do\", from Sanskrit karoti, \"does\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12bc088f8771f40a",
+      "sourceHash": "fnv1a64:3b1a8e0c29051212",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বোঝানো (bojhāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from budhyate, \"understands\" (CDIAL 9279). CDIAL lists Bengali bojhā, \"to understand\", and its causing form bujhāna, \"to explain\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "shāk"
 concept_tag: BN-THINGS117-SHAK
 prerequisites: [BN-C117-shim, BN-C117-kumro]
 sounds: []
-roots: []
+roots: [sanskrit-shaka]
+etymology_hook: "shāk ← Sanskrit śāka 'potherb, vegetable', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C117-kumro]
 <!-- hl-knowledge: introduces=[BN-LEX-C117-THINGS117-03]; assesses=[] -->
 
 **শাক** — *shāk* — "leafy greens".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শাক** (*shāk*) is Sanskrit *śāka*, "potherb, vegetable", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

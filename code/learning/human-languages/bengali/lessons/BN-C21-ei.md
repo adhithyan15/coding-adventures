@@ -11,8 +11,8 @@ gloss: this — the near half of the pair a learner needs before anything in the
 concept_tag: BN-LEX-EI
 prerequisites: [BN-R20-one-and-another, BN-W04-e-indep, BN-C15-jama, BN-C10-cha]
 sounds: []
-roots: []
-etymology_hook: "এই is the এ- of nearness carrying the same ই that ends আমি and তুমি. Bengali marks near, far and question with three heads on one frame, and this is the near head — the same এ- that opens এখানে and এটা in the lessons ahead."
+roots: [sanskrit-esha]
+etymology_hook: "ei: CDIAL lists Bengali e 'in this way' under Sanskrit ēṣa 'this' (CDIAL 2530); the word itself is not traced"
 duration:
   max_seconds: 230
 requires:
@@ -51,6 +51,11 @@ at*. That is a different job and it needs a different word.
 
 **এই** goes **in front** of the noun — the opposite end from the classifier,
 and worth noticing, because those two are about to appear in the same phrase.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Bengali *e*, "in this way", and Assamese *ei* under Sanskrit *ēṣa*, "this" (CDIAL 2530), which is where the near head **এ-** points; it has no entry for **এই** itself.
 
 ## Grammar Lens: the near head
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C21-EI-01, BN-SCRIPT-E-INDEP-01] -->

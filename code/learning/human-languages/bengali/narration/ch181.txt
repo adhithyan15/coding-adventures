@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to water, then the Bengali for to print.
 You'll want to know: নিঃশ্বাস নেওয়া.
 নিঃশ্বাস নেওয়া — niḥshvās neoyā — "to breathe".
 
+The phrase, taken apart.
+নিঃশ্বাস নেওয়া (niḥshvās neoyā) is niḥshvās, "breath", Sanskrit niḥśvāsa taken over whole, + neoyā, "to take", from Sanskrit nayati, "leads, carries off" (CDIAL 6966).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to print, then the Bengali for to breath
 
 You'll want to know: কাঁপা.
 কাঁপা — kā̃pā — "to shiver".
+
+The word, taken apart.
+কাঁপা (kā̃pā) (kāṁpā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kampate, "trembles, shivers" (CDIAL 2767).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to breathe, then the Bengali for to shiv
 You'll want to know: ভেজা.
 ভেজা — bhejā — "to get wet".
 
+The word, taken apart.
+ভেজা (bhejā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhiyajyate, "is smeared, gets wet", a form CDIAL reconstructs from its descendants (CDIAL 9502). CDIAL writes the Bengali verb bhijā.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to shiver, then the Bengali for to get w
 You'll want to know: মুখস্থ করা.
 মুখস্থ করা — mukhôsthô kôrā — "to memorise".
 
+The phrase, taken apart.
+মুখস্থ করা (mukhôsthô kôrā) is mukhôsthô, "by heart", built from Sanskrit mukha, "mouth", and -stha, "standing in": "held in the mouth", + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to get wet, then the Bengali for to memo
 
 You'll want to know: বোঝানো.
 বোঝানো — bojhāno — "to explain".
+
+The word, taken apart.
+বোঝানো (bojhāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from budhyate, "understands" (CDIAL 9279). CDIAL lists Bengali bojhā, "to understand", and its causing form bujhāna, "to explain".
 
 What you've built.
 One more word for this chapter.

@@ -12,6 +12,7 @@ concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [BN-C01-hyan-na, BN-C01-dhonnobad]
 sounds: [ya-phola, long-aa]
 roots: [vyapaara-sanskrit, na-negative]
+etymology_hook: "bæpār ← Sanskrit vyāpāra 'occupation, business', a tatsama beside inherited beorā (CDIAL 12205)"
 duration:
   max_seconds: 240
 requires:

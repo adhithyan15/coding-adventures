@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 87,
-  "sourceHash": "fnv1a64:c1fcfac31b692e51",
+  "sourceHash": "fnv1a64:247ace7e51a89c9c",
   "lessonIds": [
     "BN-C87-kuri",
     "BN-C87-tirish",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch87.txt",
   "json": "bengali/narration/ch87.json",
-  "textHash": "fnv1a64:39e0c74eac52880e",
-  "jsonHash": "fnv1a64:3697036dc331aca7",
+  "textHash": "fnv1a64:50556ab2f153ff9a",
+  "jsonHash": "fnv1a64:bf7c3019659b4f43",
   "findings": []
 }

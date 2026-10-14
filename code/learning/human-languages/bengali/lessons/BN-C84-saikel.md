@@ -14,7 +14,8 @@ romanization: "sāikel"
 concept_tag: BN-TOWN84-SAIKEL
 prerequisites: [BN-C83-hotel, BN-C84-pulish]
 sounds: []
-roots: []
+roots: [english-cycle]
+etymology_hook: "sāikel ← English cycle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C84-pulish]
 <!-- hl-knowledge: introduces=[BN-LEX-C84-TOWN84-02]; assesses=[] -->
 
 **সাইকেল** — *sāikel* — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সাইকেল** (*sāikel*) is a loan from English *cycle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

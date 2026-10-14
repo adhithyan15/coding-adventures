@@ -14,7 +14,8 @@ romanization: "prôyojôn"
 concept_tag: BN-WANT96-PROYOJON
 prerequisites: [BN-C96-shopno, BN-C96-dorkar]
 sounds: []
-roots: []
+roots: [sanskrit-prayojana]
+etymology_hook: "prôyojôn ← Sanskrit prayojana 'occasion, purpose, need', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C96-dorkar]
 <!-- hl-knowledge: introduces=[BN-LEX-C96-WANT96-05]; assesses=[] -->
 
 **প্রয়োজন** — *prôyojôn* — "a necessity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রয়োজন** (*prôyojôn*) is Sanskrit *prayojana*, "occasion, purpose, need", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

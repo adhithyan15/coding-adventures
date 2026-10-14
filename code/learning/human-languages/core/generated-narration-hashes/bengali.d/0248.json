@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 248,
-  "sourceHash": "fnv1a64:c731e949f7d8ddec",
+  "sourceHash": "fnv1a64:e9965dbe6b618e54",
   "lessonIds": [
     "BN-C248-charjar",
     "BN-C248-pasport",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch248.txt",
   "json": "bengali/narration/ch248.json",
-  "textHash": "fnv1a64:40f64c004408e15d",
-  "jsonHash": "fnv1a64:29293411e13eb0b2",
+  "textHash": "fnv1a64:53ff1bba29c3854a",
+  "jsonHash": "fnv1a64:bd944a1629df280a",
   "findings": []
 }

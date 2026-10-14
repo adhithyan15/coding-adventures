@@ -12,6 +12,7 @@ concept_tag: WORD-NAME
 prerequisites: [BN-C01-dhonnobad, BN-C01-hyan-na, BN-C01-achchha]
 sounds: [long-aa]
 roots: [naaman-sanskrit]
+etymology_hook: "nām ← Sanskrit nāman 'name', inherited (CDIAL 7067), the same ancient word as English name"
 duration:
   max_seconds: 240
 requires:

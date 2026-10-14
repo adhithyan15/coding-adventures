@@ -14,7 +14,8 @@ romanization: "nāchā"
 concept_tag: BN-VERB-NACHA
 prerequisites: [BN-C50-kada, BN-C50-gaowa]
 sounds: []
-roots: []
+roots: [sanskrit-nrtyati]
+etymology_hook: "nāchā ← Sanskrit nṛtyati 'dances', a tadbhava (CDIAL 7583)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C50-gaowa]
 <!-- hl-knowledge: introduces=[BN-LEX-C50-VERBS50-05]; assesses=[] -->
 
 **নাচা** — *nāchā* — "to dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নাচা** (*nāchā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nṛtyati*, "dances" (CDIAL 7583).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

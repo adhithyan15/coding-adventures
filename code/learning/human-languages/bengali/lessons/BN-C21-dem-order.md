@@ -11,8 +11,8 @@ gloss: this shirt, definitely — the demonstrator at the front and the classifi
 concept_tag: BN-GRAM-DEM-ORDER
 prerequisites: [BN-C21-oi, BN-C20-tta-classifier, BN-C15-jama, BN-C15-kapor]
 sounds: []
-roots: []
-etymology_hook: "English forces a choice — the shirt or this shirt, never both — because its article and its demonstrative fight for one slot at the front. Bengali gives them different ends of the word, so they never meet and never have to choose."
+roots: [sanskrit-esha, jama-persian-robe]
+etymology_hook: "ei, near head ← ēṣa 'this' (CDIAL 2530); jāmā ← Persian jāma 'garment'; -ṭā not settled"
 duration:
   max_seconds: 250
 requires:
@@ -54,6 +54,11 @@ win. In Bengali they are nowhere near each other:
 Front and back. No competition, so no choice to make — and a Bengali speaker
 uses both far more often than an English speaker would expect, because leaving
 the classifier off sounds unfinished.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**এই** points back to Sanskrit *ēṣa*, "this" (CDIAL 2530); **জামা** is usually traced to Persian *jāma*, "garment"; and the origin of **টা** is not settled.
 
 ## Grammar Lens: the fixed order
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C21-DEM-ORDER-01, BN-GRAMMAR-C20-EKTA-01, BN-LEX-C14-LAL-01] -->

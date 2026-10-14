@@ -14,7 +14,8 @@ romanization: "kômbôl"
 concept_tag: BN-THINGS133-KOMBOL
 prerequisites: [BN-C132-toshok, BN-C133-moshari]
 sounds: []
-roots: []
+roots: [sanskrit-kambala]
+etymology_hook: "kômbôl ← Sanskrit kambala 'woollen blanket', perhaps Austroasiatic (CDIAL 2771)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C133-moshari]
 <!-- hl-knowledge: introduces=[BN-LEX-C133-THINGS133-02]; assesses=[] -->
 
 **কম্বল** — *kômbôl* — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কম্বল** (*kômbôl*) is Sanskrit *kambala*, "woollen blanket", taken over whole as a learned loan, a tatsama (CDIAL 2771). CDIAL suggests that *kambala* itself may be Austroasiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

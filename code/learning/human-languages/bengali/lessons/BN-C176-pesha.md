@@ -14,7 +14,8 @@ romanization: "peshā"
 concept_tag: BN-KAJ176-PESHA
 prerequisites: [BN-C175-shilnora, BN-C175-gs]
 sounds: []
-roots: []
+roots: [persian-pesha]
+etymology_hook: "peshā: usually traced to Persian pesha 'craft, profession'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C175-gs]
 <!-- hl-knowledge: introduces=[BN-LEX-C176-KAJ176-01]; assesses=[] -->
 
 **পেশা** — *peshā* — "a profession".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পেশা** (*peshā*) is a loan, usually traced to Persian *pesha*, "craft, profession".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

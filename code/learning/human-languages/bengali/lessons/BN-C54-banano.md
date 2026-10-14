@@ -14,7 +14,8 @@ romanization: "bānāno"
 concept_tag: BN-VERB-BANANO
 prerequisites: [BN-C53-ora, BN-C53-shekhano]
 sounds: []
-roots: []
+roots: [sanskrit-vanati]
+etymology_hook: "bānāno ← Sanskrit vanati 'desires, makes ready', a tadbhava (CDIAL 11260)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C53-shekhano]
 <!-- hl-knowledge: introduces=[BN-LEX-C54-VERBS54-01]; assesses=[] -->
 
 **বানানো** — *bānāno* — "to make".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বানানো** (*bānāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vanati*, "desires, makes ready" (CDIAL 11260). *Bānāno* is the causing form of *banā*, a verb CDIAL glosses "to agree, do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

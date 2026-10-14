@@ -14,7 +14,8 @@ romanization: "chôk"
 concept_tag: BN-JINIS172-CHOK
 prerequisites: [BN-C172-chhatri, BN-C172-bord]
 sounds: []
-roots: []
+roots: [english-chalk]
+etymology_hook: "chôk ← English chalk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C172-bord]
 <!-- hl-knowledge: introduces=[BN-LEX-C172-JINIS172-04]; assesses=[] -->
 
 **চক** — *chôk* — "chalk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চক** (*chôk*) is a loan from English *chalk*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

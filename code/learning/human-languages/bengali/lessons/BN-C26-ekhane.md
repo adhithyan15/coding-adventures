@@ -11,8 +11,8 @@ gloss: here — the near head again, this time on a frame that means place, so t
 concept_tag: BN-LEX-EKHANE
 prerequisites: [BN-W05-tha, BN-C21-ei, BN-C11-bhai, BN-C10-cha]
 sounds: []
-roots: []
-etymology_hook: "এখানে is the এ- of nearness on a frame meaning place, exactly as এই is that head on a frame meaning thing. The reader who noticed the pattern in chapter thirty-two already knows what ওখানে will be before it is shown."
+roots: [sanskrit-esha]
+etymology_hook: "ekhāne: the near head e- ← ēṣa 'this' (CDIAL 2530); the place frame -khāne is not settled"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +52,11 @@ be said to be anywhere.
 **এখানে** takes the near head **এ-** you have owned since chapter thirty-two and
 puts it on a frame that means *place*. And as with **এটা জল**, there is no verb
 in the middle: the thing, then where it is, and stop.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The head **এ-** points back to Sanskrit *ēṣa*, "this" (CDIAL 2530). CDIAL has no entry for the place frame *-khāne*, so its origin is not settled.
 
 ## Grammar Lens: the grid, now in three dimensions
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C26-EKHANE-01, BN-LEX-C21-EI-01, BN-LEX-C21-OI-01, BN-GRAMMAR-C16-NEI-01] -->

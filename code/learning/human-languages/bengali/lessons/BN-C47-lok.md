@@ -14,7 +14,8 @@ romanization: "lok"
 concept_tag: BN-FAMILY47-LOK
 prerequisites: [BN-C47-stri, BN-C47-shishu]
 sounds: []
-roots: []
+roots: [sanskrit-loka]
+etymology_hook: "lok ← Sanskrit loka 'world, people', a tatsama; CDIAL lists Old Bengali loa (CDIAL 11119)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C47-shishu]
 <!-- hl-knowledge: introduces=[BN-LEX-C47-FAMILY47-05]; assesses=[] -->
 
 **লোক** — *lok* — "a person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লোক** (*lok*) is Sanskrit *loka*, "world, people", taken over whole as a learned loan, a tatsama (CDIAL 11119). The word inherited from it is Old Bengali *loa*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

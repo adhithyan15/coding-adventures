@@ -14,7 +14,8 @@ romanization: "tāṛātāṛi kôrā"
 concept_tag: BN-VERB-TARATARI-KORA
 prerequisites: [BN-C149-pichhle-pora, BN-C149-bishram-neoya]
 sounds: []
-roots: []
+roots: [sanskrit-karoti]
+etymology_hook: "tāṛātāṛi kôrā: tāṛātāṛi 'quickly', of unsettled origin, + kôrā 'to do' ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C149-bishram-neoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C149-ACT149-04]; assesses=[] -->
 
 **তাড়াতাড়ি করা** — *tāṛātāṛi kôrā* — "to hurry".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তাড়াতাড়ি করা** (*tāṛātāṛi kôrā*) is *tāṛātāṛi*, "quickly", whose origin is not settled, as CDIAL has no entry for it, + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

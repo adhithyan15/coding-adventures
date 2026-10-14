@@ -14,7 +14,8 @@ romanization: "rôsun"
 concept_tag: BN-THINGS116-ROSUN
 prerequisites: [BN-C116-tormuj, BN-C116-begun]
 sounds: []
-roots: []
+roots: [sanskrit-lashuna]
+etymology_hook: "rôsun ← Sanskrit laśuna 'garlic', a tadbhava (CDIAL 10990)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C116-begun]
 <!-- hl-knowledge: introduces=[BN-LEX-C116-THINGS116-03]; assesses=[] -->
 
 **রসুন** — *rôsun* — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রসুন** (*rôsun*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *laśuna*, "garlic" (CDIAL 10990). CDIAL lists Bengali *rasun* under the variant *rasuna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

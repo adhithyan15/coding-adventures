@@ -14,7 +14,8 @@ romanization: "drutô"
 concept_tag: BN-QUAL135-DRUTO
 prerequisites: [BN-C135-shukno, BN-C135-bhora]
 sounds: []
-roots: []
+roots: [sanskrit-druta]
+etymology_hook: "drutô ← Sanskrit druta 'quick, swift', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C135-bhora]
 <!-- hl-knowledge: introduces=[BN-LEX-C135-QUAL135-04]; assesses=[] -->
 
 **দ্রুত** — *drutô* — "fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দ্রুত** (*drutô*) is Sanskrit *druta*, "quick, swift", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

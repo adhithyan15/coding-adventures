@@ -14,7 +14,8 @@ romanization: "molāyem"
 concept_tag: BN-QUAL144-MOLAYEM
 prerequisites: [BN-C144-mishuk, BN-C144-chupchap]
 sounds: []
-roots: []
+roots: [arabic-mulaim]
+etymology_hook: "molāyem ← Arabic mulāʾim 'suitable, agreeable', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C144-chupchap]
 <!-- hl-knowledge: introduces=[BN-LEX-C144-QUAL144-04]; assesses=[] -->
 
 **মোলায়েম** — *molāyem* — "smooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মোলায়েম** (*molāyem*) is a loan from Arabic *mulāʾim*, "suitable, agreeable", which reached Bengali through Persian. Its Arabic root is *l-ʾ-m* (Lane). In Persian and Bengali it has come to mean "soft, smooth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

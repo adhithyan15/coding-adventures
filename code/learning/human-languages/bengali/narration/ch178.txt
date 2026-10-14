@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a scientist, then the Bengali for a sing
 You'll want to know: দাঁতের ডাক্তার.
 দাঁতের ডাক্তার — dā̃ter ḍāktār — "a dentist".
 
+The phrase, taken apart.
+দাঁতের ডাক্তার (dā̃ter ḍāktār) (dāṁter ḍāktār) is dāṁter, "of the tooth", from dāṁt, "tooth", inherited from Sanskrit danta (CDIAL 6152), + ḍāktār, from English doctor.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a singer, then the Bengali for a dentist
 
 You'll want to know: দমকল.
 দমকল — dômkôl — "the fire brigade".
+
+The word, taken apart.
+দমকল (dômkôl) is dôm, "breath, pressure", usually traced to Persian dam, "breath", + kôl, "machine", which CDIAL lists under Sanskrit kalā, "any practical art" (CDIAL 2927): "the pressure machine", the fire pump.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a dentist, then the Bengali for the fire
 You'll want to know: ধাত্রী.
 ধাত্রী — dhātrī — "a midwife".
 
+The word, taken apart.
+ধাত্রী (dhātrī) is Sanskrit dhātrī, "nurse", taken over whole as a learned loan, a tatsama (CDIAL 6774). The word inherited from it is dhāi, "wet nurse", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for the fire brigade, then the Bengali for a
 You'll want to know: বিক্রেতা.
 বিক্রেতা — bikretā — "a seller".
 
+The word, taken apart.
+বিক্রেতা (bikretā) is Sanskrit vikretā, "seller", taken over whole as a learned loan, a tatsama. It is the naming form of vikretṛ.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a midwife, then the Bengali for a seller
 
 You'll want to know: ক্রেতা.
 ক্রেতা — kretā — "a buyer".
+
+The word, taken apart.
+ক্রেতা (kretā) is Sanskrit kretā, "buyer", taken over whole as a learned loan, a tatsama. It is the naming form of kretṛ.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "shekhāno"
 concept_tag: BN-VERB-SHEKHANO
 prerequisites: [BN-C53-phla, BN-C53-ora]
 sounds: []
-roots: []
+roots: [sanskrit-shikshate]
+etymology_hook: "shekhāno ← Sanskrit śikṣate 'learns', a tadbhava (CDIAL 12430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C53-ora]
 <!-- hl-knowledge: introduces=[BN-LEX-C53-VERBS53-05]; assesses=[] -->
 
 **শেখানো** — *shekhāno* — "to teach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শেখানো** (*shekhāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śikṣate*, "learns" (CDIAL 12430). *Shekhāno* is the causing form of *shekhā*, "to learn"; CDIAL lists the pair as *sikhā* and *sikhāna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

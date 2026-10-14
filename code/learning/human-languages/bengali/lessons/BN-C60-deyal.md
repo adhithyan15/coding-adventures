@@ -14,7 +14,8 @@ romanization: "deyāl"
 concept_tag: BN-HOME60-DEYAL
 prerequisites: [BN-C60-cheyar, BN-C60-tebil]
 sounds: []
-roots: []
+roots: [persian-divar]
+etymology_hook: "deyāl: usually traced to Persian dīvār 'wall'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C60-tebil]
 <!-- hl-knowledge: introduces=[BN-LEX-C60-HOME60-03]; assesses=[] -->
 
 **দেয়াল** — *deyāl* — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দেয়াল** (*deyāl*) is a loan, usually traced to Persian *dīvār*, "wall".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

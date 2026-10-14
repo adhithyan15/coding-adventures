@@ -14,7 +14,8 @@ romanization: "gôtôkāl"
 concept_tag: BN-TIME90-GOTOKAL
 prerequisites: [BN-C90-majhrat, BN-C90-porshu]
 sounds: []
-roots: []
+roots: [sanskrit-gata, sanskrit-kalya]
+etymology_hook: "gôtôkāl: gôtô 'gone', Sanskrit gata, a tatsama, + kāl ← kalya 'dawn, tomorrow' (CDIAL 3104)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C90-porshu]
 <!-- hl-knowledge: introduces=[BN-LEX-C90-TIME90-05]; assesses=[] -->
 
 **গতকাল** — *gôtôkāl* — "yesterday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গতকাল** (*gôtôkāl*) is *gôtô*, "gone", Sanskrit *gata* taken over whole, + *kāl*, "yesterday, tomorrow", from Sanskrit *kalya*, "dawn" (CDIAL 3104).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

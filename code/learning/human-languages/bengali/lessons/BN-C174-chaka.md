@@ -14,7 +14,8 @@ romanization: "chākā"
 concept_tag: BN-JINIS174-CHAKA
 prerequisites: [BN-C174-plag, BN-C174-injin]
 sounds: []
-roots: []
+roots: [sanskrit-cakra]
+etymology_hook: "chākā ← Sanskrit cakra 'wheel', a tadbhava (CDIAL 4538)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C174-injin]
 <!-- hl-knowledge: introduces=[BN-LEX-C174-JINIS174-03]; assesses=[] -->
 
 **চাকা** — *chākā* — "a wheel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চাকা** (*chākā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cakra*, "wheel" (CDIAL 4538). CDIAL lists Bengali *cākā*, "wheel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jôṭil"
 concept_tag: BN-GUN192-JOTIL
 prerequisites: [BN-C192-hotash, BN-C192-sorol]
 sounds: []
-roots: []
+roots: [sanskrit-jatila]
+etymology_hook: "jôṭil ← Sanskrit jaṭila 'wearing matted hair; tangled', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C192-sorol]
 <!-- hl-knowledge: introduces=[BN-LEX-C192-GUN192-03]; assesses=[] -->
 
 **জটিল** — *jôṭil* — "complicated".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জটিল** (*jôṭil*) is Sanskrit *jaṭila*, "wearing matted hair; tangled", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

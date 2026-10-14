@@ -14,7 +14,8 @@ romanization: "pāilôṭ"
 concept_tag: BN-KAJ208-PAILOT
 prerequisites: [BN-C207-bbsa, BN-C207-kompani]
 sounds: []
-roots: []
+roots: [english-pilot]
+etymology_hook: "pāilôṭ ← English pilot"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C207-kompani]
 <!-- hl-knowledge: introduces=[BN-LEX-C208-KAJ208-01]; assesses=[] -->
 
 **পাইলট** — *pāilôṭ* — "a pilot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাইলট** (*pāilôṭ*) is a loan from English *pilot*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chhôṛāno"
 concept_tag: BN-VERB-CHHORANO
 prerequisites: [BN-C241-golpo-kora, BN-C242-berono]
 sounds: []
-roots: []
+roots: [indo-aryan-chat]
+etymology_hook: "chhôṛāno ← *chaṭ 'scatter, sift', a reconstructed form; a tadbhava (CDIAL 4965)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C242-berono]
 <!-- hl-knowledge: introduces=[BN-LEX-C242-ACT242-02]; assesses=[] -->
 
 **ছড়ানো** — *chhôṛāno* — "to scatter, to spread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছড়ানো** (*chhôṛāno*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*chaṭ*, "scatter, sift", a form CDIAL reconstructs from its descendants (CDIAL 4965). CDIAL lists Bengali *chaṛāna*, "to scatter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

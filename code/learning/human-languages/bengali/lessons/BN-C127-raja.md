@@ -14,7 +14,8 @@ romanization: "rājā"
 concept_tag: BN-THINGS127-RAJA
 prerequisites: [BN-C126-mudi, BN-C126-nars]
 sounds: []
-roots: []
+roots: [sanskrit-rajan]
+etymology_hook: "rājā ← Sanskrit rājan 'king', a tatsama; CDIAL lists the inherited rāy 'prince' (CDIAL 10679)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C126-nars]
 <!-- hl-knowledge: introduces=[BN-LEX-C127-THINGS127-01]; assesses=[] -->
 
 **রাজা** — *rājā* — "a king".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রাজা** (*rājā*) is Sanskrit *rājan*, "chieftain, king", taken over whole as a learned loan, a tatsama (CDIAL 10679). The word inherited from it is *rāy*, "prince", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

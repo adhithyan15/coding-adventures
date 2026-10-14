@@ -14,7 +14,8 @@ romanization: "lôjjā"
 concept_tag: BN-JINIS169-LOJJA
 prerequisites: [BN-C168-atmiyo, BN-C169-anondo]
 sounds: []
-roots: []
+roots: [sanskrit-lajja]
+etymology_hook: "lôjjā ← Sanskrit lajjā 'shame, modesty', a tatsama (CDIAL 10910)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C169-anondo]
 <!-- hl-knowledge: introduces=[BN-LEX-C169-JINIS169-02]; assesses=[] -->
 
 **লজ্জা** — *lôjjā* — "shame, shyness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লজ্জা** (*lôjjā*) is Sanskrit *lajjā*, "shame, modesty", taken over whole as a learned loan, a tatsama (CDIAL 10910). The word inherited from it is *lāj*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

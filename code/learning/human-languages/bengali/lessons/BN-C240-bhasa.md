@@ -14,7 +14,8 @@ romanization: "bhāsā"
 concept_tag: BN-VERB-BHASA
 prerequisites: [BN-C240-jhap-deoya, BN-C240-doba]
 sounds: []
-roots: []
+roots: [sanskrit-bhrashyati]
+etymology_hook: "bhāsā ← Sanskrit bhraśyati 'falls', a tadbhava (CDIAL 9654)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C240-doba]
 <!-- hl-knowledge: introduces=[BN-LEX-C240-ACT240-05]; assesses=[] -->
 
 **ভাসা** — *bhāsā* — "to float".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভাসা** (*bhāsā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhraśyati*, "falls" (CDIAL 9654). CDIAL lists Bengali *bhāsā*, "to float, drift along".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

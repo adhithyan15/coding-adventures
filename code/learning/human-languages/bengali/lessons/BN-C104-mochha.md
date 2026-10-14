@@ -14,7 +14,8 @@ romanization: "mochhā"
 concept_tag: BN-VERB-MOCHHA
 prerequisites: [BN-C104-shoya, BN-C104-bondho]
 sounds: []
-roots: []
+roots: [sanskrit-pronchati]
+etymology_hook: "mochhā: CDIAL, under proñchati 'wipes off', explains muchā as crossed with mājā ← mārjati 'wipes' (CDIAL 9011)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C104-bondho]
 <!-- hl-knowledge: introduces=[BN-LEX-C104-ACT104-05]; assesses=[] -->
 
 **মোছা** — *mochhā* — "to wipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL, under Sanskrit *proñchati*, "wipes off", gives Bengali *pũchā*, "to wipe", and explains the form *muchā* as crossed with *mājā*, from Sanskrit *mārjati*, "wipes" (CDIAL 9011). **মোছা** (*mochhā*) belongs with that *muchā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "phon"
 concept_tag: BN-THINGS132-PHON
 prerequisites: [BN-C131-gitar, BN-C131-kyamera]
 sounds: []
-roots: []
+roots: [english-phone]
+etymology_hook: "phon ← English phone"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C131-kyamera]
 <!-- hl-knowledge: introduces=[BN-LEX-C132-THINGS132-01]; assesses=[] -->
 
 **ফোন** — *phon* — "a phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফোন** (*phon*) is a loan from English *phone*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

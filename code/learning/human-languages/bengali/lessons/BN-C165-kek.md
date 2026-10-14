@@ -14,7 +14,8 @@ romanization: "kek"
 concept_tag: BN-JINIS165-KEK
 prerequisites: [BN-C165-kishmish, BN-C165-jm]
 sounds: []
-roots: []
+roots: [english-cake]
+etymology_hook: "kek ← English cake"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C165-jm]
 <!-- hl-knowledge: introduces=[BN-LEX-C165-JINIS165-03]; assesses=[] -->
 
 **কেক** — *kek* — "a cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কেক** (*kek*) is a loan from English *cake*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
