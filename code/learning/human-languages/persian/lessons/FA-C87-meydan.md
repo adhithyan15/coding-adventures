@@ -14,7 +14,8 @@ romanization: "meydân"
 concept_tag: FA-LOC87-MEYDAN
 prerequisites: [FA-C86-gushe, FA-C87-kuche]
 sounds: []
-roots: []
+roots: [persian-maidan]
+etymology_hook: "meydân ← Arabic maydān 'open space, arena', root m-y-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C87-kuche]
 <!-- hl-knowledge: introduces=[FA-LEX-C87-LOC87-02]; assesses=[] -->
 
 **میدان** — *meydân* — "a square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*meydân* is borrowed from Arabic *maydān*, "open space, arena". Its Arabic root is *m-y-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

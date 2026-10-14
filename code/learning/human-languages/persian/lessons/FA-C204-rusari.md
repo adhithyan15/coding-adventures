@@ -14,7 +14,8 @@ romanization: "rusari"
 concept_tag: FA-CHIZ204-RUSARI
 prerequisites: [FA-C204-palto, FA-C204-manto]
 sounds: []
-roots: []
+roots: [persian-ru, persian-sar]
+etymology_hook: "rusari: Persian ru 'on' + sar 'head' (EtymDB) + -i; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C204-manto]
 <!-- hl-knowledge: introduces=[FA-LEX-C204-CHIZ204-03]; assesses=[] -->
 
 **روسری** — *rusari* — "a headscarf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rusari* is *ru*, "on, surface", with *sar*, "head", and *-i*: the thing on the head. Both are native; *sar* continues Middle Persian *sar* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

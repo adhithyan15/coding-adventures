@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 105,
-  "sourceHash": "fnv1a64:1a4a1bd67a7bbb84",
+  "sourceHash": "fnv1a64:7e612d973cb9f753",
   "lessonIds": [
     "FA-C105-palang",
     "FA-C105-khargush",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch105.txt",
   "json": "persian/narration/ch105.json",
-  "textHash": "fnv1a64:2dccf8bcf27daa6d",
-  "jsonHash": "fnv1a64:191dc76db899cf22",
+  "textHash": "fnv1a64:0e95c32916f3c959",
+  "jsonHash": "fnv1a64:ed131475e3ed58dc",
   "findings": []
 }

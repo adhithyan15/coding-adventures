@@ -14,7 +14,8 @@ romanization: "jâdde"
 concept_tag: FA-THINGS118-JADDE
 prerequisites: [FA-C117-kashti, FA-C117-havapeyma]
 sounds: []
-roots: []
+roots: [arabic-jadda]
+etymology_hook: "jâdde ← Arabic jādda 'main road', root j-d-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C117-havapeyma]
 <!-- hl-knowledge: introduces=[FA-LEX-C118-THINGS118-01]; assesses=[] -->
 
 **جاده** — *jâdde* — "a road, a highway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jâdde* is borrowed from Arabic *jādda*, "main road". Its Arabic root is *j-d-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

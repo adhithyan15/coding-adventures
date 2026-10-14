@@ -12,6 +12,9 @@ Before the new one: say the Persian for to walk, then the Persian for to get on.
 You'll want to know: دم کردن.
 دم کردن — dam kardan — "to brew (tea); to steam (rice)".
 
+The word, taken apart.
+dam kardan pairs dam, "breath, steam", a native word, with kardan: to let it steam. (EtymDB also lists Arabic dam, "blood", a different word that looks alike.) kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to get on, then the Persian for to brew.
 
 You'll want to know: سرفه کردن.
 سرفه کردن — sorfe kardan — "to cough".
+
+The word, taken apart.
+sorfe kardan pairs sorfe, "a cough", with kardan, "to do". Where sorfe comes from is not settled. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to brew, then the Persian for to cough.
 You'll want to know: استراحت کردن.
 استراحت کردن — esterâhat kardan — "to rest".
 
+The word, taken apart.
+esterâhat kardan pairs esterâhat, borrowed from Arabic istirāḥa, "resting" (root r-w-ḥ, Lane), with the Persian verb kardan, "to do, to make". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to cough, then the Persian for to rest.
 You'll want to know: ورزش کردن.
 ورزش کردن — varzesh kardan — "to exercise, to do sport".
 
+The word, taken apart.
+varzesh kardan pairs varzesh, "exercise", with kardan. varzesh is built on varzidan, "to practise", a native verb usually traced to Middle Persian warzīdan. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to rest, then the Persian for to exercis
 
 You'll want to know: شنا کردن.
 شنا کردن — shenâ kardan — "to swim".
+
+The word, taken apart.
+shenâ kardan pairs shenâ, "swimming", with kardan. shenâ is inherited: EtymDB traces it to Avestan snā- and the Indo-European root (s)neh₂-, "to swim". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.

@@ -12,6 +12,9 @@ Before the new one: say the Persian for a monkey, then the Persian for a snake.
 You'll want to know: خرس.
 خرس — khers — "a bear".
 
+The word, taken apart.
+khers is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian xirs, "bear". EtymDB takes it back to the Indo-European word for "bear" behind Latin ursus and Greek arktos.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a snake, then the Persian for a bear.
 
 You'll want to know: شتر.
 شتر — shotor — "a camel".
+
+The word, taken apart.
+shotor is a native Persian word, inherited rather than borrowed: EtymDB traces it to Proto-Iranian uštrah, "camel", and Middle Persian had uštar.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a bear, then the Persian for a camel.
 You'll want to know: خر.
 خر — khar — "a donkey".
 
+The word, taken apart.
+khar is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian xar, "donkey".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a camel, then the Persian for a donkey.
 You'll want to know: پروانه.
 پروانه — parvâne — "a butterfly".
 
+The word, taken apart.
+parvâne continues Middle Persian parwānag (EtymDB), which meant "guide, leader". How the word came to name the butterfly and the moth is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a donkey, then the Persian for a butterf
 
 You'll want to know: مورچه.
 مورچه — murche — "an ant".
+
+The word, taken apart.
+murche is mur, "ant", with the small-thing ending -che. mur is a native word, usually traced to Middle Persian mōr.
 
 What you've built.
 One more word for this chapter.

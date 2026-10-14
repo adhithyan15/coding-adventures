@@ -14,7 +14,8 @@ romanization: "zir"
 concept_tag: FA-DEF85-ZIR
 prerequisites: [FA-C85-kenar, FA-C85-vasat]
 sounds: []
-roots: []
+roots: [persian-zir]
+etymology_hook: "zir: inherited, usually traced to Middle Persian azēr"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C85-vasat]
 <!-- hl-knowledge: introduces=[FA-LEX-C85-DEF85-05]; assesses=[] -->
 
 **زیر** — *zir* — "under".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zir* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *azēr*, "below".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pâk kardan"
 concept_tag: FA-VERB-PAK-KARDAN
 prerequisites: [FA-C139-resid, FA-C140-baz-kardan]
 sounds: []
-roots: []
+roots: [persian-pak, pie-kwer]
+etymology_hook: "pâk kardan: pâk ← Middle Persian pāk 'clean' (EtymDB) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C140-baz-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C140-KONESH140-02]; assesses=[] -->
 
 **پاک کردن** — *pâk kardan* — "to wipe, to erase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pâk kardan* pairs *pâk*, "clean", with *kardan*, "to make". *pâk* is inherited: EtymDB traces it to Middle Persian *pāk*, "clean, pure". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

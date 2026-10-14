@@ -14,7 +14,8 @@ romanization: "haml kardan"
 concept_tag: FA-VERB-HAML-KARDAN
 prerequisites: [FA-C223-penhan-kardan, FA-C223-sharh-dadan]
 sounds: []
-roots: []
+roots: [arabic-haml]
+etymology_hook: "haml ← Arabic ḥaml 'carrying', root ḥ-m-l (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C223-sharh-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C223-KONESH223-04]; assesses=[] -->
 
 **حمل کردن** — *haml kardan* — "to carry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*haml kardan* pairs *haml*, borrowed from Arabic *ḥaml*, "carrying" (root *ḥ-m-l*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "molâqât kardan"
 concept_tag: FA-VERB-MOLAQAT-KARDAN
 prerequisites: [FA-C183-jashn-gereftan, FA-C183-tabrik-goftan]
 sounds: []
-roots: []
+roots: [arabic-mulaqat]
+etymology_hook: "molâqât ← Arabic mulāqāt 'meeting, encounter', root l-q-y (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C183-tabrik-goftan]
 <!-- hl-knowledge: introduces=[FA-LEX-C183-KONESH183-04]; assesses=[] -->
 
 **ملاقات کردن** — *molâqât kardan* — "to meet (someone)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*molâqât kardan* pairs *molâqât*, borrowed from Arabic *mulāqāt*, "meeting, encounter" (root *l-q-y*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

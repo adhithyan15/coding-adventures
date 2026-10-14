@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 50,
-  "sourceHash": "fnv1a64:285b8dfe6ee1112d",
+  "sourceHash": "fnv1a64:1a24517ac981672d",
   "lessonIds": [
     "FA-C50-naghshe",
     "FA-C50-dars",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch50.txt",
   "json": "persian/narration/ch50.json",
-  "textHash": "fnv1a64:1c38684d97734a7c",
-  "jsonHash": "fnv1a64:77ebd6ed351a793e",
+  "textHash": "fnv1a64:4652c0547babf649",
+  "jsonHash": "fnv1a64:c8ad06583ce3c097",
   "findings": []
 }

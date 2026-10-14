@@ -12,6 +12,9 @@ Before the new one: say the Persian for late, then the Persian for before.
 You'll want to know: صبح.
 صبح — sobh — "morning".
 
+The word, taken apart.
+sobh is borrowed from Arabic ṣubḥ, "morning, dawn". Its Arabic root is ṣ-b-ḥ (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for before, then the Persian for morning.
 
 You'll want to know: شب.
 شب — shab — "night".
+
+The word, taken apart.
+shab is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian šab, "night".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for morning, then the Persian for night.
 You'll want to know: روز.
 روز — ruz — "a day".
 
+The word, taken apart.
+ruz is a native Persian word, inherited rather than borrowed: it continues Middle Persian rōz, "day" (EtymDB). Old Persian had raucah-, "day" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for night, then the Persian for a day.
 You'll want to know: دور.
 دور — dur — "far".
 
+The word, taken apart.
+dur is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian dūr, "far". EtymDB takes it back to the Indo-European root dweh₂-, "far, long". (It also lists Arabic dawr, "period", a different word that looks alike.)
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a day, then the Persian for far.
 
 You'll want to know: نزدیک.
 نزدیک — nazdik — "near".
+
+The word, taken apart.
+nazdik is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian nazdīk, "near".
 
 What you've built.
 One more word for this chapter.

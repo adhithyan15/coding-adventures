@@ -14,7 +14,8 @@ romanization: "konjkâv"
 concept_tag: FA-SEFAT238-KONJKAV
 prerequisites: [FA-C238-tord, FA-C238-abdar]
 sounds: []
-roots: []
+roots: [persian-kunj]
+etymology_hook: "konjkâv: Persian konj 'corner' + kâv 'digging'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C238-abdar]
 <!-- hl-knowledge: introduces=[FA-LEX-C238-SEFAT238-03]; assesses=[] -->
 
 **کنجکاو** — *konjkâv* — "curious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*konjkâv* is built from *konj*, "corner", and *-kâv*, "digging" (from *kâvidan*, "to dig, to search"): one who searches the corners. Both are native Persian words, inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

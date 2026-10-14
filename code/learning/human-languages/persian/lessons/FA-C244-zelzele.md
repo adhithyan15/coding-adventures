@@ -14,7 +14,8 @@ romanization: "zelzele"
 concept_tag: FA-CHIZ244-ZELZELE
 prerequisites: [FA-C243-sargarmi, FA-C243-khatere]
 sounds: []
-roots: []
+roots: [arabic-zalzala]
+etymology_hook: "zelzele ← Arabic zalzala 'earthquake, shaking', root z-l-z-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C243-khatere]
 <!-- hl-knowledge: introduces=[FA-LEX-C244-CHIZ244-01]; assesses=[] -->
 
 **زلزله** — *zelzele* — "an earthquake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zelzele* is borrowed from Arabic *zalzala*, "earthquake, shaking". Its Arabic root is *z-l-z-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "yakhchâl"
 concept_tag: FA-THINGS96-YAKHCHAL
 prerequisites: [FA-C95-mahitabe, FA-C95-ojagh]
 sounds: []
-roots: []
+roots: [persian-yakh]
+etymology_hook: "yakhchâl: Persian yakh 'ice' + châl 'pit': first the ice-house"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C95-ojagh]
 <!-- hl-knowledge: introduces=[FA-LEX-C96-THINGS96-01]; assesses=[] -->
 
 **یخچال** — *yakhchâl* — "a fridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yakhchâl* is *yakh*, "ice", with *châl*, "pit": the ice-pit, the old domed ice-house, now the fridge. Both parts are native Persian; *yakh* is usually traced to Middle Persian *yax*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

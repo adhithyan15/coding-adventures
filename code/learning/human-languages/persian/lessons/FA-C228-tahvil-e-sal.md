@@ -14,7 +14,8 @@ romanization: "tahvil-e sâl"
 concept_tag: FA-ZAMAN228-TAHVIL-E-SAL
 prerequisites: [FA-C228-chaharshanbe-suri, FA-C228-sal-e-now]
 sounds: []
-roots: []
+roots: [arabic-tahwil, persian-sal]
+etymology_hook: "tahvil ← Arabic taḥwīl 'turning' (Lane) + Persian sâl 'year' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C228-sal-e-now]
 <!-- hl-knowledge: introduces=[FA-LEX-C228-ZAMAN228-04]; assesses=[] -->
 
 **تحویل سال** — *tahvil-e sâl* — "the turn of the year (the moment of the New Year)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tahvil-e sâl* is "the turning over of the year": *tahvil* is borrowed from Arabic *taḥwīl*, "transfer, turning" (root *ḥ-w-l*, Lane), and *sâl*, "year", is inherited (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

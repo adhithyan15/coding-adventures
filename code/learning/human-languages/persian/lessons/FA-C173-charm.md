@@ -14,7 +14,8 @@ romanization: "charm"
 concept_tag: FA-CHIZ173-CHARM
 prerequisites: [FA-C173-plastik, FA-C173-parche]
 sounds: []
-roots: []
+roots: [persian-charm]
+etymology_hook: "charm ← Middle Persian čarm (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C173-parche]
 <!-- hl-knowledge: introduces=[FA-LEX-C173-CHIZ173-05]; assesses=[] -->
 
 **چرم** — *charm* — "leather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*charm* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *čarm*, "skin, hide, leather" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

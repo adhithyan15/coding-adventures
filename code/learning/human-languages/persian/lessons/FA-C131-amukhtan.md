@@ -14,7 +14,8 @@ romanization: "âmukhtan"
 concept_tag: FA-VERB-AMUKHTAN
 prerequisites: [FA-C131-mahbub, FA-C131-pardakhtan, FA-C06-amadan]
 sounds: []
-roots: []
+roots: [persian-amukhtan]
+etymology_hook: "âmukhtan ← Middle Persian hammōxtan (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [FA-C131-pardakhtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C131-QUAL131-03]; assesses=[] -->
 
 **آموختن** — *âmukhtan* — "to learn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âmukhtan* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *hammōxtan*, "to teach, to learn" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

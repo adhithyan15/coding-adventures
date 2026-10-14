@@ -14,7 +14,8 @@ romanization: "ruzâne"
 concept_tag: FA-ZAMAN152-RUZANE
 prerequisites: [FA-C151-kapsul, FA-C152-emsal]
 sounds: []
-roots: []
+roots: [persian-roz]
+etymology_hook: "ruzâne: Persian ruz 'day' (Middle Persian rōz, EtymDB) + -âne"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C152-emsal]
 <!-- hl-knowledge: introduces=[FA-LEX-C152-ZAMAN152-02]; assesses=[] -->
 
 **روزانه** — *ruzâne* — "daily".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ruzâne* is *ruz*, "day", with the ending *-âne*, "every, belonging to": daily. *ruz* continues Middle Persian *rōz* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

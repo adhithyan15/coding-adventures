@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 142,
-  "sourceHash": "fnv1a64:efa573ff6237a26b",
+  "sourceHash": "fnv1a64:61b2d99b6c9564dd",
   "lessonIds": [
     "FA-C142-sabr-kardan",
     "FA-C142-pishnahad-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch142.txt",
   "json": "persian/narration/ch142.json",
-  "textHash": "fnv1a64:b4cd1d19124078ef",
-  "jsonHash": "fnv1a64:48ac4d08d5cbfad5",
+  "textHash": "fnv1a64:84615260bba89f9d",
+  "jsonHash": "fnv1a64:dab04178eb2a1f1a",
   "findings": []
 }

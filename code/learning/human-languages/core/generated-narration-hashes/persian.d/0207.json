@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 207,
-  "sourceHash": "fnv1a64:4d17848ab927c453",
+  "sourceHash": "fnv1a64:3790822403e2552b",
   "lessonIds": [
     "FA-C207-haft-sin",
     "FA-C207-hediye",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch207.txt",
   "json": "persian/narration/ch207.json",
-  "textHash": "fnv1a64:f4669b2c0829d871",
-  "jsonHash": "fnv1a64:d8e1ff2e626893a3",
+  "textHash": "fnv1a64:d38dc4282483bbc4",
+  "jsonHash": "fnv1a64:ba17e05cb90b84de",
   "findings": []
 }

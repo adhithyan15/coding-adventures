@@ -14,7 +14,8 @@ romanization: "sâyebân"
 concept_tag: FA-MAKAN268-SAYEBAN
 prerequisites: [FA-C267-oqyanus, FA-C268-darvaze]
 sounds: []
-roots: []
+roots: [persian-saya]
+etymology_hook: "sâyebân: Persian sâye 'shade' + -bân 'keeper'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C268-darvaze]
 <!-- hl-knowledge: introduces=[FA-LEX-C268-MAKAN268-02]; assesses=[] -->
 
 **سایبان** — *sâyebân* — "an awning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâyebân* is *sâye*, "shade", with *-bân*, "keeper": the shade-keeper. Both are native Persian; *sâye* is usually traced to Middle Persian *sāyag*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

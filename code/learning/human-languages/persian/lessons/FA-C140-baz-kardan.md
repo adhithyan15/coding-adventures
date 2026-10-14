@@ -14,7 +14,8 @@ romanization: "bâz kardan"
 concept_tag: FA-VERB-BAZ-KARDAN
 prerequisites: [FA-C139-agahi, FA-C139-resid]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "bâz kardan: Persian bâz 'open' + kardan 'to make'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C139-resid]
 <!-- hl-knowledge: introduces=[FA-LEX-C140-KONESH140-01]; assesses=[] -->
 
 **باز کردن** — *bâz kardan* — "to open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâz kardan* pairs *bâz*, "open", a native Persian word, with the verb *kardan*, "to do, to make": "to make open". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

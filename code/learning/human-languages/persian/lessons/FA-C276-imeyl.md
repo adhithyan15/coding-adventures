@@ -14,7 +14,8 @@ romanization: "imeyl"
 concept_tag: FA-CHIZ276-IMEYL
 prerequisites: [FA-C276-shomare, FA-C276-payamak]
 sounds: []
-roots: []
+roots: [english-email]
+etymology_hook: "imeyl: a loan, usually traced to English email 'email'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C276-payamak]
 <!-- hl-knowledge: introduces=[FA-LEX-C276-CHIZ276-05]; assesses=[] -->
 
 **ایمیل** — *imeyl* — "an email".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*imeyl* is a loan, usually traced to English *email*, "email".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

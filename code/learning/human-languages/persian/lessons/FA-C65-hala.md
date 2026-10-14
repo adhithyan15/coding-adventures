@@ -14,7 +14,8 @@ romanization: "hâlâ"
 concept_tag: FA-TIME65-HALA
 prerequisites: [FA-C65-diruz, FA-C65-farda]
 sounds: []
-roots: []
+roots: [arabic-hal]
+etymology_hook: "hâlâ ← Arabic ḥālan 'now, at present', root ḥ-w-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C65-farda]
 <!-- hl-knowledge: introduces=[FA-LEX-C65-TIME65-05]; assesses=[] -->
 
 **حالا** — *hâlâ* — "now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hâlâ* is borrowed from Arabic *ḥālan*, "now, at present". Its Arabic root is *ḥ-w-l* (Lane). It is the word *ḥāl*, "state", used as an adverb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

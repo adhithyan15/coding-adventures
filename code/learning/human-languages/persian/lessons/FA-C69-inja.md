@@ -14,7 +14,8 @@ romanization: "injâ"
 concept_tag: FA-PLACE69-INJA
 prerequisites: [FA-C68-payin, FA-C68-jolow]
 sounds: []
-roots: []
+roots: [persian-ja]
+etymology_hook: "injâ: Persian in 'this' + jâ 'place'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C68-jolow]
 <!-- hl-knowledge: introduces=[FA-LEX-C69-PLACE69-01]; assesses=[] -->
 
 **اینجا** — *injâ* — "here".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*injâ* is *in*, "this", with *jâ*, "place": "this place". Both are native Persian; *jâ* is usually traced to Middle Persian *gyāg*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

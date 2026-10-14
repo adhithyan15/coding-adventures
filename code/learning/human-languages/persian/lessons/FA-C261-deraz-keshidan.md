@@ -14,7 +14,8 @@ romanization: "derâz keshidan"
 concept_tag: FA-VERB-DERAZ-KESHIDAN
 prerequisites: [FA-C261-bastari-shodan, FA-C261-tekye-dadan]
 sounds: []
-roots: []
+roots: [persian-kashidan]
+etymology_hook: "derâz keshidan: Persian derâz 'long' + keshidan 'to draw'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C261-tekye-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C261-KONESH261-04]; assesses=[] -->
 
 **دراز کشیدن** — *derâz keshidan* — "to lie down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*derâz keshidan* is "to stretch out long": *derâz*, "long" (usually traced to Middle Persian *drāz*), with *keshidan*, "to draw". Both are native. *keshidan*, "to pull", is an inherited verb; it is usually traced to Middle Persian *kašīdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

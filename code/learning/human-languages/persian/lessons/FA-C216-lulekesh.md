@@ -14,7 +14,8 @@ romanization: "lulekesh"
 concept_tag: FA-KAR216-LULEKESH
 prerequisites: [FA-C216-kargah, FA-C216-najjar]
 sounds: []
-roots: []
+roots: [persian-kashidan]
+etymology_hook: "lulekesh: Persian lule 'pipe' + kesh 'laying' (keshidan, inherited)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C216-najjar]
 <!-- hl-knowledge: introduces=[FA-LEX-C216-KAR216-03]; assesses=[] -->
 
 **لوله کش** — *lulekesh* — "a plumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lulekesh* is built from *lule*, "pipe", and *-kesh*, "drawing, laying" (from *keshidan*): the pipe-layer. *keshidan* is inherited, usually traced to Middle Persian *kašīdan*; where *lule* comes from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

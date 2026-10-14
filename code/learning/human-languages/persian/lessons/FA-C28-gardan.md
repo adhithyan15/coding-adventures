@@ -14,7 +14,8 @@ romanization: "gardan"
 concept_tag: FA-BODY28-GARDAN
 prerequisites: [FA-C28-angosht, FA-C28-shane]
 sounds: []
-roots: []
+roots: [persian-gardan]
+etymology_hook: "gardan: inherited, usually traced to Middle Persian gardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C28-shane]
 <!-- hl-knowledge: introduces=[FA-LEX-C28-BODY28-04]; assesses=[] -->
 
 **گردن** — *gardan* — "the neck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gardan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *gardan*, "neck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

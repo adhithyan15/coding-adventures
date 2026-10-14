@@ -14,7 +14,8 @@ romanization: "lubiyâ"
 concept_tag: FA-THINGS119-LUBIYA
 prerequisites: [FA-C118-alu, FA-C118-kadu]
 sounds: []
-roots: []
+roots: [greek-lobia]
+etymology_hook: "lubiyâ ← Greek lobia 'pods, beans' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C118-kadu]
 <!-- hl-knowledge: introduces=[FA-LEX-C119-THINGS119-01]; assesses=[] -->
 
 **لوبیا** — *lubiyâ* — "beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lubiyâ* goes back to Greek *lobia*, "pods, beans" (EtymDB); Arabic *lūbiyā* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "siyâh"
 concept_tag: FA-ADJ64-SIYAH
 prerequisites: [FA-C63-ghermez, FA-C64-abi]
 sounds: []
-roots: []
+roots: [persian-siyah]
+etymology_hook: "siyâh: inherited, usually traced to Middle Persian syāh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C64-abi]
 <!-- hl-knowledge: introduces=[FA-LEX-C64-ADJ64-02]; assesses=[] -->
 
 **سیاه** — *siyâh* — "black".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*siyâh* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *syāh*, "black".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

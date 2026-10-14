@@ -14,7 +14,8 @@ romanization: "garm"
 concept_tag: FA-ADJ59-GARM
 prerequisites: [FA-C59-boland, FA-C59-kutah]
 sounds: []
-roots: []
+roots: [persian-garm]
+etymology_hook: "garm: inherited, usually traced to Middle Persian garm"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C59-kutah]
 <!-- hl-knowledge: introduces=[FA-LEX-C59-ADJ59-03]; assesses=[] -->
 
 **گرم** — *garm* — "warm, hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*garm* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *garm*, "warm". EtymDB takes it back to the Indo-European root *\*gʷʰer-*, "to heat", the root usually also given for English *warm*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

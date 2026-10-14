@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 259,
-  "sourceHash": "fnv1a64:5b183127fb866d1b",
+  "sourceHash": "fnv1a64:6ef4c52d9d8db5ae",
   "lessonIds": [
     "FA-C259-barrasi-kardan",
     "FA-C259-chane-zadan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch259.txt",
   "json": "persian/narration/ch259.json",
-  "textHash": "fnv1a64:bc207c50779deb09",
-  "jsonHash": "fnv1a64:575cd9dab2562bac",
+  "textHash": "fnv1a64:ebdb6dd227704c76",
+  "jsonHash": "fnv1a64:b59bfa0487babade",
   "findings": []
 }

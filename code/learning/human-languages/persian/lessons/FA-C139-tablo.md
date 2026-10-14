@@ -14,7 +14,8 @@ romanization: "tâblo"
 concept_tag: FA-KHANDAN139-TABLO
 prerequisites: [FA-C138-omidvar-budan, FA-C139-jadval-e-zamani]
 sounds: []
-roots: []
+roots: [french-tableau]
+etymology_hook: "tâblo: a loan, usually traced to French tableau 'board, picture'"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [FA-C139-jadval-e-zamani]
 
 The sign says **پنجشنبه بسته است** — *panjshanbe baste ast* — "Closed on
 Thursday." Come on another day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tâblo* is a loan, usually traced to French *tableau*, "board, picture".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

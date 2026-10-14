@@ -14,7 +14,8 @@ romanization: "hamishe"
 concept_tag: FA-TIME66-HAMISHE
 prerequisites: [FA-C65-farda, FA-C65-hala]
 sounds: []
-roots: []
+roots: [persian-hamishe]
+etymology_hook: "hamishe: inherited, usually traced to Middle Persian hamēšag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C65-hala]
 <!-- hl-knowledge: introduces=[FA-LEX-C66-TIME66-01]; assesses=[] -->
 
 **همیشه** — *hamishe* — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hamishe* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *hamēšag*, "always".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

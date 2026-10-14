@@ -14,7 +14,8 @@ romanization: "âmâde kardan"
 concept_tag: FA-VERB-AMADE-KARDAN
 prerequisites: [FA-C253-andakhtan, FA-C254-daravardan]
 sounds: []
-roots: []
+roots: [persian-amada, pie-kwer]
+etymology_hook: "âmâde kardan: Persian âmâde 'ready' (Middle Persian āmādag) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C254-daravardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C254-KONESH254-02]; assesses=[] -->
 
 **آماده کردن** — *âmâde kardan* — "to prepare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âmâde kardan* pairs *âmâde*, "ready", with *kardan*, "to make". *âmâde* is native, usually traced to Middle Persian *āmādag*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

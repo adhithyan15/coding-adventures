@@ -14,7 +14,8 @@ romanization: "otâgh"
 concept_tag: FA-HOME45-OTAGH
 prerequisites: [FA-C44-shir, FA-C45-khane]
 sounds: []
-roots: []
+roots: [turkic-otaq]
+etymology_hook: "otâgh: a loan, usually traced to Turkic otaq 'tent, room'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C45-khane]
 <!-- hl-knowledge: introduces=[FA-LEX-C45-HOME45-02]; assesses=[] -->
 
 **اتاق** — *otâgh* — "a room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*otâgh* is a loan, usually traced to Turkic *otaq*, "tent, room".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

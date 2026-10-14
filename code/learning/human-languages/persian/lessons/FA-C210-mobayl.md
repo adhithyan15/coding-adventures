@@ -14,7 +14,8 @@ romanization: "mobâyl"
 concept_tag: FA-CHIZ210-MOBAYL
 prerequisites: [FA-C210-mosahebe, FA-C210-internet]
 sounds: []
-roots: []
+roots: [english-mobile]
+etymology_hook: "mobâyl: a loan, usually traced to English mobile 'mobile'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C210-internet]
 <!-- hl-knowledge: introduces=[FA-LEX-C210-CHIZ210-05]; assesses=[] -->
 
 **موبایل** — *mobâyl* — "a mobile phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mobâyl* is a loan, usually traced to English *mobile*, "mobile".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

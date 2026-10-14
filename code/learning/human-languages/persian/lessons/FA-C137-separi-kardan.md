@@ -14,7 +14,8 @@ romanization: "separi kardan"
 concept_tag: FA-VERB-SEPARI-KARDAN
 prerequisites: [FA-C137-parsal, FA-C137-yek-bar]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "separi kardan: separi usually traced to Middle Persian spurrīg 'complete', + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C137-yek-bar]
 <!-- hl-knowledge: introduces=[FA-LEX-C137-GOZASHTE137-05]; assesses=[] -->
 
 **سپری کردن** — *separi kardan* — "to spend (time)". Said of time: **تابستان را در روستا سپری کردم** — *tâbestân râ dar rustâ separi kardam* — "I spent the summer in the village."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*separi kardan* pairs *separi*, "spent, finished", with *kardan*, "to do". *separi* is usually traced to Middle Persian *spurrīg*, "complete". *kardan* is inherited, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

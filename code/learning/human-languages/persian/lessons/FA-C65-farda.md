@@ -14,7 +14,8 @@ romanization: "fardâ"
 concept_tag: FA-TIME65-FARDA
 prerequisites: [FA-C65-emruz, FA-C65-diruz]
 sounds: []
-roots: []
+roots: [persian-farda]
+etymology_hook: "fardâ ← Middle Persian fradāg (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C65-diruz]
 <!-- hl-knowledge: introduces=[FA-LEX-C65-TIME65-04]; assesses=[] -->
 
 **فردا** — *fardâ* — "tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*fardâ* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *fradāg*, "tomorrow" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 127,
-  "sourceHash": "fnv1a64:16c7676f9fbadc69",
+  "sourceHash": "fnv1a64:8f54c843c6ac3465",
   "lessonIds": [
     "FA-C127-talkh",
     "FA-C127-torsh",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch127.txt",
   "json": "persian/narration/ch127.json",
-  "textHash": "fnv1a64:6025ae71bd27ce2d",
-  "jsonHash": "fnv1a64:4ce50d6108732403",
+  "textHash": "fnv1a64:27bf67eda1dd7b54",
+  "jsonHash": "fnv1a64:df013df0021c429f",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 161,
-  "sourceHash": "fnv1a64:765c17ebe1b23394",
+  "sourceHash": "fnv1a64:54ffb0ff3ba33fb0",
   "lessonIds": [
     "FA-C161-khoshmaze",
     "FA-C161-khonak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch161.txt",
   "json": "persian/narration/ch161.json",
-  "textHash": "fnv1a64:15f7f8b05fbc868a",
-  "jsonHash": "fnv1a64:e72cf9957538893f",
+  "textHash": "fnv1a64:22ccba9c447af4d1",
+  "jsonHash": "fnv1a64:e81218c4f5212a73",
   "findings": []
 }

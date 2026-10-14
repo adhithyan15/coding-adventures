@@ -14,7 +14,8 @@ romanization: "yekshanbe"
 concept_tag: FA-TIME81-YEKSHANBE
 prerequisites: [FA-C80-fasl, FA-C81-shanbe]
 sounds: []
-roots: []
+roots: [proto-indo-european-oywos, aramaic-shabbat]
+etymology_hook: "yekshanbe: Persian yek 'one' + shanbe 'Sabbath' (EtymDB): day one after Saturday"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C81-shanbe]
 <!-- hl-knowledge: introduces=[FA-LEX-C81-TIME81-02]; assesses=[] -->
 
 **یکشنبه** — *yekshanbe* — "Sunday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yekshanbe* is *yek*, "one", with *shanbe*, "Saturday" (EtymDB): the first day after the Sabbath. *yek* is inherited; *shanbe* is the Sabbath word, usually traced through Middle Persian to Aramaic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

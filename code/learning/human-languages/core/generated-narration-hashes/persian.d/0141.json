@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 141,
-  "sourceHash": "fnv1a64:e90a16e9b5be99d3",
+  "sourceHash": "fnv1a64:8c10f662c94b65cf",
   "lessonIds": [
     "FA-C141-gom-kardan",
     "FA-C141-peyda-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch141.txt",
   "json": "persian/narration/ch141.json",
-  "textHash": "fnv1a64:28198defd90da339",
-  "jsonHash": "fnv1a64:cb46e0177856edad",
+  "textHash": "fnv1a64:149d9d7149cb0178",
+  "jsonHash": "fnv1a64:dd8f5af546e9b9e2",
   "findings": []
 }

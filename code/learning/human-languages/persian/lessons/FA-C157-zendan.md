@@ -14,7 +14,8 @@ romanization: "zendân"
 concept_tag: FA-MAKAN157-ZENDAN
 prerequisites: [FA-C157-bonbast, FA-C157-khabgah]
 sounds: []
-roots: []
+roots: [persian-zendan]
+etymology_hook: "zendân: usually traced to Middle Persian zēndān 'prison'; Armenian zndan was borrowed from Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C157-khabgah]
 <!-- hl-knowledge: introduces=[FA-LEX-C157-MAKAN157-03]; assesses=[] -->
 
 **زندان** — *zendân* — "a prison".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zendân* is a native Persian word for a prison, usually traced to Middle Persian *zēndān*. EtymDB sets Armenian *zndan*, "prison", beside it, a word Armenian took from Iranian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

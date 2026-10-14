@@ -14,7 +14,8 @@ romanization: "tajrobe"
 concept_tag: FA-KAR214-TAJROBE
 prerequisites: [FA-C213-dayere, FA-C213-noqte]
 sounds: []
-roots: []
+roots: [arabic-tajriba]
+etymology_hook: "tajrobe ← Arabic tajriba 'trial, experience', root j-r-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C213-noqte]
 <!-- hl-knowledge: introduces=[FA-LEX-C214-KAR214-01]; assesses=[] -->
 
 **تجربه** — *tajrobe* — "experience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tajrobe* is borrowed from Arabic *tajriba*, "trial, experience". Its Arabic root is *j-r-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

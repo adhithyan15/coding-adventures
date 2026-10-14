@@ -14,7 +14,8 @@ romanization: "golâbi"
 concept_tag: FA-CHIZ241-GOLABI
 prerequisites: [FA-C240-juje, FA-C240-sabzi]
 sounds: []
-roots: []
+roots: [persian-gul, persian-ab]
+etymology_hook: "golâbi: usually explained as Persian golâb 'rose-water' + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C240-sabzi]
 <!-- hl-knowledge: introduces=[FA-LEX-C241-CHIZ241-01]; assesses=[] -->
 
 **گلابی** — *golâbi* — "a pear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*golâbi* is usually explained as built on *golâb*, "rose-water" (*gol*, "rose", with *âb*, "water"), with *-i*: the pear named for its scent. All the pieces are native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

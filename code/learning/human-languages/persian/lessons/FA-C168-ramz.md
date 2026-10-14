@@ -14,7 +14,8 @@ romanization: "ramz"
 concept_tag: FA-CHIZ168-RAMZ
 prerequisites: [FA-C167-morabba, FA-C168-sayt]
 sounds: []
-roots: []
+roots: [arabic-ramz]
+etymology_hook: "ramz ← Arabic ramz 'sign, cipher, code', root r-m-z (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C168-sayt]
 <!-- hl-knowledge: introduces=[FA-LEX-C168-CHIZ168-02]; assesses=[] -->
 
 **رمز** — *ramz* — "a password, a PIN".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ramz* is borrowed from Arabic *ramz*, "sign, cipher, code". Its Arabic root is *r-m-z* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

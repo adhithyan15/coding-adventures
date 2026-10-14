@@ -14,7 +14,8 @@ romanization: "sine"
 concept_tag: FA-THINGS108-SINE
 prerequisites: [FA-C108-shast, FA-C108-nakhon]
 sounds: []
-roots: []
+roots: [persian-sine]
+etymology_hook: "sine: inherited, usually traced to Middle Persian sēnag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C108-nakhon]
 <!-- hl-knowledge: introduces=[FA-LEX-C108-THINGS108-04]; assesses=[] -->
 
 **سینه** — *sine* — "the chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sine* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *sēnag*, "chest, breast".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

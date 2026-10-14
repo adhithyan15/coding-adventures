@@ -14,7 +14,8 @@ romanization: "dukhtan"
 concept_tag: FA-VERB-DUKHTAN
 prerequisites: [FA-C131-oftadan, FA-C132-shekastan]
 sounds: []
-roots: []
+roots: [persian-dukhtan]
+etymology_hook: "dukhtan: inherited, usually traced to Middle Persian dōxtan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C132-shekastan]
 <!-- hl-knowledge: introduces=[FA-LEX-C132-ACT132-02]; assesses=[] -->
 
 **دوختن** — *dukhtan* — "to sew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dukhtan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *dōxtan*, "to sew".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

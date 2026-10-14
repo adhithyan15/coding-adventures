@@ -14,7 +14,8 @@ romanization: "qu"
 concept_tag: FA-CHIZ245-QU
 prerequisites: [FA-C244-shakhe, FA-C244-kaj2]
 sounds: []
-roots: []
+roots: [turkic-qu]
+etymology_hook: "qu: a loan, usually traced to Turkic qu 'swan'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C244-kaj2]
 <!-- hl-knowledge: introduces=[FA-LEX-C245-CHIZ245-01]; assesses=[] -->
 
 **قو** — *qu* — "a swan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qu* is a loan, usually traced to Turkic *qu*, "swan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

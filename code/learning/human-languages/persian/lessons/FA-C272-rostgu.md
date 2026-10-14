@@ -14,7 +14,8 @@ romanization: "rostgu"
 concept_tag: FA-SEFAT272-ROSTGU
 prerequisites: [FA-C271-rasmi, FA-C271-khosusi]
 sounds: []
-roots: []
+roots: [old-persian-gaub]
+etymology_hook: "rostgu: Persian rost 'true' + gu 'saying' (goftan); inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C271-khosusi]
 <!-- hl-knowledge: introduces=[FA-LEX-C272-SEFAT272-01]; assesses=[] -->
 
 **راستگو** — *rostgu* — "honest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rostgu* is *rost*, "true" (a form of *râst*), with *-gu*, "saying" (from *goftan*, "to say"): truth-teller. Both are inherited Persian words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gâhi"
 concept_tag: FA-TIME66-GAHI
 prerequisites: [FA-C65-hala, FA-C66-hamishe]
 sounds: []
-roots: []
+roots: [persian-gah]
+etymology_hook: "gâhi: Persian gâh 'time' (Middle Persian gāh) + -i; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C66-hamishe]
 <!-- hl-knowledge: introduces=[FA-LEX-C66-TIME66-02]; assesses=[] -->
 
 **گاهی** — *gâhi* — "sometimes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gâhi* is *gâh*, "time, place", with the ending *-i*, "a": "a time", so "sometimes". *gâh* is native and usually traced to Middle Persian *gāh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

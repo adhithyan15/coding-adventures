@@ -14,7 +14,8 @@ romanization: "zânu"
 concept_tag: FA-BODY29-ZANU
 prerequisites: [FA-C28-surat, FA-C29-khun]
 sounds: []
-roots: []
+roots: [persian-zanu]
+etymology_hook: "zânu: inherited, usually traced to Middle Persian zānūg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C29-khun]
 <!-- hl-knowledge: introduces=[FA-LEX-C29-BODY29-02]; assesses=[] -->
 
 **زانو** — *zânu* — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zânu* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *zānūg*, "knee". It is usually set beside Latin *genu* and English *knee* as one Indo-European word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

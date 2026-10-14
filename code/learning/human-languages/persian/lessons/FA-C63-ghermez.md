@@ -14,7 +14,8 @@ romanization: "ghermez"
 concept_tag: FA-ADJ63-GHERMEZ
 prerequisites: [FA-C63-sabz, FA-C63-zard]
 sounds: []
-roots: []
+roots: [arabic-qirmiz]
+etymology_hook: "ghermez ← Arabic qirmiz 'kermes' (EtymDB), itself from Persian (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C63-zard]
 <!-- hl-knowledge: introduces=[FA-LEX-C63-ADJ63-05]; assesses=[] -->
 
 **قرمز** — *ghermez* — "red".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ghermez* is borrowed from Arabic *qirmiz*, the kermes insect and its crimson dye (EtymDB). Lane records the Arabic word as itself taken from Persian, and it is usually traced to an Indo-Iranian word for "worm", the word of Persian *kerm*. English *crimson* comes from the same Arabic word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

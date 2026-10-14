@@ -14,7 +14,8 @@ romanization: "deltang shodan"
 concept_tag: FA-VERB-DELTANG-SHODAN
 prerequisites: [FA-C256-mosaferat-kardan, FA-C256-bazneshaste-shodan]
 sounds: []
-roots: []
+roots: [persian-dil, persian-shudan]
+etymology_hook: "deltang shodan: Persian del 'heart' + tang 'narrow' + shodan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C256-bazneshaste-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C257-KONESH257-01]; assesses=[] -->
 
 **دلتنگ شدن** — *deltang shodan* — "to miss (someone)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*deltang shodan* is "to become narrow-hearted": *del*, "heart" (inherited, EtymDB), with *tang*, "narrow", and *shodan*. All are native Persian. *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

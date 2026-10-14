@@ -14,7 +14,8 @@ romanization: "shostan"
 concept_tag: FA-VERB-SHOSTAN
 prerequisites: [FA-C37-bastan, FA-C37-pokhtan]
 sounds: []
-roots: []
+roots: [persian-shostan]
+etymology_hook: "shostan: inherited, usually traced to Middle Persian šustan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C37-pokhtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C37-VERBS37-04]; assesses=[] -->
 
 **شستن** — *shostan* — "to wash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shostan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *šustan*, "to wash".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

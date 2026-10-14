@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ244-BUTE
 prerequisites: [FA-C244-zelzele, FA-C244-sel]
 sounds: []
 roots: []
+etymology_hook: "bute: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C244-sel]
 <!-- hl-knowledge: introduces=[FA-LEX-C244-CHIZ244-03]; assesses=[] -->
 
 **بوته** — *bute* — "a bush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bute* is the word for a bush, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

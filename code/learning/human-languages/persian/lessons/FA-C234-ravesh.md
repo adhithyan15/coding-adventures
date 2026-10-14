@@ -14,7 +14,8 @@ romanization: "ravesh"
 concept_tag: FA-CHERA234-RAVESH
 prerequisites: [FA-C233-ehtemalan, FA-C233-kheyli]
 sounds: []
-roots: []
+roots: [persian-raftan]
+etymology_hook: "ravesh: Persian rav- 'go' (raftan, inherited) + -esh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C233-kheyli]
 <!-- hl-knowledge: introduces=[FA-LEX-C234-CHERA234-01]; assesses=[] -->
 
 **روش** — *ravesh* — "a method, a way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ravesh* is built from *rav-*, the present stem of *raftan*, "to go", and the noun ending *-esh*: a way of going. *raftan* is inherited, usually traced to Middle Persian *raftan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

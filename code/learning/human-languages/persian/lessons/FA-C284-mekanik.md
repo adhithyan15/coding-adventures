@@ -14,7 +14,8 @@ romanization: "mekânik"
 concept_tag: FA-KAR284-MEKANIK
 prerequisites: [FA-C283-pich-gushti, FA-C283-anbor]
 sounds: []
-roots: []
+roots: [french-mecanique]
+etymology_hook: "mekânik: a loan, usually traced to French mécanique 'mechanics'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C283-anbor]
 <!-- hl-knowledge: introduces=[FA-LEX-C284-KAR284-01]; assesses=[] -->
 
 **مکانیک** — *mekânik* — "a mechanic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mekânik* is a loan, usually traced to French *mécanique*, "mechanics".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

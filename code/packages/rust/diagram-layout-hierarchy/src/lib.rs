@@ -265,7 +265,11 @@ fn measure_railroad_expression(expr: &RailroadExpression) -> (f64, f64) {
 
 /// Lay out top-level Mermaid subgraphs as stable ownership lanes.
 pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
-    let title_height = if diagram.title.is_some() { 44.0 } else { 16.0 };
+    let title_height = if diagram.title.is_some() {
+        44.0 + diagram.flowchart_config.title_top_margin.unwrap_or(0.0)
+    } else {
+        16.0
+    };
     let horizontal_flow = matches!(
         diagram.direction,
         DiagramDirection::Lr | DiagramDirection::Rl

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 188,
-  "sourceHash": "fnv1a64:8944731527b25cfe",
+  "sourceHash": "fnv1a64:6229cbccf6aed6fd",
   "lessonIds": [
     "FA-C188-yaddasht-kardan",
     "FA-C188-talaffoz-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch188.txt",
   "json": "persian/narration/ch188.json",
-  "textHash": "fnv1a64:ccd95a8ab1771850",
-  "jsonHash": "fnv1a64:d4dfc96814e04142",
+  "textHash": "fnv1a64:5ce81547cda8286f",
+  "jsonHash": "fnv1a64:64efd69995331b8e",
   "findings": []
 }

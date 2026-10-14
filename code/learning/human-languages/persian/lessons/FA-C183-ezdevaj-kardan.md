@@ -14,7 +14,8 @@ romanization: "ezdevâj kardan"
 concept_tag: FA-VERB-EZDEVAJ-KARDAN
 prerequisites: [FA-C182-tarjome-kardan, FA-C182-sohbat-kardan]
 sounds: []
-roots: []
+roots: [arabic-izdiwaj]
+etymology_hook: "ezdevâj ← Arabic izdiwāj 'pairing, marriage', root z-w-j (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C182-sohbat-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C183-KONESH183-01]; assesses=[] -->
 
 **ازدواج کردن** — *ezdevâj kardan* — "to marry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ezdevâj kardan* pairs *ezdevâj*, borrowed from Arabic *izdiwāj*, "pairing, marriage" (root *z-w-j*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

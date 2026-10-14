@@ -14,7 +14,8 @@ romanization: "nânvâyi"
 concept_tag: FA-LOC88-NANVAYI
 prerequisites: [FA-C88-ketabkhane, FA-C88-darukhane]
 sounds: []
-roots: []
+roots: [persian-nan]
+etymology_hook: "nânvâyi: built on Persian nân 'bread' (Middle Persian nān, EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C88-darukhane]
 <!-- hl-knowledge: introduces=[FA-LEX-C88-LOC88-03]; assesses=[] -->
 
 **نانوایی** — *nânvâyi* — "a bakery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nânvâyi* is *nânvâ*, "baker", with the place ending *-i*. *nânvâ* is built on *nân*, "bread", an inherited word: EtymDB traces it to Middle Persian *nān*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

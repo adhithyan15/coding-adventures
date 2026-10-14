@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 146,
-  "sourceHash": "fnv1a64:ea26a312a144cbcb",
+  "sourceHash": "fnv1a64:d85ff25d8454276b",
   "lessonIds": [
     "FA-C146-be-yad-avardan",
     "FA-C146-hads-zadan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch146.txt",
   "json": "persian/narration/ch146.json",
-  "textHash": "fnv1a64:e1a3dab24f1ff61d",
-  "jsonHash": "fnv1a64:145ccbf53d9c2871",
+  "textHash": "fnv1a64:05e07fe4cce969ab",
+  "jsonHash": "fnv1a64:51319cea2143d4d7",
   "findings": []
 }

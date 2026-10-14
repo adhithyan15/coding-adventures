@@ -14,7 +14,8 @@ romanization: "âjor"
 concept_tag: FA-CHIZ211-AJOR
 prerequisites: [FA-C211-pashm, FA-C211-abrisham]
 sounds: []
-roots: []
+roots: [akkadian-agurru]
+etymology_hook: "âjor: usually traced to Akkadian agurru 'baked brick'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C211-abrisham]
 <!-- hl-knowledge: introduces=[FA-LEX-C211-CHIZ211-04]; assesses=[] -->
 
 **آجر** — *âjor* — "a brick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âjor* is usually traced to Akkadian *agurru*, "baked brick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "che vaqt"
 concept_tag: FA-NAFY136-CHE-VAQT
 prerequisites: [FA-C136-aslan, FA-C136-magar]
 sounds: []
-roots: []
+roots: [persian-che, arabic-waqt]
+etymology_hook: "che vaqt: Persian che 'what' + vaqt ← Arabic waqt 'time', root w-q-t (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C136-magar]
 <!-- hl-knowledge: introduces=[FA-LEX-C136-NAFY136-05]; assesses=[] -->
 
 **چه وقت** — *che vaqt* — "when, at what time". **چه وقت آمدی** — *che vaqt âmadi* — "When did you come?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*che vaqt* is "what time". *che*, "what", is native, from Middle Persian *čē* (EtymDB); *vaqt*, "time", is borrowed from Arabic *waqt* (root *w-q-t*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: FA-HOME48-LIVAN
 prerequisites: [FA-C48-ashpazkhane, FA-C48-hammam]
 sounds: []
 roots: []
+etymology_hook: "livân: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C48-hammam]
 <!-- hl-knowledge: introduces=[FA-LEX-C48-HOME48-04]; assesses=[] -->
 
 **لیوان** — *livân* — "a glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*livân* is the everyday word for a drinking glass, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tavânestan"
 concept_tag: FA-VERB-TAVANESTAN
 prerequisites: [FA-C88-sinema, FA-C88-muze]
 sounds: []
-roots: []
+roots: [persian-tavanestan]
+etymology_hook: "tavânestan: inherited, usually traced to Middle Persian tuwānistan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C88-muze]
 <!-- hl-knowledge: introduces=[FA-LEX-C89-CAN89-01]; assesses=[] -->
 
 **توانستن** — *tavânestan* — "to be able to, can".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tavânestan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *tuwānistan*, "to be able".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Persian for expensive, then the Persian for cheap.
 You'll want to know: پر.
 پر — por — "full".
 
+The word, taken apart.
+por is a native Persian word, inherited rather than borrowed: it continues Middle Persian purr, "full" (EtymDB). EtymDB takes it back to the Indo-European word behind English full.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for cheap, then the Persian for full.
 
 You'll want to know: خالی.
 خالی — khâli — "empty".
+
+The word, taken apart.
+khâli is borrowed from Arabic ḫālī, "empty, vacant". Its Arabic root is ḫ-l-w (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for full, then the Persian for empty.
 You'll want to know: پولدار.
 پولدار — puldâr — "rich".
 
+The word, taken apart.
+puldâr is built from pul, "money", and -dâr, "holding" (from dâshtan, "to have"): "money-holder". -dâr is inherited, usually traced to Middle Persian dār; pul first named a small coin and is usually traced to a Greek coin name.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for empty, then the Persian for rich.
 You'll want to know: فقیر.
 فقیر — faghir — "poor".
 
+The word, taken apart.
+faghir is borrowed from Arabic faqīr, "poor, needy". Its Arabic root is f-q-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for rich, then the Persian for poor.
 
 You'll want to know: تمیز.
 تمیز — tamiz — "clean".
+
+The word, taken apart.
+tamiz is borrowed from Arabic tamyīz, "discerning, telling apart". Its Arabic root is m-y-z (Lane). Persian shifted it to "clean".
 
 What you've built.
 One more word for this chapter.

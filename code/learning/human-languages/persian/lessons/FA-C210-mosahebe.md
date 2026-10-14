@@ -14,7 +14,8 @@ romanization: "mosâhebe"
 concept_tag: FA-CHIZ210-MOSAHEBE
 prerequisites: [FA-C210-radiyo, FA-C210-rasane]
 sounds: []
-roots: []
+roots: [arabic-musahaba]
+etymology_hook: "mosâhebe ← Arabic muṣāḥaba 'keeping company, conversing', root ṣ-ḥ-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C210-rasane]
 <!-- hl-knowledge: introduces=[FA-LEX-C210-CHIZ210-03]; assesses=[] -->
 
 **مصاحبه** — *mosâhebe* — "an interview".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mosâhebe* is borrowed from Arabic *muṣāḥaba*, "keeping company, conversing". Its Arabic root is *ṣ-ḥ-b* (Lane). Persian uses it for an interview.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bastan"
 concept_tag: FA-VERB-BASTAN
 prerequisites: [FA-C36-forukhtan, FA-C37-dadan]
 sounds: []
-roots: []
+roots: [persian-bastan]
+etymology_hook: "bastan: inherited, usually traced to Middle Persian bastan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C37-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C37-VERBS37-02]; assesses=[] -->
 
 **بستن** — *bastan* — "to close".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bastan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *bastan*, "to bind, to close". EtymDB takes it back to the Indo-European root *\*bʰendʰ-*, "to bind", the root of English *bind*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

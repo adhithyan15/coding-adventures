@@ -14,7 +14,8 @@ romanization: "shur"
 concept_tag: FA-QUAL127-SHUR
 prerequisites: [FA-C127-talkh, FA-C127-torsh]
 sounds: []
-roots: []
+roots: [persian-shur]
+etymology_hook: "shur: inherited, usually traced to Middle Persian šōr"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C127-torsh]
 <!-- hl-knowledge: introduces=[FA-LEX-C127-QUAL127-03]; assesses=[] -->
 
 **شور** — *shur* — "salty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shur* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *šōr*, "salty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

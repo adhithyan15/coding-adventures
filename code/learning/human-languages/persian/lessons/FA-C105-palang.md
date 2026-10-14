@@ -14,7 +14,8 @@ romanization: "palang"
 concept_tag: FA-THINGS105-PALANG
 prerequisites: [FA-C104-meh, FA-C104-shabnam]
 sounds: []
-roots: []
+roots: [persian-palang]
+etymology_hook: "palang: inherited, usually traced to Middle Persian palang"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C104-shabnam]
 <!-- hl-knowledge: introduces=[FA-LEX-C105-THINGS105-01]; assesses=[] -->
 
 **پلنگ** — *palang* — "a leopard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*palang* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *palang*, "leopard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

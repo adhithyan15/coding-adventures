@@ -14,7 +14,8 @@ romanization: "taqsim kardan"
 concept_tag: FA-VERB-TAQSIM-KARDAN
 prerequisites: [FA-C149-hadar-dadan, FA-C149-sarfejuyi-kardan]
 sounds: []
-roots: []
+roots: [arabic-taqsim]
+etymology_hook: "taqsim ← Arabic taqsīm 'dividing, distribution', root q-s-m (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C149-sarfejuyi-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C149-KONESH149-03]; assesses=[] -->
 
 **تقسیم کردن** — *taqsim kardan* — "to divide, to share out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*taqsim kardan* pairs *taqsim*, borrowed from Arabic *taqsīm*, "dividing, distribution" (root *q-s-m*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

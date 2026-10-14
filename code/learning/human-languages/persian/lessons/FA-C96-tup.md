@@ -14,7 +14,8 @@ romanization: "tup"
 concept_tag: FA-THINGS96-TUP
 prerequisites: [FA-C96-yakhchal, FA-C96-kebrit]
 sounds: []
-roots: []
+roots: [turkic-top]
+etymology_hook: "tup: a loan, usually traced to Turkic top 'ball'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C96-kebrit]
 <!-- hl-knowledge: introduces=[FA-LEX-C96-THINGS96-03]; assesses=[] -->
 
 **توپ** — *tup* — "a ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tup* is a loan, usually traced to Turkic *top*, "ball".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "âstin"
 concept_tag: FA-CHIZ240-ASTIN
 prerequisites: [FA-C239-zobale, FA-C240-dokme]
 sounds: []
-roots: []
+roots: [persian-astin]
+etymology_hook: "âstin: inherited, usually traced to Middle Persian āstēn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C240-dokme]
 <!-- hl-knowledge: introduces=[FA-LEX-C240-CHIZ240-02]; assesses=[] -->
 
 **آستین** — *âstin* — "a sleeve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âstin* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *āstēn*, "sleeve".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

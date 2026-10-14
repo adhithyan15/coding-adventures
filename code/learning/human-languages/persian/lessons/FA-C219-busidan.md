@@ -14,7 +14,8 @@ romanization: "busidan"
 concept_tag: FA-VERB-BUSIDAN
 prerequisites: [FA-C219-negah-dashtan, FA-C219-tamrin-kardan]
 sounds: []
-roots: []
+roots: [persian-busidan]
+etymology_hook: "busidan: inherited, usually traced to Middle Persian bōsīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C219-tamrin-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C219-KONESH219-04]; assesses=[] -->
 
 **بوسیدن** — *busidan* — "to kiss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*busidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *bōsīdan*, "to kiss".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

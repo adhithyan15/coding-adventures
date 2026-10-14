@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 59,
-  "sourceHash": "fnv1a64:e3276b4c91a62a3f",
+  "sourceHash": "fnv1a64:8a065a6ac437ed53",
   "lessonIds": [
     "FA-C59-boland",
     "FA-C59-kutah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch59.txt",
   "json": "persian/narration/ch59.json",
-  "textHash": "fnv1a64:81de7044e686b1a2",
-  "jsonHash": "fnv1a64:70ad523b82b500d2",
+  "textHash": "fnv1a64:c3770fe159398bb1",
+  "jsonHash": "fnv1a64:911b37b4478bef4d",
   "findings": []
 }

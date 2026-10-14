@@ -14,7 +14,8 @@ romanization: "ghodrat"
 concept_tag: FA-CAN90-GHODRAT
 prerequisites: [FA-C90-abzar, FA-C90-saheb]
 sounds: []
-roots: []
+roots: [arabic-qudra]
+etymology_hook: "ghodrat ← Arabic qudra 'power, ability', root q-d-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C90-saheb]
 <!-- hl-knowledge: introduces=[FA-LEX-C90-CAN90-03]; assesses=[] -->
 
 **قدرت** — *ghodrat* — "power".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ghodrat* is borrowed from Arabic *qudra*, "power, ability". Its Arabic root is *q-d-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

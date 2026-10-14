@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 184,
-  "sourceHash": "fnv1a64:851290009e723766",
+  "sourceHash": "fnv1a64:b1ebd6f28bb33c93",
   "lessonIds": [
     "FA-C184-qabul-kardan",
     "FA-C184-rad-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch184.txt",
   "json": "persian/narration/ch184.json",
-  "textHash": "fnv1a64:5eebc22e5fb24518",
-  "jsonHash": "fnv1a64:e657b3de314cf3bb",
+  "textHash": "fnv1a64:3221272ad87abd74",
+  "jsonHash": "fnv1a64:c44053df930c192c",
   "findings": []
 }

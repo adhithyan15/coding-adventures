@@ -15,6 +15,7 @@ concept_tag: FA-ADJ62-CHAGH
 prerequisites: [FA-C61-tamiz, FA-C62-shirin]
 sounds: []
 roots: []
+etymology_hook: "châgh: sometimes traced to Turkic; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C62-shirin]
 <!-- hl-knowledge: introduces=[FA-LEX-C62-ADJ62-02]; assesses=[] -->
 
 **چاق** — *châgh* — "fat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*châgh* is sometimes traced to Turkic, but no source used here confirms it, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

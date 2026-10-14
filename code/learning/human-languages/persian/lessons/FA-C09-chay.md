@@ -12,7 +12,7 @@ concept_tag: FA-FOOD-TEA
 prerequisites: [FA-C09-nan]
 sounds: [rtl, long-a, short-vowels-unwritten]
 roots: [mandarin-cha, persian-chay]
-etymology_hook: chây continues Mandarin chá, carried overland through Central Asia into Persian; that same Persian word later passed onward into Urdu as chāy, while tea that reached Europe by sea kept a different southern-Chinese form, which is why English says tea rather than chai.
+etymology_hook: chây comes from Mandarin chá, carried overland through Central Asia into Persian; that same Persian word later passed onward into Urdu as chāy, while tea that reached Europe by sea kept a different southern-Chinese form, which is why English says tea rather than chai.
 duration:
   max_seconds: 250
 requires:
@@ -53,7 +53,7 @@ Three letters, all already yours: **چ** *ch*, from *chist*; long **ا** *â*;
 <!-- hl-knowledge: introduces=[FA-ETYMON-CHAY]; assesses=[] -->
 
 **چای** is not an inherited Persian word at all — it is a loan, and a
-comparatively recent one. It continues Northern Chinese **chá**, carried
+comparatively recent one. It comes from Northern Chinese **chá**, carried
 overland through Central Asia into Persian, the same road Russian **chai**
 and Turkish **çay** travelled.
 

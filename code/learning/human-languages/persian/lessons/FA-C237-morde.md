@@ -14,7 +14,8 @@ romanization: "morde"
 concept_tag: FA-SEFAT237-MORDE
 prerequisites: [FA-C237-ahli, FA-C237-zende]
 sounds: []
-roots: []
+roots: [persian-murdan]
+etymology_hook: "morde: past participle of Persian mordan 'to die' (Middle Persian murdan)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C237-zende]
 <!-- hl-knowledge: introduces=[FA-LEX-C237-SEFAT237-05]; assesses=[] -->
 
 **مرده** — *morde* — "dead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*morde* is the past participle of *mordan*, "to die": "died, dead". The verb is native, usually traced to Middle Persian *murdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

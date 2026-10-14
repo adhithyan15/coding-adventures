@@ -14,7 +14,8 @@ romanization: "angur"
 concept_tag: FA-FOOD42-ANGUR
 prerequisites: [FA-C42-namak, FA-C42-kare]
 sounds: []
-roots: []
+roots: [persian-angur]
+etymology_hook: "angur: inherited, usually traced to Middle Persian angūr"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C42-kare]
 <!-- hl-knowledge: introduces=[FA-LEX-C42-FOOD42-04]; assesses=[] -->
 
 **انگور** — *angur* — "grapes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*angur* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *angūr*, "grapes".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

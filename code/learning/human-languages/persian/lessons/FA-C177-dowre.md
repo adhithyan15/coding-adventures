@@ -14,7 +14,8 @@ romanization: "dowre"
 concept_tag: FA-KAR177-DOWRE
 prerequisites: [FA-C177-morakhkhasi, FA-C177-reshte]
 sounds: []
-roots: []
+roots: [arabic-dawra]
+etymology_hook: "dowre ← Arabic dawra 'turn, cycle', root d-w-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C177-reshte]
 <!-- hl-knowledge: introduces=[FA-LEX-C177-KAR177-05]; assesses=[] -->
 
 **دوره** — *dowre* — "a course".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dowre* is borrowed from Arabic *dawra*, "turn, cycle". Its Arabic root is *d-w-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

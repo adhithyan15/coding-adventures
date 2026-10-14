@@ -14,7 +14,8 @@ romanization: "nushidan"
 concept_tag: FA-VERB-NUSHIDAN
 prerequisites: [FA-C34-khanom, FA-C35-khordan]
 sounds: []
-roots: []
+roots: [persian-nosh]
+etymology_hook: "nushidan: Persian nuš 'sweet drink' + -idan; nuš usually traced to Middle Persian anōš"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C35-khordan]
 <!-- hl-knowledge: introduces=[FA-LEX-C35-VERBS35-02]; assesses=[] -->
 
 **نوشیدن** — *nushidan* — "to drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nushidan* is a Persian verb built on *nuš*, "sweet drink", with the verb ending *-idan*. *nuš* is usually traced to Middle Persian *anōš*, "immortality, ambrosia".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

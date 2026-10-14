@@ -14,7 +14,8 @@ romanization: "term"
 concept_tag: FA-ZAMAN265-TERM
 prerequisites: [FA-C265-dahe, FA-C265-qarn]
 sounds: []
-roots: []
+roots: [french-terme]
+etymology_hook: "term: a loan, usually traced to French terme 'term'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C265-qarn]
 <!-- hl-knowledge: introduces=[FA-LEX-C265-ZAMAN265-05]; assesses=[] -->
 
 **ترم** — *term* — "a term (at school)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*term* is a loan, usually traced to French *terme*, "term".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

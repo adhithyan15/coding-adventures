@@ -14,7 +14,8 @@ romanization: "namakdân"
 concept_tag: FA-CHIZ174-NAMAKDAN
 prerequisites: [FA-C174-abkesh, FA-C174-qandan]
 sounds: []
-roots: []
+roots: [persian-namak, persian-dan]
+etymology_hook: "namakdân: Persian namak 'salt' (EtymDB) + -dân 'container'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C174-qandan]
 <!-- hl-knowledge: introduces=[FA-LEX-C174-CHIZ174-05]; assesses=[] -->
 
 **نمکدان** — *namakdân* — "a salt cellar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*namakdân* is *namak*, "salt", with *-dân*, "container". Both are native; *namak* continues Middle Persian *namak* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

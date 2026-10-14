@@ -14,7 +14,8 @@ romanization: "shomâl"
 concept_tag: FA-MAKAN230-SHOMAL
 prerequisites: [FA-C229-digar, FA-C229-sahar]
 sounds: []
-roots: []
+roots: [arabic-samal]
+etymology_hook: "shomâl ← Arabic šamāl 'north; the north wind', root š-m-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C229-sahar]
 <!-- hl-knowledge: introduces=[FA-LEX-C230-MAKAN230-01]; assesses=[] -->
 
 **شمال** — *shomâl* — "north".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shomâl* is borrowed from Arabic *šamāl*, "north; the north wind". Its Arabic root is *š-m-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

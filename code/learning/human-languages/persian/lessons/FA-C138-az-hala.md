@@ -14,7 +14,8 @@ romanization: "az hâlâ"
 concept_tag: FA-AYANDE138-AZ-HALA
 prerequisites: [FA-C137-separi-kardan, FA-C138-ayande]
 sounds: []
-roots: []
+roots: [arabic-hal]
+etymology_hook: "az hâlâ: Persian az 'from' (Old Persian hacā) + hâlâ ← Arabic ḥālan (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C138-ayande]
 <!-- hl-knowledge: introduces=[FA-LEX-C138-AYANDE138-02]; assesses=[] -->
 
 **از حالا** — *az hâlâ* — "from now on". **از حالا هر روز ورزش خواهم کرد** — *az hâlâ har ruz varzesh khâham kard* — "From now on I will exercise every day."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*az hâlâ* is "from now". *az*, "from", is native: Old Persian had *hacā* (EtymDB). *hâlâ*, "now", is borrowed from Arabic *ḥālan* (root *ḥ-w-l*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

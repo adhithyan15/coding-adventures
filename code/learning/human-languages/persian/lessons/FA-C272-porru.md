@@ -14,7 +14,8 @@ romanization: "porru"
 concept_tag: FA-SEFAT272-PORRU
 prerequisites: [FA-C271-khosusi, FA-C272-rostgu]
 sounds: []
-roots: []
+roots: [persian-pur, persian-ru]
+etymology_hook: "porru: Persian por 'full' (EtymDB) + ru 'face'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C272-rostgu]
 <!-- hl-knowledge: introduces=[FA-LEX-C272-SEFAT272-02]; assesses=[] -->
 
 **پررو** — *porru* — "cheeky".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*porru* is *por*, "full", with *ru*, "face": full-faced, bold. Both are native; *por* continues Middle Persian *purr* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

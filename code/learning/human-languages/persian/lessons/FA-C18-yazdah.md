@@ -12,7 +12,7 @@ concept_tag: FA-NUMBER-ELEVEN
 prerequisites: [FA-C17-practice]
 sounds: [rtl, long-a, short-vowels-unwritten]
 roots: [proto-indo-european-oywos, proto-indo-european-dekm]
-etymology_hook: "yazdah is yek worn down to yaz plus dah, ten: Persian builds every number from eleven to nineteen by putting a unit in front of ten, so eleven is a rule rather than a word."
+etymology_hook: "yâzdah: inherited, usually traced to Middle Persian yāzdah: yek 'one' + dah 'ten'"
 duration:
   max_seconds: 265
 requires:
@@ -58,6 +58,11 @@ stops:
 
 Nine numbers, one rule, and the unit is a number you already have. This is why
 ten had to come first.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yâzdah* is inherited: it is usually traced to Middle Persian *yāzdah*, built from the old words for "one" and "ten", Middle Persian *ēk* and *dah*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-YAZDAH, FA-GRAMMAR-TEENS-DAH, FA-LEX-DAH, FA-ETYMON-DAH] -->

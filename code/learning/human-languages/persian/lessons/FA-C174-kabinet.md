@@ -14,7 +14,8 @@ romanization: "kâbinet"
 concept_tag: FA-CHIZ174-KABINET
 prerequisites: [FA-C173-parche, FA-C173-charm]
 sounds: []
-roots: []
+roots: [french-cabinet]
+etymology_hook: "kâbinet: a loan, usually traced to French cabinet 'cabinet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C173-charm]
 <!-- hl-knowledge: introduces=[FA-LEX-C174-CHIZ174-01]; assesses=[] -->
 
 **کابینت** — *kâbinet* — "a kitchen cabinet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kâbinet* is a loan, usually traced to French *cabinet*, "cabinet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

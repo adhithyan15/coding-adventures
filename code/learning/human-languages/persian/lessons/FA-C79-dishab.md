@@ -14,7 +14,8 @@ romanization: "dishab"
 concept_tag: FA-TIME79-DISHAB
 prerequisites: [FA-C79-pariruz, FA-C79-emshab]
 sounds: []
-roots: []
+roots: [persian-shab]
+etymology_hook: "dishab: Persian di 'yesterday' + shab 'night'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C79-emshab]
 <!-- hl-knowledge: introduces=[FA-LEX-C79-TIME79-04]; assesses=[] -->
 
 **دیشب** — *dishab* — "last night".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dishab* is *di*, the old Persian word for "yesterday", with *shab*, "night": "yesterday's night". Both parts are native; *shab* is usually traced to Middle Persian *šab*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

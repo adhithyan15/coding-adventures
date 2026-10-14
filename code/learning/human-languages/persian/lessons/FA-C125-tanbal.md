@@ -15,6 +15,7 @@ concept_tag: FA-QUAL125-TANBAL
 prerequisites: [FA-C125-javan, FA-C125-pir]
 sounds: []
 roots: []
+etymology_hook: "tanbal: Persian; Turkish tembel comes from it; older origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C125-pir]
 <!-- hl-knowledge: introduces=[FA-LEX-C125-QUAL125-05]; assesses=[] -->
 
 **تنبل** — *tanbal* — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tanbal* is a native Persian word (Turkish *tembel* comes from it), but its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

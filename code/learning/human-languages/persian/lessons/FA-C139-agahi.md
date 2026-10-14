@@ -14,7 +14,8 @@ romanization: "âgahi"
 concept_tag: FA-KHANDAN139-AGAHI
 prerequisites: [FA-C139-tablo, FA-C139-ejare]
 sounds: []
-roots: []
+roots: [persian-agah]
+etymology_hook: "âgahi: Persian âgah 'aware' (Middle Persian āgāh) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [FA-C139-ejare]
 [YOU READ: the advert]
 
 The advert says **خانه برای اجاره** — *khâne barâye ejâre* — "House for rent."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âgahi* is *âgah*, "aware, informed", with the noun ending *-i*: "information, notice". *âgah* is native, usually traced to Middle Persian *āgāh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

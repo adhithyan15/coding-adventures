@@ -14,7 +14,8 @@ romanization: "âftâbi"
 concept_tag: FA-SEFAT201-AFTABI
 prerequisites: [FA-C201-shabih, FA-C201-khoshbu]
 sounds: []
-roots: []
+roots: [persian-aftab]
+etymology_hook: "âftâbi: Persian âftâb 'sun' (Middle Persian āftāb) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C201-khoshbu]
 <!-- hl-knowledge: introduces=[FA-LEX-C201-SEFAT201-03]; assesses=[] -->
 
 **آفتابی** — *âftâbi* — "sunny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âftâbi* is *âftâb*, "sunshine", with the ending *-i*. *âftâb* is native, usually traced to Middle Persian *āftāb*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

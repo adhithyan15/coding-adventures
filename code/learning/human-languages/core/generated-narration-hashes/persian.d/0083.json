@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 83,
-  "sourceHash": "fnv1a64:2a4f1309372919cf",
+  "sourceHash": "fnv1a64:47d519ddf95fd935",
   "lessonIds": [
     "FA-C83-anha",
     "FA-C83-hamin",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch83.txt",
   "json": "persian/narration/ch83.json",
-  "textHash": "fnv1a64:5c35f5805781996a",
-  "jsonHash": "fnv1a64:2cc8b7e39ea0357c",
+  "textHash": "fnv1a64:9308ecf887d5b1fa",
+  "jsonHash": "fnv1a64:f0bf5fcc5c7682be",
   "findings": []
 }

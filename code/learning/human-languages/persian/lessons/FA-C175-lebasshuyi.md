@@ -14,7 +14,8 @@ romanization: "lebâsshuyi"
 concept_tag: FA-CHIZ175-LEBASSHUYI
 prerequisites: [FA-C175-periz, FA-C175-jarubarqi]
 sounds: []
-roots: []
+roots: [arabic-libas]
+etymology_hook: "lebâsshuyi: lebâs ← Arabic libās (Lane) + Persian shu 'washing' + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C175-jarubarqi]
 <!-- hl-knowledge: introduces=[FA-LEX-C175-CHIZ175-05]; assesses=[] -->
 
 **لباسشویی** — *lebâsshuyi* — "a washing machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lebâsshuyi* is *lebâs*, "clothes", with *shu*, "washing", and *-i*. *lebâs* is borrowed from Arabic *libās*, "clothing" (root *l-b-s*, Lane); *shu* is native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

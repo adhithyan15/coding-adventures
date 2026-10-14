@@ -14,7 +14,8 @@ romanization: "pas dâdan"
 concept_tag: FA-VERB-PAS-DADAN
 prerequisites: [FA-C141-gom-kardan, FA-C141-peyda-kardan]
 sounds: []
-roots: []
+roots: [persian-pas, pie-deh3]
+etymology_hook: "pas dâdan: pas ← Middle Persian pas 'behind' (EtymDB) + dâdan 'to give'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C141-peyda-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C141-KONESH141-03]; assesses=[] -->
 
 **پس دادن** — *pas dâdan* — "to give back, to return (an item)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pas dâdan* pairs *pas*, "back, behind", with *dâdan*, "to give": "to give back". *pas* is inherited: EtymDB traces it to Middle Persian *pas*, "then, behind". *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

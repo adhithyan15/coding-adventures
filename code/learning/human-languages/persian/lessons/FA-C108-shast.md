@@ -14,7 +14,8 @@ romanization: "shast"
 concept_tag: FA-THINGS108-SHAST
 prerequisites: [FA-C107-aranj, FA-C108-moch]
 sounds: []
-roots: []
+roots: [persian-shast]
+etymology_hook: "shast: inherited, usually traced to Middle Persian šast"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C108-moch]
 <!-- hl-knowledge: introduces=[FA-LEX-C108-THINGS108-02]; assesses=[] -->
 
 **شست** — *shast* — "a thumb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shast* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *šast*, "thumb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

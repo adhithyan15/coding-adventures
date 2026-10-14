@@ -14,7 +14,8 @@ romanization: "tang"
 concept_tag: FA-SEFAT161-TANG
 prerequisites: [FA-C161-khonak, FA-C161-kham]
 sounds: []
-roots: []
+roots: [persian-tang]
+etymology_hook: "tang: inherited, usually traced to Middle Persian tang"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C161-kham]
 <!-- hl-knowledge: introduces=[FA-LEX-C161-SEFAT161-04]; assesses=[] -->
 
 **تنگ** — *tang* — "tight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tang* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *tang*, "narrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

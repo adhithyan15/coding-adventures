@@ -14,7 +14,8 @@ romanization: "râdiyo"
 concept_tag: FA-CHIZ210-RADIYO
 prerequisites: [FA-C209-bare, FA-C209-kharchang]
 sounds: []
-roots: []
+roots: [french-radio]
+etymology_hook: "râdiyo: a loan, usually traced to French radio 'radio'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C209-kharchang]
 <!-- hl-knowledge: introduces=[FA-LEX-C210-CHIZ210-01]; assesses=[] -->
 
 **رادیو** — *râdiyo* — "a radio".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*râdiyo* is a loan, usually traced to French *radio*, "radio".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

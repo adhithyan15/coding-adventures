@@ -14,7 +14,8 @@ romanization: "kerm"
 concept_tag: FA-THINGS121-KERM
 prerequisites: [FA-C121-gavmish, FA-C121-susk]
 sounds: []
-roots: []
+roots: [persian-kerm]
+etymology_hook: "kerm: inherited, usually traced to Middle Persian kirm"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C121-susk]
 <!-- hl-knowledge: introduces=[FA-LEX-C121-THINGS121-03]; assesses=[] -->
 
 **کرم** — *kerm* — "a worm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kerm* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kirm*, "worm". EtymDB takes it back to an Indo-European word for "worm", the word behind Sanskrit *kṛmi*. (It also lists French *crème*, a different word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

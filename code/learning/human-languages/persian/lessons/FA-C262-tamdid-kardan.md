@@ -14,7 +14,8 @@ romanization: "tamdid kardan"
 concept_tag: FA-VERB-TAMDID-KARDAN
 prerequisites: [FA-C262-saf-keshidan, FA-C262-jarime-shodan]
 sounds: []
-roots: []
+roots: [arabic-tamdid]
+etymology_hook: "tamdid ← Arabic tamdīd 'extending, stretching', root m-d-d (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C262-jarime-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C262-KONESH262-04]; assesses=[] -->
 
 **تمدید کردن** — *tamdid kardan* — "to renew, to extend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tamdid kardan* pairs *tamdid*, borrowed from Arabic *tamdīd*, "extending, stretching" (root *m-d-d*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "fowran"
 concept_tag: FA-ZAMAN192-FOWRAN
 prerequisites: [FA-C192-kam-kam, FA-C192-dobare]
 sounds: []
-roots: []
+roots: [arabic-fawr]
+etymology_hook: "fowran ← Arabic fawran 'at once', root f-w-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C192-dobare]
 <!-- hl-knowledge: introduces=[FA-LEX-C192-ZAMAN192-04]; assesses=[] -->
 
 **فورا** — *fowran* — "immediately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*fowran* is borrowed from Arabic *fawran*, "at once". Its Arabic root is *f-w-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

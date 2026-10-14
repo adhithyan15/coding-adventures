@@ -12,7 +12,7 @@ concept_tag: FA-NUMBER-ONE
 prerequisites: [FA-C15-practice]
 sounds: [rtl, short-vowels-unwritten, long-i]
 roots: [proto-indo-european-oywos]
-etymology_hook: "yek continues Middle Persian yak, from Proto-Iranian *Haywah and Proto-Indo-European *oywos, 'one' — the same root that gives English one, Latin unus and Sanskrit eka."
+etymology_hook: "yek continues Middle Persian ēk, from Proto-Iranian *Haywah and Proto-Indo-European *oywos, 'one' — the same root that gives English one, Latin unus and Sanskrit eka."
 duration:
   max_seconds: 240
 requires:
@@ -53,7 +53,7 @@ telephone number, no quantity, no time of day. It starts being paid here.
 ## The word, taken apart — the root English still uses
 <!-- hl-knowledge: introduces=[FA-ETYMON-YEK]; assesses=[FA-LEX-YEK] -->
 
-**یک** continues Middle Persian **yak**, from Proto-Iranian \**Haywah* and
+**یک** continues Middle Persian **ēk**, from Proto-Iranian \**Haywah* and
 Indo-Iranian \**Háywas*, ultimately Indo-European \**óywos*, "one."
 
 That root did not stay in Iran. Sanskrit *eka*, Ancient Greek *oios*, Latin **ūnus**, French **un**, German **ein** and English **one** are

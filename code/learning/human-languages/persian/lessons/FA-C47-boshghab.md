@@ -14,7 +14,8 @@ romanization: "boshghâb"
 concept_tag: FA-HOME47-BOSHGHAB
 prerequisites: [FA-C46-ayene, FA-C47-ghofl]
 sounds: []
-roots: []
+roots: [turkic-boshqab]
+etymology_hook: "boshghâb ← Turkic (Azerbaijani boşqab 'plate', EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C47-ghofl]
 <!-- hl-knowledge: introduces=[FA-LEX-C47-HOME47-02]; assesses=[] -->
 
 **بشقاب** — *boshghâb* — "a plate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*boshghâb* is borrowed from Turkic: EtymDB gives Azerbaijani *boşqab*, "plate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

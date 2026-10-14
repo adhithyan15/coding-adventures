@@ -14,7 +14,8 @@ romanization: "shenâsnâme"
 concept_tag: FA-CHIZ206-SHENASNAME
 prerequisites: [FA-C205-zeytun, FA-C206-madrak]
 sounds: []
-roots: []
+roots: [persian-nama]
+etymology_hook: "shenâsnâme: Persian shenâs 'recognising' + nâme 'book'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C206-madrak]
 <!-- hl-knowledge: introduces=[FA-LEX-C206-CHIZ206-02]; assesses=[] -->
 
 **شناسنامه** — *shenâsnâme* — "a birth certificate, an ID booklet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shenâsnâme* is built from *shenâs*, "knowing, recognising" (from *shenâkhtan*), and *nâme*, "letter, book": the book that makes you known. *nâme* is inherited, usually traced to Middle Persian *nāmag*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

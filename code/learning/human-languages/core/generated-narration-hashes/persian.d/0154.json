@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 154,
-  "sourceHash": "fnv1a64:d279bd7a62f9255d",
+  "sourceHash": "fnv1a64:7db2df4ebb554b5c",
   "lessonIds": [
     "FA-C154-forushgah",
     "FA-C154-supermarket",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch154.txt",
   "json": "persian/narration/ch154.json",
-  "textHash": "fnv1a64:717fbdcf94b3754f",
-  "jsonHash": "fnv1a64:ef56caad0916b9f9",
+  "textHash": "fnv1a64:aeccbd21b0713972",
+  "jsonHash": "fnv1a64:953bcbacaf8c16a3",
   "findings": []
 }

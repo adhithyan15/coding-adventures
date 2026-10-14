@@ -14,7 +14,8 @@ romanization: "qesmat"
 concept_tag: FA-CHERA234-QESMAT
 prerequisites: [FA-C234-jang, FA-C234-zendegi]
 sounds: []
-roots: []
+roots: [arabic-qisma]
+etymology_hook: "qesmat ← Arabic qisma 'division, share', root q-s-m (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C234-zendegi]
 <!-- hl-knowledge: introduces=[FA-LEX-C234-CHERA234-05]; assesses=[] -->
 
 **قسمت** — *qesmat* — "a part, a section".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qesmat* is borrowed from Arabic *qisma*, "division, share". Its Arabic root is *q-s-m* (Lane). Arabic also uses it for one's lot in life (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

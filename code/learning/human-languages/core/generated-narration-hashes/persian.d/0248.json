@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 248,
-  "sourceHash": "fnv1a64:6e0a86759f7531d7",
+  "sourceHash": "fnv1a64:aac183037db49d7e",
   "lessonIds": [
     "FA-C248-chub-lebasi",
     "FA-C248-gire",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch248.txt",
   "json": "persian/narration/ch248.json",
-  "textHash": "fnv1a64:7b24a14376e615e0",
-  "jsonHash": "fnv1a64:1731aee5eb2bc058",
+  "textHash": "fnv1a64:2b97a531cfb1db97",
+  "jsonHash": "fnv1a64:ca9ac2b18eb359b9",
   "findings": []
 }

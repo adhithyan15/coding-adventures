@@ -14,7 +14,8 @@ romanization: "haftegi"
 concept_tag: FA-ZAMAN153-HAFTEGI
 prerequisites: [FA-C153-sepas, FA-C153-balakhare]
 sounds: []
-roots: []
+roots: [persian-haft]
+etymology_hook: "haftegi: Persian hafte 'week' (from haft 'seven', EtymDB) + -gi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C153-balakhare]
 <!-- hl-knowledge: introduces=[FA-LEX-C153-ZAMAN153-05]; assesses=[] -->
 
 **هفتگی** — *haftegi* — "weekly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*haftegi* is *hafte*, "week", with the ending *-gi*: weekly. *hafte* is built on *haft*, "seven", inherited from Middle Persian (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

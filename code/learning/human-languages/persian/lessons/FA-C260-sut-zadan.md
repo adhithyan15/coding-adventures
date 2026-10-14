@@ -14,7 +14,8 @@ romanization: "sut zadan"
 concept_tag: FA-VERB-SUT-ZADAN
 prerequisites: [FA-C260-gereh-zadan, FA-C260-dar-zadan]
 sounds: []
-roots: []
+roots: [persian-zadan]
+etymology_hook: "sut zadan: sut 'whistle' (origin not settled) + Persian zadan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C260-dar-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C260-KONESH260-05]; assesses=[] -->
 
 **سوت زدن** — *sut zadan* — "to whistle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sut zadan* pairs *sut*, "whistle", with *zadan*, "to strike". Where *sut* comes from is not settled. *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

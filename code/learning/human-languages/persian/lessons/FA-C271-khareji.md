@@ -14,7 +14,8 @@ romanization: "khâreji"
 concept_tag: FA-SEFAT271-KHAREJI
 prerequisites: [FA-C270-bahane, FA-C271-azad]
 sounds: []
-roots: []
+roots: [arabic-hariji]
+etymology_hook: "khâreji ← Arabic ḫārijī 'external, outer', root ḫ-r-j (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C271-azad]
 <!-- hl-knowledge: introduces=[FA-LEX-C271-SEFAT271-02]; assesses=[] -->
 
 **خارجی** — *khâreji* — "foreign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâreji* is borrowed from Arabic *ḫārijī*, "external, outer". Its Arabic root is *ḫ-r-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

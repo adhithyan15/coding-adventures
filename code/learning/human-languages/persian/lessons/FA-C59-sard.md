@@ -14,7 +14,8 @@ romanization: "sard"
 concept_tag: FA-ADJ59-SARD
 prerequisites: [FA-C59-kutah, FA-C59-garm]
 sounds: []
-roots: []
+roots: [persian-sard]
+etymology_hook: "sard ← Middle Persian sard (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C59-garm]
 <!-- hl-knowledge: introduces=[FA-LEX-C59-ADJ59-04]; assesses=[] -->
 
 **سرد** — *sard* — "cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sard* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *sard*, "cold" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

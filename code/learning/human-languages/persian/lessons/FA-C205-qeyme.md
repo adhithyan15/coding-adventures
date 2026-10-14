@@ -14,7 +14,8 @@ romanization: "qeyme"
 concept_tag: FA-CHIZ205-QEYME
 prerequisites: [FA-C205-sandvich, FA-C205-makaroni]
 sounds: []
-roots: []
+roots: [turkic-q-yma]
+etymology_hook: "qeyme: a loan, usually traced to Turkic qıyma 'minced meat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C205-makaroni]
 <!-- hl-knowledge: introduces=[FA-LEX-C205-CHIZ205-04]; assesses=[] -->
 
 **قیمه** — *qeyme* — "qeymeh (a split-pea stew)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qeyme* is a loan, usually traced to Turkic *qıyma*, "minced meat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "agar"
 concept_tag: FA-CHERA158-AGAR
 prerequisites: [FA-C157-bandar, FA-C157-dudkesh]
 sounds: []
-roots: []
+roots: [persian-agar]
+etymology_hook: "agar ← Middle Persian agar (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C157-dudkesh]
 <!-- hl-knowledge: introduces=[FA-LEX-C158-CHERA158-01]; assesses=[] -->
 
 **اگر** — *agar* — "if".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*agar* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *agar*, "if" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

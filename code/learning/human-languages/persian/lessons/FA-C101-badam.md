@@ -14,7 +14,8 @@ romanization: "bâdâm"
 concept_tag: FA-THINGS101-BADAM
 prerequisites: [FA-C100-anar, FA-C100-gerdu]
 sounds: []
-roots: []
+roots: [persian-badam]
+etymology_hook: "bâdâm ← Middle Persian wādām (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C100-gerdu]
 <!-- hl-knowledge: introduces=[FA-LEX-C101-THINGS101-01]; assesses=[] -->
 
 **بادام** — *bâdâm* — "an almond".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâdâm* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *wādām*, "almond" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

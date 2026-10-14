@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 177,
-  "sourceHash": "fnv1a64:d0c072fd1568d254",
+  "sourceHash": "fnv1a64:019fcf7fb4572e29",
   "lessonIds": [
     "FA-C177-mosafer",
     "FA-C177-rahnama",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch177.txt",
   "json": "persian/narration/ch177.json",
-  "textHash": "fnv1a64:7b1b45ffe7c2a3e8",
-  "jsonHash": "fnv1a64:c125bf2281444681",
+  "textHash": "fnv1a64:2a601b52606f9bb6",
+  "jsonHash": "fnv1a64:0247cccaf52783fa",
   "findings": []
 }

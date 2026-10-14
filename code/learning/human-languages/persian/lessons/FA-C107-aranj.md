@@ -14,7 +14,8 @@ romanization: "âranj"
 concept_tag: FA-THINGS107-ARANJ
 prerequisites: [FA-C107-chane, FA-C107-gune]
 sounds: []
-roots: []
+roots: [persian-aranj]
+etymology_hook: "âranj: inherited; EtymDB: an Indo-Iranian word for 'elbow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C107-gune]
 <!-- hl-knowledge: introduces=[FA-LEX-C107-THINGS107-05]; assesses=[] -->
 
 **آرنج** — *âranj* — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âranj* is a native Persian word, inherited rather than borrowed: EtymDB takes it back to an Indo-Iranian word for "elbow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

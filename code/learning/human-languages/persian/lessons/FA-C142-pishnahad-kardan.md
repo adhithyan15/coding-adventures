@@ -14,7 +14,8 @@ romanization: "pishnahâd kardan"
 concept_tag: FA-VERB-PISHNAHAD-KARDAN
 prerequisites: [FA-C141-sefaresh-dadan, FA-C142-sabr-kardan]
 sounds: []
-roots: []
+roots: [persian-pesh, pie-kwer]
+etymology_hook: "pishnahâd kardan: Persian pish 'forward' + nahâd 'placed' + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C142-sabr-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C142-KONESH142-02]; assesses=[] -->
 
 **پیشنهاد کردن** — *pishnahâd kardan* — "to suggest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pishnahâd kardan* pairs *pishnahâd*, "suggestion", with *kardan*. *pishnahâd* is *pish*, "forward", with *nahâd*, "placed" (from *nahâdan*, "to put"): something put forward. All the pieces are native Persian. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

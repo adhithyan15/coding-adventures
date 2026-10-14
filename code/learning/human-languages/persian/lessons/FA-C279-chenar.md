@@ -14,7 +14,8 @@ romanization: "chenâr"
 concept_tag: FA-CHIZ279-CHENAR
 prerequisites: [FA-C278-ehteram, FA-C279-sarv]
 sounds: []
-roots: []
+roots: [persian-chenar]
+etymology_hook: "chenâr ← Middle Persian čanār (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C279-sarv]
 <!-- hl-knowledge: introduces=[FA-LEX-C279-CHIZ279-02]; assesses=[] -->
 
 **چنار** — *chenâr* — "a plane tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chenâr* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *čanār*, "plane tree" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

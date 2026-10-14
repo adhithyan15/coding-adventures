@@ -14,7 +14,8 @@ romanization: "telefon"
 concept_tag: FA-THINGS110-TELEFON
 prerequisites: [FA-C109-mobl, FA-C110-lamp]
 sounds: []
-roots: []
+roots: [french-telephone]
+etymology_hook: "telefon ← French téléphone 'telephone'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C110-lamp]
 <!-- hl-knowledge: introduces=[FA-LEX-C110-THINGS110-02]; assesses=[] -->
 
 **تلفن** — *telefon* — "a telephone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*telefon* is borrowed from French *téléphone*, "telephone" (EtymDB). The French word is built from Greek *tēle*, "far", and *phōnē*, "sound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

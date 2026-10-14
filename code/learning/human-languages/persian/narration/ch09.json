@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Please: Water, Bread, Tea, Key",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f5f036ac39ebc45b",
+  "sourceHash": "fnv1a64:690a97918eb5fe7c",
   "lessons": [
     {
       "id": "FA-C09-ab",
@@ -356,7 +356,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd9b02b73b1f333f",
+      "sourceHash": "fnv1a64:400758ae7d1cca46",
       "notice": null,
       "blocks": [
         {
@@ -402,7 +402,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "چای (chây) is not an inherited Persian word at all — it is a loan, and a comparatively recent one. It continues Northern Chinese chá, carried overland through Central Asia into Persian, the same road Russian chai and Turkish çay travelled."
+              "text": "چای (chây) is not an inherited Persian word at all — it is a loan, and a comparatively recent one. It comes from Northern Chinese chá, carried overland through Central Asia into Persian, the same road Russian chai and Turkish çay travelled."
             },
             {
               "kind": "speech",
@@ -519,7 +519,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d594c8797e79de70",
+      "sourceHash": "fnv1a64:3f8538ce96d0e1e0",
       "notice": null,
       "blocks": [
         {
@@ -597,11 +597,11 @@
             {
               "kind": "prompt",
               "action": "CONNECT",
-              "instruction": "kelid from Greek kleidíon becomes Latin claudere becomes English close, conclude, exclude",
+              "instruction": "kelid from Greek kleidíon; the same old root in Latin claudere becomes English close, conclude, exclude",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU CONNECT: **kelid** ← Greek **kleidíon** → Latin *claudere* → English **close**, **conclude**, **exclude**]"
+              "source": "[YOU CONNECT: **kelid** ← Greek **kleidíon**; the same old root in Latin *claudere* → English **close**, **conclude**, **exclude**]"
             },
             {
               "kind": "prompt",

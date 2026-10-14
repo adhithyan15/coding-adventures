@@ -14,7 +14,8 @@ romanization: "momken"
 concept_tag: FA-SEFAT273-MOMKEN
 prerequisites: [FA-C273-sonnati, FA-C273-monaseb]
 sounds: []
-roots: []
+roots: [arabic-mumkin]
+etymology_hook: "momken ← Arabic mumkin 'possible', root m-k-n (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C273-monaseb]
 <!-- hl-knowledge: introduces=[FA-LEX-C273-SEFAT273-05]; assesses=[] -->
 
 **ممکن** — *momken* — "possible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*momken* is borrowed from Arabic *mumkin*, "possible". Its Arabic root is *m-k-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

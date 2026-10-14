@@ -14,7 +14,8 @@ romanization: "boland"
 concept_tag: FA-ADJ59-BOLAND
 prerequisites: [FA-C58-taze, FA-C58-ghadimi]
 sounds: []
-roots: []
+roots: [persian-boland]
+etymology_hook: "boland ← Middle Persian buland (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C58-ghadimi]
 <!-- hl-knowledge: introduces=[FA-LEX-C59-ADJ59-01]; assesses=[] -->
 
 **بلند** — *boland* — "long, tall; loud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*boland* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *buland*, "high" (EtymDB). EtymDB takes it back to the Indo-European root *\*bʰerǵʰ-*, "high".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

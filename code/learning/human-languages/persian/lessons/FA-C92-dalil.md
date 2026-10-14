@@ -14,7 +14,8 @@ romanization: "dalil"
 concept_tag: FA-WHY92-DALIL
 prerequisites: [FA-C92-zira, FA-C92-chon]
 sounds: []
-roots: []
+roots: [arabic-dalil]
+etymology_hook: "dalil ← Arabic dalīl 'guide; proof', root d-l-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C92-chon]
 <!-- hl-knowledge: introduces=[FA-LEX-C92-WHY92-04]; assesses=[] -->
 
 **دلیل** — *dalil* — "a reason".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dalil* is borrowed from Arabic *dalīl*, "guide; proof". Its Arabic root is *d-l-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

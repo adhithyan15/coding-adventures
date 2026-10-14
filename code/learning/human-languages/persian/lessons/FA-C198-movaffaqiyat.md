@@ -14,7 +14,8 @@ romanization: "movaffaqiyat"
 concept_tag: FA-CHERA198-MOVAFFAQIYAT
 prerequisites: [FA-C198-farq, FA-C198-nemune]
 sounds: []
-roots: []
+roots: [arabic-muwaffaqiyya]
+etymology_hook: "movaffaqiyat ← Arabic muwaffaqiyya 'success', root w-f-q (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C198-nemune]
 <!-- hl-knowledge: introduces=[FA-LEX-C198-CHERA198-05]; assesses=[] -->
 
 **موفقیت** — *movaffaqiyat* — "success".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*movaffaqiyat* is borrowed from Arabic *muwaffaqiyya*, "success". Its Arabic root is *w-f-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

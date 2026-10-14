@@ -14,7 +14,8 @@ romanization: "mosakken"
 concept_tag: FA-SALAMAT227-MOSAKKEN
 prerequisites: [FA-C226-abkeshi-kardan, FA-C227-band]
 sounds: []
-roots: []
+roots: [arabic-musakkin]
+etymology_hook: "mosakken ← Arabic musakkin 'calming, soothing', root s-k-n (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C227-band]
 <!-- hl-knowledge: introduces=[FA-LEX-C227-SALAMAT227-02]; assesses=[] -->
 
 **مسکن** — *mosakken* — "a painkiller".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mosakken* is borrowed from Arabic *musakkin*, "calming, soothing". Its Arabic root is *s-k-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

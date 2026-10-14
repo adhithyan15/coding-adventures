@@ -14,7 +14,8 @@ romanization: "reshte"
 concept_tag: FA-KAR177-RESHTE
 prerequisites: [FA-C177-rahnama, FA-C177-morakhkhasi]
 sounds: []
-roots: []
+roots: [persian-reshte]
+etymology_hook: "reshte ← Middle Persian rištag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C177-morakhkhasi]
 <!-- hl-knowledge: introduces=[FA-LEX-C177-KAR177-04]; assesses=[] -->
 
 **رشته** — *reshte* — "a subject of study, a major".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*reshte* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *rištag*, "thread, string" (EtymDB). Persian also uses it for a line of study.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

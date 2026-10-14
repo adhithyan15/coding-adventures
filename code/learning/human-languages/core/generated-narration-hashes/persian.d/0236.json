@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 236,
-  "sourceHash": "fnv1a64:2b9b530cb3453ecb",
+  "sourceHash": "fnv1a64:ee93752e7bda19c5",
   "lessonIds": [
     "FA-C236-khasis",
     "FA-C236-bamaze",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch236.txt",
   "json": "persian/narration/ch236.json",
-  "textHash": "fnv1a64:9ec4809869b608bc",
-  "jsonHash": "fnv1a64:38b4a8e01a2d8aa3",
+  "textHash": "fnv1a64:5f2f9b45a3e110d9",
+  "jsonHash": "fnv1a64:d3f04834eb290de5",
   "findings": []
 }

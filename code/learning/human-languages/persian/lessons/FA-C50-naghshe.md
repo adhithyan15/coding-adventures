@@ -14,7 +14,8 @@ romanization: "naghshe"
 concept_tag: FA-SCHOOL50-NAGHSHE
 prerequisites: [FA-C49-kif, FA-C49-pul]
 sounds: []
-roots: []
+roots: [arabic-naqsh]
+etymology_hook: "naghshe: naghsh ← Arabic naqš 'engraving, design', root n-q-š (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C49-pul]
 <!-- hl-knowledge: introduces=[FA-LEX-C50-SCHOOL50-01]; assesses=[] -->
 
 **نقشه** — *naghshe* — "a map".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*naghshe* is *naghsh*, "design, picture", with the ending *-e*. *naghsh* is borrowed from Arabic *naqš*, "engraving, painting" (root *n-q-š*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

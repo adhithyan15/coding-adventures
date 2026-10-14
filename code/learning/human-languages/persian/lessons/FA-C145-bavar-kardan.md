@@ -14,7 +14,8 @@ romanization: "bâvar kardan"
 concept_tag: FA-VERB-BAVAR-KARDAN
 prerequisites: [FA-C145-negahdari-kardan, FA-C145-hamrahi-kardan]
 sounds: []
-roots: []
+roots: [persian-bavar, pie-kwer]
+etymology_hook: "bâvar kardan: Persian bâvar 'belief' (Middle Persian wābar) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C145-hamrahi-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C145-KONESH145-04]; assesses=[] -->
 
 **باور کردن** — *bâvar kardan* — "to believe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâvar kardan* pairs *bâvar*, "belief", with *kardan*, "to make". *bâvar* is native, usually traced to Middle Persian *wābar*, "trustworthy". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

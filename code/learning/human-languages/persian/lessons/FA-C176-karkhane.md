@@ -14,7 +14,8 @@ romanization: "kârkhâne"
 concept_tag: FA-KAR176-KARKHANE
 prerequisites: [FA-C176-herfe, FA-C176-sherkat]
 sounds: []
-roots: []
+roots: [persian-karkhana]
+etymology_hook: "kârkhâne: Persian kâr 'work' (EtymDB) + khâne 'house'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C176-sherkat]
 <!-- hl-knowledge: introduces=[FA-LEX-C176-KAR176-03]; assesses=[] -->
 
 **کارخانه** — *kârkhâne* — "a factory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kârkhâne* is built from *kâr*, "work", and *khâne*, "house": the work-house. Both are inherited: *kâr* continues Middle Persian *kār* (EtymDB), and *khâne* is usually traced to *xānag*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

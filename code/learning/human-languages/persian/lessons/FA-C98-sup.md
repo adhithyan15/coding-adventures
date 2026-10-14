@@ -14,7 +14,8 @@ romanization: "sup"
 concept_tag: FA-THINGS98-SUP
 prerequisites: [FA-C98-sandal, FA-C98-khoresh]
 sounds: []
-roots: []
+roots: [french-soupe]
+etymology_hook: "sup ← French soupe 'soup'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C98-khoresh]
 <!-- hl-knowledge: introduces=[FA-LEX-C98-THINGS98-03]; assesses=[] -->
 
 **سوپ** — *sup* — "soup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sup* is borrowed from French *soupe*, "soup" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

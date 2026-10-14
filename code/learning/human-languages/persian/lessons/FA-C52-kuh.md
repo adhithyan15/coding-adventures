@@ -14,7 +14,8 @@ romanization: "kuh"
 concept_tag: FA-NATURE52-KUH
 prerequisites: [FA-C51-gol, FA-C51-barg]
 sounds: []
-roots: []
+roots: [persian-kuh]
+etymology_hook: "kuh ← Middle Persian kōf (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C51-barg]
 <!-- hl-knowledge: introduces=[FA-LEX-C52-NATURE52-01]; assesses=[] -->
 
 **کوه** — *kuh* — "a mountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kuh* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *kōf*, "hill, mountain" (EtymDB). Old Persian had *kaufa-*, "mountain" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

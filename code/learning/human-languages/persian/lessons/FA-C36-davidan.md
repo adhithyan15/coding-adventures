@@ -14,7 +14,8 @@ romanization: "davidan"
 concept_tag: FA-VERB-DAVIDAN
 prerequisites: [FA-C36-khabidan, FA-C36-istadan]
 sounds: []
-roots: []
+roots: [persian-davidan]
+etymology_hook: "davidan: inherited, usually traced to Middle Persian dawīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C36-istadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C36-VERBS36-03]; assesses=[] -->
 
 **دویدن** — *davidan* — "to run".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*davidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *dawīdan*, "to run". EtymDB links it to the Indo-European root *\*dʰew-*, "to run".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

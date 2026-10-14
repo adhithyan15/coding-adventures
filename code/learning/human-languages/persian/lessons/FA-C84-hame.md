@@ -14,7 +14,8 @@ romanization: "hame"
 concept_tag: FA-DEF84-HAME
 prerequisites: [FA-C83-chenin, FA-C83-har]
 sounds: []
-roots: []
+roots: [persian-hame]
+etymology_hook: "hame ← Middle Persian hamāg (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C83-har]
 <!-- hl-knowledge: introduces=[FA-LEX-C84-DEF84-01]; assesses=[] -->
 
 **همه** — *hame* — "all, everyone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hame* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *hamāg*, "all" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

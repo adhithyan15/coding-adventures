@@ -14,7 +14,8 @@ romanization: "zahmatkesh"
 concept_tag: FA-SEFAT238-ZAHMATKESH
 prerequisites: [FA-C238-konjkav, FA-C238-sakhtgir]
 sounds: []
-roots: []
+roots: [arabic-zahma, persian-kashidan]
+etymology_hook: "zahmatkesh: zahmat ← Arabic zaḥma 'crowding' (Lane) + Persian kesh 'bearing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C238-sakhtgir]
 <!-- hl-knowledge: introduces=[FA-LEX-C238-SEFAT238-05]; assesses=[] -->
 
 **زحمتکش** — *zahmatkesh* — "hard-working".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zahmatkesh* is *zahmat*, "trouble, toil", with *-kesh*, "bearing" (from *keshidan*): one who bears toil. *zahmat* is borrowed from Arabic *zaḥma*, "crowding, pressure" (root *z-ḥ-m*, Lane); *kesh* is native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

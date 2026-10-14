@@ -14,7 +14,8 @@ romanization: "hads zadan"
 concept_tag: FA-VERB-HADS-ZADAN
 prerequisites: [FA-C145-seda-zadan, FA-C146-be-yad-avardan]
 sounds: []
-roots: []
+roots: [arabic-hads]
+etymology_hook: "hads ← Arabic ḥads 'guessing, conjecture', root ḥ-d-s (Lane), + Persian zadan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C146-be-yad-avardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C146-KONESH146-02]; assesses=[] -->
 
 **حدس زدن** — *hads zadan* — "to guess".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hads zadan* pairs *hads*, borrowed from Arabic *ḥads*, "guessing, conjecture" (root *ḥ-d-s*, Lane), with the Persian verb *zadan*, "to strike". *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

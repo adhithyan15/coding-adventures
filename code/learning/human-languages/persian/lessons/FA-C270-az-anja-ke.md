@@ -14,7 +14,8 @@ romanization: "az ânjâ ke"
 concept_tag: FA-CHERA270-AZ-ANJA-KE
 prerequisites: [FA-C270-shekl, FA-C270-howsele]
 sounds: []
-roots: []
+roots: [persian-ja]
+etymology_hook: "az ânjâ ke: Persian az 'from' + ânjâ 'there' + ke 'that'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C270-howsele]
 <!-- hl-knowledge: introduces=[FA-LEX-C270-CHERA270-03]; assesses=[] -->
 
 **از آنجا که** — *az ânjâ ke* — "since, given that".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*az ânjâ ke* is "from there that": *az*, "from" (Old Persian *hacā*, EtymDB), *ânjâ*, "there", and *ke*, "that". All are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

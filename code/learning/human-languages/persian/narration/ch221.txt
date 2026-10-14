@@ -12,6 +12,9 @@ Before the new one: say the Persian for to print, then the Persian for to photoc
 You'll want to know: بخشیدن.
 بخشیدن — bakhshidan — "to forgive".
 
+The word, taken apart.
+bakhshidan is a native Persian word, inherited rather than borrowed: it continues Middle Persian baxš-, "to share out, to grant" (EtymDB). Persian uses "to grant" for forgiving.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to photocopy, then the Persian for to fo
 
 You'll want to know: قهر کردن.
 قهر کردن — qahr kardan — "to fall out, to stop speaking to someone".
+
+The word, taken apart.
+qahr kardan pairs qahr, borrowed from Arabic qahr, "force, wrath" (root q-h-r, Lane), with the Persian verb kardan, "to do, to make". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB). Persian uses it for sulking and refusing to speak.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to forgive, then the Persian for to fall
 You'll want to know: آشتی کردن.
 آشتی کردن — âshti kardan — "to make up (after a quarrel)".
 
+The word, taken apart.
+âshti kardan pairs âshti, "peace, reconciliation", with kardan. âshti is inherited: EtymDB traces it to Middle Persian āštīh, "peace". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to fall out, then the Persian for to mak
 You'll want to know: شوخی کردن.
 شوخی کردن — shukhi kardan — "to joke".
 
+The word, taken apart.
+shukhi kardan pairs shukhi, "a joke" (shukh, "playful", with -i), with kardan. Where shukh comes from is not settled. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to make up, then the Persian for to joke
 
 You'll want to know: حسودی کردن.
 حسودی کردن — hasudi kardan — "to be jealous".
+
+The word, taken apart.
+hasudi kardan pairs hasudi, "envy", with kardan. hasud is borrowed from Arabic ḥasūd, "envious" (root ḥ-s-d, Lane), with the Persian ending -i. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.

@@ -12,6 +12,9 @@ Before the new one: say the Persian for to rub, then the Persian for to sprinkle
 You'll want to know: دست زدن.
 دست زدن — dast zadan — "to touch; to clap".
 
+The word, taken apart.
+dast zadan pairs dast, "hand", with zadan, "to strike": to strike with the hand. dast is inherited: Old Persian had dasta-, "hand" (EtymDB). zadan, "to strike", is an inherited verb; it is usually traced to Middle Persian zadan.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to sprinkle, then the Persian for to tou
 
 You'll want to know: چرت زدن.
 چرت زدن — chort zadan — "to doze, to nap".
+
+The word, taken apart.
+chort zadan pairs chort, "nap", with zadan, "to strike". Where chort comes from is not settled. zadan, "to strike", is an inherited verb; it is usually traced to Middle Persian zadan.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to touch, then the Persian for to doze.
 You'll want to know: ترمز گرفتن.
 ترمز گرفتن — tormoz gereftan — "to brake".
 
+The word, taken apart.
+tormoz gereftan is "to take the brake": tormoz is borrowed from Russian tormoz, "brake" (EtymDB), and gereftan, "to take", is native. gereftan, "to take", is an inherited verb; EtymDB takes it back to the Indo-European root gʰrebh₂-, "to seize".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to doze, then the Persian for to brake.
 You'll want to know: پنچر شدن.
 پنچر شدن — panchar shodan — "to get a flat tyre".
 
+The word, taken apart.
+panchar shodan pairs panchar, "flat tyre", usually traced to English puncture, with shodan, "to become". shodan, "to become", is an inherited verb; it is usually traced to Middle Persian šudan, "to go".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to brake, then the Persian for to get a 
 
 You'll want to know: گیر کردن.
 گیر کردن — gir kardan — "to get stuck".
+
+The word, taken apart.
+gir kardan pairs gir, "catch, grip" (the present stem of gereftan, "to take"), with kardan: to be caught. Both are native Persian. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "kuche"
 concept_tag: FA-LOC87-KUCHE
 prerequisites: [FA-C86-taraf, FA-C86-gushe]
 sounds: []
-roots: []
+roots: [persian-ku]
+etymology_hook: "kuche: Persian ku 'street' (Middle Persian kōy) + -che 'little'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C86-gushe]
 <!-- hl-knowledge: introduces=[FA-LEX-C87-LOC87-01]; assesses=[] -->
 
 **کوچه** — *kuche* — "a lane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kuche* is *ku*, "street, quarter", with the small-thing ending *-che*: a little street. *ku* is native, usually traced to Middle Persian *kōy*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

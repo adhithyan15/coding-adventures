@@ -14,7 +14,8 @@ romanization: "dâvar"
 concept_tag: FA-KAR251-DAVAR
 prerequisites: [FA-C250-khalaban, FA-C251-honarmand]
 sounds: []
-roots: []
+roots: [persian-davar]
+etymology_hook: "dâvar: inherited, usually traced to Middle Persian dādwar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C251-honarmand]
 <!-- hl-knowledge: introduces=[FA-LEX-C251-KAR251-02]; assesses=[] -->
 
 **داور** — *dâvar* — "a referee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dâvar* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *dādwar*, "judge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

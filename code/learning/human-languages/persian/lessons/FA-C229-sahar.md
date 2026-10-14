@@ -14,7 +14,8 @@ romanization: "sahar"
 concept_tag: FA-ZAMAN229-SAHAR
 prerequisites: [FA-C229-lahze, FA-C229-digar]
 sounds: []
-roots: []
+roots: [arabic-sahar]
+etymology_hook: "sahar ← Arabic saḥar 'the last part of the night, before dawn', root s-ḥ-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C229-digar]
 <!-- hl-knowledge: introduces=[FA-LEX-C229-ZAMAN229-05]; assesses=[] -->
 
 **سحر** — *sahar* — "dawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sahar* is borrowed from Arabic *saḥar*, "the last part of the night, before dawn". Its Arabic root is *s-ḥ-r* (Lane). The same Arabic root gives *sehr*, "magic" (EtymDB lists both).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

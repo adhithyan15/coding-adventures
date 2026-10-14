@@ -14,7 +14,8 @@ romanization: "hamkelâsi"
 concept_tag: FA-CHIZ169-HAMKELASI
 prerequisites: [FA-C168-form, FA-C169-bozorgsal]
 sounds: []
-roots: []
+roots: [persian-ham, french-classe]
+etymology_hook: "hamkelâsi: Persian ham- 'same' + kelâs ← French classe (EtymDB) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C169-bozorgsal]
 <!-- hl-knowledge: introduces=[FA-LEX-C169-CHIZ169-02]; assesses=[] -->
 
 **همکلاسی** — *hamkelâsi* — "a classmate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hamkelâsi* is *ham-*, "same", with *kelâs*, "class", and *-i*: one of the same class. *ham-* is native Persian; *kelâs* is borrowed from French *classe* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

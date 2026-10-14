@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 54,
-  "sourceHash": "fnv1a64:029c20cd9f857fcc",
+  "sourceHash": "fnv1a64:09b84139406b3a46",
   "lessonIds": [
     "FA-C54-khak",
     "FA-C54-bad",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch54.txt",
   "json": "persian/narration/ch54.json",
-  "textHash": "fnv1a64:a8827ef3539cb549",
-  "jsonHash": "fnv1a64:0cc2e9208c342adc",
+  "textHash": "fnv1a64:2d1defa12aa9541c",
+  "jsonHash": "fnv1a64:5508fd1e2bec61b6",
   "findings": []
 }

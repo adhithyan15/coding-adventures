@@ -14,7 +14,8 @@ romanization: "tufân"
 concept_tag: FA-THINGS104-TUFAN
 prerequisites: [FA-C104-dane, FA-C104-sabze]
 sounds: []
-roots: []
+roots: [arabic-tufan]
+etymology_hook: "tufân ← Arabic ṭūfān 'flood, deluge', root ṭ-w-f (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C104-sabze]
 <!-- hl-knowledge: introduces=[FA-LEX-C104-THINGS104-03]; assesses=[] -->
 
 **توفان** — *tufân* — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tufân* is borrowed from Arabic *ṭūfān*, "flood, deluge". Its Arabic root is *ṭ-w-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ân"
 concept_tag: FA-TIME82-AN
 prerequisites: [FA-C82-hargez, FA-C82-in]
 sounds: []
-roots: []
+roots: [persian-an]
+etymology_hook: "ân: inherited, usually traced to Middle Persian ān"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C82-in]
 <!-- hl-knowledge: introduces=[FA-LEX-C82-TIME82-04]; assesses=[] -->
 
 **آن** — *ân* — "that".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ân* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *ān*, "that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 198,
-  "sourceHash": "fnv1a64:5f3aa0d50a65dca5",
+  "sourceHash": "fnv1a64:e0d9fbab6c82308f",
   "lessonIds": [
     "FA-C198-bayad",
     "FA-C198-ide",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch198.txt",
   "json": "persian/narration/ch198.json",
-  "textHash": "fnv1a64:efedb759a87e1e8b",
-  "jsonHash": "fnv1a64:011cf433bf87b028",
+  "textHash": "fnv1a64:93b83b3ac9420729",
+  "jsonHash": "fnv1a64:758eb3e6a5b228c0",
   "findings": []
 }

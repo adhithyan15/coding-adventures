@@ -14,7 +14,8 @@ romanization: "takhfif"
 concept_tag: FA-CHIZ274-TAKHFIF
 prerequisites: [FA-C274-qafase, FA-C274-qeymat]
 sounds: []
-roots: []
+roots: [arabic-tahfif]
+etymology_hook: "takhfif ← Arabic taḫfīf 'lightening, reducing', root ḫ-f-f (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C274-qeymat]
 <!-- hl-knowledge: introduces=[FA-LEX-C274-CHIZ274-04]; assesses=[] -->
 
 **تخفیف** — *takhfif* — "a discount".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*takhfif* is borrowed from Arabic *taḫfīf*, "lightening, reducing". Its Arabic root is *ḫ-f-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

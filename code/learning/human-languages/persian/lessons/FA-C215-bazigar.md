@@ -14,7 +14,8 @@ romanization: "bâzigar"
 concept_tag: FA-KAR215-BAZIGAR
 prerequisites: [FA-C215-mashq, FA-C215-khabarnegar]
 sounds: []
-roots: []
+roots: [persian-bazi]
+etymology_hook: "bâzigar: Persian bâzi 'play' + -gar 'doer'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C215-khabarnegar]
 <!-- hl-knowledge: introduces=[FA-LEX-C215-KAR215-04]; assesses=[] -->
 
 **بازیگر** — *bâzigar* — "an actor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâzigar* is *bâzi*, "play", with *-gar*, "doer": the player. Both are native; *bâzi* is usually traced to Middle Persian *wāzīg*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

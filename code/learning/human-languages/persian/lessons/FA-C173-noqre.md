@@ -14,7 +14,8 @@ romanization: "noqre"
 concept_tag: FA-CHIZ173-NOQRE
 prerequisites: [FA-C172-majalle, FA-C172-seriyal]
 sounds: []
-roots: []
+roots: [arabic-nuqra]
+etymology_hook: "noqre ← Arabic nuqra 'ingot of melted silver', root n-q-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C172-seriyal]
 <!-- hl-knowledge: introduces=[FA-LEX-C173-CHIZ173-01]; assesses=[] -->
 
 **نقره** — *noqre* — "silver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*noqre* is borrowed from Arabic *nuqra*, "ingot of melted silver". Its Arabic root is *n-q-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

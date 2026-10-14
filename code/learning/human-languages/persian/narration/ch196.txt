@@ -12,6 +12,9 @@ Before the new one: say the Persian for a corridor, then the Persian for a dome.
 You'll want to know: ناودان.
 ناودان — nâvdân — "a drainpipe".
 
+The word, taken apart.
+nâvdân is built from nâv, "trough, channel", and -dân, "holder": the channel for water. Both are native Persian words, inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Persian for a dome, then the Persian for a drainpipe
 
 You'll want to know: ستون.
 ستون — sotun — "a column, a pillar".
+
+The word, taken apart.
+sotun is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian stūn, "pillar". It is usually set beside Sanskrit sthūṇā, "post, pillar".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Persian for a drainpipe, then the Persian for a colu
 You'll want to know: اطراف.
 اطراف — atrâf — "the surroundings".
 
+The word, taken apart.
+atrâf is borrowed from Arabic aṭrāf, "ends, sides". Its Arabic root is ṭ-r-f (Lane). It is the plural of ṭaraf, "side".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Persian for a column, then the Persian for the surro
 You'll want to know: لبه.
 لبه — labe — "an edge, a rim".
 
+The word, taken apart.
+labe is built from lab, "lip", with the ending -e: the lip of a thing, its rim. lab is inherited; EtymDB links it to the Indo-European root leb-, "lip".
+
 What you've built.
 One more word for this chapter.
 
@@ -133,6 +145,9 @@ Before the new one: say the Persian for the surroundings, then the Persian for a
 
 You'll want to know: همکف.
 همکف — hamkaf — "the ground floor".
+
+The word, taken apart.
+hamkaf is ham-, "same", with kaf, "floor": level with the floor. ham- is native Persian; kaf is usually taken as Arabic kaff, "palm, flat of the hand" (root k-f-f, Lane).
 
 What you've built.
 One more word for this chapter.

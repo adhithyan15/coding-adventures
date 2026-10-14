@@ -14,7 +14,8 @@ romanization: "mohandes"
 concept_tag: FA-KAR250-MOHANDES
 prerequisites: [FA-C249-albalu, FA-C250-monshi]
 sounds: []
-roots: []
+roots: [persian-andaza]
+etymology_hook: "mohandes ← Arabic muhandis; EtymDB traces it to Persian andâze 'measure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C250-monshi]
 <!-- hl-knowledge: introduces=[FA-LEX-C250-KAR250-02]; assesses=[] -->
 
 **مهندس** — *mohandes* — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mohandes* is borrowed from Arabic *muhandis*, "engineer, geometer", built on *handasa*, "geometry". EtymDB traces *handasa* back to Persian *andâze*, "measure": the Persian word came home in Arabic dress.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

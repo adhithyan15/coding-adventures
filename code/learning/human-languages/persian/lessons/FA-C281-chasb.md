@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ281-CHASB
 prerequisites: [FA-C281-arre, FA-C281-bil]
 sounds: []
 roots: []
+etymology_hook: "chasb: native Persian (chaspidan); older form not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C281-bil]
 <!-- hl-knowledge: introduces=[FA-LEX-C281-CHIZ281-04]; assesses=[] -->
 
 **چسب** — *chasb* — "glue; sticky tape".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chasb* is a native Persian word, the stem of *chaspidan*, "to stick", but its older form is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

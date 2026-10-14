@@ -14,7 +14,8 @@ romanization: "gâv"
 concept_tag: FA-ANIMALS55-GAV
 prerequisites: [FA-C54-gorbe, FA-C55-asb]
 sounds: []
-roots: []
+roots: [persian-gav]
+etymology_hook: "gâv: inherited, usually traced to Middle Persian gāw"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C55-asb]
 <!-- hl-knowledge: introduces=[FA-LEX-C55-ANIMALS55-02]; assesses=[] -->
 
 **گاو** — *gâv* — "a cow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gâv* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *gāw*, "cow, ox". EtymDB takes it back to the Indo-European word behind English *cow*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

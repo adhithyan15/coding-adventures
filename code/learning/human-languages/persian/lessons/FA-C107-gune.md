@@ -14,7 +14,8 @@ romanization: "gune"
 concept_tag: FA-THINGS107-GUNE
 prerequisites: [FA-C107-magas, FA-C107-chane]
 sounds: []
-roots: []
+roots: [persian-gune]
+etymology_hook: "gune: inherited, usually traced to Middle Persian gōnag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C107-chane]
 <!-- hl-knowledge: introduces=[FA-LEX-C107-THINGS107-04]; assesses=[] -->
 
 **گونه** — *gune* — "a cheek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gune* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *gōnag*, "colour, kind". The same word also means "kind, sort".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

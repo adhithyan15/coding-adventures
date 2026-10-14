@@ -14,7 +14,8 @@ romanization: "kârfarmâ"
 concept_tag: FA-KAR214-KARFARMA
 prerequisites: [FA-C213-noqte, FA-C214-tajrobe]
 sounds: []
-roots: []
+roots: [persian-kar, persian-farman]
+etymology_hook: "kârfarmâ: Persian kâr 'work' (EtymDB) + farmâ 'commanding'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C214-tajrobe]
 <!-- hl-knowledge: introduces=[FA-LEX-C214-KAR214-02]; assesses=[] -->
 
 **کارفرما** — *kârfarmâ* — "an employer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kârfarmâ* is built from *kâr*, "work", and *-farmâ*, "commanding" (from *farmudan*, "to command"): the one who orders the work. *kâr* is inherited, from Middle Persian *kār* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

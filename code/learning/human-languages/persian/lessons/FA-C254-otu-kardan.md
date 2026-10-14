@@ -14,7 +14,8 @@ romanization: "otu kardan"
 concept_tag: FA-VERB-OTU-KARDAN
 prerequisites: [FA-C254-daravardan, FA-C254-amade-kardan]
 sounds: []
-roots: []
+roots: [turkic-utug, pie-kwer]
+etymology_hook: "otu ← Turkic (Old Turkic ütüg, EtymDB), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C254-amade-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C254-KONESH254-03]; assesses=[] -->
 
 **اتو کردن** — *otu kardan* — "to iron".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*otu kardan* pairs *otu*, "iron", borrowed from Turkic, with the Persian verb *kardan*. EtymDB traces *otu* to Old Turkic *ütüg*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

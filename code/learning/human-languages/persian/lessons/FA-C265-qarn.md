@@ -14,7 +14,8 @@ romanization: "qarn"
 concept_tag: FA-ZAMAN265-QARN
 prerequisites: [FA-C265-hamzaman, FA-C265-dahe]
 sounds: []
-roots: []
+roots: [arabic-qarn]
+etymology_hook: "qarn ← Arabic qarn 'horn; generation, century', root q-r-n (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C265-dahe]
 <!-- hl-knowledge: introduces=[FA-LEX-C265-ZAMAN265-04]; assesses=[] -->
 
 **قرن** — *qarn* — "a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qarn* is borrowed from Arabic *qarn*, "horn; generation, century". Its Arabic root is *q-r-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

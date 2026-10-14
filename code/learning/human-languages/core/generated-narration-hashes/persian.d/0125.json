@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 125,
-  "sourceHash": "fnv1a64:76fc68f447a8fa2a",
+  "sourceHash": "fnv1a64:e93cb81b675723fa",
   "lessonIds": [
     "FA-C125-seft",
     "FA-C125-zesht",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch125.txt",
   "json": "persian/narration/ch125.json",
-  "textHash": "fnv1a64:41bcb468c407221c",
-  "jsonHash": "fnv1a64:5f443478f0722bb1",
+  "textHash": "fnv1a64:8bc3ddacd4b33103",
+  "jsonHash": "fnv1a64:e740c47fd84fc6f3",
   "findings": []
 }

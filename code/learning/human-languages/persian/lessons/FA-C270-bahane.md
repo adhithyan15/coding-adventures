@@ -15,6 +15,7 @@ concept_tag: FA-CHERA270-BAHANE
 prerequisites: [FA-C270-az-anja-ke, FA-C270-ba-vojud-e]
 sounds: []
 roots: []
+etymology_hook: "bahâne: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C270-ba-vojud-e]
 <!-- hl-knowledge: introduces=[FA-LEX-C270-CHERA270-05]; assesses=[] -->
 
 **بهانه** — *bahâne* — "an excuse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bahâne* is the word for an excuse, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

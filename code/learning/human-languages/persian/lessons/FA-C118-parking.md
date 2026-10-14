@@ -14,7 +14,8 @@ romanization: "pârking"
 concept_tag: FA-THINGS118-PARKING
 prerequisites: [FA-C117-havapeyma, FA-C118-jadde]
 sounds: []
-roots: []
+roots: [english-parking]
+etymology_hook: "pârking: a loan, usually traced to English parking 'parking'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C118-jadde]
 <!-- hl-knowledge: introduces=[FA-LEX-C118-THINGS118-02]; assesses=[] -->
 
 **پارکینگ** — *pârking* — "a car park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pârking* is a loan, usually traced to English *parking*, "parking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

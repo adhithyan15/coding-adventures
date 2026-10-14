@@ -14,7 +14,8 @@ romanization: "bâdbâdak"
 concept_tag: FA-THINGS96-BADBADAK
 prerequisites: [FA-C96-kebrit, FA-C96-tup]
 sounds: []
-roots: []
+roots: [persian-bad-wind]
+etymology_hook: "bâdbâdak: Persian bâd 'wind', doubled, + -ak 'little'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C96-tup]
 <!-- hl-knowledge: introduces=[FA-LEX-C96-THINGS96-04]; assesses=[] -->
 
 **بادبادک** — *bâdbâdak* — "a kite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâdbâdak* is built on *bâd*, "wind", doubled, with the small-thing ending *-ak*: a little wind-thing. *bâd* is native, usually traced to Middle Persian *wād*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

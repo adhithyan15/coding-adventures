@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 37,
-  "sourceHash": "fnv1a64:da51f83185d1765a",
+  "sourceHash": "fnv1a64:8112ca3f13649c22",
   "lessonIds": [
     "FA-C37-dadan",
     "FA-C37-bastan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch37.txt",
   "json": "persian/narration/ch37.json",
-  "textHash": "fnv1a64:ee73034a77ac98c3",
-  "jsonHash": "fnv1a64:0de8db367885f1b4",
+  "textHash": "fnv1a64:5915d2b9f5d7c15f",
+  "jsonHash": "fnv1a64:f6f7b9eb3c6c4de4",
   "findings": []
 }

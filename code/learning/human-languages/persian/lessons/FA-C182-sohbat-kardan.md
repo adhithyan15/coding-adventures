@@ -14,7 +14,8 @@ romanization: "sohbat kardan"
 concept_tag: FA-VERB-SOHBAT-KARDAN
 prerequisites: [FA-C182-tekrar-kardan, FA-C182-tarjome-kardan]
 sounds: []
-roots: []
+roots: [arabic-suhba]
+etymology_hook: "sohbat ← Arabic ṣuḥba 'companionship', root ṣ-ḥ-b (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C182-tarjome-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C182-KONESH182-05]; assesses=[] -->
 
 **صحبت کردن** — *sohbat kardan* — "to talk, to chat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sohbat kardan* pairs *sohbat*, borrowed from Arabic *ṣuḥba*, "companionship" (root *ṣ-ḥ-b*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB). Persian moved it from keeping company to talking (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

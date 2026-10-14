@@ -14,7 +14,8 @@ romanization: "tarh"
 concept_tag: FA-AYANDE138-TARH
 prerequisites: [FA-C138-ayande, FA-C138-az-hala]
 sounds: []
-roots: []
+roots: [arabic-tarh]
+etymology_hook: "tarh ← Arabic ṭarḥ 'throwing, laying down', root ṭ-r-ḥ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C138-az-hala]
 <!-- hl-knowledge: introduces=[FA-LEX-C138-AYANDE138-03]; assesses=[] -->
 
 **طرح** — *tarh* — "a plan, a design". **یک طرح خوب داریم** — *yek tarh-e khub dârim* — "We have a good plan."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tarh* is borrowed from Arabic *ṭarḥ*, "throwing, laying down". Its Arabic root is *ṭ-r-ḥ* (Lane). Persian uses it for a plan or design.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

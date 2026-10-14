@@ -14,7 +14,8 @@ romanization: "rânande"
 concept_tag: FA-THINGS116-RANANDE
 prerequisites: [FA-C115-kargar, FA-C116-keshavarz]
 sounds: []
-roots: []
+roots: [persian-randan]
+etymology_hook: "rânande: Persian rândan 'to drive' (Middle Persian rāndan) + -ande '-ing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C116-keshavarz]
 <!-- hl-knowledge: introduces=[FA-LEX-C116-THINGS116-02]; assesses=[] -->
 
 **راننده** — *rânande* — "a driver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rânande* is the "-ing" form of *rândan*, "to drive": "the one driving". The verb is inherited, usually traced to Middle Persian *rāndan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

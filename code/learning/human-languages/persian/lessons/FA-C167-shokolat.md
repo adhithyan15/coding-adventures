@@ -14,7 +14,8 @@ romanization: "shokolât"
 concept_tag: FA-CHIZ167-SHOKOLAT
 prerequisites: [FA-C166-bluz, FA-C167-bastani]
 sounds: []
-roots: []
+roots: [french-chocolat]
+etymology_hook: "shokolât ← French chocolat 'chocolate'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C167-bastani]
 <!-- hl-knowledge: introduces=[FA-LEX-C167-CHIZ167-02]; assesses=[] -->
 
 **شکلات** — *shokolât* — "chocolate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shokolât* is borrowed from French *chocolat*, "chocolate" (EtymDB). The French word came through Spanish from Nahuatl (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

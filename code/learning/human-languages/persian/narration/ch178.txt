@@ -12,6 +12,9 @@ Before the new one: say the Persian for a subject of study, then the Persian for
 You'll want to know: منگنه.
 منگنه — mangane — "a stapler".
 
+The word, taken apart.
+mangane came through Ottoman Turkish mengene, "press, vice", from Greek manganon, "device, engine" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a course, then the Persian for a stapler
 
 You'll want to know: پوشه.
 پوشه — pushe — "a folder".
+
+The word, taken apart.
+pushe is built on push-, the stem of pushidan, "to cover", with -e: a cover. The verb is inherited: EtymDB traces it to Middle Persian pōšīdan.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a stapler, then the Persian for a folder
 You'll want to know: پاک کن.
 پاک کن — pâkkon — "an eraser".
 
+The word, taken apart.
+pâkkon is pâk, "clean" (Middle Persian pāk, EtymDB), with -kon, "making" (from kardan): the thing that makes clean. Both are native.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a folder, then the Persian for an eraser
 You'll want to know: جامدادی.
 جامدادی — jâmedâdi — "a pencil case".
 
+The word, taken apart.
+jâmedâdi is jâ, "place", with medâd, "pencil", and -i: the pencil's place. jâ is native (Middle Persian gyāg, EtymDB); medâd is borrowed from Arabic midād, "ink" (root m-d-d, Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for an eraser, then the Persian for a pencil
 
 You'll want to know: کارنامه.
 کارنامه — kârnâme — "a school report".
+
+The word, taken apart.
+kârnâme is built from kâr, "work, deed", and nâme, "writing": a record of work. Middle Persian already had kārnāmag, "book of deeds"; both parts are inherited.
 
 What you've built.
 One more word for this chapter.

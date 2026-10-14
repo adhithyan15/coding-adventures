@@ -14,7 +14,8 @@ romanization: "tamr"
 concept_tag: FA-THINGS113-TAMR
 prerequisites: [FA-C113-kart, FA-C113-bilit]
 sounds: []
-roots: []
+roots: [french-timbre]
+etymology_hook: "tamr: a loan, usually traced to French timbre 'stamp'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C113-bilit]
 <!-- hl-knowledge: introduces=[FA-LEX-C113-THINGS113-03]; assesses=[] -->
 
 **تمبر** — *tamr* — "a stamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tamr* is a loan, usually traced to French *timbre*, "stamp".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

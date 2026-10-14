@@ -14,7 +14,8 @@ romanization: "shir-e âb"
 concept_tag: FA-CHIZ282-SHIR-E-AB
 prerequisites: [FA-C282-qab, FA-C282-toshak]
 sounds: []
-roots: []
+roots: [persian-ab]
+etymology_hook: "shir-e âb: shir 'tap' (often explained as 'lion'; not settled) + Persian âb 'water'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C282-toshak]
 <!-- hl-knowledge: introduces=[FA-LEX-C282-CHIZ282-04]; assesses=[] -->
 
 **شیر آب** — *shir-e âb* — "a tap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shir-e âb* is "the tap of the water". *âb* is inherited (Middle Persian *āb*, EtymDB). *shir*, "tap", is usually explained as the word for "lion", from lion-headed spouts, but that is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

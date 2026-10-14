@@ -14,7 +14,8 @@ romanization: "faghir"
 concept_tag: FA-ADJ61-FAGHIR
 prerequisites: [FA-C61-khali, FA-C61-puldar]
 sounds: []
-roots: []
+roots: [arabic-faqir]
+etymology_hook: "faghir ← Arabic faqīr 'poor, needy', root f-q-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C61-puldar]
 <!-- hl-knowledge: introduces=[FA-LEX-C61-ADJ61-04]; assesses=[] -->
 
 **فقیر** — *faghir* — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*faghir* is borrowed from Arabic *faqīr*, "poor, needy". Its Arabic root is *f-q-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

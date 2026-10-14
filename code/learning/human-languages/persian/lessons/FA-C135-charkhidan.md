@@ -14,7 +14,8 @@ romanization: "charkhidan"
 concept_tag: FA-VERB-CHARKHIDAN
 prerequisites: [FA-C135-zistan, FA-C135-chaspandan]
 sounds: []
-roots: []
+roots: [persian-charkh]
+etymology_hook: "charkhidan: Persian charkh 'wheel' (Middle Persian čarx) + -idan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C135-chaspandan]
 <!-- hl-knowledge: introduces=[FA-LEX-C135-ACT135-05]; assesses=[] -->
 
 **چرخیدن** — *charkhidan* — "to spin, to turn round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*charkhidan* is built on *charkh*, "wheel", with the verb ending *-idan*: to wheel round. *charkh* is native, usually traced to Middle Persian *čarx*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

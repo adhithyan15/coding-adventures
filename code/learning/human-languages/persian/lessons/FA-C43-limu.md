@@ -14,7 +14,8 @@ romanization: "limu"
 concept_tag: FA-FOOD43-LIMU
 prerequisites: [FA-C42-angur, FA-C42-porteghal]
 sounds: []
-roots: []
+roots: [sanskrit-nimbu]
+etymology_hook: "limu: usually traced to Sanskrit nimbū 'lime' (CDIAL 7247); English lemon is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C42-porteghal]
 <!-- hl-knowledge: introduces=[FA-LEX-C43-FOOD43-01]; assesses=[] -->
 
 **لیمو** — *limu* — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*limu* is usually traced to an Indian word, Sanskrit *nimbū*, "lime" (CDIAL 7247; EtymDB sets the two side by side). Arabic *laymūn* took the word from Persian (EtymDB), and English *lemon* comes from it by way of Arabic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

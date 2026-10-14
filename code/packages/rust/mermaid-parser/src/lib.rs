@@ -6574,6 +6574,7 @@ fn parse_swimlane_flowchart_config(source: &str) -> Result<diagram_ir::SwimlaneF
         curve: value("curve").map(|value| parse_swimlane_edge_curve(&value, 1)).transpose()?,
         wrapping_width: parse("wrappingWidth")?.filter(|value| *value > 0.0),
         padding: parse("padding")?,
+        title_top_margin: parse("titleTopMargin")?,
     })
 }
 

@@ -15,6 +15,7 @@ concept_tag: FA-HEALTH32-DAYI
 prerequisites: [FA-C32-pedarbozorg, FA-C32-madarbozorg]
 sounds: []
 roots: []
+etymology_hook: "dâyi: usually traced to Turkic (Turkish dayı 'maternal uncle'); origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C32-madarbozorg]
 <!-- hl-knowledge: introduces=[FA-LEX-C32-HEALTH32-05]; assesses=[] -->
 
 **دایی** — *dâyi* — "an uncle (mother's brother)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dâyi* is usually traced to Turkic, to the word behind Turkish *dayı*, "maternal uncle"; EtymDB instead connects it with Persian *dâ*, "mother". The origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

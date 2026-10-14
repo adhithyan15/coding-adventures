@@ -14,7 +14,8 @@ romanization: "printer"
 concept_tag: FA-CHIZ206-PRINTER
 prerequisites: [FA-C206-shenasname, FA-C206-parvande]
 sounds: []
-roots: []
+roots: [english-printer]
+etymology_hook: "printer: a loan, usually traced to English printer 'printer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C206-parvande]
 <!-- hl-knowledge: introduces=[FA-LEX-C206-CHIZ206-04]; assesses=[] -->
 
 **پرینتر** — *printer* — "a printer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*printer* is a loan, usually traced to English *printer*, "printer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kâmpyuter"
 concept_tag: FA-THINGS110-KAMPYUTER
 prerequisites: [FA-C110-lamp, FA-C110-telefon]
 sounds: []
-roots: []
+roots: [english-computer]
+etymology_hook: "kâmpyuter: a loan, usually traced to English computer 'computer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C110-telefon]
 <!-- hl-knowledge: introduces=[FA-LEX-C110-THINGS110-03]; assesses=[] -->
 
 **کامپیوتر** — *kâmpyuter* — "a computer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kâmpyuter* is a loan, usually traced to English *computer*, "computer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

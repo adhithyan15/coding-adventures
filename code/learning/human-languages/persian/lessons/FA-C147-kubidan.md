@@ -14,7 +14,8 @@ romanization: "kubidan"
 concept_tag: FA-VERB-KUBIDAN
 prerequisites: [FA-C147-gerdgiri-kardan, FA-C147-pahn-kardan]
 sounds: []
-roots: []
+roots: [persian-kuftan]
+etymology_hook: "kubidan: built on kub-, stem of Persian kuftan 'to pound' (Middle Persian kōftan)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C147-pahn-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C147-KONESH147-03]; assesses=[] -->
 
 **کوبیدن** — *kubidan* — "to pound, to bang".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kubidan* is built on *kub-*, the present stem of the older *kuftan*, "to pound", usually traced to Middle Persian *kōftan*. It is native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

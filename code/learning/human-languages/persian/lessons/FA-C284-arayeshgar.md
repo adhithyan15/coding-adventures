@@ -14,7 +14,8 @@ romanization: "ârâyeshgar"
 concept_tag: FA-KAR284-ARAYESHGAR
 prerequisites: [FA-C283-anbor, FA-C284-mekanik]
 sounds: []
-roots: []
+roots: [persian-arastan]
+etymology_hook: "ârâyeshgar: Persian ârâyesh 'adornment' + -gar 'doer'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C284-mekanik]
 <!-- hl-knowledge: introduces=[FA-LEX-C284-KAR284-02]; assesses=[] -->
 
 **آرایشگر** — *ârâyeshgar* — "a hairdresser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ârâyeshgar* is built from *ârâyesh*, "adornment" (from *ârâstan*, "to adorn"), and *-gar*, "doer": the adorner. Both are native Persian, inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

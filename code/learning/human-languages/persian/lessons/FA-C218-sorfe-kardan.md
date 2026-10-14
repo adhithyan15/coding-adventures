@@ -14,7 +14,8 @@ romanization: "sorfe kardan"
 concept_tag: FA-VERB-SORFE-KARDAN
 prerequisites: [FA-C217-savar-shodan, FA-C218-dam-kardan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "sorfe kardan: sorfe 'cough' (origin not settled) + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C218-dam-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C218-KONESH218-02]; assesses=[] -->
 
 **سرفه کردن** — *sorfe kardan* — "to cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sorfe kardan* pairs *sorfe*, "a cough", with *kardan*, "to do". Where *sorfe* comes from is not settled. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

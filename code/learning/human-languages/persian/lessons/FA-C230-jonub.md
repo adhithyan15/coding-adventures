@@ -14,7 +14,8 @@ romanization: "jonub"
 concept_tag: FA-MAKAN230-JONUB
 prerequisites: [FA-C229-sahar, FA-C230-shomal]
 sounds: []
-roots: []
+roots: [arabic-janub]
+etymology_hook: "jonub ← Arabic janūb 'south; the south wind', root j-n-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C230-shomal]
 <!-- hl-knowledge: introduces=[FA-LEX-C230-MAKAN230-02]; assesses=[] -->
 
 **جنوب** — *jonub* — "south".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jonub* is borrowed from Arabic *janūb*, "south; the south wind". Its Arabic root is *j-n-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

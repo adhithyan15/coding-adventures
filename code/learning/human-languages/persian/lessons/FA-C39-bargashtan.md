@@ -14,7 +14,8 @@ romanization: "bargashtan"
 concept_tag: FA-VERB-BARGASHTAN
 prerequisites: [FA-C39-gashtan, FA-C39-pushidan]
 sounds: []
-roots: []
+roots: [persian-gashtan]
+etymology_hook: "bargashtan: Persian bar 'back' + gashtan 'to turn' (Middle Persian gaštan); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C39-pushidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C39-VERBS39-04]; assesses=[] -->
 
 **برگشتن** — *bargashtan* — "to come back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bargashtan* is built from *bar*, "back, up", and *gashtan*, "to turn": to turn back. Both parts are native Persian; *gashtan* is usually traced to Middle Persian *gaštan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

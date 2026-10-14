@@ -14,7 +14,8 @@ romanization: "chahârpâye"
 concept_tag: FA-CHIZ213-CHAHARPAYE
 prerequisites: [FA-C212-estekan, FA-C213-nakhongir]
 sounds: []
-roots: []
+roots: [pie-kwetwores, old-persian-pad]
+etymology_hook: "chahârpâye: Persian chahâr 'four' + pâ 'foot' + -ye; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C213-nakhongir]
 <!-- hl-knowledge: introduces=[FA-LEX-C213-CHIZ213-02]; assesses=[] -->
 
 **چهارپایه** — *chahârpâye* — "a stool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chahârpâye* is *chahâr*, "four", with *pâ*, "foot", and *-ye*: a four-footed thing. Both are inherited Persian words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

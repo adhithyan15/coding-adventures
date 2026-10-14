@@ -12,6 +12,9 @@ Before the new one: say the Persian for an actor, then the Persian for a singer.
 You'll want to know: کارگاه.
 کارگاه — kârgâh — "a workshop".
 
+The word, taken apart.
+kârgâh is built from kâr, "work", and gâh, "place": the work-place. Both are inherited; kâr continues Middle Persian kār (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a singer, then the Persian for a worksho
 
 You'll want to know: نجار.
 نجار — najjâr — "a carpenter".
+
+The word, taken apart.
+najjâr is borrowed from Arabic najjār, "carpenter". Its Arabic root is n-j-r (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a workshop, then the Persian for a carpe
 You'll want to know: لوله کش.
 لوله کش — lulekesh — "a plumber".
 
+The word, taken apart.
+lulekesh is built from lule, "pipe", and -kesh, "drawing, laying" (from keshidan): the pipe-layer. keshidan is inherited, usually traced to Middle Persian kašīdan; where lule comes from is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a carpenter, then the Persian for a plum
 You'll want to know: برقکار.
 برقکار — barqkâr — "an electrician".
 
+The word, taken apart.
+barqkâr is barq, "electricity", with kâr, "work": the electricity worker. barq is borrowed from Arabic barq, "lightning" (root b-r-q, Lane); kâr is native.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a plumber, then the Persian for an elect
 
 You'll want to know: خیاط.
 خیاط — khayyât — "a tailor".
+
+The word, taken apart.
+khayyât is borrowed from Arabic ḫayyāṭ, "tailor". Its Arabic root is ḫ-y-ṭ (Lane).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "bardâshtan"
 concept_tag: FA-VERB-BARDASHTAN
 prerequisites: [FA-C178-karname, FA-C179-dush-gereftan]
 sounds: []
-roots: []
+roots: [persian-dashtan]
+etymology_hook: "bardâshtan: Persian bar 'up' + dâshtan 'to hold'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C179-dush-gereftan]
 <!-- hl-knowledge: introduces=[FA-LEX-C179-KONESH179-02]; assesses=[] -->
 
 **برداشتن** — *bardâshtan* — "to pick up, to lift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bardâshtan* is *bar*, "up", with *dâshtan*, "to hold": to hold up. Both are native Persian. *dâshtan*, "to have", is an inherited verb; it is usually traced to Middle Persian *dāštan*, "to hold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

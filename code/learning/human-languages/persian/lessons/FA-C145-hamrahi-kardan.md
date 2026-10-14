@@ -14,7 +14,8 @@ romanization: "hamrâhi kardan"
 concept_tag: FA-VERB-HAMRAHI-KARDAN
 prerequisites: [FA-C145-puzesh-khastan, FA-C145-negahdari-kardan]
 sounds: []
-roots: []
+roots: [persian-ham, persian-rah, pie-kwer]
+etymology_hook: "hamrâhi kardan: Persian ham- 'same' + râh 'road' + -i + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C145-negahdari-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C145-KONESH145-03]; assesses=[] -->
 
 **همراهی کردن** — *hamrâhi kardan* — "to accompany".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hamrâhi kardan* pairs *hamrâhi*, "company on the road", with *kardan*. *hamrâhi* is *ham-*, "same", with *râh*, "road", and *-i*: sharing the road. All the pieces are native. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

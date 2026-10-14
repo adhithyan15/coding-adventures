@@ -14,7 +14,8 @@ romanization: "tarjome kardan"
 concept_tag: FA-VERB-TARJOME-KARDAN
 prerequisites: [FA-C182-estekhdam-kardan, FA-C182-tekrar-kardan]
 sounds: []
-roots: []
+roots: [arabic-tarjama]
+etymology_hook: "tarjome ← Arabic tarjama 'translation', root t-r-j-m (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C182-tekrar-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C182-KONESH182-04]; assesses=[] -->
 
 **ترجمه کردن** — *tarjome kardan* — "to translate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tarjome kardan* pairs *tarjome*, borrowed from Arabic *tarjama*, "translation" (root *t-r-j-m*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB). Arabic itself took the word from Aramaic (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

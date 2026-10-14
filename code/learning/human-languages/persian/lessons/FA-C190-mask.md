@@ -14,7 +14,8 @@ romanization: "mâsk"
 concept_tag: FA-SALAMAT190-MASK
 prerequisites: [FA-C189-ambulans, FA-C189-qad]
 sounds: []
-roots: []
+roots: [french-masque]
+etymology_hook: "mâsk: a loan, usually traced to French masque 'mask'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C189-qad]
 <!-- hl-knowledge: introduces=[FA-LEX-C190-SALAMAT190-01]; assesses=[] -->
 
 **ماسک** — *mâsk* — "a face mask".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mâsk* is a loan, usually traced to French *masque*, "mask".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

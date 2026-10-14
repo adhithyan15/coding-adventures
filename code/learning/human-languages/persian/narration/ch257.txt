@@ -12,6 +12,9 @@ Before the new one: say the Persian for to travel, then the Persian for to retir
 You'll want to know: دلتنگ شدن.
 دلتنگ شدن — deltang shodan — "to miss (someone)".
 
+The word, taken apart.
+deltang shodan is "to become narrow-hearted": del, "heart" (inherited, EtymDB), with tang, "narrow", and shodan. All are native Persian. shodan, "to become", is an inherited verb; it is usually traced to Middle Persian šudan, "to go".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to retire, then the Persian for to miss.
 
 You'll want to know: بزرگ شدن.
 بزرگ شدن — bozorg shodan — "to grow up".
+
+The word, taken apart.
+bozorg shodan is "to become big": bozorg is inherited, from Middle Persian wuzurg (EtymDB). shodan, "to become", is an inherited verb; it is usually traced to Middle Persian šudan, "to go".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to miss, then the Persian for to grow up
 You'll want to know: احساس کردن.
 احساس کردن — ehsâs kardan — "to feel".
 
+The word, taken apart.
+ehsâs kardan pairs ehsâs, borrowed from Arabic iḥsās, "perceiving, feeling" (root ḥ-s-s, Lane), with the Persian verb kardan, "to do, to make". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to grow up, then the Persian for to feel
 You'll want to know: قول دادن.
 قول دادن — qol dâdan — "to promise".
 
+The word, taken apart.
+qol dâdan pairs qol, borrowed from Arabic qawl, "saying, word" (root q-w-l, Lane), with the Persian verb dâdan, "to give". dâdan, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, "to give".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to feel, then the Persian for to promise
 
 You'll want to know: شکایت کردن.
 شکایت کردن — shekâyat kardan — "to complain".
+
+The word, taken apart.
+shekâyat kardan pairs shekâyat, borrowed from Arabic šikāya, "complaint" (root š-k-w, Lane), with the Persian verb kardan, "to do, to make". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.

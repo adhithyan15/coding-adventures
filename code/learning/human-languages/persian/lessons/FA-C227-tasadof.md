@@ -14,7 +14,8 @@ romanization: "tasâdof"
 concept_tag: FA-SALAMAT227-TASADOF
 prerequisites: [FA-C227-mosakken, FA-C227-bime]
 sounds: []
-roots: []
+roots: [arabic-tasaduf]
+etymology_hook: "tasâdof ← Arabic taṣāduf 'chance meeting, collision', root ṣ-d-f (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C227-bime]
 <!-- hl-knowledge: introduces=[FA-LEX-C227-SALAMAT227-04]; assesses=[] -->
 
 **تصادف** — *tasâdof* — "an accident, a crash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tasâdof* is borrowed from Arabic *taṣāduf*, "chance meeting, collision". Its Arabic root is *ṣ-d-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vali"
 concept_tag: FA-CHERA158-VALI
 prerequisites: [FA-C157-dudkesh, FA-C158-agar]
 sounds: []
-roots: []
+roots: [arabic-lakin]
+etymology_hook: "vali: usually explained as short for valikan, from Arabic wa-lākin 'but' (Lane); not walī 'friend'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C158-agar]
 <!-- hl-knowledge: introduces=[FA-LEX-C158-CHERA158-02]; assesses=[] -->
 
 **ولی** — *vali* — "but".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vali*, "but", is usually explained as short for the older *valikan*, from Arabic *wa-lākin*, "but" (root *l-k-n*, Lane). EtymDB links it to Arabic *walī*, "friend, guardian", a different word that looks alike.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

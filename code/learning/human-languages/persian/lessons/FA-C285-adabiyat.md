@@ -14,7 +14,8 @@ romanization: "adabiyât"
 concept_tag: FA-KAR285-ADABIYAT
 prerequisites: [FA-C285-fizik, FA-C285-shimi]
 sounds: []
-roots: []
+roots: [arabic-adabiyyat]
+etymology_hook: "adabiyât ← Arabic adabiyyāt 'literature, letters', root ʾ-d-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C285-shimi]
 <!-- hl-knowledge: introduces=[FA-LEX-C285-KAR285-03]; assesses=[] -->
 
 **ادبیات** — *adabiyât* — "literature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*adabiyât* is borrowed from Arabic *adabiyyāt*, "literature, letters". Its Arabic root is *ʾ-d-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

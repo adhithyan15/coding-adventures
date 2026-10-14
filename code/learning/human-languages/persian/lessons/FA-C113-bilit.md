@@ -14,7 +14,8 @@ romanization: "bilit"
 concept_tag: FA-THINGS113-BILIT
 prerequisites: [FA-C112-batri, FA-C113-kart, FA-C20-practice]
 sounds: []
-roots: []
+roots: [french-billet]
+etymology_hook: "bilit ← French billet 'note, ticket'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [FA-C113-kart]
 <!-- hl-knowledge: introduces=[FA-LEX-C113-THINGS113-02]; assesses=[] -->
 
 **بلیت** — *bilit* — "a ticket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bilit* is borrowed from French *billet*, "note, ticket" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

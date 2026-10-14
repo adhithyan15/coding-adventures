@@ -14,7 +14,8 @@ romanization: "âhu"
 concept_tag: FA-THINGS105-AHU
 prerequisites: [FA-C105-palang, FA-C105-khargush]
 sounds: []
-roots: []
+roots: [persian-ahu]
+etymology_hook: "âhu: inherited, usually traced to Middle Persian āhūg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C105-khargush]
 <!-- hl-knowledge: introduces=[FA-LEX-C105-THINGS105-03]; assesses=[] -->
 
 **آهو** — *âhu* — "a deer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âhu* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *āhūg*, "gazelle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

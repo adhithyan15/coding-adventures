@@ -14,7 +14,8 @@ romanization: "pahn"
 concept_tag: FA-THINGS123-PAHN
 prerequisites: [FA-C123-sebil, FA-C123-deraz]
 sounds: []
-roots: []
+roots: [persian-pahn]
+etymology_hook: "pahn ← Middle Persian pahn (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C123-deraz]
 <!-- hl-knowledge: introduces=[FA-LEX-C123-THINGS123-05]; assesses=[] -->
 
 **پهن** — *pahn* — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pahn* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *pahn*, "wide, broad" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
