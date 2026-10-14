@@ -356,7 +356,9 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
         }
         depth
     }).max().unwrap_or(0);
-    let lane_cross = if horizontal_flow { 150.0 } else { (rank_slot_width + 18.0).max(150.0) }
+    // Accepted node padding may exceed the ordinary lane extent. Reserve the
+    // same cross-axis inset for height as for width before centering nodes.
+    let lane_cross = if horizontal_flow { (node_height + 18.0).max(150.0) } else { (rank_slot_width + 18.0).max(150.0) }
         + 60.0 * max_group_depth as f64;
     let lane_along = if cross_lane_ranks.is_some() && horizontal_flow {
         lane_header + rank_count as f64 * rank_slot_width + max_rank as f64 * node_gap + 40.0
