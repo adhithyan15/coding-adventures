@@ -10081,10 +10081,78 @@ emphasized --> direct
                         assert!(work > 0, "the index instrumentation must observe actual eligibility/insertion/query work");
                         let budget = 64 * count * ((usize::BITS - count.leading_zeros()) as usize + 1);
                         assert!(work <= budget, "count={count}, index work={work}, unchanged bound={budget}");
+                        eprintln!("two-support empty: count={count} exchanged={exchange_axes} reverse={reverse} predicates={predicates} index_work={work} bound={budget}");
                     }
                 }
             }
         }
+    }
+
+    #[test]
+    fn line_hop_integer_two_support_tree_and_original_predicate_agree() {
+        fn validate(node: &SwimlaneHopEndpointNode) -> (usize, Vec<((i64, usize), i64)>) {
+            let (left_height, mut left) = node.left.as_ref().map_or((0, Vec::new()), |child| validate(child));
+            let (right_height, right) = node.right.as_ref().map_or((0, Vec::new()), |child| validate(child));
+            assert!(left.iter().all(|(key, _)| *key < node.key));
+            assert!(right.iter().all(|(key, _)| *key > node.key));
+            assert!(left_height.abs_diff(right_height) <= 1, "AVL balance comes from actual recursive leaf heights");
+            let height = 1 + left_height.max(right_height);
+            assert_eq!(node.height, height);
+            left.push((node.key, node.second));
+            left.extend(right);
+            assert_eq!(node.min_first, left.iter().map(|(key, _)| key.0).min().unwrap());
+            assert_eq!(node.max_first, left.iter().map(|(key, _)| key.0).max().unwrap());
+            assert_eq!(node.min_second, left.iter().map(|(_, value)| *value).min().unwrap());
+            assert_eq!(node.max_second, left.iter().map(|(_, value)| *value).max().unwrap());
+            (height, left)
+        }
+        fn signature(mut values: Vec<(f64, Point, usize, usize)>) -> Vec<(usize, usize, u64, u64, u64)> {
+            values.sort_by_key(|(_, _, edge, segment)| (*edge, *segment));
+            values.into_iter().map(|(t, point, edge, segment)| (edge, segment, t.to_bits(), point.x.to_bits(), point.y.to_bits())).collect()
+        }
+        for exchange in [false, true] {
+            for order in 0..4 {
+                let mut index = SwimlaneHopCrossings::default();
+                let mut original: Vec<(Point, Point)> = Vec::new();
+                for step in 0..40 {
+                    let position = match order { 0 => step, 1 => 39-step, 2 => (step*17)%40, _ => (step*23)%40 };
+                    let mut from = Point { x: 0.0, y: ((position % 9) * 12) as f64 };
+                    let mut to = Point { x: 200.0, y: ((39-position) * 7) as f64 };
+                    if exchange { std::mem::swap(&mut from.x, &mut from.y); std::mem::swap(&mut to.x, &mut to.y); }
+                    if step % 2 == 1 { std::mem::swap(&mut from, &mut to); }
+                    let expected = original.iter().enumerate().filter_map(|(edge, (start, end))| swimlane_line_crossing(&from, &to, start, end).map(|(t, point)| (t, point, edge, edge % 3))).collect();
+                    assert_eq!(signature(index.prior_crossings(&from, &to)), signature(expected), "unchanged original directed predicate/occurrence collector: exchange={exchange}, order={order}, step={step}");
+                    index.insert_geometry(step, step % 3, &from, &to);
+                    original.push((from, to));
+                    for cohort in [&index.integer_x_cohort, &index.integer_y_cohort].into_iter().flatten() {
+                        let (_, leaves) = validate(cohort.tree.as_ref().unwrap());
+                        assert_eq!(leaves.len(), index.oblique.len());
+                        let mut ids = leaves.iter().map(|(key, _)| key.1).collect::<Vec<_>>();
+                        ids.sort_unstable();
+                        assert_eq!(ids, index.oblique);
+                    }
+                }
+                // Duplicate occurrences retain distinct edge/segment identities.
+                let (from, to) = original[0].clone();
+                index.insert_geometry(40, 7, &from, &to);
+                original.push((from, to));
+                // A fractional coordinate permanently invalidates the cohort.
+                let outside = (Point { x: 0.5, y: 2.0 }, Point { x: 200.0, y: 91.0 });
+                index.insert_geometry(41, 2, &outside.0, &outside.1);
+                original.push(outside);
+                assert!(index.integer_x_cohort.is_none() && index.integer_y_cohort.is_none());
+                let from = Point { x: 0.0, y: 80.0 };
+                let to = Point { x: 200.0, y: 10.0 };
+                let expected = original.iter().enumerate().filter_map(|(edge, (start, end))| swimlane_line_crossing(&from, &to, start, end).map(|(t, point)| (t, point, edge, if edge == 40 { 7 } else if edge == 41 { 2 } else { edge % 3 }))).collect();
+                assert_eq!(signature(index.prior_crossings(&from, &to)), signature(expected), "fallback keeps duplicate multiplicity and directed floating results");
+                index.insert_geometry(42, 0, &from, &to);
+                assert!(index.integer_x_cohort.is_none() && index.integer_y_cohort.is_none(), "no rebuilding/rescanning a disqualified cohort");
+            }
+        }
+        for value in [16_777_216.5, 16_777_217.0, -16_777_217.0, f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+            assert!(swimlane_hop_integer_supports(&Point { x: value, y: 0.0 }, &Point { x: 100.0, y: 80.0 }, false).is_none());
+        }
+        assert!(swimlane_hop_integer_supports(&Point { x: -16_777_216.0, y: -0.0 }, &Point { x: 16_777_216.0, y: 16_777_216.0 }, false).is_some());
     }
 
     #[test]
