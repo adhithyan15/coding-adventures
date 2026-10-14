@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 169,
-  "sourceHash": "fnv1a64:34e01b3f7e8b3922",
+  "sourceHash": "fnv1a64:690782d75ca30664",
   "lessonIds": [
     "MR-C169-arogya",
     "MR-C169-mendu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch169.txt",
   "json": "marathi/narration/ch169.json",
-  "textHash": "fnv1a64:abbef9f20973bf01",
-  "jsonHash": "fnv1a64:78b299bf72d62af9",
+  "textHash": "fnv1a64:e1bdf4332874489d",
+  "jsonHash": "fnv1a64:6570b6a39402e2ce",
   "findings": []
 }

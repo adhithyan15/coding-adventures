@@ -4,7 +4,7 @@
   "chapter": 234,
   "title": "Important, Entertaining, Filthy, Full, Slow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:eceef95cb1aa9017",
+  "sourceHash": "fnv1a64:5653899e59a6784d",
   "lessons": [
     {
       "id": "MR-C234-mahattvaca",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee3618bea44e0edd",
+      "sourceHash": "fnv1a64:a23f142f0c1054a1",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मनोरंजक (manorañjak) is a compound of Sanskrit parts: manas, \"mind\", and rañjaka, \"colouring, delighting\"."
+              "text": "मनोरंजक (manorañjak) is a compound built from Sanskrit manas, \"mind\" (CDIAL 9822), and rañjaka, \"colouring, delighting\"."
             }
           ]
         },

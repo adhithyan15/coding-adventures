@@ -49,10 +49,11 @@ does not say "I am pleased"; it says the joy itself *occurred*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[MR-LEX-ANAND]; assesses=[] -->
 
-The heart of it is **आनंद** (*ānand*, "joy, bliss"), pure **Sanskrit**: **आ-**
-(*ā-*, "fully") + **नन्द** (*nand*, "to rejoice"). It is the *ānanda* of the
-scriptural phrase *sat-cit-ānanda* ("being–consciousness–bliss") — and one of the
-most common given names across India. So a Marathi speaker meets you and names
+The heart of it is **आनंद** (*ānand*, "joy, bliss"), Sanskrit *ānanda*,
+"happiness", a tatsama (CDIAL 1172): **आ-** (*ā-*, "fully") + **नन्द** (*nand*,
+"to rejoice"). It is the *ānanda* of the scriptural phrase *sat-cit-ānanda*
+("being–consciousness–bliss") — and one of the most common given names across
+India. So a Marathi speaker meets you and names
 the feeling **joy**.
 
 ## Why it's said this way

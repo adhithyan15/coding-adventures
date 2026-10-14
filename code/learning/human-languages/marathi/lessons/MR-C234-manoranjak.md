@@ -47,7 +47,7 @@ reviews_of: [MR-C234-mahattvaca]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**मनोरंजक** (*manorañjak*) is a compound of Sanskrit parts: *manas*, "mind", and *rañjaka*, "colouring, delighting".
+**मनोरंजक** (*manorañjak*) is a compound built from Sanskrit *manas*, "mind" (CDIAL 9822), and *rañjaka*, "colouring, delighting".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [MR-C263-gayak]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**कार्यक्रम** (*kāryakram*) is a modern compound of Sanskrit parts: *kārya*, "work, business", and *krama*, "step, order".
+**कार्यक्रम** (*kāryakram*) is a modern compound built from Sanskrit *kārya*, "work, business" (CDIAL 3078), and *krama*, "step, order" (CDIAL 3577).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

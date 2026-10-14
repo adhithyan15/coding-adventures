@@ -4,7 +4,7 @@
   "chapter": 210,
   "title": "Dentist, Butcher, Craftsman, Worker, Employee",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e6f70dd5ef4e8cf3",
+  "sourceHash": "fnv1a64:fd74afb9717d29ba",
   "lessons": [
     {
       "id": "MR-C210-dantavaidya",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd9144717812a800",
+      "sourceHash": "fnv1a64:ffe66dac4f1f4bee",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कर्मचारी (karmacārī) is a modern compound of Sanskrit parts: karman, \"work\", and cārin, \"moving, acting\"."
+              "text": "कर्मचारी (karmacārī) is a modern compound built from Sanskrit karman, \"work\" (CDIAL 2892), and cārin, \"moving, acting\" (CDIAL 4765)."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 169,
   "title": "Health, Brain, Lung, Liver, Kidney",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:34e01b3f7e8b3922",
+  "sourceHash": "fnv1a64:690782d75ca30664",
   "lessons": [
     {
       "id": "MR-C169-arogya",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cd69cea1c9a540a",
+      "sourceHash": "fnv1a64:6e65bfb83b9a6f8a",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मूत्रपिंड (mūtrapiṇḍ) is a modern compound of Sanskrit parts: mūtra, \"urine\", and piṇḍa, \"lump, ball\"."
+              "text": "मूत्रपिंड (mūtrapiṇḍ) is a modern compound built from Sanskrit mūtra, \"urine\" (CDIAL 10234), and piṇḍa, \"lump, ball\" (CDIAL 8168)."
             }
           ]
         },

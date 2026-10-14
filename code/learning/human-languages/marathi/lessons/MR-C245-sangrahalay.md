@@ -47,7 +47,7 @@ reviews_of: [MR-C245-mahavidyalay]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**संग्रहालय** (*saṅgrahālay*) is a compound of Sanskrit parts: *saṅgraha*, "collection", and *ālaya*, "abode".
+**संग्रहालय** (*saṅgrahālay*) is a compound built from Sanskrit *saṅgraha*, "collection" (CDIAL 12852), and *ālaya*, "abode" (CDIAL 1366).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [MR-C180-patrakar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**वास्तुविशारद** (*vāstuviśārad*) is a modern compound of Sanskrit parts: *vāstu*, "site of a house, building", and *viśārada*, "skilled, expert".
+**वास्तुविशारद** (*vāstuviśārad*) is a modern compound built from Sanskrit *vāstu*, "site of a house, building" (CDIAL 11606), and *viśārada*, "skilled, expert".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

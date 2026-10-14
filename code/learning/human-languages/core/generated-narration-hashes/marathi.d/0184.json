@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 184,
-  "sourceHash": "fnv1a64:404d84641e7a1a18",
+  "sourceHash": "fnv1a64:e7f819fc13ede9f6",
   "lessonIds": [
     "MR-C184-dhur",
     "MR-C184-jyot",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch184.txt",
   "json": "marathi/narration/ch184.json",
-  "textHash": "fnv1a64:437dab57436cc884",
-  "jsonHash": "fnv1a64:d3012f2bc0c7c7d8",
+  "textHash": "fnv1a64:aa098301396fdc88",
+  "jsonHash": "fnv1a64:cb7ac96b22552bff",
   "findings": []
 }

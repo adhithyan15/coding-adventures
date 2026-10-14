@@ -4,7 +4,7 @@
   "chapter": 184,
   "title": "Smoke, Flame, Climate, Environment, Pollution",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:404d84641e7a1a18",
+  "sourceHash": "fnv1a64:e7f819fc13ede9f6",
   "lessons": [
     {
       "id": "MR-C184-dhur",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:139d1b3cf80bd641",
+      "sourceHash": "fnv1a64:e9e5f7f1314803c1",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पर्यावरण (paryāvaraṇ) is a modern coinage of Sanskrit parts: pari, \"around\", and āvaraṇa, \"covering\": what surrounds us."
+              "text": "पर्यावरण (paryāvaraṇ) is a modern coinage built from Sanskrit pari, \"around\", and āvaraṇa, \"covering\" (CDIAL 1413): what surrounds us."
             }
           ]
         },

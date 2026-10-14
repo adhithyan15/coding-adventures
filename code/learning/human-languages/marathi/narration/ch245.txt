@@ -109,7 +109,7 @@ You'll want to know: महाविद्यालय.
 महाविद्यालय — mahāvidyālay — "a college".
 
 The word, taken apart.
-महाविद्यालय (mahāvidyālay) is a modern compound of Sanskrit parts: mahā, "great", vidyā, "knowledge", and ālaya, "abode".
+महाविद्यालय (mahāvidyālay) is a modern compound built from Sanskrit mahā, "great", vidyā, "knowledge" (CDIAL 11741), and ālaya, "abode" (CDIAL 1366).
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: संग्रहालय.
 संग्रहालय — saṅgrahālay — "a museum".
 
 The word, taken apart.
-संग्रहालय (saṅgrahālay) is a compound of Sanskrit parts: saṅgraha, "collection", and ālaya, "abode".
+संग्रहालय (saṅgrahālay) is a compound built from Sanskrit saṅgraha, "collection" (CDIAL 12852), and ālaya, "abode" (CDIAL 1366).
 
 What you've built.
 One more word for this chapter.

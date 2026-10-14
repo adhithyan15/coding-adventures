@@ -47,7 +47,7 @@ reviews_of: [MR-C169-yakrt]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**मूत्रपिंड** (*mūtrapiṇḍ*) is a modern compound of Sanskrit parts: *mūtra*, "urine", and *piṇḍa*, "lump, ball".
+**मूत्रपिंड** (*mūtrapiṇḍ*) is a modern compound built from Sanskrit *mūtra*, "urine" (CDIAL 10234), and *piṇḍa*, "lump, ball" (CDIAL 8168).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

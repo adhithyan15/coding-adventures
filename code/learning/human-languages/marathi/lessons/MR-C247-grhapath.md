@@ -47,7 +47,7 @@ reviews_of: [MR-C247-padvi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**गृहपाठ** (*gṛhapāṭh*) is a modern compound of Sanskrit parts: *gṛha*, "house", and *pāṭha*, "reading, lesson".
+**गृहपाठ** (*gṛhapāṭh*) is a modern compound built from Sanskrit *gṛha*, "house" (CDIAL 4240), and *pāṭha*, "reading, lesson" (CDIAL 8035).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

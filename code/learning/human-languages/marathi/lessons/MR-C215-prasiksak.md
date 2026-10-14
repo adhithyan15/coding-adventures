@@ -47,7 +47,7 @@ reviews_of: [MR-C215-kheladu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**प्रशिक्षक** (*praśikṣak*) is a modern word of Sanskrit parts: *pra-*, "forth", and *śikṣaka*, "one who teaches".
+**प्रशिक्षक** (*praśikṣak*) is a modern word built from Sanskrit *pra-*, "forth", and *śikṣaka*, "one who teaches".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

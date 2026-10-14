@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 32,
-  "sourceHash": "fnv1a64:392cd57cc84ae303",
+  "sourceHash": "fnv1a64:f40add4e57daf8dc",
   "lessonIds": [
     "MR-C32-nahi-verb",
     "MR-C32-nako",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "marathi/narration/ch32.txt",
   "json": "marathi/narration/ch32.json",
-  "textHash": "fnv1a64:4bc1343e26dbcaf4",
-  "jsonHash": "fnv1a64:10a841af9fc178c5",
+  "textHash": "fnv1a64:d6e90cbefde8719b",
+  "jsonHash": "fnv1a64:5d266d4b6e987c16",
   "findings": []
 }

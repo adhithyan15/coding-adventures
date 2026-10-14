@@ -4,7 +4,7 @@
   "chapter": 247,
   "title": "Job, Degree, Homework, Education, Feeling",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cbc89b356c2eeb85",
+  "sourceHash": "fnv1a64:0785ea31a922d110",
   "lessons": [
     {
       "id": "MR-C247-nokri",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa971a55ae954ebf",
+      "sourceHash": "fnv1a64:e269c35753bf67fb",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "गृहपाठ (gṛhapāṭh) is a modern compound of Sanskrit parts: gṛha, \"house\", and pāṭha, \"reading, lesson\"."
+              "text": "गृहपाठ (gṛhapāṭh) is a modern compound built from Sanskrit gṛha, \"house\" (CDIAL 4240), and pāṭha, \"reading, lesson\" (CDIAL 8035)."
             }
           ]
         },

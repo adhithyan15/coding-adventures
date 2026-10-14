@@ -4,7 +4,7 @@
   "chapter": 274,
   "title": "Good wishes, Invitation, Ceremony, Worship, Officer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:64c125717d9e0c22",
+  "sourceHash": "fnv1a64:dd3e8cb1e87c69c9",
   "lessons": [
     {
       "id": "MR-C274-subheccha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4fa352ec90384e2",
+      "sourceHash": "fnv1a64:14d880cab37b7ede",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "शुभेच्छा (śubhecchā) is a compound of Sanskrit parts: śubha, \"good, auspicious\", and icchā, \"wish\"."
+              "text": "शुभेच्छा (śubhecchā) is a compound built from Sanskrit śubha, \"good, auspicious\" (CDIAL 12532), and icchā, \"wish\" (CDIAL 1557)."
             }
           ]
         },

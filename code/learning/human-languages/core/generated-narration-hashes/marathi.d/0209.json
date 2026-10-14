@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 209,
-  "sourceHash": "fnv1a64:c95a2fc808707a02",
+  "sourceHash": "fnv1a64:fbd6330b80659cf1",
   "lessonIds": [
     "MR-C209-arthavyavastha",
     "MR-C209-yuddha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch209.txt",
   "json": "marathi/narration/ch209.json",
-  "textHash": "fnv1a64:1dbfe05d21084da3",
-  "jsonHash": "fnv1a64:9881f1ee0d5cc0cd",
+  "textHash": "fnv1a64:c12b0c04b245f41b",
+  "jsonHash": "fnv1a64:ea210e1dcb3aef62",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 229,
   "title": "Tablet, Ointment, Bandage, Ambulance, Diet",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0856ad93f9c7f767",
+  "sourceHash": "fnv1a64:f9bb49cf4c3b45c9",
   "lessons": [
     {
       "id": "MR-C229-goli",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:057d464ae6bc0fd2",
+      "sourceHash": "fnv1a64:bdf98d03d52b9250",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "रुग्णवाहिका (rugṇavāhikā) is a modern compound of Sanskrit parts: rugṇa, \"broken, sick\", and vāhikā, \"one that carries\"."
+              "text": "रुग्णवाहिका (rugṇavāhikā) is a modern compound built from Sanskrit rugṇa, \"broken, sick\" (CDIAL 10760), and vāhikā, \"one that carries\"."
             }
           ]
         },

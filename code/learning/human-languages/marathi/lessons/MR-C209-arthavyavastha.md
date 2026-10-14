@@ -47,7 +47,7 @@ reviews_of: [MR-C208-thamba]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**अर्थव्यवस्था** (*arthavyavasthā*) is a modern compound of Sanskrit parts: *artha*, "aim, wealth", and *vyavasthā*, "arrangement".
+**अर्थव्यवस्था** (*arthavyavasthā*) is a modern compound built from Sanskrit *artha*, "aim, wealth" (CDIAL 638), and *vyavasthā*, "arrangement".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [MR-C229-patti]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**रुग्णवाहिका** (*rugṇavāhikā*) is a modern compound of Sanskrit parts: *rugṇa*, "broken, sick", and *vāhikā*, "one that carries".
+**रुग्णवाहिका** (*rugṇavāhikā*) is a modern compound built from Sanskrit *rugṇa*, "broken, sick" (CDIAL 10760), and *vāhikā*, "one that carries".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

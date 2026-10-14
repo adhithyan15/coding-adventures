@@ -4,7 +4,7 @@
   "chapter": 215,
   "title": "Player, Coach, Supporter, Arrival, Departure",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e857f53dd08afb1a",
+  "sourceHash": "fnv1a64:04f56dd6805d8ef4",
   "lessons": [
     {
       "id": "MR-C215-kheladu",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87fb84ba66c0f561",
+      "sourceHash": "fnv1a64:a7218acf83f60efb",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "प्रशिक्षक (praśikṣak) is a modern word of Sanskrit parts: pra-, \"forth\", and śikṣaka, \"one who teaches\"."
+              "text": "प्रशिक्षक (praśikṣak) is a modern word built from Sanskrit pra-, \"forth\", and śikṣaka, \"one who teaches\"."
             }
           ]
         },

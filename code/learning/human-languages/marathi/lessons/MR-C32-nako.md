@@ -53,7 +53,7 @@ Between them sits a gap: how do you turn down something you are being
 offer with **नाही** and you have said something slightly odd — that the tea does
 not exist. Marathi keeps the two apart, and so should you.
 
-The word carries the same ancient **na-** as **नाही**, and its meaning is *I do not want it*, which is why it can refuse an offer and can never
+The word carries the same ancient **na-** as **नाही**; it means *I do not want it*, which is why it can refuse an offer and never
 answer a question of fact.
 
 Its polite partner is the one you already have. **चालेल** accepts, **नको**
@@ -62,7 +62,7 @@ declines, and **धन्यवाद** goes on the end of either.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-CDIAL has no entry for **नको** as a whole, so the history of its second syllable is left open.
+Its origin is not settled: it opens with the old negative *na*, "not" (CDIAL 6906), but CDIAL has no entry for **नको** itself.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NAKO, MR-SENSE-CHALEL-OKAY, MR-GRAMMAR-NEGATE-NAHI] -->

@@ -47,7 +47,7 @@ reviews_of: [MR-C273-daya]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**शुभेच्छा** (*śubhecchā*) is a compound of Sanskrit parts: *śubha*, "good, auspicious", and *icchā*, "wish".
+**शुभेच्छा** (*śubhecchā*) is a compound built from Sanskrit *śubha*, "good, auspicious" (CDIAL 12532), and *icchā*, "wish" (CDIAL 1557).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

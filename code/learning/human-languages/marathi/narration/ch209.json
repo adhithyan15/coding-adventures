@@ -4,7 +4,7 @@
   "chapter": 209,
   "title": "Economy, War, Peace, Army, Soldier",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c95a2fc808707a02",
+  "sourceHash": "fnv1a64:fbd6330b80659cf1",
   "lessons": [
     {
       "id": "MR-C209-arthavyavastha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f43968b28b45510",
+      "sourceHash": "fnv1a64:f830fd554cdff3ec",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "अर्थव्यवस्था (arthavyavasthā) is a modern compound of Sanskrit parts: artha, \"aim, wealth\", and vyavasthā, \"arrangement\"."
+              "text": "अर्थव्यवस्था (arthavyavasthā) is a modern compound built from Sanskrit artha, \"aim, wealth\" (CDIAL 638), and vyavasthā, \"arrangement\"."
             }
           ]
         },

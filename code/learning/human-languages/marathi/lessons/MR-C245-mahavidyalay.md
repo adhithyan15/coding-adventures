@@ -47,7 +47,7 @@ reviews_of: [MR-C245-masid]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**महाविद्यालय** (*mahāvidyālay*) is a modern compound of Sanskrit parts: *mahā*, "great", *vidyā*, "knowledge", and *ālaya*, "abode".
+**महाविद्यालय** (*mahāvidyālay*) is a modern compound built from Sanskrit *mahā*, "great", *vidyā*, "knowledge" (CDIAL 11741), and *ālaya*, "abode" (CDIAL 1366).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

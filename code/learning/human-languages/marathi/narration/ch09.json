@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Introducing Yourself",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:b9eabe439b891ce4",
+  "sourceHash": "fnv1a64:ef58f162ff412937",
   "lessons": [
     {
       "id": "MR-C02-naav",
@@ -920,7 +920,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07ec548c5b5b1184",
+      "sourceHash": "fnv1a64:e2633d72a6a698e8",
       "notice": null,
       "blocks": [
         {
@@ -958,7 +958,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The heart of it is आनंद (ānand, \"joy, bliss\"), pure Sanskrit: आ- (ā-, \"fully\") + नन्द (nand, \"to rejoice\"). It is the ānanda of the scriptural phrase sat-cit-ānanda (\"being–consciousness–bliss\") — and one of the most common given names across India. So a Marathi speaker meets you and names the feeling joy."
+              "text": "The heart of it is आनंद (ānand, \"joy, bliss\"), Sanskrit ānanda, \"happiness\", a tatsama (CDIAL 1172): आ- (ā-, \"fully\") + नन्द (nand, \"to rejoice\"). It is the ānanda of the scriptural phrase sat-cit-ānanda (\"being–consciousness–bliss\") — and one of the most common given names across India. So a Marathi speaker meets you and names the feeling joy."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [MR-C184-havaman]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**पर्यावरण** (*paryāvaraṇ*) is a modern coinage of Sanskrit parts: *pari*, "around", and *āvaraṇa*, "covering": what surrounds us.
+**पर्यावरण** (*paryāvaraṇ*) is a modern coinage built from Sanskrit *pari*, "around", and *āvaraṇa*, "covering" (CDIAL 1413): what surrounds us.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

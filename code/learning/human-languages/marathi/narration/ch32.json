@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Saying It Is Not So",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:392cd57cc84ae303",
+  "sourceHash": "fnv1a64:f40add4e57daf8dc",
   "lessons": [
     {
       "id": "MR-C32-nahi-verb",
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0994250c6be711c",
+      "sourceHash": "fnv1a64:ae2fa9fcaabef498",
       "notice": null,
       "blocks": [
         {
@@ -212,7 +212,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word carries the same ancient na- as नाही, and its meaning is I do not want it, which is why it can refuse an offer and can never answer a question of fact."
+              "text": "The word carries the same ancient na- as नाही; it means I do not want it, which is why it can refuse an offer and never answer a question of fact."
             },
             {
               "kind": "speech",
@@ -227,7 +227,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "CDIAL has no entry for नको (nako) as a whole, so the history of its second syllable is left open."
+              "text": "Its origin is not settled: it opens with the old negative na, \"not\" (CDIAL 6906), but CDIAL has no entry for नको (nako) itself."
             }
           ]
         },

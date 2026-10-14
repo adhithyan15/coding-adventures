@@ -47,7 +47,7 @@ reviews_of: [MR-C210-kamgar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**कर्मचारी** (*karmacārī*) is a modern compound of Sanskrit parts: *karman*, "work", and *cārin*, "moving, acting".
+**कर्मचारी** (*karmacārī*) is a modern compound built from Sanskrit *karman*, "work" (CDIAL 2892), and *cārin*, "moving, acting" (CDIAL 4765).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
