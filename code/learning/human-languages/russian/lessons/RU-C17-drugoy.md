@@ -58,6 +58,11 @@ one* is, and the answer is the person beside you.
 
 - **другой брат** — *drugóy brat* — the **other** brother.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**другой** was first the same word as *друг*, "friend", says Vasmer: Proto-Slavic *\*drugŭ*, "companion", a cousin of Lithuanian *draũgas*, "companion".
+
 ## Grammar lens — один … другой …
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-ODIN-DRUGOY-01]; assesses=[RU-LEX-DRUGOY-01, RU-LEX-ODIN-01, RU-LEX-LYUBIT, RU-LEX-CHAI, RU-LEX-KOFE] -->
 

@@ -11,8 +11,8 @@ concept_tag: RU-COURTESY-SORRY-FORGIVE
 romanization: prastítye
 prerequisites: [RU-C21-izvinite]
 sounds: []
-roots: []
-etymology_hook: "простите is built on простой, 'simple, straight' — to forgive is to make straight again, which is why the same root gives Russian its word for plain"
+roots: [slavic-prostu]
+etymology_hook: "простите is built on простой, Proto-Slavic *prostŭ 'simple, free': to forgive is to set someone free"
 duration:
   max_seconds: 250
 requires:
@@ -69,16 +69,15 @@ What separates them is **weight**, not politeness — both words are polite.
   them to release you from it.
 
 Use **простите** for a trodden foot and you sound as though you had wrecked their
-week. Use **извините** after a genuine wrong and you sound as though it did not
-matter.
+week.
 
 This is the same pair-with-a-rule that **здравствуйте** and *привет* form for
-greetings — Russian keeps a formal and a casual option side by side and expects
-you to choose. The difference here is that the choice is about the size of the
+greetings — Russian keeps two options side by side. The difference here is that the choice is about the size of the
 offence rather than about who you are talking to.
 
 The etymology carries the same weight: **простите** is built on **простой**,
-*simple, straight* — to forgive is to make something straight again.
+Proto-Slavic *\*prostŭ*, "simple, free": to forgive is to set someone free, and Czech
+*prostiti* still means "to free" (Vasmer).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-PROSTITE-01, RU-PRAGMATICS-IZVINITE-PROSTITE-01] -->

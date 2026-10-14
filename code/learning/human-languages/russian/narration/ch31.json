@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Back, Tongue, Lip, Face, Blood",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f8ee023c1c3ec242",
+  "sourceHash": "fnv1a64:8236eb8350b66dfc",
   "lessons": [
     {
       "id": "RU-C31-back",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37af796ed7a8fe6d",
+      "sourceHash": "fnv1a64:dc9916baa8c36e8e",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "спина (spiná) — origin disputed. One view takes it from Latin spīna, \"thorn, backbone\", through Old Polish spina, \"backbone\"; Vasmer also allows a native word, a cousin of the Latin one and of Latvian spina, \"a switch\". It is first recorded in the 1600s (Vasmer)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ea604e1fd107436",
+      "sourceHash": "fnv1a64:b4f11664d54ddef4",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "язык (yazýk) from Proto-Slavic językŭ, \"tongue\" — inherited, from the old Indo-European word for \"tongue\" that also gave Old Latin dingua, later lingua, and English tongue (Vasmer). The Slavic shape is irregular. \"Language\" grew from the organ, as in English tongue."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a52cf0f946fca1a1",
+      "sourceHash": "fnv1a64:47ad179a7e395ea2",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "губа (gubá) from Proto-Slavic gǫba — inherited; Ukrainian губа (gubá) and Polish gęba mean \"mouth\" (Vasmer). The deeper origin is unclear: Vasmer weighs Greek gamphai, \"jaws\", and a link with the губа (gubá) that means \"sponge\", without deciding."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6f3789cea474ad7",
+      "sourceHash": "fnv1a64:e8ab2dc78e435a8d",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "лицо (litsó) from Proto-Slavic lice, built on likŭ, \"face\", the word Russian keeps as лик, \"a face on an icon\" (Vasmer). Vasmer compares Old Irish lecco, \"cheek\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5292dde2f30223dd",
+      "sourceHash": "fnv1a64:6d9aa1dea1ed44bb",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "кровь (krov) from Proto-Slavic kry, with the stem krŭv- in its other forms — inherited. Vasmer lists Lithuanian kraũjas, \"blood\", Latin cruor, \"gore\", Greek kréas, \"meat\", and Old Norse hrár, \"raw\", so English raw is a cousin, from PIE kréwh₂-, \"raw flesh\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

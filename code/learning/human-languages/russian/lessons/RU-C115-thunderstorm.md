@@ -14,7 +14,8 @@ romanization: "grozá"
 concept_tag: RU-THINGS115-THUNDERSTORM
 prerequisites: [RU-C114-holiday, RU-C114-fog]
 sounds: []
-roots: []
+roots: [slavic-groza]
+etymology_hook: "гроза ← Proto-Slavic *groza 'terror'; Lithuanian gražóti 'to threaten' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C114-fog]
 <!-- hl-knowledge: introduces=[RU-LEX-C115-THINGS115-01]; assesses=[] -->
 
 **гроза** (*grozá*) — "a thunderstorm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**гроза** ← Proto-Slavic *\*groza*, "terror, dread" — inherited; *грозить*, "to threaten", is its verb. Vasmer relates it to Lithuanian *gražóti*, "to threaten", and perhaps Greek *gorgós*, "fearsome", as in the Gorgon.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 129,
-  "sourceHash": "fnv1a64:efe8b87c37d4b42c",
+  "sourceHash": "fnv1a64:abeead75e9f78ae9",
   "lessonIds": [
     "RU-C129-soft",
     "RU-C129-hard",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch129.txt",
   "json": "russian/narration/ch129.json",
-  "textHash": "fnv1a64:a1149621ce5bd7de",
-  "jsonHash": "fnv1a64:a43f55d7c4654ae6",
+  "textHash": "fnv1a64:64a50c45656d8278",
+  "jsonHash": "fnv1a64:f51b501fafb0283d",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "kázhdyy"
 concept_tag: RU-VREMYA150-KAZHDYY
 prerequisites: [RU-C149-zakat, RU-C150-redko]
 sounds: []
-roots: []
+roots: [pie-kwo]
+etymology_hook: "каждый ← Proto-Slavic *kŭžĭdo: the question word кто 'who' + же + -де, as in где 'where'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C150-redko]
 <!-- hl-knowledge: introduces=[RU-LEX-C150-VREMYA150-02]; assesses=[] -->
 
 **каждый** (*kázhdyy*) — "every, each".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**каждый** ← Proto-Slavic *\*kŭžĭdo* — inherited: the old question stem of *кто*, "who", with *же*, a stressing particle, and *-де*, as in *где*, "where" (Vasmer). Gothic *hvarjis*, "which", is built in a similar way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

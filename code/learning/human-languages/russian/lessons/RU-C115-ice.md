@@ -14,7 +14,8 @@ romanization: "lyod"
 concept_tag: RU-THINGS115-ICE
 prerequisites: [RU-C114-fog, RU-C115-thunderstorm]
 sounds: []
-roots: []
+roots: [slavic-ledu]
+etymology_hook: "лёд ← Proto-Slavic *ledŭ; Lithuanian ledùs 'ice' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C115-thunderstorm]
 <!-- hl-knowledge: introduces=[RU-LEX-C115-THINGS115-02]; assesses=[] -->
 
 **лёд** (*lyod*) — "ice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лёд** ← Proto-Slavic *\*ledŭ* — inherited, a cousin of Lithuanian *ledùs* and Latvian *ledus*, "ice" (Vasmer). A link with Greek *líthos*, "stone", he finds doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

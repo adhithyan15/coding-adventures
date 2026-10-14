@@ -14,7 +14,8 @@ romanization: "úgol"
 concept_tag: RU-LOC89-CORNER
 prerequisites: [RU-C89-factory, RU-C89-office]
 sounds: []
-roots: []
+roots: [pie-h2enk]
+etymology_hook: "угол ← Proto-Slavic *ǫgŭlŭ; Latin angulus 'corner' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C89-office]
 <!-- hl-knowledge: introduces=[RU-LEX-C89-LOC89-03]; assesses=[] -->
 
 **угол** (*úgol*) — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**угол** ← Proto-Slavic *\*ǫgŭlŭ* — inherited, a cousin of Latin *angulus*, "corner", and Sanskrit *aṅguli-*, "finger" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

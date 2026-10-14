@@ -14,7 +14,8 @@ romanization: "tupóy"
 concept_tag: RU-KACH217-TUPOY
 prerequisites: [RU-C216-grustnyy, RU-C216-strogiy]
 sounds: []
-roots: []
+roots: [slavic-topu]
+etymology_hook: "тупой ← Proto-Slavic *tǫpŭ; Vasmer reports comparisons with Old Norse þambr 'swollen', unsettled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C216-strogiy]
 <!-- hl-knowledge: introduces=[RU-LEX-C217-KACH217-01]; assesses=[] -->
 
 **тупой** (*tupóy*) — "blunt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тупой** ← Proto-Slavic *\*tǫpŭ* — inherited. It has been compared with Old Norse *þambr*, "swollen", and Lithuanian *tampýti*, "to stretch", among others (Vasmer); the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

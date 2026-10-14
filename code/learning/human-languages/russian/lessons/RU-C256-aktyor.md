@@ -14,7 +14,8 @@ romanization: "aktyór"
 concept_tag: RU-RABOTA256-AKTYOR
 prerequisites: [RU-C256-khudozhnik, RU-C256-muzykant]
 sounds: []
-roots: []
+roots: [actor-latin]
+etymology_hook: "актёр ← French acteur, from Latin actor 'a doer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C256-muzykant]
 <!-- hl-knowledge: introduces=[RU-LEX-C256-RABOTA256-05]; assesses=[] -->
 
 **актёр** (*aktyór*) — "an actor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**актёр** comes from French *acteur* (Vasmer), from Latin *āctor*, "a doer, a performer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

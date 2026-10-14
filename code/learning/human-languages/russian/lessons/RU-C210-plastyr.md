@@ -14,7 +14,8 @@ romanization: "plástyr"
 concept_tag: RU-ZDOROV210-PLASTYR
 prerequisites: [RU-C210-allergiya, RU-C210-stomatolog]
 sounds: []
-roots: []
+roots: [emplastrum-latin]
+etymology_hook: "пластырь ← Church Slavonic, from Latin plastrum or emplastrum, Greek emplastron 'a salve'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C210-stomatolog]
 <!-- hl-knowledge: introduces=[RU-LEX-C210-ZDOROV210-04]; assesses=[] -->
 
 **пластырь** (*plástyr*) — "a sticking plaster".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пластырь** — Church Slavonic *пластырь*, for Greek *émplastron*, "a salve plaster"; Vasmer takes it from Vulgar Latin *\*plastrum* or, through Old High German *pflâster*, from Latin *emplastrum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

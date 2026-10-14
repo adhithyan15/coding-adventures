@@ -14,7 +14,8 @@ romanization: "blízko"
 concept_tag: RU-WHERE1-NEAR
 prerequisites: [RU-C72-there, RU-C72-far]
 sounds: []
-roots: []
+roots: [slavic-blizu]
+etymology_hook: "близко is the adverb of близкий 'close', from близ 'near'; the deeper origin is not certain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C72-far]
 <!-- hl-knowledge: introduces=[RU-LEX-C72-WHERE1-04]; assesses=[] -->
 
 **близко** (*blízko*) — "near, close by".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**близко** is *близкий*, "close", made into an adverb, from *близ*, "near", Proto-Slavic *\*blizŭ*. Vasmer relates it to Latvian *blaîzît*, "to press", and Latin *flīgere*, "to strike", but also cites a Lithuanian alternative, so the deeper origin is open.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

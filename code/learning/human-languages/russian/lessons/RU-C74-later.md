@@ -14,7 +14,8 @@ romanization: "potóm"
 concept_tag: RU-WHEN-LATER
 prerequisites: [RU-C74-never, RU-C74-now]
 sounds: []
-roots: []
+roots: [pie-to]
+etymology_hook: "потом is по 'after' + том, a form of тот 'that': 'after that'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C74-now]
 <!-- hl-knowledge: introduces=[RU-LEX-C74-WHEN-05]; assesses=[] -->
 
 **потом** (*potóm*) — "later, then".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**потом** is *по*, "after", with *том*, a form of *тот*, "that": "after that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

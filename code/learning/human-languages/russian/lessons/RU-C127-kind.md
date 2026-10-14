@@ -14,7 +14,8 @@ romanization: "dóbryy"
 concept_tag: RU-QUAL127-KIND
 prerequisites: [RU-C126-boring, RU-C127-cheerful]
 sounds: []
-roots: []
+roots: [slavic-dobru]
+etymology_hook: "добрый ← Proto-Slavic *dobrŭ, with доба 'a fitting time'; Latin faber 'craftsman' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C127-cheerful]
 <!-- hl-knowledge: introduces=[RU-LEX-C127-QUAL127-02]; assesses=[] -->
 
 **добрый** (*dóbryy*) — "kind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**добрый** ← Proto-Slavic *\*dobrŭ* — inherited, with *доба*, "a fitting time", and *доблесть*, "valour". Vasmer relates it to Latin *faber*, "a craftsman", and Armenian *darbin*, "a smith": good was first "fitting, well made".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

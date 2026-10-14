@@ -14,7 +14,8 @@ romanization: "navérnoye"
 concept_tag: RU-PRICH215-NAVERNOYE
 prerequisites: [RU-C214-vniz, RU-C215-konechno]
 sounds: []
-roots: []
+roots: [pie-wehr-true]
+etymology_hook: "наверное is на + верное 'the sure thing', from верный 'faithful, sure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C215-konechno]
 <!-- hl-knowledge: introduces=[RU-LEX-C215-PRICH215-02]; assesses=[] -->
 
 **наверное** (*navérnoye*) — "probably".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**наверное** is *на*, "on", with *верное*, "the sure thing", from *верный*, "true, sure", and *вера*, "faith": first "for certain", now "probably".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

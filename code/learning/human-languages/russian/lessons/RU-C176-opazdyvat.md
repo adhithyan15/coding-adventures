@@ -14,7 +14,8 @@ romanization: "opázdyvat"
 concept_tag: RU-VERB-OPAZDYVAT
 prerequisites: [RU-C175-zazhigat, RU-C176-vozvrashchatsya]
 sounds: []
-roots: []
+roots: [pie-pos]
+etymology_hook: "опаздывать is о- + -паздывать, from поздно 'late'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C176-vozvrashchatsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C176-ACT176-02]; assesses=[] -->
 
 **опаздывать** (*opázdyvat*) — "to be late".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**опаздывать** is *о-* with *-паздывать*, from *поздно*, "late", Proto-Slavic *\*pozdŭ*, which Vasmer traces to the PIE word for "after" in Latin *post*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

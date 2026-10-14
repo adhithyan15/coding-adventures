@@ -14,7 +14,8 @@ romanization: "západ"
 concept_tag: RU-LOC91-WEST
 prerequisites: [RU-C90-south, RU-C90-east]
 sounds: []
-roots: []
+roots: [slavic-pad]
+etymology_hook: "запад is за- + пад, from падать 'to fall': the sun's going down, like Latin occidens"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C90-east]
 <!-- hl-knowledge: introduces=[RU-LEX-C91-LOC91-01]; assesses=[] -->
 
 **запад** (*západ*) — "the west".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**запад** is *за-*, "behind", with *пад*, from *падать*, "to fall": first "sunset", like Latin *occidēns*, "the falling (sun)" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

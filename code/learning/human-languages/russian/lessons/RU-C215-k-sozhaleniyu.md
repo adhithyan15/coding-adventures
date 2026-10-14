@@ -14,7 +14,8 @@ romanization: "k sozhaléniyu"
 concept_tag: RU-PRICH215-K-SOZHALENIYU
 prerequisites: [RU-C215-navernoye, RU-C215-mozhet-byt]
 sounds: []
-roots: []
+roots: [slavic-zhali]
+etymology_hook: "к сожалению is 'to (my) regret': сожаление from жаль 'pity'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C215-mozhet-byt]
 <!-- hl-knowledge: introduces=[RU-LEX-C215-PRICH215-04]; assesses=[] -->
 
 **к сожалению** (*k sozhaléniyu*) — "unfortunately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**к сожалению** is "to (my) regret": *к*, "to", with *сожалению*, from *сожаление*, "regret", built on *жалеть*, "to pity". Vasmer relates *жаль*, "pity", to Lithuanian *gėlà*, "torment", and *gélti*, "to sting".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

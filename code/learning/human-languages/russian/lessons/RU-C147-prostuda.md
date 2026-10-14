@@ -14,7 +14,8 @@ romanization: "prostúda"
 concept_tag: RU-ZDOROV147-PROSTUDA
 prerequisites: [RU-C146-parkovat, RU-C147-bolnoy]
 sounds: []
-roots: []
+roots: [slavic-studu]
+etymology_hook: "простуда is про- + студ 'cold', from стыть 'to grow cold'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C147-bolnoy]
 <!-- hl-knowledge: introduces=[RU-LEX-C147-ZDOROV147-02]; assesses=[] -->
 
 **простуда** (*prostúda*) — "a cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**простуда** is *про-*, "through", with *студ*, "cold", from *стыть*, "to grow cold", as in *студёный*, "icy": a cold is being chilled through.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

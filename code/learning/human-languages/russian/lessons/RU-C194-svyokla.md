@@ -14,7 +14,8 @@ romanization: "svyókla"
 concept_tag: RU-VESHCH194-SVYOKLA
 prerequisites: [RU-C194-salat, RU-C194-kapusta]
 sounds: []
-roots: []
+roots: [greek-seutlon]
+etymology_hook: "свёкла ← Greek seutlon 'beet', Old Russian seuklŭ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C194-kapusta]
 <!-- hl-knowledge: introduces=[RU-LEX-C194-VESHCH194-04]; assesses=[] -->
 
 **свёкла** (*svyókla*) — "beetroot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**свёкла** — Old Russian *seuklŭ*, from 1073 — comes from Greek *seûklon*, *seûtlon*, "beet" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

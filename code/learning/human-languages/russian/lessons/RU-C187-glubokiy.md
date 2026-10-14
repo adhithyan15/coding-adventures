@@ -14,7 +14,8 @@ romanization: "glubókiy"
 concept_tag: RU-KACH187-GLUBOKIY
 prerequisites: [RU-C186-zhadnyy, RU-C187-polnyy]
 sounds: []
-roots: []
+roots: [slavic-globoku]
+etymology_hook: "глубокий ← Proto-Slavic *glǫbokŭ; Vasmer thinks Greek glyphō 'I carve' probably a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C187-polnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C187-KACH187-02]; assesses=[] -->
 
 **глубокий** (*glubókiy*) — "deep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**глубокий** ← Proto-Slavic *\*glǫbokŭ* — inherited. Vasmer thinks it is probably related, with an inserted nasal, to Greek *glýphō*, "I hollow out", Latin *glūbō*, "I peel", and Old Norse *kljúfa*, "to split".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

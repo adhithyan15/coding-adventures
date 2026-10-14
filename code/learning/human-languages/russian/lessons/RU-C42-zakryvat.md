@@ -14,7 +14,8 @@ romanization: "zakryvát"
 concept_tag: RU-VERB-ZAKRYVAT
 prerequisites: [RU-C41-davat, RU-C42-otkryvat]
 sounds: []
-roots: []
+roots: [slavic-kryti]
+etymology_hook: "закрывать is за- 'behind, shut' + крывать, from крыть 'to cover': to close is to cover over"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C42-otkryvat]
 <!-- hl-knowledge: introduces=[RU-LEX-C42-VERB5-02]; assesses=[] -->
 
 **закрывать** (*zakryvát*) — "to close".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**закрывать** is *за-*, "behind, over", with *-крывать*, from *крыть*, "to cover": to close is to cover something over. Vasmer relates *крыть* to Greek *krýptō*, "I hide".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

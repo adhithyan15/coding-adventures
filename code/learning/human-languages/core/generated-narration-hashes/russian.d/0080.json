@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 80,
-  "sourceHash": "fnv1a64:719778d990993007",
+  "sourceHash": "fnv1a64:ced57321e4db3ae4",
   "lessonIds": [
     "RU-C80-hotel",
     "RU-C80-pharmacy",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch80.txt",
   "json": "russian/narration/ch80.json",
-  "textHash": "fnv1a64:93baf63e9152cb9e",
-  "jsonHash": "fnv1a64:61ebdd09a1c81f36",
+  "textHash": "fnv1a64:a570a01b213aac8f",
+  "jsonHash": "fnv1a64:eaa7f910e0592846",
   "findings": []
 }

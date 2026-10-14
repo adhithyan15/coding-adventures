@@ -14,7 +14,8 @@ romanization: "trátit"
 concept_tag: RU-VERB-TRATIT
 prerequisites: [RU-C204-platit, RU-C204-stoit]
 sounds: []
-roots: []
+roots: [slavic-tratiti]
+etymology_hook: "тратить ← Proto-Slavic *tratiti; Lithuanian trótinti 'to tease' is a cousin, and perhaps тереть 'to rub'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C204-stoit]
 <!-- hl-knowledge: introduces=[RU-LEX-C204-ACT204-05]; assesses=[] -->
 
 **тратить** (*trátit*) — "to spend (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тратить** ← Proto-Slavic *\*tratiti* — inherited; Ukrainian *тратити* also means "to lose, to ruin". Vasmer relates it to Lithuanian *trótinti*, "to tease", and Latvian *truots*, "a whetstone", and reports a further link with *тереть*, "to rub".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

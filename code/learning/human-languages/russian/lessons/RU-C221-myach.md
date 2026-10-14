@@ -14,7 +14,8 @@ romanization: "myach"
 concept_tag: RU-VESHCH221-MYACH
 prerequisites: [RU-C220-pult, RU-C221-igrushka]
 sounds: []
-roots: []
+roots: [slavic-moka]
+etymology_hook: "мяч first meant 'something squeezed', from смякать 'to press', on the root of мягкий 'soft'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C221-igrushka]
 <!-- hl-knowledge: introduces=[RU-LEX-C221-VESHCH221-02]; assesses=[] -->
 
 **мяч** (*myach*) — "a ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мяч** first meant "something squeezed together", from *смякать*, "to press", on the root of *мягкий*, "soft" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

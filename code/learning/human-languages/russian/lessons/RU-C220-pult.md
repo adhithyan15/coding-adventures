@@ -14,7 +14,8 @@ romanization: "pult"
 concept_tag: RU-VESHCH220-PULT
 prerequisites: [RU-C220-klaviatura, RU-C220-printer]
 sounds: []
-roots: []
+roots: [pulpitum-latin]
+etymology_hook: "пульт came through German Pult 'a desk' from Latin pulpitum 'a stage, a platform'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C220-printer]
 <!-- hl-knowledge: introduces=[RU-LEX-C220-VESHCH220-05]; assesses=[] -->
 
 **пульт** (*pult*) — "a remote control".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пульт** came through German *Pult*, "a desk", older *pulpet*, from Latin *pulpitum*, "a platform" (Vasmer). A remote is a little control desk.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

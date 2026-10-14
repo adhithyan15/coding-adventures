@@ -14,7 +14,8 @@ romanization: "chikhát"
 concept_tag: RU-VERB-CHIKHAT
 prerequisites: [RU-C207-dyshat, RU-C207-kashlyat]
 sounds: []
-roots: []
+roots: [slavic-chikhati]
+etymology_hook: "чихать is a sound-imitating verb, as Sanskrit chikkā 'a sneeze' is"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C207-kashlyat]
 <!-- hl-knowledge: introduces=[RU-LEX-C207-ACT207-05]; assesses=[] -->
 
 **чихать** (*chikhát*) — "to sneeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**чихать** — a sound-imitating verb, Proto-Slavic *\*čĭx-*, like Sanskrit *chikkā*, "a sneeze" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

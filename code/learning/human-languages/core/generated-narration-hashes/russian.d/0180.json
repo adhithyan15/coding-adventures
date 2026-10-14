@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 180,
-  "sourceHash": "fnv1a64:636528b3792de6d3",
+  "sourceHash": "fnv1a64:9863d84254de5223",
   "lessonIds": [
     "RU-C180-golovnaya-bol",
     "RU-C180-son",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch180.txt",
   "json": "russian/narration/ch180.json",
-  "textHash": "fnv1a64:510e7db025b2405b",
-  "jsonHash": "fnv1a64:399998cf8ed92481",
+  "textHash": "fnv1a64:161eadbe611f3002",
+  "jsonHash": "fnv1a64:4fe9ceaf89c057f6",
   "findings": []
 }

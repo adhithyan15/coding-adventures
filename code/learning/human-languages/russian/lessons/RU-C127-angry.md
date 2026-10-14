@@ -14,7 +14,8 @@ romanization: "zloy"
 concept_tag: RU-QUAL127-ANGRY
 prerequisites: [RU-C127-cheerful, RU-C127-kind]
 sounds: []
-roots: []
+roots: [slavic-zulu]
+etymology_hook: "злой ← Proto-Slavic *zŭlŭ; Lithuanian atžūlùs 'harsh' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C127-kind]
 <!-- hl-knowledge: introduces=[RU-LEX-C127-QUAL127-03]; assesses=[] -->
 
 **злой** (*zloy*) — "angry; wicked".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**злой** ← Proto-Slavic *\*zŭlŭ* — inherited. Vasmer relates it to Lithuanian *atžūlùs*, "harsh", and Ossetic *æwzær*, "bad".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

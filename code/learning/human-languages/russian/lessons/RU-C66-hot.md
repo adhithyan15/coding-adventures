@@ -14,7 +14,8 @@ romanization: "goryáchiy"
 concept_tag: RU-TEMP-HOT
 prerequisites: [RU-C65-long, RU-C65-short]
 sounds: []
-roots: []
+roots: [slavic-goreti]
+etymology_hook: "горячий is built on гореть 'to burn'; Greek thermos 'warm' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C65-short]
 <!-- hl-knowledge: introduces=[RU-LEX-C66-TEMP-01]; assesses=[] -->
 
 **горячий** (*goryáchiy*) — "hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**горячий** is built on *гореть*, "to burn", which Vasmer relates to Lithuanian *garėti*, "to flare up", Sanskrit *háras*, "heat", and Greek *thérmos*, "warm", from PIE *\*gʷʰer-*, "hot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

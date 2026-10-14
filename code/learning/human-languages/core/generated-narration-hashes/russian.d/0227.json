@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 227,
-  "sourceHash": "fnv1a64:4afdd503ba335b3b",
+  "sourceHash": "fnv1a64:34df4f6a70309310",
   "lessonIds": [
     "RU-C227-shtraf",
     "RU-C227-chelovek",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch227.txt",
   "json": "russian/narration/ch227.json",
-  "textHash": "fnv1a64:ad67d1663dea2223",
-  "jsonHash": "fnv1a64:9221512217ee762d",
+  "textHash": "fnv1a64:ffa4b58c0545ddd2",
+  "jsonHash": "fnv1a64:c56288a9dd00b90b",
   "findings": []
 }

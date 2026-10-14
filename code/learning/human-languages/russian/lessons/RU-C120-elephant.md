@@ -14,7 +14,8 @@ romanization: "slon"
 concept_tag: RU-THINGS120-ELEPHANT
 prerequisites: [RU-C120-lion, RU-C120-monkey]
 sounds: []
-roots: []
+roots: [turkic-arslan]
+etymology_hook: "слон: usually tied to прислониться 'to lean', from a fable; Vasmer allows Turkic arslan 'lion'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C120-monkey]
 <!-- hl-knowledge: introduces=[RU-LEX-C120-THINGS120-03]; assesses=[] -->
 
 **слон** (*slon*) — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**слон** — origin disputed. It is usually read as a bookish coinage from *прислониться*, "to lean", after the old *Physiologus*, which says the elephant sleeps leaning on a tree; Vasmer thinks that link is folk etymology and finds a loan from Turkic *arslan*, "lion", acceptable in its sounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

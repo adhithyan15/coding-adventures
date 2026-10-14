@@ -14,7 +14,8 @@ romanization: "óstryy"
 concept_tag: RU-KACH187-OSTRYY
 prerequisites: [RU-C187-rovnyy, RU-C187-kvadratnyy]
 sounds: []
-roots: []
+roots: [pie-h2ek]
+etymology_hook: "острый ← Proto-Slavic *ostrŭ; Lithuanian aštrus, Latin acer and Greek akros are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C187-kvadratnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C187-KACH187-05]; assesses=[] -->
 
 **острый** (*óstryy*) — "sharp; spicy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**острый** ← Proto-Slavic *\*ostrŭ* — inherited. Vasmer lists Lithuanian *aštrùs*, "sharp", Greek *ákros*, "topmost", and Latin *ācer*, "sharp", from PIE *\*h₂eḱ-*, "sharp".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

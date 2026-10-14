@@ -14,7 +14,8 @@ romanization: "pogóda"
 concept_tag: RU-WEATHER-WEATHER
 prerequisites: [RU-C59-snow, RU-C59-wind]
 sounds: []
-roots: []
+roots: [slavic-godu]
+etymology_hook: "погода is по- + год, once 'a fitting time'; Old Russian godŭ meant 'time, season'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C59-wind]
 <!-- hl-knowledge: introduces=[RU-LEX-C59-WEATHER-04]; assesses=[] -->
 
 **погода** (*pogóda*) — "the weather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**погода** is *по-* with *год*, which in Old Russian meant "time, a fitting moment" (Vasmer); the same root is in *годиться*, "to be fit". Weather was first "fair, fitting time", as in *непогода*, "bad weather".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

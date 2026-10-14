@@ -14,7 +14,8 @@ romanization: "vokzál"
 concept_tag: RU-TOWN2-STATION
 prerequisites: [RU-C77-school, RU-C78-bank]
 sounds: []
-roots: []
+roots: [english-vauxhall]
+etymology_hook: "вокзал ← English Vauxhall, a London pleasure garden; Pavlovsk's station had one"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C78-bank]
 <!-- hl-knowledge: introduces=[RU-LEX-C78-TOWN2-02]; assesses=[] -->
 
 **вокзал** (*vokzál*) — "a railway station". From Vauxhall, in London.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вокзал** — first *фоксал*, in 1777, a pleasure hall; Vasmer takes it from English *Vauxhall*, a London pleasure garden. The station at Pavlovsk had such a hall with concerts, and the name passed to stations. Trubachev's note gives another account of the English name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "káshlyat"
 concept_tag: RU-VERB-KASHLYAT
 prerequisites: [RU-C207-lechit, RU-C207-dyshat]
 sounds: []
-roots: []
+roots: [slavic-kashili]
+etymology_hook: "кашлять is from кашель 'a cough'; Sanskrit kāsa 'cough' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C207-dyshat]
 <!-- hl-knowledge: introduces=[RU-LEX-C207-ACT207-04]; assesses=[] -->
 
 **кашлять** (*káshlyat*) — "to cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кашлять** comes from *кашель*, "a cough", which Vasmer relates to Lithuanian *kosulỹs*, "a cough", and Sanskrit *kāsa-*, "cough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

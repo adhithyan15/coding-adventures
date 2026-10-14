@@ -14,7 +14,8 @@ romanization: "plávat"
 concept_tag: RU-VERB-PLAVAT
 prerequisites: [RU-C39-pokupat, RU-C39-prodavat]
 sounds: []
-roots: []
+roots: [pie-plew]
+etymology_hook: "плавать ← Proto-Slavic *plavati, on the root of плыть 'to swim'; Sanskrit plavate 'floats' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C39-prodavat]
 <!-- hl-knowledge: introduces=[RU-LEX-C39-VERB2-05]; assesses=[] -->
 
 **плавать** (*plávat*) — "to swim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**плавать** ← Proto-Slavic *\*plavati* — inherited, a repeated-action form on the root of *плыть*, "to swim, to sail" (Vasmer). Vasmer relates that root to Sanskrit *plávate*, "floats", Greek *pléō*, "I sail", and Latin *pluit*, "it rains".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

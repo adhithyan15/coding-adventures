@@ -18,13 +18,13 @@
   },
   "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-12T06:00:49.620760+00:00",
-    "pr_number": 17283,
+    "observed_at": "2026-10-12T19:29:43.855929+00:00",
+    "pr_number": 17325,
     "status": "merged",
-    "notes": "External merge verified at exact reviewed head; merge commit is an ancestor of fetched origin/main b163f87617be59e490f39a812e436ec5769671b0. All33 checks terminal acceptable, both required gates successful; no manual merge."
+    "notes": "PR #17325 merged by GitHub auto-merge at 2026-10-12T19:31:00Z as 92f7d0f5e68687bda9c97e989bf9278578b36361 from reviewed head 9fb306901ee17b94caedbb5e9f9da65633908258. All 32 checks terminal acceptable; both required gates passed. Auto-only enable accepted at 2026-10-12T19:30:55Z; no manual merge. Merge verified on fetched origin/main. Saved audits and two added pending owners preserved for post-merge inventory and selection."
   },
   "last_inventory": {
-    "revision": "b163f87617be59e490f39a812e436ec5769671b0",
+    "revision": "a54dae143851bc58a37afeddb777ba1f4938ebdb",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1506,
@@ -41,7 +41,8 @@
     "rust_singletons": 825,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
-    "unknown_language_buckets": 0
+    "unknown_language_buckets": 0,
+    "audit_notes": "Final collision-checked 15-lane inventory at a54dae1438 is byte-identical to post-#17325 inventory; 1,336 owners / 2,386 edges; no missing dependency, identity collision, new package root or unowned gap. All 15 live open PRs clear the seven product paths; #17185 journal overlap remains separately owned. PR #17374 file-list cap resolved by immutable mode/type/blob comparisons. External haskell-registry-final-inventory-overlap.md preserves the receipt."
   },
   "items": [
     {
@@ -862,14 +863,18 @@
     {
       "id": "build-tool-haskell-discovery-language-registry-conformance",
       "title": "Make Haskell discovery consume the complete language registry fixture",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-language-source-input-registry-corpus-and-engine-audit",
         "build-tool-haskell-dune-build-discovery-conformance"
       ],
-      "branch": null,
+      "branch": "codex/parity-haskell-registry-20261012",
       "pr_number": null,
-      "notes": "Fresh post-#17283 read-only audit: #16891 already fixed exact _build. Six generated components remain missing (.cargo, .dart_tool, .gradle, blib, dist-newstyle, gradle-build), language inference uses any absolute path component, and the specification tree can enter discovery. Consume the complete 29-record/25-package shared registry fixture with exact relative bucket identity; retain the existing four-record Dune regression and add exact/near-case generated component and ancestor-name tests. Existing Haskell native fixture CI mapping applies. Canonical BUILD membership/platform variants and duplicate identities have separate owners. External validation plan saved: haskell-registry-validation-plan.md. Existing cabal.project enables the build-tool/graph/directed-graph/sha256 closure tests; optimized full suite and separate focused HPC coverage avoid SHA allocation-test instrumentation interference. Coverage remains unmeasured until actual execution. Full fixture materializer must allow specs decoys while bounding and validating all paths and counts."
+      "notes": "Fresh post-#17283 read-only audit: #16891 already fixed exact _build. Six generated components remain missing (.cargo, .dart_tool, .gradle, blib, dist-newstyle, gradle-build), language inference uses any absolute path component, and the specification tree can enter discovery. Consume the complete 29-record/25-package shared registry fixture with exact relative bucket identity; retain the existing four-record Dune regression and add exact/near-case generated component and ancestor-name tests. Existing Haskell native fixture CI mapping applies. Canonical BUILD membership/platform variants and duplicate identities have separate owners. External validation plan saved: haskell-registry-validation-plan.md. Existing cabal.project enables the build-tool/graph/directed-graph/sha256 closure tests; optimized full suite and separate focused HPC coverage avoid SHA allocation-test instrumentation interference. Actual native validation and measured coverage are recorded below; whole-production qualification remains a separate pending owner. Full fixture materializer must allow specs decoys while bounding and validating all paths and counts.",
+      "selected_at": "2026-10-12T19:38:37.348335+00:00",
+      "selection_notes": "Post-#17325 actual auto-merge, collision-checked inventory and all-15-open-PR immutable overlap clearance. Haskell registry has two immediate concrete follow-ups; Ruby/Python one each; TS tangent and Go empty-plan zero. Select one bounded full 29-file/25-root fixture adoption with exact code-relative buckets, specification-tree exclusion and shared 27 generated components. Retain narrow Dune and all resolver/hash regressions; canonical BUILD/platform and duplicate identities stay separately owned. Native optimized tests, separate HPC, build fronts, real plans, parity and exact-head security required.",
+      "worktree": "C:\\Users\\adhit\\.codex\\worktrees\\parity-haskell-registry-20261012\\coding-adventures",
+      "validation_notes": "Native RED7examples5failures, laterconfigured-rootRED1/1; final93build-toolexamples plus graph4,directedgraph3,SHA25625 and allocationbudgetpass.8registryexamples retainDune4/3, consumeall29/25,27exact+27case-near and23languagepairs. Cabalcheck andGHC-Wall-Werror pass; unchanged BUILD_windows/POSIXBUILD executealltests throughverifiedshortalias. RealCLIhelp/version/validatedforce-dry-run exit0/210skipped,210name/language/root/commandtuples and496nativeedges matchGo. CombinedHPC changeddiscovery132/132expressions;BuildTool5482/6403(85%),entryMain10/12(83%),all7production43117/69790(61%),generatedUnicode33687/59242(56%); pendingseparatecoveragequalification,no line/fullprogramclaim.179neutralcases/298files valid,10paritytests,Go nativefixturetest/vet/trimpathbuild,45Starlark/38existingexemptions repositoryplan,1064lessons/diffcheck pass. Exactheadsecurity and hostedCI stillrequired."
     },
     {
       "id": "build-tool-haskell-discovery-duplicate-identity-conformance",
@@ -17951,11 +17956,17 @@
         "geometry-2d-neutral-fixture-ci-scheduling"
       ],
       "notes": "Bounded read-only tangent decomposition audit found no center-tangent fixture family. Specify raw d/dt derivative including sweep and rotation, finite input/output, positive/negative/zero vectors; extend closed schema/oracle/corruption tests without native implementation. Clarify G2D03 test18: noncircular ellipse tangent is orthogonal to the rotated implicit gradient, circle tangent to radius. Audit existing lane readers and record any genuinely unowned adoption gaps before later selection; do not claim all lanes consume a new family. All15 static audit independently verified four proposed vectors within 5.6e-16; 13 current formulas raw/correct. Add derivative-specific corpus output bound (tau*1e6 exceeds existing point1e6 cap), controlled huge-int rejection before math.isfinite overflow, and ellipse-gradient orthogonality wording. Preserve oracle1e-15/native1e-12 absolute tolerances and teaching bounds separate from runtime API limits. Existing-lane fixture adoption separately owned; no claim native tests executed.",
-      "status": "in-progress",
+      "status": "merged",
       "branch": "codex/parity-arc2d-tangent-neutral-20261012",
-      "pr_number": null,
+      "pr_number": 17325,
       "selected_at": "2026-10-12T06:06:08.722786+00:00",
-      "selection_notes": "Post-#17283 pinned-main collision inventory unchanged; all1333 owners reconciled, no new unowned gaps, eleven open PRs have no selected-path overlap. Bounded shared derivative contract unlocks14 pending descendants; native adoption stays serial and separately owned. Haskell registry, Ruby hash and Python center remain next alternatives."
+      "selection_notes": "Post-#17283 pinned-main collision inventory unchanged; all1333 owners reconciled, no new unowned gaps, eleven open PRs have no selected-path overlap. Bounded shared derivative contract unlocks14 pending descendants; native adoption stays serial and separately owned. Haskell registry, Ruby hash and Python center remain next alternatives.",
+      "validation_notes": "27 neutral records;18 focused tests;98.48% statements/96.43% branches; Ruff/strict MyPy;19 CIregistry+7flattening+10parity tests;1043 lessons zero problems. All18 audited native reader packages pass, TS32tests/100%lines95.23%branches and63/46/15downstream;Go96.8%+vet.122 focused Go build-tool tests/vet/build.45 Starlark/5326 package repository validation; zero native selected, explicitcompatibility supplies proof. Exact-head independent correctness/security PASS9fb306901e. Real plan-file execution exit0:5326skipped/0built as expected; hostedCIpending.",
+      "ci_terminal_notes": "PR #17325 merged by GitHub auto-merge at 2026-10-12T19:31:00Z as 92f7d0f5e68687bda9c97e989bf9278578b36361 from reviewed head 9fb306901ee17b94caedbb5e9f9da65633908258. All 32 checks terminal acceptable; both required gates passed. Auto-only enable accepted at 2026-10-12T19:30:55Z; no manual merge. Merge verified on fetched origin/main. Saved audits and two added pending owners preserved for post-merge inventory and selection.",
+      "external_merge_required": false,
+      "merged_at": "2026-10-12T19:31:00Z",
+      "merge_commit": "92f7d0f5e68687bda9c97e989bf9278578b36361",
+      "auto_merge_enabled_at": "2026-10-12T19:30:55Z"
     },
     {
       "id": "geometry-arc2d-perl-center-tangent-api-parity",
@@ -18146,6 +18157,40 @@
       "branch": null,
       "pr_number": null,
       "notes": "Static consumer audit found all8 Java/Kotlin point2d/affine2d/bezier2d/arc2d tests read code/specs/fixtures/geometry2d-v1/cases.json outside package roots, with no task input declaration in their tasks.test blocks. Reproduce fixture-only incremental stale test behavior before repair, then declare exact shared corpus inputs and prove changed fixture reruns tests while unchanged input remains up-to-date. Review other directly read fixture files, including Bezier flattening, before freezing the bounded input set. --no-build-cache does not by itself force up-to-date tasks; compatibility qualification must use --rerun-tasks until this owner lands. Separate portable build-input work; do not expand shared derivative fixture implementation. No stale native execution was demonstrated in the read-only audit."
+    },
+    {
+      "id": "build-tool-go-empty-plan-hash-work-scope-conformance",
+      "title": "Avoid unused Go source hashing for explicit empty build plans while preserving validation",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-fixtures",
+        "build-tool-go-portable-source-hashing-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Read-only final-delivery audit: forcefalse explicit affected[] on all three platforms loaded5326 roots; actual plan-file execution exit0/5326skipped. main hashes all roots before executor skips explicit-unaffected roots ahead of hashlookup, so empty-plan digests are unused. Source-backed portable work-scope gap, not timeout/failure. Future bounded runWithPackageHasher zero-call/zeroBUILD regression must retain metadata validation, null/cachefallback, force, selected-root hash failures. Collisionchecked1333 IDs normalizedidentity andscope; noexisting owner. Current17325 implementation unchanged; audit external go-empty-plan-hash-work-scope-audit.md."
+    },
+    {
+      "id": "geometry-g2d00-g2d03-established-package-matrix-documentation",
+      "title": "Complete governing geometry package matrices for every established lane",
+      "status": "pending",
+      "depends_on": [
+        "geometry-arc2d-center-tangent-neutral-contract"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Bounded read-only governing-spec audit: G2D00/G2D01/G2D02/G2D03 eachlist12 lanes andomitC#,F#,Haskell despiteall60 family/lane roots existing. Exact namespaces/modules verified,including F# Point2D sharingCodingAdventures.Point2D andotherthree.FSharp. Four-spec documentation-only slice after17325 shared-file merge; no native correction/adoption claim, noOCaml promotion. Existing correctness/adoption umbrellas have distinctscope; proposedIDexact/normalizedcollision0 across1334owners. External geometry-governing-package-matrix-audit.md pins evidence. Registeronlyinlocaljournal while17325active; no secondimplementation/commit/push."
+    },
+    {
+      "id": "build-tool-haskell-production-coverage-qualification",
+      "title": "Qualify whole Haskell build-tool production coverage with native evidence",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-haskell-discovery-language-registry-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Actual native HPC from 93 tests plus help/version/repository-plan CLI, all nonzero and test modules excluded: BuildTool 5482/6403 expressions (85%), executable Main10/12(83%), changed discovery132/132; all seven production modules43117/69790 expressions(61%), generatedUnicode33687/59242(56%). These are expression/boolean/alternative metrics, not line coverage or whole-package 80/95 compliance. No existing numerical coverage leaf or exact/canonical collision in1335owners. Portable follow-up should establish program/library metric scope, add deterministic existing contract/official-vector and bounded CLI coverage, retain raw per-module and generated-table evidence, and prepare any exception for review without self-waiver. Missing semantics, native snapshot/host authority and adapter readiness remain separateowners. External haskell-production-coverage-owner-classification.md and combinedHPCevidence pin classification."
     }
   ]
 }

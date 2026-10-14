@@ -14,7 +14,8 @@ romanization: "drévniy"
 concept_tag: RU-KACH244-DREVNIY
 prerequisites: [RU-C243-nizkiy, RU-C243-nekrasivyy]
 sounds: []
-roots: []
+roots: [slavic-drevli]
+etymology_hook: "древний is Church Slavonic in shape, Old Church Slavonic древьнь; its origin is not certain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C243-nekrasivyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C244-KACH244-01]; assesses=[] -->
 
 **древний** (*drévniy*) — "ancient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**древний** — Old Church Slavonic *древьнь*, "ancient", with the Church Slavonic *-ре-*. Vasmer derives it, with a "perhaps", from *\*drewos*, compare Gothic *triggws*, "faithful", and Lithuanian *drẽvė*, "a hollow tree".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

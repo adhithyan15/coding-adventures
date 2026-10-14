@@ -14,7 +14,8 @@ romanization: "kolbasá"
 concept_tag: RU-THINGS106-SAUSAGE
 prerequisites: [RU-C106-yoghurt, RU-C106-ice-cream]
 sounds: []
-roots: []
+roots: [slavic-kolbasa]
+etymology_hook: "колбаса: origin disputed; a native link with колоб 'a round loaf' or a Turkic loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C106-ice-cream]
 <!-- hl-knowledge: introduces=[RU-LEX-C106-THINGS106-04]; assesses=[] -->
 
 **колбаса** (*kolbasá*) — "sausage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**колбаса** — recorded from 1280; origin disputed. Some relate it to *колоб*, "a round loaf"; Vasmer finds grounds to suspect a loan and names Turkish *külbastı*, "grilled meat", as a possible source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

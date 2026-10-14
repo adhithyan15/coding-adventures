@@ -14,7 +14,8 @@ romanization: "gólod"
 concept_tag: RU-HEALTH2-HUNGER
 prerequisites: [RU-C33-cough, RU-C33-rest]
 sounds: []
-roots: []
+roots: [slavic-goldu]
+etymology_hook: "голод ← Proto-Slavic *goldŭ; Sanskrit gṛdhyati 'is greedy' is a cousin, and глад the Church Slavonic twin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C33-rest]
 <!-- hl-knowledge: introduces=[RU-LEX-C33-HEALTH2-04]; assesses=[] -->
 
 **голод** (*gólod*) — "hunger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**голод** ← Proto-Slavic *\*goldŭ* — inherited. Vasmer links it with Church Slavonic *žĭlděti*, "to crave", and Sanskrit *gṛdhyati*, "is greedy". The Church Slavonic shape is *глад*, "famine", with *-ла-* for Russian *-оло-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

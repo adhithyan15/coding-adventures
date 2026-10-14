@@ -14,7 +14,8 @@ romanization: "proyékt"
 concept_tag: RU-RABOTA257-PROYEKT
 prerequisites: [RU-C257-kompaniya, RU-C257-firma]
 sounds: []
-roots: []
+roots: [iacere-latin]
+etymology_hook: "проект probably came through German Projekt from Latin proiectum 'thrown forward'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C257-firma]
 <!-- hl-knowledge: introduces=[RU-LEX-C257-RABOTA257-03]; assesses=[] -->
 
 **проект** (*proyékt*) — "a project".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**проект** — from Peter the Great's time; it probably came through German *Projekt* from Latin *prōiectum*, "something thrown forward" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

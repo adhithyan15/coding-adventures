@@ -14,7 +14,8 @@ romanization: "málenkiy"
 concept_tag: RU-SIZE-SMALL
 prerequisites: [RU-C64-new, RU-C65-big]
 sounds: []
-roots: []
+roots: [slavic-malu]
+etymology_hook: "маленький is малый 'small' + a fond suffix; малый is a cousin of English small"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C65-big]
 <!-- hl-knowledge: introduces=[RU-LEX-C65-SIZE-02]; assesses=[] -->
 
 **маленький** (*málenkiy*) — "small".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**маленький** is *малый*, "small", with the fond *-енький*. *малый* ← Proto-Slavic *\*malŭ*, related, Vasmer says, to Gothic *smals*, "small", and Greek *mêlon*, "sheep, small cattle": English *small* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

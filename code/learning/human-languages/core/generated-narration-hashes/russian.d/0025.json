@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 25,
-  "sourceHash": "fnv1a64:87061b771cc5cafe",
+  "sourceHash": "fnv1a64:d85739f90f1f8242",
   "lessonIds": [
     "RU-C25-dvadtsat",
     "RU-C25-sto",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "russian/narration/ch25.txt",
   "json": "russian/narration/ch25.json",
-  "textHash": "fnv1a64:3c90943c833c696f",
-  "jsonHash": "fnv1a64:08a99366651ae8fa",
+  "textHash": "fnv1a64:895860ab50b6304d",
+  "jsonHash": "fnv1a64:bc00eb316137d939",
   "findings": []
 }

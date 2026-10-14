@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 39,
-  "sourceHash": "fnv1a64:1be143b42fd578de",
+  "sourceHash": "fnv1a64:daa6b3f2667816c5",
   "lessonIds": [
     "RU-C39-myt",
     "RU-C39-gotovit",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch39.txt",
   "json": "russian/narration/ch39.json",
-  "textHash": "fnv1a64:936bf3bce8aa2bf5",
-  "jsonHash": "fnv1a64:9cab1c74286e778a",
+  "textHash": "fnv1a64:388fcb1482128298",
+  "jsonHash": "fnv1a64:ca1edd427e8308d5",
   "findings": []
 }

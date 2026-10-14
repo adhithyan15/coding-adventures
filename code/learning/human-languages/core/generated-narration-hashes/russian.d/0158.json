@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 158,
-  "sourceHash": "fnv1a64:580c93ff8f233fee",
+  "sourceHash": "fnv1a64:95d3e9843c96d2f9",
   "lessonIds": [
     "RU-C158-zhivoy",
     "RU-C158-myortvyy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch158.txt",
   "json": "russian/narration/ch158.json",
-  "textHash": "fnv1a64:2489143918425fe3",
-  "jsonHash": "fnv1a64:38b07b57f7f7574e",
+  "textHash": "fnv1a64:e15ea088a4cbe2cd",
+  "jsonHash": "fnv1a64:33437a8de76e28b7",
   "findings": []
 }

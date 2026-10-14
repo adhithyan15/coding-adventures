@@ -14,7 +14,8 @@ romanization: "golódnyy"
 concept_tag: RU-KACH158-GOLODNYY
 prerequisites: [RU-C158-zhivoy, RU-C158-myortvyy]
 sounds: []
-roots: []
+roots: [slavic-goldu]
+etymology_hook: "голодный is голод 'hunger' + -ный"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C158-myortvyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C158-KACH158-03]; assesses=[] -->
 
 **голодный** (*golódnyy*) — "hungry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**голодный** is *голод*, "hunger", with *-ный*. *голод* ← Proto-Slavic *\*goldŭ*, which Vasmer relates to Sanskrit *gṛdhyati*, "is greedy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

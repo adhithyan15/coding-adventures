@@ -14,7 +14,8 @@ romanization: "tolkát"
 concept_tag: RU-VERB-TOLKAT
 prerequisites: [RU-C142-brosat, RU-C142-lovit]
 sounds: []
-roots: []
+roots: [slavic-tolkti]
+etymology_hook: "толкать goes with толочь 'to pound'; Lithuanian tilkti 'to grow quiet' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C142-lovit]
 <!-- hl-knowledge: introduces=[RU-LEX-C142-ACT142-05]; assesses=[] -->
 
 **толкать** (*tolkát*) — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**толкать** goes with *толочь*, "to pound, to crush" (Vasmer), Proto-Slavic *\*tĭlkǫ*. Vasmer compares Lithuanian *tìlkti*, "to become tame".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

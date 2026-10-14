@@ -14,7 +14,8 @@ romanization: "kassír"
 concept_tag: RU-RABOTA230-KASSIR
 prerequisites: [RU-C229-prepodavatel, RU-C230-sadovnik]
 sounds: []
-roots: []
+roots: [capsa-latin]
+etymology_hook: "кассир ← German Kassierer, from Kasse 'a till'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C230-sadovnik]
 <!-- hl-knowledge: introduces=[RU-LEX-C230-RABOTA230-02]; assesses=[] -->
 
 **кассир** (*kassír*) — "a cashier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кассир** — older *касирер*, from Peter the Great's time; it comes from German *Kassierer*, from *Kasse*, "a cash box" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

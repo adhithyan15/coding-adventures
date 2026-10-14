@@ -14,7 +14,8 @@ romanization: "gládit"
 concept_tag: RU-VERB-GLADIT
 prerequisites: [RU-C140-uzhinat, RU-C140-stirat]
 sounds: []
-roots: []
+roots: [slavic-gladiti]
+etymology_hook: "гладить ← Proto-Slavic *gladiti; Lithuanian glósti 'to stroke' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C140-stirat]
 <!-- hl-knowledge: introduces=[RU-LEX-C140-ACT140-05]; assesses=[] -->
 
 **гладить** (*gládit*) — "to iron; to stroke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**гладить** ← Proto-Slavic *\*gladiti*, "to smooth" — inherited, with *гладкий*, "smooth". Vasmer relates it to Lithuanian *glósti*, "to stroke", and Latvian *glãstît*, "to caress".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

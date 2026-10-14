@@ -14,7 +14,8 @@ romanization: "ináche"
 concept_tag: RU-PRICH154-INACHE
 prerequisites: [RU-C154-yesli, RU-C154-khotya]
 sounds: []
-roots: []
+roots: [slavic-inu]
+etymology_hook: "иначе is from иной 'other': 'in another way'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C154-khotya]
 <!-- hl-knowledge: introduces=[RU-LEX-C154-PRICH154-05]; assesses=[] -->
 
 **иначе** (*ináche*) — "otherwise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**иначе** comes from *иной*, "other", with an adverb ending: "in another way, otherwise".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

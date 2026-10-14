@@ -14,7 +14,8 @@ romanization: "tyótya"
 concept_tag: RU-FAMILY2-AUNT
 prerequisites: [RU-C36-children, RU-C36-child]
 sounds: []
-roots: []
+roots: [slavic-teta]
+etymology_hook: "тётя is a nursery word, like тятя 'dad'; Lithuanian tetà 'aunt' is formed the same way"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C36-child]
 <!-- hl-knowledge: introduces=[RU-LEX-C36-FAMILY2-03]; assesses=[] -->
 
 **тётя** (*tyótya*) — "an aunt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тётя** is a nursery word, says Vasmer, like *тятя*, an old word for "dad". Lithuanian *tetà*, "aunt", and Greek *tétta*, "daddy", are formed the same way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

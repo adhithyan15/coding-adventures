@@ -14,7 +14,8 @@ romanization: "restorán"
 concept_tag: RU-TOWN2-RESTAURANT
 prerequisites: [RU-C78-museum, RU-C78-theatre]
 sounds: []
-roots: []
+roots: [restaurare-latin]
+etymology_hook: "ресторан ← French restaurant, from restaurer 'to restore, refresh', perhaps through German"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C78-theatre]
 <!-- hl-knowledge: introduces=[RU-LEX-C78-TOWN2-05]; assesses=[] -->
 
 **ресторан** (*restorán*) — "a restaurant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ресторан** comes from French *restaurant*, "restoring", from *restaurer*, "to restore, to refresh", directly or through German *Restaurant* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

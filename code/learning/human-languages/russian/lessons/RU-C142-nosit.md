@@ -14,7 +14,8 @@ romanization: "nosít"
 concept_tag: RU-VERB-NOSIT
 prerequisites: [RU-C141-blagodarit, RU-C141-izvinyatsya]
 sounds: []
-roots: []
+roots: [slavic-nositi]
+etymology_hook: "носить ← Proto-Slavic *nositi, the repeated form of нести 'to carry'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C141-izvinyatsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C142-ACT142-01]; assesses=[] -->
 
 **носить** (*nosít*) — "to carry; to wear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**носить** ← Proto-Slavic *\*nositi*, "to carry around", the repeated-action partner of *нести*, "to carry" — inherited. Wearing is carrying your clothes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

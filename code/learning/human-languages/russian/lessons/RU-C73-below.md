@@ -14,7 +14,8 @@ romanization: "vnizú"
 concept_tag: RU-WHERE2-BELOW
 prerequisites: [RU-C72-near, RU-C72-above]
 sounds: []
-roots: []
+roots: [pie-ni]
+etymology_hook: "внизу is в 'in' + низ 'the bottom': 'at the bottom'; English nether is a cousin of низ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C72-above]
 <!-- hl-knowledge: introduces=[RU-LEX-C73-WHERE2-01]; assesses=[] -->
 
 **внизу** (*vnizú*) — "below, downstairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**внизу** is *в*, "in", with *низу*, a form of *низ*, "the bottom". Vasmer explains *низ* as an extension of the PIE *\*ni*, "down", in Sanskrit *ni-*, "down", and Old High German *nidar*, "down": English *nether* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

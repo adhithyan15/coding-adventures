@@ -14,7 +14,8 @@ romanization: "shkaf"
 concept_tag: RU-THINGS97-WARDROBE
 prerequisites: [RU-C97-washing-machine, RU-C97-sofa]
 sounds: []
-roots: []
+roots: [german-schaff]
+etymology_hook: "шкаф is reshaped from older шкап under German forms like Schaff 'a cupboard'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C97-sofa]
 <!-- hl-knowledge: introduces=[RU-LEX-C97-THINGS97-04]; assesses=[] -->
 
 **шкаф** (*shkaf*) — "a wardrobe, a cupboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шкаф** — most likely reshaped from older *шкап* under the influence of German forms such as *Schaff*, Middle High German *schaf*, "a cupboard" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vinó"
 concept_tag: RU-VESHCH164-VINO
 prerequisites: [RU-C163-blin, RU-C164-pivo]
 sounds: []
-roots: []
+roots: [vinum-latin]
+etymology_hook: "вино is an old loan, from Latin vinum or through Germanic; the word is an ancient Mediterranean one"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C164-pivo]
 <!-- hl-knowledge: introduces=[RU-LEX-C164-VESHCH164-02]; assesses=[] -->
 
 **вино** (*vinó*) — "wine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вино** is usually taken as an ancient Mediterranean word, as in Latin *vīnum*, Greek *oînos* and Gothic *wein*. Vasmer thinks Slavic more likely borrowed it than inherited it, from Latin or from Germanic. English *wine* comes from the Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

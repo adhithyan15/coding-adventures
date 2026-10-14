@@ -14,7 +14,8 @@ romanization: "trotuár"
 concept_tag: RU-MESTO183-TROTUAR
 prerequisites: [RU-C182-vovremya, RU-C183-pereulok]
 sounds: []
-roots: []
+roots: [frankish-trotton]
+etymology_hook: "тротуар ← French trottoir, from trotter 'to trot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C183-pereulok]
 <!-- hl-knowledge: introduces=[RU-LEX-C183-MESTO183-02]; assesses=[] -->
 
 **тротуар** (*trotuár*) — "a pavement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тротуар** comes from French *trottoir*, "a footway", from *trotter*, "to trot" (Vasmer); folk speech said *протуар*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

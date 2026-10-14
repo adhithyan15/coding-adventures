@@ -14,7 +14,8 @@ romanization: "perchátki"
 concept_tag: RU-THINGS101-GLOVES
 prerequisites: [RU-C101-jumper, RU-C101-tie]
 sounds: []
-roots: []
+roots: [slavic-pirstu]
+etymology_hook: "перчатки is from перст 'finger': gloves with fingers, Old Russian пьрстатица"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C101-tie]
 <!-- hl-knowledge: introduces=[RU-LEX-C101-THINGS101-04]; assesses=[] -->
 
 **перчатки** (*perchátki*) — "gloves".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**перчатки** comes from *перст*, an old word for "finger" (Vasmer): first *\*pĭrstŭčatŭ*, "fingered", as in Old Russian *пьрстатица*, "a glove". Vasmer relates *перст* to Lithuanian *pirštas*, "finger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

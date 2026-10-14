@@ -14,7 +14,8 @@ romanization: "zhádnyy"
 concept_tag: RU-KACH186-ZHADNYY
 prerequisites: [RU-C186-khrabryy, RU-C186-shchedryy]
 sounds: []
-roots: []
+roots: [slavic-zedja]
+etymology_hook: "жадный ← Old Russian žadĭnŭ 'thirsting', from the root of жажда 'thirst'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C186-shchedryy]
 <!-- hl-knowledge: introduces=[RU-LEX-C186-KACH186-05]; assesses=[] -->
 
 **жадный** (*zhádnyy*) — "greedy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**жадный** ← Old Russian *žadĭnŭ*, "thirsting"; Vasmer links it with *жажда*, "thirst". The greedy one thirsts for more.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

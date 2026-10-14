@@ -14,7 +14,8 @@ romanization: "puls"
 concept_tag: RU-ZDOROV211-PULS
 prerequisites: [RU-C211-myshtsa, RU-C211-kost]
 sounds: []
-roots: []
+roots: [pulsus-latin]
+etymology_hook: "пульс came through German Puls or French pouls from Latin pulsus (venarum) 'the beat (of the veins)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C211-kost]
 <!-- hl-knowledge: introduces=[RU-LEX-C211-ZDOROV211-03]; assesses=[] -->
 
 **пульс** (*puls*) — "a pulse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пульс** came through German *Puls* or French *pouls* from Medieval Latin *pulsus (vēnārum)*, "the beat of the veins" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

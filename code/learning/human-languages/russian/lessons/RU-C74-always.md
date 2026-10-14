@@ -14,7 +14,8 @@ romanization: "vsegdá"
 concept_tag: RU-WHEN-ALWAYS
 prerequisites: [RU-C73-alot, RU-C73-alittle]
 sounds: []
-roots: []
+roots: [slavic-visi]
+etymology_hook: "всегда is весь 'all' + -гда, the ending of когда 'when'; Vasmer ties -гда to Lithuanian kadà 'when'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C73-alittle]
 <!-- hl-knowledge: introduces=[RU-LEX-C74-WHEN-01]; assesses=[] -->
 
 **всегда** (*vsegdá*) — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**всегда** is *весь*, "all", with *-гда*, the time ending of *когда*, "when", and *тогда*, "then". Lithuanian *visadà*, "always", matches the forms without *г* in other Slavic languages, such as Czech *vezdy*; Vasmer ties *-гда* itself to Lithuanian *kadà*, "when".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

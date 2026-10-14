@@ -14,7 +14,8 @@ romanization: "temperatúra"
 concept_tag: RU-HEALTH2-TEMPERATURE
 prerequisites: [RU-C32-doctor, RU-C32-hospital]
 sounds: []
-roots: []
+roots: [temperare-latin]
+etymology_hook: "температура ← Latin temperatura 'due mixing', probably through German Temperatur"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C32-hospital]
 <!-- hl-knowledge: introduces=[RU-LEX-C33-HEALTH2-01]; assesses=[] -->
 
 **температура** (*temperatúra*) — "a temperature, a fever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**температура** ← Latin *temperātūra*, "due measure, mixing", from *temperāre*, "to mix in proportion" — borrowed in modern times, probably through German *Temperatur*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tablétka"
 concept_tag: RU-ZDOROV147-TABLETKA
 prerequisites: [RU-C147-gripp, RU-C147-nasmork]
 sounds: []
-roots: []
+roots: [tabula-latin]
+etymology_hook: "таблетка is таблет-, from German Tablette or French tablette, + -ка; from Latin tabula 'board'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C147-nasmork]
 <!-- hl-knowledge: introduces=[RU-LEX-C147-ZDOROV147-05]; assesses=[] -->
 
 **таблетка** (*tablétka*) — "a pill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**таблетка** is built on German *Tablette* or French *tablette*, "a little tablet", with *-ка*; both come from Latin *tabula*, "a board, a tablet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "máslo"
 concept_tag: RU-FOOD1-BUTTER
 prerequisites: [RU-C43-fish, RU-C43-egg]
 sounds: []
-roots: []
+roots: [slavic-mazati]
+etymology_hook: "масло ← Proto-Slavic *maslo, from *maz-slo, 'what is smeared', from мазать 'to smear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C43-egg]
 <!-- hl-knowledge: introduces=[RU-LEX-C43-FOOD1-04]; assesses=[] -->
 
 **масло** (*máslo*) — "butter; oil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**масло** ← Proto-Slavic *\*maslo*, from *\*maz-slo*, "what you smear", on the root of *мазать*, "to smear" (Vasmer). So butter and oil share one word: both are spread.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

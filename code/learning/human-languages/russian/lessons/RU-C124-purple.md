@@ -14,7 +14,8 @@ romanization: "fiolétovyy"
 concept_tag: RU-QUAL124-PURPLE
 prerequisites: [RU-C123-stairs, RU-C123-pink]
 sounds: []
-roots: []
+roots: [viola-latin]
+etymology_hook: "фиолетовый came through German violett from French violet, from Latin viola 'violet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C123-pink]
 <!-- hl-knowledge: introduces=[RU-LEX-C124-QUAL124-01]; assesses=[] -->
 
 **фиолетовый** (*fiolétovyy*) — "purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**фиолетовый** — its *ф-* shows it came through German *violett* from French *violet*, from *violette*, Latin *viola*, "the violet" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

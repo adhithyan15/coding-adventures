@@ -14,7 +14,8 @@ romanization: "retsépt"
 concept_tag: RU-ZDOROV179-RETSEPT
 prerequisites: [RU-C178-katatsya, RU-C178-zagorat]
 sounds: []
-roots: []
+roots: [recipere-latin]
+etymology_hook: "рецепт came through German Rezept from Latin receptum 'what is received'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C178-zagorat]
 <!-- hl-knowledge: introduces=[RU-LEX-C179-ZDOROV179-01]; assesses=[] -->
 
 **рецепт** (*retsépt*) — "a prescription; a recipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рецепт** — from Peter the Great's time; it came through German *Rezept* from Latin *receptum*, "taken" (Vasmer): a doctor's note began *recipe*, "take".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nalóg"
 concept_tag: RU-RABOTA170-NALOG
 prerequisites: [RU-C170-dolzhnost, RU-C170-zarplata]
 sounds: []
-roots: []
+roots: [slavic-lozhiti]
+etymology_hook: "налог is на- 'on' + лог, from the root of лежать 'to lie': what is laid on"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C170-zarplata]
 <!-- hl-knowledge: introduces=[RU-LEX-C170-RABOTA170-03]; assesses=[] -->
 
 **налог** (*nalóg*) — "a tax".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**налог** is *на-*, "on", with *-лог*, from the root of *лежать*, "to lie", and *положить*, "to lay": a tax is what is laid on you.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

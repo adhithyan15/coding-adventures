@@ -14,7 +14,8 @@ romanization: "fasól"
 concept_tag: RU-VESHCH223-FASOL
 prerequisites: [RU-C222-bulka, RU-C222-kefir]
 sounds: []
-roots: []
+roots: [phaseolus-latin]
+etymology_hook: "фасоль came through Polish fasola from Middle High German fasôl, Latin phaseolus, Greek phasēlos"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C222-kefir]
 <!-- hl-knowledge: introduces=[RU-LEX-C223-VESHCH223-01]; assesses=[] -->
 
 **фасоль** (*fasól*) — "beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**фасоль** came through Polish *fasola* from Middle High German *fasôl*, from Latin *phaseolus*, Greek *phásēlos*, "a bean" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

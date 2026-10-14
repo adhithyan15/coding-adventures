@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 253,
-  "sourceHash": "fnv1a64:00f7b55d066fd358",
+  "sourceHash": "fnv1a64:012ba1e1ef33774a",
   "lessonIds": [
     "RU-C253-skazka",
     "RU-C253-istoriya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch253.txt",
   "json": "russian/narration/ch253.json",
-  "textHash": "fnv1a64:2db3420232f706b9",
-  "jsonHash": "fnv1a64:62fd3201c250fe82",
+  "textHash": "fnv1a64:b665d91e642a0e1d",
+  "jsonHash": "fnv1a64:a9a11c2c4f4fe3f1",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "vklyuchát"
 concept_tag: RU-VERB-VKLYUCHAT
 prerequisites: [RU-C175-tyanut, RU-C175-podnimat]
 sounds: []
-roots: []
+roots: [pie-kleh2w]
+etymology_hook: "включать is в- 'in' + ключ 'a key, a hook': to lock in"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C175-podnimat]
 <!-- hl-knowledge: introduces=[RU-LEX-C175-ACT175-03]; assesses=[] -->
 
 **включать** (*vklyuchát*) — "to switch on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**включать** is *в-*, "in", with *-ключать*, from *ключ*, "a key", and so "to shut in, to include", then "to switch on".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

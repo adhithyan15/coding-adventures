@@ -14,7 +14,8 @@ romanization: "treniróvka"
 concept_tag: RU-VESHCH166-TRENIROVKA
 prerequisites: [RU-C166-komanda, RU-C166-match]
 sounds: []
-roots: []
+roots: [train-french]
+etymology_hook: "тренировка is from тренировать 'to train', from English train through German trainieren"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C166-match]
 <!-- hl-knowledge: introduces=[RU-LEX-C166-VESHCH166-05]; assesses=[] -->
 
 **тренировка** (*treniróvka*) — "a training session".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тренировка** is built on *тренировать*, "to train", from English *train*, through German *trainieren*. The English verb comes from French *traîner*, "to drag".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

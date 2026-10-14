@@ -14,7 +14,8 @@ romanization: "tyóplyy"
 concept_tag: RU-TEMP-WARM
 prerequisites: [RU-C66-hot, RU-C66-cold]
 sounds: []
-roots: []
+roots: [pie-tep]
+etymology_hook: "тёплый ← Proto-Slavic *teplŭ; Sanskrit tapati 'heats' and Latin tepidus 'lukewarm' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C66-cold]
 <!-- hl-knowledge: introduces=[RU-LEX-C66-TEMP-03]; assesses=[] -->
 
 **тёплый** (*tyóplyy*) — "warm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тёплый** ← Proto-Slavic *\*teplŭ* — inherited. Vasmer relates it to Sanskrit *tápati*, "heats", and Persian *tāftan*, "to burn"; Latin *tepidus*, "lukewarm", comes from the same PIE root *\*tep-*, "to be warm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kontsért"
 concept_tag: RU-THINGS114-CONCERT
 prerequisites: [RU-C114-price, RU-C114-football]
 sounds: []
-roots: []
+roots: [concertare-latin]
+etymology_hook: "концерт came through German Konzert from Italian concerto, from Latin concertare 'to contend'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C114-football]
 <!-- hl-knowledge: introduces=[RU-LEX-C114-THINGS114-03]; assesses=[] -->
 
 **концерт** (*kontsért*) — "a concert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**концерт** came through German *Konzert* from Italian *concerto*, "a contest (of voices)", from Latin *concertāre*, "to contend"; under Peter the Great it meant "an agreement" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

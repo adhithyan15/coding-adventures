@@ -14,7 +14,8 @@ romanization: "proveryát"
 concept_tag: RU-VERB-PROVERYAT
 prerequisites: [RU-C236-izmeryat, RU-C236-sravnivat]
 sounds: []
-roots: []
+roots: [pie-wehr-true]
+etymology_hook: "проверять is про- 'through' + верять, from вера 'faith, trust'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C236-sravnivat]
 <!-- hl-knowledge: introduces=[RU-LEX-C236-ACT236-04]; assesses=[] -->
 
 **проверять** (*proveryát*) — "to check".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**проверять** is *про-*, "through", with *-верять*, from *вера*, "trust, faith": to check is to test whether a thing can be trusted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

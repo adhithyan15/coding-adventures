@@ -14,7 +14,8 @@ romanization: "rezultát"
 concept_tag: RU-PRICH185-REZULTAT
 prerequisites: [RU-C185-prichina, RU-C185-tsel]
 sounds: []
-roots: []
+roots: [resultare-latin]
+etymology_hook: "результат ← Latin resultatum, from resultare 'to spring back'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C185-tsel]
 <!-- hl-knowledge: introduces=[RU-LEX-C185-PRICH185-03]; assesses=[] -->
 
 **результат** (*rezultát*) — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**результат** comes, through German *Resultat* or French *résultat*, from Medieval Latin *resultātum*, from *resultāre*, "to spring back".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

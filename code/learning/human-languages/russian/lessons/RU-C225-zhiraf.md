@@ -14,7 +14,8 @@ romanization: "zhiráf"
 concept_tag: RU-VESHCH225-ZHIRAF
 prerequisites: [RU-C224-ovtsa, RU-C225-krokodil]
 sounds: []
-roots: []
+roots: [arabic-zurafa]
+etymology_hook: "жираф came through French girafe, from Arabic zurāfa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C225-krokodil]
 <!-- hl-knowledge: introduces=[RU-LEX-C225-VESHCH225-02]; assesses=[] -->
 
 **жираф** (*zhiráf*) — "a giraffe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**жираф** came through French *girafe*, and the older *жирафа* through German or Italian, from Arabic *zurāfa*, "giraffe" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

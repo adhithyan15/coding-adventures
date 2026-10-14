@@ -14,7 +14,8 @@ romanization: "ótpusk"
 concept_tag: RU-LOC92-HOLIDAYS
 prerequisites: [RU-C92-suitcase, RU-C92-journey]
 sounds: []
-roots: []
+roots: [slavic-pustu]
+etymology_hook: "отпуск is от 'away' + пуск, from пустить 'to let go': leave is being let go"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C92-journey]
 <!-- hl-knowledge: introduces=[RU-LEX-C92-LOC92-04]; assesses=[] -->
 
 **отпуск** (*ótpusk*) — "holidays, leave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**отпуск** is *от*, "away", with *пуск*, from *пустить*, "to let go", Proto-Slavic *\*pustiti* (Vasmer): leave is being let go for a while.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mólniya"
 concept_tag: RU-THINGS122-LIGHTNING
 prerequisites: [RU-C122-chin, RU-C122-rainbow]
 sounds: []
-roots: []
+roots: [slavic-mulni]
+etymology_hook: "молния ← Proto-Slavic *mŭlnĭji; Old Norse Mjǫllnir, Thor's hammer, and Welsh mellt 'lightning' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C122-rainbow]
 <!-- hl-knowledge: introduces=[RU-LEX-C122-THINGS122-03]; assesses=[] -->
 
 **молния** (*mólniya*) — "lightning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**молния** ← Proto-Slavic *\*mŭlnĭji* — inherited. Vasmer relates it to Old Prussian *mealde*, "lightning", Welsh *mellt*, "lightning", and Old Norse *Mjǫllnir*, the name of Thor's hammer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

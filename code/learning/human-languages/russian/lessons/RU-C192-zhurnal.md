@@ -14,7 +14,8 @@ romanization: "zhurnál"
 concept_tag: RU-VESHCH192-ZHURNAL
 prerequisites: [RU-C191-noutbuk, RU-C192-gazeta]
 sounds: []
-roots: []
+roots: [diurnum]
+etymology_hook: "журнал ← French journal 'a daily record', from Medieval Latin diurnalis 'daily'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C192-gazeta]
 <!-- hl-knowledge: introduces=[RU-LEX-C192-VESHCH192-02]; assesses=[] -->
 
 **журнал** (*zhurnál*) — "a magazine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**журнал** — from 1720, written *юрнал* by Peter the Great; it comes from French *journal*, from Medieval Latin *diurnālis*, "daily" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

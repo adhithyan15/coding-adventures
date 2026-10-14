@@ -14,7 +14,8 @@ romanization: "oryól"
 concept_tag: RU-VESHCH165-ORYOL
 prerequisites: [RU-C164-zemlya, RU-C165-vorona]
 sounds: []
-roots: []
+roots: [slavic-orilu]
+etymology_hook: "орёл ← Proto-Slavic *orĭlŭ; Lithuanian erelis, Gothic ara and German Aar 'eagle' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C165-vorona]
 <!-- hl-knowledge: introduces=[RU-LEX-C165-VESHCH165-02]; assesses=[] -->
 
 **орёл** (*oryól*) — "an eagle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**орёл** ← Proto-Slavic *\*orĭlŭ* — inherited. Vasmer lists Lithuanian *erẽlis*, Gothic *ara* and German *Aar*, "eagle", and Greek *órnis*, "bird"; English *erne*, "sea eagle", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

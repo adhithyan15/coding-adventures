@@ -14,7 +14,8 @@ romanization: "pechát"
 concept_tag: RU-RABOTA203-PECHAT
 prerequisites: [RU-C202-rybak, RU-C203-podpis]
 sounds: []
-roots: []
+roots: [slavic-peci]
+etymology_hook: "печать ← Proto-Slavic *pečatĭ, probably from печь 'to burn': a branding tool"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C203-podpis]
 <!-- hl-knowledge: introduces=[RU-LEX-C203-RABOTA203-02]; assesses=[] -->
 
 **печать** (*pechát*) — "a seal, a stamp; print".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**печать** ← Proto-Slavic *\*pečatĭ*. Vasmer thinks it probably comes from *пеку*, "I bake, I burn", so "a tool for burning a mark"; he finds a comparison with Latvian *pęka*, "a paw", unconvincing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

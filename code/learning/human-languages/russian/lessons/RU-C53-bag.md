@@ -14,7 +14,8 @@ romanization: "súmka"
 concept_tag: RU-THINGS-BAG
 prerequisites: [RU-C52-notebook, RU-C52-pencil]
 sounds: []
-roots: []
+roots: [greek-sagma]
+etymology_hook: "сумка is сума 'a saddlebag' + -ка; сума came through Polish from German Saum 'a pack load', from Greek sagma"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C52-pencil]
 <!-- hl-knowledge: introduces=[RU-LEX-C53-THINGS-01]; assesses=[] -->
 
 **сумка** (*súmka*) — "a bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сумка** is *сума*, "a bag, a saddlebag", with *-ка*, "little". *сума* came through Polish *suma* from Old High German *soum*, "a pack load", from Late Latin *sauma*, Greek *ságma*, "a pack saddle" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

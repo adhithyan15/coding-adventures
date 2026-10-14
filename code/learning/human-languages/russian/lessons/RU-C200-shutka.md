@@ -14,7 +14,8 @@ romanization: "shútka"
 concept_tag: RU-VESHCH200-SHUTKA
 prerequisites: [RU-C199-tekst, RU-C200-sekret]
 sounds: []
-roots: []
+roots: [slavic-shutu]
+etymology_hook: "шутка is from шут 'a jester'; Vasmer reports a link with Lithuanian siausti 'to frolic'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C200-sekret]
 <!-- hl-knowledge: introduces=[RU-LEX-C200-VESHCH200-02]; assesses=[] -->
 
 **шутка** (*shútka*) — "a joke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шутка** comes from *шутить*, "to joke", and *шут*, "a jester", recorded from 1076. Vasmer reports a suggested link with Lithuanian *siaũsti*, "to rage, to frolic", and doubts a loan from German *Schaute*, "a fool".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

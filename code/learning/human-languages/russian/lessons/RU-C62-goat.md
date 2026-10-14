@@ -14,7 +14,8 @@ romanization: "kozá"
 concept_tag: RU-ANIMALS3-GOAT
 prerequisites: [RU-C62-hen, RU-C62-duck]
 sounds: []
-roots: []
+roots: [slavic-koza]
+etymology_hook: "коза ← Proto-Slavic *koza; Vasmer relates it to Old English hæcen 'kid'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C62-duck]
 <!-- hl-knowledge: introduces=[RU-LEX-C62-ANIMALS3-05]; assesses=[] -->
 
 **коза** (*kozá*) — "a goat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**коза** ← Proto-Slavic *\*koza* — inherited. Vasmer relates it to Albanian *kedh*, "kid", and Old English *hæcen*, "kid", and to Gothic *hakuls*, "a cloak", since goatskin made cloaks.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

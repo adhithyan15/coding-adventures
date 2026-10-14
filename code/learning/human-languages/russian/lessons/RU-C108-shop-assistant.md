@@ -14,7 +14,8 @@ romanization: "prodavéts"
 concept_tag: RU-THINGS108-SHOP-ASSISTANT
 prerequisites: [RU-C107-cook, RU-C108-police-officer]
 sounds: []
-roots: []
+roots: [pie-deh3-give]
+etymology_hook: "продавец is продавать 'to sell' + -ец, 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C108-police-officer]
 <!-- hl-knowledge: introduces=[RU-LEX-C108-THINGS108-02]; assesses=[] -->
 
 **продавец** (*prodavéts*) — "a shop assistant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**продавец** is *продавать*, "to sell", with *-ец*, "one who does it". The verb is *про-* with *давать*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

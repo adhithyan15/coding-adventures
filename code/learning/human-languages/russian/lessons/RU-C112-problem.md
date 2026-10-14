@@ -14,7 +14,8 @@ romanization: "probléma"
 concept_tag: RU-THINGS112-PROBLEM
 prerequisites: [RU-C111-homework, RU-C111-idea]
 sounds: []
-roots: []
+roots: [problema-greek]
+etymology_hook: "проблема came through Polish or German from Latin problema, Greek problēma 'a task put forward'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C111-idea]
 <!-- hl-knowledge: introduces=[RU-LEX-C112-THINGS112-01]; assesses=[] -->
 
 **проблема** (*probléma*) — "a problem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**проблема** — from Peter the Great's time; it came through Polish *problema* or older German *Problema* from Latin *problēma*, Greek *próblēma*, "something put forward" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "universitét"
 concept_tag: RU-MESTO242-UNIVERSITET
 prerequisites: [RU-C241-mezhdu, RU-C242-biblioteka]
 sounds: []
-roots: []
+roots: [universitas-latin]
+etymology_hook: "университет came through German Universität from Latin universitas (litterarum) 'the whole (of learning)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C242-biblioteka]
 <!-- hl-knowledge: introduces=[RU-LEX-C242-MESTO242-02]; assesses=[] -->
 
 **университет** (*universitét*) — "a university".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**университет** — the first was in Moscow in 1755; it came through German *Universität* from Latin *ūniversitās (litterārum)*, "the whole body (of learning)" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

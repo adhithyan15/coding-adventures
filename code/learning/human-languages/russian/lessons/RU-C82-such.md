@@ -14,7 +14,8 @@ romanization: "takóy"
 concept_tag: RU-DEF82-SUCH
 prerequisites: [RU-C82-that, RU-C82-that-2]
 sounds: []
-roots: []
+roots: [pie-to]
+etymology_hook: "такой is так 'so' + an adjective ending; Lithuanian tóks 'such' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C82-that-2]
 <!-- hl-knowledge: introduces=[RU-LEX-C82-DEF82-05]; assesses=[] -->
 
 **такой** (*takóy*) — "such, like this".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**такой** is *так*, "so, thus", with an adjective ending, Proto-Slavic *\*takŭjĭ*; Vasmer compares Lithuanian *tóks*, "such". It is built as *какой*, "which", is.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

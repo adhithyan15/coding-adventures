@@ -12,6 +12,9 @@ Before the new one: say the Russian for the day after tomorrow, then the Russian
 You'll want to know: секунда.
 секунда (sekúnda) — "a second".
 
+The word, taken apart.
+секунда (sekúnda) probably came through German Sekunde from Latin (pars minūta) secunda, "the second small part" of an hour, after Ptolemy's counting in sixties (Vasmer). The first small part is the минута, "minute".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for the day before yesterday, then the Russi
 
 You'll want to know: выходные.
 выходные (vykhodnýye) — "the weekend".
+
+The word, taken apart.
+выходные (vykhodnýye) is short for выходные (vykhodnýye) дни, "days for going out", from выход, "a way out": вы-, "out", with ход, "a going", the root of ходить, "to walk".
 
 What you've built.
 One more word for this chapter.
@@ -73,6 +79,9 @@ A date needs an ordinal: say первый, второй, третий.
 You'll want to know: дата.
 дата (dáta) — "a date".
 
+The word, taken apart.
+дата (dáta) comes from Latin data, "given", the word that began the dating line of letters, as in data Rōmae, "given at Rome"; German Datum has the same source.
+
 What you've built.
 One more word for this chapter.
 
@@ -102,6 +111,9 @@ Before the new one: say the Russian for the weekend, then the Russian for a date
 You'll want to know: век.
 век (vek) — "a century".
 
+The word, taken apart.
+век (vek) from Proto-Slavic věkŭ — inherited; first "strength, a lifetime", then "an age", then "a century". Vasmer relates it to Lithuanian viẽkas, "strength, life", and Gothic weihan, "to fight".
+
 What you've built.
 One more word for this chapter.
 
@@ -130,6 +142,9 @@ Before the new one: say the Russian for a date, then the Russian for a century.
 
 You'll want to know: часто.
 часто (chásto) — "often".
+
+The word, taken apart.
+часто (chásto) is частый, "dense, frequent", made into an adverb with -о. частый from Proto-Slavic čęstŭ, which Vasmer relates to Lithuanian kimštas, "stuffed full": often is "thickly".
 
 What you've built.
 One more word for this chapter.

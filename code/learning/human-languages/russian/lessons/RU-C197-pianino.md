@@ -14,7 +14,8 @@ romanization: "pianíno"
 concept_tag: RU-VESHCH197-PIANINO
 prerequisites: [RU-C197-spektakl, RU-C197-gitara]
 sounds: []
-roots: []
+roots: [planus-latin]
+etymology_hook: "пианино ← Italian pianino 'a little piano', from piano(forte) 'soft-loud'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C197-gitara]
 <!-- hl-knowledge: introduces=[RU-LEX-C197-VESHCH197-05]; assesses=[] -->
 
 **пианино** (*pianíno*) — "a piano".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пианино** comes from Italian *pianino*, "a little piano", from *pianoforte*, "soft-loud", Latin *plānus*, "flat, soft".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

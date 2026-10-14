@@ -14,7 +14,8 @@ romanization: "linéyka"
 concept_tag: RU-VESHCH192-LINEYKA
 prerequisites: [RU-C192-zhurnal, RU-C192-slovar]
 sounds: []
-roots: []
+roots: [linum-latin]
+etymology_hook: "линейка is from линия 'a line', from Latin linea 'a linen thread'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C192-slovar]
 <!-- hl-knowledge: introduces=[RU-LEX-C192-VESHCH192-04]; assesses=[] -->
 
 **линейка** (*linéyka*) — "a ruler".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**линейка** comes from *линея*, an older form of *линия*, "a line" (Vasmer), with *-йка*; *линия* came through Polish *linia* or German *Linie* from Latin *līnea*, "a linen thread", from *līnum*, "flax".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chetvérg"
 concept_tag: RU-WEEK1-THURSDAY
 prerequisites: [RU-C70-monday, RU-C70-wednesday]
 sounds: []
-roots: []
+roots: [pie-kwetwores]
+etymology_hook: "четверг ← Proto-Slavic *četvĭrgŭ, from четыре 'four': the fourth day after Sunday"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C70-wednesday]
 <!-- hl-knowledge: introduces=[RU-LEX-C70-WEEK1-03]; assesses=[] -->
 
 **четверг** (*chetvérg*) — "Thursday". "The fourth" day, from **четыре**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**четверг** ← Proto-Slavic *\*četvĭrgŭ*, from the root of *четыре*, "four" (Vasmer): the fourth day after Sunday.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

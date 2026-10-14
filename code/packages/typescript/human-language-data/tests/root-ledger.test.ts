@@ -274,7 +274,15 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // origin is uncertain or disputed, each a genuinely open question, never a stand-in.
   portuguese: { withoutHook: 0, withoutVisible: 0 },
   punjabi: { withoutHook: 549, withoutVisible: 524 },
-  russian: { withoutHook: 1135, withoutVisible: 1148 },
+  // russian: 1135 / 1148 -> 0 / 0. All 1,135 generated word lessons gained a taken-apart
+  // block and a matching hook, and 13 earlier hand-written lessons the measure missed gained
+  // the half they lacked (six as a block, seven as one origin sentence in an existing section,
+  // paid for by trimming prose; only RU-C02-menya-zovut needed a raise, 240 -> 275 s). Source:
+  // Vasmer's Russisches etymologisches Woerterbuch (Russian edition, with Trubachev's notes),
+  // paraphrased and cited, never copied; Church Slavonic shapes are named by their sound
+  // change, and loans name the donor and the route. 86 say the origin is uncertain or disputed
+  // and give Vasmer's usual account with his hedges.
+  russian: { withoutHook: 0, withoutVisible: 0 },
   sanskrit: { withoutHook: 1200, withoutVisible: 1099 },
   spanish: { withoutHook: 486, withoutVisible: 209 },
   // tamil: 1185 / 1144 -> 0 / 4. Every Tamil word lesson now has an etymology_hook, and all

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 19,
-  "sourceHash": "fnv1a64:63bbab1f5a996a87",
+  "sourceHash": "fnv1a64:256ff6799ac38ccf",
   "lessonIds": [
     "RU-C19-pochemu",
     "RU-C19-potomu-chto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "russian/narration/ch19.txt",
   "json": "russian/narration/ch19.json",
-  "textHash": "fnv1a64:c9dbd1a9d703e55e",
-  "jsonHash": "fnv1a64:da1de53ca4d87070",
+  "textHash": "fnv1a64:3f13707e49ea7057",
+  "jsonHash": "fnv1a64:a3165f2b09039339",
   "findings": []
 }

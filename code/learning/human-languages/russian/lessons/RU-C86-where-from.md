@@ -14,7 +14,8 @@ romanization: "otkúda"
 concept_tag: RU-LOC86-WHERE-FROM
 prerequisites: [RU-C86-where, RU-C86-where-to]
 sounds: []
-roots: []
+roots: [pie-kwo]
+etymology_hook: "откуда is от 'from' + куда 'where to'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C86-where-to]
 <!-- hl-knowledge: introduces=[RU-LEX-C86-LOC86-03]; assesses=[] -->
 
 **откуда** (*otkúda*) — "where from".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**откуда** is *от*, "from", with *куда*, "where to" (Vasmer): "from where".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

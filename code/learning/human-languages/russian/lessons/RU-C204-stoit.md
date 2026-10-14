@@ -14,7 +14,8 @@ romanization: "stóit"
 concept_tag: RU-VERB-STOIT
 prerequisites: [RU-C204-zakazyvat, RU-C204-platit]
 sounds: []
-roots: []
+roots: [constare-latin]
+etymology_hook: "стоить 'to cost' is perhaps from Polish stoi, copying Latin constare 'to stand firm, to cost'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C204-platit]
 <!-- hl-knowledge: introduces=[RU-LEX-C204-ACT204-04]; assesses=[] -->
 
 **стоить** (*stóit*) — "to cost".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**стоить**, "to cost", is perhaps borrowed from Polish *stoi*, "it costs"; the West Slavic sense copies Latin *cōnstāre*, "to stand firm; to cost", the source of German *kosten* (Vasmer). It goes with *стоять*, "to stand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

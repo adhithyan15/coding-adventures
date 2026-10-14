@@ -14,7 +14,8 @@ romanization: "zamechát"
 concept_tag: RU-VERB-ZAMECHAT
 prerequisites: [RU-C207-chikhat, RU-C208-chuvstvovat]
 sounds: []
-roots: []
+roots: [slavic-metiti]
+etymology_hook: "замечать is за- + мечать, from метить 'to mark'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C208-chuvstvovat]
 <!-- hl-knowledge: introduces=[RU-LEX-C208-ACT208-02]; assesses=[] -->
 
 **замечать** (*zamechát*) — "to notice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**замечать** is *за-* with *-мечать*, from *метить*, "to mark": to notice is to mark a thing in the mind. Vasmer reports a comparison of *метить* with Latin *mētior*, "I measure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

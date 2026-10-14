@@ -14,7 +14,8 @@ romanization: "mózhet byt"
 concept_tag: RU-PRICH215-MOZHET-BYT
 prerequisites: [RU-C215-konechno, RU-C215-navernoye]
 sounds: []
-roots: []
+roots: [pie-magh, pie-bhuh]
+etymology_hook: "может быть is 'it can be': может 'can' from мочь, + быть 'to be'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C215-navernoye]
 <!-- hl-knowledge: introduces=[RU-LEX-C215-PRICH215-03]; assesses=[] -->
 
 **может быть** (*mózhet byt*) — "maybe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**может быть** is "it can be": *может*, "can", from *мочь*, with *быть*, "to be", which Vasmer relates to Lithuanian *būti*, "to be", and Latin *fuī*, "I was".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

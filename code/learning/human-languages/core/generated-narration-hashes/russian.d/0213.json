@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 213,
-  "sourceHash": "fnv1a64:b1e1bb8e1af81720",
+  "sourceHash": "fnv1a64:22c41b392e240207",
   "lessonIds": [
     "RU-C213-granitsa",
     "RU-C213-tamozhnya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch213.txt",
   "json": "russian/narration/ch213.json",
-  "textHash": "fnv1a64:bd8ed2c61e2cb1be",
-  "jsonHash": "fnv1a64:e77992bdd7180c0c",
+  "textHash": "fnv1a64:c6a379db275b2d4f",
+  "jsonHash": "fnv1a64:748891b442c0a48f",
   "findings": []
 }

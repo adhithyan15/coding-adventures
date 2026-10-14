@@ -14,7 +14,8 @@ romanization: "kózha"
 concept_tag: RU-THINGS121-SKIN
 prerequisites: [RU-C121-shark, RU-C121-nail-2]
 sounds: []
-roots: []
+roots: [slavic-koza]
+etymology_hook: "кожа is from коза 'goat': first 'goatskin'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C121-nail-2]
 <!-- hl-knowledge: introduces=[RU-LEX-C121-THINGS121-03]; assesses=[] -->
 
 **кожа** (*kózha*) — "skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кожа** comes from *коза*, "goat", Proto-Slavic *\*kozja*, "goat's (hide)" (Vasmer), as Greek *ōa*, "sheepskin", comes from *óis*, "sheep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

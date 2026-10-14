@@ -14,7 +14,8 @@ romanization: "gruzovík"
 concept_tag: RU-VESHCH167-GRUZOVIK
 prerequisites: [RU-C167-elektrichka, RU-C167-mototsikl]
 sounds: []
-roots: []
+roots: [slavic-gruzu]
+etymology_hook: "грузовик is груз 'a load' + -овик: a load-carrier"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C167-mototsikl]
 <!-- hl-knowledge: introduces=[RU-LEX-C167-VESHCH167-03]; assesses=[] -->
 
 **грузовик** (*gruzovík*) — "a lorry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**грузовик** is *груз*, "a load, a cargo", with *-овик*: a vehicle for loads. Vasmer relates *груз* to *грязнуть*, "to sink in", and Lithuanian *gramzdýti*, "to sink".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

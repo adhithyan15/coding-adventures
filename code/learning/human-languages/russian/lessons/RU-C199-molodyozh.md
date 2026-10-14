@@ -14,7 +14,8 @@ romanization: "molodyózh"
 concept_tag: RU-VESHCH199-MOLODYOZH
 prerequisites: [RU-C198-probka, RU-C198-avariya]
 sounds: []
-roots: []
+roots: [slavic-moldu]
+etymology_hook: "молодёжь is from молодой 'young'; Latin mollis 'soft' is a cousin of молодой"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C198-avariya]
 <!-- hl-knowledge: introduces=[RU-LEX-C199-VESHCH199-01]; assesses=[] -->
 
 **молодёжь** (*molodyózh*) — "young people".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**молодёжь** is built on *молодой*, "young", with *-ёжь*, a collective ending. Vasmer relates *молодой* to Old Prussian *maldai*, "youths", Sanskrit *mṛdú-*, "soft", and Latin *mollis*, "soft".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

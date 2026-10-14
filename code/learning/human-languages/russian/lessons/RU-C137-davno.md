@@ -14,7 +14,8 @@ romanization: "davnó"
 concept_tag: RU-PAS137-DAVNO
 prerequisites: [RU-C136-zachem, RU-C137-nedavno]
 sounds: []
-roots: []
+roots: [slavic-davu]
+etymology_hook: "давно is from давний 'of old', with давеча 'a while ago'; Latin dudum 'long since' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C137-nedavno]
 <!-- hl-knowledge: introduces=[RU-LEX-C137-PAS137-02]; assesses=[] -->
 
 **давно** (*davnó*) — "long ago; for a long time". With the present it means "for a long time": **Я давно здесь живу.** — *ya davnó zdes zhivú* — "I have lived here for a long time."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**давно** comes from *давний*, "of long ago", which goes with *давеча*, "a while ago" (Vasmer). Vasmer relates that root to Greek *dḗn*, "for a long time", and Latin *dūdum*, "a while ago".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ráduga"
 concept_tag: RU-THINGS122-RAINBOW
 prerequisites: [RU-C121-throat, RU-C122-chin]
 sounds: []
-roots: []
+roots: [slavic-radu]
+etymology_hook: "радуга is most likely from рад 'glad': the joyful arc"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C122-chin]
 <!-- hl-knowledge: introduces=[RU-LEX-C122-THINGS122-02]; assesses=[] -->
 
 **радуга** (*ráduga*) — "a rainbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**радуга** — Vasmer finds most likely a derivation *\*radǫga* from *рад*, "glad", since dialects also call the rainbow *весёлка*, "the merry one". The form *райдуга*, with *рай*, "paradise", he takes as folk etymology.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

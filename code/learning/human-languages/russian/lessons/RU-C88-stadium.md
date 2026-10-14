@@ -14,7 +14,8 @@ romanization: "stadión"
 concept_tag: RU-LOC88-STADIUM
 prerequisites: [RU-C88-supermarket, RU-C88-swimming-pool]
 sounds: []
-roots: []
+roots: [stadium-latin]
+etymology_hook: "стадион ← Greek stadion, a measure of about 185 metres and the racecourse of that length"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C88-swimming-pool]
 <!-- hl-knowledge: introduces=[RU-LEX-C88-LOC88-05]; assesses=[] -->
 
 **стадион** (*stadión*) — "a stadium".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**стадион** comes from Greek *stádion*, a measure of about 185 metres, and so the footrace and racecourse of that length.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

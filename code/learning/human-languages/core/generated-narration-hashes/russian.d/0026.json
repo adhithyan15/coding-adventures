@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 26,
-  "sourceHash": "fnv1a64:1b0aec3001c6784a",
+  "sourceHash": "fnv1a64:fa46410fbb1115d6",
   "lessonIds": [
     "RU-C26-pervyy",
     "RU-C26-vtoroy-tretiy",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "russian/narration/ch26.txt",
   "json": "russian/narration/ch26.json",
-  "textHash": "fnv1a64:7b83ce5fbeb18455",
-  "jsonHash": "fnv1a64:8079394bbe52036f",
+  "textHash": "fnv1a64:896ea3ad6f310833",
+  "jsonHash": "fnv1a64:b884d900d9f85564",
   "findings": []
 }

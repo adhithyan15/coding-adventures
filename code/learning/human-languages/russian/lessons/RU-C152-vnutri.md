@@ -14,7 +14,8 @@ romanization: "vnutrí"
 concept_tag: RU-MESTO152-VNUTRI
 prerequisites: [RU-C152-okolo, RU-C152-vokrug]
 sounds: []
-roots: []
+roots: [slavic-notro]
+etymology_hook: "внутри is в 'in' + нутро 'the inside'; Greek entera 'entrails' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C152-vokrug]
 <!-- hl-knowledge: introduces=[RU-LEX-C152-MESTO152-03]; assesses=[] -->
 
 **внутри** (*vnutrí*) — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**внутри** is *в*, "in", with a form of *нутро*, "the inside", from *\*vŭn-ǫtrĭ*, "within" (Vasmer). Vasmer relates it to Greek *éntera*, "entrails", and Latin *interus*, "inner".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

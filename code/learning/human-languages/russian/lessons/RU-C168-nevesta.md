@@ -14,7 +14,8 @@ romanization: "nevésta"
 concept_tag: RU-VESHCH168-NEVESTA
 prerequisites: [RU-C168-svadba, RU-C168-zhenikh]
 sounds: []
-roots: []
+roots: [pie-weid]
+etymology_hook: "невеста is best explained as 'the unknown one', не 'not' + ведать 'to know'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C168-zhenikh]
 <!-- hl-knowledge: introduces=[RU-LEX-C168-VESHCH168-03]; assesses=[] -->
 
 **невеста** (*nevésta*) — "a bride, a fiancée".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**невеста** — Vasmer still finds the old explanation best: "the unknown one", *не*, "not", with the root of *ведать*, "to know", for the new bride is a stranger in her husband's house. Trubachev's note cites other views.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

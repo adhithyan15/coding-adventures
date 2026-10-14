@@ -14,7 +14,8 @@ romanization: "tetrád"
 concept_tag: RU-SCHOOL-NOTEBOOK
 prerequisites: [RU-C52-pen, RU-C52-paper]
 sounds: []
-roots: []
+roots: [greek-tetras]
+etymology_hook: "тетрадь ← Byzantine Greek tetradion, from tetras 'a group of four': a sheet folded in four"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C52-paper]
 <!-- hl-knowledge: introduces=[RU-LEX-C52-SCHOOL-04]; assesses=[] -->
 
 **тетрадь** (*tetrád*) — "a notebook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тетрадь** ← Byzantine Greek *tetrádion*, from *tetrás*, "a group of four", a sheet folded into four leaves (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

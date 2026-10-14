@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 138,
-  "sourceHash": "fnv1a64:2db0d30f205b3b7c",
+  "sourceHash": "fnv1a64:6b93a8ba8795fc59",
   "lessonIds": [
     "RU-C138-budushchiy",
     "RU-C138-cherez",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch138.txt",
   "json": "russian/narration/ch138.json",
-  "textHash": "fnv1a64:3e818b6957eccd12",
-  "jsonHash": "fnv1a64:f4a0bbad41a6162a",
+  "textHash": "fnv1a64:5518112b90ebfe86",
+  "jsonHash": "fnv1a64:8ebf109ca182e923",
   "findings": []
 }

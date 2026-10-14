@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 116,
-  "sourceHash": "fnv1a64:3851d4d9a791978a",
+  "sourceHash": "fnv1a64:f543f80a5f7f36c9",
   "lessonIds": [
     "RU-C116-desert",
     "RU-C116-volcano",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch116.txt",
   "json": "russian/narration/ch116.json",
-  "textHash": "fnv1a64:6c06bc2c7dbad013",
-  "jsonHash": "fnv1a64:7d7b01d27c0c1ed5",
+  "textHash": "fnv1a64:a420909bb8fcfb02",
+  "jsonHash": "fnv1a64:9968a22641870b7d",
   "findings": []
 }

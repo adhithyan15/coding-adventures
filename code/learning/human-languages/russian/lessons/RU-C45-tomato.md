@@ -14,7 +14,8 @@ romanization: "pomidór"
 concept_tag: RU-VEG-TOMATO
 prerequisites: [RU-C44-berry, RU-C45-potatoes]
 sounds: []
-roots: []
+roots: [italian-pomodoro]
+etymology_hook: "помидор ← Italian pomi d'oro, 'golden apples'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C45-potatoes]
 <!-- hl-knowledge: introduces=[RU-LEX-C45-VEG-02]; assesses=[] -->
 
 **помидор** (*pomidór*) — "a tomato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**помидор** comes from Italian *pomi d'oro*, "golden apples", the plural of *pomo d'oro* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

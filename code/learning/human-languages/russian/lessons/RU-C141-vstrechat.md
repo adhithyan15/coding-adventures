@@ -14,7 +14,8 @@ romanization: "vstrechát"
 concept_tag: RU-VERB-VSTRECHAT
 prerequisites: [RU-C140-stirat, RU-C140-gladit]
 sounds: []
-roots: []
+roots: [slavic-sreti]
+etymology_hook: "встречать goes with встреча 'a meeting'; Lithuanian surėsti 'to catch' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C140-gladit]
 <!-- hl-knowledge: introduces=[RU-LEX-C141-ACT141-01]; assesses=[] -->
 
 **встречать** (*vstrechát*) — "to meet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**встречать** is the ongoing partner of *встретить*, "to meet", Proto-Slavic *\*sŭrěsti*. Vasmer relates it to Lithuanian *surėsti*, "to seize, to catch", and finds a link with *randù*, "I find", less convincing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

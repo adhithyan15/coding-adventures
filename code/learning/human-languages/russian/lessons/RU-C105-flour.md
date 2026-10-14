@@ -14,7 +14,8 @@ romanization: "muká"
 concept_tag: RU-THINGS105-FLOUR
 prerequisites: [RU-C104-melon, RU-C104-garlic]
 sounds: []
-roots: []
+roots: [slavic-moka]
+etymology_hook: "мука 'flour' ← Proto-Slavic *mǫka, from the root of мягкий 'soft'; мука 'torment' is a related word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C104-garlic]
 <!-- hl-knowledge: introduces=[RU-LEX-C105-THINGS105-01]; assesses=[] -->
 
 **мука** (*muká*) — "flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мука**, "flour", stressed on the last syllable ← Proto-Slavic *\*mǫka* — inherited, from the root of *мягкий*, "soft". Vasmer relates it to Lithuanian *minkyti*, "to knead", and Greek *mássō*, "I knead". *мука*, stressed on the first syllable, "torment", is a related word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

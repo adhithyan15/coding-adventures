@@ -14,7 +14,8 @@ romanization: "nenavídet"
 concept_tag: RU-VERB-NENAVIDET
 prerequisites: [RU-C144-boyatsya, RU-C144-nravitsya]
 sounds: []
-roots: []
+roots: [pie-weid]
+etymology_hook: "ненавидеть is не 'not' + навидеть 'to like to look at': not to bear the sight of"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C144-nravitsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C144-ACT144-03]; assesses=[] -->
 
 **ненавидеть** (*nenavídet*) — "to hate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ненавидеть** is *не*, "not", with old *навидеть*, "to look at gladly", from *видеть*, "to see" (Vasmer): to hate is not to bear the sight of someone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

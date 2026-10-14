@@ -14,7 +14,8 @@ romanization: "éta"
 concept_tag: RU-DEF82-THIS-2
 prerequisites: [RU-C80-taxi, RU-C82-this]
 sounds: []
-roots: []
+roots: [pie-to]
+etymology_hook: "эта is the feminine of этот: the pointing э + та, from тот 'that'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C82-this]
 <!-- hl-knowledge: introduces=[RU-LEX-C82-DEF82-02]; assesses=[] -->
 
 **эта** (*éta*) — "this (feminine)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**эта** is the feminine of *этот*: the pointing *э* with *та*, the feminine of *тот*, "that" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "prospékt"
 concept_tag: RU-MESTO151-PROSPEKT
 prerequisites: [RU-C151-okraina, RU-C151-rayon]
 sounds: []
-roots: []
+roots: [specere-latin]
+etymology_hook: "проспект probably came through German Prospekt 'a view', from Latin prospectus 'a view, outlook'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C151-rayon]
 <!-- hl-knowledge: introduces=[RU-LEX-C151-MESTO151-05]; assesses=[] -->
 
 **проспект** (*prospékt*) — "an avenue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**проспект** probably came through German *Prospekt*, "a view, a vista", from Latin *prōspectus*, "a view" (Vasmer): a long straight avenue gives a view; *прешпект* was the folk form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "taksí"
 concept_tag: RU-PLACES-TAXI
 prerequisites: [RU-C80-church, RU-C80-park]
 sounds: []
-roots: []
+roots: [french-taximetre]
+etymology_hook: "такси ← French taxi, short for taximètre, 'a fare meter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C80-park]
 <!-- hl-knowledge: introduces=[RU-LEX-C80-PLACES-05]; assesses=[] -->
 
 **такси** (*taksí*) — "a taxi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**такси** comes from French *taxi*, short for *taximètre*, "a fare meter": *taxe*, "a charge", with *mètre*, "measure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

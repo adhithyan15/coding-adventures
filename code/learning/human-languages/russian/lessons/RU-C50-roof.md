@@ -14,7 +14,8 @@ romanization: "krýsha"
 concept_tag: RU-HOME3-ROOF
 prerequisites: [RU-C49-key, RU-C50-wall]
 sounds: []
-roots: []
+roots: [slavic-kryti]
+etymology_hook: "крыша is built on крыть 'to cover', as are открывать 'to open' and закрывать 'to close'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C50-wall]
 <!-- hl-knowledge: introduces=[RU-LEX-C50-HOME3-02]; assesses=[] -->
 
 **крыша** (*krýsha*) — "a roof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**крыша** is built on *крыть*, "to cover", with an *-s-* that became *ш* (Vasmer): the roof is the cover. The same verb is in *открывать*, "to open", and *закрывать*, "to close".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

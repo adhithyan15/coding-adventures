@@ -14,7 +14,8 @@ romanization: "uchít"
 concept_tag: RU-VERB-UCHIT
 prerequisites: [RU-C40-igrat, RU-C41-slushat]
 sounds: []
-roots: []
+roots: [slavic-uchiti]
+etymology_hook: "учить ← Proto-Slavic *učiti, first 'to accustom'; привыкнуть 'to grow accustomed' shares its root"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C41-slushat]
 <!-- hl-knowledge: introduces=[RU-LEX-C41-VERB4-02]; assesses=[] -->
 
 **учить** (*uchít*) — "to learn; to teach". The same root as **учитель**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**учить** ← Proto-Slavic *\*učiti* — inherited, first "to accustom". Vasmer links it with *привыкнуть*, "to grow accustomed", Lithuanian *jaukìnti*, "to tame", and Sanskrit *úcyati*, "is accustomed": to teach was to accustom someone to a thing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

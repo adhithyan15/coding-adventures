@@ -14,7 +14,8 @@ romanization: "ves"
 concept_tag: RU-ZDOROV239-VES
 prerequisites: [RU-C238-poliklinika, RU-C238-skoraya-pomoshch]
 sounds: []
-roots: []
+roots: [slavic-viseti]
+etymology_hook: "вес goes with висеть 'to hang', as Latin pondus 'weight' goes with pendere 'to hang'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C238-skoraya-pomoshch]
 <!-- hl-knowledge: introduces=[RU-LEX-C239-ZDOROV239-01]; assesses=[] -->
 
 **вес** (*ves*) — "weight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вес** goes with *висеть*, "to hang" (Vasmer), as Latin *pondus*, "weight", goes with *pendēre*, "to hang": weight is what hangs on the scales.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

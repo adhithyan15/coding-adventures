@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 186,
-  "sourceHash": "fnv1a64:43be3d2d478a71ef",
+  "sourceHash": "fnv1a64:55f57cdc7831875a",
   "lessonIds": [
     "RU-C186-grubyy",
     "RU-C186-chestnyy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch186.txt",
   "json": "russian/narration/ch186.json",
-  "textHash": "fnv1a64:b4a34858de880ac7",
-  "jsonHash": "fnv1a64:860d952c7277202e",
+  "textHash": "fnv1a64:7b2f115ff1ce3859",
+  "jsonHash": "fnv1a64:06591ef70e09596c",
   "findings": []
 }

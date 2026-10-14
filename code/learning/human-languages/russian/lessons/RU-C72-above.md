@@ -14,7 +14,8 @@ romanization: "naverkhú"
 concept_tag: RU-WHERE1-ABOVE
 prerequisites: [RU-C72-far, RU-C72-near]
 sounds: []
-roots: []
+roots: [slavic-virkhu]
+etymology_hook: "наверху is на 'on' + верх 'the top': 'on the top'; Lithuanian viršùs 'top' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C72-near]
 <!-- hl-knowledge: introduces=[RU-LEX-C72-WHERE1-05]; assesses=[] -->
 
 **наверху** (*naverkhú*) — "up above, upstairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**наверху** is *на*, "on", with *верху*, a form of *верх*, "the top": "on top". *верх* ← Proto-Slavic *\*vĭrxŭ*, a cousin of Lithuanian *viršùs*, "top" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

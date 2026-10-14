@@ -14,7 +14,8 @@ romanization: "sadóvnik"
 concept_tag: RU-RABOTA230-SADOVNIK
 prerequisites: [RU-C229-programmist, RU-C229-prepodavatel]
 sounds: []
-roots: []
+roots: [pie-sed]
+etymology_hook: "садовник is сад 'a garden' + -овник: one who keeps a garden"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C229-prepodavatel]
 <!-- hl-knowledge: introduces=[RU-LEX-C230-RABOTA230-01]; assesses=[] -->
 
 **садовник** (*sadóvnik*) — "a gardener".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**садовник** is *сад*, "a garden", with *-овник*, "a person": a gardener. *сад* comes from *садить*, "to plant", the "make sit" form of *сидеть*, "to sit" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

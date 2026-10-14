@@ -14,7 +14,8 @@ romanization: "podnimát"
 concept_tag: RU-VERB-PODNIMAT
 prerequisites: [RU-C174-pomnit, RU-C175-tyanut]
 sounds: []
-roots: []
+roots: [pie-hem]
+etymology_hook: "поднимать is под- 'up' + нимать, from an old verb 'to take': to take up"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C175-tyanut]
 <!-- hl-knowledge: introduces=[RU-LEX-C175-ACT175-02]; assesses=[] -->
 
 **поднимать** (*podnimát*) — "to lift, to raise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**поднимать** is *под-*, "up from under", with *-нимать*, from the old verb *\*jęti*, "to take", as in *взять*, "to take": to lift is to take up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

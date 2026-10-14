@@ -11,8 +11,8 @@ concept_tag: RU-MODAL-MUST
 romanization: náda
 prerequisites: [RU-C20-moch]
 sounds: []
-roots: []
-etymology_hook: "надо is a worn-down form of надобно, 'what is fitting' — and Russian keeps it as a word that refuses to have a subject"
+roots: [slavic-doba]
+etymology_hook: "надо is worn down from Old Russian nadobě, a form of надоба 'need' (Vasmer) — a word with no subject"
 duration:
   max_seconds: 250
 requires:
@@ -50,7 +50,7 @@ reviews_of: [RU-C20-moch, RU-C16-tozhe, RU-C04-dumat]
 - **надо** — *náda* — **it is necessary, one must**
 
 Stress the first syllable; the **о** at the end is unstressed and says *a*, so
-the word comes out *NÁ-da*.
+the word comes out *NÁ-da*. It is worn down from Old Russian *nadobě*, a form of *надоба*, "need", built on *доба*, "a time, a season" (Vasmer).
 
 Like **хотеть** and **мочь**, it is followed by a bare infinitive:
 
@@ -68,11 +68,10 @@ should read — because an English sentence is not allowed to go without one.
 Russian is allowed. **надо** is an **impersonal** word: the obligation is stated
 and left hanging in the air, belonging to nobody in particular. This is the same
 freedom you met when the present tense of **быть** turned out to be missing
-altogether — Russian is content to leave out what it does not need.
+altogether.
 
 Naming the person who must do it needs a case this book has not opened yet, so
-for now the impersonal form is the whole of it — and it is genuinely useful on
-its own.
+for now the impersonal form is the whole of it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-NADO-01, RU-GRAMMAR-NADO-IMPERSONAL-01] -->

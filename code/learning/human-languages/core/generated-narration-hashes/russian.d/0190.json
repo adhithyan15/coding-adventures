@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 190,
-  "sourceHash": "fnv1a64:3118bb88b27f4f72",
+  "sourceHash": "fnv1a64:9b7edfad3759af33",
   "lessonIds": [
     "RU-C190-shtora",
     "RU-C190-rakovina",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch190.txt",
   "json": "russian/narration/ch190.json",
-  "textHash": "fnv1a64:1f99122bb78259f5",
-  "jsonHash": "fnv1a64:f4f8ff144fd086b3",
+  "textHash": "fnv1a64:915cee4315652c58",
+  "jsonHash": "fnv1a64:5e457a4240a19542",
   "findings": []
 }

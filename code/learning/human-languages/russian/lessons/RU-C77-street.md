@@ -14,7 +14,8 @@ romanization: "úlitsa"
 concept_tag: RU-TOWN1-STREET
 prerequisites: [RU-C76-country, RU-C77-city]
 sounds: []
-roots: []
+roots: [slavic-ula]
+etymology_hook: "улица ← Proto-Slavic *ulica, from *ula 'a hollow'; Greek aulos 'a pipe' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C77-city]
 <!-- hl-knowledge: introduces=[RU-LEX-C77-TOWN1-02]; assesses=[] -->
 
 **улица** (*úlitsa*) — "a street".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**улица** ← Proto-Slavic *\*ulica*, built on *\*ula*, "a hollow, a channel" — inherited. Vasmer relates it to *улей*, "beehive", and Greek *aulós*, "pipe", *aulṓn*, "glen": a street as a passage between houses.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

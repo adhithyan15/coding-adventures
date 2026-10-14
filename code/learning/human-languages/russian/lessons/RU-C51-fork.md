@@ -14,7 +14,8 @@ romanization: "vílka"
 concept_tag: RU-TABLE-FORK
 prerequisites: [RU-C51-spoon, RU-C51-knife]
 sounds: []
-roots: []
+roots: [slavic-vidla]
+etymology_hook: "вилка is вилы 'pitchfork' + -ка 'little'; вилы ← Proto-Slavic *vidla, from вить 'to twist'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C51-knife]
 <!-- hl-knowledge: introduces=[RU-LEX-C51-TABLE-05]; assesses=[] -->
 
 **вилка** (*vílka*) — "a fork".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вилка** is *вилы*, "a pitchfork", with *-ка*, "little": a little pitchfork. *вилы* ← Proto-Slavic *\*vidla*, first "something bent", from the root of *вить*, "to twist" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

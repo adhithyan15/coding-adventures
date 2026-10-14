@@ -14,7 +14,8 @@ romanization: "gotóvyy"
 concept_tag: RU-QUAL128-READY
 prerequisites: [RU-C127-right, RU-C128-wrong]
 sounds: []
-roots: []
+roots: [slavic-gotovu]
+etymology_hook: "готовый ← Proto-Slavic *gotovŭ; Vasmer relates it to Albanian gatuanj 'I cook'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C128-wrong]
 <!-- hl-knowledge: introduces=[RU-LEX-C128-QUAL128-02]; assesses=[] -->
 
 **готовый** (*gotóvyy*) — "ready".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**готовый** ← Proto-Slavic *\*gotovŭ* — inherited. Vasmer relates it to Albanian *gatuanj*, "I cook, prepare", and rejects a loan from Gothic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

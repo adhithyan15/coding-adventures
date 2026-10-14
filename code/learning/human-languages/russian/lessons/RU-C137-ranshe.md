@@ -14,7 +14,8 @@ romanization: "ránshe"
 concept_tag: RU-PAS137-RANSHE
 prerequisites: [RU-C137-nedavno, RU-C137-davno]
 sounds: []
-roots: []
+roots: [slavic-rano]
+etymology_hook: "раньше is the comparative of рано 'early': earlier"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C137-davno]
 <!-- hl-knowledge: introduces=[RU-LEX-C137-PAS137-03]; assesses=[] -->
 
 **раньше** (*ránshe*) — "before, earlier". **Раньше здесь был парк.** — *ránshe zdes byl park* — "There used to be a park here." **был** is the past of **быть**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**раньше** is the comparing form of *рано*, "early": "earlier, before". *рано* is an old Slavic word that Vasmer calls hard to explain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

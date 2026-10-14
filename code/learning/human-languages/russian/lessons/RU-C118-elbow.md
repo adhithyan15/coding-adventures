@@ -14,7 +14,8 @@ romanization: "lókot"
 concept_tag: RU-THINGS118-ELBOW
 prerequisites: [RU-C118-whale, RU-C118-dolphin]
 sounds: []
-roots: []
+roots: [slavic-olkuti]
+etymology_hook: "локоть ← Proto-Slavic *olkŭtĭ; Lithuanian alkūnė 'elbow' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C118-dolphin]
 <!-- hl-knowledge: introduces=[RU-LEX-C118-THINGS118-05]; assesses=[] -->
 
 **локоть** (*lókot*) — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**локоть** ← Proto-Slavic *\*olkŭtĭ* — inherited; East Slavic *ol-* became *ло-*. Vasmer relates it to Lithuanian *alkūnė* and Old Prussian *alkunis*, "elbow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

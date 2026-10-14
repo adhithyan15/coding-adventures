@@ -14,7 +14,8 @@ romanization: "trolléybus"
 concept_tag: RU-VESHCH253-TROLLEYBUS
 prerequisites: [RU-C253-shakhmaty, RU-C253-transport]
 sounds: []
-roots: []
+roots: [english-trolleybus]
+etymology_hook: "троллейбус ← English trolleybus: trolley 'the pole wheel' + bus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C253-transport]
 <!-- hl-knowledge: introduces=[RU-LEX-C253-VESHCH253-05]; assesses=[] -->
 
 **троллейбус** (*trolléybus*) — "a trolleybus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**троллейбус** comes from English *trolleybus*: *trolley*, the wheel on a pole that runs along the wire, with *bus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "zdoróvyy"
 concept_tag: RU-ZDOROV148-ZDOROVYY
 prerequisites: [RU-C147-nasmork, RU-C147-tabletka]
 sounds: []
-roots: []
+roots: [pie-deru]
+etymology_hook: "здоровый ← Proto-Slavic *sŭdorvŭ, 'of good wood', from 'good' + the root of дерево 'tree'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C147-tabletka]
 <!-- hl-knowledge: introduces=[RU-LEX-C148-ZDOROV148-01]; assesses=[] -->
 
 **здоровый** (*zdoróvyy*) — "healthy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**здоровый** ← Proto-Slavic *\*sŭdorvŭ* — inherited: *\*sŭ-*, "good", with *\*dorvo-*, the root of *дерево*, "tree", so "of good timber" (Vasmer). Church Slavonic has *здравый*, "sound, sensible".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kinó"
 concept_tag: RU-LOC88-CINEMA
 prerequisites: [RU-C87-square, RU-C88-post-office]
 sounds: []
-roots: []
+roots: [kinema-greek]
+etymology_hook: "кино is short for кинематограф, from Greek kinēma 'motion' + graphein 'to write'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C88-post-office]
 <!-- hl-knowledge: introduces=[RU-LEX-C88-LOC88-02]; assesses=[] -->
 
 **кино** (*kinó*) — "a cinema".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кино** is cut short from *кинематограф*, "cinematograph", from Greek *kínēma*, "motion", and *gráphein*, "to write"; German *Kino* was cut the same way (Trubachev, in Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

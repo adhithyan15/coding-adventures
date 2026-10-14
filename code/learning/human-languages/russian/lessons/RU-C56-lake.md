@@ -14,7 +14,8 @@ romanization: "ózero"
 concept_tag: RU-NATURE2-LAKE
 prerequisites: [RU-C56-forest, RU-C56-river]
 sounds: []
-roots: []
+roots: [slavic-ezero]
+etymology_hook: "озеро ← Proto-Slavic *ezero; Lithuanian ežeras 'lake' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C56-river]
 <!-- hl-knowledge: introduces=[RU-LEX-C56-NATURE2-04]; assesses=[] -->
 
 **озеро** (*ózero*) — "a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**озеро** ← Proto-Slavic *\*ezero* — inherited, a cousin of Lithuanian *ẽžeras* and Latvian *ezers*, "lake" (Vasmer). East Slavic turned the first *je-* into *о-*: compare Old Church Slavonic *jezero*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dukhóvka"
 concept_tag: RU-VESHCH219-DUKHOVKA
 prerequisites: [RU-C219-utyug, RU-C219-pylesos]
 sounds: []
-roots: []
+roots: [slavic-dykh]
+etymology_hook: "духовка is from дух 'breath, hot air': an oven of hot air"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C219-pylesos]
 <!-- hl-knowledge: introduces=[RU-LEX-C219-VESHCH219-05]; assesses=[] -->
 
 **духовка** (*dukhóvka*) — "an oven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**духовка** is built on *дух*, "breath, air", here hot air, with *-овка*: an oven that bakes with hot air.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

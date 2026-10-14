@@ -14,7 +14,8 @@ romanization: "sosíska"
 concept_tag: RU-VESHCH163-SOSISKA
 prerequisites: [RU-C162-krossovki, RU-C162-tapochki]
 sounds: []
-roots: []
+roots: [salsus-latin]
+etymology_hook: "сосиска ← French saucisse, from Medieval Latin salsicia, from salsus 'salted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C162-tapochki]
 <!-- hl-knowledge: introduces=[RU-LEX-C163-VESHCH163-01]; assesses=[] -->
 
 **сосиска** (*sosíska*) — "a frankfurter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сосиска** comes from French *saucisse*, "a sausage", from Medieval Latin *salsīcia*, from *salsus*, "salted" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

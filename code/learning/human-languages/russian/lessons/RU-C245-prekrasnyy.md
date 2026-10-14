@@ -14,7 +14,8 @@ romanization: "prekrásnyy"
 concept_tag: RU-KACH245-PREKRASNYY
 prerequisites: [RU-C245-strannyy, RU-C245-smeshnoy]
 sounds: []
-roots: []
+roots: [slavic-krasa]
+etymology_hook: "прекрасный is пре- 'very' + красный, first 'beautiful'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C245-smeshnoy]
 <!-- hl-knowledge: introduces=[RU-LEX-C245-KACH245-03]; assesses=[] -->
 
 **прекрасный** (*prekrásnyy*) — "wonderful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**прекрасный** is *пре-*, "very", with *красный*, which first meant "beautiful", from *краса*, "beauty" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

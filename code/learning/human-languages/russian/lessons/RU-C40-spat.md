@@ -14,7 +14,8 @@ romanization: "spat"
 concept_tag: RU-VERB-SPAT
 prerequisites: [RU-C39-prodavat, RU-C39-plavat]
 sounds: []
-roots: []
+roots: [pie-swep-sleep]
+etymology_hook: "спать ← Proto-Slavic *sŭpati; Sanskrit svapiti 'sleeps' and Latin sopor 'deep sleep' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C39-plavat]
 <!-- hl-knowledge: introduces=[RU-LEX-C40-VERB3-01]; assesses=[] -->
 
 **спать** (*spat*) — "to sleep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**спать** ← Proto-Slavic *\*sŭpati* — inherited from PIE *\*swep-*, "to sleep". Vasmer lists Sanskrit *svápiti*, "sleeps", Old English *swefan*, "to sleep", and Latin *sōpiō*, "I lull to sleep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

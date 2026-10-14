@@ -14,7 +14,8 @@ romanization: "khudóy"
 concept_tag: RU-QUAL130-THIN
 prerequisites: [RU-C130-salty, RU-C130-heavy]
 sounds: []
-roots: []
+roots: [slavic-khudu]
+etymology_hook: "худой ← Proto-Slavic *xudŭ 'poor, small'; Sanskrit kṣudra 'small' is held to be a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C130-heavy]
 <!-- hl-knowledge: introduces=[RU-LEX-C130-QUAL130-04]; assesses=[] -->
 
 **худой** (*khudóy*) — "thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**худой** ← Proto-Slavic *\*xudŭ* — inherited; Old Russian *xudŭ* meant "bad, poor, small". It is held to be related to Sanskrit *kṣudrá-*, "small, low" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

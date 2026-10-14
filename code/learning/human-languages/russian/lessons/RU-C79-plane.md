@@ -14,7 +14,8 @@ romanization: "samolyót"
 concept_tag: RU-TRAVEL-PLANE
 prerequisites: [RU-C79-bus, RU-C79-train]
 sounds: []
-roots: []
+roots: [slavic-leteti]
+etymology_hook: "самолёт is сам 'self' + лёт 'flight': a self-flier, as in the folk-tale ковёр-самолёт 'flying carpet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C79-train]
 <!-- hl-knowledge: introduces=[RU-LEX-C79-TRAVEL-03]; assesses=[] -->
 
 **самолёт** (*samolyót*) — "an aeroplane". "Self-flier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**самолёт** is *сам*, "self", with *-лёт*, "flight", from *летать*, "to fly": "a self-flier". The fairy-tale flying carpet is the *ковёр-самолёт*, "carpet-plane".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

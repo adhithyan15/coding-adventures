@@ -4054,6 +4054,29 @@ line "Target" [35, 50, 68, 82]"##,
                             && path.commands.len() == 12
                 )), "rectWithTitle must lower to a rounded container and title divider");
             }
+            if fixture_name == "internal-container-shapes" {
+                assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+                    &diagram_ir::DiagramShape::RoundedRect,
+                    &diagram_ir::DiagramShape::Ellipse,
+                    &diagram_ir::DiagramShape::RoundedRect,
+                ]);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )), "mindmapCircle must retain circular paint geometry");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.corner_radius.unwrap_or_default() > 2.0
+                )).count() >= 2, "internal card and branch nodes must retain rounded paint geometry");
+            }
+            if fixture_name == "internal-compartment-shapes" {
+                assert!(layout.nodes.iter().all(|node|
+                    node.shape == diagram_ir::DiagramShape::TitledRect));
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path)
+                        if path.commands.iter().filter(|command|
+                            matches!(command, PathCommand::QuadTo { .. })).count() == 4
+                            && path.commands.len() == 12
+                )).count(), 3, "internal compartment shapes must retain title-divider geometry");
+            }
             if fixture_name == "legacy-internal-shape-aliases" {
                 assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
                     &diagram_ir::DiagramShape::Rect,

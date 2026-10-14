@@ -14,7 +14,8 @@ romanization: "pérsik"
 concept_tag: RU-THINGS106-PEACH
 prerequisites: [RU-C106-ice-cream, RU-C106-sausage]
 sounds: []
-roots: []
+roots: [persicum-latin]
+etymology_hook: "персик probably came through Low German persik from Latin persicum 'the Persian (apple)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C106-sausage]
 <!-- hl-knowledge: introduces=[RU-LEX-C106-THINGS106-05]; assesses=[] -->
 
 **персик** (*pérsik*) — "a peach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**персик** probably came through Middle Low German *persik* from Latin *(mālum) persicum*, "the Persian apple" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

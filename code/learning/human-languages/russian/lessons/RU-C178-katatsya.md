@@ -14,7 +14,8 @@ romanization: "katátsya"
 concept_tag: RU-VERB-KATATSYA
 prerequisites: [RU-C178-begat, RU-C178-prygat]
 sounds: []
-roots: []
+roots: [slavic-katiti]
+etymology_hook: "кататься is катать 'to roll' + -ся: to roll along, to ride"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C178-prygat]
 <!-- hl-knowledge: introduces=[RU-LEX-C178-ACT178-04]; assesses=[] -->
 
 **кататься** (*katátsya*) — "to go for a ride, to skate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кататься** is *катать*, "to roll", with *-ся*: to roll along, to go for a ride. Vasmer doubts a link with English *skate*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

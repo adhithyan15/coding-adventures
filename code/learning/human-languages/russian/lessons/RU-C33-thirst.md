@@ -14,7 +14,8 @@ romanization: "zházhda"
 concept_tag: RU-HEALTH2-THIRST
 prerequisites: [RU-C33-rest, RU-C33-hunger]
 sounds: []
-roots: []
+roots: [slavic-zedja]
+etymology_hook: "жажда is Church Slavonic, as its -жд- shows; Old Russian had the native жажа"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C33-hunger]
 <!-- hl-knowledge: introduces=[RU-LEX-C33-HEALTH2-05]; assesses=[] -->
 
 **жажда** (*zházhda*) — "thirst". **вода** answers it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**жажда** — taken from Church Slavonic, says Vasmer: *-жд-* is the Church Slavonic sound where East Slavic has *-ж-*, and Old Russian had the native *жажа*. Both go back to Proto-Slavic *\*žędja*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

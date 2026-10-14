@@ -14,7 +14,8 @@ romanization: "pómoshch"
 concept_tag: RU-VESHCH169-POMOSHCH
 prerequisites: [RU-C168-pensioner, RU-C169-prosba]
 sounds: []
-roots: []
+roots: [pie-magh]
+etymology_hook: "помощь is по- + мощь 'power', a Church Slavonic shape of мочь 'might'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C169-prosba]
 <!-- hl-knowledge: introduces=[RU-LEX-C169-VESHCH169-02]; assesses=[] -->
 
 **помощь** (*pómoshch*) — "help".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**помощь** is *по-* with *мощь*, "might", whose *-щ-* is the Church Slavonic shape of native *мочь*, "power", from *могу*, "I can". Vasmer relates it to Gothic *mahts*, "might".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

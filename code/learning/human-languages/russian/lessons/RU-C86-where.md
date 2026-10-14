@@ -14,7 +14,8 @@ romanization: "gde"
 concept_tag: RU-LOC86-WHERE
 prerequisites: [RU-C85-century, RU-C85-often]
 sounds: []
-roots: []
+roots: [pie-kwo]
+etymology_hook: "где ← Old Russian kŭde; Sanskrit kuha and Lithuanian kur 'where' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C85-often]
 <!-- hl-knowledge: introduces=[RU-LEX-C86-LOC86-01]; assesses=[] -->
 
 **где** (*gde*) — "where".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**где** ← Old Russian *kŭde*, Proto-Slavic *\*kŭde* — inherited, on the old question stem *\*kʷ-* of *кто*, "who". Vasmer lists Sanskrit *kúha*, Avestan *kudā* and Lithuanian *kur*, all "where".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

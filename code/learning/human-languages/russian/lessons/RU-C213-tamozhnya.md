@@ -14,7 +14,8 @@ romanization: "tamózhnya"
 concept_tag: RU-MESTO213-TAMOZHNYA
 prerequisites: [RU-C212-oktyabr, RU-C213-granitsa]
 sounds: []
-roots: []
+roots: [turkic-tamga]
+etymology_hook: "таможня is from Old Russian тамга 'a stamp, a duty', from Turkic tamga 'a seal'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C213-granitsa]
 <!-- hl-knowledge: introduces=[RU-LEX-C213-MESTO213-02]; assesses=[] -->
 
 **таможня** (*tamózhnya*) — "customs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**таможня** comes from Old Russian *тамга*, "a stamp, a customs duty" (Vasmer), from Turkic *tamga*, "an owner's brand, a seal, a tax".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

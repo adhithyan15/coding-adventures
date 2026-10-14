@@ -14,7 +14,8 @@ romanization: "séryy"
 concept_tag: RU-QUAL124-GREY
 prerequisites: [RU-C124-purple, RU-C124-brown]
 sounds: []
-roots: []
+roots: [slavic-seru]
+etymology_hook: "серый ← Proto-Slavic *sěrŭ; Old Norse hárr 'grey, hoary' and English hoar are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C124-brown]
 <!-- hl-knowledge: introduces=[RU-LEX-C124-QUAL124-03]; assesses=[] -->
 
 **серый** (*séryy*) — "grey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**серый** ← Proto-Slavic *\*sěrŭ*, from *\*xoiro-* — inherited. Vasmer relates it to Old Norse *hárr*, "grey, hoary", and Old English *hār*, so English *hoar* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

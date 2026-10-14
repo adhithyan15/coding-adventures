@@ -14,7 +14,8 @@ romanization: "futbólka"
 concept_tag: RU-VESHCH162-FUTBOLKA
 prerequisites: [RU-C161-posylka, RU-C162-bluzka]
 sounds: []
-roots: []
+roots: [english-football]
+etymology_hook: "футболка is футбол 'football' + -ка: a footballer's shirt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C162-bluzka]
 <!-- hl-knowledge: introduces=[RU-LEX-C162-VESHCH162-02]; assesses=[] -->
 
 **футболка** (*futbólka*) — "a T-shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**футболка** is *футбол*, "football", from English, with *-ка*: first the shirt footballers wore.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

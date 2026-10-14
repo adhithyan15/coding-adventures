@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 94,
-  "sourceHash": "fnv1a64:2a7174b0912d30fd",
+  "sourceHash": "fnv1a64:e2099494c8905633",
   "lessonIds": [
     "RU-C94-television",
     "RU-C94-computer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch94.txt",
   "json": "russian/narration/ch94.json",
-  "textHash": "fnv1a64:fea67ca2b27485a6",
-  "jsonHash": "fnv1a64:2d5d88ecc8cceb49",
+  "textHash": "fnv1a64:31e3eaa7b615be37",
+  "jsonHash": "fnv1a64:2ff347f239b0027b",
   "findings": []
 }

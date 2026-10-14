@@ -14,7 +14,8 @@ romanization: "boyátsya"
 concept_tag: RU-VERB-BOYATSYA
 prerequisites: [RU-C143-prikhodit, RU-C143-ukhodit]
 sounds: []
-roots: []
+roots: [pie-bheyh2]
+etymology_hook: "бояться ← Proto-Slavic *bojati sę; Sanskrit bibheti 'fears' and Lithuanian bijotis 'to fear' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C143-ukhodit]
 <!-- hl-knowledge: introduces=[RU-LEX-C144-ACT144-01]; assesses=[] -->
 
 **бояться** (*boyátsya*) — "to be afraid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бояться** ← Proto-Slavic *\*bojati sę* — inherited. Vasmer relates it to Lithuanian *bijótis*, "to fear", and Sanskrit *bibhéti*, "fears".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

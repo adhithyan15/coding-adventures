@@ -14,7 +14,8 @@ romanization: "stáryy"
 concept_tag: RU-SIZE-OLD
 prerequisites: [RU-C65-big, RU-C65-small]
 sounds: []
-roots: []
+roots: [slavic-staru]
+etymology_hook: "старый ← Proto-Slavic *starŭ; Lithuanian stóras 'thick' and Old Norse stórr 'big' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C65-small]
 <!-- hl-knowledge: introduces=[RU-LEX-C65-SIZE-03]; assesses=[] -->
 
 **старый** (*stáryy*) — "old". The opposite of **новый**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**старый** ← Proto-Slavic *\*starŭ* — inherited. Vasmer relates it to Lithuanian *stóras*, "thick, stout", and Old Norse *stórr*, "big, strong": old was first "grown, strong".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

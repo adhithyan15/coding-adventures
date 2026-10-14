@@ -14,7 +14,8 @@ romanization: "god"
 concept_tag: RU-TIME1-YEAR
 prerequisites: [RU-C68-week, RU-C68-month]
 sounds: []
-roots: []
+roots: [slavic-godu]
+etymology_hook: "год ← Proto-Slavic *godŭ 'a fitting time'; годиться 'to be fit' shares its root"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C68-month]
 <!-- hl-knowledge: introduces=[RU-LEX-C68-TIME1-04]; assesses=[] -->
 
 **год** (*god*) — "a year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**год** ← Proto-Slavic *\*godŭ*, "a fitting time, a season" — inherited; Old Russian *godŭ* meant "time, term" (Vasmer). Vasmer relates it to Latvian *gadīgs*, "capable", and Old High German *gigat*, "fitting"; the same root is in *годиться*, "to be fit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

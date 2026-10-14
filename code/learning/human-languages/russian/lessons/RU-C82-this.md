@@ -14,7 +14,8 @@ romanization: "étot"
 concept_tag: RU-DEF82-THIS
 prerequisites: [RU-C80-park, RU-C80-taxi]
 sounds: []
-roots: []
+roots: [pie-to]
+etymology_hook: "этот is the pointing э + тот 'that': 'this here'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C80-taxi]
 <!-- hl-knowledge: introduces=[RU-LEX-C82-DEF82-01]; assesses=[] -->
 
 **этот** (*étot*) — "this (masculine)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**этот** is the pointing sound *э*, "look", with *тот*, "that" (Vasmer); examples date from the 1500s.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

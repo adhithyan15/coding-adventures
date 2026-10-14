@@ -14,7 +14,8 @@ romanization: "grústnyy"
 concept_tag: RU-KACH216-GRUSTNYY
 prerequisites: [RU-C216-nervnyy, RU-C216-schastlivyy]
 sounds: []
-roots: []
+roots: [slavic-grust]
+etymology_hook: "грустный is грусть 'sadness' + -ный"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C216-schastlivyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C216-KACH216-04]; assesses=[] -->
 
 **грустный** (*grústnyy*) — "sad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**грустный** is *грусть*, "sadness", with *-ный*. Vasmer reports the usual link of *грусть* with Lithuanian *graudùs*, "brittle; sad".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

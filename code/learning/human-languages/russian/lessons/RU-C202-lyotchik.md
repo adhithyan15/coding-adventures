@@ -14,7 +14,8 @@ romanization: "lyótchik"
 concept_tag: RU-RABOTA202-LYOTCHIK
 prerequisites: [RU-C202-elektrik, RU-C202-santekhnik]
 sounds: []
-roots: []
+roots: [slavic-leteti]
+etymology_hook: "лётчик is from лёт 'flight', from летать 'to fly', + -чик: a flier"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C202-santekhnik]
 <!-- hl-knowledge: introduces=[RU-LEX-C202-RABOTA202-03]; assesses=[] -->
 
 **лётчик** (*lyótchik*) — "a pilot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лётчик** is *лёт*, "flight", from *летать*, "to fly", with *-чик*, "one who": a flier.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

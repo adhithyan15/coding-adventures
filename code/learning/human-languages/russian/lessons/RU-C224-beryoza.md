@@ -14,7 +14,8 @@ romanization: "beryóza"
 concept_tag: RU-VESHCH224-BERYOZA
 prerequisites: [RU-C223-banan, RU-C223-vinograd]
 sounds: []
-roots: []
+roots: [pie-bherhg]
+etymology_hook: "берёза ← Proto-Slavic *berza; Lithuanian beržas and English birch are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C223-vinograd]
 <!-- hl-knowledge: introduces=[RU-LEX-C224-VESHCH224-01]; assesses=[] -->
 
 **берёза** (*beryóza*) — "a birch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**берёза** ← Proto-Slavic *\*berza* — inherited. Vasmer lists Lithuanian *béržas*, Sanskrit *bhūrja-*, Old Norse *bjǫrk* and Old High German *birihha*: English *birch* is a cousin, from a root "bright, white".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

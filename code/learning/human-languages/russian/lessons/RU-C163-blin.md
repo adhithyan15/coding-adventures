@@ -14,7 +14,8 @@ romanization: "blin"
 concept_tag: RU-VESHCH163-BLIN
 prerequisites: [RU-C163-borshch, RU-C163-shchi]
 sounds: []
-roots: []
+roots: [slavic-moloti]
+etymology_hook: "блин ← Old Russian mlinŭ, from молоть 'to grind': something made of ground grain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C163-shchi]
 <!-- hl-knowledge: introduces=[RU-LEX-C163-VESHCH163-05]; assesses=[] -->
 
 **блин** (*blin*) — "a pancake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**блин** ← Old Russian *mlinŭ*, the older form: it is linked with *молоть*, "to grind", and *мелю*, "I grind" (Vasmer). A pancake is made of milled flour.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

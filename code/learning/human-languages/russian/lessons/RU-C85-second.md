@@ -14,7 +14,8 @@ romanization: "sekúnda"
 concept_tag: RU-TIME85-SECOND
 prerequisites: [RU-C84-day-after-tomorrow, RU-C84-day-before-yesterday]
 sounds: []
-roots: []
+roots: [secundus-latin]
+etymology_hook: "секунда probably came through German Sekunde from Latin (pars minuta) secunda, 'the second small part'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C84-day-before-yesterday]
 <!-- hl-knowledge: introduces=[RU-LEX-C85-TIME85-01]; assesses=[] -->
 
 **секунда** (*sekúnda*) — "a second".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**секунда** probably came through German *Sekunde* from Latin *(pars minūta) secunda*, "the second small part" of an hour, after Ptolemy's counting in sixties (Vasmer). The first small part is the *минута*, "minute".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

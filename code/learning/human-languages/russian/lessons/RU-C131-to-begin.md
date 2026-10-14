@@ -14,7 +14,8 @@ romanization: "nachinát"
 concept_tag: RU-VERB-TO-BEGIN
 prerequisites: [RU-C130-thin, RU-C130-fat]
 sounds: []
-roots: []
+roots: [slavic-chenti]
+etymology_hook: "начинать is на- + -чинать, the ongoing partner of начать 'to begin', a root shared with конец 'end'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C130-fat]
 <!-- hl-knowledge: introduces=[RU-LEX-C131-ACT131-01]; assesses=[] -->
 
 **начинать** (*nachinát*) — "to begin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**начинать** is the ongoing partner of *начать*, "to begin": *на-* with *-чать*. Vasmer finds the same root in *конец*, "end", and *искони*, "from the very start", and compares Greek *kainós*, "new".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

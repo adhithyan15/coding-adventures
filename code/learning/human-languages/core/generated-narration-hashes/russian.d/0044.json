@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 44,
-  "sourceHash": "fnv1a64:a1a35a52545defb6",
+  "sourceHash": "fnv1a64:6a161a1850e76ea3",
   "lessonIds": [
     "RU-C44-fruit",
     "RU-C44-apple",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch44.txt",
   "json": "russian/narration/ch44.json",
-  "textHash": "fnv1a64:40da80cd8330554b",
-  "jsonHash": "fnv1a64:eed7ae280b728fd4",
+  "textHash": "fnv1a64:ea854c5fece39d2c",
+  "jsonHash": "fnv1a64:03850d5e43baf20a",
   "findings": []
 }
