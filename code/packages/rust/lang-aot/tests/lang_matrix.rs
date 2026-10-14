@@ -23508,3 +23508,37 @@ fn algol_multiplicative_selector_value_snapshots_run_on_every_available_standard
         }
     }
 }
+
+#[test]
+fn algol_powered_selector_value_snapshots_run_on_every_available_standard_backend() {
+    // Sixteen complete programs expose either actual, both selector outcomes,
+    // direct/assigned output, both power spellings and base/exponent roots.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then left ^ 2 else right ** 2) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then 2 ^ left else 2 ** right) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then left ^ 2 else right ** 2; output(result) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then 2 ^ left else 2 ** right; output(result) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then left ^ 2 else right ** 2) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then 2 ^ left else 2 ** right) end", "8"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then left ^ 2 else right ** 2; output(result) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then 2 ^ left else 2 ** right; output(result) end", "8"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then left ^ 2 else right ** 2) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then 2 ^ left else 2 ** right) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then left ^ 2 else right ** 2; output(result) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then 2 ^ left else 2 ** right; output(result) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then left ^ 2 else right ** 2) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then 2 ^ left else 2 ** right) end", "8"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then left ^ 2 else right ** 2; output(result) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then 2 ^ left else 2 ** right; output(result) end", "8"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but powered value-selector control did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}

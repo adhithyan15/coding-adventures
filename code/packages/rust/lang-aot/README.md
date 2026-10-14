@@ -1161,3 +1161,10 @@ backend. Existing alias-proof guards and production bounds remain required.
 The BEAM native regression set includes long string constants that exceed initial
 heap space while a separate string remains live, alongside original sparse array
 copies. Local OTP29 success does not replace current-head Linux CI acceptance.
+
+Powered calling-selector controls cover both actual roots, selector outcomes,
+direct/assigned output and base/exponent operand positions. Default name formals
+lose formatter admission after alias promotion; value formals retain one real
+formatter call and local snapshots. Sixteen complete native programs check exact
+4/9/4/8 stdout on every available standard backend. Both ^ and ** are covered;
+existing alias, finite-value and production-limit controls remain required.

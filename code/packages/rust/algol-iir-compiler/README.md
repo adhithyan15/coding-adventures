@@ -576,3 +576,10 @@ snapshot acceptance at both direct and assigned output consumers. Sixteen
 cells cover both actuals, selector results and operand arrangements; native
 controls assert exact -4.5/1.75/-4/7 output on every available standard
 backend. Existing alias-proof guards and production bounds remain required.
+
+Powered calling-selector controls cover both actual roots, selector outcomes,
+direct/assigned output and base/exponent operand positions. Default name formals
+lose formatter admission after alias promotion; value formals retain one real
+formatter call and local snapshots. Sixteen complete native programs check exact
+4/9/4/8 stdout on every available standard backend. Both ^ and ** are covered;
+existing alias, finite-value and production-limit controls remain required.
