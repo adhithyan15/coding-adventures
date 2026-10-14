@@ -186,7 +186,9 @@ mod imp {
 
     fn timeout_to_millis(timeout: Option<Duration>) -> Dword {
         match timeout {
-            Some(duration) => duration.as_millis().min(Dword::MAX as u128) as Dword,
+            // DWORD_MAX is INFINITE, not a finite saturation value. Preserve
+            // the caller's finite-wait contract even for very large durations.
+            Some(duration) => duration.as_millis().min((INFINITE - 1) as u128) as Dword,
             None => INFINITE,
         }
     }
@@ -195,6 +197,20 @@ mod imp {
     mod tests {
         use super::*;
         use std::ptr;
+
+        #[test]
+        fn finite_timeout_never_converts_to_infinite_sentinel() {
+            assert_eq!(timeout_to_millis(None), INFINITE);
+            for (duration, expected) in [
+                (Duration::ZERO, 0),
+                (Duration::from_millis(10), 10),
+                (Duration::from_millis((INFINITE - 1) as u64), INFINITE - 1),
+                (Duration::from_millis(INFINITE as u64), INFINITE - 1),
+                (Duration::MAX, INFINITE - 1),
+            ] {
+                assert_eq!(timeout_to_millis(Some(duration)), expected);
+            }
+        }
 
         #[test]
         fn failed_terminal_pointer_precedes_timeout_classification() {
