@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 249,
-  "sourceHash": "fnv1a64:ee931a5746540e47",
+  "sourceHash": "fnv1a64:fb72c11d5f2e1fd5",
   "lessonIds": [
     "FA-C249-tekke",
     "FA-C249-zardchube",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch249.txt",
   "json": "persian/narration/ch249.json",
-  "textHash": "fnv1a64:c453bdb7a7160aa0",
-  "jsonHash": "fnv1a64:22b5005f580786d2",
+  "textHash": "fnv1a64:3bec4fff964b6be3",
+  "jsonHash": "fnv1a64:8057f4b181efc947",
   "findings": []
 }

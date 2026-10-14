@@ -14,7 +14,8 @@ romanization: "bare"
 concept_tag: FA-CHIZ209-BARE
 prerequisites: [FA-C209-tamsah, FA-C209-gurekhar]
 sounds: []
-roots: []
+roots: [persian-bare]
+etymology_hook: "bare: inherited, usually traced to Middle Persian warrag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C209-gurekhar]
 <!-- hl-knowledge: introduces=[FA-LEX-C209-CHIZ209-04]; assesses=[] -->
 
 **بره** — *bare* — "a lamb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bare* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *warrag*, "lamb". EtymDB takes it back to an Indo-European word for a ram or lamb, the word behind Greek *arēn*, "lamb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

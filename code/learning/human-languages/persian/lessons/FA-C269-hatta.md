@@ -14,7 +14,8 @@ romanization: "hattâ"
 concept_tag: FA-CHERA269-HATTA
 prerequisites: [FA-C268-piyaderow, FA-C269-faqat]
 sounds: []
-roots: []
+roots: [hatta-arabic]
+etymology_hook: "hattâ ← Arabic ḥattā 'until, even' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C269-faqat]
 <!-- hl-knowledge: introduces=[FA-LEX-C269-CHERA269-02]; assesses=[] -->
 
 **حتی** — *hattâ* — "even".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hattâ* is borrowed from Arabic *ḥattā*, "until, as far as; even" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

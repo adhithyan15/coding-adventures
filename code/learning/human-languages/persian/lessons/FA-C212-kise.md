@@ -14,7 +14,8 @@ romanization: "kise"
 concept_tag: FA-CHIZ212-KISE
 prerequisites: [FA-C212-darpush, FA-C212-karton]
 sounds: []
-roots: []
+roots: [persian-kise]
+etymology_hook: "kise ← Middle Persian kīsag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C212-karton]
 <!-- hl-knowledge: introduces=[FA-LEX-C212-CHIZ212-03]; assesses=[] -->
 
 **کیسه** — *kise* — "a bag, a sack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kise* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *kīsag*, "pouch, bag" (EtymDB). EtymDB traces it further back to an Akkadian word for a leather money-bag.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

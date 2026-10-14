@@ -14,7 +14,8 @@ romanization: "galu"
 concept_tag: FA-SALAMAT150-GALU
 prerequisites: [FA-C150-badan, FA-C150-pashne]
 sounds: []
-roots: []
+roots: [persian-galu]
+etymology_hook: "galu: inherited, usually traced to Middle Persian galōg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C150-pashne]
 <!-- hl-knowledge: introduces=[FA-LEX-C150-SALAMAT150-03]; assesses=[] -->
 
 **گلو** — *galu* — "the throat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*galu* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *galōg*, "throat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

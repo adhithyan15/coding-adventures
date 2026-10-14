@@ -14,7 +14,8 @@ romanization: "jush"
 concept_tag: FA-SALAMAT151-JUSH
 prerequisites: [FA-C150-qors, FA-C151-taval]
 sounds: []
-roots: []
+roots: [persian-josh]
+etymology_hook: "jush: stem of Persian jushidan 'to boil' (Middle Persian jōšīdan)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C151-taval]
 <!-- hl-knowledge: introduces=[FA-LEX-C151-SALAMAT151-02]; assesses=[] -->
 
 **جوش** — *jush* — "a pimple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jush* is the stem of *jushidan*, "to boil": a boil on the skin. The verb is native, usually traced to Middle Persian *jōšīdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

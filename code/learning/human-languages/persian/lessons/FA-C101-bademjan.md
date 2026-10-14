@@ -15,6 +15,7 @@ concept_tag: FA-THINGS101-BADEMJAN
 prerequisites: [FA-C101-peste, FA-C101-khiyar]
 sounds: []
 roots: []
+etymology_hook: "bâdemjân: usually traced to an Indian word (Sanskrit vātiṅgaṇa); route not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C101-khiyar]
 <!-- hl-knowledge: introduces=[FA-LEX-C101-THINGS101-04]; assesses=[] -->
 
 **بادمجان** — *bâdemjân* — "an aubergine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâdemjân* is usually traced through Middle Persian to an Indian word like Sanskrit *vātiṅgaṇa*; Arabic *bāḏinjān* is the same word. The route is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

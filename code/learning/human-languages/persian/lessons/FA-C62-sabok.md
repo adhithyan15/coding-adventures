@@ -14,7 +14,8 @@ romanization: "sabok"
 concept_tag: FA-ADJ62-SABOK
 prerequisites: [FA-C62-shirin, FA-C62-chagh]
 sounds: []
-roots: []
+roots: [persian-sabok]
+etymology_hook: "sabok: inherited, usually traced to Middle Persian sabuk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C62-chagh]
 <!-- hl-knowledge: introduces=[FA-LEX-C62-ADJ62-03]; assesses=[] -->
 
 **سبک** — *sabok* — "light (in weight)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sabok* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *sabuk*, "light".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

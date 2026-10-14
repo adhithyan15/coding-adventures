@@ -14,7 +14,8 @@ romanization: "barfi"
 concept_tag: FA-SEFAT237-BARFI
 prerequisites: [FA-C236-divane, FA-C236-vafadar]
 sounds: []
-roots: []
+roots: [persian-barf]
+etymology_hook: "barfi: Persian barf 'snow' (Middle Persian wafr, EtymDB) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C236-vafadar]
 <!-- hl-knowledge: introduces=[FA-LEX-C237-SEFAT237-01]; assesses=[] -->
 
 **برفی** — *barfi* — "snowy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*barfi* is *barf*, "snow", with the ending *-i*. *barf* is inherited, from Middle Persian *wafr* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

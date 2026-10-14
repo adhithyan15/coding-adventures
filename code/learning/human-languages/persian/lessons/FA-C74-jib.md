@@ -14,7 +14,8 @@ romanization: "jib"
 concept_tag: FA-CLOTHES74-JIB
 prerequisites: [FA-C73-shalvar, FA-C74-jurab]
 sounds: []
-roots: []
+roots: [arabic-jayb]
+etymology_hook: "jib ← Arabic jayb 'opening of a garment, pocket', root j-y-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C74-jurab]
 <!-- hl-knowledge: introduces=[FA-LEX-C74-CLOTHES74-02]; assesses=[] -->
 
 **جیب** — *jib* — "a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jib* is borrowed from Arabic *jayb*, "opening of a garment, pocket". Its Arabic root is *j-y-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: FA-THINGS99-POLOW
 prerequisites: [FA-C98-salad, FA-C98-kabab]
 sounds: []
 roots: []
+etymology_hook: "polow: English pilaf comes from it via Turkish; its own origin is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C98-kabab]
 <!-- hl-knowledge: introduces=[FA-LEX-C99-THINGS99-01]; assesses=[] -->
 
 **پلو** — *polow* — "rice pilaf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+English *pilaf* comes from this word through Turkish; the origin of *polow* itself is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

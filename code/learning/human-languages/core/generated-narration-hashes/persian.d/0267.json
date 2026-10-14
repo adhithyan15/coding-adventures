@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 267,
-  "sourceHash": "fnv1a64:34d55b18dc04f2f0",
+  "sourceHash": "fnv1a64:f4d7c5d16a72b1de",
   "lessonIds": [
     "FA-C267-varzeshgah",
     "FA-C267-paytakht",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch267.txt",
   "json": "persian/narration/ch267.json",
-  "textHash": "fnv1a64:e61141f23e65719b",
-  "jsonHash": "fnv1a64:859b7048a9672e6f",
+  "textHash": "fnv1a64:c2c758abc474b936",
+  "jsonHash": "fnv1a64:e43060d34a6ded80",
   "findings": []
 }

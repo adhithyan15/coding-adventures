@@ -14,7 +14,8 @@ romanization: "chamedân"
 concept_tag: FA-THINGS112-CHAMEDAN
 prerequisites: [FA-C112-nardeban, FA-C112-sanduq]
 sounds: []
-roots: []
+roots: [persian-dan]
+etymology_hook: "chamedân: usually explained as Persian jâmedân 'clothes-holder', back via Russian; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C112-sanduq]
 <!-- hl-knowledge: introduces=[FA-LEX-C112-THINGS112-03]; assesses=[] -->
 
 **چمدان** — *chamedân* — "a suitcase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chamedân* is usually explained as the Persian *jâmedân*, "clothes-holder" (*jâme*, "garment", with *-dân*, "container"), which went into Russian as *chemodan* and came back in that shape. The details are not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

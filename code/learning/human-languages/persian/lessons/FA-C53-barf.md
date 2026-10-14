@@ -14,7 +14,8 @@ romanization: "barf"
 concept_tag: FA-NATURE53-BARF
 prerequisites: [FA-C53-darya, FA-C53-atash]
 sounds: []
-roots: []
+roots: [persian-barf]
+etymology_hook: "barf ← Middle Persian wafr (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C53-atash]
 <!-- hl-knowledge: introduces=[FA-LEX-C53-NATURE53-05]; assesses=[] -->
 
 **برف** — *barf* — "snow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*barf* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *wafr*, "snow" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

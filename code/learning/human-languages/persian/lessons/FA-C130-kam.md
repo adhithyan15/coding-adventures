@@ -14,7 +14,8 @@ romanization: "kam"
 concept_tag: FA-QUAL130-KAM
 prerequisites: [FA-C130-dorosht, FA-C130-riz, FA-C21-adad]
 sounds: []
-roots: []
+roots: [persian-kam]
+etymology_hook: "kam: inherited, usually traced to Middle Persian kam"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [FA-C130-riz]
 <!-- hl-knowledge: introduces=[FA-LEX-C130-QUAL130-04]; assesses=[] -->
 
 **کم** — *kam* — "little, few".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kam* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kam*, "little, few".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

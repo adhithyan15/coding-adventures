@@ -14,7 +14,8 @@ romanization: "jâleb"
 concept_tag: FA-SEFAT236-JALEB
 prerequisites: [FA-C236-khasis, FA-C236-bamaze]
 sounds: []
-roots: []
+roots: [arabic-jalib]
+etymology_hook: "jâleb ← Arabic jālib 'attracting, drawing', root j-l-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C236-bamaze]
 <!-- hl-knowledge: introduces=[FA-LEX-C236-SEFAT236-03]; assesses=[] -->
 
 **جالب** — *jâleb* — "interesting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jâleb* is borrowed from Arabic *jālib*, "attracting, drawing". Its Arabic root is *j-l-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pâsport"
 concept_tag: FA-CHIZ168-PASPORT
 prerequisites: [FA-C168-sayt, FA-C168-ramz]
 sounds: []
-roots: []
+roots: [french-passeport]
+etymology_hook: "pâsport: a loan, usually traced to French passeport 'passport'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C168-ramz]
 <!-- hl-knowledge: introduces=[FA-LEX-C168-CHIZ168-03]; assesses=[] -->
 
 **پاسپورت** — *pâsport* — "a passport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pâsport* is a loan, usually traced to French *passeport*, "passport".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

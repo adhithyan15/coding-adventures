@@ -15,6 +15,7 @@ concept_tag: FA-QUAL124-KHIS
 prerequisites: [FA-C124-barik, FA-C124-gowd]
 sounds: []
 roots: []
+etymology_hook: "khis: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C124-gowd]
 <!-- hl-knowledge: introduces=[FA-LEX-C124-QUAL124-03]; assesses=[] -->
 
 **خیس** — *khis* — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khis* is a native Persian word, but no source used here gives its older form, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

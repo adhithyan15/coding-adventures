@@ -14,7 +14,8 @@ romanization: "in"
 concept_tag: FA-TIME82-IN
 prerequisites: [FA-C82-aknun, FA-C82-hargez]
 sounds: []
-roots: []
+roots: [persian-in]
+etymology_hook: "in ← Middle Persian ēn (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C82-hargez]
 <!-- hl-knowledge: introduces=[FA-LEX-C82-TIME82-03]; assesses=[] -->
 
 **این** — *in* — "this".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*in* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *ēn*, "this" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

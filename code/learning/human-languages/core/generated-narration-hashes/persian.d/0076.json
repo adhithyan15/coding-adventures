@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 76,
-  "sourceHash": "fnv1a64:8c43a423ec308e0b",
+  "sourceHash": "fnv1a64:2a7173736450d5f5",
   "lessonIds": [
     "FA-C76-hefdah",
     "FA-C76-hejdah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch76.txt",
   "json": "persian/narration/ch76.json",
-  "textHash": "fnv1a64:d29027dd35f382f9",
-  "jsonHash": "fnv1a64:e52e56b443f80abc",
+  "textHash": "fnv1a64:9e4274538c4a8e63",
+  "jsonHash": "fnv1a64:e7dfbc8cfb9aad5f",
   "findings": []
 }

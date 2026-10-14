@@ -14,7 +14,8 @@ romanization: "nasb kardan"
 concept_tag: FA-VERB-NASB-KARDAN
 prerequisites: [FA-C188-hejji-kardan, FA-C188-tab-khordan]
 sounds: []
-roots: []
+roots: [arabic-nasb]
+etymology_hook: "nasb ← Arabic naṣb 'setting up, fixing', root n-ṣ-b (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C188-tab-khordan]
 <!-- hl-knowledge: introduces=[FA-LEX-C188-KONESH188-05]; assesses=[] -->
 
 **نصب کردن** — *nasb kardan* — "to install, to fit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nasb kardan* pairs *nasb*, borrowed from Arabic *naṣb*, "setting up, fixing" (root *n-ṣ-b*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

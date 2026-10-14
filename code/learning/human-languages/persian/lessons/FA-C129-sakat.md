@@ -14,7 +14,8 @@ romanization: "sâkat"
 concept_tag: FA-QUAL129-SAKAT
 prerequisites: [FA-C128-aram, FA-C129-khaste]
 sounds: []
-roots: []
+roots: [arabic-sakit]
+etymology_hook: "sâkat ← Arabic sākit 'silent', root s-k-t (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C129-khaste]
 <!-- hl-knowledge: introduces=[FA-LEX-C129-QUAL129-02]; assesses=[] -->
 
 **ساکت** — *sâkat* — "silent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâkat* is borrowed from Arabic *sākit*, "silent". Its Arabic root is *s-k-t* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Persian for a bus, then the Persian for a train.
 You'll want to know: پل.
 پل — pol — "a bridge".
 
+The word, taken apart.
+pol is a native Persian word, inherited rather than borrowed: it continues Middle Persian puhl, "bridge" (EtymDB). EtymDB takes it back to an Indo-European word for "crossing", the word that also gave English ford.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a train, then the Persian for a bridge.
 
 You'll want to know: مسجد.
 مسجد — masjed — "a mosque".
+
+The word, taken apart.
+masjed is borrowed from Arabic masjid, "mosque, place of prostration". Its Arabic root is s-j-d (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a bridge, then the Persian for a mosque.
 You'll want to know: هتل.
 هتل — hotel — "a hotel".
 
+The word, taken apart.
+hotel is borrowed from French hôtel, "hotel" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a mosque, then the Persian for a hotel.
 You'll want to know: اداره.
 اداره — edâre — "an office".
 
+The word, taken apart.
+edâre is borrowed from Arabic idāra, "administration". Its Arabic root is d-w-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a hotel, then the Persian for an office.
 
 You'll want to know: پلیس.
 پلیس — polis — "the police".
+
+The word, taken apart.
+polis is a loan, usually traced to French police, "police".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "nahang"
 concept_tag: FA-THINGS122-NAHANG
 prerequisites: [FA-C121-hashare, FA-C121-zarafe]
 sounds: []
-roots: []
+roots: [persian-nahang]
+etymology_hook: "nahang ← Middle Persian nihang (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C121-zarafe]
 <!-- hl-knowledge: introduces=[FA-LEX-C122-THINGS122-01]; assesses=[] -->
 
 **نهنگ** — *nahang* — "a whale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nahang* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *nihang*, "crocodile" (EtymDB). Persian moved it from the crocodile to the whale.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

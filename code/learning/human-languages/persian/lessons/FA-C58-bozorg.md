@@ -14,7 +14,8 @@ romanization: "bozorg"
 concept_tag: FA-ANIMALS58-BOZORG
 prerequisites: [FA-C57-murche, FA-C58-gorg]
 sounds: []
-roots: []
+roots: [persian-buzurg]
+etymology_hook: "bozorg ← Middle Persian wuzurg (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C58-gorg]
 <!-- hl-knowledge: introduces=[FA-LEX-C58-ANIMALS58-02]; assesses=[] -->
 
 **بزرگ** — *bozorg* — "big".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bozorg* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *wuzurg*, "big, great" (EtymDB). Old Persian had *vazraka-* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

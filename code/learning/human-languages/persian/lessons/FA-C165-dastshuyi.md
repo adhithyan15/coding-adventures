@@ -14,7 +14,8 @@ romanization: "dastshuyi"
 concept_tag: FA-CHIZ165-DASTSHUYI
 prerequisites: [FA-C165-van, FA-C165-tualet]
 sounds: []
-roots: []
+roots: [persian-dast]
+etymology_hook: "dastshuyi: Persian dast 'hand' (Old Persian dasta-, EtymDB) + shu 'washing' + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C165-tualet]
 <!-- hl-knowledge: introduces=[FA-LEX-C165-CHIZ165-03]; assesses=[] -->
 
 **دستشویی** — *dastshuyi* — "a toilet, a restroom (the room)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dastshuyi* is built from *dast*, "hand", *shu*, "washing" (from *shostan*, "to wash"), and *-i*: the hand-washing place. *dast* is inherited; Old Persian had *dasta-*, "hand" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

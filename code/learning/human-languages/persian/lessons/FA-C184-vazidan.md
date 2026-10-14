@@ -14,7 +14,8 @@ romanization: "vazidan"
 concept_tag: FA-VERB-VAZIDAN
 prerequisites: [FA-C184-qabul-kardan, FA-C184-rad-kardan]
 sounds: []
-roots: []
+roots: [persian-vazidan]
+etymology_hook: "vazidan: inherited, usually traced to Middle Persian wazīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C184-rad-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C184-KONESH184-03]; assesses=[] -->
 
 **وزیدن** — *vazidan* — "to blow (of wind)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vazidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *wazīdan*, "to blow". EtymDB takes it back to the Indo-European root *\*h₂weh₁-*, "to blow", the root usually also given for English *wind*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

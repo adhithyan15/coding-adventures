@@ -14,7 +14,8 @@ romanization: "kâse"
 concept_tag: FA-THINGS111-KASE
 prerequisites: [FA-C110-parch, FA-C111-sini]
 sounds: []
-roots: []
+roots: [persian-kase]
+etymology_hook: "kâse: inherited, usually traced to Middle Persian kāsag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C111-sini]
 <!-- hl-knowledge: introduces=[FA-LEX-C111-THINGS111-02]; assesses=[] -->
 
 **کاسه** — *kâse* — "a bowl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kâse* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kāsag*, "bowl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vagarna"
 concept_tag: FA-CHERA159-VAGARNA
 prerequisites: [FA-C159-be-har-hal, FA-C159-bedun-e]
 sounds: []
-roots: []
+roots: [persian-agar]
+etymology_hook: "vagarna: Persian va 'and' + agar 'if' + na 'not': 'and if not'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C159-bedun-e]
 <!-- hl-knowledge: introduces=[FA-LEX-C159-CHERA159-03]; assesses=[] -->
 
 **وگرنه** — *vagarna* — "otherwise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vagarna* is *va*, "and", with *agar*, "if", and *na*, "not": "and if not". *agar* and *na* are inherited (*agar* from Middle Persian *agar*, EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

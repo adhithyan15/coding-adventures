@@ -14,7 +14,8 @@ romanization: "ehsâs kardan"
 concept_tag: FA-VERB-EHSAS-KARDAN
 prerequisites: [FA-C257-deltang-shodan, FA-C257-bozorg-shodan]
 sounds: []
-roots: []
+roots: [arabic-ihsas]
+etymology_hook: "ehsâs ← Arabic iḥsās 'perceiving, feeling', root ḥ-s-s (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C257-bozorg-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C257-KONESH257-03]; assesses=[] -->
 
 **احساس کردن** — *ehsâs kardan* — "to feel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ehsâs kardan* pairs *ehsâs*, borrowed from Arabic *iḥsās*, "perceiving, feeling" (root *ḥ-s-s*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

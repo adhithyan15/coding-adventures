@@ -14,7 +14,8 @@ romanization: "jomle"
 concept_tag: FA-CHIZ242-JOMLE
 prerequisites: [FA-C242-chek, FA-C242-benzin]
 sounds: []
-roots: []
+roots: [arabic-jumla]
+etymology_hook: "jomle ← Arabic jumla 'sum, whole; sentence', root j-m-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C242-benzin]
 <!-- hl-knowledge: introduces=[FA-LEX-C242-CHIZ242-04]; assesses=[] -->
 
 **جمله** — *jomle* — "a sentence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jomle* is borrowed from Arabic *jumla*, "sum, whole; sentence". Its Arabic root is *j-m-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tekye dâdan"
 concept_tag: FA-VERB-TEKYE-DADAN
 prerequisites: [FA-C261-panseman-kardan, FA-C261-bastari-shodan]
 sounds: []
-roots: []
+roots: [arabic-takya]
+etymology_hook: "tekye ← Arabic takya 'prop, support', root w-k-ʾ (Lane), + Persian dâdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C261-bastari-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C261-KONESH261-03]; assesses=[] -->
 
 **تکیه دادن** — *tekye dâdan* — "to lean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tekye dâdan* pairs *tekye*, borrowed from Arabic *takya*, "prop, support" (root *w-k-ʾ*, Lane), with the Persian verb *dâdan*, "to give". *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "omid"
 concept_tag: FA-CAN90-OMID
 prerequisites: [FA-C90-ghodrat, FA-C90-arezu]
 sounds: []
-roots: []
+roots: [persian-omid]
+etymology_hook: "omid: inherited, usually traced to Middle Persian ummēd"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C90-arezu]
 <!-- hl-knowledge: introduces=[FA-LEX-C90-CAN90-05]; assesses=[] -->
 
 **امید** — *omid* — "hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*omid* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *ummēd*, "hope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

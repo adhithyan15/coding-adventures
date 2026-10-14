@@ -14,7 +14,8 @@ romanization: "periz"
 concept_tag: FA-CHIZ175-PERIZ
 prerequisites: [FA-C175-fandak, FA-C175-khakandaz]
 sounds: []
-roots: []
+roots: [french-prise]
+etymology_hook: "periz ← French prise 'socket'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C175-khakandaz]
 <!-- hl-knowledge: introduces=[FA-LEX-C175-CHIZ175-03]; assesses=[] -->
 
 **پریز** — *periz* — "a socket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*periz* is borrowed from French *prise*, "socket" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

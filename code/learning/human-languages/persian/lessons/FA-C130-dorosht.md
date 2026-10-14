@@ -14,7 +14,8 @@ romanization: "dorosht"
 concept_tag: FA-QUAL130-DOROSHT
 prerequisites: [FA-C129-nadan, FA-C130-salem]
 sounds: []
-roots: []
+roots: [persian-dorosht]
+etymology_hook: "dorosht: inherited, usually traced to Middle Persian društ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C130-salem]
 <!-- hl-knowledge: introduces=[FA-LEX-C130-QUAL130-02]; assesses=[] -->
 
 **درشت** — *dorosht* — "coarse, large".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dorosht* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *društ*, "coarse, rough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

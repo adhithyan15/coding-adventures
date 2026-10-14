@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 242,
-  "sourceHash": "fnv1a64:f6ec915a6396a6d7",
+  "sourceHash": "fnv1a64:87f67127d9be4bc1",
   "lessonIds": [
     "FA-C242-vam",
     "FA-C242-chek",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch242.txt",
   "json": "persian/narration/ch242.json",
-  "textHash": "fnv1a64:c96f3a5b03a55d71",
-  "jsonHash": "fnv1a64:6bd6bb9668965748",
+  "textHash": "fnv1a64:39db87af048bca55",
+  "jsonHash": "fnv1a64:56cf12ac6dae1fa7",
   "findings": []
 }

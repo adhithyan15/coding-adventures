@@ -14,7 +14,8 @@ romanization: "poliver"
 concept_tag: FA-CHIZ204-POLIVER
 prerequisites: [FA-C204-rusari, FA-C204-jin]
 sounds: []
-roots: []
+roots: [english-pullover]
+etymology_hook: "poliver: a loan, usually traced to English pullover 'pullover'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C204-jin]
 <!-- hl-knowledge: introduces=[FA-LEX-C204-CHIZ204-05]; assesses=[] -->
 
 **پلیور** — *poliver* — "a pullover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*poliver* is a loan, usually traced to English *pullover*, "pullover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

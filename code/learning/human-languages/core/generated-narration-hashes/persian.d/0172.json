@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 172,
-  "sourceHash": "fnv1a64:b553496729038960",
+  "sourceHash": "fnv1a64:2be8c1c6e8884dcd",
   "lessonIds": [
     "FA-C172-durbin",
     "FA-C172-gitar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch172.txt",
   "json": "persian/narration/ch172.json",
-  "textHash": "fnv1a64:4faf16a9020b9978",
-  "jsonHash": "fnv1a64:f077aec372ba6eaa",
+  "textHash": "fnv1a64:dec67f4ca7274237",
+  "jsonHash": "fnv1a64:f32918c336dc5189",
   "findings": []
 }

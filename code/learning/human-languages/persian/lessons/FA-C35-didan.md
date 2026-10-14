@@ -14,7 +14,8 @@ romanization: "didan"
 concept_tag: FA-VERB-DIDAN
 prerequisites: [FA-C35-khordan, FA-C35-nushidan]
 sounds: []
-roots: []
+roots: [persian-didan]
+etymology_hook: "didan: inherited, usually traced to Middle Persian dīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C35-nushidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C35-VERBS35-03]; assesses=[] -->
 
 **دیدن** — *didan* — "to see".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*didan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *dīdan*, "to see".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "javidan"
 concept_tag: FA-VERB-JAVIDAN
 prerequisites: [FA-C255-vazn-kardan, FA-C255-gaz-gereftan]
 sounds: []
-roots: []
+roots: [persian-javidan]
+etymology_hook: "javidan: inherited, usually traced to Middle Persian jōyīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C255-gaz-gereftan]
 <!-- hl-knowledge: introduces=[FA-LEX-C255-KONESH255-05]; assesses=[] -->
 
 **جویدن** — *javidan* — "to chew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*javidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *jōyīdan*, "to chew".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "âshpaz"
 concept_tag: FA-THINGS115-ASHPAZ
 prerequisites: [FA-C115-doktor, FA-C115-parastar]
 sounds: []
-roots: []
+roots: [persian-pukhtan]
+etymology_hook: "âshpaz: Persian âsh 'soup' + paz 'cooking' (pokhtan, inherited)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C115-parastar]
 <!-- hl-knowledge: introduces=[FA-LEX-C115-THINGS115-04]; assesses=[] -->
 
 **آشپز** — *âshpaz* — "a cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âshpaz* is built from *âsh*, "soup, cooked food", and *-paz*, "cooking", the present stem of *pokhtan*, "to cook": the one who cooks. *pokhtan* is inherited, usually traced to Middle Persian *puxtan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

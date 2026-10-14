@@ -12,6 +12,9 @@ Before the new one: say the Persian for an exam, then the Persian for a teacher.
 You'll want to know: شاگرد.
 شاگرد — shâgerd — "a pupil".
 
+The word, taken apart.
+shâgerd is a native Persian word for a pupil or apprentice, but no source used here gives its older form, and its origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a teacher, then the Persian for a pupil.
 
 You'll want to know: دکتر.
 دکتر — doktor — "a doctor".
+
+The word, taken apart.
+doktor is borrowed from French docteur, "doctor" (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a pupil, then the Persian for a doctor.
 You'll want to know: پرستار.
 پرستار — parastâr — "a nurse".
 
+The word, taken apart.
+parastâr is a native Persian word, inherited rather than borrowed: it continues Middle Persian parastār, "servant, attendant" (EtymDB). Persian now uses it for a nurse.
+
 What you've built.
 One more word for this chapter.
 
@@ -98,6 +107,9 @@ Before the new one: say the Persian for a doctor, then the Persian for a nurse.
 
 You'll want to know: آشپز.
 آشپز — âshpaz — "a cook".
+
+The word, taken apart.
+âshpaz is built from âsh, "soup, cooked food", and -paz, "cooking", the present stem of pokhtan, "to cook": the one who cooks. pokhtan is inherited, usually traced to Middle Persian puxtan.
 
 What you've built.
 One more word for this chapter.
@@ -129,6 +141,9 @@ Say دوست داشتن, then کمک کردن: two verbs, each in two pieces.
 
 You'll want to know: کارگر.
 کارگر — kârgar — "a worker".
+
+The word, taken apart.
+kârgar is a native Persian word, inherited rather than borrowed: it continues Middle Persian kārgar, "worker" (EtymDB). It is kâr, "work", with -gar, "doer".
 
 What you've built.
 One more word for this chapter.

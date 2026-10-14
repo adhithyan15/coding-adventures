@@ -14,7 +14,8 @@ romanization: "bâ vojud-e"
 concept_tag: FA-CHERA270-BA-VOJUD-E
 prerequisites: [FA-C270-howsele, FA-C270-az-anja-ke]
 sounds: []
-roots: []
+roots: [arabic-wujud]
+etymology_hook: "bâ vojud-e: Persian bâ 'with' + vojud ← Arabic wujūd 'existence' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C270-az-anja-ke]
 <!-- hl-knowledge: introduces=[FA-LEX-C270-CHERA270-04]; assesses=[] -->
 
 **با وجود** — *bâ vojud-e* — "despite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâ vojud-e* is "with the existence of": *bâ*, "with", is native; *vojud* is borrowed from Arabic *wujūd*, "existence, being found" (root *w-j-d*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

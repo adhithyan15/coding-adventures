@@ -15,6 +15,7 @@ concept_tag: FA-THINGS122-SANJAB
 prerequisites: [FA-C122-delfin, FA-C122-kuse]
 sounds: []
 roots: []
+etymology_hook: "sanjâb: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C122-kuse]
 <!-- hl-knowledge: introduces=[FA-LEX-C122-THINGS122-04]; assesses=[] -->
 
 **سنجاب** — *sanjâb* — "a squirrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sanjâb* is the word for a squirrel, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

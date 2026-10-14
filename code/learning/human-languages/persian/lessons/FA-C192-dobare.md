@@ -14,7 +14,8 @@ romanization: "dobâre"
 concept_tag: FA-ZAMAN192-DOBARE
 prerequisites: [FA-C192-salane, FA-C192-kam-kam]
 sounds: []
-roots: []
+roots: [pie-dwoh]
+etymology_hook: "dobâre: Persian do 'two' (EtymDB) + bâre 'time'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C192-kam-kam]
 <!-- hl-knowledge: introduces=[FA-LEX-C192-ZAMAN192-03]; assesses=[] -->
 
 **دوباره** — *dobâre* — "again".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dobâre* is *do*, "two", with *bâre*, "time": a second time. *do* is inherited (Middle Persian *dō*, EtymDB); *bâr*, "time, turn", is native too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

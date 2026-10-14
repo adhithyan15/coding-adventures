@@ -14,7 +14,8 @@ romanization: "tim"
 concept_tag: FA-CHIZ278-TIM
 prerequisites: [FA-C278-sofre, FA-C278-raz]
 sounds: []
-roots: []
+roots: [english-team]
+etymology_hook: "tim: a loan, usually traced to English team 'team'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C278-raz]
 <!-- hl-knowledge: introduces=[FA-LEX-C278-CHIZ278-03]; assesses=[] -->
 
 **تیم** — *tim* — "a team".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tim* is a loan, usually traced to English *team*, "team".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

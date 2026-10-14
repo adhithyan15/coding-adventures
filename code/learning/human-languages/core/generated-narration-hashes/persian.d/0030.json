@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 30,
-  "sourceHash": "fnv1a64:5e4220aa32852f79",
+  "sourceHash": "fnv1a64:d7095a49f68f1fb2",
   "lessonIds": [
     "FA-C30-ghalb",
     "FA-C30-bazu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch30.txt",
   "json": "persian/narration/ch30.json",
-  "textHash": "fnv1a64:d22c37123a3b23b2",
-  "jsonHash": "fnv1a64:f2a0209c3200c850",
+  "textHash": "fnv1a64:0f054f573512a02a",
+  "jsonHash": "fnv1a64:ebaf3ff2924f6b2e",
   "findings": []
 }

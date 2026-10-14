@@ -14,7 +14,8 @@ romanization: "shenâ kardan"
 concept_tag: FA-VERB-SHENA-KARDAN
 prerequisites: [FA-C218-esterahat-kardan, FA-C218-varzesh-kardan]
 sounds: []
-roots: []
+roots: [persian-shena, pie-kwer]
+etymology_hook: "shenâ kardan: shenâ ← Avestan snā- 'swim' (EtymDB) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C218-varzesh-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C218-KONESH218-05]; assesses=[] -->
 
 **شنا کردن** — *shenâ kardan* — "to swim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shenâ kardan* pairs *shenâ*, "swimming", with *kardan*. *shenâ* is inherited: EtymDB traces it to Avestan *snā-* and the Indo-European root *\*(s)neh₂-*, "to swim". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

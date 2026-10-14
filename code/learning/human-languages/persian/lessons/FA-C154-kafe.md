@@ -14,7 +14,8 @@ romanization: "kâfe"
 concept_tag: FA-MAKAN154-KAFE
 prerequisites: [FA-C154-supermarket, FA-C154-qassabi]
 sounds: []
-roots: []
+roots: [arabic-qahwa]
+etymology_hook: "kâfe ← French café ← Italian ← Turkish ← Arabic qahwa (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C154-qassabi]
 <!-- hl-knowledge: introduces=[FA-LEX-C154-MAKAN154-04]; assesses=[] -->
 
 **کافه** — *kâfe* — "a café".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kâfe* is borrowed from French *café* (EtymDB), which goes back through Italian and Turkish to Arabic *qahwa*, "coffee": the same word as *ghahve*, home again by a long road.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

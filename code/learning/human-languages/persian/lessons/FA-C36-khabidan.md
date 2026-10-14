@@ -14,7 +14,8 @@ romanization: "khâbidan"
 concept_tag: FA-VERB-KHABIDAN
 prerequisites: [FA-C35-shenidan, FA-C35-neshastan]
 sounds: []
-roots: []
+roots: [persian-khwab]
+etymology_hook: "khâbidan: Persian khâb 'sleep' (Middle Persian xwāb) + -idan; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C35-neshastan]
 <!-- hl-knowledge: introduces=[FA-LEX-C36-VERBS36-01]; assesses=[] -->
 
 **خوابیدن** — *khâbidan* — "to sleep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâbidan* is built on *khâb*, "sleep", with the verb ending *-idan*. *khâb* is inherited and usually traced to Middle Persian *xwāb*; it is usually set beside Latin *somnus*, "sleep", as one Indo-European root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

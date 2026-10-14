@@ -14,7 +14,8 @@ romanization: "ghalb"
 concept_tag: FA-BODY30-GHALB
 prerequisites: [FA-C29-shekam, FA-C29-lab]
 sounds: []
-roots: []
+roots: [arabic-qalb]
+etymology_hook: "ghalb ← Arabic qalb 'heart', root q-l-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C29-lab]
 <!-- hl-knowledge: introduces=[FA-LEX-C30-BODY30-01]; assesses=[] -->
 
 **قلب** — *ghalb* — "the heart".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ghalb* is borrowed from Arabic *qalb*, "heart". Its Arabic root is *q-l-b* (Lane). The root is about turning: Lane gives "he turned it upside-down" for the verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

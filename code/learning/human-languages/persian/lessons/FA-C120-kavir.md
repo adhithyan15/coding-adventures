@@ -14,7 +14,8 @@ romanization: "kavir"
 concept_tag: FA-THINGS120-KAVIR
 prerequisites: [FA-C120-barke, FA-C120-cheshme]
 sounds: []
-roots: []
+roots: [parthian-gwyr]
+etymology_hook: "kavir ← Parthian gwyr 'salt desert' (EtymDB); Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C120-cheshme]
 <!-- hl-knowledge: introduces=[FA-LEX-C120-THINGS120-05]; assesses=[] -->
 
 **کویر** — *kavir* — "a salt desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kavir* is a native Iranian word: EtymDB traces it to a Parthian word for "salt desert, salt marsh", written *gwyr*. Parthian was a Middle Iranian sister of Middle Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

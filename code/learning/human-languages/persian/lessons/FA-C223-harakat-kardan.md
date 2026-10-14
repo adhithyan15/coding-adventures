@@ -14,7 +14,8 @@ romanization: "harakat kardan"
 concept_tag: FA-VERB-HARAKAT-KARDAN
 prerequisites: [FA-C223-sharh-dadan, FA-C223-haml-kardan]
 sounds: []
-roots: []
+roots: [arabic-haraka]
+etymology_hook: "harakat ← Arabic ḥaraka 'movement', root ḥ-r-k (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C223-haml-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C223-KONESH223-05]; assesses=[] -->
 
 **حرکت کردن** — *harakat kardan* — "to move, to set off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*harakat kardan* pairs *harakat*, borrowed from Arabic *ḥaraka*, "movement" (root *ḥ-r-k*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

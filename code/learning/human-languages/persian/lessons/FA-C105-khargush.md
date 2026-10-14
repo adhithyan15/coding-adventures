@@ -14,7 +14,8 @@ romanization: "khargush"
 concept_tag: FA-THINGS105-KHARGUSH
 prerequisites: [FA-C104-shabnam, FA-C105-palang]
 sounds: []
-roots: []
+roots: [persian-gosh]
+etymology_hook: "khargush ← Middle Persian xargōš (EtymDB): khar 'donkey' + gush 'ear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C105-palang]
 <!-- hl-knowledge: introduces=[FA-LEX-C105-THINGS105-02]; assesses=[] -->
 
 **خرگوش** — *khargush* — "a rabbit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khargush* is *khar*, "donkey", with *gush*, "ear": the hare named for its long ears. EtymDB traces it to Middle Persian *xargōš*, glossed "big ear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

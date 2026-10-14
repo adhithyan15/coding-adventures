@@ -14,7 +14,8 @@ romanization: "shanbe"
 concept_tag: FA-TIME81-SHANBE
 prerequisites: [FA-C80-zemestan, FA-C80-fasl]
 sounds: []
-roots: []
+roots: [aramaic-shabbat]
+etymology_hook: "shanbe: usually traced via Middle Persian šambad to Aramaic and Hebrew 'Sabbath'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C80-fasl]
 <!-- hl-knowledge: introduces=[FA-LEX-C81-TIME81-01]; assesses=[] -->
 
 **شنبه** — *shanbe* — "Saturday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shanbe* is the Sabbath word: it is usually traced through Middle Persian *šambad* to the Aramaic and Hebrew word for the Sabbath. Saturday was the Sabbath, and the next weekdays are counted from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

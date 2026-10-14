@@ -14,7 +14,8 @@ romanization: "jadval-e zamâni"
 concept_tag: FA-KHANDAN139-JADVAL-E-ZAMANI
 prerequisites: [FA-C138-tasmim-gereftan, FA-C138-omidvar-budan]
 sounds: []
-roots: []
+roots: [arabic-jadwal, arabic-zaman]
+etymology_hook: "jadval ← Arabic jadwal 'stream; table', root j-d-l (Lane), + zamâni 'of time'"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [FA-C138-omidvar-budan]
 
 The board says **اتوبوس: هشت صبح** — *otobus: hasht-e sobh* — "Bus: 8 a.m." The
 bus leaves at eight, so be there before eight.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jadval-e zamâni* is "a table of time". *jadval*, "table, grid", is borrowed from Arabic *jadwal*, "stream, channel; table" (root *j-d-l*, Lane); *zamâni* is *zamân*, "time", with the ending *-i*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

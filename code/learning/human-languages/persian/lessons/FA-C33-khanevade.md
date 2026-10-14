@@ -14,7 +14,8 @@ romanization: "khânevâde"
 concept_tag: FA-FAMILY33-KHANEVADE
 prerequisites: [FA-C33-hamsar, FA-C33-bachche]
 sounds: []
-roots: []
+roots: [persian-khana]
+etymology_hook: "khânevâde: built on Persian khâne 'house'; the -vâde part is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C33-bachche]
 <!-- hl-knowledge: introduces=[FA-LEX-C33-FAMILY33-05]; assesses=[] -->
 
 **خانواده** — *khânevâde* — "a family".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khânevâde* is built on *khâne*, "house, home", an inherited word usually traced to Middle Persian *xānag*. Where the second part, *-vâde*, comes from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

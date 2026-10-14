@@ -14,7 +14,8 @@ romanization: "tasmim gereftan"
 concept_tag: FA-VERB-TASMIM-GEREFTAN
 prerequisites: [FA-C138-az-hala, FA-C138-tarh]
 sounds: []
-roots: []
+roots: [arabic-tasmim]
+etymology_hook: "tasmim ← Arabic taṣmīm 'resolve', root ṣ-m-m (Lane), + Persian gereftan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C138-tarh]
 <!-- hl-knowledge: introduces=[FA-LEX-C138-AYANDE138-04]; assesses=[] -->
 
 **تصمیم گرفتن** — *tasmim gereftan* — "to decide". **تصمیم گرفتم ورزش کنم** — *tasmim gereftam varzesh konam* — "I decided to exercise."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tasmim gereftan* pairs *tasmim*, borrowed from Arabic *taṣmīm*, "resolve" (root *ṣ-m-m*, Lane), with the Persian verb *gereftan*, "to take". *gereftan*, "to take", is an inherited verb; EtymDB takes it back to the Indo-European root *\*gʰrebh₂-*, "to seize".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

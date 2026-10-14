@@ -14,7 +14,8 @@ romanization: "shekar"
 concept_tag: FA-FOOD42-SHEKAR
 prerequisites: [FA-C41-gowje, FA-C41-havij]
 sounds: []
-roots: []
+roots: [persian-shakar]
+etymology_hook: "shekar: usually traced to Sanskrit śarkarā 'sugar'; English sugar comes from it via Arabic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C41-havij]
 <!-- hl-knowledge: introduces=[FA-LEX-C42-FOOD42-01]; assesses=[] -->
 
 **شکر** — *shekar* — "sugar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shekar* is usually traced to Sanskrit *śarkarā*, "grit, sugar", through Middle Persian *šakar*. Arabic *sukkar* took the word from Persian, and English *sugar* comes from that Arabic word by way of Latin and French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

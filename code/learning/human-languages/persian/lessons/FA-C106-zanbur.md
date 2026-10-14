@@ -14,7 +14,8 @@ romanization: "zanbur"
 concept_tag: FA-THINGS106-ZANBUR
 prerequisites: [FA-C106-tavus, FA-C106-ordak]
 sounds: []
-roots: []
+roots: [arabic-zunbur]
+etymology_hook: "zanbur ← Arabic zunbūr 'hornet, wasp', root z-n-b-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C106-ordak]
 <!-- hl-knowledge: introduces=[FA-LEX-C106-THINGS106-05]; assesses=[] -->
 
 **زنبور** — *zanbur* — "a bee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zanbur* is borrowed from Arabic *zunbūr*, "hornet, wasp". Its Arabic root is *z-n-b-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

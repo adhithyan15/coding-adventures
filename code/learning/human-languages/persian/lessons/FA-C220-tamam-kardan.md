@@ -14,7 +14,8 @@ romanization: "tamâm kardan"
 concept_tag: FA-VERB-TAMAM-KARDAN
 prerequisites: [FA-C219-labkhand-zadan, FA-C220-ejaze-dadan]
 sounds: []
-roots: []
+roots: [arabic-tamam]
+etymology_hook: "tamâm ← Arabic tamām 'completeness, complete', root t-m-m (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C220-ejaze-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C220-KONESH220-02]; assesses=[] -->
 
 **تمام کردن** — *tamâm kardan* — "to finish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tamâm kardan* pairs *tamâm*, borrowed from Arabic *tamām*, "completeness, complete" (root *t-m-m*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

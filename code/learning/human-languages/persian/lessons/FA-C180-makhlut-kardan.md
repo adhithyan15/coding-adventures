@@ -14,7 +14,8 @@ romanization: "makhlut kardan"
 concept_tag: FA-VERB-MAKHLUT-KARDAN
 prerequisites: [FA-C179-negah-kardan, FA-C179-gush-dadan]
 sounds: []
-roots: []
+roots: [arabic-mahlut]
+etymology_hook: "makhlut ← Arabic maḫlūṭ 'mixed', root ḫ-l-ṭ (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C179-gush-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C180-KONESH180-01]; assesses=[] -->
 
 **مخلوط کردن** — *makhlut kardan* — "to mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*makhlut kardan* pairs *makhlut*, borrowed from Arabic *maḫlūṭ*, "mixed" (root *ḫ-l-ṭ*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

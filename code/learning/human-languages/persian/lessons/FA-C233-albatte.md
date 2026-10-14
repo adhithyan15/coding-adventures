@@ -14,7 +14,8 @@ romanization: "albatte"
 concept_tag: FA-CHERA233-ALBATTE
 prerequisites: [FA-C233-shayad, FA-C233-hatman]
 sounds: []
-roots: []
+roots: [arabic-al-battata]
+etymology_hook: "albatte ← Arabic al-battata 'decidedly, by all means', root b-t-t (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C233-hatman]
 <!-- hl-knowledge: introduces=[FA-LEX-C233-CHERA233-03]; assesses=[] -->
 
 **البته** — *albatte* — "of course".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*albatte* is borrowed from Arabic *al-battata*, "decidedly, by all means". Its Arabic root is *b-t-t* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

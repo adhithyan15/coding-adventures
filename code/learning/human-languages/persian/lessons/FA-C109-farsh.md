@@ -14,7 +14,8 @@ romanization: "farsh"
 concept_tag: FA-THINGS109-FARSH
 prerequisites: [FA-C109-pust, FA-C109-ostokhan]
 sounds: []
-roots: []
+roots: [arabic-fars]
+etymology_hook: "farsh ← Arabic farš 'something spread out, carpet', root f-r-š (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C109-ostokhan]
 <!-- hl-knowledge: introduces=[FA-LEX-C109-THINGS109-04]; assesses=[] -->
 
 **فرش** — *farsh* — "a carpet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*farsh* is borrowed from Arabic *farš*, "something spread out, carpet". Its Arabic root is *f-r-š* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

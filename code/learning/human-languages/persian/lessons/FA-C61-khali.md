@@ -14,7 +14,8 @@ romanization: "khâli"
 concept_tag: FA-ADJ61-KHALI
 prerequisites: [FA-C60-arzan, FA-C61-por]
 sounds: []
-roots: []
+roots: [arabic-hali]
+etymology_hook: "khâli ← Arabic ḫālī 'empty, vacant', root ḫ-l-w (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C61-por]
 <!-- hl-knowledge: introduces=[FA-LEX-C61-ADJ61-02]; assesses=[] -->
 
 **خالی** — *khâli* — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâli* is borrowed from Arabic *ḫālī*, "empty, vacant". Its Arabic root is *ḫ-l-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

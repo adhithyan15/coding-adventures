@@ -15,6 +15,7 @@ concept_tag: FA-THINGS111-TANAB
 prerequisites: [FA-C111-jaru, FA-C111-satl]
 sounds: []
 roots: []
+etymology_hook: "tanâb: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C111-satl]
 <!-- hl-knowledge: introduces=[FA-LEX-C111-THINGS111-05]; assesses=[] -->
 
 **طناب** — *tanâb* — "a rope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tanâb* is the word for a rope, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

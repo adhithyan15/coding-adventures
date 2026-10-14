@@ -14,7 +14,8 @@ romanization: "sotun"
 concept_tag: FA-MAKAN196-SOTUN
 prerequisites: [FA-C195-gonbad, FA-C196-navdan]
 sounds: []
-roots: []
+roots: [persian-sotun]
+etymology_hook: "sotun: inherited, usually traced to Middle Persian stūn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C196-navdan]
 <!-- hl-knowledge: introduces=[FA-LEX-C196-MAKAN196-02]; assesses=[] -->
 
 **ستون** — *sotun* — "a column, a pillar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sotun* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *stūn*, "pillar". It is usually set beside Sanskrit *sthūṇā*, "post, pillar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

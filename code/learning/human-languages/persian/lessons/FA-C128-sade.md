@@ -14,7 +14,8 @@ romanization: "sâde"
 concept_tag: FA-QUAL128-SADE
 prerequisites: [FA-C128-gerd, FA-C128-mehraban]
 sounds: []
-roots: []
+roots: [persian-sade]
+etymology_hook: "sâde: inherited, usually traced to Middle Persian sādag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C128-mehraban]
 <!-- hl-knowledge: introduces=[FA-LEX-C128-QUAL128-04]; assesses=[] -->
 
 **ساده** — *sâde* — "simple, plain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâde* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *sādag*, "simple".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 227,
-  "sourceHash": "fnv1a64:1d8dd45f3f348fe2",
+  "sourceHash": "fnv1a64:3db801c4c650df2d",
   "lessonIds": [
     "FA-C227-band",
     "FA-C227-mosakken",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch227.txt",
   "json": "persian/narration/ch227.json",
-  "textHash": "fnv1a64:d39d2d384d4736f9",
-  "jsonHash": "fnv1a64:418bd97e72889aae",
+  "textHash": "fnv1a64:2eec68d4b2c033b6",
+  "jsonHash": "fnv1a64:c346fa4bff7edab9",
   "findings": []
 }

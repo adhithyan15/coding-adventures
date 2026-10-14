@@ -14,7 +14,8 @@ romanization: "saf keshidan"
 concept_tag: FA-VERB-SAF-KESHIDAN
 prerequisites: [FA-C261-asbabkeshi-kardan, FA-C262-bastebandi-kardan]
 sounds: []
-roots: []
+roots: [arabic-saff, persian-kashidan]
+etymology_hook: "saf ← Arabic ṣaff 'row', root ṣ-f-f (Lane), + Persian keshidan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C262-bastebandi-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C262-KONESH262-02]; assesses=[] -->
 
 **صف کشیدن** — *saf keshidan* — "to queue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*saf keshidan* is "to draw a line": *saf* is borrowed from Arabic *ṣaff*, "row, rank" (root *ṣ-f-f*, Lane), and *keshidan*, "to draw", is native. *keshidan*, "to pull", is an inherited verb; it is usually traced to Middle Persian *kašīdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

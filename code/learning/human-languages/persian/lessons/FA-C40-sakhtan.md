@@ -14,7 +14,8 @@ romanization: "sâkhtan"
 concept_tag: FA-VERB-SAKHTAN
 prerequisites: [FA-C39-bordan, FA-C40-shodan]
 sounds: []
-roots: []
+roots: [persian-sakhtan]
+etymology_hook: "sâkhtan: inherited, usually traced to Middle Persian sāxtan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C40-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C40-VERBS40-02]; assesses=[] -->
 
 **ساختن** — *sâkhtan* — "to build, to make".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâkhtan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *sāxtan*, "to make, to prepare".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

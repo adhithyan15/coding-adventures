@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 157,
-  "sourceHash": "fnv1a64:62e27acd4ca9bf09",
+  "sourceHash": "fnv1a64:d9697c7542b8e767",
   "lessonIds": [
     "FA-C157-bonbast",
     "FA-C157-khabgah",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch157.txt",
   "json": "persian/narration/ch157.json",
-  "textHash": "fnv1a64:651ebbc460cb435d",
-  "jsonHash": "fnv1a64:24c86f23b9a4bf65",
+  "textHash": "fnv1a64:7f95d5e2098f4b9d",
+  "jsonHash": "fnv1a64:04defceeab79c325",
   "findings": []
 }

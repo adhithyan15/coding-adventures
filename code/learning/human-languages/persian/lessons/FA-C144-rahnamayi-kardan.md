@@ -14,7 +14,8 @@ romanization: "râhnamâyi kardan"
 concept_tag: FA-VERB-RAHNAMAYI-KARDAN
 prerequisites: [FA-C143-por-kardan, FA-C143-tahvil-dadan]
 sounds: []
-roots: []
+roots: [persian-rah, pie-kwer]
+etymology_hook: "râhnamâyi kardan: Persian râh 'road' + namâ 'showing' + -i + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C143-tahvil-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C144-KONESH144-01]; assesses=[] -->
 
 **راهنمایی کردن** — *râhnamâyi kardan* — "to give directions, to guide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*râhnamâyi kardan* pairs *râhnamâyi*, "guidance", with *kardan*. *râhnamâyi* is *râh*, "road", with *namâ*, "showing" (from *nemudan*, "to show"), and *-i*: road-showing. All the pieces are native Persian. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

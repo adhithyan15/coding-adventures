@@ -14,7 +14,8 @@ romanization: "bâzdid kardan"
 concept_tag: FA-VERB-BAZDID-KARDAN
 prerequisites: [FA-C144-rahnamayi-kardan, FA-C144-neshan-dadan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "bâzdid kardan: Persian bâz 'again' + did 'seeing' + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C144-neshan-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C144-KONESH144-03]; assesses=[] -->
 
 **بازدید کردن** — *bâzdid kardan* — "to visit (a place)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâzdid kardan* pairs *bâzdid*, "a visit", with *kardan*. *bâzdid* is *bâz*, "again", with *did*, "seeing" (from *didan*, "to see"): seeing again. All the pieces are native. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

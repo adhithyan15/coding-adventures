@@ -14,7 +14,8 @@ romanization: "tavajjoh kardan"
 concept_tag: FA-VERB-TAVAJJOH-KARDAN
 prerequisites: [FA-C184-tabidan, FA-C184-ruyidan]
 sounds: []
-roots: []
+roots: [arabic-tawajjuh]
+etymology_hook: "tavajjoh ← Arabic tawajjuh 'turning the face towards', root w-j-h (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C184-ruyidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C185-KONESH185-01]; assesses=[] -->
 
 **توجه کردن** — *tavajjoh kardan* — "to pay attention".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tavajjoh kardan* pairs *tavajjoh*, borrowed from Arabic *tawajjuh*, "turning the face towards" (root *w-j-h*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

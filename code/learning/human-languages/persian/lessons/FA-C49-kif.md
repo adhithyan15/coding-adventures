@@ -15,6 +15,7 @@ concept_tag: FA-SCHOOL49-KIF
 prerequisites: [FA-C49-khodkar, FA-C49-madrese]
 sounds: []
 roots: []
+etymology_hook: "kif: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C49-madrese]
 <!-- hl-knowledge: introduces=[FA-LEX-C49-SCHOOL49-04]; assesses=[] -->
 
 **کیف** — *kif* — "a bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kif* is the everyday word for a bag, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

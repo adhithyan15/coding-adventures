@@ -14,7 +14,8 @@ romanization: "penhân kardan"
 concept_tag: FA-VERB-PENHAN-KARDAN
 prerequisites: [FA-C222-tul-keshidan, FA-C223-nejat-dadan]
 sounds: []
-roots: []
+roots: [persian-pinhan, pie-kwer]
+etymology_hook: "penhân kardan: Persian penhân 'hidden' (Middle Persian pinhān) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C223-nejat-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C223-KONESH223-02]; assesses=[] -->
 
 **پنهان کردن** — *penhân kardan* — "to hide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*penhân kardan* pairs *penhân*, "hidden", with *kardan*. *penhân* is native, usually traced to Middle Persian *pinhān*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

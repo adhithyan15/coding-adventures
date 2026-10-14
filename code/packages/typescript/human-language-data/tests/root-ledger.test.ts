@@ -256,7 +256,7 @@ const EMPTY_ETYMOLOGY_BLOCK_PINS: Readonly<Record<string, number>> = {
   malayalam: 6,
   marathi: 0,
   marwadi: 0,
-  persian: 2,
+  persian: 0,
   portuguese: 5,
   punjabi: 0,
   russian: 52,

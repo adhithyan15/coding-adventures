@@ -14,7 +14,8 @@ romanization: "keshow"
 concept_tag: FA-CHIZ246-KESHOW
 prerequisites: [FA-C246-safhe, FA-C246-payam]
 sounds: []
-roots: []
+roots: [persian-kashidan]
+etymology_hook: "keshow: usually explained as built on Persian kesh- 'pull'; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C246-payam]
 <!-- hl-knowledge: introduces=[FA-LEX-C246-CHIZ246-03]; assesses=[] -->
 
 **کشو** — *keshow* — "a drawer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*keshow* is usually explained as built on *kesh-*, "pull" (from *keshidan*): the thing you pull out. That account is the usual one, but it is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

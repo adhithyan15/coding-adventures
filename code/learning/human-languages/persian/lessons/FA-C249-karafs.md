@@ -14,7 +14,8 @@ romanization: "karafs"
 concept_tag: FA-CHIZ249-KARAFS
 prerequisites: [FA-C249-zardchube, FA-C249-tahdig]
 sounds: []
-roots: []
+roots: [arabic-karafs]
+etymology_hook: "karafs ← Arabic karafs 'celery' (Lane), itself thought foreign in Arabic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C249-tahdig]
 <!-- hl-knowledge: introduces=[FA-LEX-C249-CHIZ249-04]; assesses=[] -->
 
 **کرفس** — *karafs* — "celery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*karafs* is borrowed from Arabic *karafs*, "celery" (root *k-r-f-s*, Lane); Lane records that the Arabic word was itself thought to be a foreign word taken into Arabic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

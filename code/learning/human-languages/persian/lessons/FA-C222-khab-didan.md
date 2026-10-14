@@ -14,7 +14,8 @@ romanization: "khâb didan"
 concept_tag: FA-VERB-KHAB-DIDAN
 prerequisites: [FA-C222-ab-dadan, FA-C222-pars-kardan]
 sounds: []
-roots: []
+roots: [persian-khwab]
+etymology_hook: "khâb didan: Persian khâb 'sleep' (EtymDB) + didan 'to see'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C222-pars-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C222-KONESH222-03]; assesses=[] -->
 
 **خواب دیدن** — *khâb didan* — "to dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâb didan* is "to see sleep": *khâb*, "sleep", is inherited (Middle Persian *xwāb*, EtymDB), and so is *didan*, "to see". EtymDB takes *khâb* back to the Indo-European root *\*swep-*, "to sleep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

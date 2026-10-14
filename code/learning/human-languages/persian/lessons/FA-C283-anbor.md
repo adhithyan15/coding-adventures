@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ283-ANBOR
 prerequisites: [FA-C283-zanjir, FA-C283-pich-gushti]
 sounds: []
 roots: []
+etymology_hook: "anbor: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C283-pich-gushti]
 <!-- hl-knowledge: introduces=[FA-LEX-C283-CHIZ283-05]; assesses=[] -->
 
 **انبر** — *anbor* — "pliers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*anbor* is the word for pliers, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

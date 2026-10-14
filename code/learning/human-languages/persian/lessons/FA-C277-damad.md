@@ -14,7 +14,8 @@ romanization: "dâmâd"
 concept_tag: FA-CHIZ277-DAMAD
 prerequisites: [FA-C277-valedeyn, FA-C277-namzad]
 sounds: []
-roots: []
+roots: [persian-damad]
+etymology_hook: "dâmâd ← Middle Persian dāmād (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C277-namzad]
 <!-- hl-knowledge: introduces=[FA-LEX-C277-CHIZ277-03]; assesses=[] -->
 
 **داماد** — *dâmâd* — "a bridegroom; a son-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dâmâd* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *dāmād*, "bridegroom, son-in-law" (EtymDB). EtymDB takes it back to the Indo-European root *\*ǵem-*, "to marry", the root of Greek *gambros*, "son-in-law".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

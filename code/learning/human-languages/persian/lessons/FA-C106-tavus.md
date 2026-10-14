@@ -14,7 +14,8 @@ romanization: "tâvus"
 concept_tag: FA-THINGS106-TAVUS
 prerequisites: [FA-C106-tuti, FA-C106-kabutar]
 sounds: []
-roots: []
+roots: [arabic-tawus]
+etymology_hook: "tâvus ← Arabic ṭāwūs 'peacock' (EtymDB), usually traced to Greek taōs"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C106-kabutar]
 <!-- hl-knowledge: introduces=[FA-LEX-C106-THINGS106-03]; assesses=[] -->
 
 **طاووس** — *tâvus* — "a peacock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tâvus* is borrowed from Arabic *ṭāwūs*, "peacock" (EtymDB), a word usually traced to Greek *taōs*, "peacock".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

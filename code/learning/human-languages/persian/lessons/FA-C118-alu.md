@@ -15,6 +15,7 @@ concept_tag: FA-THINGS118-ALU
 prerequisites: [FA-C118-parking, FA-C118-kishmish]
 sounds: []
 roots: []
+etymology_hook: "âlu: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C118-kishmish]
 <!-- hl-knowledge: introduces=[FA-LEX-C118-THINGS118-04]; assesses=[] -->
 
 **آلو** — *âlu* — "a plum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âlu* is a native Persian word whose origin is not settled; EtymDB links it to Sanskrit *ālu*, "edible root", but that link is not secure.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

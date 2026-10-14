@@ -50,6 +50,11 @@ Persian normally writes the two spoken pieces together. Start with **خدا**, a
 
 Keep the two meaning layers available underneath the complete form.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khodâ hâfez* is "God, the guardian". *khodâ* is inherited, from Middle Persian *xwadāy*, "lord"; *hâfez* is borrowed from Arabic *ḥāfiẓ*, "guardian, keeper" (EtymDB; root *ḥ-f-ẓ*, Lane).
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED] -->
 

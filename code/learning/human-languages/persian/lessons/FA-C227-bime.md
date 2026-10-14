@@ -15,6 +15,7 @@ concept_tag: FA-SALAMAT227-BIME
 prerequisites: [FA-C227-band, FA-C227-mosakken]
 sounds: []
 roots: []
+etymology_hook: "bime: often linked with Persian bim 'fear'; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C227-mosakken]
 <!-- hl-knowledge: introduces=[FA-LEX-C227-SALAMAT227-03]; assesses=[] -->
 
 **بیمه** — *bime* — "insurance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bime* is often linked with *bim*, "fear, risk", but its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

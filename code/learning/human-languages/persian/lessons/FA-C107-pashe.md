@@ -15,6 +15,7 @@ concept_tag: FA-THINGS107-PASHE
 prerequisites: [FA-C106-ordak, FA-C106-zanbur]
 sounds: []
 roots: []
+etymology_hook: "pashe: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C106-zanbur]
 <!-- hl-knowledge: introduces=[FA-LEX-C107-THINGS107-01]; assesses=[] -->
 
 **پشه** — *pashe* — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pashe* is a native Persian word, but no source used here gives its older form, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

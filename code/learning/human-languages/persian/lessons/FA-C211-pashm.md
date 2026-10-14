@@ -14,7 +14,8 @@ romanization: "pashm"
 concept_tag: FA-CHIZ211-PASHM
 prerequisites: [FA-C210-mobayl, FA-C211-panbe]
 sounds: []
-roots: []
+roots: [persian-pashm]
+etymology_hook: "pashm: inherited, usually traced to Middle Persian pašm"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C211-panbe]
 <!-- hl-knowledge: introduces=[FA-LEX-C211-CHIZ211-02]; assesses=[] -->
 
 **پشم** — *pashm* — "wool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pashm* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *pašm*, "wool".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

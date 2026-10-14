@@ -14,7 +14,8 @@ romanization: "âyande"
 concept_tag: FA-AYANDE138-AYANDE
 prerequisites: [FA-C137-yek-bar, FA-C137-separi-kardan]
 sounds: []
-roots: []
+roots: [persian-amadan]
+etymology_hook: "âyande: Persian ây- 'come' (âmadan, EtymDB) + -ande '-ing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C137-separi-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C138-AYANDE138-01]; assesses=[] -->
 
 **آینده** — *âyande* — "next, coming; the future". The future uses **خواهم** with the verb's past stem (**رفت** from **رفتن**): **هفته آینده به مشهد خواهم رفت** — *hafte-ye âyande be mashhad khâham raft* — "Next week I will go to Mashhad."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âyande* is *ây-*, the present stem of *âmadan*, "to come" (EtymDB), with *-ande*, "-ing": "coming". The verb is inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

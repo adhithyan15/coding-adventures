@@ -14,7 +14,8 @@ romanization: "sarfejuyi kardan"
 concept_tag: FA-VERB-SARFEJUYI-KARDAN
 prerequisites: [FA-C148-gir-kardan, FA-C149-hadar-dadan]
 sounds: []
-roots: []
+roots: [arabic-sarf, pie-kwer]
+etymology_hook: "sarfejuyi kardan: sarfe (Arabic ṣarf, root ṣ-r-f, Lane) + Persian ju 'seeking' + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C149-hadar-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C149-KONESH149-02]; assesses=[] -->
 
 **صرفه جویی کردن** — *sarfejuyi kardan* — "to economise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sarfejuyi kardan* pairs *sarfejuyi*, "thrift", with *kardan*. It is *sarfe*, "saving, profit", with *-ju*, "seeking", and *-i*. *sarfe* is usually traced to Arabic *ṣarf*, "spending, turning" (root *ṣ-r-f*, Lane); *-ju* is native. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

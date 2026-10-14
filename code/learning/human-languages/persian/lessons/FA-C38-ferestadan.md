@@ -14,7 +14,8 @@ romanization: "ferestâdan"
 concept_tag: FA-VERB-FERESTADAN
 prerequisites: [FA-C38-khastan, FA-C38-avardan]
 sounds: []
-roots: []
+roots: [persian-ferestadan]
+etymology_hook: "ferestâdan: inherited, usually traced to Middle Persian frēstādan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C38-avardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C38-VERBS38-04]; assesses=[] -->
 
 **فرستادن** — *ferestâdan* — "to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ferestâdan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *frēstādan*, "to send".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "majalle"
 concept_tag: FA-CHIZ172-MAJALLE
 prerequisites: [FA-C172-gitar, FA-C172-roman]
 sounds: []
-roots: []
+roots: [arabic-majalla]
+etymology_hook: "majalle ← Arabic majalla 'journal, book', root j-l-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C172-roman]
 <!-- hl-knowledge: introduces=[FA-LEX-C172-CHIZ172-04]; assesses=[] -->
 
 **مجله** — *majalle* — "a magazine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*majalle* is borrowed from Arabic *majalla*, "journal, book". Its Arabic root is *j-l-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,7 +12,7 @@ concept_tag: FA-ORDINAL-FOURTH
 prerequisites: [FA-C20-dovvom-sevvom]
 sounds: [rtl, persian-che, long-a]
 roots: []
-etymology_hook: "chaharom is chahar plus -om with no change at the join, which is what the rule looks like when the cardinal ends in a consonant."
+etymology_hook: "chahârom: inherited chahâr 'four' (Middle Persian čahār) + the ordinal ending -om (EtymDB)"
 duration:
   max_seconds: 245
 requires:
@@ -52,6 +52,11 @@ up. *dahom* is "tenth", *bistom* is "twentieth", *sadom* is "hundredth."
 
 So a reader who has twelve cardinals and one ending has twelve ordinals, minus
 the borrowed first.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chahârom* is built from *chahâr*, "four", with the ordinal ending *-om* (EtymDB); *chahâr* is inherited, from Middle Persian *čahār* (EtymDB).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-CHAHAROM, FA-MORPH-ORDINAL-OM, FA-LEX-PANJ] -->

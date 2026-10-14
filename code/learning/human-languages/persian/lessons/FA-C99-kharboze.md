@@ -15,6 +15,7 @@ concept_tag: FA-THINGS99-KHARBOZE
 prerequisites: [FA-C99-ash, FA-C99-hendevane]
 sounds: []
 roots: []
+etymology_hook: "kharboze: usually traced to Middle Persian xarbūzag; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C99-hendevane]
 <!-- hl-knowledge: introduces=[FA-LEX-C99-THINGS99-04]; assesses=[] -->
 
 **خربزه** — *kharboze* — "a melon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kharboze* is usually traced to Middle Persian *xarbūzag*, "melon"; how that word was built is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "âtashneshân"
 concept_tag: FA-KAR252-ATASHNESHAN
 prerequisites: [FA-C252-baqqal, FA-C252-qannadi]
 sounds: []
-roots: []
+roots: [persian-atash]
+etymology_hook: "âtashneshân: Persian âtash 'fire' (EtymDB) + neshân 'putting out'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C252-qannadi]
 <!-- hl-knowledge: introduces=[FA-LEX-C252-KAR252-03]; assesses=[] -->
 
 **آتش نشان** — *âtashneshân* — "a firefighter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âtashneshân* is *âtash*, "fire" (Middle Persian *ātaxš*, EtymDB), with *-neshân*, "making sit, putting out" (from *neshândan*): the fire-settler. Both are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

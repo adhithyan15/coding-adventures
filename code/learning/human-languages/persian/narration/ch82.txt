@@ -12,6 +12,9 @@ Before the new one: say the Persian for Wednesday, then the Persian for Thursday
 You'll want to know: اکنون.
 اکنون — aknun — "now".
 
+The word, taken apart.
+aknun is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian aknūn, "now". EtymDB links it to the Indo-European nu, "now", the word behind English now.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for Thursday, then the Persian for now.
 
 You'll want to know: هرگز.
 هرگز — hargez — "never".
+
+The word, taken apart.
+hargez is a native Persian word, inherited rather than borrowed: it continues Middle Persian hagriz, "ever; never" (EtymDB). Old Persian had hakaram-čiy, "once" (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for now, then the Persian for never.
 You'll want to know: این.
 این — in — "this".
 
+The word, taken apart.
+in is a native Persian word, inherited rather than borrowed: it continues Middle Persian ēn, "this" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for never, then the Persian for this.
 You'll want to know: آن.
 آن — ân — "that".
 
+The word, taken apart.
+ân is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian ān, "that".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for this, then the Persian for that.
 
 You'll want to know: اینها.
 اینها — inhâ — "these".
+
+The word, taken apart.
+inhâ is in, "this", with the plural ending -hâ: "these". Both pieces are native Persian; in continues Middle Persian ēn (EtymDB).
 
 What you've built.
 One more word for this chapter.

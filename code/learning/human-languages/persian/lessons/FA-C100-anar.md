@@ -14,7 +14,8 @@ romanization: "anâr"
 concept_tag: FA-THINGS100-ANAR
 prerequisites: [FA-C100-gilas, FA-C100-khorma]
 sounds: []
-roots: []
+roots: [persian-anar]
+etymology_hook: "anâr: inherited, usually traced to Middle Persian anār"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C100-khorma]
 <!-- hl-knowledge: introduces=[FA-LEX-C100-THINGS100-04]; assesses=[] -->
 
 **انار** — *anâr* — "a pomegranate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*anâr* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *anār*, "pomegranate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

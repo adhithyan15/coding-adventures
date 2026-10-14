@@ -14,7 +14,8 @@ romanization: "bâ in hâl"
 concept_tag: FA-CHERA197-BA-IN-HAL
 prerequisites: [FA-C197-shart, FA-C197-qanun]
 sounds: []
-roots: []
+roots: [persian-in, arabic-hal]
+etymology_hook: "bâ in hâl: Persian bâ 'with' + in 'this' + hâl ← Arabic ḥāl (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C197-qanun]
 <!-- hl-knowledge: introduces=[FA-LEX-C197-CHERA197-03]; assesses=[] -->
 
 **با این حال** — *bâ in hâl* — "nevertheless, even so".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâ in hâl* is "with this state": *bâ*, "with", and *in*, "this", are native; *hâl*, "state", is borrowed from Arabic *ḥāl* (root *ḥ-w-l*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

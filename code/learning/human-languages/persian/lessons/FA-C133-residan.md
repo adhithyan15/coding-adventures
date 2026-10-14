@@ -14,7 +14,8 @@ romanization: "residan"
 concept_tag: FA-VERB-RESIDAN
 prerequisites: [FA-C133-chidan, FA-C133-pichidan]
 sounds: []
-roots: []
+roots: [persian-residan]
+etymology_hook: "residan: inherited, usually traced to Middle Persian rasīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C133-pichidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C133-ACT133-04]; assesses=[] -->
 
 **رسیدن** — *residan* — "to arrive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*residan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *rasīdan*, "to arrive, to reach".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

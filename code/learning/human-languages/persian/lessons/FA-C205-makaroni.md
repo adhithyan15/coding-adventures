@@ -14,7 +14,8 @@ romanization: "mâkâroni"
 concept_tag: FA-CHIZ205-MAKARONI
 prerequisites: [FA-C205-kotlet, FA-C205-sandvich]
 sounds: []
-roots: []
+roots: [italian-maccheroni]
+etymology_hook: "mâkâroni: a loan, usually traced to Italian maccheroni 'macaroni'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C205-sandvich]
 <!-- hl-knowledge: introduces=[FA-LEX-C205-CHIZ205-03]; assesses=[] -->
 
 **ماکارونی** — *mâkâroni* — "pasta".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mâkâroni* is a loan, usually traced to Italian *maccheroni*, "macaroni".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

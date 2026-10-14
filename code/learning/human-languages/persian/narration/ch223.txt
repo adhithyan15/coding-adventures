@@ -12,6 +12,9 @@ Before the new one: say the Persian for to doubt, then the Persian for to take.
 You'll want to know: نجات دادن.
 نجات دادن — nejât dâdan — "to rescue, to save".
 
+The word, taken apart.
+nejât dâdan pairs nejât, borrowed from Arabic najāt, "rescue, deliverance" (root n-j-w, Lane), with the Persian verb dâdan, "to give". dâdan, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, "to give".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to take, then the Persian for to rescue.
 
 You'll want to know: پنهان کردن.
 پنهان کردن — penhân kardan — "to hide".
+
+The word, taken apart.
+penhân kardan pairs penhân, "hidden", with kardan. penhân is native, usually traced to Middle Persian pinhān. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to rescue, then the Persian for to hide.
 You'll want to know: شرح دادن.
 شرح دادن — sharh dâdan — "to explain".
 
+The word, taken apart.
+sharh dâdan pairs sharh, borrowed from Arabic šarḥ, "opening up, explanation" (root š-r-ḥ, Lane), with the Persian verb dâdan, "to give". dâdan, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, "to give".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to hide, then the Persian for to explain
 You'll want to know: حمل کردن.
 حمل کردن — haml kardan — "to carry".
 
+The word, taken apart.
+haml kardan pairs haml, borrowed from Arabic ḥaml, "carrying" (root ḥ-m-l, Lane), with the Persian verb kardan, "to do, to make". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to explain, then the Persian for to carr
 
 You'll want to know: حرکت کردن.
 حرکت کردن — harakat kardan — "to move, to set off".
+
+The word, taken apart.
+harakat kardan pairs harakat, borrowed from Arabic ḥaraka, "movement" (root ḥ-r-k, Lane), with the Persian verb kardan, "to do, to make". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.

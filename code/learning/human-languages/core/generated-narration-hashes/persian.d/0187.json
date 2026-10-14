@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 187,
-  "sourceHash": "fnv1a64:4f42ec611521e2d3",
+  "sourceHash": "fnv1a64:8495458b3da2e9b5",
   "lessonIds": [
     "FA-C187-liz-khordan",
     "FA-C187-gaz-dadan",
@@ -15,7 +15,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch187.txt",
   "json": "persian/narration/ch187.json",
-  "textHash": "fnv1a64:8e69140a50cbcafd",
-  "jsonHash": "fnv1a64:cc561ecf02b0ed72",
+  "textHash": "fnv1a64:5ee3be5c0c44ae83",
+  "jsonHash": "fnv1a64:65b77c00e6f2c36b",
   "findings": []
 }

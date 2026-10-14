@@ -14,7 +14,8 @@ romanization: "kaf"
 concept_tag: FA-CHIZ203-KAF
 prerequisites: [FA-C203-pelle, FA-C203-saqf]
 sounds: []
-roots: []
+roots: [arabic-kaff]
+etymology_hook: "kaf ← Arabic kaff 'palm of the hand' (EtymDB; root k-f-f, Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C203-saqf]
 <!-- hl-knowledge: introduces=[FA-LEX-C203-CHIZ203-03]; assesses=[] -->
 
 **کف** — *kaf* — "a floor; a palm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kaf*, "palm", is borrowed from Arabic *kaff*, "palm of the hand" (EtymDB; root *k-f-f*, Lane), and the floor sense, "the flat of a thing", is usually taken as the same word. (A different, native *kaf* means "foam".)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

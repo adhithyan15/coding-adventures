@@ -14,7 +14,8 @@ romanization: "jangal"
 concept_tag: FA-NATURE52-JANGAL
 prerequisites: [FA-C51-barg, FA-C52-kuh]
 sounds: []
-roots: []
+roots: [sanskrit-jangala]
+etymology_hook: "jangal ← Sanskrit jangala 'arid, wild' (EtymDB); English jungle is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C52-kuh]
 <!-- hl-knowledge: introduces=[FA-LEX-C52-NATURE52-02]; assesses=[] -->
 
 **جنگل** — *jangal* — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jangal* is an Indian loan: EtymDB traces it to Sanskrit *jangala*, "arid, wild land". English *jungle* comes from the same Indian word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

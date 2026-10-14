@@ -14,7 +14,8 @@ romanization: "ghadimi"
 concept_tag: FA-ANIMALS58-GHADIMI
 prerequisites: [FA-C58-kuchek, FA-C58-taze]
 sounds: []
-roots: []
+roots: [arabic-qadim]
+etymology_hook: "ghadimi: ghadim ← Arabic qadīm 'ancient', root q-d-m (Lane), + Persian -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C58-taze]
 <!-- hl-knowledge: introduces=[FA-LEX-C58-ANIMALS58-05]; assesses=[] -->
 
 **قدیمی** — *ghadimi* — "old".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ghadimi* is *ghadim*, "old, ancient", with the Persian ending *-i*. *ghadim* is borrowed from Arabic *qadīm*, "old, ancient" (root *q-d-m*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

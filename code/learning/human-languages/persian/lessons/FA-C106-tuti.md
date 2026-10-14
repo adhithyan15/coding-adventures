@@ -15,6 +15,7 @@ concept_tag: FA-THINGS106-TUTI
 prerequisites: [FA-C105-rubah, FA-C105-khuk]
 sounds: []
 roots: []
+etymology_hook: "tuti: sometimes linked with Hindi totā 'parrot'; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C105-khuk]
 <!-- hl-knowledge: introduces=[FA-LEX-C106-THINGS106-01]; assesses=[] -->
 
 **طوطی** — *tuti* — "a parrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tuti* is the word for a parrot; it is sometimes linked with Hindi *totā*, "parrot", but its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

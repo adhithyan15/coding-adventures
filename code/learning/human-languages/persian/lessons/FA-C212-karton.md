@@ -14,7 +14,8 @@ romanization: "kârton"
 concept_tag: FA-CHIZ212-KARTON
 prerequisites: [FA-C211-felez, FA-C212-darpush]
 sounds: []
-roots: []
+roots: [french-carton]
+etymology_hook: "kârton ← French carton 'cardboard'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C212-darpush]
 <!-- hl-knowledge: introduces=[FA-LEX-C212-CHIZ212-02]; assesses=[] -->
 
 **کارتن** — *kârton* — "a cardboard box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kârton* is borrowed from French *carton*, "cardboard" (EtymDB). The French word came from Italian *cartone* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

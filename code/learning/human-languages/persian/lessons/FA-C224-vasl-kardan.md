@@ -14,7 +14,8 @@ romanization: "vasl kardan"
 concept_tag: FA-VERB-VASL-KARDAN
 prerequisites: [FA-C224-kharandan, FA-C224-feshar-dadan]
 sounds: []
-roots: []
+roots: [arabic-wasl]
+etymology_hook: "vasl ← Arabic waṣl 'joining', root w-ṣ-l (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C224-feshar-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C224-KONESH224-03]; assesses=[] -->
 
 **وصل کردن** — *vasl kardan* — "to connect, to plug in".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vasl kardan* pairs *vasl*, borrowed from Arabic *waṣl*, "joining" (root *w-ṣ-l*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

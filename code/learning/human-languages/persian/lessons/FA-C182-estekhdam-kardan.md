@@ -14,7 +14,8 @@ romanization: "estekhdâm kardan"
 concept_tag: FA-VERB-ESTEKHDAM-KARDAN
 prerequisites: [FA-C181-qadam-zadan, FA-C182-rezerv-kardan]
 sounds: []
-roots: []
+roots: [arabic-istihdam]
+etymology_hook: "estekhdâm ← Arabic istiḫdām 'taking into service', root ḫ-d-m (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C182-rezerv-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C182-KONESH182-02]; assesses=[] -->
 
 **استخدام کردن** — *estekhdâm kardan* — "to hire, to employ".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*estekhdâm kardan* pairs *estekhdâm*, borrowed from Arabic *istiḫdām*, "taking into service" (root *ḫ-d-m*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

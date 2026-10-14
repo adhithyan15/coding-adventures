@@ -15,6 +15,7 @@ concept_tag: FA-FOOD43-LIMU
 prerequisites: [FA-C42-angur, FA-C42-porteghal]
 sounds: []
 roots: []
+etymology_hook: "limu: usually traced to an Indian source (Hindi nīmbū); English lemon is the same word via Arabic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C42-porteghal]
 <!-- hl-knowledge: introduces=[FA-LEX-C43-FOOD43-01]; assesses=[] -->
 
 **لیمو** — *limu* — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*limu* belongs to a word that travelled with the lemon trade; it is usually traced to an Indian source like Hindi *nīmbū*, "lime", and English *lemon* comes from the same word by way of Arabic *laymūn*. The details are not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bastebandi kardan"
 concept_tag: FA-VERB-BASTEBANDI-KARDAN
 prerequisites: [FA-C261-deraz-keshidan, FA-C261-asbabkeshi-kardan]
 sounds: []
-roots: []
+roots: [persian-bastan, pie-kwer]
+etymology_hook: "bastebandi kardan: Persian baste 'bundle' + bandi 'binding' + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C261-asbabkeshi-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C262-KONESH262-01]; assesses=[] -->
 
 **بسته بندی کردن** — *bastebandi kardan* — "to pack, to package".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bastebandi kardan* pairs *bastebandi*, "packing", with *kardan*. *baste*, "bundle" (from *bastan*, "to bind"), and *bandi*, "binding", are both native. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

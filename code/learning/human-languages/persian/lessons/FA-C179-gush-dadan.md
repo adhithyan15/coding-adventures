@@ -14,7 +14,8 @@ romanization: "gush dâdan"
 concept_tag: FA-VERB-GUSH-DADAN
 prerequisites: [FA-C179-tamasha-kardan, FA-C179-negah-kardan]
 sounds: []
-roots: []
+roots: [persian-gosh, pie-deh3]
+etymology_hook: "gush dâdan: Persian gush 'ear' (EtymDB) + dâdan 'to give': give ear"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C179-negah-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C179-KONESH179-05]; assesses=[] -->
 
 **گوش دادن** — *gush dâdan* — "to listen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gush dâdan* is "to give ear": *gush*, "ear", with *dâdan*, "to give". *gush* is inherited, from Middle Persian *gōš* (EtymDB). *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

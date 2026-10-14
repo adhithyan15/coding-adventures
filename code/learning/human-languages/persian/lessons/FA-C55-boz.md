@@ -14,7 +14,8 @@ romanization: "boz"
 concept_tag: FA-ANIMALS55-BOZ
 prerequisites: [FA-C55-asb, FA-C55-gav]
 sounds: []
-roots: []
+roots: [persian-boz]
+etymology_hook: "boz: inherited, usually traced to Middle Persian buz"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C55-gav]
 <!-- hl-knowledge: introduces=[FA-LEX-C55-ANIMALS55-03]; assesses=[] -->
 
 **بز** — *boz* — "a goat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*boz* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *buz*, "goat". EtymDB takes it back to the Indo-European word behind English *buck*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

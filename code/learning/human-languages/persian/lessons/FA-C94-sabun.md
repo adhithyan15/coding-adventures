@@ -14,7 +14,8 @@ romanization: "sâbun"
 concept_tag: FA-THINGS94-SABUN
 prerequisites: [FA-C94-suzan, FA-C94-nakh]
 sounds: []
-roots: []
+roots: [arabic-sabun]
+etymology_hook: "sâbun ← Middle Persian sābōn ← Latin sāpō 'soap' (EtymDB); English soap is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C94-nakh]
 <!-- hl-knowledge: introduces=[FA-LEX-C94-THINGS94-05]; assesses=[] -->
 
 **صابون** — *sâbun* — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâbun* goes back, through Middle Persian *sābōn* (EtymDB), to Latin *sāpō*, "soap", which the Romans took from a Germanic word, the ancestor of English *soap*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

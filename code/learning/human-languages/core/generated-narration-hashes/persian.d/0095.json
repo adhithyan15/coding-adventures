@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 95,
-  "sourceHash": "fnv1a64:949d32d41baf19bd",
+  "sourceHash": "fnv1a64:630055aea9cdb8b9",
   "lessonIds": [
     "FA-C95-hule",
     "FA-C95-fenjan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch95.txt",
   "json": "persian/narration/ch95.json",
-  "textHash": "fnv1a64:c2507ec0d11c5fb2",
-  "jsonHash": "fnv1a64:042d76b9e349a8dd",
+  "textHash": "fnv1a64:288e2f6f9e30661c",
+  "jsonHash": "fnv1a64:d5c118c693fd7c5e",
   "findings": []
 }

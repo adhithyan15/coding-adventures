@@ -14,7 +14,8 @@ romanization: "lab"
 concept_tag: FA-BODY29-LAB
 prerequisites: [FA-C29-posht, FA-C29-shekam]
 sounds: []
-roots: []
+roots: [persian-lab]
+etymology_hook: "lab: inherited; EtymDB links it to Indo-European *leb- 'lip'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C29-shekam]
 <!-- hl-knowledge: introduces=[FA-LEX-C29-BODY29-05]; assesses=[] -->
 
 **لب** — *lab* — "a lip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lab* is a native Persian word, inherited rather than borrowed. EtymDB links it to the Indo-European root *\*leb-*, "lip", the root usually also given for English *lip*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

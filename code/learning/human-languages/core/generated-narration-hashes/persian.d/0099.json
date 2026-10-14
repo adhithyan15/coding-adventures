@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 99,
-  "sourceHash": "fnv1a64:6c1e547ccf0fa407",
+  "sourceHash": "fnv1a64:40091c85ac362fea",
   "lessonIds": [
     "FA-C99-polow",
     "FA-C99-ash",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch99.txt",
   "json": "persian/narration/ch99.json",
-  "textHash": "fnv1a64:60b8bc9334a0102e",
-  "jsonHash": "fnv1a64:fa9e26264f3be4a6",
+  "textHash": "fnv1a64:cf59216392d55269",
+  "jsonHash": "fnv1a64:99a0555feebe9973",
   "findings": []
 }

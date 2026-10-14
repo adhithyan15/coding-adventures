@@ -14,7 +14,8 @@ romanization: "ghâshogh"
 concept_tag: FA-HOME47-GHASHOGH
 prerequisites: [FA-C47-chaghu, FA-C47-changal]
 sounds: []
-roots: []
+roots: [turkic-qasuq]
+etymology_hook: "ghâshogh: a loan, usually traced to Turkic qašuq 'spoon'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C47-changal]
 <!-- hl-knowledge: introduces=[FA-LEX-C47-HOME47-05]; assesses=[] -->
 
 **قاشق** — *ghâshogh* — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ghâshogh* is a loan, usually traced to Turkic *qašuq*, "spoon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

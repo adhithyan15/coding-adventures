@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 85,
-  "sourceHash": "fnv1a64:946b6d39d75169b3",
+  "sourceHash": "fnv1a64:dfe11acdbd0ca671",
   "lessonIds": [
     "FA-C85-kodam",
     "FA-C85-koja",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch85.txt",
   "json": "persian/narration/ch85.json",
-  "textHash": "fnv1a64:4487d7d1089599a7",
-  "jsonHash": "fnv1a64:d366ff0b5512b761",
+  "textHash": "fnv1a64:13924d6617610543",
+  "jsonHash": "fnv1a64:3cab136bdf31e39f",
   "findings": []
 }

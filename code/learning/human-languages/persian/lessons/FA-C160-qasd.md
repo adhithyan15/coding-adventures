@@ -14,7 +14,8 @@ romanization: "qasd"
 concept_tag: FA-CHERA160-QASD
 prerequisites: [FA-C160-angize, FA-C160-manzur]
 sounds: []
-roots: []
+roots: [arabic-qasd]
+etymology_hook: "qasd ← Arabic qaṣd 'aim, intention', root q-ṣ-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C160-manzur]
 <!-- hl-knowledge: introduces=[FA-LEX-C160-CHERA160-03]; assesses=[] -->
 
 **قصد** — *qasd* — "an intention".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qasd* is borrowed from Arabic *qaṣd*, "aim, intention". Its Arabic root is *q-ṣ-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

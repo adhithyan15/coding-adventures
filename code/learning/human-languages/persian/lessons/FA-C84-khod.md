@@ -14,7 +14,8 @@ romanization: "khod"
 concept_tag: FA-DEF84-KHOD
 prerequisites: [FA-C84-chizi, FA-C84-hich]
 sounds: []
-roots: []
+roots: [persian-khod]
+etymology_hook: "khod: inherited, usually traced to Middle Persian xwad"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C84-hich]
 <!-- hl-knowledge: introduces=[FA-LEX-C84-DEF84-05]; assesses=[] -->
 
 **خود** — *khod* — "oneself".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khod* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *xwad*, "self". (EtymDB also lists *xōd*, "helmet", a different word spelled the same.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

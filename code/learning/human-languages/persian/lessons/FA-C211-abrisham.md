@@ -14,7 +14,8 @@ romanization: "abrisham"
 concept_tag: FA-CHIZ211-ABRISHAM
 prerequisites: [FA-C211-panbe, FA-C211-pashm]
 sounds: []
-roots: []
+roots: [persian-abrisham]
+etymology_hook: "abrisham ← Middle Persian abrēšom (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C211-pashm]
 <!-- hl-knowledge: introduces=[FA-LEX-C211-CHIZ211-03]; assesses=[] -->
 
 **ابریشم** — *abrisham* — "silk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*abrisham* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *abrēšom*, "silk" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

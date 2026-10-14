@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 244,
-  "sourceHash": "fnv1a64:3c6dd344efded486",
+  "sourceHash": "fnv1a64:4ac0e9f2ee7427fe",
   "lessonIds": [
     "FA-C244-zelzele",
     "FA-C244-sel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch244.txt",
   "json": "persian/narration/ch244.json",
-  "textHash": "fnv1a64:02c9b1781f4955bd",
-  "jsonHash": "fnv1a64:f257cfdc29ac926d",
+  "textHash": "fnv1a64:2ba5fafda6e7400e",
+  "jsonHash": "fnv1a64:fbac73323762203f",
   "findings": []
 }

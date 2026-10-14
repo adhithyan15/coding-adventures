@@ -14,7 +14,8 @@ romanization: "be yâd âvardan"
 concept_tag: FA-VERB-BE-YAD-AVARDAN
 prerequisites: [FA-C145-bavar-kardan, FA-C145-seda-zadan]
 sounds: []
-roots: []
+roots: [persian-yad]
+etymology_hook: "be yâd âvardan: Persian be 'to' + yâd 'memory' + âvardan 'to bring'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C145-seda-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C146-KONESH146-01]; assesses=[] -->
 
 **به یاد آوردن** — *be yâd âvardan* — "to remember".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*be yâd âvardan* is "to bring to memory": *be*, "to", *yâd*, "memory" (usually traced to Middle Persian *ayād*), and *âvardan*, "to bring". All are native Persian. *âvardan*, "to bring", is an inherited verb; it is usually traced to Middle Persian *āwurdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

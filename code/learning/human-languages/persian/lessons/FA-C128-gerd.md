@@ -14,7 +14,8 @@ romanization: "gerd"
 concept_tag: FA-QUAL128-GERD
 prerequisites: [FA-C127-khakestari, FA-C128-talayi]
 sounds: []
-roots: []
+roots: [persian-gerd]
+etymology_hook: "gerd: inherited, usually traced to Middle Persian gird"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C128-talayi]
 <!-- hl-knowledge: introduces=[FA-LEX-C128-QUAL128-02]; assesses=[] -->
 
 **گرد** — *gerd* — "round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gerd* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *gird*, "round". EtymDB takes it back to the Indo-European root *\*wert-*, "to turn", the root of Latin *vertere*. (It also lists *gard*, "dust", a different word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kelisâ"
 concept_tag: FA-LOC87-KELISA
 prerequisites: [FA-C87-park, FA-C87-sahel]
 sounds: []
-roots: []
+roots: [ekklesia-greek]
+etymology_hook: "kelisâ: goes back to Greek ekklēsia 'assembly, church' (EtymDB); route not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C87-sahel]
 <!-- hl-knowledge: introduces=[FA-LEX-C87-LOC87-05]; assesses=[] -->
 
 **کلیسا** — *kelisâ* — "a church".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kelisâ* goes back to Greek *ekklēsia*, "assembly, church" (EtymDB), the word behind English *ecclesiastical*. The route it took into Persian is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

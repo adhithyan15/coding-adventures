@@ -14,7 +14,8 @@ romanization: "gilâs"
 concept_tag: FA-THINGS100-GILAS
 prerequisites: [FA-C99-holu, FA-C100-zardalu]
 sounds: []
-roots: []
+roots: [greek-kerasion]
+etymology_hook: "gilâs: usually traced to Greek kerasion 'cherry' (EtymDB), as is English cherry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C100-zardalu]
 <!-- hl-knowledge: introduces=[FA-LEX-C100-THINGS100-02]; assesses=[] -->
 
 **گیلاس** — *gilâs* — "cherries".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gilâs* is usually traced to Greek *kerasion*, "cherry" (EtymDB), the word that also reached English as *cherry* through Latin and French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

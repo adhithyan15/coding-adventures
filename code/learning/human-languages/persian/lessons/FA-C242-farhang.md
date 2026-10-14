@@ -14,7 +14,8 @@ romanization: "farhang"
 concept_tag: FA-CHIZ242-FARHANG
 prerequisites: [FA-C242-benzin, FA-C242-jomle]
 sounds: []
-roots: []
+roots: [persian-farhang]
+etymology_hook: "farhang ← Middle Persian frahang (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C242-jomle]
 <!-- hl-knowledge: introduces=[FA-LEX-C242-CHIZ242-05]; assesses=[] -->
 
 **فرهنگ** — *farhang* — "a dictionary; culture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*farhang* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *frahang*, "education, learning" (EtymDB). Persian uses it for culture and for a dictionary.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

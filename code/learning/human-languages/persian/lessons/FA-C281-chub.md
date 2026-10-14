@@ -14,7 +14,8 @@ romanization: "chub"
 concept_tag: FA-CHIZ281-CHUB
 prerequisites: [FA-C281-bil, FA-C281-chasb]
 sounds: []
-roots: []
+roots: [persian-chob]
+etymology_hook: "chub: inherited, usually traced to Middle Persian čōb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C281-chasb]
 <!-- hl-knowledge: introduces=[FA-LEX-C281-CHIZ281-05]; assesses=[] -->
 
 **چوب** — *chub* — "wood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chub* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *čōb*, "wood, stick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

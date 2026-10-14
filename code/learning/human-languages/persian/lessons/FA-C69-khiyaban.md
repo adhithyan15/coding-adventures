@@ -15,6 +15,7 @@ concept_tag: FA-PLACE69-KHIYABAN
 prerequisites: [FA-C69-rast, FA-C69-chap]
 sounds: []
 roots: []
+etymology_hook: "khiyâbân: first a garden avenue; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C69-chap]
 <!-- hl-knowledge: introduces=[FA-LEX-C69-PLACE69-05]; assesses=[] -->
 
 **خیابان** — *khiyâbân* — "a street".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khiyâbân* first named a garden avenue. It is a native Persian word, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

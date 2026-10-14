@@ -14,7 +14,8 @@ romanization: "shâne"
 concept_tag: FA-BODY28-SHANE
 prerequisites: [FA-C28-mu, FA-C28-angosht]
 sounds: []
-roots: []
+roots: [persian-shane]
+etymology_hook: "shâne ← Middle Persian šānag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C28-angosht]
 <!-- hl-knowledge: introduces=[FA-LEX-C28-BODY28-03]; assesses=[] -->
 
 **شانه** — *shâne* — "a shoulder; a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shâne* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *šānag*, "comb; shoulder blade" (EtymDB). One old word already named both the comb and the shoulder blade.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

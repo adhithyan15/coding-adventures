@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Which One: the Ordinals",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d1d902f518fb9980",
+  "sourceHash": "fnv1a64:49499fa6eb4e139d",
   "lessons": [
     {
       "id": "FA-C20-avval",
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8364dee838ad86fc",
+      "sourceHash": "fnv1a64:8eaa39603e5ffeea",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +200,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dovvom and sevvom are built from the inherited numbers do and se with the ordinal ending -om (EtymDB); do continues Middle Persian dō (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -233,7 +244,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -279,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35c3f66de09bba39",
+      "sourceHash": "fnv1a64:617d4b6447b33727",
       "notice": null,
       "blocks": [
         {
@@ -324,6 +335,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chahârom is built from chahâr, \"four\", with the ordinal ending -om (EtymDB); chahâr is inherited, from Middle Persian čahār (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

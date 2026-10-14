@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 254,
-  "sourceHash": "fnv1a64:05d84073e0260b0b",
+  "sourceHash": "fnv1a64:c1f57f6a1fa7c97f",
   "lessonIds": [
     "FA-C254-daravardan",
     "FA-C254-amade-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch254.txt",
   "json": "persian/narration/ch254.json",
-  "textHash": "fnv1a64:cf2e67b5b3e0ab1b",
-  "jsonHash": "fnv1a64:5c8a026227530192",
+  "textHash": "fnv1a64:b42a7b67bcca3dce",
+  "jsonHash": "fnv1a64:1f018d0247ed4cd1",
   "findings": []
 }

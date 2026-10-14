@@ -12,6 +12,9 @@ Before the new one: say the Persian for to fill, then the Persian for to hand in
 You'll want to know: راهنمایی کردن.
 راهنمایی کردن — râhnamâyi kardan — "to give directions, to guide".
 
+The word, taken apart.
+râhnamâyi kardan pairs râhnamâyi, "guidance", with kardan. râhnamâyi is râh, "road", with namâ, "showing" (from nemudan, "to show"), and -i: road-showing. All the pieces are native Persian. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to hand in, then the Persian for to give
 
 You'll want to know: نشان دادن.
 نشان دادن — neshân dâdan — "to show".
+
+The word, taken apart.
+neshân dâdan pairs neshân, "sign, mark", with dâdan, "to give": "to give a sign". neshân is native, usually traced to Middle Persian nišān. dâdan, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, "to give".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to give directions, then the Persian for
 You'll want to know: بازدید کردن.
 بازدید کردن — bâzdid kardan — "to visit (a place)".
 
+The word, taken apart.
+bâzdid kardan pairs bâzdid, "a visit", with kardan. bâzdid is bâz, "again", with did, "seeing" (from didan, "to see"): seeing again. All the pieces are native. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to show, then the Persian for to visit.
 You'll want to know: ادامه دادن.
 ادامه دادن — edâme dâdan — "to continue".
 
+The word, taken apart.
+edâme dâdan pairs edâme, borrowed from Arabic idāma, "making something last" (root d-w-m, Lane), with the Persian verb dâdan, "to give". dâdan, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, "to give".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to visit, then the Persian for to contin
 
 You'll want to know: تایپ کردن.
 تایپ کردن — tâyp kardan — "to type".
+
+The word, taken apart.
+tâyp kardan pairs tâyp, borrowed from English type, with the Persian verb kardan, "to do". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 115,
-  "sourceHash": "fnv1a64:d0d85a84ef7e8f3c",
+  "sourceHash": "fnv1a64:b938727217f96cb1",
   "lessonIds": [
     "FA-C115-shagerd",
     "FA-C115-doktor",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch115.txt",
   "json": "persian/narration/ch115.json",
-  "textHash": "fnv1a64:14908e15bdcc097d",
-  "jsonHash": "fnv1a64:025cd122bbd7c155",
+  "textHash": "fnv1a64:549ae1828e4e33ca",
+  "jsonHash": "fnv1a64:1503ee9bb1301eec",
   "findings": []
 }

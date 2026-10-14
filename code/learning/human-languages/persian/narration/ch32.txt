@@ -12,6 +12,9 @@ Before the new one: say the Persian for hungry, then the Persian for happy.
 You'll want to know: ناراحت.
 ناراحت — nârâhat — "upset, sad".
 
+The word, taken apart.
+nârâhat is nâ-, "not", with râhat, "ease, comfort": "not at ease". nâ- is the native Persian negative prefix; râhat is borrowed from Arabic rāḥa, "rest, ease" (root r-w-ḥ, Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for happy, then the Persian for upset.
 
 You'll want to know: پزشک.
 پزشک — pezeshk — "a doctor".
+
+The word, taken apart.
+pezeshk is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian bizešk, "physician".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for upset, then the Persian for a doctor.
 You'll want to know: پدربزرگ.
 پدربزرگ — pedarbozorg — "a grandfather".
 
+The word, taken apart.
+pedarbozorg is built from two inherited Persian words: pedar, "father" (Middle Persian pidar), and bozorg, "big, great" (Middle Persian wuzurg, EtymDB). The "great father" is the grandfather.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a doctor, then the Persian for a grandfa
 You'll want to know: مادربزرگ.
 مادربزرگ — mâdarbozorg — "a grandmother".
 
+The word, taken apart.
+mâdarbozorg is built from two inherited Persian words: mâdar, "mother" (Middle Persian mādar), and bozorg, "big, great" (Middle Persian wuzurg, EtymDB). The "great mother" is the grandmother.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a grandfather, then the Persian for a gr
 
 You'll want to know: دایی.
 دایی — dâyi — "an uncle (mother's brother)".
+
+The word, taken apart.
+dâyi is usually traced to Turkic, to the word behind Turkish dayı, "maternal uncle"; EtymDB instead connects it with Persian dâ, "mother". The origin is not settled.
 
 What you've built.
 One more word for this chapter.

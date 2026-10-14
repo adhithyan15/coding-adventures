@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 20,
-  "sourceHash": "fnv1a64:d1d902f518fb9980",
+  "sourceHash": "fnv1a64:49499fa6eb4e139d",
   "lessonIds": [
     "FA-C20-avval",
     "FA-C20-dovvom-sevvom",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "persian/narration/ch20.txt",
   "json": "persian/narration/ch20.json",
-  "textHash": "fnv1a64:db7113bb3ff6d203",
-  "jsonHash": "fnv1a64:0d1c99416cd73879",
+  "textHash": "fnv1a64:46f6b225c61ceddf",
+  "jsonHash": "fnv1a64:54921a85805ae59f",
   "findings": []
 }

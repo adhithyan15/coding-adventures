@@ -1,5 +1,14 @@
 # Changelog
 
+## Changed — every word lesson says where its word comes from
+
+Every Persian word lesson now carries an `etymology_hook` and states its word's origin in the lesson body (HL24 §9). The etymology gap pins fall from 1,300 / 1,311 to 0 / 0, and the two empty "taken apart" blocks are filled (human-language-data: `persian.owner.ts`, `EMPTY_ETYMOLOGY_BLOCK_PINS.persian` 2 → 0).
+
+- **Chapters 27-287.** The 1,300 vocabulary-wave lessons each gain a "The word, taken apart" block before "What you've built", and a matching hook. Arabic loans (319, 64 of them an Arabic noun with a Persian verb such as *kardan*) name the Arabic word, its sense and its root in Lane's Lexicon. Inherited words (about 440) give their Middle Persian form, cited to EtymDB 2.1 where its rows support it and otherwise hedged as "usually traced to". About 284 compounds and derivations are taken apart into their parts, each part with its origin. Loans name their donor: French (75), English (20), Turkic and Mongolian (21), Russian (5), Greek, Latin, Aramaic, Syriac and Akkadian (about 10), and Indian (5). 114 say the origin is not settled.
+- **Corrections from the sources.** EtymDB's homograph links were rejected and said so where a learner could meet them (*sar* "head" is not Arabic *sirr* "secret"; *shâm* "dinner" is not *Shâm* "Syria"; *vali* "but" is not Arabic *walī*). *behtar* and *bad* say that English *better* and *bad* only look alike. Lane's notes that some Arabic words were themselves taken from Persian are carried (*qirmiz*, *qafaṣ*, *kibrīt*).
+- **Hand-written chapters 1-20.** 14 hooks that described grammar or spelling now say where the word comes from; 12 lessons gain a short "taken apart" block (*bale*, *shomâ / to*, *chist*, *esm-e shomâ chist*, *hâl-e shomâ chetor ast*, *khubam*, *khodâ hâfez*, the teens *yâzdah*, *sizdah*, *pânzdah*, and the ordinals). *chetor*'s and *raftan*'s blocks now name their source. Older claims no source supports were corrected: *cheshm* continues Middle Persian *čašm* and is a cousin of Sanskrit *cakṣus*, not of English *spy* (its root slug `pie-spek` is removed); *setâre* continues Middle Persian *stārag*, not an Old Persian *star-*; *chahâr* continues Middle Persian *čahār*, not an Old Persian *chathwar*; *yek* continues Middle Persian *ēk*; the *kelid* hook no longer says Greek gave Latin *claudere*; *chây* "comes from" rather than "continues" Chinese *chá*.
+- **No duration raised.** Every lesson stays within its declared `max_seconds`; the *bale* block was shortened to fit.
+
 ## Fixed — every atom is practised again after the lesson that taught it
 
 Every atom a lesson introduces is now practised again by a later lesson, either in its `practises.knowledge` or in a block's `assesses` (human-language-data: `atomsNeverRevisited` 134 → 1 across the corpus).

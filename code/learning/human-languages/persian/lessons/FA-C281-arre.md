@@ -14,7 +14,8 @@ romanization: "arre"
 concept_tag: FA-CHIZ281-ARRE
 prerequisites: [FA-C280-naqqashi, FA-C281-pich]
 sounds: []
-roots: []
+roots: [persian-arre]
+etymology_hook: "arre: inherited, usually traced to Middle Persian arrag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C281-pich]
 <!-- hl-knowledge: introduces=[FA-LEX-C281-CHIZ281-02]; assesses=[] -->
 
 **اره** — *arre* — "a saw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*arre* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *arrag*, "saw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

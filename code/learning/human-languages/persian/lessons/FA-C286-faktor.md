@@ -15,6 +15,7 @@ concept_tag: FA-KAR286-FAKTOR
 prerequisites: [FA-C286-pishkhan, FA-C286-sanduqdar]
 sounds: []
 roots: []
+etymology_hook: "fâktor: usually linked with European factura 'invoice'; route not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C286-sanduqdar]
 <!-- hl-knowledge: introduces=[FA-LEX-C286-KAR286-04]; assesses=[] -->
 
 **فاکتور** — *fâktor* — "an invoice, a bill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*fâktor* is usually linked with the European word *factura*, "invoice", through French or Russian, but the route is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chahârrâh"
 concept_tag: FA-MAKAN266-CHAHARRAH
 prerequisites: [FA-C265-qarn, FA-C265-term]
 sounds: []
-roots: []
+roots: [pie-kwetwores, persian-rah]
+etymology_hook: "chahârrâh: Persian chahâr 'four' + râh 'road'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C265-term]
 <!-- hl-knowledge: introduces=[FA-LEX-C266-MAKAN266-01]; assesses=[] -->
 
 **چهارراه** — *chahârrâh* — "a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chahârrâh* is *chahâr*, "four", with *râh*, "road": where four roads meet. Both are inherited Persian words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

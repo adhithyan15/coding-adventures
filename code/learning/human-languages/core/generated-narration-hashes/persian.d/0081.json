@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 81,
-  "sourceHash": "fnv1a64:84b18b88c38e34e5",
+  "sourceHash": "fnv1a64:c820b374ba6c2650",
   "lessonIds": [
     "FA-C81-shanbe",
     "FA-C81-yekshanbe",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch81.txt",
   "json": "persian/narration/ch81.json",
-  "textHash": "fnv1a64:b2f992ec55971b83",
-  "jsonHash": "fnv1a64:3e4f1b108ab178ce",
+  "textHash": "fnv1a64:be1b1b122bfbe4dc",
+  "jsonHash": "fnv1a64:56e533c4825b04fe",
   "findings": []
 }

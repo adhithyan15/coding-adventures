@@ -14,7 +14,8 @@ romanization: "kuleposhti"
 concept_tag: FA-THINGS112-KULEPOSHTI
 prerequisites: [FA-C112-sanduq, FA-C112-chamedan]
 sounds: []
-roots: []
+roots: [persian-pusht]
+etymology_hook: "kuleposhti: Persian kule 'load' + posht 'back' + -i; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C112-chamedan]
 <!-- hl-knowledge: introduces=[FA-LEX-C112-THINGS112-04]; assesses=[] -->
 
 **کوله پشتی** — *kuleposhti* — "a backpack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kuleposhti* is built from *kule*, "load", and *posht*, "back", with the ending *-i*: a load for the back. *posht* is inherited, usually traced to Middle Persian *pušt*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

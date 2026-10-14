@@ -12,6 +12,9 @@ Before the new one: say the Persian for to promise, then the Persian for to comp
 You'll want to know: جستجو کردن.
 جستجو کردن — jostoju kardan — "to search".
 
+The word, taken apart.
+jostoju kardan pairs jostoju, "search", with kardan. jostoju is jost, "sought", with o, "and", and ju, "seeking", both from jostan, "to seek". All are native Persian. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to complain, then the Persian for to sea
 
 You'll want to know: زنگ زدن.
 زنگ زدن — zang zadan — "to phone, to ring".
+
+The word, taken apart.
+zang zadan is "to strike the bell": zang, "bell", is a native word (a different zang means "rust"). zadan, "to strike", is an inherited verb; it is usually traced to Middle Persian zadan.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to search, then the Persian for to phone
 You'll want to know: درست کردن.
 درست کردن — dorost kardan — "to fix, to make".
 
+The word, taken apart.
+dorost kardan pairs dorost, "right, sound", with kardan, "to make". dorost is inherited, from Middle Persian drust (EtymDB). kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to phone, then the Persian for to fix.
 You'll want to know: موافق بودن.
 موافق بودن — movâfeq budan — "to agree".
 
+The word, taken apart.
+movâfeq budan pairs movâfeq, borrowed from Arabic muwāfiq, "agreeing, suitable" (root w-f-q, Lane), with the Persian verb budan, "to be". budan, "to be", is an inherited verb; it is usually traced to Middle Persian būdan.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to fix, then the Persian for to agree.
 
 You'll want to know: تصور کردن.
 تصور کردن — tasavvor kardan — "to imagine".
+
+The word, taken apart.
+tasavvor kardan pairs tasavvor, borrowed from Arabic taṣawwur, "picturing, imagining" (root ṣ-w-r, Lane), with the Persian verb kardan, "to do, to make". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.

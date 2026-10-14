@@ -14,7 +14,8 @@ romanization: "honarmand"
 concept_tag: FA-KAR251-HONARMAND
 prerequisites: [FA-C250-ostad, FA-C250-khalaban]
 sounds: []
-roots: []
+roots: [persian-hunar]
+etymology_hook: "honarmand: Persian honar 'art' (Middle Persian hunar) + -mand 'having'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C250-khalaban]
 <!-- hl-knowledge: introduces=[FA-LEX-C251-KAR251-01]; assesses=[] -->
 
 **هنرمند** — *honarmand* — "an artist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*honarmand* is *honar*, "art, skill", with the ending *-mand*, "having": one who has art. *honar* is native, usually traced to Middle Persian *hunar*, "skill, virtue".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

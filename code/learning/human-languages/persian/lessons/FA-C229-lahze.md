@@ -14,7 +14,8 @@ romanization: "lahze"
 concept_tag: FA-ZAMAN229-LAHZE
 prerequisites: [FA-C229-moddat, FA-C229-taqvim]
 sounds: []
-roots: []
+roots: [arabic-lahza]
+etymology_hook: "lahze ← Arabic laḥẓa 'glance, moment', root l-ḥ-ẓ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C229-taqvim]
 <!-- hl-knowledge: introduces=[FA-LEX-C229-ZAMAN229-03]; assesses=[] -->
 
 **لحظه** — *lahze* — "a moment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lahze* is borrowed from Arabic *laḥẓa*, "glance, moment". Its Arabic root is *l-ḥ-ẓ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

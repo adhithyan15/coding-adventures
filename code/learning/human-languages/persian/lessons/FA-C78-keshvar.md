@@ -14,7 +14,8 @@ romanization: "keshvar"
 concept_tag: FA-WORLD78-KESHVAR
 prerequisites: [FA-C78-musighi, FA-C78-khabar]
 sounds: []
-roots: []
+roots: [persian-keshvar]
+etymology_hook: "keshvar ← Middle Persian kišwar (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C78-khabar]
 <!-- hl-knowledge: introduces=[FA-LEX-C78-WORLD78-04]; assesses=[] -->
 
 **کشور** — *keshvar* — "a country".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*keshvar* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *kišwar*, "region of the world" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

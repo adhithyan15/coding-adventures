@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 100,
-  "sourceHash": "fnv1a64:2d412e13d96f33a1",
+  "sourceHash": "fnv1a64:8ed88318d1adb823",
   "lessonIds": [
     "FA-C100-zardalu",
     "FA-C100-gilas",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch100.txt",
   "json": "persian/narration/ch100.json",
-  "textHash": "fnv1a64:38c838eb4205a2e0",
-  "jsonHash": "fnv1a64:ce95c9fe10317071",
+  "textHash": "fnv1a64:0ff4aedbd7b715eb",
+  "jsonHash": "fnv1a64:fc07d8c671ddce98",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "shart"
 concept_tag: FA-CHERA197-SHART
 prerequisites: [FA-C196-labe, FA-C196-hamkaf]
 sounds: []
-roots: []
+roots: [arabic-sart]
+etymology_hook: "shart ← Arabic šarṭ 'condition, stipulation', root š-r-ṭ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C196-hamkaf]
 <!-- hl-knowledge: introduces=[FA-LEX-C197-CHERA197-01]; assesses=[] -->
 
 **شرط** — *shart* — "a condition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shart* is borrowed from Arabic *šarṭ*, "condition, stipulation". Its Arabic root is *š-r-ṭ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

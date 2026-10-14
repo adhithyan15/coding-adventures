@@ -14,7 +14,8 @@ romanization: "sofre"
 concept_tag: FA-CHIZ278-SOFRE
 prerequisites: [FA-C277-famil, FA-C277-nojavan]
 sounds: []
-roots: []
+roots: [arabic-sufra]
+etymology_hook: "sofre ← Arabic sufra 'traveller's provisions, dining cloth', root s-f-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C277-nojavan]
 <!-- hl-knowledge: introduces=[FA-LEX-C278-CHIZ278-01]; assesses=[] -->
 
 **سفره** — *sofre* — "a spread cloth (for a meal)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sofre* is borrowed from Arabic *sufra*, "traveller's provisions, dining cloth". Its Arabic root is *s-f-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

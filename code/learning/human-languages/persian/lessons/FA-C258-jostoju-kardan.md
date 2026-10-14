@@ -14,7 +14,8 @@ romanization: "jostoju kardan"
 concept_tag: FA-VERB-JOSTOJU-KARDAN
 prerequisites: [FA-C257-qol-dadan, FA-C257-shekayat-kardan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "jostoju kardan: Persian jost 'sought' + ju 'seeking' (jostan) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C257-shekayat-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C258-KONESH258-01]; assesses=[] -->
 
 **جستجو کردن** — *jostoju kardan* — "to search".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jostoju kardan* pairs *jostoju*, "search", with *kardan*. *jostoju* is *jost*, "sought", with *o*, "and", and *ju*, "seeking", both from *jostan*, "to seek". All are native Persian. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

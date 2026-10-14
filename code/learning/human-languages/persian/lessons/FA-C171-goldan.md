@@ -14,7 +14,8 @@ romanization: "goldân"
 concept_tag: FA-CHIZ171-GOLDAN
 prerequisites: [FA-C170-shakhsiyat, FA-C171-narges]
 sounds: []
-roots: []
+roots: [persian-gul, persian-dan]
+etymology_hook: "goldân: Persian gol 'flower' (EtymDB) + -dân 'container'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C171-narges]
 <!-- hl-knowledge: introduces=[FA-LEX-C171-CHIZ171-02]; assesses=[] -->
 
 **گلدان** — *goldân* — "a vase, a flowerpot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*goldân* is *gol*, "flower", with *-dân*, "holder, container": a flower-holder. Both are native; *gol* continues Middle Persian *gul* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: FA-KAR285-ENGELISI
 prerequisites: [FA-C285-shimi, FA-C285-adabiyat]
 sounds: []
 roots: []
+etymology_hook: "engelisi: built on Engelis, a form of the name of the English; route not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C285-adabiyat]
 <!-- hl-knowledge: introduces=[FA-LEX-C285-KAR285-04]; assesses=[] -->
 
 **انگلیسی** — *engelisi* — "English (the language)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*engelisi* is built on *Engelis*, a form of the name of the English, with the ending *-i*. The route by which the name reached Persian is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

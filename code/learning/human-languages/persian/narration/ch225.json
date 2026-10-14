@@ -4,7 +4,7 @@
   "chapter": 225,
   "title": "To memorise, To moan, To yawn, To vomit, To swell up",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ba76f509ada5eadf",
+  "sourceHash": "fnv1a64:6097911b37d7a5c9",
   "lessons": [
     {
       "id": "FA-C225-hefz-kardan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b4153fc2f85d600",
+      "sourceHash": "fnv1a64:f406faa88497715b",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hefz kardan pairs hefz, borrowed from Arabic ḥifẓ, \"guarding, keeping in memory\" (root ḥ-f-ẓ, Lane), with the Persian verb kardan, \"to do, to make\". kardan, \"to do\", is an inherited verb, from Middle Persian kardan (EtymDB). It shares its root with hâfez."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a20f8c7dc534a29",
+      "sourceHash": "fnv1a64:fcf600f9fad94b16",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nâle kardan pairs nâle, \"moan\", with kardan. nâle is native, usually traced to Middle Persian nālag. kardan, \"to do\", is an inherited verb, from Middle Persian kardan (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a3ded7e5b50d767",
+      "sourceHash": "fnv1a64:81d11d42488335ee",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "khamyâze keshidan is \"to draw a yawn\": khamyâze, \"yawn\", is a native word whose older form is not settled. keshidan, \"to pull\", is an inherited verb; it is usually traced to Middle Persian kašīdan."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01ed4ff2927e9f48",
+      "sourceHash": "fnv1a64:972c301f918fa7da",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bâlâ âvardan is \"to bring up\": bâlâ, \"up\" (usually traced to Middle Persian bālāy), with âvardan, \"to bring\". Both are native. âvardan, \"to bring\", is an inherited verb; it is usually traced to Middle Persian āwurdan."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:576e8a37e6666fb8",
+      "sourceHash": "fnv1a64:e5bb060d5e1decca",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "varam kardan pairs varam, borrowed from Arabic waram, \"swelling\" (root w-r-m, Lane), with the Persian verb kardan, \"to do, to make\". kardan, \"to do\", is an inherited verb, from Middle Persian kardan (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

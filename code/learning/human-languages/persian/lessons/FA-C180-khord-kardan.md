@@ -14,7 +14,8 @@ romanization: "khord kardan"
 concept_tag: FA-VERB-KHORD-KARDAN
 prerequisites: [FA-C180-jushandan, FA-C180-sorkh-kardan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "khord kardan: Persian khord 'small' (Middle Persian xward) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C180-sorkh-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C180-KONESH180-05]; assesses=[] -->
 
 **خرد کردن** — *khord kardan* — "to chop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khord kardan* pairs *khord*, "small, fine", with *kardan*, "to make": to make small. *khord* is native, usually traced to Middle Persian *xward*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

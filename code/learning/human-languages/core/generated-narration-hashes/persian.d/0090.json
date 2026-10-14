@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 90,
-  "sourceHash": "fnv1a64:21b0f149479e76b5",
+  "sourceHash": "fnv1a64:d1bf5bc141ed5223",
   "lessonIds": [
     "FA-C90-abzar",
     "FA-C90-saheb",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch90.txt",
   "json": "persian/narration/ch90.json",
-  "textHash": "fnv1a64:c7b527db3ccf0075",
-  "jsonHash": "fnv1a64:7e1fda16ce9ca496",
+  "textHash": "fnv1a64:eaf77a6c98b9cd36",
+  "jsonHash": "fnv1a64:2affb5a94f53520e",
   "findings": []
 }

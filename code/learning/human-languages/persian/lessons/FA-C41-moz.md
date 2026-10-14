@@ -14,7 +14,8 @@ romanization: "moz"
 concept_tag: FA-FOOD41-MOZ
 prerequisites: [FA-C41-miveh, FA-C41-sib]
 sounds: []
-roots: []
+roots: [persian-moz]
+etymology_hook: "moz ← Middle Persian mōz (EtymDB); older origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C41-sib]
 <!-- hl-knowledge: introduces=[FA-LEX-C41-FOOD41-03]; assesses=[] -->
 
 **موز** — *moz* — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*moz* continues Middle Persian *mōz*, "banana" (EtymDB). Arabic *mawz* is the same word, and which language had it first is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

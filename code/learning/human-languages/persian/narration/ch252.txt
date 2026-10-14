@@ -12,6 +12,9 @@ Before the new one: say the Persian for a player, then the Persian for history.
 You'll want to know: بقال.
 بقال — baqqâl — "a grocer".
 
+The word, taken apart.
+baqqâl is borrowed from Arabic baqqāl, "seller of vegetables". Its Arabic root is b-q-l (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for history, then the Persian for a grocer.
 
 You'll want to know: قنادی.
 قنادی — qannâdi — "a pastry shop".
+
+The word, taken apart.
+qannâdi is qannâd, "confectioner", with the ending -i, "shop of". qannâd is borrowed from Arabic qannād, "seller of sugar-candy" (root q-n-d, Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a grocer, then the Persian for a pastry 
 You'll want to know: آتش نشان.
 آتش نشان — âtashneshân — "a firefighter".
 
+The word, taken apart.
+âtashneshân is âtash, "fire" (Middle Persian ātaxš, EtymDB), with -neshân, "making sit, putting out" (from neshândan): the fire-settler. Both are native Persian.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a pastry shop, then the Persian for a fi
 You'll want to know: نگهبان.
 نگهبان — negahbân — "a guard".
 
+The word, taken apart.
+negahbân is negah, "watch", with -bân, "keeper": the watch-keeper. Both are native; negah is usually traced to Middle Persian nigāh.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a firefighter, then the Persian for a gu
 
 You'll want to know: رفتگر.
 رفتگر — roftegar — "a street sweeper".
+
+The word, taken apart.
+roftegar is built from rofte, "swept" (from ruftan, "to sweep"), and -gar, "doer": the sweeper. Both are native Persian, inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.

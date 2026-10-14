@@ -14,7 +14,8 @@ romanization: "narm"
 concept_tag: FA-QUAL124-NARM
 prerequisites: [FA-C124-khis, FA-C124-khoshk]
 sounds: []
-roots: []
+roots: [persian-narm]
+etymology_hook: "narm: inherited, usually traced to Middle Persian narm"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C124-khoshk]
 <!-- hl-knowledge: introduces=[FA-LEX-C124-QUAL124-05]; assesses=[] -->
 
 **نرم** — *narm* — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*narm* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *narm*, "soft".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

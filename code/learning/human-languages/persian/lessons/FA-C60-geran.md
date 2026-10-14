@@ -14,7 +14,8 @@ romanization: "gerân"
 concept_tag: FA-ADJ60-GERAN
 prerequisites: [FA-C60-asan, FA-C60-sakht]
 sounds: []
-roots: []
+roots: [persian-geran]
+etymology_hook: "gerân ← Middle Persian grān (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C60-sakht]
 <!-- hl-knowledge: introduces=[FA-LEX-C60-ADJ60-04]; assesses=[] -->
 
 **گران** — *gerân* — "expensive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gerân* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *grān*, "heavy" (EtymDB). EtymDB takes it back to the Indo-European word behind Latin *gravis*, "heavy": a dear price is a heavy one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

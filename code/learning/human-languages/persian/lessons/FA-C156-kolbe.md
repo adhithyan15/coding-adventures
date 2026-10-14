@@ -15,6 +15,7 @@ concept_tag: FA-MAKAN156-KOLBE
 prerequisites: [FA-C155-gomrok, FA-C156-chah]
 sounds: []
 roots: []
+etymology_hook: "kolbe: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C156-chah]
 <!-- hl-knowledge: introduces=[FA-LEX-C156-MAKAN156-02]; assesses=[] -->
 
 **کلبه** — *kolbe* — "a hut, a cottage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kolbe* is the word for a hut or cell, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

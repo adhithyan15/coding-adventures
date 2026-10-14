@@ -12,7 +12,7 @@ concept_tag: FA-HOUSEHOLD-KEY
 prerequisites: [FA-C09-chay]
 sounds: [rtl, long-i, short-vowels-unwritten]
 roots: [greek-kleidion, middle-persian-klid]
-etymology_hook: kelid is borrowed from Greek kleidion, "little key," a loan Persian has carried since the Hellenistic centuries after Alexander; the same Greek root gave Latin claudere, "to close," and through it English close, conclude, and exclude.
+etymology_hook: kelid is borrowed from Greek kleidion, "little key," a loan Persian has carried since the Hellenistic centuries after Alexander; the same Indo-European root gave Latin claudere, "to close," and through it English close, conclude, and exclude.
 duration:
   max_seconds: 280
 requires:
@@ -74,8 +74,8 @@ layers: inherited *âb*, an untraceable *nân*, an overland Chinese loan in
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KELID, FA-ETYMON-KELID, FA-GRAMMAR-EZAFE-OWNER, FA-LEX-AB, FA-PHRASE-LOTFAN, FA-LEX-NAN, FA-LEX-CHAY, FA-ETYMON-AB, FA-ETYMON-NAN, FA-ETYMON-CHAY] -->
 
 - [YOU SAY: **kelid** — key; then **kelid-e man, lotfan** — my key, please]
-- [YOU CONNECT: **kelid** ← Greek **kleidíon** → Latin *claudere* → English
-  **close**, **conclude**, **exclude**]
+- [YOU CONNECT: **kelid** ← Greek **kleidíon**; the same old root in Latin *claudere*
+  → English **close**, **conclude**, **exclude**]
 - [YOU RUN: **âb**, **nân**, **chây**, **kelid** — each with **, lotfan**]
 - [YOU SORT: which of the four is inherited, which is untraceable, which
   travelled by land, which came from Greek]

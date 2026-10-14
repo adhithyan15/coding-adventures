@@ -14,7 +14,8 @@ romanization: "si"
 concept_tag: FA-NUMBERS76-SI
 prerequisites: [FA-C76-hejdah, FA-C76-nuzdah]
 sounds: []
-roots: []
+roots: [persian-si]
+etymology_hook: "si: inherited, usually traced to Middle Persian sīh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C76-nuzdah]
 <!-- hl-knowledge: introduces=[FA-LEX-C76-NUMBERS76-04]; assesses=[] -->
 
 **سی** — *si* — "thirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*si* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *sīh*, "thirty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

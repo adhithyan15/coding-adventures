@@ -14,7 +14,8 @@ romanization: "javân"
 concept_tag: FA-QUAL125-JAVAN
 prerequisites: [FA-C125-seft, FA-C125-zesht]
 sounds: []
-roots: []
+roots: [persian-javan]
+etymology_hook: "javân: inherited, usually traced to Middle Persian juwān"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C125-zesht]
 <!-- hl-knowledge: introduces=[FA-LEX-C125-QUAL125-03]; assesses=[] -->
 
 **جوان** — *javân* — "young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*javân* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *juwān*, "young". EtymDB takes it back to the Indo-European word for "young" behind Latin *iuvenis* and English *young*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

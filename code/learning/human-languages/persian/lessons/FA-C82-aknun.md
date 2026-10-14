@@ -14,7 +14,8 @@ romanization: "aknun"
 concept_tag: FA-TIME82-AKNUN
 prerequisites: [FA-C81-chaharshanbe, FA-C81-panjshanbe]
 sounds: []
-roots: []
+roots: [persian-aknun]
+etymology_hook: "aknun: inherited, usually traced to Middle Persian aknūn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C81-panjshanbe]
 <!-- hl-knowledge: introduces=[FA-LEX-C82-TIME82-01]; assesses=[] -->
 
 **اکنون** — *aknun* — "now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*aknun* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *aknūn*, "now". EtymDB links it to the Indo-European *\*nu*, "now", the word behind English *now*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

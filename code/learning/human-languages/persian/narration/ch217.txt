@@ -12,6 +12,9 @@ Before the new one: say the Persian for an electrician, then the Persian for a t
 You'll want to know: حرف زدن.
 حرف زدن — harf zadan — "to speak, to talk".
 
+The word, taken apart.
+harf zadan pairs harf, borrowed from Arabic ḥarf, "letter, word" (root ḥ-r-f, Lane), with the Persian verb zadan, "to strike". zadan, "to strike", is an inherited verb; it is usually traced to Middle Persian zadan.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a tailor, then the Persian for to speak.
 
 You'll want to know: کار کردن.
 کار کردن — kâr kardan — "to work".
+
+The word, taken apart.
+kâr kardan is "to do work": kâr, "work", is inherited (Middle Persian kār, EtymDB), and so is kardan. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to speak, then the Persian for to work.
 You'll want to know: بازی کردن.
 بازی کردن — bâzi kardan — "to play".
 
+The word, taken apart.
+bâzi kardan is "to do play": bâzi, "play", is native, usually traced to Middle Persian wāzīg. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to work, then the Persian for to play.
 You'll want to know: راه رفتن.
 راه رفتن — râh raftan — "to walk".
 
+The word, taken apart.
+râh raftan is "to go the road": râh, "road, way", is inherited (Middle Persian rāh, EtymDB), and raftan, "to go", is native too. raftan, "to go", is an inherited verb; it is usually traced to Middle Persian raftan.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to play, then the Persian for to walk.
 
 You'll want to know: سوار شدن.
 سوار شدن — savâr shodan — "to get on (a vehicle)".
+
+The word, taken apart.
+savâr shodan is "to become a rider". savâr is inherited: Old Persian had asabāra-, "horseman" (EtymDB), built on the word for "horse". shodan, "to become", is an inherited verb; it is usually traced to Middle Persian šudan, "to go".
 
 What you've built.
 One more word for this chapter.

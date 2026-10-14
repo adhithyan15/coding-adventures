@@ -14,7 +14,8 @@ romanization: "zemestân"
 concept_tag: FA-TIME80-ZEMESTAN
 prerequisites: [FA-C80-tabestan, FA-C80-payiz]
 sounds: []
-roots: []
+roots: [persian-zemestan]
+etymology_hook: "zemestân: inherited, usually traced to Middle Persian zamistān"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C80-payiz]
 <!-- hl-knowledge: introduces=[FA-LEX-C80-TIME80-04]; assesses=[] -->
 
 **زمستان** — *zemestân* — "winter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zemestân* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *zamistān*, "winter". It is usually set beside Latin *hiems*, "winter", as one Indo-European root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

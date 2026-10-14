@@ -14,7 +14,8 @@ romanization: "namak"
 concept_tag: FA-FOOD42-NAMAK
 prerequisites: [FA-C41-havij, FA-C42-shekar]
 sounds: []
-roots: []
+roots: [persian-namak]
+etymology_hook: "namak ← Middle Persian namak (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C42-shekar]
 <!-- hl-knowledge: introduces=[FA-LEX-C42-FOOD42-02]; assesses=[] -->
 
 **نمک** — *namak* — "salt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*namak* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *namak*, "salt" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

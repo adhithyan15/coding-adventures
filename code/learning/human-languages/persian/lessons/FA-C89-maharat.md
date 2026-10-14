@@ -14,7 +14,8 @@ romanization: "mahârat"
 concept_tag: FA-CAN89-MAHARAT
 prerequisites: [FA-C88-muze, FA-C89-tavanestan]
 sounds: []
-roots: []
+roots: [arabic-mahara]
+etymology_hook: "mahârat ← Arabic mahāra 'skill', root m-h-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C89-tavanestan]
 <!-- hl-knowledge: introduces=[FA-LEX-C89-CAN89-02]; assesses=[] -->
 
 **مهارت** — *mahârat* — "a skill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mahârat* is borrowed from Arabic *mahāra*, "skill". Its Arabic root is *m-h-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

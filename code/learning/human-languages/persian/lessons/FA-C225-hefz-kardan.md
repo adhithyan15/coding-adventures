@@ -14,7 +14,8 @@ romanization: "hefz kardan"
 concept_tag: FA-VERB-HEFZ-KARDAN
 prerequisites: [FA-C224-joda-kardan, FA-C224-pust-kandan]
 sounds: []
-roots: []
+roots: [arabic-hifz]
+etymology_hook: "hefz ← Arabic ḥifẓ 'guarding, keeping in memory', root ḥ-f-ẓ (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C224-pust-kandan]
 <!-- hl-knowledge: introduces=[FA-LEX-C225-KONESH225-01]; assesses=[] -->
 
 **حفظ کردن** — *hefz kardan* — "to memorise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hefz kardan* pairs *hefz*, borrowed from Arabic *ḥifẓ*, "guarding, keeping in memory" (root *ḥ-f-ẓ*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB). It shares its root with *hâfez*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

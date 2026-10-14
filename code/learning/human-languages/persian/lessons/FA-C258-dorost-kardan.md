@@ -14,7 +14,8 @@ romanization: "dorost kardan"
 concept_tag: FA-VERB-DOROST-KARDAN
 prerequisites: [FA-C258-jostoju-kardan, FA-C258-zang-zadan]
 sounds: []
-roots: []
+roots: [persian-durust, pie-kwer]
+etymology_hook: "dorost kardan: dorost ← Middle Persian drust (EtymDB) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C258-zang-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C258-KONESH258-03]; assesses=[] -->
 
 **درست کردن** — *dorost kardan* — "to fix, to make".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dorost kardan* pairs *dorost*, "right, sound", with *kardan*, "to make". *dorost* is inherited, from Middle Persian *drust* (EtymDB). *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

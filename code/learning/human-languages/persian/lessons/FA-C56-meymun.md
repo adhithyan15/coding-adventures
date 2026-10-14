@@ -14,7 +14,8 @@ romanization: "meymun"
 concept_tag: FA-ANIMALS56-MEYMUN
 prerequisites: [FA-C56-bebar, FA-C56-fil]
 sounds: []
-roots: []
+roots: [arabic-maymun]
+etymology_hook: "meymun ← Arabic maymūn 'fortunate', root y-m-n (Lane); the monkey sense is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C56-fil]
 <!-- hl-knowledge: introduces=[FA-LEX-C56-ANIMALS56-04]; assesses=[] -->
 
 **میمون** — *meymun* — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*meymun* is borrowed from Arabic *maymūn*, "blessed, fortunate" (root *y-m-n*, Lane). How the word for "fortunate" came to name the monkey is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

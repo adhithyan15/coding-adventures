@@ -14,7 +14,8 @@ romanization: "sobh"
 concept_tag: FA-TIME67-SOBH
 prerequisites: [FA-C66-dir, FA-C66-ghabl]
 sounds: []
-roots: []
+roots: [arabic-subh]
+etymology_hook: "sobh ← Arabic ṣubḥ 'morning, dawn', root ṣ-b-ḥ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C66-ghabl]
 <!-- hl-knowledge: introduces=[FA-LEX-C67-TIME67-01]; assesses=[] -->
 
 **صبح** — *sobh* — "morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sobh* is borrowed from Arabic *ṣubḥ*, "morning, dawn". Its Arabic root is *ṣ-b-ḥ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Name a Verb, Find Its Stem",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:eb75ee10b0067823",
+  "sourceHash": "fnv1a64:0d1ef5df0ee41716",
   "lessons": [
     {
       "id": "FA-C06-budan",
@@ -200,7 +200,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87cc564cec513ca3",
+      "sourceHash": "fnv1a64:a2b6abffae560fe4",
       "notice": null,
       "blocks": [
         {
@@ -265,7 +265,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "رفتن raftan continues Middle Persian raftan; its deeper Indo-European ancestry is genuinely unsettled, so no English cousin is claimed for it here."
+              "text": "رفتن raftan is inherited: it is usually traced to Middle Persian raftan. Its deeper Indo-European ancestry is not settled, so no English cousin is claimed for it here."
             },
             {
               "kind": "speech",

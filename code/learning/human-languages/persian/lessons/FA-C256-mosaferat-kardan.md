@@ -14,7 +14,8 @@ romanization: "mosâferat kardan"
 concept_tag: FA-VERB-MOSAFERAT-KARDAN
 prerequisites: [FA-C256-estefade-kardan, FA-C256-talash-kardan]
 sounds: []
-roots: []
+roots: [arabic-musafara]
+etymology_hook: "mosâferat ← Arabic musāfara 'travelling', root s-f-r (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C256-talash-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C256-KONESH256-04]; assesses=[] -->
 
 **مسافرت کردن** — *mosâferat kardan* — "to travel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mosâferat kardan* pairs *mosâferat*, borrowed from Arabic *musāfara*, "travelling" (root *s-f-r*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

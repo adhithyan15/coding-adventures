@@ -14,7 +14,8 @@ romanization: "golkhâne"
 concept_tag: FA-MAKAN268-GOLKHANE
 prerequisites: [FA-C268-darvaze, FA-C268-sayeban]
 sounds: []
-roots: []
+roots: [persian-gul, persian-khana]
+etymology_hook: "golkhâne: Persian gol 'flower' (EtymDB) + khâne 'house'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C268-sayeban]
 <!-- hl-knowledge: introduces=[FA-LEX-C268-MAKAN268-03]; assesses=[] -->
 
 **گلخانه** — *golkhâne* — "a greenhouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*golkhâne* is *gol*, "flower" (Middle Persian *gul*, EtymDB), with *khâne*, "house": the flower-house. Both are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

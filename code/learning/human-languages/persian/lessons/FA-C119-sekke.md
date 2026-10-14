@@ -14,7 +14,8 @@ romanization: "sekke"
 concept_tag: FA-THINGS119-SEKKE
 prerequisites: [FA-C119-lubiya, FA-C119-nokhod]
 sounds: []
-roots: []
+roots: [arabic-sikka]
+etymology_hook: "sekke ← Arabic sikka 'die for coins, coin', root s-k-k (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C119-nokhod]
 <!-- hl-knowledge: introduces=[FA-LEX-C119-THINGS119-03]; assesses=[] -->
 
 **سکه** — *sekke* — "a coin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sekke* is borrowed from Arabic *sikka*, "die for coins, coin". Its Arabic root is *s-k-k* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

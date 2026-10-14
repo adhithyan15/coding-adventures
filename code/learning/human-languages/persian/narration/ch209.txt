@@ -12,6 +12,9 @@ Before the new one: say the Persian for shade, then the Persian for temperature.
 You'll want to know: بلبل.
 بلبل — bolbol — "a nightingale".
 
+The word, taken apart.
+bolbol is borrowed from Arabic bulbul, "nightingale" (EtymDB), a name that imitates the bird's song.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for temperature, then the Persian for a nigh
 
 You'll want to know: تمساح.
 تمساح — tamsâh — "a crocodile".
+
+The word, taken apart.
+tamsâh is borrowed from Arabic timsāḥ, "crocodile", a word usually traced to Egyptian, Coptic msah.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a nightingale, then the Persian for a cr
 You'll want to know: گورخر.
 گورخر — gurekhar — "a zebra".
 
+The word, taken apart.
+gurekhar is gur, "wild ass, onager", with khar, "donkey": the striped wild donkey. Both are native Persian; khar is usually traced to Middle Persian xar.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a crocodile, then the Persian for a zebr
 You'll want to know: بره.
 بره — bare — "a lamb".
 
+The word, taken apart.
+bare is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian warrag, "lamb". EtymDB takes it back to an Indo-European word for a ram or lamb, the word behind Greek arēn, "lamb".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a zebra, then the Persian for a lamb.
 
 You'll want to know: خرچنگ.
 خرچنگ — kharchang — "a crab".
+
+The word, taken apart.
+kharchang is usually explained as khar, "big, coarse", with chang, "claw", but that account is not settled.
 
 What you've built.
 One more word for this chapter.

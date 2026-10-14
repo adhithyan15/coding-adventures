@@ -14,7 +14,8 @@ romanization: "labe"
 concept_tag: FA-MAKAN196-LABE
 prerequisites: [FA-C196-sotun, FA-C196-atraf]
 sounds: []
-roots: []
+roots: [persian-lab]
+etymology_hook: "labe: Persian lab 'lip' (EtymDB) + -e; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C196-atraf]
 <!-- hl-knowledge: introduces=[FA-LEX-C196-MAKAN196-04]; assesses=[] -->
 
 **لبه** — *labe* — "an edge, a rim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*labe* is built from *lab*, "lip", with the ending *-e*: the lip of a thing, its rim. *lab* is inherited; EtymDB links it to the Indo-European root *\*leb-*, "lip".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

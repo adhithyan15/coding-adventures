@@ -14,7 +14,8 @@ romanization: "anjir"
 concept_tag: FA-CHIZ241-ANJIR
 prerequisites: [FA-C240-sabzi, FA-C241-golabi]
 sounds: []
-roots: []
+roots: [persian-anjir]
+etymology_hook: "anjir ← Middle Persian anjīr (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C241-golabi]
 <!-- hl-knowledge: introduces=[FA-LEX-C241-CHIZ241-02]; assesses=[] -->
 
 **انجیر** — *anjir* — "a fig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*anjir* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *anjīr*, "fig" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

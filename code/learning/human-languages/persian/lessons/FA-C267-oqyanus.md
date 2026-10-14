@@ -14,7 +14,8 @@ romanization: "oqyânus"
 concept_tag: FA-MAKAN267-OQYANUS
 prerequisites: [FA-C267-marz, FA-C267-sakhre]
 sounds: []
-roots: []
+roots: [greek-okeanos]
+etymology_hook: "oqyânus ← Arabic ūqiyānūs ← Greek ōkeanos (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C267-sakhre]
 <!-- hl-knowledge: introduces=[FA-LEX-C267-MAKAN267-05]; assesses=[] -->
 
 **اقیانوس** — *oqyânus* — "an ocean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*oqyânus* is borrowed from Arabic *ūqiyānūs*, which goes back to Greek *ōkeanos*, the great outer sea (EtymDB). English *ocean* is the same Greek word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

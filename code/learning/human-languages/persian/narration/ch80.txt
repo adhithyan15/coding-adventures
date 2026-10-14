@@ -12,6 +12,9 @@ Before the new one: say the Persian for last night, then the Persian for time.
 You'll want to know: بهار.
 بهار — bahâr — "spring".
 
+The word, taken apart.
+bahâr is a native Persian word, inherited rather than borrowed: it continues Middle Persian wahār, "spring" (EtymDB). EtymDB takes it back to the Indo-European word for spring behind Latin ver.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for time, then the Persian for spring.
 
 You'll want to know: تابستان.
 تابستان — tâbestân — "summer".
+
+The word, taken apart.
+tâbestân is a native Persian word, inherited rather than borrowed: it continues Middle Persian tābistān, "summer" (EtymDB). It is usually explained as built on tāb-, "to shine, to burn": the hot season.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for spring, then the Persian for summer.
 You'll want to know: پاییز.
 پاییز — pâyiz — "autumn".
 
+The word, taken apart.
+pâyiz is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian pādēz, "autumn".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for summer, then the Persian for autumn.
 You'll want to know: زمستان.
 زمستان — zemestân — "winter".
 
+The word, taken apart.
+zemestân is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian zamistān, "winter". It is usually set beside Latin hiems, "winter", as one Indo-European root.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for autumn, then the Persian for winter.
 
 You'll want to know: فصل.
 فصل — fasl — "a season".
+
+The word, taken apart.
+fasl is borrowed from Arabic faṣl, "division, section; season". Its Arabic root is f-ṣ-l (Lane).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "hejji kardan"
 concept_tag: FA-VERB-HEJJI-KARDAN
 prerequisites: [FA-C188-yaddasht-kardan, FA-C188-talaffoz-kardan]
 sounds: []
-roots: []
+roots: [arabic-hija, pie-kwer]
+etymology_hook: "hejji: from Arabic hijāʾ 'spelling', root h-j-w, + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C188-talaffoz-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C188-KONESH188-03]; assesses=[] -->
 
 **هجی کردن** — *hejji kardan* — "to spell (out)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hejji kardan* pairs *hejji*, "spelling out", from Arabic *hijāʾ*, "spelling" (root *h-j-w*), with the Persian verb *kardan*, "to do". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shirin"
 concept_tag: FA-ADJ62-SHIRIN
 prerequisites: [FA-C61-faghir, FA-C61-tamiz]
 sounds: []
-roots: []
+roots: [persian-shirin]
+etymology_hook: "shirin ← Middle Persian šīrēn (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C61-tamiz]
 <!-- hl-knowledge: introduces=[FA-LEX-C62-ADJ62-01]; assesses=[] -->
 
 **شیرین** — *shirin* — "sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shirin* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *šīrēn*, "sweet" (EtymDB). It is usually explained as built on *šīr*, "milk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

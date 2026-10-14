@@ -14,7 +14,8 @@ romanization: "masjed"
 concept_tag: FA-TOWN71-MASJED
 prerequisites: [FA-C70-ghatar, FA-C71-pol]
 sounds: []
-roots: []
+roots: [arabic-masjid]
+etymology_hook: "masjed ← Arabic masjid 'mosque, place of prostration', root s-j-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C71-pol]
 <!-- hl-knowledge: introduces=[FA-LEX-C71-TOWN71-02]; assesses=[] -->
 
 **مسجد** — *masjed* — "a mosque".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*masjed* is borrowed from Arabic *masjid*, "mosque, place of prostration". Its Arabic root is *s-j-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

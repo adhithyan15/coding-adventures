@@ -14,7 +14,8 @@ romanization: "khâbgâh"
 concept_tag: FA-MAKAN157-KHABGAH
 prerequisites: [FA-C156-dokkan, FA-C157-bonbast]
 sounds: []
-roots: []
+roots: [persian-khwab, persian-gah]
+etymology_hook: "khâbgâh: Persian khâb 'sleep' + gâh 'place'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C157-bonbast]
 <!-- hl-knowledge: introduces=[FA-LEX-C157-MAKAN157-02]; assesses=[] -->
 
 **خوابگاه** — *khâbgâh* — "a dormitory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâbgâh* is *khâb*, "sleep", with *gâh*, "place": the sleeping place. Both are native; *khâb* is usually traced to Middle Persian *xwāb*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

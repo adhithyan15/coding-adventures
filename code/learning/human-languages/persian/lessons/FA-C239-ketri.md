@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ239-KETRI
 prerequisites: [FA-C238-sakhtgir, FA-C238-zahmatkesh]
 sounds: []
 roots: []
+etymology_hook: "ketri: usually linked with English kettle; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C238-zahmatkesh]
 <!-- hl-knowledge: introduces=[FA-LEX-C239-CHIZ239-01]; assesses=[] -->
 
 **کتری** — *ketri* — "a kettle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ketri* is usually linked with English *kettle*, but its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

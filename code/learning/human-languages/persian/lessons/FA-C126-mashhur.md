@@ -14,7 +14,8 @@ romanization: "mashhur"
 concept_tag: FA-QUAL126-MASHHUR
 prerequisites: [FA-C126-zerang, FA-C126-tarsu]
 sounds: []
-roots: []
+roots: [arabic-mashur]
+etymology_hook: "mashhur ← Arabic mašhūr 'well known, famous', root š-h-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C126-tarsu]
 <!-- hl-knowledge: introduces=[FA-LEX-C126-QUAL126-03]; assesses=[] -->
 
 **مشهور** — *mashhur* — "famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mashhur* is borrowed from Arabic *mašhūr*, "well known, famous". Its Arabic root is *š-h-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

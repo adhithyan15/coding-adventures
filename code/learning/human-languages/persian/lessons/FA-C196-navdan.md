@@ -14,7 +14,8 @@ romanization: "nâvdân"
 concept_tag: FA-MAKAN196-NAVDAN
 prerequisites: [FA-C195-rahrow, FA-C195-gonbad]
 sounds: []
-roots: []
+roots: [persian-dan]
+etymology_hook: "nâvdân: Persian nâv 'trough' + -dân 'holder'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C195-gonbad]
 <!-- hl-knowledge: introduces=[FA-LEX-C196-MAKAN196-01]; assesses=[] -->
 
 **ناودان** — *nâvdân* — "a drainpipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nâvdân* is built from *nâv*, "trough, channel", and *-dân*, "holder": the channel for water. Both are native Persian words, inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

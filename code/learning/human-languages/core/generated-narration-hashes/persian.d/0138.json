@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 138,
-  "sourceHash": "fnv1a64:0432bd279460e46e",
+  "sourceHash": "fnv1a64:6316e71e4dba8b8a",
   "lessonIds": [
     "FA-C138-ayande",
     "FA-C138-az-hala",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch138.txt",
   "json": "persian/narration/ch138.json",
-  "textHash": "fnv1a64:ea9dced52aeb6d13",
-  "jsonHash": "fnv1a64:6617f78069d8b364",
+  "textHash": "fnv1a64:f71ba04d3a706bce",
+  "jsonHash": "fnv1a64:f0d14e79efa76f0f",
   "findings": []
 }

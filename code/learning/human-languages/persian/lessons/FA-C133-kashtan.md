@@ -14,7 +14,8 @@ romanization: "kâshtan"
 concept_tag: FA-VERB-KASHTAN
 prerequisites: [FA-C132-rikhtan, FA-C132-sukhtan]
 sounds: []
-roots: []
+roots: [persian-kashtan]
+etymology_hook: "kâshtan: inherited, usually traced to Middle Persian kištan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C132-sukhtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C133-ACT133-01]; assesses=[] -->
 
 **کاشتن** — *kâshtan* — "to plant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kâshtan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kištan*, "to sow, to plant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

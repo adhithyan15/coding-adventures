@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 117,
-  "sourceHash": "fnv1a64:2cfe60adeb992b2b",
+  "sourceHash": "fnv1a64:ee3d2ac566a00d21",
   "lessonIds": [
     "FA-C117-nave",
     "FA-C117-taksi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch117.txt",
   "json": "persian/narration/ch117.json",
-  "textHash": "fnv1a64:1cb87771aef05600",
-  "jsonHash": "fnv1a64:c3dd3eb46e44e0f2",
+  "textHash": "fnv1a64:3f1e015b901b2a9d",
+  "jsonHash": "fnv1a64:52614e71b2a825c8",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "kare"
 concept_tag: FA-FOOD42-KARE
 prerequisites: [FA-C42-shekar, FA-C42-namak]
 sounds: []
-roots: []
+roots: [persian-kare]
+etymology_hook: "kare ← Middle Persian karag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C42-namak]
 <!-- hl-knowledge: introduces=[FA-LEX-C42-FOOD42-03]; assesses=[] -->
 
 **کره** — *kare* — "butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kare* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *karag*, "butter" (EtymDB). (EtymDB also lists Arabic *kura*, "ball", but that is a different word that looks alike.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

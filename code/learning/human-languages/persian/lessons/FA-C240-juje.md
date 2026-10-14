@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ240-JUJE
 prerequisites: [FA-C240-astin, FA-C240-chatr]
 sounds: []
 roots: []
+etymology_hook: "juje: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C240-chatr]
 <!-- hl-knowledge: introduces=[FA-LEX-C240-CHIZ240-04]; assesses=[] -->
 
 **جوجه** — *juje* — "a chick; chicken (as food)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*juje* is a native Persian word for a chick, but no source used here gives its older form, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

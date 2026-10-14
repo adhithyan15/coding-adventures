@@ -14,7 +14,8 @@ romanization: "cheshme"
 concept_tag: FA-THINGS120-CHESHME
 prerequisites: [FA-C120-dampayi, FA-C120-barke]
 sounds: []
-roots: []
+roots: [persian-chashm]
+etymology_hook: "cheshme ← Middle Persian čašmag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C120-barke]
 <!-- hl-knowledge: introduces=[FA-LEX-C120-THINGS120-04]; assesses=[] -->
 
 **چشمه** — *cheshme* — "a spring (of water)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cheshme* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *čašmag*, "spring, source" (EtymDB). It is built on *čašm*, "eye" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

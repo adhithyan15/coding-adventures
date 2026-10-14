@@ -14,7 +14,8 @@ romanization: "chidan"
 concept_tag: FA-VERB-CHIDAN
 prerequisites: [FA-C132-sukhtan, FA-C133-kashtan]
 sounds: []
-roots: []
+roots: [persian-chidan]
+etymology_hook: "chidan: inherited, usually traced to Middle Persian čīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C133-kashtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C133-ACT133-02]; assesses=[] -->
 
 **چیدن** — *chidan* — "to pick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *čīdan*, "to gather, to pick". EtymDB links it to the Indo-European root *\*kʷey-*, "to pile up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

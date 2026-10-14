@@ -14,7 +14,8 @@ romanization: "damâ"
 concept_tag: FA-CHIZ208-DAMA
 prerequisites: [FA-C208-tagarg, FA-C208-saye]
 sounds: []
-roots: []
+roots: [persian-dam]
+etymology_hook: "damâ: modern Persian coinage built on dam 'breath, warmth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C208-saye]
 <!-- hl-knowledge: introduces=[FA-LEX-C208-CHIZ208-05]; assesses=[] -->
 
 **دما** — *damâ* — "temperature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*damâ* is built on *dam*, "breath, warmth", a native word, with the ending *-â*: the degree of warmth, a modern Persian coinage.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

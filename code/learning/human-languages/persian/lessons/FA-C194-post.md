@@ -14,7 +14,8 @@ romanization: "post"
 concept_tag: FA-MAKAN194-POST
 prerequisites: [FA-C193-fasele, FA-C194-terminal]
 sounds: []
-roots: []
+roots: [french-poste]
+etymology_hook: "post: a loan, usually traced to French poste 'post'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C194-terminal]
 <!-- hl-knowledge: introduces=[FA-LEX-C194-MAKAN194-02]; assesses=[] -->
 
 **پست** — *post* — "the post, mail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*post* is a loan, usually traced to French *poste*, "post". (EtymDB lists two other Persian words spelled *post*, "low" and "flour", which are different.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

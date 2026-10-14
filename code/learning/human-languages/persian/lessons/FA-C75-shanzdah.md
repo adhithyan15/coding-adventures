@@ -14,7 +14,8 @@ romanization: "shânzdah"
 concept_tag: FA-CLOTHES75-SHANZDAH
 prerequisites: [FA-C75-davazdah, FA-C75-chahardah]
 sounds: []
-roots: []
+roots: [proto-indo-european-sweks, proto-indo-european-dekm]
+etymology_hook: "shânzdah: Persian shesh 'six' + dah 'ten'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C75-chahardah]
 <!-- hl-knowledge: introduces=[FA-LEX-C75-CLOTHES75-05]; assesses=[] -->
 
 **شانزده** — *shânzdah* — "sixteen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shânzdah* is *shesh*, "six", with *dah*, "ten", and an *n* before the ten, as in *pânzdah*. Both numbers are inherited from Middle Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

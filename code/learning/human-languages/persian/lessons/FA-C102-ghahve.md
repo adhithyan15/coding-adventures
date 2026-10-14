@@ -14,7 +14,8 @@ romanization: "ghahve"
 concept_tag: FA-THINGS102-GHAHVE
 prerequisites: [FA-C102-zanjabil, FA-C102-felfel]
 sounds: []
-roots: []
+roots: [arabic-qahwa]
+etymology_hook: "ghahve ← Arabic qahwa 'coffee, a brew' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C102-felfel]
 <!-- hl-knowledge: introduces=[FA-LEX-C102-THINGS102-03]; assesses=[] -->
 
 **قهوه** — *ghahve* — "coffee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ghahve* is borrowed from Arabic *qahwa*, "coffee, a brew" (EtymDB). Its Arabic root is *q-h-w*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

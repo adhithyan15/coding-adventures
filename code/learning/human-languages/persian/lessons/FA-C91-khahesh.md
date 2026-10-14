@@ -14,7 +14,8 @@ romanization: "khâhesh"
 concept_tag: FA-WANT91-KHAHESH
 prerequisites: [FA-C91-tasmim, FA-C91-hadaf]
 sounds: []
-roots: []
+roots: [persian-khwastan]
+etymology_hook: "khâhesh: Persian khâh- 'want' (Middle Persian xwāstan, EtymDB) + -esh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C91-hadaf]
 <!-- hl-knowledge: introduces=[FA-LEX-C91-WANT91-05]; assesses=[] -->
 
 **خواهش** — *khâhesh* — "a request".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâhesh* is *khâh-*, the present stem of *khâstan*, "to want", with the noun ending *-esh*. The verb is inherited: EtymDB traces it to Middle Persian *xwāstan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

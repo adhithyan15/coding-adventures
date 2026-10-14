@@ -14,7 +14,8 @@ romanization: "khâm"
 concept_tag: FA-SEFAT161-KHAM
 prerequisites: [FA-C161-khoshmaze, FA-C161-khonak]
 sounds: []
-roots: []
+roots: [persian-kham]
+etymology_hook: "khâm ← Middle Persian xām (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C161-khonak]
 <!-- hl-knowledge: introduces=[FA-LEX-C161-SEFAT161-03]; assesses=[] -->
 
 **خام** — *khâm* — "raw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâm* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *xām*, "crude, raw" (EtymDB). EtymDB takes it back to an Indo-European word meaning "raw, bitter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

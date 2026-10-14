@@ -14,7 +14,8 @@ romanization: "dar hâli ke"
 concept_tag: FA-CHERA159-DAR-HALI-KE
 prerequisites: [FA-C159-bedun-e, FA-C159-vagarna]
 sounds: []
-roots: []
+roots: [arabic-hal]
+etymology_hook: "dar hâli ke: Persian dar 'in' + hâl ← Arabic ḥāl 'state' (Lane) + ke 'that'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C159-vagarna]
 <!-- hl-knowledge: introduces=[FA-LEX-C159-CHERA159-04]; assesses=[] -->
 
 **در حالی که** — *dar hâli ke* — "while, whereas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dar hâli ke* is "in a state that": *dar*, "in", and *ke*, "that", are native; *hâli* is *hâl*, "state", borrowed from Arabic *ḥāl* (root *ḥ-w-l*, Lane), with *-i*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

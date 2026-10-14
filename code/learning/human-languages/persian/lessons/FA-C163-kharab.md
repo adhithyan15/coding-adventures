@@ -14,7 +14,8 @@ romanization: "kharâb"
 concept_tag: FA-SEFAT163-KHARAB
 prerequisites: [FA-C163-nazok, FA-C163-saf]
 sounds: []
-roots: []
+roots: [arabic-harab]
+etymology_hook: "kharâb ← Arabic ḫarāb 'ruin, ruined', root ḫ-r-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C163-saf]
 <!-- hl-knowledge: introduces=[FA-LEX-C163-SEFAT163-04]; assesses=[] -->
 
 **خراب** — *kharâb* — "broken, out of order".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kharâb* is borrowed from Arabic *ḫarāb*, "ruin, ruined". Its Arabic root is *ḫ-r-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

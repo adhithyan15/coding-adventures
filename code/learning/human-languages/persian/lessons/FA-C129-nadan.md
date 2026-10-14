@@ -14,7 +14,8 @@ romanization: "nâdân"
 concept_tag: FA-QUAL129-NADAN
 prerequisites: [FA-C129-shad, FA-C129-dana]
 sounds: []
-roots: []
+roots: [pie-gno]
+etymology_hook: "nâdân: Persian nâ- 'not' + dân 'knowing' (dânestan, inherited)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C129-dana]
 <!-- hl-knowledge: introduces=[FA-LEX-C129-QUAL129-05]; assesses=[] -->
 
 **نادان** — *nâdân* — "ignorant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nâdân* is built from *nâ-*, "not", and *dân*, "knowing", from *dânestan*, "to know": "unknowing". *dânestan* is inherited, from Middle Persian *dānistan*, a cousin of English *know*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

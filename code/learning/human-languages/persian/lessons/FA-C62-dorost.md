@@ -14,7 +14,8 @@ romanization: "dorost"
 concept_tag: FA-ADJ62-DOROST
 prerequisites: [FA-C62-sabok, FA-C62-sangin]
 sounds: []
-roots: []
+roots: [persian-dorost]
+etymology_hook: "dorost ← Middle Persian drust (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C62-sangin]
 <!-- hl-knowledge: introduces=[FA-LEX-C62-ADJ62-05]; assesses=[] -->
 
 **درست** — *dorost* — "right, correct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dorost* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *drust*, "right; healthy" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

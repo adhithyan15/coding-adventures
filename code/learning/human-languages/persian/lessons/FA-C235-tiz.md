@@ -14,7 +14,8 @@ romanization: "tiz"
 concept_tag: FA-SEFAT235-TIZ
 prerequisites: [FA-C234-zendegi, FA-C234-qesmat]
 sounds: []
-roots: []
+roots: [persian-tiz]
+etymology_hook: "tiz: inherited, usually traced to Middle Persian tēz"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C234-qesmat]
 <!-- hl-knowledge: introduces=[FA-LEX-C235-SEFAT235-01]; assesses=[] -->
 
 **تیز** — *tiz* — "sharp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tiz* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *tēz*, "sharp". EtymDB takes it back to the Indo-European root *\*(s)teyg-*, "to be sharp, to prick", the root usually also given for English *stick*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

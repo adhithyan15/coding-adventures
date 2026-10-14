@@ -14,7 +14,8 @@ romanization: "talâsh kardan"
 concept_tag: FA-VERB-TALASH-KARDAN
 prerequisites: [FA-C256-danlod-kardan, FA-C256-estefade-kardan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "talâsh kardan: talâsh 'effort' (origin not settled) + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C256-estefade-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C256-KONESH256-03]; assesses=[] -->
 
 **تلاش کردن** — *talâsh kardan* — "to try".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*talâsh kardan* pairs *talâsh*, "effort", with *kardan*. Where *talâsh* comes from is not settled; it is sometimes linked with Turkic. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "abru"
 concept_tag: FA-THINGS109-ABRU
 prerequisites: [FA-C108-sine, FA-C108-kamar]
 sounds: []
-roots: []
+roots: [persian-abru]
+etymology_hook: "abru ← Middle Persian brūg (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C108-kamar]
 <!-- hl-knowledge: introduces=[FA-LEX-C109-THINGS109-01]; assesses=[] -->
 
 **ابرو** — *abru* — "an eyebrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*abru* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *brūg*, "eyebrow" (EtymDB). EtymDB takes it back to the Indo-European word behind English *brow*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

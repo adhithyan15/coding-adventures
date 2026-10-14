@@ -12,6 +12,9 @@ Before the new one: say the Persian for to carry, then the Persian for to move.
 You'll want to know: خاراندن.
 خاراندن — khârândan — "to scratch (an itch)".
 
+The word, taken apart.
+khârândan is built from khâr-, the stem of khâridan, "to itch", as its causative: to make the itch go. The verb is native Persian, inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to move, then the Persian for to scratch
 
 You'll want to know: فشار دادن.
 فشار دادن — feshâr dâdan — "to press, to squeeze".
+
+The word, taken apart.
+feshâr dâdan is "to give pressure": feshâr is built on feshordan, "to press" (EtymDB), a native verb. dâdan, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, "to give".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to scratch, then the Persian for to pres
 You'll want to know: وصل کردن.
 وصل کردن — vasl kardan — "to connect, to plug in".
 
+The word, taken apart.
+vasl kardan pairs vasl, borrowed from Arabic waṣl, "joining" (root w-ṣ-l, Lane), with the Persian verb kardan, "to do, to make". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to press, then the Persian for to connec
 You'll want to know: جدا کردن.
 جدا کردن — jodâ kardan — "to separate".
 
+The word, taken apart.
+jodâ kardan pairs jodâ, "separate", with kardan. jodâ is inherited: EtymDB traces it to Middle Persian judāg, "separate, different". (It also lists Arabic jiddan, a different word.) kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to connect, then the Persian for to sepa
 
 You'll want to know: پوست کندن.
 پوست کندن — pust kandan — "to peel".
+
+The word, taken apart.
+pust kandan is "to dig off the skin": pust, "skin", is usually traced to Middle Persian pōst, and kandan, "to dig", to Middle Persian kandan. Both are native.
 
 What you've built.
 One more word for this chapter.

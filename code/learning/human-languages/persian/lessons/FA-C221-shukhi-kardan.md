@@ -14,7 +14,8 @@ romanization: "shukhi kardan"
 concept_tag: FA-VERB-SHUKHI-KARDAN
 prerequisites: [FA-C221-qahr-kardan, FA-C221-ashti-kardan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "shukhi kardan: shukh 'playful' (origin not settled) + -i + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C221-ashti-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C221-KONESH221-04]; assesses=[] -->
 
 **شوخی کردن** — *shukhi kardan* — "to joke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shukhi kardan* pairs *shukhi*, "a joke" (*shukh*, "playful", with *-i*), with *kardan*. Where *shukh* comes from is not settled. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "piyâz"
 concept_tag: FA-FOOD43-PIYAZ
 prerequisites: [FA-C43-limu, FA-C43-mast]
 sounds: []
-roots: []
+roots: [persian-piyaz]
+etymology_hook: "piyâz ← Middle Persian pyāz (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C43-mast]
 <!-- hl-knowledge: introduces=[FA-LEX-C43-FOOD43-03]; assesses=[] -->
 
 **پیاز** — *piyâz* — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*piyâz* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *pyāz*, "onion" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

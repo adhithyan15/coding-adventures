@@ -14,7 +14,8 @@ romanization: "jâmedâdi"
 concept_tag: FA-KAR178-JAMEDADI
 prerequisites: [FA-C178-pushe, FA-C178-pakkon]
 sounds: []
-roots: []
+roots: [persian-ja, arabic-midad]
+etymology_hook: "jâmedâdi: Persian jâ 'place' + medâd ← Arabic midād 'ink' (Lane) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C178-pakkon]
 <!-- hl-knowledge: introduces=[FA-LEX-C178-KAR178-04]; assesses=[] -->
 
 **جامدادی** — *jâmedâdi* — "a pencil case".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jâmedâdi* is *jâ*, "place", with *medâd*, "pencil", and *-i*: the pencil's place. *jâ* is native (Middle Persian *gyāg*, EtymDB); *medâd* is borrowed from Arabic *midād*, "ink" (root *m-d-d*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

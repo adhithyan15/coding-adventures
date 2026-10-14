@@ -14,7 +14,8 @@ romanization: "chort zadan"
 concept_tag: FA-VERB-CHORT-ZADAN
 prerequisites: [FA-C147-pashidan, FA-C148-dast-zadan]
 sounds: []
-roots: []
+roots: [persian-zadan]
+etymology_hook: "chort zadan: chort 'nap' (origin not settled) + Persian zadan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C148-dast-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C148-KONESH148-02]; assesses=[] -->
 
 **چرت زدن** — *chort zadan* — "to doze, to nap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chort zadan* pairs *chort*, "nap", with *zadan*, "to strike". Where *chort* comes from is not settled. *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

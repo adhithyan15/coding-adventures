@@ -14,7 +14,8 @@ romanization: "kharidan"
 concept_tag: FA-VERB-KHARIDAN
 prerequisites: [FA-C36-istadan, FA-C36-davidan]
 sounds: []
-roots: []
+roots: [persian-kharidan]
+etymology_hook: "kharidan: inherited, usually traced to Middle Persian xrīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C36-davidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C36-VERBS36-04]; assesses=[] -->
 
 **خریدن** — *kharidan* — "to buy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kharidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *xrīdan*, "to buy". It is usually set beside Sanskrit *krīṇāti*, "he buys", as one Indo-Iranian verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

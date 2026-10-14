@@ -14,7 +14,8 @@ romanization: "pishâni"
 concept_tag: FA-THINGS123-PISHANI
 prerequisites: [FA-C122-sanjab, FA-C122-khofash]
 sounds: []
-roots: []
+roots: [persian-pesh]
+etymology_hook: "pishâni: Persian pish 'front' (Middle Persian pēš) + -âni"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C122-khofash]
 <!-- hl-knowledge: introduces=[FA-LEX-C123-THINGS123-01]; assesses=[] -->
 
 **پیشانی** — *pishâni* — "the forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pishâni* is *pish*, "front", with the ending *-âni*: the front of the head. *pish* is native Persian, usually traced to Middle Persian *pēš*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

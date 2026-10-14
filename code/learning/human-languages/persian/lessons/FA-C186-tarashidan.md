@@ -14,7 +14,8 @@ romanization: "tarâshidan"
 concept_tag: FA-VERB-TARASHIDAN
 prerequisites: [FA-C185-amanat-dadan, FA-C186-baftan]
 sounds: []
-roots: []
+roots: [persian-tarash]
+etymology_hook: "tarâshidan: Iranian; EtymDB: Parthian trāš- 'to cut off'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C186-baftan]
 <!-- hl-knowledge: introduces=[FA-LEX-C186-KONESH186-02]; assesses=[] -->
 
 **تراشیدن** — *tarâshidan* — "to shave; to sharpen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tarâshidan* is a native Iranian verb: EtymDB traces it to a Parthian stem *trāš-*, "to cut off".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

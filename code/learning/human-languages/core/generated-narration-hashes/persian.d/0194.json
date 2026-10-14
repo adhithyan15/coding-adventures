@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 194,
-  "sourceHash": "fnv1a64:55bd1452a59155fd",
+  "sourceHash": "fnv1a64:b6454424dd610448",
   "lessonIds": [
     "FA-C194-terminal",
     "FA-C194-post",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch194.txt",
   "json": "persian/narration/ch194.json",
-  "textHash": "fnv1a64:ff73001f3076adc8",
-  "jsonHash": "fnv1a64:d857842f1c3e7cd0",
+  "textHash": "fnv1a64:befb3c9a2b3e3a3a",
+  "jsonHash": "fnv1a64:9bf41dacd603e1a4",
   "findings": []
 }

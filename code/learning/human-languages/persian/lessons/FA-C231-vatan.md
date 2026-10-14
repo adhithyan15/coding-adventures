@@ -14,7 +14,8 @@ romanization: "vatan"
 concept_tag: FA-MAKAN231-VATAN
 prerequisites: [FA-C231-talar, FA-C231-estakhr]
 sounds: []
-roots: []
+roots: [arabic-watan]
+etymology_hook: "vatan ← Arabic waṭan 'homeland, place of residence', root w-ṭ-n (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C231-estakhr]
 <!-- hl-knowledge: introduces=[FA-LEX-C231-MAKAN231-04]; assesses=[] -->
 
 **وطن** — *vatan* — "homeland".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vatan* is borrowed from Arabic *waṭan*, "homeland, place of residence". Its Arabic root is *w-ṭ-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

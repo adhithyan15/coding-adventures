@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 183,
-  "sourceHash": "fnv1a64:debcecd1af364be9",
+  "sourceHash": "fnv1a64:9a55ec996631a030",
   "lessonIds": [
     "FA-C183-ezdevaj-kardan",
     "FA-C183-jashn-gereftan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch183.txt",
   "json": "persian/narration/ch183.json",
-  "textHash": "fnv1a64:d295b5ca85377fe7",
-  "jsonHash": "fnv1a64:e950be892c521eef",
+  "textHash": "fnv1a64:6dc012eeea5b2adc",
+  "jsonHash": "fnv1a64:ee94c7ca42a45227",
   "findings": []
 }

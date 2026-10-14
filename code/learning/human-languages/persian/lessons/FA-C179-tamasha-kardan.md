@@ -14,7 +14,8 @@ romanization: "tamâshâ kardan"
 concept_tag: FA-VERB-TAMASHA-KARDAN
 prerequisites: [FA-C179-dush-gereftan, FA-C179-bardashtan]
 sounds: []
-roots: []
+roots: [arabic-tamasa]
+etymology_hook: "tamâshâ ← Arabic tamāšā 'walking about together', root m-š-y (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C179-bardashtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C179-KONESH179-03]; assesses=[] -->
 
 **تماشا کردن** — *tamâshâ kardan* — "to watch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tamâshâ kardan* pairs *tamâshâ*, borrowed from Arabic *tamāšā*, "walking about together" (root *m-š-y*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB). Persian turned it into "looking on, a show" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

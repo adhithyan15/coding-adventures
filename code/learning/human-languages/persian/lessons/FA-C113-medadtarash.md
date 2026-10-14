@@ -14,7 +14,8 @@ romanization: "medâdtarâsh"
 concept_tag: FA-THINGS113-MEDADTARASH
 prerequisites: [FA-C113-tamr, FA-C113-pakat]
 sounds: []
-roots: []
+roots: [arabic-midad]
+etymology_hook: "medâdtarâsh: medâd ← Arabic midād 'ink' (root m-d-d, Lane) + Persian tarâsh 'shaving'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C113-pakat]
 <!-- hl-knowledge: introduces=[FA-LEX-C113-THINGS113-05]; assesses=[] -->
 
 **مدادتراش** — *medâdtarâsh* — "a pencil sharpener".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*medâdtarâsh* is *medâd*, "pencil", with *-tarâsh*, "shaving" (from *tarâshidan*, "to scrape"): the pencil-shaver. *medâd* is borrowed from Arabic *midād*, "ink" (root *m-d-d*, Lane); *tarâsh* is native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

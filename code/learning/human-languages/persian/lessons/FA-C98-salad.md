@@ -14,7 +14,8 @@ romanization: "sâlâd"
 concept_tag: FA-THINGS98-SALAD
 prerequisites: [FA-C98-khoresh, FA-C98-sup]
 sounds: []
-roots: []
+roots: [french-salade]
+etymology_hook: "sâlâd: a loan, usually traced to French salade 'salad'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C98-sup]
 <!-- hl-knowledge: introduces=[FA-LEX-C98-THINGS98-04]; assesses=[] -->
 
 **سالاد** — *sâlâd* — "a salad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâlâd* is a loan, usually traced to French *salade*, "salad".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

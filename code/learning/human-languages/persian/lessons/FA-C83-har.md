@@ -14,7 +14,8 @@ romanization: "har"
 concept_tag: FA-DEF83-HAR
 prerequisites: [FA-C83-haman, FA-C83-chenin]
 sounds: []
-roots: []
+roots: [persian-har]
+etymology_hook: "har: inherited, usually traced to Middle Persian harw"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C83-chenin]
 <!-- hl-knowledge: introduces=[FA-LEX-C83-DEF83-05]; assesses=[] -->
 
 **هر** — *har* — "every".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*har* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *harw*, "each, all".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

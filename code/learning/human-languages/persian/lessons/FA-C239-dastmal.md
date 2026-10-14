@@ -14,7 +14,8 @@ romanization: "dastmâl"
 concept_tag: FA-CHIZ239-DASTMAL
 prerequisites: [FA-C239-ketri, FA-C239-quri]
 sounds: []
-roots: []
+roots: [persian-dast]
+etymology_hook: "dastmâl: Persian dast 'hand' + mâl 'rubbing' (mâlidan); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C239-quri]
 <!-- hl-knowledge: introduces=[FA-LEX-C239-CHIZ239-03]; assesses=[] -->
 
 **دستمال** — *dastmâl* — "a handkerchief; a cloth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dastmâl* is *dast*, "hand", with *-mâl*, "rubbing" (from *mâlidan*, "to rub"): the hand-wiper. Both are native Persian. (EtymDB links it to Arabic *māl*, "property", a different word that looks alike.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

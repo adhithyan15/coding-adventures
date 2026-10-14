@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 246,
-  "sourceHash": "fnv1a64:fe01695210044fb7",
+  "sourceHash": "fnv1a64:f0d8cf209728d382",
   "lessonIds": [
     "FA-C246-safhe",
     "FA-C246-payam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch246.txt",
   "json": "persian/narration/ch246.json",
-  "textHash": "fnv1a64:1215f458bdf52212",
-  "jsonHash": "fnv1a64:0f1d547ed5ec6d46",
+  "textHash": "fnv1a64:ca00763b380e73f8",
+  "jsonHash": "fnv1a64:5496ad438e43e808",
   "findings": []
 }

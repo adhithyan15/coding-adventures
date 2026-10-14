@@ -14,7 +14,8 @@ romanization: "khayyât"
 concept_tag: FA-KAR216-KHAYYAT
 prerequisites: [FA-C216-lulekesh, FA-C216-barqkar]
 sounds: []
-roots: []
+roots: [arabic-hayyat]
+etymology_hook: "khayyât ← Arabic ḫayyāṭ 'tailor', root ḫ-y-ṭ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C216-barqkar]
 <!-- hl-knowledge: introduces=[FA-LEX-C216-KAR216-05]; assesses=[] -->
 
 **خیاط** — *khayyât* — "a tailor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khayyât* is borrowed from Arabic *ḫayyāṭ*, "tailor". Its Arabic root is *ḫ-y-ṭ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

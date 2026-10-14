@@ -14,7 +14,8 @@ romanization: "estefâde kardan"
 concept_tag: FA-VERB-ESTEFADE-KARDAN
 prerequisites: [FA-C255-javidan, FA-C256-danlod-kardan]
 sounds: []
-roots: []
+roots: [arabic-istifada]
+etymology_hook: "estefâde ← Arabic istifāda 'gaining benefit', root f-y-d (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C256-danlod-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C256-KONESH256-02]; assesses=[] -->
 
 **استفاده کردن** — *estefâde kardan* — "to use".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*estefâde kardan* pairs *estefâde*, borrowed from Arabic *istifāda*, "gaining benefit" (root *f-y-d*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

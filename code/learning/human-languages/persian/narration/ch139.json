@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "A Timetable, a Sign, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:26153c112c645c52",
+  "sourceHash": "fnv1a64:f80cd1e687c94edd",
   "lessons": [
     {
       "id": "FA-C139-jadval-e-zamani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b49e75fff36030cc",
+      "sourceHash": "fnv1a64:85a9ff0e2448b212",
       "notice": null,
       "blocks": [
         {
@@ -65,6 +65,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jadval-e zamâni is \"a table of time\". jadval, \"table, grid\", is borrowed from Arabic jadwal, \"stream, channel; table\" (root j-d-l, Lane); zamâni is zamân, \"time\", with the ending -i."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -75,7 +86,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -124,7 +135,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -155,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e6d1bf9efc85b34",
+      "sourceHash": "fnv1a64:d755a344a931f4a1",
       "notice": null,
       "blocks": [
         {
@@ -201,6 +212,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tâblo is a loan, usually traced to French tableau, \"board, picture\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -211,7 +233,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -260,7 +282,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -291,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bad91116db23851",
+      "sourceHash": "fnv1a64:f742e3892343d27d",
       "notice": null,
       "blocks": [
         {
@@ -324,6 +346,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ejâre is borrowed from Arabic ijāra, \"hire, rent\". Its Arabic root is ʾ-j-r (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -334,7 +367,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -383,7 +416,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -414,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a45771cd969d2db1",
+      "sourceHash": "fnv1a64:03780785ca29f32e",
       "notice": null,
       "blocks": [
         {
@@ -460,6 +493,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "âgahi is âgah, \"aware, informed\", with the noun ending -i: \"information, notice\". âgah is native, usually traced to Middle Persian āgāh."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -470,7 +514,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -519,7 +563,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -550,7 +594,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:171f5b43c40a147f",
+      "sourceHash": "fnv1a64:8b43d186c14ca866",
       "notice": null,
       "blocks": [
         {
@@ -583,6 +627,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "resid is the past stem of residan, \"to arrive, to reach\": what has arrived, so the slip that confirms it. The verb is inherited, usually traced to Middle Persian rasīdan."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -593,7 +648,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -642,7 +697,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "châne zadan"
 concept_tag: FA-VERB-CHANE-ZADAN
 prerequisites: [FA-C258-tasavvor-kardan, FA-C259-barrasi-kardan]
 sounds: []
-roots: []
+roots: [persian-zadan]
+etymology_hook: "châne zadan: Persian châne 'chin' + zadan 'to strike'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C259-barrasi-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C259-KONESH259-02]; assesses=[] -->
 
 **چانه زدن** — *châne zadan* — "to haggle, to bargain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*châne zadan* is "to strike the chin", to haggle: *châne*, "chin", with *zadan*. Both are native Persian. *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

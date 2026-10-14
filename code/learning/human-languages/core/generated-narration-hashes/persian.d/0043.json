@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 43,
-  "sourceHash": "fnv1a64:5af9218addfc5d8c",
+  "sourceHash": "fnv1a64:1e63b340a3f6ecff",
   "lessonIds": [
     "FA-C43-limu",
     "FA-C43-mast",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch43.txt",
   "json": "persian/narration/ch43.json",
-  "textHash": "fnv1a64:5aec11d7bb2df555",
-  "jsonHash": "fnv1a64:bea19ffd88c5fab7",
+  "textHash": "fnv1a64:ea5db56fc6f10aa6",
+  "jsonHash": "fnv1a64:36f3fff08541eb92",
   "findings": []
 }

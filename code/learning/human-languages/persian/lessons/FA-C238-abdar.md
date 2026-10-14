@@ -14,7 +14,8 @@ romanization: "âbdâr"
 concept_tag: FA-SEFAT238-ABDAR
 prerequisites: [FA-C237-morde, FA-C238-tord]
 sounds: []
-roots: []
+roots: [persian-ab, persian-dar-holder]
+etymology_hook: "âbdâr: Persian âb 'water' (EtymDB) + -dâr 'holding'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C238-tord]
 <!-- hl-knowledge: introduces=[FA-LEX-C238-SEFAT238-02]; assesses=[] -->
 
 **آبدار** — *âbdâr* — "juicy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âbdâr* is *âb*, "water, juice", with *-dâr*, "holding": juice-holding. Both are native; *âb* continues Middle Persian *āb* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

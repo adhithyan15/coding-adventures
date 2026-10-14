@@ -14,7 +14,8 @@ romanization: "sorkh kardan"
 concept_tag: FA-VERB-SORKH-KARDAN
 prerequisites: [FA-C180-ham-zadan, FA-C180-jushandan]
 sounds: []
-roots: []
+roots: [persian-surkh, pie-kwer]
+etymology_hook: "sorkh kardan: Persian sorkh 'red' (Middle Persian suxr) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C180-jushandan]
 <!-- hl-knowledge: introduces=[FA-LEX-C180-KONESH180-04]; assesses=[] -->
 
 **سرخ کردن** — *sorkh kardan* — "to fry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sorkh kardan* pairs *sorkh*, "red", with *kardan*, "to make": to make red, to fry. *sorkh* is native, usually traced to Middle Persian *suxr*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

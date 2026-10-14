@@ -14,7 +14,8 @@ romanization: "pârk"
 concept_tag: FA-LOC87-PARK
 prerequisites: [FA-C87-kuche, FA-C87-meydan]
 sounds: []
-roots: []
+roots: [french-parc]
+etymology_hook: "pârk: a loan, usually traced to French parc 'park'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C87-meydan]
 <!-- hl-knowledge: introduces=[FA-LEX-C87-LOC87-03]; assesses=[] -->
 
 **پارک** — *pârk* — "a park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pârk* is a loan, usually traced to French *parc*, "park".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

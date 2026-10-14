@@ -14,7 +14,8 @@ romanization: "sandali"
 concept_tag: FA-HOME45-SANDALI
 prerequisites: [FA-C45-otagh, FA-C45-panjere]
 sounds: []
-roots: []
+roots: [arabic-sandal]
+etymology_hook: "sandali: usually traced to sandal 'sandalwood' (via Arabic ṣandal); not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C45-panjere]
 <!-- hl-knowledge: introduces=[FA-LEX-C45-HOME45-04]; assesses=[] -->
 
 **صندلی** — *sandali* — "a chair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sandali* is usually traced to *sandal*, "sandalwood", a word that came into Persian through Arabic *ṣandal*; the chair is said to be named after the wood. EtymDB gives this account, but it is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

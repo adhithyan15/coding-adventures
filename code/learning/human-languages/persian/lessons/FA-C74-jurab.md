@@ -15,6 +15,7 @@ concept_tag: FA-CLOTHES74-JURAB
 prerequisites: [FA-C73-pirahan, FA-C73-shalvar]
 sounds: []
 roots: []
+etymology_hook: "jurâb: usually linked with older Persian gōrab; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C73-shalvar]
 <!-- hl-knowledge: introduces=[FA-LEX-C74-CLOTHES74-01]; assesses=[] -->
 
 **جوراب** — *jurâb* — "a sock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jurâb* is usually linked with an older Persian *gōrab*, and Arabic *jawrab*, "sock", is the same word, but the details are not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

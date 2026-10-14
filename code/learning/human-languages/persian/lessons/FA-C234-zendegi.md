@@ -14,7 +14,8 @@ romanization: "zendegi"
 concept_tag: FA-CHERA234-ZENDEGI
 prerequisites: [FA-C234-azadi, FA-C234-jang]
 sounds: []
-roots: []
+roots: [persian-zinda]
+etymology_hook: "zendegi: Persian zende 'alive' (Middle Persian zīndag) + -gi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C234-jang]
 <!-- hl-knowledge: introduces=[FA-LEX-C234-CHERA234-04]; assesses=[] -->
 
 **زندگی** — *zendegi* — "life".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zendegi* is *zende*, "alive", with the noun ending *-gi*. *zende* is native, usually traced to Middle Persian *zīndag*, "alive".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

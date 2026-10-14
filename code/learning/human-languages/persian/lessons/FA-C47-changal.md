@@ -15,6 +15,7 @@ concept_tag: FA-HOME47-CHANGAL
 prerequisites: [FA-C47-boshghab, FA-C47-chaghu]
 sounds: []
 roots: []
+etymology_hook: "chângâl: usually explained as built on Persian chang 'claw, hook'; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C47-chaghu]
 <!-- hl-knowledge: introduces=[FA-LEX-C47-HOME47-04]; assesses=[] -->
 
 **چنگال** — *chângâl* — "a fork".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chângâl* is usually explained as built on *chang*, "claw, hook", a native word: the fork named after a claw. That account is the usual one, but it is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

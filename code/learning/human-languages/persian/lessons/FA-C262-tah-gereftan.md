@@ -14,7 +14,8 @@ romanization: "tah gereftan"
 concept_tag: FA-VERB-TAH-GEREFTAN
 prerequisites: [FA-C262-jarime-shodan, FA-C262-tamdid-kardan]
 sounds: []
-roots: []
+roots: [persian-tah]
+etymology_hook: "tah gereftan: Persian tah 'bottom' (EtymDB) + gereftan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C262-tamdid-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C262-KONESH262-05]; assesses=[] -->
 
 **ته گرفتن** — *tah gereftan* — "to stick to the pan, to catch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tah gereftan* is "to take the bottom": *tah*, "bottom", is inherited (Middle Persian *tah*, EtymDB). *gereftan*, "to take", is an inherited verb; EtymDB takes it back to the Indo-European root *\*gʰrebh₂-*, "to seize".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

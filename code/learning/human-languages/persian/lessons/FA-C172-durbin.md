@@ -14,7 +14,8 @@ romanization: "durbin"
 concept_tag: FA-CHIZ172-DURBIN
 prerequisites: [FA-C171-khorus, FA-C171-gonjeshk]
 sounds: []
-roots: []
+roots: [persian-dur]
+etymology_hook: "durbin: Persian dur 'far' + bin 'seeing' (didan); inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C171-gonjeshk]
 <!-- hl-knowledge: introduces=[FA-LEX-C172-CHIZ172-01]; assesses=[] -->
 
 **دوربین** — *durbin* — "a camera".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*durbin* is built from *dur*, "far", and *-bin*, "seeing" (from *didan*, "to see"): first a telescope, "far-seer", then a camera. Both are inherited; *dur* is usually traced to Middle Persian *dūr*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

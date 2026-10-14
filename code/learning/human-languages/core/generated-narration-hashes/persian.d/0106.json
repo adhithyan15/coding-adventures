@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 106,
-  "sourceHash": "fnv1a64:d7d89d63fad4c5fb",
+  "sourceHash": "fnv1a64:f82117982aecf929",
   "lessonIds": [
     "FA-C106-tuti",
     "FA-C106-kabutar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch106.txt",
   "json": "persian/narration/ch106.json",
-  "textHash": "fnv1a64:5f696d7573a3db75",
-  "jsonHash": "fnv1a64:b789c227e01c3b3e",
+  "textHash": "fnv1a64:e564564e1535b5f2",
+  "jsonHash": "fnv1a64:d9b85a2f68b2d301",
   "findings": []
 }

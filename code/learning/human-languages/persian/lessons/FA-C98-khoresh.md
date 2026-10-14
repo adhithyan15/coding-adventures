@@ -14,7 +14,8 @@ romanization: "khoresh"
 concept_tag: FA-THINGS98-KHORESH
 prerequisites: [FA-C97-chakme, FA-C98-sandal]
 sounds: []
-roots: []
+roots: [persian-khurdan]
+etymology_hook: "khoresh: Persian khor- 'eat' (Middle Persian xwar-, EtymDB) + -esh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C98-sandal]
 <!-- hl-knowledge: introduces=[FA-LEX-C98-THINGS98-02]; assesses=[] -->
 
 **خورش** — *khoresh* — "a stew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khoresh* is *khor-*, the present stem of *khordan*, "to eat", with the noun ending *-esh*: "what is eaten". The verb is inherited: EtymDB traces it to Middle Persian *xwar-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

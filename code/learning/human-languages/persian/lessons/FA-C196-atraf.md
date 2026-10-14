@@ -14,7 +14,8 @@ romanization: "atrâf"
 concept_tag: FA-MAKAN196-ATRAF
 prerequisites: [FA-C196-navdan, FA-C196-sotun]
 sounds: []
-roots: []
+roots: [arabic-atraf]
+etymology_hook: "atrâf ← Arabic aṭrāf 'ends, sides', root ṭ-r-f (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C196-sotun]
 <!-- hl-knowledge: introduces=[FA-LEX-C196-MAKAN196-03]; assesses=[] -->
 
 **اطراف** — *atrâf* — "the surroundings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*atrâf* is borrowed from Arabic *aṭrāf*, "ends, sides". Its Arabic root is *ṭ-r-f* (Lane). It is the plural of *ṭaraf*, "side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

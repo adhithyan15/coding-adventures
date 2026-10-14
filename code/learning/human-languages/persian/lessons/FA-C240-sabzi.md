@@ -14,7 +14,8 @@ romanization: "sabzi"
 concept_tag: FA-CHIZ240-SABZI
 prerequisites: [FA-C240-chatr, FA-C240-juje]
 sounds: []
-roots: []
+roots: [sabz-persian]
+etymology_hook: "sabzi: Persian sabz 'green' (Middle Persian sabz) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C240-juje]
 <!-- hl-knowledge: introduces=[FA-LEX-C240-CHIZ240-05]; assesses=[] -->
 
 **سبزی** — *sabzi* — "herbs, greens".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sabzi* is *sabz*, "green", with the ending *-i*: greens. *sabz* is native, usually traced to Middle Persian *sabz*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

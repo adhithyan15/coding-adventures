@@ -14,7 +14,8 @@ romanization: "dalir"
 concept_tag: FA-SEFAT162-DALIR
 prerequisites: [FA-C162-fowri, FA-C162-lazem]
 sounds: []
-roots: []
+roots: [persian-dalir]
+etymology_hook: "dalir: inherited, usually traced to Middle Persian dalēr"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C162-lazem]
 <!-- hl-knowledge: introduces=[FA-LEX-C162-SEFAT162-04]; assesses=[] -->
 
 **دلیر** — *dalir* — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dalir* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *dalēr*, "brave".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
