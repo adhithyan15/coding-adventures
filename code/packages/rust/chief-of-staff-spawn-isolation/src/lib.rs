@@ -64,9 +64,9 @@
 
 use std::process::{Command, Stdio};
 
-#[cfg(any(target_os = "linux", target_os = "macos"))]
+#[cfg(any(target_os = "linux", target_os = "macos", windows))]
 mod exec;
-#[cfg(any(target_os = "linux", target_os = "macos"))]
+#[cfg(any(target_os = "linux", target_os = "macos", windows))]
 pub use exec::{VerifiedExecutable, VerifyError, MAX_EXECUTABLE_BYTES};
 
 /// Isolate `command`'s descriptors for an agent spawn.

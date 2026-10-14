@@ -144,6 +144,23 @@ pub fn read_owner_only_secret_from(
     }
 }
 
+/// Test support, with the `test-support` feature only: write `bytes` to a
+/// new file at `path` under exactly the owner-only policy this crate
+/// enforces (Unix: mode 0600; Windows: the user as owner, a protected DACL
+/// holding only the user's ACE). A crate whose tests feed secrets to a
+/// loader built on this one creates them here rather than reproducing the
+/// policy, which on Windows no portable `std` call can set. Panics on any
+/// failure; it is for tests, and production never creates secrets here.
+#[cfg(feature = "test-support")]
+pub fn write_test_secret(path: &Path, bytes: &[u8]) {
+    #[cfg(unix)]
+    unix::write_test_secret(path, bytes);
+    #[cfg(windows)]
+    windows::write_test_secret(path, bytes);
+    #[cfg(not(any(unix, windows)))]
+    let _ = (path, bytes);
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

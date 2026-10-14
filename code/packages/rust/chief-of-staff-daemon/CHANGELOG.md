@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `channel_keys_become_the_broker_s_slots_with_home_resolved` names its
+  unused broker `C:/unused` on Windows, where `/unused` is not absolute
+  and the config refused it (`UnsafePath`). It failed the first time this
+  crate's tests ran on windows-2025.
 - **`[hosts.broker]` on macOS** (D18S P2.7b; #13980).
   - The broker runs confined by the Seatbelt shim, which the table must pin
     as well (`seatbelt_shim`, `seatbelt_shim_sha256`).

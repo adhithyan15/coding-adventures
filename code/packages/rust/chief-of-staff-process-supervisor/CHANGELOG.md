@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `a_host_that_never_becomes_ready_is_ended` expects the exit code a kill
+  leaves on each platform: none on Unix (a signal), 1 on Windows
+  (`Child::kill` is `TerminateProcess(handle, 1)`). It failed the first
+  time this crate's tests ran on windows-2025.
 - **Breaking:** `ChannelBrokers::new` takes an `Arc<BrokerProgram>` (D18S
   P2.7b). That is the broker, plus the Seatbelt shim on macOS, in place of
   the broker's `Arc<VerifiedExecutable>` alone.

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- The vault tests create their KEK with
+  `chief_of_staff_daemon_secret_file::write_test_secret` (dev-dependency,
+  `test-support` feature), so it carries exactly the owner-only policy the
+  daemon enforces on every platform. They set it only on Unix, so every
+  vault test failed with `InsecurePermissions` the first time this crate's
+  tests ran on windows-2025; an `icacls` attempt left the DACL failing the
+  same check, and the crate's `forbid(unsafe_code)` rules out setting it by
+  hand.
 - A vault reset is now just wiping the storage directory (VLT01 F12). The
   next `vault put` initializes a new vault, with a new vault id, and resets
   the anchor next to the KEK. A new end-to-end test checks two things: the

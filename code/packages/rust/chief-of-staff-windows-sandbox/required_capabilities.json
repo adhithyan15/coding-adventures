@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-windows-sandbox",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "the agent's image",
+      "justification": "Adds one access control entry to the agent's own image so its AppContainer may read and execute it (D18S step 8)."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "Win32: DeriveAppContainerSidFromAppContainerName, CreateAppContainerProfile, DeleteAppContainerProfile, GetAppContainerFolderPath, ConvertSidToStringSidW, CoTaskMemFree, FreeSid, GetSecurityInfo, SetEntriesInAclW, SetSecurityInfo, ReOpenFile, GetFinalPathNameByHandleW, CreatePipe, CreateFileW, SetHandleInformation, CreateJobObjectW, SetInformationJobObject, TerminateJobObject, IsProcessInJob, InitializeProcThreadAttributeList, UpdateProcThreadAttribute, DeleteProcThreadAttributeList, CreateProcessW, OpenProcessToken, GetTokenInformation, GetSidSubAuthority, EqualSid, GetProcessMitigationPolicy, QueryFullProcessImageNameW, ResumeThread, WaitForSingleObject, GetExitCodeProcess, GetSystemDirectoryW, GetSystemWindowsDirectoryW, LocalFree, CloseHandle",
+      "justification": "Creates the agent's process in its AppContainer, job and handle list, and checks all of it before the first instruction (D18S build step 8). std's Command cannot set a process-thread attribute list on stable Rust."
+    }
+  ],
+  "justification": "The D18S Windows applier. The unsafe calls live here, so the supervisor crates keep forbid(unsafe_code)."
+}

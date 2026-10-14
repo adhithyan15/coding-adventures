@@ -3,7 +3,7 @@ use coding_adventures_zeroize::Zeroizing;
 use std::ffi::c_void;
 use std::fs::File;
 use std::io::Read;
-#[cfg(test)]
+#[cfg(any(test, feature = "test-support"))]
 use std::io::Write;
 use std::mem::{size_of, MaybeUninit};
 use std::os::windows::ffi::OsStrExt;
@@ -18,13 +18,13 @@ use windows_sys::Win32::Security::{
     DACL_SECURITY_INFORMATION, OWNER_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, SE_DACL_PROTECTED,
     TOKEN_QUERY, TOKEN_USER,
 };
-#[cfg(test)]
+#[cfg(any(test, feature = "test-support"))]
 use windows_sys::Win32::Security::{
     AddAccessAllowedAce, InitializeAcl, InitializeSecurityDescriptor, SetSecurityDescriptorControl,
     SetSecurityDescriptorDacl, SetSecurityDescriptorOwner, ACL_REVISION, SECURITY_ATTRIBUTES,
     SECURITY_DESCRIPTOR,
 };
-#[cfg(test)]
+#[cfg(any(test, feature = "test-support"))]
 use windows_sys::Win32::Storage::FileSystem::FILE_GENERIC_WRITE;
 use windows_sys::Win32::Storage::FileSystem::{
     CreateFileW, FileAttributeTagInfo, GetFileInformationByHandleEx, FILE_ATTRIBUTE_DIRECTORY,
@@ -33,11 +33,11 @@ use windows_sys::Win32::Storage::FileSystem::{
     FILE_SHARE_WRITE, OPEN_EXISTING,
 };
 use windows_sys::Win32::System::SystemServices::ACCESS_ALLOWED_ACE_TYPE;
-#[cfg(test)]
+#[cfg(any(test, feature = "test-support"))]
 use windows_sys::Win32::System::SystemServices::SECURITY_DESCRIPTOR_REVISION;
 use windows_sys::Win32::System::Threading::{GetCurrentProcess, OpenProcessToken};
 
-#[cfg(test)]
+#[cfg(any(test, feature = "test-support"))]
 const OWNER_ACCESS: u32 = FILE_GENERIC_READ | FILE_GENERIC_WRITE;
 const MAX_SECURITY_DESCRIPTOR_BYTES: u32 = 64 * 1024;
 const MINIMUM_SID_BYTES: usize = 8;
@@ -290,14 +290,14 @@ fn bytes_to_words(bytes: u32) -> usize {
     (bytes as usize).div_ceil(size_of::<usize>())
 }
 
-#[cfg(test)]
+#[cfg(any(test, feature = "test-support"))]
 struct OwnerSecurity {
     _owner: CurrentUserSid,
     _acl_storage: Vec<u32>,
     descriptor: SECURITY_DESCRIPTOR,
 }
 
-#[cfg(test)]
+#[cfg(any(test, feature = "test-support"))]
 impl OwnerSecurity {
     fn new() -> Result<Self, SecretFileError> {
         let owner = CurrentUserSid::query()?;
@@ -340,7 +340,7 @@ impl OwnerSecurity {
     }
 }
 
-#[cfg(test)]
+#[cfg(any(test, feature = "test-support"))]
 pub(super) fn write_test_secret(path: &Path, bytes: &[u8]) {
     use windows_sys::Win32::Storage::FileSystem::CREATE_NEW;
 
