@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Fixed
+
+- `vitest.config.ts` now sets `testTimeout` and `hookTimeout` to 30 s. On
+  main's sharded full build a stalled worker failed trivial synchronous tests
+  after 5-18 s of wall clock; vitest's 5 s default assumed an idle machine.
+
 ### Changed
 
 - `CanvasTable` now renders through `@coding-adventures/paint-vm-canvas` instead of `@coding-adventures/draw-instructions-canvas`. The table builds a `PaintScene` (paint-instructions IR) which carries the same primitives used by the rest of the codebase. Dropped the draw-instructions dependencies entirely. No API or visual change — identical columns/rows/grid/text render.

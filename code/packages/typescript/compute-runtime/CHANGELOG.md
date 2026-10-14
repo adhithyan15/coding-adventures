@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `vitest.config.ts` now sets `testTimeout` and `hookTimeout` to 30 s. On
+  main's sharded full build a stalled worker failed trivial synchronous tests
+  after 5-18 s of wall clock; vitest's 5 s default assumed an idle machine.
+
 ## 0.1.0 (2026-03-19)
 
 ### Added
