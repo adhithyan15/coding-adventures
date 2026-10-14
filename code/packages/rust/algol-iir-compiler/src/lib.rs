@@ -4181,6 +4181,11 @@ impl Compiler {
                 .map(|token| token.value.clone());
             if let Some(source_name) = source_name {
                 let target_name = self.resolve_procedure_identity(&source_name);
+                if !self.proc_sigs.contains_key(&target_name) && target_name == "entier" {
+                    let actuals = self.standard_fn_actuals(node);
+                    return actuals.len() == 1
+                        && self.is_selector_call_safe_entier_sign_root(actuals[0]);
+                }
                 if !self.proc_sigs.contains_key(&target_name)
                     && matches!(
                         target_name.as_str(),
@@ -14386,6 +14391,27 @@ mod tests {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
                     "a calling selector may choose sign-wrapped exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_entier_wrapped_standard_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose entier-wrapped exact local transforms through real name formals for {source:?}: {error}"
                 )
             });
             let main = module.get_function("main").expect("has main");

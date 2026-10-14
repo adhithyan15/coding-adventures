@@ -2051,6 +2051,18 @@ fn swimlane_edge_label_theme_reaches_semantic_ir() {
 }
 
 #[test]
+fn swimlane_cluster_theme_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"clusterBkg\": \"#fef3c7\", \"clusterBorder\": \"#b45309\", \"titleColor\": \"#7c2d12\"}}}%%\nswimlane-beta LR\ntitle Themed workflow\nsubgraph Review[Review lane]\n  subgraph Approval[Approval phase]\n    request[Request]\n    done[Done]\n  end\nend\nrequest --> done",
+    ).expect("Swimlane cluster theme should parse");
+
+    assert_eq!(diagram.theme.cluster_background.as_deref(), Some("#fef3c7"));
+    assert_eq!(diagram.theme.cluster_border.as_deref(), Some("#b45309"));
+    assert_eq!(diagram.theme.title_color.as_deref(), Some("#7c2d12"));
+    assert_eq!(diagram.groups.len(), 1);
+}
+
+#[test]
 fn swimlane_inline_node_styles_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nrequest --> done",

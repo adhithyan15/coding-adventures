@@ -223,11 +223,12 @@ local-rooted transform. Unary signs may wrap that exact name actual without
 losing the proof, and additive composition may include finite static terms.
 That additive form may in turn be multiplied or divided by finite static
 terms, and the resulting exact local-rooted form may be the sole dynamic base
-of a power chain whose exponents are finite and static. Unrestricted runtime
-`entier` remains conservative. Up to six supported built-in numeric standard
+of a power chain whose exponents are finite and static. Up to six supported built-in numeric standard
 functions, including integer-valued `sign`, may wrap that powered exact name
-actual. A user-declared procedure receives no
-built-in privilege and must qualify through the ordinary procedure proof.
+actual. A user-declared procedure receives no built-in privilege and must
+qualify through the ordinary procedure proof.
+One additional built-in `entier` may directly wrap the exact bounded
+`entier(sign(...))` root; broader runtime `entier` operands remain conservative.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real
 operand because its result is always `-1`, `0`, or `1`.
 The same bounded result preserves runtime-real formatter provenance when it is

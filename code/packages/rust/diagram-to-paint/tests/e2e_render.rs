@@ -3584,6 +3584,22 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.theme.edgeLabelBackground")),
                     Some(&"#dbeafe".to_string()));
             }
+            if fixture_name == "theme-cluster-variables" {
+                assert_eq!(layout.theme.cluster_background.as_deref(), Some("#fef3c7"));
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
+                        && rect.stroke.as_deref() == Some("#b45309")
+                )).count() >= 2, "cluster theme must style both lane and nested group paint");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(124, 45, 18)")
+                )).count() >= 3, "titleColor must style the diagram, lane, and nested group labels");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.clusterBkg")), Some(&"#fef3c7".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.clusterBorder")), Some(&"#b45309".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.titleColor")), Some(&"#7c2d12".to_string()));
+            }
             if fixture_name == "flowchart-spacing-config" {
                 assert_eq!(layout.flowchart_config.node_spacing, Some(96.0));
                 assert_eq!(layout.flowchart_config.rank_spacing, Some(28.0));

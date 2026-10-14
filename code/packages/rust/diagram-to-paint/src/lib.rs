@@ -840,8 +840,10 @@ where
     let mut text_children = Vec::new();
     for (index, lane) in diagram.lanes.iter().enumerate() {
         let fallback_fill = if index % 2 == 0 { "#f8fafc" } else { "#eef6f8" };
-        let fill = lane.style.fill.as_deref().unwrap_or(fallback_fill);
-        let stroke = lane.style.stroke.as_deref().unwrap_or("#78909c");
+        let fill = lane.style.fill.as_deref()
+            .or(diagram.theme.cluster_background.as_deref()).unwrap_or(fallback_fill);
+        let stroke = lane.style.stroke.as_deref()
+            .or(diagram.theme.cluster_border.as_deref()).unwrap_or("#78909c");
         instructions.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
             x: lane.x,
@@ -869,7 +871,8 @@ where
             lane.width - 16.0,
             26.0,
             title_font,
-            lane.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
+            lane.style.text_color.as_deref().or(diagram.theme.title_color.as_deref())
+                .and_then(parse_css_color).unwrap_or(Color {
                 r: 38,
                 g: 50,
                 b: 56,
@@ -878,10 +881,12 @@ where
         ));
     }
     for group in &diagram.groups {
-        let stroke = group.style.stroke.as_deref().unwrap_or("#90a4ae");
+        let stroke = group.style.stroke.as_deref()
+            .or(diagram.theme.cluster_border.as_deref()).unwrap_or("#90a4ae");
         instructions.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(), x: group.x, y: group.y, width: group.width, height: group.height,
-            fill: group.style.fill.clone(), stroke: Some(stroke.into()), stroke_width: Some(group.style.stroke_width.unwrap_or(1.25)),
+            fill: group.style.fill.clone().or_else(|| diagram.theme.cluster_background.clone()),
+            stroke: Some(stroke.into()), stroke_width: Some(group.style.stroke_width.unwrap_or(1.25)),
             corner_radius: Some(group.style.corner_radius.unwrap_or(6.0)),
             stroke_dash: group.style.stroke_dash.clone().or_else(|| Some(vec![6.0, 4.0])), stroke_dash_offset: None,
         }));
@@ -894,7 +899,8 @@ where
         if let Some(family) = &group.style.font_family { label_font.family.clone_from(family); }
         text_children.push(text_node(
             &group.label, group.x + 8.0, group.y + 4.0, group.width - 16.0, 22.0,
-            label_font, group.style.text_color.as_deref().and_then(parse_css_color)
+            label_font, group.style.text_color.as_deref().or(diagram.theme.title_color.as_deref())
+                .and_then(parse_css_color)
                 .unwrap_or(Color { r: 69, g: 90, b: 100, a: 255 }),
         ));
     }
@@ -1564,19 +1570,22 @@ where
         }
     }
     if let Some(title) = &diagram.title {
+        let mut title_font = options.title_font.clone();
+        if let Some(size) = diagram.theme.font_size { title_font.size = size; }
+        if let Some(family) = &diagram.theme.font_family { title_font.family.clone_from(family); }
         text_children.push(text_node(
             title,
             10.0,
             5.0,
             diagram.width - 20.0,
             30.0,
-            options.title_font.clone(),
-            Color {
+            title_font,
+            diagram.theme.title_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
                 r: 15,
                 g: 23,
                 b: 42,
                 a: 255,
-            },
+            }),
         ));
     }
     let text_scene = layout_to_paint(
@@ -1620,6 +1629,15 @@ where
     metadata.insert("swimlane.theme.textColor".into(), diagram.theme.text_color.clone());
     if let Some(background) = &diagram.theme.edge_label_background {
         metadata.insert("swimlane.theme.edgeLabelBackground".into(), background.clone());
+    }
+    if let Some(background) = &diagram.theme.cluster_background {
+        metadata.insert("swimlane.theme.clusterBkg".into(), background.clone());
+    }
+    if let Some(border) = &diagram.theme.cluster_border {
+        metadata.insert("swimlane.theme.clusterBorder".into(), border.clone());
+    }
+    if let Some(color) = &diagram.theme.title_color {
+        metadata.insert("swimlane.theme.titleColor".into(), color.clone());
     }
     if let Some(family) = &diagram.theme.font_family {
         metadata.insert("swimlane.theme.fontFamily".into(), family.clone());

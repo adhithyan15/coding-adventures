@@ -1980,6 +1980,8 @@ pub struct SwimlaneTheme {
     pub main_background: String, pub node_border: String, pub line_color: String,
     pub primary_text_color: String, pub font_family: Option<String>, pub font_size: Option<f64>,
     pub text_color: String, pub edge_label_background: Option<String>,
+    pub cluster_background: Option<String>, pub cluster_border: Option<String>,
+    pub title_color: Option<String>,
 }
 impl Default for SwimlaneTheme {
     fn default() -> Self {
@@ -1992,6 +1994,9 @@ impl Default for SwimlaneTheme {
             font_size: None,
             text_color: "#37474f".into(),
             edge_label_background: None,
+            cluster_background: None,
+            cluster_border: None,
+            title_color: None,
         }
     }
 }

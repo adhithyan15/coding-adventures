@@ -6617,6 +6617,9 @@ fn parse_swimlane_theme(source: &str) -> diagram_ir::SwimlaneTheme {
             .filter(|value| value.is_finite() && *value > 0.0),
         text_color: value("textColor").unwrap_or(defaults.text_color),
         edge_label_background: value("edgeLabelBackground"),
+        cluster_background: value("clusterBkg"),
+        cluster_border: value("clusterBorder"),
+        title_color: value("titleColor"),
     }
 }
 
