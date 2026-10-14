@@ -13,5 +13,3 @@ owner names violate discovery, implementation cannot satisfy both gates.
 Derive the suffixes before writing the ownership expectation, and keep the
 exact discoverable filenames in that test. Run the actual loader entry point
 after the split so discovery, not a direct file invocation, proves the names.
-
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
