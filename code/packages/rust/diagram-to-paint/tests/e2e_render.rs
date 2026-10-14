@@ -3672,6 +3672,20 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata|
                     metadata.get("swimlane.flowchart.titleTopMargin")), Some(&"26".to_string()));
             }
+            if fixture_name == "flowchart-subgraph-title-margins" {
+                assert_eq!(layout.flowchart_config.subgraph_title_margin_top, Some(12.0));
+                assert_eq!(layout.flowchart_config.subgraph_title_margin_bottom, Some(18.0));
+                assert_eq!(layout.nodes[0].x, 100.0,
+                    "subgraph title margins must reserve header space before horizontal nodes");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if !run.glyphs.is_empty()
+                        && run.glyphs.iter().all(|glyph| glyph.y > 28.0 && glyph.y < 70.0)
+                )), "the shifted lane title must lower to positioned glyph paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.subGraphTitleMargin.top")), Some(&"12".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.subGraphTitleMargin.bottom")), Some(&"18".to_string()));
+            }
             if fixture_name == "flowchart-curve-config" {
                 assert_eq!(layout.flowchart_config.curve,
                     Some(diagram_ir::SwimlaneEdgeCurve::StepAfter));
