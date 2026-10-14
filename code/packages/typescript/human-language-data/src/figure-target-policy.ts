@@ -2,11 +2,7 @@
 // Existing-script changes belong in one file under figure-target-policies/;
 // this module changes only when a writing system itself is added or removed.
 
-import {
-  arabicFigureTargetPolicy,
-  persoArabicFigureTargetPolicy,
-  urduNastaliqFigureTargetPolicy,
-} from "./figure-target-policies/arabic-family.js";
+import { arabicFigureTargetPolicy } from "./figure-target-policies/arabic.js";
 import { bengaliFigureTargetPolicy } from "./figure-target-policies/bengali.js";
 import { chineseFigureTargetPolicy } from "./figure-target-policies/chinese.js";
 import { cyrillicFigureTargetPolicy } from "./figure-target-policies/cyrillic.js";
@@ -17,8 +13,10 @@ import { japaneseFigureTargetPolicy } from "./figure-target-policies/japanese.js
 import { kannadaFigureTargetPolicy } from "./figure-target-policies/kannada.js";
 import { latinFigureTargetPolicy } from "./figure-target-policies/latin.js";
 import { malayalamFigureTargetPolicy } from "./figure-target-policies/malayalam.js";
+import { persoArabicFigureTargetPolicy } from "./figure-target-policies/perso-arabic.js";
 import { tamilFigureTargetPolicy } from "./figure-target-policies/tamil.js";
 import { teluguFigureTargetPolicy } from "./figure-target-policies/telugu.js";
+import { urduNastaliqFigureTargetPolicy } from "./figure-target-policies/urdu-nastaliq.js";
 import type {
   ApartClusterSource,
   FigureTargetPolicy,

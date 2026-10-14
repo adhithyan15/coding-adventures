@@ -37,7 +37,7 @@ describe("figure-target policy ownership", () => {
   it("keeps writing-system policy in direct source owners", () => {
     expect(directOwners(sourceOwnerDirectory)).toEqual(
       expect.arrayContaining([
-        "arabic-family.ts",
+        "arabic.ts",
         "bengali.ts",
         "chinese.ts",
         "cyrillic.ts",
@@ -48,8 +48,10 @@ describe("figure-target policy ownership", () => {
         "kannada.ts",
         "latin.ts",
         "malayalam.ts",
+        "perso-arabic.ts",
         "tamil.ts",
         "telugu.ts",
+        "urdu-nastaliq.ts",
       ]),
     );
   });
