@@ -1,0 +1,92 @@
+Sanskrit, chapter 260: Me and you as objects.
+3 lessons. All 3 can be done entirely by ear.
+
+
+Lesson 1 of 3.
+माम् (mām) — me, as the object.
+
+Warm-up.
+[pause 2 seconds]
+Say सः पश्यति (saḥ paśyati), “he sees”. Keep the seeing verb. Now make the person seen be the speaker.
+
+You'll want to know: माम्.
+माम् (mām) means “me” when I am the object of the action.
+सः माम् पश्यति। saḥ mām paśyati. He sees me.
+The verb still says who does the seeing. माम् (mām) names the person the seeing reaches.
+Whitney's Sanskrit Grammar §491 lists माम् (mām) as the independent accusative singular of the first-person pronoun. “Accusative” is the case label; “the object” is the job you can hear in this sentence.
+
+Taken Apart.
+As a grammatical form, माम् (mām) comes from the first-person pronoun paradigm; it is not a word from a separate lexical root. Whitney's Sanskrit Grammar §491 records it as the independent accusative singular. This lesson makes no deeper historical derivation claim.
+Source: Whitney, Sanskrit Grammar (1889), §491.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “me” as the object — mām]
+[pause 8 seconds for the answer]
+[your turn — say: “he sees me” — saḥ mām paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: the person seen is the speaker — mām]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Someone sees the speaker. Which one-word object do you use? (माम्, mām.)
+
+
+Lesson 2 of 3.
+त्वाम् (tvām) — you, one familiar person, as the object.
+
+Warm-up.
+[pause 2 seconds]
+Say “he sees me”: सः माम् पश्यति (saḥ mām paśyati). Keep the frame and turn the object toward one familiar person.
+
+You'll want to know: त्वाम्.
+त्वाम् (tvām) means “you” when one familiar addressee is the object.
+सः त्वाम् पश्यति। saḥ tvām paśyati. He sees you.
+The opening tv- also appears in familiar tvam and tava. Here the long ā and final m belong to the independent accusative singular. Whitney §491 places त्वाम् (tvām) beside माम् (mām) in the first- and second-person paradigms.
+
+Taken Apart.
+As a grammatical form, त्वाम् (tvām) comes from the second-person pronoun paradigm; it is not a word from a separate lexical root. Whitney's Sanskrit Grammar §491 records it as the independent accusative singular. This lesson makes no deeper historical derivation claim.
+Source: Whitney, Sanskrit Grammar (1889), §491.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “he sees me” — saḥ mām paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: “he sees you” — saḥ tvām paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: speaker as object — mām; one addressee as object — tvām]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+One familiar person is seen. Which object form addresses that person? (त्वाम्, tvām.)
+
+
+Lesson 3 of 3.
+Is the one person me or you? — me or you, one person.
+
+Warm-up.
+[pause 2 seconds]
+Give the two singular objects: “me” and “you”. (Mām; tvām.)
+
+Grammar Lens: choose by person.
+There is one person in either sentence. Choose by who that person is:
+the speaker as object: माम् (mām);
+one familiar addressee as object: त्वाम् (tvām).
+Both are independent full forms and both take the same place before पश्यति. The choice changes the person seen, not the verb.
+
+Guided Practice.
+[pause 2 seconds after each]
+[your turn — say: “he sees me” — saḥ mām paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: “he sees you” — saḥ tvām paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: the rule — choose mām for the speaker, tvām for one familiar addressee]
+[pause 8 seconds for the answer]
+[your turn — contrast: mām; tvām; mām; tvām]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say both sentences without looking back, then name what changes. (Saḥ mām paśyati; saḥ tvām paśyati; the person used as the object changes.)

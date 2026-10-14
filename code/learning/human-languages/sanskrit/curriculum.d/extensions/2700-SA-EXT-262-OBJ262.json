@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-262-OBJ262",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can choose an independent first- or second-person object across one, two, or several people.",
+  "prerequisites": [
+    "SA-EXT-261-OBJ261"
+  ]
+}
