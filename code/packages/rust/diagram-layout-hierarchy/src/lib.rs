@@ -371,8 +371,12 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
     // contributes30 per depth; vertical cursors and empty-group bounds do not.
     // The explicit zero branch preserves every pre-margin layout exactly.
     let title_margin = subgraph_title_margin_top + subgraph_title_margin_bottom;
+    // Fixed-height shapes reach70; ordinary rectangles may be taller through
+    // accepted padding. Leave a full lane-header prefix before either kind.
+    let unexpanded_cross = (node_height + 18.0).max(150.0);
+    let header_deficit = (58.0 - (unexpanded_cross - node_height.max(70.0)) / 2.0).max(0.0);
     let cross_title_reserve = if title_margin > 0.0 {
-        title_margin * (max_group_depth + 1) as f64
+        title_margin * (max_group_depth + 1) as f64 + header_deficit
     } else { 0.0 };
     let nested_title_reserve = if title_margin > 0.0 {
         (title_margin + 30.0) * max_group_depth as f64
