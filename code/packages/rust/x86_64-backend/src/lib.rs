@@ -465,6 +465,28 @@ impl From<EncodeError> for BackendError {
 // Top-level compile
 // ===========================================================================
 
+// This slice extends the existing internal integer-word convention to the
+// largest captured-array descriptor (eight words). Larger signatures remain a
+// loud refusal until a separately tested ABI slice supports them.
+const MAX_WORD_ARGUMENTS: usize = 8;
+
+fn checked_frame_size(slots: u32, stack_arguments: usize, abi: X86_64Abi) -> Result<u32, BackendError> {
+    let invalid = || BackendError::MalformedInstr("word-call frame arithmetic exceeds signed displacement range".into());
+    let outgoing = u32::try_from(stack_arguments).map_err(|_| invalid())?
+        .checked_mul(8).ok_or_else(invalid)?;
+    let raw = slots.checked_mul(8).and_then(|n| n.checked_add(abi.shadow_space()))
+        .and_then(|n| n.checked_add(outgoing)).ok_or_else(invalid)?;
+    let frame = raw.checked_add(15).map(|n| n & !15)
+        .filter(|&n| n <= i32::MAX as u32).ok_or_else(invalid)?;
+    Ok(frame)
+}
+
+fn checked_stack_argument_offset(abi: X86_64Abi, index: usize, saved_frame_bytes: usize) -> Result<i32, BackendError> {
+    index.checked_mul(8).and_then(|n| n.checked_add(abi.shadow_space() as usize))
+        .and_then(|n| n.checked_add(saved_frame_bytes)).and_then(|n| i32::try_from(n).ok())
+        .ok_or_else(|| BackendError::MalformedInstr("word-call stack argument offset exceeds signed displacement range".into()))
+}
+
 #[allow(clippy::type_complexity)]
 fn compile_inner(
     ctx: &FunctionContext<'_>,
@@ -472,12 +494,23 @@ fn compile_inner(
     abi: X86_64Abi,
     global_slots: &HashMap<String, usize>,
 ) -> Result<(Vec<u8>, Vec<ExternalReloc>, Vec<StackMapRecord>), BackendError> {
-    if ctx.params.len() > abi.max_args() {
+    if ctx.params.len() > MAX_WORD_ARGUMENTS {
         return Err(BackendError::TooManyParams {
             abi: match abi { X86_64Abi::SysV => "SysV", X86_64Abi::MsX64 => "MsX64" },
             got: ctx.params.len(),
-            max: abi.max_args(),
+            max: MAX_WORD_ARGUMENTS,
         });
+    }
+
+    let mut maximum_call_arguments = 0;
+    for instruction in ir.iter().filter(|i| i.op == "call") {
+        let count = instruction.srcs.len().saturating_sub(1);
+        if count > MAX_WORD_ARGUMENTS {
+            return Err(BackendError::UnsupportedOp(format!(
+                "call: too many arguments ({count}) for {abi:?} ABI — max {MAX_WORD_ARGUMENTS}"
+            )));
+        }
+        maximum_call_arguments = maximum_call_arguments.max(count);
     }
 
     // ---- Pre-pass: assign slots --------------------------------------------
@@ -502,13 +535,14 @@ fn compile_inner(
 
     // ---- Frame size --------------------------------------------------------
     //
-    // Reserve 8 bytes per virtual slot, plus the ABI shadow space, and
+    // Reserve 8 bytes per virtual slot, plus the ABI shadow space and the
+    // largest direct call's stack-argument tail, and
     // round up to a 16-byte multiple so that after `push rbp; sub rsp,
     // frame` the stack stays 16-byte aligned at every CALL site.
-    let raw_frame = alloc.slot_count() * 8 + abi.shadow_space();
     // After `push rbp` (8 bytes pushed), RSP is at a 0-mod-16 boundary.
     // We need rsp + frame ≡ 0 (mod 16), so frame ≡ 0 (mod 16).
-    let frame: u32 = (raw_frame + 15) & !15;
+    let stack_arguments = maximum_call_arguments.saturating_sub(abi.arg_regs().len());
+    let frame = checked_frame_size(alloc.slot_count(), stack_arguments, abi)?;
 
     // ---- Pre-pass: pre-create labels --------------------------------------
     let mut asm = Assembler::new();
@@ -554,12 +588,19 @@ fn compile_inner(
         asm.sub_imm32(Reg::Rsp, frame as i32);
     }
 
-    // Spill incoming arg registers to their slots.
+    // Spill every incoming word into its original deterministic RBP local.
+    // After push RBP, return address + saved RBP contribute16 bytes; Windows
+    // also has32 bytes of caller shadow space before the first stack argument.
     for (i, (name, _ty)) in ctx.params.iter().enumerate() {
         let slot = alloc.slot_of(name);
         let off = RegAlloc::rbp_offset(slot);
-        let arg_reg = abi.arg_regs()[i];
-        asm.mov_mem_r64(Reg::Rbp, off, arg_reg);
+        if let Some(&arg_reg) = abi.arg_regs().get(i) {
+            asm.mov_mem_r64(Reg::Rbp, off, arg_reg);
+        } else {
+            let incoming = checked_stack_argument_offset(abi, i - abi.arg_regs().len(), 16)?;
+            asm.mov_r64_mem(Reg::Rax, Reg::Rbp, incoming);
+            asm.mov_mem_r64(Reg::Rbp, off, Reg::Rax);
+        }
     }
 
     // ---- Body --------------------------------------------------------------
@@ -909,10 +950,10 @@ fn emit_instr(
             )),
         };
         let arg_srcs = &instr.srcs[1..];
-        if arg_srcs.len() > abi.max_args() {
+        if arg_srcs.len() > MAX_WORD_ARGUMENTS {
             return Err(BackendError::UnsupportedOp(format!(
                 "call: too many arguments ({}) for {:?} ABI — max {}",
-                arg_srcs.len(), abi, abi.max_args()
+                arg_srcs.len(), abi, MAX_WORD_ARGUMENTS
             )));
         }
 
@@ -921,7 +962,15 @@ fn emit_instr(
         // so loading left-to-right is correct — no aliasing between an arg's
         // source slot and another arg's destination register.
         let arg_regs = abi.arg_regs();
-        for (i, src) in arg_srcs.iter().enumerate() {
+        // The fixed outgoing area is BELOW all RBP-relative locals. Windows
+        // shadow space occupies its first32 bytes. RAX is not an argument GPR;
+        // copy extra values first, then load register args from the same locals.
+        for (index, src) in arg_srcs.iter().skip(arg_regs.len()).enumerate() {
+            load_operand(asm, alloc, Reg::Rax, src);
+            let outgoing = checked_stack_argument_offset(abi, index, 0)?;
+            asm.mov_mem_r64(Reg::Rsp, outgoing, Reg::Rax);
+        }
+        for (i, src) in arg_srcs.iter().take(arg_regs.len()).enumerate() {
             load_operand(asm, alloc, arg_regs[i], src);
         }
 
@@ -3152,6 +3201,23 @@ mod tests {
             assert_eq!(relocs.len(), 1); assert_eq!(relocs[0].symbol, "target");
             assert_eq!(maps[0].pc_offset as usize, relocs[0].patch_offset + 4);
         }
+    }
+
+    #[test]
+    fn word_call_frame_arithmetic_rejects_unrepresentable_offsets() {
+        let maximum_aligned = (i32::MAX as u32) & !15;
+        for abi in [X86_64Abi::MsX64, X86_64Abi::SysV] {
+            let extras = if abi == X86_64Abi::MsX64 { 4 } else { 2 };
+            let slots = (maximum_aligned - abi.shadow_space() - extras * 8) / 8;
+            assert_eq!(checked_frame_size(slots, extras as usize, abi).unwrap(), maximum_aligned);
+            assert!(checked_frame_size(slots + 1, extras as usize, abi).is_err());
+            assert!(checked_frame_size(u32::MAX, 0, abi).is_err());
+            assert!(checked_frame_size(0, usize::MAX, abi).is_err());
+            assert!(checked_stack_argument_offset(abi, usize::MAX, 16).is_err());
+            assert!(checked_stack_argument_offset(abi, 0, usize::MAX).is_err());
+        }
+        assert_eq!(checked_frame_size(0, 0, X86_64Abi::SysV).unwrap(), 0);
+        assert_eq!(checked_frame_size(0, 0, X86_64Abi::MsX64).unwrap(), 32);
     }
 
     // ---- Globals + io_out (phase 6) ----

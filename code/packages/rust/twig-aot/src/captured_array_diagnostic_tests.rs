@@ -20,7 +20,6 @@ fn captured_array_exact_prepared_call_signature_diagnostic() {
         prepare_module_for_aot(&mut module);
         let globals = collect_global_slots(&module);
         for abi in [X86_64Abi::MsX64, X86_64Abi::SysV] {
-            let mut main_error = None;
             for function in &module.functions {
                 let ctx = FunctionContext { name: &function.name, params: &function.params, return_type: &function.return_type };
                 let inferred = infer_types(function);
@@ -28,10 +27,7 @@ fn captured_array_exact_prepared_call_signature_diagnostic() {
                 let calls: Vec<_> = cir.iter().filter(|i| i.op == "call").map(|i| &i.srcs).collect();
                 let result = x86_64_compile_with_stackmap(&ctx, &cir, abi, &globals);
                 eprintln!("case={case} abi={abi:?} function={} params={:?} calls={calls:?} error={:?}", function.name, function.params, result.as_ref().err());
-                if function.name == "main" { main_error = result.err(); }
-            }
-            if abi == X86_64Abi::MsX64 {
-                assert!(main_error.as_deref().is_some_and(|e| e.contains("call: too many arguments")), "case={case}: {main_error:?}");
+                assert!(result.is_ok(), "case={case} abi={abi:?} function={}: {:?}", function.name, result.err());
             }
         }
     }
