@@ -63,4 +63,5 @@ These sources, keys, and rubrics make two parallel project-defined A1 forms
 executable. They are not qualified Sanskrit recordings, independent human
 review, standard setting, or book-only validation. No readiness or validated
 pass claim follows from checking in source masters. Those artifacts remain
-separate prerequisites, and `assessment.json` remains absent until they exist.
+separate prerequisites. `assessment.json` is active as a source-artifact
+contract; its presence does not satisfy them.

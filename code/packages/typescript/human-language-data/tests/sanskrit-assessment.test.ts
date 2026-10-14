@@ -22,6 +22,10 @@ describe("Sanskrit assessment contract", () => {
 
   it("defines all seven policy rungs with independent four-skill thresholds", () => {
     expect(contract.levels.map((level) => level.level)).toEqual(policy.levels);
+    expect(contract.externalCapstones).toEqual([]);
+    expect(contract.levels.every((level) =>
+      Object.keys(level.additionalComponents).length === 0
+    )).toBe(true);
     expect(contract.levels.every((level) => level.target.basis === "project-defined")).toBe(true);
     expect(contract.levels.every((level) =>
       Object.values(level.skills).every((skill) => skill.passThreshold === 0.6)
@@ -69,6 +73,19 @@ describe("Sanskrit assessment contract", () => {
   });
 
   it("keeps every rubric explicit that activation is not readiness evidence", () => {
+    const specification = readFileSync(
+      join(root, "sanskrit", "assessment-spec.md"),
+      "utf8",
+    ).replace(/\s+/gu, " ");
+    expect(specification).toContain("source-artifact contract active");
+    expect(specification).toContain("not an external qualification");
+    expect(specification).toContain("not qualified recordings");
+    expect(specification).toContain("independent human review");
+    expect(specification).toContain("standard setting");
+    expect(specification).toContain("book-only validation");
+    expect(specification).toContain("readiness");
+    expect(specification).not.toContain("No `assessment.json` is checked in");
+    expect(specification).not.toContain("`assessment.json` remains absent");
     for (const level of policy.levels) {
       const rubric = readFileSync(
         join(root, "sanskrit", "mocks", level.toLowerCase(), "rubric.md"),

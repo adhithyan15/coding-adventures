@@ -63,3 +63,5 @@ These rubrics and keys make the project-defined mock executable. They do not by
 themselves establish exam readiness. The repository must still record a clean
 timed administration, qualified Sanskrit review, standard setting, and
 book-only human validation before making a pass or learner-readiness claim.
+`assessment.json` is active as a source-artifact contract; it records these
+existing files without supplying any of that outstanding evidence.
