@@ -6,8 +6,8 @@ use super::*;
 #[test]
 fn identity_conditional_evaluates_condition_and_selected_branch_once() {
     for (condition, source, expected) in [
-        ("true", "begin boolean procedure choose; begin output(\"C\"); choose := true end; real procedure leftvalue; begin output(\"L\"); leftvalue := -2.25 end; real procedure rightvalue; begin output(\"R\"); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 1) else (entier(sign(rightvalue())) + 1))); output(saved) end", "CL0"),
-        ("false", "begin boolean procedure choose; begin output(\"C\"); choose := false end; real procedure leftvalue; begin output(\"L\"); leftvalue := -2.25 end; real procedure rightvalue; begin output(\"R\"); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 1) else (entier(sign(rightvalue())) + 1))); output(saved) end", "CR2"),
+        ("true", "begin boolean procedure choose; begin output('C'); choose := true end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 1) else (entier(sign(rightvalue())) + 1))); output(saved) end", "CL0"),
+        ("false", "begin boolean procedure choose; begin output('C'); choose := false end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 1) else (entier(sign(rightvalue())) + 1))); output(saved) end", "CR2"),
     ] {
         let program = Prog { lang: Language::Algol60, ext: "alg", src: source,
             expect: Expect::Stdout(expected), backends: &[NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit] };
