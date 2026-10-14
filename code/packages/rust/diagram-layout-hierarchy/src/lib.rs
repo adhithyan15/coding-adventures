@@ -911,6 +911,15 @@ fn swimlane_edge_endpoints(
     from: &Point, from_width: f64, from_height: f64,
     to: &Point, to_width: f64, to_height: f64,
 ) -> (Point, Point) {
+    // Coincident centers have no direction to normalize. Multiplying the
+    // old infinite scale by zero produced NaN; choose two finite boundary
+    // anchors explicitly. All noncoincident endpoints keep their old formula.
+    if from.x == to.x && from.y == to.y {
+        return (
+            Point { x: from.x + from_width / 2.0, y: from.y },
+            Point { x: to.x, y: to.y - to_height / 2.0 },
+        );
+    }
     fn boundary(center: &Point, toward: &Point, width: f64, height: f64) -> Point {
         let dx = toward.x - center.x;
         let dy = toward.y - center.y;
@@ -1358,10 +1367,8 @@ mod tests {
                     expected_input.automatic_lane_ordering = false;
                     let mut expected = layout_swimlane(&expected_input); expected.automatic_lane_ordering = true;
                     let mut actual = layout_swimlane(&diagram);
-                    // Existing self-loop routing produces NaN endpoint coordinates.
-                    // NaN != NaN, so prove every endpoint's bits first, then replace
-                    // only those already-proven NaNs for the complete struct check.
-                    // An unexpected NaN, changed payload or any other field fails.
+                    // Preserve every endpoint bit and complete reference
+                    // equality; repaired anchors must additionally be finite.
                     for (actual_edge, expected_edge) in actual.edges.iter_mut().zip(expected.edges.iter_mut()) {
                         for (actual_coordinate, expected_coordinate) in [
                             (&mut actual_edge.from.x, &mut expected_edge.from.x),
@@ -1370,15 +1377,39 @@ mod tests {
                             (&mut actual_edge.to.y, &mut expected_edge.to.y),
                         ] {
                             assert_eq!(actual_coordinate.to_bits(), expected_coordinate.to_bits());
-                            if expected_coordinate.is_nan() {
-                                *actual_coordinate = 0.0; *expected_coordinate = 0.0;
-                            }
+                            assert!(actual_coordinate.is_finite() && expected_coordinate.is_finite());
                         }
                     }
                     assert_eq!(actual, expected, "{direction:?}, hops={hops}, pairs={pairs:?}");
                 }
             }
         }
+    }
+
+    #[test]
+    fn coincident_swimlane_centers_have_exact_finite_boundary_anchors() {
+        use diagram_ir::SwimlaneLineHops;
+        for direction in [DiagramDirection::Lr, DiagramDirection::Rl, DiagramDirection::Tb, DiagramDirection::Bt] {
+            for ordering in [false, true] {
+                for hops in [false, true] {
+                    let mut diagram = ordering_diagram(1, &[(0,0,2)]);
+                    diagram.direction = direction.clone();
+                    diagram.automatic_lane_ordering = ordering;
+                    diagram.line_hops = hops.then_some(SwimlaneLineHops::Arc);
+                    let layout = try_layout_swimlane(&diagram).unwrap();
+                    let node = &layout.nodes[0];
+                    assert_eq!(layout.edges.len(), 2);
+                    for edge in &layout.edges {
+                        assert_eq!(edge.from, Point { x: node.x + node.width, y: node.y + node.height / 2.0 });
+                        assert_eq!(edge.to, Point { x: node.x + node.width / 2.0, y: node.y });
+                        assert!([edge.from.x,edge.from.y,edge.to.x,edge.to.y].iter().all(|v|v.is_finite()));
+                    }
+                }
+            }
+        }
+        assert_eq!(swimlane_edge_endpoints(&Point { x: 10.0, y: 20.0 }, 8.0, 6.0,
+            &Point { x: 10.0, y: 20.0 }, 4.0, 12.0),
+            (Point { x: 14.0, y: 20.0 }, Point { x: 10.0, y: 14.0 }));
     }
 
     fn layout_gap(layout: &LayoutedSwimlaneDiagram, first: &str, second: &str) -> f64 {
