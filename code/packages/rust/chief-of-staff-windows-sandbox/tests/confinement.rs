@@ -142,6 +142,35 @@ fn the_probe_runs_in_its_own_less_privileged_appcontainer() {
         .join("Packages")
         .join(container_name(&agent.0));
     assert!(!storage.exists(), "{}", storage.display());
+    // Nor is the profile registered: creating it again is a fresh creation,
+    // not ERROR_ALREADY_EXISTS. (Removed again at once.)
+    use windows_sys::Win32::Security::FreeSid;
+    use windows_sys::Win32::Security::Isolation::{
+        CreateAppContainerProfile, DeleteAppContainerProfile,
+    };
+    let name: Vec<u16> = container_name(&agent.0)
+        .encode_utf16()
+        .chain(std::iter::once(0))
+        .collect();
+    let mut sid = std::ptr::null_mut();
+    // SAFETY: NUL-terminated strings, no capabilities, a SID out that is
+    // freed once; the profile is deleted by name below.
+    let created = unsafe {
+        let created = CreateAppContainerProfile(
+            name.as_ptr(),
+            name.as_ptr(),
+            name.as_ptr(),
+            std::ptr::null(),
+            0,
+            &mut sid,
+        );
+        if !sid.is_null() {
+            FreeSid(sid);
+        }
+        DeleteAppContainerProfile(name.as_ptr());
+        created
+    };
+    assert_eq!(created, 0, "{created:#x}");
 }
 
 #[test]
@@ -316,9 +345,16 @@ fn a_killed_or_dropped_agent_ends() {
     child.kill().unwrap();
     // TerminateJobObject's exit code, long before the minute is up.
     assert_eq!(child.wait().unwrap().code(), Some(1));
+    // Until a child is dropped, its agent may not start again: the two
+    // would share a SID (and the profile a spawn registers).
+    drop(child);
 
     let mut child = sleeper();
     assert_eq!(child.try_wait().unwrap(), None, "it is running");
+    assert!(matches!(
+        agent.confinement().spawn(SpawnRequest::default()),
+        Err(ConfinementError::Container(_))
+    ));
     let id = child.id();
     // SAFETY: an id and a wait-only right; the handle is closed below.
     let handle = unsafe { OpenProcess(PROCESS_SYNCHRONIZE, 0, id) };

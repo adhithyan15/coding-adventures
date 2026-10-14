@@ -2386,11 +2386,18 @@ through S-I3 before two weeks are spent on Windows.
    registered just before `CreateProcessW`, removed (folder and key with
    it) while the agent is still suspended, before any check and before its
    first instruction. The process keeps its container through its token.
-   A removal that fails ends the agent unrun. The register-create-remove
-   span is serialized within the supervisor, so one creation never loses
-   its profile to another's removal. A profile found already registered
-   was left by a crash inside that span; no agent can have run beside it,
-   since every agent dies with its supervisor's job handle.
+   After the removal, the storage folder Windows reported for the profile
+   must be gone (`DeleteAppContainerProfile` can succeed and leave storage
+   it could not delete). A removal that fails, or leaves the folder, ends
+   the agent unrun. Only a process with the agent's SID could write to the
+   profile while it exists, so the supervisor runs at most one instance of
+   an agent at a time: a spawn claims the agent's name, and the claim is
+   released only once that instance has exited (one that does not exit
+   within ten seconds of being ended keeps it for good). The
+   register-create-remove span is serialized within the supervisor, so one
+   creation never loses its profile to another's removal. A profile found
+   already registered was left by an earlier spawn whose removal failed,
+   or by a crash inside that span; it is removed like a fresh one.
 
    **Exec by path, pinned to a held handle (S-K1).** `CreateProcessW` takes
    a path, never a handle. So:
@@ -2440,9 +2447,16 @@ through S-I3 before two weeks are spent on Windows.
      Windows spawn in the supervisor takes one spawn lock** (std's and this
      applier's), so the window holds no other spawn. It ends entirely when
      every agent spawn goes through this applier (step 9).
-   - *One agent, two instances.* Two launches of one `agent_id` share a
-     SID, and processes of one AppContainer can open each other. Before 8b
+   - *One agent, two instances.* Two launches of one `agent_id` would share
+     a SID, and processes of one AppContainer can open each other; either
+     could also write into the profile the other's spawn registers. So a
+     supervisor runs one instance of an agent at a time (above). Before 8b
      a broker runs under a SID of its own (the agent's, plus a suffix).
+   - *One supervisor per user.* The profile span and the one-instance rule
+     hold within one supervisor process. A second supervisor, or any tool
+     of the same user, managing the same agent's profile could make a
+     creation fail (its profile removed early, `ERROR_FILE_NOT_FOUND`);
+     that never confines less, and the daemon is the only supervisor.
    - *Old image ACEs.* An agent's image keeps the ACE for its SID after
      the agent is gone; reinstalling the agent reuses it.
    - *Grants.* No `Direct` grant exists until 8c; a plan with one is

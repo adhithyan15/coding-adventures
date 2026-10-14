@@ -17,16 +17,19 @@ use std::io;
 use std::os::windows::io::{AsRawHandle, FromRawHandle, OwnedHandle, RawHandle};
 use std::os::windows::process::ExitStatusExt;
 use std::process::ExitStatus;
+use windows_sys::core::PWSTR;
 use windows_sys::Win32::Foundation::{
     LocalFree, SetHandleInformation, HANDLE, HANDLE_FLAG_INHERIT, INVALID_HANDLE_VALUE, PSID,
     WAIT_OBJECT_0, WAIT_TIMEOUT,
 };
+use windows_sys::Win32::Security::Authorization::ConvertSidToStringSidW;
 use windows_sys::Win32::Security::Authorization::{
     GetSecurityInfo, SetEntriesInAclW, SetSecurityInfo, EXPLICIT_ACCESS_W, GRANT_ACCESS,
     NO_MULTIPLE_TRUSTEE, SE_FILE_OBJECT, TRUSTEE_IS_SID, TRUSTEE_IS_UNKNOWN, TRUSTEE_W,
 };
 use windows_sys::Win32::Security::Isolation::{
-    CreateAppContainerProfile, DeleteAppContainerProfile, DeriveAppContainerSidFromAppContainerName,
+    CreateAppContainerProfile, DeleteAppContainerProfile,
+    DeriveAppContainerSidFromAppContainerName, GetAppContainerFolderPath,
 };
 use windows_sys::Win32::Security::{
     EqualSid, FreeSid, GetSidSubAuthority, GetSidSubAuthorityCount, GetTokenInformation,
@@ -39,6 +42,7 @@ use windows_sys::Win32::Storage::FileSystem::{
     CreateFileW, GetFinalPathNameByHandleW, ReOpenFile, FILE_GENERIC_EXECUTE, FILE_GENERIC_READ,
     FILE_GENERIC_WRITE, FILE_SHARE_READ, FILE_SHARE_WRITE, OPEN_EXISTING, READ_CONTROL, WRITE_DAC,
 };
+use windows_sys::Win32::System::Com::CoTaskMemFree;
 use windows_sys::Win32::System::JobObjects::{
     CreateJobObjectW, IsProcessInJob, JobObjectBasicUIRestrictions,
     JobObjectExtendedLimitInformation, SetInformationJobObject, TerminateJobObject,
@@ -162,6 +166,7 @@ impl WindowsConfinement {
                 .iter()
                 .map(|(name, value)| (name.as_str(), value.as_str())),
         )?;
+        let live = LiveInstance::claim(&self.name)?;
         let mut environment = request.environment.clone();
         environment.push(("SystemRoot".to_string(), self.system_root.clone()));
         if !request.inherited.is_empty() {
@@ -235,7 +240,7 @@ impl WindowsConfinement {
         startup.lpAttributeList = attributes.as_ptr();
         // Registered from here until just after the creation; see
         // `RegisteredProfile`.
-        let profile = RegisteredProfile::register(&self.name)?;
+        let profile = RegisteredProfile::register(&self.name, &self.sid)?;
         // Only now, immediately before the creation, are the listed handles
         // made inheritable, so the window in which a std spawn on another
         // thread (which inherits every inheritable handle) could take one
@@ -290,7 +295,12 @@ impl WindowsConfinement {
         // happened: it was needed only for the creation.
         let removed = profile.remove();
         if let Some(error) = failure {
-            return Err(error);
+            // Both are reported: a profile left registered is the next
+            // spawn's to remove, and worth knowing about now.
+            return Err(match removed {
+                Ok(()) => error,
+                Err(left) => ConfinementError::Create(format!("{error}; and {left}")),
+            });
         }
         // SAFETY: CreateProcessW succeeded, so both handles are open and
         // this process owns them; each is wrapped exactly once.
@@ -332,6 +342,7 @@ impl WindowsConfinement {
         Ok(ConfinedChild {
             process,
             job,
+            live,
             id: information.dwProcessId,
             stdin: Some(File::from(parent_stdin)),
             stdout: Some(File::from(parent_stdout)),
@@ -442,12 +453,15 @@ impl WindowsConfinement {
     }
 }
 
-/// A confined agent. Dropping it kills the agent: its job is closed, and
-/// the job kills its process when its last handle closes.
+/// A confined agent. Dropping it kills the agent: its job is ended (and,
+/// as a backstop, closed; the job kills its process when its last handle
+/// closes). The drop then waits, up to ten seconds, for the process to
+/// exit, and only then may the agent be spawned again.
 #[derive(Debug)]
 pub struct ConfinedChild {
     process: OwnedHandle,
     job: OwnedHandle,
+    live: LiveInstance,
     id: u32,
     /// The agent's stdin.
     pub stdin: Option<File>,
@@ -497,6 +511,26 @@ impl ConfinedChild {
             return Err(io::Error::last_os_error());
         }
         Ok(ExitStatus::from_raw(code))
+    }
+}
+
+/// How long dropping a [`ConfinedChild`] waits for its ended process to
+/// exit before giving up on its agent for the rest of this process.
+const EXIT_WAIT_MS: u32 = 10_000;
+
+impl Drop for ConfinedChild {
+    /// End the agent, and release its [`LiveInstance`] claim once it has
+    /// exited. One that has not exited in time keeps the claim for good.
+    fn drop(&mut self) {
+        // SAFETY: both handles are open; terminating an ended job is
+        // harmless.
+        let exited = unsafe {
+            TerminateJobObject(raw(&self.job), 1);
+            WaitForSingleObject(raw(&self.process), EXIT_WAIT_MS)
+        } == WAIT_OBJECT_0;
+        if !exited {
+            self.live.keep();
+        }
     }
 }
 
@@ -552,16 +586,28 @@ fn container_sid(name: &str) -> Result<OwnedSid, ConfinementError> {
 /// ```
 ///
 /// The process keeps its token, and with it its container, after the
-/// profile is gone. A removal that fails ends the new agent unrun.
+/// profile is gone. A removal that fails, or that leaves the storage
+/// folder behind, ends the new agent unrun.
 ///
-/// The span is serialized across this process, so one spawn never removes
-/// a profile another is about to create a process with. A profile found
-/// already registered is one a crash left between the two steps; it is
-/// used and removed like a fresh one. No agent can have written to it
-/// since: agents run only while their supervisor holds their job, and its
-/// last handle closing (in a crash too) kills them.
+/// Who could write to the profile while it exists? Only a process with the
+/// agent's SID: the new agent is suspended, and [`LiveInstance`] refuses a
+/// second instance of the agent while the first may still run. So nothing
+/// can be in the folder when it is removed, and the check after removal is
+/// a second line, not the only one.
+///
+/// The span is serialized within this process, so one spawn never removes
+/// a profile another is about to create a process with. Another process of
+/// the same user (a second supervisor) is not serialized against: the
+/// supervisor is assumed to be the only one (D18S step 8, residuals), and
+/// a collision would fail a creation, never confine less. A profile found
+/// already registered was left by an earlier spawn whose removal failed or
+/// that crashed between the two steps; it is used and removed like a fresh
+/// one.
 struct RegisteredProfile {
     name: Vec<u16>,
+    /// The profile's storage folder, `...\Packages\<name>`, as Windows
+    /// reported it while the profile was registered.
+    storage: std::path::PathBuf,
     removed: bool,
     _serialized: std::sync::MutexGuard<'static, ()>,
 }
@@ -570,45 +616,51 @@ struct RegisteredProfile {
 const PROFILE_EXISTS: i32 = 0x8007_00B7_u32 as i32;
 
 impl RegisteredProfile {
-    fn register(name: &str) -> Result<Self, ConfinementError> {
+    fn register(name: &str, sid: &OwnedSid) -> Result<Self, ConfinementError> {
         static PROFILES: std::sync::Mutex<()> = std::sync::Mutex::new(());
         let serialized = PROFILES
             .lock()
             .unwrap_or_else(|poisoned| poisoned.into_inner());
-        let name = wide(name);
-        let mut sid: PSID = std::ptr::null_mut();
+        let wide_name = wide(name);
+        let mut created_sid: PSID = std::ptr::null_mut();
         // SAFETY: NUL-terminated strings (the name doubles as display name
         // and description), no capabilities, and a SID out that is freed
         // below if one is returned.
         let created = unsafe {
             CreateAppContainerProfile(
-                name.as_ptr(),
-                name.as_ptr(),
-                name.as_ptr(),
+                wide_name.as_ptr(),
+                wide_name.as_ptr(),
+                wide_name.as_ptr(),
                 std::ptr::null(),
                 0,
-                &mut sid,
+                &mut created_sid,
             )
         };
-        if !sid.is_null() {
+        if !created_sid.is_null() {
             // SAFETY: allocated by CreateAppContainerProfile, whose
             // documented release is FreeSid; freed once. The derived SID
             // held by the confinement is the same value.
-            unsafe { FreeSid(sid) };
+            unsafe { FreeSid(created_sid) };
         }
         if created < 0 && created != PROFILE_EXISTS {
             return Err(ConfinementError::Container(format!(
                 "CreateAppContainerProfile: {created:#x}"
             )));
         }
-        Ok(Self {
-            name,
+        // Registered from here: on an early return, Drop removes it.
+        let mut profile = Self {
+            name: wide_name,
+            storage: std::path::PathBuf::new(),
             removed: false,
             _serialized: serialized,
-        })
+        };
+        profile.storage = storage_folder(name, sid)?;
+        Ok(profile)
     }
 
-    /// Remove the profile, its folder and its registry key.
+    /// Remove the profile, its folder and its registry key, and confirm
+    /// the folder is gone: `DeleteAppContainerProfile` may report success
+    /// and still leave storage it could not delete.
     fn remove(mut self) -> Result<(), ConfinementError> {
         self.removed = true;
         // SAFETY: a NUL-terminated name.
@@ -618,17 +670,120 @@ impl RegisteredProfile {
                 "DeleteAppContainerProfile: {deleted:#x}"
             )));
         }
-        Ok(())
+        match std::fs::symlink_metadata(&self.storage) {
+            Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(()),
+            Ok(_) => Err(ConfinementError::Container(format!(
+                "{}: left behind by DeleteAppContainerProfile",
+                self.storage.display()
+            ))),
+            Err(error) => Err(ConfinementError::Container(format!(
+                "{}: {error}",
+                self.storage.display()
+            ))),
+        }
     }
 }
 
 impl Drop for RegisteredProfile {
     /// On an early return before the creation: best effort, as no process
-    /// exists to refuse. Runs before the guard (a later field) is released.
+    /// exists to refuse. `drop` runs before any field is dropped, the
+    /// guard included, so the removal is still serialized.
     fn drop(&mut self) {
         if !self.removed {
             // SAFETY: a NUL-terminated name.
             unsafe { DeleteAppContainerProfile(self.name.as_ptr()) };
+        }
+    }
+}
+
+/// The registered profile's storage folder: the parent of the `AC` folder
+/// `GetAppContainerFolderPath` reports, which must be named for the
+/// container. Anything else is refused rather than guessed at, since the
+/// removal check would then look at the wrong place.
+fn storage_folder(name: &str, sid: &OwnedSid) -> Result<std::path::PathBuf, ConfinementError> {
+    let refuse = |why: String| ConfinementError::Container(why);
+    let mut text: PWSTR = std::ptr::null_mut();
+    // SAFETY: a valid SID; the string is allocated by the call and freed
+    // with LocalFree below.
+    if unsafe { ConvertSidToStringSidW(sid.0, &mut text) } == 0 || text.is_null() {
+        return Err(refuse(format!(
+            "ConvertSidToStringSidW: {}",
+            io::Error::last_os_error()
+        )));
+    }
+    let mut folder: PWSTR = std::ptr::null_mut();
+    // SAFETY: a NUL-terminated SID string; the path is allocated by the
+    // call and freed with CoTaskMemFree below.
+    let found = unsafe { GetAppContainerFolderPath(text, &mut folder) };
+    // SAFETY: allocated by ConvertSidToStringSidW; freed once.
+    unsafe { LocalFree(text as _) };
+    if found < 0 || folder.is_null() {
+        return Err(refuse(format!("GetAppContainerFolderPath: {found:#x}")));
+    }
+    // SAFETY: a NUL-terminated string from GetAppContainerFolderPath.
+    let path = unsafe {
+        let length = (0..).take_while(|&i| *folder.add(i) != 0).count();
+        String::from_utf16_lossy(std::slice::from_raw_parts(folder, length))
+    };
+    // SAFETY: allocated by GetAppContainerFolderPath; freed once.
+    unsafe { CoTaskMemFree(folder as *const c_void) };
+    let path = std::path::PathBuf::from(path);
+    let named = |path: &std::path::Path, expected: &str| {
+        path.file_name()
+            .and_then(|component| component.to_str())
+            .is_some_and(|component| component.eq_ignore_ascii_case(expected))
+    };
+    match path.parent() {
+        Some(storage) if named(&path, "AC") && named(storage, name) => Ok(storage.to_path_buf()),
+        _ => Err(refuse(format!(
+            "{}: not the AC folder of {name}",
+            path.display()
+        ))),
+    }
+}
+
+/// A claim that one agent has at most one instance from this process.
+///
+/// Two instances of one agent share its SID, so either could write into the
+/// profile the other's spawn registers, and the write would outlive both.
+/// A spawn claims the agent's name before registering; the claim is
+/// released when the [`ConfinedChild`] drops and its process has exited,
+/// or at once if the spawn fails (the process, if one was made, never ran).
+#[derive(Debug)]
+struct LiveInstance {
+    name: Option<String>,
+}
+
+/// The names of the agents with an instance that may be running.
+static LIVE: std::sync::Mutex<std::collections::BTreeSet<String>> =
+    std::sync::Mutex::new(std::collections::BTreeSet::new());
+
+impl LiveInstance {
+    fn claim(name: &str) -> Result<Self, ConfinementError> {
+        let mut live = LIVE.lock().unwrap_or_else(|poisoned| poisoned.into_inner());
+        if !live.insert(name.to_string()) {
+            return Err(ConfinementError::Container(format!(
+                "{name}: an instance of this agent may still be running"
+            )));
+        }
+        Ok(Self {
+            name: Some(name.to_string()),
+        })
+    }
+
+    /// Keep the claim for good: the process might still run, so no other
+    /// instance of the agent may start in this process.
+    fn keep(&mut self) {
+        self.name = None;
+    }
+}
+
+impl Drop for LiveInstance {
+    fn drop(&mut self) {
+        if let Some(name) = self.name.take() {
+            LIVE.lock()
+                .unwrap_or_else(|poisoned| poisoned.into_inner())
+                .remove(&name);
         }
     }
 }

@@ -27,7 +27,14 @@
     windows-2025), but a profile is a storage folder and registry key the
     agent could keep state in (S-I1). So `spawn` registers it, creates the
     process suspended, and removes it before any check or instruction,
-    serialized within the process. A failed removal ends the agent unrun. The caller's handles are consumed
+    serialized within the process. The profile's storage folder (as
+    `GetAppContainerFolderPath` reported it) must be gone afterwards. A
+    failed removal, or a folder left behind, ends the agent unrun.
+  - One instance of an agent at a time: `spawn` refuses an agent whose
+    previous `ConfinedChild` is still alive (`Container`), and dropping a
+    child ends it and releases the claim once it has exited. Instances
+    share a SID, so either could have written into the profile the other's
+    spawn registered. The caller's handles are consumed
     even when the spawn fails.
   - `ConfinedChild`: `id`, `wait`, `try_wait`, `kill`, and the `stdin` and
     `stdout` pipes. Dropping it kills the agent.

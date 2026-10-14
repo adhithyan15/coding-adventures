@@ -25,7 +25,10 @@ so this crate creates the process itself and returns a `ConfinedChild`.
   `chief-of-staff.<32 hex>`, the SHA-256 of its attested `agent_id`. Its
   profile, which `CreateProcessW` requires, is registered just before the
   creation and removed while the agent is still suspended, so it has no
-  storage folder or registry key to keep state in.
+  storage folder or registry key to keep state in. The folder must be gone
+  after the removal, and an agent runs as one instance at a time (a second
+  spawn is refused until the first child is dropped and has exited), since
+  any process with its SID could write into the profile while it exists.
   It has no capabilities: no network, no libraries, no devices. It is LPAC,
   so `ALL APPLICATION PACKAGES` grants it nothing.
 - **Its own image, readable.** One ACE lets its SID read and execute the
