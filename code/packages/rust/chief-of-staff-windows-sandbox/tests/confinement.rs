@@ -259,22 +259,22 @@ fn the_network_processes_and_the_registry_are_out_of_reach() {
     let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
     let address = listener.local_addr().unwrap().to_string();
     assert_eq!(control(&["connect", &address]), "ok");
-    let output = agent.run(&["connect", &address]).0;
-    assert!(denied(&output), "{output}");
+    let (output, code) = agent.run(&["connect", &address]);
+    assert!(denied(&output), "{output:?} (exit {code:#x})");
 
     let shell = std::env::var("ComSpec").unwrap_or_else(|_| r"C:\Windows\System32\cmd.exe".into());
     assert_eq!(control(&["spawn", &shell]), "ok");
-    let output = agent.run(&["spawn", &shell]).0;
-    assert!(denied(&output), "{output}");
+    let (output, code) = agent.run(&["spawn", &shell]);
+    assert!(denied(&output), "{output:?} (exit {code:#x})");
 
     let me = std::process::id().to_string();
     assert_eq!(control(&["openprocess", &me]), "ok");
-    let output = agent.run(&["openprocess", &me]).0;
-    assert!(denied(&output), "{output}");
+    let (output, code) = agent.run(&["openprocess", &me]);
+    assert!(denied(&output), "{output:?} (exit {code:#x})");
 
     assert_eq!(control(&["registry"]), "ok");
-    let output = agent.run(&["registry"]).0;
-    assert!(denied(&output), "{output}");
+    let (output, code) = agent.run(&["registry"]);
+    assert!(denied(&output), "{output:?} (exit {code:#x})");
 }
 
 #[test]

@@ -26,6 +26,9 @@
 
 #[cfg(windows)]
 fn main() {
+    // stderr is NUL when confined, so a panic would leave no trace: it is
+    // printed where the test reads, and is never mistaken for a denial.
+    std::panic::set_hook(Box::new(|information| println!("panic: {information}")));
     let arguments: Vec<String> = std::env::args().skip(1).collect();
     let mode = arguments.first().map(String::as_str).unwrap_or("hello");
     let operand = arguments.get(1).map(String::as_str).unwrap_or("");
@@ -41,9 +44,14 @@ fn main() {
         }
         "read" => std::fs::File::open(operand).map(|_| ok()),
         "write" => std::fs::File::create(operand).map(|_| ok()),
-        "connect" => operand
-            .parse()
-            .map_err(|_| std::io::Error::from(std::io::ErrorKind::InvalidInput))
+        // Winsock first, by hand: std panics if it cannot start, and inside
+        // the container that failure is itself the denial.
+        "connect" => windows::winsock()
+            .and_then(|()| {
+                operand
+                    .parse()
+                    .map_err(|_| std::io::Error::from(std::io::ErrorKind::InvalidInput))
+            })
             .and_then(|address| {
                 std::net::TcpStream::connect_timeout(&address, std::time::Duration::from_secs(3))
             })
@@ -89,6 +97,7 @@ mod windows {
     use std::io::{self, Write};
     use std::os::windows::io::{FromRawHandle, RawHandle};
     use windows_sys::Win32::Foundation::{CloseHandle, HANDLE};
+    use windows_sys::Win32::Networking::WinSock::{WSAStartup, WSADATA};
     use windows_sys::Win32::Security::{
         GetSidSubAuthority, GetSidSubAuthorityCount, GetTokenInformation, TokenIntegrityLevel,
         TokenIsAppContainer, TOKEN_MANDATORY_LABEL,
@@ -107,6 +116,18 @@ mod windows {
 
     fn ok() -> String {
         "ok".to_string()
+    }
+
+    /// Start Winsock, as std would, but report a failure rather than panic.
+    pub fn winsock() -> io::Result<()> {
+        // SAFETY: plain data, filled by WSAStartup.
+        let mut data: WSADATA = unsafe { std::mem::zeroed() };
+        // SAFETY: version 2.2 and a WSADATA to fill.
+        let result = unsafe { WSAStartup(0x202, &mut data) };
+        if result != 0 {
+            return Err(io::Error::from_raw_os_error(result));
+        }
+        Ok(())
     }
 
     fn wide(text: &str) -> Vec<u16> {

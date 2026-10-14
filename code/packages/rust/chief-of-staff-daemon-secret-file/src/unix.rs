@@ -183,7 +183,7 @@ fn read_exact_bounded(
     Ok(bytes)
 }
 
-#[cfg(test)]
+#[cfg(any(test, feature = "test-support"))]
 pub(super) fn write_test_secret(path: &Path, bytes: &[u8]) {
     use std::fs;
     use std::os::unix::fs::PermissionsExt;

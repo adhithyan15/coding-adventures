@@ -41,6 +41,11 @@
     `WIN://NOALLAPPPKG` security attribute answers instead, read with
     every pointer bounds- and alignment-checked. Each token query in the
     launch check now names itself in its error.
+  - The probe starts Winsock itself in `connect` (the fourth windows-2025
+    run's confined `connect` printed nothing: std panics when
+    `WSAStartup` fails, and inside the container that failure is the
+    denial), and prints any panic on stdout; the network test reports the
+    exit code with an unexpected output.
   - One instance of an agent at a time: `spawn` refuses an agent whose
     previous `ConfinedChild` is still alive (`Container`), and dropping a
     child ends it and releases the claim once it has exited. Instances
