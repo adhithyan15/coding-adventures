@@ -9631,12 +9631,51 @@ mod tests {
             layout.edges[0].from=Point { x:50.0,y:-50.0 }; layout.edges[0].to=Point { x:50.0,y:50.0 };
             layout.edges[1].from=from.clone(); layout.edges[1].to=to.clone();
             if invisible { layout.edges[0].kind=SwimlaneEdgeKind::Invisible; }
-            if curved_previous { layout.edges[0].curve=Some(SwimlaneEdgeCurve::Rounded); }
-            if curved_later { layout.edges[1].curve=Some(SwimlaneEdgeCurve::Rounded); }
+            if curved_previous { layout.edges[0].curve=Some(SwimlaneEdgeCurve::Basis); }
+            if curved_later { layout.edges[1].curve=Some(SwimlaneEdgeCurve::Basis); }
             let enabled=diagram_to_paint_swimlane(&layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
             layout.line_hops=None;
             let disabled=diagram_to_paint_swimlane(&layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
             assert_eq!(enabled.instructions,disabled.instructions,"excluded crossings must not change routes or markers");
+        }
+    }
+
+    #[test]
+    fn orthogonal_hops_preserve_exact_segment_commands_and_all_other_output() {
+        let curves = [None, Some(SwimlaneEdgeCurve::Linear), Some(SwimlaneEdgeCurve::Rounded),
+            Some(SwimlaneEdgeCurve::Step), Some(SwimlaneEdgeCurve::StepBefore), Some(SwimlaneEdgeCurve::StepAfter)];
+        for mode in ["arc", "gap"] {
+            let source = format!("---\nconfig:\n  swimlane:\n    lineHops: {mode}\n---\nswimlane-beta LR\nsubgraph L\na[A]\nb[B]\nc[C]\nd[D]\nend\na first@--> b\nc last@--> d");
+            let parsed = mermaid_parser::parse_swimlane(&source).unwrap();
+            for previous in curves {
+                for later in curves {
+                    let mut layout = diagram_layout_hierarchy::layout_swimlane(&parsed);
+                    layout.edges[0].from = Point { x: 20.0, y: -50.0 };
+                    layout.edges[0].to = Point { x: 20.0, y: 50.0 };
+                    layout.edges[0].curve = previous;
+                    layout.edges[1].from = Point { x: 0.0, y: 0.0 };
+                    layout.edges[1].to = Point { x: 100.0, y: 0.0 };
+                    layout.edges[1].curve = later;
+                    let enabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                    layout.line_hops = None;
+                    let mut expected = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                    let mut commands = vec![PathCommand::MoveTo { x: 0.0, y: 0.0 }, PathCommand::LineTo { x: 14.0, y: 0.0 }];
+                    commands.push(if mode == "arc" {
+                        PathCommand::QuadTo { cx: 20.0, cy: 12.0, x: 26.0, y: 0.0 }
+                    } else { PathCommand::MoveTo { x: 26.0, y: 0.0 } });
+                    if matches!(later, Some(SwimlaneEdgeCurve::Rounded | SwimlaneEdgeCurve::Step)) {
+                        commands.push(PathCommand::LineTo { x: 50.0, y: 0.0 });
+                    }
+                    commands.push(PathCommand::LineTo { x: 100.0, y: 0.0 });
+                    let paths = expected.instructions.iter_mut().filter_map(|instruction|
+                        if let PaintInstruction::Path(path) = instruction { Some(path) } else { None }
+                    ).collect::<Vec<_>>();
+                    assert_eq!(paths.len(), 4, "two routes and two unchanged markers");
+                    paths.into_iter().nth(2).unwrap().commands = commands;
+                    expected.metadata.as_mut().unwrap().insert("swimlane.lineHops".into(), mode.into());
+                    assert_eq!(enabled, expected, "mode={mode}, previous={previous:?}, later={later:?}: exact scene including styles, markers, glyphs and metadata");
+                }
+            }
         }
     }
 

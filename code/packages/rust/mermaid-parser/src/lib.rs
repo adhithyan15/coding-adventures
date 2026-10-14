@@ -6342,10 +6342,6 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             pending_link_styles.push(parse_swimlane_link_style(value, line_number)?);
             continue;
         }
-        if let Some(config) = parse_swimlane_edge_config(line, line_number)? {
-            pending_edge_configs.push(config);
-            continue;
-        }
         if is_edge {
             last_edge_targets = Some(parse_swimlane_edge_chain(
                 line,
