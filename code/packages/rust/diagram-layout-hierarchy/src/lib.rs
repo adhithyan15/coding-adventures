@@ -409,8 +409,9 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
             let gap_units = lane.node_ids.windows(2).map(|pair|
                 link_gaps.units(&pair[0], &pair[1]) as f64
             ).sum::<f64>();
+            let tail = if title_margin > 0.0 { (20.0 + outer_padding + group_boundary_inset).max(28.0) } else { 28.0 };
             lane_header + lane.node_ids.len().max(1) as f64 * node_height
-                + (gap_units + 1.0) * node_gap + 28.0 + nested_title_reserve
+                + (gap_units + 1.0) * node_gap + tail + nested_title_reserve
         }).fold(0.0, f64::max)
     };
     let (width, height) = if horizontal_flow {
