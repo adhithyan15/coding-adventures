@@ -124,7 +124,10 @@ it("pins Sanskrit lesson-content budgets", () =>
     // reuse known atoms, so idiom, sense, and culture-claim totals do not move.
     // 1393 -> 1394: chapter 258 adds one model-free A2 connected-composition
     // lesson. It reuses known atoms, so no content total moves.
-    lessons: 1394,
+    // 1394 -> 1397: chapter 259 teaches asmākam, then yuṣmākam, then the
+    // productive one-versus-several possessor contrast. It introduces no
+    // idiom, sense, or culture claim.
+    lessons: 1397,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

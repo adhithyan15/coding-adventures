@@ -1,0 +1,99 @@
+Sanskrit, chapter 259: Our and your-plural.
+3 lessons. All 3 can be done entirely by ear.
+
+
+Lesson 1 of 3.
+अस्माकम् (asmākam) — our, of us.
+
+Warm-up.
+[pause 2 seconds]
+Say मम गृहम् (mama gṛham), “my house”. One person possesses the house. Keep मम ready.
+
+You'll want to know: one possessor, then several.
+[a table of 2 rows, read aloud]
+possessors: one: me. Sanskrit: मम (mama). meaning: my, of me.
+possessors: several: us. Sanskrit: अस्माकम् (asmākam). meaning: our, of us.
+Say the new form slowly: as-mā-kam. The long ā holds the middle beat.
+These are genitive forms: they answer “whose?” Sanskrit uses that relationship where English often uses a possessive word.
+
+The form, taken apart.
+Whitney's Sanskrit Grammar §493 lists अस्माकम् (asmākam) as the genitive plural in the first-person paradigm. Historically, he explains it as a fixed case-form of an older adjective stem: the form is derived from asmāka. The history is unusual; the job in the sentence is simple: अस्माकम् (asmākam) answers “of us / whose?” and stays fixed before the noun.
+Source: William Dwight Whitney, Sanskrit Grammar (1889), §§493 and 516.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “my house” — mama gṛham]
+[pause 8 seconds for the answer]
+[your turn — say: “our house” — asmākam gṛham]
+[pause 8 seconds for the answer]
+[your turn — say: one possessor — mama; several possessors — asmākam]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Several people point to one house and say “our house”. Which first word do they use? (अस्माकम्, asmākam.)
+
+
+Lesson 2 of 3.
+युष्माकम् (yuṣmākam) — your, of you all.
+
+Warm-up.
+[pause 2 seconds]
+Say “our” (अस्माकम्, asmākam). Then recall the first word of तव नाम किम्? (tava nāma kim?): तव, “your” to one familiar person.
+
+You'll want to know: one addressee, then several.
+[a table of 2 rows, read aloud]
+people addressed: one. Sanskrit: तव (tava). meaning: your, of you.
+people addressed: several. Sanskrit: युष्माकम् (yuṣmākam). meaning: your, of you all.
+Say the new form slowly: yuṣ-mā-kam. The ending sounds like asmākam; the opening tells you that the possessors are the people being addressed.
+Like tava, युष्माकम् (yuṣmākam) is a genitive. It answers “whose?” for several people, and the noun it comes before does not have to change.
+
+The form, taken apart.
+Whitney's Sanskrit Grammar §493 places युष्माकम् (yuṣmākam) beside अस्माकम् (asmākam) as the second-person genitive plural. It too is historically a fixed case-form of an older adjective stem: the form is derived from yuṣmāka. For use here, keep the functional contrast: तव addresses one person; युष्माकम् (yuṣmākam) addresses several.
+Source: William Dwight Whitney, Sanskrit Grammar (1889), §§493 and 516.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: several speakers say “our house” — asmākam gṛham]
+[pause 8 seconds for the answer]
+[your turn — say: speaking to several people, “your house” — yuṣmākam gṛham]
+[pause 8 seconds for the answer]
+[your turn — say: one addressee — tava; several addressees — yuṣmākam]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+You speak to several people about their house. Which first word means “your, of you all”? (युष्माकम्, yuṣmākam.)
+
+
+Lesson 3 of 3.
+One possessor or several? — my, our, your, and your-plural.
+
+Warm-up.
+[pause 2 seconds]
+Give the three forms you can now retrieve directly: “my”, “our”, and “your, of you all”. (Mama; asmākam; yuṣmākam.)
+
+Grammar Lens: the choice.
+Choose by counting the possessors or addressees:
+one possessor speaking: मम (mama);
+several possessors speaking: अस्माकम् (asmākam);
+one familiar addressee: तव (tava);
+several addressees: युष्माकम् (yuṣmākam).
+All four answer “whose?” In this paradigm they are fixed genitive forms, not possessive adjectives that you inflect to agree with the thing possessed. Whitney §493 records the older adjectival history of the two plural forms; that history does not change the learner's choice here.
+
+Guided Practice — choose before you speak.
+[pause 2 seconds after each]
+[your turn — say: one speaker, one family: “my family” — mama kuṭumbam]
+[pause 8 seconds for the answer]
+[your turn — say: several speakers, one family: “our family” — asmākam kuṭumbam]
+[pause 8 seconds for the answer]
+[your turn — say: to one familiar person: “your house” — tava gṛham]
+[pause 8 seconds for the answer]
+[your turn — say: to several people: “your house” — yuṣmākam gṛham]
+[pause 8 seconds for the answer]
+[your turn — say: the rule — choose by whether the possessor or addressee is one or several]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Without looking back, give “our family” and “your house” when you address several people. Then say why the first word changes. (Asmākam kuṭumbam; yuṣmākam gṛham; the possessor or addressee is several, not one.)
