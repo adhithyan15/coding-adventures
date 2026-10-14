@@ -9451,9 +9451,9 @@ style release font-size:18px,font-weight:500,font-style:normal,font-family:Helve
             ("Review".to_owned(), 18.0, Some("rgb(38, 50, 56)"), "fake:test"),
             ("submit".to_owned(), 22.0, Some("rgb(124, 45, 18)"), "fake:test"),
             ("release".to_owned(), 18.0, Some("rgb(20, 83, 45)"), "fake:test"),
-            ("Request".to_owned(), 14.0, Some("rgb(38, 50, 56)"), "fake:test"),
-            ("Review".to_owned(), 14.0, Some("rgb(38, 50, 56)"), "fake:test"),
-            ("Done".to_owned(), 14.0, Some("rgb(38, 50, 56)"), "fake:test"),
+            ("Request".to_owned(), 14.0, Some("rgb(13, 71, 161)"), "fake:test"),
+            ("Review".to_owned(), 14.0, Some("rgb(13, 71, 161)"), "fake:test"),
+            ("Done".to_owned(), 14.0, Some("rgb(13, 71, 161)"), "fake:test"),
         ]);
     }
 
