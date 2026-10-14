@@ -14,7 +14,8 @@ romanization: "sol"
 concept_tag: RU-FOOD1-SALT
 prerequisites: [RU-C43-egg, RU-C43-butter]
 sounds: []
-roots: []
+roots: [pie-seh2l]
+etymology_hook: "соль ← Proto-Slavic *solĭ; Latin sal and English salt are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C43-butter]
 <!-- hl-knowledge: introduces=[RU-LEX-C43-FOOD1-05]; assesses=[] -->
 
 **соль** (*sol*) — "salt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**соль** ← Proto-Slavic *\*solĭ* — inherited. Vasmer lists Latvian *sāls*, Latin *sāl*, Greek *háls* and Gothic *salt*, all "salt": English *salt* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 58,
-  "sourceHash": "fnv1a64:e71aacb7b884af42",
+  "sourceHash": "fnv1a64:ec1639ae79716a45",
   "lessonIds": [
     "RU-C58-sky",
     "RU-C58-sun",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch58.txt",
   "json": "russian/narration/ch58.json",
-  "textHash": "fnv1a64:1228348fa93ea720",
-  "jsonHash": "fnv1a64:8aaa5e7fdf360b3c",
+  "textHash": "fnv1a64:b8041a4ca60d304c",
+  "jsonHash": "fnv1a64:ef0d641958b47f0d",
   "findings": []
 }

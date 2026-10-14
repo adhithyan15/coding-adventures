@@ -14,7 +14,8 @@ romanization: "záyats"
 concept_tag: RU-ANIMALS3-HARE
 prerequisites: [RU-C61-bear, RU-C61-fox]
 sounds: []
-roots: []
+roots: [slavic-zajecu]
+etymology_hook: "заяц ← Proto-Slavic *zajęcĭ, perhaps 'the leaper'; the comparisons are uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C61-fox]
 <!-- hl-knowledge: introduces=[RU-LEX-C62-ANIMALS3-01]; assesses=[] -->
 
 **заяц** (*záyats*) — "a hare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**заяц** ← Proto-Slavic *\*zajęcĭ* — inherited. With a first sense "leaper", it has been compared with Sanskrit *háyas*, "horse", and *jíhīte*, "leaps up", and Lithuanian *žaĩsti*, "to frolic", but Vasmer cites doubts.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

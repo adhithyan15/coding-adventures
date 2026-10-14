@@ -14,7 +14,8 @@ romanization: "ulýbka"
 concept_tag: RU-VESHCH200-ULYBKA
 prerequisites: [RU-C200-smekh, RU-C200-slyozy]
 sounds: []
-roots: []
+roots: [slavic-lybiti]
+etymology_hook: "улыбка goes with улыбаться 'to smile', from dialect лыбить, which Vasmer calls unclear"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C200-slyozy]
 <!-- hl-knowledge: introduces=[RU-LEX-C200-VESHCH200-05]; assesses=[] -->
 
 **улыбка** (*ulýbka*) — "a smile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**улыбка** goes with *улыбаться*, "to smile", from dialect *лыбить*, "to smile". Vasmer calls *лыбить* unclear and finds the proposed links, with *луб*, "bast", or Latin *labō*, "I totter", unconvincing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

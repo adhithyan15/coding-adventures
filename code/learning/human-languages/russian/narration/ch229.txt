@@ -12,6 +12,9 @@ Before the new one: say the Russian for a meaning, then the Russian for a first 
 You'll want to know: секретарь.
 секретарь (sekretár) — "a secretary".
 
+The word, taken apart.
+секретарь (sekretár) — known from 1614; it came through German Sekretär or Polish sekretarz from Latin sēcrētārius, "a keeper of secrets" (Vasmer).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for a first name, then the Russian for a sec
 
 You'll want to know: бухгалтер.
 бухгалтер (bukhgálter) — "an accountant".
+
+The word, taken apart.
+бухгалтер (bukhgálter) — from Peter the Great's time; it comes from German Buchhalter, "book-keeper" (Vasmer).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Russian for a secretary, then the Russian for an acc
 You'll want to know: менеджер.
 менеджер (ménedzher) — "a manager".
 
+The word, taken apart.
+менеджер (ménedzher) comes from English manager, from manage, Italian maneggiare, "to handle", from Latin manus, "hand".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Russian for an accountant, then the Russian for a ma
 You'll want to know: программист.
 программист (programmíst) — "a programmer".
 
+The word, taken apart.
+программист (programmíst) is программа, "a program", with -ист, "one who works at". программа goes back to Greek prógramma, "a public notice", from prográphein, "to write before".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Russian for a manager, then the Russian for a progra
 
 You'll want to know: преподаватель.
 преподаватель (prepodavátel) — "a lecturer, a teacher".
+
+The word, taken apart.
+преподаватель (prepodavátel) is преподавать, "to teach", with -тель, "one who does it". The verb is пре- and по- with давать, "to give".
 
 What you've built.
 One more word for this chapter.

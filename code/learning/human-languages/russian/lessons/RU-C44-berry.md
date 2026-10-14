@@ -14,7 +14,8 @@ romanization: "yágoda"
 concept_tag: RU-FRUIT-BERRY
 prerequisites: [RU-C44-pear, RU-C44-cherry]
 sounds: []
-roots: []
+roots: [slavic-agoda]
+etymology_hook: "ягода ← Proto-Slavic *agoda; Lithuanian úoga 'berry' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C44-cherry]
 <!-- hl-knowledge: introduces=[RU-LEX-C44-FRUIT-05]; assesses=[] -->
 
 **ягода** (*yágoda*) — "a berry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ягода** ← Proto-Slavic *\*agoda*, *\*aga* with an added *-oda* — inherited, a cousin of Lithuanian *úoga*, "berry" (Vasmer). Russian added *j-* at the front, as in *яблоко*, "apple".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

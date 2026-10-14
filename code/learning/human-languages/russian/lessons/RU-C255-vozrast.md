@@ -14,7 +14,8 @@ romanization: "vózrast"
 concept_tag: RU-VESHCH255-VOZRAST
 prerequisites: [RU-C254-plemyannik, RU-C255-familiya]
 sounds: []
-roots: []
+roots: [slavic-orsti]
+etymology_hook: "возраст is Church Slavonic, beside native взрост, from рост 'growth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C255-familiya]
 <!-- hl-knowledge: introduces=[RU-LEX-C255-VESHCH255-02]; assesses=[] -->
 
 **возраст** (*vózrast*) — "an age".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**возраст** — taken from Church Slavonic, says Vasmer, in place of native *взрост*: *воз-*, "up", with *раст*, "growth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

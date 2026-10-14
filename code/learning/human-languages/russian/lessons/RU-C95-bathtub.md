@@ -14,7 +14,8 @@ romanization: "vánna"
 concept_tag: RU-THINGS95-BATHTUB
 prerequisites: [RU-C94-cooker, RU-C94-shower]
 sounds: []
-roots: []
+roots: [german-wanne]
+etymology_hook: "ванна ← German Wanne or French vanne; recorded by 1697"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C94-shower]
 <!-- hl-knowledge: introduces=[RU-LEX-C95-THINGS95-01]; assesses=[] -->
 
 **ванна** (*vánna*) — "a bathtub".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ванна** comes from German *Wanne*, "a tub", or French *vanne* (Vasmer); Trubachev notes it by 1697.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

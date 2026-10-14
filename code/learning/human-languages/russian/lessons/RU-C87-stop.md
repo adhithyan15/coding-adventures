@@ -14,7 +14,8 @@ romanization: "ostanóvka"
 concept_tag: RU-LOC87-STOP
 prerequisites: [RU-C87-nearby, RU-C87-airport]
 sounds: []
-roots: []
+roots: [pie-steh2]
+etymology_hook: "остановка is from остановить 'to bring to a stop', built on стать 'to stand'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C87-airport]
 <!-- hl-knowledge: introduces=[RU-LEX-C87-LOC87-04]; assesses=[] -->
 
 **остановка** (*ostanóvka*) — "a stop (bus, tram)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**остановка** is *остановить*, "to stop", with the noun ending *-ка*. The verb is *о-* with *-становить*, from *стать*, "to stand", a cousin of Latin *stāre*, "to stand" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

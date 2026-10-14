@@ -14,7 +14,8 @@ romanization: "prodavát"
 concept_tag: RU-VERB-PRODAVAT
 prerequisites: [RU-C39-gotovit, RU-C39-pokupat]
 sounds: []
-roots: []
+roots: [pie-deh3-give]
+etymology_hook: "продавать is про- 'forth' + давать 'to give': selling is giving something over for a price"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C39-pokupat]
 <!-- hl-knowledge: introduces=[RU-LEX-C39-VERB2-04]; assesses=[] -->
 
 **продавать** (*prodavát*) — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**продавать** is *про-*, "through, forth", with *давать*, "to give", on the root of *дать*, "to give", which Vasmer relates to Lithuanian *dúoti* and Greek *didōmi*, "to give"; Latin *dare* is a cousin too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

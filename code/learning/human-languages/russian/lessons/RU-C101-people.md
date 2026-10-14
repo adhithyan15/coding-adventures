@@ -14,7 +14,8 @@ romanization: "lyúdi"
 concept_tag: RU-THINGS101-PEOPLE
 prerequisites: [RU-C100-calendar, RU-C100-rucksack]
 sounds: []
-roots: []
+roots: [slavic-ljudu]
+etymology_hook: "люди ← Proto-Slavic *ljudĭje; German Leute 'people' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C100-rucksack]
 <!-- hl-knowledge: introduces=[RU-LEX-C101-THINGS101-01]; assesses=[] -->
 
 **люди** (*lyúdi*) — "people".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**люди** ← Proto-Slavic *\*ljudĭje*, "people", the plural of old *люд*, "folk" — inherited. Vasmer relates it to Lithuanian *liáudis*, "the people", Old High German *liut*, "people", and Greek *eleútheros*, "free", from a root "to grow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

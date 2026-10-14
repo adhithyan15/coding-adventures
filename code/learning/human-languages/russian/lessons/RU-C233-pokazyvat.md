@@ -14,7 +14,8 @@ romanization: "pokázyvat"
 concept_tag: RU-VERB-POKAZYVAT
 prerequisites: [RU-C233-vybirat, RU-C233-menyat]
 sounds: []
-roots: []
+roots: [slavic-kazati]
+etymology_hook: "показывать is по- + казывать, from казать 'to show'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C233-menyat]
 <!-- hl-knowledge: introduces=[RU-LEX-C233-ACT233-04]; assesses=[] -->
 
 **показывать** (*pokázyvat*) — "to show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**показывать** is *по-* with *-казывать*, from *казать*, "to show".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

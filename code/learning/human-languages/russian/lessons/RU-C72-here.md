@@ -14,7 +14,8 @@ romanization: "zdes"
 concept_tag: RU-WHERE1-HERE
 prerequisites: [RU-C71-summer, RU-C71-autumn]
 sounds: []
-roots: []
+roots: [slavic-si]
+etymology_hook: "здесь ← Old Russian сьде, from the old pronoun сь 'this' (сей), built as где 'where' is"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C71-autumn]
 <!-- hl-knowledge: introduces=[RU-LEX-C72-WHERE1-01]; assesses=[] -->
 
 **здесь** (*zdes*) — "here".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**здесь** ← Old Russian *сьде*, with a later *-сь*: Proto-Slavic *\*sĭde*, "here", from the old pronoun *\*sĭ*, "this", the one in *сей* and *сегодня*, "today", built as *где*, "where", is built from the question word (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

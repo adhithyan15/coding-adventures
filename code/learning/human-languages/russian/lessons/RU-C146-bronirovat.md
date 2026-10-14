@@ -14,7 +14,8 @@ romanization: "bronírovat"
 concept_tag: RU-VERB-BRONIROVAT
 prerequisites: [RU-C145-skachivat, RU-C145-proigryvat]
 sounds: []
-roots: []
+roots: [germanic-brunjo]
+etymology_hook: "бронировать is from бронь 'a reservation', from броня 'armour', probably a loan from Gothic brunjō"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C145-proigryvat]
 <!-- hl-knowledge: introduces=[RU-LEX-C146-ACT146-01]; assesses=[] -->
 
 **бронировать** (*bronírovat*) — "to book, to reserve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бронировать** is built on *бронь*, "a reservation", from *броня*, "armour": a booking shields a seat. *броня* was probably borrowed, Vasmer says, from Gothic *brunjō*, "a breastplate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

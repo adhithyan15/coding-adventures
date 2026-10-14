@@ -12,6 +12,9 @@ Before the new one: say the Russian for dawn, then the Russian for sunset.
 You'll want to know: редко.
 редко (rédko) — "rarely".
 
+The word, taken apart.
+редко (rédko) is редкий, "sparse, rare", made into an adverb. Vasmer relates редкий to Lithuanian rẽtas, "sparse, rare", and Latin rēte, "a net": a net is all gaps.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for sunset, then the Russian for rarely.
 
 You'll want to know: каждый.
 каждый (kázhdyy) — "every, each".
+
+The word, taken apart.
+каждый (kázhdyy) from Proto-Slavic kŭžĭdo — inherited: the old question stem of кто, "who", with же, a stressing particle, and -де, as in где, "where" (Vasmer). Gothic hvarjis, "which", is built in a similar way.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Russian for rarely, then the Russian for every.
 You'll want to know: сначала.
 сначала (snachála) — "at first".
 
+The word, taken apart.
+сначала (snachála) is с, "from", with начала, a form of начало, "the beginning": "from the start".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Russian for every, then the Russian for at first.
 You'll want to know: наконец.
 наконец (nakonéts) — "at last, finally".
 
+The word, taken apart.
+наконец (nakonéts) is на, "at, on", with конец, "the end". Vasmer relates конец to Latin recēns, "fresh", and Old Irish cinim, "I arise".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Russian for at first, then the Russian for at last.
 
 You'll want to know: ещё.
 ещё (yeshchyó) — "still; more".
+
+The word, taken apart.
+ещё (yeshchyó) from Old Russian още, Old Church Slavonic ješte. Vasmer allows a link with Greek éti, "still", and Latin et, "and", plus an old kʷe, "and", but notes the sounds are hard to explain; Grappin traced it instead to jest-je.
 
 What you've built.
 One more word for this chapter.

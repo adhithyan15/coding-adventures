@@ -14,7 +14,8 @@ romanization: "soldát"
 concept_tag: RU-RABOTA171-SOLDAT
 prerequisites: [RU-C171-veterinar, RU-C171-sudya]
 sounds: []
-roots: []
+roots: [solidus-latin]
+etymology_hook: "солдат came through German Soldat or Dutch soldaat from Italian soldato 'one paid', from soldo"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C171-sudya]
 <!-- hl-knowledge: introduces=[RU-LEX-C171-RABOTA171-04]; assesses=[] -->
 
 **солдат** (*soldát*) — "a soldier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**солдат** — known from 1515; it came through German *Soldat* or Dutch *soldaat* from Italian *soldato*, "one hired for pay", from *soldare*, "to hire" (Vasmer), and *soldo*, "a coin", Latin *solidus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

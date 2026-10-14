@@ -14,7 +14,8 @@ romanization: "zavód"
 concept_tag: RU-LOC89-FACTORY
 prerequisites: [RU-C88-swimming-pool, RU-C88-stadium]
 sounds: []
-roots: []
+roots: [slavic-voditi]
+etymology_hook: "завод is за- + вод, from водить 'to lead': first 'what is set going', a works"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C88-stadium]
 <!-- hl-knowledge: introduces=[RU-LEX-C89-LOC89-01]; assesses=[] -->
 
 **завод** (*zavód*) — "a factory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**завод** is *за-*, "start", with *вод*, the root of *водить*, "to lead" (Vasmer gives *водить* with *вести*, "to lead"): *заводить* is "to set going", and a *завод* is a works set going.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

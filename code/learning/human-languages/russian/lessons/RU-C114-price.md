@@ -14,7 +14,8 @@ romanization: "tsená"
 concept_tag: RU-THINGS114-PRICE
 prerequisites: [RU-C113-drawing, RU-C113-life]
 sounds: []
-roots: []
+roots: [pie-kwey]
+etymology_hook: "цена ← Proto-Slavic *cěna; Greek poinē 'penalty' and Lithuanian kaina 'price' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C113-life]
 <!-- hl-knowledge: introduces=[RU-LEX-C114-THINGS114-01]; assesses=[] -->
 
 **цена** (*tsená*) — "a price".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**цена** ← Proto-Slavic *\*cěna* — inherited. Vasmer relates it to Lithuanian *kainà*, "price", Avestan *kaēnā-*, "retribution", and Greek *poinḗ*, "penalty", the source of English *pain*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

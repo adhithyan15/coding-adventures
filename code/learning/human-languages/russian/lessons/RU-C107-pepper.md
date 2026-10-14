@@ -14,7 +14,8 @@ romanization: "pérets"
 concept_tag: RU-THINGS107-PEPPER
 prerequisites: [RU-C107-jam, RU-C107-nut]
 sounds: []
-roots: []
+roots: [piper-latin]
+etymology_hook: "перец is an old loan from Latin piper, from Greek peperi and Sanskrit pippalī, perhaps through Gothic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C107-nut]
 <!-- hl-knowledge: introduces=[RU-LEX-C107-THINGS107-03]; assesses=[] -->
 
 **перец** (*pérets*) — "pepper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**перец** ← Old Russian *пьпьрь*, from 1193 — an old loan from Latin *piper*, which goes back through Greek *péperi* to Sanskrit *pippalī*, "long pepper"; Vasmer allows an East Germanic go-between.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

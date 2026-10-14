@@ -14,7 +14,8 @@ romanization: "pensionér"
 concept_tag: RU-VESHCH168-PENSIONER
 prerequisites: [RU-C168-nevesta, RU-C168-rodstvennik]
 sounds: []
-roots: []
+roots: [pendere-latin]
+etymology_hook: "пенсионер ← French pensionnaire, from pension, Latin pensio 'a payment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C168-rodstvennik]
 <!-- hl-knowledge: introduces=[RU-LEX-C168-VESHCH168-05]; assesses=[] -->
 
 **пенсионер** (*pensionér*) — "a pensioner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пенсионер** comes from French *pensionnaire*, built on *pension*, from Latin *pēnsiō*, "a payment", from *pendere*, "to weigh, to pay".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

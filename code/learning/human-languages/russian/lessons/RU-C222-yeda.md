@@ -14,7 +14,8 @@ romanization: "yedá"
 concept_tag: RU-VESHCH222-YEDA
 prerequisites: [RU-C221-vaza, RU-C221-kartina]
 sounds: []
-roots: []
+roots: [pie-ed]
+etymology_hook: "еда ← Proto-Slavic *ěda, with есть 'to eat'; English eat is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C221-kartina]
 <!-- hl-knowledge: introduces=[RU-LEX-C222-VESHCH222-01]; assesses=[] -->
 
 **еда** (*yedá*) — "food".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**еда** ← Proto-Slavic *\*ěda*, "food", on the root of *есть*, "to eat" — inherited. Vasmer relates it to Lithuanian *ėdà*, "food (for animals)", and Old Norse *át*, "food"; English *eat* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

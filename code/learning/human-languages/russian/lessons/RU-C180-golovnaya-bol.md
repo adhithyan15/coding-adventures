@@ -14,7 +14,8 @@ romanization: "golovnáya bol"
 concept_tag: RU-ZDOROV180-GOLOVNAYA-BOL
 prerequisites: [RU-C179-sinyak, RU-C179-perelom]
 sounds: []
-roots: []
+roots: [slavic-golva, slavic-boli]
+etymology_hook: "головная боль is 'head pain': головной, from голова 'head', + боль 'pain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C179-perelom]
 <!-- hl-knowledge: introduces=[RU-LEX-C180-ZDOROV180-01]; assesses=[] -->
 
 **головная боль** (*golovnáya bol*) — "a headache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**головная боль** is "head pain": *головная*, from *голова*, "head", with *боль*, "pain". Vasmer relates *боль* to Old English *bealu*, "evil", a link Berneker rejected.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

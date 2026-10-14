@@ -14,7 +14,8 @@ romanization: "zérkalo"
 concept_tag: RU-THINGS123-MIRROR
 prerequisites: [RU-C123-space, RU-C123-bottle]
 sounds: []
-roots: []
+roots: [slavic-zirkalo]
+etymology_hook: "зеркало is built on зреть 'to look', probably copying Latin speculum, from 'to look'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C123-bottle]
 <!-- hl-knowledge: introduces=[RU-LEX-C123-THINGS123-03]; assesses=[] -->
 
 **зеркало** (*zérkalo*) — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**зеркало** is built on the root of *зреть*, "to look", and *зоркий*, "sharp-sighted"; Vasmer thinks it probably copies Latin *speculum*, "mirror", from *specere*, "to look". Church Slavonic has *зерцало*, "mirror".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

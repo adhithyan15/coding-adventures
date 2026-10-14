@@ -14,7 +14,8 @@ romanization: "igrát"
 concept_tag: RU-VERB-IGRAT
 prerequisites: [RU-C40-stoyat, RU-C40-bezhat]
 sounds: []
-roots: []
+roots: [slavic-igra]
+etymology_hook: "играть goes with игра 'game', Proto-Slavic *jĭgra; Vasmer relates it to Sanskrit ejati 'stirs'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C40-bezhat]
 <!-- hl-knowledge: introduces=[RU-LEX-C40-VERB3-05]; assesses=[] -->
 
 **играть** (*igrát*) — "to play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**играть** goes with *игра*, "a game", ← Proto-Slavic *\*jĭgra*, *\*jĭgrati* — inherited. Vasmer relates it to Lithuanian *áikštytis*, "to be playful", and Sanskrit *ejati*, "stirs, moves".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

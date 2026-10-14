@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 244,
-  "sourceHash": "fnv1a64:0c0811c6a55a0749",
+  "sourceHash": "fnv1a64:c6bd63df28430932",
   "lessonIds": [
     "RU-C244-drevniy",
     "RU-C244-gromkiy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch244.txt",
   "json": "russian/narration/ch244.json",
-  "textHash": "fnv1a64:1ac312283a4e6b66",
-  "jsonHash": "fnv1a64:506ced58b91a6dc4",
+  "textHash": "fnv1a64:fb2e836f3a9d684d",
+  "jsonHash": "fnv1a64:5e0f59170a93e5e6",
   "findings": []
 }

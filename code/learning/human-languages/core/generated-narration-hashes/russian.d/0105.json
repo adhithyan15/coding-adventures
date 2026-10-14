@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 105,
-  "sourceHash": "fnv1a64:26d9cc8936a5746d",
+  "sourceHash": "fnv1a64:09399baf0c62e9f0",
   "lessonIds": [
     "RU-C105-flour",
     "RU-C105-chocolate",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch105.txt",
   "json": "russian/narration/ch105.json",
-  "textHash": "fnv1a64:b7d2489746cc4e2f",
-  "jsonHash": "fnv1a64:f176c59bdd728e72",
+  "textHash": "fnv1a64:40aefe9299237e79",
+  "jsonHash": "fnv1a64:5dce1fc78eab6160",
   "findings": []
 }

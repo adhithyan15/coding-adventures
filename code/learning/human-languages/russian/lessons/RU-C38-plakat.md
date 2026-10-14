@@ -14,7 +14,8 @@ romanization: "plákat"
 concept_tag: RU-VERB-PLAKAT
 prerequisites: [RU-C38-tantsevat, RU-C38-smeyatsya]
 sounds: []
-roots: []
+roots: [pie-pleh2k]
+etymology_hook: "плакать ← Proto-Slavic *plakati, first 'to beat one's breast'; Latin plangere 'to lament' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C38-smeyatsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C38-VERB1-05]; assesses=[] -->
 
 **плакать** (*plákat*) — "to cry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**плакать** ← Proto-Slavic *\*plakati* — inherited. Vasmer gives the first Slavic sense as "to beat one's breast" in mourning, and relates it to Lithuanian *plàkti*, "to beat", Greek *plēssō*, "I strike", and Latin *plangō*, "I beat my breast, lament".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

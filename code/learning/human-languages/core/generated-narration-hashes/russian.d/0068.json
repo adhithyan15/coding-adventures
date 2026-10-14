@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 68,
-  "sourceHash": "fnv1a64:2e47eb1eb4e06463",
+  "sourceHash": "fnv1a64:b233c6926d5897bb",
   "lessonIds": [
     "RU-C68-day",
     "RU-C68-week",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch68.txt",
   "json": "russian/narration/ch68.json",
-  "textHash": "fnv1a64:5469b2e7af0d57d9",
-  "jsonHash": "fnv1a64:c5af210d568d106e",
+  "textHash": "fnv1a64:c642da0d4a1560e5",
+  "jsonHash": "fnv1a64:c8389efb38ec2ba7",
   "findings": []
 }

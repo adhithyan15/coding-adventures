@@ -14,7 +14,8 @@ romanization: "ópyt"
 concept_tag: RU-RABOTA257-OPYT
 prerequisites: [RU-C257-proyekt, RU-C257-zadacha]
 sounds: []
-roots: []
+roots: [slavic-pytati]
+etymology_hook: "опыт is from пытать 'to try, to test'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C257-zadacha]
 <!-- hl-knowledge: introduces=[RU-LEX-C257-RABOTA257-05]; assesses=[] -->
 
 **опыт** (*ópyt*) — "experience; an experiment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**опыт** comes from *пытать*, "to test, to try" (Vasmer); Trubachev's note cites a first sense "a trial threshing". Vasmer compares Latin *putāre*, "to reckon, to prune".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

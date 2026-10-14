@@ -4,7 +4,7 @@
   "chapter": 111,
   "title": "Exam, Board, Rubber, Homework, Idea",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d40c2d8e88a230db",
+  "sourceHash": "fnv1a64:4d80f74cdb01617d",
   "lessons": [
     {
       "id": "RU-C111-exam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:192ba5127cdf98ca",
+      "sourceHash": "fnv1a64:afe768162b8bf973",
       "notice": null,
       "blocks": [
         {
@@ -67,6 +67,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "экзамен (ekzámen) — from Peter the Great's time; it came through Polish egzamen from Latin exāmen, \"a weighing, a test\" (Vasmer)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -77,7 +88,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -126,7 +137,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -157,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0796f1f82f5fcad2",
+      "sourceHash": "fnv1a64:c0e700c6165c37e1",
       "notice": null,
       "blocks": [
         {
@@ -205,6 +216,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "доска (doská) from Proto-Slavic dŭska, \"a board, a table\" — borrowed through Germanic (compare Old High German tisc, \"table\", Old English disc, \"dish\") from Latin discus, Greek dískos, \"a disc\" (Vasmer). German Tisch, \"table\", is the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -215,7 +237,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -264,7 +286,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -295,7 +317,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1bd2f58f3e13ee59",
+      "sourceHash": "fnv1a64:30313d5f411b912b",
       "notice": null,
       "blocks": [
         {
@@ -328,6 +350,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ластик (lástik) — in the sense \"an eraser\", it comes from Latin elasticus, \"springy\" (Trubachev, in Vasmer, citing Ushakov); rubber is elastic."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -338,7 +371,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -387,7 +420,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -418,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89ddd580c40e25d1",
+      "sourceHash": "fnv1a64:f89603eb63abc25f",
       "notice": null,
       "blocks": [
         {
@@ -451,6 +484,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "домашнее задание (domáshneye zadániye) is \"a home task\": домашнее, from дом, \"house\", with задание, \"a set task\", from задать, \"to set\", on the root of дать, \"to give\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -461,7 +505,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -510,7 +554,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -541,7 +585,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f73197e8c28ecce3",
+      "sourceHash": "fnv1a64:e305a2d857abb6dc",
       "notice": null,
       "blocks": [
         {
@@ -574,6 +618,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "идея (idéya) — recorded from 1710; it came from Polish idea, German Idee or French idée, from Latin idea, Greek idéa, \"look, form\", from ideîn, \"to see\" (Vasmer)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -584,7 +639,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -633,7 +688,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "sórok"
 concept_tag: RU-NUM2-FORTY
 prerequisites: [RU-C75-twelve, RU-C75-zero]
 sounds: []
-roots: []
+roots: [slavic-soroku]
+etymology_hook: "сорок: origin disputed; Vasmer ties it to сорочка 'shirt', a bundle of forty furs; others say Greek or Turkic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C75-zero]
 <!-- hl-knowledge: introduces=[RU-LEX-C76-NUM2-01]; assesses=[] -->
 
 **сорок** (*sórok*) — "forty". The odd one out: not built from **четыре**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сорок** — origin disputed. Old Russian *sorokŭ* was also "a bundle of forty sable pelts". Vasmer finds difficulties with Greek *(te)ssarákonta*, "forty", and probably links it with *сорочка*, "shirt", after Old Norse *serkr*, "a shirt; a bundle of furs"; Trubachev thinks a Turkic source, like Turkish *kırk*, "forty", possible.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

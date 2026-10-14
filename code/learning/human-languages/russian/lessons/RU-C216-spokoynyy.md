@@ -14,7 +14,8 @@ romanization: "spokóynyy"
 concept_tag: RU-KACH216-SPOKOYNYY
 prerequisites: [RU-C215-k-sozhaleniyu, RU-C215-k-schastyu]
 sounds: []
-roots: []
+roots: [slavic-koji]
+etymology_hook: "спокойный is from покой 'rest', which Vasmer relates to Latin quies 'quiet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C215-k-schastyu]
 <!-- hl-knowledge: introduces=[RU-LEX-C216-KACH216-01]; assesses=[] -->
 
 **спокойный** (*spokóynyy*) — "calm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**спокойный** is built on *покой*, "rest, peace", which Vasmer relates to Latin *quiēs*, "rest", and Gothic *hveila*, "a while": English *while* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

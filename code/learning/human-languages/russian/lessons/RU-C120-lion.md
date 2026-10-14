@@ -14,7 +14,8 @@ romanization: "lev"
 concept_tag: RU-THINGS120-LION
 prerequisites: [RU-C119-lips, RU-C119-chest]
 sounds: []
-roots: []
+roots: [leo-latin]
+etymology_hook: "лев ← Old High German lëwo, from Latin leo, Greek leōn, probably a bookish loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C119-chest]
 <!-- hl-knowledge: introduces=[RU-LEX-C120-THINGS120-01]; assesses=[] -->
 
 **лев** (*lev*) — "a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лев** ← Old High German *lëwo*, from Latin *leō*, Greek *léōn* (Vasmer). Vasmer thinks it came through books, since a spoken loan would have given *лёв*, and that the word's ultimate source is probably Semitic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

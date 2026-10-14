@@ -14,7 +14,8 @@ romanization: "blagodarít"
 concept_tag: RU-VERB-BLAGODARIT
 prerequisites: [RU-C141-znakomitsya, RU-C141-priglashat]
 sounds: []
-roots: []
+roots: [slavic-bologu]
+etymology_hook: "благодарить is благо 'good' + дар 'gift', Church Slavonic: благо stands for native болого"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C141-priglashat]
 <!-- hl-knowledge: introduces=[RU-LEX-C141-ACT141-04]; assesses=[] -->
 
 **благодарить** (*blagodarít*) — "to thank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**благодарить** is *благо*, "good", with *дарить*, "to give": "to give good" in return. *благо* is Church Slavonic, says Vasmer, for native *болого*; *благо-* often translates Greek *eu-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

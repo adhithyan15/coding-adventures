@@ -14,7 +14,8 @@ romanization: "monéta"
 concept_tag: RU-RABOTA203-MONETA
 prerequisites: [RU-C203-biznes, RU-C203-bankomat]
 sounds: []
-roots: []
+roots: [moneta-latin]
+etymology_hook: "монета came through Polish moneta from Latin moneta 'a mint'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C203-bankomat]
 <!-- hl-knowledge: introduces=[RU-LEX-C203-RABOTA203-05]; assesses=[] -->
 
 **монета** (*monéta*) — "a coin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**монета** — from the early 1700s; it came through Polish *moneta* from Latin *monēta*, "a mint, coined money" (Vasmer), after the temple of Juno Moneta where Rome struck its coins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

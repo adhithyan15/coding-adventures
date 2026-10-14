@@ -14,7 +14,8 @@ romanization: "królik"
 concept_tag: RU-THINGS117-RABBIT
 prerequisites: [RU-C116-waterfall, RU-C116-donkey]
 sounds: []
-roots: []
+roots: [cuniculus-latin]
+etymology_hook: "кролик ← Polish królik 'little king', a calque of German Küniglein, from Latin cuniculus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C116-donkey]
 <!-- hl-knowledge: introduces=[RU-LEX-C117-THINGS117-01]; assesses=[] -->
 
 **кролик** (*królik*) — "a rabbit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кролик** comes from Polish *królik*, "little king", which copies a German dialect *Künigl*, Middle High German *küniklîn*, from Latin *cunīculus*, "rabbit", heard as "little king" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

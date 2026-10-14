@@ -14,7 +14,8 @@ romanization: "molchát"
 concept_tag: RU-VERB-MOLCHAT
 prerequisites: [RU-C235-krichat, RU-C235-sheptat]
 sounds: []
-roots: []
+roots: [slavic-mulchati]
+etymology_hook: "молчать ← Proto-Slavic *mĭlčati; Vasmer says its kin are not reliably established"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C235-sheptat]
 <!-- hl-knowledge: introduces=[RU-LEX-C235-ACT235-03]; assesses=[] -->
 
 **молчать** (*molchát*) — "to be silent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**молчать** ← Proto-Slavic *\*mĭlčati* — inherited. Vasmer says its relatives are not reliably established; comparisons with Old High German *molawên*, "to soften", and Greek *malakós*, "soft", have been made.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ródstvennik"
 concept_tag: RU-VESHCH168-RODSTVENNIK
 prerequisites: [RU-C168-zhenikh, RU-C168-nevesta]
 sounds: []
-roots: []
+roots: [slavic-rodu]
+etymology_hook: "родственник is from родство 'kinship', from род 'family, kin'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C168-nevesta]
 <!-- hl-knowledge: introduces=[RU-LEX-C168-VESHCH168-04]; assesses=[] -->
 
 **родственник** (*ródstvennik*) — "a relative".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**родственник** is built on *родство*, "kinship", from *род*, "family, kin", with *-ник*. Vasmer relates *род* to Latvian *rads*, "a relative", and Sanskrit *várdhati*, "grows".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

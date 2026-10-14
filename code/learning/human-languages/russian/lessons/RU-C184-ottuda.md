@@ -14,7 +14,8 @@ romanization: "ottúda"
 concept_tag: RU-MESTO184-OTTUDA
 prerequisites: [RU-C184-tuda, RU-C184-syuda]
 sounds: []
-roots: []
+roots: [pie-to]
+etymology_hook: "оттуда is от 'from' + туда 'there'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C184-syuda]
 <!-- hl-knowledge: introduces=[RU-LEX-C184-MESTO184-05]; assesses=[] -->
 
 **оттуда** (*ottúda*) — "from there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**оттуда** is *от*, "from", with *туда*, "there", on the stem of *тот*, "that" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

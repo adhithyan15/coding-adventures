@@ -14,7 +14,8 @@ romanization: "lyógkiye"
 concept_tag: RU-ZDOROV180-LYOGKIYE
 prerequisites: [RU-C180-diyeta, RU-C180-vitamin]
 sounds: []
-roots: []
+roots: [pie-hlengwh]
+etymology_hook: "лёгкие is 'the light ones', from лёгкий 'light': the lungs float, as English lights"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C180-vitamin]
 <!-- hl-knowledge: introduces=[RU-LEX-C180-ZDOROV180-05]; assesses=[] -->
 
 **лёгкие** (*lyógkiye*) — "the lungs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лёгкие** is "the light ones", from *лёгкий*, "light": the lungs are the lightest organ, as in English *lights*, "lungs".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

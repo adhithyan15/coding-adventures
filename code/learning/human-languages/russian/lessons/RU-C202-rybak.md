@@ -14,7 +14,8 @@ romanization: "rybák"
 concept_tag: RU-RABOTA202-RYBAK
 prerequisites: [RU-C202-lyotchik, RU-C202-moryak]
 sounds: []
-roots: []
+roots: [slavic-ryba]
+etymology_hook: "рыбак is рыба 'fish' + -ак: a fisherman"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C202-moryak]
 <!-- hl-knowledge: introduces=[RU-LEX-C202-RABOTA202-05]; assesses=[] -->
 
 **рыбак** (*rybák*) — "a fisherman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рыбак** is *рыба*, "fish", with *-ак*, "a person": a fisherman.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

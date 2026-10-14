@@ -14,7 +14,8 @@ romanization: "gálstuk"
 concept_tag: RU-THINGS101-TIE
 prerequisites: [RU-C101-people, RU-C101-jumper]
 sounds: []
-roots: []
+roots: [dutch-halsdoek]
+etymology_hook: "галстук ← Dutch halsdoek, later German Halstuch: 'neck cloth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C101-jumper]
 <!-- hl-knowledge: introduces=[RU-LEX-C101-THINGS101-03]; assesses=[] -->
 
 **галстук** (*gálstuk*) — "a tie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**галстук** — first *галздуки*, in 1705, from Dutch *halsdoek*, "neck cloth", later reshaped after German *Halstuch* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

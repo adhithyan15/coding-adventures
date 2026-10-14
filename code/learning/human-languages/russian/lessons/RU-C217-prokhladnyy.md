@@ -14,7 +14,8 @@ romanization: "prokhládnyy"
 concept_tag: RU-KACH217-PROKHLADNYY
 prerequisites: [RU-C217-tupoy, RU-C217-gladkiy]
 sounds: []
-roots: []
+roots: [slavic-cholodu]
+etymology_hook: "прохладный is про- + хлад, the Church Slavonic shape of холод 'cold'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C217-gladkiy]
 <!-- hl-knowledge: introduces=[RU-LEX-C217-KACH217-03]; assesses=[] -->
 
 **прохладный** (*prokhládnyy*) — "cool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**прохладный** is *про-* with *хлад*, the Church Slavonic shape of *холод*, "cold" (Vasmer): -ла- against -оло-.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

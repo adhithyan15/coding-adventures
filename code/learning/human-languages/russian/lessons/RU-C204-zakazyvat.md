@@ -14,7 +14,8 @@ romanization: "zakázyvat"
 concept_tag: RU-VERB-ZAKAZYVAT
 prerequisites: [RU-C203-moneta, RU-C204-probovat]
 sounds: []
-roots: []
+roots: [slavic-kazati]
+etymology_hook: "заказывать is за- + казать 'to show, to tell': to order is to tell in advance"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C204-probovat]
 <!-- hl-knowledge: introduces=[RU-LEX-C204-ACT204-02]; assesses=[] -->
 
 **заказывать** (*zakázyvat*) — "to order (food, goods)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**заказывать** is *за-* with *-казывать*, from *казать*, "to show, to say": to order is to tell someone what you want ahead.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

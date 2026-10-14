@@ -14,7 +14,8 @@ romanization: "bryúki"
 concept_tag: RU-THINGS103-TROUSERS
 prerequisites: [RU-C103-jacket, RU-C103-shirt]
 sounds: []
-roots: []
+roots: [dutch-broek]
+etymology_hook: "брюки ← Low German brōk or Dutch broek 'breeches', of Gaulish origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C103-shirt]
 <!-- hl-knowledge: introduces=[RU-LEX-C103-THINGS103-04]; assesses=[] -->
 
 **брюки** (*bryúki*) — "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**брюки** — from Peter the Great's time, from Low German *brôk* or Dutch *broek*, "breeches"; the Germanic word goes with Latin-Gaulish *brāca*, "trousers" (Vasmer). English *breeches* is a cousin of the Dutch word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

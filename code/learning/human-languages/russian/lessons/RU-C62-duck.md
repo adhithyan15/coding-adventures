@@ -14,7 +14,8 @@ romanization: "útka"
 concept_tag: RU-ANIMALS3-DUCK
 prerequisites: [RU-C62-snake, RU-C62-hen]
 sounds: []
-roots: []
+roots: [slavic-oty]
+etymology_hook: "утка ← Proto-Slavic *ǫty 'duck' + -ка; Latin anas and Lithuanian antis are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C62-hen]
 <!-- hl-knowledge: introduces=[RU-LEX-C62-ANIMALS3-04]; assesses=[] -->
 
 **утка** (*útka*) — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**утка** is old *утица*, from Proto-Slavic *\*ǫty*, "duck" — inherited. Vasmer lists Lithuanian *ántis*, Latin *anas*, Old High German *anut* and Greek *nêssa*, all "duck". The *утка* that means a false news story copies French *canard*, Vasmer notes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

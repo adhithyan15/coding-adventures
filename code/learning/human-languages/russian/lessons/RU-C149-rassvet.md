@@ -14,7 +14,8 @@ romanization: "rassvét"
 concept_tag: RU-VREMYA149-RASSVET
 prerequisites: [RU-C149-chetvert, RU-C149-sutki]
 sounds: []
-roots: []
+roots: [slavic-svetu]
+etymology_hook: "рассвет is рас- + свет 'light': light spreading out"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C149-sutki]
 <!-- hl-knowledge: introduces=[RU-LEX-C149-VREMYA149-04]; assesses=[] -->
 
 **рассвет** (*rassvét*) — "dawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рассвет** is *рас-*, "apart, spreading", with *свет*, "light": dawn is light spreading. Vasmer relates *свет* to Sanskrit *śvetá-*, "white".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

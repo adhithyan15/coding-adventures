@@ -14,7 +14,8 @@ romanization: "óvoshchi"
 concept_tag: RU-THINGS104-VEGETABLES
 prerequisites: [RU-C103-dress, RU-C104-beef]
 sounds: []
-roots: []
+roots: [slavic-ovoshchi]
+etymology_hook: "овощи: Vasmer rejects the usual Germanic source and suggests a root 'to grow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C104-beef]
 <!-- hl-knowledge: introduces=[RU-LEX-C104-THINGS104-02]; assesses=[] -->
 
 **овощи** (*óvoshchi*) — "vegetables".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**овощи** is the plural of *овощ*, "a vegetable, a fruit". Vasmer rejects the common view that it comes from Old High German *obaz*, "fruit", and suggests, with a "perhaps", a Slavic *\*voksti-* from a root "to grow", as in Gothic *wahsjan*, "to grow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

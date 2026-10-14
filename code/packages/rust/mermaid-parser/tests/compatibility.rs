@@ -1655,6 +1655,31 @@ fn swimlane_internal_rect_with_title_reaches_semantic_ir() {
 }
 
 #[test]
+fn swimlane_internal_container_shapes_reach_shared_semantic_ir() {
+    use diagram_ir::DiagramShape;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Internal\n  card@{ shape: kanbanItem, label: \"Card\" }\n  topic@{ shape: mindmapCircle, label: \"Topic\" }\n  branch@{ shape: defaultMindmapNode, label: \"Branch\" }\nend\ncard --> topic --> branch",
+    ).expect("Mermaid 11.16.1 internal container shapes should parse");
+
+    assert_eq!(diagram.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+        &DiagramShape::RoundedRect,
+        &DiagramShape::Ellipse,
+        &DiagramShape::RoundedRect,
+    ]);
+}
+
+#[test]
+fn swimlane_internal_compartment_shapes_reach_titled_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Internal\n  classifier@{ shape: classBox, label: \"Class\" }\n  entity@{ shape: erBox, label: \"Entity\" }\n  requirement@{ shape: requirementBox, label: \"Requirement\" }\nend\nclassifier --> entity --> requirement",
+    ).expect("Mermaid 11.16.1 internal compartment shapes should parse");
+
+    assert!(diagram.nodes.iter().all(|node|
+        node.shape == diagram_ir::DiagramShape::TitledRect));
+}
+
+#[test]
 fn swimlane_start_and_stop_control_shapes_reach_semantic_ir() {
     use diagram_ir::DiagramShape;
 

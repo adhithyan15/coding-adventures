@@ -14,7 +14,8 @@ romanization: "kostyúm"
 concept_tag: RU-VESHCH248-KOSTYUM
 prerequisites: [RU-C248-odezhda, RU-C248-plashch]
 sounds: []
-roots: []
+roots: [french-costume]
+etymology_hook: "костюм ← French costume, from Italian costume 'custom', Latin consuetudo"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C248-plashch]
 <!-- hl-knowledge: introduces=[RU-LEX-C248-VESHCH248-03]; assesses=[] -->
 
 **костюм** (*kostyúm*) — "a suit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**костюм** comes from French *costume*, from Italian *costume*, "custom, dress", Latin *cōnsuētūdō*, "custom" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

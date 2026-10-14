@@ -14,7 +14,8 @@ romanization: "kréslo"
 concept_tag: RU-VESHCH159-KRESLO
 prerequisites: [RU-C159-predmet, RU-C159-mebel]
 sounds: []
-roots: []
+roots: [slavic-kreslo]
+etymology_hook: "кресло ← Proto-Slavic *krěslo; Lithuanian krėslas 'chair' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C159-mebel]
 <!-- hl-knowledge: introduces=[RU-LEX-C159-VESHCH159-04]; assesses=[] -->
 
 **кресло** (*kréslo*) — "an armchair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кресло** ← Proto-Slavic *\*krěslo* — inherited, a cousin of Lithuanian *krėslas* and Latvian *krēsls*, "chair" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

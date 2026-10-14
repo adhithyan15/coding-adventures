@@ -14,7 +14,8 @@ romanization: "móre"
 concept_tag: RU-NATURE2-SEA
 prerequisites: [RU-C56-river, RU-C56-lake]
 sounds: []
-roots: []
+roots: [pie-mori]
+etymology_hook: "море ← Proto-Slavic *morje; Latin mare, Gothic marei and English mere are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C56-lake]
 <!-- hl-knowledge: introduces=[RU-LEX-C56-NATURE2-05]; assesses=[] -->
 
 **море** (*móre*) — "the sea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**море** ← Proto-Slavic *\*morje* — inherited. Vasmer lists Lithuanian *mãrios*, "lagoon", Gothic *marei*, Old Irish *muir* and Latin *mare*, all "sea": English *mere*, "a lake", is a cousin. He gives "marsh" as a possible older sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

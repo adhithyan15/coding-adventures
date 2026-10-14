@@ -14,7 +14,8 @@ romanization: "gost"
 concept_tag: RU-PEOPLE-GUEST
 prerequisites: [RU-C36-granddaughter, RU-C37-neighbour]
 sounds: []
-roots: []
+roots: [pie-ghostis]
+etymology_hook: "гость ← Proto-Slavic *gostĭ; German Gast, Latin hostis and English guest are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C37-neighbour]
 <!-- hl-knowledge: introduces=[RU-LEX-C37-PEOPLE-02]; assesses=[] -->
 
 **гость** (*gost*) — "a guest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**гость** ← Proto-Slavic *\*gostĭ* — inherited. Vasmer relates it to Gothic *gasts* and Latin *hostis*, "stranger, enemy", and rejects a loan from Germanic: English *guest* is a cousin, from PIE *\*gʰóstis*. In Old Russian a *гость* was also a travelling merchant (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

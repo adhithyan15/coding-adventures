@@ -14,7 +14,8 @@ romanization: "opásnyy"
 concept_tag: RU-QUAL128-DANGEROUS
 prerequisites: [RU-C128-wrong, RU-C128-ready]
 sounds: []
-roots: []
+roots: [slavic-pasti]
+etymology_hook: "опасный is from опасаться 'to be wary', from пасти 'to guard': what one must guard against"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C128-ready]
 <!-- hl-knowledge: introduces=[RU-LEX-C128-QUAL128-03]; assesses=[] -->
 
 **опасный** (*opásnyy*) — "dangerous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**опасный** goes with *опасаться*, "to be wary", from *пасти*, "to tend, to guard" (Vasmer); Old Russian *опасно* meant "carefully". Dangerous is what you must be wary of.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

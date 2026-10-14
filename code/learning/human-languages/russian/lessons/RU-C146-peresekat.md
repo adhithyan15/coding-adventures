@@ -14,7 +14,8 @@ romanization: "peresekát"
 concept_tag: RU-VERB-PERESEKAT
 prerequisites: [RU-C146-bronirovat, RU-C146-povorachivat]
 sounds: []
-roots: []
+roots: [slavic-seku]
+etymology_hook: "пересекать is пере- 'across' + секать 'to cut': to cut across"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C146-povorachivat]
 <!-- hl-knowledge: introduces=[RU-LEX-C146-ACT146-03]; assesses=[] -->
 
 **пересекать** (*peresekát*) — "to cross".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пересекать** is *пере-*, "across", with *-секать*, from *сечь*, "to cut": to cross is to cut across.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

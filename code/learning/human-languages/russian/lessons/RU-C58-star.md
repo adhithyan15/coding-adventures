@@ -14,7 +14,8 @@ romanization: "zvezdá"
 concept_tag: RU-SKY-STAR
 prerequisites: [RU-C58-sun, RU-C58-moon]
 sounds: []
-roots: []
+roots: [slavic-gvezda]
+etymology_hook: "звезда ← Proto-Slavic *gvězda; Lithuanian žvaigždė 'star' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C58-moon]
 <!-- hl-knowledge: introduces=[RU-LEX-C58-SKY-04]; assesses=[] -->
 
 **звезда** (*zvezdá*) — "a star".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**звезда** ← Proto-Slavic *\*gvězda* — inherited; *г* before *ě* became *з*. Vasmer relates it to Lithuanian *žvaigždė*, "star", and Latvian *zvaigzne*, from a root "to shine".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

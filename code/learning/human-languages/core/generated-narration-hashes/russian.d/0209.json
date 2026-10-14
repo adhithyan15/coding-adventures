@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 209,
-  "sourceHash": "fnv1a64:97da7dbf2b3164a6",
+  "sourceHash": "fnv1a64:7bc2653a13242495",
   "lessonIds": [
     "RU-C209-fotografirovat",
     "RU-C209-sobirat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch209.txt",
   "json": "russian/narration/ch209.json",
-  "textHash": "fnv1a64:fb04786b6f5bad83",
-  "jsonHash": "fnv1a64:9bb86a6505c5afa2",
+  "textHash": "fnv1a64:ff818b2c75af489c",
+  "jsonHash": "fnv1a64:db2e51e4caaa8ecb",
   "findings": []
 }

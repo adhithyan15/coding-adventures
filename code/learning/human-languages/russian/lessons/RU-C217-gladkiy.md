@@ -14,7 +14,8 @@ romanization: "gládkiy"
 concept_tag: RU-KACH217-GLADKIY
 prerequisites: [RU-C216-strogiy, RU-C217-tupoy]
 sounds: []
-roots: []
+roots: [slavic-gladiti]
+etymology_hook: "гладкий ← Proto-Slavic *gladŭkŭ; Latin glaber 'smooth' and English glad are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C217-tupoy]
 <!-- hl-knowledge: introduces=[RU-LEX-C217-KACH217-02]; assesses=[] -->
 
 **гладкий** (*gládkiy*) — "smooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**гладкий** ← Proto-Slavic *\*gladŭkŭ* — inherited. Vasmer relates it to Lithuanian *glodùs*, "smooth", Latin *glaber*, "smooth, bald", and Old High German *glat*, "smooth, shining": English *glad* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

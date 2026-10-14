@@ -14,7 +14,8 @@ romanization: "váza"
 concept_tag: RU-VESHCH221-VAZA
 prerequisites: [RU-C221-myach, RU-C221-kukla]
 sounds: []
-roots: []
+roots: [vasum-latin]
+etymology_hook: "ваза came from German Vase or French vase, from Latin vas, vasa 'a vessel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C221-kukla]
 <!-- hl-knowledge: introduces=[RU-LEX-C221-VESHCH221-04]; assesses=[] -->
 
 **ваза** (*váza*) — "a vase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ваза** came from German *Vase* or French *vase*, from Latin *vās*, plural *vāsa*, "a vessel" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

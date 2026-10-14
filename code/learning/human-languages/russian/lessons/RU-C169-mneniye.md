@@ -14,7 +14,8 @@ romanization: "mnéniye"
 concept_tag: RU-VESHCH169-MNENIYE
 prerequisites: [RU-C169-prosba, RU-C169-pomoshch]
 sounds: []
-roots: []
+roots: [slavic-mineti]
+etymology_hook: "мнение is from мнить 'to think, to suppose'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C169-pomoshch]
 <!-- hl-knowledge: introduces=[RU-LEX-C169-VESHCH169-03]; assesses=[] -->
 
 **мнение** (*mnéniye*) — "an opinion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мнение** comes from *мнить*, "to suppose, to think" (Vasmer), the root also of *память*, "memory".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

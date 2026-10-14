@@ -14,7 +14,8 @@ romanization: "zaprávka"
 concept_tag: RU-VESHCH167-ZAPRAVKA
 prerequisites: [RU-C167-gruzovik, RU-C167-benzin]
 sounds: []
-roots: []
+roots: [slavic-pravu]
+etymology_hook: "заправка is from заправить 'to fill up', за- + править 'to set right'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C167-benzin]
 <!-- hl-knowledge: introduces=[RU-LEX-C167-VESHCH167-05]; assesses=[] -->
 
 **заправка** (*zaprávka*) — "a petrol station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**заправка** comes from *заправить*, "to fill up, to refuel", *за-* with *править*, "to set right", from *правый*, "straight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "lodýzhka"
 concept_tag: RU-THINGS119-ANKLE
 prerequisites: [RU-C118-dolphin, RU-C118-elbow]
 sounds: []
-roots: []
+roots: [slavic-lodyga]
+etymology_hook: "лодыжка is built on лодыга 'ankle bone, stalk', a word Vasmer calls unclear"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C118-elbow]
 <!-- hl-knowledge: introduces=[RU-LEX-C119-THINGS119-01]; assesses=[] -->
 
 **лодыжка** (*lodýzhka*) — "an ankle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лодыжка** is built on *лодыга*, "an ankle bone; a hollow stalk", with *-ка*. Vasmer calls *лодыга* unclear and finds the proposed sources, a Polish loan, Latin *lactūca*, "lettuce", or German, unconvincing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

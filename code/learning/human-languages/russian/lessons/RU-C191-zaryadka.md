@@ -14,7 +14,8 @@ romanization: "zaryádka"
 concept_tag: RU-VESHCH191-ZARYADKA
 prerequisites: [RU-C191-rozetka, RU-C191-provod]
 sounds: []
-roots: []
+roots: [slavic-redu]
+etymology_hook: "зарядка is from зарядить 'to charge, to load', за- + ряд 'a row, order'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C191-provod]
 <!-- hl-knowledge: introduces=[RU-LEX-C191-VESHCH191-04]; assesses=[] -->
 
 **зарядка** (*zaryádka*) — "a charger; morning exercises".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**зарядка** is built on *зарядить*, "to charge, to load", *за-* with the root of *ряд*, "a row, an order", and *снаряд*, "equipment"; *зарядка* also means "morning exercises", charging the body.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

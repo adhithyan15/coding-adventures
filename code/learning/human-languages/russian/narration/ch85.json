@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Second, Weekend, Date, Century, Often",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9d44dc4a621ed503",
+  "sourceHash": "fnv1a64:41fb298e3b14fc23",
   "lessons": [
     {
       "id": "RU-C85-second",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:867bdcbd8dbe8c13",
+      "sourceHash": "fnv1a64:cd692c7270cb6f54",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "секунда (sekúnda) probably came through German Sekunde from Latin (pars minūta) secunda, \"the second small part\" of an hour, after Ptolemy's counting in sixties (Vasmer). The first small part is the минута, \"minute\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:979959b608a03049",
+      "sourceHash": "fnv1a64:672e04e8a44146e5",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "выходные (vykhodnýye) is short for выходные (vykhodnýye) дни, \"days for going out\", from выход, \"a way out\": вы-, \"out\", with ход, \"a going\", the root of ходить, \"to walk\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5739680fca021f07",
+      "sourceHash": "fnv1a64:ef590c8923ac0060",
       "notice": null,
       "blocks": [
         {
@@ -317,6 +339,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "дата (dáta) comes from Latin data, \"given\", the word that began the dating line of letters, as in data Rōmae, \"given at Rome\"; German Datum has the same source."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -327,7 +360,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -376,7 +409,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -407,7 +440,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a31ab075f6dc23ff",
+      "sourceHash": "fnv1a64:5b4d95b438c745b4",
       "notice": null,
       "blocks": [
         {
@@ -440,6 +473,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "век (vek) from Proto-Slavic věkŭ — inherited; first \"strength, a lifetime\", then \"an age\", then \"a century\". Vasmer relates it to Lithuanian viẽkas, \"strength, life\", and Gothic weihan, \"to fight\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -450,7 +494,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -499,7 +543,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -530,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ac7189d47880e0b",
+      "sourceHash": "fnv1a64:1d5f17a8e5c9bcfc",
       "notice": null,
       "blocks": [
         {
@@ -563,6 +607,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "часто (chásto) is частый, \"dense, frequent\", made into an adverb with -о. частый from Proto-Slavic čęstŭ, which Vasmer relates to Lithuanian kimštas, \"stuffed full\": often is \"thickly\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -573,7 +628,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -622,7 +677,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

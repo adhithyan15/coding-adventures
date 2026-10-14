@@ -14,7 +14,8 @@ romanization: "pozhárnyy"
 concept_tag: RU-THINGS109-FIREFIGHTER
 prerequisites: [RU-C109-lawyer, RU-C109-engineer]
 sounds: []
-roots: []
+roots: [slavic-goreti]
+etymology_hook: "пожарный is from пожар 'a fire', по- + жар 'heat'; Greek thermos 'warm' is a cousin of жар"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C109-engineer]
 <!-- hl-knowledge: introduces=[RU-LEX-C109-THINGS109-03]; assesses=[] -->
 
 **пожарный** (*pozhárnyy*) — "a firefighter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пожарный** is an adjective from *пожар*, "a blaze", standing alone: "the fire man". *пожар* is *по-* with *жар*, "heat" (Vasmer), which he relates to Greek *thermós*, "warm", and Latin *formus*, "warm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

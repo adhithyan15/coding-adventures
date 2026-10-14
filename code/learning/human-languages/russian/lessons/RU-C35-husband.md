@@ -14,7 +14,8 @@ romanization: "muzh"
 concept_tag: RU-FAMILY1-HUSBAND
 prerequisites: [RU-C35-daughter, RU-C35-grandmother]
 sounds: []
-roots: []
+roots: [pie-monu-man]
+etymology_hook: "муж ← Proto-Slavic *mǫžĭ 'a man'; Sanskrit manu 'man' and English man are cousins (Vasmer)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C35-grandmother]
 <!-- hl-knowledge: introduces=[RU-LEX-C35-FAMILY1-04]; assesses=[] -->
 
 **муж** (*muzh*) — "a husband".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**муж** ← Proto-Slavic *\*mǫžĭ*, "a man" — inherited. Vasmer calls it undoubtedly related to Sanskrit *mánu-*, "man", and Gothic *manna*, so English *man* is a cousin. "Husband" grew out of "man".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

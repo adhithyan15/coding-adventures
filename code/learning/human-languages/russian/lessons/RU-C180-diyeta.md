@@ -14,7 +14,8 @@ romanization: "diyéta"
 concept_tag: RU-ZDOROV180-DIYETA
 prerequisites: [RU-C180-golovnaya-bol, RU-C180-son]
 sounds: []
-roots: []
+roots: [diaeta-latin]
+etymology_hook: "диета ← French diète or Latin diaeta, from Greek diaita 'a way of life'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C180-son]
 <!-- hl-knowledge: introduces=[RU-LEX-C180-ZDOROV180-03]; assesses=[] -->
 
 **диета** (*diyéta*) — "a diet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**диета** is a bookish loan from French *diète* or Latin *diaeta*, from Greek *díaita*, "a way of living" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

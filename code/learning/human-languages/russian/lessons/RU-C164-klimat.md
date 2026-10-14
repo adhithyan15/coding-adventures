@@ -14,7 +14,8 @@ romanization: "klímat"
 concept_tag: RU-VESHCH164-KLIMAT
 prerequisites: [RU-C164-pivo, RU-C164-vino]
 sounds: []
-roots: []
+roots: [clima-latin]
+etymology_hook: "климат ← French climat, Latin clima, from Greek klima 'slope (of the earth)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C164-vino]
 <!-- hl-knowledge: introduces=[RU-LEX-C164-VESHCH164-03]; assesses=[] -->
 
 **климат** (*klímat*) — "a climate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**климат** comes, by its written shape, from French *climat*, Latin *clima*, from Greek *klíma*, "a slope", the earth's slope from equator to pole (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

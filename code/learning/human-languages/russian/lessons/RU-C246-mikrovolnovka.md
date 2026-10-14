@@ -14,7 +14,8 @@ romanization: "mikrovolnóvka"
 concept_tag: RU-VESHCH246-MIKROVOLNOVKA
 prerequisites: [RU-C245-uzhasnyy, RU-C245-otlichnyy]
 sounds: []
-roots: []
+roots: [slavic-vilna]
+etymology_hook: "микроволновка is микроволновая печь 'microwave oven' cut short; волна is 'a wave'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C245-otlichnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C246-VESHCH246-01]; assesses=[] -->
 
 **микроволновка** (*mikrovolnóvka*) — "a microwave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**микроволновка** is *микроволновая печь*, "microwave oven", folded into one word with *-ка*: Greek *mikrós*, "small", with *волна*, "a wave".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

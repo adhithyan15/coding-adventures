@@ -14,7 +14,8 @@ romanization: "paltó"
 concept_tag: RU-THINGS102-COAT
 prerequisites: [RU-C102-boots, RU-C102-skirt]
 sounds: []
-roots: []
+roots: [french-paletot]
+etymology_hook: "пальто ← French paletot 'an overcoat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C102-skirt]
 <!-- hl-knowledge: introduces=[RU-LEX-C102-THINGS102-03]; assesses=[] -->
 
 **пальто** (*paltó*) — "a coat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пальто** comes from French *paletot*, "an overcoat"; Vasmer traces it further to Spanish *palletoque*, "a hooded cloak", and Latin *palla*, "a mantle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

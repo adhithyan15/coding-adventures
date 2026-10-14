@@ -14,7 +14,8 @@ romanization: "planshét"
 concept_tag: RU-VESHCH220-PLANSHET
 prerequisites: [RU-C219-pylesos, RU-C219-dukhovka]
 sounds: []
-roots: []
+roots: [french-planchette]
+etymology_hook: "планшет ← French planchette 'a small board'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C219-dukhovka]
 <!-- hl-knowledge: introduces=[RU-LEX-C220-VESHCH220-01]; assesses=[] -->
 
 **планшет** (*planshét*) — "a tablet (computer)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**планшет** comes from French *planchette*, "a small board, a drawing board", from *planche*, "a plank".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

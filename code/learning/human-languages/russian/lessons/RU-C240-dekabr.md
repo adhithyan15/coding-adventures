@@ -14,7 +14,8 @@ romanization: "dekábr"
 concept_tag: RU-VREMYA240-DEKABR
 prerequisites: [RU-C239-lob, RU-C240-noyabr]
 sounds: []
-roots: []
+roots: [latin-december]
+etymology_hook: "декабрь came through Byzantine Greek dekembrios from Latin december 'the tenth (month)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C240-noyabr]
 <!-- hl-knowledge: introduces=[RU-LEX-C240-VREMYA240-02]; assesses=[] -->
 
 **декабрь** (*dekábr*) — "December".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**декабрь** — Old Russian *декябрь*; it came through Byzantine Greek *dekémbrios* from Latin *december*, "the tenth month" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

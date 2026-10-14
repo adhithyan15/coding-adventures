@@ -14,7 +14,7 @@ sounds: [cyrillic-false-friends, stress-unmarked]
 roots: [slavic-zvati]
 etymology_hook: "меня зовут is literally '[they] CALL me' — an unnamed 'they' doing the naming, so the sentence contains no word for 'my' and none for 'name'; and меня is not я plus an ending but a SUPPLETIVE form from a different PIE stem, the first case FORM in this book"
 duration:
-  max_seconds: 240
+  max_seconds: 275
 requires:
   knowledge: [RU-LEX-YA]
 introduces:
@@ -38,15 +38,12 @@ reviews_of: [RU-C02-ty-vy, RU-C01-privet]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Many languages say "my name is" with a word for
-*my* and a word for *name*. Russian says something quite different, and it is
-worth taking apart slowly.
+*my* and a word for *name*. Russian says something quite different.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[RU-LEX-MENYA-ZOVUT]; assesses=[] -->
 
 > *Menyá zovút Anna.* — "My name is Anna."
-
-Now the literal reading:
 
 **меня** — *menya* — **me**, the object form. **зовут** — *zovut* —
 **they call**.
@@ -59,12 +56,12 @@ reports what people call you, not what you possess.
 ## Grammar Lens: the invisible "they"
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL]; assesses=[] -->
 
-*Zovút* is the **they** form of *zvat'*, "to call." But there is no *они* ("they")
+*Zovút* is the **they** form of *zvat'*, "to call," inherited from Proto-Slavic *\*zŭvati*, a cousin of Sanskrit *hávate*, "calls" (Vasmer). But there is no *они* ("they")
 anywhere — and there isn't meant to be. Russian uses a bare plural verb to mean
 "people in general," the way English says *"they say it'll rain"* without anyone
 in mind.
 
-English has the same trick and doesn't notice it:
+English does the same:
 
 > *They call me Anna.* — Who are *they*? Nobody. Everybody.
 
@@ -81,7 +78,7 @@ now the **object** of the calling, not the one doing it. Russian changes the
 **я** is *I*, the one acting; **меня** is *me*, the one acted on.
 
 English does this with about six **pairs** — *I/me*, *he/him*, *she/her*,
-*we/us*, *they/them*, *who/whom*, plus the archaic *thou/thee*. Russian does it with **every noun and
+*we/us*, *they/them*, *who/whom*. Russian does it with **every noun and
 pronoun in the language**. That system is called **case**, and it is the main
 thing standing between you and Russian.
 

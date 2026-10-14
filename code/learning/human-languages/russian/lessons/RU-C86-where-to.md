@@ -14,7 +14,8 @@ romanization: "kudá"
 concept_tag: RU-LOC86-WHERE-TO
 prerequisites: [RU-C85-often, RU-C86-where]
 sounds: []
-roots: []
+roots: [pie-kwo]
+etymology_hook: "куда ← Proto-Slavic *kǫdu, on the question stem of кто 'who'; Latin quando is compared"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C86-where]
 <!-- hl-knowledge: introduces=[RU-LEX-C86-LOC86-02]; assesses=[] -->
 
 **куда** (*kudá*) — "where to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**куда** ← Proto-Slavic *\*kǫdu* — inherited, on the question stem of *кто*, "who" (Vasmer). Vasmer compares Old Prussian *isquendau*, "from where", and Latin *quandō*, "when".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

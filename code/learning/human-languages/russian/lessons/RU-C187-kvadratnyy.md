@@ -14,7 +14,8 @@ romanization: "kvadrátnyy"
 concept_tag: RU-KACH187-KVADRATNYY
 prerequisites: [RU-C187-glubokiy, RU-C187-rovnyy]
 sounds: []
-roots: []
+roots: [quadrum-latin]
+etymology_hook: "квадратный is квадрат 'a square' + -ный; квадрат came through German Quadrat from Latin quadratum"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C187-rovnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C187-KACH187-04]; assesses=[] -->
 
 **квадратный** (*kvadrátnyy*) — "square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**квадратный** is *квадрат*, "a square", with *-ный*. *квадрат*, recorded from 1720, came through German *Quadrat* from Latin *quadrātum*, "a four-cornered figure" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

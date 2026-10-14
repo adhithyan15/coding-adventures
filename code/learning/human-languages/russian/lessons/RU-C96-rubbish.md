@@ -14,7 +14,8 @@ romanization: "músor"
 concept_tag: RU-THINGS96-RUBBISH
 prerequisites: [RU-C96-toothbrush, RU-C96-comb]
 sounds: []
-roots: []
+roots: [slavic-musoru]
+etymology_hook: "мусор: Vasmer compares Greek mysos 'defilement'; Trubachev ties it to бусор 'junk'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C96-comb]
 <!-- hl-knowledge: introduces=[RU-LEX-C96-THINGS96-05]; assesses=[] -->
 
 **мусор** (*músor*) — "rubbish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мусор** — Vasmer derives it from *\*mouds-* and compares Greek *mýsos*, "defilement"; Trubachev, in a note, ties it instead to dialect *бусор*, "junk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

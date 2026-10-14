@@ -14,7 +14,8 @@ romanization: "kúrtka"
 concept_tag: RU-THINGS103-JACKET
 prerequisites: [RU-C102-socks, RU-C103-hat]
 sounds: []
-roots: []
+roots: [curtus-latin]
+etymology_hook: "куртка came through Polish kurtka from Latin curtus 'short'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C103-hat]
 <!-- hl-knowledge: introduces=[RU-LEX-C103-THINGS103-02]; assesses=[] -->
 
 **куртка** (*kúrtka*) — "a jacket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**куртка** came through Polish *kurta*, *kurtka* from Latin *curtus*, "short" (Vasmer); a Turkish source he finds unlikely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

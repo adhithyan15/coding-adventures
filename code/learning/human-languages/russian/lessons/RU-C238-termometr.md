@@ -14,7 +14,8 @@ romanization: "termómetr"
 concept_tag: RU-ZDOROV238-TERMOMETR
 prerequisites: [RU-C238-maz, RU-C238-kapli]
 sounds: []
-roots: []
+roots: [greek-thermos]
+etymology_hook: "термометр is an international coinage: Greek thermos 'warm' + metron 'measure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C238-kapli]
 <!-- hl-knowledge: introduces=[RU-LEX-C238-ZDOROV238-03]; assesses=[] -->
 
 **термометр** (*termómetr*) — "a thermometer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**термометр** is an international coinage from Greek *thermós*, "warm", and *métron*, "measure". *thermós* is a cousin of Russian *жар*, "heat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

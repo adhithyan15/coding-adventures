@@ -447,6 +447,31 @@ complete registry, program identity, or duplicate-identity behavior; those
 remain separate Haskell conformance items. Adding this native fixture consumer
 MUST also extend the exact fixture-to-build-tool CI selection map.
 
+The subsequent Haskell language-registry adopter MUST materialize every checked
+file in `discovery/language-registry` in an isolated bounded tree and compare
+the complete sorted native projection of qualified name, language,
+repository-relative package root and selected BUILD path to every expected
+record. The leading `packages/<bucket>` or `programs/<bucket>` below the
+configured code root is the only language discriminator. Checkout ancestors
+and later components cannot change language or package/program identity;
+preserve the basename's original case and report an unrecognized bucket as
+`unknown`. Exclude the leading specification subtree before BUILD reads.
+Prune all exact, case-sensitive generated components from the embedded shared
+source-input registry before membership; near-case and suffixed source names
+remain discoverable. Retain the independent narrow Dune regression. This
+consumer does not qualify canonical BUILD membership, platform precedence,
+duplicate-identity rejection, evaluated Starlark output or adapter execution.
+
+The exported Haskell `inferLanguage` compatibility helper accepts code-relative
+`packages/...` and `programs/...` paths, or paths containing `code` immediately
+followed by one of those origins. For nested structural anchors it uses the
+innermost such `code` anchor, with exact bucket spelling. Other paths return
+`unknown`. Production discovery uses its explicit canonical code root instead
+of this compatibility heuristic. Tests MUST include ancestor language words,
+unknown buckets followed by a recognized basename, and package/program pairs.
+Validate every materialized path and the complete file-count/UTF-8-byte budget
+before writes; never execute fixture BUILD commands.
+
 The Elixir Dune-discovery adopter MUST project those same four OCaml package
 BUILD records through its production `discover_packages` walk. It MUST exclude
 the exact `_build` component while retaining `_Build` and `_build-example`,

@@ -14,7 +14,8 @@ romanization: "ádres"
 concept_tag: RU-WORDS-ADDRESS
 prerequisites: [RU-C54-lesson, RU-C54-word]
 sounds: []
-roots: []
+roots: [french-adresse]
+etymology_hook: "адрес came under Peter the Great from Polish adres or French adresse"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C54-word]
 <!-- hl-knowledge: introduces=[RU-LEX-C54-WORDS-03]; assesses=[] -->
 
 **адрес** (*ádres*) — "an address".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**адрес** came in Peter the Great's time from Polish *adres* or French *adresse* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

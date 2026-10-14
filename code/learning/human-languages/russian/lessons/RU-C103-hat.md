@@ -14,7 +14,8 @@ romanization: "shápka"
 concept_tag: RU-THINGS103-HAT
 prerequisites: [RU-C102-shoes, RU-C102-socks]
 sounds: []
-roots: []
+roots: [cappa-latin]
+etymology_hook: "шапка is usually traced through Old French chape to Latin cappa 'a hooded cloak', a view with problems"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C102-socks]
 <!-- hl-knowledge: introduces=[RU-LEX-C103-THINGS103-01]; assesses=[] -->
 
 **шапка** (*shápka*) — "a hat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шапка** — recorded from 1327. It is usually taken through Middle High German *schapël* from Old French *chape*, *chapel*, from Latin *cappa*, "a hooded cloak"; Vasmer notes that West Slavic has only *č-*, as in Polish *czapka*, which troubles that account.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

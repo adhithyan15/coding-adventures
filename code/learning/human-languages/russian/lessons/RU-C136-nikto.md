@@ -14,7 +14,8 @@ romanization: "niktó"
 concept_tag: RU-NEG136-NIKTO
 prerequisites: [RU-C135-to-draw, RU-C135-to-travel]
 sounds: []
-roots: []
+roots: [pie-kwo]
+etymology_hook: "никто is ни 'not even' + кто 'who'; Lithuanian niekas 'nobody' is built the same way"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C135-to-travel]
 <!-- hl-knowledge: introduces=[RU-LEX-C136-NEG136-01]; assesses=[] -->
 
 **никто** (*niktó*) — "nobody". Russian still puts **не** before the verb: **Никто не знает.** — *niktó ne znáyet* — "Nobody knows." Two negatives make one "no".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**никто** is *ни*, "not even", with *кто*, "who" (Vasmer): "not anyone". Vasmer compares Lithuanian *niẽkas*, "nobody, nothing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

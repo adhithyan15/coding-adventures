@@ -14,7 +14,8 @@ romanization: "lýzhi"
 concept_tag: RU-VESHCH166-LYZHI
 prerequisites: [RU-C165-khomyak, RU-C165-yozh]
 sounds: []
-roots: []
+roots: [slavic-lyzha]
+etymology_hook: "лыжи is the plural of лыжа 'a ski', linked with dialect лызгать 'to slide on ice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C165-yozh]
 <!-- hl-knowledge: introduces=[RU-LEX-C166-VESHCH166-01]; assesses=[] -->
 
 **лыжи** (*lýzhi*) — "skis".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лыжи** is the plural of *лыжа*, "a ski". Vasmer links it with dialect *лызгать*, "to slide on ice", and Bulgarian *lŭzgam se*, "I skate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

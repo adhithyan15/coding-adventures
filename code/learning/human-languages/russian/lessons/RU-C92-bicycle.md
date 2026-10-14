@@ -14,7 +14,8 @@ romanization: "velosipéd"
 concept_tag: RU-LOC92-BICYCLE
 prerequisites: [RU-C91-ship, RU-C91-boat]
 sounds: []
-roots: []
+roots: [pedem-latin]
+etymology_hook: "велосипед ← French vélocipède: Latin velox 'swift' + pes, pedis 'foot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C91-boat]
 <!-- hl-knowledge: introduces=[RU-LEX-C92-LOC92-01]; assesses=[] -->
 
 **велосипед** (*velosipéd*) — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**велосипед** comes from French *vélocipède*, from Latin *vēlōx*, "swift", and *pēs*, *pedis*, "foot" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

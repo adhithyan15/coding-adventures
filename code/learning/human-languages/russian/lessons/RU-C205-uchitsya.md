@@ -14,7 +14,8 @@ romanization: "uchítsya"
 concept_tag: RU-VERB-UCHITSYA
 prerequisites: [RU-C204-tratit, RU-C205-zabyvat]
 sounds: []
-roots: []
+roots: [slavic-uchiti]
+etymology_hook: "учиться is учить 'to teach' + -ся 'oneself': to teach oneself"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C205-zabyvat]
 <!-- hl-knowledge: introduces=[RU-LEX-C205-ACT205-02]; assesses=[] -->
 
 **учиться** (*uchítsya*) — "to be a student, to study".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**учиться** is *учить*, "to teach", with *-ся*, "oneself". *учить* ← Proto-Slavic *\*učiti*, first "to accustom" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "k schástyu"
 concept_tag: RU-PRICH215-K-SCHASTYU
 prerequisites: [RU-C215-mozhet-byt, RU-C215-k-sozhaleniyu]
 sounds: []
-roots: []
+roots: [slavic-chesti]
+etymology_hook: "к счастью is 'to (my) luck': счастье is *sŭ- 'good' + часть 'a share', 'a good lot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C215-k-sozhaleniyu]
 <!-- hl-knowledge: introduces=[RU-LEX-C215-PRICH215-05]; assesses=[] -->
 
 **к счастью** (*k schástyu*) — "fortunately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**к счастью** is "to (my) luck": *к*, "to", with *счастью*, from *счастье*, "luck, happiness", which is usually explained as *sŭ-*, "good", with *часть*, "a share": "a good lot" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

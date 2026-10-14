@@ -14,7 +14,8 @@ romanization: "domáshneye zadániye"
 concept_tag: RU-THINGS111-HOMEWORK
 prerequisites: [RU-C111-board, RU-C111-rubber]
 sounds: []
-roots: []
+roots: [slavic-domu, pie-deh3-give]
+etymology_hook: "домашнее задание is 'home task': домашний 'of the house', from дом, + задание 'task', from задать 'to set'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C111-rubber]
 <!-- hl-knowledge: introduces=[RU-LEX-C111-THINGS111-04]; assesses=[] -->
 
 **домашнее задание** (*domáshneye zadániye*) — "homework".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**домашнее задание** is "a home task": *домашнее*, from *дом*, "house", with *задание*, "a set task", from *задать*, "to set", on the root of *дать*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

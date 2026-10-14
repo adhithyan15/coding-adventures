@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "White, Black, Red, Blue, Green",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bcc39a85232d4a61",
+  "sourceHash": "fnv1a64:40259d7c5134f30c",
   "lessons": [
     {
       "id": "RU-C63-white",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ec73251ca04edc6",
+      "sourceHash": "fnv1a64:640aa70941187db5",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "белый (bélyy) from Proto-Slavic bělŭ — inherited. Vasmer relates it to Lithuanian bãlas, \"white\", Latvian bãls, \"pale\", Greek phalós, \"white\", and Sanskrit bhāti, \"shines\", from PIE bʰel-, \"to shine\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18d3e873376c9730",
+      "sourceHash": "fnv1a64:d303817753d6d314",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "чёрный (chyórnyy) from Proto-Slavic čĭrnŭ, from čĭrxnŭ — inherited. Vasmer relates it to Old Prussian kirsnan, \"black\", and Sanskrit kṛṣṇá-, \"black\", the name of Krishna."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee6ed98d1219fa18",
+      "sourceHash": "fnv1a64:64f35c2f255dc961",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "красный (krásnyy) is built on краса, \"beauty\", and first meant \"beautiful\", as in прекрасный, \"lovely\"; the name of Moscow's Red Square first meant \"the beautiful square\". Vasmer thinks краса is probably related to Old Norse hrósa, \"to boast\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60bebc3d2dfffd5d",
+      "sourceHash": "fnv1a64:370559d9ae97b896",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "синий (síniy) from Proto-Slavic sinĭ — inherited. Vasmer relates it to сиять, \"to shine\", or to сивый, \"grey\", and to Sanskrit śyāmá-, \"dark\", and Lithuanian šývas, \"light-coloured\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e3e9f5243fdc204",
+      "sourceHash": "fnv1a64:0ed31c46f056d839",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "зелёный (zelyónyy) from Proto-Slavic zelenŭ — inherited. Vasmer relates it to Lithuanian žãlias, \"green\", and žélti, \"to grow over\", and further to золото, \"gold\", and Sanskrit hári-, \"yellow\". German gelb, \"yellow\", comes from the same PIE root, ǵʰelh₃-, \"to be green, yellow\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

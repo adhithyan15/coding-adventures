@@ -14,7 +14,8 @@ romanization: "noskí"
 concept_tag: RU-THINGS102-SOCKS
 prerequisites: [RU-C102-coat, RU-C102-shoes]
 sounds: []
-roots: []
+roots: [slavic-nosu]
+etymology_hook: "носки is the plural of носок, from нос 'nose': the tip of a foot, then a sock"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C102-shoes]
 <!-- hl-knowledge: introduces=[RU-LEX-C102-THINGS102-05]; assesses=[] -->
 
 **носки** (*noskí*) — "socks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**носки** is the plural of *носок*, "a sock", built on *нос*, "nose" (Vasmer): the tip of the foot or shoe, then the short stocking that covers it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

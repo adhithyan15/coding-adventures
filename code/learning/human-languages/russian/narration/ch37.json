@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Neighbour, Guest, Teacher, Pupil, Work",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:50b750e48246c9a7",
+  "sourceHash": "fnv1a64:dc00c31f699e7776",
   "lessons": [
     {
       "id": "RU-C37-neighbour",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:352f2e5a32f9b208",
+      "sourceHash": "fnv1a64:252c3f914ed57871",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "сосед (soséd) from Proto-Slavic sǫsědŭ — inherited: sǫ-, \"together\", with the root of сидеть, \"to sit\", so a neighbour is \"one who sits beside you\". Vasmer compares Sanskrit saṃsád, \"assembly\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:358a18d2a4e658ae",
+      "sourceHash": "fnv1a64:c03970e3327c189d",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "гость (gost) from Proto-Slavic gostĭ — inherited. Vasmer relates it to Gothic gasts and Latin hostis, \"stranger, enemy\", and rejects a loan from Germanic: English guest is a cousin, from PIE gʰóstis. In Old Russian a гость (gost) was also a travelling merchant (Vasmer)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd8c0eddaf3c29ba",
+      "sourceHash": "fnv1a64:19f0232601fd2a62",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "учитель (uchítel) is учить, \"to teach\", with -тель, \"one who does it\"; Old Church Slavonic already had it. The verb goes back to Proto-Slavic učiti, \"to accustom\" (Vasmer)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70f5c134ad8c6a83",
+      "sourceHash": "fnv1a64:2bdf0b2d7026b76a",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ученик (ucheník) is учить, \"to teach, to learn\", with -ник, a suffix for a person: the one who learns. The verb goes back to Proto-Slavic učiti, \"to accustom\" (Vasmer)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a07ae3cd2c0e04b",
+      "sourceHash": "fnv1a64:c50867a3e23ee742",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "работа (rabóta) from Proto-Slavic orbota: Old Russian робота meant \"work, slavery\" (Vasmer). It is built on the root of раб, \"slave\", and Vasmer relates it to Gothic arbaiþs, \"hardship\", and German Arbeit, \"work\". Its ра- is the Church Slavonic shape; East Slavic dialects say робота."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

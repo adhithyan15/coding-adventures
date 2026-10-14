@@ -14,7 +14,8 @@ romanization: "ófis"
 concept_tag: RU-LOC89-OFFICE
 prerequisites: [RU-C88-stadium, RU-C89-factory]
 sounds: []
-roots: []
+roots: [english-office]
+etymology_hook: "офис ← English office, from Latin officium 'duty, service'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C89-factory]
 <!-- hl-knowledge: introduces=[RU-LEX-C89-LOC89-02]; assesses=[] -->
 
 **офис** (*ófis*) — "an office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**офис** comes from English *office*, from Latin *officium*, "duty, service".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

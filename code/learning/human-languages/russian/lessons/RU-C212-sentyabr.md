@@ -14,7 +14,8 @@ romanization: "sentyábr"
 concept_tag: RU-VREMYA212-SENTYABR
 prerequisites: [RU-C212-iyul, RU-C212-avgust]
 sounds: []
-roots: []
+roots: [latin-september]
+etymology_hook: "сентябрь came through Byzantine Greek septembrios from Latin september 'the seventh (month)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C212-avgust]
 <!-- hl-knowledge: introduces=[RU-LEX-C212-VREMYA212-04]; assesses=[] -->
 
 **сентябрь** (*sentyábr*) — "September".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сентябрь** — Old Russian *септябрь*; it came through Byzantine Greek *septémbrios* from Latin *september*, "the seventh month", when the year began in March (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

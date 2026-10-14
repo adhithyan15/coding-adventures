@@ -14,7 +14,8 @@ romanization: "býstro"
 concept_tag: RU-NUM1-QUICKLY
 prerequisites: [RU-C74-later, RU-C75-already]
 sounds: []
-roots: []
+roots: [slavic-bystru]
+etymology_hook: "быстро is the adverb of быстрый 'fast'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C75-already]
 <!-- hl-knowledge: introduces=[RU-LEX-C75-NUM1-02]; assesses=[] -->
 
 **быстро** (*býstro*) — "quickly". The adverb of **быстрый**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**быстро** is *быстрый*, "fast", made into an adverb with *-о*. *быстрый* is an old Slavic word whose deeper origin is not settled (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

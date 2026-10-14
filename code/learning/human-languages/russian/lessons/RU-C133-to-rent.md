@@ -14,7 +14,8 @@ romanization: "snimát"
 concept_tag: RU-VERB-TO-RENT
 prerequisites: [RU-C133-to-go-down, RU-C133-to-stay]
 sounds: []
-roots: []
+roots: [pie-hem]
+etymology_hook: "снимать is с- 'off' + нимать, from an old verb 'to take': to take off, to take (a room)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C133-to-stay]
 <!-- hl-knowledge: introduces=[RU-LEX-C133-ACT133-04]; assesses=[] -->
 
 **снимать** (*snimát*) — "to rent; to take off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**снимать** is *с-*, "off", with *-нимать*, from the old verb *\*jęti*, "to take": "to take off", and so "to take" a flat for rent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

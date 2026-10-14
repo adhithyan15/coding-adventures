@@ -14,7 +14,8 @@ romanization: "bolshóy"
 concept_tag: RU-SIZE-BIG
 prerequisites: [RU-C64-bad, RU-C64-new]
 sounds: []
-roots: []
+roots: [slavic-bolii]
+etymology_hook: "большой is built on больший, Proto-Slavic *bolĭjĭ 'greater'; Sanskrit bala 'strength' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C64-new]
 <!-- hl-knowledge: introduces=[RU-LEX-C65-SIZE-01]; assesses=[] -->
 
 **большой** (*bolshóy*) — "big".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**большой** is built on the comparative *больший*, "greater", Proto-Slavic *\*bolĭjĭ* — inherited. Vasmer relates it to Sanskrit *bálīyān*, "stronger", and *bálam*, "strength", and Greek *beltíōn*, "better".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "petúkh"
 concept_tag: RU-VESHCH251-PETUKH
 prerequisites: [RU-C250-konfeta, RU-C251-byk]
 sounds: []
-roots: []
+roots: [slavic-peti]
+etymology_hook: "петух is from петь 'to sing': the singer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C251-byk]
 <!-- hl-knowledge: introduces=[RU-LEX-C251-VESHCH251-02]; assesses=[] -->
 
 **петух** (*petúkh*) — "a cockerel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**петух** first meant "the singer", from *петь*, "to sing" (Vasmer); Latin *gallus* and Gothic *hana*, "cock", are named in the same way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

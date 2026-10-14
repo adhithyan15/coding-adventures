@@ -14,7 +14,8 @@ romanization: "kalendár"
 concept_tag: RU-THINGS100-CALENDAR
 prerequisites: [RU-C100-photograph, RU-C100-candle]
 sounds: []
-roots: []
+roots: [calendarium-latin]
+etymology_hook: "календарь probably came through Polish kalendarz from Latin calendarium, from calendae 'the first of the month'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C100-candle]
 <!-- hl-knowledge: introduces=[RU-LEX-C100-THINGS100-04]; assesses=[] -->
 
 **календарь** (*kalendár*) — "a calendar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**календарь** probably came through Polish *kalendarz* from Latin *calendārium*, "an account book", from *calendae*, "the first day of the month" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

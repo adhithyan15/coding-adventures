@@ -14,7 +14,8 @@ romanization: "bábushka"
 concept_tag: RU-FAMILY1-GRANDMOTHER
 prerequisites: [RU-C35-son, RU-C35-daughter]
 sounds: []
-roots: []
+roots: [slavic-baba]
+etymology_hook: "бабушка is баба 'old woman' + the fond -ушка; баба is a nursery word, like Lithuanian bóba"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C35-daughter]
 <!-- hl-knowledge: introduces=[RU-LEX-C35-FAMILY1-03]; assesses=[] -->
 
 **бабушка** (*bábushka*) — "a grandmother".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бабушка** is *баба*, "old woman, granny", with *-ушка*, a fond diminutive. *баба* is a nursery word, says Vasmer, and Lithuanian *bóba*, "old woman", is the same kind of word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

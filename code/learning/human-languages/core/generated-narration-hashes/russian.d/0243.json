@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 243,
-  "sourceHash": "fnv1a64:adcc3b17457dad4d",
+  "sourceHash": "fnv1a64:791cc6e77cb4dfd7",
   "lessonIds": [
     "RU-C243-molodoy",
     "RU-C243-pozhiloy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch243.txt",
   "json": "russian/narration/ch243.json",
-  "textHash": "fnv1a64:67fea4d3b8640b97",
-  "jsonHash": "fnv1a64:ed6e17b312388589",
+  "textHash": "fnv1a64:20d8c586c24fa0e9",
+  "jsonHash": "fnv1a64:c47eb96e238aa705",
   "findings": []
 }

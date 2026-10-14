@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 33,
-  "sourceHash": "fnv1a64:93df0efa2fe34a05",
+  "sourceHash": "fnv1a64:abeba26bfa8da2c6",
   "lessonIds": [
     "RU-C33-temperature",
     "RU-C33-cough",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch33.txt",
   "json": "russian/narration/ch33.json",
-  "textHash": "fnv1a64:946311290c7ce024",
-  "jsonHash": "fnv1a64:b3f4c7235c6ca13a",
+  "textHash": "fnv1a64:713c9bf062a7b177",
+  "jsonHash": "fnv1a64:5db1a1efd38c3389",
   "findings": []
 }

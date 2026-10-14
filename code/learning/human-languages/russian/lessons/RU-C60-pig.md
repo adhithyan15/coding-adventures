@@ -14,7 +14,8 @@ romanization: "svinyá"
 concept_tag: RU-ANIMALS1-PIG
 prerequisites: [RU-C60-horse, RU-C60-cow]
 sounds: []
-roots: []
+roots: [pie-suh]
+etymology_hook: "свинья ← Proto-Slavic *svinĭja, from the old word for 'pig' seen in Latin sus and English swine"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C60-cow]
 <!-- hl-knowledge: introduces=[RU-LEX-C60-ANIMALS1-05]; assesses=[] -->
 
 **свинья** (*svinyá*) — "a pig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**свинья** ← Proto-Slavic *\*svinĭja* — inherited, built on the PIE word *\*suH-*, "pig", that gave Latin *sūs* and English *sow*; English *swine* is a close cousin of the Slavic form. Vasmer thinks the root most likely imitates a pig's grunt *su-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

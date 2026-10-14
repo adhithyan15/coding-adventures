@@ -14,7 +14,8 @@ romanization: "predlozhéniye"
 concept_tag: RU-THINGS112-SENTENCE
 prerequisites: [RU-C111-idea, RU-C112-problem]
 sounds: []
-roots: []
+roots: [slavic-lozhiti]
+etymology_hook: "предложение is пред- 'before' + ложить 'to lay': a thing laid before you"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C112-problem]
 <!-- hl-knowledge: introduces=[RU-LEX-C112-THINGS112-02]; assesses=[] -->
 
 **предложение** (*predlozhéniye*) — "a sentence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**предложение** is *пред-*, "before", with *ложение*, "laying", from *-ложить*, "to lay": a sentence is a thing laid before the listener; it also means "an offer". The root is that of *лежать*, "to lie", a cousin of English *lie* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

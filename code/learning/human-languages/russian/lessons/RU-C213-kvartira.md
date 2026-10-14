@@ -14,7 +14,8 @@ romanization: "kvartíra"
 concept_tag: RU-MESTO213-KVARTIRA
 prerequisites: [RU-C213-tamozhnya, RU-C213-stolitsa]
 sounds: []
-roots: []
+roots: [quartarius-latin]
+etymology_hook: "квартира came through German Quartier or Dutch kwartier from Old French quartier 'a quarter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C213-stolitsa]
 <!-- hl-knowledge: introduces=[RU-LEX-C213-MESTO213-04]; assesses=[] -->
 
 **квартира** (*kvartíra*) — "a flat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**квартира** — from 1704, also folk *фатера*; it came through German *Quartier* or Dutch *kwartier* from Old French *quartier*, "a quarter, lodgings", Latin *quartārius*, "a fourth" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

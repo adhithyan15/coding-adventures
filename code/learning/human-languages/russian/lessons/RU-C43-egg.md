@@ -14,7 +14,8 @@ romanization: "yaytsó"
 concept_tag: RU-FOOD1-EGG
 prerequisites: [RU-C43-meat, RU-C43-fish]
 sounds: []
-roots: []
+roots: [pie-h2owyom]
+etymology_hook: "яйцо ← Proto-Slavic *aje + a diminutive ending; Latin ovum and English egg are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C43-fish]
 <!-- hl-knowledge: introduces=[RU-LEX-C43-FOOD1-03]; assesses=[] -->
 
 **яйцо** (*yaytsó*) — "an egg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**яйцо** ← Proto-Slavic *\*aje*, "egg", with a diminutive ending — inherited. Vasmer lists Old High German *ei*, Old Norse *egg*, Latin *ōvum* and Greek *ōión*: English *egg* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

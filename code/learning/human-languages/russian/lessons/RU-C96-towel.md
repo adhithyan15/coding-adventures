@@ -14,7 +14,8 @@ romanization: "poloténtse"
 concept_tag: RU-THINGS96-TOWEL
 prerequisites: [RU-C95-pillow, RU-C95-blanket]
 sounds: []
-roots: []
+roots: [slavic-poltino]
+etymology_hook: "полотенце is полотно 'linen cloth' + -енце; Sanskrit paṭa 'cloth' is a cousin of полотно"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C95-blanket]
 <!-- hl-knowledge: introduces=[RU-LEX-C96-THINGS96-01]; assesses=[] -->
 
 **полотенце** (*poloténtse*) — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**полотенце** is *полотно*, "linen cloth", with the diminutive *-енце*. *полотно* ← Proto-Slavic *\*poltĭno*, which Vasmer relates to Sanskrit *paṭa-*, "cloth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

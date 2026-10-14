@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 175,
-  "sourceHash": "fnv1a64:1a7d34d29cca5831",
+  "sourceHash": "fnv1a64:465c26c1ec37d2cf",
   "lessonIds": [
     "RU-C175-tyanut",
     "RU-C175-podnimat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch175.txt",
   "json": "russian/narration/ch175.json",
-  "textHash": "fnv1a64:32b0fddd7ddb25f1",
-  "jsonHash": "fnv1a64:00afd824b9596a8e",
+  "textHash": "fnv1a64:de569b004e1fd8c0",
+  "jsonHash": "fnv1a64:669f40f26bbfd8ac",
   "findings": []
 }

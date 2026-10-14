@@ -12,6 +12,9 @@ Before the new one: say the Russian for a question, then the Russian for an answ
 You'll want to know: мясо.
 мясо (myáso) — "meat".
 
+The word, taken apart.
+мясо (myáso) from Proto-Slavic męso — inherited; the old nasal ę became Russian я. Vasmer lists Old Prussian mensā, Sanskrit māṃsá- and Gothic mimz, all "meat".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for an answer, then the Russian for meat.
 
 You'll want to know: рыба.
 рыба (rýba) — "fish".
+
+The word, taken apart.
+рыба (rýba) from Proto-Slavic ryba — inherited, but its deeper origin is unclear. Vasmer thought it was probably a taboo stand-in for an older word, the cousin of Lithuanian žuvìs, "fish", which fishermen avoided because it sounded like звать, "to call". A comparison with Old High German rûppa, "caterpillar", is also reported.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Russian for meat, then the Russian for fish.
 You'll want to know: яйцо.
 яйцо (yaytsó) — "an egg".
 
+The word, taken apart.
+яйцо (yaytsó) from Proto-Slavic aje, "egg", with a diminutive ending — inherited. Vasmer lists Old High German ei, Old Norse egg, Latin ōvum and Greek ōión: English egg is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Russian for fish, then the Russian for an egg.
 You'll want to know: масло.
 масло (máslo) — "butter; oil".
 
+The word, taken apart.
+масло (máslo) from Proto-Slavic maslo, from maz-slo, "what you smear", on the root of мазать, "to smear" (Vasmer). So butter and oil share one word: both are spread.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Russian for an egg, then the Russian for butter; oil
 
 You'll want to know: соль.
 соль (sol) — "salt".
+
+The word, taken apart.
+соль (sol) from Proto-Slavic solĭ — inherited. Vasmer lists Latvian sāls, Latin sāl, Greek háls and Gothic salt, all "salt": English salt is a cousin.
 
 What you've built.
 One more word for this chapter.

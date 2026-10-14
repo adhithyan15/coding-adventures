@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 141,
-  "sourceHash": "fnv1a64:ab06c25a3def4eb5",
+  "sourceHash": "fnv1a64:48999a8fc52be0e7",
   "lessonIds": [
     "RU-C141-vstrechat",
     "RU-C141-znakomitsya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch141.txt",
   "json": "russian/narration/ch141.json",
-  "textHash": "fnv1a64:b2ef56014798a6d1",
-  "jsonHash": "fnv1a64:a500736413357b4c",
+  "textHash": "fnv1a64:898ddd60391d5d69",
+  "jsonHash": "fnv1a64:d051ba7c21346294",
   "findings": []
 }

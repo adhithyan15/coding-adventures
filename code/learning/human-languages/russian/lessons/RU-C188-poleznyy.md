@@ -14,7 +14,8 @@ romanization: "poléznyy"
 concept_tag: RU-KACH188-POLEZNYY
 prerequisites: [RU-C187-kvadratnyy, RU-C187-ostryy]
 sounds: []
-roots: []
+roots: [pie-hlengwh]
+etymology_hook: "полезный is польза 'use' + -ный; польза is по- + the root of лёгкий 'light, easy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C187-ostryy]
 <!-- hl-knowledge: introduces=[RU-LEX-C188-KACH188-01]; assesses=[] -->
 
 **полезный** (*poléznyy*) — "useful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**полезный** is *польза*, "use, benefit", with *-ный*. Vasmer explains *польза* as *по-* with *\*lĭga*, the root of *лёгкий*, "light, easy": a benefit is a relief.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

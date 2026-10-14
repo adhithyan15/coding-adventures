@@ -14,7 +14,8 @@ romanization: "dzhínsy"
 concept_tag: RU-VESHCH248-DZHINSY
 prerequisites: [RU-C248-plashch, RU-C248-kostyum]
 sounds: []
-roots: []
+roots: [english-jeans]
+etymology_hook: "джинсы ← English jeans, from Genoa, where the cloth was made"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C248-kostyum]
 <!-- hl-knowledge: introduces=[RU-LEX-C248-VESHCH248-04]; assesses=[] -->
 
 **джинсы** (*dzhínsy*) — "jeans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**джинсы** comes from English *jeans*, named after *Genoa*, the Italian city where the cloth was first made.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

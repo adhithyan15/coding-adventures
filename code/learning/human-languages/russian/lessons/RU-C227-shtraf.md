@@ -14,7 +14,8 @@ romanization: "shtraf"
 concept_tag: RU-VESHCH227-SHTRAF
 prerequisites: [RU-C226-roman, RU-C226-stikhi]
 sounds: []
-roots: []
+roots: [german-strafe]
+etymology_hook: "штраф ← German Strafe 'a punishment, a fine', from Peter the Great's time"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C226-stikhi]
 <!-- hl-knowledge: introduces=[RU-LEX-C227-VESHCH227-01]; assesses=[] -->
 
 **штраф** (*shtraf*) — "a fine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**штраф** — from 1711, under Peter the Great; it comes from German *Strafe*, "punishment, a fine" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

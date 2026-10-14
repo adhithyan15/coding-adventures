@@ -14,7 +14,8 @@ romanization: "zanimát"
 concept_tag: RU-VERB-ZANIMAT
 prerequisites: [RU-C231-otsenka, RU-C232-kopit]
 sounds: []
-roots: []
+roots: [pie-hem]
+etymology_hook: "занимать is за- + нимать, from an old verb 'to take': to take up, to borrow"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C232-kopit]
 <!-- hl-knowledge: introduces=[RU-LEX-C232-ACT232-02]; assesses=[] -->
 
 **занимать** (*zanimát*) — "to borrow; to take up (space)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**занимать** is *за-* with *-нимать*, from the old verb *\*jęti*, "to take": to take up space, or to take money as a loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

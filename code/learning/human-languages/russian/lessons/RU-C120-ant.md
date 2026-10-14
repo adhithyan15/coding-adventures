@@ -14,7 +14,8 @@ romanization: "muravéy"
 concept_tag: RU-THINGS120-ANT
 prerequisites: [RU-C120-elephant, RU-C120-bee]
 sounds: []
-roots: []
+roots: [slavic-morvi]
+etymology_hook: "муравей ← Proto-Slavic *morvĭjĭ; Irish moirb and Old Norse maurr 'ant' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C120-bee]
 <!-- hl-knowledge: introduces=[RU-LEX-C120-THINGS120-05]; assesses=[] -->
 
 **муравей** (*muravéy*) — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**муравей** ← Proto-Slavic *\*morvĭjĭ* — inherited. Vasmer lists Irish *moirb*, Avestan *maoiri-* and Old Norse *maurr*, all "ant"; Latin *formīca*, "ant", is related too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

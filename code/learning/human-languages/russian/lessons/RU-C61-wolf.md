@@ -14,7 +14,8 @@ romanization: "volk"
 concept_tag: RU-ANIMALS2-WOLF
 prerequisites: [RU-C61-bird, RU-C61-mouse]
 sounds: []
-roots: []
+roots: [pie-wlkwos]
+etymology_hook: "волк ← Proto-Slavic *vĭlkŭ; Lithuanian vilkas, Sanskrit vṛka and English wolf are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C61-mouse]
 <!-- hl-knowledge: introduces=[RU-LEX-C61-ANIMALS2-03]; assesses=[] -->
 
 **волк** (*volk*) — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**волк** ← Proto-Slavic *\*vĭlkŭ* — inherited from PIE *\*wḷkʷos*, "wolf". Vasmer lists Lithuanian *vilkas*, Sanskrit *vṛkas*, Gothic *wulfs* and Greek *lýkos*: English *wolf* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

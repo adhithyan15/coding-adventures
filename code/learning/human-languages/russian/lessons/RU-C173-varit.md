@@ -14,7 +14,8 @@ romanization: "varít"
 concept_tag: RU-VERB-VARIT
 prerequisites: [RU-C173-shit, RU-C173-rezat]
 sounds: []
-roots: []
+roots: [slavic-variti]
+etymology_hook: "варить ← Proto-Slavic *variti, from вар 'boiling'; Lithuanian virti 'to boil' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C173-rezat]
 <!-- hl-knowledge: introduces=[RU-LEX-C173-ACT173-03]; assesses=[] -->
 
 **варить** (*varít*) — "to boil, to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**варить** ← Proto-Slavic *\*variti*, from *вар*, "boiling heat" — inherited. Vasmer relates *вар* to Lithuanian *vìrti*, "to boil", and Latvian *virt*, "to boil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

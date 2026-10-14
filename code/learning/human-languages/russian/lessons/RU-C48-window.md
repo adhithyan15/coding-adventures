@@ -14,7 +14,8 @@ romanization: "oknó"
 concept_tag: RU-HOME1-WINDOW
 prerequisites: [RU-C48-room, RU-C48-kitchen]
 sounds: []
-roots: []
+roots: [pie-h3ekw]
+etymology_hook: "окно ← Proto-Slavic *okŭno, from око 'eye': the house's eye, as English window is 'wind-eye'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C48-kitchen]
 <!-- hl-knowledge: introduces=[RU-LEX-C48-HOME1-04]; assesses=[] -->
 
 **окно** (*oknó*) — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**окно** ← Proto-Slavic *\*okŭno*, built on *око*, "eye" (Vasmer): a window is the eye of the house, as English *window* is Old Norse *vindauga*, "wind-eye".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

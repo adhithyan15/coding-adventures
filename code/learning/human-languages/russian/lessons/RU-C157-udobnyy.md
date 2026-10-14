@@ -14,7 +14,8 @@ romanization: "udóbnyy"
 concept_tag: RU-KACH157-UDOBNYY
 prerequisites: [RU-C157-kislyy, RU-C157-vkusnyy]
 sounds: []
-roots: []
+roots: [slavic-doba]
+etymology_hook: "удобный is from Old Russian удобь 'easily', у- + доба 'a fitting time'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C157-vkusnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C157-KACH157-05]; assesses=[] -->
 
 **удобный** (*udóbnyy*) — "comfortable, convenient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**удобный** comes from Old Russian *удобь*, "easily", *у-* with *доба*, "a fitting time, fitness" (Vasmer): convenient is "fitting".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

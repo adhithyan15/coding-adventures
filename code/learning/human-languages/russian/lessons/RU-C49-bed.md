@@ -14,7 +14,8 @@ romanization: "krovát"
 concept_tag: RU-HOME2-BED
 prerequisites: [RU-C49-table, RU-C49-chair]
 sounds: []
-roots: []
+roots: [greek-krabbatos]
+etymology_hook: "кровать ← Byzantine Greek krabbation, from Greek krabbatos 'a pallet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C49-chair]
 <!-- hl-knowledge: introduces=[RU-LEX-C49-HOME2-03]; assesses=[] -->
 
 **кровать** (*krovát*) — "a bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кровать** ← Byzantine Greek *krabbátion*, from Greek *krábbatos*, "a pallet, a camp bed" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

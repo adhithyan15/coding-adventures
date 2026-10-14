@@ -14,7 +14,8 @@ romanization: "raspisániye"
 concept_tag: RU-CHT139-RASPISANIYE
 prerequisites: [RU-C138-planirovat, RU-C138-nadeyatsya]
 sounds: []
-roots: []
+roots: [pie-peyk]
+etymology_hook: "расписание is рас- + писание 'writing', from писать 'to write': what is written out"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [RU-C138-nadeyatsya]
 
 The board says **Автобус: 8:00.** The bus leaves at eight, so be there before
 eight.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**расписание** is *рас-*, "out", with *писание*, "writing", from *писать*, "to write": a timetable is written out. Vasmer relates *писать* to Lithuanian *piešti*, "to draw", and Sanskrit *piṃśáti*, "adorns".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

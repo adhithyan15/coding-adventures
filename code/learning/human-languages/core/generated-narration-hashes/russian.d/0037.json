@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 37,
-  "sourceHash": "fnv1a64:50b750e48246c9a7",
+  "sourceHash": "fnv1a64:dc00c31f699e7776",
   "lessonIds": [
     "RU-C37-neighbour",
     "RU-C37-guest",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch37.txt",
   "json": "russian/narration/ch37.json",
-  "textHash": "fnv1a64:3fc0ec926316f2ae",
-  "jsonHash": "fnv1a64:f7345f7365e454db",
+  "textHash": "fnv1a64:7164d677f2baee66",
+  "jsonHash": "fnv1a64:18b47b3b5aab8401",
   "findings": []
 }

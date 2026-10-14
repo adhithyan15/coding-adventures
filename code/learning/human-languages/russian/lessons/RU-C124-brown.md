@@ -14,7 +14,8 @@ romanization: "koríchnevyy"
 concept_tag: RU-QUAL124-BROWN
 prerequisites: [RU-C123-pink, RU-C124-purple]
 sounds: []
-roots: []
+roots: [slavic-kora]
+etymology_hook: "коричневый is from корица 'cinnamon', from кора 'bark': cinnamon-coloured"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C124-purple]
 <!-- hl-knowledge: introduces=[RU-LEX-C124-QUAL124-02]; assesses=[] -->
 
 **коричневый** (*koríchnevyy*) — "brown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**коричневый** is "cinnamon-coloured", from *корица*, "cinnamon", a diminutive of *кора*, "bark" (Vasmer): cinnamon is a bark.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

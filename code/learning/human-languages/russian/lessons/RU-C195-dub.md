@@ -14,7 +14,8 @@ romanization: "dub"
 concept_tag: RU-VESHCH195-DUB
 prerequisites: [RU-C195-koren, RU-C195-roza]
 sounds: []
-roots: []
+roots: [slavic-dobu]
+etymology_hook: "дуб ← Proto-Slavic *dǫbŭ; Vasmer starts from a root 'to build', as in English timber"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C195-roza]
 <!-- hl-knowledge: introduces=[RU-LEX-C195-VESHCH195-05]; assesses=[] -->
 
 **дуб** (*dub*) — "an oak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**дуб** ← Proto-Slavic *\*dǫbŭ* — inherited. Vasmer apparently starts from *\*dombros*, from the root of Greek *démō*, "I build", and Old Norse *timbr*: English *timber* would be a cousin; the account is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

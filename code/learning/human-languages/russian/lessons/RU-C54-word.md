@@ -14,7 +14,8 @@ romanization: "slóvo"
 concept_tag: RU-WORDS-WORD
 prerequisites: [RU-C53-gift, RU-C54-lesson]
 sounds: []
-roots: []
+roots: [pie-klew]
+etymology_hook: "слово ← Proto-Slavic *slovo; Greek kleos 'fame' is a cousin, from a root 'to hear', as in слушать"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C54-lesson]
 <!-- hl-knowledge: introduces=[RU-LEX-C54-WORDS-02]; assesses=[] -->
 
 **слово** (*slóvo*) — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**слово** ← Proto-Slavic *\*slovo* — inherited. Vasmer relates it to Latvian *slava*, "rumour, fame", Sanskrit *śrávas*, "fame", and Greek *kléos*, "fame": what is heard. Its root is the PIE *\*ḱlew-*, "to hear", of *слушать*, "to listen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

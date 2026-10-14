@@ -14,7 +14,8 @@ romanization: "kássa"
 concept_tag: RU-THINGS110-TILL
 prerequisites: [RU-C109-waiter, RU-C110-customer]
 sounds: []
-roots: []
+roots: [capsa-latin]
+etymology_hook: "касса came through Polish kasa or German Kasse, or from Italian cassa, Latin capsa 'a box'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C110-customer]
 <!-- hl-knowledge: introduces=[RU-LEX-C110-THINGS110-02]; assesses=[] -->
 
 **касса** (*kássa*) — "a till, a checkout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**касса** — from Peter the Great's time; it came through Polish *kasa* or German *Kasse*, or straight from Italian *cassa*, from Latin *capsa*, "a box, a case" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

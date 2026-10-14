@@ -14,7 +14,8 @@ romanization: "strógiy"
 concept_tag: RU-KACH216-STROGIY
 prerequisites: [RU-C216-schastlivyy, RU-C216-grustnyy]
 sounds: []
-roots: []
+roots: [slavic-strogu]
+etymology_hook: "строгий is usually thought to come from Polish, and linked with стеречь 'to guard'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C216-grustnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C216-KACH216-05]; assesses=[] -->
 
 **строгий** (*strógiy*) — "strict".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**строгий** — it is usually taken as a loan from Polish *srogi*, "severe", and the whole group is linked with *стеречь*, "to guard", and *сторож*, "a watchman" (Vasmer); Trubachev's note cites other views.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

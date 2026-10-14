@@ -14,7 +14,8 @@ romanization: "napravo"
 concept_tag: RU-LOC86-TO-THE-RIGHT
 prerequisites: [RU-C86-where-to, RU-C86-where-from]
 sounds: []
-roots: []
+roots: [slavic-pravu]
+etymology_hook: "направо is на 'onto' + право, from правый 'right', first 'straight'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C86-where-from]
 <!-- hl-knowledge: introduces=[RU-LEX-C86-LOC86-04]; assesses=[] -->
 
 **направо** (*napravo*) — "to the right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**направо** is *на*, "onto", with *право*, from *правый*, "right", first "straight" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

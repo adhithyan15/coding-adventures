@@ -14,7 +14,8 @@ romanization: "pénsiya"
 concept_tag: RU-RABOTA172-PENSIYA
 prerequisites: [RU-C172-rezyume, RU-C172-karyera]
 sounds: []
-roots: []
+roots: [pendere-latin]
+etymology_hook: "пенсия came under Peter the Great from Polish pensja or German Pension, Latin pensio 'a payment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C172-karyera]
 <!-- hl-knowledge: introduces=[RU-LEX-C172-RABOTA172-03]; assesses=[] -->
 
 **пенсия** (*pénsiya*) — "a pension".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пенсия** — older *пенсион*, from Peter the Great's time; it came from Polish *pensja* or German *Pension*, Latin *pēnsiō*, "a payment", from *pendere*, "to weigh out" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

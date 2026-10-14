@@ -14,7 +14,8 @@ romanization: "chek"
 concept_tag: RU-CHT139-CHEK
 prerequisites: [RU-C139-vkhod, RU-C139-vykhod]
 sounds: []
-roots: []
+roots: [english-check]
+etymology_hook: "чек ← English check, cheque; Vasmer traced it to Persian čak 'a document', others to the chess word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C139-vykhod]
 <!-- hl-knowledge: introduces=[RU-LEX-C139-CHT139-05]; assesses=[] -->
 
 **чек** (*chek*) — "a receipt". Ask for it when you pay: **Чек, пожалуйста.** — *chek, pozhálusta* — "The receipt, please."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**чек** came through English *check*, "cheque". Vasmer traced the English word, through Arabic, to Persian *čäk*, "a document"; English dictionaries take *cheque* from *check*, "a control", from the chess word *check*, Persian *shāh*, "king".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

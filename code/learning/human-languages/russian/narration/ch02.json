@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:8794742d2f9242df",
+  "sourceHash": "fnv1a64:731624c1a8974cfd",
   "lessons": [
     {
       "id": "RU-C02-ya",
@@ -474,7 +474,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69adeb0d40255221",
+      "sourceHash": "fnv1a64:160a021a65c1d0f3",
       "notice": null,
       "blocks": [
         {
@@ -490,7 +490,7 @@
             },
             {
               "kind": "speech",
-              "text": "Many languages say \"my name is\" with a word for my and a word for name. Russian says something quite different, and it is worth taking apart slowly."
+              "text": "Many languages say \"my name is\" with a word for my and a word for name. Russian says something quite different."
             }
           ]
         },
@@ -502,10 +502,6 @@
             {
               "kind": "speech",
               "text": "Menyá zovút Anna. — \"My name is Anna.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Now the literal reading:"
             },
             {
               "kind": "speech",
@@ -528,11 +524,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Zovút is the they form of zvat', \"to call.\" But there is no они (\"they\") anywhere — and there isn't meant to be. Russian uses a bare plural verb to mean \"people in general,\" the way English says \"they say it'll rain\" without anyone in mind."
+              "text": "Zovút is the they form of zvat', \"to call,\" inherited from Proto-Slavic zŭvati, a cousin of Sanskrit hávate, \"calls\" (Vasmer). But there is no они (\"they\") anywhere — and there isn't meant to be. Russian uses a bare plural verb to mean \"people in general,\" the way English says \"they say it'll rain\" without anyone in mind."
             },
             {
               "kind": "speech",
-              "text": "English has the same trick and doesn't notice it:"
+              "text": "English does the same:"
             },
             {
               "kind": "speech",
@@ -559,7 +555,7 @@
             },
             {
               "kind": "speech",
-              "text": "English does this with about six pairs — I/me, he/him, she/her, we/us, they/them, who/whom, plus the archaic thou/thee. Russian does it with every noun and pronoun in the language. That system is called case, and it is the main thing standing between you and Russian."
+              "text": "English does this with about six pairs — I/me, he/him, she/her, we/us, they/them, who/whom. Russian does it with every noun and pronoun in the language. That system is called case, and it is the main thing standing between you and Russian."
             },
             {
               "kind": "speech",

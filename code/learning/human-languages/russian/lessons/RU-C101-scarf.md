@@ -14,7 +14,8 @@ romanization: "sharf"
 concept_tag: RU-THINGS101-SCARF
 prerequisites: [RU-C101-tie, RU-C101-gloves]
 sounds: []
-roots: []
+roots: [german-scharpe]
+etymology_hook: "шарф probably came through Polish szarfa from German Schärpe 'a sash', from French écharpe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C101-gloves]
 <!-- hl-knowledge: introduces=[RU-LEX-C101-THINGS101-05]; assesses=[] -->
 
 **шарф** (*sharf*) — "a scarf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шарф** probably came through Polish *szarfa*, "a military sash", from German *Schärpe*, "a sash", which is traced to French *écharpe*, "an arm sling" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ustálost"
 concept_tag: RU-FEEL-TIREDNESS
 prerequisites: [RU-C34-anger, RU-C34-sadness]
 sounds: []
-roots: []
+roots: [pie-steh2]
+etymology_hook: "усталость is устать 'to get tired' + -ость; устать is у- + стать 'to stand, to become'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C34-sadness]
 <!-- hl-knowledge: introduces=[RU-LEX-C34-FEEL-05]; assesses=[] -->
 
 **усталость** (*ustálost*) — "tiredness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**усталость** is *устать*, "to get tired", with *-ость*, the suffix for nouns of quality. *устать* is *у-* with *стать*, "to stand, to become" (Vasmer); Old Church Slavonic *уставати* meant "to cease": a tired person has come to a stop.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

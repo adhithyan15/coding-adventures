@@ -14,7 +14,8 @@ romanization: "govyádina"
 concept_tag: RU-THINGS104-BEEF
 prerequisites: [RU-C103-trousers, RU-C103-dress]
 sounds: []
-roots: []
+roots: [pie-gwows]
+etymology_hook: "говядина is built on говядо 'cattle'; Latin bos and English cow are cousins of говядо"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C103-dress]
 <!-- hl-knowledge: introduces=[RU-LEX-C104-THINGS104-01]; assesses=[] -->
 
 **говядина** (*govyádina*) — "beef".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**говядина** is built on old *говядо*, "cattle", with *-ина*, a suffix for meat. Vasmer relates *говядо* to Sanskrit *gáuḥ*, "cow", Greek *boûs* and Latin *bōs*, "ox", and Old High German *chuo*, "cow": English *cow* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "grúsha"
 concept_tag: RU-FRUIT-PEAR
 prerequisites: [RU-C44-fruit, RU-C44-apple]
 sounds: []
-roots: []
+roots: [slavic-grusha]
+etymology_hook: "груша is probably a very old loan, like Lithuanian kriaušė 'pear'; the source is unknown"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C44-apple]
 <!-- hl-knowledge: introduces=[RU-LEX-C44-FRUIT-03]; assesses=[] -->
 
 **груша** (*grúsha*) — "a pear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**груша** — probably a very old loan: the first sound wavers between *г-* and *к-* (Bulgarian *круша*), and Lithuanian *kriáušė*, "pear", has the same source (Vasmer). Vasmer reports a comparison with a Kurdish word, but the donor is unknown.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

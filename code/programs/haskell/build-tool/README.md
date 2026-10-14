@@ -20,13 +20,27 @@ dependencies from package manifests, hashes package inputs for incremental
 builds, uses git diff information to narrow the build set, and executes
 `BUILD` scripts in dependency order.
 
-Discovery excludes the exact Dune-generated `_build` directory component at
-any depth without excluding source directories named `_Build` or
-`_build-example`. The package-local Hspec suite projects the four checked
-OCaml package BUILD records from the shared language-registry fixture through
-the production `discoverPackages` walk: three are source packages and the
-`_build` record is a decoy. This is a focused discovery slice, not a claim of
-full registry or duplicate-identity conformance.
+Discovery classifies roots relative to the configured `code/` directory.
+Only its leading `packages/<bucket>` or `programs/<bucket>` selects a language;
+checkout ancestors and later language words cannot change the bucket or turn
+a package into a program. Basename case is preserved, unknown buckets stay
+`unknown`, and the leading specification tree is excluded before BUILD reads.
+The exported `inferLanguage` helper retains rooted and code-relative callers;
+it uses the innermost structural `code/packages` or `code/programs` anchor and
+exact bucket spelling. Production discovery uses its explicit code root.
+
+All 27 exact generated-directory components come from the embedded checked
+source-input registry, including `.cargo`, `.dart_tool`, `.gradle`, `blib`,
+`dist-newstyle` and `gradle-build`. Near-case and suffixed source names remain
+discoverable. The package-local Hspec suite materializes all 29 files in the
+shared discovery fixture as inert data and compares all 25 expected native
+name/language/path/BUILD tuples. Supplemental tests cover all 23 registered
+language buckets, package/program pairs, all generated components and isolated
+case-near controls, ancestor names, and validated file-count/UTF-8-byte limits.
+The earlier four-file/three-root Dune regression remains independent.
+Canonical BUILD membership, platform precedence, duplicate identities,
+evaluated Starlark output and execution-adapter qualification have separate
+conformance items.
 
 Extra CI toolchain detection is also available through the pure
 `ToolchainDetection.evaluateToolchainSnapshot` boundary. Callers supply an
@@ -227,6 +241,22 @@ bash BUILD
 # Windows: run the command recorded in BUILD_windows
 cabal test all --enable-optimization=2
 ```
+
+The registry change is validated by 93 build-tool examples plus the project's
+graph, directed-graph and SHA-256 suites. Keep the optimized allocation-budget
+suite separate from unoptimized HPC instrumentation. Real Haskell and Go plans
+agree on all 210 Haskell identities, languages, roots and selected commands at
+the pinned delivery baseline. A separate native `resolveDependencies`
+projection also agrees with all 496 Go dependency edges. The Haskell plan
+remains its older format;
+this comparison does not qualify shared-plan interchange or adapter execution.
+
+Combined native test and CLI HPC reports show 85% expression coverage for
+`BuildTool` and 132/132 covered expressions in the changed discovery region.
+The complete seven-module production expression total is 61%, including the
+generated Unicode table module at 56%. These metrics are not line coverage or
+whole-package threshold compliance; the parity roadmap retains a separate
+production-coverage qualification owner.
 
 ## Usage
 

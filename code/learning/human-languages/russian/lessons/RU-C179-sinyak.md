@@ -14,7 +14,8 @@ romanization: "sinyák"
 concept_tag: RU-ZDOROV179-SINYAK
 prerequisites: [RU-C179-ukol, RU-C179-rana]
 sounds: []
-roots: []
+roots: [slavic-sini]
+etymology_hook: "синяк is from синий 'dark blue': a blue mark"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C179-rana]
 <!-- hl-knowledge: introduces=[RU-LEX-C179-ZDOROV179-04]; assesses=[] -->
 
 **синяк** (*sinyák*) — "a bruise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**синяк** comes from *синий*, "dark blue", with *-як*: a bruise is a blue mark.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

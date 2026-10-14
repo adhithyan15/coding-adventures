@@ -14,7 +14,8 @@ romanization: "otkryvát"
 concept_tag: RU-VERB-OTKRYVAT
 prerequisites: [RU-C41-zhdat, RU-C41-davat]
 sounds: []
-roots: []
+roots: [slavic-kryti]
+etymology_hook: "открывать is от- 'off, away' + крывать, from крыть 'to cover': to open is to uncover"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C41-davat]
 <!-- hl-knowledge: introduces=[RU-LEX-C42-VERB5-01]; assesses=[] -->
 
 **открывать** (*otkryvát*) — "to open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**открывать** is *от-*, "off, away", with *-крывать*, from *крыть*, "to cover": to open is to take the cover off. Vasmer relates *крыть* to Lithuanian *kráuti*, "to pile up", and Greek *krýptō*, "I hide", the source of English *crypt*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

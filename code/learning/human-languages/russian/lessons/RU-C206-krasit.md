@@ -14,7 +14,8 @@ romanization: "krásit"
 concept_tag: RU-VERB-KRASIT
 prerequisites: [RU-C206-stroit, RU-C206-lomat]
 sounds: []
-roots: []
+roots: [slavic-krasa]
+etymology_hook: "красить is from краса 'beauty': first 'to adorn', then 'to colour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C206-lomat]
 <!-- hl-knowledge: introduces=[RU-LEX-C206-ACT206-04]; assesses=[] -->
 
 **красить** (*krásit*) — "to paint, to dye".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**красить** comes from *краса*, "beauty" (Vasmer): first "to adorn", then "to paint, to dye".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "otsénka"
 concept_tag: RU-RABOTA231-OTSENKA
 prerequisites: [RU-C231-lektsiya, RU-C231-zanyatiye]
 sounds: []
-roots: []
+roots: [pie-kwey]
+etymology_hook: "оценка is from оценить 'to value', from цена 'a price'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C231-zanyatiye]
 <!-- hl-knowledge: introduces=[RU-LEX-C231-RABOTA231-05]; assesses=[] -->
 
 **оценка** (*otsénka*) — "a mark, a grade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**оценка** comes from *оценить*, "to assess", from *цена*, "a price, a value" (Vasmer relates *цена* to Greek *poinḗ*, "a penalty").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

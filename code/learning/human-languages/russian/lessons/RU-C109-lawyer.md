@@ -14,7 +14,8 @@ romanization: "yuríst"
 concept_tag: RU-THINGS109-LAWYER
 prerequisites: [RU-C108-baker, RU-C108-driver]
 sounds: []
-roots: []
+roots: [ius-latin]
+etymology_hook: "юрист ← German Jurist, from Medieval Latin iurista, from ius 'law'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C108-driver]
 <!-- hl-knowledge: introduces=[RU-LEX-C109-THINGS109-01]; assesses=[] -->
 
 **юрист** (*yuríst*) — "a lawyer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**юрист** — from 1704; it comes from German *Jurist*, Medieval Latin *iūrista*, from *iūs*, *iūris*, "law" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

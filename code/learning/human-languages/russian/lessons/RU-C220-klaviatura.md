@@ -14,7 +14,8 @@ romanization: "klaviatúra"
 concept_tag: RU-VESHCH220-KLAVIATURA
 prerequisites: [RU-C220-planshet, RU-C220-ekran]
 sounds: []
-roots: []
+roots: [clavis-latin]
+etymology_hook: "клавиатура ← German Klaviatur, from Latin clavis 'a key'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C220-ekran]
 <!-- hl-knowledge: introduces=[RU-LEX-C220-VESHCH220-03]; assesses=[] -->
 
 **клавиатура** (*klaviatúra*) — "a keyboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**клавиатура** comes from German *Klaviatur*, "a keyboard", built on Latin *clāvis*, "a key".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

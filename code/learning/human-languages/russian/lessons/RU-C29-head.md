@@ -14,7 +14,8 @@ romanization: "golová"
 concept_tag: RU-BODY1-HEAD
 prerequisites: [RU-C26-pervyy, RU-C26-vtoroy-tretiy]
 sounds: []
-roots: []
+roots: [slavic-golva]
+etymology_hook: "голова ← Proto-Slavic *golva, a cousin of Lithuanian galvà 'head'; глава is the Church Slavonic twin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C26-vtoroy-tretiy]
 <!-- hl-knowledge: introduces=[RU-LEX-C29-BODY1-01]; assesses=[] -->
 
 **голова** (*golová*) — "the head".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**голова** ← Proto-Slavic *\*golva*, "head" — inherited, and a cousin of Lithuanian *galvà*, "head" (Vasmer). East Slavic says *-оло-* where Church Slavonic says *-ла-*, so the same word came back from church books as *глава*, "chapter; the head of something".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

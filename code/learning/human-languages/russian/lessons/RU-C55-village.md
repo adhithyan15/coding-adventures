@@ -14,7 +14,8 @@ romanization: "derévnya"
 concept_tag: RU-NATURE1-VILLAGE
 prerequisites: [RU-C55-leaf, RU-C55-grass]
 sounds: []
-roots: []
+roots: [slavic-dirvi]
+etymology_hook: "деревня first meant 'a ploughed field'; Lithuanian dirvà 'field' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C55-grass]
 <!-- hl-knowledge: introduces=[RU-LEX-C55-NATURE1-05]; assesses=[] -->
 
 **деревня** (*derévnya*) — "a village".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**деревня** first meant "a ploughed field", then "a farmstead with its land", then "a village" (Vasmer). It goes back to *\*dĭrvĭnja*, and Vasmer reports the usual link with Lithuanian *dirvà*, "a field".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 246,
-  "sourceHash": "fnv1a64:a847d16950d4dda2",
+  "sourceHash": "fnv1a64:d85205a96f95a4da",
   "lessonIds": [
     "RU-C246-mikrovolnovka",
     "RU-C246-chaynik",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch246.txt",
   "json": "russian/narration/ch246.json",
-  "textHash": "fnv1a64:3814edb5171a5661",
-  "jsonHash": "fnv1a64:e16b798b7fd9f62d",
+  "textHash": "fnv1a64:d48e839f4d0a1511",
+  "jsonHash": "fnv1a64:43e5ab117742fca4",
   "findings": []
 }

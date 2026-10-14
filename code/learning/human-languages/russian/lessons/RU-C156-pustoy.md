@@ -14,7 +14,8 @@ romanization: "pustóy"
 concept_tag: RU-KACH156-PUSTOY
 prerequisites: [RU-C156-chistyy, RU-C156-gryaznyy]
 sounds: []
-roots: []
+roots: [slavic-pustu]
+etymology_hook: "пустой ← Proto-Slavic *pustŭ; Old Prussian pausto 'wild' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C156-gryaznyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C156-KACH156-05]; assesses=[] -->
 
 **пустой** (*pustóy*) — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пустой** ← Proto-Slavic *\*pustŭ* — inherited. Vasmer relates it to Old Prussian *pausto*, "wild", and *paustre*, "a wilderness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -44,6 +44,9 @@ You'll want to know first — two words and an ending.
 That is worth saying plainly, because it means the reader who has twelve cardinals has twelve ordinals as soon as they have one ending, with only первый (pérvyy) and второй outside it.
 Russian ordinals are adjectives, and that carries a debt as well as a rule: an adjective changes its ending to agree with what it describes, and this book has not taught an adjective yet. So the forms here are the ones a masculine noun takes, and agreeing them with anything else is an adjective chapter rather than a numeral one.
 
+The word, taken apart.
+третий from Proto-Slavic tretĭjĭ — inherited, a cousin of Lithuanian trẽčias, Latin tertius and English third (Vasmer). второй is perhaps from vĭtorŭ, related to Sanskrit vítaras, "further"; others reconstruct vŭtorŭ and link it with Lithuanian añtras, "second, other" (Vasmer).
+
 Guided Practice.
 [your turn — say: второй — second; третий — third]
 [pause 8 seconds for the answer]

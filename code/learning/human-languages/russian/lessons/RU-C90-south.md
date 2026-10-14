@@ -14,7 +14,8 @@ romanization: "yug"
 concept_tag: RU-LOC90-SOUTH
 prerequisites: [RU-C90-lift, RU-C90-north]
 sounds: []
-roots: []
+roots: [slavic-jugu]
+etymology_hook: "юг ← Proto-Slavic *jugŭ; Vasmer calls all proposed etymologies unreliable"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C90-north]
 <!-- hl-knowledge: introduces=[RU-LEX-C90-LOC90-04]; assesses=[] -->
 
 **юг** (*yug*) — "the south".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**юг** ← Proto-Slavic *\*jugŭ*, "south" — inherited. Vasmer calls the proposed etymologies unreliable, among them a link with Latin *augeō*, "I increase". The same word gave *ужин*, "supper", first the midday meal.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

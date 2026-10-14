@@ -14,7 +14,8 @@ romanization: "nérvnyy"
 concept_tag: RU-KACH216-NERVNYY
 prerequisites: [RU-C215-k-schastyu, RU-C216-spokoynyy]
 sounds: []
-roots: []
+roots: [nervus-latin]
+etymology_hook: "нервный is нерв 'a nerve' + -ный; нерв came through German Nerv or French nerf from Latin nervus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C216-spokoynyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C216-KACH216-02]; assesses=[] -->
 
 **нервный** (*nérvnyy*) — "nervous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**нервный** is *нерв*, "a nerve", with *-ный*. *нерв* is a bookish loan through German *Nerv* or French *nerf* from Latin *nervus*, "a sinew, a nerve" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

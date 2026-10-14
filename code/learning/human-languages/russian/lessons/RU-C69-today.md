@@ -14,7 +14,8 @@ romanization: "sevódnya"
 concept_tag: RU-TIME2-TODAY
 prerequisites: [RU-C68-year, RU-C68-evening]
 sounds: []
-roots: []
+roots: [slavic-dini]
+etymology_hook: "сегодня is сего дня, 'of this day': an old form of сей 'this' + день 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C68-evening]
 <!-- hl-knowledge: introduces=[RU-LEX-C69-TIME2-01]; assesses=[] -->
 
 **сегодня** (*sevódnya*) — "today". The **г** is said as *v*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сегодня** is old *сего дьне*, "of this day": a form of *сей*, "this", with *день*, "day" (Vasmer). The *г* is said *в*, as in *его*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "straná"
 concept_tag: RU-NUM2-COUNTRY
 prerequisites: [RU-C76-ninety, RU-C76-thousand]
 sounds: []
-roots: []
+roots: [slavic-storna]
+etymology_hook: "страна is the Church Slavonic shape of native сторона 'side'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C76-thousand]
 <!-- hl-knowledge: introduces=[RU-LEX-C76-NUM2-05]; assesses=[] -->
 
 **страна** (*straná*) — "a country".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**страна** — taken from Church Slavonic, says Vasmer, in place of native *сторона*, "side": *-ра-* against *-оро-*. A country was first a side, a region.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

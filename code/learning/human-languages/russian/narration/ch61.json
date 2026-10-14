@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "Bird, Mouse, Wolf, Bear, Fox",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:99a90b24623e4e91",
+  "sourceHash": "fnv1a64:e59092541c9434d2",
   "lessons": [
     {
       "id": "RU-C61-bird",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff3bc80db68c4209",
+      "sourceHash": "fnv1a64:26e719988891bd6e",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "птица (ptítsa) from Proto-Slavic pŭtica, from pŭta, \"bird\" — inherited. Vasmer lists Latvian putns, \"bird\", Lithuanian putýtis, \"little bird\", and words for \"child, young one\": Latin putus, \"boy\", and Sanskrit putrá-, \"son\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2437ea7fcfe56349",
+      "sourceHash": "fnv1a64:728d9d8d72939e7e",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "мышь (mysh) from Proto-Slavic myšĭ — inherited from PIE muHs, \"mouse\". Vasmer lists Sanskrit mūṣ-, Greek mŷs, Latin mūs and Old High German mûs: English mouse is a cousin. Trubachev adds that it may first have meant \"the grey one\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b7faf97cb7a7473",
+      "sourceHash": "fnv1a64:dd893a29416cb394",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "волк (volk) from Proto-Slavic vĭlkŭ — inherited from PIE wḷkʷos, \"wolf\". Vasmer lists Lithuanian vilkas, Sanskrit vṛkas, Gothic wulfs and Greek lýkos: English wolf is a cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a16a0c191a56e13c",
+      "sourceHash": "fnv1a64:3433b3a6ae0be4ee",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "медведь (medvéd) from Proto-Slavic medvědĭ, \"honey-eater\", from мёд, \"honey\", and the root of есть, \"to eat\" (Vasmer). It is a taboo name: hunters avoided the old word for \"bear\", the one kept in Latin ursus and Greek árktos."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7274088d6402f11d",
+      "sourceHash": "fnv1a64:26453001559b2354",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "лиса (lisá) goes with лис, \"a fox\", Old Church Slavonic лиса (lisá). Vasmer calls the origin unclear: tracing it to the family of Latin vulpēs and Lithuanian lãpė, \"fox\", is guesswork, he says, and other links are doubtful."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "neprávilnyy"
 concept_tag: RU-QUAL128-WRONG
 prerequisites: [RU-C127-serious, RU-C127-right]
 sounds: []
-roots: []
+roots: [slavic-pravu]
+etymology_hook: "неправильный is не 'not' + правильный 'correct'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C127-right]
 <!-- hl-knowledge: introduces=[RU-LEX-C128-QUAL128-01]; assesses=[] -->
 
 **неправильный** (*neprávilnyy*) — "wrong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**неправильный** is *не*, "not", with *правильный*, "correct", from *правило*, "a rule", and *правый*, "straight, right".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mototsíkl"
 concept_tag: RU-VESHCH167-MOTOTSIKL
 prerequisites: [RU-C166-trenirovka, RU-C167-elektrichka]
 sounds: []
-roots: []
+roots: [motor-latin]
+etymology_hook: "мотоцикл ← motocycle: Latin motor 'mover' + Greek kyklos 'circle, wheel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C167-elektrichka]
 <!-- hl-knowledge: introduces=[RU-LEX-C167-VESHCH167-02]; assesses=[] -->
 
 **мотоцикл** (*mototsíkl*) — "a motorbike".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мотоцикл** is an international coinage, from French *motocycle* or German *Motozykel*: Latin *mōtor*, "a mover", with Greek *kýklos*, "a wheel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

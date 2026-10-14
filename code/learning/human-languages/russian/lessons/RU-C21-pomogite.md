@@ -61,6 +61,11 @@ repeat, ask for slower speech and ask for help has covered every move a beginner
 needs to survive a conversation that goes wrong — and every one of those moves
 arrived in this chapter or the two behind it.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**помогите** is *помогать*, "to help", with *-ите*: *по-* with the root of *мочь*, "to be able", Proto-Slavic *\*mogti*, which Vasmer relates to Gothic *magan*, "to be able".
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POMOGITE-01, RU-LEX-IZVINITE-01, RU-LEX-POZHALUYSTA] -->
 

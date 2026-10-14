@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Twenty, a Hundred, and the Number That Named a Family",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:87061b771cc5cafe",
+  "sourceHash": "fnv1a64:d85739f90f1f8242",
   "lessons": [
     {
       "id": "RU-C25-dvadtsat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df3f3bf8db899b06",
+      "sourceHash": "fnv1a64:69cf626384d28bde",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "двадцать (dvádtsat) from Proto-Slavic dŭva desęti, \"two tens\", in the old form for a pair (Vasmer). десять, \"ten\", is a cousin of Latin decem, \"ten\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -93,7 +104,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

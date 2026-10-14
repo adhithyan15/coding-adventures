@@ -14,7 +14,8 @@ romanization: "nógot"
 concept_tag: RU-THINGS121-NAIL-2
 prerequisites: [RU-C120-ant, RU-C121-shark]
 sounds: []
-roots: []
+roots: [pie-h3nogwh]
+etymology_hook: "ноготь is a diminutive built on нога, first 'claw'; Lithuanian nagùtis 'nail' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C121-shark]
 <!-- hl-knowledge: introduces=[RU-LEX-C121-THINGS121-02]; assesses=[] -->
 
 **ноготь** (*nógot*) — "a nail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ноготь** ← Proto-Slavic *\*nogŭtĭ*, a diminutive built on *нога*, "leg", first "claw" (Vasmer); Lithuanian *nagùtis*, "nail, claw", is a cousin, and so is English *nail*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

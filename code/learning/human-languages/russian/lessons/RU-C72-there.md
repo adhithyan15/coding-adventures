@@ -14,7 +14,8 @@ romanization: "tam"
 concept_tag: RU-WHERE1-THERE
 prerequisites: [RU-C71-autumn, RU-C72-here]
 sounds: []
-roots: []
+roots: [pie-to]
+etymology_hook: "там ← Old Russian тамо, from the pronoun of тот 'that'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C72-here]
 <!-- hl-knowledge: introduces=[RU-LEX-C72-WHERE1-02]; assesses=[] -->
 
 **там** (*tam*) — "there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**там** ← Old Russian *тамо*, Proto-Slavic *\*tamo* — inherited, built on the pronoun stem *t-* of *тот*, "that" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

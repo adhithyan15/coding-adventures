@@ -14,7 +14,8 @@ romanization: "nazád"
 concept_tag: RU-MESTO214-NAZAD
 prerequisites: [RU-C213-etazh, RU-C214-otsyuda]
 sounds: []
-roots: []
+roots: [slavic-zadu]
+etymology_hook: "назад is на 'to' + зад 'the back': to the back"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C214-otsyuda]
 <!-- hl-knowledge: introduces=[RU-LEX-C214-MESTO214-02]; assesses=[] -->
 
 **назад** (*nazád*) — "back, backwards".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**назад** is *на*, "onto", with *зад*, "the back, the rear": backwards.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

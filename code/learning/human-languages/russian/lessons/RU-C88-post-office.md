@@ -14,7 +14,8 @@ romanization: "póchta"
 concept_tag: RU-LOC88-POST-OFFICE
 prerequisites: [RU-C87-stop, RU-C87-square]
 sounds: []
-roots: []
+roots: [positus-latin]
+etymology_hook: "почта came through Polish poczta from Italian posta, from Latin posita, the posted relay stations"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C87-square]
 <!-- hl-knowledge: introduces=[RU-LEX-C88-LOC88-01]; assesses=[] -->
 
 **почта** (*póchta*) — "a post office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**почта** — recorded from 1669; it came through Polish *poczta* from Italian *posta*, from Latin *posita*, "placed", for the horses placed at relay stations (Vasmer). German *Post* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

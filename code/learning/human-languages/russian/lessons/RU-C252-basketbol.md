@@ -14,7 +14,8 @@ romanization: "basketból"
 concept_tag: RU-VESHCH252-BASKETBOL
 prerequisites: [RU-C252-khokkey, RU-C252-tennis]
 sounds: []
-roots: []
+roots: [english-basketball]
+etymology_hook: "баскетбол ← English basketball: basket + ball"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C252-tennis]
 <!-- hl-knowledge: introduces=[RU-LEX-C252-VESHCH252-03]; assesses=[] -->
 
 **баскетбол** (*basketból*) — "basketball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**баскетбол** comes from English *basketball*, "basket ball".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

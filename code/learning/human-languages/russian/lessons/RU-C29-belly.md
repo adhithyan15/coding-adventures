@@ -14,7 +14,8 @@ romanization: "zhivót"
 concept_tag: RU-BODY1-BELLY
 prerequisites: [RU-C29-hand, RU-C29-leg]
 sounds: []
-roots: []
+roots: [pie-gweih]
+etymology_hook: "живот ← Proto-Slavic *životŭ 'life', from the root of жить 'to live'; 'belly' is a later sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C29-leg]
 <!-- hl-knowledge: introduces=[RU-LEX-C29-BODY1-04]; assesses=[] -->
 
 **живот** (*zhivót*) — "the belly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**живот** ← Proto-Slavic *\*životŭ*, "life" — inherited, from the root of *жить*, "to live". Old Russian *životŭ* meant "life, property"; "belly" came later (Vasmer). Lithuanian *gyvatà*, "life", and Latin *vīta*, "life", are cousins (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

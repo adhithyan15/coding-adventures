@@ -14,7 +14,8 @@ romanization: "cháynik"
 concept_tag: RU-VESHCH246-CHAYNIK
 prerequisites: [RU-C245-otlichnyy, RU-C246-mikrovolnovka]
 sounds: []
-roots: []
+roots: [mandarin-cha]
+etymology_hook: "чайник is чай 'tea' + -ник: a tea vessel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C246-mikrovolnovka]
 <!-- hl-knowledge: introduces=[RU-LEX-C246-VESHCH246-02]; assesses=[] -->
 
 **чайник** (*cháynik*) — "a kettle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**чайник** is *чай*, "tea", with *-ник*, a suffix for a vessel. *чай* came from Chinese *chá*, through Persian and Turkic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

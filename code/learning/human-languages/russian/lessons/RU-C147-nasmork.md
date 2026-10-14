@@ -14,7 +14,8 @@ romanization: "násmork"
 concept_tag: RU-ZDOROV147-NASMORK
 prerequisites: [RU-C147-prostuda, RU-C147-gripp]
 sounds: []
-roots: []
+roots: [slavic-smrukati]
+etymology_hook: "насморк goes with сморкаться 'to blow one's nose'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C147-gripp]
 <!-- hl-knowledge: introduces=[RU-LEX-C147-ZDOROV147-04]; assesses=[] -->
 
 **насморк** (*násmork*) — "a runny nose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**насморк** goes with *сморкать*, "to blow the nose" (Vasmer), with *на-*: a runny nose.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

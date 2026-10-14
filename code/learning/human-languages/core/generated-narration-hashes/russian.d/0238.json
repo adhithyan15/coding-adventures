@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 238,
-  "sourceHash": "fnv1a64:61e75530c686701a",
+  "sourceHash": "fnv1a64:5110083b08b59386",
   "lessonIds": [
     "RU-C238-maz",
     "RU-C238-kapli",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch238.txt",
   "json": "russian/narration/ch238.json",
-  "textHash": "fnv1a64:d2baabfc88a36c22",
-  "jsonHash": "fnv1a64:1ab97371e6f1ba56",
+  "textHash": "fnv1a64:41feed069a59c129",
+  "jsonHash": "fnv1a64:24ac93ccf2eda12b",
   "findings": []
 }

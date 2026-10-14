@@ -14,7 +14,8 @@ romanization: "nalíchnyye"
 concept_tag: RU-RABOTA170-NALICHNYYE
 prerequisites: [RU-C170-nalog, RU-C170-schyot]
 sounds: []
-roots: []
+roots: [slavic-liku]
+etymology_hook: "наличные is 'what is at hand', from на лицо 'on the face', from лицо 'face'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C170-schyot]
 <!-- hl-knowledge: introduces=[RU-LEX-C170-RABOTA170-05]; assesses=[] -->
 
 **наличные** (*nalíchnyye*) — "cash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**наличные** is short for *наличные деньги*, "money at hand", from *налицо*, "present, in view", *на*, "on", with *лицо*, "face".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

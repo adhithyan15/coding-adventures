@@ -14,7 +14,8 @@ romanization: "kósmos"
 concept_tag: RU-THINGS123-SPACE
 prerequisites: [RU-C122-thunder, RU-C122-planet]
 sounds: []
-roots: []
+roots: [greek-kosmos]
+etymology_hook: "космос ← Greek kosmos 'order, the ordered world'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C122-planet]
 <!-- hl-knowledge: introduces=[RU-LEX-C123-THINGS123-01]; assesses=[] -->
 
 **космос** (*kósmos*) — "space".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**космос** comes from Greek *kósmos*, "order, ornament", and so "the ordered world".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

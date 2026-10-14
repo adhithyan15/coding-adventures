@@ -14,7 +14,8 @@ romanization: "gólub"
 concept_tag: RU-VESHCH251-GOLUB
 prerequisites: [RU-C251-petukh, RU-C251-gus]
 sounds: []
-roots: []
+roots: [slavic-golobi]
+etymology_hook: "голубь ← Proto-Slavic *golǫbĭ, probably named for a colour; Lithuanian gulbė 'swan' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C251-gus]
 <!-- hl-knowledge: introduces=[RU-LEX-C251-VESHCH251-04]; assesses=[] -->
 
 **голубь** (*gólub*) — "a pigeon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**голубь** ← Proto-Slavic *\*golǫbĭ* — inherited, first probably named for a colour. Vasmer thinks it probably related to Lithuanian *gulbė*, "swan", and *жёлтый*, "yellow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

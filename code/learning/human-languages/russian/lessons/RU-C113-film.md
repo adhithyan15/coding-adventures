@@ -14,7 +14,8 @@ romanization: "film"
 concept_tag: RU-THINGS113-FILM
 prerequisites: [RU-C112-sport, RU-C113-game]
 sounds: []
-roots: []
+roots: [english-film]
+etymology_hook: "фильм ← English film 'a thin skin, a film'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C113-game]
 <!-- hl-knowledge: introduces=[RU-LEX-C113-THINGS113-02]; assesses=[] -->
 
 **фильм** (*film*) — "a film".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**фильм**, older *фильма*, comes from English *film*, "a thin skin, a film" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
