@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 108,
-  "sourceHash": "fnv1a64:ab44fbbb11e59a20",
+  "sourceHash": "fnv1a64:c2ebb1e4d3325726",
   "lessonIds": [
     "GU-C108-vasan",
     "GU-C108-chari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch108.txt",
   "json": "gujarati/narration/ch108.json",
-  "textHash": "fnv1a64:540735ead21eab98",
-  "jsonHash": "fnv1a64:bf038ef12665fa2d",
+  "textHash": "fnv1a64:f903502000c9f6a1",
+  "jsonHash": "fnv1a64:c869db47ebbbcf2a",
   "findings": []
 }

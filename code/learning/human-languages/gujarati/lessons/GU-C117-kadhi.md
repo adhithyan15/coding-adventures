@@ -14,7 +14,8 @@ romanization: "kaḍhī"
 concept_tag: GU-THINGS117-KADHI
 prerequisites: [GU-C116-magphali, GU-C116-dhokla]
 sounds: []
-roots: []
+roots: [indo-aryan-kvathita]
+etymology_hook: "kaḍhī ← Sanskrit kvathita 'boiled', a tadbhava (CDIAL 3637)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C116-dhokla]
 <!-- hl-knowledge: introduces=[GU-LEX-C117-THINGS117-01]; assesses=[] -->
 
 **કઢી** (*kaḍhī*) — "kadhi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કઢી** (*kaḍhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kvathita*, "boiled" (CDIAL 3637).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

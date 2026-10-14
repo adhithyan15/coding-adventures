@@ -14,7 +14,8 @@ romanization: "hamṇā̃"
 concept_tag: GU-TIME94-HAMNA
 prerequisites: [GU-C94-roj, GU-C94-tarikh, GU-C32-pan]
 sounds: []
-roots: []
+roots: [sanskrit-adhuna]
+etymology_hook: "hamṇāṁ: listed, as hamṇo 'now', under Sanskrit adhunā 'now', through *haũṇ- (CDIAL 268)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [GU-C94-tarikh]
 <!-- hl-knowledge: introduces=[GU-LEX-C94-TIME94-05]; assesses=[] -->
 
 **હમણાં** (*hamṇā̃*) — "right now, a moment ago".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Gujarati *hamṇo*, "now", under Sanskrit *adhunā*, "now", through a form *\*haũṇ-* (CDIAL 268). **હમણાં** (*hamṇāṁ*) is another form of that word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṭoplī"
 concept_tag: GU-THINGS109-TOPLI
 prerequisites: [GU-C109-savarni, GU-C109-kacro]
 sounds: []
-roots: []
+roots: [indo-aryan-toppa-basket]
+etymology_hook: "ṭoplī: with ṭoplo 'basket' ← *ṭoppa 'basket-work', reconstructed (CDIAL 5482)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C109-kacro]
 <!-- hl-knowledge: introduces=[GU-LEX-C109-THINGS109-05]; assesses=[] -->
 
 **ટોપલી** (*ṭoplī*) — "a basket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ટોપલી** (*ṭoplī*) is the small form of *ṭoplo*, "basket", which CDIAL lists under a reconstructed *\*ṭoppa*, "basket-work" (CDIAL 5482). CDIAL asks whether this is the same word as *\*ṭoppa*, "hat, covering".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

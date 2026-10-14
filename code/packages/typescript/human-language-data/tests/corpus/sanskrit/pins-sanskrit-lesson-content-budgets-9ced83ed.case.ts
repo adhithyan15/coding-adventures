@@ -122,7 +122,9 @@ it("pins Sanskrit lesson-content budgets", () =>
     // 1391 -> 1393: the chapter-65 A1 writing close adds one controlled
     // meaning-only question and one genuine timed form-plus-message paper. Both
     // reuse known atoms, so idiom, sense, and culture-claim totals do not move.
-    lessons: 1393,
+    // 1393 -> 1394: chapter 258 adds one model-free A2 connected-composition
+    // lesson. It reuses known atoms, so no content total moves.
+    lessons: 1394,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

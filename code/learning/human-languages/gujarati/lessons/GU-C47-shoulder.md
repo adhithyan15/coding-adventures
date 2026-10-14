@@ -14,7 +14,8 @@ romanization: "khabho"
 concept_tag: GU-BODY2-SHOULDER
 prerequisites: [GU-C47-finger, GU-C47-throat]
 sounds: []
-roots: []
+roots: [indo-aryan-khavaka]
+etymology_hook: "khabho: listed by CDIAL under a reconstructed *khavaka 'shoulder-blade', perhaps crossed with *skambha (CDIAL 3852)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C47-throat]
 <!-- hl-knowledge: introduces=[GU-LEX-C47-BODY2-03]; assesses=[] -->
 
 **ખભો** (*khabho*) — "a shoulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ખભો** (*khabho*) under a reconstructed *\*khavaka*, "shoulder-blade", and asks whether it was crossed with *\*skambha*, "shoulder-blade, wing" (CDIAL 3852, 13640).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

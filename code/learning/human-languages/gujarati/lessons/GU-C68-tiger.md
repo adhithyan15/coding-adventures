@@ -14,7 +14,8 @@ romanization: "vāgh"
 concept_tag: GU-ANIMALS2-TIGER
 prerequisites: [GU-C67-dog, GU-C67-mouse]
 sounds: []
-roots: []
+roots: [sanskrit-vyaghra]
+etymology_hook: "vāgh ← Sanskrit vyāghra 'tiger', a tadbhava (CDIAL 12193)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C67-mouse]
 <!-- hl-knowledge: introduces=[GU-LEX-C68-ANIMALS2-01]; assesses=[] -->
 
 **વાઘ** (*vāgh*) — "a tiger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વાઘ** (*vāgh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vyāghra*, "tiger" (CDIAL 12193).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

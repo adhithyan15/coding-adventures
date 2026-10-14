@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 114,
-  "sourceHash": "fnv1a64:c459c03c22d10c43",
+  "sourceHash": "fnv1a64:7605d7151e8a2395",
   "lessonIds": [
     "GU-C114-bajri",
     "GU-C114-ghau",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch114.txt",
   "json": "gujarati/narration/ch114.json",
-  "textHash": "fnv1a64:4902f1fd447cce69",
-  "jsonHash": "fnv1a64:893367361a9f3d58",
+  "textHash": "fnv1a64:98d11040ef8c6cf8",
+  "jsonHash": "fnv1a64:397570350926b396",
   "findings": []
 }

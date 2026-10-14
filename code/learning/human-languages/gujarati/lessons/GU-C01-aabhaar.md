@@ -12,6 +12,7 @@ concept_tag: COURTESY-THANKS
 prerequisites: [GU-W02-vocalic-r]
 sounds: [independent-aa, no-top-line]
 roots: [aabhaara-sanskrit, bhr-bear]
+etymology_hook: "ābhār ← Sanskrit ābhāra 'a load, a burden', a tatsama, on the root bhṛ 'to bear'"
 duration:
   max_seconds: 240
 requires:
@@ -48,8 +49,7 @@ reviews_of: [GU-C01-namaste]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-AABHAAR-01, GU-CONCEPT-C01-NAMASTE-01] -->
 
-**આભાર** (*ābhār*, "thanks, gratitude") is from Sanskrit **આભાર** (*ābhāra*, "a
-burden, an obligation"), from **આ-** (*ā-*, "toward") + the root **ભૃ** (*bhṛ*,
+**આભાર** (*ābhār*, "thanks, gratitude") is from Sanskrit **આભાર** (*ābhāra*, "a load, a burden"), from **આ-** (*ā-*, "toward") + the root **ભૃ** (*bhṛ*,
 "to bear, carry"). To thank someone is to acknowledge you now *bear an
 obligation* to them — the same idea as English **oblige** (Latin *ob-* + *ligāre*
 "to bind") and Portuguese *obrigado*. That root *bhṛ* is Proto-Indo-European

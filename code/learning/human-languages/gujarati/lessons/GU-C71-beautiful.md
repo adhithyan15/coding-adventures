@@ -14,7 +14,8 @@ romanization: "sundar"
 concept_tag: GU-COLOUR2-BEAUTIFUL
 prerequisites: [GU-C71-brown, GU-C71-pink]
 sounds: []
-roots: []
+roots: [sanskrit-sundara]
+etymology_hook: "sundar ← Sanskrit sundara 'beautiful', a tatsama; CDIAL asks if it is Prakrit for sūnara 'excellent' (CDIAL 13474)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C71-pink]
 <!-- hl-knowledge: introduces=[GU-LEX-C71-COLOUR2-04]; assesses=[] -->
 
 **સુંદર** (*sundar*) — "beautiful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સુંદર** (*sundar*) is Sanskrit *sundara*, "beautiful", taken over whole as a learned loan, a tatsama (CDIAL 13474). CDIAL asks whether the Sanskrit word is itself a Middle Indo-Aryan form of *sūnara*, "excellent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

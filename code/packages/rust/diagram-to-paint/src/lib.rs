@@ -839,7 +839,9 @@ where
     let mut instructions = Vec::new();
     let mut text_children = Vec::new();
     for (index, lane) in diagram.lanes.iter().enumerate() {
-        let fill = if index % 2 == 0 { "#f8fafc" } else { "#eef6f8" };
+        let fallback_fill = if index % 2 == 0 { "#f8fafc" } else { "#eef6f8" };
+        let fill = lane.style.fill.as_deref().unwrap_or(fallback_fill);
+        let stroke = lane.style.stroke.as_deref().unwrap_or("#78909c");
         instructions.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
             x: lane.x,
@@ -847,36 +849,53 @@ where
             width: lane.width,
             height: lane.height,
             fill: Some(fill.into()),
-            stroke: Some("#78909c".into()),
-            stroke_width: Some(1.5),
-            corner_radius: Some(8.0),
-            stroke_dash: None,
+            stroke: Some(stroke.into()),
+            stroke_width: Some(lane.style.stroke_width.unwrap_or(1.5)),
+            corner_radius: Some(lane.style.corner_radius.unwrap_or(8.0)),
+            stroke_dash: lane.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }));
+        let mut title_font = options.title_font.clone();
+        if let Some(size) = diagram.theme.font_size { title_font.size = size; }
+        if let Some(family) = &diagram.theme.font_family { title_font.family.clone_from(family); }
+        if let Some(size) = lane.style.font_size { title_font.size = size; }
+        if let Some(weight) = lane.style.font_weight { title_font.weight = weight; }
+        if let Some(italic) = lane.style.font_italic { title_font.italic = italic; }
+        if let Some(family) = &lane.style.font_family { title_font.family.clone_from(family); }
         text_children.push(text_node(
             &lane.label,
             lane.x + 8.0,
             lane.y + 7.0,
             lane.width - 16.0,
             26.0,
-            options.title_font.clone(),
-            Color {
+            title_font,
+            lane.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
                 r: 38,
                 g: 50,
                 b: 56,
                 a: 255,
-            },
+            }),
         ));
     }
     for group in &diagram.groups {
+        let stroke = group.style.stroke.as_deref().unwrap_or("#90a4ae");
         instructions.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(), x: group.x, y: group.y, width: group.width, height: group.height,
-            fill: None, stroke: Some("#90a4ae".into()), stroke_width: Some(1.25),
-            corner_radius: Some(6.0), stroke_dash: Some(vec![6.0, 4.0]), stroke_dash_offset: None,
+            fill: group.style.fill.clone(), stroke: Some(stroke.into()), stroke_width: Some(group.style.stroke_width.unwrap_or(1.25)),
+            corner_radius: Some(group.style.corner_radius.unwrap_or(6.0)),
+            stroke_dash: group.style.stroke_dash.clone().or_else(|| Some(vec![6.0, 4.0])), stroke_dash_offset: None,
         }));
+        let mut label_font = options.label_font.clone();
+        if let Some(size) = diagram.theme.font_size { label_font.size = size; }
+        if let Some(family) = &diagram.theme.font_family { label_font.family.clone_from(family); }
+        if let Some(size) = group.style.font_size { label_font.size = size; }
+        if let Some(weight) = group.style.font_weight { label_font.weight = weight; }
+        if let Some(italic) = group.style.font_italic { label_font.italic = italic; }
+        if let Some(family) = &group.style.font_family { label_font.family.clone_from(family); }
         text_children.push(text_node(
             &group.label, group.x + 8.0, group.y + 4.0, group.width - 16.0, 22.0,
-            options.label_font.clone(), Color { r: 69, g: 90, b: 100, a: 255 },
+            label_font, group.style.text_color.as_deref().and_then(parse_css_color)
+                .unwrap_or(Color { r: 69, g: 90, b: 100, a: 255 }),
         ));
     }
     let mut hop_crossings = SwimlaneHopCrossings::default();
@@ -884,7 +903,7 @@ where
         if edge.kind == SwimlaneEdgeKind::Invisible {
             continue;
         }
-        let stroke = edge.style.stroke.as_deref().unwrap_or("#455a64");
+        let stroke = edge.style.stroke.as_deref().unwrap_or(&diagram.theme.line_color);
         let stroke_width = edge.style.stroke_width.unwrap_or_else(|| {
             if edge.kind == SwimlaneEdgeKind::Thick { 3.5 } else { 1.8 }
         });
@@ -1029,6 +1048,8 @@ where
         ));
         if let Some(label) = &edge.label {
             let mut label_font = options.label_font.clone();
+            if let Some(size) = diagram.theme.font_size { label_font.size = size; }
+            if let Some(family) = &diagram.theme.font_family { label_font.family.clone_from(family); }
             if let Some(size) = edge.style.font_size {
                 label_font.size = size;
             }
@@ -1055,8 +1076,8 @@ where
         }
     }
     for node in &diagram.nodes {
-        let fill = node.style.fill.clone().unwrap_or_else(|| "#ffffff".into());
-        let stroke = node.style.stroke.clone().unwrap_or_else(|| "#1565c0".into());
+        let fill = node.style.fill.clone().unwrap_or_else(|| diagram.theme.main_background.clone());
+        let stroke = node.style.stroke.clone().unwrap_or_else(|| diagram.theme.node_border.clone());
         let stroke_width = node.style.stroke_width.unwrap_or(2.0);
         let stroke_dash = node.style.stroke_dash.clone();
         let shape = match node.shape {
@@ -1473,10 +1494,12 @@ where
             | DiagramShape::LightningBolt | DiagramShape::FilledCircle | DiagramShape::Anchor
             | DiagramShape::Summary
         ) {
-            let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
-                r: 13, g: 71, b: 161, a: 255,
-            });
+            let text_color = node.style.text_color.as_deref()
+                .unwrap_or(&diagram.theme.primary_text_color);
+            let text_color = parse_css_color(text_color).unwrap_or(Color { r: 13, g: 71, b: 161, a: 255 });
             let mut label_font = options.label_font.clone();
+            if let Some(size) = diagram.theme.font_size { label_font.size = size; }
+            if let Some(family) = &diagram.theme.font_family { label_font.family.clone_from(family); }
             if let Some(size) = node.style.font_size {
                 label_font.size = size;
             }
@@ -1574,6 +1597,16 @@ where
     }
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
+    }
+    metadata.insert("swimlane.theme.mainBkg".into(), diagram.theme.main_background.clone());
+    metadata.insert("swimlane.theme.nodeBorder".into(), diagram.theme.node_border.clone());
+    metadata.insert("swimlane.theme.lineColor".into(), diagram.theme.line_color.clone());
+    metadata.insert("swimlane.theme.primaryTextColor".into(), diagram.theme.primary_text_color.clone());
+    if let Some(family) = &diagram.theme.font_family {
+        metadata.insert("swimlane.theme.fontFamily".into(), family.clone());
+    }
+    if let Some(size) = diagram.theme.font_size {
+        metadata.insert("swimlane.theme.fontSize".into(), size.to_string());
     }
     if let Some(line_hops) = diagram.line_hops {
         metadata.insert("swimlane.lineHops".into(), match line_hops {

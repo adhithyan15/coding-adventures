@@ -11,7 +11,8 @@ gloss: my name is…
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [GU-C02-maarun, GU-C02-naam, GU-C02-chhe]
 sounds: []
-roots: []
+roots: [ma-first-person, naaman-sanskrit, sanskrit-akseti]
+etymology_hook: "mārũ on the base ma- (CDIAL 9691); nām ← nāman 'name' (CDIAL 7067); chhe ← ākṣeti 'abides' (CDIAL 1031)"
 duration:
   max_seconds: 180
 requires:
@@ -43,6 +44,11 @@ reviews_of: [GU-C02-maarun, GU-C02-naam, GU-C02-chhe]
 
 **મારું** (my, neuter) + **નામ** (name) + your name + **છે** (is) = **mārũ nām …
 chhe**, "my name is…" *Mārũ nām Arun chhe.* → "My name is Arun."
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+All three words are inherited. CDIAL lists *mārũ* under the Sanskrit first-person base *ma-* (CDIAL 9691), *nām* under *nāman*, "name" (CDIAL 7067), and *chhe* under *ākṣeti*, "abides, dwells in" (CDIAL 1031).
 
 ## Grammar Lens: the verb goes last
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-MAARUN-01, GU-CONCEPT-C02-MAARUNNAAMCHHE-01, GU-CONCEPT-C02-NAAM-01] -->

@@ -14,7 +14,8 @@ romanization: "ghaṇũ"
 concept_tag: GU-HOWMUCH-ALOT
 prerequisites: [GU-C75-outside, GU-C75-between]
 sounds: []
-roots: []
+roots: [sanskrit-ghana]
+etymology_hook: "ghaṇũ ← Sanskrit ghana 'compact, firm, dense', a tadbhava (CDIAL 4424)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C75-between]
 <!-- hl-knowledge: introduces=[GU-LEX-C76-HOWMUCH-01]; assesses=[] -->
 
 **ઘણું** (*ghaṇũ*) — "a lot, much".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ઘણું** (*ghaṇũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghana*, "compact, firm, dense" (CDIAL 4424).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

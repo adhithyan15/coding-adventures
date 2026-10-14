@@ -14,7 +14,8 @@ romanization: "tahevār"
 concept_tag: GU-TIME-FESTIVAL
 prerequisites: [GU-C80-minute, GU-C80-holiday]
 sounds: []
-roots: []
+roots: [indo-aryan-tithivara]
+etymology_hook: "tahevār ← *tithivāra 'a festival', a reconstructed form; a tadbhava (CDIAL 5811)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C80-holiday]
 <!-- hl-knowledge: introduces=[GU-LEX-C80-TIME-04]; assesses=[] -->
 
 **તહેવાર** (*tahevār*) — "a festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તહેવાર** (*tahevār*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*tithivāra*, "a festival", a form CDIAL reconstructs from its descendants (CDIAL 5811). It is *tithi*, "lunar day", and *vāra*, "day, turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

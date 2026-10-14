@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for blue, then the Gujarati for black.
 You'll want to know: સફેદ.
 સફેદ (saphed) — "white".
 
+The word, taken apart.
+સફેદ (saphed) is a loan, usually traced to Persian safēd, "white".
+
 What you've built.
 One more word for white, brown, pink, and what looks good.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for black, then the Gujarati for white.
 
 You'll want to know: ભૂરો.
 ભૂરો (bhūro) — "brown".
+
+The word, taken apart.
+ભૂરો (bhūro) is a tadbhava. It comes from bhrūra, "brown", a form CDIAL reconstructs and sets beside Indo-European bhrūro- and bhrūno- (CDIAL 9690). The second is the source of English brown.
 
 What you've built.
 One more word for white, brown, pink, and what looks good.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for white, then the Gujarati for brown.
 You'll want to know: ગુલાબી.
 ગુલાબી (gulābī) — "pink".
 
+The word, taken apart.
+ગુલાબી (gulābī) is a loan, usually traced to Persian gulābī, "rose-coloured", from gulāb, "rose-water".
+
 What you've built.
 One more word for white, brown, pink, and what looks good.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for brown, then the Gujarati for pink.
 You'll want to know: સુંદર.
 સુંદર (sundar) — "beautiful".
 
+The word, taken apart.
+સુંદર (sundar) is Sanskrit sundara, "beautiful", taken over whole as a learned loan, a tatsama (CDIAL 13474). CDIAL asks whether the Sanskrit word is itself a Middle Indo-Aryan form of sūnara, "excellent".
+
 What you've built.
 One more word for white, brown, pink, and what looks good.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for pink, then the Gujarati for beautiful.
 
 You'll want to know: ખરાબ.
 ખરાબ (kharāb) — "bad". The opposite of સારું.
+
+The word, taken apart.
+ખરાબ (kharāb) is a loan from Arabic kharāb, "ruin, desolation", which reached Gujarati through Persian. Its Arabic root is kh-r-b (Lane).
 
 What you've built.
 One more word for white, brown, pink, and what looks good.

@@ -1142,7 +1142,9 @@ endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline label
 thick, and dotted links, including labeled links with independently selected point, circle, cross,
 or absent markers at either endpoint, titles, and accessibility
 metadata with named and numeric entity
-decoding. Direct node
+decoding. Root `themeVariables` from init directives or front matter preserve `mainBkg`, `nodeBorder`,
+`lineColor`, `primaryTextColor`, `fontFamily`, and `fontSize` through semantic and layout IR to default
+node, edge, and glyph paint; themed font size also participates in node measurement. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
 decorators cover fill, stroke, text color, stroke width, dash patterns, font family, font size,
 weight, and italic/oblique style. Typography survives semantic IR, informs node width, and lowers
@@ -1193,7 +1195,10 @@ visual subset, including parallel
 handoffs, is rendered through Metal-to-PNG.
 Nested subgraphs remain ordinary child clusters inside their top-level ownership lane. Their lane and
 parent identities survive semantic IR, layout resolves bounds bottom-up around direct nodes and child
-clusters, and paint emits dashed labeled containers behind edge and node geometry.
+clusters, and paint emits dashed labeled containers behind edge and node geometry. Direct styles and
+named classes on top-level lanes or nested groups preserve portable fill, stroke, dash, corner, label
+color, and typography fields through semantic and layout IR into backend-neutral paint. Flowchart-style
+`:::class` decorators on either subgraph form resolve through the same class pipeline.
 Nodes outside an explicit top-level subgraph are assigned to Mermaid's unlabeled
 `__swimlane_default__` ownership lane, which survives semantic IR, lane layout, and paint lowering.
 

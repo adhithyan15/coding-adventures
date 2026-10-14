@@ -14,7 +14,8 @@ romanization: "siṃh"
 concept_tag: GU-ANIMALS2-LION
 prerequisites: [GU-C67-mouse, GU-C68-tiger]
 sounds: []
-roots: []
+roots: [sanskrit-simha]
+etymology_hook: "siṃh ← Sanskrit siṁha 'lion', a tatsama (CDIAL 13384)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C68-tiger]
 <!-- hl-knowledge: introduces=[GU-LEX-C68-ANIMALS2-02]; assesses=[] -->
 
 **સિંહ** (*siṃh*) — "a lion". Wild lions still live in Gujarat's Gir forest.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સિંહ** (*siṃh*) is Sanskrit *siṁha*, "lion", taken over whole as a learned loan, a tatsama (CDIAL 13384). CDIAL lists the inherited Gujarati form as *sīha*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: GU-VERB-LAAVVU
 prerequisites: [GU-C55-dhovu, GU-C55-aapvu]
 sounds: []
 roots: []
+etymology_hook: "lāvvũ 'to bring': origin not settled; CDIAL lists a Gujarati lāvvũ only as 'to apply' (CDIAL 11004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C55-aapvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C55-HOUSEWORK-04]; assesses=[] -->
 
 **લાવવું** (*lāvvũ*) — "to bring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **લાવવું** (*lāvvũ*) is not settled. CDIAL lists a Gujarati *lāvvũ* only in the sense "to apply" (CDIAL 11004). For Hindi *lānā*, "to bring", it gives Sanskrit *labhate*, "takes", crossed with *dadāti*, "gives" (CDIAL 10948).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pahervũ"
 concept_tag: GU-VERB-PAHERVU
 prerequisites: [GU-C141-jagvu, GU-C141-nahvu]
 sounds: []
-roots: []
+roots: [sanskrit-paridadhati]
+etymology_hook: "pahervũ ← Sanskrit paridadhāti 'sets round; puts on (clothes)', a tadbhava (CDIAL 7835)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C141-nahvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C141-ACT141-03]; assesses=[] -->
 
 **પહેરવું** (*pahervũ*) — "to wear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પહેરવું** (*pahervũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *paridadhāti*, "sets round; puts on (clothes)" (CDIAL 7835).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

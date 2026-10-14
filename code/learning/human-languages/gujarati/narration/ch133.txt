@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for spicy, then the Gujarati for soft.
 You'll want to know: કઠણ.
 કઠણ (kaṭhaṇ) — "hard".
 
+The word, taken apart.
+કઠણ (kaṭhaṇ) goes back to Sanskrit kaṭhina, "hard, stiff" (CDIAL 2650). CDIAL notes the view that this group of words came from Dravidian, and lists no Gujarati form.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for soft, then the Gujarati for hard.
 
 You'll want to know: સહેલું.
 સહેલું (sahelũ) — "easy".
+
+The word, taken apart.
+સહેલું (sahelũ) is a tadbhava. CDIAL lists it under Sanskrit sukha, "pleasant, easy", among forms built with an -illa suffix (CDIAL 13451).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for hard, then the Gujarati for easy.
 You'll want to know: અઘરું.
 અઘરું (agharũ) — "difficult".
 
+The word, taken apart.
+The origin of અઘરું (agharũ) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for easy, then the Gujarati for difficult.
 You'll want to know: હોશિયાર.
 હોશિયાર (hośiyār) — "clever".
 
+The word, taken apart.
+હોશિયાર (hośiyār) is a loan, usually traced to Persian hoshyār, "alert, wise", built on hosh, "the senses, understanding".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for difficult, then the Gujarati for clever
 
 You'll want to know: આળસુ.
 આળસુ (āḷsu) — "lazy".
+
+The word, taken apart.
+આળસુ (āḷsu) is a tadbhava. CDIAL lists it under Sanskrit alasa, "inactive", among forms built with an -uka suffix (CDIAL 708).
 
 What you've built.
 One more word for this chapter.

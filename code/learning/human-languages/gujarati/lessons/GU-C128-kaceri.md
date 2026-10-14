@@ -14,7 +14,8 @@ romanization: "kacerī"
 concept_tag: GU-THINGS128-KACERI
 prerequisites: [GU-C127-musaphar, GU-C127-hospital]
 sounds: []
-roots: []
+roots: [hindustani-kacahri]
+etymology_hook: "kacerī: as Hindi kacahrī 'court-house', which CDIAL traces to *kṛtyagharikā (CDIAL 3429)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C127-hospital]
 <!-- hl-knowledge: introduces=[GU-LEX-C128-THINGS128-01]; assesses=[] -->
 
 **કચેરી** (*kacerī*) — "an office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કચેરી** (*kacerī*) matches Hindi *kacahrī*, "court-house", which CDIAL traces to a reconstructed *\*kṛtyagharikā*, "court-house", built on *kṛtya*, "business", and *ghara*, "house" (CDIAL 3429). CDIAL lists no Gujarati form there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 86,
-  "sourceHash": "fnv1a64:bd4b171bacf1f18e",
+  "sourceHash": "fnv1a64:565cb378a84d33cb",
   "lessonIds": [
     "GU-C86-journey",
     "GU-C86-ticket",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch86.txt",
   "json": "gujarati/narration/ch86.json",
-  "textHash": "fnv1a64:40261d6ff929d5f9",
-  "jsonHash": "fnv1a64:6d71ff90be143fa2",
+  "textHash": "fnv1a64:69e1e50badac01f3",
+  "jsonHash": "fnv1a64:3be5b047e2adb219",
   "findings": []
 }

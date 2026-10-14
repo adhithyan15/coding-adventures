@@ -14,7 +14,8 @@ romanization: "jīrũ"
 concept_tag: GU-THINGS118-JIRU
 prerequisites: [GU-C118-masalo, GU-C118-haldar]
 sounds: []
-roots: []
+roots: [sanskrit-jiraka]
+etymology_hook: "jīrũ ← Sanskrit jīraka 'cummin-seed', a tadbhava (CDIAL 5234)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C118-haldar]
 <!-- hl-knowledge: introduces=[GU-LEX-C118-THINGS118-03]; assesses=[] -->
 
 **જીરું** (*jīrũ*) — "cumin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જીરું** (*jīrũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jīraka*, "cummin-seed" (CDIAL 5234).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

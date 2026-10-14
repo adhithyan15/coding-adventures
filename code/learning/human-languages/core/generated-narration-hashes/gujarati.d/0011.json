@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 11,
-  "sourceHash": "fnv1a64:f6f790b69039de20",
+  "sourceHash": "fnv1a64:418278c348d3f9e0",
   "lessonIds": [
     "GU-C05-bolvun",
     "GU-C05-hun-gujarati-bolun-chhun",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch11.txt",
   "json": "gujarati/narration/ch11.json",
-  "textHash": "fnv1a64:d50d08d263d10b59",
-  "jsonHash": "fnv1a64:e6b5fcb4ab08a3cb",
+  "textHash": "fnv1a64:3033dd9512e8a50f",
+  "jsonHash": "fnv1a64:d967260a61604565",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "bacāvvũ"
 concept_tag: GU-VERB-BACAVVU
 prerequisites: [GU-C142-jivvu, GU-C142-kharcvu]
 sounds: []
-roots: []
+roots: [sanskrit-vancati]
+etymology_hook: "bacāvvũ ← Sanskrit vañcati 'moves; escapes from'; CDIAL marks this form as from Hindi (CDIAL 11208)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C142-kharcvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C142-ACT142-04]; assesses=[] -->
 
 **બચાવવું** (*bacāvvũ*) — "to save".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બચાવવું** (*bacāvvũ*) goes back to Sanskrit *vañcati*, "moves; escapes from" (CDIAL 11208). CDIAL marks this form as taken from Hindi; the native Gujarati form is *vāṁcāvvũ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

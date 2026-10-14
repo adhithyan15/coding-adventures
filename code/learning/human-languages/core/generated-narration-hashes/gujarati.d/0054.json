@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 54,
-  "sourceHash": "fnv1a64:04a34d26a549cee8",
+  "sourceHash": "fnv1a64:e191cc6226c8be8f",
   "lessonIds": [
     "GU-C54-besvu",
     "GU-C54-chalvu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch54.txt",
   "json": "gujarati/narration/ch54.json",
-  "textHash": "fnv1a64:716b8710564684b3",
-  "jsonHash": "fnv1a64:1be8d4379ae1b649",
+  "textHash": "fnv1a64:ef046062187d0d66",
+  "jsonHash": "fnv1a64:0b713285629707bc",
   "findings": []
 }

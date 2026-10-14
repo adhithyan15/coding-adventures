@@ -14,7 +14,8 @@ romanization: "ṭuvāl"
 concept_tag: GU-THINGS106-TUVAL
 prerequisites: [GU-C106-kasko, GU-C106-sabu]
 sounds: []
-roots: []
+roots: [portuguese-toalha]
+etymology_hook: "ṭuvāl: usually traced to Portuguese toalha 'towel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C106-sabu]
 <!-- hl-knowledge: introduces=[GU-LEX-C106-THINGS106-05]; assesses=[] -->
 
 **ટુવાલ** (*ṭuvāl*) — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ટુવાલ** (*ṭuvāl*) is a loan, usually traced to Portuguese *toalha*, "towel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

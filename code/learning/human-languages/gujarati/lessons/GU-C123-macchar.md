@@ -14,7 +14,8 @@ romanization: "macchar"
 concept_tag: GU-THINGS123-MACCHAR
 prerequisites: [GU-C123-kacbo, GU-C123-magar]
 sounds: []
-roots: []
+roots: [sanskrit-matsara-mosquito]
+etymology_hook: "macchar ← Sanskrit matsara 'mosquito, fly', a tadbhava (CDIAL 9757)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C123-magar]
 <!-- hl-knowledge: introduces=[GU-LEX-C123-THINGS123-03]; assesses=[] -->
 
 **મચ્છર** (*macchar*) — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મચ્છર** (*macchar*) is a tadbhava of the lexical Sanskrit *matsara*, "mosquito, fly" (CDIAL 9757). CDIAL lists Gujarati *machrũ*, "gnat", there, and calls it possible, though unsupported, that the Sanskrit word was remade from Prakrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

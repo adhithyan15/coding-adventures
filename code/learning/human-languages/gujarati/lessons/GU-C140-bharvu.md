@@ -14,7 +14,8 @@ romanization: "bharvũ"
 concept_tag: GU-VERB-BHARVU
 prerequisites: [GU-C140-kapvu, GU-C140-sivvu]
 sounds: []
-roots: []
+roots: [sanskrit-bharati]
+etymology_hook: "bharvũ ← Sanskrit bharati 'bears, brings; fills', a tadbhava (CDIAL 9397)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C140-sivvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C140-ACT140-03]; assesses=[] -->
 
 **ભરવું** (*bharvũ*) — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ભરવું** (*bharvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bharati*, "bears, brings; fills" (CDIAL 9397).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

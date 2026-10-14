@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Last Four Shown Forms",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:c5e95a23503f36ba",
+  "sourceHash": "fnv1a64:3a14cbdf5153c616",
   "lessons": [
     {
       "id": "GU-C07-dhool",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:359663df45bd3a71",
+      "sourceHash": "fnv1a64:33e5fb866b6ed6b2",
       "notice": null,
       "blocks": [
         {
@@ -79,6 +79,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધૂળ (dhūḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dhūli, \"dust, powder\" (CDIAL 6835)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -109,7 +120,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -140,7 +151,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e09f93ee8f6c075f",
+      "sourceHash": "fnv1a64:27632c5fa7a34add",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +211,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઈંટ (ĩṭ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from iṣṭakā, \"brick\" (CDIAL 1600)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -230,7 +252,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -261,7 +283,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4bd12bf307c61eb2",
+      "sourceHash": "fnv1a64:c6a713d8c8bdc4fa",
       "notice": null,
       "blocks": [
         {
@@ -321,6 +343,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઢોલ (ḍhol) is a tadbhava of Sanskrit ḍhola, \"large drum\". CDIAL lists the Gujarati word under the doubled variant ḍholla (CDIAL 5608)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -351,7 +384,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

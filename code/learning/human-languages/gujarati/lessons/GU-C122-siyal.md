@@ -14,7 +14,8 @@ romanization: "śiyāḷ"
 concept_tag: GU-THINGS122-SIYAL
 prerequisites: [GU-C121-haran, GU-C122-rich]
 sounds: []
-roots: []
+roots: [sanskrit-shrgala]
+etymology_hook: "śiyāḷ ← Sanskrit śṛgāla 'jackal', a tadbhava (CDIAL 12578)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C122-rich]
 <!-- hl-knowledge: introduces=[GU-LEX-C122-THINGS122-02]; assesses=[] -->
 
 **શિયાળ** (*śiyāḷ*) — "a jackal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શિયાળ** (*śiyāḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śṛgāla*, "jackal" (CDIAL 12578).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dahī̃"
 concept_tag: GU-PANTRY-YOGURT
 prerequisites: [GU-C58-flour, GU-C58-ghee]
 sounds: []
-roots: []
+roots: [sanskrit-dadhi]
+etymology_hook: "dahīṁ ← Sanskrit dadhi 'thick sour milk', a tadbhava (CDIAL 6146)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C58-ghee]
 <!-- hl-knowledge: introduces=[GU-LEX-C58-PANTRY-04]; assesses=[] -->
 
 **દહીં** (*dahī̃*) — "yogurt, curd". Made from **દૂધ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દહીં** (*dahīṁ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dadhi*, "thick sour milk" (CDIAL 6146).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a pigeon, then the Gujarati for a duck.
 You'll want to know: કાચબો.
 કાચબો (kācbo) — "a turtle".
 
+The word, taken apart.
+કાચબો (kācbo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kacchapa, "turtle, tortoise" (CDIAL 2619).
+
 What you've built.
 One more word for this chapter.
 
@@ -41,6 +44,9 @@ Before the new one: say the Gujarati for a duck, then the Gujarati for a turtle.
 You'll want to know: મગર.
 મગર (magar) — "a crocodile".
 
+The word, taken apart.
+મગર (magar) goes back to Sanskrit makara, "crocodile". CDIAL lists Prakrit magara, with the same g, beside mayara, but no Gujarati form (CDIAL 9692).
+
 What you've built.
 One more word for this chapter.
 
@@ -69,6 +75,9 @@ Before the new one: say the Gujarati for a turtle, then the Gujarati for a croco
 
 You'll want to know: મચ્છર.
 મચ્છર (macchar) — "a mosquito".
+
+The word, taken apart.
+મચ્છર (macchar) is a tadbhava of the lexical Sanskrit matsara, "mosquito, fly" (CDIAL 9757). CDIAL lists Gujarati machrũ, "gnat", there, and calls it possible, though unsupported, that the Sanskrit word was remade from Prakrit.
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Before the new one: say the Gujarati for a crocodile, then the Gujarati for a mo
 You'll want to know: માખી.
 માખી (mākhī) — "a fly".
 
+The word, taken apart.
+માખી (mākhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from makṣikā, "fly, bee" (CDIAL 9696).
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Gujarati for a mosquito, then the Gujarati for a fly
 
 You'll want to know: મધમાખી.
 મધમાખી (madhmākhī) — "a bee".
+
+The word, taken apart.
+મધમાખી (madhmākhī) is "honey-fly": madh, "honey", from Sanskrit madhu (CDIAL 9784), and mākhī, "fly", from makṣikā, "fly, bee" (CDIAL 9696).
 
 What you've built.
 One more word for this chapter.

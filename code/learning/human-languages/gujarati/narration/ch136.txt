@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for ripe, then the Gujarati for raw, unripe
 You'll want to know: ખાલી.
 ખાલી (khālī) — "empty".
 
+The word, taken apart.
+ખાલી (khālī) is a loan from Arabic khālī, "empty", which reached Gujarati through Persian. Its Arabic root is kh-l-w (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for raw, unripe, then the Gujarati for empt
 
 You'll want to know: ભરેલું.
 ભરેલું (bharelũ) — "full".
+
+The word, taken apart.
+ભરેલું (bharelũ) is the past participle of bharvũ, "to fill", which CDIAL lists under Sanskrit bharati, "bears, brings; fills" (CDIAL 9397).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for empty, then the Gujarati for full.
 You'll want to know: સાચું.
 સાચું (sācũ) — "true, right".
 
+The word, taken apart.
+સાચું (sācũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from satya, "true" (CDIAL 13112).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for full, then the Gujarati for true.
 You'll want to know: ખોટું.
 ખોટું (khoṭũ) — "false, wrong".
 
+The word, taken apart.
+ખોટું (khoṭũ) is a tadbhava. CDIAL lists it under khoṭṭa, a variant of a reconstructed khoṭi, "blemish" (CDIAL 3931).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for true, then the Gujarati for false.
 
 You'll want to know: અમીર.
 અમીર (amīr) — "rich".
+
+The word, taken apart.
+અમીર (amīr) is a loan from Arabic amīr, "commander, prince", which reached Gujarati through Persian. Its Arabic root is ʾ-m-r (Lane).
 
 What you've built.
 One more word for this chapter.

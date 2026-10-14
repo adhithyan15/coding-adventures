@@ -14,7 +14,8 @@ romanization: "andhārũ"
 concept_tag: GU-THINGS121-ANDHARU
 prerequisites: [GU-C120-dharti, GU-C120-cadni]
 sounds: []
-roots: []
+roots: [sanskrit-andhakara]
+etymology_hook: "andhārũ ← Sanskrit andhakāra 'darkness', a tadbhava (CDIAL 386)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C120-cadni]
 <!-- hl-knowledge: introduces=[GU-LEX-C121-THINGS121-01]; assesses=[] -->
 
 **અંધારું** (*andhārũ*) — "darkness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**અંધારું** (*andhārũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *andhakāra*, "darkness" (CDIAL 386). It is *andha*, "blind, dark", and *kāra*, "making".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

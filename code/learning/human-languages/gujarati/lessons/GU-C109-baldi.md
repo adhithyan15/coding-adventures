@@ -14,7 +14,8 @@ romanization: "bāldī"
 concept_tag: GU-THINGS109-BALDI
 prerequisites: [GU-C108-doro, GU-C109-batan, GU-C05-practice, GU-C05-kaam-karvun]
 sounds: []
-roots: []
+roots: [portuguese-balde]
+etymology_hook: "bāldī: usually traced to Portuguese balde 'bucket'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [GU-C109-batan]
 <!-- hl-knowledge: introduces=[GU-LEX-C109-THINGS109-02]; assesses=[] -->
 
 **બાલદી** (*bāldī*) — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બાલદી** (*bāldī*) is a loan, usually traced to Portuguese *balde*, "bucket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

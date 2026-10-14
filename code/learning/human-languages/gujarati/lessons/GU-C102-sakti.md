@@ -14,7 +14,8 @@ romanization: "śakti"
 concept_tag: GU-CAN102-SAKTI
 prerequisites: [GU-C102-pase, GU-C102-takat]
 sounds: []
-roots: []
+roots: [sanskrit-shakti]
+etymology_hook: "śakti ← Sanskrit śakti 'power', a tatsama (CDIAL 12250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C102-takat]
 <!-- hl-knowledge: introduces=[GU-LEX-C102-CAN102-04]; assesses=[] -->
 
 **શક્તિ** (*śakti*) — "power".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શક્તિ** (*śakti*) is Sanskrit *śakti*, "power", taken over whole as a learned loan, a tatsama (CDIAL 12250).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

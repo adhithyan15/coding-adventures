@@ -14,7 +14,8 @@ romanization: "ṭren"
 concept_tag: GU-TRAVEL-TRAIN
 prerequisites: [GU-C84-bridge, GU-C85-bus]
 sounds: []
-roots: []
+roots: [english-train]
+etymology_hook: "ṭren ← English train"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C85-bus]
 <!-- hl-knowledge: introduces=[GU-LEX-C85-TRAVEL-02]; assesses=[] -->
 
 **ટ્રેન** (*ṭren*) — "a train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ટ્રેન** (*ṭren*) is a loan from English *train*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

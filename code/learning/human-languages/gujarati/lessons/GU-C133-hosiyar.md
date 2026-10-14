@@ -14,7 +14,8 @@ romanization: "hośiyār"
 concept_tag: GU-QUAL133-HOSIYAR
 prerequisites: [GU-C133-sahelu, GU-C133-agharu]
 sounds: []
-roots: []
+roots: [persian-hosh]
+etymology_hook: "hośiyār: usually traced to Persian hoshyār 'alert, wise', built on hosh 'the senses'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C133-agharu]
 <!-- hl-knowledge: introduces=[GU-LEX-C133-QUAL133-04]; assesses=[] -->
 
 **હોશિયાર** (*hośiyār*) — "clever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હોશિયાર** (*hośiyār*) is a loan, usually traced to Persian *hoshyār*, "alert, wise", built on *hosh*, "the senses, understanding".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

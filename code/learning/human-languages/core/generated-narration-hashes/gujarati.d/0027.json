@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 27,
-  "sourceHash": "fnv1a64:cb23294b459ed9d1",
+  "sourceHash": "fnv1a64:8ccdaedaa554b97c",
   "lessonIds": [
     "GU-C23-hear-gaam",
     "GU-R23-route-three-r1",
@@ -16,7 +16,7 @@
   "drivablePrefix": 1,
   "text": "gujarati/narration/ch27.txt",
   "json": "gujarati/narration/ch27.json",
-  "textHash": "fnv1a64:28b0dddf62747fa4",
-  "jsonHash": "fnv1a64:5ee268adc7d41792",
+  "textHash": "fnv1a64:143054a9bef9c5b6",
+  "jsonHash": "fnv1a64:d0f5be418b925e92",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "arīso"
 concept_tag: GU-THINGS106-ARISO
 prerequisites: [GU-C105-harvu, GU-C106-kabat]
 sounds: []
-roots: []
+roots: [sanskrit-adarsha]
+etymology_hook: "arīso ← Sanskrit ādarśa 'mirror', a tadbhava (CDIAL 1143)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C106-kabat]
 <!-- hl-knowledge: introduces=[GU-LEX-C106-THINGS106-02]; assesses=[] -->
 
 **અરીસો** (*arīso*) — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**અરીસો** (*arīso*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ādarśa*, "mirror" (CDIAL 1143).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

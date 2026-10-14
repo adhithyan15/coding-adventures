@@ -14,7 +14,8 @@ romanization: "caitra"
 concept_tag: GU-TIME97-CAITRA
 prerequisites: [GU-C97-magsar, GU-C97-phagan]
 sounds: []
-roots: []
+roots: [sanskrit-caitra]
+etymology_hook: "caitra ← Sanskrit caitra 'the month in which the full moon is in the constellation Citrā', a tatsama (CDIAL 4915)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C97-phagan]
 <!-- hl-knowledge: introduces=[GU-LEX-C97-TIME97-05]; assesses=[] -->
 
 **ચૈત્ર** (*caitra*) — "Chaitra, a Gujarati month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચૈત્ર** (*caitra*) is Sanskrit *caitra*, "the month in which the full moon is in the constellation Citrā", taken over whole as a learned loan, a tatsama (CDIAL 4915).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

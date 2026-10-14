@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for to use, then the Gujarati for to make.
 You'll want to know: કાપવું.
 કાપવું (kāpvũ) — "to cut".
 
+The word, taken apart.
+કાપવું (kāpvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kalpayati, "sets in order; trims, cuts" (CDIAL 2944).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for to make, then the Gujarati for to cut.
 
 You'll want to know: સીવવું.
 સીવવું (sīvvũ) — "to sew".
+
+The word, taken apart.
+સીવવું (sīvvũ) is a tadbhava. CDIAL lists it under Sanskrit sīvyati, "sews", noting that it may come instead from the form sīvayati (CDIAL 13444).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for to cut, then the Gujarati for to sew.
 You'll want to know: ભરવું.
 ભરવું (bharvũ) — "to fill".
 
+The word, taken apart.
+ભરવું (bharvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bharati, "bears, brings; fills" (CDIAL 9397).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for to sew, then the Gujarati for to fill.
 You'll want to know: ખેંચવું.
 ખેંચવું (khẽcvũ) — "to pull".
 
+The word, taken apart.
+CDIAL lists Gujarati khīṁcvũ, "to pull", under a reconstructed khiñc, "drag, pull", and the noun khẽc, "pulling", under its variant khaiñc (CDIAL 3881). ખેંચવું (khẽcvũ) belongs with them.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for to fill, then the Gujarati for to pull.
 
 You'll want to know: ફેંકવું.
 ફેંકવું (phẽkvũ) — "to throw".
+
+The word, taken apart.
+ફેંકવું (phẽkvũ) is a tadbhava. CDIAL lists it under pheṅk-, one of the forms it reconstructs under phekk, "throw" (CDIAL 9106).
 
 What you've built.
 One more word for this chapter.

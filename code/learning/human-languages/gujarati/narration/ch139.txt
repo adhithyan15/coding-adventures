@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for to open, then the Gujarati for to call.
 You'll want to know: મોકલવું.
 મોકલવું (mokalvũ) — "to send".
 
+The word, taken apart.
+The origin of મોકલવું (mokalvũ) is not settled; CDIAL has no entry for the verb. It may belong with mokḷũ, "loose, free", which CDIAL lists under a reconstructed mukna, "loosed" (CDIAL 10157). Sindhi mokilaṇu, "to send", stands in the same group there.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for to call, then the Gujarati for to send.
 
 You'll want to know: ભૂલવું.
 ભૂલવું (bhūlvũ) — "to forget".
+
+The word, taken apart.
+ભૂલવું (bhūlvũ) comes from bhull, "err, forget", a form CDIAL reconstructs (CDIAL 9538). CDIAL calls one proposed older source doubtful.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for to send, then the Gujarati for to forge
 You'll want to know: શોધવું.
 શોધવું (śodhvũ) — "to look for".
 
+The word, taken apart.
+શોધવું (śodhvũ) is a tadbhava. CDIAL lists it, with the senses "to purify, search", under Sanskrit śoddhum, "to purify" (CDIAL 12626).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for to forget, then the Gujarati for to loo
 You'll want to know: વાપરવું.
 વાપરવું (vāparvũ) — "to use".
 
+The word, taken apart.
+વાપરવું (vāparvũ) is a tadbhava, a word inherited and reshaped by sound change. It comes from vyāparati, "is engaged in", a form CDIAL reconstructs from its descendants (CDIAL 12203).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for to look for, then the Gujarati for to u
 
 You'll want to know: બનાવવું.
 બનાવવું (banāvvũ) — "to make".
+
+The word, taken apart.
+બનાવવું (banāvvũ) is the causing form of banvũ, "to be made", which CDIAL lists under Sanskrit vanati, "desires, gains, makes ready" (CDIAL 11260). CDIAL marks the Gujarati verb as taken from Hindi.
 
 What you've built.
 One more word for this chapter.

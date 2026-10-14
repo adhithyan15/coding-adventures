@@ -14,7 +14,8 @@ romanization: "gardan"
 concept_tag: GU-THINGS125-GARDAN
 prerequisites: [GU-C125-dadhi, GU-C125-much]
 sounds: []
-roots: []
+roots: [persian-gardan]
+etymology_hook: "gardan: usually traced to Persian gardan 'neck'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C125-much]
 <!-- hl-knowledge: introduces=[GU-LEX-C125-THINGS125-04]; assesses=[] -->
 
 **ગરદન** (*gardan*) — "a neck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગરદન** (*gardan*) is a loan, usually traced to Persian *gardan*, "neck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

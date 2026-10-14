@@ -14,7 +14,8 @@ romanization: "śakvũ"
 concept_tag: GU-VERB-SAKVU
 prerequisites: [GU-C101-ahi, GU-C101-tya]
 sounds: []
-roots: []
+roots: [sanskrit-shaknoti]
+etymology_hook: "śakvũ ← Sanskrit śaknoti 'is able'; CDIAL says its ś- was restored from Sanskrit (CDIAL 12252)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C101-tya]
 <!-- hl-knowledge: introduces=[GU-LEX-C102-CAN102-01]; assesses=[] -->
 
 **શકવું** (*śakvũ*) — "to be able to, can".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શકવું** (*śakvũ*) is inherited from Sanskrit *śaknoti*, "is able" (CDIAL 12252). CDIAL notes that its *ś-* was put back from Sanskrit; the older Gujarati form had *s-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

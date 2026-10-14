@@ -11,8 +11,8 @@ gloss: "the one who, the thing that — the relative word"
 concept_tag: GU-PRON-JE
 prerequisites: [GU-C36-te-write, GU-C35-jyaare]
 sounds: []
-roots: []
-etymology_hook: "જે is the stem you already met at the front of જ્યારે, standing on its own."
+roots: [sanskrit-ya-relative]
+etymology_hook: "je ← the Sanskrit relative ya-; CDIAL notes its -e came after te 'that' (CDIAL 10391)"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +55,8 @@ somebody or something, instead of naming them:
 Notice the pairing: **જ્યારે** was *when*, **જે** is *who* or *which*, and both
 begin the same way. Gujarati marks a describing clause at its front, the way it
 marked a condition with **જો**.
+
+CDIAL lists **જે** (*je*) under the Sanskrit relative *ya-*, noting that the Gujarati word took its *-e* after *te*, "that" (CDIAL 10391).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-PRON-JE-01, GU-JOIN-JYAARE-01] -->

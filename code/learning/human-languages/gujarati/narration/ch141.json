@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "To wake up, To bathe, To wear, To drive, To count",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2baa9dece3944781",
+  "sourceHash": "fnv1a64:d64f2fcd3d343b7f",
   "lessons": [
     {
       "id": "GU-C141-jagvu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1a67f2e7622ceee",
+      "sourceHash": "fnv1a64:cf55a63b7729bd5e",
       "notice": null,
       "blocks": [
         {
@@ -67,6 +67,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જાગવું (jāgvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāgrati, \"are awake\" (CDIAL 5175)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -77,7 +88,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -126,7 +137,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -157,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76a7395fa7247000",
+      "sourceHash": "fnv1a64:93b301370c54f80e",
       "notice": null,
       "blocks": [
         {
@@ -190,6 +201,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નાહવું (nāhvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from snāti, \"bathes\" (CDIAL 13786)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -200,7 +222,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -249,7 +271,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -280,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e98e310b40bc84b0",
+      "sourceHash": "fnv1a64:6bb85e5c67abc56c",
       "notice": null,
       "blocks": [
         {
@@ -313,6 +335,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પહેરવું (pahervũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from paridadhāti, \"sets round; puts on (clothes)\" (CDIAL 7835)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -323,7 +356,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -372,7 +405,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -403,7 +436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d55c1a7e45c2453",
+      "sourceHash": "fnv1a64:56ffc8aed4b2e98a",
       "notice": null,
       "blocks": [
         {
@@ -436,6 +469,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચલાવવું (calāvvũ) is the causing form of cālvũ, \"to move, walk\", which CDIAL lists under calyati, \"goes\", built on Sanskrit calati, \"goes away\" (CDIAL 4721)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -446,7 +490,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -495,7 +539,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -526,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e9e78f744bef812",
+      "sourceHash": "fnv1a64:b6934234a514b5dd",
       "notice": null,
       "blocks": [
         {
@@ -559,6 +603,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગણવું (gaṇvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gaṇayati, \"counts\" (CDIAL 3993)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -569,7 +624,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -618,7 +673,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "mānvũ"
 concept_tag: GU-VERB-MANVU
 prerequisites: [GU-C143-pharvu, GU-C143-atakvu]
 sounds: []
-roots: []
+roots: [sanskrit-manyate]
+etymology_hook: "mānvũ ← Sanskrit manyate 'thinks, honours; agrees', a tadbhava (CDIAL 9857)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C143-atakvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C143-ACT143-04]; assesses=[] -->
 
 **માનવું** (*mānvũ*) — "to believe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**માનવું** (*mānvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *manyate*, "thinks, honours; agrees" (CDIAL 9857).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

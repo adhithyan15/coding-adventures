@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for wet, then the Gujarati for dry.
 You'll want to know: ચોખ્ખું.
 ચોખ્ખું (cokhkhũ) — "clean".
 
+The word, taken apart.
+ચોખ્ખું (cokhkhũ) belongs with Gujarati cokh, "clean", which CDIAL lists under Sanskrit cokṣa, "pure, clean" (CDIAL 4918).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for dry, then the Gujarati for clean.
 
 You'll want to know: ગંદું.
 ગંદું (gandũ) — "dirty".
+
+The word, taken apart.
+ગંદું (gandũ) is a loan, usually traced to Persian ganda, "stinking, foul".
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the Gujarati for clean, then the Gujarati for dirty.
 You'll want to know: ખાટું.
 ખાટું (khāṭũ) — "sour".
 
+The word, taken apart.
+ખાટું (khāṭũ) is a tadbhava of the lexical Sanskrit khaṭṭa, "sour" (CDIAL 3777). CDIAL asks whether the word is connected with kaṭu, "pungent".
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Gujarati for dirty, then the Gujarati for sour.
 You'll want to know: તીખું.
 તીખું (tīkhũ) — "spicy".
 
+The word, taken apart.
+તીખું (tīkhũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tīkṣṇa, "sharp; hot, pungent" (CDIAL 5839).
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Gujarati for sour, then the Gujarati for spicy.
 
 You'll want to know: નરમ.
 નરમ (naram) — "soft".
+
+The word, taken apart.
+નરમ (naram) is a loan, usually traced to Persian narm, "soft".
 
 What you've built.
 One more word for this chapter.

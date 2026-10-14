@@ -14,7 +14,8 @@ romanization: "kākī"
 concept_tag: GU-FAMILY2-KAKI
 prerequisites: [GU-C51-child, GU-C52-kaka]
 sounds: []
-roots: []
+roots: [indo-aryan-kakka]
+etymology_hook: "kākī: the feminine of kākā ← *kākka 'senior male relative', from Dravidian (CDIAL 2998)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C52-kaka]
 <!-- hl-knowledge: introduces=[GU-LEX-C52-FAMILY2-02]; assesses=[] -->
 
 **કાકી** (*kākī*) — "aunt (father's brother's wife)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કાકી** (*kākī*) is the feminine of *kākā*, "uncle". CDIAL lists both under *\*kākka*, "senior male relative", which it takes from Dravidian (CDIAL 2998).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

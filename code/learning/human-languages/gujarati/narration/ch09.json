@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "How Are You?",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:bf462c3f4701478a",
+  "sourceHash": "fnv1a64:d25b7f29dbb8ecd4",
   "lessons": [
     {
       "id": "GU-C03-hun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7a95e743b29ba3df",
+      "sourceHash": "fnv1a64:2e9e305601ae39e7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c7a24784da2cb9ec",
+      "sourceHash": "fnv1a64:5931832a697fe437",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -327,7 +327,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:42a9808faa170b44",
+      "sourceHash": "fnv1a64:8d5b8533be6158b0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -369,6 +369,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tame and chho are inherited, from Sanskrit yuṣmad-, \"you\", and ākṣeti, \"abides\" (CDIAL 10511, 1031). Kem has no CDIAL entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: match the \"you\" to the copula",
           "segments": [
@@ -387,7 +398,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -427,7 +438,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "script",
           "title": "Script retrieval",
           "segments": [
@@ -456,7 +467,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -487,7 +498,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5be1512679d2a1c0",
+      "sourceHash": "fnv1a64:c0755861e7a1b348",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -651,7 +662,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3570a5eff018a51e",
+      "sourceHash": "fnv1a64:ccd7fef1457e9fa0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -699,6 +710,10 @@
             {
               "kind": "speech",
               "text": "વાંધો નહીં (vāndho nahĩ) literally means \"[there is] no objection\" — vāndho (\"objection, difficulty, harm\") + નહીં (nahĩ, \"not / no\"). It serves as \"it's okay / no worries / no problem / you're welcome.\" The negative નહીં (nahĩ) is the fuller form of the ના (nā) from the earlier yes/no lesson — both from the ancient na-, Proto-Indo-European ne, behind English no, not, and Hindi nahīṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Old Gujarati nahīaṁ under Sanskrit nahi, \"surely not\" (CDIAL 7035), and nahĩ is its modern form. It has no entry for vāndho, so the origin of that word is not settled."
             }
           ]
         },

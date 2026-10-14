@@ -11,8 +11,8 @@ gloss: money, heard before the new ai sign is taught
 concept_tag: GU-MONEY-HEARD
 prerequisites: [GU-C21-haath]
 sounds: [ai-diphthong, long-aa]
-roots: []
-etymology_hook: Meaning and sound arrive first; the unfamiliar vowel sign waits.
+roots: [indo-aryan-padamsha]
+etymology_hook: "paisā ← *padāṁśa 'quarter part', reconstructed; CDIAL thinks Gujarati probably took it from Hindi (CDIAL 7761)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C21-hear-haath]
 
 Say hand. Now listen twice: **paisā** means **money**. Do not read the Gujarati
 shape yet; one vowel sign still needs its own tiny lesson.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પૈસા** (*paisā*) goes back to *\*padāṁśa*, "quarter part", a form CDIAL reconstructs from *pada*, "quarter", and *aṁśa*, "share" (CDIAL 7761). CDIAL thinks Gujarati probably took the word from Hindi *paisā*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-PAISA-01, GU-LEX-HAATH-01] -->

@@ -14,7 +14,8 @@ romanization: "paththar"
 concept_tag: GU-LAND-STONE
 prerequisites: [GU-C64-mountain, GU-C64-forest]
 sounds: []
-roots: []
+roots: [sanskrit-prastara]
+etymology_hook: "paththar ← Sanskrit prastara 'anything strewn; flat surface; rock, stone', a tadbhava (CDIAL 8857)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C64-forest]
 <!-- hl-knowledge: introduces=[GU-LEX-C64-LAND-05]; assesses=[] -->
 
 **પથ્થર** (*paththar*) — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પથ્થર** (*paththar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *prastara*, "anything strewn; flat surface; rock, stone" (CDIAL 8857).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

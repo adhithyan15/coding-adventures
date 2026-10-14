@@ -2013,6 +2013,33 @@ fn swimlane_metadata_entities_decode_into_semantic_ir() {
 }
 
 #[test]
+fn swimlane_theme_variables_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"mainBkg\": \"#ffe1ef\", \"nodeBorder\": \"#225577\", \"lineColor\": \"#118844\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  themed[Themed node]\n  next[Next node]\nend\nthemed --> next",
+    ).expect("Swimlane theme variables should parse");
+
+    assert_eq!(diagram.theme.main_background, "#ffe1ef");
+    assert_eq!(diagram.theme.node_border, "#225577");
+    assert_eq!(diagram.theme.line_color, "#118844");
+
+    let front_matter = parse_swimlane(
+        "---\nthemeVariables:\n  mainBkg: '#fef3c7'\n  nodeBorder: '#b45309'\n  lineColor: '#166534'\n---\nswimlane-beta\nsubgraph A\n  one[One]\nend",
+    ).expect("front-matter Swimlane theme variables should parse");
+    assert_eq!(front_matter.theme.main_background, "#fef3c7");
+}
+
+#[test]
+fn swimlane_theme_typography_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"primaryTextColor\": \"#7c2d12\", \"fontFamily\": \"Helvetica Neue\", \"fontSize\": \"19px\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  themed[Themed typography]\n  next[Next node]\nend\nthemed --> next",
+    ).expect("Swimlane theme typography should parse");
+
+    assert_eq!(diagram.theme.primary_text_color, "#7c2d12");
+    assert_eq!(diagram.theme.font_family.as_deref(), Some("Helvetica Neue"));
+    assert_eq!(diagram.theme.font_size, Some(19.0));
+}
+
+#[test]
 fn swimlane_inline_node_styles_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nrequest --> done",
@@ -2560,6 +2587,34 @@ fn swimlane_nested_subgraphs_reach_semantic_ir() {
     assert_eq!(diagram.groups[0].node_ids, vec!["plan"]);
     assert_eq!(diagram.groups[1].parent_id.as_deref(), Some("Platform"));
     assert_eq!(diagram.groups[1].node_ids, vec!["build"]);
+}
+
+#[test]
+fn swimlane_subgraph_styles_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review[Review lane]\n  subgraph Approval[Approval phase]\n    request[Request]\n    approve[Approve]\n  end\nend\nclassDef phase fill:#fef3c7,stroke:#b45309,stroke-width:3px,stroke-dasharray:5 3,color:#7c2d12,font-size:17px,font-weight:bold,rx:12px,ry:12px\nclass Approval phase\nstyle Review fill:#ecfdf5,stroke:#047857,stroke-width:2px,color:#064e3b,font-size:20px,rx:14px,ry:14px\nrequest --> approve",
+    ).expect("Swimlane subgraph styles should parse");
+
+    assert_eq!(diagram.lanes[0].style.fill.as_deref(), Some("#ecfdf5"));
+    assert_eq!(diagram.lanes[0].style.corner_radius, Some(14.0));
+    assert_eq!(diagram.groups[0].classes, ["phase"]);
+    assert_eq!(diagram.groups[0].style.stroke_width, Some(3.0));
+    assert_eq!(diagram.groups[0].style.font_weight, Some(700));
+}
+
+#[test]
+fn swimlane_subgraph_class_decorators_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review[Review lane]:::laneStyle\n  subgraph Approval[Approval phase]:::phaseStyle\n    request[Request]\n    approve[Approve]\n  end\nend\nclassDef laneStyle fill:#eff6ff,stroke:#1d4ed8,stroke-width:2px,color:#172554,rx:14px,ry:14px\nclassDef phaseStyle fill:#fef3c7,stroke:#b45309,stroke-width:3px,stroke-dasharray:5 3,color:#7c2d12,font-size:17px,font-weight:bold,rx:12px,ry:12px\nrequest --> approve",
+    ).expect("Swimlane subgraph class decorators should parse");
+
+    assert_eq!(diagram.lanes[0].classes, ["laneStyle"]);
+    assert_eq!(diagram.lanes[0].style.stroke.as_deref(), Some("#1d4ed8"));
+    assert_eq!(diagram.groups[0].classes, ["phaseStyle"]);
+    assert_eq!(diagram.groups[0].style.corner_radius, Some(12.0));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph Review:::missing\n  request[Request]\nend"
+    ).is_err());
 }
 
 #[test]

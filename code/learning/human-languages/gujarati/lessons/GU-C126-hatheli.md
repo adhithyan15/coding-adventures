@@ -14,7 +14,8 @@ romanization: "hatheḷī"
 concept_tag: GU-THINGS126-HATHELI
 prerequisites: [GU-C126-kamar, GU-C126-koni, GU-C34-kem-kemke]
 sounds: []
-roots: []
+roots: [sanskrit-hastatala]
+etymology_hook: "hatheḷī ← Sanskrit hastatala 'palm of the hand', hasta 'hand' + tala 'surface' (CDIAL 14029)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [GU-C126-koni]
 <!-- hl-knowledge: introduces=[GU-LEX-C126-THINGS126-04]; assesses=[] -->
 
 **હથેળી** (*hatheḷī*) — "a palm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હથેળી** (*hatheḷī*) goes back to Sanskrit *hastatala*, "palm of the hand": *hasta*, "hand", and *tala*, "surface" (CDIAL 14029). CDIAL lists Hindi *hathelī* there, though no Gujarati form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

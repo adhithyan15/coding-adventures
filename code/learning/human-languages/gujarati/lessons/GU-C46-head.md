@@ -14,7 +14,8 @@ romanization: "māthũ"
 concept_tag: GU-BODY1-HEAD
 prerequisites: [GU-C39-nav, GU-C39-das]
 sounds: []
-roots: []
+roots: [sanskrit-mastaka]
+etymology_hook: "māthũ ← Sanskrit mastaka 'head, skull', a tadbhava (CDIAL 9926)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C39-das]
 <!-- hl-knowledge: introduces=[GU-LEX-C46-BODY1-01]; assesses=[] -->
 
 **માથું** (*māthũ*) — "the head". The top of the body.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**માથું** (*māthũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mastaka*, "head, skull" (CDIAL 9926).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

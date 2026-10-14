@@ -14,7 +14,8 @@ gloss: "pickle"
 concept_tag: GU-ANCHOR-ATHAANUN
 prerequisites: [GU-R03-doorway-three-r1]
 sounds: []
-roots: []
+roots: [sanskrit-asthapana]
+etymology_hook: "athāṇũ: listed by CDIAL under Sanskrit āsthāpana 'strengthening remedy', on sthā 'to stand' (CDIAL 1515)"
 duration:
   max_seconds: 120
 requires:
@@ -45,6 +46,11 @@ variety: standard
 **અથાણું** — *athāṇũ* — "pickle".
 
 Say it: *athāṇũ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **અ** and **થ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **અથાણું** (*athāṇũ*) under Sanskrit *āsthāpana*, "strengthening remedy", a word built on *sthā*, "to stand" (CDIAL 1515). Hindi *athān*, "pickles", stands in the same entry.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-ATHAANUN] -->

@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 134,
-  "sourceHash": "fnv1a64:be6ea6505c19d53f",
+  "sourceHash": "fnv1a64:360f6823a68c196c",
   "lessonIds": [
     "GU-C134-bahadur",
     "GU-C134-sant",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch134.txt",
   "json": "gujarati/narration/ch134.json",
-  "textHash": "fnv1a64:54f157d946829390",
-  "jsonHash": "fnv1a64:67432d5a6d6d56a0",
+  "textHash": "fnv1a64:f4e566a973e2ee6b",
+  "jsonHash": "fnv1a64:e2cdcc432512afe2",
   "findings": []
 }

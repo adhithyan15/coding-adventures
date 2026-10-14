@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for weak, then the Gujarati for necessary.
 You'll want to know: કૂદવું.
 કૂદવું (kūdvũ) — "to jump".
 
+The word, taken apart.
+કૂદવું (kūdvũ) is a tadbhava of Sanskrit kūrdati, "leaps, jumps" (CDIAL 3412). CDIAL thinks the Sanskrit verb probably came from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Before the new one: say the Gujarati for necessary, then the Gujarati for to jum
 You'll want to know: તરવું.
 તરવું (tarvũ) — "to swim".
 
+The word, taken apart.
+તરવું (tarvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tarati, "crosses; floats, swims" (CDIAL 5702).
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Gujarati for to jump, then the Gujarati for to swim.
 
 You'll want to know: ચઢવું.
 ચઢવું (caḍhvũ) — "to climb".
+
+The word, taken apart.
+ચઢવું (caḍhvũ) is a tadbhava, a word inherited and reshaped by sound change. It comes from caḍhati, "rises", a form CDIAL reconstructs from its descendants (CDIAL 4578).
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Before the new one: say the Gujarati for to swim, then the Gujarati for to climb
 You'll want to know: ખોલવું.
 ખોલવું (kholvũ) — "to open".
 
+The word, taken apart.
+ખોલવું (kholvũ) is a tadbhava, a word inherited and reshaped by sound change. It comes from kholl, "to open", a form CDIAL reconstructs from its descendants (CDIAL 3945).
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Gujarati for to climb, then the Gujarati for to open
 
 You'll want to know: બોલાવવું.
 બોલાવવું (bolāvvũ) — "to call".
+
+The word, taken apart.
+બોલાવવું (bolāvvũ) is the causing form of bolvũ, "to speak". CDIAL lists both under a reconstructed boll-, "speak" (CDIAL 9321).
 
 What you've built.
 One more word for this chapter.

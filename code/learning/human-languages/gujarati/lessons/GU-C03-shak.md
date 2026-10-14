@@ -14,7 +14,8 @@ gloss: "a doubt"
 concept_tag: GU-ANCHOR-SHAK
 prerequisites: [GU-C03-kan]
 sounds: []
-roots: []
+roots: [arabic-shakk]
+etymology_hook: "śak ← Arabic shakk 'doubt', through Persian"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **શક** — *śak* — "a doubt".
 
 Say it: *śak*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **શ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શક** (*śak*) is a loan from Arabic *shakk*, "doubt", which reached Gujarati through Persian. Its Arabic root is *sh-k-k* (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-SHAK] -->

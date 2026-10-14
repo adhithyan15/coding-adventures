@@ -14,7 +14,8 @@ romanization: "āvtīkāl"
 concept_tag: GU-WEEK2-TOMORROW
 prerequisites: [GU-C79-saturday, GU-C79-sunday]
 sounds: []
-roots: []
+roots: [sanskrit-apayati, kalya-time]
+etymology_hook: "āvtīkāl: āvtī 'coming', from āvvũ ← āpayati (CDIAL 1200), + kāl ← kalya 'dawn, tomorrow' (CDIAL 3104)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C79-sunday]
 <!-- hl-knowledge: introduces=[GU-LEX-C79-WEEK2-03]; assesses=[] -->
 
 **આવતીકાલ** (*āvtīkāl*) — "tomorrow". Literally "the coming **કાલ**".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**આવતીકાલ** (*āvtīkāl*) is "the coming *kāl*": *āvtī*, from *āvvũ*, "to come" (CDIAL 1200), and *kāl*, which CDIAL lists under Sanskrit *kalya*, "dawn; tomorrow" (CDIAL 3104).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

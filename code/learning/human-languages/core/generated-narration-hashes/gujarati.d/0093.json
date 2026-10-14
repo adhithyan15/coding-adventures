@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 93,
-  "sourceHash": "fnv1a64:3ac85acfc3102fe6",
+  "sourceHash": "fnv1a64:d320b0845f5361ca",
   "lessonIds": [
     "GU-C93-mosam",
     "GU-C93-unalo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch93.txt",
   "json": "gujarati/narration/ch93.json",
-  "textHash": "fnv1a64:9f5b912bc769d725",
-  "jsonHash": "fnv1a64:2b3b20791d111b90",
+  "textHash": "fnv1a64:7be0e0824b36487b",
+  "jsonHash": "fnv1a64:c9f63a6daa64d438",
   "findings": []
 }

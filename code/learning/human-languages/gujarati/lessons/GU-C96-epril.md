@@ -14,7 +14,8 @@ romanization: "epril"
 concept_tag: GU-TIME96-EPRIL
 prerequisites: [GU-C95-phebruari, GU-C95-marc]
 sounds: []
-roots: []
+roots: [english-april]
+etymology_hook: "epril ← English April"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C95-marc]
 <!-- hl-knowledge: introduces=[GU-LEX-C96-TIME96-01]; assesses=[] -->
 
 **એપ્રિલ** (*epril*) — "April".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**એપ્રિલ** (*epril*) is a loan from English *April*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

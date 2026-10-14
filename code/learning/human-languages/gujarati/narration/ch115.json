@@ -4,7 +4,7 @@
   "chapter": 115,
   "title": "Carrot, Garlic, Ginger, Lemon, Coconut",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e986d439cfc43f0a",
+  "sourceHash": "fnv1a64:7248de897bf1cbf8",
   "lessons": [
     {
       "id": "GU-C115-gajar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1bef2f42845d22c",
+      "sourceHash": "fnv1a64:6fca683beeb0a036",
       "notice": null,
       "blocks": [
         {
@@ -62,6 +62,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગાજર (gājar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gārjara, \"carrot\" (CDIAL 4140)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -72,7 +83,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -121,7 +132,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -152,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b8d84b55029cf67",
+      "sourceHash": "fnv1a64:f2a10e69626a5d6e",
       "notice": null,
       "blocks": [
         {
@@ -185,6 +196,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લસણ (lasaṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from laśuna, \"garlic\" (CDIAL 10990)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -195,7 +217,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -244,7 +266,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -275,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:839710674faa7cba",
+      "sourceHash": "fnv1a64:7b19c0f2d42b6cb8",
       "notice": null,
       "blocks": [
         {
@@ -308,6 +330,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આદુ (ādu) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ārdraka, \"fresh ginger\" (CDIAL 1341)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -318,7 +351,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -367,7 +400,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -398,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ce80f667b934d4d",
+      "sourceHash": "fnv1a64:f1ac9198ed0ed0a1",
       "notice": null,
       "blocks": [
         {
@@ -431,6 +464,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લીંબુ (lī̃bu) (līṁbu) is a tadbhava of Sanskrit nimbū, \"the lime\" (CDIAL 7247), with its first n changed to l. CDIAL reports that the Sanskrit word itself came from Austroasiatic."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -441,7 +485,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -490,7 +534,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -521,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68ebc763b971a042",
+      "sourceHash": "fnv1a64:60f86791c782f696",
       "notice": null,
       "blocks": [
         {
@@ -554,6 +598,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નાળિયેર (nāḷiyer) is a tadbhava of Sanskrit nārikela, \"coconut palm and fruit\" (CDIAL 7075). CDIAL lists it as nāriyaḷ and nariyeḷ, and takes the Sanskrit word, with J. Bloch, from a Dravidian compound."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -564,7 +619,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -613,7 +668,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

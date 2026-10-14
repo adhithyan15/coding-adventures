@@ -14,7 +14,8 @@ romanization: "kurto"
 concept_tag: GU-THINGS111-KURTO
 prerequisites: [GU-C110-takiyo, GU-C110-dhigli]
 sounds: []
-roots: []
+roots: [persian-kurta]
+etymology_hook: "kurto: usually traced to Persian kurta 'a long shirt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C110-dhigli]
 <!-- hl-knowledge: introduces=[GU-LEX-C111-THINGS111-01]; assesses=[] -->
 
 **કુરતો** (*kurto*) — "a kurta".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કુરતો** (*kurto*) is a loan, usually traced to Persian *kurta*, "a long shirt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

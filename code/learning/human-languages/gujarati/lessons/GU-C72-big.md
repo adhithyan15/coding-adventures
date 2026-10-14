@@ -14,7 +14,8 @@ romanization: "moṭũ"
 concept_tag: GU-SIZE-BIG
 prerequisites: [GU-C71-beautiful, GU-C71-bad]
 sounds: []
-roots: []
+roots: [indo-aryan-mutta]
+etymology_hook: "moṭũ ← *mōṭṭa, in a word group CDIAL heads *muṭṭa 'defective' (CDIAL 10187)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C71-bad]
 <!-- hl-knowledge: introduces=[GU-LEX-C72-SIZE-01]; assesses=[] -->
 
 **મોટું** (*moṭũ*) — "big".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **મોટું** (*moṭũ*) under *\*mōṭṭa*, one member of a large group of reconstructed forms it heads *\*muṭṭa*, "defective" (CDIAL 10187).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

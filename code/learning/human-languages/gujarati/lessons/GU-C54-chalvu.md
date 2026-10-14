@@ -14,7 +14,8 @@ romanization: "cālvũ"
 concept_tag: GU-VERB-CHALVU
 prerequisites: [GU-C53-guest, GU-C54-besvu]
 sounds: []
-roots: []
+roots: [indo-aryan-calyati]
+etymology_hook: "cālvũ ← *calyati 'goes', a reconstructed form; a tadbhava (CDIAL 4721)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C54-besvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C54-MOVE-02]; assesses=[] -->
 
 **ચાલવું** (*cālvũ*) — "to walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચાલવું** (*cālvũ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*calyati*, "goes", a form CDIAL reconstructs from its descendants (CDIAL 4721). It is built on Sanskrit *calati*, "goes away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

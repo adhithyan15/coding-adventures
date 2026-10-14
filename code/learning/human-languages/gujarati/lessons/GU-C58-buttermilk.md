@@ -15,6 +15,7 @@ concept_tag: GU-PANTRY-BUTTERMILK
 prerequisites: [GU-C58-ghee, GU-C58-yogurt]
 sounds: []
 roots: []
+etymology_hook: "chāś: not fully settled; it matches *chāśī 'buttermilk', reconstructed, though CDIAL lists no Gujarati form (CDIAL 5012)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C58-yogurt]
 <!-- hl-knowledge: introduces=[GU-LEX-C58-PANTRY-05]; assesses=[] -->
 
 **છાશ** (*chāś*) — "buttermilk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **છાશ** (*chāś*) is not fully settled. It matches *\*chāśī*, the second of two forms CDIAL reconstructs for "buttermilk", though CDIAL lists no Gujarati word under it (CDIAL 5012).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

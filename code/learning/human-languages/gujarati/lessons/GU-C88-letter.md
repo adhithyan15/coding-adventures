@@ -14,7 +14,8 @@ romanization: "patra"
 concept_tag: GU-CARRY-LETTER
 prerequisites: [GU-C88-bag, GU-C88-wallet]
 sounds: []
-roots: []
+roots: [sanskrit-patra]
+etymology_hook: "patra ← Sanskrit pattra 'wing-feather; leaf; leaf of a book', a tatsama (CDIAL 7733)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C88-wallet]
 <!-- hl-knowledge: introduces=[GU-LEX-C88-CARRY-04]; assesses=[] -->
 
 **પત્ર** (*patra*) — "a letter". It comes by **ટપાલ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પત્ર** (*patra*) is Sanskrit *pattra*, "wing-feather; leaf; leaf of a book", taken over whole as a learned loan, a tatsama (CDIAL 7733).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rā̃dhvũ"
 concept_tag: GU-VERB-RANDHVU
 prerequisites: [GU-C54-suvu, GU-C54-ramvu]
 sounds: []
-roots: []
+roots: [sanskrit-randhayati]
+etymology_hook: "rāṁdhvũ ← Sanskrit randhayati 'subjects, torments; prepares or cooks food', a tadbhava (CDIAL 10616)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C54-ramvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C55-HOUSEWORK-01]; assesses=[] -->
 
 **રાંધવું** (*rā̃dhvũ*) — "to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**રાંધવું** (*rāṁdhvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *randhayati*, "subjects, torments; prepares or cooks food" (CDIAL 10616).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

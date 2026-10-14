@@ -11,8 +11,8 @@ gloss: lamp, heard and said before it is ever shown
 concept_tag: GU-HOUSE-LAMP-HEARD
 prerequisites: [GU-C28-hear-chaavi]
 sounds: [voiced-d, long-ii, long-o]
-roots: []
-etymology_hook: The lamp ends in -o rather than the neuter -ũ, so the chapter closes on a second ending and a second gender.
+roots: [sanskrit-dipa]
+etymology_hook: "dīvo ← Sanskrit dīpa 'lamp', a tadbhava (CDIAL 6348)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C28-hear-chaavi, GU-C25-saanj]
 
 [PAUSE 3s] Say the words for key and for chair. Now listen twice: **dīvo**. It means
 **lamp** — the one lit at *sānj*, and note it ends in *-o*, not the neuter *-ũ*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દીવો** (*dīvo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dīpa*, "lamp" (CDIAL 6348).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-DIVO-01, GU-LEX-CHAAVI-01, GU-LEX-SAANJ-01] -->

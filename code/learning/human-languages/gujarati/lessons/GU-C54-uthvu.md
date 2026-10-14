@@ -14,7 +14,8 @@ romanization: "uṭhvũ"
 concept_tag: GU-VERB-UTHVU
 prerequisites: [GU-C54-besvu, GU-C54-chalvu]
 sounds: []
-roots: []
+roots: [indo-aryan-ut-sthati]
+etymology_hook: "uṭhvũ ← *utsthāti 'stands up', a reconstructed form; a tadbhava (CDIAL 1900)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C54-chalvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C54-MOVE-03]; assesses=[] -->
 
 **ઉઠવું** (*uṭhvũ*) — "to get up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ઉઠવું** (*uṭhvũ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*utsthāti*, "stands up", a form CDIAL reconstructs from its descendants (CDIAL 1900).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

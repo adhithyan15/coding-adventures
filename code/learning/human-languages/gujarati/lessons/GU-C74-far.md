@@ -14,7 +14,8 @@ romanization: "dūr"
 concept_tag: GU-WHERE1-FAR
 prerequisites: [GU-C74-expensive, GU-C74-near]
 sounds: []
-roots: []
+roots: [sanskrit-dura]
+etymology_hook: "dūr ← Sanskrit dūra 'distant', a tadbhava (CDIAL 6495)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C74-near]
 <!-- hl-knowledge: introduces=[GU-LEX-C74-WHERE1-03]; assesses=[] -->
 
 **દૂર** (*dūr*) — "far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દૂર** (*dūr*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dūra*, "distant" (CDIAL 6495).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

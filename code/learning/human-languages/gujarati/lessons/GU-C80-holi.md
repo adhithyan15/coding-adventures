@@ -14,7 +14,8 @@ romanization: "hoḷī"
 concept_tag: GU-TIME-HOLI
 prerequisites: [GU-C80-holiday, GU-C80-festival]
 sounds: []
-roots: []
+roots: [sanskrit-hola]
+etymology_hook: "hoḷī ← Sanskrit holā, holī 'spring festival', a tadbhava (CDIAL 14182)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C80-festival]
 <!-- hl-knowledge: introduces=[GU-LEX-C80-TIME-05]; assesses=[] -->
 
 **હોળી** (*hoḷī*) — "Holi, the festival of colours". A **તહેવાર** of spring.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હોળી** (*hoḷī*) is a tadbhava of Sanskrit *holā*, "spring festival", also written *holī* (CDIAL 14182).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

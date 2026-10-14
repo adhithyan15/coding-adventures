@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "And, Or, But",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:dd56af457dcec833",
+  "sourceHash": "fnv1a64:0cc9d8142b8b2bb5",
   "lessons": [
     {
       "id": "GU-C32-ane",
@@ -143,7 +143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:519c5d991645ca4c",
+      "sourceHash": "fnv1a64:9471a595a10d8f28",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +200,10 @@
             {
               "kind": "speech",
               "text": "That is a two-clause sentence, and it is the first one this book has been able to make."
+            },
+            {
+              "kind": "speech",
+              "text": "અને (ane) itself is inherited: CDIAL lists it, as the word for \"and\", under Sanskrit anya, \"other\", comparing anyac ca, \"moreover\" (CDIAL 399)."
             }
           ]
         },
@@ -510,7 +514,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cae20c10902be73",
+      "sourceHash": "fnv1a64:3ec02e38cca07732",
       "notice": null,
       "blocks": [
         {
@@ -555,6 +559,10 @@
             {
               "kind": "speech",
               "text": "It works especially well with what you learned last chapter, because the sharpest contrast a beginner can draw is between something that is and something that નથી."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists પણ (paṇ) under Sanskrit punar, \"back, again, moreover, however\" (CDIAL 8273): the \"moreover\" and the \"however\" are the two jobs it still does."
             }
           ]
         },

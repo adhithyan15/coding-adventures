@@ -12,6 +12,10 @@ standalone and unsupported-elevation drops without repeated whole-part scans.
 Authored resource controls count actual predicate visits alongside exact report
 semantics; they do not use elapsed time as a work bound.
 
+Drag and drop bodies use vertical stacks with authored `gap` spacing. The
+degradation report recognizes that spacing only when every occurrence of the
+part consumes it; unsupported values and reuse on other primitives stay visible.
+
 ## Overview
 
 ```

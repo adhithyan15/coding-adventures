@@ -3547,6 +3547,32 @@ line "Target" [35, 50, 68, 82]"##,
                     matches!(instruction, PaintInstruction::Rect(_))
                 ).count() >= 4, "the default lane and both nodes must lower to paint rectangles");
             }
+            if fixture_name == "theme-variables" {
+                assert_eq!(layout.theme.main_background, "#ffe1ef");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#ffe1ef")
+                        && rect.stroke.as_deref() == Some("#225577")
+                )).count() >= 2, "theme variables must style default Swimlane nodes");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#118844")
+                )), "theme lineColor must lower to backend-neutral edge paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.theme.nodeBorder")),
+                    Some(&"#225577".to_string()));
+            }
+            if fixture_name == "theme-typography-variables" {
+                assert_eq!(layout.theme.font_size, Some(19.0));
+                assert!(layout.nodes[0].width > 132.0,
+                    "theme font size must participate in backend-neutral node measurement");
+                assert!(layout.nodes.iter().all(|node|
+                    node.x + node.width < layout.lanes[0].x + layout.lanes[0].width
+                ), "theme-sized nodes must remain inside their ownership lane");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 19.0
+                        && run.fill.as_deref() == Some("rgb(124, 45, 18)")
+                )), "theme typography must lower to backend-neutral glyph runs");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.theme.fontFamily")),
+                    Some(&"Helvetica Neue".to_string()));
+            }
             if fixture_name == "node-typography-styles" {
                 assert!(layout.nodes[0].width > layout.nodes[1].width,
                     "larger bold text must reserve more backend-neutral node width");
@@ -4089,6 +4115,38 @@ line "Target" [35, 50, 68, 82]"##,
                 )).count(), 2);
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.group.1.parent")),
                     Some(&"Platform".to_string()));
+            }
+            if fixture_name == "styled-subgraphs" {
+                assert_eq!(layout.lanes[0].style.corner_radius, Some(14.0));
+                assert_eq!(layout.groups[0].style.font_size, Some(17.0));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#ecfdf5")
+                        && rect.stroke.as_deref() == Some("#047857")
+                        && rect.corner_radius == Some(14.0)
+                )), "direct lane styles must lower to backend-neutral rectangle paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
+                        && rect.stroke.as_deref() == Some("#b45309")
+                        && rect.stroke_dash.as_deref() == Some(&[5.0, 3.0])
+                )), "class group styles must lower to backend-neutral rectangle paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 17.0
+                        && run.fill.as_deref() == Some("rgb(124, 45, 18)")
+                )), "group title typography must lower to backend-neutral glyph runs");
+            }
+            if fixture_name == "subgraph-class-decorators" {
+                assert_eq!(layout.lanes[0].classes, ["laneStyle"]);
+                assert_eq!(layout.groups[0].classes, ["phaseStyle"]);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#eff6ff")
+                        && rect.stroke.as_deref() == Some("#1d4ed8")
+                        && rect.corner_radius == Some(14.0)
+                )), "lane decorators must lower through semantic and layout IR to paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
+                        && rect.stroke.as_deref() == Some("#b45309")
+                        && rect.stroke_dash.as_deref() == Some(&[5.0, 3.0])
+                )), "group decorators must lower through semantic and layout IR to paint");
             }
             if fixture_name == "state-choice-note-shapes" {
                 assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![

@@ -14,7 +14,8 @@ romanization: "chat"
 concept_tag: GU-HOUSE-ROOF
 prerequisites: [GU-C62-fan, GU-C62-lock]
 sounds: []
-roots: []
+roots: [indo-aryan-chatti]
+etymology_hook: "chat ← *chatti 'covering', on chad- 'to cover' (CDIAL 4971)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C62-lock]
 <!-- hl-knowledge: introduces=[GU-LEX-C63-HOUSE-01]; assesses=[] -->
 
 **છત** (*chat*) — "a roof, a ceiling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**છત** (*chat*) comes from *\*chatti*, "covering", a form CDIAL reconstructs on the root *chad*, "to cover" (CDIAL 4971).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

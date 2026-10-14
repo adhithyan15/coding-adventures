@@ -14,7 +14,8 @@ romanization: "dhotī"
 concept_tag: GU-CLOTHES-DHOTI
 prerequisites: [GU-C86-phone, GU-C86-post]
 sounds: []
-roots: []
+roots: [indo-aryan-dhotta]
+etymology_hook: "dhotī ← *dhotta 'cloth', a reconstructed form; a tadbhava (CDIAL 6881)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C86-post]
 <!-- hl-knowledge: introduces=[GU-LEX-C87-CLOTHES-01]; assesses=[] -->
 
 **ધોતી** (*dhotī*) — "a dhoti".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ધોતી** (*dhotī*) is a tadbhava. CDIAL lists it under *\*dhotta*, "cloth", a reconstructed form, and weighs it against a lexical Sanskrit *dhotra* (CDIAL 6881).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

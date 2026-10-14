@@ -15,6 +15,7 @@ concept_tag: GU-TABLE-POT
 prerequisites: [GU-C61-spoon, GU-C61-cup]
 sounds: []
 roots: []
+etymology_hook: "tapelī: not settled; it matches pātelũ 'brass cooking pot', listed under Sanskrit pātra (CDIAL 8055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C61-cup]
 <!-- hl-knowledge: introduces=[GU-LEX-C61-TABLE-05]; assesses=[] -->
 
 **તપેલી** (*tapelī*) — "a cooking pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **તપેલી** (*tapelī*) is not settled; CDIAL has no entry for it. It matches Gujarati *pātelũ*, "brass cooking pot", and Hindi *patīlā*, "copper pot", which CDIAL lists under Sanskrit *pātra*, "drinking vessel, dish" (CDIAL 8055). Whether **તપેલી** (*tapelī*) is the same word with two sounds swapped is not known.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

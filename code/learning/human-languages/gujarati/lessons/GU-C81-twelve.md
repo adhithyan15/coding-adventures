@@ -14,7 +14,8 @@ romanization: "bār"
 concept_tag: GU-NUM1-TWELVE
 prerequisites: [GU-C80-holi, GU-C81-eleven]
 sounds: []
-roots: []
+roots: [sanskrit-dvadasha]
+etymology_hook: "bār ← Sanskrit dvādaśa 'twelve', a tadbhava (CDIAL 6658)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C81-eleven]
 <!-- hl-knowledge: introduces=[GU-LEX-C81-NUM1-02]; assesses=[] -->
 
 **બાર** (*bār*) — "twelve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બાર** (*bār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dvādaśa*, "twelve" (CDIAL 6658). It is *dvā*, "two", and *daśa*, "ten".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

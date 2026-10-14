@@ -12,6 +12,7 @@ concept_tag: PRONOUN-MY
 prerequisites: [GU-C02-naam]
 sounds: [long-aa, u-nasal]
 roots: [ma-first-person]
+etymology_hook: "mārũ: listed by CDIAL under the Sanskrit first-person base ma-, the m- of English me (CDIAL 9691)"
 duration:
   max_seconds: 240
 requires:

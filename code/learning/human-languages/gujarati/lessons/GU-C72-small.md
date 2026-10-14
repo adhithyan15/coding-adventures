@@ -14,7 +14,8 @@ romanization: "nānũ"
 concept_tag: GU-SIZE-SMALL
 prerequisites: [GU-C71-bad, GU-C72-big]
 sounds: []
-roots: []
+roots: [sanskrit-shlakshna]
+etymology_hook: "nānũ: listed by CDIAL under Sanskrit ślakṣṇa 'smooth, soft', in the word-lists 'thin, small' (CDIAL 12732)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C72-big]
 <!-- hl-knowledge: introduces=[GU-LEX-C72-SIZE-02]; assesses=[] -->
 
 **નાનું** (*nānũ*) — "small".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**નાનું** (*nānũ*) is a tadbhava. CDIAL lists it under Sanskrit *ślakṣṇa*, "slippery, smooth, soft, tender", which the old word-lists also gloss "thin, small" (CDIAL 12732).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

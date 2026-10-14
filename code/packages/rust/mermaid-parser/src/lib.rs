@@ -6198,6 +6198,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     let automatic_lane_ordering = parse_swimlane_automatic_lane_ordering(source)?;
     let ignore_cross_lane_edges = parse_swimlane_ignore_cross_lane_edges(source)?;
     let optimize_ranks_by_crossings = parse_swimlane_optimize_ranks_by_crossings(source)?;
+    let theme = parse_swimlane_theme(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_swimlane(&prepared).map_err(|message| ParseError {
         message,
@@ -6230,6 +6231,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         automatic_lane_ordering,
         ignore_cross_lane_edges,
         optimize_ranks_by_crossings,
+        theme,
     };
     let mut current_lane: Option<usize> = None;
     let mut group_stack = Vec::<usize>::new();
@@ -6266,7 +6268,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             continue;
         }
         if let Some(value) = line.strip_prefix("subgraph ") {
-            let (id, label) = parse_swimlane_lane(
+            let (id, label, classes) = parse_swimlane_lane(
                 value, diagram.lanes.len() + diagram.groups.len() + 1, line_number,
             )?;
             if diagram.lanes.iter().any(|lane| lane.id == id)
@@ -6281,10 +6283,13 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                 let parent_id = group_stack.last().map(|group| diagram.groups[*group].id.clone());
                 diagram.groups.push(SwimlaneGroup {
                     id, label, lane_id: diagram.lanes[lane].id.clone(), parent_id, node_ids: Vec::new(),
+                    classes, style: DiagramStyle::default(),
                 });
                 group_stack.push(diagram.groups.len() - 1);
             } else {
-                diagram.lanes.push(SwimlaneLane { id, label, node_ids: Vec::new() });
+                diagram.lanes.push(SwimlaneLane {
+                    id, label, node_ids: Vec::new(), classes, style: DiagramStyle::default(),
+                });
                 current_lane = Some(diagram.lanes.len() - 1);
             }
             continue;
@@ -6440,6 +6445,22 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                     }
                 }
             }
+            if let Some(lane) = diagram.lanes.iter_mut().find(|lane| lane.id == target_id) {
+                matched = true;
+                for class in &classes {
+                    if !lane.classes.contains(class) {
+                        lane.classes.push(class.clone());
+                    }
+                }
+            }
+            if let Some(group) = diagram.groups.iter_mut().find(|group| group.id == target_id) {
+                matched = true;
+                for class in &classes {
+                    if !group.classes.contains(class) {
+                        group.classes.push(class.clone());
+                    }
+                }
+            }
             for &edge_index in swimlane_edge_target_indices(&edge_targets, &target_id) {
                 #[cfg(test)]
                 SWIMLANE_TARGET_MATCH_VISITS.with(|count| count.set(count.get() + 1));
@@ -6452,7 +6473,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                 }
             }
             if !matched {
-                return Err(swimlane_error(line, format!("Swimlane class references unknown node or edge {target_id:?}")));
+                return Err(swimlane_error(line, format!("Swimlane class references unknown node, edge, or subgraph {target_id:?}")));
             }
         }
     }
@@ -6472,11 +6493,35 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             merge_state_style(&mut edge.style, style);
         }
     }
+    for lane in &mut diagram.lanes {
+        for class in lane.classes.clone() {
+            let style = class_styles.get(&class).ok_or_else(|| {
+                swimlane_error(1, format!("Swimlane lane decorator references unknown class {class:?}"))
+            })?;
+            merge_state_style(&mut lane.style, style);
+        }
+    }
+    for group in &mut diagram.groups {
+        for class in group.classes.clone() {
+            let style = class_styles.get(&class).ok_or_else(|| {
+                swimlane_error(1, format!("Swimlane group decorator references unknown class {class:?}"))
+            })?;
+            merge_state_style(&mut group.style, style);
+        }
+    }
     for (target_id, style, line) in pending_styles {
         let mut matched = false;
         if let Some(node) = diagram.nodes.iter_mut().find(|node| node.id == target_id) {
             matched = true;
             merge_state_style(&mut node.style, &style);
+        }
+        if let Some(lane) = diagram.lanes.iter_mut().find(|lane| lane.id == target_id) {
+            matched = true;
+            merge_state_style(&mut lane.style, &style);
+        }
+        if let Some(group) = diagram.groups.iter_mut().find(|group| group.id == target_id) {
+            matched = true;
+            merge_state_style(&mut group.style, &style);
         }
         for &edge_index in swimlane_edge_target_indices(&edge_targets, &target_id) {
             #[cfg(test)]
@@ -6486,7 +6531,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             merge_state_style(&mut edge.style, &style);
         }
         if !matched {
-            return Err(swimlane_error(line, format!("Swimlane style references unknown node or edge {target_id:?}")));
+            return Err(swimlane_error(line, format!("Swimlane style references unknown node, edge, or subgraph {target_id:?}")));
         }
     }
     for (targets, style, curve, line) in pending_link_styles {
@@ -6514,6 +6559,28 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         }
     }
     Ok(diagram)
+}
+
+fn parse_swimlane_theme(source: &str) -> diagram_ir::SwimlaneTheme {
+    let front_matter = mermaid_front_matter_section(source, &["themeVariables"]);
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(theme_source, name).or_else(|| theme_source.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        })).filter(|value| !value.is_empty())
+    };
+    let defaults = diagram_ir::SwimlaneTheme::default();
+    diagram_ir::SwimlaneTheme {
+        main_background: value("mainBkg").unwrap_or(defaults.main_background),
+        node_border: value("nodeBorder").unwrap_or(defaults.node_border),
+        line_color: value("lineColor").unwrap_or(defaults.line_color),
+        primary_text_color: value("primaryTextColor").unwrap_or(defaults.primary_text_color),
+        font_family: value("fontFamily"),
+        font_size: value("fontSize").and_then(parse_mermaid_font_size)
+            .filter(|value| value.is_finite() && *value > 0.0),
+    }
 }
 
 fn parse_swimlane_line_hops(source: &str) -> Result<Option<SwimlaneLineHops>, ParseError> {
@@ -6928,8 +6995,8 @@ fn parse_swimlane_lane(
     value: &str,
     index: usize,
     line: usize,
-) -> Result<(String, String), ParseError> {
-    let value = value.trim();
+) -> Result<(String, String, Vec<String>), ParseError> {
+    let (value, classes) = split_swimlane_class_decorators(value.trim());
     if let Some(open) = value.find('[') {
         let Some(label) = value[open + 1..].strip_suffix(']') else {
             return Err(swimlane_error(line, "unterminated Swimlane label"));
@@ -6941,7 +7008,7 @@ fn parse_swimlane_lane(
                 "Swimlane id and label must not be empty",
             ));
         }
-        return Ok((id.to_string(), normalize_swimlane_label(label)));
+        return Ok((id.to_string(), normalize_swimlane_label(label), classes));
     }
     if value.is_empty() {
         return Err(swimlane_error(line, "Swimlane label must not be empty"));
@@ -6955,7 +7022,7 @@ fn parse_swimlane_lane(
     } else {
         format!("swimlane-{index}")
     };
-    Ok((id, label))
+    Ok((id, label, classes))
 }
 
 fn parse_swimlane_edge_chain(
@@ -7580,6 +7647,8 @@ fn assign_swimlane_default_lane(diagram: &mut SwimlaneDiagram) {
                 id: DEFAULT_LANE_ID.into(),
                 label: String::new(),
                 node_ids: Vec::new(),
+                classes: Vec::new(),
+                style: DiagramStyle::default(),
             });
             diagram.lanes.len() - 1
         });

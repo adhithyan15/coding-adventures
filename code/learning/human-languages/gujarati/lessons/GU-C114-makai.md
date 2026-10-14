@@ -15,6 +15,7 @@ concept_tag: GU-THINGS114-MAKAI
 prerequisites: [GU-C114-bajri, GU-C114-ghau]
 sounds: []
 roots: []
+etymology_hook: "makāī: listed by CDIAL under the lexical Sanskrit markaka, a bird-name; the link is unexplained (CDIAL 9879)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C114-ghau]
 <!-- hl-knowledge: introduces=[GU-LEX-C114-THINGS114-03]; assesses=[] -->
 
 **મકાઈ** (*makāī*) — "maize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **મકાઈ** (*makāī*) under the lexical Sanskrit *markaka*, the name of a bird, with a cross-reference to *markaṭaka* (CDIAL 9879). It does not explain how the name came to the grain, so its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

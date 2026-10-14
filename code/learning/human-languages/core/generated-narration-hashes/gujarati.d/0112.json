@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 112,
-  "sourceHash": "fnv1a64:3347809e54e940b4",
+  "sourceHash": "fnv1a64:c897b7bc74398bc3",
   "lessonIds": [
     "GU-C112-but",
     "GU-C112-patto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch112.txt",
   "json": "gujarati/narration/ch112.json",
-  "textHash": "fnv1a64:f4620d167ed63e98",
-  "jsonHash": "fnv1a64:85f55ff431af6fef",
+  "textHash": "fnv1a64:20ba02286e1a63df",
+  "jsonHash": "fnv1a64:5abd7628e2e84c64",
   "findings": []
 }

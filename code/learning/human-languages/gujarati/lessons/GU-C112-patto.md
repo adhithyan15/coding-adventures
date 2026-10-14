@@ -14,7 +14,8 @@ romanization: "paṭṭo"
 concept_tag: GU-THINGS112-PATTO
 prerequisites: [GU-C111-moja, GU-C112-but, GU-C32-athava]
 sounds: []
-roots: []
+roots: [sanskrit-patta]
+etymology_hook: "paṭṭo ← Sanskrit paṭṭa 'cloth; bandage, fillet', probably non-Aryan (CDIAL 7700)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [GU-C112-but]
 <!-- hl-knowledge: introduces=[GU-LEX-C112-THINGS112-02]; assesses=[] -->
 
 **પટ્ટો** (*paṭṭo*) — "a belt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પટ્ટો** (*paṭṭo*) goes back to Sanskrit *paṭṭa*, "cloth; bandage, fillet", which CDIAL thinks probably non-Aryan (CDIAL 7700). CDIAL lists the inherited Gujarati *pāṭo*, "bandage".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

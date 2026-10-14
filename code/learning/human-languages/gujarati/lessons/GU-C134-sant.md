@@ -14,7 +14,8 @@ romanization: "śānt"
 concept_tag: GU-QUAL134-SANT
 prerequisites: [GU-C133-alsu, GU-C134-bahadur]
 sounds: []
-roots: []
+roots: [sanskrit-shanta]
+etymology_hook: "śānt ← Sanskrit śānta 'abated; calm', a tatsama (CDIAL 12390)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C134-bahadur]
 <!-- hl-knowledge: introduces=[GU-LEX-C134-QUAL134-02]; assesses=[] -->
 
 **શાંત** (*śānt*) — "calm, quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શાંત** (*śānt*) is Sanskrit *śānta*, "abated; calm", taken over whole as a learned loan, a tatsama (CDIAL 12390).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

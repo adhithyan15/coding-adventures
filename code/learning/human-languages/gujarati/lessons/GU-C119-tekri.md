@@ -14,7 +14,8 @@ romanization: "ṭekrī"
 concept_tag: GU-THINGS119-TEKRI
 prerequisites: [GU-C119-gupha, GU-C119-khin]
 sounds: []
-roots: []
+roots: [indo-aryan-tekka]
+etymology_hook: "ṭekrī ← *ṭekka, one of the hill words CDIAL groups under *ṭakka 'hill' (CDIAL 5423)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C119-khin]
 <!-- hl-knowledge: introduces=[GU-LEX-C119-THINGS119-05]; assesses=[] -->
 
 **ટેકરી** (*ṭekrī*) — "a hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ટેકરી** (*ṭekrī*) is a tadbhava. CDIAL lists it under *\*ṭekka*, one of many reconstructed hill words it groups under *\*ṭakka*, "hill" (CDIAL 5423). CDIAL thinks the variety of forms points to a non-Aryan, perhaps Munda, origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

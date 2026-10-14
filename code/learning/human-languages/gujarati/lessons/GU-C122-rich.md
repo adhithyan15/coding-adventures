@@ -14,7 +14,8 @@ romanization: "rī̃ch"
 concept_tag: GU-THINGS122-RICH
 prerequisites: [GU-C121-saslu, GU-C121-haran]
 sounds: []
-roots: []
+roots: [sanskrit-rksha]
+etymology_hook: "rīṁch ← Sanskrit ṛkṣa 'bear', a tadbhava (CDIAL 2445)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C121-haran]
 <!-- hl-knowledge: introduces=[GU-LEX-C122-THINGS122-01]; assesses=[] -->
 
 **રીંછ** (*rī̃ch*) — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**રીંછ** (*rīṁch*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ṛkṣa*, "bear" (CDIAL 2445).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

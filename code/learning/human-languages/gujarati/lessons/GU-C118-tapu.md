@@ -14,7 +14,8 @@ romanization: "ṭāpu"
 concept_tag: GU-THINGS118-TAPU
 prerequisites: [GU-C118-jiru, GU-C118-ghas]
 sounds: []
-roots: []
+roots: [indo-aryan-tappuka]
+etymology_hook: "ṭāpu ← *ṭāppuka 'island', a reconstructed form; a tadbhava (CDIAL 5456)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C118-ghas]
 <!-- hl-knowledge: introduces=[GU-LEX-C118-THINGS118-05]; assesses=[] -->
 
 **ટાપુ** (*ṭāpu*) — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ટાપુ** (*ṭāpu*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭāppuka*, "island", a form CDIAL reconstructs from its descendants (CDIAL 5456).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

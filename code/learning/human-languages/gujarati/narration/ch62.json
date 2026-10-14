@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Bed, Table, Fan and Lock",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ef356d10a4d984e3",
+  "sourceHash": "fnv1a64:68646d7669e21724",
   "lessons": [
     {
       "id": "GU-C62-bed",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9620ed3c37f03525",
+      "sourceHash": "fnv1a64:8ed5222866987dc7",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પલંગ (palaṅg) goes back to Sanskrit palyaṅka, \"bed\" (CDIAL 7964). CDIAL notes that the north-western form with -ṅg was borrowed into many languages, Gujarati among them."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6f30e45f884a849",
+      "sourceHash": "fnv1a64:dd05e718eaf9ce3a",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખાટલો (khāṭlo) is built on Gujarati khāṭ, \"bedstead\", which CDIAL lists under Sanskrit khaṭvā, \"bedstead\" (CDIAL 3781)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27bd35af1c3276bd",
+      "sourceHash": "fnv1a64:c31dddc1e2df178c",
       "notice": null,
       "blocks": [
         {
@@ -388,7 +410,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3a615ea7b75e140",
+      "sourceHash": "fnv1a64:0a5368b3baa59574",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +443,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પંખો (paṅkho) is a tadbhava of Sanskrit pakṣa, \"wing, feather\", which also had a form pakṣaka, \"fan\" (CDIAL 7627). CDIAL suggests, with a query, that its nasal comes from puṅkha, \"feathered shaft of an arrow\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +464,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +513,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +544,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0091159dd89d84a1",
+      "sourceHash": "fnv1a64:a7aafa630d1971f8",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +577,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તાળું (tāḷũ) is a tadbhava of Sanskrit tāla, \"latch, bolt\" (CDIAL 5749). CDIAL compares Tamil and other Dravidian words for a bar, bolt or latch."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +598,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +647,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

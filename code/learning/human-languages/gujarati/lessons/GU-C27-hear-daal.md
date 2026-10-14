@@ -11,8 +11,8 @@ gloss: lentils, heard and said before it is ever shown
 concept_tag: GU-FOOD-LENTILS-HEARD
 prerequisites: [GU-C27-hear-bhaat]
 sounds: [voiced-d, long-aa, retroflex-lla]
-roots: []
-etymology_hook: Lentils arrive one lesson after rice because in Gujarat the two are named as one thing, dāḷ-bhāt.
+roots: [sanskrit-dala]
+etymology_hook: "dāḷ ← Sanskrit dāla 'split peas'; CDIAL asks if it is the same as *dāla 'splitting' (CDIAL 6309)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C27-hear-bhaat]
 
 [PAUSE 3s] Say the word for rice. Now listen twice: **dāḷ**. It means
 **lentils** — cooked lentils, the other half of the pair Gujaratis name in one breath as *dāḷ-bhāt*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દાળ** (*dāḷ*) is a tadbhava of Sanskrit *dāla*, "a kind of grain, split peas" (CDIAL 6309). CDIAL asks whether this is the same word as its *\*dāla*, "splitting".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-DAAL-01, GU-LEX-BHAAT-01] -->

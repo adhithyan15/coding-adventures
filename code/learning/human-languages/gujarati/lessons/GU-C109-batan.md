@@ -14,7 +14,8 @@ romanization: "baṭan"
 concept_tag: GU-THINGS109-BATAN
 prerequisites: [GU-C108-soy, GU-C108-doro]
 sounds: []
-roots: []
+roots: [english-button]
+etymology_hook: "baṭan ← English button"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C108-doro]
 <!-- hl-knowledge: introduces=[GU-LEX-C109-THINGS109-01]; assesses=[] -->
 
 **બટન** (*baṭan*) — "a button".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બટન** (*baṭan*) is a loan from English *button*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

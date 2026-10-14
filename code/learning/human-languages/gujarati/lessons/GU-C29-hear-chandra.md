@@ -11,8 +11,8 @@ gloss: moon, heard and said before it is ever shown
 concept_tag: GU-SKY-MOON-HEARD
 prerequisites: [GU-C29-hear-sooraj]
 sounds: [ca, medial-anusvara, consonant-cluster]
-roots: []
-etymology_hook: The moon follows the sun by one lesson and carries a consonant cluster, the dr- you can hear pushed out as one sound.
+roots: [sanskrit-candra]
+etymology_hook: "chandra ← Sanskrit candra 'shining; moon', a tatsama (CDIAL 4661)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C29-hear-sooraj]
 
 [PAUSE 3s] Say the word for sun. Now listen twice: **chandra**. It means
 **moon** — the one you see at *rāt*, and listen to the **dr** at its end pushed out as one sound.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચંદ્ર** (*chandra*) is Sanskrit *candra*, "shining; moon", taken over whole as a learned loan, a tatsama (CDIAL 4661). CDIAL lists the inherited form as Gujarati *cāṁd*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-CHANDRA-01, GU-LEX-SOORAJ-01] -->

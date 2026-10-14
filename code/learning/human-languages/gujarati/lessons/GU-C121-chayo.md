@@ -14,7 +14,8 @@ romanization: "chā̃yo"
 concept_tag: GU-THINGS121-CHAYO
 prerequisites: [GU-C121-andharu, GU-C121-prakas]
 sounds: []
-roots: []
+roots: [sanskrit-chaya]
+etymology_hook: "chāṁyo ← Sanskrit chāyā 'shade, shadow, reflection', a tadbhava (CDIAL 5027)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C121-prakas]
 <!-- hl-knowledge: introduces=[GU-LEX-C121-THINGS121-03]; assesses=[] -->
 
 **છાંયો** (*chā̃yo*) — "shade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**છાંયો** (*chāṁyo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *chāyā*, "shade, shadow, reflection" (CDIAL 5027).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

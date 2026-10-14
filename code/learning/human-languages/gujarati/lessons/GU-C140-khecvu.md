@@ -14,7 +14,8 @@ romanization: "khẽcvũ"
 concept_tag: GU-VERB-KHECVU
 prerequisites: [GU-C140-sivvu, GU-C140-bharvu]
 sounds: []
-roots: []
+roots: [indo-aryan-khinc]
+etymology_hook: "khẽcvũ: CDIAL lists khīṁcvũ 'to pull' under *khiñc 'drag, pull' and khẽc under its variant *khaiñc (CDIAL 3881)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C140-bharvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C140-ACT140-04]; assesses=[] -->
 
 **ખેંચવું** (*khẽcvũ*) — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Gujarati *khīṁcvũ*, "to pull", under a reconstructed *\*khiñc*, "drag, pull", and the noun *khẽc*, "pulling", under its variant *\*khaiñc* (CDIAL 3881). **ખેંચવું** (*khẽcvũ*) belongs with them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

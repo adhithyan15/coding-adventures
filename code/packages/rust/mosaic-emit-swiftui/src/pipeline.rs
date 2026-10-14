@@ -3317,6 +3317,9 @@ fn constructor_consuming_parts<'a>(
         let in_table = in_table || node.tag == "HostTable";
         let view = match node.tag.as_str() {
             "Column" => Some("VStack"),
+            // Drag wrappers construct their bodies through container(VStack)
+            // too. Classify spacing only here: alignment is separate debt.
+            "HostDraggable" | "HostDropTarget" if property == "gap" => Some("VStack"),
             "Row" if !in_table => Some("HStack"),
             _ => None,
         };
@@ -16873,6 +16876,35 @@ mod tests {
         for tag in ["Column", "Row"] {
             let drops = gap_drops(&gap_layout(None, tag, "c"));
             assert!(drops.is_empty(), "{tag} applies the gap; got: {drops:?}");
+        }
+    }
+
+    /// Drag bodies use the same vertical stack constructor as Column. Test
+    /// emission as well as reporting so a future primitive change cannot hide
+    /// spacing loss behind the reporter's classification.
+    #[test]
+    fn drag_body_gap_is_emitted_and_not_reported_as_dropped() {
+        for tag in ["HostDraggable", "HostDropTarget"] {
+            let mut node = gap_layout(None, tag, "c");
+            node.children = vec![leaf("Text", vec![]), leaf("Text", vec![])];
+            let style = style_with_part("F", "c", vec![sp("gap", "8px")]);
+            let output = from_pipeline(
+                &component("F", vec![], vec![]),
+                &layout_with("F", node.clone()),
+                &style,
+            )
+            .expect("drag body emits")
+            .output;
+            assert!(output.contains("VStack(spacing: 8) {"), "{tag}: {output}");
+            assert!(gap_drops(&node).is_empty(), "{tag} already emits its gap");
+
+            let unsupported = style_with_part("F", "c", vec![sp("gap", "1rem")]);
+            assert!(dropped_style_properties(&unsupported, &node)
+                .iter()
+                .any(|drop| drop.name == "gap"));
+
+            let reused = container_node("Column", vec![node, gap_layout(None, "Box", "c")]);
+            assert_eq!(gap_drops(&reused).len(), 1, "unsupported reuse must remain visible");
         }
     }
 

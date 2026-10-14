@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 24,
-  "sourceHash": "fnv1a64:3c6ad133d6dbdf91",
+  "sourceHash": "fnv1a64:939a04b929685656",
   "lessonIds": [
     "GU-C20-hear-bajar",
     "GU-C20-bajar",
@@ -16,7 +16,7 @@
   "drivablePrefix": 1,
   "text": "gujarati/narration/ch24.txt",
   "json": "gujarati/narration/ch24.json",
-  "textHash": "fnv1a64:c67dcc243bbf3a5b",
-  "jsonHash": "fnv1a64:fa2de4cbb8815cf5",
+  "textHash": "fnv1a64:c2dac117d4163812",
+  "jsonHash": "fnv1a64:08bc0751aea87515",
   "findings": []
 }

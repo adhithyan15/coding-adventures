@@ -14,7 +14,8 @@ romanization: "ā̃gaṇũ"
 concept_tag: GU-HOUSE-COURTYARD
 prerequisites: [GU-C63-roof, GU-C63-wall]
 sounds: []
-roots: []
+roots: [sanskrit-angana]
+etymology_hook: "āṁgaṇũ ← Sanskrit aṅgaṇa 'courtyard', a tadbhava (CDIAL 118)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C63-wall]
 <!-- hl-knowledge: introduces=[GU-LEX-C63-HOUSE-03]; assesses=[] -->
 
 **આંગણું** (*ā̃gaṇũ*) — "a courtyard". The open ground in front of a **ઘર**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**આંગણું** (*āṁgaṇũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṅgaṇa*, "courtyard" (CDIAL 118).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

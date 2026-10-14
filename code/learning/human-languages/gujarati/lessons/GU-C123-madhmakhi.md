@@ -14,7 +14,8 @@ romanization: "madhmākhī"
 concept_tag: GU-THINGS123-MADHMAKHI
 prerequisites: [GU-C123-macchar, GU-C123-makhi]
 sounds: []
-roots: []
+roots: [sanskrit-madhu, sanskrit-makshika]
+etymology_hook: "madhmākhī: madh 'honey' ← madhu (CDIAL 9784) + mākhī 'fly' ← makṣikā (CDIAL 9696)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C123-makhi]
 <!-- hl-knowledge: introduces=[GU-LEX-C123-THINGS123-05]; assesses=[] -->
 
 **મધમાખી** (*madhmākhī*) — "a bee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મધમાખી** (*madhmākhī*) is "honey-fly": *madh*, "honey", from Sanskrit *madhu* (CDIAL 9784), and *mākhī*, "fly", from *makṣikā*, "fly, bee" (CDIAL 9696).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

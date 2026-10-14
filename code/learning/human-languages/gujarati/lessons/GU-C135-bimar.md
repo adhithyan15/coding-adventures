@@ -14,7 +14,8 @@ romanization: "bīmār"
 concept_tag: GU-QUAL135-BIMAR
 prerequisites: [GU-C134-bhukhyu, GU-C135-tarasyu, GU-C36-ame-aapne, GU-C36-ame-aapne]
 sounds: []
-roots: []
+roots: [persian-bimar]
+etymology_hook: "bīmār: usually traced to Persian bīmār 'ill, sick'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [GU-C135-tarasyu]
 <!-- hl-knowledge: introduces=[GU-LEX-C135-QUAL135-02]; assesses=[] -->
 
 **બીમાર** (*bīmār*) — "ill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બીમાર** (*bīmār*) is a loan, usually traced to Persian *bīmār*, "ill, sick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

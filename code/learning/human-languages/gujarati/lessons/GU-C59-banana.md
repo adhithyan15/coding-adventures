@@ -14,7 +14,8 @@ romanization: "keḷũ"
 concept_tag: GU-PRODUCE-BANANA
 prerequisites: [GU-C58-buttermilk, GU-C59-fruit]
 sounds: []
-roots: []
+roots: [sanskrit-kadala]
+etymology_hook: "keḷũ ← Sanskrit kadala 'banana plant; its fruit', itself from Austroasiatic; a tadbhava (CDIAL 2712)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C59-fruit]
 <!-- hl-knowledge: introduces=[GU-LEX-C59-PRODUCE-02]; assesses=[] -->
 
 **કેળું** (*keḷũ*) — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કેળું** (*keḷũ*) is a tadbhava of Sanskrit *kadala*, "the banana plant; its fruit" (CDIAL 2712). CDIAL reports that the Sanskrit word itself came from Austroasiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kharāb"
 concept_tag: GU-COLOUR2-BAD
 prerequisites: [GU-C71-pink, GU-C71-beautiful]
 sounds: []
-roots: []
+roots: [arabic-kharab]
+etymology_hook: "kharāb ← Arabic kharāb 'ruin, desolation', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C71-beautiful]
 <!-- hl-knowledge: introduces=[GU-LEX-C71-COLOUR2-05]; assesses=[] -->
 
 **ખરાબ** (*kharāb*) — "bad". The opposite of **સારું**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખરાબ** (*kharāb*) is a loan from Arabic *kharāb*, "ruin, desolation", which reached Gujarati through Persian. Its Arabic root is *kh-r-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

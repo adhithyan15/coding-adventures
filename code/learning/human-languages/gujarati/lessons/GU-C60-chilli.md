@@ -14,7 +14,8 @@ romanization: "marcũ"
 concept_tag: GU-SNACKS-CHILLI
 prerequisites: [GU-C59-potatoes, GU-C59-tomato]
 sounds: []
-roots: []
+roots: [sanskrit-marica]
+etymology_hook: "marcũ ← *maricca, a variant of Sanskrit marīca 'peppercorn', itself from Austroasiatic (CDIAL 9875)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C59-tomato]
 <!-- hl-knowledge: introduces=[GU-LEX-C60-SNACKS-01]; assesses=[] -->
 
 **મરચું** (*marcũ*) — "a chilli".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મરચું** (*marcũ*) is a tadbhava. CDIAL lists it under *\*maricca*, a variant of Sanskrit *marīca*, "peppercorn", and reports that the Sanskrit word came from Austroasiatic (CDIAL 9875). The name moved from black pepper to the chilli.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

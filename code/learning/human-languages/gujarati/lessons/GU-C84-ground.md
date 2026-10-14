@@ -14,7 +14,8 @@ romanization: "medān"
 concept_tag: GU-TOWN-GROUND
 prerequisites: [GU-C84-bank, GU-C84-police]
 sounds: []
-roots: []
+roots: [persian-maidan]
+etymology_hook: "medān: usually traced to Persian maidān 'open ground'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C84-police]
 <!-- hl-knowledge: introduces=[GU-LEX-C84-TOWN-04]; assesses=[] -->
 
 **મેદાન** (*medān*) — "an open ground, a field for play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મેદાન** (*medān*) is a loan, usually traced to Persian *maidān*, "open ground".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kināro"
 concept_tag: GU-THINGS119-KINARO
 prerequisites: [GU-C118-ghas, GU-C118-tapu]
 sounds: []
-roots: []
+roots: [persian-kinar]
+etymology_hook: "kināro: usually traced to Persian kinār 'edge, shore'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C118-tapu]
 <!-- hl-knowledge: introduces=[GU-LEX-C119-THINGS119-01]; assesses=[] -->
 
 **કિનારો** (*kināro*) — "a shore, a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કિનારો** (*kināro*) is a loan, usually traced to Persian *kinār*, "edge, shore".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

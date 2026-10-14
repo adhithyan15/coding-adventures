@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for to win, then the Gujarati for to lose.
 You'll want to know: કબાટ.
 કબાટ (kabāṭ) — "a cupboard".
 
+The word, taken apart.
+The origin of કબાટ (kabāṭ) is not settled. It matches Sanskrit kapāṭa, "leaf of a door", under which CDIAL lists Gujarati kamāṛ, "door" (CDIAL 2963), but CDIAL does not list કબાટ (kabāṭ) itself.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for to lose, then the Gujarati for a cupboa
 
 You'll want to know: અરીસો.
 અરીસો (arīso) — "a mirror".
+
+The word, taken apart.
+અરીસો (arīso) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ādarśa, "mirror" (CDIAL 1143).
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Join two whole sentences with ane. Does either sentence change? (No: ane costs t
 You'll want to know: કાંસકો.
 કાંસકો (kā̃sko) — "a comb".
 
+The word, taken apart.
+કાંસકો (kā̃sko) (kāṁsko) is a tadbhava. CDIAL lists it under kaṅkaśa, a variant it reconstructs beside Sanskrit kaṅkata, "comb", and doubts that the Sanskrit word is of Indo-European origin (CDIAL 2598).
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Gujarati for a mirror, then the Gujarati for a comb.
 You'll want to know: સાબુ.
 સાબુ (sābu) — "soap".
 
+The word, taken apart.
+સાબુ (sābu) is a loan. It is traced either to Portuguese sabão or, like Hindi sābun, to Arabic ṣābūn through Persian (Lane, root ṣ-b-n). Both go back to Latin sāpō.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Gujarati for a comb, then the Gujarati for soap.
 
 You'll want to know: ટુવાલ.
 ટુવાલ (ṭuvāl) — "a towel".
+
+The word, taken apart.
+ટુવાલ (ṭuvāl) is a loan, usually traced to Portuguese toalha, "towel".
 
 What you've built.
 One more word for this chapter.

@@ -15,6 +15,7 @@ concept_tag: GU-THINGS117-CATNI
 prerequisites: [GU-C117-kadhi, GU-C117-bhajiya]
 sounds: []
 roots: []
+etymology_hook: "caṭṇī: not in CDIAL; often tied to cāṭvũ 'to lick', which CDIAL lists under *caṭṭ 'lick, taste' (CDIAL 4573)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C117-bhajiya]
 <!-- hl-knowledge: introduces=[GU-LEX-C117-THINGS117-03]; assesses=[] -->
 
 **ચટણી** (*caṭṇī*) — "chutney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL has no entry for **ચટણી** (*caṭṇī*). It is often tied to *cāṭvũ*, "to lick", which CDIAL lists under a reconstructed *\*caṭṭ*, "lick, taste", perhaps imitative (CDIAL 4573).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
