@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-258-A2WRITING",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "SA-EXT-258-A2WRITING"
+  ],
+  "after": []
+}
