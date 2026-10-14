@@ -3,47 +3,41 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a current-main reconciliation -->
-October14: current tested source `96b26233b26576f382ab36fd951c48ddb8026889` integrates main
-`f26caa738d25f1d30e059b6dfaba07c293181433`. Closed 25-path import proof:
-15 exact pure imports, 10 overlaps, 156 other owned objects initially retained;
-source96b retains155/156, with only the documented spec amendment differing.
-376 registry identities unchanged. No new crates.io dependency.
+October14: current source0389f753 integrates audited/fetched main
+`c351402c3b6096464273663a0e95aaba00bfa7fd`. Spec8ba51734 preceded
+mergeb59914a8; actual one-conflict merge stages preserved. Full1782-path
+partition proves1776 pure imports/6 overlaps/166 retained owned objects,
+1276 complete ALGOL/LANG objects retained,376 registry identities unchanged.
+No new crates.io dependency; ESTree canonical boundary and own types preserved.
 
-Actual core validator63937 EXIT0: full compiler/IR/paint/hierarchy/parser
-1509 passed across17targets,0fail/0ignore; repeated focus rows excluded.
-Sign alias/value controls cover both roots, outcomes and direct/assigned
-consumers; formatter refusal uses unchanged8192 classifier cap. Eight complete
-value programs run on six available backends:48actual cells, every Some(0),
-exact -1/1 stdout. CLR unavailable/unvalidated. Theme control verifies all
-font queries/glyphs, complete background rectangle fields/order and full
-remaining scene equality against the same font/color baseline. Integer work
-controls retain every scene/default metadata field and original work bounds.
-Initial629 metadata failure remains in its immutable receipt; no safety or
-production-limit assertion was weakened. Strict6/lessons/whitespace pass.
+Current spacing focus79311 actual EXIT1: exact complete-layout/scene/default
+control PASS and directive/precedence/refusal IR control PASS; finite-input
+safety control FAIL. Actual accepted LR/nodeSpacing1e308 produces extent
+(420,inf). Initial7156 compiler-field error preserved separately, not behavioral
+acceptance. Ordinary controls remain; numerical repair contract/implementation
+and complete37 reverse-consumer/standalone benchmark validation are pending.
 
-Actual downstream23389 EXIT0: union24 including dev consumers, remaining
-18 nonLANG packages plus exact unchanged11 LANG BUILD commands and48 native
-roster,8 additional paired/upstream/completion controls; Rust totals
-1258 passed/176targets/1existing ignores, separate from core.
-Original75181 EXIT1 stopped on a harness cp1252 BUILD decode after nonLANG928/60
-passed. Its receipt/log remain immutable;23389 retains that exact same-head row
-and executes every remaining command using explicit UTF-8. No native command
-was skipped and the initial harness failure is not reported as acceptance.
-Strict24, Python native-contract pytest/Ruff and doc shards pass. Native
-WinUI acceptance is included through its actual full package test; no skip flag.
-Independent exact-source scoped security review retained at SHA880ef1711964569396c229bbae23cab40f2a029d19b9c0a41a7c6ef633557150.
-Earlier source-attributed receipts and failed logs remain immutable; prior
-sixth native24 zero-exit cells and AST/direct Parse135 controls are retained
-and rechecked. Cloned AST positions are excluded from mapping/lineage evidence.
+Independent exact-source e5b9163a transport review WITHHELD:
+Windows destructor can free pending OVERLAPPED/buffers before cancellation
+completion; AcceptEx FALSE is incorrectly checked against SOCKET_ERROR;
+fan-out adoption queue is unbounded. Static OS-contract findings are not an
+executed UB reproduction. Worker/acceptor failure shutdown also needs repair.
+Report SHA99871bbc99f1cdb9ae0e724cd7f79bf9e631b5493f7eddcdeff014c6f028b92d.
+Spec-first lifetime/failed-completion repair selected; bounded admission,
+coordinated fault shutdown and numerical geometry repair remain required.
 
-Latest audited origin/main `b7d25cafd14a5e260bb2d05dea0329da117b6cee`; its newer runtime imports
-are pending and are not accepted by the source96b/f26 receipts. Sole Closure/sharedPR17288
-published `82209953a0909dfaa66c8065ee6f163d7478c2d1` remains conflicted/failed CI, auto-mergeOFF.
-Whole456/general arbitrary-support-floating P2/hosted native3OS/requiredCI/
-exact published-head review/conflict gates remain OPEN. No push, merge,
-cleanup or CV04b yet. Base ESTree canonical boundary/own types preserved.
-Full Closure parity/output-byte-to-source/all folding-renaming-inlining-motion-
-merging-deletion lineage and pass/sweep/identity/span evidence remain OPEN.
+Earlier source96b26233/f26 native core1509/17 and downstream1258/176,
+48 real sign cells/six backends and actual WinUI acceptance remain attributed
+to that source. Documentation5fff24f6 had complete1695/1698 object proof and
+exact documentation review PASS; none accepts current changed imports.
+All initial failures and immutable receipts retained. No assertions weakened.
+
+Sole active Closure/sharedPR17288, published82209953, auto-mergeOFF;
+latest audit135035Z found failed Linux/CI gate and unknown mergeability.
+No publication, merge or cleanup. Whole456/general floating P2/hosted native3OS/
+exact published-head review/requiredCI/conflict gates OPEN. Full Closure parity,
+CV04b/output-byte source joins/all folding-renaming-inlining-motion-merging-
+deletion lineage/pass-sweep/identity/span evidence remain OPEN.
 Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/checkout/target/
 receipts untouched and unpolled. Delivery first, genuine final-source Miri
 afterward. Full objective incomplete; heartbeat ACTIVE.
