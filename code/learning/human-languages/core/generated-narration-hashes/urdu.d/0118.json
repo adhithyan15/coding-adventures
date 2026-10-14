@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 118,
-  "sourceHash": "fnv1a64:ee915f57c66d7ed9",
+  "sourceHash": "fnv1a64:f549f3a1ae6c892f",
   "lessonIds": [
     "UR-C118-biskut",
     "UR-C118-chaklet",
@@ -14,6 +14,6 @@
   "text": "urdu/narration/ch118.txt",
   "json": "urdu/narration/ch118.json",
   "textHash": "fnv1a64:74bef6093efa8191",
-  "jsonHash": "fnv1a64:706410ab942f312e",
+  "jsonHash": "fnv1a64:a9da0c804748d0c6",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 234,
   "title": "Poppadom, Puri, Haleem, Nihari, Minced meat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1a99c929770d9ac2",
+  "sourceHash": "fnv1a64:5d4539f4d4ac9ce6",
   "lessons": [
     {
       "id": "UR-C234-papar",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae9491fa1e84c1fa",
+      "sourceHash": "fnv1a64:da0ec67b13b08168",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The name حلیم (halīm) is often linked with Arabic ḥalīm, \"gentle, patient\" (Lane, root ḥ-l-m), but how the dish came by it is not settled."
+              "text": "The name حلیم (halīm) is spelled as Arabic ḥalīm, \"forbearing, patient\" (Lane, root ḥ-l-m), and reached Urdu through Persian, where ḥalīm also names a porridge of wheat and meat. A popular explanation is the dish's long, slow cooking, but how the dish came by the name is not settled."
             }
           ]
         },

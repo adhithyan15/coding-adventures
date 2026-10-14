@@ -14,7 +14,7 @@ romanization: "sharbat"
 concept_tag: UR-THINGS118-SHARBAT
 prerequisites: [UR-C118-chaklet, UR-C118-qahva]
 sounds: []
-roots: [arabic-sharba]
+roots: [arabic-sharbat]
 etymology_hook: "sharbat ← Arabic sharba 'a drink', through Persian (Lane, root sh-r-b)"
 duration:
   max_seconds: 200

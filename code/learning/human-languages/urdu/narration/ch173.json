@@ -4,7 +4,7 @@
   "chapter": 173,
   "title": "Wall clock, Flowerpot, Plant, Tree trunk, Mud",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:6e3965a8245e11aa",
+  "sourceHash": "fnv1a64:213b7d098364073b",
   "lessons": [
     {
       "id": "UR-C173-divar-ghari",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88b8400b08d1a91c",
+      "sourceHash": "fnv1a64:269dd303db734e6d",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of تنا (tanā) is not settled. CDIAL has no entry for it."
+              "text": "تنا (tanā) is usually traced to Persian tana, \"trunk of a tree; body\", built on tan, \"body\". CDIAL has no entry for it."
             }
           ]
         },

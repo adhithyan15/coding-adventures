@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 90,
-  "sourceHash": "fnv1a64:e69475467eeb3923",
+  "sourceHash": "fnv1a64:89f2a080c00d6f2a",
   "lessonIds": [
     "UR-C90-tamam",
     "UR-C90-khud",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch90.txt",
   "json": "urdu/narration/ch90.json",
-  "textHash": "fnv1a64:c8668acc9985f82e",
-  "jsonHash": "fnv1a64:d5e3658d22dcaa92",
+  "textHash": "fnv1a64:86d42d02d65af593",
+  "jsonHash": "fnv1a64:9b8dd8bdc8ae3424",
   "findings": []
 }

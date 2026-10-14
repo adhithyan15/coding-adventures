@@ -47,7 +47,7 @@ reviews_of: [UR-C236-qimat]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**دکاندار** (*dukāndār*) is "shop-holder". It joins *dukān*, "shop", from Arabic *dukkān*, which reached Urdu through Persian (Lane, root *d-k-k*), and the Persian *-dār*, "holder".
+**دکاندار** (*dukāndār*) is "shop-holder". It joins *dukān*, "shop", from Arabic *dukkān*, which reached Urdu through Persian (Lane, root *d-k-n*), and the Persian *-dār*, "holder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

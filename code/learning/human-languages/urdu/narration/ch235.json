@@ -4,7 +4,7 @@
   "chapter": 235,
   "title": "Insect, Firefly, Bedbug, Crab, Prawn",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:47c3d896770e5dc9",
+  "sourceHash": "fnv1a64:93953505b20fb381",
   "lessons": [
     {
       "id": "UR-C235-kira",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fab11b44de6276d8",
+      "sourceHash": "fnv1a64:57202d8570c199de",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of کھٹمل (khaṭmal) is not settled. CDIAL has no entry for it."
+              "text": "کھٹمل (khaṭmal) is usually explained as khāṭ, \"bedstead\", with mal, \"dirt\": the pest of the bed. CDIAL lists khāṭ under Sanskrit khaṭvā, \"bedstead\" (CDIAL 3781), and mal under mala, \"dirt\" (CDIAL 9899), but it has no entry for khaṭmal itself, so the account is not certain."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 239,
   "title": "To swallow, To chew, To smell, To stare, To search",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:35a8a400245acd2d",
+  "sourceHash": "fnv1a64:5bdadb2e48b2e7a9",
   "lessons": [
     {
       "id": "UR-C239-nigalna",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf02c77d7e7750d5",
+      "sourceHash": "fnv1a64:73d87db03d815ad1",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "CDIAL lists a Hindi ghūrnā, \"to roll round\", under a reconstructed ghurati, \"revolves\" (CDIAL 4488). Whether \"to stare\" grew out of rolling the eyes is not settled."
+              "text": "گھورنا (ghūrnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ghūra, \"frown\", a form CDIAL reconstructs from its descendants; CDIAL glosses the Hindi verb \"to frown at, stare at, ogle\" (CDIAL 4496). A different verb ghūrnā, \"to roll round\", sits under ghurati, \"revolves\" (CDIAL 4488)."
             }
           ]
         },

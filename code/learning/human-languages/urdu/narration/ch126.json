@@ -4,7 +4,7 @@
   "chapter": 126,
   "title": "Crow, Peacock, Butterfly, Ant, Donkey",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:38a382ffc9dbc6ac",
+  "sourceHash": "fnv1a64:53b97baba75dc63a",
   "lessons": [
     {
       "id": "UR-C126-kavva",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e5c90c147cbe26f",
+      "sourceHash": "fnv1a64:d5df2ccde3407fd5",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مور (mor) is inherited. CDIAL lists it under mora, a form beside Sanskrit mayūra, \"peacock\" (CDIAL 9865). Some trace the Sanskrit word to Dravidian or to Austroasiatic; Bailey connects it with an Iranian colour word."
+              "text": "مور (mor) is inherited. CDIAL lists it under mora, a form beside Sanskrit mayūra, \"peacock\" (CDIAL 9865). Some trace the Sanskrit word to Dravidian or to Austroasiatic; Bailey connects it with a Khotanese word and takes it as an old Indo-Iranian colour word."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0db1242d9e095321",
+      "sourceHash": "fnv1a64:612adb0c388d8c38",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of چیونٹی (chyūṅṭī) is uncertain. CDIAL has no entry for it."
+              "text": "The origin of چیونٹی (chyūṅṭī) is not settled, and CDIAL has no entry for it. CDIAL does list a Hindi cyū̃ṭā, a form close to this word, among pinching words under a reconstructed cimb, \"pinch\" (CDIAL 4822). If the two belong together, the ant is named for its nip."
             }
           ]
         },

@@ -104,7 +104,7 @@ Put the question words you have met beside the new one.
 kaun — who.
 kab — when.
 kaise — how.
-Every one of them opens with ک. That shared consonant is not a coincidence and not a tidy invention: it is inherited. All five come from the Old Indo-Aryan interrogative stem ka-, and کہاں (kahāṅ) in particular is often traced through Prakrit kahiṅ to Sanskrit kasmin, "in what." CDIAL has no entry for it, though, so that last step is not settled.
+Every one of them opens with ک. That shared consonant is not a coincidence and not a tidy invention: it is inherited. All five come from the Old Indo-Aryan interrogative stem ka-. کہاں (kahāṅ) joins that stem to the place ending -hāṅ of yahāṅ, "here"; CDIAL has no entry for it, so the rest of its history is open.
 Now say the English list out loud — who, what, when, where, how — and listen for its own shared opening. English marks its questions with wh, Latin marks them with qu in quis and quid, and Urdu marks them with ک. Three marks, one inherited consonant: Proto-Indo-European kʷis, split three ways by three sound histories.
 So a learner meeting کہاں (kahāṅ) is not memorising an arbitrary shape. They are meeting a relative of the word they already use for the same job.
 
@@ -114,7 +114,7 @@ Guided Practice.
 [your turn — say: the five k- question words — kyā, kahāṅ, kaun, kab, kaise]
 [pause 8 seconds for the answer]
 [once you have stopped driving — read: کیا and کہاں (kahāṅ), naming their letters from the right]
-[once you have stopped driving — trace: kahāṅ from Prakrit kahiṅ from Sanskrit kasmin from PIE kʷis becomes English where, Latin quis]
+[once you have stopped driving — trace: the question stem k- of kahāṅ from PIE kʷis becomes English where, Latin quis]
 [your turn — recall: say jūtā]
 [pause 8 seconds for the answer]
 

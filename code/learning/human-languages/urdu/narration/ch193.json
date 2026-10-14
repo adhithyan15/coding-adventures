@@ -4,7 +4,7 @@
   "chapter": 193,
   "title": "Honest, Cowardly, Stingy, Greedy, Worried",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ad995e6c56d5d3fd",
+  "sourceHash": "fnv1a64:ccb93de9648deae4",
   "lessons": [
     {
       "id": "UR-C193-imandar",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51842380dba3e9db",
+      "sourceHash": "fnv1a64:f171fe4fe6433038",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of کنجوس (kanjūs) is not settled. CDIAL has no entry for it."
+              "text": "کنجوس (kanjūs) is usually traced to Persian kanjūs, \"miserly\". CDIAL has no entry for it."
             }
           ]
         },

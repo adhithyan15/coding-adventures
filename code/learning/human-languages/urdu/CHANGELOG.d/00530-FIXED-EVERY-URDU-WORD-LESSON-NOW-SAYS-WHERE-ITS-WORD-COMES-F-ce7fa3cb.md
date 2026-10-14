@@ -65,3 +65,17 @@ section.
   block would have pushed the computed length to 300 s or more were tightened
   instead (UR-C07-parhna, UR-C22-kya-kaha, UR-C24-vahan, UR-C26-hai-na); every
   lesson's computed length is at most 299 s.
+- **Review.** Two independent reviewers read all 1,216 changed lessons beside
+  CDIAL (raw rows, sub-entries, notes and addenda), Lane, DEDR and the
+  matching lessons in six sister tracks. 22 lessons (1.8%) had a content
+  error; all are fixed. Fifteen "not settled" words now give a hedged,
+  sourced origin: *kabāb* and *tayyār* are Arabic (Lane, k-b-b and ṭ-y-r),
+  *auzār* is Arabic *awzār*, "gear" (Lane, w-z-r), *kaṛhī* is under
+  *kvathita*, "boiled" (CDIAL 3637), *ghūrnā* under *\*ghūra*, "frown" (4496),
+  *-vālā* is usually traced to *pālaka*, "keeper" (with *gharwālā* under
+  4435), *chapātī* to *chapānā*, "to flatten" (4674), and *tanā*, *kanjūs*,
+  *chaṭnī*, *khaṭmal* and *vaisā* now name their usual accounts. *kahāṅ* no
+  longer claims Sanskrit *kasmin*, which CDIAL does not list; it now matches
+  *yahāṅ*, *vahāṅ* and the Hindi lesson. A wrong Lane root (*dukāndār* is
+  under *d-k-n*) and two root slugs that merged different words
+  (*adākār*, *sāinsdān*) are fixed. About 32 words keep "not settled".

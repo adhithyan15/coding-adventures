@@ -14,8 +14,8 @@ romanization: "kaṛhī"
 concept_tag: UR-CHIZ260-KARHI
 prerequisites: [UR-C260-kofta, UR-C260-tikka]
 sounds: []
-roots: []
-etymology_hook: "kaṛhī: origin not settled; CDIAL has no entry for it"
+roots: [indo-aryan-kvathita]
+etymology_hook: "kaṛhī ← Sanskrit kvathita 'boiled', a tadbhava (CDIAL 3637)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [UR-C260-tikka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **کڑھی** (*kaṛhī*) is not settled. CDIAL has no entry for it.
+**کڑھی** (*kaṛhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kvathita*, "boiled" (CDIAL 3637). Sanskrit already used its feminine for a spiced decoction made with milk.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,7 @@ romanization: "sāinsdān"
 concept_tag: UR-KAM262-SAINSDAN
 prerequisites: [UR-C262-shagird, UR-C262-injiniyar]
 sounds: []
-roots: [english-science, persian-dan]
+roots: [english-science, persian-danistan]
 etymology_hook: "sāinsdān: sāins ← English science + the Persian ending -dān 'one who knows'"
 duration:
   max_seconds: 200

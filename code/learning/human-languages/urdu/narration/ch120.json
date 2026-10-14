@@ -4,7 +4,7 @@
   "chapter": 120,
   "title": "Halwa, Rice pudding, Chutney, Kebab, Biryani",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:71df96a09879ca0a",
+  "sourceHash": "fnv1a64:0e036186749fd8d2",
   "lessons": [
     {
       "id": "UR-C120-halva",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8e6b1efa0701047",
+      "sourceHash": "fnv1a64:b8c0d643fcfb61c9",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of چٹنی (chaṭnī) is not settled. It is often tied to chāṭnā, \"to lick\", which CDIAL lists under a reconstructed caṭṭ, \"lick, taste\" (CDIAL 4573), but CDIAL does not list chaṭnī itself. English took the word as chutney."
+              "text": "چٹنی (chaṭnī) is usually tied to chāṭnā, \"to lick\". CDIAL lists that verb, and chaṭnā, \"to be tasted\", made from it, under a reconstructed caṭṭ, \"lick, taste\" (CDIAL 4573), but it does not list chaṭnī itself. English took the word as chutney."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a3b8605d5726adc",
+      "sourceHash": "fnv1a64:82bcce125c8b2505",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "کباب (kabāb) is a loan, usually traced to Persian kabāb, \"roast meat\". It is also an Arabic word, and which language had it first is not settled."
+              "text": "کباب (kabāb) is a loan from Arabic kabāb, \"meat cut up and roasted\", which reached Urdu through Persian. Lane lists it under the root k-b-b, and records that some Arab scholars took the word to be Persian."
             }
           ]
         },

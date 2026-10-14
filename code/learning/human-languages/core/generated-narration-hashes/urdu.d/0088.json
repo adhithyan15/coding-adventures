@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 88,
-  "sourceHash": "fnv1a64:63811b4c9e2fd1d9",
+  "sourceHash": "fnv1a64:1783c48a573d42cd",
   "lessonIds": [
     "UR-C88-yihi",
     "UR-C88-vahi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch88.txt",
   "json": "urdu/narration/ch88.json",
-  "textHash": "fnv1a64:490069a28894ae3e",
-  "jsonHash": "fnv1a64:a02dc3c66ba1deb0",
+  "textHash": "fnv1a64:4b7851b9c3cca46c",
+  "jsonHash": "fnv1a64:7cf0f3834ec83525",
   "findings": []
 }

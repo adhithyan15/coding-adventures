@@ -4,7 +4,7 @@
   "chapter": 263,
   "title": "Baker, Sweet-maker, Grocer, Fruit seller, Greengrocer",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:bdcceae1b0462b9c",
+  "sourceHash": "fnv1a64:5f6837ded22d3599",
   "lessons": [
     {
       "id": "UR-C263-nanbai",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:757ab8070f4c48d9",
+      "sourceHash": "fnv1a64:a4e75e9ade4b0152",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "پھل والا (phalvālā) is \"fruit-man\". phal, \"fruit\", comes from Sanskrit phala (CDIAL 9051); -vālā, \"one who deals in\", is a word whose own origin is not settled."
+              "text": "پھل والا (phalvālā) is \"fruit-man\". phal, \"fruit\", comes from Sanskrit phala (CDIAL 9051); -vālā, \"one who deals in\", is usually traced to Sanskrit pālaka, \"keeper\" (see CDIAL 4435)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fae2cadd7f5a992e",
+      "sourceHash": "fnv1a64:0a60867b08f2d3da",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سبزی والا (sabzīvālā) is \"vegetable-man\". sabzī, \"vegetables, greens\", is Persian sabz, \"green\", with the ending -ī; -vālā, \"one who deals in\", is a word whose own origin is not settled."
+              "text": "سبزی والا (sabzīvālā) is \"vegetable-man\". sabzī, \"vegetables, greens\", is Persian sabz, \"green\", with the ending -ī; -vālā, \"one who deals in\", is usually traced to Sanskrit pālaka, \"keeper\" (see CDIAL 4435)."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "Illness, Head cold, Cough, Headache, Stomach ache",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5dbd17560113f37e",
+  "sourceHash": "fnv1a64:90b7505dcdce28bf",
   "lessons": [
     {
       "id": "UR-C152-bimari",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75f20cf43ac1e791",
+      "sourceHash": "fnv1a64:cd436eaef1181019",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "پیٹ درد (peṭ dard) joins peṭ, \"belly\", and dard, \"pain\". CDIAL lists peṭ under a reconstructed peṭṭa, \"belly\" (CDIAL 8376), and its deeper origin is debated; dard is usually traced to Persian."
+              "text": "پیٹ درد (peṭ dard) joins peṭ, \"belly\", and dard, \"pain\". CDIAL lists peṭ under a reconstructed peṭṭa, \"belly\" (CDIAL 8376), and notes that it may be the same word as forms meaning \"basket\"; dard is usually traced to Persian."
             }
           ]
         },

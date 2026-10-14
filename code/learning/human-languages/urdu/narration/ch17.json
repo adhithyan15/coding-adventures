@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Sentence Learns to End",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:3e2c67b364047d09",
+  "sourceHash": "fnv1a64:1712cf5f4fb55745",
   "lessons": [
     {
       "id": "UR-C17-yih",
@@ -420,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c00be216ee83424b",
+      "sourceHash": "fnv1a64:07324f8720bf26a6",
       "notice": null,
       "blocks": [
         {
@@ -508,7 +508,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every one of them opens with ک. That shared consonant is not a coincidence and not a tidy invention: it is inherited. All five come from the Old Indo-Aryan interrogative stem ka-, and کہاں (kahāṅ) in particular is often traced through Prakrit kahiṅ to Sanskrit kasmin, \"in what.\" CDIAL has no entry for it, though, so that last step is not settled."
+              "text": "Every one of them opens with ک. That shared consonant is not a coincidence and not a tidy invention: it is inherited. All five come from the Old Indo-Aryan interrogative stem ka-. کہاں (kahāṅ) joins that stem to the place ending -hāṅ of yahāṅ, \"here\"; CDIAL has no entry for it, so the rest of its history is open."
             },
             {
               "kind": "speech",
@@ -555,11 +555,11 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "kahāṅ from Prakrit kahiṅ from Sanskrit kasmin from PIE kʷis becomes English where, Latin quis",
+              "instruction": "the question stem k- of kahāṅ from PIE kʷis becomes English where, Latin quis",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: **kahāṅ** ← Prakrit *kahiṅ* ← Sanskrit *kasmin* ← PIE *\\*kʷis* → English **where**, Latin **quis**]"
+              "source": "[YOU TRACE: the question stem *k-* of **kahāṅ** ← PIE *\\*kʷis* → English **where**, Latin **quis**]"
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 199,
   "title": "Chapati, Ghee, Spice, Turmeric, Cumin",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f89a4f2a6d48b120",
+  "sourceHash": "fnv1a64:a0c2230441135b3c",
   "lessons": [
     {
       "id": "UR-C199-chapati",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dcfe5c7a7003ba54",
+      "sourceHash": "fnv1a64:60f22858ed9c5ebb",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of چپاتی (chapātī) is not settled. CDIAL has no entry for it."
+              "text": "چپاتی (chapātī) is usually traced to chapānā, \"to flatten\", since the dough is pressed thin. CDIAL has no entry for chapātī itself; it lists Hindi capnā, \"to be pressed\", under a reconstructed capp, \"press\", which it thinks may be of non-Aryan origin (CDIAL 4674)."
             }
           ]
         },

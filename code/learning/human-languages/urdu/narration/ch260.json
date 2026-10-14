@@ -4,7 +4,7 @@
   "chapter": 260,
   "title": "Meatball, Tikka, Kadhi, Jalebi, Gulab jamun",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fdabf8d4a7e6432e",
+  "sourceHash": "fnv1a64:20d44cb408ae5f9e",
   "lessons": [
     {
       "id": "UR-C260-kofta",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7f3e6b9bb15c778",
+      "sourceHash": "fnv1a64:968c794e4bddb59b",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of کڑھی (kaṛhī) is not settled. CDIAL has no entry for it."
+              "text": "کڑھی (kaṛhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kvathita, \"boiled\" (CDIAL 3637). Sanskrit already used its feminine for a spiced decoction made with milk."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [UR-C120-khir]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **چٹنی** (*chaṭnī*) is not settled. It is often tied to *chāṭnā*, "to lick", which CDIAL lists under a reconstructed *\*caṭṭ*, "lick, taste" (CDIAL 4573), but CDIAL does not list *chaṭnī* itself. English took the word as *chutney*.
+**چٹنی** (*chaṭnī*) is usually tied to *chāṭnā*, "to lick". CDIAL lists that verb, and *chaṭnā*, "to be tasted", made from it, under a reconstructed *\*caṭṭ*, "lick, taste" (CDIAL 4573), but it does not list *chaṭnī* itself. English took the word as *chutney*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 239,
-  "sourceHash": "fnv1a64:35a8a400245acd2d",
+  "sourceHash": "fnv1a64:5bdadb2e48b2e7a9",
   "lessonIds": [
     "UR-C239-nigalna",
     "UR-C239-chabana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch239.txt",
   "json": "urdu/narration/ch239.json",
-  "textHash": "fnv1a64:f0278c8a028a1d34",
-  "jsonHash": "fnv1a64:3b5048791eb57f53",
+  "textHash": "fnv1a64:20e2bada9a59f0b1",
+  "jsonHash": "fnv1a64:e508c8d82f2fa566",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 235,
-  "sourceHash": "fnv1a64:47c3d896770e5dc9",
+  "sourceHash": "fnv1a64:93953505b20fb381",
   "lessonIds": [
     "UR-C235-kira",
     "UR-C235-jugnu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch235.txt",
   "json": "urdu/narration/ch235.json",
-  "textHash": "fnv1a64:b952dcfc1ffa94ae",
-  "jsonHash": "fnv1a64:3d83227ebc04ada2",
+  "textHash": "fnv1a64:f50ec4791890a255",
+  "jsonHash": "fnv1a64:88c559c14849db86",
   "findings": []
 }

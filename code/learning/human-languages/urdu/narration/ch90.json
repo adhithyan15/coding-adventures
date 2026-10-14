@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "All, Oneself, Which one?, One, Here",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e69475467eeb3923",
+  "sourceHash": "fnv1a64:89f2a080c00d6f2a",
   "lessons": [
     {
       "id": "UR-C90-tamam",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31526515889b1015",
+      "sourceHash": "fnv1a64:07284901ff1d9039",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of والا (vālā) is not settled. CDIAL lists compounds made with it, such as gharwālā, \"householder\", but has no entry for the word itself."
+              "text": "والا (vālā) is usually traced to Sanskrit pālaka, \"guardian, keeper\", built on pāla, \"protector\". CDIAL has no entry for vālā itself, but it lists gharwālā, \"householder\", under a reconstructed gharapāla, \"house guardian\" (CDIAL 4435)."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 256,
   "title": "Wedding, Relative, Female friend, Host, People",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:fff1e3506147d78f",
+  "sourceHash": "fnv1a64:ca56fd7ddd7a2fc5",
   "lessons": [
     {
       "id": "UR-C256-shadi",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5c4082c9b97e9fa",
+      "sourceHash": "fnv1a64:6e95e4cf4b6c8178",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "میزبان (mezbān) is a loan, usually traced to Persian mēzbān, \"host\". It is built on mēz, \"table\"."
+              "text": "میزبان (mezbān) is a loan, usually traced to Persian mēzbān, \"host\". It ends in the Persian -bān, \"keeper\"."
             }
           ]
         },

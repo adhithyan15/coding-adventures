@@ -14,8 +14,8 @@ romanization: "khaṭmal"
 concept_tag: UR-CHIZ235-KHATMAL
 prerequisites: [UR-C235-kira, UR-C235-jugnu]
 sounds: []
-roots: []
-etymology_hook: "khaṭmal 'bedbug': origin not settled; CDIAL has no entry for it"
+roots: [sanskrit-khatva, sanskrit-mala-dirt]
+etymology_hook: "khaṭmal: usually explained as khāṭ 'bed' (CDIAL 3781) + mal 'dirt' (CDIAL 9899); CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [UR-C235-jugnu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **کھٹمل** (*khaṭmal*) is not settled. CDIAL has no entry for it.
+**کھٹمل** (*khaṭmal*) is usually explained as *khāṭ*, "bedstead", with *mal*, "dirt": the pest of the bed. CDIAL lists *khāṭ* under Sanskrit *khaṭvā*, "bedstead" (CDIAL 3781), and *mal* under *mala*, "dirt" (CDIAL 9899), but it has no entry for *khaṭmal* itself, so the account is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

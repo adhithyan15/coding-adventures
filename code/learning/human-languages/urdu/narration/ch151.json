@@ -4,7 +4,7 @@
   "chapter": 151,
   "title": "To prepare, To decorate, To sneeze, To cough, To breathe",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4ff7701b52a7a62f",
+  "sourceHash": "fnv1a64:64f28170c5b4afbb",
   "lessons": [
     {
       "id": "UR-C151-tayyar-karna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8df75a5c175845b9",
+      "sourceHash": "fnv1a64:1b08487c2e708e37",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "تیار کرنا (tayyār karnā) joins tayyār, \"ready\", and karnā, \"to do\". tayyār reached Urdu through Persian, which uses it in the same sense; its Arabic source is not settled. karnā comes from Sanskrit karoti, \"does\" (CDIAL 2814)."
+              "text": "تیار کرنا (tayyār karnā) joins tayyār, \"ready\", and karnā, \"to do\". tayyār reached Urdu through Persian, which uses it in the same sense, and is usually traced to Arabic ṭayyār, \"swift\", used of a horse that almost flies, on the root ṭ-y-r, \"to fly\" (Lane). karnā comes from Sanskrit karoti, \"does\" (CDIAL 2814)."
             }
           ]
         },

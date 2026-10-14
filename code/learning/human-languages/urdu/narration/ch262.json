@@ -4,7 +4,7 @@
   "chapter": 262,
   "title": "Judge, Pupil, Engineer, Scientist, Actor",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ef78a76e395bb75a",
+  "sourceHash": "fnv1a64:531145d9cf04856d",
   "lessons": [
     {
       "id": "UR-C262-jaj",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9495f1a0ec43d077",
+      "sourceHash": "fnv1a64:212dd3e97c483a36",
       "notice": null,
       "blocks": [
         {
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:662179ca8f94010f",
+      "sourceHash": "fnv1a64:9d39edc28a4ac296",
       "notice": null,
       "blocks": [
         {

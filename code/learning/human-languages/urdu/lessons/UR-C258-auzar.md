@@ -14,8 +14,8 @@ romanization: "auzār"
 concept_tag: UR-CHIZ258-AUZAR
 prerequisites: [UR-C257-sharm, UR-C258-pechkas]
 sounds: []
-roots: []
-etymology_hook: "auzār 'tool': origin not settled; CDIAL has no entry for it"
+roots: [arabic-awzar]
+etymology_hook: "auzār: usually traced, through Persian, to Arabic awzār 'burdens; gear of war', plural of wizr"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [UR-C258-pechkas]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **اوزار** (*auzār*) is not settled. It is close to Persian *afzār*, "tool", but the route is not clear, and CDIAL has no entry for it.
+**اوزار** (*auzār*) is a loan, usually traced through Persian to Arabic *awzār*, the plural of *wizr*, "a burden", which Lane also gives as "weapons, the gear of war" (root *w-z-r*). Persian and Urdu use it for tools.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

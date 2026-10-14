@@ -4,7 +4,7 @@
   "chapter": 236,
   "title": "Savings, Price, Shopkeeper, Customer, Business",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bcd83ad9f6f94487",
+  "sourceHash": "fnv1a64:0100b49de6a294ea",
   "lessons": [
     {
       "id": "UR-C236-bachat",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f40c9137a67dc9eb",
+      "sourceHash": "fnv1a64:1c3443446db2b357",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "دکاندار (dukāndār) is \"shop-holder\". It joins dukān, \"shop\", from Arabic dukkān, which reached Urdu through Persian (Lane, root d-k-k), and the Persian -dār, \"holder\"."
+              "text": "دکاندار (dukāndār) is \"shop-holder\". It joins dukān, \"shop\", from Arabic dukkān, which reached Urdu through Persian (Lane, root d-k-n), and the Persian -dār, \"holder\"."
             }
           ]
         },

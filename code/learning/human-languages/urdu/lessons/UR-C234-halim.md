@@ -15,7 +15,7 @@ concept_tag: UR-CHIZ234-HALIM
 prerequisites: [UR-C234-papar, UR-C234-puri]
 sounds: []
 roots: [arabic-halim]
-etymology_hook: "halīm: the dish's name is often linked with Arabic ḥalīm 'gentle, patient' (Lane, root ḥ-l-m), a link not settled"
+etymology_hook: "halīm: spelled as Arabic ḥalīm 'patient' (Lane, root ḥ-l-m), through Persian; why the dish bears it is unproven"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [UR-C234-puri]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The name **حلیم** (*halīm*) is often linked with Arabic *ḥalīm*, "gentle, patient" (Lane, root *ḥ-l-m*), but how the dish came by it is not settled.
+The name **حلیم** (*halīm*) is spelled as Arabic *ḥalīm*, "forbearing, patient" (Lane, root *ḥ-l-m*), and reached Urdu through Persian, where *ḥalīm* also names a porridge of wheat and meat. A popular explanation is the dish's long, slow cooking, but how the dish came by the name is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

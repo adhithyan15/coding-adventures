@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 236,
-  "sourceHash": "fnv1a64:bcd83ad9f6f94487",
+  "sourceHash": "fnv1a64:0100b49de6a294ea",
   "lessonIds": [
     "UR-C236-bachat",
     "UR-C236-qimat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch236.txt",
   "json": "urdu/narration/ch236.json",
-  "textHash": "fnv1a64:7bef6c33426023e9",
-  "jsonHash": "fnv1a64:ff75d4f89af125ec",
+  "textHash": "fnv1a64:010bc26ee65c7b2a",
+  "jsonHash": "fnv1a64:3dda10270a4ba321",
   "findings": []
 }

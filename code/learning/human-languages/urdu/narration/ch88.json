@@ -4,7 +4,7 @@
   "chapter": 88,
   "title": "This very one, That very one, Like this, Like that, This much",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:63811b4c9e2fd1d9",
+  "sourceHash": "fnv1a64:1783c48a573d42cd",
   "lessons": [
     {
       "id": "UR-C88-yihi",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdefcb0220dc6d86",
+      "sourceHash": "fnv1a64:9f5c43823be2d218",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ویسا (vaisā) is the far partner of aisā, \"such, like this\", which comes from Sanskrit īdṛśa, \"such\" (CDIAL 1611). CDIAL has no entry for vaisā itself, so how it took its v- is not settled."
+              "text": "ویسا (vaisā) is the far partner of aisā, \"such, like this\", which comes from Sanskrit īdṛśa, \"such\" (CDIAL 1611). CDIAL has no entry for vaisā itself, but it notes under tādṛśa, \"suchlike\", that aisā and waisā were shaped after Hindi taisā, \"such\" (CDIAL 5760). Where the v- came from it does not say."
             }
           ]
         },

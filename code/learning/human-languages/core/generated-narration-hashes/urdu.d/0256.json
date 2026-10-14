@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 256,
-  "sourceHash": "fnv1a64:fff1e3506147d78f",
+  "sourceHash": "fnv1a64:ca56fd7ddd7a2fc5",
   "lessonIds": [
     "UR-C256-shadi",
     "UR-C256-rishtedar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch256.txt",
   "json": "urdu/narration/ch256.json",
-  "textHash": "fnv1a64:666365134322129b",
-  "jsonHash": "fnv1a64:8a2a858dd7a0c35a",
+  "textHash": "fnv1a64:18205c439b7006fa",
+  "jsonHash": "fnv1a64:19ec2c30b8e3f1f6",
   "findings": []
 }

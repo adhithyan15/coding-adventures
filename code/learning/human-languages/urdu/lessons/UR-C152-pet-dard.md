@@ -47,7 +47,7 @@ reviews_of: [UR-C152-sar-dard]
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**پیٹ درد** (*peṭ dard*) joins *peṭ*, "belly", and *dard*, "pain". CDIAL lists *peṭ* under a reconstructed *\*peṭṭa*, "belly" (CDIAL 8376), and its deeper origin is debated; *dard* is usually traced to Persian.
+**پیٹ درد** (*peṭ dard*) joins *peṭ*, "belly", and *dard*, "pain". CDIAL lists *peṭ* under a reconstructed *\*peṭṭa*, "belly" (CDIAL 8376), and notes that it may be the same word as forms meaning "basket"; *dard* is usually traced to Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

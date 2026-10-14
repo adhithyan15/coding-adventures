@@ -14,8 +14,8 @@ romanization: "kabāb"
 concept_tag: UR-THINGS120-KABAB
 prerequisites: [UR-C120-khir, UR-C120-chatni]
 sounds: []
-roots: [persian-kabab]
-etymology_hook: "kabāb: usually traced to Persian kabāb 'roast meat'"
+roots: [arabic-kabab]
+etymology_hook: "kabāb ← Arabic kabāb 'meat cut up and roasted', through Persian (Lane, root k-b-b)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [UR-C120-chatni]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**کباب** (*kabāb*) is a loan, usually traced to Persian *kabāb*, "roast meat". It is also an Arabic word, and which language had it first is not settled.
+**کباب** (*kabāb*) is a loan from Arabic *kabāb*, "meat cut up and roasted", which reached Urdu through Persian. Lane lists it under the root *k-b-b*, and records that some Arab scholars took the word to be Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

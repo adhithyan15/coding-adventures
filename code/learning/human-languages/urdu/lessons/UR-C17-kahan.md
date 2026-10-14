@@ -11,8 +11,8 @@ gloss: where — the fourth member of Urdu's k- question family, and a cousin of
 concept_tag: UR-WHERE
 prerequisites: [UR-C17-kaam, UR-W05-he, UR-C14-juta]
 sounds: [rtl, short-vowels-unwritten, nasal-vowel]
-roots: [sanskrit-kasmin, pie-kwis]
-etymology_hook: "kahāṅ: the question stem k- of kyā; often traced to Sanskrit kasmin 'in what', but CDIAL has no entry"
+roots: [pie-kwis]
+etymology_hook: "kahāṅ: question stem k- (kyā, kaun) + the place ending -hāṅ of yahāṅ; CDIAL has no entry, so its history is open"
 duration:
   max_seconds: 270
 requires:
@@ -68,7 +68,7 @@ Put the question words you have met beside the new one.
 
 Every one of them opens with **ک**. That shared consonant is not a coincidence
 and not a tidy invention: it is inherited. All five come from the Old Indo-Aryan
-interrogative stem *ka-*, and **کہاں** in particular is often traced through Prakrit *kahiṅ* to Sanskrit *kasmin*, "in what." CDIAL has no entry for it, though, so that last step is not settled.
+interrogative stem *ka-*. **کہاں** joins that stem to the place ending *-hāṅ* of *yahāṅ*, "here"; CDIAL has no entry for it, so the rest of its history is open.
 
 Now say the English list out loud — *who, what, when, where, how* — and listen
 for its own shared opening. English marks its questions with **wh**, Latin marks
@@ -85,8 +85,8 @@ meeting a relative of the word they already use for the same job.
 - [YOU SAY: **kahāṅ** — where; then **yih kahāṅ?**]
 - [YOU SAY: the five k- question words — **kyā, kahāṅ, kaun, kab, kaise**]
 - [YOU READ: کیا and کہاں, naming their letters from the right]
-- [YOU TRACE: **kahāṅ** ← Prakrit *kahiṅ* ← Sanskrit *kasmin* ← PIE
-  *\*kʷis* → English **where**, Latin **quis**]
+- [YOU TRACE: the question stem *k-* of **kahāṅ** ← PIE *\*kʷis* → English
+  **where**, Latin **quis**]
 - [YOU RECALL: say *jūtā*]
 
 ## Wrap-up Recall

@@ -14,7 +14,7 @@ romanization: "adākār"
 concept_tag: UR-KAM262-ADAKAR
 prerequisites: [UR-C262-injiniyar, UR-C262-sainsdan]
 sounds: []
-roots: [arabic-ada, persian-kar]
+roots: [arabic-ada-performance, persian-kar]
 etymology_hook: "adākār: Arabic adāʾ 'performance' (Lane, root ʾ-d-y) + Persian -kār 'one who works'"
 duration:
   max_seconds: 200

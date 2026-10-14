@@ -14,7 +14,7 @@ romanization: "phuphī"
 concept_tag: UR-CHIZ203-PHUPHI
 prerequisites: [UR-C203-mamun, UR-C203-khala]
 sounds: []
-roots: [indo-aryan-phupphu]
+roots: [indo-aryan-phupphi]
 etymology_hook: "phuphī ← *phupphī 'father's sister', a reconstructed form; a tadbhava (CDIAL 9089)"
 duration:
   max_seconds: 200

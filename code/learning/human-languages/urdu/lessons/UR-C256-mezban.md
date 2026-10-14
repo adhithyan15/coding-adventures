@@ -47,7 +47,7 @@ reviews_of: [UR-C256-saheli]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**میزبان** (*mezbān*) is a loan, usually traced to Persian *mēzbān*, "host". It is built on *mēz*, "table".
+**میزبان** (*mezbān*) is a loan, usually traced to Persian *mēzbān*, "host". It ends in the Persian *-bān*, "keeper".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
