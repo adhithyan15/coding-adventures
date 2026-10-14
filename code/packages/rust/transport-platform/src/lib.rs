@@ -3117,7 +3117,6 @@ mod tests {
     /// thread does the `accept`, the worker platform `adopt`s the socket.
     #[cfg(any(unix, windows))]
     fn assert_adopts_external_stream<P: TransportPlatform>(platform: &mut P) {
-
         // A separate std listener stands in for the fan-out acceptor: it accepts a
         // real loopback connection, and we hand the accepted socket to `platform`.
         let listener = std::net::TcpListener::bind("127.0.0.1:0").expect("bind std listener");

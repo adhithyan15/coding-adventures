@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- The fan-out acceptor no longer stops for good on the first accept error.
+  A peer that connects and resets before the accept (ECONNABORTED /
+  WSAECONNRESET), or a passing descriptor/buffer shortage, used to end the
+  acceptor thread and leave the runtime silently refusing everyone. Those
+  errors are now skipped (with a short back-off for shortages); only `stop`
+  ends the loop. Fan-out worker listeners use a backlog of 1.
 - Multi-worker runtimes on Windows use the accept fan-out (one listener,
   accepted sockets round-robined to the workers and adopted by their IOCP
   providers) instead of `SO_REUSEPORT`, which Windows does not have and the

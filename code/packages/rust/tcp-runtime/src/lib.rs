@@ -304,8 +304,27 @@ impl FanoutAcceptor {
                 Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
                     thread::sleep(std::time::Duration::from_millis(1));
                 }
-                // Listener error (e.g. closed on shutdown): stop accepting.
-                Err(_) => break,
+                // Everything else is about *one* connection or a passing shortage,
+                // never about the listener, so the loop must survive it.  This
+                // acceptor is the only way in for a fan-out runtime: a `break`
+                // here would leave the workers running and every later client
+                // unanswered, and any remote peer can provoke these errors
+                // (connect, then reset before the accept: ECONNABORTED on
+                // Unix, WSAECONNRESET on Windows).  Out of descriptors or
+                // buffers (EMFILE, ENFILE, ENOBUFS) clears as connections close,
+                // so back off a little longer instead of spinning.  Shutdown is
+                // signalled by `stop`, which the loop condition checks.
+                Err(error) => {
+                    let pause = match error.kind() {
+                        std::io::ErrorKind::ConnectionAborted
+                        | std::io::ErrorKind::ConnectionReset
+                        | std::io::ErrorKind::Interrupted => 0,
+                        _ => 10,
+                    };
+                    if pause > 0 {
+                        thread::sleep(std::time::Duration::from_millis(pause));
+                    }
+                }
             }
         }
     }
@@ -684,12 +703,17 @@ where
     S: Send + 'static,
 {
     // Workers don't accept client traffic.  They still bind a listener (the
-    // constructor requires one), but `accept_connections = false` means they never
-    // enable accept interest on it — so a direct connect to a worker's throwaway
-    // loopback port is left in the kernel backlog, never served, and can't be used
-    // to bypass the acceptor.  reuse_port is irrelevant (each is a separate port).
+    // constructor requires one), but `accept_connections = false` makes the
+    // reactor switch its accept interest off and ignore its accept readiness —
+    // so a direct connect to a worker's throwaway loopback port is never served
+    // and can't be used to bypass the acceptor.  reuse_port is irrelevant (each
+    // is a separate port).
     options.listener.reuse_port = false;
     options.accept_connections = false;
+    // The smallest backlog: nothing should ever wait on these listeners, and on
+    // Windows the backlog also sets how many AcceptEx operations the IOCP
+    // provider pre-posts at bind (before interest is switched off).
+    options.listener.backlog = 1;
     let throwaway: SocketAddr = "127.0.0.1:0".parse().expect("valid loopback address");
 
     let mut runtimes = Vec::with_capacity(worker_count);
