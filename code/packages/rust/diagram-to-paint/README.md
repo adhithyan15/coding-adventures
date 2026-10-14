@@ -119,6 +119,17 @@ and counted index work cover both axes, orientations and hop modes through8192
 distinct segments, plus authored parser/layout scenes. The bound includes
 geometric inversions; general arbitrary-support/floating work remains open.
 
+An additional integer cohort allows different right supports when the left
+support is common. Exact rational slope ordering and conservative bounds at
+both right endpoints prune candidates; the original directed crossing
+predicate still decides every returned hop. Geometry ordinals restore legacy
+occurrence order. Certificate, observation, AVL maintenance, query, comparison,
+rotation, drop, candidate, sort and occurrence counters describe this bounded
+index; general geometry-key, cut and floating fallback costs remain separate.
+Eight independent controls cover raw directed bits/order, zero slope, endpoint
+equalities, extreme coordinates, minimal span, permanent invalidation, exact
+candidate counts and independently recomputed AVL extrema.
+
 
 Authored Swimlane edge-label theme controls verify complete font queries,
 glyph text/size/fill/reference, explicit style precedence and every background
@@ -149,10 +160,14 @@ gates remain separate. Final-source Miri is **DEFERRED/PENDING**.
 
 ## Native validation checkpoint
 
-Source baa06e72 has 192 complete node/edge theme IR/layout/scene controls, including exact directed marker fields, authored overrides, thick-edge defaults, zero/finite width behavior and invalid-width defaults. Existing cluster controls cover 128 cases. The varied-support hop control preserves complete scenes but FAILS its work bound in all 32 cases: 496/2016 predicate calls for N32/64 against 448/1024; existing index work132/260 is separately counted. The resource gate remains open and the failing test is neither ignored nor called passed.
+Source baa06e72 has 192 complete node/edge theme IR/layout/scene controls, including exact directed marker fields, authored overrides, thick-edge defaults, zero/finite width behavior and invalid-width defaults. Existing cluster controls cover 128 cases. The original varied-support work receipt failed all32 cases (496/2016 predicate calls for N32/64); that failed receipt is preserved. The common-origin repair at e32c4728 passes those unchanged controls with one predicate call per case and counted index work3445..8242. All16 outside-right adversarial scene/work controls pass as well. These measured bounded families do not establish a universal output-sensitive or arbitrary-floating resource guarantee.
 
-The 14-package safety run passed834 tests across32 targets, explicitly
-excluding only the new expected-red work test that was executed separately
-(Cargo101,1PASS/1FAIL). Strict15-package lint passed. This is scoped evidence;
+The current14-package cone at e32c4728 passed843 tests across32 targets with no
+exclusions. Its strict run failed on a new test-only tuple annotation; a named
+oracle group corrects that annotation. Independent review also found imported
+padding missing from checked layout admission: the new direct red control
+fails20/20 invalid cases, including NaN panics in all four directions. The
+repair adds padding to the existing finite inclusive spacing guard. Final
+affected suites and exact-source security acceptance are recorded separately;
 whole/downstream/hosted/merge acceptance remains withheld. Final-source Miri
 is **DEFERRED/PENDING**.

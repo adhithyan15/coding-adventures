@@ -33,14 +33,14 @@ The prior5ba run exhausted disk before tests; its failed receipts are preserved.
 Retry disabled debug symbols/incremental compilation, preserving all inputs,
 assertions and limits. Registry376 tuples remain exact. Miri
 DEFERRED/PENDING, never passed; frozen run/input/target/receipts untouched.
-General-hop32 resource debt, hosted CI/conflict/review/merge, full Closure parity
+General floating resource debt, hosted CI/conflict/review/merge, full Closure parity
 and output-source/full transformation lineage remain OPEN.
 
 Prior scoped JVM sourcec5 full200 tests/docs +original8JVMarrays +floatarray
 positive/descriptor-negative +realIEEE84 and strict3 remain accepted with
 immutable receipts/security reports. Historical da unfilteredLANG463PASS9FAIL
 and current5ba build failure are preserved, never latest-source acceptance.
-General-hop varied-support32/32 resource failures remain OPEN; no capacity,
+Original general-hop varied-support32/32 failed receipts remain preserved; no capacity,
 safety or ownership tests weakened. Actual mainf211 importb83 has2097pure
 zero-overlap paths, every retainedowned object exact, complete17530Rust/program/
 instruction objects exact before/after and registry376 exactbaseline. Actual
@@ -51,9 +51,9 @@ The two npm PATH failures remain failed; boundedchild188 PATH fixes inherited
 No curriculum execution acceptance inferred. Native source712, docs73 and
 integration4f independent source/carrier/terminal reviews PASS; final integration
 reportSHA 1f47734f0ff79c89367f95c348faa31afc8b2705f2d6713d601276d0be2404a1. All native/doc runs terminal.
-Next bounded implementation: repair demonstrated varied-support general-hop
-work debt, preserving rounded predicate/output/collector/limits and full cost
-accounting. Full arbitrary-floating/general resource acceptance remains open.
+Bounded common-origin implementation now repairs the demonstrated32 integer
+varied-support cases while preserving the rounded predicate/output/collector/
+limits. Full arbitrary-floating/general resource acceptance remains open.
 Selected spec CV04a-integer-common-origin-hop-work.md (46c674be): exact integer
 common-left rational inversion tree with conservative query/prior-right bounds.
 Independent initial sign proof PASS, but slope-only output-sensitive work was
@@ -61,9 +61,34 @@ WITHHELD: the reviewed (0,i)->(4N+i,i+1) family has quadratic outside-right
 candidates and zero crossings. Preserve it as a new pre-production control;
 revised endpoint design independently PASS, reportSHA
 b95fd54420831a05b13b2d424def67fb7195de7ffd9d07c93a924825a0c8907b.
-No new tests/production or actual32
-PASS yet; C false positives are counted separately from final K. Original32red
-receipt/tests and all8192/limit/whole-scene controls remain unchanged.
+Spec-first public red controls at26011d4f executed2PASS2FAIL; original32 work
+remained failed. Production e32c4728 adds an own rational/common-origin AVL
+cohort and conservative endpoint bounds. Eight independent controls now cover
+raw directed signatures/order, zero slope, independent endpoint bounds,
+epsilon interval, rotation extrema, permanent invalidation, extreme/minimal
+span and exact determinant-only candidate counts. Original32 and new16
+outside-right complete-scene/work controls PASS unchanged bounds. Original32
+measured predicate1/index3445..8242; outside-right predicate1/index3475/8304.
+C false positives remain separate from final K; no universal work guarantee.
+All8192/limit/whole-scene controls remain required and unweakened.
+
+Actual padding main import f94 has13 paths/7 overlaps. Independent whole-tree
+three-way reconstruction verifies all seven merged objects, all six pure
+incoming objects and every retained owned object. Both owned config literals
+add only padding:None, preserving defaults/assertions. Registry376 exact and
+166-package native forward cone equality retains prior native8 receipts at
+this stage. Newer audited main a2bb4ec0 includes ALGOL unit-offset work and
+Sanskrit changes; it is not imported or accepted yet.
+
+Exact e32 full diagram cone843/0/0 over32targets passed; strict failed on a
+new test tuple annotation, then corrected using a named oracle group. Independent
+review found imported padding bypassing checked admission. Its direct native
+red control fails20/20 invalid cases, including NaN clamp panics in all four
+directions; valid default/zero/cap controls pass. Spec334 +tests0fd precede
+production7d011987, which adds padding to the existing finite0..=65536 guard.
+Actual complete14-package cone at7d:847PASS/0FAIL/0ignore/32targets plus strict
+alltargets Clippy PASS. Failed receipts remain preserved. Independent exact
+source review pending final report; no hosted acceptance inferred.
 
 SolePR17288 remains prior published82209953a0909dfaa66c8065ee6f163d7478c2d1/conflicting/failedCI/autoOFF.
 No new push/merge/cleanup; re-audit live main/openPR/backlog/epic each resume.
