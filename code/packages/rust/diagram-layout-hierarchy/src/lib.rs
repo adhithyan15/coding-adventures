@@ -1284,6 +1284,45 @@ mod tests {
     }
 
     #[test]
+    fn imported_padding_checked_admission_never_panics() {
+        let mut failures = Vec::new();
+        for direction in [DiagramDirection::Lr, DiagramDirection::Rl, DiagramDirection::Tb, DiagramDirection::Bt] {
+            for padding in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY, -1.0, 65_536.000_001] {
+                let mut diagram = ordering_diagram(2, &[(0, 1, 1)]);
+                diagram.direction = direction.clone();
+                diagram.flowchart_config.padding = Some(padding);
+                let before = diagram.flowchart_config.padding.unwrap().to_bits();
+                let result = std::panic::catch_unwind(|| try_layout_swimlane(&diagram));
+                if !matches!(result, Ok(Err(SwimlaneLayoutError::UnsupportedSpacing { field: "padding" }))) {
+                    failures.push((direction.clone(), before, format!("{result:?}")));
+                }
+                assert_eq!(diagram.flowchart_config.padding.unwrap().to_bits(), before);
+            }
+        }
+        assert!(failures.is_empty(), "checked padding failures {}/20: {failures:?}", failures.len());
+    }
+
+    #[test]
+    fn imported_padding_accepted_boundaries_keep_finite_layout() {
+        for direction in [DiagramDirection::Lr, DiagramDirection::Rl, DiagramDirection::Tb, DiagramDirection::Bt] {
+            for padding in [None, Some(-0.0), Some(0.0), Some(14.0), Some(65_536.0)] {
+                let mut diagram = ordering_diagram(2, &[(0, 1, 1)]);
+                diagram.direction = direction.clone();
+                diagram.flowchart_config.padding = padding;
+                let before = diagram.clone();
+                let layout = try_layout_swimlane(&diagram).unwrap();
+                assert_eq!(layout, layout_swimlane(&diagram));
+                assert_eq!(diagram, before);
+                assert!([layout.width, layout.height].iter().all(|v| v.is_finite() && *v >= 0.0));
+                for node in &layout.nodes {
+                    assert!(node.width.is_finite() && node.height.is_finite());
+                    assert!(node.width >= 0.0 && node.height >= 0.0);
+                }
+            }
+        }
+    }
+
+    #[test]
     fn swimlane_ordering_dense_public_layout_bounds_weight_visits() {
         let pairs = (0..16).flat_map(|a| ((a + 1)..16).map(move |b| (a, b, 1))).collect::<Vec<_>>();
         assert_eq!(pairs.len(), 120);
