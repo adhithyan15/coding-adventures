@@ -52,3 +52,19 @@ actual gates pass. BaseESTree/own types/no new crates.io retained. Full parity,
 output-byte/source and all transformation lineage goal OPEN. Miri DEFERRED/
 PENDING, never passed; frozen497inputs/run/source/target/receipts untouched and
 unpolled. Delivery first, genuine final-source Miri later; heartbeat ACTIVE.
+
+Actual initial merge12386 EXIT0 has no conflicts. The25-path proof imports15
+pure objects, records10 overlaps and retains156 other owned objects exactly;
+all376 registry tuples remain, new18-package reverse cone includes dev. Native
+81508 initial runner EXIT1 at629e: sixth ownership3PASS, integer2PASS1FAIL.
+The authored integer scene's old four-theme-field oracle lacks the newly emitted
+default textColor#37474f. Keep the failed receipt, add the exact fifth field to
+both full metadata maps, and retain full scene equality and unchanged work caps.
+
+For authored label-background controls, compare both complete ordered background
+rectangles at their exact instruction positions, then compare the entire scene
+with the same authored font/textColor source lacking only background configuration
+after removing precisely those two proven rectangles and the sole background
+metadata key. Pin all ordered font queries and glyph text/size/fill/ref, plus
+default textColor/absent background and explicit edge-style precedence. This
+retains every remaining scene field and is not token-presence-only evidence.
