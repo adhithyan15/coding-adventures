@@ -50,6 +50,15 @@ four-direction golden layouts precede these repairs. Current efd2e023 affected
 cone passes848 tests/32targets plus strict all-target lint. General malformed
 caller IR and whole-PR/hosted acceptance remain separate.
 
+Imported titleTopMargin also uses the finite0..=65536 typed admission boundary,
+including inputs without a title. Its direct red control fails all40 invalid
+cells before the guard; the repair returns the exact UnsupportedSpacing field.
+Eighty complete-layout controls preserve input/config bits and all fields while
+checking title-only vertical translation across four directions and real groups.
+The resolved main conflict retains the checked wrapper and constraint indexes.
+Final affected suites/strict and exact-head review remain required; Miri is
+**DEFERRED/PENDING**.
+
 
 ## Global curves and checked ranks
 

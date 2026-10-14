@@ -624,3 +624,21 @@ classifier budget and real formatter error remain checked; admitted value
 programs retain one formatter. Eight native source programs verify exact -1/1
 and normal exit0 on six available backends. CLR is unvalidated. Final-source
 Miri remains DEFERRED/PENDING; these controls do not establish Closure lineage.
+
+## Outer-entier unit-offset isolation
+
+One flat exact +/-1 term may accompany a narrow sign-rooted operand at the four
+outer-entier admission sites. Parentheses and unary signs do not reset the
+offset budget: nested or builtin-wrapped inner shifts are refused by the
+unchanged narrow operand classifier. Exp/log range consumers retain their old
+helper semantics. Overridden builtin identities, selector snapshots, alias
+guards and existing work limits remain required. Generic Boolean formatter
+composition still lacks general range/proof-kind tracking and remains separate.
+
+Spec-first controls reproduced five wrongly admitted forms, then pass after
+source7d8cec34. All849 compiler library tests pass, including existing work and
+selector controls. Twelve owned LANG programs complete72 actual backend runs
+with exact stdout and Exit0 at eb50f4f9; these are separate source-attributed
+receipts. Full final affected suites/strict and hosted acceptance remain
+required. The cancelled4a diagnostic baseline is incomplete, never passed.
+Final-source Miri remains **DEFERRED/PENDING**.

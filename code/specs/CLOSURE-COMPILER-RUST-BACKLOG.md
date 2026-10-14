@@ -2,6 +2,40 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04a active delivery checkpoint -->
+October14 active source21345e9d: bounded common-origin hop/padding repairs pass
+diagram848/strict at efd; original32/new16 work/scene cases pass unchanged
+budgets, all8192/curve/rank/node/cluster/limits retained. General arbitrary-F
+resource work remains OPEN. Newer main c25 is actually merged16c5b2d1; closed
+4014path proof verifies4007pure/7overlaps, retaining the checked wrapper and
+all constraint indexes while applying only the incoming title-height expression.
+
+Incoming unit-offset proof leaks are repaired7d8cec34. Actual red2PASS1FAIL
+exposes five wrong admissions; candidate3PASS and full compiler849/0/0 pass.
+Scoped exact-source security PASS5af59d6a. Owned eb50 runtime12sources/72actual
+backend runs pass exact stdout+Exit0; CLR unavailable. These are separate
+source-attributed receipts, not full final-source native acceptance. Cancelled
+diagnostic4a session79530 is actualEXIT1/incomplete, never passed; six owned
+processes stopped after identity proof, frozen Miri excluded. Old failed logs
+and reports remain immutable. Generic Boolean formatter/range tracking is OPEN.
+
+Title-margin spec7fd precedes controls790:40invalid cells fail exact admission,
+80complete layout/config/input translation cells pass. Production21345e9d adds
+only the new field to the finite0..=65536 guard; focused2PASS. Default config
+literal adapters preserve all fields/assertions. Combined affected20-package
+full unfiltered/compiler/native/downstream suites and strict lint are NEXT;
+fresh exact-head security/carrier/docs/build-plan/hosted gates remain required.
+No new crates.io deps; registry376 must remain exact. SolePR17288 remains old
+published822/conflicting/failedCI/autoOFF; no new push or merge accepted.
+
+Full Closure parity/output-byte source/full fold-rename-inline-motion-merge-
+delete lineage/pass-sweep/stableIDs/spans/CV04b/whole objective remain OPEN.
+Existing CLOC27 leaf-token bridge is real; stale epic allNone audit is not scope.
+Miri DEFERRED/PENDING, never passed; frozen497 run/source/inputs/target/receipts
+unpolled/untouched, delivery first then genuine final-source acceptance.
+Heartbeat ACTIVE. Dated checkpoints below preserve source-specific history.
+<!-- /CV04a active delivery checkpoint -->
+
 <!-- CV04a current-main reconciliation -->
 October14 native8 checkpoint: functional6597951c, comment71d24b24, source-attributed
 validation316e7878 plus test-only correction7126217d. Fixed aligned outgoing argument tail follows32-byte MsX64 shadow or

@@ -1253,3 +1253,12 @@ assertions and limits. Registry376 tuples remain exact. Miri
 **DEFERRED/PENDING**, never passed; frozen run/input/target/receipts untouched.
 General-hop32 resource debt, hosted CI/conflict/review/merge, full Closure parity
 and output-source/full transformation lineage remain OPEN.
+
+Twelve owned unit-offset programs additionally distinguish direct and saved
+values, sign -1/0/+1, plus/minus units, and both selector outcomes. Their scoped
+runner requires exact stdout and normal Exit0 rather than stdout alone; every
+source requires an actual available-backend execution. At eb50f4f9 all72 runs
+across NativeAot/LLVM/WASM/JVM/VM/JIT pass; CLR is unavailable. Original matrix
+and unavailable-toolchain assertions remain unchanged. Full final-source
+unfiltered suites/strict and hosted acceptance remain required; the4a diagnostic
+baseline cancellation is preserved as incomplete. Miri **DEFERRED/PENDING**.
