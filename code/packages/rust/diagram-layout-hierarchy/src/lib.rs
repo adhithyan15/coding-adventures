@@ -294,6 +294,7 @@ pub fn try_layout_swimlane(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimlane
         ("nodeSpacing", diagram.flowchart_config.node_spacing),
         ("rankSpacing", diagram.flowchart_config.rank_spacing),
         ("diagramPadding", diagram.flowchart_config.diagram_padding),
+        ("padding", diagram.flowchart_config.padding),
     ] {
         if value.is_some_and(|v| !v.is_finite() || !(0.0..=diagram_ir::MAX_SWIMLANE_FLOWCHART_SPACING).contains(&v)) {
             return Err(SwimlaneLayoutError::UnsupportedSpacing { field });
