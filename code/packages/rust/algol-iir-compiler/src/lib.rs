@@ -3967,7 +3967,7 @@ impl Compiler {
                 if !self.proc_sigs.contains_key(&target_name) && target_name == "entier" {
                     let actuals = self.standard_fn_actuals(node);
                     return actuals.len() == 1
-                        && self.builtin_outer_entier_operand(actuals[0], Self::is_selector_call_safe_runtime_real_root).is_some_and(|operand| {
+                        && self.builtin_outer_entier_operand(actuals[0]).is_some_and(|operand| {
                             self.is_selector_call_safe_runtime_real_root(operand)
                         });
                 }
@@ -4184,7 +4184,7 @@ impl Compiler {
                 if !self.proc_sigs.contains_key(&target_name) && target_name == "entier" {
                     let actuals = self.standard_fn_actuals(node);
                     return actuals.len() == 1
-                        && self.builtin_outer_entier_operand(actuals[0], Self::is_selector_call_safe_runtime_real_root).is_some_and(|operand| {
+                        && self.builtin_outer_entier_operand(actuals[0]).is_some_and(|operand| {
                             self.is_selector_call_safe_runtime_real_root(operand)
                         });
                 }
@@ -4787,7 +4787,6 @@ impl Compiler {
     fn builtin_outer_entier_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
-        branch_safe: fn(&Self, &GrammarASTNode) -> bool,
     ) -> Option<&'n GrammarASTNode> {
         #[cfg(test)]
         selector_classifier_visit();
@@ -4812,10 +4811,10 @@ impl Compiler {
         let (_condition, then_node, else_node) = self.conditional_expression_parts(front)?;
         let then_root = self.builtin_outer_entier_flat_operand(then_node)?;
         let else_root = self.builtin_outer_entier_flat_operand(else_node)?;
-        // Use this consumer's existing policy for BOTH arms. Assignment proofs
-        // already distinguish tracked global captures from strict local roots;
-        // a new conditional must not collapse those separate post-state rules.
-        (branch_safe(self, then_root) && branch_safe(self, else_root)).then_some(then_root)
+        // Both branches need the strict local-root proof, including after a
+        // condition has lowered its aliases. Never reuse a pre-condition bit.
+        (self.is_selector_call_safe_runtime_real_root(then_root)
+            && self.is_selector_call_safe_runtime_real_root(else_root)).then_some(then_root)
     }
 
     fn builtin_outer_entier_flat_operand<'n>(
@@ -5147,7 +5146,7 @@ impl Compiler {
                         let actuals = self.standard_fn_actuals(node);
                         if actuals.len() == 1
                             && self
-                                .builtin_outer_entier_operand(actuals[0], Self::is_selector_call_safe_runtime_real_value)
+                                .builtin_outer_entier_operand(actuals[0])
                                 .is_some_and(|operand| {
                                     self.is_selector_call_safe_runtime_real_value(operand)
                                 })
@@ -5352,7 +5351,7 @@ impl Compiler {
                     let actuals = self.standard_fn_actuals(node);
                     return actuals.len() == 1
                         && self
-                            .builtin_outer_entier_operand(actuals[0], Self::is_runtime_real_assignment_value)
+                            .builtin_outer_entier_operand(actuals[0])
                             .is_some_and(|operand| {
                                 self.is_runtime_real_assignment_value(operand)
                             });
@@ -5602,6 +5601,67 @@ impl Compiler {
         copy
     }
 
+    /// Only this declaration has exactly the effects of reading a name actual
+    /// once. Checking complete child lists excludes hidden labels, blocks,
+    /// extra assignments and calls; checking the registered signature against
+    /// the declaration prevents a stale or malformed heading from authorizing
+    /// the substitution. The source spelling of the result is local to this
+    /// declaration, while lookup uses the resolved stable procedure identity.
+    fn is_read_once_real_name_identity(&self, source_name: &str, sig: &ProcSig) -> bool {
+        let [param] = sig.params.as_slice() else { return false; };
+        if sig.ret != Some(ScalarType::Real)
+            || param.mode != ProcedureParamMode::Name
+            || param.ty != ProcedureParamType::Scalar(ScalarType::Real)
+        { return false; }
+        let Some(decl) = self.proc_decls.get(source_name) else { return false; };
+        if decl.rule_name != "procedure_decl" { return false; }
+        let Ok((result_name, params, ret)) = self.procedure_parts(decl) else { return false; };
+        if params != sig.params || ret != sig.ret || result_name == param.name { return false; }
+        let bodies: Vec<_> = direct_nodes(decl).into_iter().filter(|n| n.rule_name == "proc_body").collect();
+        let [body] = bodies.as_slice() else { return false; };
+        let [ASTNodeOrToken::Node(statement)] = body.children.as_slice() else { return false; };
+        if statement.rule_name != "statement" { return false; }
+        let [ASTNodeOrToken::Node(unlabeled)] = statement.children.as_slice() else { return false; };
+        if unlabeled.rule_name != "unlabeled_stmt" { return false; }
+        let [ASTNodeOrToken::Node(assign)] = unlabeled.children.as_slice() else { return false; };
+        if assign.rule_name != "assign_stmt" { return false; }
+        let [ASTNodeOrToken::Node(left), ASTNodeOrToken::Node(rhs)] = assign.children.as_slice() else { return false; };
+        if left.rule_name != "left_part" || rhs.rule_name != "expression" { return false; }
+        let [ASTNodeOrToken::Node(variable), ASTNodeOrToken::Token(assignment)] = left.children.as_slice() else { return false; };
+        let [ASTNodeOrToken::Token(target)] = variable.children.as_slice() else { return false; };
+        variable.rule_name == "variable"
+            && assignment.effective_type_name() == "ASSIGN"
+            && target.effective_type_name() == "NAME" && target.value == result_name
+            && exact_bare_variable_expression_name(rhs).as_deref() == Some(param.name.as_str())
+    }
+
+    /// Keep the read-once optimization within one builtin-entier conditional
+    /// front. In particular, arbitrary forwarded formals and overridden
+    /// standard functions cannot use it. Discovery is iterative and counted
+    /// just like the dedicated outer-entier classifier.
+    fn is_conditional_unit_identity_actual(&self, node: &GrammarASTNode) -> bool {
+        let transparent = |mut node: &GrammarASTNode| {
+            loop {
+                #[cfg(test)] selector_classifier_visit();
+                if let Some(child) = single_parenthesized_child(node) { node = child; continue; }
+                if node.rule_name != "proc_call" && direct_tokens(node).is_empty() {
+                    let children = direct_nodes(node);
+                    if children.len() == 1 { node = children[0]; continue; }
+                }
+                return node;
+            }
+        };
+        let call = transparent(node);
+        if call.rule_name != "proc_call" { return false; }
+        let Some(name) = direct_tokens(call).into_iter().find(|t| t.effective_type_name() == "NAME") else { return false; };
+        let target = self.resolve_procedure_identity(&name.value);
+        if target != "entier" || self.proc_sigs.contains_key(&target) { return false; }
+        let actuals = self.standard_fn_actuals(call);
+        let [actual] = actuals.as_slice() else { return false; };
+        self.conditional_expression_parts(transparent(actual)).is_some()
+            && self.builtin_outer_entier_operand(actual).is_some()
+    }
+
     /// Shared call-lowering for `proc_call` and `proc_stmt`: resolve the
     /// signature, evaluate and type-check the actuals, then emit a `call`
     /// whose `srcs[0]` names the callee and whose remaining `srcs` are the
@@ -5654,6 +5714,21 @@ impl Compiler {
                 sig.params.len(),
                 actuals.len()
             )));
+        }
+
+        // A name actual is normally captured into a sibling frame. A sole
+        // `relay := x` body reads it exactly once with no intervening effects;
+        // evaluating that read here preserves semantics and local proof
+        // invalidation. Limit this specialization to the conditional-entier
+        // boundary. Formal procedures and recursive/forwarded contexts keep
+        // the ordinary lowering path, and no cached proof becomes a fresh bit.
+        if !self.procedure_bindings.contains_key(&name)
+            && !self.compiling_by_name_procedures.contains_key(&target_source_name)
+            && self.is_read_once_real_name_identity(&target_source_name, &sig)
+            && self.is_conditional_unit_identity_actual(actuals[0])
+        {
+            let value = self.emit_expr(actuals[0])?;
+            return self.coerce_value(value, ScalarType::Real, "read-once name result").map(Some);
         }
 
         let target_name = if sig.params.iter().any(|param| {
