@@ -1,4 +1,4 @@
-# Unreleased — admit node padding before floating layout arithmetic
+## [Unreleased] — admit node padding before floating layout arithmetic
 
 Include imported Swimlane flowchart padding in the existing finite inclusive
 0..=65536 admission guard. The fallible public layout API now returns typed

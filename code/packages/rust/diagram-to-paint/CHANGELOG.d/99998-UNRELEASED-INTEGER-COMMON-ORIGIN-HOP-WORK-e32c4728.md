@@ -1,4 +1,4 @@
-# Unreleased — integer common-origin hop candidate discovery
+## [Unreleased] — integer common-origin hop candidate discovery
 
 Add an own AVL index for certified integral coordinates bounded by2^24 with
 common left support and varying right supports. Compare unreduced rational

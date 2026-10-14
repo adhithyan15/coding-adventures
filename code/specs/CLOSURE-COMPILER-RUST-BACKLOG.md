@@ -98,6 +98,36 @@ pending; no hosted acceptance inferred. Framed maina2bb has66paths/5overlaps;
 spec CV04a-unit-offset-main-reconciliation.md precedes next actual import and
 six-package compiler/native/downstream validation, including full LANG.
 
+Scoped final diagram review PASSefd2e023, reportSHA
+53ab3f8802fa07b4b8f1978274d4334a4197b2d0d65bc8d8e4dcb2d17c21f248.
+Actual merge4a56fc64 imports maina2bb: independent closed-tree proof verifies
+all66 incoming paths (61 pure/5 overlapping three-way objects), every retained
+owned object, diagram50-package forward-cone runtime equality and registry376.
+Closure1093 source attribution independently verifies all3669 compiled/config/
+test objects across36 forward packages against actual316e source; no new
+compiler execution claimed. Six-package ALGOL/LANG/native/downstream suites,
+including unfiltered LANG, were stopped after the confirmed admission finding:
+session79530 actual EXIT1, incomplete and never accepted. Six positively
+identified owned diagnostic processes were stopped; frozen Miri was excluded,
+and all owned children were verified gone before further source changes.
+Partial logs/receipts remain preserved. Full final-source suites/strict remain
+required after the spec-first repair. Changelog headings now pass the actual
+doc-shard checker; original failed check is preserved.
+
+Imported unit-offset review is not accepted: actual current Cargo-produced CLI
+probes accept nested(sign+1)+1 while refusing flat sign+1+1, and accept a
+triple-exp offset through an outer entier/ln proof. Shared builtin_sign_operand
+widening is broader than the claimed one-unit local-name slice. Emitted LLVM
+retains floor/range/trap guards; no UB or generated-program runtime result is
+claimed. Preserve immutable probe sources/binary identity/LLVM receipts; scope
+the unit-offset proof and add adversarial exact controls after the fixed native
+baseline is terminal. Spec CV04a-unit-offset-admission-isolation.md commits the
+reviewed dedicated-flat-unit/old-helper isolation before controls/production.
+Inherited generic Boolean formatter/range composition remains separately OPEN.
+No publication/auto-merge through this review finding.
+Independent imported-source review WITHHELD at4a56fc64, reportSHA
+1ae4761b0310ee54c8f6174acc795deebefa7e5c289cec7766806e5153ffb372.
+
 SolePR17288 remains prior published82209953a0909dfaa66c8065ee6f163d7478c2d1/conflicting/failedCI/autoOFF.
 No new push/merge/cleanup; re-audit live main/openPR/backlog/epic each resume.
 Full Closure parity/output-byte source/full fold-rename-inline-motion-merge-
