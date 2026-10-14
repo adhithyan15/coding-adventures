@@ -1,6 +1,31 @@
 //! Public compiler oracles for isolating the one-unit outer-entier slice.
 use super::*;
 
+// This oracle examines the semantic call boundary, not the spelling of a
+// classifier token: only a sole read of the name actual can lose its thunk.
+#[test]
+fn conditional_identity_specialization_keeps_nonidentity_calls() {
+    for (heading, body, specialized) in [
+        ("real procedure relay(x); real x;", "relay := x", true),
+        ("real procedure relay(x); real x;", "relay := x + x", false),
+        ("real procedure relay(x); real x;", "relay := -x", false),
+        ("real procedure relay(x); real x;", "begin relay := x end", false),
+        ("real procedure relay(x); real x;", "begin x := 0.0; relay := x end", false),
+        ("real procedure relay(x); real x;", "begin relay := x; x := 0.0 end", false),
+        ("real procedure relay(x); real x;", "labelled: relay := x", false),
+        ("real procedure relay(x); value x; real x;", "relay := x", false),
+        ("integer procedure relay(x); real x;", "relay := entier(x)", false),
+    ] {
+        let source = format!("begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; {heading} {body}; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := relay(entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1))) end");
+        let module = compile_source(&source, "identity_boundary").unwrap_or_else(|e| panic!("{source}: {e}"));
+        let relay_calls = module.get_function("main").unwrap().instructions.iter().filter(|i| {
+            i.op == "call" && i.srcs.first().and_then(Operand::as_var)
+                .is_some_and(|name| name == "relay" || name.starts_with("__algol_by_name_relay_"))
+        }).count();
+        assert_eq!(relay_calls, usize::from(!specialized), "{source}");
+    }
+}
+
 #[test]
 fn nested_offsets_and_shifted_narrow_range_proofs_have_exact_typed_refusals() {
     let mut failures = Vec::new();
