@@ -32,9 +32,9 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // ---- Flutter (#12022) ----
     // Measured on first build, both themes: the same pre-existing Flutter gaps
     // the sibling packages pin. `color` on the Text parts (title, progress,
-    // indent, question, the ☐/☑ marks) and `font-size` on every HostButton.
+    // indent, question, the ☐/☑ marks). `font-size` on every HostButton was
+    // pinned too, until Flutter learned it (X-7).
     (Backend::Flutter, "color"),
-    (Backend::Flutter, "font-size"),
 ];
 
 fn package_root() -> PathBuf {
