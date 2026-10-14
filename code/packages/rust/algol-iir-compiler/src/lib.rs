@@ -16257,6 +16257,125 @@ mod tests {
         }
     }
 
+    fn sextuple_computed_name_source(root: &str, condition: &str, assigned: bool, value: bool, depth: usize) -> String {
+        let arm = |name: &str| {
+            let exact = if name == "left" { "entier(sign(left)) + 82.0" } else { "entier(sign(right))" };
+            let mut expression = format!("sqrt(abs({exact}))");
+            for _ in 2..depth { expression = format!("abs({expression})"); }
+            format!("relay({expression})")
+        };
+        let conditional = format!("if choose({root}) then {} else {}", arm("left"), arm("right"));
+        let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
+        let formal = if value { "value t; " } else { "" };
+        format!("begin boolean procedure choose(t); {formal}real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end")
+    }
+
+    fn sextuple_computed_name_ast(source: &str) -> GrammarASTNode {
+        fn name(node: &GrammarASTNode) -> Option<&str> {
+            (node.rule_name == "proc_call").then(|| direct_tokens(node).into_iter().find(|token| token.effective_type_name() == "NAME").map(|token| token.value.as_str())).flatten()
+        }
+        fn names(node: &GrammarASTNode) -> Vec<String> {
+            let mut tokens = Vec::new(); collect_tokens(node, &mut tokens);
+            tokens.into_iter().filter(|token| token.effective_type_name() == "NAME").map(|token| token.value.clone()).collect()
+        }
+        fn add_abs(node: &mut GrammarASTNode, original: &GrammarASTNode) -> bool {
+            if name(node) == Some("abs") {
+                let parameters = node.children.iter_mut().find_map(|child| match child {
+                    ASTNodeOrToken::Node(child) if child.rule_name == "actual_params" => Some(child), _ => None,
+                }).expect("parsed outer abs parameters");
+                let expressions: Vec<_> = parameters.children.iter_mut().filter_map(|child| match child {
+                    ASTNodeOrToken::Node(child) if child.rule_name == "expression" => Some(child), _ => None,
+                }).collect();
+                assert_eq!(expressions.len(), 1);
+                let inner = expressions.into_iter().next().expect("one parsed abs argument");
+                inner.clone_from(original);
+                assert_eq!(inner, original, "the entire original argument, including numeric tokens, is retained inside exactly one outer abs");
+                return true;
+            }
+            node.children.iter_mut().any(|child| match child {
+                ASTNodeOrToken::Node(child) => add_abs(child, original), _ => false,
+            })
+        }
+        fn deepen(node: &mut GrammarASTNode) -> usize {
+            if name(node) == Some("relay") {
+                let parameters = node.children.iter_mut().find_map(|child| match child {
+                    ASTNodeOrToken::Node(child) if child.rule_name == "actual_params" => Some(child), _ => None,
+                }).expect("parsed relay parameters");
+                let expressions: Vec<_> = parameters.children.iter_mut().filter_map(|child| match child {
+                    ASTNodeOrToken::Node(child) if child.rule_name == "expression" => Some(child), _ => None,
+                }).collect();
+                assert_eq!(expressions.len(), 1);
+                let actual = expressions.into_iter().next().expect("one parsed relay argument");
+                let before = names(actual);
+                assert_eq!(&before[..7], ["abs", "abs", "abs", "sqrt", "abs", "entier", "sign"]);
+                assert_eq!(before.len(), 8);
+                assert!(matches!(before[7].as_str(), "left" | "right"));
+                let original = actual.clone(); assert!(add_abs(actual, &original));
+                let after = names(actual);
+                assert_eq!(after[0], "abs"); assert_eq!(&after[1..], before.as_slice(), "retain every original wrapper and local root in exact order");
+                return 1; // Never revisit the inserted argument.
+            }
+            node.children.iter_mut().map(|child| match child {
+                ASTNodeOrToken::Node(child) => deepen(child), _ => 0,
+            }).sum()
+        }
+        let five = parse_algol(source); let mut six = five.clone();
+        assert_eq!(deepen(&mut six), 2, "only both conditional relay actuals change");
+        assert_eq!(five, parse_algol(source), "preserve the original parsed source tree");
+        // These cloned positions establish semantic AST evidence only.
+        // They do not establish source spans or output/transformation mappings.
+        six
+    }
+
+    #[test]
+    fn al4_sextuple_computed_name_alias_roots_refuse_at_both_ast_consumers() {
+        struct BudgetGuard;
+        impl Drop for BudgetGuard { fn drop(&mut self) { SELECTOR_CLASSIFIER_BUDGET.with(|counter| counter.set(None)); } }
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let source = sextuple_computed_name_source(root, condition, assigned, false, 5);
+                    let ast = sextuple_computed_name_ast(&source);
+                    SELECTOR_CLASSIFIER_BUDGET.with(|counter| counter.set(Some((0, 8192))));
+                    let _guard = BudgetGuard;
+                    let error = compile_ast(&ast, "sixth-alias").expect_err("computed name branches cannot restore a root promoted by the selector");
+                    assert!(matches!(error, CompileError::Type(ref message) if message.contains("cannot print a real value")), "root={root}, condition={condition}, assigned={assigned}: {error:?}");
+                    let (visits, limit) = SELECTOR_CLASSIFIER_BUDGET.with(Cell::get).expect("budget active");
+                    assert!(visits > 0 && visits <= limit);
+                    eprintln!("sixth alias root={root} condition={condition} assigned={assigned}: {visits} classifier visits");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_sextuple_computed_name_value_roots_retain_one_formatter_at_both_ast_consumers() {
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let source = sextuple_computed_name_source(root, condition, assigned, true, 5);
+                    let ast = sextuple_computed_name_ast(&source);
+                    let module = compile_ast(&ast, "sixth-value").unwrap_or_else(|error| panic!("root={root}, condition={condition}, assigned={assigned}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "one formatter for the materialized conditional result");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_sextuple_computed_name_direct_source_retains_parser_boundary() {
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for value in [false, true] {
+                    let source = sextuple_computed_name_source(root, condition, false, value, 6);
+                    let error = compile_source(&source, "sixth-direct-source").expect_err("direct sixth source reaches the unchanged parser boundary before semantic classification");
+                    assert!(matches!(error, CompileError::Parse(ref message) if message.contains("supported limit (135)")), "root={root}, condition={condition}, value={value}: {error:?}");
+                }
+            }
+        }
+    }
+
     fn standard_name_depth_boundary_source(condition: &str, assigned: bool, depth: usize) -> String {
         let arm = |root: &str| {
             let mut expression = format!("entier(sign({root}))");

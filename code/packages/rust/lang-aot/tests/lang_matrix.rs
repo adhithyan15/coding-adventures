@@ -23722,3 +23722,25 @@ fn algol_quintuple_computed_name_selector_value_snapshots_run_on_every_available
         }
     }
 }
+
+#[test]
+fn algol_sextuple_computed_name_assigned_value_snapshots_run_on_every_available_standard_backend() {
+    // Four complete source programs distinguish either captured root and
+    // both selected outcomes. Direct source has a separate parser135 oracle.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(result) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(result) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(result) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(result) end", "1"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but sixth assigned computed-name selector control did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
