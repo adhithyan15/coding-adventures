@@ -3134,6 +3134,26 @@ mod tests {
         assert!(result.is_err(), "expected `too many args` error");
     }
 
+    #[test]
+    fn eight_word_stack_root_identity_and_safepoint_order() {
+        for abi in [X86_64Abi::MsX64, X86_64Abi::SysV] {
+            let mut params: Vec<_> = (0..8).map(|i| (format!("p{i}"), "u64".into())).collect();
+            params[7].1 = "ref<any>".into();
+            let mut args = vec![Op::Var("target".into())]; args.extend((0..8).map(|i| Op::Var(format!("p{i}"))));
+            let mut recursive = vec![Op::Var("rec".into())]; recursive.extend((0..8).map(|i| Op::Var(format!("p{i}"))));
+            let ir = vec![instr("call", Some("first"), args), instr("call", Some("second"), recursive), instr("ret_u64", None, vec![Op::Var("second".into())])];
+            let (bytes, relocs, maps) = compile_function_with_globals_and_stackmap(&fn_ctx("rec", &params, "u64"), &ir, abi, &HashMap::new()).unwrap();
+            assert_eq!(&bytes[..7], &[0x55, 0x48, 0x89, 0xe5, 0x48, 0x81, 0xec]);
+            let frame = i32::from_le_bytes(bytes[7..11].try_into().unwrap());
+            assert_eq!(frame, if abi == X86_64Abi::MsX64 { 160 } else { 112 });
+            assert_eq!(maps.len(), 2);
+            assert_eq!(maps[0].slots, vec![-64]); assert_eq!(maps[1].slots, vec![-64]);
+            assert!(maps[0].pc_offset < maps[1].pc_offset);
+            assert_eq!(relocs.len(), 1); assert_eq!(relocs[0].symbol, "target");
+            assert_eq!(maps[0].pc_offset as usize, relocs[0].patch_offset + 4);
+        }
+    }
+
     // ---- Globals + io_out (phase 6) ----
 
     #[test]

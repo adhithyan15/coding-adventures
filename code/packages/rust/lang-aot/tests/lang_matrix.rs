@@ -10191,7 +10191,7 @@ fn erl_ok() -> bool {
 /// variant now needs exactly one edit here.
 fn toolchain_available(backend: Backend) -> bool {
     match backend {
-        NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+        NativeAot => native_linker_ok(),
         Llvm => clang_ok(),
         Wasm | Vm | Jit => true,
         Jvm => java_ok(),
@@ -24122,4 +24122,64 @@ fn jvm_float_comparison_real_verifier_table() {
     assert!(output.status.success(), "IEEE table: {}", String::from_utf8_lossy(&output.stderr));
     assert_eq!(checks, 84); assert!(output.stdout.is_empty());
     eprintln!("EXECUTED: real JVM IEEE table84checks,2widths,6relations,7operand pairs; process0");
+}
+
+#[test]
+fn captured_array_native_stack_argument_runtime_regression() {
+    if !toolchain_available(NativeAot) { eprintln!("UNAVAILABLE: native captured-array ABI control"); return; }
+    let programs: Vec<_> = PROGRAMS.iter().filter(|p| {
+        (p.src.contains("procedure populate") || p.src.contains("procedure seed"))
+            && (p.src.contains("array flags[-1:0, 2:3, 5:6")
+                || p.src.contains("array values[-1:0, 2:3, 5:6")
+                || p.src.contains("array words[-1:0, 4:5, 7:8"))
+    }).collect();
+    assert_eq!(programs.len(), 8);
+    for (case, program) in programs.iter().enumerate() {
+        let result = run(NativeAot, program).expect("available native toolchain must execute each original array row");
+        assert_cell(NativeAot, program, result);
+        eprintln!("EXECUTED: native original captured/forwarded array row{case}, Exit42");
+    }
+}
+
+#[test]
+fn native_six_and_eight_distinct_word_arguments_really_execute() {
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+    if !toolchain_available(NativeAot) { eprintln!("UNAVAILABLE: native distinct word-call ABI control"); return; }
+    for count in [6, 8] {
+        let values = [3_i64, 5, 7, 11, 13, 17, 19, 23];
+        let var = |name: &str| Operand::Var(name.into());
+        let mut caller: Vec<_> = values[..count].iter().enumerate().map(|(i, value)| IIRInstr::new("const", Some(format!("v{i}")), vec![Operand::Int(*value)], "i64")).collect();
+        let mut args = vec![var("ordered")]; args.extend((0..count).map(|i| var(&format!("v{i}"))));
+        caller.push(IIRInstr::new("call", Some("answer".into()), args, "i64"));
+        caller.push(IIRInstr::new("ret", None, vec![var("answer")], "i64"));
+        let mut body = Vec::new();
+        for (i, value) in values[..count].iter().enumerate() {
+            body.push(IIRInstr::new("const", Some(format!("expected{i}")), vec![Operand::Int(*value)], "i64"));
+            body.push(IIRInstr::new("cmp_eq", Some(format!("same{i}")), vec![var(&format!("p{i}")), var(&format!("expected{i}"))], "i64"));
+            body.push(IIRInstr::new("jmp_if_false", None, vec![var(&format!("same{i}")), var("bad")], "void"));
+        }
+        body.extend([
+            IIRInstr::new("const", Some("yes".into()), vec![Operand::Int(42)], "i64"),
+            IIRInstr::new("ret", None, vec![var("yes")], "i64"),
+            IIRInstr::new("label", None, vec![var("bad")], "void"),
+            IIRInstr::new("const", Some("no".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("ret", None, vec![var("no")], "i64"),
+        ]);
+        let module = IIRModule { name: "word_order".into(), functions: vec![
+            IIRFunction::new("main", vec![], "i64", caller),
+            IIRFunction::new("ordered", (0..count).map(|i| (format!("p{i}"), "i64".into())).collect(), "i64", body),
+        ], entry_point: Some("main".into()), language: "test".into(), exports: vec![], imports: vec![] };
+        let dir = tempfile::tempdir().unwrap();
+        let exe = dir.path().join(if cfg!(windows) { "word_order.exe" } else { "word_order" });
+        #[cfg(target_os = "windows")]
+        twig_aot::compile_module_to_windows_executable(&module, &exe).expect("compile real MS x64 word-order executable");
+        #[cfg(target_os = "linux")]
+        twig_aot::compile_module_to_linux_executable(&module, &exe).expect("compile real native Linux word-order executable");
+        #[cfg(target_os = "macos")]
+        twig_aot::compile_module_to_macos_executable(&module, &exe).expect("compile real native macOS word-order executable");
+        let output = Command::new(&exe).output().expect("execute native word-order control");
+        assert_eq!(output.status.code(), Some(42), "native {count}-argument order: {}", String::from_utf8_lossy(&output.stderr));
+        assert!(output.stdout.is_empty());
+        eprintln!("EXECUTED: native{count} distinct ordered word arguments, all positions checked, Exit42");
+    }
 }
