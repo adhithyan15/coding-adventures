@@ -4790,6 +4790,37 @@ impl Compiler {
     ) -> Option<&'n GrammarASTNode> {
         #[cfg(test)]
         selector_classifier_visit();
+        if let Some(root) = self.builtin_outer_entier_flat_operand(node) { return Some(root); }
+        // One conditional front, then two disjoint flat proofs. There is no
+        // recursive branch reset or widening of the shared exp/log classifier.
+        let mut front = node;
+        loop {
+            #[cfg(test)]
+            selector_classifier_visit();
+            if let Some(child) = single_parenthesized_child(front) { front = child; continue; }
+            if let Some((sign, child)) = single_signed_child(front) {
+                if !matches!(sign, "+" | "-") { return None; }
+                front = child; continue;
+            }
+            if front.rule_name != "proc_call" && direct_tokens(front).is_empty() {
+                let children = direct_nodes(front);
+                if children.len() == 1 { front = children[0]; continue; }
+            }
+            break;
+        }
+        let (_condition, then_node, else_node) = self.conditional_expression_parts(front)?;
+        let then_root = self.builtin_outer_entier_flat_operand(then_node)?;
+        let else_root = self.builtin_outer_entier_flat_operand(else_node)?;
+        (self.is_selector_call_safe_runtime_real_root(then_root)
+            && self.is_selector_call_safe_runtime_real_root(else_root)).then_some(then_root)
+    }
+
+    fn builtin_outer_entier_flat_operand<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        #[cfg(test)]
+        selector_classifier_visit();
         if let Some(operand) = self.builtin_sign_operand(node) {
             return Some(operand);
         }
@@ -4851,117 +4882,11 @@ impl Compiler {
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
-        let operand = self.builtin_sign_operand_unchecked(node)?;
-        (self.builtin_sign_unit_offset_count(node)? <= 1).then_some(operand)
-    }
-
-    fn builtin_sign_unit_offset_count(&self, node: &GrammarASTNode) -> Option<usize> {
         if let Some((_condition, then_node, else_node)) =
             self.conditional_expression_parts(node)
         {
-            return Some(
-                self.builtin_sign_unit_offset_count(then_node)?
-                    .max(self.builtin_sign_unit_offset_count(else_node)?),
-            );
-        }
-        if let Some(child) = single_parenthesized_child(node) {
-            return self.builtin_sign_unit_offset_count(child);
-        }
-        if let Some((sign, child)) = single_signed_child(node) {
-            return matches!(sign, "+" | "-")
-                .then(|| self.builtin_sign_unit_offset_count(child))?;
-        }
-        if pieces(node)
-            .iter()
-            .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
-        {
-            return self.builtin_sign_unit_offset_count(literal_power_identity_base(
-                node, true,
-            )?);
-        }
-        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
-            let sequence = pieces(node);
-            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
-                let mut count = 0usize;
-                for (index, piece) in sequence.iter().enumerate() {
-                    if index % 2 == 0 {
-                        let Piece::Node(operand) = piece else {
-                            return None;
-                        };
-                        if self.builtin_sign_operand_unchecked(operand).is_some() {
-                            count = count
-                                .checked_add(self.builtin_sign_unit_offset_count(operand)?)?;
-                        } else {
-                            let value =
-                                expr_static_real_arithmetic_value_with(operand, &|_| None)?;
-                            if value != 0.0 {
-                                if value.abs() != 1.0 {
-                                    return None;
-                                }
-                                count = count.checked_add(1)?;
-                            }
-                        }
-                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
-                        return None;
-                    }
-                }
-                return Some(count);
-            }
-        }
-        if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
-            let sequence = pieces(node);
-            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
-                for (index, piece) in sequence.iter().enumerate() {
-                    if index % 2 == 0 {
-                        let Piece::Node(operand) = piece else {
-                            return None;
-                        };
-                        if self.builtin_sign_operand_unchecked(operand).is_some() {
-                            return self.builtin_sign_unit_offset_count(operand);
-                        }
-                    }
-                }
-                return None;
-            }
-        }
-        if node.rule_name != "proc_call" {
-            let children = direct_nodes(node);
-            if direct_tokens(node).is_empty() && children.len() == 1 {
-                return self.builtin_sign_unit_offset_count(children[0]);
-            }
-            return None;
-        }
-        let source_name = direct_tokens(node)
-            .into_iter()
-            .find(|token| token.effective_type_name() == "NAME")?
-            .value
-            .clone();
-        let target_name = self.resolve_procedure_identity(&source_name);
-        if self.proc_sigs.contains_key(&target_name) {
-            return None;
-        }
-        let actuals = self.standard_fn_actuals(node);
-        if actuals.len() != 1 {
-            return None;
-        }
-        match target_name.as_str() {
-            "sign" => Some(0),
-            "abs" | "entier" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan" => {
-                self.builtin_sign_unit_offset_count(actuals[0])
-            }
-            _ => None,
-        }
-    }
-
-    fn builtin_sign_operand_unchecked<'n>(
-        &self,
-        node: &'n GrammarASTNode,
-    ) -> Option<&'n GrammarASTNode> {
-        if let Some((_condition, then_node, else_node)) =
-            self.conditional_expression_parts(node)
-        {
-            let then_operand = self.builtin_sign_operand_unchecked(then_node)?;
-            let else_operand = self.builtin_sign_operand_unchecked(else_node)?;
+            let then_operand = self.builtin_sign_operand(then_node)?;
+            let else_operand = self.builtin_sign_operand(else_node)?;
             if self.is_selector_call_safe_runtime_real_root(then_operand)
                 && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
@@ -4970,11 +4895,11 @@ impl Compiler {
             return None;
         }
         if let Some(child) = single_parenthesized_child(node) {
-            return self.builtin_sign_operand_unchecked(child);
+            return self.builtin_sign_operand(child);
         }
         if let Some((sign, child)) = single_signed_child(node) {
             if matches!(sign, "+" | "-") {
-                return self.builtin_sign_operand_unchecked(child);
+                return self.builtin_sign_operand(child);
             }
             return None;
         }
@@ -4983,7 +4908,7 @@ impl Compiler {
             .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
         {
             if let Some(base) = literal_power_identity_base(node, true) {
-                return self.builtin_sign_operand_unchecked(base);
+                return self.builtin_sign_operand(base);
             }
             return None;
         }
@@ -4996,7 +4921,7 @@ impl Compiler {
                         let Piece::Node(operand) = piece else {
                             return None;
                         };
-                        if let Some(operand) = self.builtin_sign_operand_unchecked(operand) {
+                        if let Some(operand) = self.builtin_sign_operand(operand) {
                             if sign_operand.replace(operand).is_some() {
                                 return None;
                             }
@@ -5025,7 +4950,7 @@ impl Compiler {
                         let Piece::Node(operand) = piece else {
                             return None;
                         };
-                        if let Some(operand) = self.builtin_sign_operand_unchecked(operand) {
+                        if let Some(operand) = self.builtin_sign_operand(operand) {
                             if sign_operand.replace(operand).is_some() {
                                 return None;
                             }
@@ -5066,7 +4991,7 @@ impl Compiler {
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             if direct_tokens(node).is_empty() && children.len() == 1 {
-                return self.builtin_sign_operand_unchecked(children[0]);
+                return self.builtin_sign_operand(children[0]);
             }
             return None;
         }
@@ -5085,11 +5010,11 @@ impl Compiler {
         }
         match target_name.as_str() {
             "sign" => Some(actuals[0]),
-            "abs" | "entier" => self.builtin_sign_operand_unchecked(actuals[0]),
+            "abs" | "entier" => self.builtin_sign_operand(actuals[0]),
             "sqrt" => self.builtin_nonnegative_bounded_sign_operand(actuals[0]),
-            "sin" | "cos" | "arctan" => self.builtin_sign_operand_unchecked(actuals[0]),
+            "sin" | "cos" | "arctan" => self.builtin_sign_operand(actuals[0]),
             "exp" if !self.contains_builtin_exp_call(actuals[0]) => {
-                self.builtin_sign_operand_unchecked(actuals[0])
+                self.builtin_sign_operand(actuals[0])
             }
             "ln" => self
                 .builtin_single_exp_sign_operand(actuals[0])
@@ -5101,6 +5026,8 @@ impl Compiler {
             _ => None,
         }
     }
+
+
 
     fn is_selector_call_safe_runtime_real_value(&self, node: &GrammarASTNode) -> bool {
         #[cfg(test)]
