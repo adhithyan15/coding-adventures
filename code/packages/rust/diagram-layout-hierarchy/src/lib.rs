@@ -1204,6 +1204,7 @@ mod tests {
         let actual = layout_swimlane(&diagram);
         let visits = SWIMLANE_ORDER_WEIGHT_VISITS.with(|count| count.get());
         assert_eq!(actual, expected, "complete layout and metadata retain reference output");
+        eprintln!("dense ordering: {visits} actual weighted-edge visits");
         assert!(visits <= 27 * pairs.len(), "{visits} actual weighted-edge visits exceed nine-start initialization bound {}", 27 * pairs.len());
     }
 
@@ -1227,13 +1228,22 @@ mod tests {
             let mut digits = graph;
             let mut weights = Vec::new();
             let mut reference_weights = Vec::new();
+            let mut pairs = Vec::new();
             for a in 0..4 {
                 for b in (a + 1)..4 {
                     let weight = digits % 3; digits /= 3;
+                    pairs.push((a, b, weight));
                     weights.push(WeightedSwimlaneEdge { a: ids[a].clone(), b: ids[b].clone(), weight });
                     reference_weights.push(ReferenceWeightedSwimlaneEdge { a: ids[a].clone(), b: ids[b].clone(), weight });
                 }
             }
+            let mut diagram = ordering_diagram(4, &pairs);
+            for (i, lane) in diagram.lanes.iter_mut().enumerate() {
+                lane.id = ids[i].clone(); diagram.nodes[i].lane_id = Some(ids[i].clone());
+            }
+            assert_eq!(optimize_swimlane_lane_order(&diagram).iter().map(|lane| &lane.id).collect::<Vec<_>>(),
+                reference_optimize_swimlane_lane_order(&diagram).iter().map(|lane| &lane.id).collect::<Vec<_>>(),
+                "all nine starts and UTF16 seeds, graph={graph}");
             for order in &orders {
                 assert_eq!(greedy_swimlane_order(order.clone(), &weights, &positions),
                     reference_greedy_swimlane_order(order.clone(), &reference_weights, &positions),

@@ -9245,6 +9245,152 @@ mod tests {
         }
     }
 
+    // Independent original full-cost algorithm, copied before the delta repair.
+    // Keep its seed, shuffle, strict comparison and tie behavior as the oracle.
+    mod lane_order_reference {
+        use std::collections::{BTreeMap, HashMap};
+        use diagram_ir::{SwimlaneDiagram, SwimlaneEdgeKind};
+        #[derive(Clone)]
+        struct WeightedSwimlaneEdge { a: String, b: String, weight: usize }
+
+        pub(super) fn optimize_swimlane_lane_order(diagram: &SwimlaneDiagram) -> Vec<&diagram_ir::SwimlaneLane> {
+            let source_order = diagram.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>();
+            if source_order.len() < 2 {
+                return diagram.lanes.iter().collect();
+            }
+            let source_index = source_order.iter().enumerate()
+                .map(|(index, lane)| (*lane, index)).collect::<HashMap<_, _>>();
+            let node_lanes = diagram.lanes.iter().flat_map(|lane|
+                lane.node_ids.iter().map(move |node| (node.as_str(), lane.id.as_str()))
+            ).collect::<HashMap<_, _>>();
+            let mut counts = BTreeMap::<(usize, usize), usize>::new();
+            for edge in &diagram.edges {
+                if edge.kind == SwimlaneEdgeKind::Invisible {
+                    continue;
+                }
+                let (Some(from_lane), Some(to_lane)) = (
+                    node_lanes.get(edge.from.as_str()), node_lanes.get(edge.to.as_str()),
+                ) else { continue };
+                if from_lane == to_lane {
+                    continue;
+                }
+                let (Some(&from_index), Some(&to_index)) = (
+                    source_index.get(from_lane), source_index.get(to_lane),
+                ) else { continue };
+                let pair = if from_index <= to_index {
+                    (from_index, to_index)
+                } else {
+                    (to_index, from_index)
+                };
+                *counts.entry(pair).or_default() += 1;
+            }
+            let weights = counts.into_iter().map(|((a, b), weight)| WeightedSwimlaneEdge {
+                a: source_order[a].to_string(), b: source_order[b].to_string(), weight,
+            }).collect::<Vec<_>>();
+            if weights.is_empty() {
+                return diagram.lanes.iter().collect();
+            }
+            let source = source_order.iter().map(|lane| (*lane).to_string()).collect::<Vec<_>>();
+            let source_positions = source.iter().enumerate()
+                .map(|(index, lane)| (lane.as_str(), index)).collect::<HashMap<_, _>>();
+            let mut best = greedy_swimlane_order(source.clone(), &weights, &source_positions);
+            for restart in 0..8 {
+                let mut candidate = source.clone();
+                deterministic_swimlane_shuffle(&mut candidate, swimlane_restart_seed(&source, &weights, restart));
+                let candidate = greedy_swimlane_order(candidate, &weights, &source_positions);
+                if candidate.1 < best.1 || (candidate.1 == best.1 && candidate.2 < best.2) {
+                    best = candidate;
+                }
+            }
+            best.0.iter().filter_map(|lane_id|
+                diagram.lanes.iter().find(|lane| lane.id == *lane_id)
+            ).collect()
+        }
+
+        fn swimlane_arrangement_cost(order: &[String], weights: &[WeightedSwimlaneEdge]) -> usize {
+            let positions = order.iter().enumerate().map(|(index, lane)| (lane.as_str(), index))
+                .collect::<HashMap<_, _>>();
+            weights.iter().map(|edge| edge.weight * positions[edge.a.as_str()].abs_diff(positions[edge.b.as_str()])).sum()
+        }
+
+        fn greedy_swimlane_order(
+            mut order: Vec<String>, weights: &[WeightedSwimlaneEdge], source: &HashMap<&str, usize>,
+        ) -> (Vec<String>, usize, usize) {
+            let mut cost = swimlane_arrangement_cost(&order, weights);
+            for _ in 0..order.len().max(1) {
+                let mut changed = false;
+                for index in 0..order.len().saturating_sub(1) {
+                    order.swap(index, index + 1);
+                    let next_cost = swimlane_arrangement_cost(&order, weights);
+                    if next_cost < cost {
+                        cost = next_cost;
+                        changed = true;
+                    } else {
+                        order.swap(index, index + 1);
+                    }
+                }
+                if !changed { break; }
+            }
+            let distance = order.iter().enumerate().map(|(index, lane)| index.abs_diff(source[lane.as_str()])).sum();
+            (order, cost, distance)
+        }
+
+        fn swimlane_restart_seed(source: &[String], weights: &[WeightedSwimlaneEdge], restart: usize) -> u32 {
+            let mut sorted_weights = weights.to_vec();
+            sorted_weights.sort_by(|left, right| left.a.cmp(&right.a).then_with(|| left.b.cmp(&right.b)));
+            let signature = sorted_weights.iter().map(|edge| format!("{}:{}:{}", edge.a, edge.b, edge.weight))
+                .collect::<Vec<_>>().join("|");
+            let input = format!("{}#{}#{restart}", source.join("|"), signature);
+            input.encode_utf16().fold(2_166_136_261_u32, |hash, unit|
+                (hash ^ u32::from(unit)).wrapping_mul(16_777_619)
+            )
+        }
+
+        fn deterministic_swimlane_shuffle(order: &mut [String], seed: u32) {
+            let mut state = seed;
+            for index in (1..order.len()).rev() {
+                state = state.wrapping_add(0x6d2b79f5);
+                let mut value = state;
+                value = (value ^ (value >> 15)).wrapping_mul(value | 1);
+                value ^= value.wrapping_add((value ^ (value >> 7)).wrapping_mul(value | 61));
+                let random = (value ^ (value >> 14)) as f64 / 4_294_967_296.0;
+                order.swap(index, (random * (index + 1) as f64).floor() as usize);
+            }
+        }
+
+    }
+
+    #[test]
+    fn authored_swimlane_ordering_preserves_complete_paint_scene_against_original() {
+        for direction in ["LR", "RL", "TB", "BT"] {
+            for hops in ["false", "arc", "gap"] {
+                for enabled in [false, true] {
+                    for edges in [
+                        "a --> a2\nb --> b2\nc --> c2\nd --> d2\na --> d2\na --> d2\nd2 --> a\nb --> c2\nb --> c2\na ~~~ b",
+                        "a --> b2\nb --> c2\nc --> d2\nd --> a2",
+                    ] {
+                        let source = format!("---\nconfig:\n  swimlane:\n    automaticLaneOrdering: {enabled}\n    lineHops: {hops}\n---\nswimlane-beta {direction}\nsubgraph Lé[Alpha]\na[A]\na2[A2]\nend\nsubgraph L🛰[Beta]\nb[B]\nb2[B2]\nend\nsubgraph Lane[Gamma]\nc[C]\nc2[C2]\nend\nsubgraph 中[Delta]\nd[D]\nd2[D2]\nend\n{edges}\n");
+                        let diagram = mermaid_parser::parse_swimlane(&source).expect("authored Unicode ordering fixture parses");
+                        assert_eq!(diagram.lanes.len(), 4);
+                        let actual_layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+                        let mut expected_input = diagram.clone();
+                        if enabled {
+                            expected_input.lanes = lane_order_reference::optimize_swimlane_lane_order(&diagram).into_iter().cloned().collect();
+                        }
+                        expected_input.automatic_lane_ordering = false;
+                        let mut expected_layout = diagram_layout_hierarchy::layout_swimlane(&expected_input);
+                        expected_layout.automatic_lane_ordering = enabled;
+                        assert_eq!(actual_layout, expected_layout);
+                        let options = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
+                        let actual = diagram_to_paint_swimlane(&actual_layout, &options);
+                        let expected = diagram_to_paint_swimlane(&expected_layout, &options);
+                        assert_eq!(actual, expected, "complete scene/metadata: {direction}, hops={hops}, enabled={enabled}, edges={edges}");
+                    }
+                }
+            }
+        }
+    }
+
     #[test]
     fn authored_swimlane_typography_preserves_complete_query_and_glyph_trace() {
         struct RecordingResolver(std::cell::RefCell<Vec<FontQuery>>);
