@@ -2,6 +2,34 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04a pathwise pending checkpoint -->
+October14 current integration is PENDING at implementationc39c51de; published
+4c remains the solePR17288 head, autoOFF, exact-head CI still running.
+Actualnewmain593 nested-unit-cap +530Urdu import33c closed3713paths:
+3708pure incoming/5exactthreewayoverlaps/221434retained. Imported library
+actually848PASS1FAIL: new conditional-front ownerpositive Type-refused.
+
+Spec-first owned controls and preserved failures:365red3PASS2FAIL exposed
+positive refusal plus an invalid universal-variable-refusal test assumption;
+corrected boundary controls e885/c39 remain4PASS2FAIL. All original standalone
+variable, shifted-range, non-unit, root/alias/work controls retained unchanged.
+Sharedsignhelper exactly4c and dedicatedflat helper byte-exact exceptname.
+Singleconditional wrapper and consumer-matched predicates alone do not solve
+post-call capture: roots validate prelower, then bynamepromotion invalidates
+postproof. New effect controls require name-write refusal/value-write admission.
+No fresh native/full-suite acceptance claimed; every failed receipt preserved.
+
+Next independently review fresh-scalar/byname proof flow before further repair,
+then exactfocused/full compiler+unfilteredLANG/strict, immutable diagram source
+carry, docs/registry/currentplan/finalsecurity andsamePRpush. Do not enableauto
+on old4c even if checks turngreen while this requiredreconciliation is unfinished.
+Broader recursiveconditional/wrapper paths and genericrange composition OPEN.
+Full Closure parity/fullbyte-source/alltransformationlineage/CV04b OPEN.
+MiriDEFERRED/PENDING neverpassed, frozen497 source/inputs/target/receipts
+unpolled/untouched. Accepted4c/3d/5c source-specific receipts below remain valid
+for their exact sources; they do not accept the current593 integration.
+<!-- /CV04a pathwise pending checkpoint -->
+
 <!-- CV04a active delivery checkpoint -->
 October14 source3d0f3896: final affected14-package diagram/parser/paint/downstream
 suites ACTUALLY PASS855/0/0 over32targets, strictalltargets EXIT0. TestslogSHA
