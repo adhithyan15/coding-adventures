@@ -9852,6 +9852,86 @@ mod tests {
     }
 
     #[test]
+    fn authored_node_edge_theme_preserves_complete_ir_layout_scene_and_overrides() {
+        for direction in ["LR", "RL", "TB", "BT"] {
+            for mask in 0..8 {
+                for width in [0.0, 2.25, 65536.0] {
+                    for overrides in [false, true] {
+                        let mut body = format!("swimlane-beta {direction}\nsubgraph L\na[A]\nb[B]\nc[C]\nend\na <--> b\nb ==> c\nc styled@--> a\n");
+                        if overrides {
+                            body.push_str("style b color:#064e3b,stroke-width:5px\nclassDef custom stroke:#1d4ed8,stroke-width:4.25px\nclass styled custom\n");
+                        }
+                        let bare = mermaid_parser::parse_swimlane(&body).unwrap();
+                        let mut fields = String::new();
+                        if mask & 1 != 0 { fields.push_str("    nodeTextColor: '#78350f'\n"); }
+                        if mask & 2 != 0 { fields.push_str("    arrowheadColor: '#be123c'\n"); }
+                        if mask & 4 != 0 { fields.push_str(&format!("    strokeWidth: {width}\n")); }
+                        let source = if fields.is_empty() { body.clone() } else { format!("---\nconfig:\n  themeVariables:\n{fields}---\n{body}") };
+                        let parsed = mermaid_parser::parse_swimlane(&source).unwrap();
+                        assert_eq!(parsed.theme.node_text_color.as_deref(), (mask & 1 != 0).then_some("#78350f"));
+                        assert_eq!(parsed.theme.arrowhead_color.as_deref(), (mask & 2 != 0).then_some("#be123c"));
+                        assert_eq!(parsed.theme.stroke_width, (mask & 4 != 0).then_some(width));
+                        let mut normalized = parsed.clone();
+                        normalized.theme.node_text_color = None;
+                        normalized.theme.arrowhead_color = None;
+                        normalized.theme.stroke_width = None;
+                        assert_eq!(normalized,bare,"all other authored IR fields retain exact identity");
+                        let layout = diagram_layout_hierarchy::try_layout_swimlane(&parsed).unwrap();
+                        assert_eq!((layout.lanes.len(),layout.nodes.len(),layout.edges.len()),(1,3,3));
+                        let mut explicit = layout.clone();
+                        explicit.theme.node_text_color = None;
+                        explicit.theme.arrowhead_color = None;
+                        explicit.theme.stroke_width = None;
+                        assert_eq!(explicit,diagram_layout_hierarchy::try_layout_swimlane(&bare).unwrap(),"new paint theme fields do not alter any geometry or source identity");
+                        for node in &mut explicit.nodes {
+                            if node.style.text_color.is_none() && mask & 1 != 0 { node.style.text_color=Some("#78350f".into()); }
+                            if node.style.stroke_width.is_none() && mask & 4 != 0 { node.style.stroke_width=Some(width); }
+                        }
+                        for edge in &mut explicit.edges {
+                            if edge.style.stroke_width.is_none() && edge.kind!=SwimlaneEdgeKind::Thick && mask & 4 != 0 { edge.style.stroke_width=Some(width); }
+                        }
+                        let mut expected = diagram_to_paint_swimlane(&explicit,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                        // These exact instruction positions are the four triangle
+                        // markers for the three authored edges. Recolor only their
+                        // fill; every command/field/position remains in the oracle.
+                        for (position,tip,styled) in [(2,&layout.edges[0].from,false),(3,&layout.edges[0].to,false),(5,&layout.edges[1].to,false),(7,&layout.edges[2].to,overrides)] {
+                            let PaintInstruction::Path(marker)=&mut expected.instructions[position] else { panic!("marker position {position} must remain a path"); };
+                            assert_eq!(marker.commands.len(),4);
+                            let PathCommand::MoveTo{x,y}=marker.commands[0] else { panic!("marker starts at its exact directed tip"); };
+                            assert_eq!([x.to_bits(),y.to_bits()],[tip.x.to_bits(),tip.y.to_bits()]);
+                            assert_eq!(marker.fill.as_deref(),Some(if styled { "#1d4ed8" } else { "#455a64" }));
+                            assert!(marker.stroke.is_none() && marker.stroke_width.is_none());
+                            if !styled && mask & 2 != 0 { marker.fill=Some("#be123c".into()); }
+                        }
+                        for (position,expected_width) in [(1,if mask & 4 != 0 {width}else{1.8}),(4,3.5),(6,if overrides {4.25}else if mask & 4 != 0 {width}else{1.8})] {
+                            let PaintInstruction::Path(path)=&expected.instructions[position] else { panic!("edge position {position} must remain a path"); };
+                            assert_eq!(path.stroke_width,Some(expected_width));
+                        }
+                        let node_runs=expected.instructions.iter().filter_map(|instruction| match instruction {
+                            PaintInstruction::GlyphRun(run)=>Some((run.glyphs.iter().map(|glyph|char::from_u32(glyph.glyph_id).unwrap()).collect::<String>(),run.fill.as_deref())),_=>None
+                        }).collect::<Vec<_>>();
+                        for name in ["A","B","C"] {
+                            let runs=node_runs.iter().filter(|(label,_)|label==name).collect::<Vec<_>>();
+                            assert_eq!(runs.len(),1);
+                            assert_eq!(runs[0].1,Some(if overrides && name=="B" {"rgb(6, 78, 59)"}else if mask & 1 != 0 {"rgb(120, 53, 15)"}else{"rgb(13, 71, 161)"}));
+                        }
+                        let mut actual=diagram_to_paint_swimlane(&layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                        let metadata=actual.metadata.as_mut().unwrap();
+                        assert_eq!(metadata.remove("swimlane.theme.nodeTextColor").as_deref(),(mask & 1 != 0).then_some("#78350f"));
+                        assert_eq!(metadata.remove("swimlane.theme.arrowheadColor").as_deref(),(mask & 2 != 0).then_some("#be123c"));
+                        assert_eq!(metadata.remove("swimlane.theme.strokeWidth"),(mask & 4 != 0).then(||width.to_string()));
+                        assert_eq!(actual,expected,"all scene/marker/style/node/glyph/metadata fields: direction={direction},mask={mask},width={width},overrides={overrides}");
+                        for invalid in ["-1","NaN","inf","1e309"] {
+                            let source=format!("---\nconfig:\n  themeVariables:\n    strokeWidth: {invalid}\n---\n{body}");
+                            assert_eq!(mermaid_parser::parse_swimlane(&source).unwrap(),bare,"invalid theme widths retain default behavior: {invalid}");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
     fn authored_cluster_theme_preserves_complete_ir_layout_scene_and_style_overrides() {
         // The reference uses explicit existing styles and title options. Only
         // the three independently pinned metadata keys are removed from output.
