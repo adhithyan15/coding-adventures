@@ -9626,6 +9626,106 @@ mod tests {
         }
     }
 
+    fn spacing_control_source(direction: &str) -> String {
+        format!("swimlane-beta {direction}\nsubgraph L[One]\na[Alpha]\nb[Beta]\nend\nsubgraph R[Two]\nc[Gamma]\nd[Delta]\nend\na --> b\nc --> d\n")
+    }
+
+    #[test]
+    fn authored_swimlane_spacing_config_preserves_exact_layout_scene_and_defaults() {
+        for direction in ["LR", "RL", "TB", "BT"] {
+            let body = spacing_control_source(direction);
+            let bare = mermaid_parser::parse_swimlane(&body).expect("bare spacing control parses");
+            assert_eq!(bare.flowchart_config, diagram_ir::SwimlaneFlowchartConfig::default());
+            let baseline = diagram_layout_hierarchy::layout_swimlane(&bare);
+            let baseline_scene = diagram_to_paint_swimlane(&baseline, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+            for (node_spacing, rank_spacing, padding) in [(20.0, 30.0, 40.0), (0.0, 0.0, 0.0)] {
+                let source = format!("---\nconfig:\n  flowchart:\n    nodeSpacing: {node_spacing}\n    rankSpacing: {rank_spacing}\n    diagramPadding: {padding}\n---\n{body}");
+                let parsed = mermaid_parser::parse_swimlane(&source).expect("ordinary spacing parses");
+                let config = diagram_ir::SwimlaneFlowchartConfig { node_spacing: Some(node_spacing), rank_spacing: Some(rank_spacing), diagram_padding: Some(padding) };
+                assert_eq!(parsed.flowchart_config, config);
+                let mut normalized = parsed.clone(); normalized.flowchart_config = Default::default();
+                assert_eq!(normalized, bare, "every non-config parser field remains exact");
+                let layout = diagram_layout_hierarchy::layout_swimlane(&parsed);
+                let mut expected = baseline.clone(); expected.flowchart_config = config;
+                let horizontal = matches!(direction, "LR" | "RL");
+                let zero = padding == 0.0;
+                let (width, height, lane_boxes, node_origins, endpoints) = if horizontal {
+                    if zero { (420.0, 316.0, [(0.0,16.0,420.0,150.0),(0.0,166.0,420.0,150.0)], [(58.0,64.0),(190.0,64.0),(58.0,214.0),(190.0,214.0)], [(190.0,91.0,190.0,91.0),(190.0,241.0,190.0,241.0)]) }
+                    else { (420.0,396.0,[(40.0,16.0,340.0,150.0),(40.0,186.0,340.0,150.0)],[(98.0,64.0),(260.0,64.0),(98.0,234.0),(260.0,234.0)],[(230.0,91.0,260.0,91.0),(230.0,261.0,260.0,261.0)]) }
+                } else if zero {
+                    (300.0,436.0,[(0.0,16.0,150.0,420.0),(150.0,16.0,150.0,420.0)],[(9.0,74.0),(9.0,128.0),(159.0,74.0),(159.0,128.0)],[(75.0,128.0,75.0,128.0),(225.0,128.0,225.0,128.0)])
+                } else {
+                    (380.0,436.0,[(40.0,16.0,150.0,380.0),(210.0,16.0,150.0,380.0)],[(49.0,74.0),(49.0,158.0),(219.0,74.0),(219.0,158.0)],[(115.0,128.0,115.0,158.0),(285.0,128.0,285.0,158.0)])
+                };
+                expected.width=width; expected.height=height;
+                assert_eq!(expected.lanes.len(),2); assert_eq!(expected.nodes.len(),4); assert_eq!(expected.edges.len(),2);
+                for (lane,(x,y,w,h)) in expected.lanes.iter_mut().zip(lane_boxes) { lane.x=x;lane.y=y;lane.width=w;lane.height=h; }
+                for (node,(x,y)) in expected.nodes.iter_mut().zip(node_origins) { node.x=x;node.y=y;node.width=132.0;node.height=54.0; }
+                let reverse = matches!(direction,"RL"|"BT");
+                assert_eq!(expected.nodes.iter().map(|node|node.id.as_str()).collect::<Vec<_>>(), if reverse {vec!["b","a","d","c"]} else {vec!["a","b","c","d"]});
+                for (edge,(x1,y1,x2,y2)) in expected.edges.iter_mut().zip(endpoints) {
+                    let (from,to)=if reverse {((x2,y2),(x1,y1))} else {((x1,y1),(x2,y2))};
+                    edge.from=diagram_ir::Point{x:from.0,y:from.1}; edge.to=diagram_ir::Point{x:to.0,y:to.1};
+                }
+                assert_eq!(layout,expected,"complete independent coordinate/layout oracle direction={direction},zero={zero}");
+                let scene=diagram_to_paint_swimlane(&layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                let expected_scene=diagram_to_paint_swimlane(&expected,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                assert_eq!(scene,expected_scene,"every paint route/marker/glyph/style/instruction follows the independently pinned layout");
+                let mut metadata=baseline_scene.metadata.clone().expect("complete default metadata");
+                metadata.insert("swimlane.flowchart.nodeSpacing".into(),node_spacing.to_string());
+                metadata.insert("swimlane.flowchart.rankSpacing".into(),rank_spacing.to_string());
+                metadata.insert("swimlane.flowchart.diagramPadding".into(),padding.to_string());
+                assert_eq!(scene.metadata.as_ref(),Some(&metadata),"complete expected metadata; no normalization of unknown keys");
+            }
+            let explicit_source=format!("---\nconfig:\n  flowchart:\n    nodeSpacing: 12\n    rankSpacing: 42\n    diagramPadding: 12\n---\n{body}");
+            let explicit=mermaid_parser::parse_swimlane(&explicit_source).unwrap();
+            let explicit_layout=diagram_layout_hierarchy::layout_swimlane(&explicit);
+            let mut normalized=explicit_layout.clone();normalized.flowchart_config=Default::default();
+            assert_eq!(normalized,baseline,"explicit defaults retain all baseline geometry and fields");
+            let mut scene=diagram_to_paint_swimlane(&explicit_layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+            let metadata=scene.metadata.as_mut().unwrap();
+            for (key,value) in [("nodeSpacing","12"),("rankSpacing","42"),("diagramPadding","12")] {
+                assert_eq!(metadata.remove(&format!("swimlane.flowchart.{key}")).as_deref(),Some(value));
+            }
+            assert_eq!(scene,baseline_scene,"remove only the three verified explicit-default entries; retain the complete scene");
+        }
+    }
+
+    #[test]
+    fn authored_swimlane_spacing_precedence_and_refusals_preserve_complete_ir() {
+        let body=spacing_control_source("LR");
+        let bare=mermaid_parser::parse_swimlane(&body).unwrap();
+        let source=format!("---\nconfig:\n  flowchart:\n    nodeSpacing: 96\n    rankSpacing: 28\n    diagramPadding: 32\n---\n%%{{init: {{\"flowchart\": {{\"nodeSpacing\": 72, \"rankSpacing\": 24, \"diagramPadding\": 18}}}}}}%%\n{body}");
+        let mut parsed=mermaid_parser::parse_swimlane(&source).unwrap();
+        assert_eq!(parsed.flowchart_config,diagram_ir::SwimlaneFlowchartConfig{node_spacing:Some(72.0),rank_spacing:Some(24.0),diagram_padding:Some(18.0)});
+        parsed.flowchart_config=Default::default();assert_eq!(parsed,bare);
+        for field in ["nodeSpacing","rankSpacing","diagramPadding"] {
+            for value in ["-1","not-a-number","NaN","inf","-inf"] {
+                let source=format!("---\nconfig:\n  flowchart:\n    {field}: {value}\n---\n{body}");
+                let error=mermaid_parser::parse_swimlane(&source).expect_err("negative/nonnumeric/nonfinite spacing is refused");
+                assert_eq!(error.message,format!("Swimlane flowchart {field} must be a non-negative number"));
+                assert_eq!((error.line,error.column),(1,1));
+            }
+        }
+    }
+
+    #[test]
+    fn authored_swimlane_spacing_finite_input_requires_finite_nonnegative_layout() {
+        for direction in ["LR","RL","TB","BT"] {
+            for field in ["nodeSpacing","rankSpacing","diagramPadding"] {
+                let body=spacing_control_source(direction);
+                let source=format!("---\nconfig:\n  flowchart:\n    {field}: 1e308\n---\n{body}");
+                let diagram=mermaid_parser::parse_swimlane(&source).expect("current finite nonnegative source admission");
+                let layout=diagram_layout_hierarchy::layout_swimlane(&diagram);
+                eprintln!("spacing finite-input control direction={direction} field={field} extent=({},{})",layout.width,layout.height);
+                assert!(layout.width.is_finite()&&layout.height.is_finite()&&layout.width>=0.0&&layout.height>=0.0,"accepted finite spacing must not produce nonfinite/negative extent");
+                for lane in &layout.lanes {
+                    assert!([lane.x,lane.y,lane.width,lane.height].iter().all(|v|v.is_finite())&&lane.width>=0.0&&lane.height>=0.0,"accepted spacing must not produce nonfinite/negative lane");
+                }
+            }
+        }
+    }
+
     #[test]
     fn authored_swimlane_edge_label_theme_preserves_complete_scene_queries_and_rectangles() {
         struct RecordingResolver(std::cell::RefCell<Vec<FontQuery>>);
