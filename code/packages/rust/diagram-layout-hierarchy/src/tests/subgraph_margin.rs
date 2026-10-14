@@ -60,6 +60,8 @@ fn imported_subgraph_margin_nested_geometry_and_default_identity() {
                             classes:vec!["owned".into()],style:Default::default(),
                         });
                     }
+                    for outer in [None,Some(0.0),Some(12.0),Some(65_536.0)] {
+                    baseline.flowchart_config.diagram_padding=outer;
                     let golden=try_layout_swimlane(&baseline).unwrap();
                     for (top,bottom) in [(None,None),(Some(-0.0),Some(0.0)),(Some(0.0),Some(-0.0)),
                         (Some(14.0),Some(7.0)),(Some(100.0),Some(0.0)),(Some(0.0),Some(100.0)),(Some(65_536.0),Some(65_536.0))] {
@@ -103,12 +105,13 @@ fn imported_subgraph_margin_nested_geometry_and_default_identity() {
                                 ok &= inside(rect,[child.x,child.y,child.width,child.height]) && title_end+bottom.unwrap_or(0.0)<=child.y;
                             }
                         }
-                        if !ok {failures.push((direction.clone(),ranked,depth,empty,top,bottom));}
+                        if !ok {failures.push((direction.clone(),ranked,depth,empty,outer,top,bottom));}
+                    }
                     }
                 }
             }
         }
     }
-    assert_eq!(cells,336);
-    assert!(failures.is_empty(),"nested geometry failed {}/336 cells: {failures:?}",failures.len());
+    assert_eq!(cells,1344);
+    assert!(failures.is_empty(),"nested geometry failed {}/1344 cells: {failures:?}",failures.len());
 }
