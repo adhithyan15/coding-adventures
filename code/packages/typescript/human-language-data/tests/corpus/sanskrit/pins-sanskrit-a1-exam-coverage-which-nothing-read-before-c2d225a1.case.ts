@@ -53,7 +53,7 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   expect(formatExamCoverage(coverage)).toContain(
     "sanskrit A1 (partial inventory): 145/164 points covered (88%)",
   );
-  // Where the 20 gaps actually are, named rather than counted. Two columns hold
+  // Where the 19 gaps actually are, named rather than counted. Two columns hold
   // 13 of them, and they are the two an editorially derived A1 inventory is
   // bound to strain on: the revival vocabulary a classical corpus never had,
   // and the orthography beyond the characters the script ladder teaches.
