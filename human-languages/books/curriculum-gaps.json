@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 29588,
+    "totalLessons": 29597,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -30,7 +30,7 @@
     "scriptExposureExemptedGlyphs": 1686,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
-    "wordLessons": 25690,
+    "wordLessons": 25693,
     "wordLessonsWithoutEtymologyHook": 4810,
     "wordLessonsWithoutVisibleEtymology": 4804,
     "wordLessonsWithEmptyEtymologyBlock": 370,
@@ -44,7 +44,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 134,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 27769,
+    "drivableLessons": 27778,
     "drivablePercent": 94,
     "chaptersWithoutDrivablePrefix": 189,
     "chaptersWithoutDrivablePrefixByType": 182,
@@ -10455,7 +10455,9 @@
           259,
           260,
           261,
-          262
+          262,
+          263,
+          264
         ],
         "bookChapters": [
           1,
@@ -10719,7 +10721,9 @@
           259,
           260,
           261,
-          262
+          262,
+          263,
+          264
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -12360,9 +12364,9 @@
       {
         "language": "sanskrit",
         "status": "version-2",
-        "lessonCount": 1407,
+        "lessonCount": 1416,
         "versions": {
-          "2": 1407
+          "2": 1416
         }
       },
       {
@@ -12548,8 +12552,8 @@
       },
       {
         "language": "sanskrit",
-        "bookChapters": 262,
-        "declaredChapters": 262,
+        "bookChapters": 264,
+        "declaredChapters": 264,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -12588,8 +12592,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 5854,
-      "declaredChapters": 5854,
+      "bookChapters": 5856,
+      "declaredChapters": 5856,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 0,
@@ -12601,11 +12605,11 @@
     }
   },
   "levels": {
-    "totalLessons": 29588,
+    "totalLessons": 29597,
     "byLevel": {
       "pre-A1": 9438,
       "A1": 18567,
-      "A2": 1499,
+      "A2": 1508,
       "B1": 39,
       "B2": 17,
       "C1": 10,
@@ -12886,11 +12890,11 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1407,
+        "lessonCount": 1416,
         "byLevel": {
           "pre-A1": 495,
           "A1": 856,
-          "A2": 56,
+          "A2": 65,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -13550,8 +13554,8 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1407,
-        "measurable": 1404,
+        "lessonCount": 1416,
+        "measurable": 1413,
         "unmeasurable": 3,
         "lessonViolations": 0,
         "chapterViolations": 7
@@ -13781,7 +13785,7 @@
           "language": "sanskrit",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 1407,
+          "lessonCount": 1416,
           "totalGlyphs": 50,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -84000,6 +84004,54 @@
           "R4"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C246-THG246-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C246-saktuh",
+        "introducedAt": 1331,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C246-THG246-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C246-ksaudram",
+        "introducedAt": 1332,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C246-THG246-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C246-mistannam",
+        "introducedAt": 1333,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C247-THG247-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C247-banah",
+        "introducedAt": 1334,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "SA-LEX-C51-KIN-02",
@@ -262873,7 +262925,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "SA-LEX-C139-FUT139-03",
@@ -262906,7 +262958,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "SA-LEX-C14-DEIXIS-01",
@@ -267881,46 +267933,57 @@
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C246-THG246-03",
+        "atom": "SA-LEX-C245-THG245-04",
         "language": "sanskrit",
-        "introducedBy": "SA-C246-saktuh",
-        "introducedAt": 1331,
+        "introducedBy": "SA-C245-lavangam",
+        "introducedAt": 1327,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C246-THG246-04",
+        "atom": "SA-LEX-C245-THG245-05",
         "language": "sanskrit",
-        "introducedBy": "SA-C246-ksaudram",
-        "introducedAt": 1332,
+        "introducedBy": "SA-C245-ela",
+        "introducedAt": 1328,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C246-THG246-05",
+        "atom": "SA-LEX-C246-THG246-01",
         "language": "sanskrit",
-        "introducedBy": "SA-C246-mistannam",
-        "introducedAt": 1333,
+        "introducedBy": "SA-C246-lajah",
+        "introducedAt": 1329,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C247-THG247-01",
+        "atom": "SA-LEX-C246-THG246-02",
         "language": "sanskrit",
-        "introducedBy": "SA-C247-banah",
-        "introducedAt": 1334,
+        "introducedBy": "SA-C246-dhanyam",
+        "introducedAt": 1330,
         "missed": [
           "R2",
-          "R3"
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C247-THG247-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C247-khadgah",
+        "introducedAt": 1335,
+        "missed": [
+          "R3",
+          "R4"
         ],
         "revisits": 3
       },
@@ -268057,6 +268120,39 @@
         "revisits": 3
       },
       {
+        "atom": "SA-LEX-C257-TRV257-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C257-karayanam",
+        "introducedAt": 1388,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C257-TRV257-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C257-agamanam",
+        "introducedAt": 1389,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C257-TRV257-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C257-prasthanam",
+        "introducedAt": 1390,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "SA-LEX-C26-ROLE-02",
         "language": "sanskrit",
         "introducedBy": "SA-C26-student",
@@ -268175,7 +268271,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "SA-LEX-C28-LEAVE-03",
@@ -271167,7 +271263,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "SA-LEX-KIM",
@@ -328814,6 +328910,26 @@
         "revisits": 2
       },
       {
+        "atom": "SA-GRAMMAR-C261-DUAL-OBJECTS-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C261-dual-object-practice",
+        "introducedAt": 1402,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-GRAMMAR-C262-OBJECT-PERSON-NUMBER-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C262-object-person-number",
+        "introducedAt": 1405,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "SA-GRAMMAR-CORRELATIVE-01",
         "language": "sanskrit",
         "introducedBy": "SA-C53-yah-sah",
@@ -329042,56 +329158,6 @@
           "R3"
         ],
         "revisits": 5
-      },
-      {
-        "atom": "SA-LEX-C245-THG245-04",
-        "language": "sanskrit",
-        "introducedBy": "SA-C245-lavangam",
-        "introducedAt": 1327,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C245-THG245-05",
-        "language": "sanskrit",
-        "introducedBy": "SA-C245-ela",
-        "introducedAt": 1328,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C246-THG246-01",
-        "language": "sanskrit",
-        "introducedBy": "SA-C246-lajah",
-        "introducedAt": 1329,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C246-THG246-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C246-dhanyam",
-        "introducedAt": 1330,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C247-THG247-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C247-khadgah",
-        "introducedAt": 1335,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
       },
       {
         "atom": "SA-LEX-C247-THG247-03",
@@ -329514,32 +329580,32 @@
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C257-TRV257-03",
+        "atom": "SA-LEX-C257-TRV257-02",
         "language": "sanskrit",
-        "introducedBy": "SA-C257-karayanam",
-        "introducedAt": 1388,
+        "introducedBy": "SA-C257-lokayanam",
+        "introducedAt": 1387,
         "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C257-TRV257-04",
+        "atom": "SA-LEX-C259-ASMAKAM-01",
         "language": "sanskrit",
-        "introducedBy": "SA-C257-agamanam",
-        "introducedAt": 1389,
+        "introducedBy": "SA-C259-asmakam",
+        "introducedAt": 1394,
         "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C257-TRV257-05",
+        "atom": "SA-LEX-C259-YUSMAKAM-02",
         "language": "sanskrit",
-        "introducedBy": "SA-C257-prasthanam",
-        "introducedAt": 1390,
+        "introducedBy": "SA-C259-yusmakam",
+        "introducedAt": 1395,
         "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 2
       },
@@ -329742,6 +329808,26 @@
           "R3"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "SA-PRON-C262-ASMAN-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C262-asman",
+        "introducedAt": 1403,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-PRON-C262-YUSMAN-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C262-yusman",
+        "introducedAt": 1404,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "SA-SCRIPT-DANDA-01",
@@ -341303,11 +341389,11 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1407,
+        "lessonCount": 1416,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 1396,
+        "atomsTaught": 1401,
         "atomsNeverRevisited": 0,
         "forwardReferences": 0
       },
@@ -341357,14 +341443,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 29975,
+      "atomsTaught": 29980,
       "atomsNeverRevisited": 1,
       "neverRevisitedPercent": 0,
       "missedByWindow": {
         "R1": 1554,
-        "R2": 19842,
-        "R3": 15997,
-        "R4": 24365
+        "R2": 19846,
+        "R3": 16003,
+        "R4": 24374
       },
       "forwardReferences": 788
     }
@@ -341543,7 +341629,7 @@
       {
         "language": "sanskrit",
         "script": "devanagari",
-        "lessonCount": 1407,
+        "lessonCount": 1416,
         "scriptLessons": 76,
         "taughtGlyphs": 50,
         "shownGlyphs": 50,
@@ -341753,7 +341839,7 @@
       },
       {
         "language": "sanskrit",
-        "wordLessons": 1235,
+        "wordLessons": 1238,
         "wordLessonsWithoutEtymologyHook": 1200,
         "wordLessonsWithoutVisibleEtymology": 1099,
         "wordLessonsWithoutAnyEtymology": 1098,
@@ -341793,7 +341879,7 @@
       }
     ],
     "summary": {
-      "wordLessons": 25690,
+      "wordLessons": 25693,
       "wordLessonsWithoutEtymologyHook": 4810,
       "wordLessonsWithoutVisibleEtymology": 4804,
       "wordLessonsWithoutAnyEtymology": 4693,
@@ -363495,8 +363581,8 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1407,
-        "atomMeasurableLessons": 1404,
+        "lessonCount": 1416,
+        "atomMeasurableLessons": 1413,
         "atomMeasurementBlindLessons": 3,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -363511,14 +363597,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 1396,
+        "atomsTaught": 1401,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 2910,
+        "reinforcementWindowMisses": 2929,
         "reinforcementMissesByWindow": {
           "R1": 70,
-          "R2": 822,
-          "R3": 774,
-          "R4": 1244
+          "R2": 826,
+          "R3": 780,
+          "R4": 1253
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 98,
@@ -363535,7 +363621,7 @@
           {
             "language": "sanskrit",
             "kind": "reinforcement",
-            "count": 2910,
+            "count": 2929,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -364086,16 +364172,16 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "portuguese",
+        "language": "sanskrit",
         "kind": "reinforcement",
-        "count": 2914,
+        "count": 2929,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "sanskrit",
+        "language": "portuguese",
         "kind": "reinforcement",
-        "count": 2910,
+        "count": 2914,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -364699,8 +364785,8 @@
           },
           {
             "criterion": "vocabulary",
-            "detail": "teaches 1234 distinct headwords at or below B1, against 2500",
-            "shortfall": 1266
+            "detail": "teaches 1237 distinct headwords at or below B1, against 2500",
+            "shortfall": 1263
           },
           {
             "criterion": "verb-vocabulary",
@@ -364708,7 +364794,7 @@
             "shortfall": 83
           }
         ],
-        "vocabulary": 1234
+        "vocabulary": 1237
       },
       {
         "language": "spanish",
@@ -364798,11 +364884,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 29588,
-    "voice": 27199,
+    "totalLessons": 29597,
+    "voice": 27208,
     "sight": 896,
     "pen": 1493,
-    "coreVoice": 27769,
+    "coreVoice": 27778,
     "lessonsWithWritingSegments": 958,
     "drivablePercent": 94,
     "tracks": [
@@ -429117,13 +429203,13 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1407,
-        "voice": 1294,
+        "lessonCount": 1416,
+        "voice": 1303,
         "sight": 36,
         "pen": 77,
-        "coreVoice": 1316,
+        "coreVoice": 1325,
         "drivablePercent": 94,
-        "drivablePrefixTotal": 1229,
+        "drivablePrefixTotal": 1238,
         "chapters": [
           {
             "language": "sanskrit",
@@ -433108,6 +433194,36 @@
               "voice"
             ],
             "drivablePrefix": 4,
+            "firstNonVoiceLesson": null,
+            "unstartable": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 263,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null,
+            "unstartable": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 264,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
             "firstNonVoiceLesson": null,
             "unstartable": null
           }
@@ -454448,7 +454564,7 @@
     "underspentPercent": 95
   },
   "infoDump": {
-    "lessons": 29588,
+    "lessons": 29597,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -454456,11 +454572,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 29588,
-    "measuredLessons": 25196,
-    "idiomMeasuredLessons": 25196,
-    "senseMeasuredLessons": 25197,
-    "cultureClaimMeasuredLessons": 25196,
+    "lessons": 29597,
+    "measuredLessons": 25205,
+    "idiomMeasuredLessons": 25205,
+    "senseMeasuredLessons": 25206,
+    "cultureClaimMeasuredLessons": 25205,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -454469,8 +454585,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 29113,
-    "usesBeforeIntroduction": 53347,
+    "lessonsUsingTerms": 29122,
+    "usesBeforeIntroduction": 53371,
     "technicalUsesBeforeIntroduction": 8563,
     "technicalLessons": 5503,
     "worstTerms": [
@@ -454501,12 +454617,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 29588,
+    "lessonsScanned": 29597,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 5923,
+    "filesScanned": 5925,
     "mainCharacters": 153,
     "scriptCharacters": 829,
     "gaps": 0
