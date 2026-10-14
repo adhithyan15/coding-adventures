@@ -1108,6 +1108,8 @@ Shared Flowchart `nodeSpacing`, `rankSpacing`, and `diagramPadding` configuratio
 init directives survives semantic and layout IR. The values control ownership-lane separation,
 consecutive-rank separation, and outer scene padding respectively, and remain visible in backend-neutral
 scene metadata.
+Shared Flowchart `wrappingWidth` configuration caps measured horizontal process-node width and carries
+that bound into backend-neutral text wrapping and paint lowering.
 Shared Flowchart `curve` configuration accepts the complete supported curve catalog and supplies the
 layout-time default for edges without a direct or class-resolved curve. Per-edge curves retain precedence,
 and the resolved modes lower to backend-neutral line, quadratic, or cubic paint paths.
