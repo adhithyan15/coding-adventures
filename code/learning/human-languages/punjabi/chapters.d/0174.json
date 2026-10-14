@@ -1,0 +1,17 @@
+{
+  "chapter": 174,
+  "title": "Return to the Familiar Three-Field Card Cue",
+  "label": "ch:pa-form-card-cue-r4",
+  "canDo": "I can use one familiar fictional card to choose the matching old age, phone, and date values, then check a brief recall against the bank.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-R174-form-card-cue-again",
+    "kind": "production",
+    "summary": "Copy one supported three-field card selection and recall the other briefly, outside scored A1 mock credit.",
+    "assesses": [
+      "PA-FORM-AGE-PHONE-DATE-CUE-01"
+    ]
+  }
+}

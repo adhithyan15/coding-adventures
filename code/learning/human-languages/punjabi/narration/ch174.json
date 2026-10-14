@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 174,
+  "title": "Return to the Familiar Three-Field Card Cue",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:f7fdefd877066c44",
+  "lessons": [
+    {
+      "id": "PA-R174-form-card-cue-again",
+      "sequence": 9180,
+      "title": "One old card, three old bank choices",
+      "headword": "ਕ / ਖ",
+      "romanization": "two familiar fictional form cards",
+      "gloss": "retrieve the old card-to-three-bank cue without adding a form field",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:320afd610a6d2ff3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is a gentle return to fictional practice values, not a request for personal information or a scored A1 mock."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep this old model visible: ਕ chooses A in all three banks; ਖ chooses B in all three banks. Age A/B are ੧੫ / ੨੫; phone A/B are ੦੧੨ ੨੫੧ / ੦੨੫ ੧੨੫; date A/B are ੧੫/੦੧/੨੦੨੫ / ੨੫/੦੨/੨੦੨੫. Point to the matching bank letter for each field before writing anything."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With the model still visible, use ਕ to copy its three A values after these printed labels. Look back at the bank before each value. Keep the card mark out of the form."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਮਰ: ______ ਫ਼ੋਨ: ______ ਤਾਰੀਖ਼: ______."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the bank for five seconds. The card is now ਖ. On a fresh copy of the same three printed labels, write the familiar B values from memory. Uncover the bank and compare one value at a time. If a value differs, correct only that value with the model visible again. This brief recall is practice, not independent timed writing or mock credit."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
