@@ -39,3 +39,10 @@ strict lint and exact-head independent security review before delivery. Required
 CI/conflict/review/merge gates remain; no skipping existing failures or weakening
 capacity/ownership checks. General-hop32 resource debt and full Closure parity/
 byte-source/full lineage/pass-sweep/stableIDs/spans remain open. One active PR.
+
+The first hardware control returned UNAVAILABLE because the shared test helper
+uses a Linux/macOS-only approximation for NativeAot. The actual native runner
+already uses native_linker_ok, including a genuine Windows linker probe.
+Align the shared availability helper with that real execution gate, retain the
+unavailable receipt as non-execution, and rerun the baseline hardware control.
+An installed Windows linker must not silently suppress these controls.
