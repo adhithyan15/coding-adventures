@@ -4380,7 +4380,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_railroad_to_png() {
-        let diagram = parse_railroad("railroad-beta\ntitle Numeric literal\naccTitle: Numeric grammar\nsign = optional(terminal(\"-\"));\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = sequence(nonterminal(\"sign\"), oneOrMore(nonterminal(\"digit\")), special(\"integer\"));").expect("railroad parse failed");
+        let diagram = parse_railroad("---\nconfig:\n  railroad:\n    padding: 24\n    verticalSeparation: 30\n    horizontalSeparation: 36\n---\nrailroad-beta\ntitle Numeric literal\naccTitle: Numeric grammar\nsign = optional(terminal(\"-\"));\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = sequence(nonterminal(\"sign\"), oneOrMore(nonterminal(\"digit\")), special(\"integer\"));").expect("railroad parse failed");
         let layout = layout_railroad(&diagram);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_railroad(&layout, &DiagramToPaintOptions {
@@ -4389,6 +4389,9 @@ line "Target" [35, 50, 68, 82]"##,
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")), Some(&"Numeric grammar".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.padding")), Some(&"24".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.verticalSeparation")), Some(&"30".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.horizontalSeparation")), Some(&"36".to_string()));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_railroad_e2e.png").expect("PNG write failed");
