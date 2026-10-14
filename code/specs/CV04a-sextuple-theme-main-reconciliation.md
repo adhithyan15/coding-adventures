@@ -70,3 +70,11 @@ controls, accept assigned sixth source, retain direct sixth Parse135 and check
 seventh source Parse135 separately from six/seven public-AST semantic controls.
 Never loosen the parser cap, erase theme metadata, or infer source mappings from
 cloned AST positions. Source/native/security acceptance remains pending.
+
+Actual66250 EXIT1 at3b944: focused depth2 and integer3 pass, then the full
+five-package suite exits101 during compilation, before tests. Two owned
+hierarchy builders need imported lane classes/style and diagram theme fields.
+Supply the upstream neutral defaults, retaining every ordering/large-gap
+assertion. Preserve the compilation-failure receipt. Completed incremental
+cache alone may be reclaimed after the actual terminal result; preserve source,
+receipts, binaries and all frozen Miri artifacts. No active-target cleanup.
