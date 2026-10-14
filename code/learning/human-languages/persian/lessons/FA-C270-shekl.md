@@ -14,7 +14,8 @@ romanization: "shekl"
 concept_tag: FA-CHERA270-SHEKL
 prerequisites: [FA-C269-daqiqan, FA-C269-khoshbakhtane]
 sounds: []
-roots: []
+roots: [arabic-sakl]
+etymology_hook: "shekl ← Arabic šakl 'likeness, shape', root š-k-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C269-khoshbakhtane]
 <!-- hl-knowledge: introduces=[FA-LEX-C270-CHERA270-01]; assesses=[] -->
 
 **شکل** — *shekl* — "a shape".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shekl* is borrowed from Arabic *šakl*, "likeness, shape". Its Arabic root is *š-k-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

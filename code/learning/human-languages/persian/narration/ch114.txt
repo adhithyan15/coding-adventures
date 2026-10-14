@@ -12,6 +12,9 @@ Before the new one: say the Persian for an envelope, then the Persian for a penc
 You'll want to know: خط کش.
 خط کش — khatkesh — "a ruler".
 
+The word, taken apart.
+khatkesh is khat, "line", with -kesh, "drawing" (from keshidan, "to draw"): the line-drawer. khat is borrowed from Arabic ḫaṭṭ, "line, writing" (root ḫ-ṭ-ṭ, Lane); kesh is native Persian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a pencil sharpener, then the Persian for
 
 You'll want to know: تخته.
 تخته — takhte — "a board".
+
+The word, taken apart.
+takhte is a native Persian word, inherited rather than borrowed: it continues Middle Persian taxtag, "plank, board" (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the Persian for a ruler, then the Persian for a board.
 You'll want to know: کلاس.
 کلاس — kelâs — "a class".
 
+The word, taken apart.
+kelâs is borrowed from French classe, "class" (EtymDB). The French word goes back to Latin classis.
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Persian for a board, then the Persian for a class.
 You'll want to know: امتحان.
 امتحان — emtehân — "an exam".
 
+The word, taken apart.
+emtehân is borrowed from Arabic imtiḥān, "examination, test". Its Arabic root is m-ḥ-n (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Persian for a class, then the Persian for an exam.
 
 You'll want to know: آموزگار.
 آموزگار — âmuzgâr — "a teacher".
+
+The word, taken apart.
+âmuzgâr is a native Persian word, inherited rather than borrowed: it continues Middle Persian hammōzgār, "teacher" (EtymDB). It belongs with âmukhtan, "to learn".
 
 What you've built.
 One more word for this chapter.

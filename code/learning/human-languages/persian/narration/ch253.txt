@@ -12,6 +12,9 @@ Before the new one: say the Persian for a guard, then the Persian for a street s
 You'll want to know: پیاده شدن.
 پیاده شدن — piyâde shodan — "to get off (a vehicle)".
 
+The word, taken apart.
+piyâde shodan is "to become on foot": piyâde is inherited, from Middle Persian payādag, "foot soldier" (EtymDB, which also lists the sense "chess pawn"). shodan, "to become", is an inherited verb; it is usually traced to Middle Persian šudan, "to go".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a street sweeper, then the Persian for t
 
 You'll want to know: وارد شدن.
 وارد شدن — vâred shodan — "to enter".
+
+The word, taken apart.
+vâred shodan pairs vâred, borrowed from Arabic wārid, "arriving, coming in" (root w-r-d, Lane), with the Persian verb shodan, "to become". shodan, "to become", is an inherited verb; it is usually traced to Middle Persian šudan, "to go".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to get off, then the Persian for to ente
 You'll want to know: خارج شدن.
 خارج شدن — khârej shodan — "to go out, to exit".
 
+The word, taken apart.
+khârej shodan pairs khârej, borrowed from Arabic ḫārij, "outside, going out" (root ḫ-r-j, Lane), with the Persian verb shodan, "to become". shodan, "to become", is an inherited verb; it is usually traced to Middle Persian šudan, "to go".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to enter, then the Persian for to go out
 You'll want to know: هل دادن.
 هل دادن — hel dâdan — "to push".
 
+The word, taken apart.
+hel dâdan pairs hel, "a push", with dâdan, "to give". Where hel comes from is not settled. dâdan, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, "to give".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to go out, then the Persian for to push.
 
 You'll want to know: انداختن.
 انداختن — andâkhtan — "to throw".
+
+The word, taken apart.
+andâkhtan is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian handāxtan, "to throw; to measure".
 
 What you've built.
 One more word for this chapter.

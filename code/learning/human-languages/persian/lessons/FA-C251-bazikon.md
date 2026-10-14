@@ -14,7 +14,8 @@ romanization: "bâzikon"
 concept_tag: FA-KAR251-BAZIKON
 prerequisites: [FA-C251-davar, FA-C251-morabbi]
 sounds: []
-roots: []
+roots: [persian-bazi]
+etymology_hook: "bâzikon: Persian bâzi 'play' + kon 'doing' (kardan); inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C251-morabbi]
 <!-- hl-knowledge: introduces=[FA-LEX-C251-KAR251-04]; assesses=[] -->
 
 **بازیکن** — *bâzikon* — "a player".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâzikon* is built from *bâzi*, "play", and *-kon*, "doing" (from *kardan*): the one who plays. *bâzi* is usually traced to Middle Persian *wāzīg*, and *kardan* to *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

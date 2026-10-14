@@ -14,7 +14,8 @@ romanization: "jarime shodan"
 concept_tag: FA-VERB-JARIME-SHODAN
 prerequisites: [FA-C262-bastebandi-kardan, FA-C262-saf-keshidan]
 sounds: []
-roots: []
+roots: [arabic-jarima]
+etymology_hook: "jarime ← Arabic jarīma 'crime, offence', root j-r-m (Lane), + Persian shodan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C262-saf-keshidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C262-KONESH262-03]; assesses=[] -->
 
 **جریمه شدن** — *jarime shodan* — "to be fined".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jarime shodan* pairs *jarime*, borrowed from Arabic *jarīma*, "crime, offence" (root *j-r-m*, Lane), with the Persian verb *shodan*, "to become". *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go". Persian uses it for the fine paid for an offence.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

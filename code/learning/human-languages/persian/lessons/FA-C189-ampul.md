@@ -14,7 +14,8 @@ romanization: "âmpul"
 concept_tag: FA-SALAMAT189-AMPUL
 prerequisites: [FA-C188-tab-khordan, FA-C188-nasb-kardan]
 sounds: []
-roots: []
+roots: [french-ampoule]
+etymology_hook: "âmpul ← French ampoule 'phial'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C188-nasb-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C189-SALAMAT189-01]; assesses=[] -->
 
 **آمپول** — *âmpul* — "an injection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âmpul* is borrowed from French *ampoule*, "phial" (EtymDB). The French word goes back to Latin *ampulla*, "small flask".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

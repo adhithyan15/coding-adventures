@@ -14,7 +14,8 @@ romanization: "chizi"
 concept_tag: FA-DEF84-CHIZI
 prerequisites: [FA-C84-hame, FA-C84-kasi]
 sounds: []
-roots: []
+roots: [persian-chiz]
+etymology_hook: "chizi: Persian chiz 'thing' (Middle Persian čiš) + -i 'some'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C84-kasi]
 <!-- hl-knowledge: introduces=[FA-LEX-C84-DEF84-03]; assesses=[] -->
 
 **چیزی** — *chizi* — "something".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chizi* is *chiz*, "thing", with the ending *-i*, "a, some": "some thing". *chiz* is native, usually traced to Middle Persian *čiš*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

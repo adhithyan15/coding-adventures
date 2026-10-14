@@ -14,7 +14,8 @@ romanization: "zardâlu"
 concept_tag: FA-THINGS100-ZARDALU
 prerequisites: [FA-C99-kharboze, FA-C99-holu]
 sounds: []
-roots: []
+roots: [persian-zard]
+etymology_hook: "zardâlu: Persian zard 'yellow' + âlu 'plum'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C99-holu]
 <!-- hl-knowledge: introduces=[FA-LEX-C100-THINGS100-01]; assesses=[] -->
 
 **زردآلو** — *zardâlu* — "an apricot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zardâlu* is *zard*, "yellow", with *âlu*, "plum": "yellow plum". Both parts are native Persian; *zard* is usually traced to Middle Persian *zard*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "suzan"
 concept_tag: FA-THINGS94-SUZAN
 prerequisites: [FA-C94-chakosh, FA-C94-gheychi]
 sounds: []
-roots: []
+roots: [persian-suzan]
+etymology_hook: "suzan: inherited, usually traced to Middle Persian sūzan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C94-gheychi]
 <!-- hl-knowledge: introduces=[FA-LEX-C94-THINGS94-03]; assesses=[] -->
 
 **سوزن** — *suzan* — "a needle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*suzan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *sūzan*, "needle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

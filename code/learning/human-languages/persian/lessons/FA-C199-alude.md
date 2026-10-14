@@ -14,7 +14,8 @@ romanization: "âlude"
 concept_tag: FA-SEFAT199-ALUDE
 prerequisites: [FA-C198-nemune, FA-C198-movaffaqiyat]
 sounds: []
-roots: []
+roots: [persian-aludan]
+etymology_hook: "âlude: past participle of Persian âludan 'to stain' (Middle Persian ālūdan)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C198-movaffaqiyat]
 <!-- hl-knowledge: introduces=[FA-LEX-C199-SEFAT199-01]; assesses=[] -->
 
 **آلوده** — *âlude* — "polluted, contaminated".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âlude* is the past participle of *âludan*, "to soil, to stain": "stained". The verb is native, usually traced to Middle Persian *ālūdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

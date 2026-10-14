@@ -14,7 +14,8 @@ romanization: "yâs"
 concept_tag: FA-CHIZ279-YAS
 prerequisites: [FA-C279-nakhl, FA-C279-lale]
 sounds: []
-roots: []
+roots: [persian-yasaman]
+etymology_hook: "yâs: usually explained as short for yâsaman, the source of English jasmine"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C279-lale]
 <!-- hl-knowledge: introduces=[FA-LEX-C279-CHIZ279-05]; assesses=[] -->
 
 **یاس** — *yâs* — "jasmine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yâs* is usually explained as short for *yâsaman*, "jasmine", the Persian word that English *jasmine* comes from, through Arabic and French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

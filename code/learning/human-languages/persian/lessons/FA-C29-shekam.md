@@ -14,7 +14,8 @@ romanization: "shekam"
 concept_tag: FA-BODY29-SHEKAM
 prerequisites: [FA-C29-zanu, FA-C29-posht]
 sounds: []
-roots: []
+roots: [persian-shekam]
+etymology_hook: "shekam ← Middle Persian aškamb (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C29-posht]
 <!-- hl-knowledge: introduces=[FA-LEX-C29-BODY29-04]; assesses=[] -->
 
 **شکم** — *shekam* — "the belly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shekam* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *aškamb*, "belly" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

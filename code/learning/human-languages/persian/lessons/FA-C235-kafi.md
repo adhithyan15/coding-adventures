@@ -14,7 +14,8 @@ romanization: "kâfi"
 concept_tag: FA-SEFAT235-KAFI
 prerequisites: [FA-C235-tiz, FA-C235-mojud]
 sounds: []
-roots: []
+roots: [arabic-kafi]
+etymology_hook: "kâfi ← Arabic kāfī 'sufficient', root k-f-y (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C235-mojud]
 <!-- hl-knowledge: introduces=[FA-LEX-C235-SEFAT235-03]; assesses=[] -->
 
 **کافی** — *kâfi* — "enough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kâfi* is borrowed from Arabic *kāfī*, "sufficient". Its Arabic root is *k-f-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

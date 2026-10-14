@@ -14,7 +14,8 @@ romanization: "tumân"
 concept_tag: FA-CHIZ166-TUMAN
 prerequisites: [FA-C165-khamirdandan, FA-C165-shampu]
 sounds: []
-roots: []
+roots: [mongolian-tumen]
+etymology_hook: "tumân ← Mongolian tümen 'ten thousand'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C165-shampu]
 <!-- hl-knowledge: introduces=[FA-LEX-C166-CHIZ166-01]; assesses=[] -->
 
 **تومان** — *tumân* — "toman (ten rials)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tumân* is borrowed from Mongolian *tümen*, "ten thousand" (EtymDB). It first named a unit of ten thousand.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

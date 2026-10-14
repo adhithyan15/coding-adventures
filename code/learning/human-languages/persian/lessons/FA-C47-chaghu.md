@@ -14,7 +14,8 @@ romanization: "châghu"
 concept_tag: FA-HOME47-CHAGHU
 prerequisites: [FA-C47-ghofl, FA-C47-boshghab]
 sounds: []
-roots: []
+roots: [turkic-caqu]
+etymology_hook: "châghu: a loan, usually traced to Turkic čaqu 'knife'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C47-boshghab]
 <!-- hl-knowledge: introduces=[FA-LEX-C47-HOME47-03]; assesses=[] -->
 
 **چاقو** — *châghu* — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*châghu* is a loan, usually traced to Turkic *čaqu*, "knife".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

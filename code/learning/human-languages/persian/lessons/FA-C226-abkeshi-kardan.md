@@ -14,7 +14,8 @@ romanization: "âbkeshi kardan"
 concept_tag: FA-VERB-ABKESHI-KARDAN
 prerequisites: [FA-C226-raha-kardan, FA-C226-sabidan]
 sounds: []
-roots: []
+roots: [persian-ab, pie-kwer]
+etymology_hook: "âbkeshi kardan: Persian âb 'water' + kesh 'drawing' + -i + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C226-sabidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C226-KONESH226-05]; assesses=[] -->
 
 **آبکشی کردن** — *âbkeshi kardan* — "to rinse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âbkeshi kardan* pairs *âbkeshi*, "rinsing", with *kardan*. *âbkeshi* is *âb*, "water" (EtymDB), with *kesh*, "drawing", and *-i*. All are native Persian. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

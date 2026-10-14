@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ279-LALE
 prerequisites: [FA-C279-chenar, FA-C279-nakhl]
 sounds: []
 roots: []
+etymology_hook: "lâle: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C279-nakhl]
 <!-- hl-knowledge: introduces=[FA-LEX-C279-CHIZ279-04]; assesses=[] -->
 
 **لاله** — *lâle* — "a tulip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lâle* is the word for a tulip, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

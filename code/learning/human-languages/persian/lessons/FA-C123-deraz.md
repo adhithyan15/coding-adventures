@@ -14,7 +14,8 @@ romanization: "derâz"
 concept_tag: FA-THINGS123-DERAZ
 prerequisites: [FA-C123-rish, FA-C123-sebil]
 sounds: []
-roots: []
+roots: [persian-deraz]
+etymology_hook: "derâz: inherited, usually traced to Middle Persian drāz"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C123-sebil]
 <!-- hl-knowledge: introduces=[FA-LEX-C123-THINGS123-04]; assesses=[] -->
 
 **دراز** — *derâz* — "long".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*derâz* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *drāz*, "long".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

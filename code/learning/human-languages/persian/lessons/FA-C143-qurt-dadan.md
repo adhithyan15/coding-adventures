@@ -14,7 +14,8 @@ romanization: "qurt dâdan"
 concept_tag: FA-VERB-QURT-DADAN
 prerequisites: [FA-C142-sarma-khordan, FA-C142-zakhmi-shodan]
 sounds: []
-roots: []
+roots: [pie-deh3]
+etymology_hook: "qurt dâdan: qurt 'gulp' (origin not settled) + Persian dâdan 'to give'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C142-zakhmi-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C143-KONESH143-01]; assesses=[] -->
 
 **قورت دادن** — *qurt dâdan* — "to swallow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qurt dâdan* pairs *qurt*, "gulp", with *dâdan*, "to give". Where *qurt* comes from is not settled. *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

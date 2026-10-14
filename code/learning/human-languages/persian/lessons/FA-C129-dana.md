@@ -14,7 +14,8 @@ romanization: "dânâ"
 concept_tag: FA-QUAL129-DANA
 prerequisites: [FA-C129-sakat, FA-C129-shad]
 sounds: []
-roots: []
+roots: [pie-gno]
+etymology_hook: "dânâ: Persian dân- 'know' (dânestan, inherited) + -â"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C129-shad]
 <!-- hl-knowledge: introduces=[FA-LEX-C129-QUAL129-04]; assesses=[] -->
 
 **دانا** — *dânâ* — "wise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dânâ* is *dân-*, the present stem of *dânestan*, "to know", with the ending *-â*, "-ing": "knowing". The verb is inherited, from Middle Persian *dānistan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

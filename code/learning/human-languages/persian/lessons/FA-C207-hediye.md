@@ -14,7 +14,8 @@ romanization: "hediye"
 concept_tag: FA-CHIZ207-HEDIYE
 prerequisites: [FA-C206-adres, FA-C207-haft-sin]
 sounds: []
-roots: []
+roots: [arabic-hadiyya]
+etymology_hook: "hediye ← Arabic hadiyya 'gift, present', root h-d-y (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C207-haft-sin]
 <!-- hl-knowledge: introduces=[FA-LEX-C207-CHIZ207-02]; assesses=[] -->
 
 **هدیه** — *hediye* — "a present, a gift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hediye* is borrowed from Arabic *hadiyya*, "gift, present". Its Arabic root is *h-d-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

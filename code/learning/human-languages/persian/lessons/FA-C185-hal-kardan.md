@@ -14,7 +14,8 @@ romanization: "hal kardan"
 concept_tag: FA-VERB-HAL-KARDAN
 prerequisites: [FA-C184-ruyidan, FA-C185-tavajjoh-kardan]
 sounds: []
-roots: []
+roots: [arabic-hall]
+etymology_hook: "hal ← Arabic ḥall 'untying, solving', root ḥ-l-l (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C185-tavajjoh-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C185-KONESH185-02]; assesses=[] -->
 
 **حل کردن** — *hal kardan* — "to solve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hal kardan* pairs *hal*, borrowed from Arabic *ḥall*, "untying, solving" (root *ḥ-l-l*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

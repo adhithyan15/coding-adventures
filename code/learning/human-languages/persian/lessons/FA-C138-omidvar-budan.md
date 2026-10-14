@@ -14,7 +14,8 @@ romanization: "omidvâr budan"
 concept_tag: FA-VERB-OMIDVAR-BUDAN
 prerequisites: [FA-C138-tarh, FA-C138-tasmim-gereftan]
 sounds: []
-roots: []
+roots: [persian-ummed]
+etymology_hook: "omidvâr budan: Persian omid 'hope' + -vâr 'having' + budan 'to be'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C138-tasmim-gereftan]
 <!-- hl-knowledge: introduces=[FA-LEX-C138-AYANDE138-05]; assesses=[] -->
 
 **امیدوار بودن** — *omidvâr budan* — "to hope". **امیدوارم حالت خوب باشد** — *omidvâram hâlat khub bâshad* — "I hope you are well."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*omidvâr budan* is "to be hopeful": *omid*, "hope", with *-vâr*, "having", and *budan*, "to be". All are native; *omid* is usually traced to Middle Persian *ummēd*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bozorg shodan"
 concept_tag: FA-VERB-BOZORG-SHODAN
 prerequisites: [FA-C256-bazneshaste-shodan, FA-C257-deltang-shodan]
 sounds: []
-roots: []
+roots: [persian-buzurg, persian-shudan]
+etymology_hook: "bozorg shodan: Persian bozorg 'big' (EtymDB) + shodan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C257-deltang-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C257-KONESH257-02]; assesses=[] -->
 
 **بزرگ شدن** — *bozorg shodan* — "to grow up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bozorg shodan* is "to become big": *bozorg* is inherited, from Middle Persian *wuzurg* (EtymDB). *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

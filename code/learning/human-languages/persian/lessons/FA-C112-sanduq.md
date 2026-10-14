@@ -14,7 +14,8 @@ romanization: "sanduq"
 concept_tag: FA-THINGS112-SANDUQ
 prerequisites: [FA-C111-tanab, FA-C112-nardeban]
 sounds: []
-roots: []
+roots: [arabic-sunduq]
+etymology_hook: "sanduq ← Arabic ṣundūq 'chest, box', root ṣ-n-d-q (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C112-nardeban]
 <!-- hl-knowledge: introduces=[FA-LEX-C112-THINGS112-02]; assesses=[] -->
 
 **صندوق** — *sanduq* — "a chest, a box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sanduq* is borrowed from Arabic *ṣundūq*, "chest, box". Its Arabic root is *ṣ-n-d-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

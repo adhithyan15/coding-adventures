@@ -14,7 +14,8 @@ romanization: "gardanband"
 concept_tag: FA-THINGS97-GARDANBAND
 prerequisites: [FA-C97-dastkesh, FA-C97-gushvare]
 sounds: []
-roots: []
+roots: [persian-band]
+etymology_hook: "gardanband: Persian gardan 'neck' + band 'band' (EtymDB); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C97-gushvare]
 <!-- hl-knowledge: introduces=[FA-LEX-C97-THINGS97-04]; assesses=[] -->
 
 **گردنبند** — *gardanband* — "a necklace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gardanband* is *gardan*, "neck", with *band*, "band, tie" (EtymDB): a band for the neck. Both are native Persian; EtymDB takes *band* back to the Indo-European root of English *bind*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

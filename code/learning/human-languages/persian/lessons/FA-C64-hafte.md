@@ -14,7 +14,8 @@ romanization: "hafte"
 concept_tag: FA-ADJ64-HAFTE
 prerequisites: [FA-C64-siyah, FA-C64-sefid]
 sounds: []
-roots: []
+roots: [persian-haft]
+etymology_hook: "hafte: Persian haft 'seven' + -e (EtymDB); inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C64-sefid]
 <!-- hl-knowledge: introduces=[FA-LEX-C64-ADJ64-04]; assesses=[] -->
 
 **هفته** — *hafte* — "a week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hafte* is built on *haft*, "seven" (EtymDB), with the ending *-e*: a week is a set of seven days. *haft* is inherited, from Middle Persian *haft*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

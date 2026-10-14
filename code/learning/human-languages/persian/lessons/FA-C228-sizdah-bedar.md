@@ -14,7 +14,8 @@ romanization: "sizdah bedar"
 concept_tag: FA-ZAMAN228-SIZDAH-BEDAR
 prerequisites: [FA-C227-tasadof, FA-C227-dandanpezeshk]
 sounds: []
-roots: []
+roots: [pie-treyes, proto-indo-european-dekm]
+etymology_hook: "sizdah bedar: Persian sizdah 'thirteen' + be-dar 'outdoors'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C227-dandanpezeshk]
 <!-- hl-knowledge: introduces=[FA-LEX-C228-ZAMAN228-01]; assesses=[] -->
 
 **سیزده بدر** — *sizdah bedar* — "Sizdah Bedar (the outdoor 13th day of Nowruz)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sizdah bedar* is built from *sizdah*, "thirteen" (*se*, "three", with *dah*, "ten"), and *be-dar*, "to the door, outside". All the pieces are inherited Persian words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

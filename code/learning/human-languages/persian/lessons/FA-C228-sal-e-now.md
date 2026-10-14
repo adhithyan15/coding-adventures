@@ -14,7 +14,8 @@ romanization: "sâl-e now"
 concept_tag: FA-ZAMAN228-SAL-E-NOW
 prerequisites: [FA-C228-sizdah-bedar, FA-C228-chaharshanbe-suri]
 sounds: []
-roots: []
+roots: [persian-sal, persian-nau]
+etymology_hook: "sâl-e now: Persian sâl 'year' (EtymDB) + now 'new'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C228-chaharshanbe-suri]
 <!-- hl-knowledge: introduces=[FA-LEX-C228-ZAMAN228-03]; assesses=[] -->
 
 **سال نو** — *sâl-e now* — "the New Year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâl-e now* is "the new year": *sâl*, "year", continues Middle Persian *sāl* (EtymDB), and *now*, "new", is inherited too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

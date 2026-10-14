@@ -14,7 +14,8 @@ romanization: "roftegar"
 concept_tag: FA-KAR252-ROFTEGAR
 prerequisites: [FA-C252-atashneshan, FA-C252-negahban]
 sounds: []
-roots: []
+roots: [persian-ruftan]
+etymology_hook: "roftegar: Persian rofte 'swept' (ruftan) + -gar 'doer'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C252-negahban]
 <!-- hl-knowledge: introduces=[FA-LEX-C252-KAR252-05]; assesses=[] -->
 
 **رفتگر** — *roftegar* — "a street sweeper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*roftegar* is built from *rofte*, "swept" (from *ruftan*, "to sweep"), and *-gar*, "doer": the sweeper. Both are native Persian, inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

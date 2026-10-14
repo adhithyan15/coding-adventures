@@ -14,7 +14,8 @@ romanization: "mahbub"
 concept_tag: FA-QUAL131-MAHBUB
 prerequisites: [FA-C130-kam, FA-C130-ziyad]
 sounds: []
-roots: []
+roots: [arabic-mahbub]
+etymology_hook: "mahbub ← Arabic maḥbūb 'beloved', root ḥ-b-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C130-ziyad]
 <!-- hl-knowledge: introduces=[FA-LEX-C131-QUAL131-01]; assesses=[] -->
 
 **محبوب** — *mahbub* — "popular, beloved".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mahbub* is borrowed from Arabic *maḥbūb*, "beloved". Its Arabic root is *ḥ-b-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

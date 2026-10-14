@@ -14,7 +14,8 @@ romanization: "moshtari"
 concept_tag: FA-CHIZ166-MOSHTARI
 prerequisites: [FA-C165-shampu, FA-C166-tuman]
 sounds: []
-roots: []
+roots: [arabic-mustari]
+etymology_hook: "moshtari ← Arabic muštarī 'buyer', root š-r-y (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C166-tuman]
 <!-- hl-knowledge: introduces=[FA-LEX-C166-CHIZ166-02]; assesses=[] -->
 
 **مشتری** — *moshtari* — "a customer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*moshtari* is borrowed from Arabic *muštarī*, "buyer". Its Arabic root is *š-r-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

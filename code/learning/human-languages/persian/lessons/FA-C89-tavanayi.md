@@ -14,7 +14,8 @@ romanization: "tavânâyi"
 concept_tag: FA-CAN89-TAVANAYI
 prerequisites: [FA-C89-tavanestan, FA-C89-maharat]
 sounds: []
-roots: []
+roots: [persian-tavan]
+etymology_hook: "tavânâyi: Persian tavânâ 'able' + -i; from the inherited verb tavânestan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C89-maharat]
 <!-- hl-knowledge: introduces=[FA-LEX-C89-CAN89-03]; assesses=[] -->
 
 **توانایی** — *tavânâyi* — "ability".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tavânâyi* is *tavânâ*, "able", with the noun ending *-i*. *tavânâ* belongs with *tavânestan*, "to be able", an inherited verb usually traced to Middle Persian *tuwānistan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

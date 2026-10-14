@@ -14,7 +14,8 @@ romanization: "khoshmaze"
 concept_tag: FA-SEFAT161-KHOSHMAZE
 prerequisites: [FA-C160-ettefaq, FA-C160-shans]
 sounds: []
-roots: []
+roots: [khush-persian]
+etymology_hook: "khoshmaze: Persian khosh 'pleasant' + maze 'taste'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C160-shans]
 <!-- hl-knowledge: introduces=[FA-LEX-C161-SEFAT161-01]; assesses=[] -->
 
 **خوشمزه** — *khoshmaze* — "tasty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khoshmaze* is *khosh*, "pleasant", with *maze*, "taste": pleasant-tasting. Both are native Persian; *khosh* is usually traced to Middle Persian *xwaš*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

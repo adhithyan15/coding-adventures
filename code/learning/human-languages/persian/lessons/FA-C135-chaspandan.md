@@ -15,6 +15,7 @@ concept_tag: FA-VERB-CHASPANDAN
 prerequisites: [FA-C135-mandan, FA-C135-zistan]
 sounds: []
 roots: []
+etymology_hook: "chaspândan: causative of Persian chaspidan 'to stick'; older form not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C135-zistan]
 <!-- hl-knowledge: introduces=[FA-LEX-C135-ACT135-04]; assesses=[] -->
 
 **چسباندن** — *chaspândan* — "to stick, to glue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chaspândan* is the causative of *chaspidan*, "to stick". It is native Persian, but its older form is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gomrok"
 concept_tag: FA-MAKAN155-GOMROK
 prerequisites: [FA-C155-shahrdari, FA-C155-sefarat]
 sounds: []
-roots: []
+roots: [commercium-latin]
+etymology_hook: "gomrok ← Greek kommerkion ← Latin commercium (EtymDB), usually via Turkish"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C155-sefarat]
 <!-- hl-knowledge: introduces=[FA-LEX-C155-MAKAN155-05]; assesses=[] -->
 
 **گمرک** — *gomrok* — "customs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gomrok* goes back to Byzantine Greek *kommerkion*, "customs duty", from Latin *commercium*, "trade" (EtymDB); it is usually said to have reached Persian through Turkish *gümrük*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

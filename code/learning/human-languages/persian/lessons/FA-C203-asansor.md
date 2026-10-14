@@ -14,7 +14,8 @@ romanization: "âsânsor"
 concept_tag: FA-CHIZ203-ASANSOR
 prerequisites: [FA-C203-saqf, FA-C203-kaf]
 sounds: []
-roots: []
+roots: [french-ascenseur]
+etymology_hook: "âsânsor ← French ascenseur 'lift'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C203-kaf]
 <!-- hl-knowledge: introduces=[FA-LEX-C203-CHIZ203-04]; assesses=[] -->
 
 **آسانسور** — *âsânsor* — "a lift, an elevator".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âsânsor* is borrowed from French *ascenseur*, "lift" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "âlu"
 concept_tag: FA-THINGS118-ALU
 prerequisites: [FA-C118-parking, FA-C118-kishmish]
 sounds: []
-roots: []
+roots: [persian-alu]
+etymology_hook: "âlu: usually traced to Middle Persian ālūd 'plum' (CDIAL 1103); not Sanskrit ālu 'edible root'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C118-kishmish]
 <!-- hl-knowledge: introduces=[FA-LEX-C118-THINGS118-04]; assesses=[] -->
 
 **آلو** — *âlu* — "a plum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âlu* is usually traced to Middle Persian *ālūd*, "plum", as Turner's CDIAL (1103) notes; Hindi *ālū*, "plum", was taken from it. EtymDB links it to Sanskrit *ālu*, "edible root", but that is a different word that looks alike.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

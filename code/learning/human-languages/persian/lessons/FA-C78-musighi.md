@@ -14,7 +14,8 @@ romanization: "musighi"
 concept_tag: FA-WORLD78-MUSIGHI
 prerequisites: [FA-C77-ahang, FA-C78-safar]
 sounds: []
-roots: []
+roots: [greek-mousike]
+etymology_hook: "musighi ← Arabic mūsīqā ← Greek mousikē (EtymDB); English music is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C78-safar]
 <!-- hl-knowledge: introduces=[FA-LEX-C78-WORLD78-02]; assesses=[] -->
 
 **موسیقی** — *musighi* — "music".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*musighi* is borrowed from Arabic *mūsīqā*, "music", which goes back to Greek *mousikē*, "the art of the Muses" (EtymDB). English *music* comes from the same Greek word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

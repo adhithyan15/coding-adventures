@@ -14,7 +14,8 @@ romanization: "mojud"
 concept_tag: FA-SEFAT235-MOJUD
 prerequisites: [FA-C234-qesmat, FA-C235-tiz]
 sounds: []
-roots: []
+roots: [arabic-mawjud]
+etymology_hook: "mojud ← Arabic mawjūd 'found, existing', root w-j-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C235-tiz]
 <!-- hl-knowledge: introduces=[FA-LEX-C235-SEFAT235-02]; assesses=[] -->
 
 **موجود** — *mojud* — "available, in stock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mojud* is borrowed from Arabic *mawjūd*, "found, existing". Its Arabic root is *w-j-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

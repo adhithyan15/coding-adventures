@@ -14,7 +14,8 @@ romanization: "takht"
 concept_tag: FA-HOME46-TAKHT
 prerequisites: [FA-C45-miz, FA-C46-divar]
 sounds: []
-roots: []
+roots: [persian-takht]
+etymology_hook: "takht ← Middle Persian taxt (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C46-divar]
 <!-- hl-knowledge: introduces=[FA-LEX-C46-HOME46-02]; assesses=[] -->
 
 **تخت** — *takht* — "a bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*takht* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *taxt*, "throne" (EtymDB). Persian now uses it for a bed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

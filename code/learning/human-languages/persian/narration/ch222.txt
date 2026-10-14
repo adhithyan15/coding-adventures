@@ -12,6 +12,9 @@ Before the new one: say the Persian for to joke, then the Persian for to be jeal
 You'll want to know: آب دادن.
 آب دادن — âb dâdan — "to water (plants)".
 
+The word, taken apart.
+âb dâdan is "to give water": âb is inherited (Middle Persian āb, EtymDB). dâdan, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, "to give".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to be jealous, then the Persian for to w
 
 You'll want to know: پارس کردن.
 پارس کردن — pârs kardan — "to bark".
+
+The word, taken apart.
+pârs kardan pairs pârs, "barking", with kardan. Where pârs comes from is not settled; it is not the name Pârs, "Persia", which EtymDB lists beside it. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to water, then the Persian for to bark.
 You'll want to know: خواب دیدن.
 خواب دیدن — khâb didan — "to dream".
 
+The word, taken apart.
+khâb didan is "to see sleep": khâb, "sleep", is inherited (Middle Persian xwāb, EtymDB), and so is didan, "to see". EtymDB takes khâb back to the Indo-European root swep-, "to sleep".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to bark, then the Persian for to dream.
 You'll want to know: شک کردن.
 شک کردن — shak kardan — "to doubt".
 
+The word, taken apart.
+shak kardan pairs shak, borrowed from Arabic šakk, "doubt" (root š-k-k, Lane), with the Persian verb kardan, "to do, to make". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to dream, then the Persian for to doubt.
 
 You'll want to know: طول کشیدن.
 طول کشیدن — tul keshidan — "to take (time), to last".
+
+The word, taken apart.
+tul keshidan is "to draw out length": tul, "length", is borrowed from Arabic ṭūl (root ṭ-w-l, Lane), and keshidan, "to draw", is native. keshidan, "to pull", is an inherited verb; it is usually traced to Middle Persian kašīdan.
 
 What you've built.
 One more word for this chapter.

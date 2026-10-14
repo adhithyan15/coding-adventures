@@ -12,6 +12,9 @@ Before the new one: say the Persian for to knock at the door, then the Persian f
 You'll want to know: پانسمان کردن.
 پانسمان کردن — pânsemân kardan — "to dress (a wound)".
 
+The word, taken apart.
+pânsemân kardan pairs pânsemân, borrowed from French pansement, "dressing" (EtymDB), with the Persian verb kardan. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to whistle, then the Persian for to dres
 
 You'll want to know: بستری شدن.
 بستری شدن — bastari shodan — "to be admitted to hospital".
+
+The word, taken apart.
+bastari shodan is "to become bedded": bastari is bastar, "bed", with -i, and shodan. bastar is native Persian. shodan, "to become", is an inherited verb; it is usually traced to Middle Persian šudan, "to go".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to dress, then the Persian for to be adm
 You'll want to know: تکیه دادن.
 تکیه دادن — tekye dâdan — "to lean".
 
+The word, taken apart.
+tekye dâdan pairs tekye, borrowed from Arabic takya, "prop, support" (root w-k-ʾ, Lane), with the Persian verb dâdan, "to give". dâdan, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, "to give".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to be admitted to hospital, then the Per
 You'll want to know: دراز کشیدن.
 دراز کشیدن — derâz keshidan — "to lie down".
 
+The word, taken apart.
+derâz keshidan is "to stretch out long": derâz, "long" (usually traced to Middle Persian drāz), with keshidan, "to draw". Both are native. keshidan, "to pull", is an inherited verb; it is usually traced to Middle Persian kašīdan.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to lean, then the Persian for to lie dow
 
 You'll want to know: اسباب کشی کردن.
 اسباب کشی کردن — asbâbkeshi kardan — "to move house".
+
+The word, taken apart.
+asbâbkeshi kardan pairs asbâbkeshi, "carrying belongings", with kardan. asbâb is borrowed from Arabic asbāb, "means, belongings", the plural of sabab (root s-b-b, Lane); kesh is native. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.

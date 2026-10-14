@@ -14,7 +14,8 @@ romanization: "qâb"
 concept_tag: FA-CHIZ282-QAB
 prerequisites: [FA-C281-chub, FA-C282-lule]
 sounds: []
-roots: []
+roots: [turkic-qap]
+etymology_hook: "qâb: a loan, usually traced to Turkic qap 'case, container'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C282-lule]
 <!-- hl-knowledge: introduces=[FA-LEX-C282-CHIZ282-02]; assesses=[] -->
 
 **قاب** — *qâb* — "a frame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qâb* is a loan, usually traced to Turkic *qap*, "case, container".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

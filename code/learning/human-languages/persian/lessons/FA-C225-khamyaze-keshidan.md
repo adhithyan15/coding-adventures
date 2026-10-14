@@ -14,7 +14,8 @@ romanization: "khamyâze keshidan"
 concept_tag: FA-VERB-KHAMYAZE-KESHIDAN
 prerequisites: [FA-C225-hefz-kardan, FA-C225-nale-kardan]
 sounds: []
-roots: []
+roots: [persian-kashidan]
+etymology_hook: "khamyâze keshidan: khamyâze 'yawn' (not settled) + Persian keshidan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C225-nale-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C225-KONESH225-03]; assesses=[] -->
 
 **خمیازه کشیدن** — *khamyâze keshidan* — "to yawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khamyâze keshidan* is "to draw a yawn": *khamyâze*, "yawn", is a native word whose older form is not settled. *keshidan*, "to pull", is an inherited verb; it is usually traced to Middle Persian *kašīdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

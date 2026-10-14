@@ -14,7 +14,8 @@ romanization: "khaste"
 concept_tag: FA-QUAL129-KHASTE
 prerequisites: [FA-C128-sade, FA-C128-aram]
 sounds: []
-roots: []
+roots: [persian-khastan]
+etymology_hook: "khaste: past participle of Persian khastan 'to wound' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C128-aram]
 <!-- hl-knowledge: introduces=[FA-LEX-C129-QUAL129-01]; assesses=[] -->
 
 **خسته** — *khaste* — "tired".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khaste* is the past participle of *khastan*, "to wound, to injure" (EtymDB): "wounded", then "worn out, tired". The verb is native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

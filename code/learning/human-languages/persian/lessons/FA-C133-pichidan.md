@@ -15,6 +15,7 @@ concept_tag: FA-VERB-PICHIDAN
 prerequisites: [FA-C133-kashtan, FA-C133-chidan]
 sounds: []
 roots: []
+etymology_hook: "pichidan: Persian pich 'twist' + -idan; older form not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C133-chidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C133-ACT133-03]; assesses=[] -->
 
 **پیچیدن** — *pichidan* — "to turn, to twist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pichidan* is built on *pich*, "twist, coil", with the verb ending *-idan*. *pich* is native, but its older form is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "râh raftan"
 concept_tag: FA-VERB-RAH-RAFTAN
 prerequisites: [FA-C217-kar-kardan, FA-C217-bazi-kardan]
 sounds: []
-roots: []
+roots: [persian-rah]
+etymology_hook: "râh raftan: Persian râh 'road' (EtymDB) + raftan 'to go'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C217-bazi-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C217-KONESH217-04]; assesses=[] -->
 
 **راه رفتن** — *râh raftan* — "to walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*râh raftan* is "to go the road": *râh*, "road, way", is inherited (Middle Persian *rāh*, EtymDB), and *raftan*, "to go", is native too. *raftan*, "to go", is an inherited verb; it is usually traced to Middle Persian *raftan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

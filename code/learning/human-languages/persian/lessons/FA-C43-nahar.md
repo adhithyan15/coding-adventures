@@ -14,7 +14,8 @@ romanization: "nâhâr"
 concept_tag: FA-FOOD43-NAHAR
 prerequisites: [FA-C43-piyaz, FA-C43-sobhane]
 sounds: []
-roots: []
+roots: [persian-ahar]
+etymology_hook: "nâhâr: Persian nâ- 'not' + âhâr 'food' (EtymDB): first 'fasting'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C43-sobhane]
 <!-- hl-knowledge: introduces=[FA-LEX-C43-FOOD43-05]; assesses=[] -->
 
 **ناهار** — *nâhâr* — "lunch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nâhâr* is built from *nâ-*, "not", and *âhâr*, "food" (EtymDB): the word first meant "fasting, not having eaten", and came to name the meal that ends the fast. Both parts are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

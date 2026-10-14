@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bc123d1b5387e8cf",
+  "sourceHash": "fnv1a64:fa3d3c6533b04ba3",
   "lessons": [
     {
       "id": "FA-C05-khoda",
@@ -314,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be5dc97ecab28a56",
+      "sourceHash": "fnv1a64:149a9ca8f08b10ef",
       "notice": null,
       "blocks": [
         {
@@ -364,6 +364,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "khodâ hâfez is \"God, the guardian\". khodâ is inherited, from Middle Persian xwadāy, \"lord\"; hâfez is borrowed from Arabic ḥāfiẓ, \"guardian, keeper\" (EtymDB; root ḥ-f-ẓ, Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -397,7 +408,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 61,
-  "sourceHash": "fnv1a64:26c8f98d85787b7a",
+  "sourceHash": "fnv1a64:dcd9d9f7f29d7073",
   "lessonIds": [
     "FA-C61-por",
     "FA-C61-khali",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch61.txt",
   "json": "persian/narration/ch61.json",
-  "textHash": "fnv1a64:7791a39005d102d4",
-  "jsonHash": "fnv1a64:6356f7bad04e1a61",
+  "textHash": "fnv1a64:8d320b767cb29a44",
+  "jsonHash": "fnv1a64:0475fef2ed5c1454",
   "findings": []
 }

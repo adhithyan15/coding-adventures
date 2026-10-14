@@ -14,7 +14,8 @@ romanization: "khamirdandân"
 concept_tag: FA-CHIZ165-KHAMIRDANDAN
 prerequisites: [FA-C165-tualet, FA-C165-dastshuyi]
 sounds: []
-roots: []
+roots: [arabic-khamir, persian-dandan]
+etymology_hook: "khamirdandân: khamir ← Arabic ḫamīr 'dough' (Lane) + Persian dandân 'tooth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C165-dastshuyi]
 <!-- hl-knowledge: introduces=[FA-LEX-C165-CHIZ165-04]; assesses=[] -->
 
 **خمیردندان** — *khamirdandân* — "toothpaste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khamirdandân* is *khamir*, "dough, paste", with *dandân*, "tooth": tooth-paste. *khamir* is borrowed from Arabic *ḫamīr*, "leavened dough" (root *ḫ-m-r*, Lane); *dandân* is inherited (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

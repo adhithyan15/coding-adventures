@@ -14,7 +14,8 @@ romanization: "bâzi kardan"
 concept_tag: FA-VERB-BAZI-KARDAN
 prerequisites: [FA-C217-harf-zadan, FA-C217-kar-kardan]
 sounds: []
-roots: []
+roots: [persian-bazi, pie-kwer]
+etymology_hook: "bâzi kardan: Persian bâzi 'play' (Middle Persian wāzīg) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C217-kar-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C217-KONESH217-03]; assesses=[] -->
 
 **بازی کردن** — *bâzi kardan* — "to play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâzi kardan* is "to do play": *bâzi*, "play", is native, usually traced to Middle Persian *wāzīg*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

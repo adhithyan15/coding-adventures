@@ -14,7 +14,8 @@ romanization: "moqâyese kardan"
 concept_tag: FA-VERB-MOQAYESE-KARDAN
 prerequisites: [FA-C149-sarfejuyi-kardan, FA-C149-taqsim-kardan]
 sounds: []
-roots: []
+roots: [arabic-muqayasa]
+etymology_hook: "moqâyese ← Arabic muqāyasa 'comparison, measuring', root q-y-s (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C149-taqsim-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C149-KONESH149-04]; assesses=[] -->
 
 **مقایسه کردن** — *moqâyese kardan* — "to compare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*moqâyese kardan* pairs *moqâyese*, borrowed from Arabic *muqāyasa*, "comparison, measuring" (root *q-y-s*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

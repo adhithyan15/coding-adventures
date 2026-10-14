@@ -14,7 +14,8 @@ romanization: "peydâ kardan"
 concept_tag: FA-VERB-PEYDA-KARDAN
 prerequisites: [FA-C140-bidar-shodan, FA-C141-gom-kardan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "peydâ kardan: peydâ (Middle Persian paydāg 'manifest') + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C141-gom-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C141-KONESH141-02]; assesses=[] -->
 
 **پیدا کردن** — *peydâ kardan* — "to find".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*peydâ kardan* pairs *peydâ*, "visible, found", with *kardan*, "to make": "to make visible". *peydâ* is native, usually traced to Middle Persian *paydāg*, "manifest". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

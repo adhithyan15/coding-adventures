@@ -14,7 +14,8 @@ romanization: "kabâb"
 concept_tag: FA-THINGS98-KABAB
 prerequisites: [FA-C98-sup, FA-C98-salad]
 sounds: []
-roots: []
+roots: [arabic-kabab]
+etymology_hook: "kabâb ← Arabic kabāb 'roasted meat', root k-b-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C98-salad]
 <!-- hl-knowledge: introduces=[FA-LEX-C98-THINGS98-05]; assesses=[] -->
 
 **کباب** — *kabâb* — "a kebab".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kabâb* is borrowed from Arabic *kabāb*, "roasted meat". Its Arabic root is *k-b-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

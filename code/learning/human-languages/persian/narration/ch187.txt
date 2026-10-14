@@ -12,6 +12,9 @@ Before the new one: say the Persian for to shiver, then the Persian for to crawl
 You'll want to know: لیز خوردن.
 لیز خوردن — liz khordan — "to slip".
 
+The word, taken apart.
+liz khordan pairs liz, "slippery", a native word, with khordan, "to eat": Persian "eats" a slip as it eats a fall. khordan, "to eat", is an inherited verb; EtymDB traces it to Middle Persian xwar-, "to eat".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to crawl, then the Persian for to slip.
 
 You'll want to know: گاز دادن.
 گاز دادن — gâz dâdan — "to accelerate, to step on the gas".
+
+The word, taken apart.
+gâz dâdan is "to give gas": gâz is borrowed from French gaz, "gas", and dâdan, "to give", is native. dâdan, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, "to give".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to slip, then the Persian for to acceler
 You'll want to know: درو کردن.
 درو کردن — derow kardan — "to harvest, to reap".
 
+The word, taken apart.
+derow kardan pairs derow, "harvest", with kardan, "to do". derow is native, the present stem of the older verb derudan, "to reap". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to accelerate, then the Persian for to h
 You'll want to know: پس انداز کردن.
 پس انداز کردن — pasandâz kardan — "to save (money)".
 
+The word, taken apart.
+pasandâz kardan pairs pasandâz, "savings", with kardan. pasandâz is pas, "back" (EtymDB), with andâz, "throwing" (from andâkhtan): what is thrown back for later. All are native Persian. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to harvest, then the Persian for to save
 
 You'll want to know: واریز کردن.
 واریز کردن — vâriz kardan — "to deposit (money)".
+
+The word, taken apart.
+vâriz kardan pairs vâriz, "deposit", with kardan, "to do". vâriz is usually analysed as vâ-, "back, again", with riz-, the present stem of rikhtan, "to pour". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.

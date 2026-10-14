@@ -14,7 +14,8 @@ romanization: "mosâfer"
 concept_tag: FA-KAR177-MOSAFER
 prerequisites: [FA-C176-jalase, FA-C176-hoquq]
 sounds: []
-roots: []
+roots: [arabic-musafir]
+etymology_hook: "mosâfer ← Arabic musāfir 'traveller', root s-f-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C176-hoquq]
 <!-- hl-knowledge: introduces=[FA-LEX-C177-KAR177-01]; assesses=[] -->
 
 **مسافر** — *mosâfer* — "a passenger, a traveller".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mosâfer* is borrowed from Arabic *musāfir*, "traveller". Its Arabic root is *s-f-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

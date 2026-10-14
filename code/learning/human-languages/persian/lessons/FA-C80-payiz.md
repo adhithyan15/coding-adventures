@@ -14,7 +14,8 @@ romanization: "pâyiz"
 concept_tag: FA-TIME80-PAYIZ
 prerequisites: [FA-C80-bahar, FA-C80-tabestan]
 sounds: []
-roots: []
+roots: [persian-payiz]
+etymology_hook: "pâyiz: inherited, usually traced to Middle Persian pādēz"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C80-tabestan]
 <!-- hl-knowledge: introduces=[FA-LEX-C80-TIME80-03]; assesses=[] -->
 
 **پاییز** — *pâyiz* — "autumn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pâyiz* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *pādēz*, "autumn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

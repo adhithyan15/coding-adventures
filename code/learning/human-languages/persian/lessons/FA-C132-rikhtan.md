@@ -14,7 +14,8 @@ romanization: "rikhtan"
 concept_tag: FA-VERB-RIKHTAN
 prerequisites: [FA-C132-dukhtan, FA-C132-keshidan]
 sounds: []
-roots: []
+roots: [persian-rikhtan]
+etymology_hook: "rikhtan: inherited, usually traced to Middle Persian rēxtan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C132-keshidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C132-ACT132-04]; assesses=[] -->
 
 **ریختن** — *rikhtan* — "to pour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rikhtan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *rēxtan*, "to pour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

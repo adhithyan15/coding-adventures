@@ -12,6 +12,9 @@ Before the new one: say the Persian for suitable, then the Persian for possible.
 You'll want to know: بخاری.
 بخاری — bokhâri — "a heater".
 
+The word, taken apart.
+bokhâri is bokhâr, "steam, vapour", with the ending -i. bokhâr is borrowed from Arabic buḫār, "vapour" (root b-ḫ-r, Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for possible, then the Persian for a heater.
 
 You'll want to know: قفسه.
 قفسه — qafase — "a shelf".
+
+The word, taken apart.
+qafase is built on qafas, "cage", with the ending -e. qafas is borrowed from Arabic qafaṣ, "cage" (root q-f-ṣ, Lane); Lane notes that some take the Arabic word itself from Persian.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a heater, then the Persian for a shelf.
 You'll want to know: قیمت.
 قیمت — qeymat — "a price".
 
+The word, taken apart.
+qeymat is borrowed from Arabic qīma, "value, price". Its Arabic root is q-w-m (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a shelf, then the Persian for a price.
 You'll want to know: تخفیف.
 تخفیف — takhfif — "a discount".
 
+The word, taken apart.
+takhfif is borrowed from Arabic taḫfīf, "lightening, reducing". Its Arabic root is ḫ-f-f (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a price, then the Persian for a discount
 
 You'll want to know: اسکناس.
 اسکناس — eskenâs — "a banknote".
+
+The word, taken apart.
+eskenâs is borrowed from Russian assignatsiya, "paper money" (EtymDB). It goes back to Latin assignātiō, "allotment" (EtymDB).
 
 What you've built.
 One more word for this chapter.

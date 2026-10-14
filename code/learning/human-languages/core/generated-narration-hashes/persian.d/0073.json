@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 73,
-  "sourceHash": "fnv1a64:102f8005f740951a",
+  "sourceHash": "fnv1a64:102f585fc76c92a9",
   "lessonIds": [
     "FA-C73-forudgah",
     "FA-C73-resturan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch73.txt",
   "json": "persian/narration/ch73.json",
-  "textHash": "fnv1a64:c16f81d6ba1b10af",
-  "jsonHash": "fnv1a64:55af6ecbe8c9f381",
+  "textHash": "fnv1a64:b4910e485bb2898b",
+  "jsonHash": "fnv1a64:86d27f0a91ea9463",
   "findings": []
 }

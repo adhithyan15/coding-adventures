@@ -14,7 +14,8 @@ romanization: "khuk"
 concept_tag: FA-THINGS105-KHUK
 prerequisites: [FA-C105-ahu, FA-C105-rubah]
 sounds: []
-roots: []
+roots: [persian-khuk]
+etymology_hook: "khuk: inherited, usually traced to Middle Persian xūg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C105-rubah]
 <!-- hl-knowledge: introduces=[FA-LEX-C105-THINGS105-05]; assesses=[] -->
 
 **خوک** — *khuk* — "a pig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khuk* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *xūg*, "pig".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

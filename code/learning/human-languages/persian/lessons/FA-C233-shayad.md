@@ -14,7 +14,8 @@ romanization: "shâyad"
 concept_tag: FA-CHERA233-SHAYAD
 prerequisites: [FA-C232-pagard, FA-C232-narde]
 sounds: []
-roots: []
+roots: [persian-shayad]
+etymology_hook: "shâyad ← Middle Persian šāyēd (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C232-narde]
 <!-- hl-knowledge: introduces=[FA-LEX-C233-CHERA233-01]; assesses=[] -->
 
 **شاید** — *shâyad* — "maybe, perhaps".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shâyad* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *šāyēd*, "one can, it is possible" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

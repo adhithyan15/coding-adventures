@@ -14,7 +14,8 @@ romanization: "ashk"
 concept_tag: FA-CHIZ170-ASHK
 prerequisites: [FA-C170-mohabbat, FA-C170-khashm]
 sounds: []
-roots: []
+roots: [persian-ashk]
+etymology_hook: "ashk: inherited, usually traced to Middle Persian ašk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C170-khashm]
 <!-- hl-knowledge: introduces=[FA-LEX-C170-CHIZ170-03]; assesses=[] -->
 
 **اشک** — *ashk* — "tears".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ashk* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *ašk*, "tear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

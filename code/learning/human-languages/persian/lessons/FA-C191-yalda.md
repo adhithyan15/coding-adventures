@@ -14,7 +14,8 @@ romanization: "yaldâ"
 concept_tag: FA-ZAMAN191-YALDA
 prerequisites: [FA-C191-mohlat, FA-C191-nowruz]
 sounds: []
-roots: []
+roots: [syriac-yalda]
+etymology_hook: "yaldâ: usually traced to Syriac yaldā 'birth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C191-nowruz]
 <!-- hl-knowledge: introduces=[FA-LEX-C191-ZAMAN191-05]; assesses=[] -->
 
 **یلدا** — *yaldâ* — "Yalda (the longest night, winter solstice)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yaldâ* is usually traced to Syriac *yaldā*, "birth": the long night was linked with the feast of a birth, the Nativity.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

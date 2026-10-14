@@ -14,7 +14,8 @@ romanization: "bottri"
 concept_tag: FA-HOME48-BOTTRI
 prerequisites: [FA-C47-changal, FA-C47-ghashogh]
 sounds: []
-roots: []
+roots: [english-bottle]
+etymology_hook: "bottri ← English bottle 'bottle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C47-ghashogh]
 <!-- hl-knowledge: introduces=[FA-LEX-C48-HOME48-01]; assesses=[] -->
 
 **بطری** — *bottri* — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bottri* is borrowed from English *bottle*, "bottle" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Sky, Sun, Moon, Star, Rain",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c3ec1c99ea15d15e",
+  "sourceHash": "fnv1a64:f995e4baa96f674f",
   "lessons": [
     {
       "id": "FA-C13-aseman",
@@ -447,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19d85b4c42d3d8a7",
+      "sourceHash": "fnv1a64:01f7f2e3cfcbc1b0",
       "notice": null,
       "blocks": [
         {
@@ -489,7 +489,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ستاره (setâre) continues Old Persian star-, from Indo-European h₂stḗr, \"star.\" Few Indo-European roots survive this cleanly across the whole family: English star, Latin stella ( becomes stellar, constellation), Greek astron ( becomes astronomy, disaster — \"ill-starred\"), and Persian's own ستاره (setâre) all continue the identical ancient word, alongside dar's door and ماه (mâh)'s moon as the tranche's clearest cousins."
+              "text": "ستاره (setâre) continues Middle Persian stārag, built on the old Iranian star- that Avestan records, from Indo-European h₂stḗr, \"star.\" Few Indo-European roots survive this cleanly across the whole family: English star, Latin stella ( becomes stellar, constellation), Greek astron ( becomes astronomy, disaster — \"ill-starred\"), and Persian's own ستاره (setâre) all continue the identical ancient word, alongside dar's door and ماه (mâh)'s moon as the tranche's clearest cousins."
             }
           ]
         },

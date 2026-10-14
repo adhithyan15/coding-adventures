@@ -14,7 +14,8 @@ romanization: "zesht"
 concept_tag: FA-QUAL125-ZESHT
 prerequisites: [FA-C124-narm, FA-C125-seft]
 sounds: []
-roots: []
+roots: [persian-zesht]
+etymology_hook: "zesht ← Middle Persian zišt (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C125-seft]
 <!-- hl-knowledge: introduces=[FA-LEX-C125-QUAL125-02]; assesses=[] -->
 
 **زشت** — *zesht* — "ugly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zesht* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *zišt*, "hateful, ugly" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

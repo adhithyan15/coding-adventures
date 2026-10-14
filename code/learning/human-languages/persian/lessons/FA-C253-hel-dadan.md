@@ -14,7 +14,8 @@ romanization: "hel dâdan"
 concept_tag: FA-VERB-HEL-DADAN
 prerequisites: [FA-C253-vared-shodan, FA-C253-kharej-shodan]
 sounds: []
-roots: []
+roots: [pie-deh3]
+etymology_hook: "hel dâdan: hel 'push' (origin not settled) + Persian dâdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C253-kharej-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C253-KONESH253-04]; assesses=[] -->
 
 **هل دادن** — *hel dâdan* — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hel dâdan* pairs *hel*, "a push", with *dâdan*, "to give". Where *hel* comes from is not settled. *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

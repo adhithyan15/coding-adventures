@@ -14,7 +14,8 @@ romanization: "yâddâsht kardan"
 concept_tag: FA-VERB-YADDASHT-KARDAN
 prerequisites: [FA-C187-pasandaz-kardan, FA-C187-variz-kardan]
 sounds: []
-roots: []
+roots: [persian-yad, pie-kwer]
+etymology_hook: "yâddâsht kardan: Persian yâd 'memory' + dâsht 'holding' + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C187-variz-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C188-KONESH188-01]; assesses=[] -->
 
 **یادداشت کردن** — *yâddâsht kardan* — "to note down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yâddâsht kardan* pairs *yâddâsht*, "note", with *kardan*. *yâddâsht* is *yâd*, "memory", with *dâsht*, "holding" (from *dâshtan*): a memory-keeper. All are native Persian. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

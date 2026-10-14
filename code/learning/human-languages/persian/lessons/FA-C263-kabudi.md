@@ -14,7 +14,8 @@ romanization: "kabudi"
 concept_tag: FA-SALAMAT263-KABUDI
 prerequisites: [FA-C263-sardard, FA-C263-deldard]
 sounds: []
-roots: []
+roots: [persian-kabud]
+etymology_hook: "kabudi: Persian kabud 'dark blue' (Middle Persian kabōd) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C263-deldard]
 <!-- hl-knowledge: introduces=[FA-LEX-C263-SALAMAT263-05]; assesses=[] -->
 
 **کبودی** — *kabudi* — "a bruise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kabudi* is *kabud*, "dark blue", with the ending *-i*: a blue mark. *kabud* is native, usually traced to Middle Persian *kabōd*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

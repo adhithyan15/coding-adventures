@@ -15,6 +15,7 @@ concept_tag: FA-THINGS108-MOCH
 prerequisites: [FA-C107-gune, FA-C107-aranj]
 sounds: []
 roots: []
+etymology_hook: "moch: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C107-aranj]
 <!-- hl-knowledge: introduces=[FA-LEX-C108-THINGS108-01]; assesses=[] -->
 
 **مچ** — *moch* — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*moch* is the everyday word for the wrist, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tul keshidan"
 concept_tag: FA-VERB-TUL-KESHIDAN
 prerequisites: [FA-C222-khab-didan, FA-C222-shak-kardan]
 sounds: []
-roots: []
+roots: [arabic-tul, persian-kashidan]
+etymology_hook: "tul ← Arabic ṭūl 'length', root ṭ-w-l (Lane), + Persian keshidan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C222-shak-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C222-KONESH222-05]; assesses=[] -->
 
 **طول کشیدن** — *tul keshidan* — "to take (time), to last".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tul keshidan* is "to draw out length": *tul*, "length", is borrowed from Arabic *ṭūl* (root *ṭ-w-l*, Lane), and *keshidan*, "to draw", is native. *keshidan*, "to pull", is an inherited verb; it is usually traced to Middle Persian *kašīdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

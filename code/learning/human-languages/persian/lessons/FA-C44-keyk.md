@@ -14,7 +14,8 @@ romanization: "keyk"
 concept_tag: FA-FOOD44-KEYK
 prerequisites: [FA-C44-sham, FA-C44-abmive]
 sounds: []
-roots: []
+roots: [english-cake]
+etymology_hook: "keyk: a loan, usually traced to English cake 'cake'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C44-abmive]
 <!-- hl-knowledge: introduces=[FA-LEX-C44-FOOD44-03]; assesses=[] -->
 
 **کیک** — *keyk* — "a cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*keyk* is a loan, usually traced to English *cake*, "cake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

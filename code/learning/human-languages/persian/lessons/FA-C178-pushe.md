@@ -14,7 +14,8 @@ romanization: "pushe"
 concept_tag: FA-KAR178-PUSHE
 prerequisites: [FA-C177-dowre, FA-C178-mangane]
 sounds: []
-roots: []
+roots: [persian-pushidan]
+etymology_hook: "pushe: Persian push- 'cover' (pushidan, EtymDB) + -e"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C178-mangane]
 <!-- hl-knowledge: introduces=[FA-LEX-C178-KAR178-02]; assesses=[] -->
 
 **پوشه** — *pushe* — "a folder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pushe* is built on *push-*, the stem of *pushidan*, "to cover", with *-e*: a cover. The verb is inherited: EtymDB traces it to Middle Persian *pōšīdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

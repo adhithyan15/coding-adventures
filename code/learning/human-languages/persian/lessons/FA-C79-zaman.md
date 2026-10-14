@@ -14,7 +14,8 @@ romanization: "zamân"
 concept_tag: FA-TIME79-ZAMAN
 prerequisites: [FA-C79-emshab, FA-C79-dishab]
 sounds: []
-roots: []
+roots: [arabic-zaman]
+etymology_hook: "zamân: usually from Arabic zamān 'time', root z-m-n (Lane); Middle Persian zamān too"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C79-dishab]
 <!-- hl-knowledge: introduces=[FA-LEX-C79-TIME79-05]; assesses=[] -->
 
 **زمان** — *zamân* — "time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zamân* is usually treated as a loan from Arabic *zamān*, "time" (root *z-m-n*, Lane). Middle Persian also had *zamān*, so which way the word first moved is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

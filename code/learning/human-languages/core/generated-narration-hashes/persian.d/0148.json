@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 148,
-  "sourceHash": "fnv1a64:fdba0681b574dfff",
+  "sourceHash": "fnv1a64:39526e34d721f76f",
   "lessonIds": [
     "FA-C148-dast-zadan",
     "FA-C148-chort-zadan",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch148.txt",
   "json": "persian/narration/ch148.json",
-  "textHash": "fnv1a64:c6a8d8941e43eaf3",
-  "jsonHash": "fnv1a64:3abbe9d6398a37e2",
+  "textHash": "fnv1a64:b77b0fe8a0c20c81",
+  "jsonHash": "fnv1a64:f363919eb4ecad6b",
   "findings": []
 }

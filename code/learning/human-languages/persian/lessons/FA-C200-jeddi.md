@@ -14,7 +14,8 @@ romanization: "jeddi"
 concept_tag: FA-SEFAT200-JEDDI
 prerequisites: [FA-C200-khejalati, FA-C200-badakhlaq]
 sounds: []
-roots: []
+roots: [arabic-jiddi]
+etymology_hook: "jeddi ← Arabic jiddī 'serious, earnest', root j-d-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C200-badakhlaq]
 <!-- hl-knowledge: introduces=[FA-LEX-C200-SEFAT200-03]; assesses=[] -->
 
 **جدی** — *jeddi* — "serious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jeddi* is borrowed from Arabic *jiddī*, "serious, earnest". Its Arabic root is *j-d-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

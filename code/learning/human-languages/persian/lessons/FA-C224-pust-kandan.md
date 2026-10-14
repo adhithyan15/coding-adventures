@@ -14,7 +14,8 @@ romanization: "pust kandan"
 concept_tag: FA-VERB-PUST-KANDAN
 prerequisites: [FA-C224-vasl-kardan, FA-C224-joda-kardan]
 sounds: []
-roots: []
+roots: [persian-pust]
+etymology_hook: "pust kandan: Persian pust 'skin' + kandan 'to dig'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C224-joda-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C224-KONESH224-05]; assesses=[] -->
 
 **پوست کندن** — *pust kandan* — "to peel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pust kandan* is "to dig off the skin": *pust*, "skin", is usually traced to Middle Persian *pōst*, and *kandan*, "to dig", to Middle Persian *kandan*. Both are native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

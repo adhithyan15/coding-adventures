@@ -14,7 +14,8 @@ romanization: "khers"
 concept_tag: FA-ANIMALS57-KHERS
 prerequisites: [FA-C56-meymun, FA-C56-mar]
 sounds: []
-roots: []
+roots: [persian-khers]
+etymology_hook: "khers: inherited, usually traced to Middle Persian xirs"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C56-mar]
 <!-- hl-knowledge: introduces=[FA-LEX-C57-ANIMALS57-01]; assesses=[] -->
 
 **خرس** — *khers* — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khers* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *xirs*, "bear". EtymDB takes it back to the Indo-European word for "bear" behind Latin *ursus* and Greek *arktos*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

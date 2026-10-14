@@ -14,7 +14,8 @@ romanization: "vorudi"
 concept_tag: FA-MAKAN266-VORUDI
 prerequisites: [FA-C266-mahalle, FA-C266-sakhteman]
 sounds: []
-roots: []
+roots: [arabic-wurud]
+etymology_hook: "vorudi: vorud ← Arabic wurūd 'arrival', root w-r-d (Lane), + Persian -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C266-sakhteman]
 <!-- hl-knowledge: introduces=[FA-LEX-C266-MAKAN266-04]; assesses=[] -->
 
 **ورودی** — *vorudi* — "an entrance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vorudi* is *vorud*, "entry", with the ending *-i*. *vorud* is borrowed from Arabic *wurūd*, "arrival, coming to water" (root *w-r-d*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

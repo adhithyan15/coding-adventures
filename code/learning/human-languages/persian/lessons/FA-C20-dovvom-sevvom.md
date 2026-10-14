@@ -12,7 +12,7 @@ concept_tag: FA-ORDINAL-SUFFIX
 prerequisites: [FA-C20-avval]
 sounds: [rtl, short-vowels-unwritten]
 roots: []
-etymology_hook: "Persian makes an ordinal by putting -om on the cardinal: do gives dovvom and se gives sevvom, and the doubled consonant is the only thing the join adds."
+etymology_hook: "dovvom, sevvom: inherited do 'two' and se 'three' + the ordinal ending -om (EtymDB)"
 duration:
   max_seconds: 260
 requires:
@@ -52,6 +52,11 @@ the only thing you have to hear.
 **سوم** is written **س**، **و**، **م** — three letters, all yours from the script
 chapter. That makes it the fourth word in this book you can write unaided, after
 *se*, *noh* and *avval*, whose written forms the script chapter already gave.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dovvom* and *sevvom* are built from the inherited numbers *do* and *se* with the ordinal ending *-om* (EtymDB); *do* continues Middle Persian *dō* (EtymDB).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DOVVOM, FA-LEX-SEVVOM, FA-MORPH-ORDINAL-OM, FA-SCRIPT-SIN-01, FA-SCRIPT-MIM-01] -->

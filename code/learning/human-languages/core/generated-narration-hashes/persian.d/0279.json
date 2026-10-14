@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 279,
-  "sourceHash": "fnv1a64:41c746c2946cac3e",
+  "sourceHash": "fnv1a64:c5a2b02a616c7a1e",
   "lessonIds": [
     "FA-C279-sarv",
     "FA-C279-chenar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch279.txt",
   "json": "persian/narration/ch279.json",
-  "textHash": "fnv1a64:bde045e685f8787d",
-  "jsonHash": "fnv1a64:de671ec962281d8e",
+  "textHash": "fnv1a64:2bc7b365036af2d6",
+  "jsonHash": "fnv1a64:6c43d9dda89beccc",
   "findings": []
 }

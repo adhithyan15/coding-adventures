@@ -14,7 +14,8 @@ romanization: "istâdan"
 concept_tag: FA-VERB-ISTADAN
 prerequisites: [FA-C35-neshastan, FA-C36-khabidan]
 sounds: []
-roots: []
+roots: [pie-steh2]
+etymology_hook: "istâdan: inherited; EtymDB: Indo-European *steh₂- 'to stand', as in English stand"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C36-khabidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C36-VERBS36-02]; assesses=[] -->
 
 **ایستادن** — *istâdan* — "to stand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*istâdan* is a native Persian verb, inherited rather than borrowed; it is usually traced to Middle Persian *ēstādan*. EtymDB takes it back to the Indo-European root *\*steh₂-*, "to stand", the root of English *stand*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

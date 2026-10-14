@@ -14,7 +14,8 @@ romanization: "larzidan"
 concept_tag: FA-VERB-LARZIDAN
 prerequisites: [FA-C186-tarashidan, FA-C186-chekidan]
 sounds: []
-roots: []
+roots: [persian-larzidan]
+etymology_hook: "larzidan: inherited, usually traced to Middle Persian larzīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C186-chekidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C186-KONESH186-04]; assesses=[] -->
 
 **لرزیدن** — *larzidan* — "to shiver, to tremble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*larzidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *larzīdan*, "to tremble".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

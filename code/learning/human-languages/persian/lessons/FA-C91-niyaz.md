@@ -14,7 +14,8 @@ romanization: "niyâz"
 concept_tag: FA-WANT91-NIYAZ
 prerequisites: [FA-C90-omid, FA-C91-barname]
 sounds: []
-roots: []
+roots: [persian-niyaz]
+etymology_hook: "niyâz: inherited, usually traced to Middle Persian niyāz"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C91-barname]
 <!-- hl-knowledge: introduces=[FA-LEX-C91-WANT91-02]; assesses=[] -->
 
 **نیاز** — *niyâz* — "a need".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*niyâz* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *niyāz*, "need".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

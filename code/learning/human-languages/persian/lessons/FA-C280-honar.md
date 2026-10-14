@@ -14,7 +14,8 @@ romanization: "honar"
 concept_tag: FA-CHIZ280-HONAR
 prerequisites: [FA-C280-kuhnavardi, FA-C280-konsert]
 sounds: []
-roots: []
+roots: [persian-hunar]
+etymology_hook: "honar: inherited, usually traced to Middle Persian hunar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C280-konsert]
 <!-- hl-knowledge: introduces=[FA-LEX-C280-CHIZ280-04]; assesses=[] -->
 
 **هنر** — *honar* — "art".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*honar* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *hunar*, "skill, virtue".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

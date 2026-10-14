@@ -14,7 +14,8 @@ romanization: "sâhel"
 concept_tag: FA-LOC87-SAHEL
 prerequisites: [FA-C87-meydan, FA-C87-park]
 sounds: []
-roots: []
+roots: [arabic-sahil]
+etymology_hook: "sâhel ← Arabic sāḥil 'coast, shore', root s-ḥ-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C87-park]
 <!-- hl-knowledge: introduces=[FA-LEX-C87-LOC87-04]; assesses=[] -->
 
 **ساحل** — *sâhel* — "a coast, a beach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâhel* is borrowed from Arabic *sāḥil*, "coast, shore". Its Arabic root is *s-ḥ-l* (Lane). The name *Swahili* comes from its plural, *sawāḥil*, "coasts".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

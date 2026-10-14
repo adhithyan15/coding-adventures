@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ245-LANE
 prerequisites: [FA-C244-kaj2, FA-C245-qu]
 sounds: []
 roots: []
+etymology_hook: "lâne: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C245-qu]
 <!-- hl-knowledge: introduces=[FA-LEX-C245-CHIZ245-02]; assesses=[] -->
 
 **لانه** — *lâne* — "a nest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lâne* is a native Persian word for a nest, but no source used here gives its older form, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kamrang"
 concept_tag: FA-SEFAT202-KAMRANG
 prerequisites: [FA-C202-kaj, FA-C202-khoshtip]
 sounds: []
-roots: []
+roots: [persian-kam, persian-rang]
+etymology_hook: "kamrang: Persian kam 'little' + rang 'colour' (EtymDB); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C202-khoshtip]
 <!-- hl-knowledge: introduces=[FA-LEX-C202-SEFAT202-04]; assesses=[] -->
 
 **کمرنگ** — *kamrang* — "pale (of colour); weak (of tea)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kamrang* is *kam*, "little", with *rang*, "colour": little colour. Both are native; *rang* continues Middle Persian *rang* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

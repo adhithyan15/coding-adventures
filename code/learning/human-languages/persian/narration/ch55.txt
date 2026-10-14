@@ -12,6 +12,9 @@ Before the new one: say the Persian for a dog, then the Persian for a cat.
 You'll want to know: اسب.
 اسب — asb — "a horse".
 
+The word, taken apart.
+asb is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian asp, "horse". Latin equus is the same Indo-European word.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a cat, then the Persian for a horse.
 
 You'll want to know: گاو.
 گاو — gâv — "a cow".
+
+The word, taken apart.
+gâv is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian gāw, "cow, ox". EtymDB takes it back to the Indo-European word behind English cow.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a horse, then the Persian for a cow.
 You'll want to know: بز.
 بز — boz — "a goat".
 
+The word, taken apart.
+boz is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian buz, "goat". EtymDB takes it back to the Indo-European word behind English buck.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a cow, then the Persian for a goat.
 You'll want to know: گوسفند.
 گوسفند — gusfand — "a sheep".
 
+The word, taken apart.
+gusfand is a native Persian word, inherited rather than borrowed: it continues Middle Persian gōspand, "sheep, small cattle" (EtymDB). EtymDB traces it to an Avestan phrase meaning "beneficent cattle".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a goat, then the Persian for a sheep.
 
 You'll want to know: پرنده.
 پرنده — parande — "a bird".
+
+The word, taken apart.
+parande is the "-ing" form of paridan, "to fly": "a flying one". The verb is built on par, "wing, feather", a native word usually traced to Middle Persian parr.
 
 What you've built.
 One more word for this chapter.

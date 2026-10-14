@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 216,
-  "sourceHash": "fnv1a64:b04cbede2e248a81",
+  "sourceHash": "fnv1a64:857fe204c399d048",
   "lessonIds": [
     "FA-C216-kargah",
     "FA-C216-najjar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch216.txt",
   "json": "persian/narration/ch216.json",
-  "textHash": "fnv1a64:87d3a11e5f2afe1c",
-  "jsonHash": "fnv1a64:3d16e4c805ef06b8",
+  "textHash": "fnv1a64:e7ee7f7e8e42a080",
+  "jsonHash": "fnv1a64:8d5ddd7c31bd3fa7",
   "findings": []
 }

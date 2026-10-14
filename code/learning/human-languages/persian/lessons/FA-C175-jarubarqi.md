@@ -14,7 +14,8 @@ romanization: "jârubarqi"
 concept_tag: FA-CHIZ175-JARUBARQI
 prerequisites: [FA-C175-khakandaz, FA-C175-periz]
 sounds: []
-roots: []
+roots: [arabic-barq]
+etymology_hook: "jârubarqi: Persian jâru 'broom' + barqi ← Arabic barq 'lightning' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C175-periz]
 <!-- hl-knowledge: introduces=[FA-LEX-C175-CHIZ175-04]; assesses=[] -->
 
 **جاروبرقی** — *jârubarqi* — "a vacuum cleaner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jârubarqi* is *jâru*, "broom", with *barqi*, "electric". *jâru* is native; *barq*, "lightning, electricity", is borrowed from Arabic *barq*, "lightning" (root *b-r-q*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

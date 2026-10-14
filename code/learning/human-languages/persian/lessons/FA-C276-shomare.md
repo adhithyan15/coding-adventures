@@ -14,7 +14,8 @@ romanization: "shomâre"
 concept_tag: FA-CHIZ276-SHOMARE
 prerequisites: [FA-C276-serke, FA-C276-ard]
 sounds: []
-roots: []
+roots: [persian-shumar]
+etymology_hook: "shomâre ← Middle Persian ōšmārag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C276-ard]
 <!-- hl-knowledge: introduces=[FA-LEX-C276-CHIZ276-03]; assesses=[] -->
 
 **شماره** — *shomâre* — "a number".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shomâre* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *ōšmārag*, "calculation, reckoning" (EtymDB). It belongs with *shemordan*, "to count".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

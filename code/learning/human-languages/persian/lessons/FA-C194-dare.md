@@ -14,7 +14,8 @@ romanization: "dare"
 concept_tag: FA-MAKAN194-DARE
 prerequisites: [FA-C194-post, FA-C194-baje]
 sounds: []
-roots: []
+roots: [persian-dare]
+etymology_hook: "dare: inherited, usually traced to Middle Persian darrag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C194-baje]
 <!-- hl-knowledge: introduces=[FA-LEX-C194-MAKAN194-04]; assesses=[] -->
 
 **دره** — *dare* — "a valley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dare* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *darrag*, "valley".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

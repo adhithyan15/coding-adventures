@@ -14,7 +14,8 @@ romanization: "be-tâzegi"
 concept_tag: FA-GOZASHTE137-BE-TAZEGI
 prerequisites: [FA-C136-magar, FA-C136-che-vaqt]
 sounds: []
-roots: []
+roots: [persian-taza]
+etymology_hook: "be-tâzegi: Persian be 'in' + tâzegi 'freshness' (tâze); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C136-che-vaqt]
 <!-- hl-knowledge: introduces=[FA-LEX-C137-GOZASHTE137-01]; assesses=[] -->
 
 **به تازگی** — *be-tâzegi* — "recently". Persian's past for "I" ends in **-am**: **به تازگی یک کتاب خواندم** — *be-tâzegi yek ketâb khândam* — "I recently read a book."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*be-tâzegi* is *be*, "with, in", with *tâzegi*, "freshness" (from *tâze*, "fresh"): "freshly". All the pieces are native; *tâze* is usually traced to Middle Persian *tāzag*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

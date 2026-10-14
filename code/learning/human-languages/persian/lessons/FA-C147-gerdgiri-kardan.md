@@ -14,7 +14,8 @@ romanization: "gerdgiri kardan"
 concept_tag: FA-VERB-GERDGIRI-KARDAN
 prerequisites: [FA-C146-be-nazar-residan, FA-C146-negaran-budan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "gerdgiri kardan: Persian gerd 'dust' + giri 'taking' (gereftan) + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C146-negaran-budan]
 <!-- hl-knowledge: introduces=[FA-LEX-C147-KONESH147-01]; assesses=[] -->
 
 **گردگیری کردن** — *gerdgiri kardan* — "to dust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gerdgiri kardan* pairs *gerdgiri*, "dust-taking", with *kardan*. *gerdgiri* is *gerd*, "dust", with *giri*, "taking" (from *gereftan*, "to take"). All the pieces are native. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

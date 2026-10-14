@@ -14,7 +14,8 @@ romanization: "tasmim"
 concept_tag: FA-WANT91-TASMIM
 prerequisites: [FA-C91-barname, FA-C91-niyaz]
 sounds: []
-roots: []
+roots: [arabic-tasmim]
+etymology_hook: "tasmim ← Arabic taṣmīm 'resolve, determination', root ṣ-m-m (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C91-niyaz]
 <!-- hl-knowledge: introduces=[FA-LEX-C91-WANT91-03]; assesses=[] -->
 
 **تصمیم** — *tasmim* — "a decision".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tasmim* is borrowed from Arabic *taṣmīm*, "resolve, determination". Its Arabic root is *ṣ-m-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

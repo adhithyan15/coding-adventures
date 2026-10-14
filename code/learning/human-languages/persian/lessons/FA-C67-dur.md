@@ -14,7 +14,8 @@ romanization: "dur"
 concept_tag: FA-TIME67-DUR
 prerequisites: [FA-C67-shab, FA-C67-ruz]
 sounds: []
-roots: []
+roots: [persian-dur]
+etymology_hook: "dur: inherited, usually traced to Middle Persian dūr"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C67-ruz]
 <!-- hl-knowledge: introduces=[FA-LEX-C67-TIME67-04]; assesses=[] -->
 
 **دور** — *dur* — "far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dur* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *dūr*, "far". EtymDB takes it back to the Indo-European root *\*dweh₂-*, "far, long". (It also lists Arabic *dawr*, "period", a different word that looks alike.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 196,
-  "sourceHash": "fnv1a64:593918f7fc8390d2",
+  "sourceHash": "fnv1a64:d03ad3f58896c3b7",
   "lessonIds": [
     "FA-C196-navdan",
     "FA-C196-sotun",
@@ -15,7 +15,7 @@
   "drivablePrefix": 1,
   "text": "persian/narration/ch196.txt",
   "json": "persian/narration/ch196.json",
-  "textHash": "fnv1a64:9312fc27012f292f",
-  "jsonHash": "fnv1a64:028d2f974a824adf",
+  "textHash": "fnv1a64:c2ea658b946f12d3",
+  "jsonHash": "fnv1a64:1b591e52c5de537c",
   "findings": []
 }

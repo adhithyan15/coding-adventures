@@ -14,7 +14,8 @@ romanization: "dâstân"
 concept_tag: FA-WORLD78-DASTAN
 prerequisites: [FA-C78-khabar, FA-C78-keshvar]
 sounds: []
-roots: []
+roots: [persian-dastan]
+etymology_hook: "dâstân: inherited, usually traced to Middle Persian dāstān"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C78-keshvar]
 <!-- hl-knowledge: introduces=[FA-LEX-C78-WORLD78-05]; assesses=[] -->
 
 **داستان** — *dâstân* — "a story".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dâstân* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *dāstān*, "story".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

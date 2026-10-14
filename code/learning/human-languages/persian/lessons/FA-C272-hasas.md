@@ -14,7 +14,8 @@ romanization: "hasâs"
 concept_tag: FA-SEFAT272-HASAS
 prerequisites: [FA-C272-rostgu, FA-C272-porru]
 sounds: []
-roots: []
+roots: [arabic-hassas]
+etymology_hook: "hasâs ← Arabic ḥassās 'sensitive, quick to feel', root ḥ-s-s (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C272-porru]
 <!-- hl-knowledge: introduces=[FA-LEX-C272-SEFAT272-03]; assesses=[] -->
 
 **حساس** — *hasâs* — "sensitive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hasâs* is borrowed from Arabic *ḥassās*, "sensitive, quick to feel". Its Arabic root is *ḥ-s-s* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

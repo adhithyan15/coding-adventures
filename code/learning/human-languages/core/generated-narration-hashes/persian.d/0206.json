@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 206,
-  "sourceHash": "fnv1a64:7567a4e3e0892156",
+  "sourceHash": "fnv1a64:558a967471aaac10",
   "lessonIds": [
     "FA-C206-madrak",
     "FA-C206-shenasname",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch206.txt",
   "json": "persian/narration/ch206.json",
-  "textHash": "fnv1a64:708bd68cf9a667b3",
-  "jsonHash": "fnv1a64:481abe1af757ef65",
+  "textHash": "fnv1a64:4f1a8fce7c947964",
+  "jsonHash": "fnv1a64:157fff06e36195c5",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "sonnati"
 concept_tag: FA-SEFAT273-SONNATI
 prerequisites: [FA-C273-kesel-konande, FA-C273-mofid]
 sounds: []
-roots: []
+roots: [arabic-sunna]
+etymology_hook: "sonnati: sonnat ← Arabic sunna 'custom' (Lane) + Persian -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C273-mofid]
 <!-- hl-knowledge: introduces=[FA-LEX-C273-SEFAT273-03]; assesses=[] -->
 
 **سنتی** — *sonnati* — "traditional".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sonnati* is *sonnat*, "tradition", with the ending *-i*. *sonnat* is borrowed from Arabic *sunna*, "custom, way" (root *s-n-n*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

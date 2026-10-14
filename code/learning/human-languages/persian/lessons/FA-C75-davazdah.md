@@ -14,7 +14,8 @@ romanization: "davâzdah"
 concept_tag: FA-CLOTHES75-DAVAZDAH
 prerequisites: [FA-C75-kot, FA-C75-kamarband]
 sounds: []
-roots: []
+roots: [pie-dwoh, proto-indo-european-dekm]
+etymology_hook: "davâzdah: Persian do 'two' + dah 'ten'; inherited (Middle Persian dwāzdah)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C75-kamarband]
 <!-- hl-knowledge: introduces=[FA-LEX-C75-CLOTHES75-03]; assesses=[] -->
 
 **دوازده** — *davâzdah* — "twelve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*davâzdah* is *do*, "two", with *dah*, "ten": two-and-ten. It is usually traced to Middle Persian *dwāzdah*, an inherited number.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

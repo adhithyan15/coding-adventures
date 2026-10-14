@@ -14,7 +14,8 @@ romanization: "shak kardan"
 concept_tag: FA-VERB-SHAK-KARDAN
 prerequisites: [FA-C222-pars-kardan, FA-C222-khab-didan]
 sounds: []
-roots: []
+roots: [arabic-shakk]
+etymology_hook: "shak ← Arabic šakk 'doubt', root š-k-k (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C222-khab-didan]
 <!-- hl-knowledge: introduces=[FA-LEX-C222-KONESH222-04]; assesses=[] -->
 
 **شک کردن** — *shak kardan* — "to doubt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shak kardan* pairs *shak*, borrowed from Arabic *šakk*, "doubt" (root *š-k-k*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

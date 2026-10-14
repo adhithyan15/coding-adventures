@@ -14,7 +14,8 @@ romanization: "shakhsiyat"
 concept_tag: FA-CHIZ170-SHAKHSIYAT
 prerequisites: [FA-C170-ashk, FA-C170-akhlaq]
 sounds: []
-roots: []
+roots: [arabic-sahsiyya]
+etymology_hook: "shakhsiyat ← Arabic šaḫṣiyya 'personality', root š-ḫ-ṣ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C170-akhlaq]
 <!-- hl-knowledge: introduces=[FA-LEX-C170-CHIZ170-05]; assesses=[] -->
 
 **شخصیت** — *shakhsiyat* — "personality".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shakhsiyat* is borrowed from Arabic *šaḫṣiyya*, "personality". Its Arabic root is *š-ḫ-ṣ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

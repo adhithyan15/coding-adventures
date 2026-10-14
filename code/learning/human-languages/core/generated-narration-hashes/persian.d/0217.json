@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 217,
-  "sourceHash": "fnv1a64:84fcf00b78d2c883",
+  "sourceHash": "fnv1a64:89bcc488523c2cd4",
   "lessonIds": [
     "FA-C217-harf-zadan",
     "FA-C217-kar-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch217.txt",
   "json": "persian/narration/ch217.json",
-  "textHash": "fnv1a64:45fdc0f13c5e463e",
-  "jsonHash": "fnv1a64:18a57063c58b4a6e",
+  "textHash": "fnv1a64:55eacb3c2ee46ef5",
+  "jsonHash": "fnv1a64:0d96cee235aee9f8",
   "findings": []
 }

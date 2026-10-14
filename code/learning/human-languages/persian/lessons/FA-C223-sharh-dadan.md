@@ -14,7 +14,8 @@ romanization: "sharh dâdan"
 concept_tag: FA-VERB-SHARH-DADAN
 prerequisites: [FA-C223-nejat-dadan, FA-C223-penhan-kardan]
 sounds: []
-roots: []
+roots: [arabic-sarh]
+etymology_hook: "sharh ← Arabic šarḥ 'opening up, explanation', root š-r-ḥ (Lane), + Persian dâdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C223-penhan-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C223-KONESH223-03]; assesses=[] -->
 
 **شرح دادن** — *sharh dâdan* — "to explain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sharh dâdan* pairs *sharh*, borrowed from Arabic *šarḥ*, "opening up, explanation" (root *š-r-ḥ*, Lane), with the Persian verb *dâdan*, "to give". *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

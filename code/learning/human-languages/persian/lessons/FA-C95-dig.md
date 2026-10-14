@@ -14,7 +14,8 @@ romanization: "dig"
 concept_tag: FA-THINGS95-DIG
 prerequisites: [FA-C95-hule, FA-C95-fenjan]
 sounds: []
-roots: []
+roots: [persian-dig]
+etymology_hook: "dig: inherited, usually traced to Middle Persian dīg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C95-fenjan]
 <!-- hl-knowledge: introduces=[FA-LEX-C95-THINGS95-03]; assesses=[] -->
 
 **دیگ** — *dig* — "a pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dig* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *dīg*, "cooking pot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

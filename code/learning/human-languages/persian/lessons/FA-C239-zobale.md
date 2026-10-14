@@ -14,7 +14,8 @@ romanization: "zobâle"
 concept_tag: FA-CHIZ239-ZOBALE
 prerequisites: [FA-C239-dastmal, FA-C239-sabad]
 sounds: []
-roots: []
+roots: [arabic-zubala]
+etymology_hook: "zobâle ← Arabic zubāla 'sweepings, refuse', root z-b-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C239-sabad]
 <!-- hl-knowledge: introduces=[FA-LEX-C239-CHIZ239-05]; assesses=[] -->
 
 **زباله** — *zobâle* — "rubbish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zobâle* is borrowed from Arabic *zubāla*, "sweepings, refuse". Its Arabic root is *z-b-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

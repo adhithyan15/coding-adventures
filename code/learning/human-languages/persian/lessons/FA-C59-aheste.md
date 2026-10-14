@@ -15,6 +15,7 @@ concept_tag: FA-ADJ59-AHESTE
 prerequisites: [FA-C59-garm, FA-C59-sard]
 sounds: []
 roots: []
+etymology_hook: "âheste: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C59-sard]
 <!-- hl-knowledge: introduces=[FA-LEX-C59-ADJ59-05]; assesses=[] -->
 
 **آهسته** — *âheste* — "slow, slowly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âheste* is a native Persian word, but no source used here gives an older form, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

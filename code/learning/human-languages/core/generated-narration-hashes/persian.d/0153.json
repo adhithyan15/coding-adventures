@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 153,
-  "sourceHash": "fnv1a64:9d81924c54272730",
+  "sourceHash": "fnv1a64:83207120497b2638",
   "lessonIds": [
     "FA-C153-nime-shab",
     "FA-C153-pish",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch153.txt",
   "json": "persian/narration/ch153.json",
-  "textHash": "fnv1a64:e003e6c92cb2a92f",
-  "jsonHash": "fnv1a64:55efbe8fb3476945",
+  "textHash": "fnv1a64:4019b3f7bf79edba",
+  "jsonHash": "fnv1a64:b62a96c304c7fee3",
   "findings": []
 }

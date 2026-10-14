@@ -14,7 +14,8 @@ romanization: "dâyere"
 concept_tag: FA-CHIZ213-DAYERE
 prerequisites: [FA-C213-chaharpaye, FA-C213-taqche]
 sounds: []
-roots: []
+roots: [arabic-daira]
+etymology_hook: "dâyere ← Arabic dāʾira 'circle', root d-w-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C213-taqche]
 <!-- hl-knowledge: introduces=[FA-LEX-C213-CHIZ213-04]; assesses=[] -->
 
 **دایره** — *dâyere* — "a circle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dâyere* is borrowed from Arabic *dāʾira*, "circle". Its Arabic root is *d-w-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

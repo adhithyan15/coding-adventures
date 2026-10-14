@@ -14,7 +14,8 @@ romanization: "goshâd"
 concept_tag: FA-SEFAT161-GOSHAD
 prerequisites: [FA-C161-kham, FA-C161-tang]
 sounds: []
-roots: []
+roots: [persian-goshad]
+etymology_hook: "goshâd: inherited, usually traced to Middle Persian gušād"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C161-tang]
 <!-- hl-knowledge: introduces=[FA-LEX-C161-SEFAT161-05]; assesses=[] -->
 
 **گشاد** — *goshâd* — "loose, baggy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*goshâd* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *gušād*, "open, wide".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 75,
-  "sourceHash": "fnv1a64:68701da19b7b9e72",
+  "sourceHash": "fnv1a64:227d65a594018d8d",
   "lessonIds": [
     "FA-C75-kot",
     "FA-C75-kamarband",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch75.txt",
   "json": "persian/narration/ch75.json",
-  "textHash": "fnv1a64:f5c30ea60bdd0c90",
-  "jsonHash": "fnv1a64:4277cecea0667fec",
+  "textHash": "fnv1a64:033cf262c609cbf5",
+  "jsonHash": "fnv1a64:0047c84ba399b798",
   "findings": []
 }

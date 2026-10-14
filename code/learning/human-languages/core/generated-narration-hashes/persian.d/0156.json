@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 156,
-  "sourceHash": "fnv1a64:fe7d210c9040258d",
+  "sourceHash": "fnv1a64:3e759fbaf5c11588",
   "lessonIds": [
     "FA-C156-chah",
     "FA-C156-kolbe",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch156.txt",
   "json": "persian/narration/ch156.json",
-  "textHash": "fnv1a64:a9ef2a6c2379e66e",
-  "jsonHash": "fnv1a64:28467c269896bd4c",
+  "textHash": "fnv1a64:5629bf4307ec85fa",
+  "jsonHash": "fnv1a64:5534a1c20c238bb7",
   "findings": []
 }

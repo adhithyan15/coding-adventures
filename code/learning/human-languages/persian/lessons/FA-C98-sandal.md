@@ -14,7 +14,8 @@ romanization: "sandal"
 concept_tag: FA-THINGS98-SANDAL
 prerequisites: [FA-C97-gardanband, FA-C97-chakme]
 sounds: []
-roots: []
+roots: [french-sandale]
+etymology_hook: "sandal: a loan, usually traced to French sandale 'sandal'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C97-chakme]
 <!-- hl-knowledge: introduces=[FA-LEX-C98-THINGS98-01]; assesses=[] -->
 
 **صندل** — *sandal* — "sandals".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sandal* is a loan, usually traced to French *sandale*, "sandal". (EtymDB lists *sandal*, "sandalwood", a different word spelled the same.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "por"
 concept_tag: FA-ADJ61-POR
 prerequisites: [FA-C60-geran, FA-C60-arzan]
 sounds: []
-roots: []
+roots: [persian-por]
+etymology_hook: "por ← Middle Persian purr (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C60-arzan]
 <!-- hl-knowledge: introduces=[FA-LEX-C61-ADJ61-01]; assesses=[] -->
 
 **پر** — *por* — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*por* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *purr*, "full" (EtymDB). EtymDB takes it back to the Indo-European word behind English *full*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

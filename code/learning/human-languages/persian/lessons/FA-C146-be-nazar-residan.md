@@ -14,7 +14,8 @@ romanization: "be nazar residan"
 concept_tag: FA-VERB-BE-NAZAR-RESIDAN
 prerequisites: [FA-C146-hads-zadan, FA-C146-tarjih-dadan]
 sounds: []
-roots: []
+roots: [arabic-nazar, persian-rasid]
+etymology_hook: "nazar ← Arabic naẓar 'look', root n-ẓ-r (Lane); be and residan are Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C146-tarjih-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C146-KONESH146-04]; assesses=[] -->
 
 **به نظر رسیدن** — *be nazar residan* — "to seem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*be nazar residan* is "to reach the view": *be*, "to", *nazar*, "look, view", and *residan*, "to reach". *nazar* is borrowed from Arabic *naẓar*, "look, sight" (root *n-ẓ-r*, Lane); *be* and *residan* are native. *residan*, "to reach", is an inherited verb; it is usually traced to Middle Persian *rasīdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

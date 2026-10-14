@@ -14,7 +14,8 @@ romanization: "âsib"
 concept_tag: FA-SALAMAT263-ASIB
 prerequisites: [FA-C262-tamdid-kardan, FA-C262-tah-gereftan]
 sounds: []
-roots: []
+roots: [persian-asib]
+etymology_hook: "âsib: inherited, usually traced to Middle Persian āsēb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C262-tah-gereftan]
 <!-- hl-knowledge: introduces=[FA-LEX-C263-SALAMAT263-01]; assesses=[] -->
 
 **آسیب** — *âsib* — "an injury, harm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âsib* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *āsēb*, "harm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

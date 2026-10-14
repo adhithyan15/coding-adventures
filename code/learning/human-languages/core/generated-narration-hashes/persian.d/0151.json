@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 151,
-  "sourceHash": "fnv1a64:f261b3b9cea0a7f1",
+  "sourceHash": "fnv1a64:fee24128abf61c34",
   "lessonIds": [
     "FA-C151-taval",
     "FA-C151-jush",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch151.txt",
   "json": "persian/narration/ch151.json",
-  "textHash": "fnv1a64:f7a87be8628b24ff",
-  "jsonHash": "fnv1a64:70d0c07efca2578a",
+  "textHash": "fnv1a64:959c3350c21c19a0",
+  "jsonHash": "fnv1a64:2f12e3eadd5ddddd",
   "findings": []
 }

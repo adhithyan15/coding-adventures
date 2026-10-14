@@ -14,7 +14,8 @@ romanization: "ghofl"
 concept_tag: FA-HOME47-GHOFL
 prerequisites: [FA-C46-zamin, FA-C46-ayene]
 sounds: []
-roots: []
+roots: [arabic-qufl]
+etymology_hook: "ghofl ← Arabic qufl 'lock', root q-f-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C46-ayene]
 <!-- hl-knowledge: introduces=[FA-LEX-C47-HOME47-01]; assesses=[] -->
 
 **قفل** — *ghofl* — "a lock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ghofl* is borrowed from Arabic *qufl*, "lock". Its Arabic root is *q-f-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

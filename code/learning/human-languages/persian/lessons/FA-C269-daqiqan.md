@@ -14,7 +14,8 @@ romanization: "daqiqan"
 concept_tag: FA-CHERA269-DAQIQAN
 prerequisites: [FA-C269-hatta, FA-C269-kamelan]
 sounds: []
-roots: []
+roots: [arabic-daqiqan]
+etymology_hook: "daqiqan ← Arabic daqīqan 'exactly, precisely', root d-q-q (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C269-kamelan]
 <!-- hl-knowledge: introduces=[FA-LEX-C269-CHERA269-04]; assesses=[] -->
 
 **دقیقا** — *daqiqan* — "exactly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*daqiqan* is borrowed from Arabic *daqīqan*, "exactly, precisely". Its Arabic root is *d-q-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

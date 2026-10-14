@@ -14,7 +14,8 @@ romanization: "jazire"
 concept_tag: FA-THINGS103-JAZIRE
 prerequisites: [FA-C102-dasht, FA-C103-tappe]
 sounds: []
-roots: []
+roots: [arabic-jazira]
+etymology_hook: "jazire ← Arabic jazīra 'island', root j-z-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C103-tappe]
 <!-- hl-knowledge: introduces=[FA-LEX-C103-THINGS103-02]; assesses=[] -->
 
 **جزیره** — *jazire* — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jazire* is borrowed from Arabic *jazīra*, "island". Its Arabic root is *j-z-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

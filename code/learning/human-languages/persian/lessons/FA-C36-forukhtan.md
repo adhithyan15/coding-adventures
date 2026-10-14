@@ -14,7 +14,8 @@ romanization: "forukhtan"
 concept_tag: FA-VERB-FORUKHTAN
 prerequisites: [FA-C36-davidan, FA-C36-kharidan]
 sounds: []
-roots: []
+roots: [persian-forukhtan]
+etymology_hook: "forukhtan: inherited, usually traced to Middle Persian frōxtan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C36-kharidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C36-VERBS36-05]; assesses=[] -->
 
 **فروختن** — *forukhtan* — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*forukhtan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *frōxtan*, "to sell".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

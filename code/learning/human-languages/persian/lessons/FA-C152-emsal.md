@@ -14,7 +14,8 @@ romanization: "emsâl"
 concept_tag: FA-ZAMAN152-EMSAL
 prerequisites: [FA-C151-qatre, FA-C151-kapsul]
 sounds: []
-roots: []
+roots: [persian-sal]
+etymology_hook: "emsâl: Persian em- 'this' + sâl 'year' (Middle Persian sāl, EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C151-kapsul]
 <!-- hl-knowledge: introduces=[FA-LEX-C152-ZAMAN152-01]; assesses=[] -->
 
 **امسال** — *emsâl* — "this year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*emsâl* is *em-*, "this", with *sâl*, "year": "this year". Both are native; *sâl* continues Middle Persian *sāl* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

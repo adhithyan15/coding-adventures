@@ -14,7 +14,8 @@ romanization: "rustâ"
 concept_tag: FA-TOWN72-RUSTA
 prerequisites: [FA-C72-docharkhe, FA-C72-bazar]
 sounds: []
-roots: []
+roots: [persian-rusta]
+etymology_hook: "rustâ: inherited, usually traced to Middle Persian rōstāg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C72-bazar]
 <!-- hl-knowledge: introduces=[FA-LEX-C72-TOWN72-04]; assesses=[] -->
 
 **روستا** — *rustâ* — "a village".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rustâ* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *rōstāg*, "village".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

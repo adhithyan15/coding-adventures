@@ -15,6 +15,7 @@ concept_tag: FA-NATURE53-MASE
 prerequisites: [FA-C52-daryache, FA-C52-sang]
 sounds: []
 roots: []
+etymology_hook: "mâse: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C52-sang]
 <!-- hl-knowledge: introduces=[FA-LEX-C53-NATURE53-01]; assesses=[] -->
 
 **ماسه** — *mâse* — "sand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mâse* is the everyday word for sand, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

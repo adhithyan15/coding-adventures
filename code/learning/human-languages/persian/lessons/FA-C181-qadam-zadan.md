@@ -14,7 +14,8 @@ romanization: "qadam zadan"
 concept_tag: FA-VERB-QADAM-ZADAN
 prerequisites: [FA-C181-tekan-dadan, FA-C181-rad-shodan]
 sounds: []
-roots: []
+roots: [arabic-qadam]
+etymology_hook: "qadam ← Arabic qadam 'foot, step', root q-d-m (Lane), + Persian zadan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C181-rad-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C181-KONESH181-05]; assesses=[] -->
 
 **قدم زدن** — *qadam zadan* — "to stroll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qadam zadan* pairs *qadam*, borrowed from Arabic *qadam*, "foot, step" (root *q-d-m*, Lane), with the Persian verb *zadan*, "to strike". *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

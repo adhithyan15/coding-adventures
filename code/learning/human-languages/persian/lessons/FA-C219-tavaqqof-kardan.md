@@ -14,7 +14,8 @@ romanization: "tavaqqof kardan"
 concept_tag: FA-VERB-TAVAQQOF-KARDAN
 prerequisites: [FA-C218-varzesh-kardan, FA-C218-shena-kardan]
 sounds: []
-roots: []
+roots: [arabic-tawaqquf]
+etymology_hook: "tavaqqof ← Arabic tawaqquf 'stopping, pausing', root w-q-f (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C218-shena-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C219-KONESH219-01]; assesses=[] -->
 
 **توقف کردن** — *tavaqqof kardan* — "to stop, to halt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tavaqqof kardan* pairs *tavaqqof*, borrowed from Arabic *tawaqquf*, "stopping, pausing" (root *w-q-f*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

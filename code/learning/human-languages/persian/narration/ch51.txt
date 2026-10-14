@@ -12,6 +12,9 @@ Before the new one: say the Persian for a word, then the Persian for a game.
 You'll want to know: نامه.
 نامه — nâme — "a letter (post)".
 
+The word, taken apart.
+nâme is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian nāmag, "letter, book". It is usually explained as built on nâm, "name".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a game, then the Persian for a letter.
 
 You'll want to know: روزنامه.
 روزنامه — ruznâme — "a newspaper".
+
+The word, taken apart.
+ruznâme is built from ruz, "day" (Middle Persian rōz, EtymDB), and nâme, "letter, writing" (Middle Persian nāmag): a daily writing. Both parts are inherited.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a letter, then the Persian for a newspap
 You'll want to know: درخت.
 درخت — derakht — "a tree".
 
+The word, taken apart.
+derakht is a native Persian word, inherited rather than borrowed: it continues Middle Persian draxt, "tree" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a newspaper, then the Persian for a tree
 You'll want to know: گل.
 گل — gol — "a flower".
 
+The word, taken apart.
+gol is a native Persian word, inherited rather than borrowed: it continues Middle Persian gul, "rose, flower" (EtymDB). EtymDB takes it back to an Old Iranian word for "rose". (It also lists English goal, which is a different word that looks alike.)
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a tree, then the Persian for a flower.
 
 You'll want to know: برگ.
 برگ — barg — "a leaf".
+
+The word, taken apart.
+barg is a native Persian word, inherited rather than borrowed: it continues Middle Persian warg, "leaf" (EtymDB).
 
 What you've built.
 One more word for this chapter.

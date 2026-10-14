@@ -14,7 +14,8 @@ romanization: "gusht"
 concept_tag: FA-VERBS40-GUSHT
 prerequisites: [FA-C40-mahi, FA-C40-berenj]
 sounds: []
-roots: []
+roots: [persian-gusht]
+etymology_hook: "gusht: inherited, usually traced to Middle Persian gōšt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C40-berenj]
 <!-- hl-knowledge: introduces=[FA-LEX-C40-VERBS40-05]; assesses=[] -->
 
 **گوشت** — *gusht* — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gusht* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *gōšt*, "meat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

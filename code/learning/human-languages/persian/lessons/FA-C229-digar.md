@@ -14,7 +14,8 @@ romanization: "digar"
 concept_tag: FA-ZAMAN229-DIGAR
 prerequisites: [FA-C229-taqvim, FA-C229-lahze]
 sounds: []
-roots: []
+roots: [pie-dwoh]
+etymology_hook: "digar: native; usually traced to Middle Persian dudīgar 'second'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C229-lahze]
 <!-- hl-knowledge: introduces=[FA-LEX-C229-ZAMAN229-04]; assesses=[] -->
 
 **دیگر** — *digar* — "any more; other".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*digar* is native Persian, usually traced to Middle Persian *dudīgar*, "second, other"; EtymDB takes it back to the Indo-European word for "two".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

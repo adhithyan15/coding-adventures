@@ -60,6 +60,11 @@ uses *vy* and French uses *vous*. Use **shomâ** with an unfamiliar adult or in
 a first meeting. Use **to** after the relationship is familiar. English once
 made a similar distinction but now uses *you* for both.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*to* is inherited: it is the old Indo-European familiar "you", the word behind English *thou* and Latin *tu*, usually traced to Middle Persian *tō*. *shomâ* is inherited too, usually traced to Middle Persian *ašmā*, the old plural "you".
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SHOMA-TO, FA-SCRIPT-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER] -->
 

@@ -14,7 +14,8 @@ romanization: "bâzu"
 concept_tag: FA-BODY30-BAZU
 prerequisites: [FA-C29-lab, FA-C30-ghalb]
 sounds: []
-roots: []
+roots: [persian-bazu]
+etymology_hook: "bâzu: inherited, usually traced to Middle Persian bāzūg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C30-ghalb]
 <!-- hl-knowledge: introduces=[FA-LEX-C30-BODY30-02]; assesses=[] -->
 
 **بازو** — *bâzu* — "an arm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâzu* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *bāzūg*, "arm". Old Persian had *bāzu-*, "arm" (EtymDB), and EtymDB takes it back to Indo-European *\*bʰeh₂ǵʰús*, "arm"; English *bough*, which once meant "shoulder", is usually traced to the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

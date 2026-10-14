@@ -14,7 +14,8 @@ romanization: "nafas keshidan"
 concept_tag: FA-VERB-NAFAS-KESHIDAN
 prerequisites: [FA-C180-sorkh-kardan, FA-C180-khord-kardan]
 sounds: []
-roots: []
+roots: [arabic-nafas, persian-kashidan]
+etymology_hook: "nafas ← Arabic nafas 'breath' (root n-f-s, Lane), + Persian keshidan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C180-khord-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C181-KONESH181-01]; assesses=[] -->
 
 **نفس کشیدن** — *nafas keshidan* — "to breathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nafas keshidan* is "to draw breath": *nafas* is borrowed from Arabic *nafas*, "breath" (EtymDB; root *n-f-s*, Lane), and *keshidan*, "to draw", is native. *keshidan*, "to pull", is an inherited verb; it is usually traced to Middle Persian *kašīdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

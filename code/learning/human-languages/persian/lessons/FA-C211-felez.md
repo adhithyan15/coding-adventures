@@ -14,7 +14,8 @@ romanization: "felez"
 concept_tag: FA-CHIZ211-FELEZ
 prerequisites: [FA-C211-abrisham, FA-C211-ajor]
 sounds: []
-roots: []
+roots: [arabic-filizz]
+etymology_hook: "felez ← Arabic filizz 'metal', root f-l-z (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C211-ajor]
 <!-- hl-knowledge: introduces=[FA-LEX-C211-CHIZ211-05]; assesses=[] -->
 
 **فلز** — *felez* — "metal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*felez* is borrowed from Arabic *filizz*, "metal". Its Arabic root is *f-l-z* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

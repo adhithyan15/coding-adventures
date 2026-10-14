@@ -14,7 +14,8 @@ romanization: "bâm"
 concept_tag: FA-MAKAN195-BAM
 prerequisites: [FA-C194-qolle, FA-C195-aparteman]
 sounds: []
-roots: []
+roots: [persian-bam]
+etymology_hook: "bâm: inherited, usually traced to Middle Persian bām"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C195-aparteman]
 <!-- hl-knowledge: introduces=[FA-LEX-C195-MAKAN195-02]; assesses=[] -->
 
 **بام** — *bâm* — "a roof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâm* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *bām*, "roof".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: FA-SEFAT238-TORD
 prerequisites: [FA-C237-zende, FA-C237-morde]
 sounds: []
 roots: []
+etymology_hook: "tord: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C237-morde]
 <!-- hl-knowledge: introduces=[FA-LEX-C238-SEFAT238-01]; assesses=[] -->
 
 **ترد** — *tord* — "crisp, crunchy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tord* is a native Persian word, but no source used here gives its older form, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khatkesh"
 concept_tag: FA-THINGS114-KHATKESH
 prerequisites: [FA-C113-pakat, FA-C113-medadtarash]
 sounds: []
-roots: []
+roots: [arabic-khatt]
+etymology_hook: "khatkesh: khat ← Arabic ḫaṭṭ 'line' (root ḫ-ṭ-ṭ, Lane) + Persian kesh 'drawing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C113-medadtarash]
 <!-- hl-knowledge: introduces=[FA-LEX-C114-THINGS114-01]; assesses=[] -->
 
 **خط کش** — *khatkesh* — "a ruler".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khatkesh* is *khat*, "line", with *-kesh*, "drawing" (from *keshidan*, "to draw"): the line-drawer. *khat* is borrowed from Arabic *ḫaṭṭ*, "line, writing" (root *ḫ-ṭ-ṭ*, Lane); *kesh* is native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

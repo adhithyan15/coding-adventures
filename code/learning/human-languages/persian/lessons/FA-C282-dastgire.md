@@ -14,7 +14,8 @@ romanization: "dastgire"
 concept_tag: FA-CHIZ282-DASTGIRE
 prerequisites: [FA-C282-toshak, FA-C282-shir-e-ab]
 sounds: []
-roots: []
+roots: [persian-dast]
+etymology_hook: "dastgire: Persian dast 'hand' (EtymDB) + gir 'grip' + -e; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C282-shir-e-ab]
 <!-- hl-knowledge: introduces=[FA-LEX-C282-CHIZ282-05]; assesses=[] -->
 
 **دستگیره** — *dastgire* — "a handle, a doorknob".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dastgire* is built from *dast*, "hand", *gir*, "grip" (from *gereftan*), and *-e*: the hand-grip. *dast* is inherited; Old Persian had *dasta-*, "hand" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sir"
 concept_tag: FA-THINGS101-SIR
 prerequisites: [FA-C101-khiyar, FA-C101-bademjan]
 sounds: []
-roots: []
+roots: [persian-sir]
+etymology_hook: "sir: inherited, usually traced to Middle Persian sīr"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C101-bademjan]
 <!-- hl-knowledge: introduces=[FA-LEX-C101-THINGS101-05]; assesses=[] -->
 
 **سیر** — *sir* — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sir* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *sīr*, "garlic".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

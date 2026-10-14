@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 32,
-  "sourceHash": "fnv1a64:cc61106d3f07031d",
+  "sourceHash": "fnv1a64:17058a524095dd2e",
   "lessonIds": [
     "FA-C32-narahat",
     "FA-C32-pezeshk",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch32.txt",
   "json": "persian/narration/ch32.json",
-  "textHash": "fnv1a64:4b03e233e7733f9f",
-  "jsonHash": "fnv1a64:b8573ba9ec5033f8",
+  "textHash": "fnv1a64:4f8669339da808fe",
+  "jsonHash": "fnv1a64:eeb2bd92df854db5",
   "findings": []
 }

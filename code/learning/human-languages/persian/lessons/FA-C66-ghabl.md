@@ -14,7 +14,8 @@ romanization: "ghabl"
 concept_tag: FA-TIME66-GHABL
 prerequisites: [FA-C66-zud, FA-C66-dir]
 sounds: []
-roots: []
+roots: [arabic-qabl]
+etymology_hook: "ghabl ← Arabic qabl 'before', root q-b-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C66-dir]
 <!-- hl-knowledge: introduces=[FA-LEX-C66-TIME66-05]; assesses=[] -->
 
 **قبل** — *ghabl* — "before".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ghabl* is borrowed from Arabic *qabl*, "before". Its Arabic root is *q-b-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

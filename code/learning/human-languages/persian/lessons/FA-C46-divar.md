@@ -14,7 +14,8 @@ romanization: "divâr"
 concept_tag: FA-HOME46-DIVAR
 prerequisites: [FA-C45-sandali, FA-C45-miz]
 sounds: []
-roots: []
+roots: [persian-divar]
+etymology_hook: "divâr ← Middle Persian dēwār (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C45-miz]
 <!-- hl-knowledge: introduces=[FA-LEX-C46-HOME46-01]; assesses=[] -->
 
 **دیوار** — *divâr* — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*divâr* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *dēwār*, "wall" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

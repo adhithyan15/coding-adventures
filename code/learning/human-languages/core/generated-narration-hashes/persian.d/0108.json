@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 108,
-  "sourceHash": "fnv1a64:06d64537a108d036",
+  "sourceHash": "fnv1a64:bc9ea9295b5e09e0",
   "lessonIds": [
     "FA-C108-moch",
     "FA-C108-shast",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch108.txt",
   "json": "persian/narration/ch108.json",
-  "textHash": "fnv1a64:32660a71180a4794",
-  "jsonHash": "fnv1a64:32f417a49f2be548",
+  "textHash": "fnv1a64:4ae9748ba696e3f4",
+  "jsonHash": "fnv1a64:fa8ff59f54f38134",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "tâyp kardan"
 concept_tag: FA-VERB-TAYP-KARDAN
 prerequisites: [FA-C144-bazdid-kardan, FA-C144-edame-dadan]
 sounds: []
-roots: []
+roots: [english-type, pie-kwer]
+etymology_hook: "tâyp ← English type, + Persian kardan 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C144-edame-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C144-KONESH144-05]; assesses=[] -->
 
 **تایپ کردن** — *tâyp kardan* — "to type".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tâyp kardan* pairs *tâyp*, borrowed from English *type*, with the Persian verb *kardan*, "to do". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

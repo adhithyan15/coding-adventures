@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 283,
-  "sourceHash": "fnv1a64:ff04b770c203d270",
+  "sourceHash": "fnv1a64:87fb8d1ea5dbf902",
   "lessonIds": [
     "FA-C283-shen",
     "FA-C283-lastik",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch283.txt",
   "json": "persian/narration/ch283.json",
-  "textHash": "fnv1a64:2d29137bcfdeb201",
-  "jsonHash": "fnv1a64:c4020f1c63d4821d",
+  "textHash": "fnv1a64:bb81d7aae5def831",
+  "jsonHash": "fnv1a64:e2afe8f338450e25",
   "findings": []
 }

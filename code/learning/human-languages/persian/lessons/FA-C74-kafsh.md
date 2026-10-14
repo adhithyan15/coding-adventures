@@ -14,7 +14,8 @@ romanization: "kafsh"
 concept_tag: FA-CLOTHES74-KAFSH
 prerequisites: [FA-C74-angoshtar, FA-C74-kolah]
 sounds: []
-roots: []
+roots: [persian-kafsh]
+etymology_hook: "kafsh ← Middle Persian kafš (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C74-kolah]
 <!-- hl-knowledge: introduces=[FA-LEX-C74-CLOTHES74-05]; assesses=[] -->
 
 **کفش** — *kafsh* — "a shoe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kafsh* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *kafš*, "shoe" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

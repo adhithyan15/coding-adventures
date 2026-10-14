@@ -14,7 +14,8 @@ romanization: "mobl"
 concept_tag: FA-THINGS109-MOBL
 prerequisites: [FA-C109-ostokhan, FA-C109-farsh]
 sounds: []
-roots: []
+roots: [french-meuble]
+etymology_hook: "mobl: a loan, usually traced to French meuble 'piece of furniture'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C109-farsh]
 <!-- hl-knowledge: introduces=[FA-LEX-C109-THINGS109-05]; assesses=[] -->
 
 **مبل** — *mobl* — "a sofa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mobl* is a loan, usually traced to French *meuble*, "piece of furniture".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

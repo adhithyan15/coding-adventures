@@ -14,7 +14,8 @@ romanization: "tanhâ"
 concept_tag: FA-SEFAT200-TANHA
 prerequisites: [FA-C200-badakhlaq, FA-C200-jeddi]
 sounds: []
-roots: []
+roots: [persian-tanha]
+etymology_hook: "tanhâ ← Middle Persian tanhā (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C200-jeddi]
 <!-- hl-knowledge: introduces=[FA-LEX-C200-SEFAT200-04]; assesses=[] -->
 
 **تنها** — *tanhâ* — "alone, lonely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tanhâ* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *tanhā*, "alone" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

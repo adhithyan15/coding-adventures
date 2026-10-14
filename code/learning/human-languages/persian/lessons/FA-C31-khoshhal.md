@@ -14,7 +14,8 @@ romanization: "khoshhâl"
 concept_tag: FA-HEALTH31-KHOSHHAL
 prerequisites: [FA-C31-teshne, FA-C31-gorosne]
 sounds: []
-roots: []
+roots: [khush-persian, arabic-hal]
+etymology_hook: "khoshhâl: Persian khosh 'pleasant' + hâl ← Arabic ḥāl 'state', root ḥ-w-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C31-gorosne]
 <!-- hl-knowledge: introduces=[FA-LEX-C31-HEALTH31-05]; assesses=[] -->
 
 **خوشحال** — *khoshhâl* — "happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khoshhâl* is *khosh*, "pleasant, good", with *hâl*, "state": a pleasant state. *khosh* is inherited and usually traced to Middle Persian *xwaš*; *hâl* is borrowed from Arabic *ḥāl*, "state, condition" (root *ḥ-w-l*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

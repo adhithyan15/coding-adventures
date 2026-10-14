@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 88,
-  "sourceHash": "fnv1a64:d3ec6162ed243f68",
+  "sourceHash": "fnv1a64:66466d88f82540ab",
   "lessonIds": [
     "FA-C88-ketabkhane",
     "FA-C88-darukhane",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch88.txt",
   "json": "persian/narration/ch88.json",
-  "textHash": "fnv1a64:f63037585b849c64",
-  "jsonHash": "fnv1a64:5a0f25d30782992c",
+  "textHash": "fnv1a64:528e87208c1b413c",
+  "jsonHash": "fnv1a64:ed9d6057b598b3ee",
   "findings": []
 }

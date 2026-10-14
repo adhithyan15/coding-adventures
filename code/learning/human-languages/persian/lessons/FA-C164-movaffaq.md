@@ -14,7 +14,8 @@ romanization: "movaffaq"
 concept_tag: FA-SEFAT164-MOVAFFAQ
 prerequisites: [FA-C163-mokhtalef, FA-C164-behtar]
 sounds: []
-roots: []
+roots: [arabic-muwaffaq]
+etymology_hook: "movaffaq ← Arabic muwaffaq 'successful, favoured', root w-f-q (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C164-behtar]
 <!-- hl-knowledge: introduces=[FA-LEX-C164-SEFAT164-02]; assesses=[] -->
 
 **موفق** — *movaffaq* — "successful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*movaffaq* is borrowed from Arabic *muwaffaq*, "successful, favoured". Its Arabic root is *w-f-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

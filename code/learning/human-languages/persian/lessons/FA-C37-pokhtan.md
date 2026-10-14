@@ -14,7 +14,8 @@ romanization: "pokhtan"
 concept_tag: FA-VERB-POKHTAN
 prerequisites: [FA-C37-dadan, FA-C37-bastan]
 sounds: []
-roots: []
+roots: [persian-pokhtan]
+etymology_hook: "pokhtan: inherited, usually traced to Middle Persian puxtan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C37-bastan]
 <!-- hl-knowledge: introduces=[FA-LEX-C37-VERBS37-03]; assesses=[] -->
 
 **پختن** — *pokhtan* — "to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pokhtan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *puxtan*, "to cook". EtymDB takes it back to the Indo-European root *\*pekʷ-*, "to cook, to ripen", the root of Latin *coquere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

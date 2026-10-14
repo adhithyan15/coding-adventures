@@ -14,7 +14,8 @@ romanization: "be khâter-e"
 concept_tag: FA-CHERA158-BE-KHATER-E
 prerequisites: [FA-C158-agar, FA-C158-vali]
 sounds: []
-roots: []
+roots: [arabic-khatir]
+etymology_hook: "be khâter-e: Persian be 'for' + khâter ← Arabic ḫāṭir 'mind', root ḫ-ṭ-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C158-vali]
 <!-- hl-knowledge: introduces=[FA-LEX-C158-CHERA158-03]; assesses=[] -->
 
 **به خاطر** — *be khâter-e* — "because of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*be khâter-e* is "for the sake of": *be*, "to, for", with *khâter*, "mind, heart", and the linking *-e*. *khâter* is borrowed from Arabic *ḫāṭir*, "thought, mind" (root *ḫ-ṭ-r*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

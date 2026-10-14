@@ -14,7 +14,8 @@ romanization: "râhat"
 concept_tag: FA-SEFAT199-RAHAT
 prerequisites: [FA-C199-charb, FA-C199-qavi]
 sounds: []
-roots: []
+roots: [arabic-raha]
+etymology_hook: "râhat ← Arabic rāḥa 'rest, ease', root r-w-ḥ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C199-qavi]
 <!-- hl-knowledge: introduces=[FA-LEX-C199-SEFAT199-04]; assesses=[] -->
 
 **راحت** — *râhat* — "comfortable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*râhat* is borrowed from Arabic *rāḥa*, "rest, ease". Its Arabic root is *r-w-ḥ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

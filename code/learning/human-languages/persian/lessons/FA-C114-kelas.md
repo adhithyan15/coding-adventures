@@ -14,7 +14,8 @@ romanization: "kelâs"
 concept_tag: FA-THINGS114-KELAS
 prerequisites: [FA-C114-khatkesh, FA-C114-takhte, FA-C21-adad, FA-C21-answers, FA-C21-words]
 sounds: []
-roots: []
+roots: [french-classe]
+etymology_hook: "kelâs ← French classe 'class'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [FA-C114-takhte]
 <!-- hl-knowledge: introduces=[FA-LEX-C114-THINGS114-03]; assesses=[] -->
 
 **کلاس** — *kelâs* — "a class".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kelâs* is borrowed from French *classe*, "class" (EtymDB). The French word goes back to Latin *classis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

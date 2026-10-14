@@ -14,7 +14,8 @@ romanization: "dir"
 concept_tag: FA-TIME66-DIR
 prerequisites: [FA-C66-gahi, FA-C66-zud]
 sounds: []
-roots: []
+roots: [persian-dir]
+etymology_hook: "dir: inherited, usually traced to Middle Persian dēr"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C66-zud]
 <!-- hl-knowledge: introduces=[FA-LEX-C66-TIME66-04]; assesses=[] -->
 
 **دیر** — *dir* — "late".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dir* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *dēr*, "long, late". Old Persian *darga-*, "long", is usually given as its older form. (EtymDB also lists a word for "monastery" spelled the same, which is unrelated.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kâhu"
 concept_tag: FA-CHIZ275-KAHU
 prerequisites: [FA-C274-takhfif, FA-C274-eskenas]
 sounds: []
-roots: []
+roots: [persian-kahu]
+etymology_hook: "kâhu: inherited, usually traced to Middle Persian kāhūg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C274-eskenas]
 <!-- hl-knowledge: introduces=[FA-LEX-C275-CHIZ275-01]; assesses=[] -->
 
 **کاهو** — *kâhu* — "lettuce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kâhu* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kāhūg*, "lettuce".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

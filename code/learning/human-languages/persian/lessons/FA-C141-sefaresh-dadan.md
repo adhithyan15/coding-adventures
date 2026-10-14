@@ -14,7 +14,8 @@ romanization: "sefâresh dâdan"
 concept_tag: FA-VERB-SEFARESH-DADAN
 prerequisites: [FA-C141-pas-dadan, FA-C141-hesab-kardan]
 sounds: []
-roots: []
+roots: [pie-deh3]
+etymology_hook: "sefâresh dâdan: Persian sefâresh 'order' (from sepordan 'to entrust') + dâdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C141-hesab-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C141-KONESH141-05]; assesses=[] -->
 
 **سفارش دادن** — *sefâresh dâdan* — "to order (food, goods)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sefâresh dâdan* pairs *sefâresh*, "commission, order", with *dâdan*, "to give". *sefâresh* is native, usually explained as built on *sepâr-*, the present stem of *sepordan*, "to entrust". *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

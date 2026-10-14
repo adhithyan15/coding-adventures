@@ -14,7 +14,8 @@ romanization: "tabsanj"
 concept_tag: FA-SALAMAT190-TABSANJ
 prerequisites: [FA-C189-qad, FA-C190-mask]
 sounds: []
-roots: []
+roots: [persian-tab]
+etymology_hook: "tabsanj: Persian tab 'fever' + sanj 'measuring'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C190-mask]
 <!-- hl-knowledge: introduces=[FA-LEX-C190-SALAMAT190-02]; assesses=[] -->
 
 **تب سنج** — *tabsanj* — "a thermometer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tabsanj* is built from *tab*, "fever", and *-sanj*, "measuring" (from *sanjidan*, "to weigh, to measure"): the fever-measurer. *tab* is inherited, usually traced to Middle Persian *tab*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

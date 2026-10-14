@@ -14,7 +14,8 @@ romanization: "entezâr dâshtan"
 concept_tag: FA-VERB-ENTEZAR-DASHTAN
 prerequisites: [FA-C149-taqsim-kardan, FA-C149-moqayese-kardan]
 sounds: []
-roots: []
+roots: [arabic-intizar]
+etymology_hook: "entezâr ← Arabic intiẓār 'waiting, expectation', root n-ẓ-r (Lane), + Persian dâshtan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C149-moqayese-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C149-KONESH149-05]; assesses=[] -->
 
 **انتظار داشتن** — *entezâr dâshtan* — "to expect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*entezâr dâshtan* pairs *entezâr*, borrowed from Arabic *intiẓār*, "waiting, expectation" (root *n-ẓ-r*, Lane), with the Persian verb *dâshtan*, "to have, to hold". *dâshtan*, "to have", is an inherited verb; it is usually traced to Middle Persian *dāštan*, "to hold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
