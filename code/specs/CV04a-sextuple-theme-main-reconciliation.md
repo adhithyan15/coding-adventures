@@ -55,3 +55,18 @@ Base ESTree/own types/no new crates.io remain. Full parity, output byte-source
 and full transformation lineage goal OPEN. Final-source Miri DEFERRED/PENDING,
 never passed; frozen497inputs/run/checkout/target/receipts untouched/unpolled.
 Delivery first, genuine final-source Miri afterward; heartbeat ACTIVE.
+
+## Actual initial evidence and oracle reconciliation
+
+Initial unfiltered offline metadata exits101 before any test because an existing
+Android dependency is uncached. Full Windows-platform graph metadata preserves
+all376 registry identities; platform filtering records Windows evidence only.
+Actual87297 EXIT1 at1781: depth controls0PASS2FAIL because sixth-layer semantic
+admission supersedes the old refusal. Integer controls2PASS1FAIL because the
+authored scene now has four upstream default theme keys, rather than an empty
+metadata container. Preserve these failed receipts. Keep the exact four theme
+values in both complete scenes; remove only the hop flag. Keep five-layer source
+controls, accept assigned sixth source, retain direct sixth Parse135 and check
+seventh source Parse135 separately from six/seven public-AST semantic controls.
+Never loosen the parser cap, erase theme metadata, or infer source mappings from
+cloned AST positions. Source/native/security acceptance remains pending.
