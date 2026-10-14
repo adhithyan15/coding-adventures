@@ -7,6 +7,13 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.5` accumulate here until the next version is
 cut.
 
+### Fixed — SwiftUI drag-body gaps leave the degradation report (#17481)
+
+SwiftUI now recognizes the authored spacing already emitted by drag and drop
+body stacks. All four TaskApp gap false positives leave the measured inventory,
+reducing SwiftUI from 63 to 59 style drops. Unsupported values and parts reused
+on non-spacing primitives remain reported; drag behavior is unchanged.
+
 ## [0.5.5] - 2026-10-13
 
 ### Fixed — XAML preserves the seven-column calendar grid (#17394)
