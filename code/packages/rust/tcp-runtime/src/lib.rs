@@ -214,46 +214,97 @@ impl<P, S> ShardedTcpRuntime<P, S> {
     }
 }
 
+struct CoordinatedShutdown(ShardedStopHandle);
+
+impl Drop for CoordinatedShutdown {
+    fn drop(&mut self) {
+        self.0.stop();
+    }
+}
+
+// Fields drop in declaration order. Even disposing an unstarted spawn closure
+// signals the other participants before an owned provider's teardown can wait.
+struct ShutdownParticipant<T> {
+    _shutdown: CoordinatedShutdown,
+    owned: T,
+}
+
+impl<T> ShutdownParticipant<T> {
+    fn run<R>(mut self, work: impl FnOnce(&mut T) -> R) -> R {
+        work(&mut self.owned)
+    }
+}
+
 impl<P, S> ShardedTcpRuntime<P, S>
 where
     P: TransportPlatform + Send + 'static,
     S: Send + 'static,
 {
     pub fn serve(&mut self) -> Result<(), PlatformError> {
-        // Start the fan-out acceptor (if any) first, so it is ready to distribute
-        // connections the instant the workers begin serving.  Each worker reactor
-        // serves on its own thread; the acceptor (macOS/BSD, Windows) runs on one more.
-        let acceptor = self.acceptor.take().and_then(FanoutAcceptor::spawn);
-
+        let stop = self.stop_handle();
+        let _supervisor = CoordinatedShutdown(stop.clone());
+        let acceptor = match self.acceptor.take() {
+            Some(acceptor) => {
+                let participant = ShutdownParticipant {
+                    _shutdown: CoordinatedShutdown(stop.clone()),
+                    owned: acceptor,
+                };
+                Some(
+                    thread::Builder::new()
+                        .name("tcp-acceptor".into())
+                        .spawn(move || participant.run(|acceptor| acceptor.run()))
+                        .map_err(|e| {
+                            PlatformError::ProviderFault(format!("start TCP acceptor: {e}"))
+                        })?,
+                )
+            }
+            None => None,
+        };
         let runtimes = std::mem::take(&mut self.runtimes);
         let mut workers = Vec::with_capacity(runtimes.len());
-        for mut runtime in runtimes {
-            workers.push(thread::spawn(move || runtime.serve()));
-        }
-
         let mut first_error = None;
+        for (index, runtime) in runtimes.into_iter().enumerate() {
+            let participant = ShutdownParticipant {
+                _shutdown: CoordinatedShutdown(stop.clone()),
+                owned: runtime,
+            };
+            match thread::Builder::new()
+                .name(format!("tcp-worker-{index}"))
+                .spawn(move || participant.run(|runtime| runtime.serve()))
+            {
+                Ok(worker) => workers.push(worker),
+                Err(error) => {
+                    // Signal before the unstarted suffix is destroyed, then
+                    // join every successfully launched participant below.
+                    stop.stop();
+                    first_error = Some(PlatformError::ProviderFault(format!(
+                        "start TCP worker: {error}"
+                    )));
+                    break;
+                }
+            }
+        }
         for worker in workers {
             let result = match worker.join() {
                 Ok(result) => result,
                 Err(_) => Err(PlatformError::ProviderFault(
-                    "TCP runtime worker panicked".to_string(),
+                    "TCP runtime worker panicked".into(),
                 )),
             };
             if first_error.is_none() {
                 first_error = result.err();
             }
         }
-
-        // The workers have exited (via `stop`); the acceptor's stop flag was set
-        // alongside theirs, so it has exited its accept loop too — join it.
         if let Some(handle) = acceptor {
-            let _ = handle.join();
+            if handle.join().is_err() && first_error.is_none() {
+                first_error = Some(PlatformError::ProviderFault(
+                    "TCP runtime acceptor panicked".into(),
+                ));
+            }
         }
-
-        if let Some(error) = first_error {
-            Err(error)
-        } else {
-            Ok(())
+        match first_error {
+            Some(error) => Err(error),
+            None => Ok(()),
         }
     }
 }
@@ -279,12 +330,7 @@ struct FanoutAcceptor {
 }
 
 impl FanoutAcceptor {
-    /// Spawn the accept-and-distribute loop on its own thread.
-    fn spawn(self) -> Option<thread::JoinHandle<()>> {
-        Some(thread::spawn(move || self.run()))
-    }
-
-    fn run(self) {
+    fn run(&self) {
         let worker_count = self.mailboxes.len().max(1);
         let mut next = 0usize;
         while !self.stop.load(Ordering::SeqCst) {
@@ -1245,6 +1291,59 @@ mod windows_tests {
     }
 
     #[test]
+    fn later_worker_panic_stops_first_worker_and_acceptor_before_join() {
+        let mut runtime = TcpRuntime::bind_windows_sharded(
+            ("127.0.0.1", 0),
+            TcpRuntimeOptions::default(),
+            2,
+            |info, bytes| {
+                if info.id.0 & 1 == 1 {
+                    panic!("controlled later worker panic");
+                }
+                TcpHandlerResult::write(bytes.to_vec())
+            },
+        )
+        .unwrap();
+        let address = runtime.local_addr();
+        let stop = runtime.stop_handle();
+        let (tx, rx) = std::sync::mpsc::channel();
+        let server = thread::spawn(move || {
+            let result = runtime.serve();
+            tx.send(result).unwrap();
+        });
+        let mut first = TcpStream::connect(address).unwrap();
+        first
+            .set_read_timeout(Some(Duration::from_secs(2)))
+            .unwrap();
+        first.write_all(b"healthy").unwrap();
+        let mut reply = [0; 7];
+        first.read_exact(&mut reply).unwrap();
+        assert_eq!(&reply, b"healthy");
+        let mut second = TcpStream::connect(address).unwrap();
+        second.write_all(b"panic").unwrap();
+        let observed = rx.recv_timeout(Duration::from_secs(5));
+        if observed.is_err() {
+            stop.stop();
+        }
+        server.join().unwrap();
+        assert!(
+            matches!(observed.unwrap(), Err(PlatformError::ProviderFault(message)) if message == "TCP runtime worker panicked")
+        );
+        assert!(
+            TcpStream::connect_timeout(&address, Duration::from_millis(200)).is_err(),
+            "all ingress closed after joins"
+        );
+        let mut byte = [0];
+        match first.read(&mut byte) {
+            Ok(n) => assert_eq!(n, 0),
+            Err(e) => assert!(matches!(
+                e.kind(),
+                std::io::ErrorKind::ConnectionReset | std::io::ErrorKind::ConnectionAborted
+            )),
+        }
+    }
+
+    #[test]
     fn sharded_runtime_spreads_connections_across_shards_through_the_fanout() {
         // Windows has no load-balancing SO_REUSEPORT (the provider refuses it),
         // so a multi-worker runtime used to fail at bind.  It now uses the same
@@ -1856,5 +1955,54 @@ mod tests {
         let mut response = Vec::new();
         stream.read_to_end(&mut response)?;
         Ok(response)
+    }
+}
+
+#[cfg(test)]
+mod terminal_guard_tests {
+    use super::*;
+    use std::sync::atomic::AtomicUsize;
+
+    struct DestructionProbe {
+        stopped: Arc<AtomicBool>,
+        observed: Arc<AtomicUsize>,
+    }
+    impl Drop for DestructionProbe {
+        fn drop(&mut self) {
+            assert!(
+                self.stopped.load(Ordering::SeqCst),
+                "owned destruction preceded shutdown signal"
+            );
+            self.observed.fetch_add(1, Ordering::SeqCst);
+        }
+    }
+
+    #[test]
+    fn participant_signals_before_owned_destruction_on_unwind_and_unstarted_disposal() {
+        for unwind in [false, true] {
+            let stopped = Arc::new(AtomicBool::new(false));
+            let observed = Arc::new(AtomicUsize::new(0));
+            let participant = ShutdownParticipant {
+                _shutdown: CoordinatedShutdown(ShardedStopHandle {
+                    stop_handles: Arc::from([]),
+                    acceptor_stop: Some(Arc::clone(&stopped)),
+                }),
+                owned: DestructionProbe {
+                    stopped: Arc::clone(&stopped),
+                    observed: Arc::clone(&observed),
+                },
+            };
+            if unwind {
+                assert!(std::panic::catch_unwind(std::panic::AssertUnwindSafe(
+                    || participant.run(|_| panic!("controlled participant panic"))
+                ))
+                .is_err());
+            } else {
+                // Simulates disposal after failed launch; no OS spawn failure claimed.
+                let unstarted = move || participant.run(|_| ());
+                drop(unstarted);
+            }
+            assert_eq!(observed.load(Ordering::SeqCst), 1);
+        }
     }
 }
