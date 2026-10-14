@@ -19,7 +19,7 @@ under precommitted speca847. No new crates.io dependency or unsafe added.
 
 Actual positive controls: cluster128cases; node/edge theme192cases complete
 IR/layout/PaintScene/defaults/overrides/exact marker fields; owned nested-entier
-8sources/48normal-exit native cells across6backends (Wasm unavailable). Keep
+8sources/48normal-exit native cells across6backends (CLR unavailable). Keep
 producer test/shared helper unchanged. Actual scoped14 safety834PASS/32targets/
 0ignore excludes only the new expected-red test already executed separately;
 strict15 EXIT0. Subset/focused counts are not added to full-suite totals.
