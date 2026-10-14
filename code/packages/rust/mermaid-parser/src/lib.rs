@@ -6281,10 +6281,13 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                 let parent_id = group_stack.last().map(|group| diagram.groups[*group].id.clone());
                 diagram.groups.push(SwimlaneGroup {
                     id, label, lane_id: diagram.lanes[lane].id.clone(), parent_id, node_ids: Vec::new(),
+                    classes: Vec::new(), style: DiagramStyle::default(),
                 });
                 group_stack.push(diagram.groups.len() - 1);
             } else {
-                diagram.lanes.push(SwimlaneLane { id, label, node_ids: Vec::new() });
+                diagram.lanes.push(SwimlaneLane {
+                    id, label, node_ids: Vec::new(), classes: Vec::new(), style: DiagramStyle::default(),
+                });
                 current_lane = Some(diagram.lanes.len() - 1);
             }
             continue;
@@ -6429,6 +6432,22 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                     }
                 }
             }
+            if let Some(lane) = diagram.lanes.iter_mut().find(|lane| lane.id == target_id) {
+                matched = true;
+                for class in &classes {
+                    if !lane.classes.contains(class) {
+                        lane.classes.push(class.clone());
+                    }
+                }
+            }
+            if let Some(group) = diagram.groups.iter_mut().find(|group| group.id == target_id) {
+                matched = true;
+                for class in &classes {
+                    if !group.classes.contains(class) {
+                        group.classes.push(class.clone());
+                    }
+                }
+            }
             for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(target_id.as_str())) {
                 matched = true;
                 for class in &classes {
@@ -6438,7 +6457,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                 }
             }
             if !matched {
-                return Err(swimlane_error(line, format!("Swimlane class references unknown node or edge {target_id:?}")));
+                return Err(swimlane_error(line, format!("Swimlane class references unknown node, edge, or subgraph {target_id:?}")));
             }
         }
     }
@@ -6458,18 +6477,36 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             merge_state_style(&mut edge.style, style);
         }
     }
+    for lane in &mut diagram.lanes {
+        for class in lane.classes.clone() {
+            merge_state_style(&mut lane.style, class_styles.get(&class).expect("validated Swimlane lane class"));
+        }
+    }
+    for group in &mut diagram.groups {
+        for class in group.classes.clone() {
+            merge_state_style(&mut group.style, class_styles.get(&class).expect("validated Swimlane group class"));
+        }
+    }
     for (target_id, style, line) in pending_styles {
         let mut matched = false;
         if let Some(node) = diagram.nodes.iter_mut().find(|node| node.id == target_id) {
             matched = true;
             merge_state_style(&mut node.style, &style);
         }
+        if let Some(lane) = diagram.lanes.iter_mut().find(|lane| lane.id == target_id) {
+            matched = true;
+            merge_state_style(&mut lane.style, &style);
+        }
+        if let Some(group) = diagram.groups.iter_mut().find(|group| group.id == target_id) {
+            matched = true;
+            merge_state_style(&mut group.style, &style);
+        }
         for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(target_id.as_str())) {
             matched = true;
             merge_state_style(&mut edge.style, &style);
         }
         if !matched {
-            return Err(swimlane_error(line, format!("Swimlane style references unknown node or edge {target_id:?}")));
+            return Err(swimlane_error(line, format!("Swimlane style references unknown node, edge, or subgraph {target_id:?}")));
         }
     }
     for (targets, style, curve, line) in pending_link_styles {
@@ -7476,6 +7513,8 @@ fn assign_swimlane_default_lane(diagram: &mut SwimlaneDiagram) {
                 id: DEFAULT_LANE_ID.into(),
                 label: String::new(),
                 node_ids: Vec::new(),
+                classes: Vec::new(),
+                style: DiagramStyle::default(),
             });
             diagram.lanes.len() - 1
         });
