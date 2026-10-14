@@ -686,13 +686,13 @@ describe("the modality manifest CLI", () => {
   it("rejects dangling target links and linked parent components", () => {
     const dangling = simpleRoot();
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
-    symlinkSync(join(dangling, "missing-owner-tree"), join(dangling, MODALITY_MANIFEST_DIR));
+    symlinkSync(join(dangling, "missing-owner-tree"), join(dangling, MODALITY_MANIFEST_DIR), process.platform === "win32" ? "junction" : "dir");
     expect(runModalityManifest(["--write"], dangling)).toBe(1);
 
     const linkedParent = simpleRoot();
     const realCore = join(linkedParent, "real-core");
     renameSync(join(linkedParent, "core"), realCore);
-    symlinkSync(realCore, join(linkedParent, "core"));
+    symlinkSync(realCore, join(linkedParent, "core"), process.platform === "win32" ? "junction" : "dir");
     expect(runModalityManifest(["--write"], linkedParent)).toBe(1);
   });
 

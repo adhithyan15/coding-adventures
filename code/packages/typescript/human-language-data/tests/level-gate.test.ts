@@ -140,7 +140,7 @@ describe("level-gate attainment owner discovery", () => {
     }
   });
 
-  it("rejects a symlink owner without opening its target", () => {
+  it("rejects a symlink owner without opening its target", (ctx) => {
     const root = fixture();
     const outside = fixture();
     const target = join(outside, "target.json");
@@ -148,7 +148,9 @@ describe("level-gate attainment owner discovery", () => {
     try {
       try {
         symlinkSync(target, join(root, "toy.json"), "file");
-      } catch {
+      } catch (error) {
+        if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+        ctx.skip();
         // Windows without Developer Mode cannot create file symlinks. The
         // reader's lstat guard is still exercised on every platform that can.
         return;

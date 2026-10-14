@@ -125,23 +125,12 @@ describe("reading-reach floor direct owners", () => {
     ).toThrow(/not canonical/);
   });
 
-  it("rejects nesting, symlinks, case-fold collisions, and resurrected aggregates", () => {
+  it("rejects nesting, case-fold collisions, and resurrected aggregates", () => {
     const nested = temporaryRoot();
     writeOwners(nested);
     mkdirSync(join(nested, READING_REACH_FLOOR_OWNER_DIRECTORY, "nested"));
     expect(() =>
       readReadingReachFloorOwners(nested, { expectedInventories: inventories }),
-    ).toThrow(/real direct-child regular file/);
-
-    const linked = temporaryRoot();
-    writeOwners(linked);
-    rmSync(join(linked, READING_REACH_FLOOR_OWNER_DIRECTORY, "spanish--a1.json"));
-    symlinkSync(
-      join(linked, READING_REACH_FLOOR_OWNER_DIRECTORY, "spanish--pre-a1.json"),
-      join(linked, READING_REACH_FLOOR_OWNER_DIRECTORY, "spanish--a1.json"),
-    );
-    expect(() =>
-      readReadingReachFloorOwners(linked, { expectedInventories: inventories }),
     ).toThrow(/real direct-child regular file/);
 
     const collision = temporaryRoot();
@@ -166,6 +155,26 @@ describe("reading-reach floor direct owners", () => {
     expect(() =>
       readReadingReachFloorOwners(resurrected, { expectedInventories: inventories }),
     ).toThrow(/present beside canonical/);
+  });
+
+  it("rejects a symlinked reading-reach owner", (ctx) => {
+    const linked = temporaryRoot();
+    writeOwners(linked);
+    rmSync(join(linked, READING_REACH_FLOOR_OWNER_DIRECTORY, "spanish--a1.json"));
+    try {
+      symlinkSync(
+        join(linked, READING_REACH_FLOOR_OWNER_DIRECTORY, "spanish--pre-a1.json"),
+        join(linked, READING_REACH_FLOOR_OWNER_DIRECTORY, "spanish--a1.json"),
+        "file",
+      );
+    } catch (error) {
+      if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+      ctx.skip();
+      return;
+    }
+    expect(() =>
+      readReadingReachFloorOwners(linked, { expectedInventories: inventories }),
+    ).toThrow(/real direct-child regular file/);
   });
 
   it("rejects unsafe, duplicated, and invalid expected identities", () => {
