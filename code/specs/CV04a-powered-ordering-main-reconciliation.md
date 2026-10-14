@@ -107,6 +107,34 @@ review overlap and refresh main before final publication.
 
 ## Powered selector controls
 
+### Actual imported name-actual failures
+
+At powered test source7f84f9f5, full compiler session18101 returns actual EXIT1
+(Cargo EXIT101): 845 tests pass across five targets and eight imported library
+controls fail at the real formatter boundary. Both new powered policy tests pass.
+The failing controls select `relay(entier(sign(local)))` and its signed/additive/
+multiplicative/powered/one-to-three-standard-transform forms. Preparing those
+branch name actuals promotes their dependencies, making a later AST re-proof
+forget the already materialized scalar result. Preserve every original test.
+
+Carry a transient proof on the conditional expression's emitted `ExprValue`.
+Compute both branch proofs in the actual state **after lowering the condition**,
+before either branch lowers its own name actuals. Publish the proof only after
+both branches lower successfully to the same real scalar type and join into a
+fresh result slot. Ordinary values and arithmetic/coercion constructors start
+without this proof. Parenthesized wrappers may return the same value unchanged.
+Both consumers still require their original pre-lowering proof plus either the
+current AST proof or this specific materialized conditional-result proof.
+
+A condition that promotes either root must therefore refuse output, including
+when each arm calls a relay with a bounded computed name actual. Pair those
+refusals with value-selector snapshots, both outcomes and direct/assigned output;
+verify exact -1/1 native stdout. Initial shared roots, user-function shadowing,
+mutable tracked-literal refusals, branch intersection and every earlier alias
+guard remain unchanged. This is value provenance, not permission to re-admit
+shared roots or restore stale AST proof globally. Keep the original failed run
+and its eight diagnostics; rerun the complete compiler and relevant native cases.
+
 Preserve the upstream bounded provenance rule and every existing alias/capture,
 name/value, branch-intersection and formatter refusal. Both `^` and `**` require
 controls. A by-name selector may promote either local actual to shared storage;
