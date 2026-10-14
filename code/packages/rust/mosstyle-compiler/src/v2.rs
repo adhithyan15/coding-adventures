@@ -270,6 +270,14 @@ pub fn check(def: &StyleDef) -> Vec<CompileError> {
 }
 
 fn check_prop(part: &str, state: Option<&str>, prop: &StyleProp) -> Option<CompileError> {
+    // Everything quoted from the source is escaped: a `.msl` string may hold
+    // ESC or CR, and a finding is printed straight to a terminal.
+    let (part, name, value) = (
+        part.escape_debug(),
+        prop.name.escape_debug(),
+        prop.value.escape_debug(),
+    );
+    let state = state.map(|s| s.escape_debug().to_string());
     let place = match state {
         Some(state) => format!("part '{part}', state '{state}'"),
         None => format!("part '{part}'"),
@@ -280,10 +288,7 @@ fn check_prop(part: &str, state: Option<&str>, prop: &StyleProp) -> Option<Compi
             .unwrap_or_default();
         return Some(CompileError {
             kind: ErrorKind::UnknownProperty,
-            message: format!(
-                "'{}' is not a mosstyle v2 property ({place}){hint}",
-                prop.name
-            ),
+            message: format!("'{name}' is not a mosstyle v2 property ({place}){hint}"),
         });
     };
     if value_matches(t, &prop.value) {
@@ -291,12 +296,7 @@ fn check_prop(part: &str, state: Option<&str>, prop: &StyleProp) -> Option<Compi
     }
     Some(CompileError {
         kind: ErrorKind::TypeMismatch,
-        message: format!(
-            "'{}: {}' ({place}) expects {}",
-            prop.name,
-            prop.value,
-            describe(t)
-        ),
+        message: format!("'{name}: {value}' ({place}) expects {}", describe(t)),
     })
 }
 
@@ -414,7 +414,9 @@ mod tests {
             assert_eq!(findings.len(), 1, "{name}: {value}");
             assert_eq!(findings[0].kind, ErrorKind::TypeMismatch, "{name}: {value}");
             assert!(
-                findings[0].message.contains(value),
+                findings[0]
+                    .message
+                    .contains(&value.escape_debug().to_string()),
                 "{}",
                 findings[0].message
             );
@@ -474,5 +476,21 @@ mod tests {
             "{}",
             findings[0].message
         );
+    }
+
+    #[test]
+    fn quoted_source_cannot_reach_the_terminal_raw() {
+        let findings = check(&def(vec![
+            prop("color", "\u{1b}]0;title\u{7}"),
+            prop("bad\u{1b}[2J", "1"),
+        ]));
+        assert_eq!(findings.len(), 2);
+        for finding in &findings {
+            assert!(
+                !finding.message.chars().any(char::is_control),
+                "{:?}",
+                finding.message
+            );
+        }
     }
 }

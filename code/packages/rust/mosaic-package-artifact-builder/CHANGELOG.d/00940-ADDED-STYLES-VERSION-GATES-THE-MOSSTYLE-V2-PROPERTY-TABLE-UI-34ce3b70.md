@@ -16,3 +16,11 @@
   - v2 fails before anything is written;
   - clean v2 passes;
   - theme files are checked, and another component's files are not.
+- The check is hardened against untrusted package contents, per its
+  security review:
+  - Only regular files are opened. A FIFO or a link to `/dev/zero` beside
+    the real style file cannot hang the build.
+  - File names and quoted values are escaped before they are printed.
+  - In a v2 package, a style file that cannot be read, parsed or analyzed
+    is itself a finding. The compile step reads only the file the theme
+    picks, so a broken theme file would otherwise pass unchecked.

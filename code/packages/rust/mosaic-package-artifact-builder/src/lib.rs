@@ -3806,24 +3806,49 @@ fn check_style_language(
         .collect();
     style_files.sort();
 
+    let strict = manifest.styles.version == 2;
     let mut findings = Vec::new();
     let mut first_component = None;
     for (name, path) in &style_files {
-        let Ok(source) = fs::read_to_string(path) else {
+        // Escaped: a file name may hold ESC, and findings reach a terminal.
+        let label = format!("src/{}", name.escape_debug());
+        // Only a regular file (after symlinks) is read. The build itself
+        // opens one style file per export; this check opens all of them, so
+        // a FIFO or a link to /dev/zero beside the real one must not hang it.
+        if !fs::metadata(path).is_ok_and(|meta| meta.is_file()) {
+            if strict {
+                findings.push(format!("{label}: not a regular file"));
+            }
             continue;
-        };
-        let Ok(ast) = mosstyle_compiler::parse_style(&source) else {
-            continue;
-        };
-        let Ok(def) = mosstyle_compiler::analyze_with_tokens(&ast, tokens) else {
-            continue;
+        }
+        // A v1 package skips a file that does not read, parse or analyze: the
+        // compile step reports it with its real error. A v2 package cannot,
+        // because the compile step reads only the style file the theme picks,
+        // so a broken theme file would otherwise pass unchecked.
+        let def = fs::read_to_string(path)
+            .map_err(|e| format!("cannot be read: {e}"))
+            .and_then(|source| {
+                mosstyle_compiler::parse_style(&source).map_err(|e| format!("does not parse: {e}"))
+            })
+            .and_then(|ast| {
+                mosstyle_compiler::analyze_with_tokens(&ast, tokens)
+                    .map_err(|e| format!("does not analyze: {}", e.message))
+            });
+        let def = match def {
+            Ok(def) => def,
+            Err(reason) => {
+                if strict {
+                    findings.push(format!("{label}: {}", reason.escape_debug()));
+                }
+                continue;
+            }
         };
         for finding in mosstyle_compiler::v2::check(&def) {
             first_component.get_or_insert_with(|| def.component_name.clone());
-            findings.push(format!("src/{name}: {}", finding.message));
+            findings.push(format!("{label}: {}", finding.message));
         }
     }
-    if manifest.styles.version == 2 && !findings.is_empty() {
+    if strict && !findings.is_empty() {
         return Err(BuildError::PipelineError {
             component: first_component.unwrap_or_default(),
             error: format!(
@@ -24958,5 +24983,36 @@ mod style_language_version_tests {
         let findings = result.expect("builds").style_findings;
         assert_eq!(findings.len(), 2, "{findings:?}");
         assert!(findings.iter().all(|f| f.starts_with("src/Card.dark.msl: ")));
+    }
+
+    #[test]
+    fn a_v2_package_fails_on_a_theme_file_that_does_not_parse() {
+        let pkg = package(Some(2), V2_STYLE);
+        fs::write(pkg.path().join("src/Card.light.msl"), "style Card { part root {").unwrap();
+        let (result, _out) = build(&pkg);
+        let err = result.expect_err("an unparseable v2 theme file fails").to_string();
+        assert!(err.contains("src/Card.light.msl: does not parse"), "{err}");
+
+        // A v1 package leaves it to the compile step, which reads only the
+        // file the theme picks: Card.msl here.
+        let v1 = package(Some(1), V2_STYLE);
+        fs::write(v1.path().join("src/Card.light.msl"), "style Card { part root {").unwrap();
+        let (result, _out) = build(&v1);
+        assert!(result.expect("v1 builds").style_findings.is_empty());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn style_files_that_are_not_regular_files_are_never_opened() {
+        let pkg = package(Some(1), V2_STYLE);
+        std::os::unix::fs::symlink("/dev/zero", pkg.path().join("src/Card.zz.msl")).unwrap();
+        let (result, _out) = build(&pkg);
+        assert!(result.expect("v1 builds").style_findings.is_empty());
+
+        let strict = package(Some(2), V2_STYLE);
+        std::os::unix::fs::symlink("/dev/zero", strict.path().join("src/Card.zz.msl")).unwrap();
+        let (result, _out) = build(&strict);
+        let err = result.expect_err("v2 names it").to_string();
+        assert!(err.contains("src/Card.zz.msl: not a regular file"), "{err}");
     }
 }
