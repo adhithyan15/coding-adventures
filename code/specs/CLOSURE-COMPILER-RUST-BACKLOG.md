@@ -3,55 +3,58 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a current-main reconciliation -->
-October14 current implementation checkpoint: tested sourcec5b00f8362c114a17d951735b8df7b6120fd3767;
-production2f25e31e, followed by an exact old greater-than oracle correction.
-Actual validator41518 EXIT0: completeJVM200/3/0ignore (69lib124integration7docs),
-original8 real JVM array rows Exit42, float-array compute42/process0 plus exact
-descriptor-only negativeVerifyError, real IEEE84 table (2widths6relations7pairs),
-strictJVM/LANG/Twig alltargets. Focused6 compiler controls included in200.
-Independent exact-source security PASS, report SHA
-84f4fe59a3d0b50bda652540236e3a37ca6788d6c900d7211b7ae1b1f4410689;
-publication/whole acceptance withheld. Source-specific receipts/log hashes
-preserved under the local A root.
+October14 native8 checkpoint: functional6597951c, comment71d24b24, frozen
+validation head316e78781f32c57b6c65d9de14e7c148bfd1171a (subsequent BUILD/lessons
+only). Fixed aligned outgoing argument tail follows32-byte MsX64 shadow or
+SysV0; callee extras spill from RBP+16+shadow+8index into stable negative slots.
+Checked frame/displacement arithmetic rejects overflow; ninth word/formal
+refuses. Builtin physical register ABI unchanged. No new crates.io dependencies.
 
-The revised direct-call writer counts actual argument load slots, keeps the
-non-call8 bound, consumes unused returns, checks255 static parameter slots and
-argument/result/reference descriptors. Float-array descriptors now agree with
-allocation[F. f32/f64 comparisons use typed loads and ordered NaN semantics;
-mixed floating types refuse. Original full2f suite69lib+123integrationPASS1FAIL
-was the old dcmpg greater-than oracle; real84 checks justify exactdcmpl/ifle
-assertion adaptation, with no test deletion. Initial serializer API compile
-error and missing-launcherUTF8 ClassFormatError are harness failures, not causal
-descriptor evidence. Corrected positive then exposed realf32 wrong-type loads;
-spec-first typedcomparison repair retained the original computation control.
+Actual focused native evidence: simulator10 bothABIs (5/6/7/8 ordered words,
+fullRAX, stackwords, alignment, shadow overwrite, preserved locals, restoration,
+recursion and nine-arg refusal); backend root1 exactp7 RBP-64 and external actual
+returnPC; real Windows six/eight formal-position checks Exit42; all8 original
+captured/forwarded array rows execute Exit42. Independent scoped exact-source
+security PASS71d retained at5ba, reportSHA a47128791b7d619fff919da48021a3386201c26cc772455ea2ce37ab6964afba. No Linux/macOS hardware
+or forced-GC acceptance inferred from simulator/root metadata.
 
-Actual earlier da unfilteredLANG81763 EXIT1/Cargo101:463PASS9FAIL0ignore;
-all9 are native ABI refusals (8 dedicated captured/forwarded arrays plus matrix
-duplicate). The former JVM proven-columns stack VerifyError is resolved.
-That oldsource463 count is not latestsource execution/whole acceptance. Exact
-prepared-CIR diagnostics prove3D6/4D8 call/formal arity, MsX64guard4/SysVguard6.
-Native bounded8 stackargs spec exists but no production implementation yet.
-Do not skip original rows, change Exit42, lower limits or bypass requiredCI.
+Full nine-package platform Cargo reverse/dev validation316e actually completed
+session25345 EXIT1: affected suite1226PASS2FAIL1existingignore/81targets. Only
+backend old five/seven-parameter refusal oracles failed; full unfiltered LANG
+476/0/0 including original8array rows and proven-column guard PASS. Complete
+checked arithmetic/root/simulator controls passed. Strict nine-package
+alltargets0; standalone Closure1093/0/0 over181targets and strict0.
+Original failed receipt stays failed; no full acceptance yet. Spec-first
+reconcile only the two cfg(test) oracles: preserve old-count/eight-boundary
+success and exact ABI/got9/max8 plus public-refusal checks. Run complete backend,
+affected strict, prove full production/rest-test/config equality and independent
+source/carrier/terminal review. Do not change production to satisfy obsolete
+physical-register expectations, delete/ignore tests or repeat unaffected long
+LANG executions without a source change. No newregistry dependencies.
 
-Main99f58 actual import4d2ddb48 supersedes initial45fa frame:2236 total paths,
-2224pure exactimports,12overlap,205retained,24transport/57backend baseline objects,
-376registry identities unchanged. Two wrapping_widthNone literals adapted only.
-Producer curriculum/TS/device imports are not new native/content acceptance.
-Previously accepted bounded node/cluster/entier controls and safety assertions
-remain; varied-support generalhop work stillFAILS32/32. General discovery design
-and full candidate/key/event/collector accounting open; no failing test ignored.
+Initial5ba all4stages101 from disk exhaustion executed zero tests; logs retained.
+After its actual terminal, verified OWN isolated target/debug and reclaimed
+10.35GB regenerable output only. Retry used jobs1/incremental0/dev+testdebug0,
+all assertions/inputs/limits preserved. Registry376 tuples exact baseline.
+FrozenMiri untouched. Full/hosted/merge acceptance remains withheld.
 
-SolePR17288 stays prior published822, conflicting/failedCI/autoOFF. No push,
-merge, cleanup or exact-head hosted acceptance. Re-audit main/openPR/backlog/
-epic eachresume. Next implement native8 stack-argument caller/callee ABI with
-alignment/shadow/checked offsets/GC roots/order/recursion/refusal tests, run
-complete affected native/downstream suites and independent security. Final
-documentation/requiredCI/review/conflict gates still apply. Full Closure parity,
-output-byte/source joins and fold/rename/inline/motion/merge/delete lineage,
-pass/sweep/stableIDs/spans/CV04b remain OPEN. ExistingCLOC27 leaf-token bridge
-is real and prior epic bridge-allNone audit stale; audit before extending.
-Miri DEFERRED/PENDING, never passed: frozen497 run/source/inputs/target/receipts
-untouched/unpolled. Delivery first, genuine final-source Miri afterward. Heartbeat ACTIVE.
+Prior scoped JVM sourcec5 full200 tests/docs +original8JVMarrays +floatarray
+positive/descriptor-negative +realIEEE84 and strict3 remain accepted with
+immutable receipts/security reports. Historical da unfilteredLANG463PASS9FAIL
+and current5ba build failure are preserved, never latest-source acceptance.
+General-hop varied-support32/32 resource failures remain OPEN; no capacity,
+safety or ownership tests weakened. Pending Japanese main32d producer delta
+2094paths/zeroowned overlap/complete17470Rust+instruction objects exact99f58
+must be reconciled before publication; no producer-content acceptance inferred.
+
+SolePR17288 remains prior published82209953a0909dfaa66c8065ee6f163d7478c2d1/conflicting/failedCI/autoOFF.
+No new push/merge/cleanup; re-audit live main/openPR/backlog/epic each resume.
+Full Closure parity/output-byte source/full fold-rename-inline-motion-merge-
+delete lineage/pass-sweep/stableIDs/spans/CV04b remain OPEN. ExistingCLOC27
+leaf-token bridge is real; stale epic allNone audit is not implementation scope.
+Miri DEFERRED/PENDING, neverpassed. Frozen497 run/source/input/target/receipts
+unpolled/untouched; delivery first, genuine final-source validation afterward.
+Heartbeat ACTIVE.
 <!-- /CV04a current-main reconciliation -->
 
 <!-- CV04a BEAM heap native continuation -->
