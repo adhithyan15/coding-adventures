@@ -5590,6 +5590,28 @@ mod tests {
         assert!(format!("{err:?}").contains("return destination reference descriptor"), "{err:?}");
     }
 
+    #[test]
+    fn captured_array_direct_call_float_descriptor_matches_local_allocation() {
+        let mut module = direct_call_slot_module(&["array<f32>"], false);
+        module.functions[0].params.clear();
+        module.functions[0].instructions = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(1)], "i32"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<f32>"),
+            IIRInstr::new("call", None, vec![Operand::Var("callee".into()), Operand::Var("a".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ];
+        let class = lower_iir_to_jvm(&module, &make_cfg()).unwrap();
+        let caller = class.methods.iter().find(|m| m.name == "caller").unwrap();
+        let code = &caller.code_attribute().unwrap().code;
+        assert_eq!(&code[..9], &[0x04, 0x3b, 0x1a, 0xbc, 0x06, 0x3a, 0x01, 0x19, 0x01]);
+        assert_eq!(code[9], INVOKESTATIC);
+        assert_eq!(&code[12..], &[RETURN]);
+        assert_eq!(class.methods.iter().find(|m| m.name == "callee").unwrap().descriptor, "([F)V");
+        module.functions[1].params[0].1 = "array<i32>".into();
+        let err = lower_iir_to_jvm(&module, &make_cfg()).unwrap_err();
+        assert!(format!("{err:?}").contains("reference descriptor"), "{err:?}");
+    }
+
     fn make_cfg() -> IIRJvmConfig {
         IIRJvmConfig::new("TestClass")
     }

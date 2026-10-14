@@ -23991,3 +23991,57 @@ fn captured_array_jvm_direct_call_slot_runtime_regression() {
         assert_cell(Jvm, program, result);
     }
 }
+
+#[test]
+fn captured_array_jvm_float_descriptor_runtime_regression() {
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+    use jvm_class_file::{JvmCodeAttribute, JvmConstantPoolEntry as Cp, JvmMethodAttribute, JvmMethodInfo, ACC_PUBLIC, ACC_STATIC};
+    if !java_ok() {
+        eprintln!("UNAVAILABLE: real JVM float-array descriptor control");
+        return;
+    }
+    let var = |name: &str| Operand::Var(name.into());
+    let main = IIRFunction::new("main", vec![], "i32", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(1)], "i32"),
+        IIRInstr::new("const", Some("zero".into()), vec![Operand::Int(0)], "i32"),
+        IIRInstr::new("const", Some("one".into()), vec![Operand::Float(1.0)], "f32"),
+        IIRInstr::new("alloc_array", Some("a".into()), vec![var("n")], "array<f32>"),
+        IIRInstr::new("array_set", None, vec![var("a"), var("zero"), var("one")], "f32"),
+        IIRInstr::new("call", Some("value".into()), vec![var("read"), var("a")], "f32"),
+        IIRInstr::new("cmp_eq", Some("same".into()), vec![var("value"), var("one")], "f32"),
+        IIRInstr::new("jmp_if_false", None, vec![var("same"), var("bad")], "void"),
+        IIRInstr::new("const", Some("answer".into()), vec![Operand::Int(42)], "i32"),
+        IIRInstr::new("ret", None, vec![var("answer")], "i32"),
+        IIRInstr::new("label", None, vec![var("bad")], "void"),
+        IIRInstr::new("ret", None, vec![var("zero")], "i32"),
+    ]);
+    let read = IIRFunction::new("read", vec![("a".into(), "array<f32>".into())], "f32", vec![
+        IIRInstr::new("const", Some("zero".into()), vec![Operand::Int(0)], "i32"),
+        IIRInstr::new("array_get", Some("value".into()), vec![var("a"), var("zero")], "f32"),
+        IIRInstr::new("ret", None, vec![var("value")], "f32"),
+    ]);
+    let module = IIRModule { name: "float_array_control".into(), functions: vec![main, read], entry_point: Some("main".into()), language: "test".into(), exports: vec![], imports: vec![] };
+    let mut class = iir_to_jvm_class_file::lower_iir_to_jvm(&module, &iir_to_jvm_class_file::IIRJvmConfig::new("Main")).unwrap();
+    fn append(cp: &mut Vec<Option<Cp>>, entry: Cp) -> u16 {
+        let index = u16::try_from(cp.len()).unwrap(); cp.push(Some(entry)); index
+    }
+    let cp = &mut class.constant_pool;
+    let cname = append(cp, Cp::Utf8("Main".into()));
+    let owner = append(cp, Cp::Class { name_index: cname });
+    let name = append(cp, Cp::Utf8("main".into()));
+    let descriptor = append(cp, Cp::Utf8("()I".into()));
+    let nat = append(cp, Cp::NameAndType { name_index: name, descriptor_index: descriptor });
+    let method = append(cp, Cp::Methodref { class_index: owner, name_and_type_index: nat });
+    // main(String[]) calls main()I and accepts only42. An incorrect answer
+    // throws (aconst_null; athrow), so process success proves the computation.
+    // if_icmpeq at PC5 targets return at PC10: offset5, stack empty on both arms.
+    let [hi, lo] = method.to_be_bytes();
+    class.methods.push(JvmMethodInfo { access_flags: ACC_PUBLIC | ACC_STATIC, name: "main".into(), descriptor: "([Ljava/lang/String;)V".into(), attributes: vec![JvmMethodAttribute::Code(JvmCodeAttribute { name: "Code".into(), max_stack: 2, max_locals: 1, code: vec![0xb8, hi, lo, 0x10, 42, 0x9f, 0, 5, 0x01, 0xbf, 0xb1], nested_attributes: vec![] })] });
+    let bytes = iir_to_jvm_class_file::serialize_jvm_class_file(&class);
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(dir.path().join("Main.class"), bytes).unwrap();
+    let output = Command::new("java").arg("-Xverify:all").arg("-cp").arg(dir.path()).arg("Main").output().expect("execute installed JVM float-array control");
+    assert!(output.status.success(), "JVM float array: {}", String::from_utf8_lossy(&output.stderr));
+    assert!(output.stdout.is_empty());
+    eprintln!("EXECUTED: real JVM float-array allocation/store/call/load/return verified; computed42; process0");
+}
