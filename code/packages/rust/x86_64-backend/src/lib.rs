@@ -449,7 +449,7 @@ fn v1_builtin_names() -> Vec<&'static str> {
 enum BackendError {
     /// CIR contains an opcode this backend doesn't yet support.
     UnsupportedOp(String),
-    /// CIR uses more parameters than the ABI has GPR slots.
+    /// CIR exceeds the supported word-call or builtin parameter bound.
     TooManyParams { abi: &'static str, got: usize, max: usize },
     /// An instruction is missing a required `dest` or `srcs` field.
     MalformedInstr(String),
