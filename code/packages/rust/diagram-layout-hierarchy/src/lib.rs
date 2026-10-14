@@ -170,8 +170,52 @@ fn swimlane_cross_lane_ranks(diagram: &SwimlaneDiagram, link_gaps: &SwimlaneLink
     Ok(Some(ranks))
 }
 
-/// Lay out explicit Railroad constructors into rule rows and branch paths.
+/// Typed refusal for caller-constructed Railroad spacing or derived geometry.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum RailroadLayoutError {
+    UnsupportedSpacing { field: &'static str },
+    InvalidDerivedGeometry,
+}
+
+impl std::fmt::Display for RailroadLayoutError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::UnsupportedSpacing { field } => write!(f,"Railroad {field} must be finite and in 0..=65536"),
+            Self::InvalidDerivedGeometry => f.write_str("Railroad layout requires finite coordinates and nonnegative dimensions"),
+        }
+    }
+}
+impl std::error::Error for RailroadLayoutError {}
+
+/// Compatibility entry for supported IR. Panics on unsupported spacing or
+/// derived geometry; callers handling untrusted typed IR use the checked API.
 pub fn layout_railroad(diagram: &RailroadDiagram) -> LayoutedRailroadDiagram {
+    try_layout_railroad(diagram).expect("Railroad layout requires supported spacing and finite geometry")
+}
+
+/// Check all spacing before arithmetic, then validate complete derived boxes
+/// and path coordinates. This is a scalar/geometry boundary, not a promise of
+/// arbitrary recursive AST depth or remeasurement resource bounds.
+pub fn try_layout_railroad(diagram: &RailroadDiagram) -> Result<LayoutedRailroadDiagram, RailroadLayoutError> {
+    for (field,value) in [("padding",diagram.config.padding),
+        ("verticalSeparation",diagram.config.vertical_separation),
+        ("horizontalSeparation",diagram.config.horizontal_separation)] {
+        if !value.is_finite() || !(0.0..=diagram_ir::MAX_RAILROAD_SPACING).contains(&value) {
+            return Err(RailroadLayoutError::UnsupportedSpacing{field});
+        }
+    }
+    let layout=layout_railroad_supported(diagram);
+    let rectangle=|x:f64,y:f64,w:f64,h:f64| [x,y,w,h].iter().all(|v|v.is_finite())&&w>=0.0&&h>=0.0;
+    if !rectangle(0.0,0.0,layout.width,layout.height) || layout.rules.iter().any(|rule|
+        !rectangle(0.0,rule.y,layout.width,rule.height)
+        || rule.elements.iter().any(|e|!rectangle(e.x,e.y,e.width,e.height))
+        || rule.paths.iter().flat_map(|p|&p.points).any(|p|!p.x.is_finite()||!p.y.is_finite())) {
+        return Err(RailroadLayoutError::InvalidDerivedGeometry);
+    }
+    Ok(layout)
+}
+
+fn layout_railroad_supported(diagram: &RailroadDiagram) -> LayoutedRailroadDiagram {
     let padding = diagram.config.padding;
     let title_height = if diagram.title.is_some() { 36.0 + padding } else { 8.0 + padding };
     let expression_x = padding + 130.0;
@@ -208,15 +252,20 @@ fn layout_railroad_expression(expr: &RailroadExpression, x: f64, y: f64,
         }
         RailroadExpression::Sequence(items) => {
             let sizes: Vec<_> = items.iter().map(|item| measure_railroad_expression(item, config)).collect();
+            // A sequence has exactly n-1 gaps. Keep its measured extent rather
+            // than recover it by subtracting a trailing gap from a large cursor.
+            let width=sizes.iter().map(|size|size.0).sum::<f64>()
+                +config.horizontal_separation*items.len().saturating_sub(1) as f64;
             let max_height = sizes.iter().map(|size| size.1).fold(36.0, f64::max);
             let center = y + max_height / 2.0;
             let mut cursor = x; let mut previous_end = None;
-            for (item, (_, item_height)) in items.iter().zip(sizes) {
+            for (index,(item, (_, item_height))) in items.iter().zip(sizes).enumerate() {
                 let (item_width, _) = layout_railroad_expression(item, cursor, y + (max_height - item_height) / 2.0, config, elements, paths);
                 if let Some(end) = previous_end { paths.push(LayoutedRailroadPath { points: vec![Point { x: end, y: center }, Point { x: cursor, y: center }], loopback: false }); }
-                previous_end = Some(cursor + item_width); cursor += item_width + config.horizontal_separation;
+                previous_end = Some(cursor + item_width); cursor += item_width;
+                if index+1<items.len() {cursor+=config.horizontal_separation;}
             }
-            ((cursor - x - config.horizontal_separation).max(0.0), max_height)
+            (width, max_height)
         }
         RailroadExpression::Choice(alternatives) => {
             let gap = config.vertical_separation; let mut cursor_y = y; let mut max_width: f64 = 0.0; let mut sizes = Vec::new();

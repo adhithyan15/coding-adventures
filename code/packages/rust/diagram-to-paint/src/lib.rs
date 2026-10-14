@@ -2225,9 +2225,12 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: element.x, y: element.y,
                 width: element.width, height: element.height, fill: Some(fill.into()), stroke: Some(stroke.into()),
                 stroke_width: Some(1.7), corner_radius: Some(radius), stroke_dash: None, stroke_dash_offset: None }));
+            // Small accepted padding can make a leaf shorter than24px. Keep
+            // its declared label box inside the leaf before shaping glyphs.
+            let label_height=24.0_f64.min(element.height);
             text_children.push(text_node_no_wrap(&element.label, element.x + diagram.config.padding,
-                element.y + (element.height - 24.0) / 2.0,
-                (element.width - diagram.config.padding * 2.0).max(1.0), 24.0,
+                element.y + (element.height - label_height) / 2.0,
+                (element.width - diagram.config.padding * 2.0).max(1.0), label_height,
                 options.label_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
         }
     }

@@ -7801,11 +7801,11 @@ fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
     let parse = |name: &str, default: f64| -> Result<f64, ParseError> {
         let Some(value) = value(name) else { return Ok(default); };
         let parsed = value.parse::<f64>().map_err(|_| ParseError {
-            message: format!("Mermaid Railroad {name} must be a non-negative number"), line: 1, col: 1,
+            message: format!("Mermaid Railroad {name} must be finite and in 0..=65536"), line: 1, col: 1,
         })?;
-        if !parsed.is_finite() || parsed < 0.0 {
+        if !parsed.is_finite() || !(0.0..=diagram_ir::MAX_RAILROAD_SPACING).contains(&parsed) {
             return Err(ParseError {
-                message: format!("Mermaid Railroad {name} must be a non-negative number"), line: 1, col: 1,
+                message: format!("Mermaid Railroad {name} must be finite and in 0..=65536"), line: 1, col: 1,
             });
         }
         Ok(parsed)

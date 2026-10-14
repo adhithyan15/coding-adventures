@@ -2074,6 +2074,9 @@ pub enum RailroadExpression {
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct RailroadRule { pub name: String, pub definition: RailroadExpression }
+/// Supported scalar spacing budget. Parsers and checked typed-IR layout share
+/// this boundary so finite source numbers cannot overflow downstream geometry.
+pub const MAX_RAILROAD_SPACING: f64 = 65_536.0;
 #[derive(Clone, Debug, PartialEq)]
 pub struct RailroadConfig {
     pub padding: f64, pub vertical_separation: f64, pub horizontal_separation: f64,
