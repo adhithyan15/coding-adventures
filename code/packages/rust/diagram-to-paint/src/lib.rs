@@ -1761,6 +1761,7 @@ impl SwimlaneHopCrossings {
 #[cfg(test)]
 std::thread_local! {
     static SWIMLANE_LINE_CROSSING_VISITS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+    static SWIMLANE_HOP_INDEX_WORK: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
 }
 
 fn swimlane_line_crossing(
@@ -9873,6 +9874,54 @@ emphasized --> direct
                     let geometries = layout.edges.iter().map(|edge| [edge.from.x.to_bits(), edge.from.y.to_bits(), edge.to.x.to_bits(), edge.to.y.to_bits()]).collect::<std::collections::BTreeSet<_>>();
                     assert_eq!(geometries.len(), size * size, "every Cartesian geometry is distinct");
                     assert_authored_parallel_hop_work(&source, size * size, direction);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn line_hop_integer_two_support_empty_work_preserves_complete_scene() {
+        for count in [32usize, 64] {
+            for mode in [SwimlaneLineHops::Arc, SwimlaneLineHops::Gap] {
+                for exchange_axes in [false, true] {
+                    for reverse in [false, true] {
+                        let parsed = mermaid_parser::parse_swimlane("swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na --> b").unwrap();
+                        let mut layout = diagram_layout_hierarchy::layout_swimlane(&parsed);
+                        let template = layout.edges[0].clone();
+                        let span = (4 * count) as f64;
+                        layout.width = span + 2.0;
+                        layout.height = span + (2 * count) as f64 + 2.0;
+                        layout.edges = (0..count).map(|index| {
+                            let mut edge = template.clone();
+                            edge.id = Some(format!("unique-oblique-{index}"));
+                            edge.curve = Some(SwimlaneEdgeCurve::Linear);
+                            let mut from = Point { x: 0.0, y: index as f64 };
+                            let mut to = Point { x: span, y: span + (2 * index) as f64 };
+                            if exchange_axes { std::mem::swap(&mut from.x, &mut from.y); std::mem::swap(&mut to.x, &mut to.y); }
+                            if reverse { std::mem::swap(&mut from, &mut to); }
+                            edge.from = from;
+                            edge.to = to;
+                            edge
+                        }).collect();
+                        assert_eq!(layout.edges.len(), count);
+                        let geometries = layout.edges.iter().map(|edge| [edge.from.x.to_bits(), edge.from.y.to_bits(), edge.to.x.to_bits(), edge.to.y.to_bits()]).collect::<std::collections::BTreeSet<_>>();
+                        assert_eq!(geometries.len(), count);
+                        layout.line_hops = Some(mode);
+                        SWIMLANE_LINE_CROSSING_VISITS.with(|value| value.set(0));
+                        SWIMLANE_HOP_INDEX_WORK.with(|value| value.set(0));
+                        let mut enabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                        let predicates = SWIMLANE_LINE_CROSSING_VISITS.with(std::cell::Cell::get);
+                        let work = SWIMLANE_HOP_INDEX_WORK.with(std::cell::Cell::get);
+                        let metadata = enabled.metadata.as_mut().expect("metadata retained");
+                        assert_eq!(metadata.remove("swimlane.lineHops").as_deref(), Some(match mode { SwimlaneLineHops::Arc => "arc", SwimlaneLineHops::Gap => "gap" }));
+                        layout.line_hops = None;
+                        let disabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                        assert_eq!(enabled, disabled, "all scene/style/marker/glyph/metadata fields survive: count={count}, exchanged={exchange_axes}, reverse={reverse}");
+                        assert!(predicates <= 1, "empty distinct oblique work must not scan prior geometries: count={count}, predicates={predicates}");
+                        assert!(work > 0, "the index instrumentation must observe actual eligibility/insertion/query work");
+                        let budget = 64 * count * ((usize::BITS - count.leading_zeros()) as usize + 1);
+                        assert!(work <= budget, "count={count}, index work={work}, unchanged bound={budget}");
+                    }
                 }
             }
         }
