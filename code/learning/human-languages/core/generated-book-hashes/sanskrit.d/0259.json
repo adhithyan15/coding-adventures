@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:e978d75d679aa31e",
+  "lessonIds": [
+    "SA-C259-asmakam",
+    "SA-C259-yusmakam",
+    "SA-C259-plural-possessors-practice"
+  ],
+  "tex": "sanskrit/book/chapters/ch259-our-and-your-plural.tex"
+}
