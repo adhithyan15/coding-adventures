@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 196,
-  "sourceHash": "fnv1a64:653cd9871c1d9d0f",
+  "sourceHash": "fnv1a64:3a7d8529ba4ab301",
   "lessonIds": [
     "MR-C196-phirayla-jane",
     "MR-C196-ghadi-karne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch196.txt",
   "json": "marathi/narration/ch196.json",
-  "textHash": "fnv1a64:507fe78848d38877",
-  "jsonHash": "fnv1a64:95a871fe272046e2",
+  "textHash": "fnv1a64:43fc4aedd02c494f",
+  "jsonHash": "fnv1a64:b7483e8499ea4e5f",
   "findings": []
 }

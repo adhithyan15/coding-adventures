@@ -14,7 +14,8 @@ romanization: "plāsṭik"
 concept_tag: MR-VASTU214-PLASTIK
 prerequisites: [MR-C213-mala, MR-C214-urja]
 sounds: []
-roots: []
+roots: [english-plastic]
+etymology_hook: "plāsṭik ← English plastic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C214-urja]
 <!-- hl-knowledge: introduces=[MR-LEX-C214-VASTU214-02]; assesses=[] -->
 
 **प्लास्टिक** — *plāsṭik* — "plastic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्लास्टिक** (*plāsṭik*) is a loan from English *plastic*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

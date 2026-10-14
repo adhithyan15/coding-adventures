@@ -12,6 +12,9 @@ Before the new one: say the Marathi for peanuts, then the Marathi for cashews.
 You'll want to know: मळा.
 मळा — maḷā — "a farm plot".
 
+The word, taken apart.
+The origin of मळा (maḷā), "a farm plot", is not settled. CDIAL has no entry for it in this sense.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for cashews, then the Marathi for a farm plo
 
 You'll want to know: गोठा.
 गोठा — goṭhā — "a cowshed".
+
+The word, taken apart.
+गोठा (goṭhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from goṣṭha, "cow-house" (CDIAL 4336). It is go, "cow", and stha, "standing". CDIAL glosses the Marathi word "cowpen".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a farm plot, then the Marathi for a cows
 You'll want to know: मशीद.
 मशीद — maśīd — "a mosque".
 
+The word, taken apart.
+मशीद (maśīd) is a loan from Arabic masjid, "place of prostration, mosque", which reached Marathi through Persian. Its Arabic root is s-j-d (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a cowshed, then the Marathi for a mosque
 You'll want to know: महाविद्यालय.
 महाविद्यालय — mahāvidyālay — "a college".
 
+The word, taken apart.
+महाविद्यालय (mahāvidyālay) is a modern compound built from Sanskrit mahā, "great", vidyā, "knowledge" (CDIAL 11741), and ālaya, "abode" (CDIAL 1366).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a mosque, then the Marathi for a college
 
 You'll want to know: संग्रहालय.
 संग्रहालय — saṅgrahālay — "a museum".
+
+The word, taken apart.
+संग्रहालय (saṅgrahālay) is a compound built from Sanskrit saṅgraha, "collection" (CDIAL 12852), and ālaya, "abode" (CDIAL 1366).
 
 What you've built.
 One more word for this chapter.

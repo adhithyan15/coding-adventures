@@ -26,6 +26,7 @@ coding_adventures_zeroize = { path = "../zeroize" }
 websocket-runtime = { path = "../websocket-runtime" }
 
 [dev-dependencies]
+chief-of-staff-daemon-secret-file = { path = "../chief-of-staff-daemon-secret-file", features = ["test-support"] }
 chief-of-staff-vault-runtime = { path = "../chief-of-staff-vault-runtime" }
 transport-platform = { path = "../transport-platform" }
 websocket-core = { path = "../websocket-core" }

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 89,
-  "sourceHash": "fnv1a64:dd070a0a236f7c8b",
+  "sourceHash": "fnv1a64:2e67eadcc079a854",
   "lessonIds": [
     "MR-C89-kanda",
     "MR-C89-amba",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch89.txt",
   "json": "marathi/narration/ch89.json",
-  "textHash": "fnv1a64:b671fb0f02570942",
-  "jsonHash": "fnv1a64:b417c45bb2530b9b",
+  "textHash": "fnv1a64:e5cdf53f5dda9c36",
+  "jsonHash": "fnv1a64:a1b7e788a7011b23",
   "findings": []
 }

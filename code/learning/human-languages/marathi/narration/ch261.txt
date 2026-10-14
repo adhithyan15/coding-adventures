@@ -12,6 +12,9 @@ Before the new one: say the Marathi for unmarried, then the Marathi for married.
 You'll want to know: कुरूप.
 कुरूप — kurūp — "ugly".
 
+The word, taken apart.
+कुरूप (kurūp) is Sanskrit kurūpa, "ill-formed, ugly", a tatsama: ku-, "bad", and rūpa, "form, beauty" (CDIAL 10803).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for married, then the Marathi for ugly.
 
 You'll want to know: थकलेला.
 थकलेला — thaklelā — "tired".
+
+The word, taken apart.
+थकलेला (thaklelā) is the "-ed" form of thakṇẽ, "to become tired", which comes from a reconstructed sthakk-, "stop, halt" (CDIAL 13737).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for ugly, then the Marathi for tired.
 You'll want to know: भुकेला.
 भुकेला — bhukelā — "hungry".
 
+The word, taken apart.
+भुकेला (bhukelā) is built on bhūk, "hunger", which comes from Sanskrit bubhukṣā, "desire to eat, hunger" (CDIAL 9286).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for tired, then the Marathi for hungry.
 You'll want to know: तहानलेला.
 तहानलेला — tahānlelā — "thirsty".
 
+The word, taken apart.
+तहानलेला (tahānlelā) is built on tahān, "thirst", which comes from Sanskrit tṛṣṇā, "thirst" (CDIAL 5941).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for hungry, then the Marathi for thirsty.
 
 You'll want to know: रागीट.
 रागीट — rāgīṭ — "short-tempered".
+
+The word, taken apart.
+रागीट (rāgīṭ) is rāg, "anger", with the ending -īṭ, "given to". Rāg is Sanskrit rāga, "passion" (CDIAL 10674).
 
 What you've built.
 One more word for this chapter.

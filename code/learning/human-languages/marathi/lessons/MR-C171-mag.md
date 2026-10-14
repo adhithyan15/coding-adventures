@@ -14,7 +14,8 @@ romanization: "mag"
 concept_tag: MR-VEL171-MAG
 prerequisites: [MR-C170-nasib, MR-C171-kvacit]
 sounds: []
-roots: []
+roots: [sanskrit-marga]
+etymology_hook: "mag: CDIAL lists it, 'then, after', as an adverbial use of Sanskrit mārga 'track, road' (CDIAL 10071)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C171-kvacit]
 <!-- hl-knowledge: introduces=[MR-LEX-C171-VEL171-02]; assesses=[] -->
 
 **मग** — *mag* — "then, after that".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मग** (*mag*) is inherited. CDIAL lists Marathi *mag*, "then, after", as an adverbial use of Sanskrit *mārga*, "track, road" (CDIAL 10071).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

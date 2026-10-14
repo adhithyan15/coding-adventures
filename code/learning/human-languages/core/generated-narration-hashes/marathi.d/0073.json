@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 73,
-  "sourceHash": "fnv1a64:98cee4de67ac7f38",
+  "sourceHash": "fnv1a64:04ea1b30684e8022",
   "lessonIds": [
     "MR-C73-ajari",
     "MR-C73-vedana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch73.txt",
   "json": "marathi/narration/ch73.json",
-  "textHash": "fnv1a64:6ad4c9d63a3e2e0b",
-  "jsonHash": "fnv1a64:baa6b3a007219fe3",
+  "textHash": "fnv1a64:d22bf7e443c03ff8",
+  "jsonHash": "fnv1a64:5c48a84e24cf72a2",
   "findings": []
 }

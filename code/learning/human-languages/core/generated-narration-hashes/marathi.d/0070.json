@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 70,
-  "sourceHash": "fnv1a64:600bd0f4735071ba",
+  "sourceHash": "fnv1a64:eceb57e5ab29a931",
   "lessonIds": [
     "MR-C70-hat",
     "MR-C70-pay",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch70.txt",
   "json": "marathi/narration/ch70.json",
-  "textHash": "fnv1a64:c49120883acad337",
-  "jsonHash": "fnv1a64:558637c73a89d0f9",
+  "textHash": "fnv1a64:245a4c5559bb9537",
+  "jsonHash": "fnv1a64:5a8dba49619f41da",
   "findings": []
 }

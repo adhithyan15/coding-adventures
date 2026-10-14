@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 233,
-  "sourceHash": "fnv1a64:d94cbca2fa4850dd",
+  "sourceHash": "fnv1a64:ef2e6b84555d3270",
   "lessonIds": [
     "MR-C233-gadad",
     "MR-C233-phikat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch233.txt",
   "json": "marathi/narration/ch233.json",
-  "textHash": "fnv1a64:eaf561028327b2f7",
-  "jsonHash": "fnv1a64:38c1d7a57fa97ac1",
+  "textHash": "fnv1a64:038d49a7c81f57ad",
+  "jsonHash": "fnv1a64:27d32f86bb34ccc0",
   "findings": []
 }

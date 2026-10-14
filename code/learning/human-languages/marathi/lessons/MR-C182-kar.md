@@ -14,7 +14,8 @@ romanization: "kar"
 concept_tag: MR-VASTU182-KAR
 prerequisites: [MR-C182-not, MR-C182-karja]
 sounds: []
-roots: []
+roots: [sanskrit-kara-tax]
+etymology_hook: "kar ← Sanskrit kara 'tax, tribute', which CDIAL takes, after Burrow, from Dravidian (CDIAL 2780)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C182-karja]
 <!-- hl-knowledge: introduces=[MR-LEX-C182-VASTU182-05]; assesses=[] -->
 
 **कर** — *kar* — "a tax".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कर** (*kar*) is Sanskrit *kara*, "tax, tribute" (CDIAL 2780). CDIAL takes the Sanskrit word, after Burrow, from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

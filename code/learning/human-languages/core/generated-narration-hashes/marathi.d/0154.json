@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 154,
-  "sourceHash": "fnv1a64:f31c71c2b1cd60a3",
+  "sourceHash": "fnv1a64:986c19fcff0792ca",
   "lessonIds": [
     "MR-C154-paratne",
     "MR-C154-nighne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch154.txt",
   "json": "marathi/narration/ch154.json",
-  "textHash": "fnv1a64:2920035664fb7610",
-  "jsonHash": "fnv1a64:1703439871741f41",
+  "textHash": "fnv1a64:1b576a459825878c",
+  "jsonHash": "fnv1a64:703c39815ea4a210",
   "findings": []
 }

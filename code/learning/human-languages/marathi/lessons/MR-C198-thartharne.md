@@ -14,7 +14,8 @@ romanization: "thartharṇe"
 concept_tag: MR-VERB-THARTHARNE
 prerequisites: [MR-C198-dabne, MR-C198-khokne]
 sounds: []
-roots: []
+roots: [indo-aryan-thar]
+etymology_hook: "thartharṇe ← *thar 'tremble', a reconstructed form; a tadbhava (CDIAL 6092)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C198-khokne]
 <!-- hl-knowledge: introduces=[MR-LEX-C198-ACT198-03]; assesses=[] -->
 
 **थरथरणे** — *thartharṇe* — "to tremble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थरथरणे** (*thartharṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*thar*, "tremble", a form CDIAL reconstructs from its descendants (CDIAL 6092). CDIAL compares Buddhist Sanskrit *tharatharāyamāṇa*, "trembling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

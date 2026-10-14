@@ -14,7 +14,8 @@ romanization: "sadnikā"
 concept_tag: MR-VASTU178-SADNIKA
 prerequisites: [MR-C177-namra, MR-C177-garvistha]
 sounds: []
-roots: []
+roots: [sanskrit-sadana]
+etymology_hook: "sadnikā: a modern word on Sanskrit sadana 'seat, dwelling', with -ikā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C177-garvistha]
 <!-- hl-knowledge: introduces=[MR-LEX-C178-VASTU178-01]; assesses=[] -->
 
 **सदनिका** — *sadnikā* — "a flat, an apartment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सदनिका** (*sadnikā*) is a modern word built on Sanskrit *sadana*, "seat, dwelling", with the ending *-ikā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

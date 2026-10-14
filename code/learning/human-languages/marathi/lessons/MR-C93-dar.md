@@ -14,7 +14,8 @@ romanization: "dār"
 concept_tag: MR-HOME93-DAR
 prerequisites: [MR-C92-suri, MR-C92-batli]
 sounds: []
-roots: []
+roots: [sanskrit-dvara]
+etymology_hook: "dār ← Sanskrit dvāra 'door', a tadbhava (CDIAL 6663)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C92-batli]
 <!-- hl-knowledge: introduces=[MR-LEX-C93-HOME93-01]; assesses=[] -->
 
 **दार** — *dār* — "a door".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दार** (*dār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dvāra*, "door" (CDIAL 6663). The same ancient word as English *door*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

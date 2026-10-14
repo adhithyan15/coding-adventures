@@ -14,7 +14,8 @@ romanization: "mokḷā"
 concept_tag: MR-GUN207-MOKLA
 prerequisites: [MR-C207-niskalji, MR-C207-vyasta]
 sounds: []
-roots: []
+roots: [indo-aryan-mukna]
+etymology_hook: "mokḷā ← *mukna 'loosed', a reconstructed form; a tadbhava (CDIAL 10157)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C207-vyasta]
 <!-- hl-knowledge: introduces=[MR-LEX-C207-GUN207-05]; assesses=[] -->
 
 **मोकळा** — *mokḷā* — "free, open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोकळा** (*mokḷā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*mukna*, "loosed", a form CDIAL reconstructs from its descendants (CDIAL 10157). CDIAL compares *mukta*, "loosed", and suggests the *-o-* may come from *mokṣa*, "release". It glosses the Marathi word "free".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "perṇe"
 concept_tag: MR-VERB-PERNE
 prerequisites: [MR-C156-gilne, MR-C157-cakhne]
 sounds: []
-roots: []
+roots: [sanskrit-prakirati]
+etymology_hook: "perṇe ← Sanskrit prakirati 'scatters', a tadbhava (CDIAL 8443)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C157-cakhne]
 <!-- hl-knowledge: introduces=[MR-LEX-C157-ACT157-02]; assesses=[] -->
 
 **पेरणे** — *perṇe* — "to sow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पेरणे** (*perṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *prakirati*, "scatters" (CDIAL 8443). CDIAL glosses the Marathi verb "to scatter, strew, sow", and calls Bloch's source *pradara* wrong.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vārā"
 concept_tag: MR-NATURE99-VARA
 prerequisites: [MR-C98-barpha, MR-C99-paus]
 sounds: []
-roots: []
+roots: [sanskrit-vatara]
+etymology_hook: "vārā ← Sanskrit vātara 'windy, stormy', a tadbhava (CDIAL 11497)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C99-paus]
 <!-- hl-knowledge: introduces=[MR-LEX-C99-NATURE99-02]; assesses=[] -->
 
 **वारा** — *vārā* — "wind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वारा** (*vārā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vātara*, "windy, stormy" (CDIAL 11497). CDIAL builds it on Sanskrit *vāta*, "wind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

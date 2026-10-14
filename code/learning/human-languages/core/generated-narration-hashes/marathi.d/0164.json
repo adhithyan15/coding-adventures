@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 164,
-  "sourceHash": "fnv1a64:de7c9dedeb0c2b85",
+  "sourceHash": "fnv1a64:16fe9cc89a4a55d9",
   "lessonIds": [
     "MR-C164-jahir-karne",
     "MR-C164-talya-vajavne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch164.txt",
   "json": "marathi/narration/ch164.json",
-  "textHash": "fnv1a64:d26bca4d686da063",
-  "jsonHash": "fnv1a64:d0cf74c536353164",
+  "textHash": "fnv1a64:8f4e4ece772512b4",
+  "jsonHash": "fnv1a64:437a2483d27ec301",
   "findings": []
 }

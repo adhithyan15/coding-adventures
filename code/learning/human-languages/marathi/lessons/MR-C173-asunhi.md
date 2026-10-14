@@ -14,7 +14,8 @@ romanization: "asūnhī"
 concept_tag: MR-KARAN173-ASUNHI
 prerequisites: [MR-C173-tarihi, MR-C173-jari]
 sounds: []
-roots: []
+roots: [sanskrit-aste]
+etymology_hook: "asūnhī: asūn 'being', from asṇe 'to be', which CDIAL lists under āste 'sits, exists' (CDIAL 1480), + hī 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C173-jari]
 <!-- hl-knowledge: introduces=[MR-LEX-C173-KARAN173-03]; assesses=[] -->
 
 **असूनही** — *asūnhī* — "despite, even though".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**असूनही** (*asūnhī*) is *asūn*, "being", from the verb *asṇẽ*, "to be", with *hī*, "even". CDIAL lists *asṇẽ* under Sanskrit *āste*, "sits, exists, remains" (CDIAL 1480), or perhaps *ākṣeti*, "abides" (CDIAL 1031).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

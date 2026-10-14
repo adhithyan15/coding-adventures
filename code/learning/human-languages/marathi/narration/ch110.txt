@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a year, then the Marathi for an hour.
 You'll want to know: मिनिट.
 मिनिट — miniṭ — "a minute".
 
+The word, taken apart.
+मिनिट (miniṭ) is a loan from English minute.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for an hour, then the Marathi for a minute.
 
 You'll want to know: आज.
 आज — āj — "today".
+
+The word, taken apart.
+आज (āj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from adya, "today" (CDIAL 242).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a minute, then the Marathi for today.
 You'll want to know: आता.
 आता — ātā — "now".
 
+The word, taken apart.
+आता (ātā) is inherited. CDIAL lists Marathi ātāṁ, "now", under Sanskrit atra, "here" (CDIAL 228).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for today, then the Marathi for now.
 You'll want to know: नेहमी.
 नेहमी — nehmī — "always".
 
+The word, taken apart.
+The origin of नेहमी (nehmī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for now, then the Marathi for always.
 
 You'll want to know: कधीकधी.
 कधीकधी — kadhīkadhī — "sometimes".
+
+The word, taken apart.
+कधीकधी (kadhīkadhī) is कधी, "when", said twice. कधी is usually traced to Sanskrit kadā, "when"; CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

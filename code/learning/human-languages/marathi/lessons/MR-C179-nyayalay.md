@@ -14,7 +14,8 @@ romanization: "nyāyālay"
 concept_tag: MR-VASTU179-NYAYALAY
 prerequisites: [MR-C178-ghanta, MR-C178-kappa]
 sounds: []
-roots: []
+roots: [sanskrit-nyaya, sanskrit-alaya]
+etymology_hook: "nyāyālay: Sanskrit nyāya 'rule, justice' + ālaya 'abode'; a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C178-kappa]
 <!-- hl-knowledge: introduces=[MR-LEX-C179-VASTU179-01]; assesses=[] -->
 
 **न्यायालय** — *nyāyālay* — "a court".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**न्यायालय** (*nyāyālay*) is a compound of Sanskrit parts, a tatsama: *nyāya*, "rule, justice", and *ālaya*, "abode".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

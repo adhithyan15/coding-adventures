@@ -14,7 +14,8 @@ romanization: "osrī"
 concept_tag: MR-VASTU271-OSRI
 prerequisites: [MR-C271-basasthanak, MR-C271-pangharun]
 sounds: []
-roots: []
+roots: [indo-aryan-avashara]
+etymology_hook: "osrī ← *avaśara 'protection, shelter', a reconstructed form; a tadbhava (CDIAL 848)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C271-pangharun]
 <!-- hl-knowledge: introduces=[MR-LEX-C271-VASTU271-04]; assesses=[] -->
 
 **ओसरी** — *osrī* — "a veranda".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ओसरी** (*osrī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*avaśara*, "protection, shelter", a form CDIAL reconstructs from its descendants (CDIAL 848). CDIAL compares the sense change in *śaraṇa*, "shelter", toward "roof, veranda".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ gloss: "firm, steady"
 concept_tag: MR-ANCHOR-THAAM
 prerequisites: [MR-C07-taali]
 sounds: []
-roots: []
+roots: [indo-aryan-sthamya]
+etymology_hook: "ṭhām ← *sthāmya 'placed', a reconstructed form; a tadbhava (CDIAL 13761)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **ठाम** — *ṭhām* — "firm, steady".
 
 Say it: *ṭhām*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ठ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ठाम** (*ṭhām*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*sthāmya*, "placed", a form CDIAL reconstructs from its descendants (CDIAL 13761). CDIAL builds it on Sanskrit *sthāman*, "station, place", and glosses the Marathi word "fixed, firm, settled".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-THAAM] -->

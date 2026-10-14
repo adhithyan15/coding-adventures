@@ -14,7 +14,8 @@ romanization: "sucavṇe"
 concept_tag: MR-VERB-SUCAVNE
 prerequisites: [MR-C225-avlambun-asne, MR-C225-talne]
 sounds: []
-roots: []
+roots: [sanskrit-sucyate]
+etymology_hook: "sucavṇe: the 'make' form of sucṇe 'to come to mind', listed under sūcyate 'is indicated' (CDIAL 13551a)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C225-talne]
 <!-- hl-knowledge: introduces=[MR-LEX-C226-ACT226-01]; assesses=[] -->
 
 **सुचवणे** — *sucavṇe* — "to suggest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुचवणे** (*sucavṇe*) is the "make" form of *sucṇẽ*, "to come to mind", which CDIAL lists under Sanskrit *sūcyate*, "is indicated" (CDIAL 13551a).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

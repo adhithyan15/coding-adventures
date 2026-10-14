@@ -4158,7 +4158,7 @@ impl Compiler {
     fn is_selector_call_safe_standard_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
         #[cfg(test)]
         selector_classifier_visit();
-        self.is_selector_call_safe_standard_entier_sign_root_with_depth(node, 4)
+        self.is_selector_call_safe_standard_entier_sign_root_with_depth(node, 5)
     }
 
     fn is_selector_call_safe_standard_entier_sign_root_with_depth(
@@ -14335,6 +14335,27 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_calling_selectors_allow_quintuple_nested_standard_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(abs(abs(abs(entier(sign(left)))))))) else relay(abs(abs(abs(abs(abs(entier(sign(right)))))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(abs(abs(abs(entier(sign(left)))))))) else relay(abs(abs(abs(abs(abs(entier(sign(right)))))))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose five nested standard-function exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
     fn al4_runtime_real_conditional_selector_calls_reject_unsafe_local_branches() {
         for source in [
             "begin boolean procedure choose; choose := true; real procedure pick; pick := -2.25; real procedure abs(x); real x; abs := x; real x; x := pick(); output(if choose() then abs(x) else abs(x)) end",
@@ -14353,7 +14374,7 @@ mod tests {
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left)) * entier(sign(right))) else relay(entier(sign(right)) / entier(sign(left))); output(result) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left)) ^ entier(sign(right))) else relay(entier(sign(right)) ^ entier(sign(left))); output(result) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left)) ^ right) else relay(entier(sign(right)) ^ left); output(result) end",
-            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(abs(abs(abs(abs(abs(entier(sign(left)))))))) else relay(abs(abs(abs(abs(abs(entier(sign(right)))))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(abs(abs(abs(abs(abs(abs(left))))))) else relay(abs(abs(abs(abs(abs(abs(right))))))); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
                 "a calling selector must not admit transformed locals or overridden builtins",

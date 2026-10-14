@@ -14,7 +14,8 @@ romanization: "phakta"
 concept_tag: MR-KARAN203-PHAKTA
 prerequisites: [MR-C203-javaljaval, MR-C203-sumare]
 sounds: []
-roots: []
+roots: [arabic-faqat]
+etymology_hook: "phakta: usually traced, through Persian, to Arabic faqaṭ 'only'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C203-sumare]
 <!-- hl-knowledge: introduces=[MR-LEX-C203-KARAN203-05]; assesses=[] -->
 
 **फक्त** — *phakta* — "only".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फक्त** (*phakta*) is a loan, usually traced through Persian to Arabic *faqaṭ*, "only", with **फ** for the *f*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

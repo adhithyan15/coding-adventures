@@ -14,7 +14,8 @@ romanization: "rāgāvṇe"
 concept_tag: MR-VERB-RAGAVNE
 prerequisites: [MR-C251-garam-karne, MR-C252-maja-karne]
 sounds: []
-roots: []
+roots: [sanskrit-raga]
+etymology_hook: "rāgāvṇe: built on rāg 'anger', from Sanskrit rāga 'passion' (CDIAL 10674)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C252-maja-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C252-ACT252-02]; assesses=[] -->
 
 **रागावणे** — *rāgāvṇe* — "to get angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रागावणे** (*rāgāvṇe*) is built on *rāg*, "anger", from Sanskrit *rāga*, "passion" (CDIAL 10674). CDIAL lists no Marathi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

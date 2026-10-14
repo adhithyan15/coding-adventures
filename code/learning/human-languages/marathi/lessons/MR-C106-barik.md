@@ -14,7 +14,8 @@ romanization: "bārīk"
 concept_tag: MR-ADJ106-BARIK
 prerequisites: [MR-C106-god, MR-C106-jad]
 sounds: []
-roots: []
+roots: [persian-barik]
+etymology_hook: "bārīk: usually traced to Persian bārīk 'thin, fine'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C106-jad]
 <!-- hl-knowledge: introduces=[MR-LEX-C106-ADJ106-04]; assesses=[] -->
 
 **बारीक** — *bārīk* — "thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बारीक** (*bārīk*) is a loan, usually traced to Persian *bārīk*, "thin, fine".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

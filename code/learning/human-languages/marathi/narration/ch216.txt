@@ -12,6 +12,9 @@ Before the new one: say the Marathi for arrival, then the Marathi for departure.
 You'll want to know: श्रीखंड.
 श्रीखंड — śrīkhaṇḍ — "shrikhand".
 
+The word, taken apart.
+The origin of the dish name श्रीखंड (śrīkhaṇḍ) is not settled. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for departure, then the Marathi for shrikhan
 
 You'll want to know: ताक.
 ताक — tāk — "buttermilk".
+
+The word, taken apart.
+ताक (tāk) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from takra, "buttermilk with a third part of water" (CDIAL 5617). CDIAL glosses the Marathi word "buttermilk, whey".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for shrikhand, then the Marathi for buttermi
 You'll want to know: मसाला.
 मसाला — masālā — "a spice mix".
 
+The word, taken apart.
+मसाला (masālā) is a loan from Arabic maṣāliḥ, "things that are needful", which reached Marathi through Persian. Its Arabic root is ṣ-l-ḥ (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for buttermilk, then the Marathi for a spice
 You'll want to know: हळद.
 हळद — haḷad — "turmeric".
 
+The word, taken apart.
+हळद (haḷad) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from haridrā, "turmeric" (CDIAL 13992).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a spice mix, then the Marathi for turmer
 
 You'll want to know: जिरे.
 जिरे — jire — "cumin".
+
+The word, taken apart.
+जिरे (jire) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jīraka, "cummin-seed" (CDIAL 5234).
 
 What you've built.
 One more word for this chapter.

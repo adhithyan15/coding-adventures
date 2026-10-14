@@ -14,7 +14,8 @@ romanization: "jāgṇe"
 concept_tag: MR-VERB-JAGNE
 prerequisites: [MR-C157-vadhne, MR-C157-thakne]
 sounds: []
-roots: []
+roots: [sanskrit-jagrati]
+etymology_hook: "jāgṇe ← Sanskrit jāgrati 'are awake', a tadbhava (CDIAL 5175)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C157-thakne]
 <!-- hl-knowledge: introduces=[MR-LEX-C157-ACT157-05]; assesses=[] -->
 
 **जागणे** — *jāgṇe* — "to stay awake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जागणे** (*jāgṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jāgrati*, "are awake" (CDIAL 5175).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

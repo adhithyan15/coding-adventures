@@ -14,7 +14,8 @@ romanization: "jakāt"
 concept_tag: MR-VASTU236-JAKAT
 prerequisites: [MR-C236-phalat, MR-C236-parpatra]
 sounds: []
-roots: []
+roots: [arabic-zakat]
+etymology_hook: "jakāt ← Arabic zakāt 'alms, a tax on wealth', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C236-parpatra]
 <!-- hl-knowledge: introduces=[MR-LEX-C236-VASTU236-03]; assesses=[] -->
 
 **जकात** — *jakāt* — "octroi, a toll on goods".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जकात** (*jakāt*) is a loan from Arabic *zakāt*, "alms, a tax on wealth", which reached Marathi through Persian. Its Arabic root is *z-k-w* (Lane). Marathi writes the *z* as **ज**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to move, then the Marathi for to heat.
 You'll want to know: मजा करणे.
 मजा करणे — majā karṇe — "to have fun".
 
+The word, taken apart.
+मजा is usually traced to Persian maza, "taste, relish". करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to heat, then the Marathi for to have fu
 
 You'll want to know: रागावणे.
 रागावणे — rāgāvṇe — "to get angry".
+
+The word, taken apart.
+रागावणे (rāgāvṇe) is built on rāg, "anger", from Sanskrit rāga, "passion" (CDIAL 10674). CDIAL lists no Marathi form.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to have fun, then the Marathi for to get
 You'll want to know: काळजी करणे.
 काळजी करणे — kāḷjī karṇe — "to worry".
 
+The word, taken apart.
+काळजी matches Gujarati kāḷjī, "care, anxiety", which CDIAL lists beside Marathi kāḷīj, "liver, heart", under Sanskrit kālēyaka, "liver" (CDIAL 3103). करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to get angry, then the Marathi for to wo
 You'll want to know: धूम्रपान करणे.
 धूम्रपान करणे — dhūmrapān karṇe — "to smoke".
 
+The word, taken apart.
+धूम्रपान is "smoke-drinking": Sanskrit dhūmra, "smoke-coloured; smoke" (CDIAL 6861), and pāna, "drinking". करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to worry, then the Marathi for to smoke.
 
 You'll want to know: सोबत जाणे.
 सोबत जाणे — sobat jāṇe — "to go with".
+
+The word, taken apart.
+सोबत, "company", is usually traced through Persian to Arabic ṣuḥba, "companionship", whose root is ṣ-ḥ-b (Lane). जाणे comes from Sanskrit yāti, "goes" (CDIAL 10452).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "shambhar"
 concept_tag: MR-NUMBERS119-SHAMBHAR
 prerequisites: [MR-C118-sattar, MR-C118-navvad]
 sounds: []
-roots: []
+roots: [indo-aryan-shatambhara]
+etymology_hook: "shambhar ← *śatambhara 'full hundred', a reconstructed form; a tadbhava (CDIAL 12284)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C118-navvad]
 <!-- hl-knowledge: introduces=[MR-LEX-C119-NUMBERS119-01]; assesses=[] -->
 
 **शंभर** — *shambhar* — "a hundred".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शंभर** (*shambhar*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*śatambhara*, "full hundred", a form CDIAL reconstructs from its descendants (CDIAL 12284). It is built on *śata*, "hundred".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

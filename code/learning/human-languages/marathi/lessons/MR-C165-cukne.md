@@ -14,7 +14,8 @@ romanization: "cukṇe"
 concept_tag: MR-VERB-CUKNE
 prerequisites: [MR-C164-vadhavne, MR-C164-kami-karne]
 sounds: []
-roots: []
+roots: [indo-aryan-cukk]
+etymology_hook: "cukṇe ← *cukk 'fall short of, stop', a reconstructed form; a tadbhava (CDIAL 4848)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C164-kami-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C165-ACT165-01]; assesses=[] -->
 
 **चुकणे** — *cukṇe* — "to miss; to go wrong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चुकणे** (*cukṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cukk*, "fall short of, stop", a form CDIAL reconstructs from its descendants (CDIAL 4848). CDIAL says Prakrit *cukka*, "fallen, mistaken", took the place of Sanskrit *cyuta*, "fallen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

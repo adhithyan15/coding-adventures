@@ -14,7 +14,8 @@ romanization: "kuṇḍī"
 concept_tag: MR-VASTU241-KUNDI
 prerequisites: [MR-C240-asan, MR-C240-cak]
 sounds: []
-roots: []
+roots: [sanskrit-kunda]
+etymology_hook: "kuṇḍī ← Sanskrit kuṇḍa 'bowl, waterpot', a tadbhava (CDIAL 3264)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C240-cak]
 <!-- hl-knowledge: introduces=[MR-LEX-C241-VASTU241-01]; assesses=[] -->
 
 **कुंडी** — *kuṇḍī* — "a flowerpot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुंडी** (*kuṇḍī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kuṇḍa*, "bowl, waterpot" (CDIAL 3264). CDIAL glosses the Marathi word "small open-mouthed jar". It takes the Sanskrit word from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

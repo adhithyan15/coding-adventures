@@ -12,6 +12,9 @@ Before the new one: say the Marathi for cooked, then the Marathi for ripe.
 You'll want to know: सार्वजनिक.
 सार्वजनिक — sārvajanik — "public".
 
+The word, taken apart.
+सार्वजनिक (sārvajanik) is Sanskrit sārvajanika, "relating to all people", a tatsama built on sarva, "all", and jana, "people".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for ripe, then the Marathi for public.
 
 You'll want to know: खाजगी.
 खाजगी — khājgī — "private".
+
+The word, taken apart.
+खाजगी (khājgī) is a loan, usually traced to Persian khāṣagī, "private", built on Arabic khāṣṣ, "special".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for public, then the Marathi for private.
 You'll want to know: वैयक्तिक.
 वैयक्तिक — vaiyaktik — "personal".
 
+The word, taken apart.
+वैयक्तिक (vaiyaktik) is a modern word built on Sanskrit vyakti, "an individual", with the adjective ending -ika.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for private, then the Marathi for personal.
 You'll want to know: सामान्य.
 सामान्य — sāmānya — "ordinary, common".
 
+The word, taken apart.
+सामान्य (sāmānya) is Sanskrit sāmānya, "equal, alike", taken over whole as a learned loan, a tatsama (CDIAL 13351). It is built on samāna, "same".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for personal, then the Marathi for ordinary.
 
 You'll want to know: खास.
 खास — khās — "special".
+
+The word, taken apart.
+खास (khās) is a loan from Arabic khāṣṣ, "particular, special", which reached Marathi through Persian. Its Arabic root is kh-ṣ-ṣ (Lane).
 
 What you've built.
 One more word for this chapter.

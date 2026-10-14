@@ -14,7 +14,8 @@ romanization: "śejār"
 concept_tag: MR-VASTU190-SEJAR
 prerequisites: [MR-C189-phayda, MR-C189-tota]
 sounds: []
-roots: []
+roots: [indo-aryan-sagrhya]
+etymology_hook: "śejār ← *sagṛhya 'neighbouring', a reconstructed form; a tadbhava (CDIAL 13077)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C189-tota]
 <!-- hl-knowledge: introduces=[MR-LEX-C190-VASTU190-01]; assesses=[] -->
 
 **शेजार** — *śejār* — "the neighbourhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शेजार** (*śejār*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*sagṛhya*, "neighbouring", a form CDIAL reconstructs from its descendants (CDIAL 13077). CDIAL glosses the Marathi word "neighbourhood, neighbours".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

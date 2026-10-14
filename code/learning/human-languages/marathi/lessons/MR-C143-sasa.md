@@ -14,7 +14,8 @@ romanization: "sasā"
 concept_tag: MR-THINGS143-SASA
 prerequisites: [MR-C143-magar, MR-C143-harin]
 sounds: []
-roots: []
+roots: [sanskrit-shasha]
+etymology_hook: "sasā ← Sanskrit śaśa 'hare', a tadbhava (CDIAL 12357)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C143-harin]
 <!-- hl-knowledge: introduces=[MR-LEX-C143-THINGS143-04]; assesses=[] -->
 
 **ससा** — *sasā* — "a rabbit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ससा** (*sasā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śaśa*, "hare" (CDIAL 12357).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

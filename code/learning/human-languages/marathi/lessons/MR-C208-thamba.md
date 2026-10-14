@@ -14,7 +14,8 @@ romanization: "thāmbā"
 concept_tag: MR-VASTU208-THAMBA
 prerequisites: [MR-C208-khau, MR-C208-baksis]
 sounds: []
-roots: []
+roots: [sanskrit-stambhate]
+etymology_hook: "thāmbā: from thāmbṇe 'to stop' ← stambhate 'supports, arrests' (CDIAL 13683)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C208-baksis]
 <!-- hl-knowledge: introduces=[MR-LEX-C208-VASTU208-05]; assesses=[] -->
 
 **थांबा** — *thāmbā* — "a stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थांबा** (*thāmbā*) is the noun of *thāṁbṇẽ*, "to stop", which comes from Sanskrit *stambhate*, "supports, arrests" (CDIAL 13683).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

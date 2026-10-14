@@ -14,7 +14,8 @@ romanization: "āt"
 concept_tag: MR-PLACE112-AT
 prerequisites: [MR-C111-vel, MR-C112-dur]
 sounds: []
-roots: []
+roots: [sanskrit-antar]
+etymology_hook: "āt ← Sanskrit antar 'inside', a tadbhava (CDIAL 356)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C112-dur]
 <!-- hl-knowledge: introduces=[MR-LEX-C112-PLACE112-02]; assesses=[] -->
 
 **आत** — *āt* — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आत** (*āt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *antar*, "inside" (CDIAL 356).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

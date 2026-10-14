@@ -894,6 +894,7 @@ fn a_host_that_never_becomes_ready_is_ended() {
         }
     };
     assert_eq!(error, ProcessSupervisorError::BootstrapTimeout);
+    // The host waits for a Ready it never sends, so it cannot exit 1 by itself.
     // Preserve the OS's exact killed-child status: Unix reports a signal
     // without a numeric code, while Windows Child::kill terminates with 1.
     // Neither outcome relaxes the timeout, reap, or no-process-ID checks.

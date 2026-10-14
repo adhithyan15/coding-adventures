@@ -14,7 +14,8 @@ romanization: "bāg"
 concept_tag: MR-LOC128-BAG
 prerequisites: [MR-C127-kopra, MR-C128-cauk]
 sounds: []
-roots: []
+roots: [persian-bagh]
+etymology_hook: "bāg: usually traced to Persian bāgh 'garden'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C128-cauk]
 <!-- hl-knowledge: introduces=[MR-LEX-C128-LOC128-02]; assesses=[] -->
 
 **बाग** — *bāg* — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाग** (*bāg*) is a loan, usually traced to Persian *bāgh*, "garden".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "māhitī"
 concept_tag: MR-VASTU191-MAHITI
 prerequisites: [MR-C191-hiseb, MR-C191-tapsil]
 sounds: []
-roots: []
+roots: [arabic-mahiyya]
+etymology_hook: "māhitī: built on māhīt 'known', often traced, through Persian, to Arabic māhiyya 'what a thing is'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C191-tapsil]
 <!-- hl-knowledge: introduces=[MR-LEX-C191-VASTU191-05]; assesses=[] -->
 
 **माहिती** — *māhitī* — "information".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माहिती** (*māhitī*) is built on Marathi *māhīt*, "known". *Māhīt* is often traced, through Persian, to Arabic *māhiyya*, "what a thing is, its nature", but no source here settles it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

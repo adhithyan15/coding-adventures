@@ -14,7 +14,8 @@ romanization: "paramparā"
 concept_tag: MR-VASTU237-PARAMPARA
 prerequisites: [MR-C236-araksan, MR-C236-khore]
 sounds: []
-roots: []
+roots: [sanskrit-parampara]
+etymology_hook: "paramparā: Sanskrit paramparā 'uninterrupted series', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C236-khore]
 <!-- hl-knowledge: introduces=[MR-LEX-C237-VASTU237-01]; assesses=[] -->
 
 **परंपरा** — *paramparā* — "a tradition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परंपरा** (*paramparā*) is Sanskrit *paramparā*, "an unbroken series", taken over whole, a tatsama. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

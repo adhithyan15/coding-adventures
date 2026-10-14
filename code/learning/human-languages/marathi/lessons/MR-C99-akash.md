@@ -14,7 +14,8 @@ romanization: "ākāsh"
 concept_tag: MR-NATURE99-AKASH
 prerequisites: [MR-C99-paus, MR-C99-vara]
 sounds: []
-roots: []
+roots: [sanskrit-akasha]
+etymology_hook: "ākāsh ← Sanskrit ākāśa 'sky', a tatsama (CDIAL 1008)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C99-vara]
 <!-- hl-knowledge: introduces=[MR-LEX-C99-NATURE99-03]; assesses=[] -->
 
 **आकाश** — *ākāsh* — "the sky".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आकाश** (*ākāsh*) is Sanskrit *ākāśa*, "sky", taken over whole as a learned loan, a tatsama (CDIAL 1008).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

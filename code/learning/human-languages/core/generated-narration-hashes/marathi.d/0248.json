@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 248,
-  "sourceHash": "fnv1a64:92d11e5fdd2c3a8e",
+  "sourceHash": "fnv1a64:46b602af55a9321d",
   "lessonIds": [
     "MR-C248-san",
     "MR-C248-miravnuk",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch248.txt",
   "json": "marathi/narration/ch248.json",
-  "textHash": "fnv1a64:770fd84968b91032",
-  "jsonHash": "fnv1a64:6b3babae381eba85",
+  "textHash": "fnv1a64:5f4b364f877f28f2",
+  "jsonHash": "fnv1a64:9722ed1633d3ff47",
   "findings": []
 }

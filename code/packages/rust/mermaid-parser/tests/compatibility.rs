@@ -2049,6 +2049,19 @@ fn swimlane_node_typography_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_node_corner_radii_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  rounded[Class rounded]\n  compact[Direct compact]\nend\nclassDef soft fill:#fef3c7,stroke:#b45309,rx:16px,ry:16px\nclass rounded soft\nstyle compact fill:#dcfce7,stroke:#166534,rx:4px,ry:4px\nrounded --> compact",
+    ).expect("Swimlane node corner radii should parse");
+
+    assert_eq!(diagram.nodes[0].style.corner_radius, Some(16.0));
+    assert_eq!(diagram.nodes[1].style.corner_radius, Some(4.0));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph A\n  one[One]\nend\nstyle one rx:4px,ry:8px"
+    ).is_err());
+}
+
+#[test]
 fn swimlane_named_classes_resolve_into_semantic_styles() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclass request accent\nclassDef default fill:#f8fafc,stroke:#64748b\nclassDef accent fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nstyle request fill:#dcfce7\nrequest --> done",
@@ -2328,6 +2341,24 @@ fn swimlane_edge_classes_and_styles_lower_to_semantic_ir() {
     assert_eq!(diagram.edges[1].style.stroke_width, Some(5.0));
     assert_eq!(diagram.edges[1].style.stroke_dash.as_deref(), Some([2.0, 2.0].as_slice()));
     assert_eq!(diagram.edges[1].style.text_color.as_deref(), Some("#065f46"));
+}
+
+#[test]
+fn swimlane_edge_label_typography_lowers_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@-- submit --> review release@-- release --> done\nclassDef urgent font-size:22px,font-weight:bold,font-style:italic,font-family:\"Helvetica Neue\",color:#7c2d12\nclass submit urgent\nstyle release font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d",
+    ).expect("Flowchart edge label typography should parse");
+
+    let submit = &diagram.edges[0].style;
+    assert_eq!(submit.font_size, Some(22.0));
+    assert_eq!(submit.font_weight, Some(700));
+    assert_eq!(submit.font_italic, Some(true));
+    assert_eq!(submit.font_family.as_deref(), Some("Helvetica Neue"));
+    let release = &diagram.edges[1].style;
+    assert_eq!(release.font_size, Some(18.0));
+    assert_eq!(release.font_weight, Some(500));
+    assert_eq!(release.font_italic, Some(false));
+    assert_eq!(release.font_family.as_deref(), Some("Helvetica"));
 }
 
 #[test]

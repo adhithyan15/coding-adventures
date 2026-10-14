@@ -15,6 +15,7 @@ concept_tag: MR-BHAV160-PUDHCA
 prerequisites: [MR-C160-bhavishya, MR-C160-lavkarac]
 sounds: []
 roots: []
+etymology_hook: "puḍhcā: puḍhe 'ahead' + the possessive -cā; the origin of puḍhe is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C160-lavkarac]
 <!-- hl-knowledge: introduces=[MR-LEX-C160-BHAV160-03]; assesses=[] -->
 
 **पुढचा / पुढची / पुढचे** — *puḍhcā / puḍhcī / puḍhce* — "next". It agrees with its noun: **पुढच्या आठवड्यात** — *puḍhcyā āṭhavḍyāt* — "next week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पुढचा** (*puḍhcā*) is **पुढे**, "ahead", with the possessive ending *-cā*, "of". The origin of **पुढे** is not settled: neither CDIAL nor DEDR has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khokṇe"
 concept_tag: MR-VERB-KHOKNE
 prerequisites: [MR-C197-pocavne, MR-C198-dabne]
 sounds: []
-roots: []
+roots: [indo-aryan-khokkh]
+etymology_hook: "khokṇe ← *khokkh 'bark, cough', a reconstructed form; a tadbhava (CDIAL 3926)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C198-dabne]
 <!-- hl-knowledge: introduces=[MR-LEX-C198-ACT198-02]; assesses=[] -->
 
 **खोकणे** — *khokṇe* — "to cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खोकणे** (*khokṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khokkh*, "bark, cough", a form CDIAL reconstructs from its descendants (CDIAL 3926).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

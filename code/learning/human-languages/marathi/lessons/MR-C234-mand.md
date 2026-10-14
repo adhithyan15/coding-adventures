@@ -14,7 +14,8 @@ romanization: "mand"
 concept_tag: MR-GUN234-MAND
 prerequisites: [MR-C234-ghanerda, MR-C234-bharlela]
 sounds: []
-roots: []
+roots: [sanskrit-manda]
+etymology_hook: "mand ← Sanskrit manda 'slow, weak'; CDIAL lists Marathi mand 'slow, stupid' under it (CDIAL 9754)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C234-bharlela]
 <!-- hl-knowledge: introduces=[MR-LEX-C234-GUN234-05]; assesses=[] -->
 
 **मंद** — *mand* — "slow, dim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मंद** (*mand*) is Sanskrit *manda*, "slow, weak, dull". CDIAL lists Marathi *mand*, "slow, stupid", under it, in its "defective" word group *\*matthara* (CDIAL 9754).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "citrapaṭ"
 concept_tag: MR-VASTU275-CITRAPAT
 prerequisites: [MR-C275-kode, MR-C275-natak]
 sounds: []
-roots: []
+roots: [sanskrit-citra, sanskrit-pata-cloth]
+etymology_hook: "citrapaṭ: Sanskrit citra 'picture' (CDIAL 4803) + paṭa 'cloth, screen'; a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C275-natak]
 <!-- hl-knowledge: introduces=[MR-LEX-C275-VASTU275-03]; assesses=[] -->
 
 **चित्रपट** — *citrapaṭ* — "a film".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चित्रपट** (*citrapaṭ*) is a modern compound of Sanskrit parts: *citra*, "picture" (CDIAL 4803), and *paṭa*, "cloth, screen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

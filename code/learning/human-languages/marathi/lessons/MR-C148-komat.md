@@ -14,7 +14,8 @@ romanization: "komaṭ"
 concept_tag: MR-QUAL148-KOMAT
 prerequisites: [MR-C148-mau, MR-C148-kadak]
 sounds: []
-roots: []
+roots: [indo-aryan-koshma]
+etymology_hook: "komaṭ ← *koṣma 'warm', a reconstructed form; a tadbhava (CDIAL 3552)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C148-kadak]
 <!-- hl-knowledge: introduces=[MR-LEX-C148-QUAL148-04]; assesses=[] -->
 
 **कोमट** — *komaṭ* — "lukewarm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोमट** (*komaṭ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*koṣma*, "warm", a form CDIAL reconstructs from its descendants (CDIAL 3552). CDIAL compares Sanskrit *koṣṇa*, "warm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

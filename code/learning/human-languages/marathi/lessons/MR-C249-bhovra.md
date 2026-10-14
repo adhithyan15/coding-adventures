@@ -14,7 +14,8 @@ romanization: "bhovrā"
 concept_tag: MR-VASTU249-BHOVRA
 prerequisites: [MR-C249-bahuli, MR-C249-patang]
 sounds: []
-roots: []
+roots: [sanskrit-bhramara]
+etymology_hook: "bhovrā ← Sanskrit bhramara 'moving unsteadily, revolving; spinning top', a tadbhava (CDIAL 9650)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C249-patang]
 <!-- hl-knowledge: introduces=[MR-LEX-C249-VASTU249-05]; assesses=[] -->
 
 **भोवरा** — *bhovrā* — "a spinning top".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भोवरा** (*bhovrā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhramara*, "moving unsteadily, revolving; spinning top" (CDIAL 9650). CDIAL glosses the Marathi word "whorl of hair".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

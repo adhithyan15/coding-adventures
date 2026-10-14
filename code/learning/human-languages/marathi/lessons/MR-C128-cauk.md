@@ -14,7 +14,8 @@ romanization: "cauk"
 concept_tag: MR-LOC128-CAUK
 prerequisites: [MR-C127-valan, MR-C127-kopra, MR-C69-dem-system, MR-C69-dem-system]
 sounds: []
-roots: []
+roots: [sanskrit-catushka]
+etymology_hook: "cauk ← Sanskrit catuṣka 'set of four; quadrangular courtyard', a tadbhava (CDIAL 4629)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [MR-C127-kopra]
 <!-- hl-knowledge: introduces=[MR-LEX-C128-LOC128-01]; assesses=[] -->
 
 **चौक** — *cauk* — "a square, a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चौक** (*cauk*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *catuṣka*, "set of four; quadrangular courtyard" (CDIAL 4629). It is built on *catur*, "four".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

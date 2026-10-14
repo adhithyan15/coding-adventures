@@ -14,7 +14,8 @@ romanization: "mahattvācā"
 concept_tag: MR-GUN234-MAHATTVACA
 prerequisites: [MR-C233-vaktasir, MR-C233-sahansil]
 sounds: []
-roots: []
+roots: [sanskrit-mahattva]
+etymology_hook: "mahattvācā: Sanskrit mahattva 'greatness' + -ācā 'of'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C233-sahansil]
 <!-- hl-knowledge: introduces=[MR-LEX-C234-GUN234-01]; assesses=[] -->
 
 **महत्त्वाचा** — *mahattvācā* — "important".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**महत्त्वाचा** (*mahattvācā*) is Sanskrit *mahattva*, "greatness", with **-चा**, "of": "of greatness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -6842,6 +6842,8 @@ fn parse_swimlane_edge_curve(value: &str, line: usize) -> Result<SwimlaneEdgeCur
 
 fn parse_swimlane_style_declarations(value: &str, line: usize) -> Result<DiagramStyle, ParseError> {
     let mut style = DiagramStyle::default();
+    let mut corner_radius_x = None;
+    let mut corner_radius_y = None;
     for declaration in split_style_declarations(value) {
         let (property, value) = declaration.split_once(':').ok_or_else(|| {
             swimlane_error(line, format!("invalid Swimlane style {declaration:?}"))
@@ -6879,9 +6881,18 @@ fn parse_swimlane_style_declarations(value: &str, line: usize) -> Result<Diagram
                 }
                 style.font_family = Some(value.into());
             }
+            "rx" => corner_radius_x = Some(parse_swimlane_style_number(value, line)?),
+            "ry" => corner_radius_y = Some(parse_swimlane_style_number(value, line)?),
             property => return Err(swimlane_error(line, format!("unsupported Swimlane style property {property:?}"))),
         }
     }
+    style.corner_radius = match (corner_radius_x, corner_radius_y) {
+        (Some(x), Some(y)) if (x - y).abs() > f64::EPSILON => {
+            return Err(swimlane_error(line, "Swimlane rx and ry must match for backend-neutral corners"));
+        }
+        (Some(radius), _) | (_, Some(radius)) => Some(radius),
+        (None, None) => None,
+    };
     Ok(style)
 }
 
@@ -10192,6 +10203,9 @@ fn merge_state_style(target: &mut DiagramStyle, source: &DiagramStyle) {
     }
     if source.font_family.is_some() {
         target.font_family.clone_from(&source.font_family);
+    }
+    if source.corner_radius.is_some() {
+        target.corner_radius = source.corner_radius;
     }
 }
 

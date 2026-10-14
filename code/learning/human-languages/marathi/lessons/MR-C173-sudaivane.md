@@ -14,7 +14,8 @@ romanization: "sudaivāne"
 concept_tag: MR-KARAN173-SUDAIVANE
 prerequisites: [MR-C173-asunhi, MR-C173-durdaivane]
 sounds: []
-roots: []
+roots: [sanskrit-sudaiva]
+etymology_hook: "sudaivāne: Sanskrit sudaiva 'good luck' + the 'by' ending -ne"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C173-durdaivane]
 <!-- hl-knowledge: introduces=[MR-LEX-C173-KARAN173-05]; assesses=[] -->
 
 **सुदैवाने** — *sudaivāne* — "luckily".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुदैवाने** (*sudaivāne*) is Sanskrit *sudaiva*, "good luck": *su-*, "good", and *daiva*, "fate", with the ending **-ने**, "by".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 224,
-  "sourceHash": "fnv1a64:85c7c77b33ef647c",
+  "sourceHash": "fnv1a64:a79b46754ef61a19",
   "lessonIds": [
     "MR-C224-mhatare-hone",
     "MR-C224-ghatasphot-ghene",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch224.txt",
   "json": "marathi/narration/ch224.json",
-  "textHash": "fnv1a64:f7340f4a684d18f1",
-  "jsonHash": "fnv1a64:0a86e64ff39d5193",
+  "textHash": "fnv1a64:9a4e4b4e917636d2",
+  "jsonHash": "fnv1a64:984bf0ec88b8cc63",
   "findings": []
 }

@@ -15,6 +15,7 @@ concept_tag: MR-VERB-GATHNE
 prerequisites: [MR-C198-svagat-karne, MR-C199-cikatavne]
 sounds: []
 roots: []
+etymology_hook: "gāṭhṇe 'to reach, catch up with': origin not settled; CDIAL has no entry in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C199-cikatavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C199-ACT199-02]; assesses=[] -->
 
 **गाठणे** — *gāṭhṇe* — "to reach, to catch up with".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **गाठणे** (*gāṭhṇe*) is not settled. CDIAL has no entry for it in this sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

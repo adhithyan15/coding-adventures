@@ -15,6 +15,7 @@ concept_tag: MR-FOOD88-SANTRE
 prerequisites: [MR-C87-tel, MR-C87-drakse]
 sounds: []
 roots: []
+etymology_hook: "santre: origin uncertain; often linked with Cintra (Sintra) in Portugal; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C87-drakse]
 <!-- hl-knowledge: introduces=[MR-LEX-C88-FOOD88-01]; assesses=[] -->
 
 **संत्रे** — *santre* — "an orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **संत्रे** (*santre*) is uncertain. It is often linked with the town of Cintra (Sintra) in Portugal, but CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

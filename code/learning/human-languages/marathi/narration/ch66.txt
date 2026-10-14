@@ -14,14 +14,15 @@ That is a question with one answer. This chapter widens the answer.
 
 You'll want to know: सकाळ.
 सकाळ — sakāḷ — morning.
-The last letter is ळ, the retroflex l you first read in काळजी घ्या. Marathi keeps it where standard Hindi does not — so if you come to Marathi from Hindi, this letter is new, and it is worth slowing down on rather than reading as an ordinary ल.
+The last letter is ळ, the retroflex l you first read in काळजी घ्या. Standard Hindi lacks it, so do not read it as an ordinary ल.
+Where सकाळ (sakāḷ) comes from is not settled. CDIAL has Sanskrit sakāla, "early in the morning" (13067), but lists no Marathi form there.
 
 Grammar Lens: the ending that means "at that time".
 सकाळ (sakāḷ) is the morning as a thing. To put an event in it, add -ी:
 [a table of 1 row, read aloud]
 the part of the day: सकाळ sakāḷ. at that time: सकाळी sakāḷī.
 मी सकाळी येतो. — mī sakāḷī yeto. — I come in the morning.
-Notice where सकाळी sits: early, before the verb, in the same slot उद्या and कधी take. A Marathi time word fronts the verb, and this one is no exception.
+Notice where सकाळी sits: early, before the verb, in the same slot उद्या and कधी take. A Marathi time word fronts the verb.
 English needs two words for that slot — in the morning. Marathi needs one letter.
 
 Guided Practice.
@@ -52,6 +53,9 @@ You'll want to know: दुपार.
 दुपार — dupār — afternoon, the middle of the day.
 It is the stretch after the morning and before the evening — the middle of the day, when the sun is highest.
 मी दुपारी येतो. — mī dupārī yeto. — I come in the afternoon.
+
+The word, taken apart.
+दुपार (dupār) is usually explained as "two watches", du- and pahār, "a watch of three hours"; CDIAL asks whether Sanskrit prahara renders Persian pahra (CDIAL 8900).
 
 Grammar Lens: the ending holds.
 You were shown -ी on one word. Here it is on a second, doing the same job:
@@ -96,6 +100,9 @@ It is the longest word in this chapter, and you have already read half of it. Lo
 The morning and the evening end in the same piece — काळ. Once you see that, संध्याकाळ (sandhyākāḷ) stops being a long new word and becomes a short new piece — संध्या — in front of one you can already read.
 That is worth doing to any long word in this language before deciding it is hard: look for the part of it you have met.
 
+The word, taken apart.
+संध्याकाळ (sandhyākāḷ) is Sanskrit sandhyā, "twilight" (CDIAL 12918), and kāḷ, "time", from kāla (CDIAL 3084).
+
 Grammar Lens: third time, same ending.
 मी संध्याकाळी येतो. — mī sandhyākāḷī yeto. — I come in the evening.
 [a table of 3 rows, read aloud]
@@ -136,6 +143,9 @@ You'll want to know: रात्र.
 The word ends on त्र, a त and a र written as one joined shape. You have read that join before; here it closes the word rather than opening it, so give it its full value — rā-tra, not rāt.
 मी रात्री येतो. — mī rātrī yeto. — I come at night.
 
+The word, taken apart.
+रात्र (rātra) is Sanskrit rātri, "night", lightly reshaped; the inherited form is rāt (CDIAL 10702).
+
 Grammar Lens: four for four, and what English does instead.
 [a table of 4 rows, read aloud]
 the part of the day: सकाळ (sakāḷ). at that time: सकाळी.
@@ -175,6 +185,9 @@ Four parts, four at-that-time words. Say them. Then ask yourself what the four o
 You'll want to know: दिवस.
 दिवस — divas — day.
 Not a fifth part. The whole that holds the other four — the morning, the afternoon, the evening and the night are stretches of a दिवस (divas).
+
+The word, taken apart.
+दिवस (divas) is inherited, almost unchanged, from Sanskrit divasa, "heaven", later "day" (CDIAL 6333).
 
 Grammar Lens: the one that will not take -ी.
 Four words took -ी without complaint. This one does not:

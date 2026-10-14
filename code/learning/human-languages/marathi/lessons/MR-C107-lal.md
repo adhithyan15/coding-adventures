@@ -14,7 +14,8 @@ romanization: "lāl"
 concept_tag: MR-ADJ107-LAL
 prerequisites: [MR-C107-hirva, MR-C107-pivla]
 sounds: []
-roots: []
+roots: [persian-lal]
+etymology_hook: "lāl: usually traced to Persian lāl 'red'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C107-pivla]
 <!-- hl-knowledge: introduces=[MR-LEX-C107-ADJ107-04]; assesses=[] -->
 
 **लाल** — *lāl* — "red".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लाल** (*lāl*) is a loan, usually traced to Persian *lāl*, "red". The Persian word is usually tied to *laʿl*, "a ruby".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

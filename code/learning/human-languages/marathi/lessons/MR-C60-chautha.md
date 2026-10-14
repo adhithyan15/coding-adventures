@@ -14,7 +14,7 @@ sounds: [matra-au]
 roots: [sanskrit-caturtha]
 etymology_hook: "Molesworth marks चौथा with a bare '(चतुर्थ S)' -- straight from the Sanskrit fourth, which is why चार is only half visible in it"
 duration:
-  max_seconds: 220
+  max_seconds: 235
 requires:
   knowledge: [MR-LEX-PAHILA, MR-LEX-TISRA, MR-LEX-DUSRA, MR-GRAMMAR-ORDINAL-SET, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-AU-MATRA-01, MR-LEX-RUPAYA, MR-LEX-BARA, MR-GRAMMAR-OBLIQUE]
 introduces:
@@ -65,8 +65,8 @@ The chapter's four words, laid out against their numbers:
 | **तीन** | **तिसरा** | **-सरा** |
 | **चार** | **चौथा** | **-था** |
 
-Three different shapes across four words. Marathi did not build these; it
-**inherited** them, each one worn down separately over centuries — Molesworth
+Three different shapes across four words. No rule made these; each was
+**inherited** and worn down separately over centuries — Molesworth
 records **चौथा** as coming straight from Sanskrit **चतुर्थ**.
 
 So do not look for a rule here. **There is none, and this book will not invent
@@ -88,6 +88,6 @@ and you now have all four.
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-CHAUTHA, MR-GRAMMAR-ORDINAL-SET] -->
 
 [PAUSE 3s] How many of these four can you predict from the number? (**None** —
-they are inherited, not built.) How many are there in all? (**Four.**)
+each has its own shape.) How many are there in all? (**Four.**)
 
 Sources: [Molesworth, *A Dictionary, Marathi and English*, p. 296 (DSAL)](https://dsal.uchicago.edu/cgi-bin/app/molesworth_query.py?qs=%E0%A4%9A%E0%A5%8C%E0%A4%A5%E0%A4%BE&searchhws=yes); [Omniglot: Numbers in Marathi](https://www.omniglot.com/language/numbers/marathi.htm).

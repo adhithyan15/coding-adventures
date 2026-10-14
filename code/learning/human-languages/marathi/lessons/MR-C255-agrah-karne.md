@@ -14,7 +14,8 @@ romanization: "āgrah karṇe"
 concept_tag: MR-VERB-AGRAH-KARNE
 prerequisites: [MR-C254-sahan-karne, MR-C254-svapna-pahne]
 sounds: []
-roots: []
+roots: [sanskrit-agraha, sanskrit-karoti]
+etymology_hook: "āgrah: Sanskrit āgraha 'seizing, insistence', a tatsama; karṇe ← karoti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C254-svapna-pahne]
 <!-- hl-knowledge: introduces=[MR-LEX-C255-ACT255-01]; assesses=[] -->
 
 **आग्रह करणे** — *āgrah karṇe* — "to insist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आग्रह** is Sanskrit *āgraha*, "seizing; insistence", a tatsama built on *grah*, "to seize". **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

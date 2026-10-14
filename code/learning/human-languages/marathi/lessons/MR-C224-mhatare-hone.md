@@ -14,7 +14,8 @@ romanization: "mhātāre hoṇe"
 concept_tag: MR-VERB-MHATARE-HONE
 prerequisites: [MR-C223-bhasantar-karne, MR-C223-nirnay-ghene]
 sounds: []
-roots: []
+roots: [sanskrit-mahattara, sanskrit-bhavati]
+etymology_hook: "mhātāre: from mhātārā 'old' ← mahattara 'greater; village eldest' (CDIAL 9932); hoṇe ← bhavati"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C223-nirnay-ghene]
 <!-- hl-knowledge: introduces=[MR-LEX-C224-ACT224-01]; assesses=[] -->
 
 **म्हातारे होणे** — *mhātāre hoṇe* — "to grow old".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**म्हातारे** is a form of *mhātārā*, "old", which CDIAL lists under Sanskrit *mahattara*, "greater; village eldest" (CDIAL 9932). **होणे** comes from Sanskrit *bhavati*, "becomes, is" (CDIAL 9416).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

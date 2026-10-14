@@ -14,7 +14,8 @@ romanization: "dābṇe"
 concept_tag: MR-VERB-DABNE
 prerequisites: [MR-C197-gappa-marne, MR-C197-pocavne]
 sounds: []
-roots: []
+roots: [indo-aryan-dabb]
+etymology_hook: "dābṇe ← *dabb 'press', which CDIAL reports A. Master took from Dravidian (CDIAL 6173)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C197-pocavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C198-ACT198-01]; assesses=[] -->
 
 **दाबणे** — *dābṇe* — "to press".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दाबणे** (*dābṇe*) comes from a reconstructed *\*dabb-*, "press" (CDIAL 6173). CDIAL reports A. Master's view that it comes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

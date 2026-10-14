@@ -14,7 +14,8 @@ romanization: "upkār"
 concept_tag: MR-VASTU189-UPKAR
 prerequisites: [MR-C188-madhmasi, MR-C189-dhoka]
 sounds: []
-roots: []
+roots: [sanskrit-upakara]
+etymology_hook: "upkār ← Sanskrit upakāra 'help, use', a tatsama (CDIAL 2141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C189-dhoka]
 <!-- hl-knowledge: introduces=[MR-LEX-C189-VASTU189-02]; assesses=[] -->
 
 **उपकार** — *upkār* — "a favour, a kindness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उपकार** (*upkār*) is Sanskrit *upakāra*, "help, use", taken over whole as a learned loan, a tatsama (CDIAL 2141). It is built on *kṛ*, "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

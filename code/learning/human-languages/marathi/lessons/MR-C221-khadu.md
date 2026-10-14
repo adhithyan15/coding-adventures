@@ -14,7 +14,8 @@ romanization: "khaḍū"
 concept_tag: MR-VASTU221-KHADU
 prerequisites: [MR-C221-ahval, MR-C221-visay]
 sounds: []
-roots: []
+roots: [sanskrit-khatika]
+etymology_hook: "khaḍū ← Sanskrit khaṭikā 'chalk', a tadbhava (CDIAL 3773)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C221-visay]
 <!-- hl-knowledge: introduces=[MR-LEX-C221-VASTU221-03]; assesses=[] -->
 
 **खडू** — *khaḍū* — "chalk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खडू** (*khaḍū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khaṭikā*, "chalk" (CDIAL 3773). CDIAL glosses the Marathi word "a kind of pipeclay".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

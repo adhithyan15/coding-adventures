@@ -141,6 +141,6 @@ describe("Sanskrit A2 timed mock source pair", () => {
     expect(normalized).toContain("independent human review");
     expect(normalized).toContain("standard setting");
     expect(normalized).toContain("book-only validation");
-    expect(normalized).toContain("`assessment.json` remains absent");
+    expect(normalized).toContain("`assessment.json` is active as a source-artifact contract");
   });
 });

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 208,
-  "sourceHash": "fnv1a64:2690ca9f066810d2",
+  "sourceHash": "fnv1a64:a701292a8e8b660b",
   "lessonIds": [
     "MR-C208-aramkhurci",
     "MR-C208-batan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch208.txt",
   "json": "marathi/narration/ch208.json",
-  "textHash": "fnv1a64:97bd1336b93c77fb",
-  "jsonHash": "fnv1a64:b5f59171c844f8ad",
+  "textHash": "fnv1a64:0078c99a3a35a0f4",
+  "jsonHash": "fnv1a64:d432177b40388355",
   "findings": []
 }

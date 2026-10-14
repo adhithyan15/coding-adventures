@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 205,
-  "sourceHash": "fnv1a64:1fb35c6ba415bc6a",
+  "sourceHash": "fnv1a64:02bb8b5007ec6c3e",
   "lessonIds": [
     "MR-C205-mophat",
     "MR-C205-adhunik",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch205.txt",
   "json": "marathi/narration/ch205.json",
-  "textHash": "fnv1a64:debdb88b0fe7012d",
-  "jsonHash": "fnv1a64:9e5b9914d651ac77",
+  "textHash": "fnv1a64:32597645df19a80a",
+  "jsonHash": "fnv1a64:4e4822887b0788d1",
   "findings": []
 }

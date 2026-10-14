@@ -14,7 +14,8 @@ romanization: "parvāngī"
 concept_tag: MR-VASTU265-PARVANGI
 prerequisites: [MR-C264-sasre, MR-C264-javai]
 sounds: []
-roots: []
+roots: [persian-parwanagi]
+etymology_hook: "parvāngī: usually traced to Persian parwānagī 'permission'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C264-javai]
 <!-- hl-knowledge: introduces=[MR-LEX-C265-VASTU265-01]; assesses=[] -->
 
 **परवानगी** — *parvāngī* — "permission".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परवानगी** (*parvāngī*) is a loan, usually traced to Persian *parwānagī*, "permission", built on *parwāna*, "an order, a licence".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

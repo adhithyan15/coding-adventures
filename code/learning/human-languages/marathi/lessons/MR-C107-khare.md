@@ -14,7 +14,8 @@ romanization: "khare"
 concept_tag: MR-ADJ107-KHARE
 prerequisites: [MR-C106-barik, MR-C106-halka]
 sounds: []
-roots: []
+roots: [sanskrit-khara]
+etymology_hook: "khare: with kharā 'pure, good, firm' ← Sanskrit khara 'hard, sharp' (CDIAL 3819)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C106-halka]
 <!-- hl-knowledge: introduces=[MR-LEX-C107-ADJ107-01]; assesses=[] -->
 
 **खरे** — *khare* — "true".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खरे** (*khare*) is a form of Marathi *kharā*, "pure, good, firm", which CDIAL lists under Sanskrit *khara*, "hard, sharp; solid" (CDIAL 3819).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

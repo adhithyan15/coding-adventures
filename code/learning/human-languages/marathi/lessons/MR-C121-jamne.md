@@ -14,7 +14,8 @@ romanization: "jamṇe"
 concept_tag: MR-VERB-JAMNE
 prerequisites: [MR-C120-gosta, MR-C121-sakne]
 sounds: []
-roots: []
+roots: [sanskrit-yamyate]
+etymology_hook: "jamṇe ← Sanskrit yamyate 'is fixed', a tadbhava (CDIAL 10428)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C121-sakne]
 <!-- hl-knowledge: introduces=[MR-LEX-C121-CAN121-02]; assesses=[] -->
 
 **जमणे** — *jamṇe* — "to manage to, to come off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जमणे** (*jamṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *yamyate*, "is fixed" (CDIAL 10428). CDIAL glosses the Marathi verb "to collect, coagulate, freeze".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

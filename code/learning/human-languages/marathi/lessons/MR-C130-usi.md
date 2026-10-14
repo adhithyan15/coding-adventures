@@ -14,7 +14,8 @@ romanization: "uśī"
 concept_tag: MR-LOC130-USI
 prerequisites: [MR-C130-angan, MR-C130-darvaja]
 sounds: []
-roots: []
+roots: [indo-aryan-utshirsha]
+etymology_hook: "uśī: CDIAL lists it under *ut-śīrṣa 'pillow' (CDIAL 1853) and under ōpaśa 'cushion, pillow' (CDIAL 2555)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C130-darvaja]
 <!-- hl-knowledge: introduces=[MR-LEX-C130-LOC130-03]; assesses=[] -->
 
 **उशी** — *uśī* — "a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **उशी** (*uśī*) twice: under *ucchīrṣaka*, "pillow", built on *śīrṣa*, "head" (CDIAL 1853), and under Sanskrit *ōpaśa*, "cushion, pillow" (CDIAL 2555), without choosing between them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

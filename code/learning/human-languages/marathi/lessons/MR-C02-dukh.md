@@ -14,7 +14,8 @@ gloss: "sorrow, grief"
 concept_tag: MR-ANCHOR-DUKH
 prerequisites: [MR-C01-dhanyavad]
 sounds: []
-roots: []
+roots: [sanskrit-duhkha]
+etymology_hook: "duḥkh ← Sanskrit duḥkha 'difficulty, pain', a tatsama; CDIAL lists the spoken Marathi dukh (CDIAL 6375)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **दुःख** — *duḥkh* — "sorrow, grief".
 
 Say it: *duḥkh*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ः**, **ु** and **ख**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुःख** (*duḥkh*) is Sanskrit *duḥkha*, "difficulty, pain", kept with its Sanskrit spelling, a tatsama. CDIAL lists the everyday Marathi form as *dukh*, "sorrow, pain", and notes that *duḥkha* was formed after *sukha*, "ease" (CDIAL 6375).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-DUKH] -->

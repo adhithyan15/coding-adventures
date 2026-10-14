@@ -14,7 +14,8 @@ gloss: "a lunch box"
 concept_tag: MR-ANCHOR-DABA
 prerequisites: [MR-C07-thaam]
 sounds: []
-roots: []
+roots: [indo-aryan-dabba]
+etymology_hook: "ḍabā ← *ḍabba 'box', which CDIAL calls non-Aryan, from Dravidian after A. Master (CDIAL 5528)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **डबा** — *ḍabā* — "a lunch box".
 
 Say it: *ḍabā*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ड**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डबा** (*ḍabā*) goes back to a reconstructed *\*ḍabba*, "box"; CDIAL lists Marathi *ḍabbā*, "box". It says the word is of non-Aryan origin, from Dravidian according to A. Master (CDIAL 5528).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-DABA] -->

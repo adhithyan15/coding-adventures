@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 245,
-  "sourceHash": "fnv1a64:6bab910badc5b47b",
+  "sourceHash": "fnv1a64:73a5d0168b62dcb5",
   "lessonIds": [
     "MR-C245-mala2",
     "MR-C245-gotha",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch245.txt",
   "json": "marathi/narration/ch245.json",
-  "textHash": "fnv1a64:0282c32a5a7f3693",
-  "jsonHash": "fnv1a64:5d3bca4d4ab657d3",
+  "textHash": "fnv1a64:426a030778b2d12d",
+  "jsonHash": "fnv1a64:90dc30ca4516e284",
   "findings": []
 }

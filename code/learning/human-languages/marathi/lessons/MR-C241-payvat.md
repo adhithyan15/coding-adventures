@@ -14,7 +14,8 @@ romanization: "pāyvāṭ"
 concept_tag: MR-VASTU241-PAYVAT
 prerequisites: [MR-C241-khod, MR-C241-hirval]
 sounds: []
-roots: []
+roots: [sanskrit-pada, sanskrit-vartman]
+etymology_hook: "pāyvāṭ: pāy 'foot' ← pāda (CDIAL 8056) + vāṭ 'path' ← vartman (CDIAL 11366)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C241-hirval]
 <!-- hl-knowledge: introduces=[MR-LEX-C241-VASTU241-05]; assesses=[] -->
 
 **पायवाट** — *pāyvāṭ* — "a footpath".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पायवाट** (*pāyvāṭ*) is "foot-path": *pāy*, "foot", from Sanskrit *pāda* (CDIAL 8056), and *vāṭ*, "path", from Sanskrit *vartman*, "track of a wheel, path" (CDIAL 11366).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

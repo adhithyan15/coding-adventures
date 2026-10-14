@@ -14,7 +14,8 @@ romanization: "divā"
 concept_tag: MR-HOME91-DIVA
 prerequisites: [MR-C91-jina, MR-C91-arsa]
 sounds: []
-roots: []
+roots: [sanskrit-dipa]
+etymology_hook: "divā ← Sanskrit dīpa 'lamp', a tadbhava (CDIAL 6348)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C91-arsa]
 <!-- hl-knowledge: introduces=[MR-LEX-C91-HOME91-03]; assesses=[] -->
 
 **दिवा** — *divā* — "a lamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दिवा** (*divā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dīpa*, "lamp" (CDIAL 6348).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

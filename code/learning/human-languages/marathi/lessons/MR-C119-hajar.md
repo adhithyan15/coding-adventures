@@ -14,7 +14,8 @@ romanization: "hajār"
 concept_tag: MR-NUMBERS119-HAJAR
 prerequisites: [MR-C118-navvad, MR-C119-shambhar]
 sounds: []
-roots: []
+roots: [persian-hazar]
+etymology_hook: "hajār: usually traced to Persian hazār 'thousand'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C119-shambhar]
 <!-- hl-knowledge: introduces=[MR-LEX-C119-NUMBERS119-02]; assesses=[] -->
 
 **हजार** — *hajār* — "a thousand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हजार** (*hajār*) is a loan, usually traced to Persian *hazār*, "thousand". Marathi writes the *z* as **ज**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

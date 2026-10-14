@@ -1146,11 +1146,14 @@ decoding. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
 decorators cover fill, stroke, text color, stroke width, dash patterns, font family, font size,
 weight, and italic/oblique style. Typography survives semantic IR, informs node width, and lowers
-to backend-neutral glyph runs. URL
+to backend-neutral glyph runs. Matching SVG `rx` and `ry` node styles survive semantic and layout IR
+and lower to backend-neutral rectangle corner radii; unequal elliptical radii remain unsupported. URL
 clicks, tooltips, standard browser link targets, explicit `call` callback
 actions, and legacy callback aliases survive as scene metadata. Flowchart edge identifiers
 survive semantic IR, layout, and scene metadata; named classes and direct styles for identified
 edges resolve stroke color, width, dash patterns, and label color into backend-neutral paint.
+Edge label font family, size, weight, and italic or oblique style also survive semantic and layout IR
+and lower to backend-neutral glyph runs for both class-based and direct identified-edge styles.
 Positional `linkStyle` directives accept `default` or comma-separated edge indices and resolve
 into the same backend-neutral edge style fields. Their `interpolate` form applies supported curve
 modes by position through semantic and layout IR to portable path instructions.

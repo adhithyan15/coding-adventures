@@ -12,8 +12,9 @@ concept_tag: RESPONSE-YES
 prerequisites: [MR-W03-dhanyavad-write]
 sounds: [o-matra]
 roots: []
+etymology_hook: "ho: origin not settled; CDIAL lists a Marathi ho, with no gloss, under Sanskrit ho, a cry of summons (CDIAL 14172)"
 duration:
-  max_seconds: 120
+  max_seconds: 144
 requires:
   knowledge: [MR-LEX-NAMASKAR-01, MR-LEX-DHANYAVAD-01, MR-SCRIPT-DHANYAVAD-WRITE-01, MR-SCRIPT-DA-01, MR-SCRIPT-DHA-01, MR-SCRIPT-BA-01]
 introduces:
@@ -48,7 +49,7 @@ reviews_of: [MR-C01-namaskar, MR-C01-dhanyavad]
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-HO-01] -->
 
 **हो** (*ho*, "yes") is Marathi's plain affirmative — distinct from Hindi's
-*hāṁ*. Marathi builds its own everyday words on shared Indo-Aryan roots. The
+*hāṁ*. Its origin is not settled; CDIAL lists an unglossed Marathi *ho* under Sanskrit *ho*, a cry of summons (CDIAL 14172). The
 polite, fuller "yes" is *ho, baraṃ āhe* ("yes, it's fine").
 
 ## Guided Practice

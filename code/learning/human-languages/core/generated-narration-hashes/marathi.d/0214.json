@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 214,
-  "sourceHash": "fnv1a64:cf92e6f11d83f1e6",
+  "sourceHash": "fnv1a64:9941af184becdd22",
   "lessonIds": [
     "MR-C214-urja",
     "MR-C214-plastik",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch214.txt",
   "json": "marathi/narration/ch214.json",
-  "textHash": "fnv1a64:bda09cd2a7aec699",
-  "jsonHash": "fnv1a64:b90b2baa7e7ff1e6",
+  "textHash": "fnv1a64:c23009cfebf6c5cb",
+  "jsonHash": "fnv1a64:358e648dbe21bf8a",
   "findings": []
 }

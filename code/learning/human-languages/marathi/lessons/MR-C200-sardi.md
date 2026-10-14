@@ -14,7 +14,8 @@ romanization: "sardī"
 concept_tag: MR-AAROGYA200-SARDI
 prerequisites: [MR-C200-jakham, MR-C200-vran]
 sounds: []
-roots: []
+roots: [middle-persian-sard]
+etymology_hook: "sardī: usually traced to Persian sardī 'coldness', from sard 'cold'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C200-vran]
 <!-- hl-knowledge: introduces=[MR-LEX-C200-AAROGYA200-04]; assesses=[] -->
 
 **सर्दी** — *sardī* — "a head cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सर्दी** (*sardī*) is a loan, usually traced to Persian *sardī*, "coldness", built on *sard*, "cold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

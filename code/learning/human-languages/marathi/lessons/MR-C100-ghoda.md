@@ -14,7 +14,8 @@ romanization: "ghoḍā"
 concept_tag: MR-ANIMALS100-GHODA
 prerequisites: [MR-C99-kutra, MR-C99-manjar]
 sounds: []
-roots: []
+roots: [sanskrit-ghotaka]
+etymology_hook: "ghoḍā ← Sanskrit ghoṭa 'horse', which CDIAL calls non-Aryan, probably Dravidian (CDIAL 4516)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C99-manjar]
 <!-- hl-knowledge: introduces=[MR-LEX-C100-ANIMALS100-01]; assesses=[] -->
 
 **घोडा** — *ghoḍā* — "a horse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घोडा** (*ghoḍā*) is a tadbhava of Sanskrit *ghoṭa*, "horse" (CDIAL 4516). CDIAL calls the Sanskrit word non-Aryan, probably from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dhūmrapān karṇe"
 concept_tag: MR-VERB-DHUMRAPAN-KARNE
 prerequisites: [MR-C252-ragavne, MR-C252-kalji-karne]
 sounds: []
-roots: []
+roots: [sanskrit-dhumra, sanskrit-pana, sanskrit-karoti]
+etymology_hook: "dhūmrapān: Sanskrit dhūmra 'smoke-coloured' (CDIAL 6861) + pāna 'drinking'; karṇe ← karoti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C252-kalji-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C252-ACT252-04]; assesses=[] -->
 
 **धूम्रपान करणे** — *dhūmrapān karṇe* — "to smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धूम्रपान** is "smoke-drinking": Sanskrit *dhūmra*, "smoke-coloured; smoke" (CDIAL 6861), and *pāna*, "drinking". **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

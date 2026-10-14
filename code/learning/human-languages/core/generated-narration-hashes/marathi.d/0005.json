@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 5,
-  "sourceHash": "fnv1a64:eab8786ad015ff0e",
+  "sourceHash": "fnv1a64:2caf55855ad145b6",
   "lessonIds": [
     "MR-C05-amrut",
     "MR-C05-kiran",
@@ -18,7 +18,7 @@
   "drivablePrefix": 3,
   "text": "marathi/narration/ch05.txt",
   "json": "marathi/narration/ch05.json",
-  "textHash": "fnv1a64:6f5c3ae10ca9982d",
-  "jsonHash": "fnv1a64:6e302c46767f545f",
+  "textHash": "fnv1a64:3f1ab5735458fa80",
+  "jsonHash": "fnv1a64:075a4c31e646c160",
   "findings": []
 }

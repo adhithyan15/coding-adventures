@@ -12,6 +12,7 @@ concept_tag: COURTESY-THANKS
 prerequisites: [MR-W01-namaskar-read]
 sounds: [nya-conjunct]
 roots: [dhanya, vada]
+etymology_hook: "dhanyavād: Sanskrit dhanya 'fortunate' (CDIAL 6727a) + vāda 'a saying', a tatsama compound"
 duration:
   max_seconds: 240
 requires:
@@ -49,8 +50,8 @@ it: **द**, the *da* of its last beat. The next word you hear begins with it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DHANYAVAD-01] -->
 
-*Dhanyavād* = Sanskrit *dhanya* ("worthy") + *vāda* ("a saying") —
-"an utterance of '[you are] worthy.'" The same Sanskrit word behind Hindi
+*Dhanyavād* = Sanskrit *dhanya* ("fortunate") + *vāda* ("a saying") —
+"an utterance of '[you are] fortunate.'" The same Sanskrit word behind Hindi
 *dhanyavād*, Kannada *dhanyavāda*, Telugu *dhanyavādamulu*. Warmer, more spoken
 Marathi often says *ābhārī āhe* ("[I] am grateful"), on the root
 *ābhār*, "gratitude."
@@ -66,4 +67,4 @@ Marathi often says *ābhārī āhe* ("[I] am grateful"), on the root
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DHANYAVAD-01] -->
 
 [PAUSE 3s] What are the two Sanskrit pieces of *dhanyavād*, and a warmer Marathi
-alternative? (*dhanya* "worthy" + *vāda* "a saying"; *ābhārī āhe*.)
+alternative? (*dhanya* "fortunate" + *vāda* "a saying"; *ābhārī āhe*.)

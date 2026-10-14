@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to open, then the Marathi for to cook.
 You'll want to know: धुणे.
 धुणे — dhuṇe — "to wash".
 
+The word, taken apart.
+धुणे (dhuṇe) comes from dhuvati, "washes", a form CDIAL reconstructs beside Sanskrit dhuta, "cleansed". CDIAL asks whether it is the same verb as dhuvati, "shakes" (CDIAL 6833).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to cook, then the Marathi for to wash.
 
 You'll want to know: हसणे.
 हसणे — hasṇe — "to laugh".
+
+The word, taken apart.
+हसणे (hasṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hasati, "laughs" (CDIAL 14021).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to wash, then the Marathi for to laugh.
 You'll want to know: रडणे.
 रडणे — raḍṇe — "to cry".
 
+The word, taken apart.
+रडणे (raḍṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from raṭati, "cries, yells" (CDIAL 10590).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to laugh, then the Marathi for to cry.
 You'll want to know: गाणे.
 गाणे — gāṇe — "to sing; a song".
 
+The word, taken apart.
+गाणे (gāṇe) is two inherited words in one shape. The verb comes from Sanskrit gāyati, "sings" (CDIAL 4135), and the noun from gāna, "singing" (CDIAL 4130).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to cry, then the Marathi for to sing; a 
 
 You'll want to know: नाचणे.
 नाचणे — nāchṇe — "to dance".
+
+The word, taken apart.
+नाचणे (nāchṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nṛtyati, "dances" (CDIAL 7583).
 
 What you've built.
 One more word for this chapter.

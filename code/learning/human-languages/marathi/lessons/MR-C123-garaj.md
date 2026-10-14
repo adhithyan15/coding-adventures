@@ -14,7 +14,8 @@ romanization: "garaj"
 concept_tag: MR-WANT123-GARAJ
 prerequisites: [MR-C122-hava, MR-C122-iccha]
 sounds: []
-roots: []
+roots: [arabic-gharad]
+etymology_hook: "garaj ← Arabic gharaḍ 'aim, purpose, need', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C122-iccha]
 <!-- hl-knowledge: introduces=[MR-LEX-C123-WANT123-01]; assesses=[] -->
 
 **गरज** — *garaj* — "a need".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गरज** (*garaj*) is a loan from Arabic *gharaḍ*, "aim, purpose, need", which reached Marathi through Persian. Its Arabic root is *gh-r-ḍ* (Lane). Persian and Hindustani say *gharaz*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

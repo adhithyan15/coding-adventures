@@ -14,7 +14,8 @@ romanization: "nāriṅgī"
 concept_tag: MR-QUAL152-NARINGI
 prerequisites: [MR-C152-khote, MR-C152-jambhala]
 sounds: []
-roots: []
+roots: [sanskrit-naranga]
+etymology_hook: "nāriṅgī: Sanskrit nāraṅga 'orange tree'; CDIAL lists Marathi nārãgī (CDIAL 7073)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C152-jambhala]
 <!-- hl-knowledge: introduces=[MR-LEX-C152-QUAL152-05]; assesses=[] -->
 
 **नारिंगी** — *nāriṅgī* — "orange (the colour)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नारिंगी** (*nāriṅgī*) goes back to Sanskrit *nāraṅga*, "orange tree"; CDIAL lists Marathi *nārãg* and *nārãgī* (CDIAL 7073). The colour is named after the fruit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

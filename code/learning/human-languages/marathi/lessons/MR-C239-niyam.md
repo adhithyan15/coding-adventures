@@ -14,7 +14,8 @@ romanization: "niyam"
 concept_tag: MR-VASTU239-NIYAM
 prerequisites: [MR-C239-udaharan, MR-C239-satya]
 sounds: []
-roots: []
+roots: [sanskrit-niyama]
+etymology_hook: "niyam ← Sanskrit niyama 'restraint; fixed law', a tatsama (CDIAL 7250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C239-satya]
 <!-- hl-knowledge: introduces=[MR-LEX-C239-VASTU239-05]; assesses=[] -->
 
 **नियम** — *niyam* — "a rule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नियम** (*niyam*) is Sanskrit *niyama*, "restraint; fixed law", taken over whole as a learned loan, a tatsama (CDIAL 7250).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

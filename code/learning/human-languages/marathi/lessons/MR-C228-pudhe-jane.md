@@ -14,7 +14,8 @@ romanization: "puḍhe jāṇe"
 concept_tag: MR-VERB-PUDHE-JANE
 prerequisites: [MR-C227-pathlag-karne, MR-C228-kautuk-karne]
 sounds: []
-roots: []
+roots: [sanskrit-yati]
+etymology_hook: "puḍhe: origin not settled; jāṇe ← yāti 'goes' (CDIAL 10452)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C228-kautuk-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C228-ACT228-02]; assesses=[] -->
 
 **पुढे जाणे** — *puḍhe jāṇe* — "to go forward".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **पुढे**, "ahead", is not settled: neither CDIAL nor DEDR has an entry for it. **जाणे** comes from Sanskrit *yāti*, "goes" (CDIAL 10452).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-174-FORM-CARD-CUE-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can select three already-taught fictional values from one card, first with a visible bank and then after a short delay.",
+  "prerequisites": [
+    "PA-EXT-172-FORM-ORDER-RETURN"
+  ]
+}

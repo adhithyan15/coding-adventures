@@ -14,7 +14,8 @@ romanization: "apriya"
 concept_tag: MR-GUN174-APRIYA
 prerequisites: [MR-C174-sabhya, MR-C174-uddhat]
 sounds: []
-roots: []
+roots: [sanskrit-apriya]
+etymology_hook: "apriya ← Sanskrit apriya 'disliked', a tatsama (CDIAL 501a)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C174-uddhat]
 <!-- hl-knowledge: introduces=[MR-LEX-C174-GUN174-04]; assesses=[] -->
 
 **अप्रिय** — *apriya* — "unpleasant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अप्रिय** (*apriya*) is Sanskrit *apriya*, "disliked", taken over whole as a learned loan, a tatsama (CDIAL 501a). It is *a-*, "not", and *priya*, "dear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

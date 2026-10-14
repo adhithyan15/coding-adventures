@@ -14,7 +14,8 @@ romanization: "ārakṣaṇ"
 concept_tag: MR-VASTU236-ARAKSAN
 prerequisites: [MR-C236-parpatra, MR-C236-jakat]
 sounds: []
-roots: []
+roots: [sanskrit-araksha]
+etymology_hook: "ārakṣaṇ: Sanskrit ārakṣaṇa 'guarding', a tatsama in a modern sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C236-jakat]
 <!-- hl-knowledge: introduces=[MR-LEX-C236-VASTU236-04]; assesses=[] -->
 
 **आरक्षण** — *ārakṣaṇ* — "a booking, a reservation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आरक्षण** (*ārakṣaṇ*) is Sanskrit *ārakṣaṇa*, "guarding, protection", a tatsama put to a modern use.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

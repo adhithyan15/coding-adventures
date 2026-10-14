@@ -14,7 +14,8 @@ romanization: "sahanśīl"
 concept_tag: MR-GUN233-SAHANSIL
 prerequisites: [MR-C233-durca, MR-C233-vaktasir]
 sounds: []
-roots: []
+roots: [sanskrit-sahana, sanskrit-shila]
+etymology_hook: "sahanśīl: Sanskrit sahana 'endurance' (CDIAL 13305) + śīla 'nature' (CDIAL 12501)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C233-vaktasir]
 <!-- hl-knowledge: introduces=[MR-LEX-C233-GUN233-05]; assesses=[] -->
 
 **सहनशील** — *sahanśīl* — "patient, tolerant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सहनशील** (*sahanśīl*) is a compound of Sanskrit parts: *sahana*, "endurance, patience" (CDIAL 13305), and *śīla*, "habit, nature" (CDIAL 12501).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

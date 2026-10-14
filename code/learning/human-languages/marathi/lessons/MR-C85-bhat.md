@@ -14,7 +14,8 @@ romanization: "bhāt"
 concept_tag: MR-FOOD85-BHAT
 prerequisites: [MR-C84-mams, MR-C85-masa]
 sounds: []
-roots: []
+roots: [sanskrit-bhakta]
+etymology_hook: "bhāt ← Sanskrit bhakta 'meal, food; boiled rice', a tadbhava (CDIAL 9331)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C85-masa]
 <!-- hl-knowledge: introduces=[MR-LEX-C85-FOOD85-02]; assesses=[] -->
 
 **भात** — *bhāt* — "cooked rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भात** (*bhāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhakta*, "meal, food; boiled rice" (CDIAL 9331). It is the past participle of *bhaj*, "to share out": a portion.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

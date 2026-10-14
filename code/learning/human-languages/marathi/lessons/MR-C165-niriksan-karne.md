@@ -14,7 +14,8 @@ romanization: "nirīkṣaṇ karṇe"
 concept_tag: MR-VERB-NIRIKSAN-KARNE
 prerequisites: [MR-C165-sudharne, MR-C165-bighadne]
 sounds: []
-roots: []
+roots: [sanskrit-nirikshana, sanskrit-karoti]
+etymology_hook: "nirīkṣaṇ: Sanskrit nirīkṣaṇa 'looking at', a tatsama; karṇe ← karoti 'does' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C165-bighadne]
 <!-- hl-knowledge: introduces=[MR-LEX-C165-ACT165-04]; assesses=[] -->
 
 **निरीक्षण करणे** — *nirīkṣaṇ karṇe* — "to observe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**निरीक्षण** is Sanskrit *nirīkṣaṇa*, "looking at, observing", a tatsama built on *īkṣ*, "to see". **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

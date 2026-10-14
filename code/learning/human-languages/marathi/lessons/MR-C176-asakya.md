@@ -14,7 +14,8 @@ romanization: "aśakya"
 concept_tag: MR-GUN176-ASAKYA
 prerequisites: [MR-C176-pavsali, MR-C176-sakya]
 sounds: []
-roots: []
+roots: [sanskrit-shakya]
+etymology_hook: "aśakya: Sanskrit aśakya 'impossible', a- 'not' + śakya 'possible' (CDIAL 12253); a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C176-sakya]
 <!-- hl-knowledge: introduces=[MR-LEX-C176-GUN176-04]; assesses=[] -->
 
 **अशक्य** — *aśakya* — "impossible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अशक्य** (*aśakya*) is Sanskrit *aśakya*, "impossible", a tatsama: *a-*, "not", and *śakya*, "possible" (CDIAL 12253).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

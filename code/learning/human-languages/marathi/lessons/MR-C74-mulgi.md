@@ -15,6 +15,7 @@ concept_tag: MR-HEALTH74-MULGI
 prerequisites: [MR-C74-ai, MR-C74-mulga]
 sounds: []
 roots: []
+etymology_hook: "mulgī 'daughter, girl': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C74-mulga]
 <!-- hl-knowledge: introduces=[MR-LEX-C74-HEALTH74-05]; assesses=[] -->
 
 **मुलगी** — *mulgī* — "a daughter; a girl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मुलगी** (*mulgī*) is the feminine of **मुलगा**, "boy". Its origin is not settled: neither CDIAL nor DEDR has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

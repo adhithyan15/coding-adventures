@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a mosquito, then the Marathi for the for
 You'll want to know: गाल.
 गाल — gāl — "a cheek".
 
+The word, taken apart.
+गाल (gāl) is a tadbhava of Sanskrit galla, "cheek" (CDIAL 4089). CDIAL notes the view that the word is from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for the forehead, then the Marathi for a che
 
 You'll want to know: जीभ.
 जीभ — jībh — "the tongue".
+
+The word, taken apart.
+जीभ (jībh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jihvā, "tongue" (CDIAL 5228).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a cheek, then the Marathi for the tongue
 You'll want to know: हनुवटी.
 हनुवटी — hanuvaṭī — "the chin".
 
+The word, taken apart.
+हनुवटी (hanuvaṭī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hanu, "jaw" (CDIAL 13966). CDIAL lists Marathi haṇū and haṇvaṭī, "chin".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for the tongue, then the Marathi for the chi
 You'll want to know: कोपर.
 कोपर — kopar — "an elbow".
 
+The word, taken apart.
+कोपर (kopar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kūrpara, "elbow" (CDIAL 3413).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for the chin, then the Marathi for an elbow.
 
 You'll want to know: मनगट.
 मनगट — managaṭ — "a wrist".
+
+The word, taken apart.
+मनगट (managaṭ) is a tadbhava, a word inherited and reshaped by sound change. It comes from maṇigranthi, "wrist", a form CDIAL reconstructs from its descendants (CDIAL 9734). It is built on granthi, "knot, joint".
 
 What you've built.
 One more word for this chapter.

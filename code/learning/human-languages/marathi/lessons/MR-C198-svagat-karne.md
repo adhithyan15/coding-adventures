@@ -14,7 +14,8 @@ romanization: "svāgat karṇe"
 concept_tag: MR-VERB-SVAGAT-KARNE
 prerequisites: [MR-C198-thartharne, MR-C198-mat-dene]
 sounds: []
-roots: []
+roots: [sanskrit-svagata]
+etymology_hook: "svāgat: Sanskrit svāgata 'welcome': su- 'well' + āgata 'come', a tatsama; karṇe 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C198-mat-dene]
 <!-- hl-knowledge: introduces=[MR-LEX-C198-ACT198-05]; assesses=[] -->
 
 **स्वागत करणे** — *svāgat karṇe* — "to welcome".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्वागत** is Sanskrit *svāgata*, "welcome", a tatsama: *su-*, "well", and *āgata*, "come". **करणे** is "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ gloss: "a clap"
 concept_tag: MR-ANCHOR-TAALI
 prerequisites: [MR-W06-jha]
 sounds: []
-roots: []
+roots: [sanskrit-tada]
+etymology_hook: "ṭāḷī ← Sanskrit tāla 'clap, rhythm', listed under tāḍa 'blow'; a tadbhava (CDIAL 5748)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **टाळी** — *ṭāḷī* — "a clap".
 
 Say it: *ṭāḷī*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ट**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टाळी** (*ṭāḷī*) is a tadbhava, a word inherited and reshaped by sound change. CDIAL lists Marathi *ṭāḷī*, "clapping", under Sanskrit *tāḍa*, "blow", whose form *tāla* meant "clap, rhythm" (CDIAL 5748).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-TAALI] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a question, then the Marathi for an answ
 You'll want to know: शब्द.
 शब्द — shabda — "a word".
 
+The word, taken apart.
+शब्द (shabda) is Sanskrit śabda, "articulate sound, noise", taken over whole as a learned loan, a tatsama (CDIAL 12298). Marathi uses it for "a word".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for an answer, then the Marathi for a word.
 
 You'll want to know: खेळ.
 खेळ — kheḷ — "a game".
+
+The word, taken apart.
+खेळ (kheḷ) is inherited from a reconstructed khēl-, "play" (CDIAL 3918), the word inside खेळणे, "to play". CDIAL links it with Sanskrit krīḍati, "plays": if that verb has a non-Aryan source, these forms may share it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a word, then the Marathi for a game.
 You'll want to know: पत्र.
 पत्र — patra — "a letter (post)".
 
+The word, taken apart.
+पत्र (patra) is Sanskrit pattra, "wing-feather; leaf; leaf of a book", taken over whole as a learned loan, a tatsama (CDIAL 7733). A leaf to write on became a letter.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a game, then the Marathi for a letter.
 You'll want to know: चित्र.
 चित्र — chitra — "a picture".
 
+The word, taken apart.
+चित्र (chitra) is Sanskrit citra, "conspicuous, bright; variegated", taken over whole as a learned loan, a tatsama (CDIAL 4803). Marathi uses it for a picture.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a letter, then the Marathi for a picture
 
 You'll want to know: झाड.
 झाड — jhāḍ — "a tree".
+
+The word, taken apart.
+झाड (jhāḍ) is a tadbhava of Sanskrit jhāṭa, "forest, arbour", a word known from the old word-lists (CDIAL 5362). CDIAL reports Kuiper's view that it comes from Munda.
 
 What you've built.
 One more word for this chapter.

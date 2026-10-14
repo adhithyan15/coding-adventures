@@ -14,7 +14,8 @@ romanization: "majā karṇe"
 concept_tag: MR-VERB-MAJA-KARNE
 prerequisites: [MR-C251-halavne, MR-C251-garam-karne]
 sounds: []
-roots: []
+roots: [maza-persian, sanskrit-karoti]
+etymology_hook: "majā: usually traced to Persian maza 'taste, relish'; karṇe ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C251-garam-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C252-ACT252-01]; assesses=[] -->
 
 **मजा करणे** — *majā karṇe* — "to have fun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मजा** is usually traced to Persian *maza*, "taste, relish". **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

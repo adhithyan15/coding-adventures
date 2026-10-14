@@ -14,7 +14,8 @@ romanization: "itihās"
 concept_tag: MR-KAAM250-ITIHAS
 prerequisites: [MR-C249-patang, MR-C249-bhovra]
 sounds: []
-roots: []
+roots: [sanskrit-itihasa]
+etymology_hook: "itihās: Sanskrit itihāsa 'tradition, history', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C249-bhovra]
 <!-- hl-knowledge: introduces=[MR-LEX-C250-KAAM250-01]; assesses=[] -->
 
 **इतिहास** — *itihās* — "history".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इतिहास** (*itihās*) is Sanskrit *itihāsa*, "tradition, history", a tatsama: *iti ha āsa*, "so indeed it was".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

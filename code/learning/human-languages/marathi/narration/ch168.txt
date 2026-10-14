@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to slip, then the Marathi for to suspect
 You'll want to know: आवरणे.
 आवरणे — āvarṇe — "to tidy up".
 
+The word, taken apart.
+आवरणे (āvarṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from āvarati, "covers", a form CDIAL reconstructs from its descendants (CDIAL 1414). CDIAL glosses the Marathi verb "to cover, restrain, gather together".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to suspect, then the Marathi for to tidy
 
 You'll want to know: लक्षात येणे.
 लक्षात येणे — lakṣāt yeṇe — "to notice, to realise".
+
+The word, taken apart.
+लक्षात is "into the mark": Sanskrit lakṣa, "mark, aim", with -त, "in". येणे comes from Sanskrit aiti, "comes near" (CDIAL 2534).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to tidy up, then the Marathi for to noti
 You'll want to know: लाजणे.
 लाजणे — lājṇe — "to be shy, to blush".
 
+The word, taken apart.
+लाजणे (lājṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lajjate, "is ashamed" (CDIAL 10909).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to notice, then the Marathi for to be sh
 You'll want to know: हरणे.
 हरणे — harṇe — "to be defeated, to lose (a game)".
 
+The word, taken apart.
+हरणे (harṇe) is inherited. CDIAL lists it, "to lose, fail, be conquered", as formed from Marathi hārṇẽ, "to take away, win", which comes from Sanskrit hārayati, "causes to be taken; loses" (CDIAL 14061).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to be shy, then the Marathi for to be de
 
 You'll want to know: लपणे.
 लपणे — lapṇe — "to take cover, to hide".
+
+The word, taken apart.
+The origin of लपणे (lapṇe) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.

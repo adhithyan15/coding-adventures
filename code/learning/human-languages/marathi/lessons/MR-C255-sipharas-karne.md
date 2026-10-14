@@ -14,7 +14,8 @@ romanization: "śiphāras karṇe"
 concept_tag: MR-VERB-SIPHARAS-KARNE
 prerequisites: [MR-C255-misalne, MR-C255-prarthana-karne]
 sounds: []
-roots: []
+roots: [persian-sifarish, sanskrit-karoti]
+etymology_hook: "śiphāras: usually traced to Persian sifārish 'recommendation'; karṇe ← karoti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C255-prarthana-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C255-ACT255-05]; assesses=[] -->
 
 **शिफारस करणे** — *śiphāras karṇe* — "to recommend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शिफारस** is usually traced to Persian *sifārish*, "recommendation". **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

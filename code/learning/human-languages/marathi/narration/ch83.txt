@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to teach, then the Marathi for to make.
 You'll want to know: उचलणे.
 उचलणे — uchalṇe — "to lift".
 
+The word, taken apart.
+उचलणे (uchalṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from uccalyati, "goes up", a form CDIAL reconstructs from its descendants (CDIAL 1642). CDIAL builds it on Sanskrit uccalati, "springs up".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to make, then the Marathi for to lift.
 
 You'll want to know: ओढणे.
 ओढणे — oḍhṇe — "to pull".
+
+The word, taken apart.
+ओढणे (oḍhṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from avakaḍḍhati, "pulls away", a form CDIAL reconstructs from its descendants (CDIAL 14245).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to lift, then the Marathi for to pull.
 You'll want to know: ढकलणे.
 ढकलणे — ḍhakalṇe — "to push".
 
+The word, taken apart.
+ढकलणे (ḍhakalṇe) belongs with Marathi ḍhakā, "push", which CDIAL lists under a reconstructed dhakk-, "push, strike" (CDIAL 6701).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to pull, then the Marathi for to push.
 You'll want to know: लपवणे.
 लपवणे — lapavṇe — "to hide".
 
+The word, taken apart.
+The origin of लपवणे (lapavṇe) is not settled. Neither CDIAL nor DEDR has an entry for it or for lapṇẽ, "to hide".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to push, then the Marathi for to hide.
 
 You'll want to know: जिंकणे.
 जिंकणे — jiṅkṇe — "to win".
+
+The word, taken apart.
+जिंकणे (jiṅkṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jita, "won, conquered" (CDIAL 5224). CDIAL lists Marathi jĩkṇẽ, "to conquer", from the Middle Indo-Aryan form jikka-.
 
 What you've built.
 One more word for this chapter.

@@ -15,6 +15,7 @@ concept_tag: MR-VASTU271-PANGHARUN
 prerequisites: [MR-C271-kaceri, MR-C271-basasthanak]
 sounds: []
 roots: []
+etymology_hook: "pāṅgharūṇ 'blanket': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C271-basasthanak]
 <!-- hl-knowledge: introduces=[MR-LEX-C271-VASTU271-03]; assesses=[] -->
 
 **पांघरूण** — *pāṅgharūṇ* — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **पांघरूण** (*pāṅgharūṇ*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

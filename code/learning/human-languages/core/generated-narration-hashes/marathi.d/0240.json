@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 240,
-  "sourceHash": "fnv1a64:26d138abd2392340",
+  "sourceHash": "fnv1a64:f616757d582c8a76",
   "lessonIds": [
     "MR-C240-praves",
     "MR-C240-pravesdvar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch240.txt",
   "json": "marathi/narration/ch240.json",
-  "textHash": "fnv1a64:719465c12c38bacc",
-  "jsonHash": "fnv1a64:8244d0aabacef058",
+  "textHash": "fnv1a64:1d17ebc5fecbe567",
+  "jsonHash": "fnv1a64:fafa6bd49a87aeea",
   "findings": []
 }

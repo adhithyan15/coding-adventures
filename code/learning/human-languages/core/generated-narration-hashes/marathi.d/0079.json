@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 79,
-  "sourceHash": "fnv1a64:fdbab531012fbf8c",
+  "sourceHash": "fnv1a64:f83fb0c93d06cc04",
   "lessonIds": [
     "MR-C79-dhune",
     "MR-C79-hasne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch79.txt",
   "json": "marathi/narration/ch79.json",
-  "textHash": "fnv1a64:b449c6c9e80b7e5e",
-  "jsonHash": "fnv1a64:22c8283654da1ca8",
+  "textHash": "fnv1a64:b805cffd41e8d588",
+  "jsonHash": "fnv1a64:f8d5e3ca6c6c7c35",
   "findings": []
 }

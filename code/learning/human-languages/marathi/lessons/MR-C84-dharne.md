@@ -14,7 +14,8 @@ romanization: "dharṇe"
 concept_tag: MR-VERB-DHARNE
 prerequisites: [MR-C84-bharne, MR-C84-badalne]
 sounds: []
-roots: []
+roots: [sanskrit-dharati]
+etymology_hook: "dharṇe ← Sanskrit dharati 'holds, keeps', a tadbhava (CDIAL 6747)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C84-badalne]
 <!-- hl-knowledge: introduces=[MR-LEX-C84-VERBS84-03]; assesses=[] -->
 
 **धरणे** — *dharṇe* — "to hold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धरणे** (*dharṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dharati*, "holds, keeps" (CDIAL 6747).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

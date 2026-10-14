@@ -14,7 +14,8 @@ romanization: "chitra"
 concept_tag: MR-SCHOOL95-CHITRA
 prerequisites: [MR-C95-khel, MR-C95-patra]
 sounds: []
-roots: []
+roots: [sanskrit-citra]
+etymology_hook: "chitra ← Sanskrit citra 'conspicuous, bright; variegated', a tatsama (CDIAL 4803)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C95-patra]
 <!-- hl-knowledge: introduces=[MR-LEX-C95-SCHOOL95-04]; assesses=[] -->
 
 **चित्र** — *chitra* — "a picture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चित्र** (*chitra*) is Sanskrit *citra*, "conspicuous, bright; variegated", taken over whole as a learned loan, a tatsama (CDIAL 4803). Marathi uses it for a picture.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

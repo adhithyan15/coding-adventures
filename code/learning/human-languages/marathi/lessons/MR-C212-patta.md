@@ -15,6 +15,7 @@ concept_tag: MR-VASTU212-PATTA
 prerequisites: [MR-C212-arj, MR-C212-pakit]
 sounds: []
 roots: []
+etymology_hook: "pattā 'address': origin not settled; CDIAL has no entry for it in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C212-pakit]
 <!-- hl-knowledge: introduces=[MR-LEX-C212-VASTU212-03]; assesses=[] -->
 
 **पत्ता** — *pattā* — "an address".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **पत्ता** (*pattā*), "address", is not settled. CDIAL has no entry for it in this sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

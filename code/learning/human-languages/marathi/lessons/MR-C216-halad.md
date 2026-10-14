@@ -14,7 +14,8 @@ romanization: "haḷad"
 concept_tag: MR-VASTU216-HALAD
 prerequisites: [MR-C216-tak, MR-C216-masala]
 sounds: []
-roots: []
+roots: [sanskrit-haridra]
+etymology_hook: "haḷad ← Sanskrit haridrā 'turmeric', a tadbhava (CDIAL 13992)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C216-masala]
 <!-- hl-knowledge: introduces=[MR-LEX-C216-VASTU216-04]; assesses=[] -->
 
 **हळद** — *haḷad* — "turmeric".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हळद** (*haḷad*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *haridrā*, "turmeric" (CDIAL 13992).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

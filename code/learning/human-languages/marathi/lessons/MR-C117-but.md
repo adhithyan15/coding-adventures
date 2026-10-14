@@ -14,7 +14,8 @@ romanization: "būṭ"
 concept_tag: MR-CLOTHES117-BUT
 prerequisites: [MR-C117-ghadyal, MR-C117-topi]
 sounds: []
-roots: []
+roots: [english-boot]
+etymology_hook: "būṭ ← English boot"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C117-topi]
 <!-- hl-knowledge: introduces=[MR-LEX-C117-CLOTHES117-03]; assesses=[] -->
 
 **बूट** — *būṭ* — "a shoe, a boot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बूट** (*būṭ*) is a loan from English *boot*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

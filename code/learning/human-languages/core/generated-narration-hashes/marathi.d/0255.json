@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 255,
-  "sourceHash": "fnv1a64:e8103946cd693a9b",
+  "sourceHash": "fnv1a64:32e3c818bc1f3cdd",
   "lessonIds": [
     "MR-C255-agrah-karne",
     "MR-C255-madhye-bolne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch255.txt",
   "json": "marathi/narration/ch255.json",
-  "textHash": "fnv1a64:b7c63fe2a10f9692",
-  "jsonHash": "fnv1a64:9685e85bf48f76bb",
+  "textHash": "fnv1a64:6f224865b0a08331",
+  "jsonHash": "fnv1a64:9e25a21f9da0c409",
   "findings": []
 }

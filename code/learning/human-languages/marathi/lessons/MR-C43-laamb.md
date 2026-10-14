@@ -12,8 +12,9 @@ concept_tag: MR-LEX-LAAMB
 prerequisites: [MR-C43-samor]
 sounds: [matra-aa, anusvara-nasal]
 roots: [sanskrit-lamba]
+etymology_hook: "lāmb ← Sanskrit lamba 'pendent, long', a tadbhava (CDIAL 10951)"
 duration:
-  max_seconds: 210
+  max_seconds: 222
 requires:
   knowledge: [MR-POSTP-SAMOR, MR-POSTP-JAVAL, MR-POSTP-VAR, MR-QUESTION-KUTHE]
 introduces:

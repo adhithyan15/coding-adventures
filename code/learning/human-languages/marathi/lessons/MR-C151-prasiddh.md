@@ -14,7 +14,8 @@ romanization: "prasiddh"
 concept_tag: MR-QUAL151-PRASIDDH
 prerequisites: [MR-C151-bhitra, MR-C151-murkh]
 sounds: []
-roots: []
+roots: [sanskrit-prasiddha]
+etymology_hook: "prasiddh ← Sanskrit prasiddha 'celebrated', a tatsama (CDIAL 8842)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C151-murkh]
 <!-- hl-knowledge: introduces=[MR-LEX-C151-QUAL151-05]; assesses=[] -->
 
 **प्रसिद्ध** — *prasiddh* — "famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रसिद्ध** (*prasiddh*) is Sanskrit *prasiddha*, "celebrated", taken over whole as a learned loan, a tatsama (CDIAL 8842).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

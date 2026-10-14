@@ -14,7 +14,8 @@ romanization: "jinā"
 concept_tag: MR-HOME91-JINA
 prerequisites: [MR-C90-kapat, MR-C90-jamin]
 sounds: []
-roots: []
+roots: [persian-zina]
+etymology_hook: "jinā: usually traced to Persian zīna 'ladder, stairs'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C90-jamin]
 <!-- hl-knowledge: introduces=[MR-LEX-C91-HOME91-01]; assesses=[] -->
 
 **जिना** — *jinā* — "stairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जिना** (*jinā*) is a loan, usually traced to Persian *zīna*, "ladder, stairs". Marathi writes the *z* as **ज**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

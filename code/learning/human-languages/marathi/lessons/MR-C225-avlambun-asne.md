@@ -14,7 +14,8 @@ romanization: "avlambūn asṇe"
 concept_tag: MR-VERB-AVLAMBUN-ASNE
 prerequisites: [MR-C225-tika-karne, MR-C225-siddha-karne]
 sounds: []
-roots: []
+roots: [sanskrit-avalamba, sanskrit-aste]
+etymology_hook: "avlambūn: from Sanskrit avalamba 'hanging down, support'; asṇe ← āste 'sits, exists' (CDIAL 1480)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C225-siddha-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C225-ACT225-04]; assesses=[] -->
 
 **अवलंबून असणे** — *avlambūn asṇe* — "to depend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अवलंबून** is "hanging on", from Sanskrit *avalamba*, "hanging down; support". CDIAL lists **असणे** under Sanskrit *āste*, "sits, exists, remains" (CDIAL 1480), or perhaps *ākṣeti*, "abides" (CDIAL 1031).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

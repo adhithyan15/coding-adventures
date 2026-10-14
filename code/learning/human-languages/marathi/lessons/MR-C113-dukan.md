@@ -14,7 +14,8 @@ romanization: "dukān"
 concept_tag: MR-TOWN113-DUKAN
 prerequisites: [MR-C112-mage, MR-C112-pudhe]
 sounds: []
-roots: []
+roots: [arabic-dukkan]
+etymology_hook: "dukān ← Arabic dukkān 'shop', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C112-pudhe]
 <!-- hl-knowledge: introduces=[MR-LEX-C113-TOWN113-01]; assesses=[] -->
 
 **दुकान** — *dukān* — "a shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुकान** (*dukān*) is a loan from Arabic *dukkān*, "shop", which reached Marathi through Persian. Its Arabic root is *d-k-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

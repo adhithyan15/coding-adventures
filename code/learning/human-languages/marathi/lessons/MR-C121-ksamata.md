@@ -14,7 +14,8 @@ romanization: "kṣamatā"
 concept_tag: MR-CAN121-KSAMATA
 prerequisites: [MR-C121-jamne, MR-C121-kausalya]
 sounds: []
-roots: []
+roots: [kshama-sanskrit]
+etymology_hook: "kṣamatā: Sanskrit kṣama 'able, fit' + the noun ending -tā; a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C121-kausalya]
 <!-- hl-knowledge: introduces=[MR-LEX-C121-CAN121-04]; assesses=[] -->
 
 **क्षमता** — *kṣamatā* — "ability, capacity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**क्षमता** (*kṣamatā*) is a tatsama: Sanskrit *kṣama*, "able, fit", with the noun ending *-tā*, "-ness". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

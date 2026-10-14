@@ -76,4 +76,5 @@ qualification. These learner papers, confidential masters, keys, and rubric
 are not qualified Sanskrit recordings, independent human review, calibrated
 double-scoring, or standard setting. Book-only validation cannot establish a
 readiness or validated-pass claim. Those artifacts remain separate
-prerequisites, and `assessment.json` remains absent until they exist.
+prerequisites. `assessment.json` is active as a source-artifact contract; its
+presence does not satisfy them.

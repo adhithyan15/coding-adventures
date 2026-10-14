@@ -607,6 +607,12 @@ pub trait Resolver: Send + Sync {
 }
 
 /// The operating system's resolver.
+///
+/// An empty name is refused here, before the operating system sees it,
+/// because what the system makes of one differs: glibc and macOS fail,
+/// but Windows' `getaddrinfo` answers with the machine's own addresses.
+/// An authorized target names a declared host, never an empty one, so this
+/// only keeps the resolver's answer the same on every platform.
 pub struct SystemResolver;
 
 impl Resolver for SystemResolver {

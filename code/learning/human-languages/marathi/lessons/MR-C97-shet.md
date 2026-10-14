@@ -14,7 +14,8 @@ romanization: "shet"
 concept_tag: MR-NATURE97-SHET
 prerequisites: [MR-C97-dagad, MR-C97-valu]
 sounds: []
-roots: []
+roots: [sanskrit-kshetra]
+etymology_hook: "shet ← Sanskrit kṣetra 'land', a tadbhava (CDIAL 3735)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C97-valu]
 <!-- hl-knowledge: introduces=[MR-LEX-C97-NATURE97-04]; assesses=[] -->
 
 **शेत** — *shet* — "a field".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शेत** (*shet*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣetra*, "land" (CDIAL 3735).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

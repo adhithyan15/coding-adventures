@@ -14,7 +14,8 @@ romanization: "soḍavṇe"
 concept_tag: MR-VERB-SODAVNE
 prerequisites: [MR-C226-nakarne, MR-C226-dhoka-patkarne]
 sounds: []
-roots: []
+roots: [sanskrit-kshotayati]
+etymology_hook: "soḍavṇe: the 'make' form of soḍṇe 'to let go' ← kṣoṭayati 'throws' (CDIAL 3747)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C226-dhoka-patkarne]
 <!-- hl-knowledge: introduces=[MR-LEX-C226-ACT226-05]; assesses=[] -->
 
 **सोडवणे** — *soḍavṇe* — "to solve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सोडवणे** (*soḍavṇe*) is the "make" form of **सोडणे**, "to let go", which comes from Sanskrit *kṣoṭayati*, "throws" (CDIAL 3747).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

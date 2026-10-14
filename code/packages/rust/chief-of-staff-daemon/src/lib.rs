@@ -4365,6 +4365,7 @@ hardware_key_timeout = 60
     #[test]
     fn channel_keys_become_the_broker_s_slots_with_home_resolved() {
         let directory = TestDir::new();
+        // Only the key table is read; keep the fixture path absolute on every OS.
         let config = broker_config(&directory.0.join("unused"), [0; 32]);
         let keys = broker_key_files(&config, &directory.0).unwrap();
         let pipeline_id = config.data_plane().channel_keys()[0].pipeline_id();

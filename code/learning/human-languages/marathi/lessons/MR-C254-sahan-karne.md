@@ -14,7 +14,8 @@ romanization: "sahan karṇe"
 concept_tag: MR-VERB-SAHAN-KARNE
 prerequisites: [MR-C254-sodhun-kadhne, MR-C254-seva-karne]
 sounds: []
-roots: []
+roots: [sanskrit-sahana, sanskrit-karoti]
+etymology_hook: "sahan: Sanskrit sahana 'endurance', a tatsama (CDIAL 13305); karṇe ← karoti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C254-seva-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C254-ACT254-04]; assesses=[] -->
 
 **सहन करणे** — *sahan karṇe* — "to bear, to endure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सहन** is Sanskrit *sahana*, "endurance, patience", a tatsama (CDIAL 13305). **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

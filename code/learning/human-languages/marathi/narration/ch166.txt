@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to observe, then the Marathi for to take
 You'll want to know: वाया घालवणे.
 वाया घालवणे — vāyā ghālavṇe — "to waste".
 
+The word, taken apart.
+The origin of वाया, "in vain", is not settled: CDIAL has no entry for it. घालवणे is the "make" form of घालणे, which CDIAL lists, as "to pour", under a reconstructed ghalyati, "pours" (CDIAL 4457).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to take part, then the Marathi for to wa
 
 You'll want to know: गप्प बसणे.
 गप्प बसणे — gappa basṇe — "to keep quiet".
+
+The word, taken apart.
+The origin of गप्प, "silent", is not settled: CDIAL has no entry for it in this sense. बसणे comes from Sanskrit upaviśati, "sits down" (CDIAL 2245).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to waste, then the Marathi for to keep q
 You'll want to know: घाबरणे.
 घाबरणे — ghābarṇe — "to be afraid".
 
+The word, taken apart.
+The origin of घाबरणे (ghābarṇe) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to keep quiet, then the Marathi for to b
 You'll want to know: वाहून नेणे.
 वाहून नेणे — vāhūn neṇe — "to carry, to transport".
 
+The word, taken apart.
+वाहून is "having carried", from Marathi vāhṇẽ, "to carry", which CDIAL lists under Sanskrit vāhayati, "drives (a chariot)" (CDIAL 11612). नेणे comes from Sanskrit nayati, "leads, carries off" (CDIAL 6966).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to be afraid, then the Marathi for to ca
 
 You'll want to know: मारणे.
 मारणे — mārṇe — "to hit; to kill".
+
+The word, taken apart.
+मारणे (mārṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mārayati, "kills" (CDIAL 10066). It is the "make" form of mṛ, "to die": to kill is to make die. CDIAL glosses the Marathi verb "to strike, kill".
 
 What you've built.
 One more word for this chapter.

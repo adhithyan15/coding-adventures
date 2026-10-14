@@ -14,7 +14,8 @@ romanization: "dhotar"
 concept_tag: MR-VASTU270-DHOTAR
 prerequisites: [MR-C270-manuka, MR-C270-gul]
 sounds: []
-roots: []
+roots: [indo-aryan-dhotta]
+etymology_hook: "dhotar ← *dhotta 'cloth', a reconstructed form; a tadbhava (CDIAL 6881)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C270-gul]
 <!-- hl-knowledge: introduces=[MR-LEX-C270-VASTU270-04]; assesses=[] -->
 
 **धोतर** — *dhotar* — "a dhoti".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धोतर** (*dhotar*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhotta*, "cloth", a form CDIAL reconstructs from its descendants (CDIAL 6881). CDIAL marks the Marathi word as taken from Gujarati.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

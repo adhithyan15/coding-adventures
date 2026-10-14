@@ -11,7 +11,8 @@ gloss: fourteen — four-and-ten, and the first word in this book to need the au
 concept_tag: MR-LEX-CHAUDA
 prerequisites: [MR-W56-au-matra, MR-R56-ten-to-twelve, MR-C57-tera]
 sounds: [matra-au, matra-aa]
-roots: []
+roots: [sanskrit-chaturdasha]
+etymology_hook: "caudā ← Sanskrit caturdaśa 'fourteen': catur 'four' + daśa 'ten'; a tadbhava (CDIAL 4605)"
 duration:
   max_seconds: 210
 requires:

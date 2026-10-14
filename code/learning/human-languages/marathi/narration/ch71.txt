@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a tooth, then the Marathi for the throat
 You'll want to know: पोट.
 पोट — poṭ — "the stomach".
 
+The word, taken apart.
+पोट (poṭ) goes back to pōṭṭa, "belly", one of the forms CDIAL reconstructs under pēṭṭa, "belly" (CDIAL 8376). CDIAL notes that these may be the same as its words for "basket".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for the throat, then the Marathi for the sto
 
 You'll want to know: खांदा.
 खांदा — khāndā — "a shoulder".
+
+The word, taken apart.
+खांदा (khāndā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from skandha, "shoulder" (CDIAL 13627). CDIAL glosses the Marathi word "shoulder, back of neck; large bough".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for the stomach, then the Marathi for a shou
 You'll want to know: बोट.
 बोट — boṭ — "a finger".
 
+The word, taken apart.
+The origin of बोट (boṭ) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a shoulder, then the Marathi for a finge
 You'll want to know: मान.
 मान — mān — "the neck".
 
+The word, taken apart.
+मान (mān) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from manyā, "nape of the neck" (CDIAL 9858). CDIAL glosses the Marathi word "neck".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a finger, then the Marathi for the neck.
 
 You'll want to know: चेहरा.
 चेहरा — chehrā — "the face".
+
+The word, taken apart.
+चेहरा (chehrā) is a loan, usually traced to Persian chihra, "face, countenance".
 
 What you've built.
 One more word for this chapter.

@@ -16,7 +16,7 @@ The letters in this word.
 (Skim if you read Devanagari.) बो (bo) + ल (la) + णे (ṇe, the retroflex ण ṇa with the -e stroke) becomes बोलणे bolṇe.
 
 The word, taken apart.
-बोलणे (bolṇe, "to speak") is a native Indo-Aryan verb on the stem bol- — the same bol- as Hindi bolnā and Punjabi bolṇā. Its ending -णे (-ṇe) is the Marathi infinitive ("to ___"): bol-ṇe "to speak," bheṭ-ṇe "to meet," ye-ṇe "to come." Strip -ṇe and you have the stem to build on: bol-.
+बोलणे (bolṇe, "to speak") is a native Indo-Aryan verb, from a reconstructed bōll-, "speak" (CDIAL 9321), on the stem bol- — the same bol- as Hindi bolnā and Punjabi bolṇā. Its ending -णे (-ṇe) is the Marathi infinitive ("to ___"): bol-ṇe "to speak," bheṭ-ṇe "to meet," ye-ṇe "to come." Strip -ṇe and you have the stem to build on: bol-.
 
 Grammar Lens: stem + gendered present ending.
 From the stem you build the present tense — and, as with yeto/yete, it splits by the speaker's gender:
@@ -80,7 +80,7 @@ The letters in this word.
 (Skim if you read Devanagari.) रा (rā) + ह (ha) + णे (ṇe, retroflex) becomes राहणे rāhṇe.
 
 The word, taken apart.
-राहणे (rāhṇe, "to live, remain, stay") is from Sanskrit रह् (rah-, "to remain") — the same root behind Hindi rahnā. Present tense, gendered as always: मी पुण्यात राहतो (mī puṇyāt rāhto, a man) / राहते (rāhte, a woman) — "I live in Pune."
+राहणे (rāhṇe, "to live, remain, stay") goes back to rahati, "remains", a form CDIAL reconstructs (CDIAL 10666) — the same verb as Hindi rahnā. Present tense, gendered as always: मी पुण्यात राहतो (mī puṇyāt rāhto, a man) / राहते (rāhte, a woman) — "I live in Pune."
 
 Grammar Lens: "in" comes after the noun.
 Look at पुण्यात (puṇyāt) = पुणे (Puṇe, the city) + -ात (-āt, "in"). Marathi glues "in" onto the end of the noun — a postposition, not a preposition. Verb last, place-marker on the noun's tail: mī puṇyāt rāhto, "I in-Pune live."

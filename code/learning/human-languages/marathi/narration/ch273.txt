@@ -12,6 +12,9 @@ Before the new one: say the Marathi for responsibility, then the Marathi for an 
 You'll want to know: आठवण.
 आठवण — āṭhvaṇ — "a memory".
 
+The word, taken apart.
+आठवण (āṭhvaṇ) is built on āṭhavṇẽ, "to come to mind", which comes from Sanskrit āsthāpayati, "causes to stay, fixes into" (CDIAL 1516).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for an opportunity, then the Marathi for a m
 
 You'll want to know: स्वभाव.
 स्वभाव — svabhāv — "temperament, nature".
+
+The word, taken apart.
+स्वभाव (svabhāv) is Sanskrit svabhāva, "one's own nature", a tatsama: sva, "own", and bhāva, "being". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a memory, then the Marathi for temperame
 You'll want to know: वागणूक.
 वागणूक — vāgṇūk — "behaviour".
 
+The word, taken apart.
+वागणूक (vāgṇūk) is built on vāgṇẽ, "to move, live", which CDIAL lists under Sanskrit vrajati, "goes, wanders", through a Middle Indo-Aryan form vagga- (CDIAL 12225).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for temperament, then the Marathi for behavi
 You'll want to know: आदर.
 आदर — ādar — "respect".
 
+The word, taken apart.
+आदर (ādar) is Sanskrit ādara, "respect", taken over whole as a learned loan, a tatsama (CDIAL 1142).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for behaviour, then the Marathi for respect.
 
 You'll want to know: दया.
 दया — dayā — "pity, compassion".
+
+The word, taken apart.
+दया (dayā) is Sanskrit dayā, "pity, compassion", taken over whole, a tatsama (CDIAL 6185).
 
 What you've built.
 One more word for this chapter.

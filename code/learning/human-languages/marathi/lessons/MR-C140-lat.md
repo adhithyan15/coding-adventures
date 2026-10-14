@@ -15,6 +15,7 @@ concept_tag: MR-THINGS140-LAT
 prerequisites: [MR-C140-mati, MR-C140-khadak]
 sounds: []
 roots: []
+etymology_hook: "lāṭ 'wave': origin not settled; CDIAL's lāṭ is a different word, a large beam (CDIAL 10991)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C140-khadak]
 <!-- hl-knowledge: introduces=[MR-LEX-C140-THINGS140-05]; assesses=[] -->
 
 **लाट** — *lāṭ* — "a wave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **लाट** (*lāṭ*) is not settled. CDIAL has no entry for it in this sense; its Marathi *lāṭ* is a different word, "large beam" (CDIAL 10991).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

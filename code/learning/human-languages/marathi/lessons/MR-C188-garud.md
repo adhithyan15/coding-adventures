@@ -14,7 +14,8 @@ romanization: "garuḍ"
 concept_tag: MR-VASTU188-GARUD
 prerequisites: [MR-C188-dindarsika, MR-C188-khekda]
 sounds: []
-roots: []
+roots: [sanskrit-garuda]
+etymology_hook: "garuḍ ← Sanskrit garuḍa 'a mythical bird', a tatsama (CDIAL 4041)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C188-khekda]
 <!-- hl-knowledge: introduces=[MR-LEX-C188-VASTU188-03]; assesses=[] -->
 
 **गरुड** — *garuḍ* — "an eagle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गरुड** (*garuḍ*) is Sanskrit *garuḍa*, "a mythical bird", taken over whole as a learned loan, a tatsama (CDIAL 4041). Marathi uses the name of Vishnu's bird for the eagle.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

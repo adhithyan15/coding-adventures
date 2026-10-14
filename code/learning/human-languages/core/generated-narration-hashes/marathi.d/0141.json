@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 141,
-  "sourceHash": "fnv1a64:dab31dddb827acc3",
+  "sourceHash": "fnv1a64:d32e288ad32a83ec",
   "lessonIds": [
     "MR-C141-kinara",
     "MR-C141-bet",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch141.txt",
   "json": "marathi/narration/ch141.json",
-  "textHash": "fnv1a64:100ecc0e088fe668",
-  "jsonHash": "fnv1a64:5a2f6154b571ee13",
+  "textHash": "fnv1a64:d5b2b7d159f9304c",
+  "jsonHash": "fnv1a64:fb122b5d2df1ab75",
   "findings": []
 }

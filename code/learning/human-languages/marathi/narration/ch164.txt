@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to check, then the Marathi for to sign.
 You'll want to know: जाहीर करणे.
 जाहीर करणे — jāhīr karṇe — "to announce".
 
+The word, taken apart.
+जाहीर is a loan, usually traced through Persian to Arabic ẓāhir, "evident, manifest", whose root is ẓ-h-r (Lane). करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to sign, then the Marathi for to announc
 
 You'll want to know: टाळ्या वाजवणे.
 टाळ्या वाजवणे — ṭāḷyā vājavṇe — "to clap".
+
+The word, taken apart.
+टाळ्या is the plural of टाळी, "a clap", which CDIAL lists under Sanskrit tāḍa, "blow", whose form tāla meant "clap, rhythm" (CDIAL 5748). वाजवणे is the "make" form of वाजणे, "to sound", from Sanskrit vādyate, "is made to sound" (CDIAL 11513).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to announce, then the Marathi for to cla
 You'll want to know: ओलांडणे.
 ओलांडणे — olāṇḍṇe — "to cross".
 
+The word, taken apart.
+ओलांडणे (olāṇḍṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from avalaṇḍayati, "crosses", a form CDIAL reconstructs from its descendants (CDIAL 825).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to clap, then the Marathi for to cross.
 You'll want to know: वाढवणे.
 वाढवणे — vāḍhavṇe — "to increase".
 
+The word, taken apart.
+वाढवणे (vāḍhavṇe) is the "make" form of वाढणे, "to grow", from Sanskrit vardhate, "grows, increases" (CDIAL 11376); Sanskrit had its own "make" form, vardhayati, "makes grow" (CDIAL 11382).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to cross, then the Marathi for to increa
 
 You'll want to know: कमी करणे.
 कमी करणे — kamī karṇe — "to reduce".
+
+The word, taken apart.
+कमी is a loan, usually traced to Persian kam, "little, less", with the ending -ī. करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

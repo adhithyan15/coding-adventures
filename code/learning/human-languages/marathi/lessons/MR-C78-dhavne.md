@@ -14,7 +14,8 @@ romanization: "dhāvṇe"
 concept_tag: MR-VERB-DHAVNE
 prerequisites: [MR-C77-aikne, MR-C77-uthne]
 sounds: []
-roots: []
+roots: [sanskrit-dhavati]
+etymology_hook: "dhāvṇe ← Sanskrit dhāvati 'runs, flows', a tadbhava (CDIAL 6802)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C77-uthne]
 <!-- hl-knowledge: introduces=[MR-LEX-C78-VERBS78-01]; assesses=[] -->
 
 **धावणे** — *dhāvṇe* — "to run".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धावणे** (*dhāvṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dhāvati*, "runs, flows" (CDIAL 6802).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

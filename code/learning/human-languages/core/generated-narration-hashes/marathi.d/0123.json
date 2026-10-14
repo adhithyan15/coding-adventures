@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 123,
-  "sourceHash": "fnv1a64:58c4e90664783f20",
+  "sourceHash": "fnv1a64:4d8b4f4fa8c1d5a3",
   "lessonIds": [
     "MR-C123-garaj",
     "MR-C123-asa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch123.txt",
   "json": "marathi/narration/ch123.json",
-  "textHash": "fnv1a64:e4725c71410901c3",
-  "jsonHash": "fnv1a64:74ff7255493d77bf",
+  "textHash": "fnv1a64:ed3e34a90f40172c",
+  "jsonHash": "fnv1a64:62ec5881318ee046",
   "findings": []
 }

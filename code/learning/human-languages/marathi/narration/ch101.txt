@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a sheep, then the Marathi for a bird.
 You'll want to know: उंदीर.
 उंदीर — undīr — "a mouse".
 
+The word, taken apart.
+उंदीर (undīr) is a tadbhava of Sanskrit undura, "rat, mouse" (CDIAL 2095). CDIAL notes the view that the Sanskrit word comes from Austroasiatic.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a bird, then the Marathi for a mouse.
 
 You'll want to know: सिंह.
 सिंह — siṁha — "a lion".
+
+The word, taken apart.
+सिंह (siṁha) is Sanskrit siṁha, "lion", taken over whole as a learned loan, a tatsama (CDIAL 13384).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a mouse, then the Marathi for a lion.
 You'll want to know: वाघ.
 वाघ — vāgh — "a tiger".
 
+The word, taken apart.
+वाघ (vāgh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vyāghra, "tiger" (CDIAL 12193).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a lion, then the Marathi for a tiger.
 You'll want to know: हत्ती.
 हत्ती — hattī — "an elephant".
 
+The word, taken apart.
+हत्ती (hattī) is a tadbhava of Sanskrit hastin, "having hands", which meant "elephant" from the Rigveda on (CDIAL 14039). CDIAL suggests it renders karin, "elephant", a word perhaps of non-Aryan origin, linked by folk etymology with kara, "hand".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a tiger, then the Marathi for an elephan
 
 You'll want to know: माकड.
 माकड — mākaḍ — "a monkey".
+
+The word, taken apart.
+माकड (mākaḍ) is a tadbhava of Sanskrit markaṭa, "monkey" (CDIAL 9882). CDIAL suggests it may extend a word marka that may come from Dravidian, comparing Kannada maṅga, "monkey".
 
 What you've built.
 One more word for this chapter.

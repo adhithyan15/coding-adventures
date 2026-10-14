@@ -14,7 +14,8 @@ romanization: "sabhya"
 concept_tag: MR-GUN174-SABHYA
 prerequisites: [MR-C173-sudaivane, MR-C174-aramdayak]
 sounds: []
-roots: []
+roots: [sanskrit-sabhya]
+etymology_hook: "sabhya ← Sanskrit sabhya 'being in an assembly; polite', a tatsama (CDIAL 13171)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C174-aramdayak]
 <!-- hl-knowledge: introduces=[MR-LEX-C174-GUN174-02]; assesses=[] -->
 
 **सभ्य** — *sabhya* — "polite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सभ्य** (*sabhya*) is Sanskrit *sabhya*, "being in an assembly; polite", taken over whole as a learned loan, a tatsama (CDIAL 13171). It is built on *sabhā*, "assembly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

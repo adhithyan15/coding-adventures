@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a tip; a prize, then the Marathi for a s
 You'll want to know: अर्थव्यवस्था.
 अर्थव्यवस्था — arthavyavasthā — "the economy".
 
+The word, taken apart.
+अर्थव्यवस्था (arthavyavasthā) is a modern compound built from Sanskrit artha, "aim, wealth" (CDIAL 638), and vyavasthā, "arrangement".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a stop, then the Marathi for the economy
 
 You'll want to know: युद्ध.
 युद्ध — yuddha — "war".
+
+The word, taken apart.
+युद्ध (yuddha) is Sanskrit yuddha, "fought; battle", taken over whole as a learned loan, a tatsama (CDIAL 10499).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for the economy, then the Marathi for war.
 You'll want to know: शांतता.
 शांतता — śāntatā — "peace".
 
+The word, taken apart.
+शांतता (śāntatā) is Sanskrit śānta, "calm, appeased", with the ending -tā, "-ness": "calmness".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for war, then the Marathi for peace.
 You'll want to know: सैन्य.
 सैन्य — sainya — "an army".
 
+The word, taken apart.
+सैन्य (sainya) is Sanskrit sainya, "army", a tatsama built on senā, "army" (CDIAL 13602).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for peace, then the Marathi for an army.
 
 You'll want to know: सैनिक.
 सैनिक — sainik — "a soldier".
+
+The word, taken apart.
+सैनिक (sainik) is Sanskrit sainika, "belonging to an army, soldier", a tatsama built on senā, "army". CDIAL notes it, with a "Cf.", beside sainya, "army" (CDIAL 13602).
 
 What you've built.
 One more word for this chapter.

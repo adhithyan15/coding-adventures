@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a person, then the Marathi for a woman.
 You'll want to know: शेजारी.
 शेजारी — shejārī — "a neighbour".
 
+The word, taken apart.
+शेजारी (shejārī) is a tadbhava, a word inherited and reshaped by sound change. It comes from sagṛhya, "neighbouring", a form CDIAL reconstructs from its descendants (CDIAL 13077). CDIAL builds it on Sanskrit sagṛha, "with one's household".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a woman, then the Marathi for a neighbou
 
 You'll want to know: पाहुणा.
 पाहुणा — pāhuṇā — "a guest".
+
+The word, taken apart.
+पाहुणा (pāhuṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prāhuṇa, "guest" (CDIAL 8973).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a neighbour, then the Marathi for a gues
 You'll want to know: शिक्षक.
 शिक्षक — shikṣak — "a teacher".
 
+The word, taken apart.
+शिक्षक (shikṣak) is Sanskrit śikṣaka, "one who teaches", taken over whole as a learned loan, a tatsama. It is built on śikṣā, "learning, study".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a guest, then the Marathi for a teacher.
 You'll want to know: ऐकणे.
 ऐकणे — aikṇe — "to hear, to listen".
 
+The word, taken apart.
+ऐकणे (aikṇe) goes back to ācikhyati, "communicates", a form CDIAL reconstructs from Sanskrit ākhyāti, "tells". CDIAL prefers it to ācakṣati, "looks at" (CDIAL 1074, 1063).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a teacher, then the Marathi for to hear.
 
 You'll want to know: उठणे.
 उठणे — uṭhṇe — "to get up".
+
+The word, taken apart.
+उठणे (uṭhṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from utsthāti, "stands up", a form CDIAL reconstructs from its descendants (CDIAL 1900). It is ud, "up", and sthā, "to stand".
 
 What you've built.
 One more word for this chapter.

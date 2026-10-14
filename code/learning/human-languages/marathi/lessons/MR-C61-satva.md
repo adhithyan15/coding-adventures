@@ -7,14 +7,14 @@ chapter: 61
 type: word
 headword: सातवा
 romanization: sātvā
-gloss: "seventh — and the first sign that the dictionaries never bothered to list these"
+gloss: "seventh — and the first sign that Molesworth's dictionary never bothered to list these"
 concept_tag: MR-ORDINAL-SEVENTH
 prerequisites: [MR-C61-sahava, MR-C60-pahila, MR-C57-chauda, MR-C42-khaali]
 sounds: []
-roots: []
-etymology_hook: "Molesworth's dictionary has no entry for सातवा at all -- the nearest headword on the page is सातवार, a coast-term for the seventh wave"
+roots: [sanskrit-saptama]
+etymology_hook: "sātvā ← Sanskrit saptama 'seventh', a tadbhava (CDIAL 13151)"
 duration:
-  max_seconds: 210
+  max_seconds: 235
 requires:
   knowledge: [MR-LEX-SAHAVA, MR-GRAMMAR-ORDINAL-VA, MR-LEX-PAHILA, MR-LEX-SAAT, MR-LEX-CHAUDA, MR-POSTP-KHAALI]
 introduces:
@@ -55,7 +55,12 @@ One small thing in the sound. **सहा** ends in a vowel, so **सहाव�
 three beats — *sa-hā-vā*. **सात** ends in a consonant, so **सातवा** comes out in
 two — *sāt-vā*. The ending did not change; the number it landed on did.
 
-## Grammar Lens: the dictionaries agree with you
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सातवा** is inherited: CDIAL lists it under Sanskrit *saptama*, "seventh", whose *-ma* became **-वा** (CDIAL 13151).
+
+## Grammar Lens: Molesworth agrees with you
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-SATVA, MR-GRAMMAR-ORDINAL-VA, MR-LEX-PAHILA] -->
 
 Look up **पहिला** in Molesworth's 1857 dictionary and it is there, with its own
@@ -72,7 +77,7 @@ visible in the dictionary's own table of contents.**
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-SATVA, MR-LEX-SAHAVA, MR-GRAMMAR-ORDINAL-VA] -->
 
-<!-- hl-activity: {"id":"MR-C61-satva-r1","kind":"text","assesses":["MR-LEX-SATVA","MR-LEX-SAHAVA"],"prompt":"Say sixth and seventh, then say which of the two an 1857 dictionary bothered to print.","answer":"sahāvā, sātvā — neither of them","accepted":["सहावा सातवा neither","sahava satva neither"],"feedback":{"correct":"Neither. Only the four inherited ones were printed.","incorrect":"Both are built from the number, so neither needed an entry."},"response_seconds":25} -->
+<!-- hl-activity: {"id":"MR-C61-satva-r1","kind":"text","assesses":["MR-LEX-SATVA","MR-LEX-SAHAVA"],"prompt":"Say sixth and seventh, then say which of the two an 1857 dictionary bothered to print.","answer":"sahāvā, sātvā — neither of them","accepted":["सहावा सातवा neither","sahava satva neither"],"feedback":{"correct":"Neither. Only the four irregular ones were printed.","incorrect":"Both follow the rule, so neither needed an entry."},"response_seconds":25} -->
 
 [PAUSE 1s]
 - [YOU SAY: *sahāvā*, *sātvā*]

@@ -14,7 +14,8 @@ romanization: "tapśīl"
 concept_tag: MR-VASTU191-TAPSIL
 prerequisites: [MR-C191-saciv, MR-C191-hiseb]
 sounds: []
-roots: []
+roots: [arabic-tafsil]
+etymology_hook: "tapśīl ← Arabic tafṣīl 'a setting out in detail', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C191-hiseb]
 <!-- hl-knowledge: introduces=[MR-LEX-C191-VASTU191-04]; assesses=[] -->
 
 **तपशील** — *tapśīl* — "details".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तपशील** (*tapśīl*) is a loan from Arabic *tafṣīl*, "a setting out in detail", which reached Marathi through Persian. Its Arabic root is *f-ṣ-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

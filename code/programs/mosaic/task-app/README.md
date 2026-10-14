@@ -267,6 +267,12 @@ SwiftUI. The downloadable web/native artifact matrix remains unchanged: Static
 HTML, Web Components, and Paint are CI-only, while signing, notarization, and
 installers remain #13977.
 
+The `task-app-v0.5.5` patch preserves the seven-column XAML calendar and
+reconciles Qt elevation-shadow reporting. The downloadable artifact matrix
+remains unchanged: Static HTML, Web Components, and Paint are CI-only, while
+signing, notarization, and installers remain #13977. Publication and the
+immutable asset audit are tracked in #17469.
+
 From the repository's **Actions** tab, run **Release TaskApp** from `main` and
 provide both the bare version and its matching product tag. The equivalent CLI
 command for the first release is:

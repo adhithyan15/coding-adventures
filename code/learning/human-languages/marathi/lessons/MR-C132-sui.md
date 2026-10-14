@@ -14,7 +14,8 @@ romanization: "suī"
 concept_tag: MR-THINGS132-SUI
 prerequisites: [MR-C132-hatoda, MR-C132-katri]
 sounds: []
-roots: []
+roots: [sanskrit-suci]
+etymology_hook: "suī ← Sanskrit sūcī 'needle', a tadbhava (CDIAL 13551)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C132-katri]
 <!-- hl-knowledge: introduces=[MR-LEX-C132-THINGS132-03]; assesses=[] -->
 
 **सुई** — *suī* — "a needle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुई** (*suī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sūcī*, "needle" (CDIAL 13551).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

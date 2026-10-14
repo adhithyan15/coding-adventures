@@ -14,7 +14,8 @@ romanization: "ānand gheṇe"
 concept_tag: MR-VERB-ANAND-GHENE
 prerequisites: [MR-C252-sobat-jane, MR-C253-valne]
 sounds: []
-roots: []
+roots: [ananda-sanskrit, sanskrit-grbhayati]
+etymology_hook: "ānand: Sanskrit ānanda 'happiness', a tatsama (CDIAL 1172); gheṇe ← gṛbhāyati (CDIAL 4236)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C253-valne]
 <!-- hl-knowledge: introduces=[MR-LEX-C253-ACT253-02]; assesses=[] -->
 
 **आनंद घेणे** — *ānand gheṇe* — "to enjoy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आनंद** is Sanskrit *ānanda*, "happiness", a tatsama (CDIAL 1172). **घेणे** comes from Sanskrit *gṛbhāyati*, "takes, seizes" (CDIAL 4236).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

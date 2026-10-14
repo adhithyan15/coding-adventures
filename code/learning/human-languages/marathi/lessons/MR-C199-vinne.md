@@ -14,7 +14,8 @@ romanization: "viṇṇe"
 concept_tag: MR-VERB-VINNE
 prerequisites: [MR-C199-gathne, MR-C199-bhet-dene]
 sounds: []
-roots: []
+roots: [indo-aryan-vinati]
+etymology_hook: "viṇṇe ← *vināti 'weaves', a reconstructed form; a tadbhava (CDIAL 11773)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C199-bhet-dene]
 <!-- hl-knowledge: introduces=[MR-LEX-C199-ACT199-04]; assesses=[] -->
 
 **विणणे** — *viṇṇe* — "to knit, to weave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विणणे** (*viṇṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vināti*, "weaves", a form CDIAL reconstructs from its descendants (CDIAL 11773). Bloch derived it instead from Sanskrit *vayana*, "weaving".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

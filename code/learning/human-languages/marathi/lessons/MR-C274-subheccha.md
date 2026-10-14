@@ -14,7 +14,8 @@ romanization: "śubhecchā"
 concept_tag: MR-VASTU274-SUBHECCHA
 prerequisites: [MR-C273-adar, MR-C273-daya]
 sounds: []
-roots: []
+roots: [sanskrit-shubha, sanskrit-iccha]
+etymology_hook: "śubhecchā: Sanskrit śubha 'good' + icchā 'wish'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C273-daya]
 <!-- hl-knowledge: introduces=[MR-LEX-C274-VASTU274-01]; assesses=[] -->
 
 **शुभेच्छा** — *śubhecchā* — "good wishes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शुभेच्छा** (*śubhecchā*) is a compound built from Sanskrit *śubha*, "good, auspicious" (CDIAL 12532), and *icchā*, "wish" (CDIAL 1557).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 82,
-  "sourceHash": "fnv1a64:5f1ce2265c6c5cd0",
+  "sourceHash": "fnv1a64:370381be31dc8ec7",
   "lessonIds": [
     "MR-C82-phekne",
     "MR-C82-udne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch82.txt",
   "json": "marathi/narration/ch82.json",
-  "textHash": "fnv1a64:0bfebd29a7100823",
-  "jsonHash": "fnv1a64:219e787d91a57f23",
+  "textHash": "fnv1a64:95ad7ba53e3e7a06",
+  "jsonHash": "fnv1a64:c58bb595c6fb7d16",
   "findings": []
 }

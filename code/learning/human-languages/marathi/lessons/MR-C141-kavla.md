@@ -14,7 +14,8 @@ romanization: "kāvḷā"
 concept_tag: MR-THINGS141-KAVLA
 prerequisites: [MR-C141-vij, MR-C141-vadal]
 sounds: []
-roots: []
+roots: [sanskrit-kaka]
+etymology_hook: "kāvḷā ← Sanskrit kāka 'crow', with an added -la-; a tadbhava (CDIAL 2993)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C141-vadal]
 <!-- hl-knowledge: introduces=[MR-LEX-C141-THINGS141-05]; assesses=[] -->
 
 **कावळा** — *kāvḷā* — "a crow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कावळा** (*kāvḷā*) is a tadbhava of Sanskrit *kāka*, "crow", with an added *-la-* (CDIAL 2993). CDIAL notes that the word imitates the bird's call.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

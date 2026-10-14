@@ -12,6 +12,9 @@ Before the new one: say the Marathi for ninth, then the Marathi for tenth.
 You'll want to know: हात.
 हात — hāt — "a hand".
 
+The word, taken apart.
+हात (hāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hasta, "hand" (CDIAL 14024). CDIAL glosses the Marathi word "hand, arm, cubit".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for tenth, then the Marathi for a hand.
 
 You'll want to know: पाय.
 पाय — pāy — "a foot, a leg".
+
+The word, taken apart.
+पाय (pāy) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pāda, "foot" (CDIAL 8056).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a hand, then the Marathi for a foot.
 You'll want to know: केस.
 केस — kes — "hair".
 
+The word, taken apart.
+केस (kes) is inherited from Sanskrit keśa, "hair of the head", and has come down with almost no change (CDIAL 3471).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a foot, then the Marathi for hair.
 You'll want to know: दात.
 दात — dāt — "a tooth".
 
+The word, taken apart.
+दात (dāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from danta, "tooth" (CDIAL 6152). The same ancient word as Latin dens and English tooth.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for hair, then the Marathi for a tooth.
 
 You'll want to know: गळा.
 गळा — gaḷā — "the throat".
+
+The word, taken apart.
+गळा (gaḷā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gala, "throat, neck" (CDIAL 4070).
 
 What you've built.
 One more word for this chapter.

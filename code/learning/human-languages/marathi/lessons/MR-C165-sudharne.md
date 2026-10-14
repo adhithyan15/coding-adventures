@@ -14,7 +14,8 @@ romanization: "sudhārṇe"
 concept_tag: MR-VERB-SUDHARNE
 prerequisites: [MR-C164-kami-karne, MR-C165-cukne]
 sounds: []
-roots: []
+roots: [indo-aryan-shuddhakara]
+etymology_hook: "sudhārṇe ← *śuddhakāra 'making clean', a reconstructed form; a tadbhava (CDIAL 12521)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C165-cukne]
 <!-- hl-knowledge: introduces=[MR-LEX-C165-ACT165-02]; assesses=[] -->
 
 **सुधारणे** — *sudhārṇe* — "to improve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुधारणे** (*sudhārṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*śuddhakāra*, "making clean", a form CDIAL reconstructs from its descendants (CDIAL 12521). It is *śuddha*, "clean", and *kāra*, "making".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

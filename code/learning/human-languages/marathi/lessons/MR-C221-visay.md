@@ -14,7 +14,8 @@ romanization: "viṣay"
 concept_tag: MR-VASTU221-VISAY
 prerequisites: [MR-C220-asru, MR-C221-ahval]
 sounds: []
-roots: []
+roots: [sanskrit-vishaya]
+etymology_hook: "viṣay ← Sanskrit viṣaya 'scope, sphere', a tatsama (CDIAL 11973)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C221-ahval]
 <!-- hl-knowledge: introduces=[MR-LEX-C221-VASTU221-02]; assesses=[] -->
 
 **विषय** — *viṣay* — "a subject, a topic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विषय** (*viṣay*) is Sanskrit *viṣaya*, "scope, sphere", taken over whole as a learned loan, a tatsama (CDIAL 11973).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

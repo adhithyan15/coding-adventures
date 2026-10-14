@@ -11,7 +11,8 @@ gloss: ten — the word every teen in the next two chapters is built out of
 concept_tag: MR-LEX-DAHA
 prerequisites: [MR-C55-aath, MR-C55-nau, MR-R55-six-to-nine]
 sounds: [matra-aa]
-roots: []
+roots: [sanskrit-dasha]
+etymology_hook: "dahā ← Sanskrit daśa 'ten', a tadbhava; the same ancient word as English ten (CDIAL 6227)"
 duration:
   max_seconds: 210
 requires:

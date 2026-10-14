@@ -14,7 +14,8 @@ romanization: "usne deṇe"
 concept_tag: MR-VERB-USNE-DENE
 prerequisites: [MR-C196-tayari-karne, MR-C196-olakh-karun-dene]
 sounds: []
-roots: []
+roots: [sanskrit-dadati]
+etymology_hook: "usne: origin not settled; deṇe ← dadāti 'gives' (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C196-olakh-karun-dene]
 <!-- hl-knowledge: introduces=[MR-LEX-C196-ACT196-05]; assesses=[] -->
 
 **उसने देणे** — *usne deṇe* — "to lend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **उसने**, "on loan", is not settled: neither CDIAL nor DEDR has an entry for it. **देणे** comes from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

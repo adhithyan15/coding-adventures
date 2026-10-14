@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Mind and the Page",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8ed9b82e49b9ff3a",
+  "sourceHash": "fnv1a64:fa756a51d8eb1674",
   "lessons": [
     {
       "id": "MR-C08-vichar-karne",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:82cebf1fcc9fb3a4",
+      "sourceHash": "fnv1a64:956b7cf21ae272f6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -259,7 +259,7 @@
             },
             {
               "kind": "speech",
-              "text": "The first one is worth hearing literally: knowing a language is it coming to you, on येणे — the verb that is जाणे with आ- \"toward here\" fixed to the front. Understanding works the same way. Neither is something you do."
+              "text": "The first one is worth hearing literally: knowing a language is it coming to you, on येणे — a verb of going with आ- \"toward here\" fixed to the front. Understanding works the same way. Neither is something you do."
             }
           ]
         },

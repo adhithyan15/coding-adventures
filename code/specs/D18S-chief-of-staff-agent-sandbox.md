@@ -481,7 +481,7 @@ supervisor:**
 | Linux | Landlock restricts ptracing outside the domain (ABI v1), and seccomp denies the syscalls outright. **Each agent must call `landlock_restrict_self()` in its own process after fork** — a domain shared across agents does not separate them. At negotiated **ABI 0 the seccomp filter is the sole mechanism, and distinct UIDs become required rather than recommended.** | none |
 | OpenBSD | `pledge` lacking `ptrace`, `proc`, and `ps`; procfs has not existed since 5.7 | none |
 | FreeBSD | capability mode returns `ECAPMODE` for every global-namespace call; the only process handles are `procdesc` descriptors, and the agent holds none | none |
-| Windows | each agent gets its own AppContainer SID; `CreateAppContainerProfile` needs no administrator. **Container names derive from the attested `agent_id`; `ERROR_ALREADY_EXISTS` without a verified matching SID is a launch failure** — otherwise two agents silently share one principal. Agents run as LPAC, or `ALL APPLICATION PACKAGES` (S-1-15-2-1) is explicitly denied on supervisor-owned objects, since every AppContainer token carries it. | none |
+| Windows | each agent gets its own AppContainer SID, which needs no administrator. **The SID is derived from a name that is the digest of the attested `agent_id`** (`DeriveAppContainerSidFromAppContainerName`; its profile exists only around each process creation, step 8), so two agents never silently share one principal. Agents run as LPAC, or `ALL APPLICATION PACKAGES` (S-1-15-2-1) is explicitly denied on supervisor-owned objects, since every AppContainer token carries it. | none |
 | macOS | Seatbelt `(deny mach-priv-task-port)`, `(deny mach-lookup)`, `(deny process-info*)`. `process-info*` alone gates enumeration, **not Mach task-port acquisition, which is the actual memory-read vector.** The broker and supervisor are built with the Hardened Runtime and without `com.apple.security.get-task-allow`; absent that, a same-UID caller can take their task ports regardless of the agent's own profile. | none |
 
 Distinct UIDs on Unix remain **recommended** as defence in depth against a gap
@@ -603,9 +603,8 @@ apart. This design has no such namespace. Principal separation remains
 not a launch failure.
 
 Where an OS supplies per-agent principals for free it is still used: an
-AppContainer profile *is* a SID and `CreateAppContainerProfile` needs no
-administrator, so each Windows agent gets its own and profiles are never
-shared.
+AppContainer SID needs no administrator, so each Windows agent gets its own,
+derived from its `agent_id`, and never shared (step 8).
 
 #### The checkable half is key NAMES, and that is accepted
 
@@ -2303,6 +2302,198 @@ through S-I3 before two weeks are spent on Windows.
         fixture. The Linux-only assertions, `NoNewPrivs` and the seccomp
         mode, stay Linux-only.
 8. **Windows AppContainer** (Tier A). The expensive one; schedule accordingly.
+
+   Windows has an OS principal per agent for free, and the kernel checks it
+   on every access, so there is no filter to install and no shim to run.
+   What it lacks is a way to say any of this through Rust's `Command`:
+   `PROC_THREAD_ATTRIBUTE_*` needs `STARTUPINFOEXW`, and std's support for
+   it (`raw_attribute`) is unstable. So the applier creates the process
+   itself, with `CreateProcessW`, and owns the child it returns.
+
+   ```text
+     supervisor                                        agent
+     ------------------------------------------------  ----------------
+     WindowsConfinement::prepare_verified(plan, agent, agent_id)
+       re-verifies the agent through its held handle
+       the path is canonical and names that handle
+       the AppContainer SID for agent_id
+       an ACE: that SID may read and execute the image
+     spawn(argv, env, stdin, stdout)
+       a job: kill-on-close, one process, UI limits
+       CreateProcessW(SUSPENDED, attributes below)
+       launch checks (S-P4), from outside:
+         token is AppContainer, LPAC, that SID,
+         no capabilities, Low integrity
+         the process is in the job
+         its mitigation policies are the ones set
+         its image is the file whose handle is held
+       ResumeThread ───────────────────────────────►  first
+                                                       instruction,
+                                                       confined
+   ```
+
+   Nothing of the agent runs before the checks pass: the process is
+   created suspended, so not even its loader has run. It is created
+   detached, with no console: a console needs a console host, which
+   Windows starts as a child of the agent, in its job and under its
+   policies, all of which forbid one. Any failed check
+   terminates it through the job and refuses the launch (S-P3).
+
+   **The attributes.** One `PROC_THREAD_ATTRIBUTE_LIST` carries them all:
+
+   ```text
+     attribute                       value
+     ------------------------------  -----------------------------------------
+     SECURITY_CAPABILITIES           the agent's AppContainer SID, no
+                                     capabilities: no network, no
+                                     library or device access
+     ALL_APPLICATION_PACKAGES_POLICY OPT_OUT: a less privileged AppContainer
+                                     (LPAC), so ALL APPLICATION PACKAGES
+                                     (S-1-15-2-1) grants nothing (S-I5)
+     HANDLE_LIST                     stdin, stdout, stderr (NUL), and the
+                                     handles passed on (S-I3); nothing else
+     JOB_LIST                        the job, so the process is in it from
+                                     its creation
+     CHILD_PROCESS_POLICY            RESTRICTED: it can create no process
+     MITIGATION_POLICY               (DEP and SEHOP for a 32-bit agent),
+                                     bottom-up and high-entropy
+                                     ASLR, terminate on heap corruption,
+                                     strict handle checks, no extension
+                                     points, no dynamic code, no remote or
+                                     low-label images, system32 first, no
+                                     non-Microsoft DLLs, no non-system fonts
+   ```
+
+   **The job** has `KILL_ON_JOB_CLOSE`, an active-process limit of one,
+   `DIE_ON_UNHANDLED_EXCEPTION`, and every UI restriction (desktop,
+   display settings, exit, global atoms, user handles, clipboard, system
+   parameters). The supervisor holds the only handle to it, so dropping
+   the child kills the agent and anything it could have started.
+
+   **The principal (S-I5's Windows row).** Each agent gets its own
+   AppContainer SID, derived (`DeriveAppContainerSidFromAppContainerName`)
+   from the name `chief-of-staff.<32 hex digits>`: the first 16 bytes of
+   SHA-256 over the attested `agent_id`. The derivation is deterministic,
+   so an agent has the same principal on every launch, and two agents
+   share one only through a SHA-256 collision. A profile
+   (`CreateAppContainerProfile`) gives the agent a storage folder under
+   `%LOCALAPPDATA%\Packages` and a registry key, both writable by its SID
+   and kept across runs, which is persistent state S-I1 does not allow.
+   But `CreateProcessW` needs one: it looks the SID up among the
+   registered profiles and fails with `ERROR_FILE_NOT_FOUND` otherwise
+   (seen on windows-2025; an earlier draft of this step said the kernel
+   needed only the SID). So the profile exists only around the creation:
+   registered just before `CreateProcessW`, removed (folder and key with
+   it) while the agent is still suspended, before any check and before its
+   first instruction. The process keeps its container through its token.
+   After the removal, the storage folder Windows reported for the profile
+   must be gone (`DeleteAppContainerProfile` can succeed and leave storage
+   it could not delete). A removal that fails, or leaves the folder, ends
+   the agent unrun. Only a process with the agent's SID could write to the
+   profile while it exists, so the supervisor runs at most one instance of
+   an agent at a time: a spawn claims the agent's name, and the claim is
+   released only once that instance has exited (one that does not exit
+   within ten seconds of being ended keeps it for good). The
+   register-create-remove span is serialized within the supervisor, so one
+   creation never loses its profile to another's removal. A profile found
+   already registered was left by an earlier spawn whose removal failed,
+   or by a crash inside that span; it is removed like a fresh one.
+
+   **Exec by path, pinned to a held handle (S-K1).** `CreateProcessW` takes
+   a path, never a handle. So:
+   - `VerifiedExecutable` on Windows opens the file sharing read only, so
+     no one can write, rename or delete it while it is held. It does not
+     follow a reparse point at the last component and refuses one, and it
+     refuses anything but a regular file. Its digest is checked through
+     the held handle at open and before every launch.
+   - The share mode keeps out handles opened while it is held, not a
+     writable mapping someone made earlier. So, as the Unix owner and mode
+     rule does, the file must be owned by this user, Administrators, SYSTEM
+     or TrustedInstaller, and its access list may give no one else any
+     write-class right (write or append data, delete, change the list or
+     the owner, generic write or all). A file with no list is refused.
+   - The path must be canonical: exactly the final path of the held handle
+     (`GetFinalPathNameByHandleW`), case included.
+   - After the suspended creation, the child's image name
+     (`QueryFullProcessImageNameW`, the path the image was opened by) and
+     the held handle's final path must both still equal the verified path.
+     The held file cannot be renamed, and a directory above it cannot be
+     renamed while it is open without delete sharing; these checks confirm
+     that the path led to the held file at the creation.
+
+   **Reading its own image.** An LPAC token cannot read a file merely
+   because ALL APPLICATION PACKAGES may. The applier adds one ACE to the
+   agent's image: its AppContainer SID may read and execute it. The ACE
+   stays, since it grants that agent only what every launch of it needs.
+   It is added by reading the list, adding to it and writing it back
+   through a handle reopened from the held one, never by path. That
+   read-modify-write is serialized within the supervisor, so two agents
+   prepared at once from one image never drop each other's entry.
+   The working directory is the system directory, which ALL RESTRICTED
+   APPLICATION PACKAGES (S-1-15-2-2) may read.
+
+   **LPAC, as the launch check reads it.** `TokenIsLessPrivilegedAppContainer`
+   cannot, by inference, be queried on windows-2025 (an unlabelled
+   `ERROR_INVALID_PARAMETER` from the launch check, which every token query
+   now labels). What makes a token LPAC is its `WIN://NOALLAPPPKG` security
+   attribute, which access checks consult to leave out ALL APPLICATION
+   PACKAGES, so the check reads `TokenSecurityAttributes` for it when the
+   information class is refused. Any other failure refuses the launch.
+
+   **The environment** is the closed set of the macOS applier: only names
+   set on the command, each in the grantable set, with plain values. It is
+   passed as an explicit Unicode block, never inherited. The applier adds
+   two names Windows needs: `SystemRoot`, which its own libraries read,
+   and `LOCALAPPDATA`, without which `CreateProcessW` refuses an
+   AppContainer (`ERROR_ENVVAR_NOT_FOUND`, seen on windows-2025). The
+   latter is set to the container's own `AC` folder, where Windows is
+   reported to point it in any case, and which is removed before the agent
+   runs; Windows may point `TEMP` and `TMP` there as well.
+
+   **Residuals, recorded.**
+   - *A concurrent std spawn.* A handle on the list must be inheritable.
+     std's `Command` spawns with `bInheritHandles=TRUE` and no list, so a
+     std child created by another supervisor thread in the window could
+     inherit one: the agent's stdin (and read what is sent to it), its
+     stdout (and hold the supervisor's end-of-file back). The applier marks
+     the handles immediately before its `CreateProcessW` and closes its
+     copies right after. **Before 8b passes a broker's keys this way, every
+     Windows spawn in the supervisor takes one spawn lock** (std's and this
+     applier's), so the window holds no other spawn. It ends entirely when
+     every agent spawn goes through this applier (step 9).
+   - *One agent, two instances.* Two launches of one `agent_id` would share
+     a SID, and processes of one AppContainer can open each other; either
+     could also write into the profile the other's spawn registers. So a
+     supervisor runs one instance of an agent at a time (above). Before 8b
+     a broker runs under a SID of its own (the agent's, plus a suffix).
+   - *One supervisor per user.* The profile span and the one-instance rule
+     hold within one supervisor process. A second supervisor, or any tool
+     of the same user, managing the same agent's profile could make a
+     creation fail (its profile removed early, `ERROR_FILE_NOT_FOUND`).
+     A second supervisor running the same agent would also reopen the
+     shared-SID window above, caught then only by the folder check (the
+     profile's registry key is not re-checked). The daemon is the only
+     supervisor.
+   - *Old image ACEs.* An agent's image keeps the ACE for its SID after
+     the agent is gone; reinstalling the agent reuses it.
+   - *Grants.* No `Direct` grant exists until 8c; a plan with one is
+     refused (`Unsupported`), never run without it.
+
+   Sub-steps:
+   1. **P2.8a:** `VerifiedExecutable` on Windows, and
+      `chief-of-staff-windows-sandbox`: `WindowsConfinement` and its
+      `ConfinedChild`. Tested on `windows-2025`: a probe agent proves each
+      denial against an unconfined control. The denials are files outside
+      the agent, the network, processes, other processes' handles, the
+      registry outside its container, inherited handles, and the token
+      and policies themselves.
+   2. **P2.8b:** the broker on Windows. Its key handles go on the handle
+      list, and their values reach it in one environment variable. The
+      supervisor-wide spawn lock and the broker's own SID come first (see
+      the residuals). The daemon accepts `[hosts.broker]` on Windows, and
+      the broker end-to-end tests run on `windows-2025`.
+   3. **P2.8c:** `Direct` file grants, as per-object ACEs for the agent's
+      SID, checked as on macOS and removed when the agent ends.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather
    than the enforcement mechanism — its flags are retained beneath the OS plan
    as the S-I8 inner layer, not deleted.

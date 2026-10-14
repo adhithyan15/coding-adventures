@@ -14,7 +14,8 @@ romanization: "kambar"
 concept_tag: MR-THINGS146-KAMBAR
 prerequisites: [MR-C146-nakh, MR-C146-path]
 sounds: []
-roots: []
+roots: [persian-kamar]
+etymology_hook: "kambar: usually traced to Persian kamar 'waist'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C146-path]
 <!-- hl-knowledge: introduces=[MR-LEX-C146-THINGS146-04]; assesses=[] -->
 
 **कंबर** — *kambar* — "the waist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कंबर** (*kambar*) is a loan, usually traced to Persian *kamar*, "waist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

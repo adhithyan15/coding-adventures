@@ -14,7 +14,8 @@ romanization: "pāūs"
 concept_tag: MR-NATURE99-PAUS
 prerequisites: [MR-C98-ag, MR-C98-barpha]
 sounds: []
-roots: []
+roots: [sanskrit-pravrsh]
+etymology_hook: "pāūs ← Sanskrit prāvṛṣ 'the rainy season', a tadbhava (CDIAL 8964)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C98-barpha]
 <!-- hl-knowledge: introduces=[MR-LEX-C99-NATURE99-01]; assesses=[] -->
 
 **पाऊस** — *pāūs* — "rain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पाऊस** (*pāūs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *prāvṛṣ*, "the rainy season" (CDIAL 8964). It is built on *vṛṣ*, "to rain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

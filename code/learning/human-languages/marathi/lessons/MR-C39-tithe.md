@@ -11,7 +11,8 @@ gloss: there — the far half of a pointing pair, and the first thing you can an
 concept_tag: MR-LEX-TITHE
 prerequisites: [MR-W05-i-matra, MR-A1M01-reader-greeting, MR-C36-jevha, MR-C38-kuthe, MR-W39-tha]
 sounds: [matra-i, aspirated-th, matra-e]
-roots: []
+roots: [sanskrit-tatra]
+etymology_hook: "tithe: CDIAL lists Marathi tethẽ 'there' under Sanskrit tatra 'there' (CDIAL 5643)"
 duration:
   max_seconds: 210
 requires:

@@ -14,7 +14,8 @@ romanization: "raḍṇe"
 concept_tag: MR-VERB-RADNE
 prerequisites: [MR-C79-dhune, MR-C79-hasne]
 sounds: []
-roots: []
+roots: [sanskrit-ratati]
+etymology_hook: "raḍṇe ← Sanskrit raṭati 'cries, yells', a tadbhava (CDIAL 10590)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C79-hasne]
 <!-- hl-knowledge: introduces=[MR-LEX-C79-VERBS79-03]; assesses=[] -->
 
 **रडणे** — *raḍṇe* — "to cry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रडणे** (*raḍṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *raṭati*, "cries, yells" (CDIAL 10590).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

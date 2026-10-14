@@ -14,7 +14,8 @@ romanization: "mat deṇe"
 concept_tag: MR-VERB-MAT-DENE
 prerequisites: [MR-C198-khokne, MR-C198-thartharne]
 sounds: []
-roots: []
+roots: [sanskrit-mata, sanskrit-dadati]
+etymology_hook: "mat: Sanskrit mata 'thought, opinion', a tatsama; deṇe ← dadāti 'gives' (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C198-thartharne]
 <!-- hl-knowledge: introduces=[MR-LEX-C198-ACT198-04]; assesses=[] -->
 
 **मत देणे** — *mat deṇe* — "to vote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मत** is Sanskrit *mata*, "thought, opinion", a tatsama. **देणे** comes from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

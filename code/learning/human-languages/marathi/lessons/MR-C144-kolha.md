@@ -14,7 +14,8 @@ romanization: "kolhā"
 concept_tag: MR-THINGS144-KOLHA
 prerequisites: [MR-C143-sasa, MR-C143-landga]
 sounds: []
-roots: []
+roots: [sanskrit-kroshtr]
+etymology_hook: "kolhā ← Sanskrit kroṣṭṛ 'crying; jackal', a tadbhava (CDIAL 3615)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C143-landga]
 <!-- hl-knowledge: introduces=[MR-LEX-C144-THINGS144-01]; assesses=[] -->
 
 **कोल्हा** — *kolhā* — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोल्हा** (*kolhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kroṣṭṛ*, "crying; jackal" (CDIAL 3615). It is built on *kruś*, "to cry out". CDIAL glosses the Marathi word "jackal".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sākhar"
 concept_tag: MR-FOOD86-SAKHAR
 prerequisites: [MR-C86-batata, MR-C86-gajar]
 sounds: []
-roots: []
+roots: [sanskrit-sharkara-sugar]
+etymology_hook: "sākhar ← Sanskrit śarkarā 'candied sugar' (CDIAL 12338); Przyluski saw a Mon-Khmer word behind the sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C86-gajar]
 <!-- hl-knowledge: introduces=[MR-LEX-C86-FOOD86-04]; assesses=[] -->
 
 **साखर** — *sākhar* — "sugar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साखर** (*sākhar*) is a tadbhava of Sanskrit *śarkarā*, "candied sugar" (CDIAL 12338). CDIAL reports Przyluski's view that the "sugar" sense came from a Mon-Khmer word that merged early with *śarkarā*, "gravel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

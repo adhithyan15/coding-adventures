@@ -14,7 +14,8 @@ romanization: "pahāṭ"
 concept_tag: MR-WANT124-PAHAT
 prerequisites: [MR-C123-tharavne, MR-C124-yojana]
 sounds: []
-roots: []
+roots: [sanskrit-prabha]
+etymology_hook: "pahāṭ: CDIAL lists it, as 'period before sunrise, dawn', under Sanskrit prabhā 'light', with a query (CDIAL 8705)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C124-yojana]
 <!-- hl-knowledge: introduces=[MR-LEX-C124-WANT124-02]; assesses=[] -->
 
 **पहाट** — *pahāṭ* — "dawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पहाट** (*pahāṭ*) is inherited. CDIAL lists Marathi *pahāṭ*, "period before sunrise, dawn", under Sanskrit *prabhā*, "light", with a query on how the word was formed (CDIAL 8705).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

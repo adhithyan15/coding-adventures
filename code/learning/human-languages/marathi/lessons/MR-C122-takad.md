@@ -14,7 +14,8 @@ romanization: "tākad"
 concept_tag: MR-CAN122-TAKAD
 prerequisites: [MR-C122-sadhan, MR-C122-malak]
 sounds: []
-roots: []
+roots: [arabic-taqa]
+etymology_hook: "tākad ← Arabic ṭāqa 'power, strength', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C122-malak]
 <!-- hl-knowledge: introduces=[MR-LEX-C122-CAN122-03]; assesses=[] -->
 
 **ताकद** — *tākad* — "strength".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ताकद** (*tākad*) is a loan from Arabic *ṭāqa*, "power, strength", which reached Marathi through Persian. Its Arabic root is *ṭ-w-q* (Lane). Persian and Hindustani say *ṭāqat*; Marathi ends it in **द**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

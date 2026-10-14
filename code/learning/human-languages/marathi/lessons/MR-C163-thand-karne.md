@@ -14,7 +14,8 @@ romanization: "thaṇḍ karṇe"
 concept_tag: MR-VERB-THAND-KARNE
 prerequisites: [MR-C162-bolavne, MR-C162-abhar-manne]
 sounds: []
-roots: []
+roots: [sanskrit-stabdha, sanskrit-karoti]
+etymology_hook: "thaṇḍ: CDIAL lists it under Sanskrit stabdha 'stiff' (CDIAL 13676); karṇe ← karoti 'does' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C162-abhar-manne]
 <!-- hl-knowledge: introduces=[MR-LEX-C163-ACT163-01]; assesses=[] -->
 
 **थंड करणे** — *thaṇḍ karṇe* — "to cool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थंड** CDIAL lists under Sanskrit *stabdha*, "stiff; solidified", through a form it says was influenced by another word (CDIAL 13676). **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

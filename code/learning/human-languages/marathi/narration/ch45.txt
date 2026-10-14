@@ -19,6 +19,9 @@ The word has a second life you should meet now, because you will hear it far mor
 बरोबर! — barobar! — that's right!
 So one word gives you a way to travel with somebody and a way to agree with them.
 
+The word, taken apart.
+बरोबर (barobar) is a loan, usually traced to Persian barābar, "equal, level". Marathi uses it for "with" and, said alone, for "that's right".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: barobar — with]
@@ -51,6 +54,9 @@ A noun takes an oblique stem before a postposition. A pronoun does too, and its 
 Say the middle form of each line aloud. Each one is माझं / तुझं / तुमचं with its ending changed to -या, which is exactly what a noun in -ए did back in chapter forty-one. The machinery is the same; only the starting form is different, and the starting form is the possessive.
 That is the rule worth holding, because it saves you from guessing every time: to put a pronoun in front of a postposition, take its possessive and bend that.
 
+The word, taken apart.
+माझ्या- is the oblique of माझा, on the first-person base ma- (CDIAL 9691). बरोबर (barobar) is usually traced to Persian barābar, "equal, level".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: mājhyābarobar — with me]
@@ -82,6 +88,9 @@ That is why बोलणे takes it. English says speak TO; Marathi says मि
 Keep the pair as a contrast rather than as two words:
 मित्राबरोबर — alongside my friend. मित्राशी — engaged with my friend.
 
+The word, taken apart.
+-शी (-śī) is inherited. CDIAL lists it, as Marathi śīṁ, "with", under Sanskrit sama, "equal, alike", which already meant "together with" in the Brahmanas. CDIAL calls Bloch's derivation from sahitam wrong (CDIAL 13173).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: mitrāśī — with, to my friend]
@@ -112,6 +121,9 @@ You'll want to know: -ने.
 English overloads one word: with my friend, with my eye. Marathi refuses to. A companion takes बरोबर (barobar) or -शी (-śī); a tool takes -ने (-ne), and the two sets never swap. Ask yourself which one the thing is — a person you are with, or a thing you are using — and the ending picks itself.
 -ने (-ne) glues to the oblique stem like everything else in this chapter, and a pronoun in front of it bends the same way: माझ्याने, by me.
 One thing to file away rather than learn now. This same -ने (-ne) has a second and much larger job in Marathi: it also marks the SUBJECT of a past transitive verb, which is a rule no European language has. That is a later chapter. For now, note only that the ending you have just met is one you will meet again wearing a different hat.
+
+The word, taken apart.
+-ने (-ne) is usually traced to the Sanskrit instrumental ending -ena, "by, with"; CDIAL has no entry for it.
 
 Guided Practice.
 [pause 1 second]

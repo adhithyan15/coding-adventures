@@ -14,7 +14,8 @@ gloss: "what is left over"
 concept_tag: MR-ANCHOR-SHESH
 prerequisites: [MR-C08-ulat]
 sounds: []
-roots: []
+roots: [sanskrit-shesha]
+etymology_hook: "śeṣ ← Sanskrit śeṣa 'remainder', a tatsama (CDIAL 12611)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **शेष** — *śeṣ* — "what is left over".
 
 Say it: *śeṣ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **श** and **ष**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शेष** (*śeṣ*) is Sanskrit *śeṣa*, "remainder", taken over whole as a learned loan, a tatsama (CDIAL 12611). Its root is *śiṣ*, "to leave".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-SHESH] -->

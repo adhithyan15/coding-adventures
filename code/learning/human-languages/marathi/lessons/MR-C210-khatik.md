@@ -15,6 +15,7 @@ concept_tag: MR-VASTU210-KHATIK
 prerequisites: [MR-C209-sainik, MR-C210-dantavaidya]
 sounds: []
 roots: []
+etymology_hook: "khāṭīk 'butcher': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C210-dantavaidya]
 <!-- hl-knowledge: introduces=[MR-LEX-C210-VASTU210-02]; assesses=[] -->
 
 **खाटीक** — *khāṭīk* — "a butcher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **खाटीक** (*khāṭīk*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

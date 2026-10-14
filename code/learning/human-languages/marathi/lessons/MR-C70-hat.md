@@ -14,7 +14,8 @@ romanization: "hāt"
 concept_tag: MR-BODY70-HAT
 prerequisites: [MR-C61-navva, MR-C61-dahava]
 sounds: []
-roots: []
+roots: [hasta-sanskrit]
+etymology_hook: "hāt ← Sanskrit hasta 'hand', a tadbhava (CDIAL 14024)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C61-dahava]
 <!-- hl-knowledge: introduces=[MR-LEX-C70-BODY70-01]; assesses=[] -->
 
 **हात** — *hāt* — "a hand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हात** (*hāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hasta*, "hand" (CDIAL 14024). CDIAL glosses the Marathi word "hand, arm, cubit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

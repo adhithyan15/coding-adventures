@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 191,
-  "sourceHash": "fnv1a64:3336a2fe69c14fb4",
+  "sourceHash": "fnv1a64:4eaf40b73cc22141",
   "lessonIds": [
     "MR-C191-vyavasthapak",
     "MR-C191-saciv",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch191.txt",
   "json": "marathi/narration/ch191.json",
-  "textHash": "fnv1a64:6f495ae2ee7893bc",
-  "jsonHash": "fnv1a64:6f6153bbcbcd0e27",
+  "textHash": "fnv1a64:b50fcb735873b0af",
+  "jsonHash": "fnv1a64:095fc5c001fe5466",
   "findings": []
 }

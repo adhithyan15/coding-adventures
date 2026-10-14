@@ -14,7 +14,8 @@ romanization: "khās"
 concept_tag: MR-GUN206-KHAS
 prerequisites: [MR-C206-vaiyaktik, MR-C206-samanya]
 sounds: []
-roots: []
+roots: [arabic-khass]
+etymology_hook: "khās ← Arabic khāṣṣ 'particular, special', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C206-samanya]
 <!-- hl-knowledge: introduces=[MR-LEX-C206-GUN206-05]; assesses=[] -->
 
 **खास** — *khās* — "special".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खास** (*khās*) is a loan from Arabic *khāṣṣ*, "particular, special", which reached Marathi through Persian. Its Arabic root is *kh-ṣ-ṣ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

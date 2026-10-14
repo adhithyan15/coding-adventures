@@ -14,7 +14,8 @@ romanization: "bājārpeṭh"
 concept_tag: MR-VASTU217-BAJARPETH
 prerequisites: [MR-C217-har, MR-C217-kanatle]
 sounds: []
-roots: []
+roots: [persian-bazar, sanskrit-pratishtha]
+etymology_hook: "bājārpeṭh: bājār ← Persian bāzār 'market' + peṭh 'market' ← pratiṣṭhā (CDIAL 8608)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C217-kanatle]
 <!-- hl-knowledge: introduces=[MR-LEX-C217-VASTU217-03]; assesses=[] -->
 
 **बाजारपेठ** — *bājārpeṭh* — "a market quarter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाजारपेठ** (*bājārpeṭh*) joins two words for market: *bājār*, usually traced to Persian *bāzār*, and *peṭh*, "town quarter, market", which CDIAL lists under Sanskrit *pratiṣṭhā*, "foundation; homestead" (CDIAL 8608).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

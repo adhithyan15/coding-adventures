@@ -11,7 +11,8 @@ gloss: a little, slightly — the softener that turns a demand into a request
 concept_tag: MR-LEX-JARA
 prerequisites: [MR-C53-khuup, MR-C48-kade, MR-C31-naa-tag, MR-C04-kalji-ghya, MR-C22-dene, MR-C10-paani]
 sounds: [matra-aa]
-roots: []
+roots: [arabic-dharra]
+etymology_hook: "jarā: usually traced to Persian zarra, from Arabic dharra 'a tiny particle, a mote'"
 duration:
   max_seconds: 210
 requires:
@@ -60,6 +61,11 @@ without adding a whole formula:
 The word is shared with Hindi's *zarā* and with Urdu, and it does the same
 softening job in all three. It is the sort of word you will hear far more often
 than you read.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जरा** (*jarā*) is a loan, usually traced to Persian *zarra*, from Arabic *dharra*, "a tiny particle, a mote".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-JARA, MR-LEX-KHUP, MR-LEX-KATHIN, MR-POSTP-KADE, MR-JOIN-TAG-NAA, MR-GRAMMAR-IMPERATIVE-REGISTER, MR-PHRASE-KALJI-GHYA, MR-LEX-DENE, MR-LEX-PAANI] -->

@@ -69,6 +69,12 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
+**Next priority: [#17469](https://github.com/adhithyan15/coding-adventures/issues/17469)
+— publish `task-app-v0.5.5`.** The P0 native lifecycle gates are complete.
+The Qt shadow fix (#17388) and XAML calendar fix (#17396) have merged; prepare
+their compatible patch release, validate every existing payload lane, then
+publish and audit the immutable assets. Artifact coverage remains unchanged.
+
 The durable product backlog is [GitHub issue #13517](https://github.com/adhithyan15/coding-adventures/issues/13517).
 It tracks the local-first, Rust-scheduled, native TaskApp completion loop and
 links existing Mosaic work instead of duplicating it.

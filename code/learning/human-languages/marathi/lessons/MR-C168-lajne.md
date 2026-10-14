@@ -14,7 +14,8 @@ romanization: "lājṇe"
 concept_tag: MR-VERB-LAJNE
 prerequisites: [MR-C168-avarne, MR-C168-laksat-yene]
 sounds: []
-roots: []
+roots: [sanskrit-lajjate]
+etymology_hook: "lājṇe ← Sanskrit lajjate 'is ashamed', a tadbhava (CDIAL 10909)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C168-laksat-yene]
 <!-- hl-knowledge: introduces=[MR-LEX-C168-ACT168-03]; assesses=[] -->
 
 **लाजणे** — *lājṇe* — "to be shy, to blush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लाजणे** (*lājṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lajjate*, "is ashamed" (CDIAL 10909).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

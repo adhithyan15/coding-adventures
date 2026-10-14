@@ -14,7 +14,8 @@ romanization: "ciṭṭhī"
 concept_tag: MR-AAROGYA200-CITTHI
 prerequisites: [MR-C200-vran, MR-C200-sardi]
 sounds: []
-roots: []
+roots: [indo-aryan-cishta]
+etymology_hook: "ciṭṭhī ← *ciṣṭa 'message', a reconstructed form; a tadbhava (CDIAL 4832)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C200-sardi]
 <!-- hl-knowledge: introduces=[MR-LEX-C200-AAROGYA200-05]; assesses=[] -->
 
 **चिठ्ठी** — *ciṭṭhī* — "a note; a prescription".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चिठ्ठी** (*ciṭṭhī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ciṣṭa*, "message", a form CDIAL reconstructs from its descendants (CDIAL 4832). CDIAL compares Avestan *činasti*, "teaches, makes known". It glosses the Marathi word "letter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

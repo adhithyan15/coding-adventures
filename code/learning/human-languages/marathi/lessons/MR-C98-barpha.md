@@ -14,7 +14,8 @@ romanization: "barpha"
 concept_tag: MR-NATURE98-BARPHA
 prerequisites: [MR-C98-samudra, MR-C98-ag]
 sounds: []
-roots: []
+roots: [persian-barf]
+etymology_hook: "barpha: usually traced to Persian barf 'snow, ice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C98-ag]
 <!-- hl-knowledge: introduces=[MR-LEX-C98-NATURE98-05]; assesses=[] -->
 
 **बर्फ** — *barpha* — "snow; ice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बर्फ** (*barpha*) is a loan, usually traced to Persian *barf*, "snow, ice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

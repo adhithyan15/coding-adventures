@@ -14,7 +14,8 @@ romanization: "uttar"
 concept_tag: MR-SCHOOL94-UTTAR
 prerequisites: [MR-C94-dhada, MR-C94-prashna]
 sounds: []
-roots: []
+roots: [sanskrit-uttara]
+etymology_hook: "uttar: Sanskrit uttara 'upper, following', as a noun 'answer'; a tatsama (CDIAL 1767)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C94-prashna]
 <!-- hl-knowledge: introduces=[MR-LEX-C94-SCHOOL94-05]; assesses=[] -->
 
 **उत्तर** — *uttar* — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उत्तर** (*uttar*) is Sanskrit *uttara*, "upper, following", a tatsama; as a noun it already meant "answer" in the Ramayana (CDIAL 1767).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

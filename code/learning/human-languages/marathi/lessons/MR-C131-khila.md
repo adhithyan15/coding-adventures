@@ -14,7 +14,8 @@ romanization: "khiḷā"
 concept_tag: MR-THINGS131-KHILA
 prerequisites: [MR-C131-badli, MR-C131-dori]
 sounds: []
-roots: []
+roots: [sanskrit-kila]
+etymology_hook: "khiḷā: with khīḷ 'bolt, peg', listed under khīla 'post', a variant of kīla 'stake, peg' (CDIAL 3202)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C131-dori]
 <!-- hl-knowledge: introduces=[MR-LEX-C131-THINGS131-05]; assesses=[] -->
 
 **खिळा** — *khiḷā* — "a nail (to hammer)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खिळा** (*khiḷā*) belongs with Marathi *khīḷ*, "bolt, peg", which CDIAL lists under Sanskrit *khīla*, "post", a variant of *kīla*, "stake, peg" (CDIAL 3202). CDIAL thinks the variant shapes support a non-Aryan origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

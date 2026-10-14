@@ -14,7 +14,8 @@ romanization: "surī"
 concept_tag: MR-HOME92-SURI
 prerequisites: [MR-C92-tat, MR-C92-chamcha]
 sounds: []
-roots: []
+roots: [sanskrit-kshuri]
+etymology_hook: "surī ← Sanskrit kṣurī 'knife, dagger', a tadbhava (CDIAL 3727)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C92-chamcha]
 <!-- hl-knowledge: introduces=[MR-LEX-C92-HOME92-04]; assesses=[] -->
 
 **सुरी** — *surī* — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुरी** (*surī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣurī*, "knife, dagger" (CDIAL 3727). It is built on *kṣura*, "razor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

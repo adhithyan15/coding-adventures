@@ -14,7 +14,8 @@ gloss: "warmth"
 concept_tag: MR-ANCHOR-UUB
 prerequisites: [MR-C08-shesh]
 sounds: []
-roots: []
+roots: [indo-aryan-ubba]
+etymology_hook: "ūb ← *ubbā 'damp heat', a reconstructed form; a tadbhava (CDIAL 2340)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **ऊब** — *ūb* — "warmth".
 
 Say it: *ūb*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ऊ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ऊब** (*ūb*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ubbā*, "damp heat", a form CDIAL reconstructs from its descendants (CDIAL 2340). CDIAL glosses the Marathi word "sultry heat".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-UUB] -->

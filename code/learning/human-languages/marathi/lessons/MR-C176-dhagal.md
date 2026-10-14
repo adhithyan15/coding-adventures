@@ -15,6 +15,7 @@ concept_tag: MR-GUN176-DHAGAL
 prerequisites: [MR-C175-yogya, MR-C175-ayogya]
 sounds: []
 roots: []
+etymology_hook: "ḍhagāḷ: ḍhag 'cloud' + -āḷ; the origin of ḍhag is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C175-ayogya]
 <!-- hl-knowledge: introduces=[MR-LEX-C176-GUN176-01]; assesses=[] -->
 
 **ढगाळ** — *ḍhagāḷ* — "cloudy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ढगाळ** (*ḍhagāḷ*) is *ḍhag*, "cloud", with the ending *-āḷ*, "full of". The origin of *ḍhag* is not settled: neither CDIAL nor DEDR has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

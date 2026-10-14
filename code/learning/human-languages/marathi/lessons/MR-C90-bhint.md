@@ -14,7 +14,8 @@ romanization: "bhint"
 concept_tag: MR-HOME90-BHINT
 prerequisites: [MR-C89-khurchi, MR-C89-tebal]
 sounds: []
-roots: []
+roots: [sanskrit-bhitti]
+etymology_hook: "bhint ← Sanskrit bhitti 'mat of split reeds; wall', a tadbhava (CDIAL 9494)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C89-tebal]
 <!-- hl-knowledge: introduces=[MR-LEX-C90-HOME90-01]; assesses=[] -->
 
 **भिंत** — *bhint* — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भिंत** (*bhint*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhitti*, "mat of split reeds; wall" (CDIAL 9494). It is built on *bhid*, "to split".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shejārī"
 concept_tag: MR-FAMILY77-SHEJARI
 prerequisites: [MR-C76-manus, MR-C76-bai]
 sounds: []
-roots: []
+roots: [indo-aryan-sagrhya]
+etymology_hook: "shejārī ← *sagṛhya 'neighbouring', a reconstructed form; a tadbhava (CDIAL 13077)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C76-bai]
 <!-- hl-knowledge: introduces=[MR-LEX-C77-FAMILY77-01]; assesses=[] -->
 
 **शेजारी** — *shejārī* — "a neighbour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शेजारी** (*shejārī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*sagṛhya*, "neighbouring", a form CDIAL reconstructs from its descendants (CDIAL 13077). CDIAL builds it on Sanskrit *sagṛha*, "with one's household".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

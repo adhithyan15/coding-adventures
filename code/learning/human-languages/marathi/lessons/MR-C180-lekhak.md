@@ -14,7 +14,8 @@ romanization: "lekhak / lekhikā"
 concept_tag: MR-VASTU180-LEKHAK
 prerequisites: [MR-C179-nivadnuk, MR-C179-rajkaran]
 sounds: []
-roots: []
+roots: [sanskrit-lekhaka]
+etymology_hook: "lekhak ← Sanskrit lekhaka 'scribe', a tatsama (CDIAL 11102)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C179-rajkaran]
 <!-- hl-knowledge: introduces=[MR-LEX-C180-VASTU180-01]; assesses=[] -->
 
 **लेखक / लेखिका** — *lekhak / lekhikā* — "a writer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लेखक** (*lekhak*) is Sanskrit *lekhaka*, "scribe", taken over whole as a learned loan, a tatsama (CDIAL 11102). It is built on *likh*, "to write".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

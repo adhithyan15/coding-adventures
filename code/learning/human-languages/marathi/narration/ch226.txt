@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to depend, then the Marathi for to avoid
 You'll want to know: सुचवणे.
 सुचवणे — sucavṇe — "to suggest".
 
+The word, taken apart.
+सुचवणे (sucavṇe) is the "make" form of sucṇẽ, "to come to mind", which CDIAL lists under Sanskrit sūcyate, "is indicated" (CDIAL 13551a).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to avoid, then the Marathi for to sugges
 
 You'll want to know: परत देणे.
 परत देणे — parat deṇe — "to give back".
+
+The word, taken apart.
+परत, "back", goes with paratṇẽ, "to return", which CDIAL lists under Sanskrit parivartate, "revolves, turns round" (CDIAL 7872). देणे comes from Sanskrit dadāti, "gives" (CDIAL 6141).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to suggest, then the Marathi for to give
 You'll want to know: नाकारणे.
 नाकारणे — nākārṇe — "to refuse".
 
+The word, taken apart.
+नाकारणे (nākārṇe) is built on nakār, "a refusal", from Sanskrit nakāra, "the sound na": na is "not", and kāra names a sound.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to give back, then the Marathi for to re
 You'll want to know: धोका पत्करणे.
 धोका पत्करणे — dhokā patkarṇe — "to take a risk".
 
+The word, taken apart.
+धोका comes from a reconstructed dhrōkṣa, "deceit" (CDIAL 6894). The origin of पत्करणे, "to accept, take on", is not settled; CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to refuse, then the Marathi for to take 
 
 You'll want to know: सोडवणे.
 सोडवणे — soḍavṇe — "to solve".
+
+The word, taken apart.
+सोडवणे (soḍavṇe) is the "make" form of सोडणे, "to let go", which comes from Sanskrit kṣoṭayati, "throws" (CDIAL 3747).
 
 What you've built.
 One more word for this chapter.

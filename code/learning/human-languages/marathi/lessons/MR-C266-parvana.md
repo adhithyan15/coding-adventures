@@ -14,7 +14,8 @@ romanization: "parvānā"
 concept_tag: MR-VASTU266-PARVANA
 prerequisites: [MR-C266-mahamarg, MR-C266-dand]
 sounds: []
-roots: []
+roots: [persian-parwana]
+etymology_hook: "parvānā: usually traced to Persian parwāna 'an order, a licence'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C266-dand]
 <!-- hl-knowledge: introduces=[MR-LEX-C266-VASTU266-04]; assesses=[] -->
 
 **परवाना** — *parvānā* — "a licence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परवाना** (*parvānā*) is a loan, usually traced to Persian *parwāna*, "an order, a licence".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

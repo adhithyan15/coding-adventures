@@ -72,6 +72,9 @@ You'll want to know: दुसरा.
 दुसरा (dusrā) is दोन ("two") wearing an ordinal ending: literally two-th. Marathi builds it the way English builds second out of nothing you can see, and Marathi's is the more honest of the two — you can still read the two inside it.
 Like every -आ word in this book it agrees: दुसरा (dusrā) for a masculine thing, दुसरी feminine, दुसरं neuter.
 
+The word, taken apart.
+दुसरा (dusrā) comes from dviḥsara, "twofold", built on Sanskrit dviḥ, "twice" (CDIAL 6676).
+
 Grammar Lens: एक … दुसरा … — sharing a pair out.
 एक चहा आणि दुसरा पाणी. — ek chahā āṇi dusrā pāṇī. — One is tea and the other is water.
 Set एक in front of the first thing and दुसरा (dusrā) in front of the second, and the pair is now shared out rather than merely listed. आणि would only stack them; this frame says this one, and that one. It is the last of the joining shapes that needs a word at BOTH ends, and it is how Marathi distributes a choice a speaker has already made.

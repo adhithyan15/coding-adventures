@@ -14,7 +14,8 @@ romanization: "pīṭh"
 concept_tag: MR-THINGS138-PITH
 prerequisites: [MR-C138-kalingad, MR-C138-naral]
 sounds: []
-roots: []
+roots: [sanskrit-pishta]
+etymology_hook: "pīṭh ← Sanskrit piṣṭa 'crushed, ground; flour', a tadbhava (CDIAL 8218)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C138-naral]
 <!-- hl-knowledge: introduces=[MR-LEX-C138-THINGS138-05]; assesses=[] -->
 
 **पीठ** — *pīṭh* — "flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पीठ** (*pīṭh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *piṣṭa*, "crushed, ground; flour" (CDIAL 8218). It is built on *piṣ*, "to grind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

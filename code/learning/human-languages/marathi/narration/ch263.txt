@@ -12,6 +12,9 @@ Before the new one: say the Marathi for the government, then the Marathi for a l
 You'll want to know: गायक / गायिका.
 गायक / गायिका — gāyak / gāyikā — "a singer".
 
+The word, taken apart.
+गायक (gāyak) is Sanskrit gāyaka, "singer", a tatsama built on gai, "to sing". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a law, then the Marathi for a singer.
 
 You'll want to know: कार्यक्रम.
 कार्यक्रम — kāryakram — "a programme, a show".
+
+The word, taken apart.
+कार्यक्रम (kāryakram) is a modern compound built from Sanskrit kārya, "work, business" (CDIAL 3078), and krama, "step, order" (CDIAL 3577).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a singer, then the Marathi for a program
 You'll want to know: अभिनेता.
 अभिनेता — abhinetā — "an actor".
 
+The word, taken apart.
+अभिनेता (abhinetā) is Sanskrit abhinetṛ, "one who acts out", built on abhi-nī, "to bring toward, act out", the verb behind abhinaya, "acting".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a programme, then the Marathi for an act
 You'll want to know: अभिनेत्री.
 अभिनेत्री — abhinetrī — "an actress".
 
+The word, taken apart.
+अभिनेत्री (abhinetrī) is the feminine of अभिनेता (abhinetā), built on Sanskrit abhi-nī, "to act out", the verb behind abhinaya, "acting".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for an actor, then the Marathi for an actres
 
 You'll want to know: कविता.
 कविता — kavitā — "a poem".
+
+The word, taken apart.
+कविता (kavitā) is Sanskrit kavitā, "poetry", a tatsama built on kavi, "poet". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

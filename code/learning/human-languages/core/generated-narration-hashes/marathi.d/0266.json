@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 266,
-  "sourceHash": "fnv1a64:6c4234f2b078cd9b",
+  "sourceHash": "fnv1a64:5f5c9b600f8360ec",
   "lessonIds": [
     "MR-C266-injin",
     "MR-C266-mahamarg",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch266.txt",
   "json": "marathi/narration/ch266.json",
-  "textHash": "fnv1a64:2503d285a4ca63ce",
-  "jsonHash": "fnv1a64:ad33a2100dd58fcb",
+  "textHash": "fnv1a64:172c1f60b96b95b1",
+  "jsonHash": "fnv1a64:28e18866b4c8c93c",
   "findings": []
 }

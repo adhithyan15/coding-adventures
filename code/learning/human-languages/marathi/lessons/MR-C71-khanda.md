@@ -14,7 +14,8 @@ romanization: "khāndā"
 concept_tag: MR-BODY71-KHANDA
 prerequisites: [MR-C70-gala, MR-C71-pot]
 sounds: []
-roots: []
+roots: [sanskrit-skandha]
+etymology_hook: "khāndā ← Sanskrit skandha 'shoulder', a tadbhava (CDIAL 13627)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C71-pot]
 <!-- hl-knowledge: introduces=[MR-LEX-C71-BODY71-02]; assesses=[] -->
 
 **खांदा** — *khāndā* — "a shoulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खांदा** (*khāndā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *skandha*, "shoulder" (CDIAL 13627). CDIAL glosses the Marathi word "shoulder, back of neck; large bough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

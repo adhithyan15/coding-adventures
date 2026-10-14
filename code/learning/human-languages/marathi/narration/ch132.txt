@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a rope, then the Marathi for a nail.
 You'll want to know: हातोडा.
 हातोडा — hātoḍā — "a hammer".
 
+The word, taken apart.
+हातोडा (hātoḍā) is a tadbhava, a word inherited and reshaped by sound change. It comes from hastakūṭa, "hand hammer", a form CDIAL reconstructs from its descendants (CDIAL 14028). It is hasta, "hand", and kūṭa, "hammer".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a nail, then the Marathi for a hammer.
 
 You'll want to know: कात्री.
 कात्री — kātrī — "scissors".
+
+The word, taken apart.
+कात्री (kātrī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kartarī, "scissors, knife" (CDIAL 2858). It is built on kṛt, "to cut".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a hammer, then the Marathi for scissors.
 You'll want to know: सुई.
 सुई — suī — "a needle".
 
+The word, taken apart.
+सुई (suī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sūcī, "needle" (CDIAL 13551).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for scissors, then the Marathi for a needle.
 You'll want to know: दोरा.
 दोरा — dorā — "a thread".
 
+The word, taken apart.
+दोरा (dorā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from davara, "string" (CDIAL 6225). CDIAL lists Marathi dor, "string, rope".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a needle, then the Marathi for a thread.
 
 You'll want to know: कंगवा.
 कंगवा — kaṅgvā — "a comb".
+
+The word, taken apart.
+कंगवा (kaṅgvā) goes back to Sanskrit kaṅkata, "comb" (CDIAL 2598). CDIAL lists Marathi kaṅkvā as the inherited form and kaṅgvā among the forms taken from Punjabi.
 
 What you've built.
 One more word for this chapter.

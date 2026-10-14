@@ -14,7 +14,8 @@ romanization: "ghubaḍ"
 concept_tag: MR-THINGS142-GHUBAD
 prerequisites: [MR-C142-popat, MR-C142-kabutar]
 sounds: []
-roots: []
+roots: [sanskrit-ghuka]
+etymology_hook: "ghubaḍ: CDIAL lists it under Sanskrit ghūka 'owl', which it takes from Dravidian (CDIAL 4494; DEDR 1871)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C142-kabutar]
 <!-- hl-knowledge: introduces=[MR-LEX-C142-THINGS142-04]; assesses=[] -->
 
 **घुबड** — *ghubaḍ* — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **घुबड** (*ghubaḍ*) under Sanskrit *ghūka*, "owl", a word it takes, after Burrow, from Dravidian, comparing Tamil *kūkai* (CDIAL 4494). DEDR sets Marathi *ghubaḍ* beside Dravidian owl words such as Kannada *gūbe* and Telugu *gūba* (DEDR 1871).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

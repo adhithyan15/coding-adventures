@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Toward, and What You Have",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:0f28c9ecb07195d3",
+  "sourceHash": "fnv1a64:e05b0306ce4d1d83",
   "lessons": [
     {
       "id": "MR-C48-kade",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa4f628400fc1296",
+      "sourceHash": "fnv1a64:edad3fa34ad625c5",
       "notice": null,
       "blocks": [
         {
@@ -77,6 +77,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-कडे (-kaḍe) matches Marathi kaḍ, \"side, waist\", which CDIAL lists under Sanskrit kaṭi, \"hip\". CDIAL takes that word as rather from Dravidian, comparing Kannada kaḍe, \"side, end\" (CDIAL 2639), and DEDR compares Old Marathi kaḍe, \"edge, side\" (DEDR 1109)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -137,7 +148,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -172,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2208d6b6574ffb91",
+      "sourceHash": "fnv1a64:80c0d7842b9845c1",
       "notice": null,
       "blocks": [
         {
@@ -225,6 +236,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माझ्या- goes back to the first-person base ma- (CDIAL 9691); -कडे (-kaḍe) matches kaḍ, \"side\", which CDIAL takes as rather Dravidian (CDIAL 2639). आहे CDIAL lists under asti, \"is\", though Bloch disagrees (CDIAL 977)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -293,7 +315,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for spicy, then the Marathi for fresh.
 You'll want to know: शिळा.
 शिळा — śiḷā — "stale".
 
+The word, taken apart.
+शिळा (śiḷā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śītala, "cold" (CDIAL 12487). CDIAL glosses the Marathi word "cold, sluggish, stale".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for fresh, then the Marathi for stale.
 
 You'll want to know: कच्चा.
 कच्चा — kaccā — "raw, unripe".
+
+The word, taken apart.
+कच्चा (kaccā) goes back to a reconstructed kacca, "raw, unripe" (CDIAL 2613). CDIAL lists the inherited Marathi form as kācā, and marks kaccā as taken from Punjabi.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for stale, then the Marathi for raw.
 You'll want to know: शांत.
 शांत — śānt — "calm, quiet".
 
+The word, taken apart.
+शांत (śānt) is Sanskrit śānta, "abated, calm", taken over whole, a tatsama. CDIAL lists the inherited Marathi form as sant, "calm (of flame or temper)" (CDIAL 12390).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for raw, then the Marathi for calm.
 You'll want to know: आळशी.
 आळशी — āḷśī — "lazy".
 
+The word, taken apart.
+आळशी (āḷśī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ālasya, "sloth" (CDIAL 1371). It is built on alasa, "idle".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for calm, then the Marathi for lazy.
 
 You'll want to know: मेहनती.
 मेहनती — mehantī — "hard-working".
+
+The word, taken apart.
+मेहनती (mehantī) is mehnat, "toil", with the ending -ī. Mehnat is usually traced, through Persian, to Arabic miḥna, "trial, ordeal", whose root is m-ḥ-n (Lane).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "māgṇe"
 concept_tag: MR-VERB-MAGNE
 prerequisites: [MR-C123-asa, MR-C123-svapna]
 sounds: []
-roots: []
+roots: [sanskrit-margati]
+etymology_hook: "māgṇe ← Sanskrit mārgati 'seeks, requests', a tadbhava (CDIAL 10074)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C123-svapna]
 <!-- hl-knowledge: introduces=[MR-LEX-C123-WANT123-04]; assesses=[] -->
 
 **मागणे** — *māgṇe* — "to ask for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मागणे** (*māgṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mārgati*, "seeks, requests" (CDIAL 10074). It is built on *mārga*, "track, path".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

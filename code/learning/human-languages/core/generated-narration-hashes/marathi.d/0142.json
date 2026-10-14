@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 142,
-  "sourceHash": "fnv1a64:7cfd1caa452e5e80",
+  "sourceHash": "fnv1a64:397ae839228c3a81",
   "lessonIds": [
     "MR-C142-cimni",
     "MR-C142-popat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch142.txt",
   "json": "marathi/narration/ch142.json",
-  "textHash": "fnv1a64:e920ba1a982f8557",
-  "jsonHash": "fnv1a64:bd4540e2617bf3bc",
+  "textHash": "fnv1a64:8d9b83ed5efd6f28",
+  "jsonHash": "fnv1a64:9ba63f476961d792",
   "findings": []
 }

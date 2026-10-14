@@ -14,7 +14,8 @@ romanization: "śodhūn kāḍhṇe"
 concept_tag: MR-VERB-SODHUN-KADHNE
 prerequisites: [MR-C253-takrar-karne, MR-C254-corne]
 sounds: []
-roots: []
+roots: [sanskrit-shoddhum, indo-aryan-kaddhati]
+etymology_hook: "śodhūn: from śodhṇe 'to search', listed under śoddhum 'to purify' (CDIAL 12626); kāḍhṇe ← *kaḍḍhati (CDIAL 2660)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C254-corne]
 <!-- hl-knowledge: introduces=[MR-LEX-C254-ACT254-02]; assesses=[] -->
 
 **शोधून काढणे** — *śodhūn kāḍhṇe* — "to discover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शोधून** is "having searched", from *śodhṇẽ*, "to purify, search", which CDIAL lists under Sanskrit *śoddhum*, "to purify" (CDIAL 12626). **काढणे** comes from a reconstructed *\*kaḍḍhati*, "pulls, draws" (CDIAL 2660).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

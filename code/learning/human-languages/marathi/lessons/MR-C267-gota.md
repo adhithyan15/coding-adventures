@@ -14,7 +14,8 @@ romanization: "goṭā"
 concept_tag: MR-VASTU267-GOTA
 prerequisites: [MR-C267-jvalamukhi, MR-C267-pathar]
 sounds: []
-roots: []
+roots: [indo-aryan-gotta]
+etymology_hook: "goṭā ← *goṭṭa 'something round', a reconstructed form; a tadbhava (CDIAL 4271)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C267-pathar]
 <!-- hl-knowledge: introduces=[MR-LEX-C267-VASTU267-03]; assesses=[] -->
 
 **गोटा** — *goṭā* — "a pebble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गोटा** (*goṭā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*goṭṭa*, "something round", a form CDIAL reconstructs from its descendants (CDIAL 4271). CDIAL glosses the Marathi word "roundish stone". In the sense "fruit, kernel" it takes the word from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

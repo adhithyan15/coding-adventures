@@ -11,10 +11,10 @@ gloss: to go — and the present tense you cannot say without declaring your own
 concept_tag: VERB-GO
 prerequisites: [MR-C07-asne]
 sounds: [matra-aa, retroflex-na]
-roots: [sanskrit-yati-go]
-etymology_hook: "जातो jāto and जाते jāte are both I go — Marathi's present ending carries the speaker's gender, so there is no neutral way to say it; the stem is Sanskrit yāti through Prakrit jāi"
+roots: [sanskrit-yati]
+etymology_hook: "jāṇe ← Sanskrit yāti 'goes', through Prakrit jāi; a tadbhava (CDIAL 10452)"
 duration:
-  max_seconds: 250
+  max_seconds: 263
 requires:
   knowledge: [MR-LEX-ASNE-AAHE, MR-GRAMMAR-AAHE-LAST]
 introduces:
@@ -51,6 +51,11 @@ Marathi builds the everyday present: **जातो** (*jāto*) and **जात�
 
 Both mean "I go." Neither is more correct than the other. Which one you may say
 is decided by something the English sentence never mentions.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जाणे** (*jāṇe*) is inherited from Sanskrit *yāti*, "goes" (CDIAL 10452).
 
 ## Sounds you'll need: जा · णे
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

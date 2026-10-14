@@ -14,7 +14,8 @@ romanization: "kaccā"
 concept_tag: MR-QUAL150-KACCA
 prerequisites: [MR-C149-taja, MR-C150-sila]
 sounds: []
-roots: []
+roots: [indo-aryan-kacca]
+etymology_hook: "kaccā ← *kacca 'raw, unripe'; CDIAL lists Marathi kācā, and kaccā as taken from Punjabi (CDIAL 2613)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C150-sila]
 <!-- hl-knowledge: introduces=[MR-LEX-C150-QUAL150-02]; assesses=[] -->
 
 **कच्चा** — *kaccā* — "raw, unripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कच्चा** (*kaccā*) goes back to a reconstructed *\*kacca*, "raw, unripe" (CDIAL 2613). CDIAL lists the inherited Marathi form as *kācā*, and marks *kaccā* as taken from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

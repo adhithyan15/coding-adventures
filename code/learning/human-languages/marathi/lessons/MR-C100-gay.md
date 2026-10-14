@@ -14,7 +14,8 @@ romanization: "gāy"
 concept_tag: MR-ANIMALS100-GAY
 prerequisites: [MR-C99-manjar, MR-C100-ghoda]
 sounds: []
-roots: []
+roots: [sanskrit-gavi]
+etymology_hook: "gāy: CDIAL lists Marathi gāī 'cow' under Sanskrit gāvī, a form of go 'cow' (CDIAL 4147)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C100-ghoda]
 <!-- hl-knowledge: introduces=[MR-LEX-C100-ANIMALS100-02]; assesses=[] -->
 
 **गाय** — *gāy* — "a cow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गाय** (*gāy*) is inherited. CDIAL lists Marathi *gāī*, "cow", under Sanskrit *gāvī*, "cow", a form of *go* (CDIAL 4147).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

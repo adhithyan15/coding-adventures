@@ -12,6 +12,9 @@ Before the new one: say the Marathi for an elephant, then the Marathi for a monk
 You'll want to know: साप.
 साप — sāp — "a snake".
 
+The word, taken apart.
+साप (sāp) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sarpa, "snake" (CDIAL 13271). It is built on sṛp, "to creep".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a monkey, then the Marathi for a snake.
 
 You'll want to know: मोर.
 मोर — mor — "a peacock".
+
+The word, taken apart.
+मोर (mor) comes from mōra, a form CDIAL sets beside Sanskrit mayūra, "peacock" (CDIAL 9865). The source of the Sanskrit word is debated: Bloch traced it to Dravidian, Przyluski to Austroasiatic, and Bailey to an old Indo-Iranian colour word.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a snake, then the Marathi for a peacock.
 You'll want to know: अस्वल.
 अस्वल — asval — "a bear".
 
+The word, taken apart.
+अस्वल (asval) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṛkṣabhalla, "bear", a form CDIAL reconstructs from its descendants (CDIAL 2446). It joins two words for "bear", ṛkṣa and bhalla.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a peacock, then the Marathi for a bear.
 You'll want to know: उंट.
 उंट — uṇṭ — "a camel".
 
+The word, taken apart.
+उंट (uṇṭ) is usually traced to Sanskrit uṣṭra, "buffalo" in the Rigveda and "camel" later (CDIAL 2387). CDIAL lists no Marathi form under it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a bear, then the Marathi for a camel.
 
 You'll want to know: फुलपाखरू.
 फुलपाखरू — phulpākhrū — "a butterfly".
+
+The word, taken apart.
+फुलपाखरू (phulpākhrū) is "flower-bird": फूल, "flower", from Sanskrit phulla (CDIAL 9092), and pākhrū, "bird", from a reconstructed pakṣirūpa, "bird-shape" (CDIAL 7637).
 
 What you've built.
 One more word for this chapter.

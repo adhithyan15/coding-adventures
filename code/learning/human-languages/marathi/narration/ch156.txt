@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to paint, then the Marathi for to take o
 You'll want to know: दाखवणे.
 दाखवणे — dākhavṇe — "to show".
 
+The word, taken apart.
+दाखवणे (dākhavṇe) is the "make someone see" form of an old verb for "see": CDIAL lists it under a reconstructed dṛkṣati, "sees" (CDIAL 6507).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to take out, then the Marathi for to sho
 
 You'll want to know: वाजवणे.
 वाजवणे — vājavṇe — "to play (an instrument)".
+
+The word, taken apart.
+वाजवणे (vājavṇe) is the "make" form of वाजणे, "to sound", from Sanskrit vādyate, "is made to sound" (CDIAL 11513).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to show, then the Marathi for to play.
 You'll want to know: ओरडणे.
 ओरडणे — oraḍṇe — "to shout".
 
+The word, taken apart.
+ओरडणे (oraḍṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from uparaṭati, "shouts to", a form CDIAL reconstructs from its descendants (CDIAL 2211). It is upa, "to", and raṭ, "to cry".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to play, then the Marathi for to shout.
 You'll want to know: चावणे.
 चावणे — cāvṇe — "to bite, to chew".
 
+The word, taken apart.
+चावणे (cāvṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from carvati, "chews" (CDIAL 4711).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to shout, then the Marathi for to bite.
 
 You'll want to know: गिळणे.
 गिळणे — giḷṇe — "to swallow".
+
+The word, taken apart.
+गिळणे (giḷṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gilati, "swallows" (CDIAL 4075).
 
 What you've built.
 One more word for this chapter.

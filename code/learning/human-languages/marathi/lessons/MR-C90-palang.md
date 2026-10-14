@@ -14,7 +14,8 @@ romanization: "palaṅg"
 concept_tag: MR-HOME90-PALANG
 prerequisites: [MR-C90-bhint, MR-C90-chhappar]
 sounds: []
-roots: []
+roots: [sanskrit-palyanka]
+etymology_hook: "palaṅg ← Sanskrit palyaṅka 'bed'; CDIAL says the north-western form with -ṅg was borrowed widely (CDIAL 7964)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C90-chhappar]
 <!-- hl-knowledge: introduces=[MR-LEX-C90-HOME90-03]; assesses=[] -->
 
 **पलंग** — *palaṅg* — "a bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पलंग** (*palaṅg*) goes back to Sanskrit *palyaṅka*, "bed" (CDIAL 7964). CDIAL says the north-western form with *-ṅg* was borrowed widely as the word for "bed"; Marathi's own inherited forms are *pālak*, "cradle", and *pālkhī*, "litter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

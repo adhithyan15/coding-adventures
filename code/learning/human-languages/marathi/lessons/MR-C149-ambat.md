@@ -14,7 +14,8 @@ romanization: "āmbaṭ"
 concept_tag: MR-QUAL149-AMBAT
 prerequisites: [MR-C148-suka, MR-C149-kharat]
 sounds: []
-roots: []
+roots: [sanskrit-amla]
+etymology_hook: "āmbaṭ: CDIAL lists it under Sanskrit amla 'sour, acid', querying how it was formed (CDIAL 579)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C149-kharat]
 <!-- hl-knowledge: introduces=[MR-LEX-C149-QUAL149-02]; assesses=[] -->
 
 **आंबट** — *āmbaṭ* — "sour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आंबट** (*āmbaṭ*) is inherited. CDIAL lists Marathi *āṁbaṭ*, "sour", under Sanskrit *amla*, "sour, acid", with a query on how the word was formed (CDIAL 579).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

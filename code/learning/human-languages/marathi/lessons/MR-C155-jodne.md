@@ -14,7 +14,8 @@ romanization: "joḍṇe"
 concept_tag: MR-VERB-JODNE
 prerequisites: [MR-C154-todne, MR-C154-modne]
 sounds: []
-roots: []
+roots: [indo-aryan-yutati]
+etymology_hook: "joḍṇe ← *yōṭayati 'joins', a form CDIAL reconstructs under *yuṭati 'is joined' (CDIAL 10496)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C154-modne]
 <!-- hl-knowledge: introduces=[MR-LEX-C155-ACT155-01]; assesses=[] -->
 
 **जोडणे** — *joḍṇe* — "to join".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जोडणे** (*joḍṇe*) comes from *\*yōṭayati*, "joins", a form CDIAL reconstructs under *\*yuṭati*, "is joined" (CDIAL 10496).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

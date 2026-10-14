@@ -14,7 +14,8 @@ romanization: "ayogya"
 concept_tag: MR-GUN175-AYOGYA
 prerequisites: [MR-C175-sarkha, MR-C175-yogya]
 sounds: []
-roots: []
+roots: [sanskrit-yogya]
+etymology_hook: "ayogya: Sanskrit ayogya 'unfit', a- 'not' + yogya 'fit, proper' (CDIAL 10528); a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C175-yogya]
 <!-- hl-knowledge: introduces=[MR-LEX-C175-GUN175-05]; assesses=[] -->
 
 **अयोग्य** — *ayogya* — "wrong, improper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अयोग्य** (*ayogya*) is Sanskrit *ayogya*, "unfit", a tatsama: *a-*, "not", and *yogya*, "fit, proper" (CDIAL 10528).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

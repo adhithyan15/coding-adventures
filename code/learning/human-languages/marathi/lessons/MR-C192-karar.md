@@ -14,7 +14,8 @@ romanization: "karār"
 concept_tag: MR-KAAM192-KARAR
 prerequisites: [MR-C192-sahakari, MR-C192-baithak]
 sounds: []
-roots: []
+roots: [arabic-qarar]
+etymology_hook: "karār ← Arabic qarār 'settledness, an agreement', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C192-baithak]
 <!-- hl-knowledge: introduces=[MR-LEX-C192-KAAM192-04]; assesses=[] -->
 
 **करार** — *karār* — "a contract, an agreement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**करार** (*karār*) is a loan from Arabic *qarār*, "settledness, an agreement", which reached Marathi through Persian. Its Arabic root is *q-r-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

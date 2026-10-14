@@ -14,7 +14,8 @@ romanization: "śarṭ"
 concept_tag: MR-THINGS135-SART
 prerequisites: [MR-C135-varg, MR-C135-abhyas]
 sounds: []
-roots: []
+roots: [english-shirt]
+etymology_hook: "śarṭ ← English shirt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C135-abhyas]
 <!-- hl-knowledge: introduces=[MR-LEX-C135-THINGS135-05]; assesses=[] -->
 
 **शर्ट** — *śarṭ* — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शर्ट** (*śarṭ*) is a loan from English *shirt*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

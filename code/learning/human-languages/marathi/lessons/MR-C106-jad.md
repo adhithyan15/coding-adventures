@@ -14,7 +14,8 @@ romanization: "jāḍ"
 concept_tag: MR-ADJ106-JAD
 prerequisites: [MR-C106-svachchha, MR-C106-god]
 sounds: []
-roots: []
+roots: [sanskrit-jada]
+etymology_hook: "jāḍ: CDIAL lists it under Sanskrit jaḍa 'dull, cold', which it calls certainly non-Aryan (CDIAL 5090)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C106-god]
 <!-- hl-knowledge: introduces=[MR-LEX-C106-ADJ106-03]; assesses=[] -->
 
 **जाड** — *jāḍ* — "thick, fat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जाड** (*jāḍ*) is inherited. CDIAL lists Marathi *jāḍ*, "thick", under Sanskrit *jaḍa*, "stupid, dumb; cold", a word it calls certainly of non-Aryan origin (CDIAL 5090).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

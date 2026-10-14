@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 147,
-  "sourceHash": "fnv1a64:2ee8431e2a248efd",
+  "sourceHash": "fnv1a64:46634ea6527ca05d",
   "lessonIds": [
     "MR-C147-tvaca",
     "MR-C147-had",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch147.txt",
   "json": "marathi/narration/ch147.json",
-  "textHash": "fnv1a64:1d7e8f629cfb83f0",
-  "jsonHash": "fnv1a64:f204aaa99d775daf",
+  "textHash": "fnv1a64:da1961b3ddf3201b",
+  "jsonHash": "fnv1a64:4ccdc1b25538386c",
   "findings": []
 }

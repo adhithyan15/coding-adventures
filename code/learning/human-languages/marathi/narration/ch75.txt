@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a son; a boy, then the Marathi for a dau
 You'll want to know: आजोबा.
 आजोबा — ājobā — "a grandfather".
 
+The word, taken apart.
+आजोबा (ājobā) is built on Marathi ājā, "grandfather", with an added -bā. CDIAL lists ājā under Sanskrit āryaka, "respectable man, grandfather" (CDIAL 1348).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a daughter; a girl, then the Marathi for
 
 You'll want to know: आजी.
 आजी — ājī — "a grandmother".
+
+The word, taken apart.
+CDIAL lists आजी (ājī) beside ājā, "grandfather", under Sanskrit āryaka, "respectable man, grandfather" (CDIAL 1348).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a grandfather, then the Marathi for a gr
 You'll want to know: काका.
 काका — kākā — "an uncle (father's brother)".
 
+The word, taken apart.
+काका (kākā) goes back to kākka, "senior male relative", which CDIAL takes from Dravidian, comparing Kannada kakka, "uncle", and Telugu kakka, "daddy" (CDIAL 2998).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a grandmother, then the Marathi for an u
 You'll want to know: मावशी.
 मावशी — māvshī — "an aunt (mother's sister)".
 
+The word, taken apart.
+मावशी (māvshī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mātuḥṣvasṛ, "mother's sister" (CDIAL 10001). It is mātṛ, "mother", and svasṛ, "sister".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for an uncle, then the Marathi for an aunt.
 
 You'll want to know: मामा.
 मामा — māmā — "an uncle (mother's brother)".
+
+The word, taken apart.
+मामा (māmā) is a tadbhava of Sanskrit māma, "uncle" (CDIAL 10055). CDIAL calls it a nursery word and notes similar words in Dravidian.
 
 What you've built.
 One more word for this chapter.

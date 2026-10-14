@@ -11,7 +11,8 @@ gloss: eight — and the retroflex ठ is exactly where a Sanskrit consonant clu
 concept_tag: MR-LEX-AATH
 prerequisites: [MR-R54-how-much, MR-C55-saha, MR-C55-saat]
 sounds: [standalone-vowel-aa, retroflex-tha]
-roots: []
+roots: [sanskrit-ashta]
+etymology_hook: "āṭh ← Sanskrit aṣṭa 'eight', a tadbhava; the same ancient word as English eight (CDIAL 941)"
 duration:
   max_seconds: 210
 requires:

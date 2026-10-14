@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 181,
-  "sourceHash": "fnv1a64:5ecfac5fddf5d989",
+  "sourceHash": "fnv1a64:7e20039439a63ed7",
   "lessonIds": [
     "MR-C181-sun",
     "MR-C181-navardev",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch181.txt",
   "json": "marathi/narration/ch181.json",
-  "textHash": "fnv1a64:dff806d5f3ddc839",
-  "jsonHash": "fnv1a64:4257cb8b32913e5f",
+  "textHash": "fnv1a64:5d4659a3ff2e09d1",
+  "jsonHash": "fnv1a64:8f15d9c9e33ad211",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "pardeśī"
 concept_tag: MR-VASTU238-PARDESI
 prerequisites: [MR-C238-vaimanik, MR-C238-samsodhak]
 sounds: []
-roots: []
+roots: [sanskrit-para, sanskrit-desha]
+etymology_hook: "pardeśī: Sanskrit para 'other' + deśa 'country' + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C238-samsodhak]
 <!-- hl-knowledge: introduces=[MR-LEX-C238-VASTU238-03]; assesses=[] -->
 
 **परदेशी** — *pardeśī* — "a foreigner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परदेशी** (*pardeśī*) is Sanskrit *para*, "other", and *deśa*, "country", with the ending *-ī*, "of": "one of another country".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

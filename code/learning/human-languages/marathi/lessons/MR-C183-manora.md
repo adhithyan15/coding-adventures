@@ -14,7 +14,8 @@ romanization: "manorā"
 concept_tag: MR-VASTU183-MANORA
 prerequisites: [MR-C183-bogda, MR-C183-killa]
 sounds: []
-roots: []
+roots: [arabic-manara]
+etymology_hook: "manorā: usually traced, through Persian, to Arabic manāra 'lighthouse, minaret'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C183-killa]
 <!-- hl-knowledge: introduces=[MR-LEX-C183-VASTU183-03]; assesses=[] -->
 
 **मनोरा** — *manorā* — "a tower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मनोरा** (*manorā*) is a loan, usually traced through Persian to Arabic *manāra*, "lighthouse, minaret", whose root is *n-w-r*, "light" (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

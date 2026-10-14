@@ -15,6 +15,7 @@ concept_tag: MR-AAROGYA169-MENDU
 prerequisites: [MR-C168-lapne, MR-C169-arogya]
 sounds: []
 roots: []
+etymology_hook: "mendū 'brain': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C169-arogya]
 <!-- hl-knowledge: introduces=[MR-LEX-C169-AAROGYA169-02]; assesses=[] -->
 
 **मेंदू** — *mendū* — "the brain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **मेंदू** (*mendū*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

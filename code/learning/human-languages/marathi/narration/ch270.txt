@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a sprouted-bean curry, then the Marathi 
 You'll want to know: बदाम.
 बदाम — badām — "almonds".
 
+The word, taken apart.
+बदाम (badām) is a loan, usually traced to Persian bādām, "almond".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a pickle, then the Marathi for almonds.
 
 You'll want to know: मनुका.
 मनुका — manukā — "raisins".
+
+The word, taken apart.
+The origin of मनुका (manukā) is not settled. Neither CDIAL nor DEDR has an entry for it. It may be the same word as Hindi munakkā, "large raisin", from Arabic munaqqā, "cleaned", but no source here confirms it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for almonds, then the Marathi for raisins.
 You'll want to know: गूळ.
 गूळ — gūḷ — "jaggery".
 
+The word, taken apart.
+गूळ (gūḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from guḍa, "boiled sugarcane juice, molasses" (CDIAL 4182).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for raisins, then the Marathi for jaggery.
 You'll want to know: धोतर.
 धोतर — dhotar — "a dhoti".
 
+The word, taken apart.
+धोतर (dhotar) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhotta, "cloth", a form CDIAL reconstructs from its descendants (CDIAL 6881). CDIAL marks the Marathi word as taken from Gujarati.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for jaggery, then the Marathi for a dhoti.
 
 You'll want to know: कुर्ता.
 कुर्ता — kurtā — "a kurta".
+
+The word, taken apart.
+कुर्ता (kurtā) is a loan, usually traced to Persian kurta, "a long shirt".
 
 What you've built.
 One more word for this chapter.

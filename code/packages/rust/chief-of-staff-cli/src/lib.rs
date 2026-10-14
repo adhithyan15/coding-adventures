@@ -1201,17 +1201,10 @@ hardware_key_timeout = 60
         );
         fs::write(&config, text).unwrap();
         let kek = directory.0.join(".chief-of-staff").join("vault.kek");
-        // The existing writer creates a protected owner-only Windows DACL.
-        // Overwriting this synthetic fixture's bytes preserves that ACL; the
-        // real daemon loader must still enforce its complete secret policy.
-        #[cfg(windows)]
-        drop(load_or_create_credential(&kek).unwrap());
-        fs::write(&kek, [0x5a_u8; 32]).unwrap();
-        #[cfg(unix)]
-        {
-            use std::os::unix::fs::PermissionsExt;
-            fs::set_permissions(&kek, fs::Permissions::from_mode(0o600)).unwrap();
-        }
+        // The daemon's owner-only policy, set by the crate that enforces it
+        // (on Windows: the user as owner and a protected DACL with only the
+        // user's ACE, which std cannot express).
+        chief_of_staff_daemon_secret_file::write_test_secret(&kek, &[0x5a_u8; 32]);
         (directory, config)
     }
 
