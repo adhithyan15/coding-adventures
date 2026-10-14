@@ -1358,7 +1358,8 @@ mod tests {
                     node.width = node_width; node.height = node_height;
                 }
                 let enclosure = actual.nodes.iter().all(|node| {
-                    let lane = actual.lanes.iter().find(|lane| Some(&lane.id)==node.lane_id.as_ref()).unwrap();
+                    let source = diagram.nodes.iter().find(|source| source.id==node.id).unwrap();
+                    let lane = actual.lanes.iter().find(|lane| Some(&lane.id)==source.lane_id.as_ref()).unwrap();
                     node.x>=lane.x && node.y>=lane.y && node.x+node.width<=lane.x+lane.width
                         && node.y+node.height<=lane.y+lane.height && node.x>=0.0 && node.y>=0.0
                         && node.x+node.width<=actual.width && node.y+node.height<=actual.height

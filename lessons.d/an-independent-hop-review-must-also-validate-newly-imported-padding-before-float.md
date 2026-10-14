@@ -26,3 +26,8 @@ directory before the red run. The add/commit failed, while Cargo genuinely
 executed the working-tree tests. Commit from the repository root and record
 that exact source blob and pre-commit execution honestly; do not attribute the
 run to an earlier committed source that lacks those tests.
+
+The first enclosure control did not compile because a laid-out node has no
+lane_id field. Resolve its stable node ID through the caller-owned diagram,
+then find that source lane in the layout. Preserve the E0609 log as a harness
+failure with zero tests executed, distinct from the subsequent geometric red.
