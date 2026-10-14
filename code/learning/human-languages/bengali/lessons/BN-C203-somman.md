@@ -14,7 +14,8 @@ romanization: "sômmān"
 concept_tag: BN-JINIS203-SOMMAN
 prerequisites: [BN-C203-gorbo, BN-C203-hingsa]
 sounds: []
-roots: []
+roots: [sanskrit-sammana]
+etymology_hook: "sômmān ← Sanskrit sammāna 'honour, respect', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C203-hingsa]
 <!-- hl-knowledge: introduces=[BN-LEX-C203-JINIS203-05]; assesses=[] -->
 
 **সম্মান** — *sômmān* — "respect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সম্মান** (*sômmān*) is Sanskrit *sammāna*, "honour, respect", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

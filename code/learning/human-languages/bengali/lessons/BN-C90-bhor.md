@@ -14,7 +14,8 @@ romanization: "bhor"
 concept_tag: BN-TIME90-BHOR
 prerequisites: [BN-C89-khlna, BN-C90-bikel]
 sounds: []
-roots: []
+roots: [indo-aryan-bhora]
+etymology_hook: "bhor ← *bhorā 'daybreak', a reconstructed form; a tadbhava (CDIAL 9634)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C90-bikel]
 <!-- hl-knowledge: introduces=[BN-LEX-C90-TIME90-02]; assesses=[] -->
 
 **ভোর** — *bhor* — "dawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভোর** (*bhor*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhorā*, "daybreak", a form CDIAL reconstructs from its descendants (CDIAL 9634).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

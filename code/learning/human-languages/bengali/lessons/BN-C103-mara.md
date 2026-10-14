@@ -14,7 +14,8 @@ romanization: "mārā"
 concept_tag: BN-VERB-MARA
 prerequisites: [BN-C103-satar, BN-C103-laphano]
 sounds: []
-roots: []
+roots: [sanskrit-marayati]
+etymology_hook: "mārā ← Sanskrit mārayati 'kills', a tadbhava (CDIAL 10066)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C103-laphano]
 <!-- hl-knowledge: introduces=[BN-LEX-C103-ACT103-04]; assesses=[] -->
 
 **মারা** — *mārā* — "to hit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মারা** (*mārā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mārayati*, "kills" (CDIAL 10066).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

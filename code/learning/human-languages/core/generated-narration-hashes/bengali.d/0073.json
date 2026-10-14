@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 73,
-  "sourceHash": "fnv1a64:6c757c07151016ba",
+  "sourceHash": "fnv1a64:b1cfcc82736b56d4",
   "lessonIds": [
     "BN-C73-lomba",
     "BN-C73-gorom",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch73.txt",
   "json": "bengali/narration/ch73.json",
-  "textHash": "fnv1a64:f1a155935a5933c3",
-  "jsonHash": "fnv1a64:5dbbed5e1f39c3e2",
+  "textHash": "fnv1a64:ea98ae75532a7350",
+  "jsonHash": "fnv1a64:7dc09b0441cada00",
   "findings": []
 }

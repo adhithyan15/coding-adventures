@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 168,
-  "sourceHash": "fnv1a64:1e4022764991ccdd",
+  "sourceHash": "fnv1a64:d2e2034d2da6155b",
   "lessonIds": [
     "BN-C168-shashuri",
     "BN-C168-bor",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch168.txt",
   "json": "bengali/narration/ch168.json",
-  "textHash": "fnv1a64:adf8e7fff312e187",
-  "jsonHash": "fnv1a64:18475b626c6faffb",
+  "textHash": "fnv1a64:2896649d62272310",
+  "jsonHash": "fnv1a64:e66093221c7e9233",
   "findings": []
 }

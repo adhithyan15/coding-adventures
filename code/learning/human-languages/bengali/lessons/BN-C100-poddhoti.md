@@ -14,7 +14,8 @@ romanization: "pôddhôti"
 concept_tag: BN-CAN100-PODDHOTI
 prerequisites: [BN-C100-jontro, BN-C100-soronjam]
 sounds: []
-roots: []
+roots: [sanskrit-paddhati]
+etymology_hook: "pôddhôti ← Sanskrit paddhati 'path, way', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C100-soronjam]
 <!-- hl-knowledge: introduces=[BN-LEX-C100-CAN100-05]; assesses=[] -->
 
 **পদ্ধতি** — *pôddhôti* — "a method".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পদ্ধতি** (*pôddhôti*) is Sanskrit *paddhati*, "path, way", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

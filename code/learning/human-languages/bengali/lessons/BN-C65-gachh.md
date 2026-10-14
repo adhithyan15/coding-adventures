@@ -14,7 +14,8 @@ romanization: "gāchh"
 concept_tag: BN-SCHOOL65-GACHH
 prerequisites: [BN-C65-shobdo, BN-C65-chhobi]
 sounds: []
-roots: []
+roots: [indo-aryan-gaksha]
+etymology_hook: "gāchh ← *gakṣa 'tree', a reconstructed form; a tadbhava (CDIAL 3949)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C65-chhobi]
 <!-- hl-knowledge: introduces=[BN-LEX-C65-SCHOOL65-03]; assesses=[] -->
 
 **গাছ** — *gāchh* — "a tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গাছ** (*gāchh*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*gakṣa*, "tree", a form CDIAL reconstructs from its descendants (CDIAL 3949). Lexicons give a Sanskrit *gaccha*, "tree".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

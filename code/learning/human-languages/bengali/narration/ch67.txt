@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a pond, then the Bengali for a stone.
 You'll want to know: বালি.
 বালি — bāli — "sand".
 
+The word, taken apart.
+বালি (bāli) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vālukā, "sand, gravel" (CDIAL 11580). CDIAL notes that its ending -ukā was replaced by -ikā.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a stone, then the Bengali for sand.
 
 You'll want to know: চাঁদ.
 চাঁদ — chā̃d — "the moon".
+
+The word, taken apart.
+চাঁদ (chā̃d) (chāṁd) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from candra, "shining; moon" (CDIAL 4661).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for sand, then the Bengali for the moon.
 You'll want to know: সমুদ্র.
 সমুদ্র — sômudrô — "the sea".
 
+The word, taken apart.
+সমুদ্র (sômudrô) is Sanskrit samudra, "sea", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for the moon, then the Bengali for the sea.
 You'll want to know: আগুন.
 আগুন — āgun — "fire".
 
+The word, taken apart.
+আগুন (āgun) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from agni, "fire" (CDIAL 14198). CDIAL's addenda list āgun and its variants; the main entry gives the shorter āg (CDIAL 55).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for the sea, then the Bengali for fire.
 
 You'll want to know: বরফ.
 বরফ — bôrôph — "ice".
+
+The word, taken apart.
+বরফ (bôrôph) is a loan, usually traced to Persian barf, "snow, ice".
 
 What you've built.
 One more word for this chapter.

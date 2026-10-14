@@ -14,7 +14,8 @@ romanization: "khõjā"
 concept_tag: BN-VERB-KHOJA
 prerequisites: [BN-C52-kata, BN-C52-thama]
 sounds: []
-roots: []
+roots: [indo-aryan-khojja]
+etymology_hook: "khõjā ← *khojjati 'tracks, seeks', a reconstructed form; a tadbhava (CDIAL 3929)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C52-thama]
 <!-- hl-knowledge: introduces=[BN-LEX-C52-VERBS52-04]; assesses=[] -->
 
 **খোঁজা** — *khõjā* — "to look for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খোঁজা** (*khõjā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khojjati*, "tracks, seeks", a form CDIAL reconstructs from its descendants (CDIAL 3929). CDIAL doubts a link with Sanskrit *khojati*, "steals".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

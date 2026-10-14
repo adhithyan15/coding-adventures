@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 43,
-  "sourceHash": "fnv1a64:eb6f15fd8470d648",
+  "sourceHash": "fnv1a64:b6371465219dc12d",
   "lessonIds": [
     "BN-C43-kadh",
     "BN-C43-rokto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch43.txt",
   "json": "bengali/narration/ch43.json",
-  "textHash": "fnv1a64:70a24eeaf08f9e6e",
-  "jsonHash": "fnv1a64:fe41ae0d1525002e",
+  "textHash": "fnv1a64:1cb8812ed138ece2",
+  "jsonHash": "fnv1a64:0d33a0f2764bd0ce",
   "findings": []
 }

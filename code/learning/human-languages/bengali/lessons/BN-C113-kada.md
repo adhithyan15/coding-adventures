@@ -14,7 +14,8 @@ romanization: "kādā"
 concept_tag: BN-THINGS113-KADA
 prerequisites: [BN-C112-bagan, BN-C113-kuyo]
 sounds: []
-roots: []
+roots: [sanskrit-karda]
+etymology_hook: "kādā ← Sanskrit karda 'mud', a word CDIAL thinks probably non-Aryan (CDIAL 2867)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C113-kuyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C113-THINGS113-02]; assesses=[] -->
 
 **কাদা** — *kādā* — "mud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাদা** (*kādā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karda*, "mud, swamp" (CDIAL 2867). CDIAL thinks this family of words probably of non-Aryan origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

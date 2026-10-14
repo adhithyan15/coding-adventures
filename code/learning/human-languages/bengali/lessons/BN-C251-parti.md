@@ -14,7 +14,8 @@ romanization: "pārṭi"
 concept_tag: BN-JINIS251-PARTI
 prerequisites: [BN-C251-prodorshoni, BN-C251-mela]
 sounds: []
-roots: []
+roots: [english-party]
+etymology_hook: "pārṭi ← English party"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C251-mela]
 <!-- hl-knowledge: introduces=[BN-LEX-C251-JINIS251-04]; assesses=[] -->
 
 **পার্টি** — *pārṭi* — "a party".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পার্টি** (*pārṭi*) is a loan from English *party*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

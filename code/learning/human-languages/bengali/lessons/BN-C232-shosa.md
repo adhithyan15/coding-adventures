@@ -15,6 +15,7 @@ concept_tag: BN-JINIS232-SHOSA
 prerequisites: [BN-C231-moyda, BN-C231-suji]
 sounds: []
 roots: []
+etymology_hook: "shôsā 'cucumber': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C231-suji]
 <!-- hl-knowledge: introduces=[BN-LEX-C232-JINIS232-01]; assesses=[] -->
 
 **শসা** — *shôsā* — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **শসা** (*shôsā*) is not settled: CDIAL has no entry for it in this sense, and a search by the gloss "cucumber" finds only words of other shapes, such as Bengali *khirā* (CDIAL 3697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

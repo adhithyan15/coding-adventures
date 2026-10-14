@@ -51,7 +51,7 @@ The letters in this word.
 New: ধ dhô (a breathy d), and the conjunct ন্য: the ন you know, then the hasanta ্ that strips its vowel, then য y. The rest of the word — a b, a d and a long-ā sign — waits for later chapters, and so does its whole spelling.
 
 The word, taken apart.
-Dhônyobad = Sanskrit dhanya ("worthy") + vāda ("a saying") — the very "thank you" behind Hindi dhanyavād. Two Bengali quirks fire at once: the inherent a becomes ô again (dhônyobad), and — because Bengali has no separate "v," only b — Sanskrit vāda is spoken bad. V becoming b is a Bengali signature (think Bishnu for Vishnu).
+Dhônyobad = Sanskrit dhanya ("fortunate, blessed") + vāda ("a saying") — the very "thank you" behind Hindi dhanyavād. Two Bengali quirks fire at once: the inherent a becomes ô again (dhônyobad), and — because Bengali has no separate "v," only b — Sanskrit vāda is spoken bad. V becoming b is a Bengali signature (think Bishnu for Vishnu).
 
 Why it's said this way.
 This is the standard, slightly formal thanks. In warm everyday speech Bengalis often lean on the whole gesture and tone rather than the word — but dhônyobad is what you say and write when you mean it plainly. Note how much you already knew: only the sound changed, not the roots.
@@ -65,7 +65,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Dhônyobad comes from which two Sanskrit parts, and why is the "v" gone? (Dhanya "worthy" + vāda "saying"; Bengali has no "v," only b.)
+Dhônyobad comes from which two Sanskrit parts, and why is the "v" gone? (Dhanya "fortunate" + vāda "saying"; Bengali has no "v," only b.)
 
 
 Lesson 3 of 6.
@@ -83,6 +83,7 @@ New: হ hô, the y-phola ্য that glides the sound, and the nasal mark chand
 
 The word, taken apart.
 হ্যাঁ (hyã, "yes") and না (nā, "no"). That "no" rides the ancient negative na- — the same Proto-Indo-European ne behind English no, not, none, Latin nōn, and Hindi nahīṇ. Bengali kept it at its shortest, bare nā: the family resemblance to English no sits right on the surface.
+CDIAL lists the Bengali word for "yes" under Sanskrit ām, "yes", with an h- added either for emphasis or from the verb "to be" (CDIAL 1235); nā is Sanskrit na, "not" (CDIAL 6906).
 
 Why it's said this way.
 The chandrabindu (that nasal moon-dot) is everywhere in Bengali and gives the language part of its soft, nasal music. Hear the breath leave through the nose at the end of hyã — that mark is doing the work.
@@ -113,7 +114,7 @@ The letters in this word.
 New: আ — the independent vowel ā, the shape a word uses when it starts with a vowel. (A built-in vowel rides a consonant; a standalone one gets its own letter.) Then the doubled চ্ছ (চ ch + ছ chh). Read আ, চ্ছা, ā-chchhā.
 
 The word, taken apart.
-আচ্ছা (āchchhā) is the all-purpose "okay, alright, I see, go on" — a true workhorse of spoken Bengali, from Sanskrit acchā ("good, clear"). It is the word a Bengali speaker peppers through speech the way an English speaker says "right… right," a nod made audible.
+আচ্ছা (āchchhā) is the all-purpose "okay, alright, I see, go on" — a true workhorse of spoken Bengali, from Sanskrit accha, "clear, transparent", which CDIAL suggests may first have meant "shadowless" (CDIAL 142). It is the word a Bengali speaker peppers through speech the way an English speaker says "right… right," a nod made audible.
 
 Why it's said this way.
 Note it opens with আ, a standalone vowel-letter — your first. This is the other half of how the script handles vowels: attached to a consonant they are little signs (া), but on their own they stand as full letters (আ). Same sound, two shapes, chosen by position.
@@ -144,7 +145,7 @@ The letters in this word.
 New: স — here truly "sh," the s becomes sh shift you heard in nômoshkar — and the ি sign (i), which in Bengali is written before the consonant it follows but read after it. আসি (āshi) = আ + সি, ā-shi.
 
 The word, taken apart.
-আসি (āshi) literally means "I come," from the verb āsā ("to come," a Sanskrit root shared with Hindi ānā). Yet it is how Bengalis say goodbye — never "I'm leaving" (unlucky, too final) but "I'll come [again]": আসি, or the fuller āschhi ("I am coming"). It is the very same "promise of return" farewell Tamil and Marathi reach for — a whole culture's optimism folded into one verb.
+আসি (āshi) literally means "I come," from the verb āsā ("to come"), which CDIAL lists under Sanskrit āsadati, "approaches" (CDIAL 1483), while noting that Chatterji derived it from āviśati, "enters". Yet it is how Bengalis say goodbye — never "I'm leaving" (unlucky, too final) but "I'll come [again]": আসি, or the fuller āschhi ("I am coming"). It is the very same "promise of return" farewell Tamil and Marathi reach for — a whole culture's optimism folded into one verb.
 
 Why it's said this way.
 And notice: āshi is "I come" whether a man or a woman says it — Bengali marks no gender on the verb. That sets it apart from Marathi (yeto m. / yete f.) and, in this one respect, makes Bengali's verbs simpler than its neighbours'.

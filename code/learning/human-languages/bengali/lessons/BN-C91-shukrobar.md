@@ -14,7 +14,8 @@ romanization: "shukrôbār"
 concept_tag: BN-TIME91-SHUKROBAR
 prerequisites: [BN-C91-budhbar, BN-C91-brihospotibar]
 sounds: []
-roots: []
+roots: [vara-sanskrit]
+etymology_hook: "shukrôbār ← Sanskrit śukravāra 'Friday', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C91-brihospotibar]
 <!-- hl-knowledge: introduces=[BN-LEX-C91-TIME91-05]; assesses=[] -->
 
 **শুক্রবার** — *shukrôbār* — "Friday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শুক্রবার** (*shukrôbār*) is Sanskrit *śukravāra*, "Friday", taken over whole as a learned loan, a tatsama. It is *śukra*, "Venus", + *vāra*, "day of the week".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

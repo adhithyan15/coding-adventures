@@ -14,7 +14,8 @@ romanization: "tāṛā kôrā"
 concept_tag: BN-VERB-TARA-KORA
 prerequisites: [BN-C238-barano, BN-C238-komano]
 sounds: []
-roots: []
+roots: [sanskrit-tadayati, sanskrit-karoti]
+etymology_hook: "tāṛā kôrā: tāṛā 'chase', with tāṛāna 'to drive away' ← tāḍayati (CDIAL 5752), + kôrā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C238-komano]
 <!-- hl-knowledge: introduces=[BN-LEX-C238-ACT238-04]; assesses=[] -->
 
 **তাড়া করা** — *tāṛā kôrā* — "to chase".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তাড়া করা** (*tāṛā kôrā*) is *tāṛā*, "a chase", which belongs with Bengali *tāṛāna*, "to drive away", from Sanskrit *tāḍayati*, "beats, strikes" (CDIAL 5752), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

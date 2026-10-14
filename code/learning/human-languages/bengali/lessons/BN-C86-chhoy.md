@@ -14,7 +14,8 @@ romanization: "chhôy"
 concept_tag: BN-CLOTHES86-CHHOY
 prerequisites: [BN-C85-tupi, BN-C86-juto]
 sounds: []
-roots: []
+roots: [sanskrit-shash]
+etymology_hook: "chhôy ← *kṣaṭ, a variant CDIAL reconstructs beside Sanskrit ṣaṣ 'six' (CDIAL 12803)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C86-juto]
 <!-- hl-knowledge: introduces=[BN-LEX-C86-CLOTHES86-02]; assesses=[] -->
 
 **ছয়** — *chhôy* — "six".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছয়** (*chhôy*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kṣaṭ*, "six", a form CDIAL reconstructs from its descendants (CDIAL 12803). It is a variant CDIAL reconstructs beside Sanskrit *ṣaṣ*, "six".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

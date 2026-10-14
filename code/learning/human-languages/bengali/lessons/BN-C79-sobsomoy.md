@@ -14,7 +14,8 @@ romanization: "sôbsômôy"
 concept_tag: BN-TIME79-SOBSOMOY
 prerequisites: [BN-C79-aj, BN-C79-ekhon]
 sounds: []
-roots: []
+roots: [sanskrit-sarva, sanskrit-samaya]
+etymology_hook: "sôbsômôy: sab 'all' ← Sanskrit sarva (CDIAL 13276) + sômôy 'time' ← Sanskrit samaya, a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C79-ekhon]
 <!-- hl-knowledge: introduces=[BN-LEX-C79-TIME79-05]; assesses=[] -->
 
 **সবসময়** — *sôbsômôy* — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সবসময়** (*sôbsômôy*) is *sab*, "all", from Sanskrit *sarva*, "all" (CDIAL 13276), + *sômôy*, "time", Sanskrit *samaya* taken over whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

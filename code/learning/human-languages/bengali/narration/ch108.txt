@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a water pot, then the Bengali for a buck
 You'll want to know: ঝাঁটা.
 ঝাঁটা — jhā̃ṭā — "a broom".
 
+The word, taken apart.
+CDIAL lists ঝাঁটা (jhā̃ṭā) (jhāṁṭā), "broom", under jhāṇṭa, a variant of Sanskrit jhāṭa, "forest, arbour", which it reports may come from Munda (CDIAL 5362).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a bucket, then the Bengali for a broom.
 
 You'll want to know: বালিশ.
 বালিশ — bālish — "a pillow".
+
+The word, taken apart.
+বালিশ (bālish) is a loan, usually traced to Persian bālish, "pillow, cushion".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a broom, then the Bengali for a pillow.
 You'll want to know: চাদর.
 চাদর — chādôr — "a sheet".
 
+The word, taken apart.
+চাদর (chādôr) is a loan, usually traced to Persian chādar, "sheet, veil".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a pillow, then the Bengali for a sheet.
 You'll want to know: লেপ.
 লেপ — lep — "a quilt".
 
+The word, taken apart.
+লেপ (lep) has the same shape as Bengali lep, "a smearing, a plaster", which CDIAL lists under Sanskrit lēpya, "to be smeared" (CDIAL 11114). CDIAL does not list the sense "quilt", so the link is not confirmed.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a sheet, then the Bengali for a quilt.
 
 You'll want to know: মাদুর.
 মাদুর — mādur — "a mat".
+
+The word, taken apart.
+মাদুর (mādur) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mandurā, "mattress, bed" (CDIAL 9854).
 
 What you've built.
 One more word for this chapter.

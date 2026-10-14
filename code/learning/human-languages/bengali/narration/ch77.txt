@@ -12,6 +12,9 @@ Before the new one: say the Bengali for heavy, then the Bengali for true.
 You'll want to know: মিথ্যা.
 মিথ্যা — mitthā — "false".
 
+The word, taken apart.
+মিথ্যা (mitthā) is Sanskrit mithyā, "wrongly, falsely", taken over whole as a learned loan, a tatsama (CDIAL 10130). The word inherited from it is michā, "untrue", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for true, then the Bengali for false.
 
 You'll want to know: হলুদ.
 হলুদ — hôlud — "yellow".
+
+The word, taken apart.
+হলুদ (hôlud) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from haridrā, "turmeric" (CDIAL 13992). Bengali names the colour after the spice.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for false, then the Bengali for yellow.
 You'll want to know: বাদামি.
 বাদামি — bādāmi — "brown".
 
+The word, taken apart.
+বাদামি (bādāmi) is bādām, "almond", with the ending -i: "almond-coloured". Bādām is usually traced to Persian bādām, "almond".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for yellow, then the Bengali for brown.
 You'll want to know: সুন্দর.
 সুন্দর — sundôr — "beautiful".
 
+The word, taken apart.
+সুন্দর (sundôr) is Sanskrit sundara, "beautiful", taken over whole as a learned loan, a tatsama (CDIAL 13474). The inherited form is sũdar, which CDIAL lists; CDIAL asks whether sundara is itself a Middle Indo-Aryan form of sūnara, "excellent".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for brown, then the Bengali for beautiful.
 
 You'll want to know: দিন.
 দিন — din — "a day".
+
+The word, taken apart.
+দিন (din) is inherited from Sanskrit dina, "day", and has come down with almost no change (CDIAL 6328).
 
 What you've built.
 One more word for this chapter.

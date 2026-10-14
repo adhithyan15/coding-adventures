@@ -14,7 +14,8 @@ romanization: "lāgāno"
 concept_tag: BN-VERB-LAGANO
 prerequisites: [BN-C101-selai, BN-C102-bona]
 sounds: []
-roots: []
+roots: [sanskrit-lagyati]
+etymology_hook: "lāgāno ← Sanskrit lagyati 'adheres to', a tadbhava (CDIAL 10895)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C102-bona]
 <!-- hl-knowledge: introduces=[BN-LEX-C102-ACT102-02]; assesses=[] -->
 
 **লাগানো** — *lāgāno* — "to attach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লাগানো** (*lāgāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lagyati*, "adheres to" (CDIAL 10895). *Lāgāno* is the causing form of *lāgā*, "to stick", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

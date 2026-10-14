@@ -14,7 +14,8 @@ romanization: "rôonā deoyā"
 concept_tag: BN-VERB-ROONA-DEOYA
 prerequisites: [BN-C213-saja, BN-C213-prostut-hooya]
 sounds: []
-roots: []
+roots: [persian-ravana, sanskrit-dadati]
+etymology_hook: "rôonā deoyā: rôonā 'departure', usually traced to Persian ravāna 'going', + deoyā (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C213-prostut-hooya]
 <!-- hl-knowledge: introduces=[BN-LEX-C213-ACT213-04]; assesses=[] -->
 
 **রওনা দেওয়া** — *rôonā deoyā* — "to set off".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রওনা দেওয়া** (*rôonā deoyā*) is *rôonā*, "departure", usually traced to Persian *ravāna*, "going, setting out", + *deoyā*, "to give", from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

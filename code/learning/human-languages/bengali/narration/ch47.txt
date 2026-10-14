@@ -12,6 +12,9 @@ Before the new one: say the Bengali for an uncle, then the Bengali for an aunt.
 You'll want to know: পিসি.
 পিসি — pishi — "an aunt (father's sister)".
 
+The word, taken apart.
+পিসি (pishi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pituḥṣvasṛ, "father's sister" (CDIAL 8177). It is pitṛ, "father", + svasṛ, "sister".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for an aunt, then the Bengali for an aunt.
 
 You'll want to know: স্বামী.
 স্বামী — shbāmi — "a husband".
+
+The word, taken apart.
+স্বামী (shbāmi) is Sanskrit svāmin, "owner, master; husband", taken over whole as a learned loan, a tatsama (CDIAL 13930). The word inherited from it is sāṁi, "master", which CDIAL lists.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for an aunt, then the Bengali for a husband.
 You'll want to know: স্ত্রী.
 স্ত্রী — stri — "a wife".
 
+The word, taken apart.
+স্ত্রী (stri) is Sanskrit strī, "woman, wife", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a husband, then the Bengali for a wife.
 You'll want to know: শিশু.
 শিশু — shishu — "a child".
 
+The word, taken apart.
+শিশু (shishu) is Sanskrit śiśu, "young of an animal, child", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a wife, then the Bengali for a child.
 
 You'll want to know: লোক.
 লোক — lok — "a person".
+
+The word, taken apart.
+লোক (lok) is Sanskrit loka, "world, people", taken over whole as a learned loan, a tatsama (CDIAL 11119). The word inherited from it is Old Bengali loa, which CDIAL lists.
 
 What you've built.
 One more word for this chapter.

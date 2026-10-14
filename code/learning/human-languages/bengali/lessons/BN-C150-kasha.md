@@ -14,7 +14,8 @@ romanization: "kāshā"
 concept_tag: BN-VERB-KASHA
 prerequisites: [BN-C150-chaliye-jaoya, BN-C150-hacha]
 sounds: []
-roots: []
+roots: [sanskrit-kasate]
+etymology_hook: "kāshā ← Sanskrit kāsate 'coughs', a tadbhava (CDIAL 3135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C150-hacha]
 <!-- hl-knowledge: introduces=[BN-LEX-C150-ACT150-05]; assesses=[] -->
 
 **কাশা** — *kāshā* — "to cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাশা** (*kāshā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kāsate*, "coughs" (CDIAL 3135).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

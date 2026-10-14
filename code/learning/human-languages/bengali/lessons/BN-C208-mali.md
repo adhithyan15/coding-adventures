@@ -14,7 +14,8 @@ romanization: "māli"
 concept_tag: BN-KAJ208-MALI
 prerequisites: [BN-C208-pailot, BN-C208-nabik]
 sounds: []
-roots: []
+roots: [sanskrit-malin]
+etymology_hook: "māli ← Sanskrit mālin 'garlanded; gardener', a tadbhava (CDIAL 10094)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C208-nabik]
 <!-- hl-knowledge: introduces=[BN-LEX-C208-KAJ208-03]; assesses=[] -->
 
 **মালি** — *māli* — "a gardener".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মালি** (*māli*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mālin*, "garlanded; gardener" (CDIAL 10094). CDIAL lists Bengali *māli*, "gardener".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

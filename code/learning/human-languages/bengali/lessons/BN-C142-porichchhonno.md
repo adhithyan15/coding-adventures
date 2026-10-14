@@ -14,7 +14,8 @@ romanization: "pôrichchhônnô"
 concept_tag: BN-QUAL142-PORICHCHHONNO
 prerequisites: [BN-C142-priyo, BN-C142-bikhyato]
 sounds: []
-roots: []
+roots: [sanskrit-paricchanna]
+etymology_hook: "pôrichchhônnô ← Sanskrit paricchanna 'covered, clad', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C142-bikhyato]
 <!-- hl-knowledge: introduces=[BN-LEX-C142-QUAL142-03]; assesses=[] -->
 
 **পরিচ্ছন্ন** — *pôrichchhônnô* — "clean, tidy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পরিচ্ছন্ন** (*pôrichchhônnô*) is Sanskrit *paricchanna*, "covered, clad", taken over whole as a learned loan, a tatsama. In Bengali it has come to mean "clean, tidy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

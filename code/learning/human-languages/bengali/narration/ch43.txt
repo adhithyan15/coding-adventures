@@ -12,6 +12,9 @@ Before the new one: say the Bengali for the throat, then the Bengali for the sto
 You'll want to know: কাঁধ.
 কাঁধ — kā̃dh — "a shoulder".
 
+The word, taken apart.
+কাঁধ (kā̃dh) (kāṁdh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from skandha, "shoulder" (CDIAL 13627).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for the stomach, then the Bengali for a shou
 
 You'll want to know: রক্ত.
 রক্ত — rôkto — "blood".
+
+The word, taken apart.
+রক্ত (rôkto) is Sanskrit rakta, "coloured, red; blood", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a shoulder, then the Bengali for blood.
 You'll want to know: হাঁটু.
 হাঁটু — hā̃ṭu — "a knee".
 
+The word, taken apart.
+হাঁটু (hā̃ṭu) (hāṁṭu) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṣṭhīvat, "knee" (CDIAL 959).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for blood, then the Bengali for a knee.
 You'll want to know: জিভ.
 জিভ — jibh — "the tongue".
 
+The word, taken apart.
+জিভ (jibh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jihvā, "tongue" (CDIAL 5228).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a knee, then the Bengali for the tongue.
 
 You'll want to know: মাথা.
 মাথা — māthā — "the head".
+
+The word, taken apart.
+মাথা (māthā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mastaka, "head, skull" (CDIAL 9926). CDIAL writes the Bengali form as mātā.
 
 What you've built.
 One more word for this chapter.

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a sparrow, then the Bengali for a heron.
 You'll want to know: মাছি.
 মাছি — māchhi — "a fly".
 
+The word, taken apart.
+মাছি (māchhi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from makṣikā, "fly, bee" (CDIAL 9696).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a heron, then the Bengali for a fly.
 
 You'll want to know: মশা.
 মশা — môshā — "a mosquito".
+
+The word, taken apart.
+মশা (môshā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from maśaka, "mosquito" (CDIAL 9917).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a fly, then the Bengali for a mosquito.
 You'll want to know: কেঁচো.
 কেঁচো — kechô — "an earthworm".
 
+The word, taken apart.
+কেঁচো (kechô) is a tadbhava, a word inherited and reshaped by sound change. It comes from keñcuka, "worm", a form CDIAL reconstructs from its descendants (CDIAL 3459).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a mosquito, then the Bengali for an eart
 You'll want to know: টিকটিকি.
 টিকটিকি — ṭikṭiki — "a gecko".
 
+The word, taken apart.
+The origin of টিকটিকি (ṭikṭiki) is not settled: CDIAL has no entry for it; the only Bengali word for a house lizard it gives is jeṭhī, under Sanskrit jyaiṣṭhī (CDIAL 5295), a different word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for an earthworm, then the Bengali for a gec
 
 You'll want to know: কচ্ছপ.
 কচ্ছপ — kôchchhôp — "a turtle".
+
+The word, taken apart.
+কচ্ছপ (kôchchhôp) is Sanskrit kacchapa, "turtle, tortoise", taken over whole as a learned loan, a tatsama (CDIAL 2619). The word inherited from it is kāchim, which CDIAL lists.
 
 What you've built.
 One more word for this chapter.

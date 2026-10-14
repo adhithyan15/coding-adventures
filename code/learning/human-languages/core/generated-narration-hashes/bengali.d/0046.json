@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 46,
-  "sourceHash": "fnv1a64:3af8b2da1f24798c",
+  "sourceHash": "fnv1a64:e84d8786bd9d0e47",
   "lessonIds": [
     "BN-C46-dadu",
     "BN-C46-didima",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch46.txt",
   "json": "bengali/narration/ch46.json",
-  "textHash": "fnv1a64:6104ecfdd8b29ed2",
-  "jsonHash": "fnv1a64:86e2d377bef94d40",
+  "textHash": "fnv1a64:2bd4883b865a65a9",
+  "jsonHash": "fnv1a64:dafeae5bf16a09c5",
   "findings": []
 }

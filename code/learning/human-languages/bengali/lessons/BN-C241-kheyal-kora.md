@@ -14,7 +14,8 @@ romanization: "kheyāl kôrā"
 concept_tag: BN-VERB-KHEYAL-KORA
 prerequisites: [BN-C241-hariye-jaoya, BN-C241-khuje-paoya]
 sounds: []
-roots: []
+roots: [arabic-khayal, sanskrit-karoti]
+etymology_hook: "kheyāl kôrā: kheyāl 'attention' ← Arabic khayāl 'fancy, image', through Persian, + kôrā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C241-khuje-paoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C241-ACT241-03]; assesses=[] -->
 
 **খেয়াল করা** — *kheyāl kôrā* — "to notice".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খেয়াল করা** (*kheyāl kôrā*) is *kheyāl*, "attention, notice", from Arabic *khayāl*, "an image in the mind", which reached Bengali through Persian (Lane), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

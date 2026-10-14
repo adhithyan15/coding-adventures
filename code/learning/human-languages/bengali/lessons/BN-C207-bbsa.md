@@ -14,7 +14,8 @@ romanization: "bæbsā"
 concept_tag: BN-KAJ207-BBSA
 prerequisites: [BN-C207-dokandar, BN-C207-khodder]
 sounds: []
-roots: []
+roots: [sanskrit-vyavasaya]
+etymology_hook: "bæbsā ← Sanskrit vyavasāya 'resolve; trade', a tadbhava (CDIAL 11831)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C207-khodder]
 <!-- hl-knowledge: introduces=[BN-LEX-C207-KAJ207-04]; assesses=[] -->
 
 **ব্যবসা** — *bæbsā* — "business".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ব্যবসা** (*bæbsā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vyavasāya*, "resolve; trade" (CDIAL 11831). CDIAL lists Bengali *byabsā*, "business", and notes the pull of the learned *byabasāyī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

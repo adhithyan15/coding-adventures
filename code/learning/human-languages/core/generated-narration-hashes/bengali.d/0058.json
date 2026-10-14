@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 58,
-  "sourceHash": "fnv1a64:74b3274834eab8de",
+  "sourceHash": "fnv1a64:93035dd0b65c9a80",
   "lessonIds": [
     "BN-C58-komla",
     "BN-C58-lebu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch58.txt",
   "json": "bengali/narration/ch58.json",
-  "textHash": "fnv1a64:50c2b80e07c016d2",
-  "jsonHash": "fnv1a64:d41213dca540025a",
+  "textHash": "fnv1a64:660bc1cab67aee41",
+  "jsonHash": "fnv1a64:e9523c5aaea561c1",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a veranda, then the Bengali for a garden
 You'll want to know: কুয়ো.
 কুয়ো — kuyo — "a well".
 
+The word, taken apart.
+কুয়ো (kuyo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kūpa, "hole, pit, well" (CDIAL 3400). CDIAL writes the Bengali form kuyā.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a garden, then the Bengali for a well.
 
 You'll want to know: কাদা.
 কাদা — kādā — "mud".
+
+The word, taken apart.
+কাদা (kādā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karda, "mud, swamp" (CDIAL 2867). CDIAL thinks this family of words probably of non-Aryan origin.
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the Bengali for a well, then the Bengali for mud.
 You'll want to know: ধুলো.
 ধুলো — dhulo — "dust".
 
+The word, taken apart.
+ধুলো (dhulo) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhūḍi, "dust, powder", a form CDIAL reconstructs from its descendants (CDIAL 6835). Sanskrit has dhūli; CDIAL writes the Bengali forms dhul and dhulā.
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Bengali for mud, then the Bengali for dust.
 You'll want to know: বজ্র.
 বজ্র — bôjrô — "thunder".
 
+The word, taken apart.
+বজ্র (bôjrô) is Sanskrit vajra, "thunderbolt", taken over whole as a learned loan, a tatsama (CDIAL 11204). The word inherited from it is bāj, which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Bengali for dust, then the Bengali for thunder.
 
 You'll want to know: রংধনু.
 রংধনু — rôngdhônu — "a rainbow".
+
+The word, taken apart.
+রংধনু (rôngdhônu) is rông, "colour", which matches Sanskrit raṅga and Persian rang (CDIAL 10560), + dhônu, "bow", Sanskrit dhanus: a bow of colours.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "māchh"
 concept_tag: BN-VERBS55-MACHH
 prerequisites: [BN-C55-paowa, BN-C55-mangsho]
 sounds: []
-roots: []
+roots: [sanskrit-matsya]
+etymology_hook: "māchh ← Sanskrit matsya 'fish', a tadbhava (CDIAL 9758)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C55-mangsho]
 <!-- hl-knowledge: introduces=[BN-LEX-C55-VERBS55-05]; assesses=[] -->
 
 **মাছ** — *māchh* — "a fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাছ** (*māchh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *matsya*, "fish" (CDIAL 9758).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

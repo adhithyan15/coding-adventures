@@ -14,7 +14,8 @@ romanization: "sārādin"
 concept_tag: BN-TIME95-SARADIN
 prerequisites: [BN-C94-shiggir, BN-C95-idaning]
 sounds: []
-roots: []
+roots: [sanskrit-sara, sanskrit-dina]
+etymology_hook: "sārādin: sārā 'whole' ← Sanskrit sāra 'best part' (CDIAL 13355) + din 'day' ← dina (CDIAL 6328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C95-idaning]
 <!-- hl-knowledge: introduces=[BN-LEX-C95-TIME95-02]; assesses=[] -->
 
 **সারাদিন** — *sārādin* — "all day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সারাদিন** (*sārādin*) is *sārā*, "whole", + *din*, "day". CDIAL lists Bengali *sārā*, "whole", under Sanskrit *sāra*, "hardness, best part" (CDIAL 13355), and *din* is Sanskrit *dina*, "day" (CDIAL 6328).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

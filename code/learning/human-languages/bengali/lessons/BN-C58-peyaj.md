@@ -14,7 +14,8 @@ romanization: "pẽyāj"
 concept_tag: BN-FOOD58-PEYAJ
 prerequisites: [BN-C58-dim, BN-C58-doi]
 sounds: []
-roots: []
+roots: [persian-piyaz]
+etymology_hook: "pẽyāj: usually traced to Persian piyāz 'onion'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C58-doi]
 <!-- hl-knowledge: introduces=[BN-LEX-C58-FOOD58-05]; assesses=[] -->
 
 **পেঁয়াজ** — *pẽyāj* — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পেঁয়াজ** (*pẽyāj*) is a loan, usually traced to Persian *piyāz*, "onion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

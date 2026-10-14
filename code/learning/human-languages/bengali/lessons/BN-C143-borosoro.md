@@ -14,7 +14,8 @@ romanization: "bôṛôsôṛô"
 concept_tag: BN-QUAL143-BOROSORO
 prerequisites: [BN-C143-shoktishali, BN-C143-susbadu]
 sounds: []
-roots: []
+roots: [sanskrit-vadra]
+etymology_hook: "bôṛôsôṛô: bôṛo 'big' ← vaḍra (CDIAL 11225), doubled as an echo word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C143-susbadu]
 <!-- hl-knowledge: introduces=[BN-LEX-C143-QUAL143-03]; assesses=[] -->
 
 **বড়সড়** — *bôṛôsôṛô* — "fairly big".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বড়সড়** (*bôṛôsôṛô*) is *bôṛo*, "big", from Sanskrit *vaḍra* (CDIAL 11225), followed by *sôṛô*, an echo of it with no meaning of its own, which softens it to "fairly big".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

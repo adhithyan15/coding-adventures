@@ -14,7 +14,8 @@ romanization: "dukhi"
 concept_tag: BN-QUAL137-DUKHI
 prerequisites: [BN-C136-beguni, BN-C137-golapi]
 sounds: []
-roots: []
+roots: [sanskrit-duhkhin]
+etymology_hook: "dukhi ← Sanskrit duḥkhin 'in pain, unhappy', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C137-golapi]
 <!-- hl-knowledge: introduces=[BN-LEX-C137-QUAL137-02]; assesses=[] -->
 
 **দুঃখী** — *dukhi* — "sad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দুঃখী** (*dukhi*) is Sanskrit *duḥkhin*, "in pain, unhappy", taken over whole as a learned loan, a tatsama. CDIAL lists the inherited Bengali *dukh*, "sorrow, pain", under Sanskrit *duḥkha* (CDIAL 6375).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

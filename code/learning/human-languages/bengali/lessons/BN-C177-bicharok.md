@@ -14,7 +14,8 @@ romanization: "bichārôk"
 concept_tag: BN-KAJ177-BICHAROK
 prerequisites: [BN-C176-khoroch, BN-C176-sonchoy]
 sounds: []
-roots: []
+roots: [sanskrit-vicara]
+etymology_hook: "bichārôk: Sanskrit vicāra 'judgement', a tatsama, + -ôk 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C176-sonchoy]
 <!-- hl-knowledge: introduces=[BN-LEX-C177-KAJ177-01]; assesses=[] -->
 
 **বিচারক** — *bichārôk* — "a judge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিচারক** (*bichārôk*) is built on Sanskrit *vicāra*, "consideration, judgement", taken over whole, + the ending *-ôk*, "one who": "one who judges".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

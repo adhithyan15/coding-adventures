@@ -14,7 +14,8 @@ romanization: "phækāshe"
 concept_tag: BN-GUN247-PHKASHE
 prerequisites: [BN-C246-akashi, BN-C247-porer]
 sounds: []
-roots: []
+roots: [indo-aryan-phikka]
+etymology_hook: "phækāshe: appears to belong with Oriya phakā 'light-coloured', under phakka (CDIAL 9037)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C247-porer]
 <!-- hl-knowledge: introduces=[BN-LEX-C247-GUN247-02]; assesses=[] -->
 
 **ফ্যাকাশে** — *phækāshe* — "pale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL has no Bengali row for **ফ্যাকাশে** (*phækāshe*), "pale", but it appears to belong with Oriya *phakā*, "light-coloured", which CDIAL lists under Sanskrit *phakka*, "cripple", beside *\*phikka*, "defective" (CDIAL 9037). The same entry gives Bengali *phikā*, "weak (of tea), pale".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

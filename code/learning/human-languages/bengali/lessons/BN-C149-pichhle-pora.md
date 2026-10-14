@@ -14,7 +14,8 @@ romanization: "pichhle pôṛā"
 concept_tag: BN-VERB-PICHHLE-PORA
 prerequisites: [BN-C148-seddho-kora, BN-C149-satar-kata]
 sounds: []
-roots: []
+roots: [sanskrit-picchala, sanskrit-patati]
+etymology_hook: "pichhle pôṛā: pichhle 'slipping', with pichal 'slippery' ← picchala (CDIAL 8152), + pôṛā 'to fall' ← patati (CDIAL 7722)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C149-satar-kata]
 <!-- hl-knowledge: introduces=[BN-LEX-C149-ACT149-02]; assesses=[] -->
 
 **পিছলে পড়া** — *pichhle pôṛā* — "to slip".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পিছলে পড়া** (*pichhle pôṛā*) is *pichhle*, "slipping", which belongs with Bengali *pichal*, "slippery", from Sanskrit *picchala* (CDIAL 8152), + *pôṛā*, "to fall", from Sanskrit *patati*, "falls" (CDIAL 7722).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pônir"
 concept_tag: BN-JINIS257-PONIR
 prerequisites: [BN-C256-sahityo, BN-C257-chhana]
 sounds: []
-roots: []
+roots: [persian-panir]
+etymology_hook: "pônir: usually traced to Persian panīr 'cheese'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C257-chhana]
 <!-- hl-knowledge: introduces=[BN-LEX-C257-JINIS257-02]; assesses=[] -->
 
 **পনির** — *pônir* — "paneer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পনির** (*pônir*) is a loan, usually traced to Persian *panīr*, "cheese".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

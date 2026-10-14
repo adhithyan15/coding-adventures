@@ -14,7 +14,8 @@ romanization: "nôrtôkī"
 concept_tag: BN-KAJ262-NORTOKI
 prerequisites: [BN-C262-shilpi, BN-C262-gayika]
 sounds: []
-roots: []
+roots: [sanskrit-nartaki]
+etymology_hook: "nôrtôkī ← Sanskrit nartakī 'female dancer', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C262-gayika]
 <!-- hl-knowledge: introduces=[BN-LEX-C262-KAJ262-05]; assesses=[] -->
 
 **নর্তকী** — *nôrtôkī* — "a female dancer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নর্তকী** (*nôrtôkī*) is Sanskrit *nartakī*, "female dancer", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

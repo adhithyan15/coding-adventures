@@ -14,7 +14,8 @@ romanization: "rông kôrā"
 concept_tag: BN-VERB-RONG-KORA
 prerequisites: [BN-C238-bishvas-kora, BN-C239-chumu-khaoya]
 sounds: []
-roots: []
+roots: [sanskrit-ranga, persian-rang, sanskrit-karoti]
+etymology_hook: "rông kôrā: rông 'colour' matches Sanskrit raṅga (CDIAL 10560) and Persian rang, + kôrā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C239-chumu-khaoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C239-ACT239-02]; assesses=[] -->
 
 **রং করা** — *rông kôrā* — "to paint".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রং করা** (*rông kôrā*) is *rông*, "colour", which matches both Sanskrit *raṅga*, "dye, colour", whose inherited form is *rāṅā* (CDIAL 10560), and Persian *rang*, "colour", + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

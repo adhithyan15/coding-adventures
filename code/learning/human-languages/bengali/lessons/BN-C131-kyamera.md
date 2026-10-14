@@ -14,7 +14,8 @@ romanization: "kyāmerā"
 concept_tag: BN-THINGS131-KYAMERA
 prerequisites: [BN-C131-tobla, BN-C131-gitar]
 sounds: []
-roots: []
+roots: [english-camera]
+etymology_hook: "kyāmerā ← English camera"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C131-gitar]
 <!-- hl-knowledge: introduces=[BN-LEX-C131-THINGS131-05]; assesses=[] -->
 
 **ক্যামেরা** — *kyāmerā* — "a camera".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ক্যামেরা** (*kyāmerā*) is a loan from English *camera*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

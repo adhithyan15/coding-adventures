@@ -11,8 +11,8 @@ gloss: the adjective stands in front of its noun and never changes shape — a r
 concept_tag: BN-GRAM-ADJ-ORDER
 prerequisites: [BN-C22-gulo, BN-C14-lal, BN-C14-shada, BN-C03-bhalo]
 sounds: []
-roots: []
-etymology_hook: "Spanish puts most of its adjectives behind the noun and makes them agree with it in gender and number. Bengali puts them all in front and makes them agree with nothing at all — one fewer position to learn, and no endings to add."
+roots: [laal-persian, jama-persian-robe]
+etymology_hook: "lāl ← Persian lāl 'ruby, red'; jāmā ← Persian jāma 'garment'; both usually traced to Persian"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +55,11 @@ anything:
 
 One form of **লাল**, three phrases. Spanish would have made you write *rojo*,
 *rojos* and *roja*.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Both words are loans, usually traced to Persian: **লাল** to *lāl*, "a ruby; red", and **জামা** to *jāma*, "a garment".
 
 ## Grammar Lens: the queue, filled in
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C22-ADJ-ORDER-01, BN-GRAMMAR-C21-DEM-ORDER-01, BN-GRAMMAR-C22-PLURAL-GULO-01, BN-CONCEPT-C03-BHALO-01] -->

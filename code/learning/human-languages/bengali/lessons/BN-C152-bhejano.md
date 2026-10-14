@@ -14,7 +14,8 @@ romanization: "bhejāno"
 concept_tag: BN-VERB-BHEJANO
 prerequisites: [BN-C151-badha, BN-C152-shukano]
 sounds: []
-roots: []
+roots: [indo-aryan-bhiyajyate]
+etymology_hook: "bhejāno ← *bhiyajyate 'is smeared, gets wet', a reconstructed form; a tadbhava (CDIAL 9502)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C152-shukano]
 <!-- hl-knowledge: introduces=[BN-LEX-C152-ACT152-02]; assesses=[] -->
 
 **ভেজানো** — *bhejāno* — "to soak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভেজানো** (*bhejāno*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhiyajyate*, "is smeared, gets wet", a form CDIAL reconstructs from its descendants (CDIAL 9502). *Bhejāno* is the causing form of *bhijā*, "to get wet", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

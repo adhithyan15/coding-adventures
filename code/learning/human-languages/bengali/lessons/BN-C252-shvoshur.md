@@ -14,7 +14,8 @@ romanization: "shvôshur"
 concept_tag: BN-JINIS252-SHVOSHUR
 prerequisites: [BN-C252-nati, BN-C252-natni]
 sounds: []
-roots: []
+roots: [sanskrit-shvashura]
+etymology_hook: "shvôshur ← Sanskrit śvaśura 'husband's or wife's father', a tatsama (CDIAL 12753)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C252-natni]
 <!-- hl-knowledge: introduces=[BN-LEX-C252-JINIS252-05]; assesses=[] -->
 
 **শ্বশুর** — *shvôshur* — "a father-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শ্বশুর** (*shvôshur*) is Sanskrit *śvaśura*, "husband's or wife's father", taken over whole as a learned loan, a tatsama (CDIAL 12753). The word inherited from it is *sasar*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

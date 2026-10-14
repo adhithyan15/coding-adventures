@@ -14,7 +14,8 @@ romanization: "shôkun"
 concept_tag: BN-JINIS166-SHOKUN
 prerequisites: [BN-C165-sondesh, BN-C165-porota]
 sounds: []
-roots: []
+roots: [sanskrit-shakuna]
+etymology_hook: "shôkun ← Sanskrit śakuna 'bird', a tatsama (CDIAL 12245)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C165-porota]
 <!-- hl-knowledge: introduces=[BN-LEX-C166-JINIS166-01]; assesses=[] -->
 
 **শকুন** — *shôkun* — "a vulture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শকুন** (*shôkun*) is Sanskrit *śakuna*, "bird", taken over whole as a learned loan, a tatsama (CDIAL 12245). In Bengali it has narrowed to "vulture".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dhān"
 concept_tag: BN-JINIS171-DHAN
 prerequisites: [BN-C171-golap, BN-C171-bot]
 sounds: []
-roots: []
+roots: [sanskrit-dhanya-grain]
+etymology_hook: "dhān ← Sanskrit dhānya 'grain; rice', a tadbhava (CDIAL 6778)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C171-bot]
 <!-- hl-knowledge: introduces=[BN-LEX-C171-JINIS171-04]; assesses=[] -->
 
 **ধান** — *dhān* — "paddy, rice plants".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধান** (*dhān*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dhānya*, "grain; rice" (CDIAL 6778). CDIAL lists Bengali *dhān*, "growing or unhusked rice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mæp"
 concept_tag: BN-JINIS205-MP
 prerequisites: [BN-C205-horn, BN-C205-signl]
 sounds: []
-roots: []
+roots: [english-map]
+etymology_hook: "mæp ← English map"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C205-signl]
 <!-- hl-knowledge: introduces=[BN-LEX-C205-JINIS205-03]; assesses=[] -->
 
 **ম্যাপ** — *mæp* — "a map".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ম্যাপ** (*mæp*) is a loan from English *map*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

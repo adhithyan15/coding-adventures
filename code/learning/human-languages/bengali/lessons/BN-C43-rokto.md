@@ -14,7 +14,8 @@ romanization: "rôkto"
 concept_tag: BN-BODY43-ROKTO
 prerequisites: [BN-C42-pet, BN-C43-kadh]
 sounds: []
-roots: []
+roots: [sanskrit-rakta]
+etymology_hook: "rôkto ← Sanskrit rakta 'coloured, red; blood', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C43-kadh]
 <!-- hl-knowledge: introduces=[BN-LEX-C43-BODY43-02]; assesses=[] -->
 
 **রক্ত** — *rôkto* — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রক্ত** (*rôkto*) is Sanskrit *rakta*, "coloured, red; blood", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

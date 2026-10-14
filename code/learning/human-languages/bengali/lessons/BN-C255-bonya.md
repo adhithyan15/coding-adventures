@@ -14,7 +14,8 @@ romanization: "bônyā"
 concept_tag: BN-JINIS255-BONYA
 prerequisites: [BN-C255-rod, BN-C255-jhor]
 sounds: []
-roots: []
+roots: [sanskrit-vanya]
+etymology_hook: "bônyā ← Sanskrit vanyā 'flood', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C255-jhor]
 <!-- hl-knowledge: introduces=[BN-LEX-C255-JINIS255-03]; assesses=[] -->
 
 **বন্যা** — *bônyā* — "a flood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বন্যা** (*bônyā*) is Sanskrit *vanyā*, "flood", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

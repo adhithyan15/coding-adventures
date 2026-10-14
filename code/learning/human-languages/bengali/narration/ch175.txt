@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a tyre, then the Bengali for a brake.
 You'll want to know: দুর্গন্ধ.
 দুর্গন্ধ — durgôndhô — "a stench".
 
+The word, taken apart.
+দুর্গন্ধ (durgôndhô) is Sanskrit durgandha, "bad smell", taken over whole as a learned loan, a tatsama (CDIAL 6431).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a brake, then the Bengali for a stench.
 
 You'll want to know: ঝাড়ন.
 ঝাড়ন — jhāṛôn — "a duster".
+
+The word, taken apart.
+ঝাড়ন (jhāṛôn) is built on the verb jhāṛā, "to shake off", which CDIAL lists under jhāṭayati, "shakes down", a form it reconstructs (CDIAL 5328), + -ôn, an ending for a tool: "a thing for shaking off dust".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a stench, then the Bengali for a duster.
 You'll want to know: বঁটি.
 বঁটি — bõṭi — "a bonti (a kitchen blade)".
 
+The word, taken apart.
+The origin of বঁটি (bõṭi) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "blade" and "knife" finds only words of other shapes, such as Bengali phal, "blade" (CDIAL 9052).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a duster, then the Bengali for a bonti.
 You'll want to know: শিলনোড়া.
 শিলনোড়া — shilnoṛā — "a grinding stone".
 
+The word, taken apart.
+শিলনোড়া (shilnoṛā) is shil, "flat stone for grinding on", from Sanskrit śilā, "rock" (CDIAL 12459), + noṛā, "rolling-pin", which CDIAL lists under Sanskrit lōṭha, "rolling" (CDIAL 11134).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a bonti, then the Bengali for a grinding
 
 You'll want to know: গ্যাস.
 গ্যাস — gæs — "gas".
+
+The word, taken apart.
+গ্যাস (gæs) is a loan from English gas.
 
 What you've built.
 One more word for this chapter.

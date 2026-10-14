@@ -15,6 +15,7 @@ concept_tag: BN-HOME63-BOTOL
 prerequisites: [BN-C62-chamoch, BN-C63-chhuri]
 sounds: []
 roots: []
+etymology_hook: "botôl: usually traced to Portuguese botelha or to English bottle; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C63-chhuri]
 <!-- hl-knowledge: introduces=[BN-LEX-C63-HOME63-02]; assesses=[] -->
 
 **বোতল** — *botôl* — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বোতল** (*botôl*) is usually traced to Portuguese *botelha* or to English *bottle*; CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

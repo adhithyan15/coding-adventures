@@ -14,7 +14,8 @@ romanization: "jôruri"
 concept_tag: BN-QUAL139-JORURI
 prerequisites: [BN-C139-bhitu, BN-C139-shanto]
 sounds: []
-roots: []
+roots: [arabic-daruri]
+etymology_hook: "jôruri ← Arabic ḍarūrī 'necessary', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C139-shanto]
 <!-- hl-knowledge: introduces=[BN-LEX-C139-QUAL139-03]; assesses=[] -->
 
 **জরুরি** — *jôruri* — "urgent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জরুরি** (*jôruri*) is a loan from Arabic *ḍarūrī*, "necessary", which reached Bengali through Persian. Its Arabic root is *ḍ-r-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

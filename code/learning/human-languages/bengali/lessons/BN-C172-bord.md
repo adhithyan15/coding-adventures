@@ -14,7 +14,8 @@ romanization: "borḍ"
 concept_tag: BN-JINIS172-BORD
 prerequisites: [BN-C172-kheladhula, BN-C172-chhatri]
 sounds: []
-roots: []
+roots: [english-board]
+etymology_hook: "borḍ ← English board"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C172-chhatri]
 <!-- hl-knowledge: introduces=[BN-LEX-C172-JINIS172-03]; assesses=[] -->
 
 **বোর্ড** — *borḍ* — "a board".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বোর্ড** (*borḍ*) is a loan from English *board*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

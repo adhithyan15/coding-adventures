@@ -14,7 +14,8 @@ romanization: "bā̃sh"
 concept_tag: BN-THINGS115-BASH
 prerequisites: [BN-C114-bij, BN-C114-kata]
 sounds: []
-roots: []
+roots: [sanskrit-vamsha]
+etymology_hook: "bāṁsh ← Sanskrit vaṁśa 'bamboo', a tadbhava (CDIAL 11175)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C114-kata]
 <!-- hl-knowledge: introduces=[BN-LEX-C115-THINGS115-01]; assesses=[] -->
 
 **বাঁশ** — *bā̃sh* — "bamboo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাঁশ** (*bāṁsh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vaṁśa*, "bamboo" (CDIAL 11175).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

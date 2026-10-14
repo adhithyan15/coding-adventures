@@ -14,7 +14,8 @@ romanization: "bāli"
 concept_tag: BN-NATURE67-BALI
 prerequisites: [BN-C66-pukur, BN-C66-pathor]
 sounds: []
-roots: []
+roots: [sanskrit-valuka]
+etymology_hook: "bāli ← Sanskrit vālukā 'sand, gravel', a tadbhava (CDIAL 11580)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C66-pathor]
 <!-- hl-knowledge: introduces=[BN-LEX-C67-NATURE67-01]; assesses=[] -->
 
 **বালি** — *bāli* — "sand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বালি** (*bāli*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vālukā*, "sand, gravel" (CDIAL 11580). CDIAL notes that its ending *-ukā* was replaced by *-ikā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

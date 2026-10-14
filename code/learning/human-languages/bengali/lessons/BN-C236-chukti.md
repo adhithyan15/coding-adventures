@@ -14,7 +14,8 @@ romanization: "chukti"
 concept_tag: BN-KAJ236-CHUKTI
 prerequisites: [BN-C236-klas, BN-C236-kormi]
 sounds: []
-roots: []
+roots: [indo-aryan-cukk]
+etymology_hook: "chukti: apparently on chukā 'to be settled' (CDIAL 4848) + -ti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C236-kormi]
 <!-- hl-knowledge: introduces=[BN-LEX-C236-KAJ236-03]; assesses=[] -->
 
 **চুক্তি** — *chukti* — "a contract".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চুক্তি** (*chukti*) appears to be built on the verb *chukā*, "to be finished, be settled", which CDIAL lists under *\*cukk*, a form it reconstructs (CDIAL 4848): "a settling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

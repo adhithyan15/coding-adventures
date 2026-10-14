@@ -15,6 +15,7 @@ concept_tag: BN-JINIS194-JHURI
 prerequisites: [BN-C194-jog, BN-C194-ketli]
 sounds: []
 roots: []
+etymology_hook: "jhuṛi: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C194-ketli]
 <!-- hl-knowledge: introduces=[BN-LEX-C194-JINIS194-05]; assesses=[] -->
 
 **ঝুড়ি** — *jhuṛi* — "a basket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ঝুড়ি** (*jhuṛi*) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "basket" finds only words of other shapes, such as Bengali *cāṅāri*, "basket" (CDIAL 4565).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sôrôl"
 concept_tag: BN-GUN192-SOROL
 prerequisites: [BN-C191-asol, BN-C192-hotash]
 sounds: []
-roots: []
+roots: [sanskrit-sarala]
+etymology_hook: "sôrôl ← Sanskrit sarala 'straight', inherited (CDIAL 13252)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C192-hotash]
 <!-- hl-knowledge: introduces=[BN-LEX-C192-GUN192-02]; assesses=[] -->
 
 **সরল** — *sôrôl* — "simple, innocent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সরল** (*sôrôl*) is inherited from Sanskrit *sarala*, "straight", and has come down with almost no change (CDIAL 13252).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "glās"
 concept_tag: BN-JINIS201-GLAS
 prerequisites: [BN-C201-droyar, BN-C201-thole]
 sounds: []
-roots: []
+roots: [english-glass]
+etymology_hook: "glās ← English glass"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C201-thole]
 <!-- hl-knowledge: introduces=[BN-LEX-C201-JINIS201-05]; assesses=[] -->
 
 **গ্লাস** — *glās* — "a glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গ্লাস** (*glās*) is a loan from English *glass*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

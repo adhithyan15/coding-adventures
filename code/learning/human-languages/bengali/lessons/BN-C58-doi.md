@@ -14,7 +14,8 @@ romanization: "dôi"
 concept_tag: BN-FOOD58-DOI
 prerequisites: [BN-C58-lebu, BN-C58-dim]
 sounds: []
-roots: []
+roots: [sanskrit-dadhi]
+etymology_hook: "dôi ← Sanskrit dadhi 'thick sour milk', a tadbhava (CDIAL 6146)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C58-dim]
 <!-- hl-knowledge: introduces=[BN-LEX-C58-FOOD58-04]; assesses=[] -->
 
 **দই** — *dôi* — "yoghurt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দই** (*dôi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dadhi*, "thick sour milk" (CDIAL 6146).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

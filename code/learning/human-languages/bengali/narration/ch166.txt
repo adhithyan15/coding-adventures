@@ -12,6 +12,9 @@ Before the new one: say the Bengali for sandesh, then the Bengali for a paratha.
 You'll want to know: শকুন.
 শকুন — shôkun — "a vulture".
 
+The word, taken apart.
+শকুন (shôkun) is Sanskrit śakuna, "bird", taken over whole as a learned loan, a tatsama (CDIAL 12245). In Bengali it has narrowed to "vulture".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a paratha, then the Bengali for a vultur
 
 You'll want to know: তিমি.
 তিমি — timi — "a whale".
+
+The word, taken apart.
+তিমি (timi) is Sanskrit timi, "a large fabled fish", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a vulture, then the Bengali for a whale.
 You'll want to know: কাঁকড়া.
 কাঁকড়া — kā̃kṛā — "a crab".
 
+The word, taken apart.
+কাঁকড়া (kā̃kṛā) (kāṁkṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karkaṭa, "crab" (CDIAL 2816). CDIAL lists Bengali kāṁkṛā, "crab", and suspects that the Sanskrit word is itself of non-Aryan origin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a whale, then the Bengali for a crab.
 You'll want to know: শামুক.
 শামুক — shāmuk — "a snail".
 
+The word, taken apart.
+শামুক (shāmuk) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śambūka, "bivalve shell" (CDIAL 12316). CDIAL lists Bengali sāmuk, "bivalve shell, snail".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a crab, then the Bengali for a snail.
 
 You'll want to know: ক্রিকেট.
 ক্রিকেট — krikeṭ — "cricket (the game)".
+
+The word, taken apart.
+ক্রিকেট (krikeṭ) is a loan from English cricket.
 
 What you've built.
 One more word for this chapter.

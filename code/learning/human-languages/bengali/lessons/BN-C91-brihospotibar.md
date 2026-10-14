@@ -14,7 +14,8 @@ romanization: "brihôspôtibār"
 concept_tag: BN-TIME91-BRIHOSPOTIBAR
 prerequisites: [BN-C91-sombar, BN-C91-budhbar]
 sounds: []
-roots: []
+roots: [vara-sanskrit]
+etymology_hook: "brihôspôtibār ← Sanskrit bṛhaspativāra 'Thursday', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C91-budhbar]
 <!-- hl-knowledge: introduces=[BN-LEX-C91-TIME91-04]; assesses=[] -->
 
 **বৃহস্পতিবার** — *brihôspôtibār* — "Thursday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বৃহস্পতিবার** (*brihôspôtibār*) is Sanskrit *bṛhaspativāra*, "Thursday", taken over whole as a learned loan, a tatsama. It is *bṛhaspati*, "Jupiter", + *vāra*, "day of the week".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

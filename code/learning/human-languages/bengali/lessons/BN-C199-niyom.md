@@ -14,7 +14,8 @@ romanization: "niyôm"
 concept_tag: BN-JINIS199-NIYOM
 prerequisites: [BN-C199-bakyo, BN-C199-bhul]
 sounds: []
-roots: []
+roots: [sanskrit-niyama]
+etymology_hook: "niyôm ← Sanskrit niyama 'restraint; fixed law', a tatsama (CDIAL 7250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C199-bhul]
 <!-- hl-knowledge: introduces=[BN-LEX-C199-JINIS199-05]; assesses=[] -->
 
 **নিয়ম** — *niyôm* — "a rule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নিয়ম** (*niyôm*) is Sanskrit *niyama*, "restraint; fixed law", taken over whole as a learned loan, a tatsama (CDIAL 7250). The word inherited from it is *neo*, "a law", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chārpāshe"
 concept_tag: BN-JAYGA216-CHARPASHE
 prerequisites: [BN-C216-grej, BN-C216-pashe]
 sounds: []
-roots: []
+roots: [sanskrit-catvari, sanskrit-parshva]
+etymology_hook: "chārpāshe: chār 'four' ← catvāraḥ (CDIAL 4655) + pāsh 'side' ← pārśva (CDIAL 8118) + -e"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C216-pashe]
 <!-- hl-knowledge: introduces=[BN-LEX-C216-JAYGA216-03]; assesses=[] -->
 
 **চারপাশে** — *chārpāshe* — "all around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চারপাশে** (*chārpāshe*) is *chār*, "four", from Sanskrit *catvāraḥ* (CDIAL 4655), + *pāsh*, "side", from Sanskrit *pārśva* (CDIAL 8118), + *-e*, "at": "at the four sides".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

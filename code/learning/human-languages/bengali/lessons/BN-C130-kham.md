@@ -15,6 +15,7 @@ concept_tag: BN-THINGS130-KHAM
 prerequisites: [BN-C130-manibyag, BN-C130-poysa]
 sounds: []
 roots: []
+etymology_hook: "khām: origin not settled; CDIAL has no entry for it in the sense 'envelope'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C130-poysa]
 <!-- hl-knowledge: introduces=[BN-LEX-C130-THINGS130-03]; assesses=[] -->
 
 **খাম** — *khām* — "an envelope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **খাম** (*khām*) is not settled. CDIAL has no entry for it in the sense "envelope"; its Bengali *khām* is a different word, "pillar, post", from Sanskrit *skambha* (CDIAL 13639).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

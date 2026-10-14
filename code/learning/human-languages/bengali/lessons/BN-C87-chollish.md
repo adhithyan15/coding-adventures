@@ -14,7 +14,8 @@ romanization: "chôllish"
 concept_tag: BN-NUMBERS87-CHOLLISH
 prerequisites: [BN-C87-kuri, BN-C87-tirish]
 sounds: []
-roots: []
+roots: [sanskrit-catvarimshat]
+etymology_hook: "chôllish ← Sanskrit catvāriṁśat 'forty', a tadbhava (CDIAL 4656)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C87-tirish]
 <!-- hl-knowledge: introduces=[BN-LEX-C87-NUMBERS87-03]; assesses=[] -->
 
 **চল্লিশ** — *chôllish* — "forty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চল্লিশ** (*chôllish*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *catvāriṁśat*, "forty" (CDIAL 4656).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

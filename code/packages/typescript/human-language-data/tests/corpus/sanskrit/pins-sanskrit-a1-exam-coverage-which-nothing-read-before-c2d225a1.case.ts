@@ -38,8 +38,10 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // 142 -> 143: SA-A1-SP-02 was stale measurement debt, not missing
   // curriculum. Chapters 93-94 already introduce all six relative-position
   // exponents and chapter 99 retrieves them together.
-  expect(coverage.covered).toBe(143);
-  expect(coverage.unmapped).toBe(21);
+  // 143 -> 144: chapter 259 teaches asmākam and yuṣmākam separately, then
+  // retrieves the one-versus-several possessor contrast in known noun frames.
+  expect(coverage.covered).toBe(144);
+  expect(coverage.unmapped).toBe(20);
   expect(coverage.partial).toBe(0);
   // The highest percentage in the corpus, and the reason is worth stating so it
   // is not read as the track being furthest along: this inventory is DERIVED
@@ -47,9 +49,9 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // denominator is the smallest of the twenty-five. 86% of 164 is not
   // comparable with 84% of 273.
   expect(formatExamCoverage(coverage)).toContain(
-    "sanskrit A1 (partial inventory): 143/164 points covered (87%)",
+    "sanskrit A1 (partial inventory): 144/164 points covered (88%)",
   );
-  // Where the 21 gaps actually are, named rather than counted. Two columns hold
+  // Where the 20 gaps actually are, named rather than counted. Two columns hold
   // 13 of them, and they are the two an editorially derived A1 inventory is
   // bound to strain on: the revival vocabulary a classical corpus never had,
   // and the orthography beyond the characters the script ladder teaches.
@@ -67,6 +69,7 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // The spatial column is now closed on existing lessons, rather than left
   // artificially open by a null probe and paid twice with redundant teaching.
   expect(coverage.byCategory["Spatial notions"]!).toEqual({ enumerated: 4, covered: 4 });
+  expect(coverage.byCategory["Ṣaṣṭhī — possession"]!).toEqual({ enumerated: 3, covered: 3 });
   // And the column the ordinal tranche finished: number and quantity, 4/5 -> 5/5.
   expect(coverage.byCategory["Saṅkhyā — number and quantity"]!).toEqual({ enumerated: 5, covered: 5 });
   // The ordinal point, named rather than left to the aggregate, so a nulled

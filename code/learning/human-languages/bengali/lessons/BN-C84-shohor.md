@@ -14,7 +14,8 @@ romanization: "shôhôr"
 concept_tag: BN-TOWN84-SHOHOR
 prerequisites: [BN-C84-bajar, BN-C84-gram]
 sounds: []
-roots: []
+roots: [persian-shahr]
+etymology_hook: "shôhôr: usually traced to Persian shahr 'city'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C84-gram]
 <!-- hl-knowledge: introduces=[BN-LEX-C84-TOWN84-05]; assesses=[] -->
 
 **শহর** — *shôhôr* — "a city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শহর** (*shôhôr*) is a loan, usually traced to Persian *shahr*, "city".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

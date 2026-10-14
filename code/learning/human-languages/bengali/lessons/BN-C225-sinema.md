@@ -14,7 +14,8 @@ romanization: "sinemā"
 concept_tag: BN-JINIS225-SINEMA
 prerequisites: [BN-C225-dol, BN-C225-kheloyar]
 sounds: []
-roots: []
+roots: [english-cinema]
+etymology_hook: "sinemā ← English cinema"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C225-kheloyar]
 <!-- hl-knowledge: introduces=[BN-LEX-C225-JINIS225-03]; assesses=[] -->
 
 **সিনেমা** — *sinemā* — "a film; a cinema".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সিনেমা** (*sinemā*) is a loan from English *cinema*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

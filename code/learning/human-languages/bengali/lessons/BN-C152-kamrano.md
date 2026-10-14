@@ -15,6 +15,7 @@ concept_tag: BN-VERB-KAMRANO
 prerequisites: [BN-C152-kacha, BN-C152-achrano]
 sounds: []
 roots: []
+etymology_hook: "kāmṛāno: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C152-achrano]
 <!-- hl-knowledge: introduces=[BN-LEX-C152-ACT152-05]; assesses=[] -->
 
 **কামড়ানো** — *kāmṛāno* — "to bite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **কামড়ানো** (*kāmṛāno*) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "bite" finds nothing close.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

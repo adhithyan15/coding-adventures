@@ -4,7 +4,7 @@
   "chapter": 213,
   "title": "To have a haircut, To dress up, To get ready, To set off, To ride",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5e5ff9d1da271d44",
+  "sourceHash": "fnv1a64:1317007b200d46bc",
   "lessons": [
     {
       "id": "BN-C213-chul-kata",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93720eff9571a2b0",
+      "sourceHash": "fnv1a64:789a0830d8a14c46",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চুল কাটা (chul kāṭā) is chul, \"hair\", from Sanskrit cūḍa, \"tuft of hair\", a word CDIAL traces to Dravidian or Munda (CDIAL 4883), + kāṭā, \"to cut\", from Sanskrit kartati, \"cuts\" (CDIAL 2854)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e950dffa25d8964",
+      "sourceHash": "fnv1a64:3f25e76f60a23408",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাজা (sājā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sajjayati, \"makes ready\" (CDIAL 13091). CDIAL lists Bengali sājā, \"to make ready, dress\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fae1adfd369f0427",
+      "sourceHash": "fnv1a64:86e83f7448c64dc9",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রস্তুত হওয়া (prôstut hôoyā) is prôstut, \"ready\", Sanskrit prastuta, \"begun, prepared\", taken over whole, + hôoyā, \"to be\", from Sanskrit bhavati, \"becomes, is\" (CDIAL 9416)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da865c39ffda8c3d",
+      "sourceHash": "fnv1a64:83350ac8c8bfb935",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রওনা দেওয়া (rôonā deoyā) is rôonā, \"departure\", usually traced to Persian ravāna, \"going, setting out\", + deoyā, \"to give\", from Sanskrit dadāti, \"gives\" (CDIAL 6141)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:710f5bd467312bc5",
+      "sourceHash": "fnv1a64:f72524e126ae7371",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চড়া (chôṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from caḍhati, \"rises\", a form CDIAL reconstructs from its descendants (CDIAL 4578). CDIAL lists Bengali caṛā, \"to mount\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

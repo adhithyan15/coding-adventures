@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to obstruct, then the Bengali for to tak
 You'll want to know: বড়ি.
 বড়ি — bôṛi — "a pill".
 
+The word, taken apart.
+বড়ি (bôṛi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vaṭa, "small lump; round cake of pulse" (CDIAL 11213). CDIAL lists Bengali baṛi, "ball of bruised pulse, pill".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to take a risk, then the Bengali for a p
 
 You'll want to know: ইনজেকশন.
 ইনজেকশন — injekshôn — "an injection".
+
+The word, taken apart.
+ইনজেকশন (injekshôn) is a loan from English injection.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a pill, then the Bengali for an injectio
 You'll want to know: চোট.
 চোট — choṭ — "an injury".
 
+The word, taken apart.
+চোট (choṭ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cuṭati, "cuts off, strikes" (CDIAL 4857). CDIAL lists Bengali coṭ, "to hit", and calls the group non-Aryan.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for an injection, then the Bengali for an in
 You'll want to know: ফোসকা.
 ফোসকা — phoskā — "a blister".
 
+The word, taken apart.
+ফোসকা (phoskā) is a tadbhava, a word inherited and reshaped by sound change. It comes from phossa, "hollow", a form CDIAL reconstructs from its descendants (CDIAL 9114). CDIAL lists Bengali phoskā, "blister".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for an injury, then the Bengali for a bliste
 
 You'll want to know: ব্যান্ডেজ.
 ব্যান্ডেজ — bænḍej — "a bandage".
+
+The word, taken apart.
+ব্যান্ডেজ (bænḍej) is a loan from English bandage.
 
 What you've built.
 One more word for this chapter.

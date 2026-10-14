@@ -15,6 +15,7 @@ concept_tag: BN-JINIS254-NIRBACHON
 prerequisites: [BN-C253-hasi, BN-C253-bondhutvo]
 sounds: []
 roots: []
+etymology_hook: "nirbāchôn: a learned word of Sanskrit parts; CDIAL has no entry, so its formation is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C253-bondhutvo]
 <!-- hl-knowledge: introduces=[BN-LEX-C254-JINIS254-01]; assesses=[] -->
 
 **নির্বাচন** — *nirbāchôn* — "an election".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নির্বাচন** (*nirbāchôn*) is a learned word made of Sanskrit parts. CDIAL has no entry for it, so how it was formed is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

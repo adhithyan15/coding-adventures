@@ -14,7 +14,8 @@ romanization: "didimā"
 concept_tag: BN-FAMILY46-DIDIMA
 prerequisites: [BN-C45-meye, BN-C46-dadu]
 sounds: []
-roots: []
+roots: [indo-aryan-didda, sanskrit-matr]
+etymology_hook: "didimā: didi 'elder sister' ← *diddā (CDIAL 6327) + mā 'mother' ← mātṛ (CDIAL 10016)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C46-dadu]
 <!-- hl-knowledge: introduces=[BN-LEX-C46-FAMILY46-02]; assesses=[] -->
 
 **দিদিমা** — *didimā* — "a grandmother (mother's mother)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দিদিমা** (*didimā*) is *didi* + *mā*. CDIAL lists *didi*, "elder sister", and notes that Bengali also uses it for "grandmother", under *\*diddā*, "elder sister", a form it reconstructs (CDIAL 6327); *mā*, "mother", is Sanskrit *mātṛ* (CDIAL 10016).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hemôntô"
 concept_tag: BN-TIME93-HEMONTO
 prerequisites: [BN-C92-shit, BN-C93-bosonto]
 sounds: []
-roots: []
+roots: [sanskrit-hemanta]
+etymology_hook: "hemôntô ← Sanskrit hēmanta 'winter', a tatsama; CDIAL lists the inherited form heõt (CDIAL 14164)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C93-bosonto]
 <!-- hl-knowledge: introduces=[BN-LEX-C93-TIME93-02]; assesses=[] -->
 
 **হেমন্ত** — *hemôntô* — "late autumn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হেমন্ত** (*hemôntô*) is Sanskrit *hemanta*, "winter", taken over whole as a learned loan, a tatsama (CDIAL 14164). The word inherited from it is *heõt*, "winter", which CDIAL lists; in Bengali the season it names is late autumn.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

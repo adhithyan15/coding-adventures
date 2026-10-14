@@ -14,7 +14,8 @@ romanization: "prôthôme"
 concept_tag: BN-SOMOY156-PROTHOME
 prerequisites: [BN-C155-svasthyo, BN-C156-majhe-majhe]
 sounds: []
-roots: []
+roots: [sanskrit-prathama]
+etymology_hook: "prôthôme: Sanskrit prathama 'first', a tatsama, + the ending -e 'in, at'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C156-majhe-majhe]
 <!-- hl-knowledge: introduces=[BN-LEX-C156-SOMOY156-02]; assesses=[] -->
 
 **প্রথমে** — *prôthôme* — "at first".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রথমে** (*prôthôme*) is Sanskrit *prathama*, "first", taken over whole, + the ending *-e*, "in, at": "in the first place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "buddhi"
 concept_tag: BN-CAN99-BUDDHI
 prerequisites: [BN-C99-ay, BN-C99-chakri]
 sounds: []
-roots: []
+roots: [sanskrit-buddhi]
+etymology_hook: "buddhi ← Sanskrit buddhi 'intelligence', a tatsama; CDIAL lists Middle Bengali budhi (CDIAL 9277)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C99-chakri]
 <!-- hl-knowledge: introduces=[BN-LEX-C99-CAN99-04]; assesses=[] -->
 
 **বুদ্ধি** — *buddhi* — "intelligence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বুদ্ধি** (*buddhi*) is Sanskrit *buddhi*, "intelligence", taken over whole as a learned loan, a tatsama (CDIAL 9277). Middle Bengali *budhi*, "intellect", is the inherited form CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

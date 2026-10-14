@@ -14,7 +14,8 @@ romanization: "mrityu"
 concept_tag: BN-JINIS228-MRITYU
 prerequisites: [BN-C228-brthota, BN-C228-jibon]
 sounds: []
-roots: []
+roots: [sanskrit-mrtyu]
+etymology_hook: "mrityu ← Sanskrit mṛtyu 'death', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C228-jibon]
 <!-- hl-knowledge: introduces=[BN-LEX-C228-JINIS228-03]; assesses=[] -->
 
 **মৃত্যু** — *mrityu* — "death".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মৃত্যু** (*mrityu*) is Sanskrit *mṛtyu*, "death", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

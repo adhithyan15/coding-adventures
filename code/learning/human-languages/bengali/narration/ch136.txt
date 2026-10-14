@@ -12,6 +12,9 @@ Before the new one: say the Bengali for fast, then the Bengali for slow.
 You'll want to know: গভীর.
 গভীর — gôbhīr — "deep".
 
+The word, taken apart.
+গভীর (gôbhīr) is Sanskrit gabhīra, "deep", taken over whole as a learned loan, a tatsama (CDIAL 4024). The word inherited from it is gahir, which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for slow, then the Bengali for deep.
 
 You'll want to know: চওড়া.
 চওড়া — chôoṛā — "wide".
+
+The word, taken apart.
+চওড়া (chôoṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ca-uḍa, "wide, open", a form CDIAL reconstructs from its descendants (CDIAL 4534). CDIAL suggests it may be built on caü-, the "four" of compounds.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for deep, then the Bengali for wide.
 You'll want to know: সরু.
 সরু — sôru — "narrow".
 
+The word, taken apart.
+সরু (sôru) is inherited from Sanskrit saru, "fine", and has come down with almost no change (CDIAL 13264).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for wide, then the Bengali for narrow.
 You'll want to know: গোল.
 গোল — gol — "round".
 
+The word, taken apart.
+গোল (gol) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gola, "ball" (CDIAL 4321).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for narrow, then the Bengali for round.
 
 You'll want to know: বেগুনি.
 বেগুনি — beguni — "purple".
+
+The word, taken apart.
+বেগুনি (beguni) is begun, "aubergine", with the ending -i: "aubergine-coloured". CDIAL lists Bengali bāguniyā, "purple", as derived from the word for the aubergine, Sanskrit vātiṅgaṇa (CDIAL 11503).
 
 What you've built.
 One more word for this chapter.

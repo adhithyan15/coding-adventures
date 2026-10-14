@@ -14,7 +14,8 @@ romanization: "tôrmuj"
 concept_tag: BN-THINGS116-TORMUJ
 prerequisites: [BN-C115-anaros, BN-C115-pepe]
 sounds: []
-roots: []
+roots: [persian-tarbuz]
+etymology_hook: "tôrmuj: usually traced to Persian tarbuz 'watermelon'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C115-pepe]
 <!-- hl-knowledge: introduces=[BN-LEX-C116-THINGS116-01]; assesses=[] -->
 
 **তরমুজ** — *tôrmuj* — "a watermelon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তরমুজ** (*tôrmuj*) is a loan, usually traced to Persian *tarbuz*, "watermelon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

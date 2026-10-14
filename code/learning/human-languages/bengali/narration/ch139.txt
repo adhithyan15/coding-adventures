@@ -12,6 +12,9 @@ Before the new one: say the Bengali for kind, then the Bengali for brave.
 You'll want to know: ভীতু.
 ভীতু — bhītu — "timid".
 
+The word, taken apart.
+ভীতু (bhītu) is bhīt, "afraid", Sanskrit bhīta, with the ending -u.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for brave, then the Bengali for timid.
 
 You'll want to know: শান্ত.
 শান্ত — shāntô — "calm".
+
+The word, taken apart.
+শান্ত (shāntô) is Sanskrit śānta, "abated, calm", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for timid, then the Bengali for calm.
 You'll want to know: জরুরি.
 জরুরি — jôruri — "urgent".
 
+The word, taken apart.
+জরুরি (jôruri) is a loan from Arabic ḍarūrī, "necessary", which reached Bengali through Persian. Its Arabic root is ḍ-r-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for calm, then the Bengali for urgent.
 You'll want to know: সোজা.
 সোজা — sojā — "straight".
 
+The word, taken apart.
+সোজা (sojā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śodhya, "to be cleaned" (CDIAL 12632). CDIAL prefers this source to a form śudhya, "to be made pure", that Chatterji proposed (CDIAL 12525).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for urgent, then the Bengali for straight.
 
 You'll want to know: বাঁকা.
 বাঁকা — bā̃kā — "crooked".
+
+The word, taken apart.
+বাঁকা (bā̃kā) (bāṁkā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vaṅka, "bent, crooked" (CDIAL 11191). CDIAL thinks the word belongs to, or was influenced by, a probably non-Aryan group of words for "bent".
 
 What you've built.
 One more word for this chapter.

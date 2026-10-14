@@ -14,7 +14,8 @@ romanization: "lāin"
 concept_tag: BN-JINIS170-LAIN
 prerequisites: [BN-C170-akar, BN-C170-tukro]
 sounds: []
-roots: []
+roots: [english-line]
+etymology_hook: "lāin ← English line"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C170-tukro]
 <!-- hl-knowledge: introduces=[BN-LEX-C170-JINIS170-03]; assesses=[] -->
 
 **লাইন** — *lāin* — "a queue, a line".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লাইন** (*lāin*) is a loan from English *line*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

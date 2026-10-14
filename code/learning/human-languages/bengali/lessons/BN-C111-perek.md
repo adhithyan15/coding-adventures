@@ -14,7 +14,8 @@ romanization: "perek"
 concept_tag: BN-THINGS111-PEREK
 prerequisites: [BN-C110-koyla, BN-C111-dori]
 sounds: []
-roots: []
+roots: [portuguese-prego]
+etymology_hook: "perek ← Portuguese prego 'nail'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C111-dori]
 <!-- hl-knowledge: introduces=[BN-LEX-C111-THINGS111-02]; assesses=[] -->
 
 **পেরেক** — *perek* — "a nail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পেরেক** (*perek*) is a loan from Portuguese *prego*, "nail".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 193,
-  "sourceHash": "fnv1a64:ae412a59e332a42b",
+  "sourceHash": "fnv1a64:6fb091cd8cc310d7",
   "lessonIds": [
     "BN-C193-bishal",
     "BN-C193-majhari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch193.txt",
   "json": "bengali/narration/ch193.json",
-  "textHash": "fnv1a64:822e93dbfe1fcf1e",
-  "jsonHash": "fnv1a64:8cf37797211a4fa0",
+  "textHash": "fnv1a64:06efb54c65a23c87",
+  "jsonHash": "fnv1a64:19aa9a0b95ebfde6",
   "findings": []
 }

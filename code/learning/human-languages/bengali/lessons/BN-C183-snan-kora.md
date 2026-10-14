@@ -14,7 +14,8 @@ romanization: "snān kôrā"
 concept_tag: BN-VERB-SNAN-KORA
 prerequisites: [BN-C183-nak-daka, BN-C183-jaga]
 sounds: []
-roots: []
+roots: [sanskrit-snana, sanskrit-karoti]
+etymology_hook: "snān kôrā: snān 'bath', Sanskrit snāna, + kôrā (CDIAL 2814); inherited nāoyā 'bathes' (CDIAL 13786)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C183-jaga]
 <!-- hl-knowledge: introduces=[BN-LEX-C183-ACT183-05]; assesses=[] -->
 
 **স্নান করা** — *snān kôrā* — "to bathe".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**স্নান করা** (*snān kôrā*) is *snān*, "a bath", Sanskrit *snāna* taken over whole, + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814). The verb inherited from the same root is *nāoyā*, "to bathe", which CDIAL lists under Sanskrit *snāti*, "bathes" (CDIAL 13786).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

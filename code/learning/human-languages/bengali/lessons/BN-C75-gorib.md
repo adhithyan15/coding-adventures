@@ -14,7 +14,8 @@ romanization: "gôrib"
 concept_tag: BN-ADJ75-GORIB
 prerequisites: [BN-C74-khali, BN-C75-dhoni]
 sounds: []
-roots: []
+roots: [arabic-gharib]
+etymology_hook: "gôrib ← Arabic gharīb 'a stranger', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C75-dhoni]
 <!-- hl-knowledge: introduces=[BN-LEX-C75-ADJ75-02]; assesses=[] -->
 
 **গরিব** — *gôrib* — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গরিব** (*gôrib*) is a loan from Arabic *gharīb*, "a stranger", which reached Bengali through Persian. Its Arabic root is *gh-r-b* (Lane). In Bengali, as in Hindi, it has come to mean "poor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

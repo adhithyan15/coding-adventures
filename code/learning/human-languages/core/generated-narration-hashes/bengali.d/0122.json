@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 122,
-  "sourceHash": "fnv1a64:0381d95ea95b509a",
+  "sourceHash": "fnv1a64:396fb5513e1c6213",
   "lessonIds": [
     "BN-C122-machhi",
     "BN-C122-mosha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch122.txt",
   "json": "bengali/narration/ch122.json",
-  "textHash": "fnv1a64:1ac1cb5f3b70adcd",
-  "jsonHash": "fnv1a64:c29aa407e27923bc",
+  "textHash": "fnv1a64:ccff1a8046b0df32",
+  "jsonHash": "fnv1a64:15c346c89a142b79",
   "findings": []
 }

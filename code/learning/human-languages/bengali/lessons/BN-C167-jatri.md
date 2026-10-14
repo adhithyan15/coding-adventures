@@ -14,7 +14,8 @@ romanization: "jātrī"
 concept_tag: BN-JINIS167-JATRI
 prerequisites: [BN-C166-shamuk, BN-C166-kriket]
 sounds: []
-roots: []
+roots: [sanskrit-yatra]
+etymology_hook: "jātrī: Sanskrit yātrā 'journey', a tatsama, + -ī 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C166-kriket]
 <!-- hl-knowledge: introduces=[BN-LEX-C167-JINIS167-01]; assesses=[] -->
 
 **যাত্রী** — *jātrī* — "a passenger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**যাত্রী** (*jātrī*) is Sanskrit *yātrā*, "journey", taken over whole, + the ending *-ī*, "one who": "one on a journey". CDIAL has Sanskrit *yātrika*, "traveller", but gives no Bengali form for it (CDIAL 10457).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

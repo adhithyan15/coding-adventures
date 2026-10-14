@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to give back, then the Bengali for to re
 You'll want to know: আটকানো.
 আটকানো — āṭkāno — "to block, to hold up".
 
+The word, taken apart.
+আটকানো (āṭkāno) is a tadbhava, a word inherited and reshaped by sound change. It comes from aṭṭakk, "obstruct, stop", a form CDIAL reconstructs from its descendants (CDIAL 182). CDIAL lists Bengali āṭkāna, "to obstruct".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to remember, then the Bengali for to blo
 
 You'll want to know: জমা দেওয়া.
 জমা দেওয়া — jômā deoyā — "to hand in, to deposit".
+
+The phrase, taken apart.
+জমা দেওয়া (jômā deoyā) is jômā, "a deposit, a sum", from Arabic jamʿ, "a gathering together", which reached Bengali through Persian (Lane), + deoyā, "to give", from Sanskrit dadāti, "gives" (CDIAL 6141).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to block, then the Bengali for to hand i
 You'll want to know: ঝাঁপ দেওয়া.
 ঝাঁপ দেওয়া — jhā̃p deoyā — "to dive".
 
+The phrase, taken apart.
+ঝাঁপ দেওয়া (jhā̃p deoyā) (jhāṁp deoyā) is jhāṁp, "a sudden movement, a leap", which CDIAL lists under jhapp, "sudden movement", a form it reconstructs (CDIAL 5336), + deoyā, "to give", from Sanskrit dadāti, "gives" (CDIAL 6141).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to hand in, then the Bengali for to dive
 You'll want to know: ডোবা.
 ডোবা — ḍobā — "to sink, to drown".
 
+The word, taken apart.
+ডোবা (ḍobā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍubb, "sink", a form CDIAL reconstructs from its descendants (CDIAL 5561). CDIAL lists Bengali ḍubā, "to sink", and takes the form as a reshuffling of Middle Indo-Aryan buḍḍaï.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to dive, then the Bengali for to sink.
 
 You'll want to know: ভাসা.
 ভাসা — bhāsā — "to float".
+
+The word, taken apart.
+ভাসা (bhāsā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhraśyati, "falls" (CDIAL 9654). CDIAL lists Bengali bhāsā, "to float, drift along".
 
 What you've built.
 One more word for this chapter.

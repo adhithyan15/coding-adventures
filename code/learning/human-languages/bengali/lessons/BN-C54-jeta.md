@@ -14,7 +14,8 @@ romanization: "jetā"
 concept_tag: BN-VERB-JETA
 prerequisites: [BN-C54-tana, BN-C54-lukano]
 sounds: []
-roots: []
+roots: [sanskrit-jita]
+etymology_hook: "jetā ← Sanskrit jita 'won, conquered', a tadbhava (CDIAL 5224)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C54-lukano]
 <!-- hl-knowledge: introduces=[BN-LEX-C54-VERBS54-05]; assesses=[] -->
 
 **জেতা** — *jetā* — "to win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জেতা** (*jetā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jita*, "won, conquered" (CDIAL 5224). CDIAL writes the Bengali verb *jitā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

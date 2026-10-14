@@ -14,7 +14,8 @@ romanization: "mojur"
 concept_tag: BN-THINGS127-MOJUR
 prerequisites: [BN-C127-pujari, BN-C127-karkhana]
 sounds: []
-roots: []
+roots: [persian-muzdur]
+etymology_hook: "mojur: usually traced to Persian muzdūr 'a hired labourer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C127-karkhana]
 <!-- hl-knowledge: introduces=[BN-LEX-C127-THINGS127-05]; assesses=[] -->
 
 **মজুর** — *mojur* — "a labourer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মজুর** (*mojur*) is a loan, usually traced to Persian *muzdūr*, "a hired labourer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

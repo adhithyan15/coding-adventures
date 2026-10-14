@@ -14,7 +14,8 @@ romanization: "hār"
 concept_tag: BN-THINGS120-HAR
 prerequisites: [BN-C120-choti, BN-C120-maphlar]
 sounds: []
-roots: []
+roots: [sanskrit-hara]
+etymology_hook: "hār ← Sanskrit hāra 'necklace', inherited (CDIAL 14059)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C120-maphlar]
 <!-- hl-knowledge: introduces=[BN-LEX-C120-THINGS120-03]; assesses=[] -->
 
 **হার** — *hār* — "a necklace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হার** (*hār*) is inherited from Sanskrit *hāra*, "necklace", and has come down with almost no change (CDIAL 14059).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

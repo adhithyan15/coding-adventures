@@ -14,7 +14,8 @@ romanization: "hôtāsh"
 concept_tag: BN-GUN192-HOTASH
 prerequisites: [BN-C191-prachin, BN-C191-asol]
 sounds: []
-roots: []
+roots: [sanskrit-hatasha]
+etymology_hook: "hôtāsh ← Sanskrit hatāśa 'whose hope is struck down', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C191-asol]
 <!-- hl-knowledge: introduces=[BN-LEX-C192-GUN192-01]; assesses=[] -->
 
 **হতাশ** — *hôtāsh* — "disappointed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হতাশ** (*hôtāsh*) is Sanskrit *hatāśa*, "whose hope is struck down", taken over whole as a learned loan, a tatsama. It is Sanskrit *hata*, "struck", + *āśā*, "hope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

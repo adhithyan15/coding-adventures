@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:7364674b4b6f1fb3",
+  "sourceHash": "fnv1a64:4545b44df306990c",
   "lessons": [
     {
       "id": "BN-C07-howa",
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65a711d49cd63c80",
+      "sourceHash": "fnv1a64:bb0874f68abc1837",
       "notice": null,
       "blocks": [
         {
@@ -373,7 +373,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The আ- in front is Sanskrit's ā-, \"hither, toward\" — the very prefix that turns going into coming. Hindi's ānā is that ā- welded onto yā-, the go-verb of the last lesson: \"go, but this way.\" Bengali shows the same prefix on a different stem, and the honest position on that stem is that its history is unsettled; this book will not invent one for it."
+              "text": "The আ- in front is Sanskrit's ā-, \"hither, toward\" — the very prefix that turns going into coming. Hindi's ānā is that ā- welded onto yā-, the go-verb of the last lesson: \"go, but this way.\" Bengali shows the same prefix on a different stem, and that stem's history is not settled: CDIAL lists আসা (āsā) under Sanskrit āsadati, \"approaches\" (CDIAL 1483), while Chatterji derived it from āviśati, \"enters\" (CDIAL 1437)."
             }
           ]
         },

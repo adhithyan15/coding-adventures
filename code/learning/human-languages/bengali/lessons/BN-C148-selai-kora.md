@@ -14,7 +14,8 @@ romanization: "selāi kôrā"
 concept_tag: BN-VERB-SELAI-KORA
 prerequisites: [BN-C147-rosid, BN-C148-ranna-kora]
 sounds: []
-roots: []
+roots: [sanskrit-sivyati, sanskrit-karoti]
+etymology_hook: "selāi kôrā: selāi 'sewing', apparently on the verb 'to sew' ← sīvyati (CDIAL 13444), + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C148-ranna-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C148-ACT148-02]; assesses=[] -->
 
 **সেলাই করা** — *selāi kôrā* — "to sew".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সেলাই করা** (*selāi kôrā*) is *selāi*, "sewing", which appears to be built on the verb CDIAL lists as Bengali *siyāna* under Sanskrit *sīvyati*, "sews" (CDIAL 13444), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 99,
-  "sourceHash": "fnv1a64:0d7f1c93aa5ad708",
+  "sourceHash": "fnv1a64:5c64f0d4a0914747",
   "lessonIds": [
     "BN-C99-sompotti",
     "BN-C99-ay",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch99.txt",
   "json": "bengali/narration/ch99.json",
-  "textHash": "fnv1a64:5a2e70e4435d11c5",
-  "jsonHash": "fnv1a64:25b3080beecd1748",
+  "textHash": "fnv1a64:4976e91a999bfa1b",
+  "jsonHash": "fnv1a64:1fac88ab2f233361",
   "findings": []
 }

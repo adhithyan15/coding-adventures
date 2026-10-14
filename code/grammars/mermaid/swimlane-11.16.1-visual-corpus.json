@@ -94,6 +94,7 @@
     "internal-container-shapes",
     "internal-compartment-shapes",
     "legacy-internal-shape-aliases",
+    "flowchart-curve-config",
     "flowchart-spacing-config",
     "cross-lane-rank-constraints",
     "rank-crossing-optimization"

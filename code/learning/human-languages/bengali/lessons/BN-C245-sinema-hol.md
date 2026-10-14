@@ -14,7 +14,8 @@ romanization: "sinemā hôl"
 concept_tag: BN-JAYGA245-SINEMA-HOL
 prerequisites: [BN-C244-dvip, BN-C244-restora]
 sounds: []
-roots: []
+roots: [english-cinema, english-hall]
+etymology_hook: "sinemā hôl ← English cinema hall"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C244-restora]
 <!-- hl-knowledge: introduces=[BN-LEX-C245-JAYGA245-01]; assesses=[] -->
 
 **সিনেমা হল** — *sinemā hôl* — "a cinema hall".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সিনেমা হল** (*sinemā hôl*) is a loan from English *cinema hall*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pôkeṭ"
 concept_tag: BN-CLOTHES85-POKET
 prerequisites: [BN-C85-pnt, BN-C85-moja]
 sounds: []
-roots: []
+roots: [english-pocket]
+etymology_hook: "pôkeṭ ← English pocket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C85-moja]
 <!-- hl-knowledge: introduces=[BN-LEX-C85-CLOTHES85-03]; assesses=[] -->
 
 **পকেট** — *pôkeṭ* — "a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পকেট** (*pôkeṭ*) is a loan from English *pocket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

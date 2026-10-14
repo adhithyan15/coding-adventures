@@ -14,7 +14,8 @@ romanization: "kolsi"
 concept_tag: BN-THINGS107-KOLSI
 prerequisites: [BN-C107-hari, BN-C107-korai]
 sounds: []
-roots: []
+roots: [sanskrit-kalasha]
+etymology_hook: "kolsi ← Sanskrit kalaśa 'waterpot', a tadbhava (CDIAL 2920)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C107-korai]
 <!-- hl-knowledge: introduces=[BN-LEX-C107-THINGS107-04]; assesses=[] -->
 
 **কলসি** — *kolsi* — "a water pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কলসি** (*kolsi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kalaśa*, "waterpot" (CDIAL 2920). CDIAL writes the Bengali form *kalsi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

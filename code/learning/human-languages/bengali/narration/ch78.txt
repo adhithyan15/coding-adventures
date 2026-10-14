@@ -12,6 +12,9 @@ Before the new one: say the Bengali for beautiful, then the Bengali for a day.
 You'll want to know: রাত.
 রাত — rāt — "night".
 
+The word, taken apart.
+রাত (rāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rātrī, "night" (CDIAL 10702).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a day, then the Bengali for night.
 
 You'll want to know: সন্ধ্যা.
 সন্ধ্যা — sôndhyā — "evening".
+
+The word, taken apart.
+সন্ধ্যা (sôndhyā) is Sanskrit saṁdhyā, "twilight", taken over whole as a learned loan, a tatsama (CDIAL 12918). The word inherited from it is sāṁjh, "evening", which CDIAL lists.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for night, then the Bengali for evening.
 You'll want to know: সকাল.
 সকাল — sôkāl — "morning".
 
+The word, taken apart.
+সকাল (sôkāl) matches Sanskrit sakāla, "seasonable", whose adverb sakālam means "early in the morning". CDIAL has that entry but lists no Bengali form under it (CDIAL 13067).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for evening, then the Bengali for morning.
 You'll want to know: সপ্তাহ.
 সপ্তাহ — sôptāhô — "a week".
 
+The word, taken apart.
+সপ্তাহ (sôptāhô) is Sanskrit saptāha, "period of seven days", taken over whole as a learned loan, a tatsama. It is sapta, "seven", + aha, "day".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for morning, then the Bengali for a week.
 
 You'll want to know: মাস.
 মাস — māsh — "a month".
+
+The word, taken apart.
+মাস (māsh) is inherited from Sanskrit māsa, "moon, month", and has come down with almost no change (CDIAL 10104).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "chiṛiyākhānā"
 concept_tag: BN-JAYGA157-CHIRIYAKHANA
 prerequisites: [BN-C157-mor, BN-C157-khal]
 sounds: []
-roots: []
+roots: [sanskrit-cataka, persian-khana]
+etymology_hook: "chiṛiyākhānā: chiṛiyā 'bird', from Hindi (CDIAL 4571), + khānā 'house', from Persian khāna"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C157-khal]
 <!-- hl-knowledge: introduces=[BN-LEX-C157-JAYGA157-05]; assesses=[] -->
 
 **চিড়িয়াখানা** — *chiṛiyākhānā* — "a zoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চিড়িয়াখানা** (*chiṛiyākhānā*) is *chiṛiyā*, "bird", + *khānā*, "house". CDIAL takes Bengali *chiṛiyā* from Hindi *ciṛiyā*, under Sanskrit *caṭaka*, "sparrow", a word it calls imitative (CDIAL 4571); *khānā* is usually traced to Persian *khāna*, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

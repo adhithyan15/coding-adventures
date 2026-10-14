@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 111,
-  "sourceHash": "fnv1a64:5aa476ada047e779",
+  "sourceHash": "fnv1a64:45282f225281c0be",
   "lessonIds": [
     "BN-C111-dori",
     "BN-C111-perek",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch111.txt",
   "json": "bengali/narration/ch111.json",
-  "textHash": "fnv1a64:b7bf8fe90fc7b818",
-  "jsonHash": "fnv1a64:d9c9a3045cd74f3e",
+  "textHash": "fnv1a64:5833172054663aa3",
+  "jsonHash": "fnv1a64:9fa38c3765c2ce8f",
   "findings": []
 }

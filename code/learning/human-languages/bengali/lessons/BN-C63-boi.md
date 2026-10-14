@@ -14,7 +14,8 @@ romanization: "bôi"
 concept_tag: BN-HOME63-BOI
 prerequisites: [BN-C63-botol, BN-C63-dorja]
 sounds: []
-roots: []
+roots: [sanskrit-vahika]
+etymology_hook: "bôi: CDIAL lists baï 'account-book' under Sanskrit vahikā, known only in rājavahikā 'king's diary' (CDIAL 11460)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C63-dorja]
 <!-- hl-knowledge: introduces=[BN-LEX-C63-HOME63-04]; assesses=[] -->
 
 **বই** — *bôi* — "a book".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Bengali *baï*, "account-book, ledger", under Sanskrit *vahikā*, known only in *rājavahikā*, "king's diary" (CDIAL 11460). In Bengali the word has widened to mean any book.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

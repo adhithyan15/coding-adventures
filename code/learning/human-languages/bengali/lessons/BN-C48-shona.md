@@ -14,7 +14,8 @@ romanization: "shonā"
 concept_tag: BN-VERB-SHONA
 prerequisites: [BN-C48-mohila, BN-C48-protibeshi]
 sounds: []
-roots: []
+roots: [sanskrit-shrnoti]
+etymology_hook: "shonā ← Sanskrit śṛṇoti 'hears', a tadbhava (CDIAL 12598)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C48-protibeshi]
 <!-- hl-knowledge: introduces=[BN-LEX-C48-FAMILY48-03]; assesses=[] -->
 
 **শোনা** — *shonā* — "to hear, to listen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শোনা** (*shonā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śṛṇoti*, "hears" (CDIAL 12598). CDIAL writes the Bengali verb *sunā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

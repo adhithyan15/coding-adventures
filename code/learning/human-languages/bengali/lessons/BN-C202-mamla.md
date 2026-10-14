@@ -14,7 +14,8 @@ romanization: "māmlā"
 concept_tag: BN-JINIS202-MAMLA
 prerequisites: [BN-C202-chor, BN-C202-dakat]
 sounds: []
-roots: []
+roots: [arabic-muamala]
+etymology_hook: "māmlā ← Arabic muʿāmala 'dealing, transaction', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C202-dakat]
 <!-- hl-knowledge: introduces=[BN-LEX-C202-JINIS202-04]; assesses=[] -->
 
 **মামলা** — *māmlā* — "a lawsuit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মামলা** (*māmlā*) is a loan from Arabic *muʿāmala*, "dealing, transaction", which reached Bengali through Persian. Its Arabic root is *ʿ-m-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

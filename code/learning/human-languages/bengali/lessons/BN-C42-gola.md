@@ -14,7 +14,8 @@ romanization: "gôlā"
 concept_tag: BN-BODY42-GOLA
 prerequisites: [BN-C42-chul, BN-C42-dat]
 sounds: []
-roots: []
+roots: [sanskrit-gala]
+etymology_hook: "gôlā ← Sanskrit gala 'throat, neck', a tadbhava (CDIAL 4070)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C42-dat]
 <!-- hl-knowledge: introduces=[BN-LEX-C42-BODY42-04]; assesses=[] -->
 
 **গলা** — *gôlā* — "the throat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গলা** (*gôlā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gala*, "throat, neck" (CDIAL 4070).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

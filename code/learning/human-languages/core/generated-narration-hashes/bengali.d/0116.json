@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 116,
-  "sourceHash": "fnv1a64:91474f154f0bd3c8",
+  "sourceHash": "fnv1a64:f02bd8fd97e619f5",
   "lessonIds": [
     "BN-C116-tormuj",
     "BN-C116-begun",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch116.txt",
   "json": "bengali/narration/ch116.json",
-  "textHash": "fnv1a64:662c458e9c5d869c",
-  "jsonHash": "fnv1a64:8b71d82e52e3f253",
+  "textHash": "fnv1a64:1916be2ebc6ab231",
+  "jsonHash": "fnv1a64:d600a160be8e785d",
   "findings": []
 }

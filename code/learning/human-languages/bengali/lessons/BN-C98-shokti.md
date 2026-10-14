@@ -14,7 +14,8 @@ romanization: "shôkti"
 concept_tag: BN-CAN98-SHOKTI
 prerequisites: [BN-C97-dabi, BN-C98-para]
 sounds: []
-roots: []
+roots: [sanskrit-shakti]
+etymology_hook: "shôkti ← Sanskrit śakti 'power', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C98-para]
 <!-- hl-knowledge: introduces=[BN-LEX-C98-CAN98-02]; assesses=[] -->
 
 **শক্তি** — *shôkti* — "strength".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শক্তি** (*shôkti*) is Sanskrit *śakti*, "power", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

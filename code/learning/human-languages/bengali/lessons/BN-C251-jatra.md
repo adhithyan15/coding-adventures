@@ -14,7 +14,8 @@ romanization: "jātrā"
 concept_tag: BN-JINIS251-JATRA
 prerequisites: [BN-C251-mela, BN-C251-parti]
 sounds: []
-roots: []
+roots: [sanskrit-yatra]
+etymology_hook: "jātrā ← Sanskrit yātrā 'journey, procession', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C251-parti]
 <!-- hl-knowledge: introduces=[BN-LEX-C251-JINIS251-05]; assesses=[] -->
 
 **যাত্রা** — *jātrā* — "a journey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**যাত্রা** (*jātrā*) is Sanskrit *yātrā*, "journey, procession", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

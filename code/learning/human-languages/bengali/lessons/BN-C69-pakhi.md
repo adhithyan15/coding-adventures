@@ -14,7 +14,8 @@ romanization: "pākhi"
 concept_tag: BN-ANIMALS69-PAKHI
 prerequisites: [BN-C69-chhagol, BN-C69-bhera]
 sounds: []
-roots: []
+roots: [sanskrit-pakshin]
+etymology_hook: "pākhi ← Sanskrit pakṣin 'winged; bird', a tadbhava (CDIAL 7636)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C69-bhera]
 <!-- hl-knowledge: introduces=[BN-LEX-C69-ANIMALS69-04]; assesses=[] -->
 
 **পাখি** — *pākhi* — "a bird".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাখি** (*pākhi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pakṣin*, "winged; bird" (CDIAL 7636).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

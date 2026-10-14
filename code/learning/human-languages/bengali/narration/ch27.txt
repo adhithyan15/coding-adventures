@@ -51,6 +51,9 @@ You'll want to know: নয়.
 আমি ভালো নই — āmi bhālo nôi — I am not well.
 Chapter three taught the frame আমার নাম … and said plainly that it carries no word for is. Bengali leaves the present-tense is out. To deny that sentence you cannot negate a verb that was never said, so the language supplies one, and it supplies it only here: নয় (nôy).
 
+The word, taken apart.
+নয় (nôy) begins with the negator na, "not" (CDIAL 6906); CDIAL has no entry for the whole word, so how its ending formed is not settled.
+
 Grammar Lens: the form follows the person.
 [a table of 2 rows, read aloud]
 about: me. say: নই (nôi).
@@ -88,6 +91,9 @@ You'll want to know: নেই.
 আমার চা নেই — āmār chā nei — I have no tea.
 আমার ভাই নেই — āmār bhāi nei — I have no brother.
 Chapter five taught আমি ভালো আছি, "I am well," on the stem আছ-, which means to be present. নেই (nei) is that stem's denial, and it comes as a single word rather than as আছি না (nā), which no Bengali says.
+
+The word, taken apart.
+নেই (nei) is a worn form of nāi: the negator na, "not" (CDIAL 6906), fused with the verb of being; CDIAL has no entry for the whole, so the details are not settled.
 
 Grammar Lens: having, in a language with no verb for it.
 Bengali has no verb to have. It says of-me tea is-present, using the same আমার chapter three taught for my. So আমার চা নেই (nei) is literally of me, tea is not present — and the same shape covers I have no tea and there is no tea of mine, because in Bengali those were never different sentences.

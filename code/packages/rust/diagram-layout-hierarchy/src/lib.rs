@@ -540,7 +540,7 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagr
                 style: edge.style.clone(),
                 animate: edge.animate,
                 animation: edge.animation,
-                curve: edge.curve,
+                curve: edge.curve.or(diagram.flowchart_config.curve),
             })
         })
         .collect();

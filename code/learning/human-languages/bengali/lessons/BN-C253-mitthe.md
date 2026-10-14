@@ -14,7 +14,8 @@ romanization: "mitthe"
 concept_tag: BN-JINIS253-MITTHE
 prerequisites: [BN-C252-natni, BN-C252-shvoshur]
 sounds: []
-roots: []
+roots: [sanskrit-mithya]
+etymology_hook: "mitthe ← Sanskrit mithyā 'wrongly, falsely', a semi-tatsama (CDIAL 10130)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C252-shvoshur]
 <!-- hl-knowledge: introduces=[BN-LEX-C253-JINIS253-01]; assesses=[] -->
 
 **মিথ্যে** — *mitthe* — "a lie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মিথ্যে** (*mitthe*) is a semi-tatsama: Sanskrit *mithyā*, "wrongly, falsely", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 10130). The word inherited from it is *michā*, "untrue", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "komôl"
 concept_tag: BN-GUN161-KOMOL
 prerequisites: [BN-C160-buro, BN-C161-bhodro]
 sounds: []
-roots: []
+roots: [sanskrit-komala]
+etymology_hook: "komôl ← Sanskrit komala 'tender, soft', a tatsama (CDIAL 3523)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C161-bhodro]
 <!-- hl-knowledge: introduces=[BN-LEX-C161-GUN161-02]; assesses=[] -->
 
 **কোমল** — *komôl* — "gentle, tender".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কোমল** (*komôl*) is Sanskrit *komala*, "tender, soft", taken over whole as a learned loan, a tatsama (CDIAL 3523). The word inherited from it is Middle Bengali *kõala*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

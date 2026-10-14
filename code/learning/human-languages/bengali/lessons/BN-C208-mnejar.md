@@ -14,7 +14,8 @@ romanization: "mænejār"
 concept_tag: BN-KAJ208-MNEJAR
 prerequisites: [BN-C208-mali, BN-C208-sochib]
 sounds: []
-roots: []
+roots: [english-manager]
+etymology_hook: "mænejār ← English manager"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C208-sochib]
 <!-- hl-knowledge: introduces=[BN-LEX-C208-KAJ208-05]; assesses=[] -->
 
 **ম্যানেজার** — *mænejār* — "a manager".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ম্যানেজার** (*mænejār*) is a loan from English *manager*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

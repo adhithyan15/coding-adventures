@@ -14,7 +14,8 @@ romanization: "gôbhīr"
 concept_tag: BN-QUAL136-GOBHIR
 prerequisites: [BN-C135-druto, BN-C135-dhir]
 sounds: []
-roots: []
+roots: [sanskrit-gabhira]
+etymology_hook: "gôbhīr ← Sanskrit gabhīra 'deep', a tatsama; CDIAL lists the inherited form gahir (CDIAL 4024)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C135-dhir]
 <!-- hl-knowledge: introduces=[BN-LEX-C136-QUAL136-01]; assesses=[] -->
 
 **গভীর** — *gôbhīr* — "deep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গভীর** (*gôbhīr*) is Sanskrit *gabhīra*, "deep", taken over whole as a learned loan, a tatsama (CDIAL 4024). The word inherited from it is *gahir*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

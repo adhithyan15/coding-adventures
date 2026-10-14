@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 191,
-  "sourceHash": "fnv1a64:fba545e2f512a066",
+  "sourceHash": "fnv1a64:263ac112c415dec8",
   "lessonIds": [
     "BN-C191-dorkari",
     "BN-C191-sombhob",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch191.txt",
   "json": "bengali/narration/ch191.json",
-  "textHash": "fnv1a64:931377a6abe75ee9",
-  "jsonHash": "fnv1a64:d8c15e69bd1ed7fc",
+  "textHash": "fnv1a64:a4f03c3bce45d344",
+  "jsonHash": "fnv1a64:e564cf9100319e7f",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "klāntô"
 concept_tag: BN-QUAL137-KLANTO
 prerequisites: [BN-C137-dukhi, BN-C137-ragi]
 sounds: []
-roots: []
+roots: [sanskrit-klanta]
+etymology_hook: "klāntô ← Sanskrit klānta 'wearied', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C137-ragi]
 <!-- hl-knowledge: introduces=[BN-LEX-C137-QUAL137-04]; assesses=[] -->
 
 **ক্লান্ত** — *klāntô* — "tired".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ক্লান্ত** (*klāntô*) is Sanskrit *klānta*, "wearied", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "injekshôn"
 concept_tag: BN-SVASTHYO185-INJEKSHON
 prerequisites: [BN-C184-jhuki-neoya, BN-C185-bori]
 sounds: []
-roots: []
+roots: [english-injection]
+etymology_hook: "injekshôn ← English injection"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C185-bori]
 <!-- hl-knowledge: introduces=[BN-LEX-C185-SVASTHYO185-02]; assesses=[] -->
 
 **ইনজেকশন** — *injekshôn* — "an injection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ইনজেকশন** (*injekshôn*) is a loan from English *injection*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

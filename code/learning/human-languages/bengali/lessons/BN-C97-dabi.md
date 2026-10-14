@@ -14,7 +14,8 @@ romanization: "dābi"
 concept_tag: BN-WANT97-DABI
 prerequisites: [BN-C97-shokh, BN-C97-abdar, BN-C40-prothom-path]
 sounds: []
-roots: []
+roots: [arabic-dawa]
+etymology_hook: "dābi ← Arabic daʿwā 'claim, lawsuit', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [BN-C97-abdar]
 <!-- hl-knowledge: introduces=[BN-LEX-C97-WANT97-05]; assesses=[] -->
 
 **দাবি** — *dābi* — "a demand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দাবি** (*dābi*) is a loan from Arabic *daʿwā*, "claim, lawsuit", which reached Bengali through Persian. Its Arabic root is *d-ʿ-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

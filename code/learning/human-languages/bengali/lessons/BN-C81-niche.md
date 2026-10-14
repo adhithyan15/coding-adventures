@@ -14,7 +14,8 @@ romanization: "niche"
 concept_tag: BN-PLACE81-NICHE
 prerequisites: [BN-C81-bhitore, BN-C81-baire]
 sounds: []
-roots: []
+roots: [sanskrit-nica]
+etymology_hook: "niche ← Sanskrit nīca 'low', a tadbhava (CDIAL 7540)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C81-baire]
 <!-- hl-knowledge: introduces=[BN-LEX-C81-PLACE81-04]; assesses=[] -->
 
 **নিচে** — *niche* — "below".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নিচে** (*niche*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nīca*, "low" (CDIAL 7540). *Niche* adds the ending *-e*, "below".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "lobhī"
 concept_tag: BN-GUN160-LOBHI
 prerequisites: [BN-C160-buddhiman, BN-C160-porishromi]
 sounds: []
-roots: []
+roots: [sanskrit-lobhin]
+etymology_hook: "lobhī ← Sanskrit lobhin 'greedy', a tatsama; CDIAL lists lobha 'eager desire' (CDIAL 11147)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C160-porishromi]
 <!-- hl-knowledge: introduces=[BN-LEX-C160-GUN160-03]; assesses=[] -->
 
 **লোভী** — *lobhī* — "greedy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লোভী** (*lobhī*) is Sanskrit *lobhin*, "greedy", taken over whole as a learned loan, a tatsama (CDIAL 11147). It is built on *lobha*, "eager desire", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

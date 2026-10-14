@@ -14,7 +14,8 @@ romanization: "jire"
 concept_tag: BN-JINIS249-JIRE
 prerequisites: [BN-C248-potrika, BN-C249-moshla]
 sounds: []
-roots: []
+roots: [sanskrit-jiraka]
+etymology_hook: "jire ← Sanskrit jīraka 'cummin-seed', a tadbhava (CDIAL 5234)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C249-moshla]
 <!-- hl-knowledge: introduces=[BN-LEX-C249-JINIS249-02]; assesses=[] -->
 
 **জিরে** — *jire* — "cumin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জিরে** (*jire*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jīraka*, "cummin-seed" (CDIAL 5234). CDIAL lists Bengali *jīr*, "cummin-seed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bhārôtīyô"
 concept_tag: BN-GUN246-BHAROTIYO
 prerequisites: [BN-C246-bideshi, BN-C246-ingreji]
 sounds: []
-roots: []
+roots: [sanskrit-bharatiya]
+etymology_hook: "bhārôtīyô ← Sanskrit bhāratīya 'of Bhārata, Indian', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C246-ingreji]
 <!-- hl-knowledge: introduces=[BN-LEX-C246-GUN246-03]; assesses=[] -->
 
 **ভারতীয়** — *bhārôtīyô* — "Indian".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভারতীয়** (*bhārôtīyô*) is Sanskrit *bhāratīya*, "of Bhārata, Indian", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

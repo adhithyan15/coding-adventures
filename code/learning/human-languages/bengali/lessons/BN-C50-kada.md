@@ -14,7 +14,8 @@ romanization: "kā̃dā"
 concept_tag: BN-VERB-KADA
 prerequisites: [BN-C50-dhoya, BN-C50-hasa]
 sounds: []
-roots: []
+roots: [sanskrit-krandati]
+etymology_hook: "kāṁdā ← Sanskrit krandati 'roars, laments', a tadbhava (CDIAL 3574)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C50-hasa]
 <!-- hl-knowledge: introduces=[BN-LEX-C50-VERBS50-03]; assesses=[] -->
 
 **কাঁদা** — *kā̃dā* — "to cry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাঁদা** (*kāṁdā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *krandati*, "roars, laments" (CDIAL 3574).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

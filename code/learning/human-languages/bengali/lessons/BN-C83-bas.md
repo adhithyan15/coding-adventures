@@ -14,7 +14,8 @@ romanization: "bās"
 concept_tag: BN-TOWN83-BAS
 prerequisites: [BN-C82-steshon, BN-C83-gari]
 sounds: []
-roots: []
+roots: [english-bus]
+etymology_hook: "bās ← English bus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C83-gari]
 <!-- hl-knowledge: introduces=[BN-LEX-C83-TOWN83-02]; assesses=[] -->
 
 **বাস** — *bās* — "a bus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাস** (*bās*) is a loan from English *bus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

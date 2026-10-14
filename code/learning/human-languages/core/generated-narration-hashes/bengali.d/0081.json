@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 81,
-  "sourceHash": "fnv1a64:cbd1b57c572f64cf",
+  "sourceHash": "fnv1a64:d607ad0978860007",
   "lessonIds": [
     "BN-C81-kachhe",
     "BN-C81-bhitore",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch81.txt",
   "json": "bengali/narration/ch81.json",
-  "textHash": "fnv1a64:66125d416c38ccc5",
-  "jsonHash": "fnv1a64:7608507a7d7dae3a",
+  "textHash": "fnv1a64:2f1863e8d59b3ae2",
+  "jsonHash": "fnv1a64:c8d6b5b43648bfdd",
   "findings": []
 }

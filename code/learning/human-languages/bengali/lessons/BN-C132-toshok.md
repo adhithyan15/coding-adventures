@@ -14,7 +14,8 @@ romanization: "toshôk"
 concept_tag: BN-THINGS132-TOSHOK
 prerequisites: [BN-C132-alo, BN-C132-khat]
 sounds: []
-roots: []
+roots: [persian-tushak]
+etymology_hook: "toshôk: usually traced to Persian tushak 'mattress'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C132-khat]
 <!-- hl-knowledge: introduces=[BN-LEX-C132-THINGS132-05]; assesses=[] -->
 
 **তোশক** — *toshôk* — "a mattress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তোশক** (*toshôk*) is a loan, usually traced to Persian *tushak*, "mattress".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

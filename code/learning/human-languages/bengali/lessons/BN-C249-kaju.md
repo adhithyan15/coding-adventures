@@ -14,7 +14,8 @@ romanization: "kāju"
 concept_tag: BN-JINIS249-KAJU
 prerequisites: [BN-C249-dhone, BN-C249-pudina]
 sounds: []
-roots: []
+roots: [portuguese-caju]
+etymology_hook: "kāju ← Portuguese caju 'cashew'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C249-pudina]
 <!-- hl-knowledge: introduces=[BN-LEX-C249-JINIS249-05]; assesses=[] -->
 
 **কাজু** — *kāju* — "a cashew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাজু** (*kāju*) is a loan from Portuguese *caju*, "cashew".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

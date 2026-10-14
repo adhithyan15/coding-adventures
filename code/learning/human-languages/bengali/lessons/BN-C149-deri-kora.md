@@ -14,7 +14,8 @@ romanization: "deri kôrā"
 concept_tag: BN-VERB-DERI-KORA
 prerequisites: [BN-C149-bishram-neoya, BN-C149-taratari-kora]
 sounds: []
-roots: []
+roots: [persian-der, sanskrit-karoti]
+etymology_hook: "deri kôrā: deri 'lateness', usually traced to Persian dēr 'late', + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C149-taratari-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C149-ACT149-05]; assesses=[] -->
 
 **দেরি করা** — *deri kôrā* — "to delay, to be late".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দেরি করা** (*deri kôrā*) is *deri*, "lateness", usually traced to Persian *dēr*, "late", + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

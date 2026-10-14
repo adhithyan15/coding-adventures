@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 93,
-  "sourceHash": "fnv1a64:a325430abb5309b9",
+  "sourceHash": "fnv1a64:687eb4fe833cfdf0",
   "lessonIds": [
     "BN-C93-bosonto",
     "BN-C93-hemonto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch93.txt",
   "json": "bengali/narration/ch93.json",
-  "textHash": "fnv1a64:3e994ea3c50835bf",
-  "jsonHash": "fnv1a64:07193b4928b5ffc5",
+  "textHash": "fnv1a64:3a8ac7fa6c2b6a9c",
+  "jsonHash": "fnv1a64:0833f84d4510a2d9",
   "findings": []
 }

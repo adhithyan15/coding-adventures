@@ -14,7 +14,8 @@ romanization: "tāk"
 concept_tag: BN-THINGS112-TAK
 prerequisites: [BN-C111-chhata, BN-C112-bakso]
 sounds: []
-roots: []
+roots: [persian-taq]
+etymology_hook: "tāk: usually traced to Persian tāq 'arch, niche'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C112-bakso]
 <!-- hl-knowledge: introduces=[BN-LEX-C112-THINGS112-02]; assesses=[] -->
 
 **তাক** — *tāk* — "a shelf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তাক** (*tāk*) is a loan, usually traced to Persian *tāq*, "arch, niche".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

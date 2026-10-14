@@ -14,7 +14,8 @@ romanization: "nāgôrik"
 concept_tag: BN-JINIS199-NAGORIK
 prerequisites: [BN-C198-ason, BN-C198-pltphorm]
 sounds: []
-roots: []
+roots: [sanskrit-nagarika]
+etymology_hook: "nāgôrik ← Sanskrit nāgarika 'of the town; a townsman', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C198-pltphorm]
 <!-- hl-knowledge: introduces=[BN-LEX-C199-JINIS199-01]; assesses=[] -->
 
 **নাগরিক** — *nāgôrik* — "a citizen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নাগরিক** (*nāgôrik*) is Sanskrit *nāgarika*, "of the town; a townsman", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

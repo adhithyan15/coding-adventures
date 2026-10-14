@@ -14,7 +14,8 @@ romanization: "chhõṛā"
 concept_tag: BN-VERB-CHHORA
 prerequisites: [BN-C105-bhaja, BN-C105-meshano]
 sounds: []
-roots: []
+roots: [sanskrit-kshotayati]
+etymology_hook: "chhõṛā ← Sanskrit kṣoṭayati 'throws', a tadbhava (CDIAL 3747)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C105-meshano]
 <!-- hl-knowledge: introduces=[BN-LEX-C106-ACT106-01]; assesses=[] -->
 
 **ছোড়া** — *chhõṛā* — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছোড়া** (*chhõṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣoṭayati*, "throws" (CDIAL 3747).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

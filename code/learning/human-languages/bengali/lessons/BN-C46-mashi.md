@@ -14,7 +14,8 @@ romanization: "māshi"
 concept_tag: BN-FAMILY46-MASHI
 prerequisites: [BN-C46-kaka, BN-C46-mama]
 sounds: []
-roots: []
+roots: [sanskrit-matuhshvasr]
+etymology_hook: "māshi ← Sanskrit mātuḥṣvasṛ 'mother's sister', a tadbhava (CDIAL 10001)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C46-mama]
 <!-- hl-knowledge: introduces=[BN-LEX-C46-FAMILY46-05]; assesses=[] -->
 
 **মাসি** — *māshi* — "an aunt (mother's sister)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাসি** (*māshi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mātuḥṣvasṛ*, "mother's sister" (CDIAL 10001). It is *mātṛ*, "mother", + *svasṛ*, "sister".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

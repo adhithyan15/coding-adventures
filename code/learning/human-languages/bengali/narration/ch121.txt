@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a jackal, then the Bengali for a bat.
 You'll want to know: প্যাঁচা.
 প্যাঁচা — pyā̃chā — "an owl".
 
+The word, taken apart.
+প্যাঁচা (pyā̃chā) (pyāṁchā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pecaka, "owl" (CDIAL 8375).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a bat, then the Bengali for an owl.
 
 You'll want to know: টিয়া.
 টিয়া — tiyā — "a parrot".
+
+The word, taken apart.
+The origin of টিয়া (tiyā) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "parrot" finds nothing close.
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Say "I live in Kolkata," then "she speaks." (Āmi Kolkātāy thāki; se bôle, t
 You'll want to know: কবুতর.
 কবুতর — kôbutôr — "a pigeon".
 
+The word, taken apart.
+কবুতর (kôbutôr) is a loan, usually traced to Persian kabūtar, "pigeon".
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Bengali for a parrot, then the Bengali for a pigeon.
 You'll want to know: চড়ুই.
 চড়ুই — chôṛui — "a sparrow".
 
+The word, taken apart.
+চড়ুই (chôṛui) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caṭaka, "sparrow" (CDIAL 4571). CDIAL calls the word imitative of the bird's call.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Bengali for a pigeon, then the Bengali for a sparrow
 
 You'll want to know: বক.
 বক — bôk — "a heron".
+
+The word, taken apart.
+বক (bôk) is inherited from Sanskrit baka, "the egret Ardea nivea", and has come down with almost no change (CDIAL 9115). CDIAL thinks the word probably imitative in origin.
 
 What you've built.
 One more word for this chapter.

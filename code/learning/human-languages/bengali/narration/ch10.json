@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Two Marks Inside a Verb",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:974c69a3e2384e10",
+  "sourceHash": "fnv1a64:32501735364433f7",
   "lessons": [
     {
       "id": "BN-C10-ojon",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:122591699cf2bbdc",
+      "sourceHash": "fnv1a64:92ef69a452d052c3",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ওজন (ojôn) is a loan from Arabic wazn, \"weight, a weighing\", which reached Bengali through Persian. Its Arabic root is w-z-n (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -295,7 +306,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72bdcc18ad572103",
+      "sourceHash": "fnv1a64:de61d0c9c9850261",
       "notice": null,
       "blocks": [
         {
@@ -345,6 +356,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists পাড়া (pāṛā) under Sanskrit pāṭaka, \"quarter of a town or village\", a word it notes may come from Dravidian (CDIAL 8031). It also gives pāṛā under padra, \"village\", itself probably Dravidian (CDIAL 7780), so the two sources are not cleanly separated."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -375,7 +397,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

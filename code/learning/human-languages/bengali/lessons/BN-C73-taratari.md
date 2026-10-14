@@ -15,6 +15,7 @@ concept_tag: BN-ADJ73-TARATARI
 prerequisites: [BN-C73-gorom, BN-C73-aste]
 sounds: []
 roots: []
+etymology_hook: "tāṛātāṛi: a doubled tāṛā 'haste'; origin not settled, CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C73-aste]
 <!-- hl-knowledge: introduces=[BN-LEX-C73-ADJ73-04]; assesses=[] -->
 
 **তাড়াতাড়ি** — *tāṛātāṛi* — "quickly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তাড়াতাড়ি** (*tāṛātāṛi*) doubles *tāṛā*, "haste". Its origin is not settled: CDIAL has no entry for that word; the nearest form it gives is Bengali *tāṛāna*, "to drive away, drive on", under Sanskrit *tāḍayati*, "beats" (CDIAL 5752), and it does not link the two.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

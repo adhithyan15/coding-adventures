@@ -14,7 +14,8 @@ romanization: "mājhāri"
 concept_tag: BN-GUN193-MAJHARI
 prerequisites: [BN-C192-eki, BN-C193-bishal]
 sounds: []
-roots: []
+roots: [sanskrit-madhya]
+etymology_hook: "mājhāri: on mājh 'middle' ← madhya (CDIAL 9804)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C193-bishal]
 <!-- hl-knowledge: introduces=[BN-LEX-C193-GUN193-02]; assesses=[] -->
 
 **মাঝারি** — *mājhāri* — "medium".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাঝারি** (*mājhāri*) is built on *mājh*, "middle", from Sanskrit *madhya*, "middle" (CDIAL 9804).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

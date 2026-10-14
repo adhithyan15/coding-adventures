@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to look for, then the Bengali for to los
 You'll want to know: পরা.
 পরা — pôrā — "to wear".
 
+The word, taken apart.
+পরা (pôrā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from paridadhāti, "sets round, puts on clothes" (CDIAL 7835). CDIAL notes that Chatterji preferred the passive paridhīyate.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to lose, then the Bengali for to wear.
 
 You'll want to know: ছাড়া.
 ছাড়া — chhāṛā — "to leave, to let go".
+
+The word, taken apart.
+ছাড়া (chhāṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from chardayati, "causes to flow over, vomits" (CDIAL 4998). CDIAL gives its basic sense as "eject".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to wear, then the Bengali for to leave.
 You'll want to know: ফেলা.
 ফেলা — phælā — "to throw, to drop".
 
+The word, taken apart.
+CDIAL lists ফেলা (phælā) under Sanskrit prathita, "spread out", as a form extended with -ll-, and asks whether it was crossed with prēlayati, "pushes on", a form it reconstructs (CDIAL 8651).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to leave, then the Bengali for to throw.
 You'll want to know: ওড়া.
 ওড়া — oṛā — "to fly".
 
+The word, taken apart.
+ওড়া (oṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uḍḍīyate, "flies up" (CDIAL 1697).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to throw, then the Bengali for to fly.
 
 You'll want to know: শেখানো.
 শেখানো — shekhāno — "to teach".
+
+The word, taken apart.
+শেখানো (shekhāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śikṣate, "learns" (CDIAL 12430). Shekhāno is the causing form of shekhā, "to learn"; CDIAL lists the pair as sikhā and sikhāna.
 
 What you've built.
 One more word for this chapter.

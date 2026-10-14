@@ -14,7 +14,8 @@ romanization: "sthānīyô"
 concept_tag: BN-GUN219-STHANIYO
 prerequisites: [BN-C219-mrito, BN-C219-phaka]
 sounds: []
-roots: []
+roots: [sanskrit-sthaniya]
+etymology_hook: "sthānīyô ← Sanskrit sthānīya 'of a place', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C219-phaka]
 <!-- hl-knowledge: introduces=[BN-LEX-C219-GUN219-05]; assesses=[] -->
 
 **স্থানীয়** — *sthānīyô* — "local".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**স্থানীয়** (*sthānīyô*) is Sanskrit *sthānīya*, "of a place", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jor kôrā"
 concept_tag: BN-VERB-JOR-KORA
 prerequisites: [BN-C184-mene-neoya, BN-C184-raji-hooya]
 sounds: []
-roots: []
+roots: [persian-zor, sanskrit-karoti]
+etymology_hook: "jor kôrā: jor 'force', usually traced to Persian zōr 'strength', + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C184-raji-hooya]
 <!-- hl-knowledge: introduces=[BN-LEX-C184-ACT184-03]; assesses=[] -->
 
 **জোর করা** — *jor kôrā* — "to force".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জোর করা** (*jor kôrā*) is *jor*, "force", usually traced to Persian *zōr*, "strength", + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

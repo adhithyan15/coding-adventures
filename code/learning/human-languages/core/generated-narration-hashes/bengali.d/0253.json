@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 253,
-  "sourceHash": "fnv1a64:2d6a793273483bc8",
+  "sourceHash": "fnv1a64:aad927f7ff3ac380",
   "lessonIds": [
     "BN-C253-mitthe",
     "BN-C253-rohosyo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch253.txt",
   "json": "bengali/narration/ch253.json",
-  "textHash": "fnv1a64:9ab24d7ee4dc4ea9",
-  "jsonHash": "fnv1a64:3e25ed3c626616e6",
+  "textHash": "fnv1a64:80f854fb7958ab6a",
+  "jsonHash": "fnv1a64:45fcd5fee01aa0a7",
   "findings": []
 }

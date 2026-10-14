@@ -14,7 +14,8 @@ romanization: "chupchāp"
 concept_tag: BN-QUAL144-CHUPCHAP
 prerequisites: [BN-C144-lajuk, BN-C144-mishuk]
 sounds: []
-roots: []
+roots: [indo-aryan-cuppa]
+etymology_hook: "chupchāp: chup 'silent' ← *cuppa (CDIAL 4864), doubled as an echo word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C144-mishuk]
 <!-- hl-knowledge: introduces=[BN-LEX-C144-QUAL144-03]; assesses=[] -->
 
 **চুপচাপ** — *chupchāp* — "quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চুপচাপ** (*chupchāp*) is *chup*, "silent", which CDIAL lists under *\*cuppa*, a form it reconstructs (CDIAL 4864), followed by *chāp*, an echo of it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pôchhôndô"
 concept_tag: BN-WANT97-POCHHONDO
 prerequisites: [BN-C96-proyojon, BN-C97-lobh]
 sounds: []
-roots: []
+roots: [persian-pasand]
+etymology_hook: "pôchhôndô: usually traced to Persian pasand 'liking, approval'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C97-lobh]
 <!-- hl-knowledge: introduces=[BN-LEX-C97-WANT97-02]; assesses=[] -->
 
 **পছন্দ** — *pôchhôndô* — "a liking, a choice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পছন্দ** (*pôchhôndô*) is a loan, usually traced to Persian *pasand*, "liking, approval".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

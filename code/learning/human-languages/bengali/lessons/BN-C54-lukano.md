@@ -14,7 +14,8 @@ romanization: "lukāno"
 concept_tag: BN-VERB-LUKANO
 prerequisites: [BN-C54-tola, BN-C54-tana]
 sounds: []
-roots: []
+roots: [sanskrit-lupyate]
+etymology_hook: "lukāno ← Sanskrit lupyate 'is lost, is removed', a tadbhava (CDIAL 11083)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C54-tana]
 <!-- hl-knowledge: introduces=[BN-LEX-C54-VERBS54-04]; assesses=[] -->
 
 **লুকানো** — *lukāno* — "to hide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লুকানো** (*lukāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lupyate*, "is lost, is removed" (CDIAL 11083). *Lukāno* is the causing form of *lukā*, "to hide", the verb CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

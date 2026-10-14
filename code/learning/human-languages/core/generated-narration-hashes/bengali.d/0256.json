@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 256,
-  "sourceHash": "fnv1a64:943316452edb368f",
+  "sourceHash": "fnv1a64:cda85e03d14dcacb",
   "lessonIds": [
     "BN-C256-songskriti",
     "BN-C256-itihas",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch256.txt",
   "json": "bengali/narration/ch256.json",
-  "textHash": "fnv1a64:4ca6d6dd32bde0a8",
-  "jsonHash": "fnv1a64:5876c1ba304948c8",
+  "textHash": "fnv1a64:546fbdd1c2945cb0",
+  "jsonHash": "fnv1a64:4b23067678e1a90d",
   "findings": []
 }

@@ -11,10 +11,10 @@ gloss: "fourth — a different Sanskrit ending, and the only ordinal so far that
 concept_tag: BN-ORDINAL-CHOTURTHO
 prerequisites: [BN-C27-tritiyo, BN-C26-okhane, BN-C23-o-pron, BN-W04-nil-read]
 sounds: []
-roots: []
-etymology_hook: "Samsad's Bengali-English dictionary gives choturtho its own headword and romanizes it caturtha, which is the Sanskrit word unchanged"
+roots: [sanskrit-caturtha]
+etymology_hook: "choturthô ← Sanskrit caturtha 'fourth', a tatsama; the inherited form is cauth 'a quarter' (CDIAL 4600)"
 duration:
-  max_seconds: 240
+  max_seconds: 257
 requires:
   knowledge: [BN-LEX-C27-TRITIYO-01, BN-GRAMMAR-C27-ORDINAL-TIYO-01, BN-LEX-C27-DITIYO-01, BN-GRAMMAR-C27-ORDINAL-TATSAMA-01, BN-LEX-NUMBERS-ONE-TO-FIVE, BN-LEX-C26-OKHANE-01, BN-LEX-C23-O-PRON-01, BN-LEX-C14-NIL-01, BN-SCRIPT-THA-01]
 introduces:
@@ -57,7 +57,7 @@ lessons.
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C27-CHOTURTHO-01, BN-GRAMMAR-C27-ORDINAL-TIYO-01, BN-GRAMMAR-C27-ORDINAL-TATSAMA-01, BN-LEX-C27-DITIYO-01, BN-LEX-C27-TRITIYO-01] -->
 
 Samsad's *Bengali-English Dictionary* gives **চতুর্থ** its own headword and
-romanizes it *caturtha* — the Sanskrit word carried over with nothing altered.
+romanizes it *caturtha*: Sanskrit *caturtha*, "fourth", unaltered, a tatsama; the inherited form is *cauth*, "a quarter" (CDIAL 4600).
 Same layer as the last two, different ending:
 
 | ending | words |

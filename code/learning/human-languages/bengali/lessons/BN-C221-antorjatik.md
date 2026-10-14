@@ -14,7 +14,8 @@ romanization: "āntôrjātik"
 concept_tag: BN-GUN221-ANTORJATIK
 prerequisites: [BN-C221-besorkari, BN-C221-jatiyo]
 sounds: []
-roots: []
+roots: [sanskrit-antar, sanskrit-jati]
+etymology_hook: "āntôrjātik: Sanskrit antar 'between' + jāti 'birth, people' + -ika, a modern word of Sanskrit parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C221-jatiyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C221-GUN221-03]; assesses=[] -->
 
 **আন্তর্জাতিক** — *āntôrjātik* — "international".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আন্তর্জাতিক** (*āntôrjātik*) is built from Sanskrit *antar*, "between", *jāti*, "birth, a people", and the ending *-ika*, "of": a modern word of Sanskrit parts.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

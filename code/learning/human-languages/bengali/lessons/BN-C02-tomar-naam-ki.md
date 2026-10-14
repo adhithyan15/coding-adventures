@@ -11,9 +11,10 @@ gloss: what's your name?
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [BN-C02-tumi-apni, BN-C02-ki, BN-C02-naam]
 sounds: []
-roots: []
+roots: [sanskrit-yushmad, naaman-sanskrit, ka-interrogative]
+etymology_hook: "tomār, from tumi ← yuṣmad 'you' (CDIAL 10511); nām ← nāman 'name' (CDIAL 7067); ki ← kim 'what' (CDIAL 3164)"
 duration:
-  max_seconds: 180
+  max_seconds: 189
 requires:
   knowledge: [BN-CONCEPT-C02-TUMIAPNI-01, BN-CONCEPT-C02-KI-01, BN-CONCEPT-C02-NAAM-01]
 introduces:
@@ -42,6 +43,11 @@ reviews_of: [BN-C02-ki, BN-C02-tumi-apni]
 literally "**your name what?**" And note — still **no "is."** The zero copula
 holds here too: Bengali lays "your name" beside "what," and the question is
 complete.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তোমার** is the possessive of *tumi*, from Sanskrit *yuṣmad-*, "you" (CDIAL 10511); **নাম** is Sanskrit *nāman*, "name" (CDIAL 7067); **কি** is Sanskrit *kim*, "what" (CDIAL 3164).
 
 ## Grammar Lens: answering, and the respectful form
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-KI-01, BN-CONCEPT-C02-NAAM-01, BN-CONCEPT-C02-TOMARNAAMKI-01, BN-CONCEPT-C02-TUMIAPNI-01] -->

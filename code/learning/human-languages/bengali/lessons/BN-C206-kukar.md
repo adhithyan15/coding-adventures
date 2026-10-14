@@ -14,7 +14,8 @@ romanization: "kukār"
 concept_tag: BN-JINIS206-KUKAR
 prerequisites: [BN-C205-litar, BN-C206-silindar]
 sounds: []
-roots: []
+roots: [english-cooker]
+etymology_hook: "kukār ← English cooker"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C206-silindar]
 <!-- hl-knowledge: introduces=[BN-LEX-C206-JINIS206-02]; assesses=[] -->
 
 **কুকার** — *kukār* — "a pressure cooker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কুকার** (*kukār*) is a loan from English *cooker*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āṭkāno"
 concept_tag: BN-VERB-ATKANO
 prerequisites: [BN-C239-phiriye-deoya, BN-C239-mone-rakha]
 sounds: []
-roots: []
+roots: [indo-aryan-attakk]
+etymology_hook: "āṭkāno ← *aṭṭakk 'obstruct, stop', a reconstructed form; a tadbhava (CDIAL 182)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C239-mone-rakha]
 <!-- hl-knowledge: introduces=[BN-LEX-C240-ACT240-01]; assesses=[] -->
 
 **আটকানো** — *āṭkāno* — "to block, to hold up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আটকানো** (*āṭkāno*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*aṭṭakk*, "obstruct, stop", a form CDIAL reconstructs from its descendants (CDIAL 182). CDIAL lists Bengali *āṭkāna*, "to obstruct".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

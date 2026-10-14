@@ -14,7 +14,8 @@ romanization: "dāṛi"
 concept_tag: BN-SVASTHYO243-DARI
 prerequisites: [BN-C243-bomi, BN-C243-chulkani]
 sounds: []
-roots: []
+roots: [indo-aryan-damshtra]
+etymology_hook: "dāṛi ← *dāṁṣṭra 'fang, tusk, beard', a reconstructed form; a tadbhava (CDIAL 6250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C243-chulkani]
 <!-- hl-knowledge: introduces=[BN-LEX-C243-SVASTHYO243-03]; assesses=[] -->
 
 **দাড়ি** — *dāṛi* — "a beard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দাড়ি** (*dāṛi*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dāṁṣṭra*, "fang, tusk, beard", a form CDIAL reconstructs from its descendants (CDIAL 6250). CDIAL lists Bengali *dāṛi*, "beard, chin".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

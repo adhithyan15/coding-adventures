@@ -14,7 +14,8 @@ romanization: "bil"
 concept_tag: BN-KAJ176-BIL
 prerequisites: [BN-C176-pesha, BN-C176-dhar]
 sounds: []
-roots: []
+roots: [english-bill]
+etymology_hook: "bil ← English bill"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C176-dhar]
 <!-- hl-knowledge: introduces=[BN-LEX-C176-KAJ176-03]; assesses=[] -->
 
 **বিল** — *bil* — "a bill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিল** (*bil*) is a loan from English *bill*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

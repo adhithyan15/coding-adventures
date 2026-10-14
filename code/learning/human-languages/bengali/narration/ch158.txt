@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a canal, then the Bengali for a zoo.
 You'll want to know: কবরস্থান.
 কবরস্থান — kôbôrsthān — "a graveyard".
 
+The word, taken apart.
+কবরস্থান (kôbôrsthān) is kôbôr, "grave", from Arabic qabr, "grave", which reached Bengali through Persian (Lane), + sthān, "place", Sanskrit sthāna taken over whole. Persian has the matching qabristān.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a zoo, then the Bengali for a graveyard.
 
 You'll want to know: প্রাসাদ.
 প্রাসাদ — prāsād — "a palace".
+
+The word, taken apart.
+প্রাসাদ (prāsād) is Sanskrit prāsāda, "lofty mansion", taken over whole as a learned loan, a tatsama (CDIAL 8971).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a graveyard, then the Bengali for a pala
 You'll want to know: দুর্গ.
 দুর্গ — durgô — "a fort".
 
+The word, taken apart.
+দুর্গ (durgô) is Sanskrit durga, "hard to reach; a fort", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a palace, then the Bengali for a fort.
 You'll want to know: মিনার.
 মিনার — minār — "a minaret, a tower".
 
+The word, taken apart.
+মিনার (minār) is a loan from Arabic manār, "lighthouse, minaret", which reached Bengali through Persian. Its Arabic root is n-w-r (Lane). The word belongs with Arabic nūr, "light".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a fort, then the Bengali for a minaret.
 
 You'll want to know: সিলিং.
 সিলিং — siling — "a ceiling".
+
+The word, taken apart.
+সিলিং (siling) is a loan from English ceiling.
 
 What you've built.
 One more word for this chapter.

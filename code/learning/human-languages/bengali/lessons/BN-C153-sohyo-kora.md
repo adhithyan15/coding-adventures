@@ -14,7 +14,8 @@ romanization: "sôhyô kôrā"
 concept_tag: BN-VERB-SOHYO-KORA
 prerequisites: [BN-C153-boka, BN-C153-dhonyobad-deoya]
 sounds: []
-roots: []
+roots: [sanskrit-sahya, sanskrit-karoti]
+etymology_hook: "sôhyô kôrā: sôhyô 'bearing', Sanskrit sahya 'tolerable' (CDIAL 13383), + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C153-dhonyobad-deoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C153-ACT153-05]; assesses=[] -->
 
 **সহ্য করা** — *sôhyô kôrā* — "to put up with".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সহ্য করা** (*sôhyô kôrā*) is *sôhyô*, "bearing", Sanskrit *sahya*, "tolerable", taken over whole (CDIAL 13383), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

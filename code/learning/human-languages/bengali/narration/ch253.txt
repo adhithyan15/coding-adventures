@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a granddaughter, then the Bengali for a 
 You'll want to know: মিথ্যে.
 মিথ্যে — mitthe — "a lie".
 
+The word, taken apart.
+মিথ্যে (mitthe) is a semi-tatsama: Sanskrit mithyā, "wrongly, falsely", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 10130). The word inherited from it is michā, "untrue", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a father-in-law, then the Bengali for a 
 
 You'll want to know: রহস্য.
 রহস্য — rôhôsyô — "a mystery".
+
+The word, taken apart.
+রহস্য (rôhôsyô) is Sanskrit rahasya, "secret, mystery", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a lie, then the Bengali for a mystery.
 You'll want to know: রসিকতা.
 রসিকতা — rôsikôtā — "a joke".
 
+The word, taken apart.
+রসিকতা (rôsikôtā) is Sanskrit rasika, "having taste, witty", + the ending -tā, "-ness", both taken over whole.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a mystery, then the Bengali for a joke.
 You'll want to know: হাসি.
 হাসি — hāsi — "a smile, laughter".
 
+The word, taken apart.
+হাসি (hāsi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hāsya, "laughable; laughter" (CDIAL 14071). CDIAL lists Bengali hāsi, "laughter, smile".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a joke, then the Bengali for a smile.
 
 You'll want to know: বন্ধুত্ব.
 বন্ধুত্ব — bôndhutvô — "friendship".
+
+The word, taken apart.
+বন্ধুত্ব (bôndhutvô) is Sanskrit bandhu, "kinsman, friend", + the ending -tva, "-ness", both taken over whole.
 
 What you've built.
 One more word for this chapter.

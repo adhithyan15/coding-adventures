@@ -14,7 +14,8 @@ romanization: "nārs"
 concept_tag: BN-THINGS126-NARS
 prerequisites: [BN-C126-dhopa, BN-C126-mudi]
 sounds: []
-roots: []
+roots: [english-nurse]
+etymology_hook: "nārs ← English nurse"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C126-mudi]
 <!-- hl-knowledge: introduces=[BN-LEX-C126-THINGS126-05]; assesses=[] -->
 
 **নার্স** — *nārs* — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নার্স** (*nārs*) is a loan from English *nurse*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

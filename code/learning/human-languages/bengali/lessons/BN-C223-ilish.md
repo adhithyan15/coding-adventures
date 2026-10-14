@@ -14,7 +14,8 @@ romanization: "ilish"
 concept_tag: BN-JINIS223-ILISH
 prerequisites: [BN-C223-torkari, BN-C223-chingri]
 sounds: []
-roots: []
+roots: [sanskrit-illisha]
+etymology_hook: "ilish: matches Sanskrit ilīśa, a name of the fish; CDIAL lists Bengali ilsā (CDIAL 1594)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C223-chingri]
 <!-- hl-knowledge: introduces=[BN-LEX-C223-JINIS223-05]; assesses=[] -->
 
 **ইলিশ** — *ilish* — "hilsa (fish)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ইলিশ** (*ilish*) matches Sanskrit *ilīśa*, a name of this fish, beside *illiśa*; CDIAL lists the Bengali form *ilsā* (CDIAL 1594).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

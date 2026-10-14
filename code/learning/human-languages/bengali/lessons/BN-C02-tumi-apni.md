@@ -11,7 +11,8 @@ gloss: you (familiar / respectful; also তুই intimate)
 concept_tag: PRONOUN-YOU
 prerequisites: [BN-C02-naam]
 sounds: [long-ii]
-roots: [tu-second-person]
+roots: [tu-second-person, sanskrit-yushmad, sanskrit-atman]
+etymology_hook: "tumi ← Sanskrit yuṣmad 'you (plural)', with t- from tvam (CDIAL 10511); āpni ← ātman 'self' (CDIAL 1135)"
 duration:
   max_seconds: 240
 requires:
@@ -44,7 +45,7 @@ reviews_of: [BN-C02-amar-naam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-NAAM-01, BN-CONCEPT-C02-TUMIAPNI-01] -->
 
-**তুমি** (*tumi*, familiar "you") ← Sanskrit *tvam*, from PIE **\*tū** — the same
+**তুমি** (*tumi*, familiar "you") goes back to the Sanskrit plural *yuṣmad-*, "you", with its *t-* taken from singular *tvam*, "thou" (CDIAL 10511); *tvam* is from PIE **\*tū** — the same
 root as English archaic **thou**, Latin *tū*, French *tu*. Bengali grades respect
 in **three** levels:
 
@@ -54,6 +55,8 @@ in **three** levels:
 
 (This is like Hindi's *tū / tum / āp*, and finer than the two-way split of the
 Romance tracks.) For a first meeting, use **আপনি**.
+
+**আপনি** (*āpni*) is Sanskrit *ātman*, "self": CDIAL lists the respectful Bengali pronoun under it (CDIAL 1135), so the polite "you" is, at the root, "your self".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-NAAM-01, BN-CONCEPT-C02-TUMIAPNI-01] -->

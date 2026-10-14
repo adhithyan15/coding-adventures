@@ -14,7 +14,8 @@ romanization: "juddhô"
 concept_tag: BN-JINIS200-JUDDHO
 prerequisites: [BN-C199-bhul, BN-C199-niyom]
 sounds: []
-roots: []
+roots: [sanskrit-yuddha]
+etymology_hook: "juddhô ← Sanskrit yuddha 'fought; battle', a tatsama (CDIAL 10499)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C199-niyom]
 <!-- hl-knowledge: introduces=[BN-LEX-C200-JINIS200-01]; assesses=[] -->
 
 **যুদ্ধ** — *juddhô* — "a war".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**যুদ্ধ** (*juddhô*) is Sanskrit *yuddha*, "fought; battle", taken over whole as a learned loan, a tatsama (CDIAL 10499).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

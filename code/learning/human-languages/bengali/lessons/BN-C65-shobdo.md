@@ -14,7 +14,8 @@ romanization: "shôbdo"
 concept_tag: BN-SCHOOL65-SHOBDO
 prerequisites: [BN-C64-taka, BN-C64-proshno]
 sounds: []
-roots: []
+roots: [sanskrit-shabda]
+etymology_hook: "shôbdo ← Sanskrit śabda 'sound', a tatsama; CDIAL lists Old Bengali sāda 'sound, echo' (CDIAL 12298)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C64-proshno]
 <!-- hl-knowledge: introduces=[BN-LEX-C65-SCHOOL65-01]; assesses=[] -->
 
 **শব্দ** — *shôbdo* — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শব্দ** (*shôbdo*) is Sanskrit *śabda*, "articulate sound, noise", taken over whole as a learned loan, a tatsama (CDIAL 12298). The word inherited from it is Old Bengali *sāda*, "sound, echo", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

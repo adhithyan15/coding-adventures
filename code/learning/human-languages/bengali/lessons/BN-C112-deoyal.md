@@ -14,7 +14,8 @@ romanization: "deoyāl"
 concept_tag: BN-THINGS112-DEOYAL
 prerequisites: [BN-C112-bakso, BN-C112-tak]
 sounds: []
-roots: []
+roots: [persian-divar]
+etymology_hook: "deoyāl: usually traced to Persian dīvār 'wall'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C112-tak]
 <!-- hl-knowledge: introduces=[BN-LEX-C112-THINGS112-03]; assesses=[] -->
 
 **দেওয়াল** — *deoyāl* — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দেওয়াল** (*deoyāl*) is a loan, usually traced to Persian *dīvār*, "wall".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

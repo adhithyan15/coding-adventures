@@ -14,7 +14,8 @@ romanization: "renkoṭ"
 concept_tag: BN-JINIS195-RENKOT
 prerequisites: [BN-C194-jhuri, BN-C195-jket]
 sounds: []
-roots: []
+roots: [english-raincoat]
+etymology_hook: "renkoṭ ← English raincoat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C195-jket]
 <!-- hl-knowledge: introduces=[BN-LEX-C195-JINIS195-02]; assesses=[] -->
 
 **রেনকোট** — *renkoṭ* — "a raincoat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রেনকোট** (*renkoṭ*) is a loan from English *raincoat*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

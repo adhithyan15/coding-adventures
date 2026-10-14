@@ -14,7 +14,8 @@ romanization: "imel"
 concept_tag: BN-JINIS258-IMEL
 prerequisites: [BN-C257-chire, BN-C257-phuchka]
 sounds: []
-roots: []
+roots: [english-email]
+etymology_hook: "imel ← English email"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C257-phuchka]
 <!-- hl-knowledge: introduces=[BN-LEX-C258-JINIS258-01]; assesses=[] -->
 
 **ইমেল** — *imel* — "an email".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ইমেল** (*imel*) is a loan from English *email*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bhuṭṭā"
 concept_tag: BN-JINIS232-BHUTTA
 prerequisites: [BN-C232-shosa, BN-C232-mashrum]
 sounds: []
-roots: []
+roots: [sanskrit-bhrshta]
+etymology_hook: "bhuṭṭā ← Sanskrit bhṛṣṭa 'fried, roasted', a tadbhava (CDIAL 9594)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C232-mashrum]
 <!-- hl-knowledge: introduces=[BN-LEX-C232-JINIS232-03]; assesses=[] -->
 
 **ভুট্টা** — *bhuṭṭā* — "maize, a corn cob".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভুট্টা** (*bhuṭṭā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhṛṣṭa*, "fried, roasted" (CDIAL 9594). CDIAL lists Bengali *bhuṭā*, "maize cob".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

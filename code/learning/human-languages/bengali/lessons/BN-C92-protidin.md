@@ -14,7 +14,8 @@ romanization: "prôtidin"
 concept_tag: BN-TIME92-PROTIDIN
 prerequisites: [BN-C92-shonibar, BN-C92-robibar]
 sounds: []
-roots: []
+roots: [sanskrit-pratidinam]
+etymology_hook: "prôtidin ← Sanskrit pratidinam 'every day', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C92-robibar]
 <!-- hl-knowledge: introduces=[BN-LEX-C92-TIME92-03]; assesses=[] -->
 
 **প্রতিদিন** — *prôtidin* — "every day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রতিদিন** (*prôtidin*) is Sanskrit *pratidinam*, "every day", taken over whole as a learned loan, a tatsama. It is *prati*, "each", + *dina*, "day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
