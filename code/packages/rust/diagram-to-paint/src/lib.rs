@@ -10041,7 +10041,7 @@ emphasized --> direct
 
     #[test]
     fn line_hop_integer_two_support_empty_work_preserves_complete_scene() {
-        for count in [32usize, 64] {
+        for count in [32usize, 64, 256, 512, 4096, 8192] {
             for mode in [SwimlaneLineHops::Arc, SwimlaneLineHops::Gap] {
                 for exchange_axes in [false, true] {
                     for reverse in [false, true] {
