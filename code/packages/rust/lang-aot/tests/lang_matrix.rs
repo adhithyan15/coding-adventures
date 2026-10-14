@@ -23542,3 +23542,28 @@ fn algol_powered_selector_value_snapshots_run_on_every_available_standard_backen
         }
     }
 }
+
+#[test]
+fn algol_computed_name_selector_value_snapshots_run_on_every_available_standard_backend() {
+    // Exact signed results expose either stale root or a swapped selected arm.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then relay(entier(sign(left))) else relay(entier(sign(right)))) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then relay(entier(sign(left))) else relay(entier(sign(right)))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then relay(entier(sign(left))) else relay(entier(sign(right)))) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then relay(entier(sign(left))) else relay(entier(sign(right)))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end", "1"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but computed-name selector control did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
