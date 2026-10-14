@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 29578,
+    "totalLessons": 29588,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -30,13 +30,13 @@
     "scriptExposureExemptedGlyphs": 1686,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
-    "wordLessons": 25684,
-    "wordLessonsWithoutEtymologyHook": 5963,
-    "wordLessonsWithoutVisibleEtymology": 6208,
+    "wordLessons": 25690,
+    "wordLessonsWithoutEtymologyHook": 5411,
+    "wordLessonsWithoutVisibleEtymology": 5492,
     "wordLessonsWithEmptyEtymologyBlock": 372,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 2,
+    "atomsNeverRevisited": 1,
     "forwardReferences": 788,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 0,
@@ -44,7 +44,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 134,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 27759,
+    "drivableLessons": 27769,
     "drivablePercent": 94,
     "chaptersWithoutDrivablePrefix": 189,
     "chaptersWithoutDrivablePrefixByType": 182,
@@ -10452,7 +10452,10 @@
           256,
           257,
           258,
-          259
+          259,
+          260,
+          261,
+          262
         ],
         "bookChapters": [
           1,
@@ -10713,7 +10716,10 @@
           256,
           257,
           258,
-          259
+          259,
+          260,
+          261,
+          262
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -12354,9 +12360,9 @@
       {
         "language": "sanskrit",
         "status": "version-2",
-        "lessonCount": 1397,
+        "lessonCount": 1407,
         "versions": {
-          "2": 1397
+          "2": 1407
         }
       },
       {
@@ -12542,8 +12548,8 @@
       },
       {
         "language": "sanskrit",
-        "bookChapters": 259,
-        "declaredChapters": 259,
+        "bookChapters": 262,
+        "declaredChapters": 262,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -12582,8 +12588,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 5851,
-      "declaredChapters": 5851,
+      "bookChapters": 5854,
+      "declaredChapters": 5854,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 0,
@@ -12595,10 +12601,10 @@
     }
   },
   "levels": {
-    "totalLessons": 29578,
+    "totalLessons": 29588,
     "byLevel": {
       "pre-A1": 9438,
-      "A1": 18557,
+      "A1": 18567,
       "A2": 1499,
       "B1": 39,
       "B2": 17,
@@ -12880,10 +12886,10 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1397,
+        "lessonCount": 1407,
         "byLevel": {
           "pre-A1": 495,
-          "A1": 846,
+          "A1": 856,
           "A2": 56,
           "B1": 0,
           "B2": 0,
@@ -13544,8 +13550,8 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1397,
-        "measurable": 1394,
+        "lessonCount": 1407,
+        "measurable": 1404,
         "unmeasurable": 3,
         "lessonViolations": 0,
         "chapterViolations": 7
@@ -13729,7 +13735,7 @@
           "totalGlyphs": 55,
           "lessonViolations": 0,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 0
+          "lessonsWithForeignScript": 1
         },
         {
           "language": "persian",
@@ -13775,7 +13781,7 @@
           "language": "sanskrit",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 1397,
+          "lessonCount": 1407,
           "totalGlyphs": 50,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -13825,7 +13831,7 @@
       "summary": {
         "lessonViolations": 0,
         "systemViolations": 0,
-        "lessonsWithForeignScript": 216,
+        "lessonsWithForeignScript": 217,
         "maxForeignGlyphsInALesson": 26,
         "steepestLesson": null
       }
@@ -84437,7 +84443,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 12
       },
       {
         "atom": "SA-LEX-PATHATI-READ",
@@ -260700,7 +260706,7 @@
           "R1",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "SA-GRAMMAR-NUMERAL-GENDER",
@@ -267765,6 +267771,116 @@
         "revisits": 3
       },
       {
+        "atom": "SA-LEX-C243-QUAL243-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C243-sukhi",
+        "introducedAt": 1317,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C243-QUAL243-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C243-duhkhi",
+        "introducedAt": 1318,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C244-QUAL244-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C244-ucitah",
+        "introducedAt": 1319,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C244-QUAL244-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C244-anucitah",
+        "introducedAt": 1320,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C244-QUAL244-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C244-avasyakah",
+        "introducedAt": 1321,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C244-QUAL244-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C244-anyah",
+        "introducedAt": 1322,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C244-QUAL244-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C244-ekaki",
+        "introducedAt": 1323,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C245-THG245-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C245-nalika",
+        "introducedAt": 1324,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C245-THG245-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C245-takram",
+        "introducedAt": 1325,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C245-THG245-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C245-phalarasah",
+        "introducedAt": 1326,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "SA-LEX-C246-THG246-03",
         "language": "sanskrit",
         "introducedBy": "SA-C246-saktuh",
@@ -271315,7 +271431,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "SA-REL-YAH-01",
@@ -328688,6 +328804,16 @@
         "revisits": 5
       },
       {
+        "atom": "SA-GRAMMAR-C259-PLURAL-POSSESSORS-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C259-plural-possessors-practice",
+        "introducedAt": 1396,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "SA-GRAMMAR-CORRELATIVE-01",
         "language": "sanskrit",
         "introducedBy": "SA-C53-yah-sah",
@@ -328916,106 +329042,6 @@
           "R3"
         ],
         "revisits": 5
-      },
-      {
-        "atom": "SA-LEX-C243-QUAL243-04",
-        "language": "sanskrit",
-        "introducedBy": "SA-C243-sukhi",
-        "introducedAt": 1317,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C243-QUAL243-05",
-        "language": "sanskrit",
-        "introducedBy": "SA-C243-duhkhi",
-        "introducedAt": 1318,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C244-QUAL244-01",
-        "language": "sanskrit",
-        "introducedBy": "SA-C244-ucitah",
-        "introducedAt": 1319,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C244-QUAL244-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C244-anucitah",
-        "introducedAt": 1320,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C244-QUAL244-03",
-        "language": "sanskrit",
-        "introducedBy": "SA-C244-avasyakah",
-        "introducedAt": 1321,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C244-QUAL244-04",
-        "language": "sanskrit",
-        "introducedBy": "SA-C244-anyah",
-        "introducedAt": 1322,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C244-QUAL244-05",
-        "language": "sanskrit",
-        "introducedBy": "SA-C244-ekaki",
-        "introducedAt": 1323,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C245-THG245-01",
-        "language": "sanskrit",
-        "introducedBy": "SA-C245-nalika",
-        "introducedAt": 1324,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C245-THG245-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C245-takram",
-        "introducedAt": 1325,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C245-THG245-03",
-        "language": "sanskrit",
-        "introducedBy": "SA-C245-phalarasah",
-        "introducedAt": 1326,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
       },
       {
         "atom": "SA-LEX-C245-THG245-04",
@@ -329384,6 +329410,106 @@
         "introducedAt": 1372,
         "missed": [
           "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C255-SCH255-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C255-jnanam",
+        "introducedAt": 1377,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C255-SCH255-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C255-abhyasah",
+        "introducedAt": 1378,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C255-SCH255-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C255-grhakaryam",
+        "introducedAt": 1379,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C255-SCH255-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C255-uttaram",
+        "introducedAt": 1380,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C256-WRK256-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C256-prasiksanam",
+        "introducedAt": 1381,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C256-WRK256-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C256-sammelanam",
+        "introducedAt": 1382,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C256-WRK256-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C256-nirnayah",
+        "introducedAt": 1383,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C256-WRK256-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C256-vicarah",
+        "introducedAt": 1384,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C256-WRK256-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C256-matam",
+        "introducedAt": 1385,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C257-TRV257-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C257-simantah",
+        "introducedAt": 1386,
+        "missed": [
+          "R3"
         ],
         "revisits": 3
       },
@@ -341177,12 +341303,12 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1397,
+        "lessonCount": 1407,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 1387,
-        "atomsNeverRevisited": 1,
+        "atomsTaught": 1396,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 0
       },
       {
@@ -341231,14 +341357,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 29966,
-      "atomsNeverRevisited": 2,
+      "atomsTaught": 29975,
+      "atomsNeverRevisited": 1,
       "neverRevisitedPercent": 0,
       "missedByWindow": {
-        "R1": 1553,
+        "R1": 1554,
         "R2": 19842,
-        "R3": 15987,
-        "R4": 24355
+        "R3": 15997,
+        "R4": 24365
       },
       "forwardReferences": 788
     }
@@ -341417,7 +341543,7 @@
       {
         "language": "sanskrit",
         "script": "devanagari",
-        "lessonCount": 1397,
+        "lessonCount": 1407,
         "scriptLessons": 76,
         "taughtGlyphs": 50,
         "shownGlyphs": 50,
@@ -341588,9 +341714,9 @@
       {
         "language": "marwadi",
         "wordLessons": 718,
-        "wordLessonsWithoutEtymologyHook": 552,
-        "wordLessonsWithoutVisibleEtymology": 716,
-        "wordLessonsWithoutAnyEtymology": 550,
+        "wordLessonsWithoutEtymologyHook": 0,
+        "wordLessonsWithoutVisibleEtymology": 0,
+        "wordLessonsWithoutAnyEtymology": 0,
         "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
@@ -341627,7 +341753,7 @@
       },
       {
         "language": "sanskrit",
-        "wordLessons": 1229,
+        "wordLessons": 1235,
         "wordLessonsWithoutEtymologyHook": 1200,
         "wordLessonsWithoutVisibleEtymology": 1099,
         "wordLessonsWithoutAnyEtymology": 1098,
@@ -341667,13 +341793,13 @@
       }
     ],
     "summary": {
-      "wordLessons": 25684,
-      "wordLessonsWithoutEtymologyHook": 5963,
-      "wordLessonsWithoutVisibleEtymology": 6208,
-      "wordLessonsWithoutAnyEtymology": 5843,
+      "wordLessons": 25690,
+      "wordLessonsWithoutEtymologyHook": 5411,
+      "wordLessonsWithoutVisibleEtymology": 5492,
+      "wordLessonsWithoutAnyEtymology": 5293,
       "wordLessonsWithEmptyEtymologyBlock": 372,
-      "hookPercent": 76,
-      "visiblePercent": 75
+      "hookPercent": 78,
+      "visiblePercent": 78
     }
   },
   "writingStages": {
@@ -352938,7 +353064,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-W01-raam",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Writing — from copy to memory",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -352974,7 +353100,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C02-aabhaar",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Writing — from guided to delayed copy",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353010,7 +353136,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C03-haan-saa",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Writing — guided, then delayed",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353091,7 +353217,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C05-mharo",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353109,7 +353235,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C05-naam",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353127,7 +353253,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C05-answer",
-            "blockIndex": 3,
+            "blockIndex": 4,
             "blockTitle": "Wrap-up Recall",
             "stage": "dictation-transcription",
             "level": "pre-A1",
@@ -353145,7 +353271,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C05-tharo",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353172,7 +353298,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C05-kain",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353190,7 +353316,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C06-question",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353217,7 +353343,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C06-answer",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353235,7 +353361,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C08-maa",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353244,7 +353370,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C08-baap",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353253,7 +353379,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C08-bhai",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353262,7 +353388,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C08-bahan",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "dictation-transcription",
             "level": "pre-A1",
@@ -353271,7 +353397,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C08-dada",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353280,7 +353406,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C08-dadi",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "dictation-transcription",
             "level": "pre-A1",
@@ -353289,7 +353415,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C08-parivaar",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353298,7 +353424,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C09-nana",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353307,7 +353433,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C09-nani",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353325,7 +353451,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C09-pati",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353334,7 +353460,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C09-patni",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353352,7 +353478,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C09-bachcha",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353370,7 +353496,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C10-bajar",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353388,7 +353514,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C10-ghar",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353397,7 +353523,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C10-mandir",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353406,7 +353532,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C10-haath",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353415,7 +353541,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C10-paisa",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353424,7 +353550,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C11-hawa",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353433,7 +353559,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C11-baadal",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353442,7 +353568,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C11-barsaat",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353460,7 +353586,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C12-mausam",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353478,7 +353604,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C12-garmi",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353496,7 +353622,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C12-thandi",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353514,7 +353640,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C13-dukan",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353523,7 +353649,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C13-vastu",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353532,7 +353658,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C13-bhaav",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353541,7 +353667,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C14-sasta",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353550,7 +353676,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C14-samaan",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353568,7 +353694,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C15-kapda",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353577,7 +353703,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C15-mahango",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353595,7 +353721,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C16-bas",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353604,7 +353730,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C16-gaadi",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353613,7 +353739,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C16-thela",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353640,7 +353766,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C17-riksha",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353649,7 +353775,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C17-ghodo",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353667,7 +353793,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C18-daal",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353676,7 +353802,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C18-ghee",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353685,7 +353811,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C18-sabji",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353712,7 +353838,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C19-roti",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353721,7 +353847,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C19-baati",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353739,7 +353865,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C20-churma",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353757,7 +353883,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C20-chaay",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353775,7 +353901,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C21-ye",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353793,7 +353919,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C21-dikhavo",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353802,7 +353928,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C21-show-request",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353820,7 +353946,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C22-kitno",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353829,7 +353955,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C22-price-question",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353838,7 +353964,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C22-total-question",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353856,7 +353982,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C23-ghano",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353865,7 +353991,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C23-price-answer",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353874,7 +354000,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C23-thodu",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353883,7 +354009,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C23-karo",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353892,7 +354018,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C23-bargain-request",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353910,7 +354036,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C24-lo",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353919,7 +354045,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C24-pay",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353928,7 +354054,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C24-do",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353937,7 +354063,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C24-aakhri",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353946,7 +354072,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C24-final-price",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353964,7 +354090,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C25-lavo",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -353973,7 +354099,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C25-bring-request",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354018,7 +354144,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C32-ek",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354027,7 +354153,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C32-do-two",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354036,7 +354162,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C32-teen",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354045,7 +354171,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C32-chaar",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354054,7 +354180,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C32-paanch",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354081,7 +354207,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C33-chha",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354090,7 +354216,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C33-saat",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354099,7 +354225,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C33-aath",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354108,7 +354234,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C33-no-nine",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354117,7 +354243,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C33-das",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354144,7 +354270,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C34-bees",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354153,7 +354279,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C34-so",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "dictation-transcription",
             "level": "pre-A1",
@@ -354162,7 +354288,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C34-price-number",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354171,7 +354297,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C34-counter-offer",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354315,7 +354441,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C37-igyaara",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "guided-copy",
             "level": "A1",
@@ -354324,7 +354450,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C37-baara",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354333,7 +354459,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C37-tera",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354342,7 +354468,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C37-chauda",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354351,7 +354477,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C37-pandara",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354378,7 +354504,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C38-sola",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "guided-copy",
             "level": "A1",
@@ -354396,7 +354522,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C38-satara",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354405,7 +354531,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C38-athara",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -354423,7 +354549,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C38-ughanis",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "guided-copy",
             "level": "A1",
@@ -354441,7 +354567,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C39-koni",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "guided-copy",
             "level": "pre-A1",
@@ -354524,7 +354650,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-W01-raam",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Writing — from copy to memory",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354560,7 +354686,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C02-aabhaar",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Writing — from guided to delayed copy",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354596,7 +354722,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C03-haan-saa",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Writing — guided, then delayed",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354677,7 +354803,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C05-mharo",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354695,7 +354821,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C05-naam",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354713,7 +354839,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C05-answer",
-            "blockIndex": 3,
+            "blockIndex": 4,
             "blockTitle": "Wrap-up Recall",
             "stage": "dictation-transcription",
             "level": "pre-A1",
@@ -354731,7 +354857,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C05-tharo",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354758,7 +354884,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C05-kain",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354776,7 +354902,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C06-question",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354803,7 +354929,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C06-answer",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354821,7 +354947,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C08-maa",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354830,7 +354956,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C08-baap",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354839,7 +354965,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C08-bhai",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354848,7 +354974,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C08-bahan",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "dictation-transcription",
             "level": "pre-A1",
@@ -354857,7 +354983,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C08-dada",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354866,7 +354992,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C08-dadi",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "dictation-transcription",
             "level": "pre-A1",
@@ -354875,7 +355001,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C08-parivaar",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354884,7 +355010,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C09-nana",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354893,7 +355019,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C09-nani",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354911,7 +355037,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C09-pati",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354920,7 +355046,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C09-patni",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354938,7 +355064,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C09-bachcha",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354956,7 +355082,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C10-bajar",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354974,7 +355100,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C10-ghar",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354983,7 +355109,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C10-mandir",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -354992,7 +355118,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C10-haath",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355001,7 +355127,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C10-paisa",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355010,7 +355136,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C11-hawa",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355019,7 +355145,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C11-baadal",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355028,7 +355154,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C11-barsaat",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355046,7 +355172,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C12-mausam",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355064,7 +355190,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C12-garmi",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355082,7 +355208,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C12-thandi",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355100,7 +355226,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C13-dukan",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355109,7 +355235,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C13-vastu",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355118,7 +355244,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C13-bhaav",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355127,7 +355253,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C14-sasta",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355136,7 +355262,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C14-samaan",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355154,7 +355280,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C15-kapda",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355163,7 +355289,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C15-mahango",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355181,7 +355307,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C16-bas",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355190,7 +355316,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C16-gaadi",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355199,7 +355325,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C16-thela",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355226,7 +355352,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C17-riksha",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355235,7 +355361,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C17-ghodo",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355253,7 +355379,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C18-daal",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355262,7 +355388,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C18-ghee",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355271,7 +355397,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C18-sabji",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355298,7 +355424,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C19-roti",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355307,7 +355433,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C19-baati",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355325,7 +355451,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C20-churma",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355343,7 +355469,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C20-chaay",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355361,7 +355487,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C21-ye",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355379,7 +355505,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C21-dikhavo",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355388,7 +355514,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C21-show-request",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355406,7 +355532,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C22-kitno",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355415,7 +355541,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C22-price-question",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355424,7 +355550,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C22-total-question",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355442,7 +355568,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C23-ghano",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355451,7 +355577,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C23-price-answer",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355460,7 +355586,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C23-thodu",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355469,7 +355595,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C23-karo",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355478,7 +355604,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C23-bargain-request",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355496,7 +355622,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C24-lo",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355505,7 +355631,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C24-pay",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355514,7 +355640,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C24-do",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355523,7 +355649,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C24-aakhri",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355532,7 +355658,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C24-final-price",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355550,7 +355676,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C25-lavo",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355559,7 +355685,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C25-bring-request",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355604,7 +355730,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C32-ek",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355613,7 +355739,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C32-do-two",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355622,7 +355748,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C32-teen",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355631,7 +355757,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C32-chaar",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355640,7 +355766,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C32-paanch",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355667,7 +355793,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C33-chha",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355676,7 +355802,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C33-saat",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355685,7 +355811,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C33-aath",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355694,7 +355820,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C33-no-nine",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355703,7 +355829,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C33-das",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355730,7 +355856,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C34-bees",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355739,7 +355865,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C34-so",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "dictation-transcription",
             "level": "pre-A1",
@@ -355748,7 +355874,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C34-price-number",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355757,7 +355883,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C34-counter-offer",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "pre-A1",
@@ -355901,7 +356027,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C37-igyaara",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "guided-copy",
             "level": "A1",
@@ -355910,7 +356036,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C37-baara",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355919,7 +356045,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C37-tera",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355928,7 +356054,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C37-chauda",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355937,7 +356063,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C37-pandara",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355964,7 +356090,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C38-sola",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "guided-copy",
             "level": "A1",
@@ -355982,7 +356108,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C38-satara",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -355991,7 +356117,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C38-athara",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "delayed-copy",
             "level": "A1",
@@ -356009,7 +356135,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C38-ughanis",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "guided-copy",
             "level": "A1",
@@ -356027,7 +356153,7 @@
           {
             "language": "marwadi",
             "lessonId": "MW-C39-koni",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "blockTitle": "Guided Practice",
             "stage": "guided-copy",
             "level": "pre-A1",
@@ -363369,8 +363495,8 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1397,
-        "atomMeasurableLessons": 1394,
+        "lessonCount": 1407,
+        "atomMeasurableLessons": 1404,
         "atomMeasurementBlindLessons": 3,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -363385,14 +363511,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 1387,
-        "atomsNeverRevisited": 1,
-        "reinforcementWindowMisses": 2889,
+        "atomsTaught": 1396,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 2910,
         "reinforcementMissesByWindow": {
-          "R1": 69,
+          "R1": 70,
           "R2": 822,
-          "R3": 764,
-          "R4": 1234
+          "R3": 774,
+          "R4": 1244
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 98,
@@ -363409,7 +363535,7 @@
           {
             "language": "sanskrit",
             "kind": "reinforcement",
-            "count": 2889,
+            "count": 2910,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -363967,16 +364093,16 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "urdu",
+        "language": "sanskrit",
         "kind": "reinforcement",
-        "count": 2890,
+        "count": 2910,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "sanskrit",
+        "language": "urdu",
         "kind": "reinforcement",
-        "count": 2889,
+        "count": 2890,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -364573,8 +364699,8 @@
           },
           {
             "criterion": "vocabulary",
-            "detail": "teaches 1228 distinct headwords at or below B1, against 2500",
-            "shortfall": 1272
+            "detail": "teaches 1234 distinct headwords at or below B1, against 2500",
+            "shortfall": 1266
           },
           {
             "criterion": "verb-vocabulary",
@@ -364582,7 +364708,7 @@
             "shortfall": 83
           }
         ],
-        "vocabulary": 1228
+        "vocabulary": 1234
       },
       {
         "language": "spanish",
@@ -364672,11 +364798,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 29578,
-    "voice": 27189,
+    "totalLessons": 29588,
+    "voice": 27199,
     "sight": 896,
     "pen": 1493,
-    "coreVoice": 27759,
+    "coreVoice": 27769,
     "lessonsWithWritingSegments": 958,
     "drivablePercent": 94,
     "tracks": [
@@ -428991,13 +429117,13 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1397,
-        "voice": 1284,
+        "lessonCount": 1407,
+        "voice": 1294,
         "sight": 36,
         "pen": 77,
-        "coreVoice": 1306,
-        "drivablePercent": 93,
-        "drivablePrefixTotal": 1219,
+        "coreVoice": 1316,
+        "drivablePercent": 94,
+        "drivablePrefixTotal": 1229,
         "chapters": [
           {
             "language": "sanskrit",
@@ -432937,6 +433063,51 @@
               "voice"
             ],
             "drivablePrefix": 3,
+            "firstNonVoiceLesson": null,
+            "unstartable": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 260,
+            "lessonCount": 3,
+            "voice": 3,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 3,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null,
+            "unstartable": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 261,
+            "lessonCount": 3,
+            "voice": 3,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 3,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null,
+            "unstartable": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 262,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
             "firstNonVoiceLesson": null,
             "unstartable": null
           }
@@ -454240,20 +454411,20 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 16550,
-    "underspent": 15630,
-    "neverSpent": 12260,
+    "roots": 17105,
+    "underspent": 16168,
+    "neverSpent": 12721,
     "payoffDistribution": {
-      "0": 12260,
-      "1": 2412,
-      "2": 958,
-      "3": 446,
-      "4": 219,
-      "5": 107,
-      "6": 50,
+      "0": 12721,
+      "1": 2482,
+      "2": 965,
+      "3": 458,
+      "4": 221,
+      "5": 108,
+      "6": 51,
       "7": 35,
       "8": 12,
-      "9": 9,
+      "9": 10,
       "10": 8,
       "11": 3,
       "12": 6,
@@ -454274,10 +454445,10 @@
       "39": 1,
       "43": 1
     },
-    "underspentPercent": 94
+    "underspentPercent": 95
   },
   "infoDump": {
-    "lessons": 29578,
+    "lessons": 29588,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -454285,11 +454456,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 29578,
-    "measuredLessons": 25186,
-    "idiomMeasuredLessons": 25186,
-    "senseMeasuredLessons": 25187,
-    "cultureClaimMeasuredLessons": 25186,
+    "lessons": 29588,
+    "measuredLessons": 25196,
+    "idiomMeasuredLessons": 25196,
+    "senseMeasuredLessons": 25197,
+    "cultureClaimMeasuredLessons": 25196,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -454298,18 +454469,18 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 29061,
-    "usesBeforeIntroduction": 52566,
-    "technicalUsesBeforeIntroduction": 8460,
-    "technicalLessons": 5413,
+    "lessonsUsingTerms": 29098,
+    "usesBeforeIntroduction": 53199,
+    "technicalUsesBeforeIntroduction": 8513,
+    "technicalLessons": 5459,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 3137
+        "lessons": 3169
       },
       {
         "term": "noun",
-        "lessons": 1721
+        "lessons": 1728
       },
       {
         "term": "adjective",
@@ -454317,26 +454488,26 @@
       },
       {
         "term": "participle",
-        "lessons": 369
+        "lessons": 370
       },
       {
         "term": "case",
-        "lessons": 306
+        "lessons": 307
       },
       {
-        "term": "voice",
-        "lessons": 288
+        "term": "pronoun",
+        "lessons": 294
       }
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 29578,
+    "lessonsScanned": 29588,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 5920,
-    "mainCharacters": 152,
+    "filesScanned": 5923,
+    "mainCharacters": 153,
     "scriptCharacters": 829,
     "gaps": 0
   }
