@@ -45,7 +45,13 @@ fn identity_declaration_guard_checks_exact_tree_signature_and_resolved_identity(
     let identity = compiler.resolve_procedure_identity("relay");
     let sig = compiler.proc_sigs[&identity].clone();
     assert!(compiler.is_read_once_real_name_identity(&identity, &sig), "{decl:#?}");
-    for mutation in 0..5 {
+    fn find_mut<'a>(node: &'a mut GrammarASTNode, rule: &str) -> Option<&'a mut GrammarASTNode> {
+        if node.rule_name == rule { return Some(node); }
+        node.children.iter_mut().find_map(|child| match child {
+            ASTNodeOrToken::Node(child) => find_mut(child, rule), _ => None,
+        })
+    }
+    for mutation in 0..9 {
         let mut damaged = decl.clone();
         match mutation {
             0 => damaged.children.push(ASTNodeOrToken::Node(first_direct_node(&decl, "proc_body").unwrap().clone())),
@@ -58,7 +64,18 @@ fn identity_declaration_guard_checks_exact_tree_signature_and_resolved_identity(
                 let ASTNodeOrToken::Node(body) = damaged.children.iter_mut().find(|child| matches!(child,ASTNodeOrToken::Node(n) if n.rule_name=="proc_body")).unwrap() else { unreachable!() };
                 body.children.clear();
             }
-            _ => damaged.children.retain(|child| !matches!(child,ASTNodeOrToken::Node(n) if n.rule_name=="formal_params")),
+            4 => damaged.children.retain(|child| !matches!(child,ASTNodeOrToken::Node(n) if n.rule_name=="formal_params")),
+            5 | 6 => find_mut(&mut damaged, "expr_eqv").unwrap().rule_name =
+                if mutation == 5 { "proc_call" } else { "unknown_wrapper" }.into(),
+            7 => {
+                let variable = find_mut(&mut damaged, "expression").and_then(|rhs| find_mut(rhs, "variable")).unwrap();
+                variable.children.push(variable.children[0].clone());
+            }
+            _ => {
+                let wrapper = find_mut(&mut damaged, "expr_eqv").unwrap();
+                let ASTNodeOrToken::Node(child) = wrapper.children.remove(0) else { unreachable!() };
+                *wrapper = child;
+            }
         }
         compiler.proc_decls.insert(identity.clone(), damaged);
         assert!(!compiler.is_read_once_real_name_identity(&identity, &sig), "damaged tree {mutation}");
