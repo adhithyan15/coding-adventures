@@ -141,3 +141,26 @@ assigned Type/specific formatter refusal. Five-layer source accepts all four.
 This supplies real six-layer source semantic evidence for assignment only;
 the separately constructed AST supplies the compiler evidence for both consumers.
 No production limits or policy changed. Full acceptance and Miri remain pending.
+
+
+## Failure callback precedes cooperative stop in worker fixtures
+
+Actual87820 EXIT1/Cargo101 at894 reports4608PASS/1FAIL/176targets, two existing
+ignores. The real isolated WinUI build/launch/complete interaction passes.
+Only chief_synology_pairing_worker_stops_and_propagates_clock_failure fails:
+it sleeps20ms before stop_and_join and can stop a correctly scheduled worker
+before its first failed tick. Preserve this failure and the WinUI acceptance
+with their exact source frame; the whole runner remains incomplete.
+
+The same fixed20ms test pattern exists in seven daemon worker failure fixtures
+(automation, Hue pairing, Axis, ONVIF, Reolink, ZoneMinder, Synology). All use
+the callback's Release store and Acquire observation. Replace only these seven
+sleeps with a test-only bounded five-second callback wait, preserving every
+specific error variant, cooperative stop/join and failure observation assertion.
+The existing discovery fixture already waits on its callback with that deadline.
+No production worker interval, lifecycle, clock/error handling or capabilities
+change. Missing callbacks must still fail within five seconds; do not serialise
+or skip the whole suite to hide the race. Run full daemon and strict lint plus
+the remaining current-main/consumer/native roster; retain exact input equality
+for previously passing other domains if avoiding redundant WinUI builds.
+Full final-source Miri DEFERRED/PENDING; frozen source/run/inputs untouched.
