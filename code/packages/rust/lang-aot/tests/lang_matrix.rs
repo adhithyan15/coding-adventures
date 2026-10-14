@@ -23876,3 +23876,35 @@ fn algol_sign_wrapped_computed_name_value_snapshots_with_normal_exits() {
         assert!(completed > 0, "sign native program requires an actual completed backend: {source}");
     }
 }
+
+#[test]
+fn algol_entier_nested_name_actual_both_branches_complete_normally() {
+    // Eight owned sources keep the result convention at default zero while
+    // proving both outcomes, either captured name root, and direct/saved output.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); output(if choose(left) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right))))) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(left) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(saved) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); output(if choose(left) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(left) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(saved) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); output(if choose(right) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right))))) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(right) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(saved) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); output(if choose(right) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(right) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(saved) end", "1"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        let mut completed = 0;
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but nested entier name-actual control did not run: {source}");
+                continue;
+            };
+            if let RunResult::Completed { code, stdout } = &result {
+                eprintln!("entier native observed backend={backend:?} expected={expected:?} code={code:?} stdout={stdout:?} source={source:?}");
+            }
+            assert_sextuple_native_completed(backend, &program, result);
+            completed += 1;
+        }
+        assert!(completed > 0, "each entier source needs an actual normally completed backend: {source}");
+    }
+}
