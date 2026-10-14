@@ -77,3 +77,31 @@ Replace only the oversized fixture arithmetic: five standard layers wrap
 entier(sign(left))+82.0 (sqrt(abs(...)) gives9 at left=-2.25), while the right
 arm wraps entier(sign(right)) (gives1 at right=3.5). Retain both root dependencies,
 the complete eight-cell consumer/selector matrix and exact9/1 native expectations.
+
+
+## Exact depth boundary and Windows profile isolation
+
+Native validator9455 returns actualEXIT1/Cargo101 at85e2e2ee: full nonLANG55
+reports4606PASS/1FAIL across176targets, plus two existing ignores. The generated
+Venture WinUI app builds and launches but reports that its bookmark catalog
+did not receive the durable entry. Its host requires Bookmarks (1), while the
+test starts the app without VENTURE_BOOKMARKS_PATH and therefore reads/writes
+the persistent default user catalog. Multiple prior acceptance entries remain
+there. Preserve that profile and the failed output/log; use the existing
+profile override with output/bookmarks.json on this child only. Keep the entire
+real build/launch/interaction assertion set; do not use interactive-skip mode.
+Repeat the complete failing target and affected cone on the final source.
+
+The scoped85 review is PASS/no security findings, with a test-quality limit:
+upstream's sixth-layer negative wraps a bare real local, already an unsafe
+name actual. Add a paired same-root control around entier(sign(local)): five
+standard abs layers must compile with exactly one real formatter; the sixth
+must produce the specific semantic formatter refusal, never parser rejection.
+Cover true/false and direct/assigned consumers. Preserve every original test
+and all production classifier/parser caps. If source parsing cannot reach six,
+record that failure and separate parsed-AST classifier evidence explicitly;
+do not manufacture a full-program depth result or raise the parser cap.
+
+Full pending native/strict/current-main delivery/hosted/security gates remain
+pending. Full final-source Miri DEFERRED/PENDING; frozen497inputs/run/checkout/
+receipts/target remain untouched and unpolled. The full objective is OPEN.
