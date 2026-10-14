@@ -22,3 +22,10 @@ overwrite it to make a retry succeed.
 A fresh checkout regenerates an ignored Cargo.lock. Preserve that generated
 file separately and copy the tested checkout's exact lock into the new checkout
 before comparing execution, keeping the original tested inputs untouched.
+
+The compiling retry measured17280 visits against3240, but its separate full-layout
+oracle also failed because both old layouts contain NaN self-loop endpoints and
+NaN is unequal to itself. Prove each corresponding endpoint's exact floating
+bits first. Replace only already-proven NaNs in test-owned copies for the full
+struct comparison; unexpected NaNs, changed payloads and other fields still fail.
+Preserve the original one-pass/two-fail receipt rather than relabeling it.

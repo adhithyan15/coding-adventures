@@ -1193,7 +1193,25 @@ mod tests {
                     expected_input.lanes = reference_optimize_swimlane_lane_order(&diagram).into_iter().cloned().collect();
                     expected_input.automatic_lane_ordering = false;
                     let mut expected = layout_swimlane(&expected_input); expected.automatic_lane_ordering = true;
-                    assert_eq!(layout_swimlane(&diagram), expected, "{direction:?}, hops={hops}, pairs={pairs:?}");
+                    let mut actual = layout_swimlane(&diagram);
+                    // Existing self-loop routing produces NaN endpoint coordinates.
+                    // NaN != NaN, so prove every endpoint's bits first, then replace
+                    // only those already-proven NaNs for the complete struct check.
+                    // An unexpected NaN, changed payload or any other field fails.
+                    for (actual_edge, expected_edge) in actual.edges.iter_mut().zip(expected.edges.iter_mut()) {
+                        for (actual_coordinate, expected_coordinate) in [
+                            (&mut actual_edge.from.x, &mut expected_edge.from.x),
+                            (&mut actual_edge.from.y, &mut expected_edge.from.y),
+                            (&mut actual_edge.to.x, &mut expected_edge.to.x),
+                            (&mut actual_edge.to.y, &mut expected_edge.to.y),
+                        ] {
+                            assert_eq!(actual_coordinate.to_bits(), expected_coordinate.to_bits());
+                            if expected_coordinate.is_nan() {
+                                *actual_coordinate = 0.0; *expected_coordinate = 0.0;
+                            }
+                        }
+                    }
+                    assert_eq!(actual, expected, "{direction:?}, hops={hops}, pairs={pairs:?}");
                 }
             }
         }

@@ -85,3 +85,12 @@ E0382 in its test fixture, before any tests. That compile receipt is preserved
 and is not the counted red. Clone the non-Copy direction and retry the same bound.
 The fresh ignored lock is archived; the original tested checkout's exact lock
 is copied into the new checkout without changing the original inputs.
+
+Compiling candidate8dae97b1 observes the intended17280 visits against3240, but
+validator42897 returns actualEXIT1/Cargo101 with1PASS/2FAIL: the other failure is
+the fixture's PartialEq comparison of matching pre-existing self-loop NaNs.
+Prove all route endpoint coordinate bits, then compare complete layouts with
+only already-proven NaNs normalized in test-owned copies. Unexpected NaNs and
+all other fields remain checked. This preserves source behavior and does not
+claim finite self-loop geometry acceptance; that pre-existing route issue is
+outside this ordering resource repair. Retain the original failed receipt.
