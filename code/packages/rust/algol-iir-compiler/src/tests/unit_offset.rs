@@ -71,16 +71,34 @@ fn conditional_unit_fronts_preserve_both_branches_with_bounded_discovery() {
 }
 
 #[test]
-fn conditional_front_second_units_and_unsafe_roots_keep_typed_refusals() {
+fn conditional_front_second_and_nonunit_offsets_keep_typed_refusals() {
     for condition in ["true","false"] {
         for expression in [
             "entier((if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1)) + 1)",
             "entier(if choose() then (entier(sign(left)) + 2) else (entier(sign(right)) + 1))",
             "entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 2))",
-            "entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + unit))",
         ] {
             let source=format!("begin boolean procedure choose; choose := {condition}; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := {expression}; output(saved) end");
             assert!(matches!(compile_source(&source,"conditional_unit_refusal"),Err(CompileError::Type(message)) if message.contains("cannot print a real value")),"condition={condition}: {source}");
+        }
+    }
+}
+
+#[test]
+fn conditional_front_condition_name_writes_refuse_and_value_writes_preserve_proof() {
+    for root in ["left","right"] {
+        for condition in ["true","false"] {
+            for value_parameter in [false,true] {
+                let mode=if value_parameter {"value t; "} else {""};
+                let source=format!("begin boolean procedure choose(t); {mode}real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := relay(entier(if choose({root}) then (entier(sign(left)) + 1) else (entier(sign(right)) + 1))); output(saved) end");
+                let result=compile_source(&source,"conditional_unit_effect");
+                if value_parameter {
+                    let module=result.unwrap_or_else(|e|panic!("value condition root={root} result={condition}: {e}"));
+                    assert_eq!(module.get_function("main").unwrap().instructions.iter().filter(|i|i.op=="call" && i.srcs.first().and_then(Operand::as_var)==Some("__basic_print_real")).count(),1);
+                } else {
+                    assert!(matches!(result,Err(CompileError::Type(message)) if message.contains("cannot print a real value")),"name condition root={root} result={condition}: {source}");
+                }
+            }
         }
     }
 }

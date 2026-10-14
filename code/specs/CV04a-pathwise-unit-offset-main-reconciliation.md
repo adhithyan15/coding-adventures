@@ -59,3 +59,19 @@ an overbroad test assumption about a variable offset through generic relay
 formatting. Keep the variable-offset typed refusal at the direct consumer,
 while retaining every incoming relay/non-unit negative unchanged. Generic
 formatter proof composition remains OPEN and is not fixed by this slice.
+
+Actual c6 diagnostics recognize the conditional and admit both roots before
+lowering, but by-name capture promotes them before the assignment post-check.
+The four existing consumers intentionally use distinct predicates: two strict
+selector-root guards, one selector-value guard, one runtime-assignment guard
+which already admits tracked global slots. Pass each consumer's existing
+predicate into the new conditional-front helper and require it for BOTH roots;
+retain its representative-root post-check. Do not restore stale root metadata
+or reuse a pre-condition proof bit. Add name-condition write negatives and
+value-condition positives for each root and outcome before production.
+
+The variable-offset conditional is already independently admitted even at the
+direct consumer, outside this helper's bounded rule; keep original standalone
+variable refusals and all producer non-unit/second-unit refusals. Replace that
+unjustified new universal-refusal fixture with the actual alias-effect control.
+Generic conditional/range proof composition remains explicitly OPEN.
