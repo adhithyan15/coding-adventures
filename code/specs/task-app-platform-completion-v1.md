@@ -257,8 +257,6 @@ rather than letting them read as silent gaps.
     Components, and Paint remain CI-only, while signing, notarization, and
     installers remain tracked by #13977.
 
-### Tier C — reach, stated honestly
-
 **Next release checkpoint — P1 [#17469](https://github.com/adhithyan15/coding-adventures/issues/17469):
 publish `task-app-v0.5.5`.** The native lifecycle gates are complete; this
 compatible patch rolls forward the Qt shadow reporting fix (#17386) and XAML
@@ -266,6 +264,8 @@ seven-column calendar lowering (#17394). Validate the preparation PR through
 the existing release payload matrix, then publish from main and audit the
 immutable tag, source manifest, checksums, and coverage notes. Static HTML,
 Web Components, and Paint remain CI-only; signing and installers remain #13977.
+
+### Tier C — reach, stated honestly
 
 14. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,
     #16041, and #16144.** The generated app carries the real runtime, launches
