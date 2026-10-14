@@ -38,3 +38,9 @@ the exact committed source, reapply only the new test, and verify the source
 inventory; the original validated checkout remained untouched. Use saved scripts
 with actual newline literals or apply_patch for source changes. Validate content
 and arguments before opening a destination for writing.
+
+The final documentation helper committed its correction, then a default-locale
+read failed on UTF8 backlog bytes under Windows cp1252 before any issue PATCH.
+Use explicit UTF8 for every source read. On retry, verify the exact committed
+documentation state and resume finalization without creating a second commit
+or overwriting the original failed-stage evidence.
