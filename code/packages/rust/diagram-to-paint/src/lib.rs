@@ -9722,7 +9722,7 @@ mod tests {
             for (node_spacing, rank_spacing, padding) in [(20.0, 30.0, 40.0), (0.0, 0.0, 0.0)] {
                 let source = format!("---\nconfig:\n  flowchart:\n    nodeSpacing: {node_spacing}\n    rankSpacing: {rank_spacing}\n    diagramPadding: {padding}\n---\n{body}");
                 let parsed = mermaid_parser::parse_swimlane(&source).expect("ordinary spacing parses");
-                let config = diagram_ir::SwimlaneFlowchartConfig { node_spacing: Some(node_spacing), rank_spacing: Some(rank_spacing), diagram_padding: Some(padding), wrapping_width: None, padding: None, title_top_margin: None, curve: None };
+                let config = diagram_ir::SwimlaneFlowchartConfig { node_spacing: Some(node_spacing), rank_spacing: Some(rank_spacing), diagram_padding: Some(padding), wrapping_width: None, padding: None, title_top_margin: None, subgraph_title_margin_top: None, subgraph_title_margin_bottom: None, curve: None };
                 assert_eq!(parsed.flowchart_config, config);
                 let mut normalized = parsed.clone(); normalized.flowchart_config = Default::default();
                 assert_eq!(normalized, bare, "every non-config parser field remains exact");
@@ -9778,7 +9778,7 @@ mod tests {
         let bare=mermaid_parser::parse_swimlane(&body).unwrap();
         let source=format!("---\nconfig:\n  flowchart:\n    nodeSpacing: 96\n    rankSpacing: 28\n    diagramPadding: 32\n---\n%%{{init: {{\"flowchart\": {{\"nodeSpacing\": 72, \"rankSpacing\": 24, \"diagramPadding\": 18}}}}}}%%\n{body}");
         let mut parsed=mermaid_parser::parse_swimlane(&source).unwrap();
-        assert_eq!(parsed.flowchart_config,diagram_ir::SwimlaneFlowchartConfig{node_spacing:Some(72.0),rank_spacing:Some(24.0),diagram_padding:Some(18.0),wrapping_width:None,padding:None,title_top_margin:None,curve:None});
+        assert_eq!(parsed.flowchart_config,diagram_ir::SwimlaneFlowchartConfig{node_spacing:Some(72.0),rank_spacing:Some(24.0),diagram_padding:Some(18.0),wrapping_width:None,padding:None,title_top_margin:None,subgraph_title_margin_top:None,subgraph_title_margin_bottom:None,curve:None});
         parsed.flowchart_config=Default::default();assert_eq!(parsed,bare);
         for field in ["nodeSpacing","rankSpacing","diagramPadding"] {
             for value in ["-1","not-a-number","NaN","inf","-inf"] {
