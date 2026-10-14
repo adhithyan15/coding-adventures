@@ -9704,7 +9704,7 @@ mod tests {
                 let source=format!("---\nconfig:\n  flowchart:\n    {field}: {value}\n---\n{body}");
                 let error=mermaid_parser::parse_swimlane(&source).expect_err("negative/nonnumeric/nonfinite spacing is refused");
                 assert_eq!(error.message,format!("Swimlane flowchart {field} must be a non-negative number"));
-                assert_eq!((error.line,error.column),(1,1));
+                assert_eq!((error.line,error.col),(1,1));
             }
         }
     }
