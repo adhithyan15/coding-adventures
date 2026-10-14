@@ -404,6 +404,14 @@ pub struct BuildResult {
     /// so a target that lands on a path this build already produced replaced
     /// generated code. See `DegradationReport::replaced_generated_files`.
     pub replaced_generated_files: Vec<String>,
+    /// The mosstyle language version the package declares (`[styles]
+    /// version`, UI90 §4 step 1).
+    pub style_version: u8,
+    /// What the v2 checker found in this package's own `.msl` files, one line
+    /// each (`src/Card.msl: …`). For a v2 package this is always empty, since
+    /// any finding fails the build. For a v1 package these are the warnings:
+    /// what migrating to v2 would take.
+    pub style_findings: Vec<String>,
 }
 
 /// Everything that can go wrong while building a package.
@@ -3452,6 +3460,9 @@ fn build_package_inner(
     let package_tokens =
         load_package_tokens(&opts.package_root, &manifest, Some(opts.backend), tokens)?;
 
+    // ----- 2b. Check the styles against mosstyle v2 (UI90 §4 step 1) --------
+    let style_findings = check_style_language(&opts.package_root, &manifest, &package_tokens)?;
+
     // ----- 3. Prepare the output directory ---------------------------------
     //
     // `create_dir_all` is the friendly "mkdir -p" — it is *not* an error
@@ -3751,7 +3762,79 @@ fn build_package_inner(
         artifacts,
         components_built,
         replaced_generated_files,
+        style_version: manifest.styles.version,
+        style_findings,
     })
+}
+
+/// Check every `.msl` the package exports against the mosstyle v2 property
+/// table ([`mosstyle_compiler::v2::check`], UI90 §3.1–§3.2).
+///
+/// | `[styles] version` | findings      | result                        |
+/// |--------------------|---------------|-------------------------------|
+/// | 1 (default)        | any           | build continues; findings returned as warnings |
+/// | 2                  | none          | build continues               |
+/// | 2                  | one or more   | build fails, listing them all |
+///
+/// Every style file of an export is checked: `Card.msl` and each theme or
+/// variant file such as `Card.dark.msl`. A file that does not parse or
+/// analyze is skipped here, because the compile step reports it with its
+/// real error. Findings come back sorted by file, then in source order, so
+/// the output is deterministic.
+fn check_style_language(
+    package_root: &Path,
+    manifest: &MosaicPackage,
+    tokens: &mosstyle_compiler::TokenOverrides,
+) -> Result<Vec<String>, BuildError> {
+    let src_dir = package_root.join("src");
+    let Ok(entries) = fs::read_dir(&src_dir) else {
+        return Ok(Vec::new());
+    };
+    let mut style_files: Vec<(String, PathBuf)> = entries
+        .filter_map(Result::ok)
+        .filter_map(|entry| {
+            let name = entry.file_name().to_string_lossy().into_owned();
+            let stem = name.strip_suffix(".msl")?;
+            let component = stem.split('.').next()?;
+            manifest
+                .components
+                .exports
+                .iter()
+                .any(|export| export == component)
+                .then(|| (name.clone(), entry.path()))
+        })
+        .collect();
+    style_files.sort();
+
+    let mut findings = Vec::new();
+    let mut first_component = None;
+    for (name, path) in &style_files {
+        let Ok(source) = fs::read_to_string(path) else {
+            continue;
+        };
+        let Ok(ast) = mosstyle_compiler::parse_style(&source) else {
+            continue;
+        };
+        let Ok(def) = mosstyle_compiler::analyze_with_tokens(&ast, tokens) else {
+            continue;
+        };
+        for finding in mosstyle_compiler::v2::check(&def) {
+            first_component.get_or_insert_with(|| def.component_name.clone());
+            findings.push(format!("src/{name}: {}", finding.message));
+        }
+    }
+    if manifest.styles.version == 2 && !findings.is_empty() {
+        return Err(BuildError::PipelineError {
+            component: first_component.unwrap_or_default(),
+            error: format!(
+                "this package declares [styles] version = 2, and {} declaration(s) are not \
+                 mosstyle v2 (UI90 §3.1):\n  {}",
+                findings.len(),
+                findings.join("\n  ")
+            ),
+        });
+    }
+    Ok(findings)
 }
 
 // ---------------------------------------------------------------------------
@@ -24780,5 +24863,100 @@ mod compose_pipeline_shell_tests {
             assert!(error.to_string().contains("rename the component"), "{name}: {error}");
         }
         assert!(compose_pipeline_project_files("Button", "", &[], &HashMap::new()).is_ok());
+    }
+}
+
+/// UI90 §4 step 1: `[styles] version` decides whether the v2 property table
+/// warns or fails the build.
+#[cfg(test)]
+mod style_language_version_tests {
+    use super::*;
+    use tempfile::TempDir;
+
+    fn package(version: Option<u8>, msl: &str) -> TempDir {
+        let tmp = TempDir::new().expect("temp dir");
+        let styles = version
+            .map(|v| format!("[styles]\nversion = {v}\n\n"))
+            .unwrap_or_default();
+        fs::write(
+            tmp.path().join("mosaic-package.toml"),
+            format!(
+                "[package]\nname = \"mosaic-pkg-card\"\nversion = \"0.1.0\"\n\
+                 description = \"fixture\"\nlicense = \"MIT\"\n\n\
+                 [components]\nexports = [\"Card\"]\n\n[dependencies]\n\n\
+                 {styles}[kernel]\nversion = \"1\"\n"
+            ),
+        )
+        .unwrap();
+        let src = tmp.path().join("src");
+        fs::create_dir_all(&src).unwrap();
+        fs::write(src.join("Card.mil"), "component Card { }\n").unwrap();
+        fs::write(src.join("Card.mll"), "layout Card { Box [ root ] { } }\n").unwrap();
+        fs::write(src.join("Card.msl"), msl).unwrap();
+        tmp
+    }
+
+    fn build(pkg: &TempDir) -> (Result<BuildResult, BuildError>, TempDir) {
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Html,
+            emit_project: false,
+            theme: None,
+        });
+        (result, out)
+    }
+
+    const CSS_STYLE: &str = "style Card { part root { width: 100% ; border-radius: 8 ; } }\n";
+    const V2_STYLE: &str = "style Card { part root { width: fill ; corner: 8 ; } }\n";
+
+    #[test]
+    fn a_v1_package_builds_and_reports_v2_findings_as_warnings() {
+        for version in [None, Some(1)] {
+            let pkg = package(version, CSS_STYLE);
+            let (result, _out) = build(&pkg);
+            let result = result.expect("a v1 package builds as before");
+            assert_eq!(result.style_version, 1);
+            assert_eq!(result.style_findings.len(), 2, "{:?}", result.style_findings);
+            assert!(result.style_findings[0].starts_with("src/Card.msl: "));
+            assert!(result.style_findings.iter().any(|f| f.contains("'width: 100%'")));
+            assert!(result.style_findings.iter().any(|f| f.contains("`corner`")));
+        }
+    }
+
+    #[test]
+    fn a_v2_package_fails_on_any_finding_and_lists_them_all() {
+        let pkg = package(Some(2), CSS_STYLE);
+        let (result, out) = build(&pkg);
+        let err = result.expect_err("v2 refuses CSS values").to_string();
+        assert!(err.contains("version = 2"), "{err}");
+        assert!(err.contains("2 declaration(s)"), "{err}");
+        assert!(err.contains("width") && err.contains("border-radius"), "{err}");
+        assert!(
+            !out.path().join("html").exists(),
+            "the check runs before anything is written"
+        );
+    }
+
+    #[test]
+    fn a_clean_v2_package_builds_with_no_findings() {
+        let pkg = package(Some(2), V2_STYLE);
+        let (result, _out) = build(&pkg);
+        let result = result.expect("a clean v2 package builds");
+        assert_eq!(result.style_version, 2);
+        assert!(result.style_findings.is_empty());
+    }
+
+    #[test]
+    fn theme_files_are_checked_and_other_components_files_are_not() {
+        let pkg = package(Some(1), V2_STYLE);
+        let src = pkg.path().join("src");
+        fs::write(src.join("Card.dark.msl"), CSS_STYLE).unwrap();
+        fs::write(src.join("Other.msl"), CSS_STYLE.replace("Card", "Other")).unwrap();
+        let (result, _out) = build(&pkg);
+        let findings = result.expect("builds").style_findings;
+        assert_eq!(findings.len(), 2, "{findings:?}");
+        assert!(findings.iter().all(|f| f.starts_with("src/Card.dark.msl: ")));
     }
 }

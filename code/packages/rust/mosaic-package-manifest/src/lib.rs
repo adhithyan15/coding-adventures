@@ -74,6 +74,7 @@
 //! | `InvalidBundleIdentifier` | `[app].bundle-identifier` is not reverse DNS |
 //! | `InvalidLayoutRule`     | an `[[app.layouts]]` rule could not work (UI48 §7.2) |
 //! | `InvalidStylePath`      | `[styles].token_palette` is not a safe relative JSON path |
+//! | `InvalidStyleVersion`   | `[styles].version` is anything other than `1` or `2` |
 //! | `DuplicateHostEffectHandler` | two `[host_effects].handlers` for one backend |
 //! | `HostEffectFileWithoutHandler` | a `[host_effects].files` backend declares no handler |
 //! | `InvalidHostEffectTarget` | a `[host_effects].files` target is not a plain relative path |
@@ -118,9 +119,25 @@ pub struct MosaicPackage {
 /// palette. Package builders treat it as this package's design-system
 /// defaults; a consuming package and an explicit application palette may
 /// override those values without copying the file.
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
+///
+/// `version` is the mosstyle language version the package's `.msl` files are
+/// written in (UI90 §4 step 1). `1`, the default, is today's open,
+/// string-valued language. `2` opts into the closed, typed property table
+/// (UI90 §3.1), so a property or value v2 does not accept fails the build.
+/// A v1 package compiles as before and reports those findings as warnings.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StylesSection {
     pub token_palette: Option<String>,
+    pub version: u8,
+}
+
+impl Default for StylesSection {
+    fn default() -> Self {
+        Self {
+            token_palette: None,
+            version: 1,
+        }
+    }
 }
 
 /// Optional metadata for the generated application shell.
@@ -322,6 +339,8 @@ pub enum ManifestError {
     /// `[styles].token_palette` was not a safe, portable package-relative
     /// JSON path.
     InvalidStylePath(String),
+    /// `[styles].version` was not `1` or `2` (UI90 §4 step 1).
+    InvalidStyleVersion(i64),
     /// A `[host_effects]` `install` symbol was not a plausible identifier.
     ///
     /// It is interpolated verbatim into generated source as a call expression,
@@ -419,6 +438,10 @@ impl std::fmt::Display for ManifestError {
                 f,
                 "invalid style resource path `{path}` (must be a package-relative .json path without `.` or `..` components)"
             ),
+            Self::InvalidStyleVersion(version) => write!(
+                f,
+                "invalid [styles] version `{version}` (mosstyle versions are 1 and 2)"
+            ),
             Self::InvalidHostEffectKind(value) => write!(
                 f,
                 "invalid `[host_effects]` handler kind `{value}` (kinds are dotted \
@@ -499,6 +522,7 @@ struct RawManifest {
 #[serde(deny_unknown_fields)]
 struct RawStyles {
     token_palette: Option<String>,
+    version: Option<i64>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -825,8 +849,20 @@ fn is_bundle_identifier(identifier: &str) -> bool {
 }
 
 fn validate_styles(raw: Option<RawStyles>) -> Result<StylesSection, ManifestError> {
-    let Some(path) = raw.and_then(|styles| styles.token_palette) else {
-        return Ok(StylesSection::default());
+    let (token_palette, version) = match raw {
+        Some(styles) => (styles.token_palette, styles.version),
+        None => (None, None),
+    };
+    let version = match version {
+        None => 1,
+        Some(v @ (1 | 2)) => v as u8,
+        Some(other) => return Err(ManifestError::InvalidStyleVersion(other)),
+    };
+    let Some(path) = token_palette else {
+        return Ok(StylesSection {
+            token_palette: None,
+            version,
+        });
     };
     let portable = !path.is_empty()
         && !path.starts_with('/')
@@ -841,6 +877,7 @@ fn validate_styles(raw: Option<RawStyles>) -> Result<StylesSection, ManifestErro
     }
     Ok(StylesSection {
         token_palette: Some(path),
+        version,
     })
 }
 
@@ -1521,6 +1558,39 @@ version = "1"
         assert_eq!(
             pkg.styles.token_palette.as_deref(),
             Some("tokens/foundation.json")
+        );
+    }
+
+    #[test]
+    fn parses_the_mosstyle_version_and_defaults_to_1() {
+        let parse_with = |styles: &str| {
+            parse(&format!(
+                "[package]\nname = \"a\"\nversion = \"0.1.0\"\ndescription = \"d\"\n\
+                 license = \"MIT\"\n[components]\nexports = []\n[dependencies]\n\
+                 {styles}[kernel]\nversion = \"1\"\n"
+            ))
+        };
+        assert_eq!(parse_with("").expect("no [styles]").styles.version, 1);
+        assert_eq!(
+            parse_with("[styles]\ntoken_palette = \"t.json\"\n")
+                .expect("no version")
+                .styles
+                .version,
+            1
+        );
+        let v2 = parse_with("[styles]\nversion = 2\n").expect("version 2");
+        assert_eq!(v2.styles.version, 2);
+        assert_eq!(v2.styles.token_palette, None);
+        for bad in ["0", "3", "-1"] {
+            let err = parse_with(&format!("[styles]\nversion = {bad}\n")).expect_err(bad);
+            assert!(
+                matches!(err, ManifestError::InvalidStyleVersion(_)),
+                "{bad}: {err}"
+            );
+        }
+        assert!(
+            parse_with("[styles]\nversion = \"2\"\n").is_err(),
+            "a string version is refused"
         );
     }
 

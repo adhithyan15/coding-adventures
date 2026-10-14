@@ -2,6 +2,26 @@
 
 ## [Unreleased]
 
+### Added — the mosstyle v2 property table and checker (UI90 §6 step 2)
+
+- New module `v2`. Its `v2::check(&StyleDef)` returns every declaration
+  that the closed, typed property table of UI90 §3.1 rejects:
+  - `UnknownProperty` for a name v2 does not have. When there is a direct
+    replacement, the message names it: `border-radius` → `corner`,
+    `box-shadow` → `elevation`, `position` → a `.mll` placement, and so on.
+  - `TypeMismatch` (a new `ErrorKind`) for a value of the wrong type. That
+    includes a unit on a length, `rgba()`, a named colour, 3- or 8-digit
+    hex, a numeric `font-weight`, or a word outside a closed set.
+- Colours follow UI90 §3.2: `#RRGGBB` or `#RRGGBB / A`, with `A` from 0
+  to 1. Lengths are plain non-negative numbers.
+- The module also exposes `property_type`, `value_matches`,
+  `replacement_hint`, `describe` and `TYPE_ROLES` (Material 3's 15 type
+  roles).
+- It only checks. Nothing it does changes what an emitter receives. It
+  runs after token resolution, so the built-in v1 palette (`4px`,
+  `rgba(…)`) is not v2 until §6 step 3.
+- Not yet checked: whether a property belongs on its part's kind.
+
 ### Added — `PlatformValue`: mosstyle values are platform-neutral (X-4)
 
 - mosstyle describes every styling decision without platform vocabulary.
