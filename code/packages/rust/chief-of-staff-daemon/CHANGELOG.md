@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Wait for the failure callback before stopping all seven automation/pairing
+  worker failure fixtures. The five-second deadline replaces fixed20ms sleeps;
+  exact error, stop/join and callback assertions remain.
+
 - `channel_keys_become_the_broker_s_slots_with_home_resolved` names its
   unused broker `C:/unused` on Windows, where `/unused` is not absolute
   and the config refused it (`UnsafePath`). It failed the first time this

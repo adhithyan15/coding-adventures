@@ -1,8 +1,9 @@
 # chief-of-staff-daemon
 
 Broker fixture paths use native absolute spelling and owned string escaping.
-The Hue worker test observes its failure callback before stopping, then checks
-the exact clock error. Production path checks and worker scheduling are retained.
+Worker failure fixtures observe the callback under a five-second deadline before
+requesting cooperative stop and checking the exact error. Production path checks
+and worker scheduling are retained.
 
 Concrete, dependency-free-at-runtime executable for the D18 Chief of Staff
 orchestrator. It composes the repository-owned configuration, credential,

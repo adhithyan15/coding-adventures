@@ -3831,6 +3831,17 @@ fn same_file(left: &Metadata, right: &Metadata) -> bool {
 #[cfg(test)]
 mod tests {
 
+    fn wait_for_worker_failure_callback(failure_seen: &AtomicBool) {
+        // Stop is allowed to win before the first tick. Observe the failure
+        // signal before requesting stop, while retaining a bounded refusal
+        // if the callback is missing rather than relying on scheduler timing.
+        let deadline = std::time::Instant::now() + Duration::from_secs(5);
+        while !failure_seen.load(Ordering::Acquire) {
+            assert!(std::time::Instant::now() < deadline, "worker failure callback was not observed");
+            thread::sleep(Duration::from_millis(1));
+        }
+    }
+
     #[test]
     fn the_production_model_tool_surface_names_no_peer() {
         // D18S S-I7 (V1): the agent's view contains no agent identity and the
@@ -5065,7 +5076,7 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        wait_for_worker_failure_callback(&failure_seen);
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeAutomation)
@@ -5242,7 +5253,7 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        wait_for_worker_failure_callback(&failure_seen);
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomePairingClock)
@@ -5439,7 +5450,7 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        wait_for_worker_failure_callback(&failure_seen);
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeOnvifPairingClock)
@@ -5641,7 +5652,7 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        wait_for_worker_failure_callback(&failure_seen);
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeAxisPairingClock)
@@ -5842,7 +5853,7 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        wait_for_worker_failure_callback(&failure_seen);
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeZoneMinderPairingClock)
@@ -6051,7 +6062,7 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        wait_for_worker_failure_callback(&failure_seen);
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeReolinkPairingClock)
@@ -6259,7 +6270,7 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        wait_for_worker_failure_callback(&failure_seen);
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeSynologyPairingClock)
