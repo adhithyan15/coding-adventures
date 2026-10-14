@@ -438,6 +438,41 @@ func RewriteInlineEnvPrefixForWindows(command string) string {
 //  8. Sends progress events to the tracker (if non-nil)
 //
 // The function returns a map from package name to BuildResult.
+// PruneLeafCargoTargets makes ExecuteBuilds delete a package's own Cargo
+// `target/` directory once the package has finished building (pass or fail),
+// when nothing in the graph depends on it.
+//
+// CI's main full build runs every package on one runner, and each Mosaic
+// package and Rust program is its own Cargo workspace that compiles its whole
+// dependency tree into its own `target/`. Kept to the end, those directories
+// filled the runner's disk part-way through a shard: "No space left on
+// device" and linker bus errors killed shards 5, 6 and 12 on every main run
+// (X-7). A leaf's `target/` is read by nothing after its own build, so it can
+// go as soon as the build has reported.
+//
+// Only `<package>/target` beside a `Cargo.toml` is removed, so a member of a
+// shared workspace (whose output lives in the workspace root) is never
+// touched. A package with dependents keeps its output, because a dependent
+// may read it (a staged cdylib, say). Off by default; main's full build turns
+// it on with -prune-leaf-targets.
+var PruneLeafCargoTargets bool
+
+func pruneLeafCargoTarget(pkg discovery.Package, graph *directedgraph.Graph) {
+	if successors, err := graph.Successors(pkg.Name); err != nil || len(successors) > 0 {
+		return
+	}
+	if _, err := os.Stat(filepath.Join(pkg.Path, "Cargo.toml")); err != nil {
+		return
+	}
+	target := filepath.Join(pkg.Path, "target")
+	if info, err := os.Lstat(target); err != nil || !info.IsDir() {
+		return
+	}
+	if err := os.RemoveAll(target); err != nil {
+		fmt.Fprintf(os.Stderr, "Warning: could not prune %s: %v\n", target, err)
+	}
+}
+
 func ExecuteBuilds(
 	packages []discovery.Package,
 	graph *directedgraph.Graph,
@@ -628,6 +663,9 @@ func ExecuteBuilds(
 				tracker.Send(progress.Event{Type: progress.Started, Name: p.Name})
 				result := runPackageBuild(p, clippy)
 				tracker.Send(progress.Event{Type: progress.Finished, Name: p.Name, Status: result.Status})
+				if PruneLeafCargoTargets {
+					pruneLeafCargoTarget(p, graph)
+				}
 
 				resultsMu.Lock()
 				results[p.Name] = result

@@ -117,6 +117,22 @@ if [[ "$platform" == android ]]; then
     sed -i 's/<application/<application android:allowBackup="false"/' "$manifest"
   fi
   test "$(grep -c 'android:allowBackup="false"' "$manifest")" = 1
+
+  # Build with the NDK the runner already has, not the one Flutter pins.
+  # Otherwise Gradle downloads Flutter's NDK (about 1 GB) on every build, and
+  # a truncated download fails the build with "Archive is not a ZIP archive"
+  # (X-7, shard 7). This app compiles no native code; it only packages the
+  # prebuilt engine, and the checks below already read that same NDK.
+  runner_ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
+  if [[ -n "$runner_ndk" && -f "$runner_ndk/source.properties" ]]; then
+    ndk_version="$(sed -n 's/^Pkg\.Revision *= *//p' "$runner_ndk/source.properties" | tr -d '\r')"
+    if [[ "$ndk_version" =~ ^[0-9]+(\.[0-9]+)+$ && -d "${ANDROID_HOME:-}/ndk/$ndk_version" ]]; then
+      app_gradle=android/app/build.gradle.kts
+      grep -qxF '    ndkVersion = flutter.ndkVersion' "$app_gradle"
+      sed -i "s/^    ndkVersion = flutter\.ndkVersion\$/    ndkVersion = \"$ndk_version\"/" "$app_gradle"
+      grep -qxF "    ndkVersion = \"$ndk_version\"" "$app_gradle"
+    fi
+  fi
 fi
 
 flutter pub get
