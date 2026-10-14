@@ -1412,6 +1412,30 @@ mod tests {
             (Point { x: 14.0, y: 20.0 }, Point { x: 10.0, y: 14.0 }));
     }
 
+    #[test]
+    fn enabled_swimlane_rank_overflow_is_a_checked_refusal_across_directions() {
+        let mut failures = Vec::new();
+        for direction in [DiagramDirection::Lr, DiagramDirection::Rl, DiagramDirection::Tb, DiagramDirection::Bt] {
+            for optimize in [false, true] {
+                for (name, count, pairs) in [
+                    ("rank-count", 2, vec![(0,1,1)]),
+                    ("rank-accumulation", 3, vec![(0,1,1),(1,2,1)]),
+                ] {
+                    let mut diagram = ordering_diagram(count, &pairs);
+                    diagram.direction = direction.clone();
+                    diagram.ignore_cross_lane_edges = false;
+                    diagram.optimize_ranks_by_crossings = optimize;
+                    diagram.edges[0].min_length = usize::MAX;
+                    let result = std::panic::catch_unwind(|| try_layout_swimlane(&diagram));
+                    let refused = matches!(&result, Ok(Err(_)));
+                    eprintln!("rank-overflow direction={direction:?} optimize={optimize} case={name} checked_refusal={refused} panicked={}",result.is_err());
+                    if !refused { failures.push(format!("{direction:?}/{optimize}/{name}")); }
+                }
+            }
+        }
+        assert!(failures.is_empty(), "rank overflow must be an explicit checked refusal, failures={failures:?}");
+    }
+
     fn layout_gap(layout: &LayoutedSwimlaneDiagram, first: &str, second: &str) -> f64 {
         let from = layout.nodes.iter().find(|node| node.id == first).unwrap();
         let to = layout.nodes.iter().find(|node| node.id == second).unwrap();
