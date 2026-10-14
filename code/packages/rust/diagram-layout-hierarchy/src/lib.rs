@@ -264,7 +264,57 @@ fn measure_railroad_expression(expr: &RailroadExpression) -> (f64, f64) {
 }
 
 /// Lay out top-level Mermaid subgraphs as stable ownership lanes.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SwimlaneLayoutError {
+    UnsupportedSpacing { field: &'static str },
+    InvalidDerivedGeometry,
+}
+
+impl std::fmt::Display for SwimlaneLayoutError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::UnsupportedSpacing { field } => write!(f, "Swimlane flowchart {field} must be finite and in 0..=65536"),
+            Self::InvalidDerivedGeometry => f.write_str("Swimlane layout requires finite coordinates and nonnegative dimensions"),
+        }
+    }
+}
+
+impl std::error::Error for SwimlaneLayoutError {}
+
+/// Checked boundary for caller-constructed IR. No invalid spacing reaches the
+/// arithmetic, and no invalid derived geometry leaves this boundary.
+pub fn try_layout_swimlane(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimlaneDiagram, SwimlaneLayoutError> {
+    for (field, value) in [
+        ("nodeSpacing", diagram.flowchart_config.node_spacing),
+        ("rankSpacing", diagram.flowchart_config.rank_spacing),
+        ("diagramPadding", diagram.flowchart_config.diagram_padding),
+    ] {
+        if value.is_some_and(|v| !v.is_finite() || !(0.0..=diagram_ir::MAX_SWIMLANE_FLOWCHART_SPACING).contains(&v)) {
+            return Err(SwimlaneLayoutError::UnsupportedSpacing { field });
+        }
+    }
+    let layout = layout_swimlane_supported(diagram);
+    let rectangle = |x: f64, y: f64, width: f64, height: f64| {
+        [x,y,width,height].iter().all(|v| v.is_finite()) && width >= 0.0 && height >= 0.0
+    };
+    if !rectangle(0.0, 0.0, layout.width, layout.height)
+        || layout.lanes.iter().any(|v| !rectangle(v.x,v.y,v.width,v.height))
+        || layout.groups.iter().any(|v| !rectangle(v.x,v.y,v.width,v.height))
+        || layout.nodes.iter().any(|v| !rectangle(v.x,v.y,v.width,v.height))
+        || layout.edges.iter().any(|v| ![v.from.x,v.from.y,v.to.x,v.to.y].iter().all(|v|v.is_finite()))
+    {
+        return Err(SwimlaneLayoutError::InvalidDerivedGeometry);
+    }
+    Ok(layout)
+}
+
+/// Layout supported Swimlane input. Panics explicitly for unsupported spacing
+/// or invalid derived geometry; use try_layout_swimlane for fallible input.
 pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
+    try_layout_swimlane(diagram).expect("supported Swimlane layout input")
+}
+
+fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     // Parallel edges remain separate drawing instructions, but spacing needs
     // only their maximum constraint. Index once before either layout phase;
     // otherwise a small flat document can force two full scans per node gap.
@@ -324,13 +374,13 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     };
     let (width, height) = if horizontal_flow {
         (
-            lane_along.max(420.0),
+            lane_along.max(420.0).max(outer_padding * 2.0),
             title_height + diagram.lanes.len() as f64 * (lane_cross + lane_gap) + outer_padding,
         )
     } else {
         (
             diagram.lanes.len() as f64 * (lane_cross + lane_gap) + outer_padding,
-            title_height + lane_along.max(420.0),
+            title_height + lane_along.max(420.0).max(outer_padding),
         )
     };
     let ordered_lanes = if diagram.automatic_lane_ordering {

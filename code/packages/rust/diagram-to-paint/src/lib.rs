@@ -9714,13 +9714,39 @@ mod tests {
         for direction in ["LR","RL","TB","BT"] {
             for field in ["nodeSpacing","rankSpacing","diagramPadding"] {
                 let body=spacing_control_source(direction);
-                let source=format!("---\nconfig:\n  flowchart:\n    {field}: 1e308\n---\n{body}");
-                let diagram=mermaid_parser::parse_swimlane(&source).expect("current finite nonnegative source admission");
-                let layout=diagram_layout_hierarchy::layout_swimlane(&diagram);
-                eprintln!("spacing finite-input control direction={direction} field={field} extent=({},{})",layout.width,layout.height);
-                assert!(layout.width.is_finite()&&layout.height.is_finite()&&layout.width>=0.0&&layout.height>=0.0,"accepted finite spacing must not produce nonfinite/negative extent");
-                for lane in &layout.lanes {
-                    assert!([lane.x,lane.y,lane.width,lane.height].iter().all(|v|v.is_finite())&&lane.width>=0.0&&lane.height>=0.0,"accepted spacing must not produce nonfinite/negative lane");
+                for value in ["1e308", "65537"] {
+                    let source=format!("---\nconfig:\n  flowchart:\n    {field}: {value}\n---\n{body}");
+                    let error=mermaid_parser::parse_swimlane(&source).expect_err("above production spacing bound is refused");
+                    assert_eq!(error.message,format!("Swimlane flowchart {field} must not exceed 65536"));
+                    assert_eq!((error.line,error.col),(1,1));
+                }
+                let bare = mermaid_parser::parse_swimlane(&body).unwrap();
+                for value in [-1.0, f64::NAN, f64::INFINITY, f64::NEG_INFINITY, 65537.0, 1e308] {
+                    let mut direct = bare.clone();
+                    match field {
+                        "nodeSpacing" => direct.flowchart_config.node_spacing=Some(value),
+                        "rankSpacing" => direct.flowchart_config.rank_spacing=Some(value),
+                        _ => direct.flowchart_config.diagram_padding=Some(value),
+                    }
+                    assert_eq!(diagram_layout_hierarchy::try_layout_swimlane(&direct),
+                        Err(diagram_layout_hierarchy::SwimlaneLayoutError::UnsupportedSpacing { field }));
+                }
+                for value in [0,65536] {
+                    let source=format!("---\nconfig:\n  flowchart:\n    {field}: {value}\n---\n{body}");
+                    let diagram=mermaid_parser::parse_swimlane(&source).expect("supported boundary source");
+                    let layout=diagram_layout_hierarchy::try_layout_swimlane(&diagram).expect("supported boundary geometry");
+                    assert_eq!(diagram_layout_hierarchy::layout_swimlane(&diagram),layout);
+                    assert!(layout.width.is_finite()&&layout.height.is_finite()&&layout.width>=0.0&&layout.height>=0.0,"accepted spacing must not produce nonfinite/negative extent");
+                    for lane in &layout.lanes {
+                        assert!([lane.x,lane.y,lane.width,lane.height].iter().all(|v|v.is_finite())&&lane.width>=0.0&&lane.height>=0.0,"accepted spacing must not produce nonfinite/negative lane");
+                    }
+                    for group in &layout.groups { assert!([group.x,group.y,group.width,group.height].iter().all(|v|v.is_finite())&&group.width>=0.0&&group.height>=0.0); }
+                    for node in &layout.nodes { assert!([node.x,node.y,node.width,node.height].iter().all(|v|v.is_finite())&&node.width>=0.0&&node.height>=0.0); }
+                    for edge in &layout.edges { assert!([edge.from.x,edge.from.y,edge.to.x,edge.to.y].iter().all(|v|v.is_finite())); }
+                    if field=="diagramPadding" && value==65536 {
+                        if matches!(direction,"LR"|"RL") { assert_eq!(layout.width,131072.0); assert!(layout.lanes.iter().all(|lane|lane.width==0.0)); }
+                        else { assert_eq!(layout.height,65552.0); assert!(layout.lanes.iter().all(|lane|lane.height==0.0)); }
+                    }
                 }
             }
         }

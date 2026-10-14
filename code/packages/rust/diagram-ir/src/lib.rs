@@ -1995,6 +1995,10 @@ impl Default for SwimlaneTheme {
         }
     }
 }
+/// Production spacing range shared by parsed and caller-constructed Swimlane IR.
+/// This explicit cap prevents finite input from overflowing derived geometry.
+pub const MAX_SWIMLANE_FLOWCHART_SPACING: f64 = 65_536.0;
+
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct SwimlaneFlowchartConfig {
     pub node_spacing: Option<f64>, pub rank_spacing: Option<f64>,

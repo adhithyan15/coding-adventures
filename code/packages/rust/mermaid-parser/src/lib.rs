@@ -6582,6 +6582,10 @@ fn parse_swimlane_flowchart_config(source: &str) -> Result<diagram_ir::SwimlaneF
             return Err(swimlane_error(1,
                 format!("Swimlane flowchart {name} must be a non-negative number")));
         }
+        if parsed > diagram_ir::MAX_SWIMLANE_FLOWCHART_SPACING {
+            return Err(swimlane_error(1,
+                format!("Swimlane flowchart {name} must not exceed 65536")));
+        }
         Ok(Some(parsed))
     };
     Ok(diagram_ir::SwimlaneFlowchartConfig {
