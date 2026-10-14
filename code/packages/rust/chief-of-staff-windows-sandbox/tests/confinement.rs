@@ -195,11 +195,32 @@ fn the_environment_is_only_what_was_given() {
         environment: vec![("TZ".to_string(), "UTC".to_string())],
         ..SpawnRequest::default()
     });
-    let names: Vec<&str> = output
-        .lines()
-        .map(|line| line.split('=').next().unwrap())
-        .collect();
-    assert_eq!(names, ["SystemRoot", "TZ"], "{output}");
+    // What was given, SystemRoot, and LOCALAPPDATA, which CreateProcessW
+    // requires of an AppContainer environment. Windows may also point TEMP
+    // and TMP into the container's folder. Each of those three names a
+    // place inside the agent's own (removed) storage, never the user's.
+    let own = PathBuf::from(std::env::var("LOCALAPPDATA").unwrap())
+        .join("Packages")
+        .join(container_name(&agent.0))
+        .to_string_lossy()
+        .to_ascii_lowercase();
+    let mut names = Vec::new();
+    for line in output.lines() {
+        let (name, value) = line.split_once('=').unwrap();
+        match name {
+            "TZ" => assert_eq!(value, "UTC"),
+            "SystemRoot" => {}
+            "LOCALAPPDATA" | "TEMP" | "TMP" => assert!(
+                format!("{}\\", value.to_ascii_lowercase()).starts_with(&format!("{own}\\")),
+                "{name}={value} is outside {own}"
+            ),
+            _ => panic!("{name} was not given: {output}"),
+        }
+        names.push(name);
+    }
+    for required in ["LOCALAPPDATA", "SystemRoot", "TZ"] {
+        assert!(names.contains(&required), "{required}: {output}");
+    }
 
     let refused = agent.confinement().spawn(SpawnRequest {
         arguments: vec!["env".to_string()],

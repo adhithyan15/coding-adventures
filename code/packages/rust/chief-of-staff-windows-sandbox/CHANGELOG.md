@@ -27,7 +27,10 @@
     windows-2025), but a profile is a storage folder and registry key the
     agent could keep state in (S-I1). So `spawn` registers it, creates the
     process suspended, and removes it before any check or instruction,
-    serialized within the process. The profile's storage folder (as
+    serialized within the process. The agent's environment gains
+    `LOCALAPPDATA`, set to the container's `AC` folder: without it
+    `CreateProcessW` fails with `ERROR_ENVVAR_NOT_FOUND` (the second
+    windows-2025 run). The profile's storage folder (as
     `GetAppContainerFolderPath` reported it) must be gone afterwards. A
     failed removal, or a folder left behind, ends the agent unrun.
   - One instance of an agent at a time: `spawn` refuses an agent whose

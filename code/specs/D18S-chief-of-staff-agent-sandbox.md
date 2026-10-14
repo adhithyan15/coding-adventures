@@ -2434,7 +2434,13 @@ through S-I3 before two weeks are spent on Windows.
 
    **The environment** is the closed set of the macOS applier: only names
    set on the command, each in the grantable set, with plain values. It is
-   passed as an explicit Unicode block, never inherited.
+   passed as an explicit Unicode block, never inherited. The applier adds
+   two names Windows needs: `SystemRoot`, which its own libraries read,
+   and `LOCALAPPDATA`, without which `CreateProcessW` refuses an
+   AppContainer (`ERROR_ENVVAR_NOT_FOUND`, seen on windows-2025). The
+   latter is set to the container's own `AC` folder, where Windows is
+   reported to point it in any case, and which is removed before the agent
+   runs; Windows may point `TEMP` and `TMP` there as well.
 
    **Residuals, recorded.**
    - *A concurrent std spawn.* A handle on the list must be inheritable.

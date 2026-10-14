@@ -122,7 +122,11 @@
 //! The same closed set as the macOS applier ([`GRANTABLE_ENVIRONMENT`]):
 //! only names set by the caller, each in the set, with plain values. To it
 //! the applier adds `SystemRoot`, which Windows' own libraries read, and
-//! nothing else. It is passed as an explicit block, never inherited.
+//! `LOCALAPPDATA`, without which `CreateProcessW` refuses an AppContainer
+//! (`ERROR_ENVVAR_NOT_FOUND`): it is set to the container's own folder,
+//! where Windows is reported to point it anyway, and which is removed
+//! before the agent runs. Windows may point `TEMP` and `TMP` there too. Nothing else is
+//! added. It is passed as an explicit block, never inherited.
 
 #![deny(unsafe_op_in_unsafe_fn)]
 

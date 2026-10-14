@@ -168,8 +168,20 @@ impl WindowsConfinement {
                 .map(|(name, value)| (name.as_str(), value.as_str())),
         )?;
         let mut live = LiveInstance::claim(&self.name)?;
+        // Registered from here until just after the creation; see
+        // `RegisteredProfile`. Its folder is needed for the environment.
+        let profile = RegisteredProfile::register(&self.name, &self.sid)?;
         let mut environment = request.environment.clone();
         environment.push(("SystemRoot".to_string(), self.system_root.clone()));
+        // CreateProcessW refuses an AppContainer environment without
+        // LOCALAPPDATA (ERROR_ENVVAR_NOT_FOUND), and points it into the
+        // container's own folder. It is set to that folder here, so the
+        // agent sees the same value either way: a path into storage that is
+        // removed before the agent runs.
+        let local = profile.folder.to_str().ok_or_else(|| {
+            ConfinementError::Container(format!("{}: not Unicode", profile.folder.display()))
+        })?;
+        environment.push(("LOCALAPPDATA".to_string(), local.to_string()));
         if !request.inherited.is_empty() {
             let values: Vec<String> = request
                 .inherited
@@ -239,9 +251,6 @@ impl WindowsConfinement {
         startup.StartupInfo.hStdOutput = raw(&child_stdout);
         startup.StartupInfo.hStdError = raw(&stderr);
         startup.lpAttributeList = attributes.as_ptr();
-        // Registered from here until just after the creation; see
-        // `RegisteredProfile`.
-        let profile = RegisteredProfile::register(&self.name, &self.sid)?;
         // Only now, immediately before the creation, are the listed handles
         // made inheritable, so the window in which a std spawn on another
         // thread (which inherits every inheritable handle) could take one
@@ -614,6 +623,8 @@ fn container_sid(name: &str) -> Result<OwnedSid, ConfinementError> {
 /// one.
 struct RegisteredProfile {
     name: Vec<u16>,
+    /// The container's own folder, `...\Packages\<name>\AC`.
+    folder: std::path::PathBuf,
     /// The profile's storage folder, `...\Packages\<name>`, as Windows
     /// reported it while the profile was registered.
     storage: std::path::PathBuf,
@@ -659,11 +670,12 @@ impl RegisteredProfile {
         // Registered from here: on an early return, Drop removes it.
         let mut profile = Self {
             name: wide_name,
+            folder: std::path::PathBuf::new(),
             storage: std::path::PathBuf::new(),
             removed: false,
             _serialized: serialized,
         };
-        profile.storage = storage_folder(name, sid)?;
+        (profile.folder, profile.storage) = container_folders(name, sid)?;
         Ok(profile)
     }
 
@@ -705,11 +717,14 @@ impl Drop for RegisteredProfile {
     }
 }
 
-/// The registered profile's storage folder: the parent of the `AC` folder
-/// `GetAppContainerFolderPath` reports, which must be named for the
-/// container. Anything else is refused rather than guessed at, since the
-/// removal check would then look at the wrong place.
-fn storage_folder(name: &str, sid: &OwnedSid) -> Result<std::path::PathBuf, ConfinementError> {
+/// The registered profile's `AC` folder, as `GetAppContainerFolderPath`
+/// reports it, and its storage folder, the parent, which must be named for
+/// the container. Anything else is refused rather than guessed at, since
+/// the removal check would then look at the wrong place.
+fn container_folders(
+    name: &str,
+    sid: &OwnedSid,
+) -> Result<(std::path::PathBuf, std::path::PathBuf), ConfinementError> {
     let refuse = |why: String| ConfinementError::Container(why);
     let mut text: PWSTR = std::ptr::null_mut();
     // SAFETY: a valid SID; the string is allocated by the call and freed
@@ -745,7 +760,9 @@ fn storage_folder(name: &str, sid: &OwnedSid) -> Result<std::path::PathBuf, Conf
             .is_some_and(|component| component.eq_ignore_ascii_case(expected))
     };
     match path.parent() {
-        Some(storage) if named(&path, "AC") && named(storage, name) => Ok(storage.to_path_buf()),
+        Some(storage) if named(&path, "AC") && named(storage, name) => {
+            Ok((path.clone(), storage.to_path_buf()))
+        }
         _ => Err(refuse(format!(
             "{}: not the AC folder of {name}",
             path.display()

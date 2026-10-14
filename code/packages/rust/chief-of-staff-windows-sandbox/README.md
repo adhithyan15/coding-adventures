@@ -46,7 +46,10 @@ so this crate creates the process itself and returns a `ConfinedChild`.
   Microsoft-signed DLLs only, no non-system fonts, and no remote or
   low-label images. The library search starts in system32.
 - **A closed environment.** It sees only grantable names with plain values,
-  plus `SystemRoot`.
+  plus `SystemRoot` and `LOCALAPPDATA`. `CreateProcessW` requires the
+  latter for an AppContainer, so it names the container's own folder,
+  which is removed before the agent runs. Windows may point `TEMP` and
+  `TMP` there too.
 
 ## Confirmed before it runs (S-P4)
 
