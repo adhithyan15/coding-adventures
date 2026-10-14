@@ -28,6 +28,8 @@
 
 pub const VERSION: &str = "0.75.0";
 
+mod swimlane_hop_origin;
+
 use std::collections::{BTreeMap, HashMap};
 
 use diagram_ir::{
@@ -1971,6 +1973,8 @@ struct SwimlaneHopCrossings {
     oblique: Vec<usize>,
     integer_x_cohort: Option<SwimlaneHopSupportCohort>,
     integer_y_cohort: Option<SwimlaneHopSupportCohort>,
+    origin_x_cohort: Option<swimlane_hop_origin::Cohort>,
+    origin_y_cohort: Option<swimlane_hop_origin::Cohort>,
 }
 
 impl SwimlaneHopCrossings {
@@ -1986,7 +1990,10 @@ impl SwimlaneHopCrossings {
         for &group_index in horizontal_candidates.iter().chain(vertical_candidates.iter()).chain(oblique_candidates.iter()) {
             let other = &self.geometries[group_index];
             if let Some((t, point)) = swimlane_line_crossing(from, to, &other.from, &other.to) {
-                crossings.extend(other.occurrences.iter().map(|&(edge, segment)| (t, point.clone(), edge, segment)));
+                crossings.extend(other.occurrences.iter().map(|&(edge, segment)| {
+                    swimlane_hop_origin::count(swimlane_hop_origin::Work::Occurrence);
+                    (t, point.clone(), edge, segment)
+                }));
             }
         }
         crossings
@@ -2005,6 +2012,11 @@ impl SwimlaneHopCrossings {
                 tree.inversions(first, second, false, &mut output);
             }
             return Some(output);
+        }
+        for (exchange, cohort) in [(false, &self.origin_x_cohort), (true, &self.origin_y_cohort)] {
+            let Some(cohort) = cohort else { continue; };
+            let Some(query) = swimlane_hop_origin::project(from, to, exchange) else { continue; };
+            if let Some(output) = cohort.candidates(query) { return Some(output); }
         }
         None
     }
@@ -2026,6 +2038,8 @@ impl SwimlaneHopCrossings {
                 let first_geometry = self.oblique.is_empty();
                 swimlane_hop_observe_cohort(&mut self.integer_x_cohort, first_geometry, swimlane_hop_integer_supports(from, to, false), group_index);
                 swimlane_hop_observe_cohort(&mut self.integer_y_cohort, first_geometry, swimlane_hop_integer_supports(from, to, true), group_index);
+                swimlane_hop_origin::observe(&mut self.origin_x_cohort, first_geometry, swimlane_hop_origin::project(from, to, false), group_index);
+                swimlane_hop_origin::observe(&mut self.origin_y_cohort, first_geometry, swimlane_hop_origin::project(from, to, true), group_index);
                 self.oblique.push(group_index);
             }
         }
