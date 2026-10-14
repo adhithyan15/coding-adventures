@@ -3661,6 +3661,17 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata|
                     metadata.get("swimlane.flowchart.padding")), Some(&"24".to_string()));
             }
+            if fixture_name == "flowchart-title-top-margin" {
+                assert_eq!(layout.flowchart_config.title_top_margin, Some(26.0));
+                assert_eq!(layout.lanes[0].y, 70.0,
+                    "titleTopMargin must reserve portable layout space above ownership lanes");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if !run.glyphs.is_empty()
+                        && run.glyphs.iter().all(|glyph| glyph.y > 26.0 && glyph.y < 70.0)
+                )), "the shifted title must lower to positioned glyph paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.titleTopMargin")), Some(&"26".to_string()));
+            }
             if fixture_name == "flowchart-curve-config" {
                 assert_eq!(layout.flowchart_config.curve,
                     Some(diagram_ir::SwimlaneEdgeCurve::StepAfter));
