@@ -12,6 +12,9 @@ Before the new one: say the Persian for a country, then the Persian for a story.
 You'll want to know: ظهر.
 ظهر — zohr — "noon, midday".
 
+The word, taken apart.
+zohr is borrowed from Arabic ẓuhr, "noon". Its Arabic root is ẓ-h-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a story, then the Persian for noon.
 
 You'll want to know: پریروز.
 پریروز — pariruz — "the day before yesterday".
+
+The word, taken apart.
+pariruz is pari-, "before", with ruz, "day". ruz continues Middle Persian rōz (EtymDB), and pari- is usually traced to an old prefix meaning "before".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for noon, then the Persian for the day befor
 You'll want to know: امشب.
 امشب — emshab — "tonight".
 
+The word, taken apart.
+emshab is em-, "this", with shab, "night": "this night". Both are native Persian; shab is usually traced to Middle Persian šab.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for the day before yesterday, then the Persi
 You'll want to know: دیشب.
 دیشب — dishab — "last night".
 
+The word, taken apart.
+dishab is di, the old Persian word for "yesterday", with shab, "night": "yesterday's night". Both parts are native; shab is usually traced to Middle Persian šab.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for tonight, then the Persian for last night
 
 You'll want to know: زمان.
 زمان — zamân — "time".
+
+The word, taken apart.
+zamân is usually treated as a loan from Arabic zamān, "time" (root z-m-n, Lane). Middle Persian also had zamān, so which way the word first moved is not settled.
 
 What you've built.
 One more word for this chapter.

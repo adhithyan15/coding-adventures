@@ -14,7 +14,8 @@ romanization: "bâftan"
 concept_tag: FA-VERB-BAFTAN
 prerequisites: [FA-C185-amanat-gereftan, FA-C185-amanat-dadan]
 sounds: []
-roots: []
+roots: [persian-baftan]
+etymology_hook: "bâftan ← Middle Persian waf- 'to weave' (EtymDB); inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C185-amanat-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C186-KONESH186-01]; assesses=[] -->
 
 **بافتن** — *bâftan* — "to knit, to weave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâftan* is a native Persian verb, inherited rather than borrowed: EtymDB traces it to the Middle Persian stem *waf-*, "to weave", and it is usually set beside English *weave* as one Indo-European root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

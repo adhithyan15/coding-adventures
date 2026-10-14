@@ -326,7 +326,11 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
     // only their maximum constraint. Index once before either layout phase;
     // otherwise a small flat document can force two full scans per node gap.
     let link_gaps = SwimlaneLinkGaps::new(diagram);
-    let title_height = if diagram.title.is_some() { 44.0 } else { 16.0 };
+    let title_height = if diagram.title.is_some() {
+        44.0 + diagram.flowchart_config.title_top_margin.unwrap_or(0.0)
+    } else {
+        16.0
+    };
     let horizontal_flow = matches!(
         diagram.direction,
         DiagramDirection::Lr | DiagramDirection::Rl

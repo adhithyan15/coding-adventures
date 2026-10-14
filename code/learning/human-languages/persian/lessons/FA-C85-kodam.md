@@ -14,7 +14,8 @@ romanization: "kodâm"
 concept_tag: FA-DEF85-KODAM
 prerequisites: [FA-C84-hich, FA-C84-khod]
 sounds: []
-roots: []
+roots: [persian-kodam]
+etymology_hook: "kodâm: inherited, usually traced to Middle Persian kadām"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C84-khod]
 <!-- hl-knowledge: introduces=[FA-LEX-C85-DEF85-01]; assesses=[] -->
 
 **کدام** — *kodâm* — "which?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kodâm* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kadām*, "which".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

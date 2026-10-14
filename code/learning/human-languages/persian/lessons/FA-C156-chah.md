@@ -14,7 +14,8 @@ romanization: "châh"
 concept_tag: FA-MAKAN156-CHAH
 prerequisites: [FA-C155-sefarat, FA-C155-gomrok]
 sounds: []
-roots: []
+roots: [persian-chah]
+etymology_hook: "châh: inherited, usually traced to Middle Persian čāh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C155-gomrok]
 <!-- hl-knowledge: introduces=[FA-LEX-C156-MAKAN156-01]; assesses=[] -->
 
 **چاه** — *châh* — "a well".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*châh* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *čāh*, "well".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

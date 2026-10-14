@@ -14,7 +14,8 @@ romanization: "nârâhat"
 concept_tag: FA-HEALTH32-NARAHAT
 prerequisites: [FA-C31-gorosne, FA-C31-khoshhal]
 sounds: []
-roots: []
+roots: [arabic-raha]
+etymology_hook: "nârâhat: Persian nâ- 'not' + râhat ← Arabic rāḥa 'rest, ease', root r-w-ḥ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C31-khoshhal]
 <!-- hl-knowledge: introduces=[FA-LEX-C32-HEALTH32-01]; assesses=[] -->
 
 **ناراحت** — *nârâhat* — "upset, sad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nârâhat* is *nâ-*, "not", with *râhat*, "ease, comfort": "not at ease". *nâ-* is the native Persian negative prefix; *râhat* is borrowed from Arabic *rāḥa*, "rest, ease" (root *r-w-ḥ*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

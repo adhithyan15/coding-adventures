@@ -14,7 +14,8 @@ romanization: "dars"
 concept_tag: FA-SCHOOL50-DARS
 prerequisites: [FA-C49-pul, FA-C50-naghshe]
 sounds: []
-roots: []
+roots: [arabic-dars]
+etymology_hook: "dars ← Arabic dars 'lesson, study', root d-r-s (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C50-naghshe]
 <!-- hl-knowledge: introduces=[FA-LEX-C50-SCHOOL50-02]; assesses=[] -->
 
 **درس** — *dars* — "a lesson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dars* is borrowed from Arabic *dars*, "lesson, study". Its Arabic root is *d-r-s* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

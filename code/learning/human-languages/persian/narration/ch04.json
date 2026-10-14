@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:83321d2e3249a0c4",
+  "sourceHash": "fnv1a64:3bb531d7a01d8006",
   "lessons": [
     {
       "id": "FA-C04-hal",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87c13c04f39d66f7",
+      "sourceHash": "fnv1a64:a2b84a32e948e523",
       "notice": null,
       "blocks": [
         {
@@ -205,7 +205,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Persian Online takes چطور apart as Persian che, “what,” plus the Arabic loan طور tor, “manner.” The literal picture is “in what manner?” That layered history is useful memory, but chetor is one everyday Persian question word now."
+              "text": "Persian Online takes چطور apart as Persian che, “what,” plus طور tor, “manner,” borrowed from Arabic ṭawr, “time, state, manner” (Lane). The literal picture is “in what manner?” That layered history is useful memory, but chetor is one everyday Persian question word now."
             }
           ]
         },
@@ -293,7 +293,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab449c9dd5f9b11f",
+      "sourceHash": "fnv1a64:d1cbd71adeb25eb8",
       "notice": null,
       "blocks": [
         {
@@ -349,6 +349,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two layers meet in this line. hâl, \"state\", is borrowed from Arabic ḥāl (root ḥ-w-l, Lane), and chetor is Persian che, \"what\", with Arabic ṭawr, \"manner\". shomâ, ast and the linking -e are inherited Persian."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -382,7 +393,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -563,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:810c1d65261be6af",
+      "sourceHash": "fnv1a64:11fff6c80ac5e763",
       "notice": null,
       "blocks": [
         {
@@ -611,6 +622,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "khubam is khub, \"good, well\", which continues Middle Persian xūb (EtymDB), with the inherited ending -am, \"I am\". mamnun is borrowed from Arabic mamnūn, \"favoured, obliged\" (root m-n-n, Lane)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -644,7 +666,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

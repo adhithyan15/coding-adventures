@@ -14,7 +14,8 @@ romanization: "sag"
 concept_tag: FA-NATURE54-SAG
 prerequisites: [FA-C54-bad, FA-C54-biyaban]
 sounds: []
-roots: []
+roots: [persian-sag]
+etymology_hook: "sag: inherited, usually traced to Middle Persian sag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C54-biyaban]
 <!-- hl-knowledge: introduces=[FA-LEX-C54-NATURE54-04]; assesses=[] -->
 
 **سگ** — *sag* — "a dog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sag* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *sag*, "dog".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

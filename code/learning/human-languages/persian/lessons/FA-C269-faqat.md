@@ -14,7 +14,8 @@ romanization: "faqat"
 concept_tag: FA-CHERA269-FAQAT
 prerequisites: [FA-C268-jub, FA-C268-piyaderow]
 sounds: []
-roots: []
+roots: [arabic-faqat]
+etymology_hook: "faqat ← Arabic faqaṭ 'only', root q-ṭ-ṭ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C268-piyaderow]
 <!-- hl-knowledge: introduces=[FA-LEX-C269-CHERA269-01]; assesses=[] -->
 
 **فقط** — *faqat* — "only".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*faqat* is borrowed from Arabic *faqaṭ*, "only". Its Arabic root is *q-ṭ-ṭ* (Lane). It is *fa-*, "so", with *qaṭ*, "only, enough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

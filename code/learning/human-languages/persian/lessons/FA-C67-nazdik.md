@@ -14,7 +14,8 @@ romanization: "nazdik"
 concept_tag: FA-TIME67-NAZDIK
 prerequisites: [FA-C67-ruz, FA-C67-dur]
 sounds: []
-roots: []
+roots: [persian-nazdik]
+etymology_hook: "nazdik: inherited, usually traced to Middle Persian nazdīk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C67-dur]
 <!-- hl-knowledge: introduces=[FA-LEX-C67-TIME67-05]; assesses=[] -->
 
 **نزدیک** — *nazdik* — "near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nazdik* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *nazdīk*, "near".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

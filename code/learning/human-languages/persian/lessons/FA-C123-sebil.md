@@ -14,7 +14,8 @@ romanization: "sebil"
 concept_tag: FA-THINGS123-SEBIL
 prerequisites: [FA-C123-pishani, FA-C123-rish]
 sounds: []
-roots: []
+roots: [arabic-sabala]
+etymology_hook: "sebil ← Arabic sabala 'moustache', root s-b-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C123-rish]
 <!-- hl-knowledge: introduces=[FA-LEX-C123-THINGS123-03]; assesses=[] -->
 
 **سبیل** — *sebil* — "a moustache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sebil* is borrowed from Arabic *sabala*, "moustache" (root *s-b-l*, Lane). EtymDB links it to Arabic *sabīl*, "path", a different word from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

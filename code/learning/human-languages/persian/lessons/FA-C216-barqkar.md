@@ -14,7 +14,8 @@ romanization: "barqkâr"
 concept_tag: FA-KAR216-BARQKAR
 prerequisites: [FA-C216-najjar, FA-C216-lulekesh]
 sounds: []
-roots: []
+roots: [arabic-barq, persian-kar]
+etymology_hook: "barqkâr: barq ← Arabic barq 'lightning' (Lane) + Persian kâr 'work'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C216-lulekesh]
 <!-- hl-knowledge: introduces=[FA-LEX-C216-KAR216-04]; assesses=[] -->
 
 **برقکار** — *barqkâr* — "an electrician".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*barqkâr* is *barq*, "electricity", with *kâr*, "work": the electricity worker. *barq* is borrowed from Arabic *barq*, "lightning" (root *b-r-q*, Lane); *kâr* is native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

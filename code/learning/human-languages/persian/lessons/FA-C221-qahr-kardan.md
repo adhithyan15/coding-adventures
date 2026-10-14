@@ -14,7 +14,8 @@ romanization: "qahr kardan"
 concept_tag: FA-VERB-QAHR-KARDAN
 prerequisites: [FA-C220-kopi-gereftan, FA-C221-bakhshidan]
 sounds: []
-roots: []
+roots: [arabic-qahr]
+etymology_hook: "qahr ← Arabic qahr 'force, wrath', root q-h-r (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C221-bakhshidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C221-KONESH221-02]; assesses=[] -->
 
 **قهر کردن** — *qahr kardan* — "to fall out, to stop speaking to someone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qahr kardan* pairs *qahr*, borrowed from Arabic *qahr*, "force, wrath" (root *q-h-r*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB). Persian uses it for sulking and refusing to speak.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

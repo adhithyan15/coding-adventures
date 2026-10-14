@@ -14,6 +14,9 @@ You'll want to know: جدول زمانی.
 [once you have stopped driving — read: the board]
 The board says اتوبوس: هشت صبح — otobus: hasht-e sobh — "Bus: 8 a.m." The bus leaves at eight, so be there before eight.
 
+The word, taken apart.
+jadval-e zamâni is "a table of time". jadval, "table, grid", is borrowed from Arabic jadwal, "stream, channel; table" (root j-d-l, Lane); zamâni is zamân, "time", with the ending -i; zamân is usually treated as a loan from Arabic zamān, but Middle Persian also had zamān, so which way it moved is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -45,6 +48,9 @@ You'll want to know: تابلو.
 [once you have stopped driving — read: the sign]
 The sign says پنجشنبه بسته است — panjshanbe baste ast — "Closed on Thursday." Come on another day.
 
+The word, taken apart.
+tâblo is a loan, usually traced to French tableau, "board, picture".
+
 What you've built.
 One more word for this chapter.
 
@@ -73,6 +79,9 @@ Before the new one: say the Persian for a timetable, then the Persian for a sign
 
 You'll want to know: اجاره.
 اجاره — ejâre — "rent". The money for a flat: اجاره خانه — ejâre-ye khâne — "the rent for the house".
+
+The word, taken apart.
+ejâre is borrowed from Arabic ijāra, "hire, rent". Its Arabic root is ʾ-j-r (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -105,6 +114,9 @@ You'll want to know: آگهی.
 [once you have stopped driving — read: the advert]
 The advert says خانه برای اجاره — khâne barâye ejâre — "House for rent."
 
+The word, taken apart.
+âgahi is âgah, "aware, informed", with the noun ending -i: "information, notice". âgah is native, usually traced to Middle Persian āgāh.
+
 What you've built.
 One more word for this chapter.
 
@@ -133,6 +145,9 @@ Before the new one: say the Persian for rent, then the Persian for an advert.
 
 You'll want to know: رسید.
 رسید — resid — "a receipt". Ask for it when you pay: لطفا رسید را بدهید — lotfan resid râ bedahid — "The receipt, please."
+
+The word, taken apart.
+resid is the past stem of residan, "to arrive, to reach": what has arrived, so the slip that confirms it. The verb is inherited, usually traced to Middle Persian rasīdan.
 
 What you've built.
 One more word for this chapter.

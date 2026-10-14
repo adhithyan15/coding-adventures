@@ -14,7 +14,8 @@ romanization: "kesel-konande"
 concept_tag: FA-SEFAT273-KESEL-KONANDE
 prerequisites: [FA-C272-surati, FA-C272-tarik]
 sounds: []
-roots: []
+roots: [arabic-kasal]
+etymology_hook: "kesel ← Arabic kasal 'sluggishness' (root k-s-l, Lane) + Persian konande 'making'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C272-tarik]
 <!-- hl-knowledge: introduces=[FA-LEX-C273-SEFAT273-01]; assesses=[] -->
 
 **کسل کننده** — *kesel-konande* — "boring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kesel-konande* is "making weary": *kesel*, "weary, bored", is borrowed from Arabic *kasal*, "sluggishness" (root *k-s-l*, Lane), and *konande*, "making", is from *kardan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

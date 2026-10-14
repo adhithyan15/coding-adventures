@@ -14,7 +14,8 @@ romanization: "abri"
 concept_tag: FA-SEFAT201-ABRI
 prerequisites: [FA-C201-khoshbu, FA-C201-aftabi]
 sounds: []
-roots: []
+roots: [persian-abr]
+etymology_hook: "abri: Persian abr 'cloud' (EtymDB) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C201-aftabi]
 <!-- hl-knowledge: introduces=[FA-LEX-C201-SEFAT201-04]; assesses=[] -->
 
 **ابری** — *abri* — "cloudy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*abri* is *abr*, "cloud", with the ending *-i*. *abr* is inherited, from Middle Persian *abr* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

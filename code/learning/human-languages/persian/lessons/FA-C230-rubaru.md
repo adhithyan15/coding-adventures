@@ -14,7 +14,8 @@ romanization: "rubaru"
 concept_tag: FA-MAKAN230-RUBARU
 prerequisites: [FA-C230-sharq, FA-C230-mostaqim]
 sounds: []
-roots: []
+roots: [persian-ru]
+etymology_hook: "rubaru: Persian ru 'face' + be 'to' + ru 'face'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C230-mostaqim]
 <!-- hl-knowledge: introduces=[FA-LEX-C230-MAKAN230-05]; assesses=[] -->
 
 **روبرو** — *rubaru* — "opposite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rubaru* is *ru*, "face", with *be*, "to", and *ru* again: face to face. All are native Persian; *ru* is usually traced to Middle Persian *rōy*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

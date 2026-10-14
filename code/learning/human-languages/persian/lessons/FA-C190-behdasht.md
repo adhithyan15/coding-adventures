@@ -14,7 +14,8 @@ romanization: "behdâsht"
 concept_tag: FA-SALAMAT190-BEHDASHT
 prerequisites: [FA-C190-mask, FA-C190-tabsanj]
 sounds: []
-roots: []
+roots: [persian-beh]
+etymology_hook: "behdâsht: modern Persian coinage: beh 'well' + dâsht 'keeping'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C190-tabsanj]
 <!-- hl-knowledge: introduces=[FA-LEX-C190-SALAMAT190-03]; assesses=[] -->
 
 **بهداشت** — *behdâsht* — "hygiene".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*behdâsht* is built from *beh*, "good, well", and *dâsht*, "keeping" (from *dâshtan*): keeping well, a modern Persian coinage. *beh* is inherited, usually traced to Middle Persian *weh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bâzâr"
 concept_tag: FA-TOWN72-BAZAR
 prerequisites: [FA-C72-ghayegh, FA-C72-docharkhe]
 sounds: []
-roots: []
+roots: [persian-bazar]
+etymology_hook: "bâzâr ← Middle Persian wāzār (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C72-docharkhe]
 <!-- hl-knowledge: introduces=[FA-LEX-C72-TOWN72-03]; assesses=[] -->
 
 **بازار** — *bâzâr* — "a bazaar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâzâr* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *wāzār*, "market" (EtymDB). English *bazaar* comes from this Persian word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

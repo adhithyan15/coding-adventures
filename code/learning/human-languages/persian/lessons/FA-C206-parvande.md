@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ206-PARVANDE
 prerequisites: [FA-C206-madrak, FA-C206-shenasname]
 sounds: []
 roots: []
+etymology_hook: "parvande: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C206-shenasname]
 <!-- hl-knowledge: introduces=[FA-LEX-C206-CHIZ206-03]; assesses=[] -->
 
 **پرونده** — *parvande* — "a file, a dossier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*parvande* is a native Persian word for a file or bundle, but no source used here gives its older form, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shabih"
 concept_tag: FA-SEFAT201-SHABIH
 prerequisites: [FA-C200-tanha, FA-C200-khodkhah]
 sounds: []
-roots: []
+roots: [arabic-sabih]
+etymology_hook: "shabih ← Arabic šabīh 'like, resembling', root š-b-h (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C200-khodkhah]
 <!-- hl-knowledge: introduces=[FA-LEX-C201-SEFAT201-01]; assesses=[] -->
 
 **شبیه** — *shabih* — "similar, alike".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shabih* is borrowed from Arabic *šabīh*, "like, resembling". Its Arabic root is *š-b-h* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

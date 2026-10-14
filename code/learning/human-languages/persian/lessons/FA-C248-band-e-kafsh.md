@@ -14,7 +14,8 @@ romanization: "band-e kafsh"
 concept_tag: FA-CHIZ248-BAND-E-KAFSH
 prerequisites: [FA-C248-chub-lebasi, FA-C248-gire]
 sounds: []
-roots: []
+roots: [persian-band, persian-kafsh]
+etymology_hook: "band-e kafsh: Persian band 'band' + kafsh 'shoe' (EtymDB); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C248-gire]
 <!-- hl-knowledge: introduces=[FA-LEX-C248-CHIZ248-03]; assesses=[] -->
 
 **بند کفش** — *band-e kafsh* — "a shoelace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*band-e kafsh* is "the band of the shoe". *band* is native (EtymDB), and *kafsh* is inherited, from Middle Persian *kafš* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

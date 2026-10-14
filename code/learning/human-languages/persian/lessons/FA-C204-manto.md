@@ -14,7 +14,8 @@ romanization: "mânto"
 concept_tag: FA-CHIZ204-MANTO
 prerequisites: [FA-C203-zarf, FA-C204-palto]
 sounds: []
-roots: []
+roots: [french-manteau]
+etymology_hook: "mânto: a loan, usually traced to French manteau 'coat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C204-palto]
 <!-- hl-knowledge: introduces=[FA-LEX-C204-CHIZ204-02]; assesses=[] -->
 
 **مانتو** — *mânto* — "a manteau (a women's long coat)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mânto* is a loan, usually traced to French *manteau*, "coat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

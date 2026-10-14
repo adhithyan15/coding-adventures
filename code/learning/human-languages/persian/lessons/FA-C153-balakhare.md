@@ -14,7 +14,8 @@ romanization: "bâlâkhare"
 concept_tag: FA-ZAMAN153-BALAKHARE
 prerequisites: [FA-C153-pish, FA-C153-sepas]
 sounds: []
-roots: []
+roots: [arabic-akhir]
+etymology_hook: "bâlâkhare ← Arabic phrase bi-l-āḫira 'at the last', root ʾ-ḫ-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C153-sepas]
 <!-- hl-knowledge: introduces=[FA-LEX-C153-ZAMAN153-04]; assesses=[] -->
 
 **بالاخره** — *bâlâkhare* — "finally, at last".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâlâkhare* is borrowed as a whole phrase from Arabic *bi-l-āḫira*, "at the last" (root *ʾ-ḫ-r*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

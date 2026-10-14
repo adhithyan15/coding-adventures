@@ -14,7 +14,8 @@ romanization: "pardâkhtan"
 concept_tag: FA-VERB-PARDAKHTAN
 prerequisites: [FA-C130-ziyad, FA-C131-mahbub]
 sounds: []
-roots: []
+roots: [persian-pardakhtan]
+etymology_hook: "pardâkhtan: inherited, usually traced to Middle Persian pardāxtan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C131-mahbub]
 <!-- hl-knowledge: introduces=[FA-LEX-C131-QUAL131-02]; assesses=[] -->
 
 **پرداختن** — *pardâkhtan* — "to pay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pardâkhtan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *pardāxtan*, "to finish, to attend to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

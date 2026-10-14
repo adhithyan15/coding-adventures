@@ -14,7 +14,8 @@ romanization: "samâvar"
 concept_tag: FA-CHIZ247-SAMAVAR
 prerequisites: [FA-C247-adviye, FA-C247-tarazu]
 sounds: []
-roots: []
+roots: [russian-samovar]
+etymology_hook: "samâvar ← Russian samovar 'self-boiler'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C247-tarazu]
 <!-- hl-knowledge: introduces=[FA-LEX-C247-CHIZ247-04]; assesses=[] -->
 
 **سماور** — *samâvar* — "a samovar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*samâvar* is borrowed from Russian *samovar*, "self-boiler" (EtymDB). It is Russian *samo-*, "self", with *varit'*, "to boil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

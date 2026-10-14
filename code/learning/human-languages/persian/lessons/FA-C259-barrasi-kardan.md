@@ -14,7 +14,8 @@ romanization: "barrasi kardan"
 concept_tag: FA-VERB-BARRASI-KARDAN
 prerequisites: [FA-C258-movafeq-budan, FA-C258-tasavvor-kardan]
 sounds: []
-roots: []
+roots: [persian-rasid, pie-kwer]
+etymology_hook: "barrasi kardan: Persian bar 'on' + rasi 'reaching' (residan) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C258-tasavvor-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C259-KONESH259-01]; assesses=[] -->
 
 **بررسی کردن** — *barrasi kardan* — "to check, to examine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*barrasi kardan* pairs *barrasi*, "examination", with *kardan*. *barrasi* is *bar*, "on", with *rasi*, "reaching" (from *residan*): going over a thing. All are native Persian. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

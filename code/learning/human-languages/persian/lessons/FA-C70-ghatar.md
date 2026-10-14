@@ -14,7 +14,8 @@ romanization: "ghatâr"
 concept_tag: FA-TOWN70-GHATAR
 prerequisites: [FA-C70-mashin, FA-C70-otobus]
 sounds: []
-roots: []
+roots: [arabic-qitar]
+etymology_hook: "ghatâr ← Arabic qiṭār 'line of camels', root q-ṭ-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C70-otobus]
 <!-- hl-knowledge: introduces=[FA-LEX-C70-TOWN70-05]; assesses=[] -->
 
 **قطار** — *ghatâr* — "a train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ghatâr* is borrowed from Arabic *qiṭār*, "line of camels". Its Arabic root is *q-ṭ-r* (Lane). Lane describes camels tied one behind another; Persian moved the word to the train.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

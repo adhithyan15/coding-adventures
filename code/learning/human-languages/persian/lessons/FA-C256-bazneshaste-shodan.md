@@ -14,7 +14,8 @@ romanization: "bâzneshaste shodan"
 concept_tag: FA-VERB-BAZNESHASTE-SHODAN
 prerequisites: [FA-C256-talash-kardan, FA-C256-mosaferat-kardan]
 sounds: []
-roots: []
+roots: [persian-shudan]
+etymology_hook: "bâzneshaste shodan: Persian bâz 'back' + neshaste 'seated' + shodan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C256-mosaferat-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C256-KONESH256-05]; assesses=[] -->
 
 **بازنشسته شدن** — *bâzneshaste shodan* — "to retire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâzneshaste shodan* is "to become sat back": *bâz*, "back", with *neshaste*, "seated" (from *neshastan*), and *shodan*. All are native Persian. *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

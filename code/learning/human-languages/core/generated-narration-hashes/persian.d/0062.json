@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 62,
-  "sourceHash": "fnv1a64:d0294ec8924f9a39",
+  "sourceHash": "fnv1a64:a402b5b7c81be75d",
   "lessonIds": [
     "FA-C62-shirin",
     "FA-C62-chagh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch62.txt",
   "json": "persian/narration/ch62.json",
-  "textHash": "fnv1a64:97151849ec1efdb0",
-  "jsonHash": "fnv1a64:50746f0fb24b7e7e",
+  "textHash": "fnv1a64:c7daef583ddaeec8",
+  "jsonHash": "fnv1a64:c920cb6c479e8191",
   "findings": []
 }

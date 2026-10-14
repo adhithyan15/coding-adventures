@@ -14,7 +14,8 @@ romanization: "kenâr"
 concept_tag: FA-DEF85-KENAR
 prerequisites: [FA-C85-kodam, FA-C85-koja]
 sounds: []
-roots: []
+roots: [persian-kenar]
+etymology_hook: "kenâr: inherited, usually traced to Middle Persian kanārag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C85-koja]
 <!-- hl-knowledge: introduces=[FA-LEX-C85-DEF85-03]; assesses=[] -->
 
 **کنار** — *kenâr* — "beside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kenâr* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kanārag*, "edge, border".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

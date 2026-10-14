@@ -14,7 +14,8 @@ romanization: "kudak"
 concept_tag: FA-THINGS116-KUDAK
 prerequisites: [FA-C116-furushande, FA-C116-nanva]
 sounds: []
-roots: []
+roots: [persian-kudak]
+etymology_hook: "kudak: inherited, usually traced to Middle Persian kōdak"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C116-nanva]
 <!-- hl-knowledge: introduces=[FA-LEX-C116-THINGS116-05]; assesses=[] -->
 
 **کودک** — *kudak* — "a small child".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kudak* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kōdak*, "small child".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

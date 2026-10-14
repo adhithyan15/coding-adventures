@@ -14,7 +14,8 @@ romanization: "kud dâdan"
 concept_tag: FA-VERB-KUD-DADAN
 prerequisites: [FA-C225-bala-avardan, FA-C225-varam-kardan]
 sounds: []
-roots: []
+roots: [pie-deh3]
+etymology_hook: "kud dâdan: Persian kud 'manure' (EtymDB) + dâdan 'to give'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C225-varam-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C226-KONESH226-01]; assesses=[] -->
 
 **کود دادن** — *kud dâdan* — "to fertilise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kud dâdan* is "to give manure": *kud*, "manure, heap", is a native word (EtymDB). *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

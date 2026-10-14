@@ -14,7 +14,8 @@ romanization: "sang"
 concept_tag: FA-NATURE52-SANG
 prerequisites: [FA-C52-rudkhane, FA-C52-daryache]
 sounds: []
-roots: []
+roots: [persian-sang]
+etymology_hook: "sang: inherited, usually traced to Middle Persian sang"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C52-daryache]
 <!-- hl-knowledge: introduces=[FA-LEX-C52-NATURE52-05]; assesses=[] -->
 
 **سنگ** — *sang* — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sang* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *sang*, "stone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

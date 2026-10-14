@@ -14,7 +14,8 @@ romanization: "tagarg"
 concept_tag: FA-CHIZ208-TAGARG
 prerequisites: [FA-C208-hava, FA-C208-yakh]
 sounds: []
-roots: []
+roots: [persian-tagarg]
+etymology_hook: "tagarg ← Middle Persian tagarg (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C208-yakh]
 <!-- hl-knowledge: introduces=[FA-LEX-C208-CHIZ208-03]; assesses=[] -->
 
 **تگرگ** — *tagarg* — "hail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tagarg* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *tagarg*, "hail" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

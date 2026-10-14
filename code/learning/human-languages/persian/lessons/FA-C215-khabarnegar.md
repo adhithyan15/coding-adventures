@@ -14,7 +14,8 @@ romanization: "khabarnegâr"
 concept_tag: FA-KAR215-KHABARNEGAR
 prerequisites: [FA-C215-nomre, FA-C215-mashq]
 sounds: []
-roots: []
+roots: [arabic-khabar]
+etymology_hook: "khabarnegâr: khabar ← Arabic ḫabar 'news' (Lane) + Persian negâr 'writing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C215-mashq]
 <!-- hl-knowledge: introduces=[FA-LEX-C215-KAR215-03]; assesses=[] -->
 
 **خبرنگار** — *khabarnegâr* — "a journalist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khabarnegâr* is *khabar*, "news", with *-negâr*, "writing" (from *negâshtan*, "to write, to paint"): the news-writer. *khabar* is borrowed from Arabic *ḫabar* (root *ḫ-b-r*, Lane); *negâr* is native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

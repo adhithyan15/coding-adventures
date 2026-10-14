@@ -14,7 +14,8 @@ romanization: "be-zudi"
 concept_tag: FA-ZAMAN192-BE-ZUDI
 prerequisites: [FA-C192-dobare, FA-C192-fowran]
 sounds: []
-roots: []
+roots: [persian-zud]
+etymology_hook: "be-zudi: Persian be 'with' + zud 'quick' + -i; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C192-fowran]
 <!-- hl-knowledge: introduces=[FA-LEX-C192-ZAMAN192-05]; assesses=[] -->
 
 **به زودی** — *be-zudi* — "soon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*be-zudi* is *be*, "with", with *zudi*, "quickness" (from *zud*, "quick"): quickly, soon. *zud* is native, usually traced to Middle Persian *zūd*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

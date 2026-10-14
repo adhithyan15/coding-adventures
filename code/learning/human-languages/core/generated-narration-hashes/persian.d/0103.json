@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 103,
-  "sourceHash": "fnv1a64:e8f16d98aaeb8e2b",
+  "sourceHash": "fnv1a64:abed71c811d79f6d",
   "lessonIds": [
     "FA-C103-tappe",
     "FA-C103-jazire",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch103.txt",
   "json": "persian/narration/ch103.json",
-  "textHash": "fnv1a64:d7ca681e2417c866",
-  "jsonHash": "fnv1a64:659621594e494166",
+  "textHash": "fnv1a64:7cf7015c367b569d",
+  "jsonHash": "fnv1a64:7d403b749c165016",
   "findings": []
 }

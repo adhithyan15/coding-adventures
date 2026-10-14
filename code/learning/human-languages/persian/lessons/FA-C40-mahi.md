@@ -14,7 +14,8 @@ romanization: "mâhi"
 concept_tag: FA-VERBS40-MAHI
 prerequisites: [FA-C40-shodan, FA-C40-sakhtan]
 sounds: []
-roots: []
+roots: [persian-mahi]
+etymology_hook: "mâhi ← Middle Persian māhīg (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C40-sakhtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C40-VERBS40-03]; assesses=[] -->
 
 **ماهی** — *mâhi* — "a fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mâhi* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *māhīg*, "fish" (EtymDB). EtymDB takes it back to an Indo-Iranian word for "fish", the same word as Sanskrit *matsya*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

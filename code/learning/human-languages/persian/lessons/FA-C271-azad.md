@@ -14,7 +14,8 @@ romanization: "âzâd"
 concept_tag: FA-SEFAT271-AZAD
 prerequisites: [FA-C270-ba-vojud-e, FA-C270-bahane]
 sounds: []
-roots: []
+roots: [persian-azad]
+etymology_hook: "âzâd ← Middle Persian āzād (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C270-bahane]
 <!-- hl-knowledge: introduces=[FA-LEX-C271-SEFAT271-01]; assesses=[] -->
 
 **آزاد** — *âzâd* — "free (not busy)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âzâd* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *āzād*, "noble, free" (EtymDB). Old Persian had *āzāta-* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

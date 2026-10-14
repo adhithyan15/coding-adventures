@@ -14,7 +14,8 @@ romanization: "zibâ"
 concept_tag: FA-ADJ63-ZIBA
 prerequisites: [FA-C62-dorost, FA-C63-mohem]
 sounds: []
-roots: []
+roots: [persian-ziba]
+etymology_hook: "zibâ: inherited, usually traced to Middle Persian zēbāg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C63-mohem]
 <!-- hl-knowledge: introduces=[FA-LEX-C63-ADJ63-02]; assesses=[] -->
 
 **زیبا** — *zibâ* — "beautiful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zibâ* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *zēbāg*, "beautiful".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

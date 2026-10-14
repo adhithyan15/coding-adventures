@@ -14,7 +14,8 @@ romanization: "mehmân"
 concept_tag: FA-FAMILY34-MEHMAN
 prerequisites: [FA-C33-khanevade, FA-C34-hamsaye]
 sounds: []
-roots: []
+roots: [persian-mihman]
+etymology_hook: "mehmân ← Middle Persian mehmān (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C34-hamsaye]
 <!-- hl-knowledge: introduces=[FA-LEX-C34-FAMILY34-02]; assesses=[] -->
 
 **مهمان** — *mehmân* — "a guest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mehmân* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *mehmān*, "inhabitant; guest" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

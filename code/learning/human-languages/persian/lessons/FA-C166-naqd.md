@@ -14,7 +14,8 @@ romanization: "naqd"
 concept_tag: FA-CHIZ166-NAQD
 prerequisites: [FA-C166-moshtari, FA-C166-andaze]
 sounds: []
-roots: []
+roots: [arabic-naqd]
+etymology_hook: "naqd ← Arabic naqd 'ready money; testing coins', root n-q-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C166-andaze]
 <!-- hl-knowledge: introduces=[FA-LEX-C166-CHIZ166-04]; assesses=[] -->
 
 **نقد** — *naqd* — "cash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*naqd* is borrowed from Arabic *naqd*, "ready money; testing coins". Its Arabic root is *n-q-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

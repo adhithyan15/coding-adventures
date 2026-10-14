@@ -14,7 +14,8 @@ romanization: "ham zadan"
 concept_tag: FA-VERB-HAM-ZADAN
 prerequisites: [FA-C179-gush-dadan, FA-C180-makhlut-kardan]
 sounds: []
-roots: []
+roots: [persian-ham, persian-zadan]
+etymology_hook: "ham zadan: Persian ham 'together' (Old Persian hama-, EtymDB) + zadan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C180-makhlut-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C180-KONESH180-02]; assesses=[] -->
 
 **هم زدن** — *ham zadan* — "to stir".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ham zadan* pairs *ham*, "together", with *zadan*, "to strike": to beat together. *ham* is inherited: EtymDB traces it to Middle Persian *ham* and Old Persian *hama-*, "same, together". *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

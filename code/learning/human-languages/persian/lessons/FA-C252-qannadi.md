@@ -14,7 +14,8 @@ romanization: "qannâdi"
 concept_tag: FA-KAR252-QANNADI
 prerequisites: [FA-C251-tarikh, FA-C252-baqqal]
 sounds: []
-roots: []
+roots: [arabic-qannad]
+etymology_hook: "qannâdi: Arabic qannād 'confectioner', root q-n-d (Lane), + Persian -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C252-baqqal]
 <!-- hl-knowledge: introduces=[FA-LEX-C252-KAR252-02]; assesses=[] -->
 
 **قنادی** — *qannâdi* — "a pastry shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qannâdi* is *qannâd*, "confectioner", with the ending *-i*, "shop of". *qannâd* is borrowed from Arabic *qannād*, "seller of sugar-candy" (root *q-n-d*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

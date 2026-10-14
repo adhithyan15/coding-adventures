@@ -14,7 +14,8 @@ romanization: "sakhre"
 concept_tag: FA-MAKAN267-SAKHRE
 prerequisites: [FA-C267-paytakht, FA-C267-marz]
 sounds: []
-roots: []
+roots: [arabic-sahra]
+etymology_hook: "sakhre ← Arabic ṣaḫra 'rock, great stone', root ṣ-ḫ-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C267-marz]
 <!-- hl-knowledge: introduces=[FA-LEX-C267-MAKAN267-04]; assesses=[] -->
 
 **صخره** — *sakhre* — "a rock, a cliff".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sakhre* is borrowed from Arabic *ṣaḫra*, "rock, great stone". Its Arabic root is *ṣ-ḫ-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

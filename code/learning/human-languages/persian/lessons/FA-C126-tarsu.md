@@ -14,7 +14,8 @@ romanization: "tarsu"
 concept_tag: FA-QUAL126-TARSU
 prerequisites: [FA-C125-tanbal, FA-C126-zerang]
 sounds: []
-roots: []
+roots: [persian-tars]
+etymology_hook: "tarsu: Persian tars 'fear' (tarsidan, inherited) + -u"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C126-zerang]
 <!-- hl-knowledge: introduces=[FA-LEX-C126-QUAL126-02]; assesses=[] -->
 
 **ترسو** — *tarsu* — "timid, cowardly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tarsu* is *tars*, "fear", with the ending *-u*, "given to": "fearful". *tars* belongs with *tarsidan*, "to fear", an inherited verb usually traced to Middle Persian *tarsīdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

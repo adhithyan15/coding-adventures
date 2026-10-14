@@ -14,7 +14,8 @@ romanization: "kolâh"
 concept_tag: FA-CLOTHES74-KOLAH
 prerequisites: [FA-C74-jib, FA-C74-angoshtar]
 sounds: []
-roots: []
+roots: [persian-kolah]
+etymology_hook: "kolâh ← Middle Persian kulāf (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C74-angoshtar]
 <!-- hl-knowledge: introduces=[FA-LEX-C74-CLOTHES74-04]; assesses=[] -->
 
 **کلاه** — *kolâh* — "a hat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kolâh* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *kulāf*, "cap" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

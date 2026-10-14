@@ -14,7 +14,8 @@ romanization: "mohlat"
 concept_tag: FA-ZAMAN191-MOHLAT
 prerequisites: [FA-C191-sar-e-vaqt, FA-C191-qarar]
 sounds: []
-roots: []
+roots: [arabic-muhla]
+etymology_hook: "mohlat ← Arabic muhla 'respite, delay', root m-h-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C191-qarar]
 <!-- hl-knowledge: introduces=[FA-LEX-C191-ZAMAN191-03]; assesses=[] -->
 
 **مهلت** — *mohlat* — "a deadline".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mohlat* is borrowed from Arabic *muhla*, "respite, delay". Its Arabic root is *m-h-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

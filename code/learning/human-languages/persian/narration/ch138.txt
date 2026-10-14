@@ -12,6 +12,9 @@ Before the new one: say the Persian for once, then the Persian for to spend.
 You'll want to know: آینده.
 آینده — âyande — "next, coming; the future". The future uses خواهم with the verb's past stem (رفت from رفتن): هفته آینده به مشهد خواهم رفت — hafte-ye âyande be mashhad khâham raft — "Next week I will go to Mashhad."
 
+The word, taken apart.
+âyande is ây-, the present stem of âmadan, "to come" (EtymDB), with -ande, "-ing": "coming". The verb is inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to spend, then the Persian for next.
 
 You'll want to know: از حالا.
 از حالا — az hâlâ — "from now on". از حالا هر روز ورزش خواهم کرد — az hâlâ har ruz varzesh khâham kard — "From now on I will exercise every day."
+
+The word, taken apart.
+az hâlâ is "from now". az, "from", is native: Old Persian had hacā (EtymDB). hâlâ, "now", is borrowed from Arabic ḥālan (root ḥ-w-l, Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for next, then the Persian for from now on.
 You'll want to know: طرح.
 طرح — tarh — "a plan, a design". یک طرح خوب داریم — yek tarh-e khub dârim — "We have a good plan."
 
+The word, taken apart.
+tarh is borrowed from Arabic ṭarḥ, "throwing, laying down". Its Arabic root is ṭ-r-ḥ (Lane). Persian uses it for a plan or design.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for from now on, then the Persian for a plan
 You'll want to know: تصمیم گرفتن.
 تصمیم گرفتن — tasmim gereftan — "to decide". تصمیم گرفتم ورزش کنم — tasmim gereftam varzesh konam — "I decided to exercise."
 
+The word, taken apart.
+tasmim gereftan pairs tasmim, borrowed from Arabic taṣmīm, "resolve" (root ṣ-m-m, Lane), with the Persian verb gereftan, "to take". gereftan, "to take", is an inherited verb; EtymDB takes it back to the Indo-European root gʰrebh₂-, "to seize".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a plan, then the Persian for to decide.
 
 You'll want to know: امیدوار بودن.
 امیدوار بودن — omidvâr budan — "to hope". امیدوارم حالت خوب باشد — omidvâram hâlat khub bâshad — "I hope you are well."
+
+The word, taken apart.
+omidvâr budan is "to be hopeful": omid, "hope", with -vâr, "having", and budan, "to be". All are native; omid is usually traced to Middle Persian ummēd.
 
 What you've built.
 One more word for this chapter.

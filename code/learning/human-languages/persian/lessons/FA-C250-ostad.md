@@ -14,7 +14,8 @@ romanization: "ostâd"
 concept_tag: FA-KAR250-OSTAD
 prerequisites: [FA-C250-mohandes, FA-C250-vakil]
 sounds: []
-roots: []
+roots: [persian-ostad]
+etymology_hook: "ostâd ← Middle Persian ōstād (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C250-vakil]
 <!-- hl-knowledge: introduces=[FA-LEX-C250-KAR250-04]; assesses=[] -->
 
 **استاد** — *ostâd* — "a university lecturer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ostâd* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *ōstād*, "master, craftsman" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

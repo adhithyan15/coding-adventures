@@ -14,7 +14,8 @@ romanization: "bime"
 concept_tag: FA-SALAMAT227-BIME
 prerequisites: [FA-C227-band, FA-C227-mosakken]
 sounds: []
-roots: []
+roots: [persian-bima]
+etymology_hook: "bime: usually explained as built on Persian bim 'fear, risk'; Hindi bīmā comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C227-mosakken]
 <!-- hl-knowledge: introduces=[FA-LEX-C227-SALAMAT227-03]; assesses=[] -->
 
 **بیمه** — *bime* — "insurance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bime* is usually explained as built on *bim*, "fear, risk", with the ending *-e*: cover against a risk. Hindi *bīmā*, "insurance", comes from this Persian word (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

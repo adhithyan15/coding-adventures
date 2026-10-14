@@ -14,7 +14,8 @@ romanization: "ide"
 concept_tag: FA-CHERA198-IDE
 prerequisites: [FA-C197-ya, FA-C198-bayad]
 sounds: []
-roots: []
+roots: [french-idee]
+etymology_hook: "ide ← French idée 'idea'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C198-bayad]
 <!-- hl-knowledge: introduces=[FA-LEX-C198-CHERA198-02]; assesses=[] -->
 
 **ایده** — *ide* — "an idea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ide* is borrowed from French *idée*, "idea" (EtymDB). The French word goes back to Greek *idea*, "form, pattern".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

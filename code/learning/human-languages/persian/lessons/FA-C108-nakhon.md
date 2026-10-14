@@ -14,7 +14,8 @@ romanization: "nâkhon"
 concept_tag: FA-THINGS108-NAKHON
 prerequisites: [FA-C108-moch, FA-C108-shast]
 sounds: []
-roots: []
+roots: [persian-nakhun]
+etymology_hook: "nâkhon: inherited, usually traced to Middle Persian nāxun"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C108-shast]
 <!-- hl-knowledge: introduces=[FA-LEX-C108-THINGS108-03]; assesses=[] -->
 
 **ناخن** — *nâkhon* — "a fingernail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nâkhon* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *nāxun*, "nail". It is usually set beside English *nail* and Latin *unguis* as one Indo-European word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

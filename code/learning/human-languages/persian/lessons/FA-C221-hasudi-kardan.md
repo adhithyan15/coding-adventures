@@ -14,7 +14,8 @@ romanization: "hasudi kardan"
 concept_tag: FA-VERB-HASUDI-KARDAN
 prerequisites: [FA-C221-ashti-kardan, FA-C221-shukhi-kardan]
 sounds: []
-roots: []
+roots: [arabic-hasud, pie-kwer]
+etymology_hook: "hasud ← Arabic ḥasūd 'envious', root ḥ-s-d (Lane), + -i + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C221-shukhi-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C221-KONESH221-05]; assesses=[] -->
 
 **حسودی کردن** — *hasudi kardan* — "to be jealous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hasudi kardan* pairs *hasudi*, "envy", with *kardan*. *hasud* is borrowed from Arabic *ḥasūd*, "envious" (root *ḥ-s-d*, Lane), with the Persian ending *-i*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

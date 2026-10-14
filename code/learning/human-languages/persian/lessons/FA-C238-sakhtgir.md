@@ -14,7 +14,8 @@ romanization: "sakhtgir"
 concept_tag: FA-SEFAT238-SAKHTGIR
 prerequisites: [FA-C238-abdar, FA-C238-konjkav]
 sounds: []
-roots: []
+roots: [persian-sakht]
+etymology_hook: "sakhtgir: Persian sakht 'hard' (EtymDB) + gir 'gripping'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C238-konjkav]
 <!-- hl-knowledge: introduces=[FA-LEX-C238-SEFAT238-04]; assesses=[] -->
 
 **سختگیر** — *sakhtgir* — "strict".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sakhtgir* is *sakht*, "hard", with *-gir*, "taking, gripping" (from *gereftan*): one who grips hard. *sakht* is inherited, from Middle Persian *saxt* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jashnvâre"
 concept_tag: FA-ZAMAN264-JASHNVARE
 prerequisites: [FA-C263-kabudi, FA-C264-salgard]
 sounds: []
-roots: []
+roots: [persian-jashn]
+etymology_hook: "jashnvâre: Persian jashn 'festival' (Middle Persian jašn) + -vâre"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C264-salgard]
 <!-- hl-knowledge: introduces=[FA-LEX-C264-ZAMAN264-02]; assesses=[] -->
 
 **جشنواره** — *jashnvâre* — "a festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jashnvâre* is *jashn*, "festival", with the ending *-vâre*: a festival event. *jashn* is usually traced to Middle Persian *jašn*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

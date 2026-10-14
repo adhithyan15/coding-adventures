@@ -14,7 +14,8 @@ romanization: "gonbad"
 concept_tag: FA-MAKAN195-GONBAD
 prerequisites: [FA-C195-balkon, FA-C195-rahrow]
 sounds: []
-roots: []
+roots: [persian-gonbad]
+etymology_hook: "gonbad ← Middle Persian gumbad (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C195-rahrow]
 <!-- hl-knowledge: introduces=[FA-LEX-C195-MAKAN195-05]; assesses=[] -->
 
 **گنبد** — *gonbad* — "a dome".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gonbad* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *gumbad*, "dome" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

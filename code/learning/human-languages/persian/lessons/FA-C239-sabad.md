@@ -14,7 +14,8 @@ romanization: "sabad"
 concept_tag: FA-CHIZ239-SABAD
 prerequisites: [FA-C239-quri, FA-C239-dastmal]
 sounds: []
-roots: []
+roots: [persian-sabad]
+etymology_hook: "sabad: inherited, usually traced to Middle Persian sabad"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C239-dastmal]
 <!-- hl-knowledge: introduces=[FA-LEX-C239-CHIZ239-04]; assesses=[] -->
 
 **سبد** — *sabad* — "a basket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sabad* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *sabad*, "basket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

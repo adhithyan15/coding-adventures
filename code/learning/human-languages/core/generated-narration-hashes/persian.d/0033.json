@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 33,
-  "sourceHash": "fnv1a64:14e33ad0cbd82505",
+  "sourceHash": "fnv1a64:30a79e4c817c8717",
   "lessonIds": [
     "FA-C33-khale",
     "FA-C33-shohar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch33.txt",
   "json": "persian/narration/ch33.json",
-  "textHash": "fnv1a64:dccee8bc6be6d8a1",
-  "jsonHash": "fnv1a64:2db930afed861187",
+  "textHash": "fnv1a64:68f9c8b69f51a371",
+  "jsonHash": "fnv1a64:7c6322a81770420c",
   "findings": []
 }

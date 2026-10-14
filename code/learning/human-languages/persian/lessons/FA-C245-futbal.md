@@ -14,7 +14,8 @@ romanization: "futbâl"
 concept_tag: FA-CHIZ245-FUTBAL
 prerequisites: [FA-C245-bal, FA-C245-shakh]
 sounds: []
-roots: []
+roots: [english-football]
+etymology_hook: "futbâl: a loan, usually traced to English football 'football'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C245-shakh]
 <!-- hl-knowledge: introduces=[FA-LEX-C245-CHIZ245-05]; assesses=[] -->
 
 **فوتبال** — *futbâl* — "football".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*futbâl* is a loan, usually traced to English *football*, "football".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

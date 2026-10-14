@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ283-PICH-GUSHTI
 prerequisites: [FA-C283-lastik, FA-C283-zanjir]
 sounds: []
 roots: []
+etymology_hook: "pich-gushti: built on Persian pich 'screw'; second part not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C283-zanjir]
 <!-- hl-knowledge: introduces=[FA-LEX-C283-CHIZ283-04]; assesses=[] -->
 
 **پیچ گوشتی** — *pich-gushti* — "a screwdriver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pich-gushti* is built on *pich*, "screw", a native word; where the second part comes from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: FA-THINGS97-SHAL
 prerequisites: [FA-C96-badbadak, FA-C96-daman]
 sounds: []
 roots: []
+etymology_hook: "shâl: English shawl comes from it; its own origin is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C96-daman]
 <!-- hl-knowledge: introduces=[FA-LEX-C97-THINGS97-01]; assesses=[] -->
 
 **شال** — *shâl* — "a shawl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+English *shawl* comes from this Persian word. Where Persian got it is not settled: EtymDB links it to Sanskrit *śāṭī*, "cloth, sari".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

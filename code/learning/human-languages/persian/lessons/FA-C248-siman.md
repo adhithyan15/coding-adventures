@@ -14,7 +14,8 @@ romanization: "simân"
 concept_tag: FA-CHIZ248-SIMAN
 prerequisites: [FA-C248-gire, FA-C248-band-e-kafsh]
 sounds: []
-roots: []
+roots: [french-ciment]
+etymology_hook: "simân: a loan, usually traced to French ciment 'cement'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C248-band-e-kafsh]
 <!-- hl-knowledge: introduces=[FA-LEX-C248-CHIZ248-04]; assesses=[] -->
 
 **سیمان** — *simân* — "cement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*simân* is a loan, usually traced to French *ciment*, "cement".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

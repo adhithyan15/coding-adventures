@@ -1591,7 +1591,7 @@ where
         text_children.push(text_node(
             title,
             10.0,
-            5.0,
+            5.0 + diagram.flowchart_config.title_top_margin.unwrap_or(0.0),
             diagram.width - 20.0,
             30.0,
             title_font,
@@ -1702,6 +1702,9 @@ where
     }
     if let Some(padding) = diagram.flowchart_config.padding {
         metadata.insert("swimlane.flowchart.padding".into(), padding.to_string());
+    }
+    if let Some(margin) = diagram.flowchart_config.title_top_margin {
+        metadata.insert("swimlane.flowchart.titleTopMargin".into(), margin.to_string());
     }
     for (index, group) in diagram.groups.iter().enumerate() {
         metadata.insert(format!("swimlane.group.{index}.id"), group.id.clone());

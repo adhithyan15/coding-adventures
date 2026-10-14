@@ -12,6 +12,9 @@ Before the new one: say the Persian for that, then the Persian for these.
 You'll want to know: آنها.
 آنها — ânhâ — "those, they".
 
+The word, taken apart.
+ânhâ is ân, "that", with the plural ending -hâ: "those". Both pieces are native Persian; ân is usually traced to Middle Persian ān.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for these, then the Persian for those.
 
 You'll want to know: همین.
 همین — hamin — "this very".
+
+The word, taken apart.
+hamin is ham-, "same, very", with in, "this": "this very". Both pieces are native; in continues Middle Persian ēn (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for those, then the Persian for this very.
 You'll want to know: همان.
 همان — hamân — "that very".
 
+The word, taken apart.
+hamân is ham-, "same, very", with ân, "that" (EtymDB): "that very". Both pieces are native Persian, usually traced to Middle Persian ham and ān.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for this very, then the Persian for that ver
 You'll want to know: چنین.
 چنین — chenin — "such".
 
+The word, taken apart.
+chenin is chon, "like, as", with in, "this": "like this". Both are native; chon continues Middle Persian čiyōn (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for that very, then the Persian for such.
 
 You'll want to know: هر.
 هر — har — "every".
+
+The word, taken apart.
+har is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian harw, "each, all".
 
 What you've built.
 One more word for this chapter.

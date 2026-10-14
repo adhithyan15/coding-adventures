@@ -14,7 +14,8 @@ romanization: "tarâzu"
 concept_tag: FA-CHIZ247-TARAZU
 prerequisites: [FA-C247-quti, FA-C247-adviye]
 sounds: []
-roots: []
+roots: [persian-tarazu]
+etymology_hook: "tarâzu: inherited, usually traced to Middle Persian tarāzūg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C247-adviye]
 <!-- hl-knowledge: introduces=[FA-LEX-C247-CHIZ247-03]; assesses=[] -->
 
 **ترازو** — *tarâzu* — "scales (for weighing)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tarâzu* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *tarāzūg*, "balance". EtymDB lists an Avestan form, *tarāzu-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

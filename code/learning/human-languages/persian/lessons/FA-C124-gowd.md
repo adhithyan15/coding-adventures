@@ -15,6 +15,7 @@ concept_tag: FA-QUAL124-GOWD
 prerequisites: [FA-C123-pahn, FA-C124-barik]
 sounds: []
 roots: []
+etymology_hook: "gowd: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C124-barik]
 <!-- hl-knowledge: introduces=[FA-LEX-C124-QUAL124-02]; assesses=[] -->
 
 **گود** — *gowd* — "deep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gowd* is a native Persian word, but no source used here gives its older form, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

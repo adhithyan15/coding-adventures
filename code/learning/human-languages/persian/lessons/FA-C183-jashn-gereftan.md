@@ -14,7 +14,8 @@ romanization: "jashn gereftan"
 concept_tag: FA-VERB-JASHN-GEREFTAN
 prerequisites: [FA-C182-sohbat-kardan, FA-C183-ezdevaj-kardan]
 sounds: []
-roots: []
+roots: [persian-jashn]
+etymology_hook: "jashn: usually traced to Middle Persian jašn (Avestan yasna 'worship'), + gereftan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C183-ezdevaj-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C183-KONESH183-02]; assesses=[] -->
 
 **جشن گرفتن** — *jashn gereftan* — "to celebrate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jashn gereftan* is "to take a festival": *jashn* is usually traced to Middle Persian *jašn*, "festival", from the old word for "worship" that Avestan wrote *yasna*. Both parts are native. *gereftan*, "to take", is an inherited verb; EtymDB takes it back to the Indo-European root *\*gʰrebh₂-*, "to seize".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

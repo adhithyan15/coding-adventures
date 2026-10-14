@@ -14,7 +14,8 @@ romanization: "seft"
 concept_tag: FA-QUAL125-SEFT
 prerequisites: [FA-C124-khoshk, FA-C124-narm]
 sounds: []
-roots: []
+roots: [persian-seft]
+etymology_hook: "seft: inherited, usually traced to Middle Persian saft"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C124-narm]
 <!-- hl-knowledge: introduces=[FA-LEX-C125-QUAL125-01]; assesses=[] -->
 
 **سفت** — *seft* — "hard, firm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*seft* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *saft*, "firm, hard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

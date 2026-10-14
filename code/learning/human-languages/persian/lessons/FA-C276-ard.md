@@ -14,7 +14,8 @@ romanization: "ârd"
 concept_tag: FA-CHIZ276-ARD
 prerequisites: [FA-C275-khame, FA-C276-serke]
 sounds: []
-roots: []
+roots: [persian-ard]
+etymology_hook: "ârd ← Middle Persian ārd (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C276-serke]
 <!-- hl-knowledge: introduces=[FA-LEX-C276-CHIZ276-02]; assesses=[] -->
 
 **آرد** — *ârd* — "flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ârd* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *ārd*, "flour" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

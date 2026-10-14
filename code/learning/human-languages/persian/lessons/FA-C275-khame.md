@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ275-KHAME
 prerequisites: [FA-C275-qarch, FA-C275-darchin]
 sounds: []
 roots: []
+etymology_hook: "khâme: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C275-darchin]
 <!-- hl-knowledge: introduces=[FA-LEX-C275-CHIZ275-05]; assesses=[] -->
 
 **خامه** — *khâme* — "cream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâme* is the word for cream, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

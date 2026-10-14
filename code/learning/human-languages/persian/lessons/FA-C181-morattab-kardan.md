@@ -14,7 +14,8 @@ romanization: "morattab kardan"
 concept_tag: FA-VERB-MORATTAB-KARDAN
 prerequisites: [FA-C180-khord-kardan, FA-C181-nafas-keshidan]
 sounds: []
-roots: []
+roots: [arabic-murattab]
+etymology_hook: "morattab ← Arabic murattab 'arranged in order', root r-t-b (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C181-nafas-keshidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C181-KONESH181-02]; assesses=[] -->
 
 **مرتب کردن** — *morattab kardan* — "to tidy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*morattab kardan* pairs *morattab*, borrowed from Arabic *murattab*, "arranged in order" (root *r-t-b*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

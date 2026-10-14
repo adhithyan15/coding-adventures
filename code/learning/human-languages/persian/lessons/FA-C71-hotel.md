@@ -14,7 +14,8 @@ romanization: "hotel"
 concept_tag: FA-TOWN71-HOTEL
 prerequisites: [FA-C71-pol, FA-C71-masjed]
 sounds: []
-roots: []
+roots: [french-hotel]
+etymology_hook: "hotel ← French hôtel 'hotel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C71-masjed]
 <!-- hl-knowledge: introduces=[FA-LEX-C71-TOWN71-03]; assesses=[] -->
 
 **هتل** — *hotel* — "a hotel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hotel* is borrowed from French *hôtel*, "hotel" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bastani"
 concept_tag: FA-CHIZ167-BASTANI
 prerequisites: [FA-C166-naqd, FA-C166-bluz]
 sounds: []
-roots: []
+roots: [persian-bastan]
+etymology_hook: "bastani: usually explained as Persian bastan 'to set, to freeze' + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C166-bluz]
 <!-- hl-knowledge: introduces=[FA-LEX-C167-CHIZ167-01]; assesses=[] -->
 
 **بستنی** — *bastani* — "ice cream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bastani* is usually explained as built on *bastan*, "to bind, to set, to freeze", with *-i*: something set solid. *bastan* is native Persian. (EtymDB links it to an unrelated Romanian word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

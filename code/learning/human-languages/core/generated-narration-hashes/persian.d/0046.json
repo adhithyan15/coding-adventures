@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 46,
-  "sourceHash": "fnv1a64:36269813336f0410",
+  "sourceHash": "fnv1a64:a08df51a7385b24f",
   "lessonIds": [
     "FA-C46-divar",
     "FA-C46-takht",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch46.txt",
   "json": "persian/narration/ch46.json",
-  "textHash": "fnv1a64:4c5729cea1cd9363",
-  "jsonHash": "fnv1a64:87ae15db2b271357",
+  "textHash": "fnv1a64:9d6355af9b512ef0",
+  "jsonHash": "fnv1a64:bbae2ad2996e70be",
   "findings": []
 }

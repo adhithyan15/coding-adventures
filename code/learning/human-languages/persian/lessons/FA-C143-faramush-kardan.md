@@ -14,7 +14,8 @@ romanization: "farâmush kardan"
 concept_tag: FA-VERB-FARAMUSH-KARDAN
 prerequisites: [FA-C142-zakhmi-shodan, FA-C143-qurt-dadan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "farâmush kardan: farâmush (Middle Persian framōš) + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C143-qurt-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C143-KONESH143-02]; assesses=[] -->
 
 **فراموش کردن** — *farâmush kardan* — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*farâmush kardan* pairs *farâmush*, "forgotten", with *kardan*, "to make". *farâmush* is native, usually traced to Middle Persian *framōš*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

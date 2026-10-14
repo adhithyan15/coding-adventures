@@ -14,7 +14,8 @@ romanization: "benzin"
 concept_tag: FA-CHIZ242-BENZIN
 prerequisites: [FA-C242-vam, FA-C242-chek]
 sounds: []
-roots: []
+roots: [french-benzine]
+etymology_hook: "benzin: a loan, usually traced to French benzine 'benzine'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C242-chek]
 <!-- hl-knowledge: introduces=[FA-LEX-C242-CHIZ242-03]; assesses=[] -->
 
 **بنزین** — *benzin* — "petrol".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*benzin* is a loan, usually traced to French *benzine*, "benzine".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

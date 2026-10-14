@@ -14,7 +14,8 @@ romanization: "eskenâs"
 concept_tag: FA-CHIZ274-ESKENAS
 prerequisites: [FA-C274-qeymat, FA-C274-takhfif]
 sounds: []
-roots: []
+roots: [russian-assignatsiya]
+etymology_hook: "eskenâs ← Russian assignatsiya 'paper money'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C274-takhfif]
 <!-- hl-knowledge: introduces=[FA-LEX-C274-CHIZ274-05]; assesses=[] -->
 
 **اسکناس** — *eskenâs* — "a banknote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*eskenâs* is borrowed from Russian *assignatsiya*, "paper money" (EtymDB). It goes back to Latin *assignātiō*, "allotment" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

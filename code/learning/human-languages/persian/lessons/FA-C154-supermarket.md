@@ -14,7 +14,8 @@ romanization: "supermârket"
 concept_tag: FA-MAKAN154-SUPERMARKET
 prerequisites: [FA-C153-haftegi, FA-C154-forushgah]
 sounds: []
-roots: []
+roots: [supermarket-english]
+etymology_hook: "supermârket: a loan, usually traced to English supermarket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C154-forushgah]
 <!-- hl-knowledge: introduces=[FA-LEX-C154-MAKAN154-02]; assesses=[] -->
 
 **سوپرمارکت** — *supermârket* — "a supermarket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*supermârket* is a loan, usually traced to English *supermarket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

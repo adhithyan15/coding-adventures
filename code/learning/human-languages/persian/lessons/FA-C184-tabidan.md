@@ -14,7 +14,8 @@ romanization: "tâbidan"
 concept_tag: FA-VERB-TABIDAN
 prerequisites: [FA-C184-rad-kardan, FA-C184-vazidan]
 sounds: []
-roots: []
+roots: [persian-tabidan]
+etymology_hook: "tâbidan: inherited, usually traced to Middle Persian tābīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C184-vazidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C184-KONESH184-04]; assesses=[] -->
 
 **تابیدن** — *tâbidan* — "to shine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tâbidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *tābīdan*, "to shine".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

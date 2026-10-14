@@ -14,7 +14,8 @@ romanization: "shekâyat kardan"
 concept_tag: FA-VERB-SHEKAYAT-KARDAN
 prerequisites: [FA-C257-ehsas-kardan, FA-C257-qol-dadan]
 sounds: []
-roots: []
+roots: [arabic-sikaya]
+etymology_hook: "shekâyat ← Arabic šikāya 'complaint', root š-k-w (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C257-qol-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C257-KONESH257-05]; assesses=[] -->
 
 **شکایت کردن** — *shekâyat kardan* — "to complain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shekâyat kardan* pairs *shekâyat*, borrowed from Arabic *šikāya*, "complaint" (root *š-k-w*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

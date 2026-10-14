@@ -14,7 +14,8 @@ romanization: "kalam"
 concept_tag: FA-CHIZ275-KALAM
 prerequisites: [FA-C274-eskenas, FA-C275-kahu]
 sounds: []
-roots: []
+roots: [greek-krambe]
+etymology_hook: "kalam ← Middle Persian kalamb ← Greek krambē 'cabbage' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C275-kahu]
 <!-- hl-knowledge: introduces=[FA-LEX-C275-CHIZ275-02]; assesses=[] -->
 
 **کلم** — *kalam* — "cabbage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kalam* goes back, through Middle Persian *kalamb* (EtymDB), to Greek *krambē*, "cabbage".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

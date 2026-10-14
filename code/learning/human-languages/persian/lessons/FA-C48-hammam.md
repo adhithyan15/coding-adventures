@@ -14,7 +14,8 @@ romanization: "hammâm"
 concept_tag: FA-HOME48-HAMMAM
 prerequisites: [FA-C48-bottri, FA-C48-ashpazkhane]
 sounds: []
-roots: []
+roots: [arabic-hammam]
+etymology_hook: "hammâm ← Arabic ḥammām 'bath, bathhouse', root ḥ-m-m (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C48-ashpazkhane]
 <!-- hl-knowledge: introduces=[FA-LEX-C48-HOME48-03]; assesses=[] -->
 
 **حمام** — *hammâm* — "a bathroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hammâm* is borrowed from Arabic *ḥammām*, "bath, bathhouse". Its Arabic root is *ḥ-m-m* (Lane). The root is about heat: a bath was a heated room.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

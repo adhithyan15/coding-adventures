@@ -14,7 +14,8 @@ romanization: "divâne"
 concept_tag: FA-SEFAT236-DIVANE
 prerequisites: [FA-C236-bamaze, FA-C236-jaleb]
 sounds: []
-roots: []
+roots: [persian-div]
+etymology_hook: "divâne: usually explained as Persian div 'demon' (Middle Persian dēw) + -âne"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C236-jaleb]
 <!-- hl-knowledge: introduces=[FA-LEX-C236-SEFAT236-04]; assesses=[] -->
 
 **دیوانه** — *divâne* — "crazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*divâne* is usually explained as built from *div*, "demon" (Middle Persian *dēw*), and the ending *-âne*: possessed by a demon. Both pieces are inherited Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

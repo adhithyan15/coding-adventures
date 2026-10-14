@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 195,
-  "sourceHash": "fnv1a64:04bc0ad92197641c",
+  "sourceHash": "fnv1a64:b9d38fe0617c8fd4",
   "lessonIds": [
     "FA-C195-aparteman",
     "FA-C195-bam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch195.txt",
   "json": "persian/narration/ch195.json",
-  "textHash": "fnv1a64:d1d0df33281503ff",
-  "jsonHash": "fnv1a64:0af355b703760251",
+  "textHash": "fnv1a64:746c0aa0490dcc18",
+  "jsonHash": "fnv1a64:b307a705eb25b319",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "khasis"
 concept_tag: FA-SEFAT236-KHASIS
 prerequisites: [FA-C235-majani, FA-C235-bikar]
 sounds: []
-roots: []
+roots: [arabic-hasis]
+etymology_hook: "khasis ← Arabic ḫasīs 'mean, base', root ḫ-s-s (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C235-bikar]
 <!-- hl-knowledge: introduces=[FA-LEX-C236-SEFAT236-01]; assesses=[] -->
 
 **خسیس** — *khasis* — "stingy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khasis* is borrowed from Arabic *ḫasīs*, "mean, base". Its Arabic root is *ḫ-s-s* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

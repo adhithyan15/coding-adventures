@@ -14,7 +14,8 @@ romanization: "plâstik"
 concept_tag: FA-CHIZ173-PLASTIK
 prerequisites: [FA-C173-noqre, FA-C173-mes]
 sounds: []
-roots: []
+roots: [french-plastique]
+etymology_hook: "plâstik ← French plastique 'plastic'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C173-mes]
 <!-- hl-knowledge: introduces=[FA-LEX-C173-CHIZ173-03]; assesses=[] -->
 
 **پلاستیک** — *plâstik* — "plastic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*plâstik* is borrowed from French *plastique*, "plastic" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

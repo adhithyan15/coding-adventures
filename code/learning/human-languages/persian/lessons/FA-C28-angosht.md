@@ -14,7 +14,8 @@ romanization: "angosht"
 concept_tag: FA-BODY28-ANGOSHT
 prerequisites: [FA-C27-dandan, FA-C28-mu]
 sounds: []
-roots: []
+roots: [persian-angosht]
+etymology_hook: "angosht: inherited, usually traced to Middle Persian angust"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C28-mu]
 <!-- hl-knowledge: introduces=[FA-LEX-C28-BODY28-02]; assesses=[] -->
 
 **انگشت** — *angosht* — "a finger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*angosht* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *angust*, "finger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

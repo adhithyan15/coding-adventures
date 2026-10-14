@@ -14,7 +14,8 @@ romanization: "chahârshanbe"
 concept_tag: FA-TIME81-CHAHARSHANBE
 prerequisites: [FA-C81-yekshanbe, FA-C81-doshanbe]
 sounds: []
-roots: []
+roots: [pie-kwetwores, aramaic-shabbat]
+etymology_hook: "chahârshanbe: Persian chahâr 'four' + shanbe 'Sabbath' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C81-doshanbe]
 <!-- hl-knowledge: introduces=[FA-LEX-C81-TIME81-04]; assesses=[] -->
 
 **چهارشنبه** — *chahârshanbe* — "Wednesday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chahârshanbe* is *chahâr*, "four", with *shanbe*, "Saturday" (EtymDB): the fourth day after the Sabbath. *chahâr* is inherited from Middle Persian (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gush"
 concept_tag: FA-BODY27-GUSH
 prerequisites: [FA-C20-chaharom, FA-C27-sar]
 sounds: []
-roots: []
+roots: [persian-gush]
+etymology_hook: "gush ← Middle Persian gōš (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C27-sar]
 <!-- hl-knowledge: introduces=[FA-LEX-C27-BODY27-02]; assesses=[] -->
 
 **گوش** — *gush* — "an ear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gush* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *gōš*, "ear" (EtymDB). Old Persian had *gauša-*, "ear" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

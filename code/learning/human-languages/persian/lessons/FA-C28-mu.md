@@ -14,7 +14,8 @@ romanization: "mu"
 concept_tag: FA-BODY28-MU
 prerequisites: [FA-C27-dahan, FA-C27-dandan]
 sounds: []
-roots: []
+roots: [persian-mu]
+etymology_hook: "mu ← Middle Persian mōy (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C27-dandan]
 <!-- hl-knowledge: introduces=[FA-LEX-C28-BODY28-01]; assesses=[] -->
 
 **مو** — *mu* — "hair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mu* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *mōy*, "hair" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

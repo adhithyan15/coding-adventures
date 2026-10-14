@@ -14,7 +14,8 @@ romanization: "pahn kardan"
 concept_tag: FA-VERB-PAHN-KARDAN
 prerequisites: [FA-C146-negaran-budan, FA-C147-gerdgiri-kardan]
 sounds: []
-roots: []
+roots: [persian-pahn, pie-kwer]
+etymology_hook: "pahn kardan: pahn ← Middle Persian pahn 'broad' (EtymDB) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C147-gerdgiri-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C147-KONESH147-02]; assesses=[] -->
 
 **پهن کردن** — *pahn kardan* — "to spread out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pahn kardan* pairs *pahn*, "wide, broad", with *kardan*, "to make". *pahn* is inherited: EtymDB traces it to Middle Persian *pahn*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

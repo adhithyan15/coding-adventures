@@ -15,6 +15,7 @@ concept_tag: FA-FOOD42-PORTEGHAL
 prerequisites: [FA-C42-kare, FA-C42-angur]
 sounds: []
 roots: []
+etymology_hook: "porteghâl: from the name Portugal; the sweet orange came with Portuguese trade"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C42-angur]
 <!-- hl-knowledge: introduces=[FA-LEX-C42-FOOD42-05]; assesses=[] -->
 
 **پرتقال** — *porteghâl* — "an orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*porteghâl* is the country name Portugal. The sweet orange is usually said to have reached the region through Portuguese traders, and Persian, like Arabic, Greek and Turkish, named the fruit after them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

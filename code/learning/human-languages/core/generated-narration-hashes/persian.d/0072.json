@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 72,
-  "sourceHash": "fnv1a64:c30b41cea262749d",
+  "sourceHash": "fnv1a64:639444174102f250",
   "lessonIds": [
     "FA-C72-ghayegh",
     "FA-C72-docharkhe",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch72.txt",
   "json": "persian/narration/ch72.json",
-  "textHash": "fnv1a64:e0232dc80ae4a904",
-  "jsonHash": "fnv1a64:bd528662ee7a86ba",
+  "textHash": "fnv1a64:56d6e543b48af393",
+  "jsonHash": "fnv1a64:efa17ac875f7a895",
   "findings": []
 }

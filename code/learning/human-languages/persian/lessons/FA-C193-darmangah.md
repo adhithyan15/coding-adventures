@@ -14,7 +14,8 @@ romanization: "darmângâh"
 concept_tag: FA-MAKAN193-DARMANGAH
 prerequisites: [FA-C192-fowran, FA-C192-be-zudi]
 sounds: []
-roots: []
+roots: [persian-darman, persian-gah]
+etymology_hook: "darmângâh: Persian darmân 'cure' (Middle Persian darmān) + gâh 'place'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C192-be-zudi]
 <!-- hl-knowledge: introduces=[FA-LEX-C193-MAKAN193-01]; assesses=[] -->
 
 **درمانگاه** — *darmângâh* — "a clinic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*darmângâh* is *darmân*, "cure, treatment", with *gâh*, "place": the place of treatment. *darmân* is native, usually traced to Middle Persian *darmān*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

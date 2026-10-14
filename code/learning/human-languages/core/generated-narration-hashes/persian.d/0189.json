@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 189,
-  "sourceHash": "fnv1a64:83fe257fad2705c9",
+  "sourceHash": "fnv1a64:91252017a475c5c3",
   "lessonIds": [
     "FA-C189-ampul",
     "FA-C189-noskhe",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch189.txt",
   "json": "persian/narration/ch189.json",
-  "textHash": "fnv1a64:221fe69ecef14613",
-  "jsonHash": "fnv1a64:a4e61a80549e1d3d",
+  "textHash": "fnv1a64:64372c1bf70e69d2",
+  "jsonHash": "fnv1a64:4e95d40f798d32b2",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 80,
-  "sourceHash": "fnv1a64:85c8d554a743a56d",
+  "sourceHash": "fnv1a64:c2aa8616e3d16003",
   "lessonIds": [
     "FA-C80-bahar",
     "FA-C80-tabestan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch80.txt",
   "json": "persian/narration/ch80.json",
-  "textHash": "fnv1a64:b1061f89089b43b6",
-  "jsonHash": "fnv1a64:490071d0a15a9b94",
+  "textHash": "fnv1a64:369a0376ec55fafa",
+  "jsonHash": "fnv1a64:46a3417f770ddd2e",
   "findings": []
 }

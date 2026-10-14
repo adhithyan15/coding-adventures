@@ -14,7 +14,8 @@ romanization: "sâlem"
 concept_tag: FA-QUAL130-SALEM
 prerequisites: [FA-C129-dana, FA-C129-nadan]
 sounds: []
-roots: []
+roots: [s-l-m]
+etymology_hook: "sâlem ← Arabic sālim 'sound, safe', root s-l-m (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C129-nadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C130-QUAL130-01]; assesses=[] -->
 
 **سالم** — *sâlem* — "healthy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâlem* is borrowed from Arabic *sālim*, "sound, safe". Its Arabic root is *s-l-m* (Lane). It shares its root with *salâm*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

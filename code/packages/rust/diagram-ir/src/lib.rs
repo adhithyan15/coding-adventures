@@ -2014,6 +2014,7 @@ pub struct SwimlaneFlowchartConfig {
     pub node_spacing: Option<f64>, pub rank_spacing: Option<f64>,
     pub diagram_padding: Option<f64>, pub curve: Option<SwimlaneEdgeCurve>,
     pub wrapping_width: Option<f64>, pub padding: Option<f64>,
+    pub title_top_margin: Option<f64>,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneDiagram {

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 31,
-  "sourceHash": "fnv1a64:e297db5321897757",
+  "sourceHash": "fnv1a64:7dd82efec070f21f",
   "lessonIds": [
     "FA-C31-dard",
     "FA-C31-daru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch31.txt",
   "json": "persian/narration/ch31.json",
-  "textHash": "fnv1a64:feebe9e1ee08fe70",
-  "jsonHash": "fnv1a64:d926c169a34aa9bc",
+  "textHash": "fnv1a64:de41e628614b7885",
+  "jsonHash": "fnv1a64:edf7225de487cf1b",
   "findings": []
 }

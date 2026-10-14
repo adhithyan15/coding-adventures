@@ -14,7 +14,8 @@ romanization: "mosâbeqe"
 concept_tag: FA-CHIZ243-MOSABEQE
 prerequisites: [FA-C242-farhang, FA-C243-marasem]
 sounds: []
-roots: []
+roots: [arabic-musabaqa]
+etymology_hook: "mosâbeqe ← Arabic musābaqa 'race, competition', root s-b-q (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C243-marasem]
 <!-- hl-knowledge: introduces=[FA-LEX-C243-CHIZ243-02]; assesses=[] -->
 
 **مسابقه** — *mosâbeqe* — "a competition, a match".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mosâbeqe* is borrowed from Arabic *musābaqa*, "race, competition". Its Arabic root is *s-b-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

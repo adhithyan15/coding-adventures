@@ -14,7 +14,8 @@ romanization: "nave"
 concept_tag: FA-THINGS117-NAVE
 prerequisites: [FA-C116-nanva, FA-C116-kudak]
 sounds: []
-roots: []
+roots: [persian-nave]
+etymology_hook: "nave: usually traced to Old Persian napā 'grandson', a cousin of Latin nepos"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C116-kudak]
 <!-- hl-knowledge: introduces=[FA-LEX-C117-THINGS117-01]; assesses=[] -->
 
 **نوه** — *nave* — "a grandchild".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nave* is usually traced to the old Iranian word for "grandson" that Old Persian wrote *napā*, the same Indo-European word as Latin *nepos*, "grandson".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

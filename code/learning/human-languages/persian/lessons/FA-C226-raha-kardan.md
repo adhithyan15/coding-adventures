@@ -14,7 +14,8 @@ romanization: "rahâ kardan"
 concept_tag: FA-VERB-RAHA-KARDAN
 prerequisites: [FA-C226-kud-dadan, FA-C226-paru-kardan]
 sounds: []
-roots: []
+roots: [persian-raha, pie-kwer]
+etymology_hook: "rahâ kardan: Persian rahâ 'free' (Middle Persian rahāg) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C226-paru-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C226-KONESH226-03]; assesses=[] -->
 
 **رها کردن** — *rahâ kardan* — "to let go, to release".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rahâ kardan* pairs *rahâ*, "free, released", with *kardan*. *rahâ* is native, usually traced to Middle Persian *rahāg*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

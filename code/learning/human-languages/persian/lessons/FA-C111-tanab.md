@@ -14,7 +14,8 @@ romanization: "tanâb"
 concept_tag: FA-THINGS111-TANAB
 prerequisites: [FA-C111-jaru, FA-C111-satl]
 sounds: []
-roots: []
+roots: [arabic-tunub]
+etymology_hook: "tanâb: usually traced to Arabic ṭunub 'tent-rope', root ṭ-n-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C111-satl]
 <!-- hl-knowledge: introduces=[FA-LEX-C111-THINGS111-05]; assesses=[] -->
 
 **طناب** — *tanâb* — "a rope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tanâb* is usually traced to Arabic *ṭunub*, "a tent-rope". Its Arabic root is *ṭ-n-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

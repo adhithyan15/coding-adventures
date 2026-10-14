@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "One to Five, and the Words English Already Says",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:963408854331ed5b",
+  "sourceHash": "fnv1a64:c40b189150b802d8",
   "lessons": [
     {
       "id": "FA-C16-yek",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2823d2a7216684c4",
+      "sourceHash": "fnv1a64:d56d2a7d51f3a93f",
       "notice": null,
       "blocks": [
         {
@@ -70,7 +70,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "یک (yek) continues Middle Persian yak, from Proto-Iranian Haywah and Indo-Iranian Háywas, ultimately Indo-European óywos, \"one.\""
+              "text": "یک (yek) continues Middle Persian ēk, from Proto-Iranian Haywah and Indo-Iranian Háywas, ultimately Indo-European óywos, \"one.\""
             },
             {
               "kind": "speech",
@@ -448,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:083bf555afbb35f3",
+      "sourceHash": "fnv1a64:e02f22dd0a6bb429",
       "notice": null,
       "blocks": [
         {
@@ -490,7 +490,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "چهار (chahâr) continues Old Persian chathwar, from Indo-European kʷetwóres, \"four.\""
+              "text": "چهار (chahâr) continues Middle Persian čahār, from Proto-Iranian čathwārah (EtymDB) and Indo-European kʷetwóres, \"four.\""
             },
             {
               "kind": "speech",

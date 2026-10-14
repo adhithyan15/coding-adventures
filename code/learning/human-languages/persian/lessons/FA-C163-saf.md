@@ -14,7 +14,8 @@ romanization: "sâf"
 concept_tag: FA-SEFAT163-SAF
 prerequisites: [FA-C163-rangarang, FA-C163-nazok]
 sounds: []
-roots: []
+roots: [arabic-safi]
+etymology_hook: "sâf ← Arabic ṣāfī 'pure, clear', root ṣ-f-w (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C163-nazok]
 <!-- hl-knowledge: introduces=[FA-LEX-C163-SEFAT163-03]; assesses=[] -->
 
 **صاف** — *sâf* — "smooth; straight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâf* is borrowed from Arabic *ṣāfī*, "pure, clear". Its Arabic root is *ṣ-f-w* (Lane). Persian uses it for smooth and straight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

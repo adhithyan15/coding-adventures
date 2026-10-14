@@ -14,7 +14,8 @@ romanization: "rangârang"
 concept_tag: FA-SEFAT163-RANGARANG
 prerequisites: [FA-C162-dalir, FA-C162-porharf]
 sounds: []
-roots: []
+roots: [persian-rang]
+etymology_hook: "rangârang: Persian rang 'colour' (Middle Persian rang, EtymDB), doubled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C162-porharf]
 <!-- hl-knowledge: introduces=[FA-LEX-C163-SEFAT163-01]; assesses=[] -->
 
 **رنگارنگ** — *rangârang* — "colourful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rangârang* is *rang*, "colour", doubled with a linking *â*: colour upon colour. *rang* is inherited: EtymDB traces it to Middle Persian *rang*, "colour, dye".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

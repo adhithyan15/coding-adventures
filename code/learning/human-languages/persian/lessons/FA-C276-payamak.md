@@ -14,7 +14,8 @@ romanization: "payâmak"
 concept_tag: FA-CHIZ276-PAYAMAK
 prerequisites: [FA-C276-ard, FA-C276-shomare]
 sounds: []
-roots: []
+roots: [persian-payam]
+etymology_hook: "payâmak: modern coinage: Persian payâm 'message' + -ak 'little'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C276-shomare]
 <!-- hl-knowledge: introduces=[FA-LEX-C276-CHIZ276-04]; assesses=[] -->
 
 **پیامک** — *payâmak* — "a text message".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*payâmak* is *payâm*, "message", with the small-thing ending *-ak*: a little message, a modern Persian coinage. *payâm* is usually traced to Middle Persian *paygām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

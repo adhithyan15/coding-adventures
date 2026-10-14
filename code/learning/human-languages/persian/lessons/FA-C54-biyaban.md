@@ -14,7 +14,8 @@ romanization: "biyâbân"
 concept_tag: FA-NATURE54-BIYABAN
 prerequisites: [FA-C54-khak, FA-C54-bad]
 sounds: []
-roots: []
+roots: [persian-biyaban]
+etymology_hook: "biyâbân ← Middle Persian wiyābān (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C54-bad]
 <!-- hl-knowledge: introduces=[FA-LEX-C54-NATURE54-03]; assesses=[] -->
 
 **بیابان** — *biyâbân* — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*biyâbân* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *wiyābān*, "astray; desert" (EtymDB). The desert was the place where one wanders.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

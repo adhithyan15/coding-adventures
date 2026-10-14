@@ -14,7 +14,8 @@ romanization: "geristan"
 concept_tag: FA-VERB-GERISTAN
 prerequisites: [FA-C133-pichidan, FA-C133-residan]
 sounds: []
-roots: []
+roots: [persian-geristan]
+etymology_hook: "geristan: inherited, usually traced to Middle Persian griyistan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C133-residan]
 <!-- hl-knowledge: introduces=[FA-LEX-C133-ACT133-05]; assesses=[] -->
 
 **گریستن** — *geristan* — "to weep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*geristan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *griyistan*, "to weep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

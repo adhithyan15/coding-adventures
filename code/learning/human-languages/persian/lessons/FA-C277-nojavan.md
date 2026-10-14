@@ -14,7 +14,8 @@ romanization: "nojavân"
 concept_tag: FA-CHIZ277-NOJAVAN
 prerequisites: [FA-C277-damad, FA-C277-famil]
 sounds: []
-roots: []
+roots: [persian-nau, persian-javan]
+etymology_hook: "nojavân: Persian no 'new' + javân 'young' (EtymDB); inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C277-famil]
 <!-- hl-knowledge: introduces=[FA-LEX-C277-CHIZ277-05]; assesses=[] -->
 
 **نوجوان** — *nojavân* — "a teenager".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nojavân* is *no*, "new", with *javân*, "young": newly young. Both are inherited; EtymDB takes *javân* back to the Indo-European word behind Latin *iuvenis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

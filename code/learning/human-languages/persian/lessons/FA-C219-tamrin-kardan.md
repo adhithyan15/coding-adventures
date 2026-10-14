@@ -14,7 +14,8 @@ romanization: "tamrin kardan"
 concept_tag: FA-VERB-TAMRIN-KARDAN
 prerequisites: [FA-C219-tavaqqof-kardan, FA-C219-negah-dashtan]
 sounds: []
-roots: []
+roots: [arabic-tamrin]
+etymology_hook: "tamrin ← Arabic tamrīn 'training, exercise', root m-r-n (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C219-negah-dashtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C219-KONESH219-03]; assesses=[] -->
 
 **تمرین کردن** — *tamrin kardan* — "to practise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tamrin kardan* pairs *tamrin*, borrowed from Arabic *tamrīn*, "training, exercise" (root *m-r-n*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

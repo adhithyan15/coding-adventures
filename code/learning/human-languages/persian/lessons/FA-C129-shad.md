@@ -14,7 +14,8 @@ romanization: "shâd"
 concept_tag: FA-QUAL129-SHAD
 prerequisites: [FA-C129-khaste, FA-C129-sakat]
 sounds: []
-roots: []
+roots: [persian-shad]
+etymology_hook: "shâd: inherited, usually traced to Middle Persian šād"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C129-sakat]
 <!-- hl-knowledge: introduces=[FA-LEX-C129-QUAL129-03]; assesses=[] -->
 
 **شاد** — *shâd* — "glad, cheerful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shâd* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *šād*, "glad".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

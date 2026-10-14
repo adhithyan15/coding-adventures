@@ -15,6 +15,7 @@ concept_tag: FA-VERB-SABIDAN
 prerequisites: [FA-C226-paru-kardan, FA-C226-raha-kardan]
 sounds: []
 roots: []
+etymology_hook: "sâbidan: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C226-raha-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C226-KONESH226-04]; assesses=[] -->
 
 **سابیدن** — *sâbidan* — "to scrub".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâbidan* is a native Persian verb, but no source used here gives its older form, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

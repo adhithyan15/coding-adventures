@@ -14,7 +14,8 @@ romanization: "kotlet"
 concept_tag: FA-CHIZ205-KOTLET
 prerequisites: [FA-C204-jin, FA-C204-poliver]
 sounds: []
-roots: []
+roots: [french-cotelette]
+etymology_hook: "kotlet: a loan, usually traced to French côtelette 'cutlet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C204-poliver]
 <!-- hl-knowledge: introduces=[FA-LEX-C205-CHIZ205-01]; assesses=[] -->
 
 **کتلت** — *kotlet* — "a cutlet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kotlet* is a loan, usually traced to French *côtelette*, "cutlet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

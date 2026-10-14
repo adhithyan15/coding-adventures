@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 63,
-  "sourceHash": "fnv1a64:ae2137cc9cdc0d24",
+  "sourceHash": "fnv1a64:2d82003e9da3bbd1",
   "lessonIds": [
     "FA-C63-mohem",
     "FA-C63-ziba",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch63.txt",
   "json": "persian/narration/ch63.json",
-  "textHash": "fnv1a64:ee1433652513a36b",
-  "jsonHash": "fnv1a64:273fdb2736127da8",
+  "textHash": "fnv1a64:f0aeff59d8817b61",
+  "jsonHash": "fnv1a64:6d44fd7f7ddb5c56",
   "findings": []
 }

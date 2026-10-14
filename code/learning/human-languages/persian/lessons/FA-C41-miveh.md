@@ -14,7 +14,8 @@ romanization: "miveh"
 concept_tag: FA-FOOD41-MIVEH
 prerequisites: [FA-C40-berenj, FA-C40-gusht]
 sounds: []
-roots: []
+roots: [persian-miveh]
+etymology_hook: "miveh ← Middle Persian mēwag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C40-gusht]
 <!-- hl-knowledge: introduces=[FA-LEX-C41-FOOD41-01]; assesses=[] -->
 
 **میوه** — *miveh* — "fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*miveh* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *mēwag*, "fruit" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

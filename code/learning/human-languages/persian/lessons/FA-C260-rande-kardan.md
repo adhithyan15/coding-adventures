@@ -14,7 +14,8 @@ romanization: "rande kardan"
 concept_tag: FA-VERB-RANDE-KARDAN
 prerequisites: [FA-C259-farar-kardan, FA-C259-jaru-kardan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "rande kardan: Persian rande 'grater' (older form not settled) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C259-jaru-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C260-KONESH260-01]; assesses=[] -->
 
 **رنده کردن** — *rande kardan* — "to grate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rande kardan* pairs *rande*, "grater, plane", with *kardan*. *rande* is native, but its older form is not settled. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

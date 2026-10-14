@@ -14,7 +14,8 @@ romanization: "ketri"
 concept_tag: FA-CHIZ239-KETRI
 prerequisites: [FA-C238-sakhtgir, FA-C238-zahmatkesh]
 sounds: []
-roots: []
+roots: [english-kettle]
+etymology_hook: "ketri: a loan, usually traced to English kettle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C238-zahmatkesh]
 <!-- hl-knowledge: introduces=[FA-LEX-C239-CHIZ239-01]; assesses=[] -->
 
 **کتری** — *ketri* — "a kettle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ketri* is a loan, usually traced to English *kettle*, with an *r* where English has *l*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

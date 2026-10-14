@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ249-ALBALU
 prerequisites: [FA-C249-tahdig, FA-C249-karafs]
 sounds: []
 roots: []
+etymology_hook: "âlbâlu: built on Persian âlu 'plum'; the first part is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C249-karafs]
 <!-- hl-knowledge: introduces=[FA-LEX-C249-CHIZ249-05]; assesses=[] -->
 
 **آلبالو** — *âlbâlu* — "a sour cherry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âlbâlu* is built on *âlu*, "plum"; where the first part comes from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

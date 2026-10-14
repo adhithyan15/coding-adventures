@@ -12,6 +12,9 @@ Before the new one: say the Persian for an advert, then the Persian for a receip
 You'll want to know: باز کردن.
 باز کردن — bâz kardan — "to open".
 
+The word, taken apart.
+bâz kardan pairs bâz, "open", a native Persian word, with the verb kardan, "to do, to make": "to make open". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a receipt, then the Persian for to open.
 
 You'll want to know: پاک کردن.
 پاک کردن — pâk kardan — "to wipe, to erase".
+
+The word, taken apart.
+pâk kardan pairs pâk, "clean", with kardan, "to make". pâk is inherited: EtymDB traces it to Middle Persian pāk, "clean, pure". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to open, then the Persian for to wipe.
 You'll want to know: روشن کردن.
 روشن کردن — roshan kardan — "to switch on, to light".
 
+The word, taken apart.
+roshan kardan pairs roshan, "bright, lit", with kardan, "to make". roshan is inherited: EtymDB traces it to Middle Persian rōšn, "light, bright". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to wipe, then the Persian for to switch 
 You'll want to know: خاموش کردن.
 خاموش کردن — khâmush kardan — "to switch off, to put out".
 
+The word, taken apart.
+khâmush kardan pairs khâmush, "silent, out", with kardan, "to make". khâmush is inherited: EtymDB traces it to Middle Persian xāmōš, "silent". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to switch on, then the Persian for to sw
 
 You'll want to know: بیدار شدن.
 بیدار شدن — bidâr shodan — "to wake up".
+
+The word, taken apart.
+bidâr shodan pairs bidâr, "awake", a native Persian word, with shodan, "to become": "to become awake". shodan, "to become", is an inherited verb; it is usually traced to Middle Persian šudan, "to go".
 
 What you've built.
 One more word for this chapter.

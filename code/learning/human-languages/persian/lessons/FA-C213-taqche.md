@@ -14,7 +14,8 @@ romanization: "tâqche"
 concept_tag: FA-CHIZ213-TAQCHE
 prerequisites: [FA-C213-nakhongir, FA-C213-chaharpaye]
 sounds: []
-roots: []
+roots: [persian-taq]
+etymology_hook: "tâqche: Persian tâq 'arch' (Middle Persian tāg) + -che 'little'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C213-chaharpaye]
 <!-- hl-knowledge: introduces=[FA-LEX-C213-CHIZ213-03]; assesses=[] -->
 
 **طاقچه** — *tâqche* — "a wall niche, a shelf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tâqche* is *tâq*, "arch, vault", with the small-thing ending *-che*: a little arch. *tâq* is native, usually traced to Middle Persian *tāg*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

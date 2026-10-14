@@ -12,6 +12,9 @@ Before the new one: say the Persian for a tulip, then the Persian for jasmine.
 You'll want to know: شطرنج.
 شطرنج — shatranj — "chess".
 
+The word, taken apart.
+shatranj is borrowed from Arabic šaṭranj, which goes back to Middle Persian čatrang, and that to Sanskrit caturaṅga, the "four-limbed" army (EtymDB). Persian took its own word back in Arabic dress.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for jasmine, then the Persian for chess.
 
 You'll want to know: کوهنوردی.
 کوهنوردی — kuhnavardi — "mountain climbing".
+
+The word, taken apart.
+kuhnavardi is kuh, "mountain" (Middle Persian kōf, EtymDB), with navard, "roaming" (from navardidan), and -i: mountain-roaming. All are native Persian.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for chess, then the Persian for mountain cli
 You'll want to know: کنسرت.
 کنسرت — konsert — "a concert".
 
+The word, taken apart.
+konsert is borrowed from French concert, "concert" (EtymDB). The French word came from Italian concerto (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for mountain climbing, then the Persian for 
 You'll want to know: هنر.
 هنر — honar — "art".
 
+The word, taken apart.
+honar is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian hunar, "skill, virtue".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a concert, then the Persian for art.
 
 You'll want to know: نقاشی.
 نقاشی — naqqâshi — "painting".
+
+The word, taken apart.
+naqqâshi is naqqâsh, "painter", with the ending -i. naqqâsh is borrowed from Arabic naqqāš, "engraver, painter" (root n-q-š, Lane).
 
 What you've built.
 One more word for this chapter.

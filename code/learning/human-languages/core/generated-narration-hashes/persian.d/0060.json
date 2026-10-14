@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 60,
-  "sourceHash": "fnv1a64:3970e827cbeb94bd",
+  "sourceHash": "fnv1a64:636ff06cafb41e8d",
   "lessonIds": [
     "FA-C60-tond",
     "FA-C60-asan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch60.txt",
   "json": "persian/narration/ch60.json",
-  "textHash": "fnv1a64:44a23fde2fb94f05",
-  "jsonHash": "fnv1a64:38fbe2a5eeaa3791",
+  "textHash": "fnv1a64:590519b18fc82756",
+  "jsonHash": "fnv1a64:92f7b750a58bee12",
   "findings": []
 }

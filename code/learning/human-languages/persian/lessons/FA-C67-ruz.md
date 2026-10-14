@@ -14,7 +14,8 @@ romanization: "ruz"
 concept_tag: FA-TIME67-RUZ
 prerequisites: [FA-C67-sobh, FA-C67-shab]
 sounds: []
-roots: []
+roots: [persian-roz]
+etymology_hook: "ruz ← Middle Persian rōz (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C67-shab]
 <!-- hl-knowledge: introduces=[FA-LEX-C67-TIME67-03]; assesses=[] -->
 
 **روز** — *ruz* — "a day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ruz* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *rōz*, "day" (EtymDB). Old Persian had *raucah-*, "day" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

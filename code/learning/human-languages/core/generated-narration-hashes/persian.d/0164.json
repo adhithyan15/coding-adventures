@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 164,
-  "sourceHash": "fnv1a64:fb547c4a1aa2ca6c",
+  "sourceHash": "fnv1a64:7dabcf7def2741ab",
   "lessonIds": [
     "FA-C164-behtar",
     "FA-C164-movaffaq",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch164.txt",
   "json": "persian/narration/ch164.json",
-  "textHash": "fnv1a64:1583b87e496d2043",
-  "jsonHash": "fnv1a64:c0fcbf4babd82079",
+  "textHash": "fnv1a64:97d4bb3c46a25e08",
+  "jsonHash": "fnv1a64:0e050286f996e8a2",
   "findings": []
 }

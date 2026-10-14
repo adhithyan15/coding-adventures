@@ -14,7 +14,8 @@ romanization: "doshanbe"
 concept_tag: FA-TIME81-DOSHANBE
 prerequisites: [FA-C81-shanbe, FA-C81-yekshanbe]
 sounds: []
-roots: []
+roots: [pie-dwoh, aramaic-shabbat]
+etymology_hook: "doshanbe: Persian do 'two' + shanbe 'Sabbath' (EtymDB): day two after Saturday"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C81-yekshanbe]
 <!-- hl-knowledge: introduces=[FA-LEX-C81-TIME81-03]; assesses=[] -->
 
 **دوشنبه** — *doshanbe* — "Monday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*doshanbe* is *do*, "two", with *shanbe*, "Saturday" (EtymDB): the second day after the Sabbath. *do* is inherited, from Middle Persian *dō* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

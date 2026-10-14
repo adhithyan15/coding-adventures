@@ -14,7 +14,8 @@ romanization: "sharbat"
 concept_tag: FA-THINGS102-SHARBAT
 prerequisites: [FA-C102-felfel, FA-C102-ghahve]
 sounds: []
-roots: []
+roots: [arabic-sharbat]
+etymology_hook: "sharbat ← Arabic šarba 'a drink, a draught', root š-r-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C102-ghahve]
 <!-- hl-knowledge: introduces=[FA-LEX-C102-THINGS102-04]; assesses=[] -->
 
 **شربت** — *sharbat* — "a sweet drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sharbat* is borrowed from Arabic *šarba*, "a drink, a draught". Its Arabic root is *š-r-b* (Lane). English *sherbet* comes from the same word through Turkish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

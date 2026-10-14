@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 252,
-  "sourceHash": "fnv1a64:1f461f3b35618091",
+  "sourceHash": "fnv1a64:576a578acade4843",
   "lessonIds": [
     "FA-C252-baqqal",
     "FA-C252-qannadi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch252.txt",
   "json": "persian/narration/ch252.json",
-  "textHash": "fnv1a64:97542a7ef62007aa",
-  "jsonHash": "fnv1a64:859d6c9dbb60d2f3",
+  "textHash": "fnv1a64:ea30bd26a620732d",
+  "jsonHash": "fnv1a64:4b926d7922f222dd",
   "findings": []
 }

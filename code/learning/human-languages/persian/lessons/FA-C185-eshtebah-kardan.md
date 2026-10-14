@@ -14,7 +14,8 @@ romanization: "eshtebâh kardan"
 concept_tag: FA-VERB-ESHTEBAH-KARDAN
 prerequisites: [FA-C185-tavajjoh-kardan, FA-C185-hal-kardan]
 sounds: []
-roots: []
+roots: [arabic-istibah]
+etymology_hook: "eshtebâh ← Arabic ištibāh 'confusion, mistaking one thing for another', root š-b-h (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C185-hal-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C185-KONESH185-03]; assesses=[] -->
 
 **اشتباه کردن** — *eshtebâh kardan* — "to make a mistake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*eshtebâh kardan* pairs *eshtebâh*, borrowed from Arabic *ištibāh*, "confusion, mistaking one thing for another" (root *š-b-h*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

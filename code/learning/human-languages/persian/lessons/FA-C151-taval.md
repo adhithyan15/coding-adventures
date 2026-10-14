@@ -15,6 +15,7 @@ concept_tag: FA-SALAMAT151-TAVAL
 prerequisites: [FA-C150-zakhm, FA-C150-qors]
 sounds: []
 roots: []
+etymology_hook: "tâval: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C150-qors]
 <!-- hl-knowledge: introduces=[FA-LEX-C151-SALAMAT151-01]; assesses=[] -->
 
 **تاول** — *tâval* — "a blister".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tâval* is the word for a blister, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

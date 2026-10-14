@@ -12,7 +12,7 @@ concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [FA-C03-chist]
 sounds: [rtl, ezafe-e, persian-question-mark]
 roots: [ism, indo-iranian-question-chi]
-etymology_hook: The question reuses Arabic-loan esm inside native Persian grammar: ezafe links the owner, and chi plus ast compresses to chist.
+etymology_hook: "esm ← Arabic ism 'name' (EtymDB; root s-m-w, Lane); shomâ, chi and ast are inherited Persian"
 duration:
   max_seconds: 210
 requires:
@@ -58,6 +58,11 @@ end. No new agreement or verb table is hiding here.
 Persian ends a written question with **؟**. Its curve faces the opposite way
 from English **?**, matching the right-to-left line. Read the sentence from its
 right edge; meet the punctuation at the far left.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*esm* is borrowed from Arabic *ism*, "name" (EtymDB; root *s-m-w*, Lane). *shomâ*, *chist* and the linking *-e* are inherited Persian.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-NAME-QUESTION, FA-GRAMMAR-NAME-QUESTION-ORDER, FA-SCRIPT-PERSIAN-QUESTION-MARK] -->

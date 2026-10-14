@@ -14,7 +14,8 @@ romanization: "shalvâr"
 concept_tag: FA-TOWN73-SHALVAR
 prerequisites: [FA-C73-lebas, FA-C73-pirahan]
 sounds: []
-roots: []
+roots: [persian-shalvar]
+etymology_hook: "shalvâr ← Middle Persian šalwār (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C73-pirahan]
 <!-- hl-knowledge: introduces=[FA-LEX-C73-TOWN73-05]; assesses=[] -->
 
 **شلوار** — *shalvâr* — "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shalvâr* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *šalwār*, "trousers" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nemune"
 concept_tag: FA-CHERA198-NEMUNE
 prerequisites: [FA-C198-ide, FA-C198-farq]
 sounds: []
-roots: []
+roots: [persian-namudan, persian-namuna]
+etymology_hook: "nemune: built on Persian nemudan 'to show' (Middle Persian nimūnag)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C198-farq]
 <!-- hl-knowledge: introduces=[FA-LEX-C198-CHERA198-04]; assesses=[] -->
 
 **نمونه** — *nemune* — "an example, a sample".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nemune* is built on *nemudan*, "to show": what is shown. It is native, usually traced to Middle Persian *nimūnag*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

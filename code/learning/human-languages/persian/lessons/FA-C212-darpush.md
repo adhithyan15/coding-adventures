@@ -14,7 +14,8 @@ romanization: "darpush"
 concept_tag: FA-CHIZ212-DARPUSH
 prerequisites: [FA-C211-ajor, FA-C211-felez]
 sounds: []
-roots: []
+roots: [persian-pushidan]
+etymology_hook: "darpush: Persian dar 'opening' + push 'cover' (pushidan); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C211-felez]
 <!-- hl-knowledge: introduces=[FA-LEX-C212-CHIZ212-01]; assesses=[] -->
 
 **درپوش** — *darpush* — "a lid, a cap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*darpush* is *dar*, "opening", with *push*, "cover" (from *pushidan*, "to cover", EtymDB): the opening's cover. Both are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

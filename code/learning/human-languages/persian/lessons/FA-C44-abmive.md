@@ -14,7 +14,8 @@ romanization: "âbmive"
 concept_tag: FA-FOOD44-ABMIVE
 prerequisites: [FA-C43-nahar, FA-C44-sham]
 sounds: []
-roots: []
+roots: [persian-ab, persian-meva]
+etymology_hook: "âbmive: Persian âb 'water' + mive 'fruit', both inherited (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C44-sham]
 <!-- hl-knowledge: introduces=[FA-LEX-C44-FOOD44-02]; assesses=[] -->
 
 **آبمیوه** — *âbmive* — "juice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âbmive* is built from two inherited words: *âb*, "water" (Middle Persian *āb*, EtymDB), and *mive*, "fruit" (Middle Persian *mēwag*, EtymDB): "fruit water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

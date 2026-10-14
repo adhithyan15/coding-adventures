@@ -14,7 +14,8 @@ romanization: "kârt"
 concept_tag: FA-THINGS113-KART
 prerequisites: [FA-C112-kuleposhti, FA-C112-batri]
 sounds: []
-roots: []
+roots: [french-carte]
+etymology_hook: "kârt ← French carte 'card, map'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C112-batri]
 <!-- hl-knowledge: introduces=[FA-LEX-C113-THINGS113-01]; assesses=[] -->
 
 **کارت** — *kârt* — "a card".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kârt* is borrowed from French *carte*, "card, map" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

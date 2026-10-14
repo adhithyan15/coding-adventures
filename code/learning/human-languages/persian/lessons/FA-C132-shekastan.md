@@ -14,7 +14,8 @@ romanization: "shekastan"
 concept_tag: FA-VERB-SHEKASTAN
 prerequisites: [FA-C131-paridan, FA-C131-oftadan]
 sounds: []
-roots: []
+roots: [persian-shekastan]
+etymology_hook: "shekastan ← Middle Persian škastan (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C131-oftadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C132-ACT132-01]; assesses=[] -->
 
 **شکستن** — *shekastan* — "to break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shekastan* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *škastan*, "to break" (EtymDB). EtymDB takes it back to the Indo-European root *\*skeyd-*, "to split", the root of Latin *scindere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

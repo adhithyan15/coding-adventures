@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 261,
-  "sourceHash": "fnv1a64:aad76b4efe1301e5",
+  "sourceHash": "fnv1a64:cf75f3adbb4202ad",
   "lessonIds": [
     "FA-C261-panseman-kardan",
     "FA-C261-bastari-shodan",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch261.txt",
   "json": "persian/narration/ch261.json",
-  "textHash": "fnv1a64:45bb2020d3b8beab",
-  "jsonHash": "fnv1a64:f914c85267470d07",
+  "textHash": "fnv1a64:2c12fc196a79cfa6",
+  "jsonHash": "fnv1a64:ae1060553e096235",
   "findings": []
 }

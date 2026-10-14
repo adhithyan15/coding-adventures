@@ -14,7 +14,8 @@ romanization: "taqvim"
 concept_tag: FA-ZAMAN229-TAQVIM
 prerequisites: [FA-C228-tavallod, FA-C229-moddat]
 sounds: []
-roots: []
+roots: [arabic-taqwim]
+etymology_hook: "taqvim ← Arabic taqwīm 'setting right, calendar', root q-w-m (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C229-moddat]
 <!-- hl-knowledge: introduces=[FA-LEX-C229-ZAMAN229-02]; assesses=[] -->
 
 **تقویم** — *taqvim* — "a calendar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*taqvim* is borrowed from Arabic *taqwīm*, "setting right, calendar". Its Arabic root is *q-w-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

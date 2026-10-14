@@ -14,7 +14,8 @@ romanization: "âbi"
 concept_tag: FA-ADJ64-ABI
 prerequisites: [FA-C63-zard, FA-C63-ghermez]
 sounds: []
-roots: []
+roots: [persian-ab]
+etymology_hook: "âbi: Persian âb 'water' (Middle Persian āb, EtymDB) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C63-ghermez]
 <!-- hl-knowledge: introduces=[FA-LEX-C64-ADJ64-01]; assesses=[] -->
 
 **آبی** — *âbi* — "blue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âbi* is *âb*, "water", with the ending *-i*: "water-coloured", and so blue. *âb* is inherited, from Middle Persian *āb* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

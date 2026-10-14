@@ -14,7 +14,8 @@ romanization: "amn"
 concept_tag: FA-QUAL126-AMN
 prerequisites: [FA-C126-mashhur, FA-C126-khatarnak]
 sounds: []
-roots: []
+roots: [arabic-amn]
+etymology_hook: "amn ← Arabic amn 'safety, security', root ʾ-m-n (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C126-khatarnak]
 <!-- hl-knowledge: introduces=[FA-LEX-C126-QUAL126-05]; assesses=[] -->
 
 **امن** — *amn* — "safe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*amn* is borrowed from Arabic *amn*, "safety, security". Its Arabic root is *ʾ-m-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

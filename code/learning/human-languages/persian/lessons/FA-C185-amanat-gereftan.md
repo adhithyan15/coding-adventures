@@ -14,7 +14,8 @@ romanization: "amânat gereftan"
 concept_tag: FA-VERB-AMANAT-GEREFTAN
 prerequisites: [FA-C185-hal-kardan, FA-C185-eshtebah-kardan]
 sounds: []
-roots: []
+roots: [arabic-amana]
+etymology_hook: "amânat ← Arabic amāna 'trust, something held in trust', root ʾ-m-n (Lane), + Persian gereftan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C185-eshtebah-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C185-KONESH185-04]; assesses=[] -->
 
 **امانت گرفتن** — *amânat gereftan* — "to borrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*amânat gereftan* pairs *amânat*, borrowed from Arabic *amāna*, "trust, something held in trust" (root *ʾ-m-n*, Lane), with the Persian verb *gereftan*, "to take". *gereftan*, "to take", is an inherited verb; EtymDB takes it back to the Indo-European root *\*gʰrebh₂-*, "to seize".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

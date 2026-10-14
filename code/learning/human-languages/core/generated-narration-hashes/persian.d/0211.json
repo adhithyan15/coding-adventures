@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 211,
-  "sourceHash": "fnv1a64:01cb51c24b44dfd6",
+  "sourceHash": "fnv1a64:54740a993704f138",
   "lessonIds": [
     "FA-C211-panbe",
     "FA-C211-pashm",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch211.txt",
   "json": "persian/narration/ch211.json",
-  "textHash": "fnv1a64:dc57205b18767ad5",
-  "jsonHash": "fnv1a64:6814ef9775c82d09",
+  "textHash": "fnv1a64:196fa81f3f1567f8",
+  "jsonHash": "fnv1a64:f41fec6a14f032cf",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 168,
-  "sourceHash": "fnv1a64:e33a4eb690940bd1",
+  "sourceHash": "fnv1a64:677a2baf498dafd5",
   "lessonIds": [
     "FA-C168-sayt",
     "FA-C168-ramz",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch168.txt",
   "json": "persian/narration/ch168.json",
-  "textHash": "fnv1a64:059f942f565b3a90",
-  "jsonHash": "fnv1a64:078bcda009ed7c4d",
+  "textHash": "fnv1a64:6c5ef618ea816237",
+  "jsonHash": "fnv1a64:6da9d75f4b7cf468",
   "findings": []
 }

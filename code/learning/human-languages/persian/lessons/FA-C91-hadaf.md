@@ -14,7 +14,8 @@ romanization: "hadaf"
 concept_tag: FA-WANT91-HADAF
 prerequisites: [FA-C91-niyaz, FA-C91-tasmim]
 sounds: []
-roots: []
+roots: [arabic-hadaf]
+etymology_hook: "hadaf ← Arabic hadaf 'target, mark', root h-d-f (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C91-tasmim]
 <!-- hl-knowledge: introduces=[FA-LEX-C91-WANT91-04]; assesses=[] -->
 
 **هدف** — *hadaf* — "a goal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hadaf* is borrowed from Arabic *hadaf*, "target, mark". Its Arabic root is *h-d-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "badan"
 concept_tag: FA-SALAMAT150-BADAN
 prerequisites: [FA-C149-moqayese-kardan, FA-C149-entezar-dashtan]
 sounds: []
-roots: []
+roots: [arabic-badan]
+etymology_hook: "badan ← Arabic badan 'body', root b-d-n (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C149-entezar-dashtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C150-SALAMAT150-01]; assesses=[] -->
 
 **بدن** — *badan* — "the body".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*badan* is borrowed from Arabic *badan*, "body". Its Arabic root is *b-d-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

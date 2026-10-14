@@ -14,7 +14,8 @@ romanization: "bâlesh"
 concept_tag: FA-WHY93-BALESH
 prerequisites: [FA-C92-sabab, FA-C93-banabarin]
 sounds: []
-roots: []
+roots: [persian-balesh]
+etymology_hook: "bâlesh ← Middle Persian bāliš (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C93-banabarin]
 <!-- hl-knowledge: introduces=[FA-LEX-C93-WHY93-02]; assesses=[] -->
 
 **بالش** — *bâlesh* — "a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâlesh* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *bāliš*, "pillow" (EtymDB). EtymDB takes it back to an Indo-European root usually also given for English *bolster*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

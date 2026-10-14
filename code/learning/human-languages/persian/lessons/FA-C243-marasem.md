@@ -14,7 +14,8 @@ romanization: "marâsem"
 concept_tag: FA-CHIZ243-MARASEM
 prerequisites: [FA-C242-jomle, FA-C242-farhang]
 sounds: []
-roots: []
+roots: [arabic-marasim]
+etymology_hook: "marâsem ← Arabic marāsim 'ceremonies, customs', root r-s-m (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C242-farhang]
 <!-- hl-knowledge: introduces=[FA-LEX-C243-CHIZ243-01]; assesses=[] -->
 
 **مراسم** — *marâsem* — "a ceremony".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*marâsem* is borrowed from Arabic *marāsim*, "ceremonies, customs". Its Arabic root is *r-s-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

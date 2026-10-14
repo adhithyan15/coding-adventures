@@ -14,7 +14,8 @@ romanization: "sar-e vaqt"
 concept_tag: FA-ZAMAN191-SAR-E-VAQT
 prerequisites: [FA-C190-feshar-e-khun, FA-C190-bihal]
 sounds: []
-roots: []
+roots: [persian-sar, arabic-waqt]
+etymology_hook: "sar-e vaqt: Persian sar 'head' (EtymDB) + vaqt ← Arabic waqt 'time' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C190-bihal]
 <!-- hl-knowledge: introduces=[FA-LEX-C191-ZAMAN191-01]; assesses=[] -->
 
 **سر وقت** — *sar-e vaqt* — "on time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sar-e vaqt* is "at the head of the time". *sar*, "head", is inherited (Middle Persian *sar*, EtymDB); *vaqt*, "time", is borrowed from Arabic *waqt* (root *w-q-t*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

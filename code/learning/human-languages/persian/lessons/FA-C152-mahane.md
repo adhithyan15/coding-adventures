@@ -14,7 +14,8 @@ romanization: "mâhâne"
 concept_tag: FA-ZAMAN152-MAHANE
 prerequisites: [FA-C152-emsal, FA-C152-ruzane]
 sounds: []
-roots: []
+roots: [old-persian-maha]
+etymology_hook: "mâhâne: Persian mâh 'month' (Old Persian māha-, EtymDB) + -âne"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C152-ruzane]
 <!-- hl-knowledge: introduces=[FA-LEX-C152-ZAMAN152-03]; assesses=[] -->
 
 **ماهانه** — *mâhâne* — "monthly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mâhâne* is *mâh*, "month", with the ending *-âne*, "every, belonging to": monthly. *mâh* is inherited; Old Persian had *māha-* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

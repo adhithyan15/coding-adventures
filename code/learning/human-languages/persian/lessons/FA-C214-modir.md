@@ -14,7 +14,8 @@ romanization: "modir"
 concept_tag: FA-KAR214-MODIR
 prerequisites: [FA-C214-karmand, FA-C214-hamkar]
 sounds: []
-roots: []
+roots: [arabic-mudir]
+etymology_hook: "modir ← Arabic mudīr 'director, one who manages', root d-w-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C214-hamkar]
 <!-- hl-knowledge: introduces=[FA-LEX-C214-KAR214-05]; assesses=[] -->
 
 **مدیر** — *modir* — "a manager; a head teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*modir* is borrowed from Arabic *mudīr*, "director, one who manages". Its Arabic root is *d-w-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

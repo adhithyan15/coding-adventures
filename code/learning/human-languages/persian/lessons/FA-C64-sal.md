@@ -14,7 +14,8 @@ romanization: "sâl"
 concept_tag: FA-ADJ64-SAL
 prerequisites: [FA-C64-sefid, FA-C64-hafte]
 sounds: []
-roots: []
+roots: [persian-sal]
+etymology_hook: "sâl ← Middle Persian sāl (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C64-hafte]
 <!-- hl-knowledge: introduces=[FA-LEX-C64-ADJ64-05]; assesses=[] -->
 
 **سال** — *sâl* — "a year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâl* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *sāl*, "year" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

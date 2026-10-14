@@ -2664,6 +2664,23 @@ fn swimlane_flowchart_node_padding_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_flowchart_title_margin_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\ntitle Approval flow\nsubgraph A\n  first[Review]\nend";
+    let front_matter = parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    titleTopMargin: 26\n---\n{source}"
+    )).expect("Flowchart title margin front matter should parse for Swimlane");
+    let directive = parse_swimlane(&format!(
+        "%%{{init: {{\"flowchart\": {{\"titleTopMargin\": 18}}}}}}%%\n{source}"
+    )).expect("Flowchart title margin init directive should parse for Swimlane");
+
+    assert_eq!(front_matter.flowchart_config.title_top_margin, Some(26.0));
+    assert_eq!(directive.flowchart_config.title_top_margin, Some(18.0));
+    assert!(parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    titleTopMargin: -1\n---\n{source}"
+    )).is_err(), "negative Flowchart title margin must be rejected");
+}
+
+#[test]
 fn swimlane_flowchart_curve_config_lowers_to_semantic_ir() {
     use diagram_ir::SwimlaneEdgeCurve;
 

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 241,
-  "sourceHash": "fnv1a64:4b09784627d0b43b",
+  "sourceHash": "fnv1a64:8679e66618d9ffc9",
   "lessonIds": [
     "FA-C241-golabi",
     "FA-C241-anjir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch241.txt",
   "json": "persian/narration/ch241.json",
-  "textHash": "fnv1a64:abf13ad13aa86d79",
-  "jsonHash": "fnv1a64:1f3a2ce47128802f",
+  "textHash": "fnv1a64:3557b53f510b6fef",
+  "jsonHash": "fnv1a64:92e9ac675f44f8c5",
   "findings": []
 }

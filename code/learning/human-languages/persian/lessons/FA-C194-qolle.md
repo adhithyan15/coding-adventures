@@ -14,7 +14,8 @@ romanization: "qolle"
 concept_tag: FA-MAKAN194-QOLLE
 prerequisites: [FA-C194-baje, FA-C194-dare]
 sounds: []
-roots: []
+roots: [arabic-qulla]
+etymology_hook: "qolle ← Arabic qulla 'summit, top', root q-l-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C194-dare]
 <!-- hl-knowledge: introduces=[FA-LEX-C194-MAKAN194-05]; assesses=[] -->
 
 **قله** — *qolle* — "a peak, a summit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qolle* is borrowed from Arabic *qulla*, "summit, top". Its Arabic root is *q-l-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

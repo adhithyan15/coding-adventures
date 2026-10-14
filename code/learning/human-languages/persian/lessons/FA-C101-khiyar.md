@@ -14,7 +14,8 @@ romanization: "khiyâr"
 concept_tag: FA-THINGS101-KHIYAR
 prerequisites: [FA-C101-badam, FA-C101-peste]
 sounds: []
-roots: []
+roots: [persian-khiyar]
+etymology_hook: "khiyâr ← Middle Persian xiyār (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C101-peste]
 <!-- hl-knowledge: introduces=[FA-LEX-C101-THINGS101-03]; assesses=[] -->
 
 **خیار** — *khiyâr* — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khiyâr* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *xiyār*, "cucumber" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

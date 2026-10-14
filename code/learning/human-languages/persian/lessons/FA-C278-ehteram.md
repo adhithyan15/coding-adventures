@@ -14,7 +14,8 @@ romanization: "ehterâm"
 concept_tag: FA-CHIZ278-EHTERAM
 prerequisites: [FA-C278-tim, FA-C278-jayeze]
 sounds: []
-roots: []
+roots: [arabic-ihtiram]
+etymology_hook: "ehterâm ← Arabic iḥtirām 'respect, reverence', root ḥ-r-m (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C278-jayeze]
 <!-- hl-knowledge: introduces=[FA-LEX-C278-CHIZ278-05]; assesses=[] -->
 
 **احترام** — *ehterâm* — "respect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ehterâm* is borrowed from Arabic *iḥtirām*, "respect, reverence". Its Arabic root is *ḥ-r-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

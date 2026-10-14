@@ -14,7 +14,8 @@ romanization: "sabr kardan"
 concept_tag: FA-VERB-SABR-KARDAN
 prerequisites: [FA-C141-hesab-kardan, FA-C141-sefaresh-dadan]
 sounds: []
-roots: []
+roots: [arabic-sabr]
+etymology_hook: "sabr ← Arabic ṣabr 'patience, endurance', root ṣ-b-r (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C141-sefaresh-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C142-KONESH142-01]; assesses=[] -->
 
 **صبر کردن** — *sabr kardan* — "to wait".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sabr kardan* pairs *sabr*, borrowed from Arabic *ṣabr*, "patience, endurance" (root *ṣ-b-r*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

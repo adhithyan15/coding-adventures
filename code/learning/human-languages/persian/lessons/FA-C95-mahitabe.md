@@ -14,7 +14,8 @@ romanization: "mâhitâbe"
 concept_tag: FA-THINGS95-MAHITABE
 prerequisites: [FA-C95-fenjan, FA-C95-dig]
 sounds: []
-roots: []
+roots: [persian-mahi]
+etymology_hook: "mâhitâbe: Persian mâhi 'fish' + tâbe 'frying pan' (EtymDB); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C95-dig]
 <!-- hl-knowledge: introduces=[FA-LEX-C95-THINGS95-04]; assesses=[] -->
 
 **ماهیتابه** — *mâhitâbe* — "a frying pan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mâhitâbe* is *mâhi*, "fish", with *tâbe*, "frying pan" (EtymDB): the pan for frying fish. Both parts are native; *mâhi* continues Middle Persian *māhīg* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "serke"
 concept_tag: FA-CHIZ276-SERKE
 prerequisites: [FA-C275-darchin, FA-C275-khame]
 sounds: []
-roots: []
+roots: [persian-sirka]
+etymology_hook: "serke: inherited; EtymDB traces it to Middle Persian sk 'vinegar'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C275-khame]
 <!-- hl-knowledge: introduces=[FA-LEX-C276-CHIZ276-01]; assesses=[] -->
 
 **سرکه** — *serke* — "vinegar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*serke* is a native Persian word, inherited rather than borrowed: EtymDB traces it to a Middle Persian word for vinegar written *sk*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

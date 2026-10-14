@@ -14,7 +14,8 @@ romanization: "tond"
 concept_tag: FA-ADJ60-TOND
 prerequisites: [FA-C59-sard, FA-C59-aheste]
 sounds: []
-roots: []
+roots: [persian-tond]
+etymology_hook: "tond: inherited, usually traced to Middle Persian tund"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C59-aheste]
 <!-- hl-knowledge: introduces=[FA-LEX-C60-ADJ60-01]; assesses=[] -->
 
 **تند** — *tond* — "fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tond* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *tund*, "sharp, quick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

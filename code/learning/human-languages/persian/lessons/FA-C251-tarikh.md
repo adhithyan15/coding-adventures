@@ -14,7 +14,8 @@ romanization: "târikh"
 concept_tag: FA-KAR251-TARIKH
 prerequisites: [FA-C251-morabbi, FA-C251-bazikon]
 sounds: []
-roots: []
+roots: [arabic-tarikh]
+etymology_hook: "târikh ← Arabic tārīḫ 'date, history', root ʾ-r-ḫ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C251-bazikon]
 <!-- hl-knowledge: introduces=[FA-LEX-C251-KAR251-05]; assesses=[] -->
 
 **تاریخ** — *târikh* — "history; a date".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*târikh* is borrowed from Arabic *tārīḫ*, "date, history". Its Arabic root is *ʾ-r-ḫ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

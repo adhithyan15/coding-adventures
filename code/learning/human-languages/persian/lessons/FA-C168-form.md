@@ -14,7 +14,8 @@ romanization: "form"
 concept_tag: FA-CHIZ168-FORM
 prerequisites: [FA-C168-pasport, FA-C168-viza]
 sounds: []
-roots: []
+roots: [french-forme]
+etymology_hook: "form: a loan, usually traced to French forme 'form'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C168-viza]
 <!-- hl-knowledge: introduces=[FA-LEX-C168-CHIZ168-05]; assesses=[] -->
 
 **فرم** — *form* — "a form".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*form* is a loan, usually traced to French *forme*, "form".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

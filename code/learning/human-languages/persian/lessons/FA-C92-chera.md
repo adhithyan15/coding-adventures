@@ -14,7 +14,8 @@ romanization: "cherâ"
 concept_tag: FA-WHY92-CHERA
 prerequisites: [FA-C91-hadaf, FA-C91-khahesh]
 sounds: []
-roots: []
+roots: [persian-che]
+etymology_hook: "cherâ ← Middle Persian čē rāy 'for what' (EtymDB); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C91-khahesh]
 <!-- hl-knowledge: introduces=[FA-LEX-C92-WHY92-01]; assesses=[] -->
 
 **چرا** — *cherâ* — "why?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cherâ* is *che*, "what", with *râ*, "for, on account of": "for what". It continues Middle Persian *čē rāy*, "for what" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

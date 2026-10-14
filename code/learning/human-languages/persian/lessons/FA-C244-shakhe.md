@@ -14,7 +14,8 @@ romanization: "shâkhe"
 concept_tag: FA-CHIZ244-SHAKHE
 prerequisites: [FA-C244-sel, FA-C244-bute]
 sounds: []
-roots: []
+roots: [persian-shakh]
+etymology_hook: "shâkhe: Persian shâkh 'branch' (Middle Persian šāx) + -e"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C244-bute]
 <!-- hl-knowledge: introduces=[FA-LEX-C244-CHIZ244-04]; assesses=[] -->
 
 **شاخه** — *shâkhe* — "a branch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shâkhe* is *shâkh*, "branch, horn", with the ending *-e*. *shâkh* is native, usually traced to Middle Persian *šāx*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

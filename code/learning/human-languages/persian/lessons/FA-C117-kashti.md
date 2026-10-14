@@ -14,7 +14,8 @@ romanization: "kashti"
 concept_tag: FA-THINGS117-KASHTI
 prerequisites: [FA-C117-taksi, FA-C117-metro]
 sounds: []
-roots: []
+roots: [persian-kishti]
+etymology_hook: "kashti ← Middle Persian kaštīg (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C117-metro]
 <!-- hl-knowledge: introduces=[FA-LEX-C117-THINGS117-04]; assesses=[] -->
 
 **کشتی** — *kashti* — "a ship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kashti* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *kaštīg*, "boat, ship" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

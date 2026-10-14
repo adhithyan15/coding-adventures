@@ -14,7 +14,8 @@ romanization: "sinemâ"
 concept_tag: FA-LOC88-SINEMA
 prerequisites: [FA-C88-darukhane, FA-C88-nanvayi]
 sounds: []
-roots: []
+roots: [french-cinema]
+etymology_hook: "sinemâ ← French cinéma 'cinema'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C88-nanvayi]
 <!-- hl-knowledge: introduces=[FA-LEX-C88-LOC88-04]; assesses=[] -->
 
 **سینما** — *sinemâ* — "a cinema".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sinemâ* is borrowed from French *cinéma*, "cinema" (EtymDB). The French word is built on Greek *kinēma*, "movement".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

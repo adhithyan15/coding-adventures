@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 214,
-  "sourceHash": "fnv1a64:7ee93935601f75f7",
+  "sourceHash": "fnv1a64:455631e7f7c6a8ea",
   "lessonIds": [
     "FA-C214-tajrobe",
     "FA-C214-karfarma",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch214.txt",
   "json": "persian/narration/ch214.json",
-  "textHash": "fnv1a64:e4c168708c6f8585",
-  "jsonHash": "fnv1a64:f56f2afee1761e55",
+  "textHash": "fnv1a64:3787002b29adb39d",
+  "jsonHash": "fnv1a64:b977ddf057e3fd26",
   "findings": []
 }

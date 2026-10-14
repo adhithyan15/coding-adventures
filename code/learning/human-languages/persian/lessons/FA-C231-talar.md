@@ -15,6 +15,7 @@ concept_tag: FA-MAKAN231-TALAR
 prerequisites: [FA-C230-rubaru, FA-C231-aramgah]
 sounds: []
 roots: []
+etymology_hook: "tâlâr: usually traced to Middle Persian tālār 'hall' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C231-aramgah]
 <!-- hl-knowledge: introduces=[FA-LEX-C231-MAKAN231-02]; assesses=[] -->
 
 **تالار** — *tâlâr* — "a hall (for weddings, events)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tâlâr* is usually traced to Middle Persian *tālār*, "hall"; EtymDB lists the form from Manichaean Middle Persian texts.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jang"
 concept_tag: FA-CHERA234-JANG
 prerequisites: [FA-C234-ravesh, FA-C234-azadi]
 sounds: []
-roots: []
+roots: [persian-jang]
+etymology_hook: "jang ← Middle Persian jang (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C234-azadi]
 <!-- hl-knowledge: introduces=[FA-LEX-C234-CHERA234-03]; assesses=[] -->
 
 **جنگ** — *jang* — "a war".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jang* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *jang*, "struggle, battle" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

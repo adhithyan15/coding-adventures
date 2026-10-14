@@ -14,7 +14,8 @@ romanization: "pâre"
 concept_tag: FA-SEFAT202-PARE
 prerequisites: [FA-C201-abri, FA-C201-barani]
 sounds: []
-roots: []
+roots: [persian-para]
+etymology_hook: "pâre: inherited, usually traced to Middle Persian pārag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C201-barani]
 <!-- hl-knowledge: introduces=[FA-LEX-C202-SEFAT202-01]; assesses=[] -->
 
 **پاره** — *pâre* — "torn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pâre* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *pārag*, "piece". Persian uses it for "torn, in pieces".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

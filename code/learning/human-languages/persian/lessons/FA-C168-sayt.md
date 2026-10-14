@@ -14,7 +14,8 @@ romanization: "sâyt"
 concept_tag: FA-CHIZ168-SAYT
 prerequisites: [FA-C167-nushabe, FA-C167-morabba]
 sounds: []
-roots: []
+roots: [english-site]
+etymology_hook: "sâyt: a loan, usually traced to English site 'site'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C167-morabba]
 <!-- hl-knowledge: introduces=[FA-LEX-C168-CHIZ168-01]; assesses=[] -->
 
 **سایت** — *sâyt* — "a website".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâyt* is a loan, usually traced to English *site*, "site".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

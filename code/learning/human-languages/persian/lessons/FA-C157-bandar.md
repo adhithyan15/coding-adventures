@@ -14,7 +14,8 @@ romanization: "bandar"
 concept_tag: FA-MAKAN157-BANDAR
 prerequisites: [FA-C157-khabgah, FA-C157-zendan]
 sounds: []
-roots: []
+roots: [persian-bandar]
+etymology_hook: "bandar: native Persian, taken into Hindi and Bengali; often explained as band 'tie' + dar 'door'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C157-zendan]
 <!-- hl-knowledge: introduces=[FA-LEX-C157-MAKAN157-04]; assesses=[] -->
 
 **بندر** — *bandar* — "a port".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bandar* is a native Persian word for a port, and Hindi, Bengali and Marathi took it from Persian. It is often explained as *band*, "tie, enclosure", with *dar*, "door".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

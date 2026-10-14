@@ -12,6 +12,9 @@ Before the new one: say the Persian for a coast, then the Persian for a church.
 You'll want to know: کتابخانه.
 کتابخانه — ketâbkhâne — "a library".
 
+The word, taken apart.
+ketâbkhâne is a two-language compound (EtymDB): ketâb, "book", borrowed from Arabic kitāb (root k-t-b, Lane), with the native Persian khâne, "house": the house of books.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a church, then the Persian for a library
 
 You'll want to know: داروخانه.
 داروخانه — dârukhâne — "a pharmacy".
+
+The word, taken apart.
+dârukhâne is dâru, "medicine", with khâne, "house": the house of medicines. Both parts are native; dâru continues Middle Persian dārūg (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a library, then the Persian for a pharma
 You'll want to know: نانوایی.
 نانوایی — nânvâyi — "a bakery".
 
+The word, taken apart.
+nânvâyi is nânvâ, "baker", with the place ending -i. nânvâ is built on nân, "bread", an inherited word: EtymDB traces it to Middle Persian nān.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a pharmacy, then the Persian for a baker
 You'll want to know: سینما.
 سینما — sinemâ — "a cinema".
 
+The word, taken apart.
+sinemâ is borrowed from French cinéma, "cinema" (EtymDB). The French word is built on Greek kinēma, "movement".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a bakery, then the Persian for a cinema.
 
 You'll want to know: موزه.
 موزه — muze — "a museum".
+
+The word, taken apart.
+muze is borrowed from French musée, "museum" (EtymDB). The French word goes back through Latin to Greek mouseion, "seat of the Muses".
 
 What you've built.
 One more word for this chapter.

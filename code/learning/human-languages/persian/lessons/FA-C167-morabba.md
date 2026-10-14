@@ -14,7 +14,8 @@ romanization: "morabbâ"
 concept_tag: FA-CHIZ167-MORABBA
 prerequisites: [FA-C167-biskuit, FA-C167-nushabe]
 sounds: []
-roots: []
+roots: [arabic-murabba]
+etymology_hook: "morabbâ ← Arabic murabbā 'preserved, made into a preserve', root r-b-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C167-nushabe]
 <!-- hl-knowledge: introduces=[FA-LEX-C167-CHIZ167-05]; assesses=[] -->
 
 **مربا** — *morabbâ* — "jam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*morabbâ* is borrowed from Arabic *murabbā*, "preserved, made into a preserve". Its Arabic root is *r-b-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

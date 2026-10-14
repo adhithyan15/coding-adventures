@@ -14,7 +14,8 @@ romanization: "feshâr-e khun"
 concept_tag: FA-SALAMAT190-FESHAR-E-KHUN
 prerequisites: [FA-C190-tabsanj, FA-C190-behdasht]
 sounds: []
-roots: []
+roots: [persian-khun]
+etymology_hook: "feshâr-e khun: Persian feshâr 'pressure' + khun 'blood' (EtymDB); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C190-behdasht]
 <!-- hl-knowledge: introduces=[FA-LEX-C190-SALAMAT190-04]; assesses=[] -->
 
 **فشار خون** — *feshâr-e khun* — "blood pressure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*feshâr-e khun* is "the pressure of the blood". *feshâr* is built on *feshordan*, "to press" (EtymDB), and *khun* is inherited, from Middle Persian *xōn* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

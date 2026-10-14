@@ -14,7 +14,8 @@ romanization: "kalântari"
 concept_tag: FA-MAKAN155-KALANTARI
 prerequisites: [FA-C154-matab, FA-C155-dabirestan]
 sounds: []
-roots: []
+roots: [persian-kalan]
+etymology_hook: "kalântari: Persian kalântar 'headman' (kalân 'big' + -tar) + -i; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C155-dabirestan]
 <!-- hl-knowledge: introduces=[FA-LEX-C155-MAKAN155-02]; assesses=[] -->
 
 **کلانتری** — *kalântari* — "a police station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kalântari* is built from *kalântar*, "headman", and the ending *-i*, "office of". *kalântar* is *kalân*, "big", with the comparative *-tar*: "the bigger one". All the pieces are native Persian, inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

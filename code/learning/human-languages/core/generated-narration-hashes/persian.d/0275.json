@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 275,
-  "sourceHash": "fnv1a64:bfa25863f117c7e5",
+  "sourceHash": "fnv1a64:b8ea055a21b3ad03",
   "lessonIds": [
     "FA-C275-kahu",
     "FA-C275-kalam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch275.txt",
   "json": "persian/narration/ch275.json",
-  "textHash": "fnv1a64:039a1ae25d32e6d3",
-  "jsonHash": "fnv1a64:5f8aec086ce7aad0",
+  "textHash": "fnv1a64:dee62147663f0d7e",
+  "jsonHash": "fnv1a64:1ad7ce7f1e9490ad",
   "findings": []
 }

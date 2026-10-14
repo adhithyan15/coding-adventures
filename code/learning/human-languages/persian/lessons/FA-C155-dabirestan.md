@@ -14,7 +14,8 @@ romanization: "dabirestân"
 concept_tag: FA-MAKAN155-DABIRESTAN
 prerequisites: [FA-C154-kafe, FA-C154-matab]
 sounds: []
-roots: []
+roots: [persian-dabir, persian-stan]
+etymology_hook: "dabirestân ← Middle Persian dibīrestān (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C154-matab]
 <!-- hl-knowledge: introduces=[FA-LEX-C155-MAKAN155-01]; assesses=[] -->
 
 **دبیرستان** — *dabirestân* — "a secondary school".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dabirestân* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *dibīrestān*, "school" (EtymDB). It is *dabir*, "scribe, teacher", with *-estân*, "place of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

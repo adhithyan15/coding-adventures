@@ -14,7 +14,8 @@ romanization: "khâle"
 concept_tag: FA-FAMILY33-KHALE
 prerequisites: [FA-C32-madarbozorg, FA-C32-dayi]
 sounds: []
-roots: []
+roots: [arabic-hala]
+etymology_hook: "khâle ← Arabic ḫāla 'maternal aunt', root ḫ-w-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C32-dayi]
 <!-- hl-knowledge: introduces=[FA-LEX-C33-FAMILY33-01]; assesses=[] -->
 
 **خاله** — *khâle* — "an aunt (mother's sister)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâle* is borrowed from Arabic *ḫāla*, "maternal aunt". Its Arabic root is *ḫ-w-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

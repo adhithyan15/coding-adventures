@@ -15,6 +15,7 @@ concept_tag: FA-KAR250-KHALABAN
 prerequisites: [FA-C250-vakil, FA-C250-ostad]
 sounds: []
 roots: []
+etymology_hook: "khalabân: usually explained as Arabic ḫalāʾ 'space' (Lane) + Persian -bân 'keeper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C250-ostad]
 <!-- hl-knowledge: introduces=[FA-LEX-C250-KAR250-05]; assesses=[] -->
 
 **خلبان** — *khalabân* — "a pilot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khalabân* is usually explained as *khalâ*, "empty space", with *-bân*, "keeper": the keeper of the air. *khalâ* is borrowed from Arabic *ḫalāʾ*, "empty place" (root *ḫ-l-w*, Lane); *-bân* is native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khâtere"
 concept_tag: FA-CHIZ243-KHATERE
 prerequisites: [FA-C243-film, FA-C243-sargarmi]
 sounds: []
-roots: []
+roots: [arabic-hatira]
+etymology_hook: "khâtere ← Arabic ḫāṭira 'thought, what comes to mind', root ḫ-ṭ-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C243-sargarmi]
 <!-- hl-knowledge: introduces=[FA-LEX-C243-CHIZ243-05]; assesses=[] -->
 
 **خاطره** — *khâtere* — "a memory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâtere* is borrowed from Arabic *ḫāṭira*, "thought, what comes to mind". Its Arabic root is *ḫ-ṭ-r* (Lane). Persian uses it for a memory.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

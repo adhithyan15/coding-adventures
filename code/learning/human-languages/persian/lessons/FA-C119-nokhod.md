@@ -14,7 +14,8 @@ romanization: "nokhod"
 concept_tag: FA-THINGS119-NOKHOD
 prerequisites: [FA-C118-kadu, FA-C119-lubiya]
 sounds: []
-roots: []
+roots: [persian-nokhod]
+etymology_hook: "nokhod ← Middle Persian naxōd (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C119-lubiya]
 <!-- hl-knowledge: introduces=[FA-LEX-C119-THINGS119-02]; assesses=[] -->
 
 **نخود** — *nokhod* — "chickpeas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nokhod* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *naxōd*, "chickpea" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

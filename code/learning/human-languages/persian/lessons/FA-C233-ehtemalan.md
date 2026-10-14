@@ -14,7 +14,8 @@ romanization: "ehtemâlan"
 concept_tag: FA-CHERA233-EHTEMALAN
 prerequisites: [FA-C233-hatman, FA-C233-albatte]
 sounds: []
-roots: []
+roots: [arabic-ihtimalan]
+etymology_hook: "ehtemâlan ← Arabic iḥtimālan 'possibly, probably', root ḥ-m-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C233-albatte]
 <!-- hl-knowledge: introduces=[FA-LEX-C233-CHERA233-04]; assesses=[] -->
 
 **احتمالا** — *ehtemâlan* — "probably".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ehtemâlan* is borrowed from Arabic *iḥtimālan*, "possibly, probably". Its Arabic root is *ḥ-m-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

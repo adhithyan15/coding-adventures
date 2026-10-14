@@ -14,7 +14,8 @@ romanization: "fâmil"
 concept_tag: FA-CHIZ277-FAMIL
 prerequisites: [FA-C277-namzad, FA-C277-damad]
 sounds: []
-roots: []
+roots: [french-famille]
+etymology_hook: "fâmil ← French famille 'family'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C277-damad]
 <!-- hl-knowledge: introduces=[FA-LEX-C277-CHIZ277-04]; assesses=[] -->
 
 **فامیل** — *fâmil* — "relatives, extended family".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*fâmil* is borrowed from French *famille*, "family" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khalvat"
 concept_tag: FA-SEFAT164-KHALVAT
 prerequisites: [FA-C164-kond, FA-C164-zebr]
 sounds: []
-roots: []
+roots: [arabic-khalwa]
+etymology_hook: "khalvat ← Arabic ḫalwa 'solitude, privacy', root ḫ-l-w (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C164-zebr]
 <!-- hl-knowledge: introduces=[FA-LEX-C164-SEFAT164-05]; assesses=[] -->
 
 **خلوت** — *khalvat* — "uncrowded".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khalvat* is borrowed from Arabic *ḫalwa*, "solitude, privacy". Its Arabic root is *ḫ-l-w* (Lane). Persian uses it for an uncrowded place.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

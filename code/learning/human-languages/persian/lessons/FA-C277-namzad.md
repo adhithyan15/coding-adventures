@@ -14,7 +14,8 @@ romanization: "nâmzad"
 concept_tag: FA-CHIZ277-NAMZAD
 prerequisites: [FA-C276-imeyl, FA-C277-valedeyn]
 sounds: []
-roots: []
+roots: [old-persian-nama, persian-zadan]
+etymology_hook: "nâmzad: Persian nâm 'name' (EtymDB) + zad 'struck' (zadan); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C277-valedeyn]
 <!-- hl-knowledge: introduces=[FA-LEX-C277-CHIZ277-02]; assesses=[] -->
 
 **نامزد** — *nâmzad* — "a fiancé, a fiancée".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nâmzad* is *nâm*, "name" (inherited, EtymDB), with *zad*, "struck" (from *zadan*): one whose name has been set down for another. Both are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

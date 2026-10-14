@@ -12,6 +12,9 @@ Before the new one: say the Persian for a result, then the Persian for a problem
 You'll want to know: به هر حال.
 به هر حال — be har hâl — "anyway".
 
+The word, taken apart.
+be har hâl is "in every state": be, "in", and har, "every", are native; hâl, "state", is borrowed from Arabic ḥāl (root ḥ-w-l, Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a problem, then the Persian for anyway.
 
 You'll want to know: بدون.
 بدون — bedun-e — "without".
+
+The word, taken apart.
+bedun-e is borrowed from Arabic bi-dūni, "without". Its Arabic root is d-w-n (Lane). Persian uses the Arabic phrase as one word, with the linking -e.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for anyway, then the Persian for without.
 You'll want to know: وگرنه.
 وگرنه — vagarna — "otherwise".
 
+The word, taken apart.
+vagarna is va, "and", with agar, "if", and na, "not": "and if not". agar and na are inherited (agar from Middle Persian agar, EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for without, then the Persian for otherwise.
 You'll want to know: در حالی که.
 در حالی که — dar hâli ke — "while, whereas".
 
+The word, taken apart.
+dar hâli ke is "in a state that": dar, "in", and ke, "that", are native; hâli is hâl, "state", borrowed from Arabic ḥāl (root ḥ-w-l, Lane), with -i.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for otherwise, then the Persian for while.
 
 You'll want to know: مخصوصا.
 مخصوصا — makhsusan — "especially".
+
+The word, taken apart.
+makhsusan is borrowed from Arabic maḫṣūṣan, "specially". Its Arabic root is ḫ-ṣ-ṣ (Lane).
 
 What you've built.
 One more word for this chapter.

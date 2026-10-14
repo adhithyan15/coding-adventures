@@ -14,7 +14,8 @@ romanization: "shabnam"
 concept_tag: FA-THINGS104-SHABNAM
 prerequisites: [FA-C104-tufan, FA-C104-meh]
 sounds: []
-roots: []
+roots: [persian-shab]
+etymology_hook: "shabnam: Persian shab 'night' + nam 'moisture' (EtymDB); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C104-meh]
 <!-- hl-knowledge: introduces=[FA-LEX-C104-THINGS104-05]; assesses=[] -->
 
 **شبنم** — *shabnam* — "dew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shabnam* is *shab*, "night", with *nam*, "moisture" (EtymDB): the night's moisture. Both parts are native Persian; *shab* is usually traced to Middle Persian *šab*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

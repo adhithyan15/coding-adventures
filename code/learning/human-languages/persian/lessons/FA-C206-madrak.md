@@ -14,7 +14,8 @@ romanization: "madrak"
 concept_tag: FA-CHIZ206-MADRAK
 prerequisites: [FA-C205-qeyme, FA-C205-zeytun]
 sounds: []
-roots: []
+roots: [arabic-madrak]
+etymology_hook: "madrak ← Arabic madrak 'means of grasping, evidence', root d-r-k (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C205-zeytun]
 <!-- hl-knowledge: introduces=[FA-LEX-C206-CHIZ206-01]; assesses=[] -->
 
 **مدرک** — *madrak* — "a document; a qualification".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*madrak* is borrowed from Arabic *madrak*, "means of grasping, evidence". Its Arabic root is *d-r-k* (Lane). Persian uses it for a document or a qualification.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rang"
 concept_tag: FA-NUMBERS77-RANG
 prerequisites: [FA-C77-hezar, FA-C77-donya]
 sounds: []
-roots: []
+roots: [persian-rang]
+etymology_hook: "rang ← Middle Persian rang (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C77-donya]
 <!-- hl-knowledge: introduces=[FA-LEX-C77-NUMBERS77-04]; assesses=[] -->
 
 **رنگ** — *rang* — "a colour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rang* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *rang*, "colour, dye" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

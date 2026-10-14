@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 237,
-  "sourceHash": "fnv1a64:7fd2b0b92714c569",
+  "sourceHash": "fnv1a64:bdaad309ce6b8bc3",
   "lessonIds": [
     "FA-C237-barfi",
     "FA-C237-vahshi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch237.txt",
   "json": "persian/narration/ch237.json",
-  "textHash": "fnv1a64:cd73324f2da8c783",
-  "jsonHash": "fnv1a64:a2cdac77b7eac038",
+  "textHash": "fnv1a64:7b5b555ddef43b18",
+  "jsonHash": "fnv1a64:ec8c7dc8de907ee9",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "qatre"
 concept_tag: FA-SALAMAT151-QATRE
 prerequisites: [FA-C151-jush, FA-C151-pomad]
 sounds: []
-roots: []
+roots: [arabic-qatra]
+etymology_hook: "qatre ← Arabic qaṭra 'drop', root q-ṭ-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C151-pomad]
 <!-- hl-knowledge: introduces=[FA-LEX-C151-SALAMAT151-04]; assesses=[] -->
 
 **قطره** — *qatre* — "a drop; drops (medicine)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qatre* is borrowed from Arabic *qaṭra*, "drop". Its Arabic root is *q-ṭ-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

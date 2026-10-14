@@ -12,6 +12,9 @@ Before the new one: say the Persian for a hat, then the Persian for a shoe.
 You'll want to know: کت.
 کت — kot — "a jacket".
 
+The word, taken apart.
+kot is a loan, usually traced to English coat, "coat".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a shoe, then the Persian for a jacket.
 
 You'll want to know: کمربند.
 کمربند — kamarband — "a belt".
+
+The word, taken apart.
+kamarband is built from kamar, "waist" (Middle Persian kamar, EtymDB), and band, "band, tie" (EtymDB): a waist-band. Both parts are native Persian.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a jacket, then the Persian for a belt.
 You'll want to know: دوازده.
 دوازده — davâzdah — "twelve".
 
+The word, taken apart.
+davâzdah is do, "two", with dah, "ten": two-and-ten. It is usually traced to Middle Persian dwāzdah, an inherited number.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a belt, then the Persian for twelve.
 You'll want to know: چهارده.
 چهارده — chahârdah — "fourteen".
 
+The word, taken apart.
+chahârdah is chahâr, "four", with dah, "ten": four-and-ten. Both numbers are inherited from Middle Persian.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for twelve, then the Persian for fourteen.
 
 You'll want to know: شانزده.
 شانزده — shânzdah — "sixteen".
+
+The word, taken apart.
+shânzdah is shesh, "six", with dah, "ten", and an n before the ten, as in pânzdah. Both numbers are inherited from Middle Persian.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "surâkh kardan"
 concept_tag: FA-VERB-SURAKH-KARDAN
 prerequisites: [FA-C259-jaru-kardan, FA-C260-rande-kardan]
 sounds: []
-roots: []
+roots: [persian-surakh, pie-kwer]
+etymology_hook: "surâkh ← Middle Persian sūrāx 'hole' (EtymDB) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C260-rande-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C260-KONESH260-02]; assesses=[] -->
 
 **سوراخ کردن** — *surâkh kardan* — "to make a hole in, to pierce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*surâkh kardan* pairs *surâkh*, "hole", with *kardan*. *surâkh* is inherited, from Middle Persian *sūrāx* (EtymDB). *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

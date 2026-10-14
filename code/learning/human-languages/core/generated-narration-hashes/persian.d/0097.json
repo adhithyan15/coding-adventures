@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 97,
-  "sourceHash": "fnv1a64:5afa891f05f6fe7c",
+  "sourceHash": "fnv1a64:59221ce49a48bd68",
   "lessonIds": [
     "FA-C97-shal",
     "FA-C97-dastkesh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch97.txt",
   "json": "persian/narration/ch97.json",
-  "textHash": "fnv1a64:ba8aad39f854b279",
-  "jsonHash": "fnv1a64:edc07b68e672a563",
+  "textHash": "fnv1a64:d5c5d1395e9c200d",
+  "jsonHash": "fnv1a64:4ca20d01cb279694",
   "findings": []
 }

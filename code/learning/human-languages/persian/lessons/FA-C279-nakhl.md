@@ -14,7 +14,8 @@ romanization: "nakhl"
 concept_tag: FA-CHIZ279-NAKHL
 prerequisites: [FA-C279-sarv, FA-C279-chenar]
 sounds: []
-roots: []
+roots: [arabic-nahl]
+etymology_hook: "nakhl ← Arabic naḫl 'date palms', root n-ḫ-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C279-chenar]
 <!-- hl-knowledge: introduces=[FA-LEX-C279-CHIZ279-03]; assesses=[] -->
 
 **نخل** — *nakhl* — "a palm tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nakhl* is borrowed from Arabic *naḫl*, "date palms". Its Arabic root is *n-ḫ-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

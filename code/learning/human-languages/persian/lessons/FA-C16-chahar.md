@@ -12,7 +12,7 @@ concept_tag: FA-NUMBER-FOUR
 prerequisites: [FA-C16-se]
 sounds: [rtl, persian-che, long-a]
 roots: [pie-kwetwores]
-etymology_hook: "chahâr continues Old Persian chathwar, from Proto-Indo-European *kwetwores — Latin quattuor kept the kw, English four lost it, Persian turned it into ch."
+etymology_hook: "chahâr ← Middle Persian čahār, Proto-Iranian *čathwārah (EtymDB), Indo-European *kwetwores: Latin quattuor"
 duration:
   max_seconds: 245
 requires:
@@ -48,7 +48,8 @@ Two syllables, and the long **â** of **باران** in the second.
 ## The word, taken apart — three languages, three fates for one sound
 <!-- hl-knowledge: introduces=[FA-ETYMON-CHAHAR]; assesses=[FA-LEX-CHAHAR] -->
 
-**چهار** continues Old Persian **chathwar**, from Indo-European
+**چهار** continues Middle Persian **čahār**, from Proto-Iranian \**čathwārah*
+(EtymDB) and Indo-European
 \**kʷetwóres*, "four."
 
 That opening \**kʷ* is the interesting part, because three languages did three

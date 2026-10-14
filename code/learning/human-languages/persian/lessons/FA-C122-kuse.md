@@ -14,7 +14,8 @@ romanization: "kuse"
 concept_tag: FA-THINGS122-KUSE
 prerequisites: [FA-C122-nahang, FA-C122-delfin]
 sounds: []
-roots: []
+roots: [persian-kuse]
+etymology_hook: "kuse ← Middle Persian kōsag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C122-delfin]
 <!-- hl-knowledge: introduces=[FA-LEX-C122-THINGS122-03]; assesses=[] -->
 
 **کوسه** — *kuse* — "a shark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kuse* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *kōsag*, "shark" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

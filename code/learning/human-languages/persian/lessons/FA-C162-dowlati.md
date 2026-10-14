@@ -14,7 +14,8 @@ romanization: "dowlati"
 concept_tag: FA-SEFAT162-DOWLATI
 prerequisites: [FA-C161-tang, FA-C161-goshad]
 sounds: []
-roots: []
+roots: [arabic-dawla]
+etymology_hook: "dowlati: dowlat ← Arabic dawla 'turn, dynasty', root d-w-l (Lane), + Persian -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C161-goshad]
 <!-- hl-knowledge: introduces=[FA-LEX-C162-SEFAT162-01]; assesses=[] -->
 
 **دولتی** — *dowlati* — "state-run, public".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dowlati* is *dowlat*, "state, government", with the ending *-i*. *dowlat* is borrowed from Arabic *dawla*, "turn of fortune, dynasty" (root *d-w-l*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
