@@ -3559,6 +3559,20 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.theme.nodeBorder")),
                     Some(&"#225577".to_string()));
             }
+            if fixture_name == "theme-typography-variables" {
+                assert_eq!(layout.theme.font_size, Some(19.0));
+                assert!(layout.nodes[0].width > 132.0,
+                    "theme font size must participate in backend-neutral node measurement");
+                assert!(layout.nodes.iter().all(|node|
+                    node.x + node.width < layout.lanes[0].x + layout.lanes[0].width
+                ), "theme-sized nodes must remain inside their ownership lane");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 19.0
+                        && run.fill.as_deref() == Some("rgb(124, 45, 18)")
+                )), "theme typography must lower to backend-neutral glyph runs");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.theme.fontFamily")),
+                    Some(&"Helvetica Neue".to_string()));
+            }
             if fixture_name == "node-typography-styles" {
                 assert!(layout.nodes[0].width > layout.nodes[1].width,
                     "larger bold text must reserve more backend-neutral node width");

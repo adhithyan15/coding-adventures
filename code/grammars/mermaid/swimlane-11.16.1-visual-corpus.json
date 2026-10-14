@@ -50,6 +50,7 @@
     "html-entity-labels",
     "metadata-entities",
     "theme-variables",
+    "theme-typography-variables",
     "inline-node-styles",
     "node-typography-styles",
     "node-corner-radius-styles",
